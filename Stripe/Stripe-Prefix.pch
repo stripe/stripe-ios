@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'Stripe' target in the 'Stripe' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif
