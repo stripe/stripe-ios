@@ -130,7 +130,7 @@
             [self handleStripeError:overallError];
         else
         {
-            [Stripe getTokenWithId:@"tok_0irznBQ8dFDxkf" completionHandler:^(STPToken *token, NSError *error)
+            [Stripe createTokenWithCard:card completionHandler:^(STPToken *token, NSError *error)
              {
                  if (error)
                  {
