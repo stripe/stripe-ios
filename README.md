@@ -18,21 +18,25 @@ There are three main classes in the Stripe iOS bindings that you should care abo
     card.expMonth = 12;
     card.expYear = 2020;
 
-    [Stripe createTokenWithCard:card publishableKey:@"my_publishable_key" completionHandler:^(STPToken *token, NSError *error)
+    [Stripe createTokenWithCard:card publishableKey:@"my_publishable_key"
+    completionHandler:^(STPToken *token, NSError *error)
     {
         if (error)
         	NSLog(@"Error trying to create token %@", [error localizedDescription]);
         else
-        	NSLog(@"Oh the sweet silence of success! Now I should send my data along with this token to my server, where I can use the token to charge the card or create a Stripe customer.");
+        	NSLog(@"Oh the sweet silence of success! Now I should send my data
+        	along with this token to my server, where I can use the token to
+        	charge the card or create a Stripe customer.");
     }];
 
-    Note that if you do not wish to send your publishableKey every time you make a call to createTokenWithCard, you can also call `[Stripe setDefaultPublishableKey:]` with your publishable key, and all Stripe API requests will use this key.
+Note that if you do not wish to send your publishableKey every time you make a call to createTokenWithCard, you can also call `[Stripe setDefaultPublishableKey:]` with your publishable key, and all Stripe API requests will use this key.
 
 ### Retrieving a token
 
 If you're implementing a complex workflow, you may want to know if you've already charged a token (since they can only be charged once).  You can do so if you have the token's ID:
 
-    [Stripe getTokenWithId:@"token_id" publishableKey:@"my_publishable_key" completionHandler:^(STPToken *token, NSError *error)
+    [Stripe getTokenWithId:@"token_id" publishableKey:@"my_publishable_key"
+    completionHandler:^(STPToken *token, NSError *error)
     {
     	if (error)
     	    NSLog(@"I should handle this error!");
