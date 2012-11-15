@@ -11,6 +11,10 @@
 
 @interface STPCard ()
 {
+    /*
+     These two properties are not synthesized because they can be set by
+     responses from the Stripe API or be dynamically generated from the number
+     */
     NSString *last4;
     NSString *type;
 }

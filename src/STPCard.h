@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+/*
+ This object represents a credit card.  You should create these and populate
+ its properties with information that your customer enters on your credit card
+ form.  Then you create tokens from these.
+ */
 @interface STPCard : NSObject
 @property (copy) NSString *number;
 @property (assign) NSUInteger expMonth;
@@ -28,7 +33,12 @@
 @property (readonly) NSString *country;
 
 
+/*
+ You should not use this constructor.  This constructor is used by Stripe to
+ generate cards from the response of creating ar getting a token.
+ */
 - (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
+
 
 /* These validation methods work as described in
     http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/KeyValueCoding/Articles/Validation.html#//apple_ref/doc/uid/20002173-CJBDBHCB
@@ -38,11 +48,12 @@
 - (BOOL)validateExpMonth:(id *)ioValue error:(NSError **)outError;
 - (BOOL)validateExpYear:(id *)ioValue error:(NSError **)outError;
 
-/* This validates a fully populated card to check for all errors, including ones
-    that come about from the interaction of more than one property. It will also do
-    all the validations on individual properties, so if you only want to call one
-    method on your card to validate it after setting all the properties, call this
-    one.
-*/
+/*
+ This validates a fully populated card to check for all errors, including ones
+ that come about from the interaction of more than one property. It will also do
+ all the validations on individual properties, so if you only want to call one
+ method on your card to validate it after setting all the properties, call this
+ one.
+ */
 - (BOOL)validateCardReturningError:(NSError **)outError;
 @end

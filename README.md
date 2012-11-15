@@ -11,6 +11,8 @@ The Stripe iOS bindings can be used to generate [tokens](https://stripe.com/docs
 
 There are three main classes in the Stripe iOS bindings that you should care about.  `STPCard` is a representation of a credit card.  You will need to create and populate this object with the credit card details a customer enters.  `STPToken` is a representation of the token Stripe returns for a credit card.  You can't construct these yourself, but will need to create them (shown below).  `Stripe` is a static class that you use to interact with the Stripe REST API.
 
+Also, there are a lot of comments in the code itself.  Look through the .h files for a more thorough understanding of this library.
+
 ### Creating a token
 
     STPCard *card = [[STPCard alloc] init];

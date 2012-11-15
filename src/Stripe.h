@@ -10,7 +10,14 @@
 
 @class STPToken;
 @class STPCard;
+
+// Stripe is a static class used to create and retrieve tokens.
 @interface Stripe : NSObject
+
+/*
+ If you set a default publishable key, it will be used in any of the methods
+ below that do not accept a publishable key parameter
+ */
 + (NSString *)defaultPublishableKey;
 + (void)setDefaultPublishableKey:(NSString *)publishableKey;
 
