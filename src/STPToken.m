@@ -7,6 +7,7 @@
 //
 
 #import "STPToken.h"
+#import "STPCard.h"
 
 @implementation STPToken
 @synthesize tokenId, object, livemode, card, created, used;

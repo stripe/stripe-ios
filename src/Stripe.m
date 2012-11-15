@@ -7,6 +7,9 @@
 //
 
 #import "Stripe.h"
+#import "StripeError.h"
+#import "STPCard.h"
+#import "STPToken.h"
 
 @interface Stripe()
 + (NSString *)URLEncodedString:(NSString *)string;
@@ -18,6 +21,7 @@
 + (NSDictionary *)camelCasedResponseFromStripeResponse:(NSDictionary *)JSONDictionary;
 + (NSDictionary *)parseJSONBody:(NSData *)data error:(NSError **)outError;
 + (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError completionHandler:(void (^)(STPToken*, NSError*))handler;
++ (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey;
 @end
 
 @implementation Stripe
@@ -33,6 +37,14 @@ static NSString * const tokenEndpoint = @"tokens";
 }
 
 #pragma mark Private Helpers
++ (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey
+{
+    return [[[NSURL URLWithString:
+              [NSString stringWithFormat:@"https://%@:@%@", [self URLEncodedString:publishableKey], apiURLBase]]
+             URLByAppendingPathComponent:apiVersion]
+            URLByAppendingPathComponent:tokenEndpoint];
+}
+
 + (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError completionHandler:(void (^)(STPToken*, NSError*))handler
 {
     // If the request failed entirely, expose the underlying request error
@@ -42,7 +54,7 @@ static NSString * const tokenEndpoint = @"tokens";
     {
         NSError *parseError;
         NSDictionary *JSONDictionary = [self parseJSONBody:body error:&parseError];
-    
+
         if (JSONDictionary == NULL)
             handler(NULL, parseError);
         else if ([(NSHTTPURLResponse *)response statusCode] == 200)
@@ -55,13 +67,13 @@ static NSString * const tokenEndpoint = @"tokens";
 + (NSDictionary *)parseJSONBody:(NSData *)data error:(NSError **)outError
 {
     NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-    
+
     if (JSONDictionary == NULL)
     {
         NSDictionary *userInfoDict = @{ NSLocalizedDescriptionKey : STPUnexpectedError,
         STPErrorMessageKey : [NSString stringWithFormat:@"The response from Stripe failed to get parsed into valid JSON."]
         };
-        
+
         *outError = [[NSError alloc] initWithDomain:StripeDomain
                                              code:STPAPIError
                                           userInfo:userInfoDict];
@@ -87,13 +99,13 @@ static NSString * const tokenEndpoint = @"tokens";
 {
     if (string == NULL || [string isEqualToString:@""])
         return @"";
-    
+
     NSMutableString *output = [NSMutableString string];
     BOOL makeNextCharacterUpperCase = NO;
     for (NSInteger index = 0; index < [string length]; index += 1)
     {
         NSString *character = [string substringWithRange:NSMakeRange(index, 1)];
-        if ([character isEqualToString:@"_"])
+        if ([character isEqualToString:@"_"] && index != [string length] - 1)
             makeNextCharacterUpperCase = YES;
         else if (makeNextCharacterUpperCase == YES)
         {
@@ -115,12 +127,28 @@ static NSString * const tokenEndpoint = @"tokens";
         [NSException raise:@"InvalidPublishableKey" format:@"You are using a secret key to create a token, instead of the publishable one. For more info, see https://stripe.com/docs/stripe.js"];
 }
 
+/* This code is adapted from the code by David DeLong in this StackOverflow post:
+    http://stackoverflow.com/questions/3423545/objective-c-iphone-percent-encode-a-string .  It is protected under the terms of a Creative Commons
+    license: http://creativecommons.org/licenses/by-sa/3.0/
+ */
 + (NSString *)URLEncodedString:(NSString *)string {
-    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
-                                                                                 (__bridge CFStringRef)string,
-                                                                                 NULL,
-                                                                                 (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                                 kCFStringEncodingUTF8);
+    NSMutableString *output = [NSMutableString string];
+    const unsigned char *source = (const unsigned char *)[string UTF8String];
+    int sourceLen = strlen((const char *)source);
+    for (int i = 0; i < sourceLen; ++i)
+    {
+        const unsigned char thisChar = source[i];
+        if (thisChar == ' ')
+            [output appendString:@"+"];
+        else if (thisChar == '.' || thisChar == '-' || thisChar == '_' || thisChar == '~' ||
+                       (thisChar >= 'a' && thisChar <= 'z') ||
+                       (thisChar >= 'A' && thisChar <= 'Z') ||
+                       (thisChar >= '0' && thisChar <= '9'))
+                [output appendFormat:@"%c", thisChar];
+        else
+            [output appendFormat:@"%%%02X", thisChar];
+    }
+    return output;
 }
 
 + (NSDictionary *)requestPropertiesFromCard:(STPCard *)card
@@ -169,7 +197,7 @@ static NSString * const tokenEndpoint = @"tokens";
     NSString *userMessage = NULL;
     NSString *cardErrorCode = NULL;
     NSInteger code = 0;
-    
+
     // There should always be a message and type for the error
     if (devMessage == NULL || type == NULL)
     {
@@ -180,16 +208,16 @@ static NSString * const tokenEndpoint = @"tokens";
                                           code:STPAPIError
                                       userInfo:userInfoDict];
     }
-    
+
     NSMutableDictionary *userInfoDict = [NSMutableDictionary dictionary];
     [userInfoDict setValue:devMessage forKey:STPErrorMessageKey];
-    
+
     if (parameter)
     {
         parameter = [self camelCaseFromUnderscoredString:parameter];
         [userInfoDict setValue:parameter forKey:STPErrorParameterKey];
     }
-    
+
     if ([type isEqualToString:@"api_error"])
     {
         userMessage = STPUnexpectedError;
@@ -252,12 +280,12 @@ static NSString * const tokenEndpoint = @"tokens";
         }
         else
             userMessage = devMessage;
-        
+
         [userInfoDict setValue:cardErrorCode forKey:STPCardErrorCodeKey];
     }
-    
+
     [userInfoDict setValue:userMessage forKey:NSLocalizedDescriptionKey];
-    
+
     return [[NSError alloc] initWithDomain:StripeDomain
                                       code:code
                                   userInfo:userInfoDict];
@@ -279,15 +307,12 @@ static NSString * const tokenEndpoint = @"tokens";
 
     [self validateKey:publishableKey];
 
-    NSURL *url = [[[NSURL URLWithString:
-                    [NSString stringWithFormat:@"https://%@:@%@", [self URLEncodedString:publishableKey], apiURLBase]]
-                   URLByAppendingPathComponent:apiVersion]
-                  URLByAppendingPathComponent:tokenEndpoint];
+    NSURL *url = [self apiURLWithPublishableKey:publishableKey];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
 
-    request.HTTPBody =[self formEncodedDataFromCard:card];
+    request.HTTPBody = [self formEncodedDataFromCard:card];
 
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:queue
@@ -301,17 +326,14 @@ static NSString * const tokenEndpoint = @"tokens";
 {
     if (tokenId == NULL)
         [NSException raise:@"RequiredParameter" format:@"'tokenId' is required to retrieve a token"];
-    
+
     [self validateKey:publishableKey];
-    
-    NSURL *url = [[[[NSURL URLWithString:
-                    [NSString stringWithFormat:@"https://%@:@%@", [self URLEncodedString:publishableKey], apiURLBase]]
-                   URLByAppendingPathComponent:apiVersion]
-                  URLByAppendingPathComponent:tokenEndpoint] URLByAppendingPathComponent:tokenId];
-    
+
+    NSURL *url = [[self apiURLWithPublishableKey:publishableKey] URLByAppendingPathComponent:tokenId];
+
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"GET";
-    
+
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:queue
                            completionHandler:^(NSURLResponse *response, NSData *body, NSError *requestError)

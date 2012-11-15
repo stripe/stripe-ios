@@ -13,7 +13,6 @@
 {
     NSString *last4;
     NSString *type;
-    NSString *fingerprint;
 }
 
 + (BOOL)isLuhnValidString:(NSString *)number;
@@ -26,7 +25,9 @@
 
 
 @implementation STPCard
-@synthesize number, expMonth, expYear, cvc, name, addressLine1, addressLine2, addressZip, addressCity, addressState, addressCountry, country, object, fingerprint;
+@synthesize number, expMonth, expYear, cvc, name, addressLine1, addressLine2,
+    addressZip, addressCity, addressState, addressCountry, country, object,
+    fingerprint;
 @dynamic last4, type;
 
 #pragma mark Private Helpers
@@ -64,7 +65,7 @@
     NSCharacterSet *numericOnly = [NSCharacterSet decimalDigitCharacterSet];
     NSCharacterSet *aStringSet = [NSCharacterSet characterSetWithCharactersInString:aString];
 
-    return [numericOnly isSupersetOfSet: aStringSet];
+    return [numericOnly isSupersetOfSet:aStringSet];
 }
 
 + (BOOL)isExpiredMonth:(NSInteger)month andYear:(NSInteger)year
@@ -94,13 +95,34 @@
     if (outError != NULL)
     {
         if ([parameter isEqualToString:@"number"])
-            *outError = [self createErrorWithMessage:STPCardErrorInvalidNumberUserMessage parameter:parameter cardErrorCode:STPInvalidNumber devErrorMessage:@"Card number must be between 10 and 19 digits long and Luhn valid."];
+            *outError = [self createErrorWithMessage:STPCardErrorInvalidNumberUserMessage
+                                           parameter:parameter
+                                       cardErrorCode:STPInvalidNumber
+                                     devErrorMessage:@"Card number must be between 10 and 19 digits long and Luhn valid."];
         else if ([parameter isEqualToString:@"cvc"])
-            *outError = [self createErrorWithMessage:STPCardErrorInvalidCVCUserMessage parameter:parameter cardErrorCode:STPInvalidCVC devErrorMessage:@"Card CVC must be numeric, 3 digits for Visa, Discover, MasterCard, JCB, and Discover cards, and 4 digits for American Express cards."];
+            *outError = [self createErrorWithMessage:STPCardErrorInvalidCVCUserMessage
+                                           parameter:parameter
+                                       cardErrorCode:STPInvalidCVC
+                                     devErrorMessage:@"Card CVC must be numeric, 3 digits for Visa, Discover, MasterCard, JCB, and Discover cards, and 4 digits for American Express cards."];
         else if ([parameter isEqualToString:@"expMonth"])
-            *outError = [self createErrorWithMessage:STPCardErrorInvalidExpMonthUserMessage parameter:parameter cardErrorCode:STPInvalidExpMonth devErrorMessage:@"expMonth must be less than 13"];
+            *outError = [self createErrorWithMessage:STPCardErrorInvalidExpMonthUserMessage
+                                           parameter:parameter
+                                       cardErrorCode:STPInvalidExpMonth
+                                     devErrorMessage:@"expMonth must be less than 13"];
         else if ([parameter isEqualToString:@"expYear"])
-            *outError = [self createErrorWithMessage:STPCardErrorInvalidExpYearUserMessage parameter:parameter cardErrorCode:STPInvalidExpYear devErrorMessage:@"expYear must be this year or a year in the future"];
+            *outError = [self createErrorWithMessage:STPCardErrorInvalidExpYearUserMessage
+                                           parameter:parameter
+                                       cardErrorCode:STPInvalidExpYear
+                                     devErrorMessage:@"expYear must be this year or a year in the future"];
+        else
+            /* This should not be possible since this is a private method so we
+                know exactly how it is called.  We use STPAPIError for all errors
+                that are unexpected within the bindings as well.
+             */
+            *outError = [[NSError alloc] initWithDomain:StripeDomain
+                                                   code:STPAPIError
+                                               userInfo:@{ NSLocalizedDescriptionKey : STPUnexpectedError,
+                                                                  STPErrorMessageKey : @"There was an error within the Stripe client library when trying to generate the proper validation error. Contact support@stripe.com if you see this." }];
     }
 }
 
@@ -165,25 +187,24 @@
         return type;
     else if ([self number])
     {
-        NSString *firstTwoDigits = [number substringToIndex:2];
-        NSString *firstDigit = [number substringToIndex:1];
-        if ([firstTwoDigits isEqualToString:@"34"] || [firstTwoDigits isEqualToString:@"37"])
+        NSString *theNumber = [self number];
+        if ([theNumber hasPrefix:@"34"] || [theNumber hasPrefix:@"37"])
             return @"American Express";
-        else if ([firstTwoDigits isEqualToString:@"60"] ||
-                 [firstTwoDigits isEqualToString:@"62"] ||
-                 [firstTwoDigits isEqualToString:@"64"] ||
-                 [firstTwoDigits isEqualToString:@"65"])
+        else if ([theNumber hasPrefix:@"60"] ||
+                 [theNumber hasPrefix:@"62"] ||
+                 [theNumber hasPrefix:@"64"] ||
+                 [theNumber hasPrefix:@"65"])
             return @"Discover";
-        else if ([firstTwoDigits isEqualToString:@"35"])
+        else if ([theNumber hasPrefix:@"35"])
             return @"JCB";
-        else if ([firstTwoDigits isEqualToString:@"30"] ||
-                 [firstTwoDigits isEqualToString:@"36"] ||
-                 [firstTwoDigits isEqualToString:@"38"] ||
-                 [firstTwoDigits isEqualToString:@"39"])
+        else if ([theNumber hasPrefix:@"30"] ||
+                 [theNumber hasPrefix:@"36"] ||
+                 [theNumber hasPrefix:@"38"] ||
+                 [theNumber hasPrefix:@"39"])
             return @"Diners Club";
-         else if ([firstDigit isEqualToString:@"4"])
+         else if ([theNumber hasPrefix:@"4"])
              return @"Visa";
-         else if ([firstDigit isEqualToString:@"5"])
+         else if ([theNumber hasPrefix:@"5"])
              return @"MasterCard";
         else
             return @"Unknown";

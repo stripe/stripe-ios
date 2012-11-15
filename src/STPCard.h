@@ -30,12 +30,19 @@
 
 - (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 
-// These validation methods work as described in http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/KeyValueCoding/Articles/Validation.html#//apple_ref/doc/uid/20002173-CJBDBHCB
+/* These validation methods work as described in
+    http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/KeyValueCoding/Articles/Validation.html#//apple_ref/doc/uid/20002173-CJBDBHCB
+*/
 - (BOOL)validateNumber:(id *)ioValue error:(NSError **)outError;
 - (BOOL)validateCvc:(id *)ioValue error:(NSError **)outError;
 - (BOOL)validateExpMonth:(id *)ioValue error:(NSError **)outError;
 - (BOOL)validateExpYear:(id *)ioValue error:(NSError **)outError;
 
-// This validates a fully populated card to check for all errors, including ones that come about from the interaction of more than one property. It will also do all the validations on individual properties, so if you only want to call one method on your card to validate it after setting all the properties, call this one.
+/* This validates a fully populated card to check for all errors, including ones
+    that come about from the interaction of more than one property. It will also do
+    all the validations on individual properties, so if you only want to call one
+    method on your card to validate it after setting all the properties, call this
+    one.
+*/
 - (BOOL)validateCardReturningError:(NSError **)outError;
 @end

@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STPCard.h"
 
+@class STPCard;
 @interface STPToken : NSObject
 @property (readonly) NSString *tokenId;
 @property (readonly) NSString *object;

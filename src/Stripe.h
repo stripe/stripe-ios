@@ -7,10 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "StripeError.h"
-#import "STPCard.h"
-#import "STPToken.h"
 
+@class STPToken;
+@class STPCard;
 @interface Stripe : NSObject
 + (NSString *)defaultPublishableKey;
 + (void)setDefaultPublishableKey:(NSString *)publishableKey;
