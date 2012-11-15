@@ -48,9 +48,18 @@ static NSString * const tokenEndpoint = @"tokens";
 
 + (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError successHandler:(STPSuccessBlock)successHandler errorHandler:(STPErrorBlock)errorHandler
 {
-    // If the request failed entirely, expose the underlying request error
     if (requestError)
-        errorHandler(requestError);
+    {
+        // If this is an error that Stripe returned, let's handle it as a StripeDomain error
+        NSDictionary *jsonDictionary = NULL;
+        if (body && (jsonDictionary = [self dictionaryFromJSONData:body error:NULL]) && [jsonDictionary valueForKey:@"error"] != NULL)
+        {
+            errorHandler([self errorFromStripeResponse:jsonDictionary]);
+        }
+        // Otherwise, return the raw NSURLError error
+        else
+            errorHandler(requestError);
+    }
     else
     {
         NSError *parseError;
@@ -61,7 +70,7 @@ static NSString * const tokenEndpoint = @"tokens";
         else if ([(NSHTTPURLResponse *)response statusCode] == 200)
             successHandler([[STPToken alloc] initWithAttributeDictionary:[self camelCasedResponseFromStripeResponse:jsonDictionary]]);
         else
-            errorHandler([self errorFromStripeResponse:[jsonDictionary valueForKey:@"error"]]);
+            errorHandler([self errorFromStripeResponse:jsonDictionary]);
     }
 }
 
@@ -192,9 +201,10 @@ static NSString * const tokenEndpoint = @"tokens";
 
 + (NSError *)errorFromStripeResponse:(NSDictionary *)jsonDictionary
 {
-    NSString *type = [jsonDictionary valueForKey:@"type"];
-    NSString *devMessage = [jsonDictionary valueForKey:@"message"];
-    NSString *parameter = [jsonDictionary valueForKey:@"param"];
+    NSDictionary *errorDictionary = [jsonDictionary valueForKey:@"error"];
+    NSString *type = [errorDictionary valueForKey:@"type"];
+    NSString *devMessage = [errorDictionary valueForKey:@"message"];
+    NSString *parameter = [errorDictionary valueForKey:@"param"];
     NSString *userMessage = NULL;
     NSString *cardErrorCode = NULL;
     NSInteger code = 0;
