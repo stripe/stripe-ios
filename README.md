@@ -54,7 +54,10 @@ Almost all calls made to methods in the Stripe iOS bindings return nothing but e
 
 ### Operation queues
 
-When you are writing an iOS application, it is important to keep the main thread responsive even if your application performs a time-consuming task.  In most cases, you should be able to use the default `createToken` and `getToken` methods for creating and retrieving tokens, which will run your `completionHandler` block on `[NSOperationQueue mainQueue]`.  However, if you have a more complicated application and want to control where your `completionHandler` gets run, you can also pass in a queue as a parameter to both of these calls.   See the method signatures for `+ (void)createTokenWithCard:publishableKey:operationQueue:completionHandler` and `+ (void)getTokenWithId:publishableKey:operationQueue:completionHandler`.
+When you are writing an iOS application, it is important to keep the main thread responsive even if your application performs a time-consuming task.  In most cases, you should be able to use the default `createToken` and `getToken` methods for creating and retrieving tokens, which will run your `completionHandler` block on `[NSOperationQueue mainQueue]`.  However, if you have a more complicated application and want to control where your `completionHandler` gets run, you can also pass in a queue as a parameter to both of these calls.  See:
+
+	+ (void)createTokenWithCard:publishableKey:operationQueue:completionHandler
+	+ (void)getTokenWithId:publishableKey:operationQueue:completionHandler
 
 ### Validation
 
