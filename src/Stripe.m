@@ -123,7 +123,7 @@ static NSString * const tokenEndpoint = @"tokens";
     if (!publishableKey || publishableKey == @"")
         [NSException raise:@"InvalidPublishableKey" format:@"You must use a valid publishable key to create a token.  For more info, see https://stripe.com/docs/stripe.js"];
 
-    if ([publishableKey substringWithRange:NSMakeRange(0, 3)] == @"sk_")
+    if ([publishableKey hasPrefix:@"sk_"])
         [NSException raise:@"InvalidPublishableKey" format:@"You are using a secret key to create a token, instead of the publishable one. For more info, see https://stripe.com/docs/stripe.js"];
 }
 
