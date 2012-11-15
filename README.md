@@ -39,10 +39,10 @@ If you're implementing a complex workflow, you may want to know if you've alread
     completionHandler:^(STPToken *token, NSError *error)
     {
     	if (error)
-    	    NSLog(@"I should handle this error!");
+    	    NSLog(@"An error!");
     	else
-    	    NSLog(@"I have received my token");
-    }]
+    	    NSLog(@"A token for my troubles.");
+    }];
 
 ### Handling errors
 
