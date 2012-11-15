@@ -17,9 +17,9 @@
 + (NSDictionary *)requestPropertiesFromCard:(STPCard *)card;
 + (NSData *)formEncodedDataFromCard:(STPCard *)card;
 + (void)validateKey:(NSString *)publishableKey;
-+ (NSError *)errorFromStripeResponse:(NSDictionary *)JSONDictionary;
-+ (NSDictionary *)camelCasedResponseFromStripeResponse:(NSDictionary *)JSONDictionary;
-+ (NSDictionary *)parseJSONBody:(NSData *)data error:(NSError **)outError;
++ (NSError *)errorFromStripeResponse:(NSDictionary *)jsonDictionary;
++ (NSDictionary *)camelCasedResponseFromStripeResponse:(NSDictionary *)jsonDictionary;
++ (NSDictionary *)dictionaryFromJSONData:(NSData *)data error:(NSError **)outError;
 + (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError completionHandler:(void (^)(STPToken*, NSError*))handler;
 + (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey;
 @end
@@ -53,22 +53,22 @@ static NSString * const tokenEndpoint = @"tokens";
     else
     {
         NSError *parseError;
-        NSDictionary *JSONDictionary = [self parseJSONBody:body error:&parseError];
+        NSDictionary *jsonDictionary = [self dictionaryFromJSONData:body error:&parseError];
 
-        if (JSONDictionary == NULL)
+        if (jsonDictionary == NULL)
             handler(NULL, parseError);
         else if ([(NSHTTPURLResponse *)response statusCode] == 200)
-            handler([[STPToken alloc] initWithAttributeDictionary:[self camelCasedResponseFromStripeResponse:JSONDictionary]], NULL);
+            handler([[STPToken alloc] initWithAttributeDictionary:[self camelCasedResponseFromStripeResponse:jsonDictionary]], NULL);
         else
-            handler(NULL, [self errorFromStripeResponse:[JSONDictionary valueForKey:@"error"]]);
+            handler(NULL, [self errorFromStripeResponse:[jsonDictionary valueForKey:@"error"]]);
     }
 }
 
-+ (NSDictionary *)parseJSONBody:(NSData *)data error:(NSError **)outError
++ (NSDictionary *)dictionaryFromJSONData:(NSData *)data error:(NSError **)outError
 {
-    NSDictionary *JSONDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
 
-    if (JSONDictionary == NULL)
+    if (jsonDictionary == NULL)
     {
         NSDictionary *userInfoDict = @{ NSLocalizedDescriptionKey : STPUnexpectedError,
         STPErrorMessageKey : [NSString stringWithFormat:@"The response from Stripe failed to get parsed into valid JSON."]
@@ -79,18 +79,18 @@ static NSString * const tokenEndpoint = @"tokens";
                                           userInfo:userInfoDict];
         return NULL;
     }
-    return JSONDictionary;
+    return jsonDictionary;
 }
 
-+ (NSDictionary *)camelCasedResponseFromStripeResponse:(NSDictionary *)JSONDictionary
++ (NSDictionary *)camelCasedResponseFromStripeResponse:(NSDictionary *)jsonDictionary
 {
     NSMutableDictionary *attributeDictionary = [NSMutableDictionary dictionary];
-    for (NSString *key in JSONDictionary)
+    for (NSString *key in jsonDictionary)
     {
         if ([key isEqualToString:@"card"])
-            [attributeDictionary setObject:[self camelCasedResponseFromStripeResponse:[JSONDictionary valueForKey:key]] forKey:key];
+            [attributeDictionary setObject:[self camelCasedResponseFromStripeResponse:[jsonDictionary valueForKey:key]] forKey:key];
         else
-            [attributeDictionary setObject:[JSONDictionary valueForKey:key] forKey:[self camelCaseFromUnderscoredString:key]];
+            [attributeDictionary setObject:[jsonDictionary valueForKey:key] forKey:[self camelCaseFromUnderscoredString:key]];
     }
     return attributeDictionary;
 }
@@ -189,11 +189,11 @@ static NSString * const tokenEndpoint = @"tokens";
     return [body dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-+ (NSError *)errorFromStripeResponse:(NSDictionary *)JSONDictionary
++ (NSError *)errorFromStripeResponse:(NSDictionary *)jsonDictionary
 {
-    NSString *type = [JSONDictionary valueForKey:@"type"];
-    NSString *devMessage = [JSONDictionary valueForKey:@"message"];
-    NSString *parameter = [JSONDictionary valueForKey:@"param"];
+    NSString *type = [jsonDictionary valueForKey:@"type"];
+    NSString *devMessage = [jsonDictionary valueForKey:@"message"];
+    NSString *parameter = [jsonDictionary valueForKey:@"param"];
     NSString *userMessage = NULL;
     NSString *cardErrorCode = NULL;
     NSInteger code = 0;
@@ -232,7 +232,7 @@ static NSString * const tokenEndpoint = @"tokens";
     else if ([type isEqualToString:@"card_error"])
     {
         code = STPCardError;
-        cardErrorCode = [JSONDictionary valueForKey:@"code"];
+        cardErrorCode = [jsonDictionary valueForKey:@"code"];
         if ([cardErrorCode isEqualToString:@"incorrect_number"])
         {
             cardErrorCode = STPIncorrectNumber;
