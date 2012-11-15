@@ -20,16 +20,24 @@ Also, there are a lot of comments in the code itself.  Look through the .h files
     card.expMonth = 12;
     card.expYear = 2020;
 
-    [Stripe createTokenWithCard:card publishableKey:@"my_publishable_key"
-    completionHandler:^(STPToken *token, NSError *error)
+    STPSuccessBlock successHandler = ^(STPToken *token)
     {
-        if (error)
-        	NSLog(@"Error trying to create token %@", [error localizedDescription]);
-        else
-        	NSLog(@"Oh the sweet silence of success! Now I should send my data
-        	along with this token to my server, where I can use the token to
-        	charge the card or create a Stripe customer.");
-    }];
+        NSSLog(@"Oh the sweet silence of success! Now I
+        should send my data along with this token to my
+        server, where I can use the token to charge the
+        card or create a Stripe customer.");
+    };
+
+    STPErrorBlock errorHandler = ^(NSError *error)
+    {
+        NSLog(@"Error trying to create token %@", [error
+        localizedDescription]);
+    }
+
+    [Stripe createTokenWithCard:card
+                 publishableKey:@"my_publishable_key"
+                        success:successHandler
+                          error:errorHandler];
 
 Note that if you do not wish to send your publishableKey every time you make a call to createTokenWithCard, you can also call `[Stripe setDefaultPublishableKey:]` with your publishable key, and all Stripe API requests will use this key.
 
@@ -52,7 +60,7 @@ Expected errors, such as a card being invalid, generate `NSError` objects.  The 
 
 The `userInfo` dictionary of errors in the `StripeDomain` contains a developer-facing error message corresponding to the `message` property returned by the [Stripe API for an error](https://stripe.com/docs/api#errors), and, when applicable, a card error code corresponding to the `code` property and a parameter the error is for corresponding to the `param` property.  These are the values for the keys `STPErrorMessageKey`, `STPCardErrorCodeKey`, and `STPErrorParameterKey` in the `userInfo` dictionary, respectively.  Note that the values for `STPErrorParameterKey` will be camel cased and match up to the properties on `STPCard`.  For example, an invalid expiration month will have `expMonth`, not `exp_month`, as the value for `STPErrorParameterKey` in the `userInfo` dictionary).
 
-Almost all calls made to methods in the Stripe iOS bindings return nothing but errors in the `StripeDomain`.  The only exception to this is calls to `createTokenWithCard` and `getTokenWithId`.  Both of these methods make requests using `NSURLConnection`, so if the request fails to even be made, these calls just return the error object that is generated and returned by `NSURLConnection`.
+Almost all calls made to methods in the Stripe iOS bindings return nothing but errors in the `StripeDomain`.  The only exception to this is calls to `createTokenWithCard` and `getTokenWithId`.  Both of these methods make requests using `NSURLConnection`, so if the request fails to even be made, these calls just return the error object that is generated and returned by `NSURLConnection` (which will be in the `NSURLErrorDomain`).
 
 ### Operation queues
 

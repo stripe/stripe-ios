@@ -7,9 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "StripeError.h"
+#import "STPCard.h"
+#import "STPToken.h"
 
-@class STPToken;
-@class STPCard;
+typedef void (^STPSuccessBlock)(STPToken*);
+typedef void (^STPErrorBlock)(NSError*);
 
 // Stripe is a static class used to create and retrieve tokens.
 @interface Stripe : NSObject
@@ -21,19 +24,19 @@
 + (NSString *)defaultPublishableKey;
 + (void)setDefaultPublishableKey:(NSString *)publishableKey;
 
-+ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completionHandler:(void (^)(STPToken*, NSError*))handler;
++ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler;
 
-+ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey completionHandler:(void (^)(STPToken*, NSError*))handler;
++ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler;
 
-+ (void)createTokenWithCard:(STPCard *)card operationQueue:(NSOperationQueue *)queue completionHandler:(void (^)(STPToken*, NSError*))handler;
++ (void)createTokenWithCard:(STPCard *)card operationQueue:(NSOperationQueue *)queue success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler;
 
-+ (void)createTokenWithCard:(STPCard *)card completionHandler:(void (^)(STPToken*, NSError*))handler;
++ (void)createTokenWithCard:(STPCard *)card success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler;
 
-+ (void)getTokenWithId:(NSString *)tokenId publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completionHandler:(void (^)(STPToken*, NSError*))handler;
++ (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler;
 
-+ (void)getTokenWithId:(NSString *)tokenId publishableKey:(NSString *)publishableKey completionHandler:(void (^)(STPToken*, NSError*))handler;
++ (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler;
 
-+ (void)getTokenWithId:(NSString *)tokenId operationQueue:(NSOperationQueue *)queue completionHandler:(void (^)(STPToken*, NSError*))handler;
++ (void)requestTokenWithID:(NSString *)tokenId operationQueue:(NSOperationQueue *)queue success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler;
 
-+ (void)getTokenWithId:(NSString *)tokenId completionHandler:(void (^)(STPToken*, NSError*))handler;
++ (void)requestTokenWithID:(NSString *)tokenId success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler;
 @end

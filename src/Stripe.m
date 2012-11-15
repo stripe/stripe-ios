@@ -20,7 +20,7 @@
 + (NSError *)errorFromStripeResponse:(NSDictionary *)jsonDictionary;
 + (NSDictionary *)camelCasedResponseFromStripeResponse:(NSDictionary *)jsonDictionary;
 + (NSDictionary *)dictionaryFromJSONData:(NSData *)data error:(NSError **)outError;
-+ (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError completionHandler:(void (^)(STPToken*, NSError*))handler;
++ (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError successHandler:(STPSuccessBlock)successHandler errorHandler:(STPErrorBlock)errorHandler;
 + (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey;
 @end
 
@@ -39,28 +39,29 @@ static NSString * const tokenEndpoint = @"tokens";
 #pragma mark Private Helpers
 + (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey
 {
-    return [[[NSURL URLWithString:
+    NSURL *url = [[[NSURL URLWithString:
               [NSString stringWithFormat:@"https://%@:@%@", [self URLEncodedString:publishableKey], apiURLBase]]
              URLByAppendingPathComponent:apiVersion]
             URLByAppendingPathComponent:tokenEndpoint];
+    return url;
 }
 
-+ (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError completionHandler:(void (^)(STPToken*, NSError*))handler
++ (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError successHandler:(STPSuccessBlock)successHandler errorHandler:(STPErrorBlock)errorHandler
 {
     // If the request failed entirely, expose the underlying request error
     if (requestError)
-        handler(NULL, requestError);
+        errorHandler(requestError);
     else
     {
         NSError *parseError;
         NSDictionary *jsonDictionary = [self dictionaryFromJSONData:body error:&parseError];
 
         if (jsonDictionary == NULL)
-            handler(NULL, parseError);
+            errorHandler(parseError);
         else if ([(NSHTTPURLResponse *)response statusCode] == 200)
-            handler([[STPToken alloc] initWithAttributeDictionary:[self camelCasedResponseFromStripeResponse:jsonDictionary]], NULL);
+            successHandler([[STPToken alloc] initWithAttributeDictionary:[self camelCasedResponseFromStripeResponse:jsonDictionary]]);
         else
-            handler(NULL, [self errorFromStripeResponse:[jsonDictionary valueForKey:@"error"]]);
+            errorHandler([self errorFromStripeResponse:[jsonDictionary valueForKey:@"error"]]);
     }
 }
 
@@ -300,7 +301,7 @@ static NSString * const tokenEndpoint = @"tokens";
     defaultKey = publishableKey;
 }
 
-+ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completionHandler:(void (^)(STPToken *, NSError *))handler
++ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler
 {
     if (card == NULL)
         [NSException raise:@"RequiredParameter" format:@"'card' is required to create a token"];
@@ -318,11 +319,11 @@ static NSString * const tokenEndpoint = @"tokens";
                                        queue:queue
                            completionHandler:^(NSURLResponse *response, NSData *body, NSError *requestError)
      {
-         [self handleTokenResponse:response body:body error:requestError completionHandler:handler];
+         [self handleTokenResponse:response body:body error:requestError successHandler:successHandler errorHandler:errorHandler];
      }];
 }
 
-+ (void)getTokenWithId:(NSString *)tokenId publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completionHandler:(void (^)(STPToken*, NSError*))handler
++ (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler
 {
     if (tokenId == NULL)
         [NSException raise:@"RequiredParameter" format:@"'tokenId' is required to retrieve a token"];
@@ -338,38 +339,38 @@ static NSString * const tokenEndpoint = @"tokens";
                                        queue:queue
                            completionHandler:^(NSURLResponse *response, NSData *body, NSError *requestError)
      {
-         [self handleTokenResponse:response body:body error:requestError completionHandler:handler];
+         [self handleTokenResponse:response body:body error:requestError successHandler:successHandler errorHandler:errorHandler];
      }];
 
 }
 
-+ (void)createTokenWithCard:(STPCard *)card completionHandler:(void (^)(STPToken *, NSError *))handler
++ (void)createTokenWithCard:(STPCard *)card success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler
 {
-    [self createTokenWithCard:card publishableKey:[self defaultPublishableKey] completionHandler:handler];
+    [self createTokenWithCard:card publishableKey:[self defaultPublishableKey] success:successHandler error:errorHandler];
 }
 
-+ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey completionHandler:(void (^)(STPToken*, NSError*))handler
++ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler
 {
-    [self createTokenWithCard:card publishableKey:publishableKey operationQueue:[NSOperationQueue mainQueue] completionHandler:handler];
+    [self createTokenWithCard:card publishableKey:publishableKey operationQueue:[NSOperationQueue mainQueue] success:successHandler error:errorHandler];
 }
 
-+ (void)createTokenWithCard:(STPCard *)card operationQueue:(NSOperationQueue *)queue completionHandler:(void (^)(STPToken*, NSError*))handler
++ (void)createTokenWithCard:(STPCard *)card operationQueue:(NSOperationQueue *)queue success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler
 {
-    [self createTokenWithCard:card publishableKey:[self defaultPublishableKey] operationQueue:queue completionHandler:handler];
+    [self createTokenWithCard:card publishableKey:[self defaultPublishableKey] operationQueue:queue success:successHandler error:errorHandler];
 }
 
-+ (void)getTokenWithId:(NSString *)tokenId publishableKey:(NSString *)publishableKey completionHandler:(void (^)(STPToken*, NSError*))handler
++ (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler
 {
-    [self getTokenWithId:tokenId publishableKey:publishableKey operationQueue:[NSOperationQueue mainQueue] completionHandler:handler];
+    [self requestTokenWithID:tokenId publishableKey:publishableKey operationQueue:[NSOperationQueue mainQueue] success:successHandler error:errorHandler];
 }
 
-+ (void)getTokenWithId:(NSString *)tokenId operationQueue:(NSOperationQueue *)queue completionHandler:(void (^)(STPToken*, NSError*))handler
++ (void)requestTokenWithID:(NSString *)tokenId operationQueue:(NSOperationQueue *)queue success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler
 {
-    [self getTokenWithId:tokenId publishableKey:[self defaultPublishableKey] operationQueue:queue completionHandler:handler];
+    [self requestTokenWithID:tokenId publishableKey:[self defaultPublishableKey] operationQueue:queue success:successHandler error:errorHandler];
 }
 
-+ (void)getTokenWithId:(NSString *)tokenId completionHandler:(void (^)(STPToken*, NSError*))handler
++ (void)requestTokenWithID:(NSString *)tokenId success:(STPSuccessBlock)successHandler error:(STPErrorBlock)errorHandler
 {
-    [self getTokenWithId:tokenId publishableKey:[self defaultPublishableKey] operationQueue:[NSOperationQueue mainQueue] completionHandler:handler];
+    [self requestTokenWithID:tokenId publishableKey:[self defaultPublishableKey] operationQueue:[NSOperationQueue mainQueue] success:successHandler error:errorHandler];
 }
 @end

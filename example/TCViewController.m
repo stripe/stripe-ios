@@ -59,7 +59,10 @@
         return NULL;
 }
 
-// We use two performSelectors below, both of which are safe, so we add this here to suppress the warning for this one call.  From http://stackoverflow.com/questions/7017281/performselector-may-cause-a-leak-because-its-selector-is-unknown
+/*
+ We use two performSelectors below, both of which are safe, so we add this
+ here to suppress the warning for this one call.  From http://stackoverflow.com/questions/7017281/performselector-may-cause-a-leak-because-its-selector-is-unknown
+ */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
@@ -117,9 +120,9 @@
                 didValidate = NO;
             }
  */
-            
+
         }
-        
+
     }
 
     if (didValidate)
@@ -130,19 +133,25 @@
             [self handleStripeError:overallError];
         else
         {
-            [Stripe createTokenWithCard:card completionHandler:^(STPToken *token, NSError *error)
-             {
-                 if (error)
-                 {
-                     NSLog(@"Error code: %d", [error code]);
-                     NSLog(@"User facing error message: %@", [error localizedDescription]);
-                     NSLog(@"Error parameter: %@", [[error userInfo] valueForKey:STPErrorParameterKey]);
-                     NSLog(@"Developer facing error message: %@", [[error userInfo] valueForKey:STPErrorMessageKey]);
-                     NSLog(@"Card error code: %@", [[error userInfo] valueForKey:STPCardErrorCodeKey]);
-                 }
-                 NSLog(@"Created token with ID: %@", token.tokenId);
-             }
-             ];
+            STPSuccessBlock successHandler = ^(STPToken *token)
+            {
+                NSLog(@"Created token with ID: %@", token.tokenId);
+            };
+
+            STPErrorBlock errorHandler = ^(NSError *error)
+            {
+                NSLog(@"Error code: %d", [error code]);
+                NSLog(@"User facing error message: %@", [error localizedDescription]);
+                NSLog(@"Error parameter: %@", [[error userInfo] valueForKey:STPErrorParameterKey]);
+                NSLog(@"Developer facing error message: %@", [[error userInfo] valueForKey:STPErrorMessageKey]);
+                NSLog(@"Card error code: %@", [[error userInfo] valueForKey:STPCardErrorCodeKey]);
+
+            };
+
+            [Stripe createTokenWithCard:card
+                         publishableKey:@"zeVgxD4vTEwY3NaQ23q0qrZipTsKa95"
+                                success:successHandler
+                                  error:errorHandler];
         }
     }
 }
