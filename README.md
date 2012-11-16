@@ -4,8 +4,11 @@ The Stripe iOS bindings can be used to generate [tokens](https://stripe.com/docs
 
 ## Installation
 
-1. Clone this Github repository somewhere
-1. Add the files in `src` to your iOS or OS X project in Xcode by clicking on File->Add files to "Project"...
+1. Clone this repository
+1. In the menubar, click on 'File' then 'Add files to "Project"...'
+1. Select all the files in the 'src' directory of your cloned stripe-ios repository
+1. Make sure "Copy items into destination group's folder (if needed)" is checked"
+1. Click "Add"
 
 ## Guide
 
