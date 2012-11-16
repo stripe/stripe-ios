@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "StripeTests.h"
+#import "StripeTest.h"
 
 @implementation StripeTests
 
@@ -26,7 +26,7 @@
 
 - (void)testExample
 {
-    STFail(@"Unit tests are not implemented yet in StripeTests");
+//    STFail(@"Unit tests are not implemented yet in StripeTests");
 }
 
 @end

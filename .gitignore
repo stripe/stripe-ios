@@ -1,0 +1,11 @@
+build/*
+*.pbxuser
+*.mode1v3
+
+.DS_Store
+profile
+DerivedData
+
+xcuserdata
+
+project.xcworkspace
