@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.homepage            = "https://stripe.com"
   s.author              = { "Saikat Chakrabarti" => "saikat@stripe.com" }
   s.source              = { :git => "https://github.com/stripe/stripe-ios.git", :tag => "v1.0.0"}
-  s.source_files        = 'src/*.{h,m}'
-  s.public_header_files = 'src/*.h'
+  s.source_files        = 'Stripe/*.{h,m}'
+  s.public_header_files = 'Stripe/*.h'
   s.framework           = 'Foundation'
 end

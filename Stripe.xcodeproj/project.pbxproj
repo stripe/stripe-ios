@@ -190,8 +190,8 @@
 			isa = PBXGroup;
 			children = (
 				11FBE98A1647723B00299E6F /* example */,
-				11C74B9D164043050071C2CA /* src */,
-				11C74BB1164043050071C2CA /* test */,
+				11C74B9D164043050071C2CA /* Stripe */,
+				11C74BB1164043050071C2CA /* StripeTest */,
 				11C74B9A164043050071C2CA /* Frameworks */,
 				11C74B99164043050071C2CA /* Products */,
 			);
@@ -222,7 +222,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		11C74B9D164043050071C2CA /* src */ = {
+		11C74B9D164043050071C2CA /* Stripe */ = {
 			isa = PBXGroup;
 			children = (
 				11FBE9A01647725D00299E6F /* STPCard.h */,
@@ -235,7 +235,8 @@
 				11EE825716478A440039CDD4 /* STPToken.h */,
 				11EE825816478A440039CDD4 /* STPToken.m */,
 			);
-			path = src;
+			name = Stripe;
+			path = Stripe;
 			sourceTree = "<group>";
 		};
 		11C74B9E164043050071C2CA /* Supporting Files */ = {
@@ -246,7 +247,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		11C74BB1164043050071C2CA /* test */ = {
+		11C74BB1164043050071C2CA /* StripeTest */ = {
 			isa = PBXGroup;
 			children = (
 				11C74BB7164043050071C2CA /* StripeTest.h */,
@@ -257,7 +258,8 @@
 				112D5AEE164DAD2D0053BB76 /* STPTokenTest.h */,
 				112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */,
 			);
-			path = test;
+			name = StripeTest;
+			path = StripeTest;
 			sourceTree = "<group>";
 		};
 		11C74BB2164043050071C2CA /* Supporting Files */ = {
@@ -641,7 +643,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DSTROOT = /tmp/iOS.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "src/Stripe-Prefix.pch";
+				GCC_PREFIX_HEADER = "Stripe/Stripe-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = YES;
@@ -660,7 +662,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DSTROOT = /tmp/iOS.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "src/Stripe-Prefix.pch";
+				GCC_PREFIX_HEADER = "Stripe/Stripe-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-ObjC";
@@ -729,7 +731,7 @@
 				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "src/Stripe-Prefix.pch";
+				GCC_PREFIX_HEADER = "Stripe/Stripe-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -754,7 +756,7 @@
 				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "src/Stripe-Prefix.pch";
+				GCC_PREFIX_HEADER = "Stripe/Stripe-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -775,9 +777,9 @@
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "test/StripeTest-Prefix.pch";
+				GCC_PREFIX_HEADER = "StripeTest/StripeTest-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "test/StripeTest-Info.plist";
+				INFOPLIST_FILE = "StripeTest/StripeTest-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -797,9 +799,9 @@
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "test/StripeTest-Prefix.pch";
+				GCC_PREFIX_HEADER = "StripeTest/StripeTest-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "test/StripeTest-Info.plist";
+				INFOPLIST_FILE = "StripeTest/StripeTest-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = octest;
@@ -818,10 +820,10 @@
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "test/StripeTest-Prefix.pch";
+				GCC_PREFIX_HEADER = "StripeTest/StripeTest-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "test/StripeTest-Info.plist";
+				INFOPLIST_FILE = "StripeTest/StripeTest-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -843,10 +845,10 @@
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "test/StripeTest-Prefix.pch";
+				GCC_PREFIX_HEADER = "StripeTest/StripeTest-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "test/StripeTest-Info.plist";
+				INFOPLIST_FILE = "StripeTest/StripeTest-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
