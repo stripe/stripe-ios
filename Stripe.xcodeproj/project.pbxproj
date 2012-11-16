@@ -47,6 +47,7 @@
 		11E1F6741651590100B49816 /* STPCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11EE8255164786A40039CDD4 /* STPCardTest.m */; };
 		11E1F6751651590100B49816 /* STPTokenTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */; };
 		11E1F6761651592700B49816 /* libStripeOSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E1F62E1651570100B49816 /* libStripeOSX.a */; };
+		11F5800E1656C0CC0036F21E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 11F5800D1656C0CC0036F21E /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +117,7 @@
 		11EE8255164786A40039CDD4 /* STPCardTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCardTest.m; sourceTree = "<group>"; };
 		11EE825716478A440039CDD4 /* STPToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPToken.h; sourceTree = "<group>"; };
 		11EE825816478A440039CDD4 /* STPToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPToken.m; sourceTree = "<group>"; };
+		11F5800D1656C0CC0036F21E /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		11FBE98C1647723B00299E6F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		11FBE98E1647723B00299E6F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
 		11FBE98F1647723B00299E6F /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -284,6 +286,7 @@
 				11FBE98B1647723B00299E6F /* InfoPlist.strings */,
 				11FBE98D1647723B00299E6F /* MainStoryboard.storyboard */,
 				11FBE98F1647723B00299E6F /* main.m */,
+				11F5800D1656C0CC0036F21E /* Default-568h@2x.png */,
 				11FBE9901647723B00299E6F /* TCAppDelegate.h */,
 				11FBE9911647723B00299E6F /* TCAppDelegate.m */,
 				11FBE9921647723B00299E6F /* TCViewController.h */,
@@ -437,6 +440,7 @@
 			files = (
 				11E1F5EA1651534E00B49816 /* InfoPlist.strings in Resources */,
 				11E1F5EB1651534E00B49816 /* MainStoryboard.storyboard in Resources */,
+				11F5800E1656C0CC0036F21E /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
