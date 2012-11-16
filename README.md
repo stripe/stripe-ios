@@ -4,6 +4,16 @@ The Stripe iOS bindings can be used to generate [tokens](https://stripe.com/docs
 
 ## Installation
 
+You can install the Stripe iOS bindings in two ways.
+
+### Install with CocoaPods
+
+[CocoaPods](http://cocoapods.org/) is a library dependency management tool for Objective-C.  To use the Stripe iOS bindings with CocoaPods, simply add the following to your `Podfile` and run `pod install`:
+
+    pod `Stripe`, :git => 'https://github.com/stripe/stripe-ios.git'
+
+### Install by adding files to project
+
 1. Clone this repository
 1. In the menubar, click on 'File' then 'Add files to "Project"...'
 1. Select all the files in the 'src' directory of your cloned stripe-ios repository
