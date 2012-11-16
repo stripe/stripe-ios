@@ -189,7 +189,7 @@
 		11C74B8D164043050071C2CA = {
 			isa = PBXGroup;
 			children = (
-				11FBE98A1647723B00299E6F /* example */,
+				11FBE98A1647723B00299E6F /* Example */,
 				11C74B9D164043050071C2CA /* Stripe */,
 				11C74BB1164043050071C2CA /* StripeTest */,
 				11C74B9A164043050071C2CA /* Frameworks */,
@@ -282,7 +282,7 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		11FBE98A1647723B00299E6F /* example */ = {
+		11FBE98A1647723B00299E6F /* Example */ = {
 			isa = PBXGroup;
 			children = (
 				11FBE98B1647723B00299E6F /* InfoPlist.strings */,
@@ -296,7 +296,7 @@
 				11FBE9941647723B00299E6F /* TreatCar-Info.plist */,
 				11FBE9951647723B00299E6F /* TreatCar-Prefix.pch */,
 			);
-			path = example;
+			path = Example;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -684,9 +684,9 @@
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "example/TreatCar-Prefix.pch";
+				GCC_PREFIX_HEADER = "Example/TreatCar-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "example/TreatCar-Info.plist";
+				INFOPLIST_FILE = "Example/TreatCar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -707,9 +707,9 @@
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "example/TreatCar-Prefix.pch";
+				GCC_PREFIX_HEADER = "Example/TreatCar-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "example/TreatCar-Info.plist";
+				INFOPLIST_FILE = "Example/TreatCar-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
