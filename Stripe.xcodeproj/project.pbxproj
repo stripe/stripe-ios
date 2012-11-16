@@ -22,7 +22,7 @@
 		11E1F5E41651532B00B49816 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 11FBE98F1647723B00299E6F /* main.m */; };
 		11E1F5E51651532B00B49816 /* TCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 11FBE9911647723B00299E6F /* TCAppDelegate.m */; };
 		11E1F5E61651532B00B49816 /* TCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11FBE9931647723B00299E6F /* TCViewController.m */; };
-		11E1F5E91651534000B49816 /* libiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E1F58C165151F400B49816 /* libiOS.a */; };
+		11E1F5E91651534000B49816 /* libStripeiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E1F58C165151F400B49816 /* libStripeiOS.a */; };
 		11E1F5EA1651534E00B49816 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11FBE98B1647723B00299E6F /* InfoPlist.strings */; };
 		11E1F5EB1651534E00B49816 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 11FBE98D1647723B00299E6F /* MainStoryboard.storyboard */; };
 		11E1F62F1651570100B49816 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E1F55D16514A5500B49816 /* Cocoa.framework */; };
@@ -40,13 +40,13 @@
 		11E1F657165157F100B49816 /* StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11C74BB8164043050071C2CA /* StripeTest.m */; };
 		11E1F658165157F100B49816 /* STPCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11EE8255164786A40039CDD4 /* STPCardTest.m */; };
 		11E1F659165157F100B49816 /* STPTokenTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */; };
-		11E1F65B165158AC00B49816 /* libiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E1F58C165151F400B49816 /* libiOS.a */; };
+		11E1F65B165158AC00B49816 /* libStripeiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E1F58C165151F400B49816 /* libStripeiOS.a */; };
 		11E1F664165158D300B49816 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74BA9164043050071C2CA /* SenTestingKit.framework */; };
 		11E1F665165158D300B49816 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E1F55D16514A5500B49816 /* Cocoa.framework */; };
 		11E1F6731651590100B49816 /* StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11C74BB8164043050071C2CA /* StripeTest.m */; };
 		11E1F6741651590100B49816 /* STPCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11EE8255164786A40039CDD4 /* STPCardTest.m */; };
 		11E1F6751651590100B49816 /* STPTokenTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */; };
-		11E1F6761651592700B49816 /* libOSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E1F62E1651570100B49816 /* libOSX.a */; };
+		11E1F6761651592700B49816 /* libStripeOSX.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E1F62E1651570100B49816 /* libStripeOSX.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,9 +106,9 @@
 		11E1F56016514A5500B49816 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		11E1F56116514A5500B49816 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		11E1F56216514A5500B49816 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		11E1F58C165151F400B49816 /* libiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		11E1F58C165151F400B49816 /* libStripeiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStripeiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E1F5CA1651530800B49816 /* TreatCar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TreatCar.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		11E1F62E1651570100B49816 /* libOSX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOSX.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		11E1F62E1651570100B49816 /* libStripeOSX.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStripeOSX.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E1F646165157CA00B49816 /* iOSTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E1F65A1651585F00B49816 /* StripeTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StripeTest-Prefix.pch"; sourceTree = "<group>"; };
 		11E1F663165158D300B49816 /* OSXTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OSXTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -145,7 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11E1F5E91651534000B49816 /* libiOS.a in Frameworks */,
+				11E1F5E91651534000B49816 /* libStripeiOS.a in Frameworks */,
 				11E1F5CC1651530800B49816 /* UIKit.framework in Frameworks */,
 				11E1F5CD1651530800B49816 /* Foundation.framework in Frameworks */,
 				11E1F5CE1651530800B49816 /* CoreGraphics.framework in Frameworks */,
@@ -164,7 +164,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11E1F65B165158AC00B49816 /* libiOS.a in Frameworks */,
+				11E1F65B165158AC00B49816 /* libStripeiOS.a in Frameworks */,
 				11E1F647165157CA00B49816 /* SenTestingKit.framework in Frameworks */,
 				11E1F648165157CA00B49816 /* UIKit.framework in Frameworks */,
 				11E1F649165157CA00B49816 /* Foundation.framework in Frameworks */,
@@ -175,7 +175,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11E1F6761651592700B49816 /* libOSX.a in Frameworks */,
+				11E1F6761651592700B49816 /* libStripeOSX.a in Frameworks */,
 				11E1F664165158D300B49816 /* SenTestingKit.framework in Frameworks */,
 				11E1F665165158D300B49816 /* Cocoa.framework in Frameworks */,
 			);
@@ -198,9 +198,9 @@
 		11C74B99164043050071C2CA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				11E1F58C165151F400B49816 /* libiOS.a */,
+				11E1F58C165151F400B49816 /* libStripeiOS.a */,
 				11E1F5CA1651530800B49816 /* TreatCar.app */,
-				11E1F62E1651570100B49816 /* libOSX.a */,
+				11E1F62E1651570100B49816 /* libStripeOSX.a */,
 				11E1F646165157CA00B49816 /* iOSTest.octest */,
 				11E1F663165158D300B49816 /* OSXTest.octest */,
 			);
@@ -311,9 +311,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		11E1F58B165151F400B49816 /* iOS */ = {
+		11E1F58B165151F400B49816 /* StripeiOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 11E1F595165151F400B49816 /* Build configuration list for PBXNativeTarget "iOS" */;
+			buildConfigurationList = 11E1F595165151F400B49816 /* Build configuration list for PBXNativeTarget "StripeiOS" */;
 			buildPhases = (
 				11E1F588165151F400B49816 /* Sources */,
 				11E1F589165151F400B49816 /* Frameworks */,
@@ -323,9 +323,9 @@
 			);
 			dependencies = (
 			);
-			name = iOS;
+			name = StripeiOS;
 			productName = iOS;
-			productReference = 11E1F58C165151F400B49816 /* libiOS.a */;
+			productReference = 11E1F58C165151F400B49816 /* libStripeiOS.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		11E1F5C91651530800B49816 /* TreatCar */ = {
@@ -346,9 +346,9 @@
 			productReference = 11E1F5CA1651530800B49816 /* TreatCar.app */;
 			productType = "com.apple.product-type.application";
 		};
-		11E1F62D1651570100B49816 /* OSX */ = {
+		11E1F62D1651570100B49816 /* StripeOSX */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 11E1F6361651570100B49816 /* Build configuration list for PBXNativeTarget "OSX" */;
+			buildConfigurationList = 11E1F6361651570100B49816 /* Build configuration list for PBXNativeTarget "StripeOSX" */;
 			buildPhases = (
 				11E1F62A1651570100B49816 /* Sources */,
 				11E1F62B1651570100B49816 /* Frameworks */,
@@ -358,9 +358,9 @@
 			);
 			dependencies = (
 			);
-			name = OSX;
+			name = StripeOSX;
 			productName = OSX;
-			productReference = 11E1F62E1651570100B49816 /* libOSX.a */;
+			productReference = 11E1F62E1651570100B49816 /* libStripeOSX.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		11E1F645165157CA00B49816 /* iOSTest */ = {
@@ -421,9 +421,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				11E1F58B165151F400B49816 /* iOS */,
+				11E1F58B165151F400B49816 /* StripeiOS */,
 				11E1F5C91651530800B49816 /* TreatCar */,
-				11E1F62D1651570100B49816 /* OSX */,
+				11E1F62D1651570100B49816 /* StripeOSX */,
 				11E1F645165157CA00B49816 /* iOSTest */,
 				11E1F662165158D300B49816 /* OSXTest */,
 			);
@@ -543,17 +543,17 @@
 /* Begin PBXTargetDependency section */
 		11E1F5E81651533A00B49816 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 11E1F58B165151F400B49816 /* iOS */;
+			target = 11E1F58B165151F400B49816 /* StripeiOS */;
 			targetProxy = 11E1F5E71651533A00B49816 /* PBXContainerItemProxy */;
 		};
 		11E1F65D165158B000B49816 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 11E1F58B165151F400B49816 /* iOS */;
+			target = 11E1F58B165151F400B49816 /* StripeiOS */;
 			targetProxy = 11E1F65C165158B000B49816 /* PBXContainerItemProxy */;
 		};
 		11E1F6781651593F00B49816 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 11E1F62D1651570100B49816 /* OSX */;
+			target = 11E1F62D1651570100B49816 /* StripeOSX */;
 			targetProxy = 11E1F6771651593F00B49816 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -639,7 +639,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "src/Stripe-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -658,7 +658,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "src/Stripe-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -862,7 +862,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		11E1F595165151F400B49816 /* Build configuration list for PBXNativeTarget "iOS" */ = {
+		11E1F595165151F400B49816 /* Build configuration list for PBXNativeTarget "StripeiOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				11E1F596165151F400B49816 /* Debug */,
@@ -880,13 +880,14 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		11E1F6361651570100B49816 /* Build configuration list for PBXNativeTarget "OSX" */ = {
+		11E1F6361651570100B49816 /* Build configuration list for PBXNativeTarget "StripeOSX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				11E1F6371651570100B49816 /* Debug */,
 				11E1F6381651570100B49816 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		11E1F654165157CA00B49816 /* Build configuration list for PBXNativeTarget "iOSTest" */ = {
 			isa = XCConfigurationList;
@@ -895,6 +896,7 @@
 				11E1F656165157CA00B49816 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		11E1F670165158D300B49816 /* Build configuration list for PBXNativeTarget "OSXTest" */ = {
 			isa = XCConfigurationList;
@@ -903,6 +905,7 @@
 				11E1F672165158D300B49816 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
