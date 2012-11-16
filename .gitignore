@@ -4,6 +4,7 @@ build/*
 
 .DS_Store
 profile
+DerivedData
 
 xcuserdata
 
