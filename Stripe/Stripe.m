@@ -318,6 +318,12 @@ static NSString * const tokenEndpoint = @"tokens";
     if (card == NULL)
         [NSException raise:@"RequiredParameter" format:@"'card' is required to create a token"];
 
+    if (successHandler == NULL)
+        [NSException raise:@"RequiredParameter" format:@"'successHandler' is required to use the token that is created"];
+
+    if (errorHandler == NULL)
+        [NSException raise:@"RequiredParameter" format:@"'errorHandler' is required"];
+
     [self validateKey:publishableKey];
 
     NSURL *url = [self apiURLWithPublishableKey:publishableKey];
