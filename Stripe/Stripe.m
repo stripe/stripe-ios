@@ -84,9 +84,11 @@ static NSString * const tokenEndpoint = @"tokens";
         STPErrorMessageKey : [NSString stringWithFormat:@"The response from Stripe failed to get parsed into valid JSON."]
         };
 
-        *outError = [[NSError alloc] initWithDomain:StripeDomain
-                                             code:STPAPIError
-                                          userInfo:userInfoDict];
+        if (outError) {
+            *outError = [[NSError alloc] initWithDomain:StripeDomain
+                                                   code:STPAPIError
+                                               userInfo:userInfoDict];
+        }
         return NULL;
     }
     return jsonDictionary;
