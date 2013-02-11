@@ -84,9 +84,11 @@ static NSString * const tokenEndpoint = @"tokens";
         STPErrorMessageKey : [NSString stringWithFormat:@"The response from Stripe failed to get parsed into valid JSON."]
         };
 
-        *outError = [[NSError alloc] initWithDomain:StripeDomain
-                                             code:STPAPIError
-                                          userInfo:userInfoDict];
+        if (outError) {
+            *outError = [[NSError alloc] initWithDomain:StripeDomain
+                                                   code:STPAPIError
+                                               userInfo:userInfoDict];
+        }
         return NULL;
     }
     return jsonDictionary;
@@ -130,7 +132,7 @@ static NSString * const tokenEndpoint = @"tokens";
 
 + (void)validateKey:(NSString *)publishableKey
 {
-    if (!publishableKey || publishableKey == @"")
+    if (!publishableKey || [publishableKey isEqualToString:@""])
         [NSException raise:@"InvalidPublishableKey" format:@"You must use a valid publishable key to create a token.  For more info, see https://stripe.com/docs/stripe.js"];
 
     if ([publishableKey hasPrefix:@"sk_"])
