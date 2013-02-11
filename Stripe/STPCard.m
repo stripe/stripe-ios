@@ -21,7 +21,7 @@
 
 + (BOOL)isLuhnValidString:(NSString *)number;
 + (BOOL)isNumericOnlyString:(NSString *)aString;
-+ (void)handleValidationErrorForParameter:(NSString *)parameter error:(NSError **)outError;
++ (BOOL)handleValidationErrorForParameter:(NSString *)parameter error:(NSError **)outError;
 + (NSError *)createErrorWithMessage:(NSString *)userMessage parameter:(NSString *)parameter cardErrorCode:(NSString *)cardErrorCode devErrorMessage:(NSString *)devMessage;
 + (NSInteger)currentYear;
 + (BOOL)isExpiredMonth:(NSInteger)month andYear:(NSInteger)year;
@@ -94,7 +94,7 @@
     return [components year];
 }
 
-+ (void)handleValidationErrorForParameter:(NSString *)parameter error:(NSError **)outError
++ (BOOL)handleValidationErrorForParameter:(NSString *)parameter error:(NSError **)outError
 {
     if (outError != NULL)
     {
@@ -128,6 +128,7 @@
                                                userInfo:@{ NSLocalizedDescriptionKey : STPUnexpectedError,
                                                                   STPErrorMessageKey : @"There was an error within the Stripe client library when trying to generate the proper validation error. Contact support@stripe.com if you see this." }];
     }
+    return NO;
 }
 
 + (NSError *)createErrorWithMessage:(NSString *)userMessage parameter:(NSString *)parameter cardErrorCode:(NSString *)cardErrorCode devErrorMessage:(NSString *)devMessage
@@ -220,8 +221,7 @@
 - (BOOL)validateNumber:(id *)ioValue error:(NSError **)outError {
     if (*ioValue == NULL)
     {
-        [STPCard handleValidationErrorForParameter:@"number" error:outError];
-        return NO;
+        return [STPCard handleValidationErrorForParameter:@"number" error:outError];
     }
 
     NSError *regexError = NULL;
@@ -234,8 +234,7 @@
 
     if (rawNumber == nil || rawNumber.length < 10 || rawNumber.length > 19 || ![STPCard isLuhnValidString:rawNumber])
     {
-        [STPCard handleValidationErrorForParameter:@"number" error:outError];
-        return NO;
+        return [STPCard handleValidationErrorForParameter:@"number" error:outError];
     }
     return YES;
 }
@@ -244,8 +243,7 @@
 {
     if (*ioValue == NULL)
     {
-        [STPCard handleValidationErrorForParameter:@"number" error:outError];
-        return NO;
+        return [STPCard handleValidationErrorForParameter:@"number" error:outError];
     }
     NSString *ioValueString = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *cardType = [self type];
@@ -256,8 +254,7 @@
 
     if (![STPCard isNumericOnlyString:ioValueString] || !validLength)
     {
-        [STPCard handleValidationErrorForParameter:@"cvc" error:outError];
-        return NO;
+        return [STPCard handleValidationErrorForParameter:@"cvc" error:outError];
     }
     return YES;
 }
@@ -266,26 +263,23 @@
 {
     if (*ioValue == NULL)
     {
-        [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
-        return NO;
+        return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
     }
     NSString *ioValueString = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSInteger expMonthInt = [ioValueString integerValue];
 
     if ((![STPCard isNumericOnlyString:ioValueString] || expMonthInt > 12 || expMonthInt < 1))
     {
-        [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
-        return NO;
+        return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
     }
     else if ([self expYear] && [STPCard isExpiredMonth:expMonthInt andYear:[self expYear]])
     {
         NSInteger currentYear = [STPCard currentYear];
         // If the year is in the past, this is actually a problem with the expYear parameter, but it still means this month is not a valid month. This is pretty rare - it means someone set expYear on the card without validating it
         if (currentYear > [self expYear])
-            [STPCard handleValidationErrorForParameter:@"expYear" error:outError];
+            return [STPCard handleValidationErrorForParameter:@"expYear" error:outError];
         else
-            [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
-        return NO;
+            return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
     }
     return YES;
 }
@@ -294,21 +288,18 @@
 {
     if (*ioValue == NULL)
     {
-        [STPCard handleValidationErrorForParameter:@"expYear" error:outError];
-        return NO;
+        return [STPCard handleValidationErrorForParameter:@"expYear" error:outError];
     }
     NSString *ioValueString = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSInteger expYearInt = [ioValueString integerValue];
 
     if ((![STPCard isNumericOnlyString:ioValueString] || expYearInt < [STPCard currentYear]))
     {
-        [STPCard handleValidationErrorForParameter:@"expYear" error:outError];
-        return NO;
+        return [STPCard handleValidationErrorForParameter:@"expYear" error:outError];
     }
     else if ([self expMonth] && [STPCard isExpiredMonth:[self expMonth] andYear:expYearInt])
     {
-        [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
-        return NO;
+        return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
     }
     return YES;
 
