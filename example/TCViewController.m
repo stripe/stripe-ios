@@ -8,11 +8,9 @@
 
 #import "TCViewController.h"
 #import "Stripe.h"
+#define STRIPE_PUBLIC_KEY @"pk_test_czwzkTp2tactuLOEOqbMTRzG"
 
 @interface TCViewController ()
-@property (weak, nonatomic) IBOutlet UITextField *treatCarTextField;
-@property (weak, nonatomic) IBOutlet UILabel *priceLabel;
-@property (copy) NSNumber *price;
 - (IBAction)orderButton:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *numberTextField;
 @property (weak, nonatomic) IBOutlet UITextField *expMonthTextField;
@@ -26,22 +24,8 @@
 @end
 
 @implementation TCViewController
-@synthesize treatCarTextField;
-@synthesize priceLabel;
 
 #pragma mark - View lifecycle
-
-- (void)textFieldShouldReturn:(UITextField *)textField
-{
-    if (textField == self.treatCarTextField)
-    {
-        NSInteger amount = self.treatCarTextField.text.integerValue;
-        self.price = [NSNumber numberWithInt:amount * 15];
-        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-        self.priceLabel.text = [NSString stringWithFormat:@"$%@.00", [formatter stringFromNumber:self.price]];
-    }
-    [textField resignFirstResponder];
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -136,6 +120,7 @@
             STPSuccessBlock successHandler = ^(STPToken *token)
             {
                 NSLog(@"Created token with ID: %@", token.tokenId);
+                // Send token to server...
             };
 
             STPErrorBlock errorHandler = ^(NSError *error)
@@ -149,7 +134,7 @@
             };
 
             [Stripe createTokenWithCard:card
-                         publishableKey:@"zeVgxD4vTEwY3NaQ23q0qrZipTsKa95"
+                         publishableKey:STRIPE_PUBLIC_KEY
                                 success:successHandler
                                   error:errorHandler];
         }
