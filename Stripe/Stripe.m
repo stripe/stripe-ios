@@ -346,6 +346,12 @@ static NSString * const tokenEndpoint = @"tokens";
     if (tokenId == NULL)
         [NSException raise:@"RequiredParameter" format:@"'tokenId' is required to retrieve a token"];
 
+    if (successHandler == NULL)
+        [NSException raise:@"RequiredParameter" format:@"'successHandler' is required to use the token that is requested"];
+
+    if (errorHandler == NULL)
+        [NSException raise:@"RequiredParameter" format:@"'errorHandler' is required"];
+
     [self validateKey:publishableKey];
 
     NSURL *url = [[self apiURLWithPublishableKey:publishableKey] URLByAppendingPathComponent:tokenId];
