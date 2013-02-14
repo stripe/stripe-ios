@@ -27,13 +27,18 @@
     return self;
 }
 
-- (void)postToURL:(NSURL*)url completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))handler
+- (void)postToURL:(NSURL*)url withParams:(NSMutableDictionary*)params completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))handler
 {
-    NSString* params = [NSString stringWithFormat:@"stripeToken=%@", self.tokenId];
+    
+    NSMutableString *body = [NSMutableString stringWithFormat:@"stripeToken=%@", self.tokenId];
+
+    [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [body appendFormat:@"&%@=%@", key, obj];
+    }];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
-    request.HTTPBody   = [params dataUsingEncoding:NSUTF8StringEncoding];
+    request.HTTPBody   = [body dataUsingEncoding:NSUTF8StringEncoding];
     
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]

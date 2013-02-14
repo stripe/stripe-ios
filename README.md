@@ -10,7 +10,7 @@ You can install the Stripe iOS bindings in two ways.
 
 [CocoaPods](http://cocoapods.org/) is a library dependency management tool for Objective-C.  To use the Stripe iOS bindings with CocoaPods, simply add the following to your `Podfile` and run `pod install`:
 
-    pod `Stripe`, :git => 'https://github.com/stripe/stripe-ios.git'
+    pod 'Stripe', :git => 'https://github.com/stripe/stripe-ios.git'
 
 ### Install by adding files to project
 
