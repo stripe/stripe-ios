@@ -10,7 +10,9 @@
 #import "STPCard.h"
 
 @implementation STPToken
+
 @synthesize tokenId, object, livemode, card, created, used;
+
 - (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary
 {
     if (self = [super init])
@@ -24,4 +26,18 @@
     }
     return self;
 }
+
+- (void)postToURL:(NSURL*)url completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))handler
+{
+    NSString* params = [NSString stringWithFormat:@"stripeToken=%@", self.tokenId];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    request.HTTPBody   = [params dataUsingEncoding:NSUTF8StringEncoding];
+    
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:handler];
+}
+
 @end

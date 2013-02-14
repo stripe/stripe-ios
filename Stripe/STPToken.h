@@ -21,9 +21,12 @@
 @property (readonly) NSDate *created;
 @property (readonly) BOOL used;
 
+- (void)postToURL:(NSURL*)url completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))handler;
+
 /*
  This method should not be invoked in your code.  This is used by Stripe to
  create tokens using a Stripe API response
  */
 - (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
+
 @end
