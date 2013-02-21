@@ -21,7 +21,7 @@
 @property (readonly) NSDate *created;
 @property (readonly) BOOL used;
 
-- (void)postToURL:(NSURL*)url withParams:(NSDictionary*)params completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))handler;
+- (void)postToURL:(NSURL*)url withParams:(NSDictionary*)params completion:(void (^)(NSURLResponse*, NSData*, NSError*))handler;
 
 /*
  This method should not be invoked in your code.  This is used by Stripe to

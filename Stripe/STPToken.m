@@ -27,7 +27,7 @@
     return self;
 }
 
-- (void)postToURL:(NSURL*)url withParams:(NSMutableDictionary*)params completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))handler
+- (void)postToURL:(NSURL*)url withParams:(NSMutableDictionary*)params completion:(void (^)(NSURLResponse*, NSData*, NSError*))handler
 {
     
     NSMutableString *body = [NSMutableString stringWithFormat:@"stripeToken=%@", self.tokenId];

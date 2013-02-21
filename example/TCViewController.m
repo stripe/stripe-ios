@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *cardErrorLabel;
 
 - (SEL)textFieldSelectorForCardProperty:(NSString *)property;
+- (void)handleValidationError:(NSError *)error;
 - (void)handleStripeError:(NSError *)error;
 - (void)resetErrors;
 @end
@@ -26,11 +27,6 @@
 @implementation TCViewController
 
 #pragma mark - View lifecycle
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
 
 - (SEL)textFieldSelectorForCardProperty:(NSString *)property
 {
@@ -43,14 +39,10 @@
         return NULL;
 }
 
-/*
- We use two performSelectors below, both of which are safe, so we add this
- here to suppress the warning for this one call.  From http://stackoverflow.com/questions/7017281/performselector-may-cause-a-leak-because-its-selector-is-unknown
- */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
-- (void)handleStripeError:(NSError *)error
+- (void)handleValidationError:(NSError *)error
 {
     if ([error domain] == StripeDomain)
     {
@@ -80,65 +72,43 @@
     [self.cvcTextField setBackgroundColor:[UIColor whiteColor]];
 }
 
+- (void)handleStripeError:(NSError *)error
+{
+    NSLog(@"Error code: %d", [error code]);
+    NSLog(@"User facing error message: %@", [error localizedDescription]);
+    NSLog(@"Error parameter: %@", [[error userInfo] valueForKey:STPErrorParameterKey]);
+    NSLog(@"Developer facing error message: %@", [[error userInfo] valueForKey:STPErrorMessageKey]);
+    NSLog(@"Card error code: %@", [[error userInfo] valueForKey:STPCardErrorCodeKey]);
+}
+
 - (IBAction)orderButton:(id)sender
 {
     [self resetErrors];
+
     STPCard *card = [[STPCard alloc] init];
-    NSArray *propertiesToValidate = [NSArray arrayWithObjects:@"number", @"expMonth", @"expYear", @"cvc", nil];
+    card.number = self.numberTextField.text;
+    card.expMonth = [self.expMonthTextField.text integerValue];
+    card.expYear = [self.expYearTextField.text integerValue];
+    card.cvc = self.cvcTextField.text;
+    
+    NSError *overallError = NULL;
+    
+    [card validateCardReturningError:&overallError];
+    if (overallError)
+        return [self handleValidationError:overallError];
 
-    BOOL didValidate = YES;
-    for (NSString *property in propertiesToValidate)
-    {
-        SEL textFieldSelector = [self textFieldSelectorForCardProperty:property];
-        if (textFieldSelector)
-        {
-            NSString *textValue = [[self performSelector:textFieldSelector] performSelector:@selector(text)];
-            [card setValue:textValue forKey:property];
-/*
-            // If you want to do property-by-property validation, uncomment this block.  The call to "validateCardReturningError" below, however, is enough to catch validation errors on the card itself
-            NSError *validationError = NULL;
-
-            if (![card validateValue:&textValue forKey:property error:&validationError])
-            {
-                [self handleStripeError:(validationError)];
-                didValidate = NO;
-            }
- */
-
-        }
-
-    }
-
-    if (didValidate)
-    {
-        NSError *overallError = NULL;
-        [card validateCardReturningError:&overallError];
-        if (overallError)
-            [self handleStripeError:overallError];
-        else
-        {
-            STPSuccessBlock successHandler = ^(STPToken *token)
-            {
-                NSLog(@"Created token with ID: %@", token.tokenId);
-                // Send token to server...
-            };
-
-            STPErrorBlock errorHandler = ^(NSError *error)
-            {
-                NSLog(@"Error code: %d", [error code]);
-                NSLog(@"User facing error message: %@", [error localizedDescription]);
-                NSLog(@"Error parameter: %@", [[error userInfo] valueForKey:STPErrorParameterKey]);
-                NSLog(@"Developer facing error message: %@", [[error userInfo] valueForKey:STPErrorMessageKey]);
-                NSLog(@"Card error code: %@", [[error userInfo] valueForKey:STPCardErrorCodeKey]);
-
-            };
-
-            [Stripe createTokenWithCard:card
-                         publishableKey:STRIPE_PUBLIC_KEY
-                                success:successHandler
-                                  error:errorHandler];
-        }
-    }
+    [Stripe createTokenWithCard:card
+                 publishableKey:STRIPE_PUBLIC_KEY
+                     completion:^(STPToken *token, NSError *error) {
+                    if (error) {
+                        [self handleStripeError:error];
+                    } else {
+        
+                        NSLog(@"Created token with ID: %@", token.tokenId);
+                        // Send token to server...
+                    }
+                }];
 }
+
 @end
 #pragma clang diagnostic pop
