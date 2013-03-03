@@ -316,6 +316,7 @@
     // Make sure expMonth, expYear, and number are set.  Validate CVC if it is provided
     return [self validateNumber:&numberRef error:outError] &&
            [self validateExpYear:&expYearRef error:outError] &&
-           [self validateExpMonth:&expMonthRef error:outError] && (cvcRef == NULL || [self validateCvc:&cvcRef error:outError]);
+           [self validateExpMonth:&expMonthRef error:outError] &&
+            (cvcRef == NULL || [self validateCvc:&cvcRef error:outError]);
 }
 @end

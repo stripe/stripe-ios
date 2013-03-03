@@ -14,23 +14,23 @@
  form.  Then you create tokens from these.
  */
 @interface STPCard : NSObject
-@property (copy) NSString *number;
-@property (assign) NSUInteger expMonth;
-@property (assign) NSUInteger expYear;
-@property (copy) NSString *cvc;
-@property (copy) NSString *name;
-@property (copy) NSString *addressLine1;
-@property (copy) NSString *addressLine2;
-@property (copy) NSString *addressCity;
-@property (copy) NSString *addressState;
-@property (copy) NSString *addressZip;
-@property (copy) NSString *addressCountry;
+@property (nonatomic, copy) NSString *number;
+@property (nonatomic, assign) NSUInteger expMonth;
+@property (nonatomic, assign) NSUInteger expYear;
+@property (nonatomic, copy) NSString *cvc;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *addressLine1;
+@property (nonatomic, copy) NSString *addressLine2;
+@property (nonatomic, copy) NSString *addressCity;
+@property (nonatomic, copy) NSString *addressState;
+@property (nonatomic, copy) NSString *addressZip;
+@property (nonatomic, copy) NSString *addressCountry;
 
-@property (readonly) NSString *object;
-@property (readonly) NSString *last4;
-@property (readonly) NSString *type;
-@property (readonly) NSString *fingerprint;
-@property (readonly) NSString *country;
+@property (nonatomic, readonly) NSString *object;
+@property (nonatomic, readonly) NSString *last4;
+@property (nonatomic, readonly) NSString *type;
+@property (nonatomic, readonly) NSString *fingerprint;
+@property (nonatomic, readonly) NSString *country;
 
 
 /*

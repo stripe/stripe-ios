@@ -14,12 +14,12 @@
  STPTokens get created by calls to + [Stripe createTokenWithCard:] and + [Stripe getTokenWithId:].  You should not construct these yourself.
  */
 @interface STPToken : NSObject
-@property (readonly) NSString *tokenId;
-@property (readonly) NSString *object;
-@property (readonly) BOOL livemode;
-@property (readonly) STPCard *card;
-@property (readonly) NSDate *created;
-@property (readonly) BOOL used;
+@property (nonatomic, readonly) NSString *tokenId;
+@property (nonatomic, readonly) NSString *object;
+@property (nonatomic, readonly) BOOL livemode;
+@property (nonatomic, readonly) STPCard *card;
+@property (nonatomic, readonly) NSDate *created;
+@property (nonatomic, readonly) BOOL used;
 
 - (void)postToURL:(NSURL*)url withParams:(NSDictionary*)params completion:(void (^)(NSURLResponse*, NSData*, NSError*))handler;
 
