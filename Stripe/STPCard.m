@@ -45,7 +45,7 @@
     {
         NSString *digit = [number substringWithRange:NSMakeRange(index, 1)];
         NSNumber *digitNumber = [numberFormatter numberFromString:digit];
-        if (digitNumber == NULL)
+        if (digitNumber == nil)
             return NO;
         NSInteger digitInteger = [digitNumber intValue];
         isOdd = !isOdd;
@@ -96,7 +96,7 @@
 
 + (BOOL)handleValidationErrorForParameter:(NSString *)parameter error:(NSError **)outError
 {
-    if (outError != NULL)
+    if (outError != nil)
     {
         if ([parameter isEqualToString:@"number"])
             *outError = [self createErrorWithMessage:STPCardErrorInvalidNumberUserMessage
@@ -183,7 +183,7 @@
     else if ([self number])
         return [number substringFromIndex:([number length] - 4)];
     else
-        return NULL;
+        return nil;
 }
 
 - (NSString *)type
@@ -215,16 +215,16 @@
             return @"Unknown";
     }
     else
-        return NULL;
+        return nil;
 }
 
 - (BOOL)validateNumber:(id *)ioValue error:(NSError **)outError {
-    if (*ioValue == NULL)
+    if (*ioValue == nil)
     {
         return [STPCard handleValidationErrorForParameter:@"number" error:outError];
     }
 
-    NSError *regexError = NULL;
+    NSError *regexError = nil;
     NSString *ioValueString = (NSString *)*ioValue;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[\\s+|-]"
                                     options:NSRegularExpressionCaseInsensitive
@@ -241,13 +241,13 @@
 
 - (BOOL)validateCvc:(id *)ioValue error:(NSError **)outError
 {
-    if (*ioValue == NULL)
+    if (*ioValue == nil)
     {
         return [STPCard handleValidationErrorForParameter:@"number" error:outError];
     }
     NSString *ioValueString = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *cardType = [self type];
-    BOOL validLength = ((cardType == NULL && [ioValueString length] >= 3 && [ioValueString length] <= 4) ||
+    BOOL validLength = ((cardType == nil && [ioValueString length] >= 3 && [ioValueString length] <= 4) ||
                          ([cardType isEqualToString:@"American Express"] && [ioValueString length] == 4) ||
                          (![cardType isEqualToString:@"American Express"] && [ioValueString length] == 3));
 
@@ -261,7 +261,7 @@
 
 - (BOOL)validateExpMonth:(id *)ioValue error:(NSError **)outError
 {
-    if (*ioValue == NULL)
+    if (*ioValue == nil)
     {
         return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
     }
@@ -286,10 +286,11 @@
 
 - (BOOL)validateExpYear:(id *)ioValue error:(NSError **)outError
 {
-    if (*ioValue == NULL)
+    if (*ioValue == nil)
     {
         return [STPCard handleValidationErrorForParameter:@"expYear" error:outError];
     }
+    
     NSString *ioValueString = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSInteger expYearInt = [ioValueString integerValue];
 
@@ -301,8 +302,8 @@
     {
         return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
     }
+    
     return YES;
-
 }
 
 - (BOOL)validateCardReturningError:(NSError **)outError;
@@ -317,6 +318,6 @@
     return [self validateNumber:&numberRef error:outError] &&
            [self validateExpYear:&expYearRef error:outError] &&
            [self validateExpMonth:&expMonthRef error:outError] &&
-            (cvcRef == NULL || [self validateCvc:&cvcRef error:outError]);
+            (cvcRef == nil || [self validateCvc:&cvcRef error:outError]);
 }
 @end

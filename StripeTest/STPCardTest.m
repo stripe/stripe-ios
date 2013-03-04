@@ -83,7 +83,7 @@
 
 - (void)testLast4ReturnsNullWhenNoCardNumberSet
 {
-    STAssertEqualObjects(NULL, card.last4, @"last4 returns NULL when nothing is set");
+    STAssertEqualObjects(nil, card.last4, @"last4 returns nil when nothing is set");
 }
 
 #pragma mark -type tests
@@ -126,7 +126,7 @@
 #pragma mark -validateNumber:error: tests
 - (void)testEmptyCardNumberDoesNotValidate
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *number = @"";
     BOOL didValidate = [card validateNumber:&number error:&error];
     STAssertFalse(didValidate, @"Empty card should not validate");
@@ -134,68 +134,68 @@
 
 - (void)testThatInvalidCardNumberReturnsTheCorrectError
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *number = @"";
     [card validateNumber:&number error:&error];
     STAssertEqualObjects(@"Your card's number is invalid", [error localizedDescription], @"Invalid card number gives an error with a message saying the number is invalid");
     NSDictionary *userInfo = [error userInfo];
     STAssertEqualObjects([userInfo valueForKey:STPCardErrorCodeKey], STPInvalidNumber, @"Invalid card number returns the correct card error code");
     STAssertEqualObjects([userInfo valueForKey:STPErrorParameterKey], @"number", @"Invaild card number returns the correct error parameter");
-    STAssertTrue([userInfo objectForKey:STPErrorMessageKey] != NULL, @"Invalid card number returns a developer-facing error message");
+    STAssertTrue([userInfo objectForKey:STPErrorMessageKey] != nil, @"Invalid card number returns a developer-facing error message");
 }
 
 - (void)testCardNumberWithManySpaces
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *number = @"      ";
     STAssertFalse([card validateNumber:&number error:&error], @"A card with a bunch of spaces should not validate");
 }
 
 - (void)testValidCardNumber
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *number = @"4242424242424242";
     STAssertTrue([card validateNumber:&number error:&error], @"A valid card should validate");
 }
 
 - (void)testValidCardNumberWithDashes
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *number = @"4242-4242-4242-4242";
     STAssertTrue([card validateNumber:&number error:&error], @"A valid card with dashes should validate");
 }
 
 - (void)testValidCardNumberWithSpaces
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *number = @"4242 4242 4242 4242";
     STAssertTrue([card validateNumber:&number error:&error], @"A valid card with spaces should validate");
 }
 
 - (void)testNonLuhnValidCardNumber
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *number = @"4242424242424241";
     STAssertFalse([card validateNumber:&number error:&error], @"A non-Luhn valid card should not validate");
 }
 
 - (void)testValidCardNumberWithAlphabetCharacters
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *number = @"424242424242a4242";
     STAssertFalse([card validateNumber:&number error:&error], @"A card with non-numeric characters that aren't spaces or dashes should not validate");
 }
 
 - (void)testCardNumberWithMoreThanNineteenDigits
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *number = @"424242424242424242424242";
     STAssertFalse([card validateNumber:&number error:&error], @"A card with more than 19 digits should not validate");
 }
 
 - (void)testCardNumberWithLessThanTenDigits
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *number = @"42424242";
     STAssertFalse([card validateNumber:&number error:&error], @"A card with more than 19 digits should not validate");
 }
@@ -204,54 +204,54 @@
 #pragma mark -validateCvc:error: tests
 - (void)testInvalidCVCReturnsTheCorrectError
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *cvc = @"";
     STAssertFalse([card validateCvc:&cvc error:&error], @"Empty CVC should not validate");
     STAssertEqualObjects(@"Your card's security code is invalid", [error localizedDescription], @"Invalid card CVC gives the correct user-facing error message");
     NSDictionary *userInfo = [error userInfo];
     STAssertEqualObjects([userInfo valueForKey:STPCardErrorCodeKey], STPInvalidCVC, @"Invalid card number returns the correct card error code");
     STAssertEqualObjects([userInfo valueForKey:STPErrorParameterKey], @"cvc", @"Invaild CVC returns the correct error parameter");
-    STAssertTrue([userInfo objectForKey:STPErrorMessageKey] != NULL, @"Invalid CVC returns a developer-facing error message");
+    STAssertTrue([userInfo objectForKey:STPErrorMessageKey] != nil, @"Invalid CVC returns a developer-facing error message");
 }
 
 - (void)testValidCVC
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *cvc = @"123";
     STAssertTrue([card validateCvc:&cvc error:&error], @"Valid CVC should validate");
 }
 
 - (void)testNullCVC
 {
-    NSError *error = NULL;
-    NSString *cvc = NULL;
+    NSError *error = nil;
+    NSString *cvc = nil;
     STAssertFalse([card validateCvc:&cvc error:&error], @"Null CVC should not validate");
 }
 
 - (void)testNonNumericCVC
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *cvc = @"1a3";
     STAssertFalse([card validateCvc:&cvc error:&error], @"CVC with non-numeric characters should not validate");
 }
 
 - (void)testTooShortCVC
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *cvc = @"13";
     STAssertFalse([card validateCvc:&cvc error:&error], @"Too short CVC should not validate");
 }
 
 - (void)testTooLongCVC
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *cvc = @"12345";
     STAssertFalse([card validateCvc:&cvc error:&error], @"Too long CVC should not validate");
 }
 
 - (void)testThreeDigitCVCDoesNotValidateForAmexCard
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *cvc = @"123";
     card.number = @"3412123412341234";
     STAssertFalse([card validateCvc:&cvc error:&error], @"Three digit CVC is too short for Amex card");
@@ -259,7 +259,7 @@
 
 - (void)testFourDigitCVCValidatesForAmexCard
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *cvc = @"1234";
     card.number = @"3412123412341234";
     STAssertTrue([card validateCvc:&cvc error:&error], @"Four digit CVC is valid for Amex card");
@@ -267,7 +267,7 @@
 
 - (void)testFourDigitCVCDoesNotValidateForVisaCard
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *cvc = @"1234";
     card.number = @"4112123412341234";
     STAssertFalse([card validateCvc:&cvc error:&error], @"Four digit CVC is too long for non-Amex card");
@@ -275,7 +275,7 @@
 
 - (void)testThreeDigitCVCValidatesForVisaCard
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *cvc = @"123";
     card.number = @"4112123412341234";
     STAssertTrue([card validateCvc:&cvc error:&error], @"Three digit CVC is valid for non-Amex card");
@@ -284,46 +284,46 @@
 #pragma mark -validateExpMonth:error: tests
 - (void)testInvalidExpMonthReturnsTheCorrectError
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *expMonth = @"";
     STAssertFalse([card validateExpMonth:&expMonth error:&error], @"expMonth must not be empty");
     STAssertEqualObjects(@"Your card's expiration month is invalid", [error localizedDescription], @"Invalid card expiration month gives the correct user facing error message");
     NSDictionary *userInfo = [error userInfo];    STAssertEqualObjects([userInfo valueForKey:STPCardErrorCodeKey], STPInvalidExpMonth, @"Invalid card expiration month returns the correct card error code");
     STAssertEqualObjects([userInfo valueForKey:STPErrorParameterKey], @"expMonth", @"Invaild expiration month returns the correct error parameter");
-    STAssertTrue([userInfo objectForKey:STPErrorMessageKey] != NULL, @"Invalid expiration month returns a developer-facing error message");
+    STAssertTrue([userInfo objectForKey:STPErrorMessageKey] != nil, @"Invalid expiration month returns a developer-facing error message");
 }
 
 - (void)testNullExpMonth
 {
-    NSError *error = NULL;
-    NSString *expMonth = NULL;
+    NSError *error = nil;
+    NSString *expMonth = nil;
     STAssertFalse([card validateExpMonth:&expMonth error:&error], @"Null expMonth should not validate.");
 }
 
 - (void)testExpMonthGreaterThan12
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *expMonth = @"14";
     STAssertFalse([card validateExpMonth:&expMonth error:&error], @"expMonth must not be less than or equal to 12");
 }
 
 - (void)testExpMonthWithNonNumericCharacters
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *expMonth = @"11a";
     STAssertFalse([card validateExpMonth:&expMonth error:&error], @"expMonth must not have any non-numeric characters");
 }
 
 - (void)testValidExpMonth
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *expMonth = @"05";
     STAssertTrue([card validateExpMonth:&expMonth error:&error], @"Numeric expMonth below 13 should validate");
 }
 
 - (void)testInvalidExpMonthForYearInPast
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *expMonth = @"12";
     card.expYear = 1995;
     STAssertFalse([card validateExpMonth:&expMonth error:&error], @"The year, when setting an expMonth, must not be invalid");
@@ -333,7 +333,7 @@
 
 - (void)testInvalidExpMonthForYearSameAsCurrentYear
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     card.expYear = [self getCurrentYear];
     NSString *expMonth = @"1";
     STAssertFalse([card validateExpMonth:&expMonth error:&error], @"When the year is already set, if it is the same as the current year and the month is before the current month, the month is invalid");
@@ -341,7 +341,7 @@
 
 - (void)testValidExpMonthForYearInFuture
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *expMonth = @"1";
     card.expYear = [self getCurrentYear] + 1;
     STAssertTrue([card validateExpMonth:&expMonth error:&error], @"When the year is already set, if it is in the future, any numeric expMonth is valid");
@@ -349,7 +349,7 @@
 
 - (void)testValidExpMonthForYearSameAsCurrentYear
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     card.expYear = [self getCurrentYear];
     NSString *expMonth = @"12";
     STAssertTrue([card validateExpMonth:&expMonth error:&error], @"When the year is already set, if it is the same as the current year and the month is the same as the current month, the month is invalid");
@@ -358,7 +358,7 @@
 #pragma mark -validateExpYear:error: tests
 - (void)testInvalidExpYearReturnsCorrectError
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *expYear = @"";
     STAssertFalse([card validateExpYear:&expYear error:&error], @"expYear must not be empty");
     STAssertEqualObjects(@"Your card's expiration year is invalid", [error localizedDescription], @"Invalid card expiration year gives the correct user facing error message");
@@ -366,34 +366,34 @@
     NSDictionary *userInfo = [error userInfo];
     STAssertEqualObjects([userInfo valueForKey:STPCardErrorCodeKey], STPInvalidExpYear, @"Invalid card expiration month returns the correct card error code");
     STAssertEqualObjects([userInfo valueForKey:STPErrorParameterKey], @"expYear", @"Invaild expiration year returns the correct error parameter");
-    STAssertTrue([userInfo objectForKey:STPErrorMessageKey] != NULL, @"Invalid expiration year returns a developer-facing error message");
+    STAssertTrue([userInfo objectForKey:STPErrorMessageKey] != nil, @"Invalid expiration year returns a developer-facing error message");
 }
 
 - (void)testNullExpYear
 {
-    NSError *error = NULL;
-    NSString *expYear = NULL;
+    NSError *error = nil;
+    NSString *expYear = nil;
     STAssertFalse([card validateExpYear:&expYear error:&error], @"expYear must not be null");
 }
 
 
 - (void)testExpYearBeforeCurrentYear
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *expYear = @"1995";
     STAssertFalse([card validateExpYear:&expYear error:&error], @"expYear must not be in the past");
 }
 
 - (void)testValidExpYear
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *expYear = @"2000";
     STAssertTrue([card validateExpYear:&expYear error:&error], @"expYear in the future is valid");
 }
 
 - (void)testInvalidExpYearForYearSameAsCurrentYear
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     NSString *expYear = [NSString stringWithFormat:@"%d", [self getCurrentYear]];
     card.expMonth = 1;
     STAssertFalse([card validateExpYear:&expYear error:&error], @"When the month is already set, if the combination of month and year is in the past, don't validate");
@@ -404,7 +404,7 @@
 
 - (void)testValidExpYearWhenMonthIsSet
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     card.expMonth = 4;
     NSString *expYear = @"2000";
     STAssertTrue([card validateExpYear:&expYear error:&error], @"expYear in the future is valid even with a month set");
@@ -413,7 +413,7 @@
 #pragma mark -validateCardReturningError: tests
 - (void)testValidatingCardWithInvalidNumber
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     card.number = @"4242424242424241";
     card.expMonth = 12;
     card.expYear = 2012;
@@ -424,7 +424,7 @@
 
 - (void)testExpiredCardDoesNotValidate
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     card.number = @"4242424242424242";
     card.expMonth = 1;
     card.expYear = 1997;
@@ -435,7 +435,7 @@
 
 - (void)testCardWithBadCVCDoesNotValidate
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     card.number = @"4242424242424242";
     card.cvc = @"1234";
     card.expMonth = 12;
@@ -447,7 +447,7 @@
 
 - (void)testCardWithMissingExpYearDoesNotValidate
 {
-    NSError *error = NULL;
+    NSError *error = nil;
     card.number = @"4242424242424242";
     card.cvc = @"123";
     card.expMonth = 12;

@@ -36,7 +36,7 @@
     if ([self respondsToSelector:textFieldSelector])
         return textFieldSelector;
     else
-        return NULL;
+        return nil;
 }
 
 #pragma clang diagnostic push
@@ -91,7 +91,7 @@
     card.expYear = [self.expYearTextField.text integerValue];
     card.cvc = self.cvcTextField.text;
     
-    NSError *overallError = NULL;
+    NSError *overallError = nil;
     
     [card validateCardReturningError:&overallError];
     if (overallError)

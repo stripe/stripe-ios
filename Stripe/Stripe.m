@@ -51,8 +51,8 @@ static NSString * const tokenEndpoint = @"tokens";
     if (requestError)
     {
         // If this is an error that Stripe returned, let's handle it as a StripeDomain error
-        NSDictionary *jsonDictionary = NULL;
-        if (body && (jsonDictionary = [self dictionaryFromJSONData:body error:NULL]) && [jsonDictionary valueForKey:@"error"] != NULL)
+        NSDictionary *jsonDictionary = nil;
+        if (body && (jsonDictionary = [self dictionaryFromJSONData:body error:nil]) && [jsonDictionary valueForKey:@"error"] != nil)
         {
             handler(nil, [self errorFromStripeResponse:jsonDictionary]);
         }
@@ -65,7 +65,7 @@ static NSString * const tokenEndpoint = @"tokens";
         NSError *parseError;
         NSDictionary *jsonDictionary = [self dictionaryFromJSONData:body error:&parseError];
 
-        if (jsonDictionary == NULL)
+        if (jsonDictionary == nil)
             handler(nil, parseError);
         else if ([(NSHTTPURLResponse *)response statusCode] == 200)
             handler([[STPToken alloc] initWithAttributeDictionary:[self camelCasedResponseFromStripeResponse:jsonDictionary]], nil);
@@ -76,9 +76,9 @@ static NSString * const tokenEndpoint = @"tokens";
 
 + (NSDictionary *)dictionaryFromJSONData:(NSData *)data error:(NSError **)outError
 {
-    NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
 
-    if (jsonDictionary == NULL)
+    if (jsonDictionary == nil)
     {
         NSDictionary *userInfoDict = @{ NSLocalizedDescriptionKey : STPUnexpectedError,
         STPErrorMessageKey : [NSString stringWithFormat:@"The response from Stripe failed to get parsed into valid JSON."]
@@ -89,7 +89,7 @@ static NSString * const tokenEndpoint = @"tokens";
                                                    code:STPAPIError
                                                userInfo:userInfoDict];
         }
-        return NULL;
+        return nil;
     }
     return jsonDictionary;
 }
@@ -109,7 +109,7 @@ static NSString * const tokenEndpoint = @"tokens";
 
 + (NSString *)camelCaseFromUnderscoredString:(NSString *)string
 {
-    if (string == NULL || [string isEqualToString:@""])
+    if (string == nil || [string isEqualToString:@""])
         return @"";
 
     NSMutableString *output = [NSMutableString string];
@@ -207,12 +207,12 @@ static NSString * const tokenEndpoint = @"tokens";
     NSString *type = [errorDictionary valueForKey:@"type"];
     NSString *devMessage = [errorDictionary valueForKey:@"message"];
     NSString *parameter = [errorDictionary valueForKey:@"param"];
-    NSString *userMessage = NULL;
-    NSString *cardErrorCode = NULL;
+    NSString *userMessage = nil;
+    NSString *cardErrorCode = nil;
     NSInteger code = 0;
 
     // There should always be a message and type for the error
-    if (devMessage == NULL || type == NULL)
+    if (devMessage == nil || type == nil)
     {
         NSDictionary *userInfoDict = @{ NSLocalizedDescriptionKey : STPUnexpectedError,
                                                STPErrorMessageKey : [NSString stringWithFormat:@"Could not interpret the error response that was returned from Stripe."]
@@ -315,10 +315,10 @@ static NSString * const tokenEndpoint = @"tokens";
 
 + (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
 {
-    if (card == NULL)
+    if (card == nil)
         [NSException raise:@"RequiredParameter" format:@"'card' is required to create a token"];
 
-    if (handler == NULL)
+    if (handler == nil)
         [NSException raise:@"RequiredParameter" format:@"'handler' is required to use the token that is created"];
 
     [self validateKey:publishableKey];
@@ -340,10 +340,10 @@ static NSString * const tokenEndpoint = @"tokens";
 
 + (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
 {
-    if (tokenId == NULL)
+    if (tokenId == nil)
         [NSException raise:@"RequiredParameter" format:@"'tokenId' is required to retrieve a token"];
 
-    if (handler == NULL)
+    if (handler == nil)
         [NSException raise:@"RequiredParameter" format:@"'handler' is required to use the token that is requested"];
 
     [self validateKey:publishableKey];
