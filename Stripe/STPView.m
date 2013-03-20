@@ -32,16 +32,6 @@
     return self;
 }
 
-- (BOOL)usAddress
-{
-    return self.paymentView.usAddress;
-}
-
-- (void)setUSAddress:(BOOL)enabled
-{
-    self.paymentView.usAddress = enabled;
-}
-
 - (void)paymentView:(PKView*)paymentView withCard:(PKCard *)card isValid:(BOOL)valid
 {
     if ([self.delegate respondsToSelector:@selector(stripeView:withCard:isValid:)]) {

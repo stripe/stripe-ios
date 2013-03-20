@@ -28,7 +28,6 @@ typedef void (^STPTokenBlock)(STPToken* token, NSError* error);
 @property (copy) NSString* key;
 @property id <STPViewDelegate> delegate;
 @property (readonly) BOOL pending;
-@property (setter = setUSAddress:) BOOL usAddress;
 
 - (void)createToken:(STPTokenBlock)block;
 
