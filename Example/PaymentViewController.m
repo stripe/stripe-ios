@@ -80,11 +80,11 @@
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                [MBProgressHUD hideHUDForView:self.view animated:YES];
                                
-                               if (error) {
-                                   [self hasError:error];
-                               } else {
+//                               if (error) {
+//                                   [self hasError:error];
+//                               } else {
                                    [self.navigationController popViewControllerAnimated:YES];
-                               }
+//                               }
                            }];
 }
 
