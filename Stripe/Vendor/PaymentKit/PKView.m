@@ -508,16 +508,6 @@
 - (void)textFieldIsInvalid:(UITextField *)textField withErrors:(BOOL)errors {
     if (errors) {
         textField.textColor = RedColor;
-        
-        // Shake view
-        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position"];
-        [animation setDuration:0.05];
-        [animation setRepeatCount:3];
-        [animation setAutoreverses:YES];
-        [animation setFromValue:[NSValue valueWithCGPoint:CGPointMake([textField center].x - 6.0f, [textField center].y)]];
-        [animation setToValue:[NSValue valueWithCGPoint:CGPointMake([textField center].x + 6.0f, [textField center].y)]];
-        [[textField layer] addAnimation:animation forKey:@"position"];
-        
     } else {
         textField.textColor = DarkGreyColor;        
     }
