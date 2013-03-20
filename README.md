@@ -20,7 +20,15 @@ You can install the Stripe iOS bindings in two ways.
 1. Make sure "Copy items into destination group's folder (if needed)" is checked"
 1. Click "Add"
 
-## Guide
+## STPView
+
+`STPView` is a custom UIView component that abstracts the lower level Stripe APIs. It'll deal with formatting credit card numbers, validation, and securely sending off the card data to Stripe.
+
+![PaymentKit](https://stripe.com/img/documentation/ios/PaymentKit.png)
+
+For more information, please see our [ios tutorial](https://stripe.com/docs/mobile/ios).
+
+## API
 
 There are three main classes in the Stripe iOS bindings that you should care about.  `STPCard` is a representation of a credit card.  You will need to create and populate this object with the credit card details a customer enters.  `STPToken` is a representation of the token Stripe returns for a credit card.  You can't construct these yourself, but will need to create them (shown below).  `Stripe` is a static class that you use to interact with the Stripe REST API.
 
@@ -53,7 +61,7 @@ Note that if you do not wish to send your publishableKey every time you make a c
 
 If you're implementing a complex workflow, you may want to know if you've already charged a token (since they can only be charged once).  You can do so if you have the token's ID:
 
-    [Stripe getTokenWithId:@"token_id" 
+    [Stripe getTokenWithId:@"token_id"
             publishableKey:@"my_publishable_key"
                 completion:^(STPToken *token, NSError *error)
     {
