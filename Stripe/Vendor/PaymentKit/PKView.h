@@ -14,14 +14,14 @@
 #import "PKAddressZip.h"
 #import "PKUSAddressZip.h"
 
-@class PKView;
+@class PKView, PKTextField;
 
 @protocol PKViewDelegate <NSObject>
 @optional
 - (void) paymentView:(PKView*)paymentView withCard:(PKCard*)card isValid:(BOOL)valid;
 @end
 
-@interface PKView : UIView <UITextFieldDelegate>
+@interface PKView : UIView
 
 - (BOOL)isValid;
 
@@ -33,13 +33,11 @@
 
 @property IBOutlet UIView* innerView;
 @property IBOutlet UIView* clipView;
-@property IBOutlet UITextField* cardNumberField;
-@property IBOutlet UITextField* cardExpiryField;
-@property IBOutlet UITextField* cardCVCField;
-@property IBOutlet UITextField* addressZipField;
+@property IBOutlet PKTextField* cardNumberField;
+@property IBOutlet PKTextField* cardExpiryField;
+@property IBOutlet PKTextField* cardCVCField;
 @property IBOutlet UIImageView* placeholderView;
 @property id <PKViewDelegate> delegate;
 @property (readonly) PKCard* card;
-@property (setter = setUSAddress:) BOOL usAddress;
 
 @end
