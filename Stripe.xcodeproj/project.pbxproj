@@ -27,6 +27,7 @@
 		11E1F658165157F100B49816 /* STPCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11EE8255164786A40039CDD4 /* STPCardTest.m */; };
 		11E1F659165157F100B49816 /* STPTokenTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */; };
 		11F5800E1656C0CC0036F21E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 11F5800D1656C0CC0036F21E /* Default-568h@2x.png */; };
+		A164C491170378B3001BE9E7 /* STPView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAFC118616E56B3E0066297F /* STPView.h */; };
 		FA2FD33216FAA84D00495B3A /* PKAddressZip.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2FD30B16FAA84D00495B3A /* PKAddressZip.m */; };
 		FA2FD33316FAA84D00495B3A /* PKAddressZip.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2FD30B16FAA84D00495B3A /* PKAddressZip.m */; };
 		FA2FD33416FAA84D00495B3A /* PKAddressZip.m in Sources */ = {isa = PBXBuildFile; fileRef = FA2FD30B16FAA84D00495B3A /* PKAddressZip.m */; };
@@ -151,6 +152,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A164C491170378B3001BE9E7 /* STPView.h in CopyFiles */,
 				11E1F59C1651521F00B49816 /* STPCard.h in CopyFiles */,
 				11E1F59D1651521F00B49816 /* StripeError.h in CopyFiles */,
 				11E1F59E1651521F00B49816 /* Stripe.h in CopyFiles */,
