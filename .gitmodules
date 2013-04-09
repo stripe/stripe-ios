@@ -1,0 +1,3 @@
+[submodule "Stripe/Vendor/PaymentKit"]
+	path = Stripe/Vendor/PaymentKit
+	url = git://github.com/stripe/PaymentKit.git
