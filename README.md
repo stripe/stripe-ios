@@ -14,7 +14,7 @@ You can install the Stripe iOS bindings in two ways.
 
 ### Install by adding files to project
 
-1. Clone this repository
+1. Clone this repository (git clone --recursive)
 1. In the menubar, click on 'File' then 'Add files to "Project"...'
 1. Select the 'Stripe' directory in your cloned stripe-ios repository
 1. Make sure "Copy items into destination group's folder (if needed)" is checked"
