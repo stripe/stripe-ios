@@ -11,6 +11,18 @@
 
 @synthesize paymentView, key, pending;
 
+- (void)setupViews;
+{
+    self.paymentView = [[PKView alloc] initWithFrame:CGRectMake(0,0,290,55)];
+    self.paymentView.delegate = self;
+    [self addSubview:self.paymentView];
+}
+
+- (void)awakeFromNib;
+{
+    [self setupViews];
+}
+
 - (id)initWithFrame: (CGRect)frame andKey: (NSString*)stripeKey
 {
     self = [self initWithFrame:frame];
@@ -24,10 +36,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
-        self.paymentView = [[PKView alloc] initWithFrame:CGRectMake(0,0,290,55)];
-        self.paymentView.delegate = self;
-        [self addSubview:self.paymentView];
+        [self setupViews];
     }
     return self;
 }
