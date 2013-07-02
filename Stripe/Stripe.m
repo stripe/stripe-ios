@@ -21,7 +21,7 @@
 + (NSDictionary *)camelCasedResponseFromStripeResponse:(NSDictionary *)jsonDictionary;
 + (NSDictionary *)dictionaryFromJSONData:(NSData *)data error:(NSError **)outError;
 + (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError completion:(STPCompletionBlock)handler;
-+ (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey;
++ (NSURL *)apiCardURLWithPublishableKey:(NSString *)publishableKey;
 @end
 
 @implementation Stripe
@@ -29,6 +29,7 @@ static NSString *defaultKey;
 static NSString * const apiURLBase = @"api.stripe.com";
 static NSString * const apiVersion = @"v1";
 static NSString * const tokenEndpoint = @"tokens";
+static NSString * const customerEndpoint = @"customer";
 
 + (id)alloc
 {
@@ -37,7 +38,7 @@ static NSString * const tokenEndpoint = @"tokens";
 }
 
 #pragma mark Private Helpers
-+ (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey
++ (NSURL *)apiCardURLWithPublishableKey:(NSString *)publishableKey
 {
     NSURL *url = [[[NSURL URLWithString:
               [NSString stringWithFormat:@"https://%@:@%@", [self URLEncodedString:publishableKey], apiURLBase]]
@@ -45,6 +46,16 @@ static NSString * const tokenEndpoint = @"tokens";
             URLByAppendingPathComponent:tokenEndpoint];
     return url;
 }
+
++ (NSURL *)apiCustomerCardURLWithPublishableKey:(NSString *)publishableKey
+{
+    NSURL *url = [[[NSURL URLWithString:
+                    [NSString stringWithFormat:@"https://%@:@%@", [self URLEncodedString:publishableKey], apiURLBase]]
+                   URLByAppendingPathComponent:apiVersion]
+                  URLByAppendingPathComponent:customerEndpoint];
+    return url;
+}
+
 
 + (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError completion:(STPCompletionBlock)handler
 {
@@ -323,13 +334,38 @@ static NSString * const tokenEndpoint = @"tokens";
 
     [self validateKey:publishableKey];
 
-    NSURL *url = [self apiURLWithPublishableKey:publishableKey];
+    NSURL *url = [self apiCardURLWithPublishableKey:publishableKey];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
 
     request.HTTPBody = [self formEncodedDataFromCard:card];
 
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:queue
+                           completionHandler:^(NSURLResponse *response, NSData *body, NSError *requestError)
+     {
+         [self handleTokenResponse:response body:body error:requestError completion:handler];
+     }];
+}
+
++ (void)createCustomerTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
+{
+    if (card == nil)
+        [NSException raise:@"RequiredParameter" format:@"'card' is required to create a token"];
+    
+    if (handler == nil)
+        [NSException raise:@"RequiredParameter" format:@"'handler' is required to use the token that is created"];
+    
+    [self validateKey:publishableKey];
+    
+    NSURL *url = [self apiCustomerCardURLWithPublishableKey:publishableKey];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    
+    request.HTTPBody = [self formEncodedDataFromCard:card];
+    
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:queue
                            completionHandler:^(NSURLResponse *response, NSData *body, NSError *requestError)
@@ -348,7 +384,7 @@ static NSString * const tokenEndpoint = @"tokens";
 
     [self validateKey:publishableKey];
 
-    NSURL *url = [[self apiURLWithPublishableKey:publishableKey] URLByAppendingPathComponent:tokenId];
+    NSURL *url = [[self apiCardURLWithPublishableKey:publishableKey] URLByAppendingPathComponent:tokenId];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"GET";
@@ -359,23 +395,58 @@ static NSString * const tokenEndpoint = @"tokens";
      {
          [self handleTokenResponse:response body:body error:requestError completion:handler];
      }];
-
 }
 
-+ (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)handler
+
++ (void)createTokenWithCard:(STPCard *)card
+                 completion:(STPCompletionBlock)handler
 {
     [self createTokenWithCard:card publishableKey:[self defaultPublishableKey] completion:handler];
 }
 
-+ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler
++ (void)createTokenWithCard:(STPCard *)card
+             publishableKey:(NSString *)publishableKey
+                 completion:(STPCompletionBlock)handler
 {
     [self createTokenWithCard:card publishableKey:publishableKey operationQueue:[NSOperationQueue mainQueue] completion:handler];
 }
 
-+ (void)createTokenWithCard:(STPCard *)card operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
++ (void)createTokenWithCard:(STPCard *)card
+             operationQueue:(NSOperationQueue *)queue
+                 completion:(STPCompletionBlock)handler
 {
     [self createTokenWithCard:card publishableKey:[self defaultPublishableKey] operationQueue:queue completion:handler];
 }
+
+//Customer support
+
++ (void)createCustomerTokenWithCard:(STPCard *)card
+                         completion:(STPCompletionBlock)handler {
+    [self createCustomerTokenWithCard:card
+                       publishableKey:[self defaultPublishableKey]
+                           completion:handler];
+}
+
++ (void)createCustomerTokenWithCard:(STPCard *)card
+                     publishableKey:(NSString *)publishableKey
+                         completion:(STPCompletionBlock)handler {
+    [self createCustomerTokenWithCard:card
+                       publishableKey:publishableKey
+                       operationQueue:[NSOperationQueue mainQueue]
+                           completion:handler];
+}
+
++ (void)createCustomerTokenWithCard:(STPCard *)card
+                     operationQueue:(NSOperationQueue *)queue
+                         completion:(STPCompletionBlock)handler {
+    [self createCustomerTokenWithCard:card
+                       publishableKey:[self defaultPublishableKey]
+                       operationQueue:queue
+                           completion:handler];
+}
+
+
+
 
 + (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler
 {
