@@ -24,6 +24,7 @@ typedef void (^STPCompletionBlock)(STPToken* token, NSError* error);
 + (NSString *)defaultSecretKey;
 + (void)setDefaultPublishableKey:(NSString *)publishableKey;
 
+
 + (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler;
 
 + (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler;
@@ -33,15 +34,12 @@ typedef void (^STPCompletionBlock)(STPToken* token, NSError* error);
 + (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)handler;
 
 //Customer support
-
 + (void)createCustomerTokenWithCard:(STPCard *)card
-                     publishableKey:(NSString *)publishableKey
                           secretKey:(NSString *) secretKey
                      operationQueue:(NSOperationQueue *)queue
                          completion:(STPCompletionBlock)handler;
 
 + (void)createCustomerTokenWithCard:(STPCard *)card
-                     publishableKey:(NSString *)publishableKey
                           secretKey:(NSString *) secretKey
                          completion:(STPCompletionBlock)handler;
 
@@ -51,12 +49,6 @@ typedef void (^STPCompletionBlock)(STPToken* token, NSError* error);
 
 + (void)createCustomerTokenWithCard:(STPCard *)card
                          completion:(STPCompletionBlock)handler;
-
-
-
-
-
-
 
 + (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler;
 
