@@ -93,8 +93,6 @@
 		4CCA852817146D130078A9DF /* textfield.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CCA84E717146D130078A9DF /* textfield.png */; };
 		4CCA852917146D130078A9DF /* textfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CCA84E817146D130078A9DF /* textfield@2x.png */; };
 		4CCA852A17146D130078A9DF /* textfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CCA84E817146D130078A9DF /* textfield@2x.png */; };
-		A164C491170378B3001BE9E7 /* STPView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAFC118616E56B3E0066297F /* STPView.h */; };
-		FAFC118916E56B3E0066297F /* STPView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC118716E56B3E0066297F /* STPView.m */; };
 		FAFC119E16E56CE00066297F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC119B16E56CE00066297F /* SettingsViewController.m */; };
 		FAFC119F16E56CE00066297F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC119B16E56CE00066297F /* SettingsViewController.m */; };
 		FAFC11A116E56CE00066297F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC119B16E56CE00066297F /* SettingsViewController.m */; };
@@ -115,8 +113,6 @@
 		FAFC12C916E576B70066297F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC125016E56EFC0066297F /* QuartzCore.framework */; };
 		FAFC12CA16E576DF0066297F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC125016E56EFC0066297F /* QuartzCore.framework */; };
 		FAFC12CB16E576E50066297F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC12C516E5767F0066297F /* UIKit.framework */; };
-		FAFC12CC16E57E6D0066297F /* STPView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC118716E56B3E0066297F /* STPView.m */; };
-		FAFC12CD16E57E700066297F /* STPView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC118716E56B3E0066297F /* STPView.m */; };
 		FAFC12CE16E57E960066297F /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 11FBE9A11647725D00299E6F /* STPCard.m */; };
 		FAFC12CF16E57E980066297F /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 11FBE9A11647725D00299E6F /* STPCard.m */; };
 		FAFC12D016E57E9B0066297F /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 11FBE9A31647725D00299E6F /* StripeError.m */; };
@@ -152,7 +148,6 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				A164C491170378B3001BE9E7 /* STPView.h in CopyFiles */,
 				11E1F59C1651521F00B49816 /* STPCard.h in CopyFiles */,
 				11E1F59D1651521F00B49816 /* StripeError.h in CopyFiles */,
 				11E1F59E1651521F00B49816 /* Stripe.h in CopyFiles */,
@@ -237,8 +232,6 @@
 		4CCA84E617146D130078A9DF /* gradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gradient@2x.png"; sourceTree = "<group>"; };
 		4CCA84E717146D130078A9DF /* textfield.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textfield.png; sourceTree = "<group>"; };
 		4CCA84E817146D130078A9DF /* textfield@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "textfield@2x.png"; sourceTree = "<group>"; };
-		FAFC118616E56B3E0066297F /* STPView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPView.h; sourceTree = "<group>"; };
-		FAFC118716E56B3E0066297F /* STPView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPView.m; sourceTree = "<group>"; };
 		FAFC119A16E56CE00066297F /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsViewController.h; path = example/SettingsViewController.h; sourceTree = SOURCE_ROOT; };
 		FAFC119B16E56CE00066297F /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingsViewController.m; path = example/SettingsViewController.m; sourceTree = SOURCE_ROOT; };
 		FAFC119C16E56CE00066297F /* SettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SettingsViewController.xib; path = example/SettingsViewController.xib; sourceTree = SOURCE_ROOT; };
@@ -329,8 +322,6 @@
 			isa = PBXGroup;
 			children = (
 				FA2FD30816FAA84D00495B3A /* Vendor */,
-				FAFC118616E56B3E0066297F /* STPView.h */,
-				FAFC118716E56B3E0066297F /* STPView.m */,
 				11FBE9A01647725D00299E6F /* STPCard.h */,
 				11FBE9A11647725D00299E6F /* STPCard.m */,
 				11FBE9A21647725D00299E6F /* StripeError.h */,
@@ -661,7 +652,6 @@
 				11E1F5991651521500B49816 /* StripeError.m in Sources */,
 				11E1F59A1651521500B49816 /* Stripe.m in Sources */,
 				11E1F59B1651521500B49816 /* STPToken.m in Sources */,
-				FAFC118916E56B3E0066297F /* STPView.m in Sources */,
 				FAFC119E16E56CE00066297F /* SettingsViewController.m in Sources */,
 				FAFC11AA16E56DD10066297F /* PaymentViewController.m in Sources */,
 				FAFC12C216E575150066297F /* MBProgressHUD.m in Sources */,
@@ -685,7 +675,6 @@
 				FAFC119F16E56CE00066297F /* SettingsViewController.m in Sources */,
 				FAFC11AB16E56DD10066297F /* PaymentViewController.m in Sources */,
 				FAFC12C316E575150066297F /* MBProgressHUD.m in Sources */,
-				FAFC12CC16E57E6D0066297F /* STPView.m in Sources */,
 				FAFC12CE16E57E960066297F /* STPCard.m in Sources */,
 				FAFC12D016E57E9B0066297F /* StripeError.m in Sources */,
 				FAFC12D216E57E9F0066297F /* Stripe.m in Sources */,
@@ -711,7 +700,6 @@
 				FAFC11A116E56CE00066297F /* SettingsViewController.m in Sources */,
 				FAFC11AD16E56DD10066297F /* PaymentViewController.m in Sources */,
 				FAFC12C416E575150066297F /* MBProgressHUD.m in Sources */,
-				FAFC12CD16E57E700066297F /* STPView.m in Sources */,
 				FAFC12CF16E57E980066297F /* STPCard.m in Sources */,
 				FAFC12D116E57E9B0066297F /* StripeError.m in Sources */,
 				FAFC12D316E57E9F0066297F /* Stripe.m in Sources */,
