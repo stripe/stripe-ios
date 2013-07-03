@@ -25,13 +25,21 @@ typedef void (^STPCompletionBlock)(STPToken* token, NSError* error);
 + (void)setDefaultPublishableKey:(NSString *)publishableKey;
 
 
-+ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler;
++ (void)createTokenWithCard:(STPCard *)card
+             publishableKey:(NSString *)publishableKey
+             operationQueue:(NSOperationQueue *)queue
+                 completion:(STPCompletionBlock)handler;
 
-+ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler;
++ (void)createTokenWithCard:(STPCard *)card
+             publishableKey:(NSString *)publishableKey
+                 completion:(STPCompletionBlock)handler;
 
-+ (void)createTokenWithCard:(STPCard *)card operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler;
++ (void)createTokenWithCard:(STPCard *)card
+             operationQueue:(NSOperationQueue *)queue
+                 completion:(STPCompletionBlock)handler;
 
-+ (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)handler;
++ (void)createTokenWithCard:(STPCard *)card
+                 completion:(STPCompletionBlock)handler;
 
 //Customer support
 + (void)createCustomerTokenWithCard:(STPCard *)card
