@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                = "Stripe"
-  s.version             = "1.0.1"
+  s.version             = "1.0.2"
   s.summary             = "Stripe is a web-based API for accepting payments online."
   s.license             = { :type => 'MIT', :file => 'LICENSE' }
   s.homepage            = "https://stripe.com"
@@ -10,4 +10,5 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Stripe/**/*.h'
   s.framework           = 'Foundation'
   s.requires_arc        = true
+  s.dependency 'PaymentKit', :git => 'https://github.com/stripe/PaymentKit.git'
 end
