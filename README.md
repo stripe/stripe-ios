@@ -5,6 +5,7 @@ The Stripe iOS bindings can be used to generate [tokens](https://stripe.com/docs
 ## Installation
 
 You can install the Stripe iOS bindings in two ways.
+You also need to add the QuartzCore framework to your project.
 
 ### Install with CocoaPods
 
