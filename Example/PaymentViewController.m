@@ -21,6 +21,8 @@
     [super viewDidLoad];
     
     self.title = @"Add Card";
+    if([self respondsToSelector:@selector(setEdgesForExtendedLayout:)])
+      self.edgesForExtendedLayout = UIRectEdgeNone;
     
     // Setup save button
     UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:0 target:self action:@selector(save:)];
@@ -28,7 +30,7 @@
     self.navigationItem.rightBarButtonItem = saveButton;
     
     // Setup checkout
-    self.checkoutView = [[STPView alloc] initWithFrame:CGRectMake(15,80,290,55) andKey:STRIPE_PUBLISHABLE_KEY];
+    self.checkoutView = [[STPView alloc] initWithFrame:CGRectMake(15,20,290,55) andKey:STRIPE_PUBLISHABLE_KEY];
     self.checkoutView.delegate = self;
     [self.view addSubview:self.checkoutView];
 }
