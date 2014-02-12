@@ -26,7 +26,7 @@ Note: be sure to use the `.xcworkspace` to open your project in Xcode instead of
 
 You will also need to add the `QuartzCore` framework to your project.
 
-### Example app
+## Example app
 
 You can also clone this repository to see our example app, TreatCar. To do so, just clone this repository, then initialize submodules:
     
@@ -36,7 +36,7 @@ Then, simply open Stripe.xcodeproj in Xcode and run TreatCar.
 
 ## Integration
 
-First, you need to create a view to collect your users' card details. We've created the `STPView` class which does this all for you, but feel free to create a custom view of your own.
+First, you need to create a view to collect your users' card details. We've created the `STPView` class which does this all for you, or you can create a custom view of your own.
 
 ### Using STPView
 
@@ -47,7 +47,19 @@ Create and show a `STPView`:
     STPView *cardView = [[STPView alloc] initWithFrame:CGRectMake(15,20,290,55) andKey:@"my_publishable_key"];
     [self.view addSubview:cardView];
 
-Then, submit the details to Stripe to receive [card token](https://stripe.com/docs/api#tokens):
+To receive feedback about the state of the view:
+
+    cardView.delegate = self // implement STPViewDelegate
+    
+    ...
+    
+    - (void)stripeView:(STPView *)view withCard:(PKCard *)card isValid:(BOOL)valid
+    {
+        // Enable the "save" button only if the card form is complete.
+        self.navigationItem.rightBarButtonItem.enabled = valid;
+    }
+
+Finally, submit the details to Stripe to receive a [token](https://stripe.com/docs/api#tokens):
 
     [cardView createToken:^(STPToken *token, NSError *error) {
         if (error) {
@@ -59,19 +71,7 @@ Then, submit the details to Stripe to receive [card token](https://stripe.com/do
     
 (Replace `@"my_publishable_key"` with [your publishable key](https://manage.stripe.com/account/apikeys).)
     
-To receiving feedback about the state of the view:
-
-    cardView.delegate = self # implement STPViewDelegate
-    
-    ...
-    
-    - (void)stripeView:(STPView *)view withCard:(PKCard *)card isValid:(BOOL)valid
-    {
-        // Enable the "save" button only if the card form is complete.
-        self.navigationItem.rightBarButtonItem.enabled = valid;
-    }
-
-### Using a custom view
+### Using your own view
 
 After showing your view, create and populate a `STPCard` with the details you collected:
 
@@ -100,9 +100,9 @@ Once you've collected a token, you can send it to your server to [charge immedia
 
 These operations need to occur in your server-side code (not the iOS bindings) since these operations require [your secret key](https://manage.stripe.com/account/apikeys).
 
-## Misc notes
+## Misc. notes
 
-Note that if you do not wish to send your publishableKey every time you make a call to createTokenWithCard, you can also call `[Stripe setDefaultPublishableKey:]` with your publishable key. All Stripe subsequent API requests will use this key.
+If you do not wish to send your publishableKey every time you make a call to createTokenWithCard, you can also call `[Stripe setDefaultPublishableKey:]` with your publishable key. All Stripe subsequent API requests will use this key.
 
 ### Retrieving a token
 
@@ -155,10 +155,6 @@ When using these validation methods, you will want to set the property on your c
 1. Open Stripe.xcodeproj
 1. Select either the iOS or OS X scheme in the toolbar at the top
 1. Go to Product->Test
-
-## iOS Example
-
-Run the "TreatCar" target.  This is a simple application that lets you order treat cars from an iOS device.
 
 ## OS X Support
 
