@@ -1,3 +1,11 @@
+=== 1.0.2 2013-09-09
+
+* Add exceptions for null successHandler and errorHandler. 
+* Added the ability to POST the created token to a URL.
+* Made STPCard properties nonatomic.
+* Moved PaymentKit to be a submodule; added to Podfile as a dependency.
+* Fixed some warnings caught by the static analyzer (thanks to jcjimenez!)
+
 === 1.0.1 2012-11-16
 
 * Add CocoaPods support
