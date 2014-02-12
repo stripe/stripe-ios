@@ -1,62 +1,108 @@
 # Stripe iOS Bindings
 
-The Stripe iOS bindings can be used to generate [tokens](https://stripe.com/docs/api#tokens) in your iOS application.  If you are building an iOS application that charges a credit card, you should use these bindings to make sure you don't pass credit card information to your server (and, so, are PCI compliant).
+The Stripe iOS bindings make it easy to collect your users' credit card details inside your iOS app. By creating [tokens](https://stripe.com/docs/api#tokens), Stripe handles the bulk of PCI compliance by preventing sensitive card data from hitting your server (for more, see [our article about PCI compliance](https://support.stripe.com/questions/do-i-need-to-be-pci-compliant-what-do-i-have-to-do)).
+
+To get started, see our [tutorial](https://stripe.com/docs/mobile/ios).
 
 ## Installation
 
-You can install the Stripe iOS bindings in two ways.
-You also need to add the QuartzCore framework to your project.
+There are two ways to add Stripe to your project:
 
-### Install with CocoaPods
+### CocoaPods
 
-[CocoaPods](http://cocoapods.org/) is a library dependency management tool for Objective-C.  To use the Stripe iOS bindings with CocoaPods, simply add the following to your `Podfile` and run `pod install`:
+[CocoaPods](http://cocoapods.org/) is a common library dependency management tool for Objective-C.  To use the Stripe iOS bindings with CocoaPods, simply add the following to your `Podfile` and run `pod install`:
 
     pod 'Stripe', :git => 'https://github.com/stripe/stripe-ios.git'
 
-### Install by adding files to project
+Note: be sure to use the `.xcworkspace` to open your project in Xcode instead of the `.xcproject`. You will also need to add the `QuartzCore` framework to your project.
 
-1. Clone this repository (git clone --recursive)
+### Copy manually
+
+1. Clone this repository (`git clone --recursive`)
 1. In the menubar, click on 'File' then 'Add files to "Project"...'
 1. Select the 'Stripe' directory in your cloned stripe-ios repository
 1. Make sure "Copy items into destination group's folder (if needed)" is checked"
 1. Click "Add"
 
-## STPView
+You will also need to add the `QuartzCore` framework to your project.
 
-`STPView` is a custom UIView component that abstracts the lower level Stripe APIs. It'll deal with formatting credit card numbers, validation, and securely sending off the card data to Stripe.
+### Example app
+
+You can also clone this repository to see our example app, TreatCar. To do so, just clone this repository, then initialize submodules:
+    
+    git submodule update --init --recursive
+    
+Then, simply open Stripe.xcodeproj in Xcode and run TreatCar.
+
+## Integration
+
+First, you need to create a view to collect your users' card details. We've created the `STPView` class which does this all for you, but feel free to create a custom view of your own.
+
+### Using STPView
 
 ![PaymentKit](https://stripe.com/img/documentation/ios/PaymentKit.png)
 
-For more information, please see our [ios tutorial](https://stripe.com/docs/mobile/ios).
+Create and show a `STPView`:
 
-## API
+    STPView *cardView = [[STPView alloc] initWithFrame:CGRectMake(15,20,290,55) andKey:@"my_publishable_key"];
+    [self.view addSubview:cardView];
 
-There are three main classes in the Stripe iOS bindings that you should care about.  `STPCard` is a representation of a credit card.  You will need to create and populate this object with the credit card details a customer enters.  `STPToken` is a representation of the token Stripe returns for a credit card.  You can't construct these yourself, but will need to create them (shown below).  `Stripe` is a static class that you use to interact with the Stripe REST API.
+Then, submit the details to Stripe to receive [card token](https://stripe.com/docs/api#tokens):
 
-Also, there are a lot of comments in the code itself.  Look through the .h files for a more thorough understanding of this library.
+    [cardView createToken:^(STPToken *token, NSError *error) {
+        if (error) {
+            [self hasError:error];
+        } else {
+            [self hasToken:token]; // Hooray!
+        }
+    }];
+    
+(Replace `@"my_publishable_key"` with [your publishable key](https://manage.stripe.com/account/apikeys).)
+    
+To receiving feedback about the state of the view:
 
-### Creating a token
+    cardView.delegate = self # implement STPViewDelegate
+    
+    ...
+    
+    - (void)stripeView:(STPView *)view withCard:(PKCard *)card isValid:(BOOL)valid
+    {
+        // Enable the "save" button only if the card form is complete.
+        self.navigationItem.rightBarButtonItem.enabled = valid;
+    }
+
+### Using a custom view
+
+After showing your view, create and populate a `STPCard` with the details you collected:
 
     STPCard *card = [[STPCard alloc] init];
     card.number = @"4242424242424242";
     card.expMonth = 12;
     card.expYear = 2020;
 
-    STPCompletionBlock completionHandler = ^(STPToken *token, NSError *error)
-    {
-        if (error) {
-            NSLog(@"Error trying to create token %@", [error
-            localizedDescription]);
-        } else {
-            NSLog(@"Token created with ID: %@", token.tokenId)
-        }
-    }
+Then send it to Stripe:
 
     [Stripe createTokenWithCard:card
                  publishableKey:@"my_publishable_key"
-                     completion:completionHandler];
+                     completion:^(STPToken *token, NSError *error) {
+                         if (error) {
+                             [self hasError:error];
+                         } else {
+                             [self hasToken:token]; // Hooray!
+                         }
+                     }];
 
-Note that if you do not wish to send your publishableKey every time you make a call to createTokenWithCard, you can also call `[Stripe setDefaultPublishableKey:]` with your publishable key, and all Stripe API requests will use this key.
+(Replace `@"my_publishable_key"` with [your publishable key](https://manage.stripe.com/account/apikeys).)
+
+## Using tokens
+
+Once you've collected a token, you can send it to your server to [charge immediately](https://stripe.com/docs/api#create_charge) or [create a customer](https://stripe.com/docs/api#create_customer) to charge in the future.
+
+These operations need to occur in your server-side code (not the iOS bindings) since these operations require [your secret key](https://manage.stripe.com/account/apikeys).
+
+## Misc notes
+
+Note that if you do not wish to send your publishableKey every time you make a call to createTokenWithCard, you can also call `[Stripe setDefaultPublishableKey:]` with your publishable key. All Stripe subsequent API requests will use this key.
 
 ### Retrieving a token
 
