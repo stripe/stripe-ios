@@ -95,20 +95,14 @@
 		4CCA852A17146D130078A9DF /* textfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CCA84E817146D130078A9DF /* textfield@2x.png */; };
 		A164C491170378B3001BE9E7 /* STPView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAFC118616E56B3E0066297F /* STPView.h */; };
 		FAFC118916E56B3E0066297F /* STPView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC118716E56B3E0066297F /* STPView.m */; };
-		FAFC119E16E56CE00066297F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC119B16E56CE00066297F /* SettingsViewController.m */; };
 		FAFC119F16E56CE00066297F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC119B16E56CE00066297F /* SettingsViewController.m */; };
-		FAFC11A116E56CE00066297F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC119B16E56CE00066297F /* SettingsViewController.m */; };
 		FAFC11A316E56CE00066297F /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAFC119C16E56CE00066297F /* SettingsViewController.xib */; };
 		FAFC11A416E56CE00066297F /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAFC119C16E56CE00066297F /* SettingsViewController.xib */; };
-		FAFC11AA16E56DD10066297F /* PaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC11A716E56DD00066297F /* PaymentViewController.m */; };
 		FAFC11AB16E56DD10066297F /* PaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC11A716E56DD00066297F /* PaymentViewController.m */; };
-		FAFC11AD16E56DD10066297F /* PaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC11A716E56DD00066297F /* PaymentViewController.m */; };
 		FAFC11AF16E56DD10066297F /* PaymentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAFC11A816E56DD00066297F /* PaymentViewController.xib */; };
 		FAFC11B016E56DD10066297F /* PaymentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FAFC11A816E56DD00066297F /* PaymentViewController.xib */; };
 		FAFC125116E56EFC0066297F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC125016E56EFC0066297F /* QuartzCore.framework */; };
-		FAFC12C216E575150066297F /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC12C116E575150066297F /* MBProgressHUD.m */; };
 		FAFC12C316E575150066297F /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC12C116E575150066297F /* MBProgressHUD.m */; };
-		FAFC12C416E575150066297F /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFC12C116E575150066297F /* MBProgressHUD.m */; };
 		FAFC12C616E5767F0066297F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC12C516E5767F0066297F /* UIKit.framework */; };
 		FAFC12C716E5769F0066297F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11FBE9B51647744200299E6F /* CoreGraphics.framework */; };
 		FAFC12C816E576A50066297F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC12C516E5767F0066297F /* UIKit.framework */; };
@@ -662,9 +656,6 @@
 				11E1F59A1651521500B49816 /* Stripe.m in Sources */,
 				11E1F59B1651521500B49816 /* STPToken.m in Sources */,
 				FAFC118916E56B3E0066297F /* STPView.m in Sources */,
-				FAFC119E16E56CE00066297F /* SettingsViewController.m in Sources */,
-				FAFC11AA16E56DD10066297F /* PaymentViewController.m in Sources */,
-				FAFC12C216E575150066297F /* MBProgressHUD.m in Sources */,
 				4CCA84E917146D130078A9DF /* PKAddressZip.m in Sources */,
 				4CCA84EC17146D130078A9DF /* PKCard.m in Sources */,
 				4CCA84EF17146D130078A9DF /* PKCardCVC.m in Sources */,
@@ -708,9 +699,6 @@
 				11E1F657165157F100B49816 /* StripeTest.m in Sources */,
 				11E1F658165157F100B49816 /* STPCardTest.m in Sources */,
 				11E1F659165157F100B49816 /* STPTokenTest.m in Sources */,
-				FAFC11A116E56CE00066297F /* SettingsViewController.m in Sources */,
-				FAFC11AD16E56DD10066297F /* PaymentViewController.m in Sources */,
-				FAFC12C416E575150066297F /* MBProgressHUD.m in Sources */,
 				FAFC12CD16E57E700066297F /* STPView.m in Sources */,
 				FAFC12CF16E57E980066297F /* STPCard.m in Sources */,
 				FAFC12D116E57E9B0066297F /* StripeError.m in Sources */,
