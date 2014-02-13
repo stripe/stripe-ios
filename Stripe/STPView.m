@@ -41,13 +41,6 @@
     return self;
 }
 
-- (void)paymentView:(PKView*)paymentView withCard:(PKCard *)card isValid:(BOOL)valid
-{
-    if ([self.delegate respondsToSelector:@selector(stripeView:withCard:isValid:)]) {
-        [self.delegate stripeView:self withCard:card isValid:valid];
-    }
-}
-
 - (void)pendingHandler:(BOOL)isPending
 {
     pending = isPending;
@@ -87,5 +80,29 @@
                  }];
 
 }
+
+#pragma mark - PKViewDelegate
+
+- (BOOL) paymentView:(PKView *)paymentView shouldShowMetaViewWithCard:(PKCard *)card {
+    if ([self.delegate respondsToSelector:@selector(stripeView:willShowMetaWithCard:)]) {
+        return [self.delegate stripeView:self willShowMetaWithCard:card];
+    } else {
+        return YES;
+    }
+}
+
+- (void)paymentView:(PKView *)paymentView withCard:(PKCard *)card cardNumberIsValid:(BOOL)valid {
+    if ([self.delegate respondsToSelector:@selector(stripeView:withCard:cardNumberIsValid:)]) {
+        [self.delegate stripeView:self withCard:card cardNumberIsValid:valid];
+    }
+}
+
+- (void)paymentView:(PKView*)paymentView withCard:(PKCard *)card isValid:(BOOL)valid
+{
+    if ([self.delegate respondsToSelector:@selector(stripeView:withCard:isValid:)]) {
+        [self.delegate stripeView:self withCard:card isValid:valid];
+    }
+}
+
 
 @end

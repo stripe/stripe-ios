@@ -17,7 +17,9 @@ typedef void (^STPTokenBlock)(STPToken* token, NSError* error);
 
 @protocol STPViewDelegate <NSObject>
 @optional
-- (void) stripeView:(STPView*)view withCard:(PKCard *)card isValid:(BOOL)valid;
+- (void) stripeView:(STPView *)view withCard:(PKCard *)card isValid:(BOOL)valid;
+- (BOOL) stripeView:(STPView *)view willShowMetaWithCard:(PKCard *)card;
+- (void) stripeView:(STPView *)view withCard:(PKCard *)card cardNumberIsValid:(BOOL)valid;
 @end
 
 @interface STPView : UIView <PKViewDelegate>
