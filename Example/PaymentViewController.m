@@ -7,7 +7,7 @@
 
 #import "PaymentViewController.h"
 #import "MBProgressHUD.h"
-#define STRIPE_PUBLISHABLE_KEY @"pk_test_czwzkTp2tactuLOEOqbMTRzG"
+#define STRIPE_PUBLISHABLE_KEY @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"
 
 @interface PaymentViewController ()
 - (void)hasError:(NSError *)error;
