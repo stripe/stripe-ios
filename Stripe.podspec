@@ -11,5 +11,6 @@ Pod::Spec.new do |s|
   s.platform             = :ios
   s.frameworks           = 'Foundation', 'QuartzCore'
   s.requires_arc         = true
-  s.dependency 'PaymentKit'
+  
+  s.dependency 'PaymentKit' , '~> 1.0.2'
 end
