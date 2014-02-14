@@ -26,7 +26,7 @@ typedef void (^STPTokenBlock)(STPToken* token, NSError* error);
 
 @property IBOutlet PKView* paymentView;
 @property (copy) NSString* key;
-@property id <STPViewDelegate> delegate;
+@property (weak) id <STPViewDelegate> delegate;
 @property (readonly) BOOL pending;
 
 - (void)createToken:(STPTokenBlock)block;
