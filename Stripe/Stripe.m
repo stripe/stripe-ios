@@ -146,7 +146,7 @@ static NSString * const tokenEndpoint = @"tokens";
 + (NSString *)URLEncodedString:(NSString *)string {
     NSMutableString *output = [NSMutableString string];
     const unsigned char *source = (const unsigned char *)[string UTF8String];
-    int sourceLen = strlen((const char *)source);
+    NSInteger sourceLen = strlen((const char *)source);
     for (int i = 0; i < sourceLen; ++i)
     {
         const unsigned char thisChar = source[i];
@@ -167,8 +167,8 @@ static NSString * const tokenEndpoint = @"tokens";
 {
     return [NSDictionary dictionaryWithObjectsAndKeys:
             card.number         ? card.number : [NSNull null],                                      @"number",
-            card.expMonth       ? [NSString stringWithFormat:@"%u", card.expMonth] : [NSNull null], @"exp_month",
-            card.expYear        ? [NSString stringWithFormat:@"%u", card.expYear] : [NSNull null],  @"exp_year",
+            card.expMonth       ? [NSString stringWithFormat:@"%lu", (unsigned long)card.expMonth] : [NSNull null], @"exp_month",
+            card.expYear        ? [NSString stringWithFormat:@"%lu", (unsigned long)card.expYear] : [NSNull null],  @"exp_year",
             card.cvc            ? card.cvc : [NSNull null],                                         @"cvc",
             card.name           ? card.name : [NSNull null],                                        @"name",
             card.addressLine1   ? card.addressLine1 : [NSNull null],                                @"address_line1",
