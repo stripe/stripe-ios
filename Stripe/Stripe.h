@@ -11,7 +11,7 @@
 #import "STPCard.h"
 #import "STPToken.h"
 
-typedef void (^STPCompletionBlock)(STPToken* token, NSError* error);
+typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
 
 // Stripe is a static class used to create and retrieve tokens.
 @interface Stripe : NSObject

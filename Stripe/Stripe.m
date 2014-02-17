@@ -7,11 +7,8 @@
 //
 
 #import "Stripe.h"
-#import "StripeError.h"
-#import "STPCard.h"
-#import "STPToken.h"
 
-@interface Stripe()
+@interface Stripe ()
 + (NSString *)URLEncodedString:(NSString *)string;
 + (NSString *)camelCaseFromUnderscoredString:(NSString *)string;
 + (NSDictionary *)requestPropertiesFromCard:(STPCard *)card;
@@ -26,9 +23,9 @@
 
 @implementation Stripe
 static NSString *defaultKey;
-static NSString * const apiURLBase = @"api.stripe.com";
-static NSString * const apiVersion = @"v1";
-static NSString * const tokenEndpoint = @"tokens";
+static NSString *const apiURLBase = @"api.stripe.com";
+static NSString *const apiVersion = @"v1";
+static NSString *const tokenEndpoint = @"tokens";
 
 + (id)alloc
 {
@@ -40,34 +37,31 @@ static NSString * const tokenEndpoint = @"tokens";
 + (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey
 {
     NSURL *url = [[[NSURL URLWithString:
-              [NSString stringWithFormat:@"https://%@:@%@", [self URLEncodedString:publishableKey], apiURLBase]]
-             URLByAppendingPathComponent:apiVersion]
+            [NSString stringWithFormat:@"https://%@:@%@", [self URLEncodedString:publishableKey], apiURLBase]]
+            URLByAppendingPathComponent:apiVersion]
             URLByAppendingPathComponent:tokenEndpoint];
     return url;
 }
 
 + (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError completion:(STPCompletionBlock)handler
 {
-    if (requestError)
-    {
+    if (requestError) {
         // If this is an error that Stripe returned, let's handle it as a StripeDomain error
         NSDictionary *jsonDictionary = nil;
-        if (body && (jsonDictionary = [self dictionaryFromJSONData:body error:nil]) && [jsonDictionary valueForKey:@"error"] != nil)
-        {
+        if (body && (jsonDictionary = [self dictionaryFromJSONData:body error:nil]) && [jsonDictionary valueForKey:@"error"] != nil) {
             handler(nil, [self errorFromStripeResponse:jsonDictionary]);
         }
-        // Otherwise, return the raw NSURLError error
+                // Otherwise, return the raw NSURLError error
         else
             handler(nil, requestError);
     }
-    else
-    {
+    else {
         NSError *parseError;
         NSDictionary *jsonDictionary = [self dictionaryFromJSONData:body error:&parseError];
 
         if (jsonDictionary == nil)
             handler(nil, parseError);
-        else if ([(NSHTTPURLResponse *)response statusCode] == 200)
+        else if ([(NSHTTPURLResponse *) response statusCode] == 200)
             handler([[STPToken alloc] initWithAttributeDictionary:[self camelCasedResponseFromStripeResponse:jsonDictionary]], nil);
         else
             handler(nil, [self errorFromStripeResponse:jsonDictionary]);
@@ -78,10 +72,9 @@ static NSString * const tokenEndpoint = @"tokens";
 {
     NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
 
-    if (jsonDictionary == nil)
-    {
-        NSDictionary *userInfoDict = @{ NSLocalizedDescriptionKey : STPUnexpectedError,
-        STPErrorMessageKey : [NSString stringWithFormat:@"The response from Stripe failed to get parsed into valid JSON."]
+    if (jsonDictionary == nil) {
+        NSDictionary *userInfoDict = @{NSLocalizedDescriptionKey : STPUnexpectedError,
+                STPErrorMessageKey : [NSString stringWithFormat:@"The response from Stripe failed to get parsed into valid JSON."]
         };
 
         if (outError) {
@@ -97,8 +90,7 @@ static NSString * const tokenEndpoint = @"tokens";
 + (NSDictionary *)camelCasedResponseFromStripeResponse:(NSDictionary *)jsonDictionary
 {
     NSMutableDictionary *attributeDictionary = [NSMutableDictionary dictionary];
-    for (NSString *key in jsonDictionary)
-    {
+    for (NSString *key in jsonDictionary) {
         if ([key isEqualToString:@"card"])
             [attributeDictionary setObject:[self camelCasedResponseFromStripeResponse:[jsonDictionary valueForKey:key]] forKey:key];
         else
@@ -114,13 +106,11 @@ static NSString * const tokenEndpoint = @"tokens";
 
     NSMutableString *output = [NSMutableString string];
     BOOL makeNextCharacterUpperCase = NO;
-    for (NSInteger index = 0; index < [string length]; index += 1)
-    {
+    for (NSInteger index = 0; index < [string length]; index += 1) {
         NSString *character = [string substringWithRange:NSMakeRange(index, 1)];
         if ([character isEqualToString:@"_"] && index != [string length] - 1)
             makeNextCharacterUpperCase = YES;
-        else if (makeNextCharacterUpperCase == YES)
-        {
+        else if (makeNextCharacterUpperCase == YES) {
             [output appendString:[character uppercaseString]];
             makeNextCharacterUpperCase = NO;
         }
@@ -143,20 +133,20 @@ static NSString * const tokenEndpoint = @"tokens";
     http://stackoverflow.com/questions/3423545/objective-c-iphone-percent-encode-a-string .  It is protected under the terms of a Creative Commons
     license: http://creativecommons.org/licenses/by-sa/3.0/
  */
-+ (NSString *)URLEncodedString:(NSString *)string {
++ (NSString *)URLEncodedString:(NSString *)string
+{
     NSMutableString *output = [NSMutableString string];
-    const unsigned char *source = (const unsigned char *)[string UTF8String];
-    NSInteger sourceLen = strlen((const char *)source);
-    for (int i = 0; i < sourceLen; ++i)
-    {
+    const unsigned char *source = (const unsigned char *) [string UTF8String];
+    NSInteger sourceLen = strlen((const char *) source);
+    for (int i = 0; i < sourceLen; ++i) {
         const unsigned char thisChar = source[i];
         if (thisChar == ' ')
             [output appendString:@"+"];
         else if (thisChar == '.' || thisChar == '-' || thisChar == '_' || thisChar == '~' ||
-                       (thisChar >= 'a' && thisChar <= 'z') ||
-                       (thisChar >= 'A' && thisChar <= 'Z') ||
-                       (thisChar >= '0' && thisChar <= '9'))
-                [output appendFormat:@"%c", thisChar];
+                (thisChar >= 'a' && thisChar <= 'z') ||
+                (thisChar >= 'A' && thisChar <= 'Z') ||
+                (thisChar >= '0' && thisChar <= '9'))
+            [output appendFormat:@"%c", thisChar];
         else
             [output appendFormat:@"%%%02X", thisChar];
     }
@@ -166,17 +156,17 @@ static NSString * const tokenEndpoint = @"tokens";
 + (NSDictionary *)requestPropertiesFromCard:(STPCard *)card
 {
     return [NSDictionary dictionaryWithObjectsAndKeys:
-            card.number         ? card.number : [NSNull null],                                      @"number",
-            card.expMonth       ? [NSString stringWithFormat:@"%lu", (unsigned long)card.expMonth] : [NSNull null], @"exp_month",
-            card.expYear        ? [NSString stringWithFormat:@"%lu", (unsigned long)card.expYear] : [NSNull null],  @"exp_year",
-            card.cvc            ? card.cvc : [NSNull null],                                         @"cvc",
-            card.name           ? card.name : [NSNull null],                                        @"name",
-            card.addressLine1   ? card.addressLine1 : [NSNull null],                                @"address_line1",
-            card.addressLine2   ? card.addressLine2 : [NSNull null],                                @"address_line2",
-            card.addressCity    ? card.addressCity : [NSNull null],                                 @"address_city",
-            card.addressState   ? card.addressState : [NSNull null],                                @"address_state",
-            card.addressZip     ? card.addressZip : [NSNull null],                                  @"address_zip",
-            card.addressCountry ? card.addressCountry : [NSNull null],                              @"address_country",
+            card.number ? card.number : [NSNull null], @"number",
+            card.expMonth ? [NSString stringWithFormat:@"%lu", (unsigned long) card.expMonth] : [NSNull null], @"exp_month",
+            card.expYear ? [NSString stringWithFormat:@"%lu", (unsigned long) card.expYear] : [NSNull null], @"exp_year",
+            card.cvc ? card.cvc : [NSNull null], @"cvc",
+            card.name ? card.name : [NSNull null], @"name",
+            card.addressLine1 ? card.addressLine1 : [NSNull null], @"address_line1",
+            card.addressLine2 ? card.addressLine2 : [NSNull null], @"address_line2",
+            card.addressCity ? card.addressCity : [NSNull null], @"address_city",
+            card.addressState ? card.addressState : [NSNull null], @"address_state",
+            card.addressZip ? card.addressZip : [NSNull null], @"address_zip",
+            card.addressCountry ? card.addressCountry : [NSNull null], @"address_country",
             nil];
 }
 
@@ -187,7 +177,7 @@ static NSString * const tokenEndpoint = @"tokens";
 
     for (NSString *key in attributes) {
         NSString *value = [attributes objectForKey:key];
-        if ((id)value == [NSNull null]) continue;
+        if ((id) value == [NSNull null]) continue;
 
         if (body.length != 0)
             [body appendString:@"&"];
@@ -212,10 +202,9 @@ static NSString * const tokenEndpoint = @"tokens";
     NSInteger code = 0;
 
     // There should always be a message and type for the error
-    if (devMessage == nil || type == nil)
-    {
-        NSDictionary *userInfoDict = @{ NSLocalizedDescriptionKey : STPUnexpectedError,
-                                               STPErrorMessageKey : [NSString stringWithFormat:@"Could not interpret the error response that was returned from Stripe."]
+    if (devMessage == nil || type == nil) {
+        NSDictionary *userInfoDict = @{NSLocalizedDescriptionKey : STPUnexpectedError,
+                STPErrorMessageKey : [NSString stringWithFormat:@"Could not interpret the error response that was returned from Stripe."]
         };
         return [[NSError alloc] initWithDomain:StripeDomain
                                           code:STPAPIError
@@ -225,69 +214,56 @@ static NSString * const tokenEndpoint = @"tokens";
     NSMutableDictionary *userInfoDict = [NSMutableDictionary dictionary];
     [userInfoDict setValue:devMessage forKey:STPErrorMessageKey];
 
-    if (parameter)
-    {
+    if (parameter) {
         parameter = [self camelCaseFromUnderscoredString:parameter];
         [userInfoDict setValue:parameter forKey:STPErrorParameterKey];
     }
 
-    if ([type isEqualToString:@"api_error"])
-    {
+    if ([type isEqualToString:@"api_error"]) {
         userMessage = STPUnexpectedError;
         code = STPAPIError;
     }
-    else if ([type isEqualToString:@"invalid_request_error"])
-    {
+    else if ([type isEqualToString:@"invalid_request_error"]) {
         code = STPInvalidRequestError;
         // This is probably not correct, but I think it's correct enough in most cases.
         userMessage = devMessage;
     }
-    else if ([type isEqualToString:@"card_error"])
-    {
+    else if ([type isEqualToString:@"card_error"]) {
         code = STPCardError;
         cardErrorCode = [jsonDictionary valueForKey:@"code"];
-        if ([cardErrorCode isEqualToString:@"incorrect_number"])
-        {
+        if ([cardErrorCode isEqualToString:@"incorrect_number"]) {
             cardErrorCode = STPIncorrectNumber;
             userMessage = STPCardErrorInvalidNumberUserMessage;
         }
-        else if ([cardErrorCode isEqualToString:@"invalid_number"])
-        {
+        else if ([cardErrorCode isEqualToString:@"invalid_number"]) {
             cardErrorCode = STPInvalidNumber;
             userMessage = STPCardErrorInvalidNumberUserMessage;
         }
-        else if ([cardErrorCode isEqualToString:@"invalid_expiry_month"])
-        {
+        else if ([cardErrorCode isEqualToString:@"invalid_expiry_month"]) {
             cardErrorCode = STPInvalidExpMonth;
             userMessage = STPCardErrorInvalidExpMonthUserMessage;
         }
-        else if ([cardErrorCode isEqualToString:@"invalid_expiry_year"])
-        {
+        else if ([cardErrorCode isEqualToString:@"invalid_expiry_year"]) {
             cardErrorCode = STPInvalidExpYear;
             userMessage = STPCardErrorInvalidExpYearUserMessage;
         }
-        else if ([cardErrorCode isEqualToString:@"invalid_cvc"])
-        {
+        else if ([cardErrorCode isEqualToString:@"invalid_cvc"]) {
             cardErrorCode = STPInvalidCVC;
             userMessage = STPCardErrorInvalidCVCUserMessage;
         }
-        else if ([cardErrorCode isEqualToString:@"expired_card"])
-        {
+        else if ([cardErrorCode isEqualToString:@"expired_card"]) {
             cardErrorCode = STPExpiredCard;
             userMessage = STPCardErrorExpiredCardUserMessage;
         }
-        else if ([cardErrorCode isEqualToString:@"incorrect_cvc"])
-        {
+        else if ([cardErrorCode isEqualToString:@"incorrect_cvc"]) {
             cardErrorCode = STPIncorrectCVC;
             userMessage = STPCardErrorInvalidCVCUserMessage;
         }
-        else if ([cardErrorCode isEqualToString:@"card_declined"])
-        {
+        else if ([cardErrorCode isEqualToString:@"card_declined"]) {
             cardErrorCode = STPCardDeclined;
             userMessage = STPCardErrorDeclinedUserMessage;
         }
-        else if ([cardErrorCode isEqualToString:@"processing_error"])
-        {
+        else if ([cardErrorCode isEqualToString:@"processing_error"]) {
             cardErrorCode = STPProcessingError;
             userMessage = STPCardErrorProcessingErrorUserMessage;
         }
@@ -305,7 +281,10 @@ static NSString * const tokenEndpoint = @"tokens";
 }
 
 #pragma mark Public Interface
-+ (NSString*)defaultPublishableKey { return defaultKey; }
++ (NSString *)defaultPublishableKey
+{
+    return defaultKey;
+}
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey
 {
@@ -332,10 +311,9 @@ static NSString * const tokenEndpoint = @"tokens";
 
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:queue
-                           completionHandler:^(NSURLResponse *response, NSData *body, NSError *requestError)
-     {
-         [self handleTokenResponse:response body:body error:requestError completion:handler];
-     }];
+                           completionHandler:^(NSURLResponse *response, NSData *body, NSError *requestError) {
+                               [self handleTokenResponse:response body:body error:requestError completion:handler];
+                           }];
 }
 
 + (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
@@ -355,10 +333,9 @@ static NSString * const tokenEndpoint = @"tokens";
 
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:queue
-                           completionHandler:^(NSURLResponse *response, NSData *body, NSError *requestError)
-     {
-         [self handleTokenResponse:response body:body error:requestError completion:handler];
-     }];
+                           completionHandler:^(NSURLResponse *response, NSData *body, NSError *requestError) {
+                               [self handleTokenResponse:response body:body error:requestError completion:handler];
+                           }];
 
 }
 

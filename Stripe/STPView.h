@@ -11,21 +11,21 @@
 
 #define STPCardErrorUserMessage NSLocalizedString(@"Your card is invalid", @"Error when the card is not valid")
 
-typedef void (^STPTokenBlock)(STPToken* token, NSError* error);
+typedef void (^STPTokenBlock)(STPToken *token, NSError *error);
 
 @class STPView;
 
 @protocol STPViewDelegate <NSObject>
 @optional
-- (void) stripeView:(STPView*)view withCard:(PKCard *)card isValid:(BOOL)valid;
+- (void)stripeView:(STPView *)view withCard:(PKCard *)card isValid:(BOOL)valid;
 @end
 
 @interface STPView : UIView <PKViewDelegate>
 
-- (id)initWithFrame: (CGRect)frame andKey: (NSString*)stripeKey;
+- (id)initWithFrame:(CGRect)frame andKey:(NSString *)stripeKey;
 
-@property IBOutlet PKView* paymentView;
-@property (copy) NSString* key;
+@property IBOutlet PKView *paymentView;
+@property (copy) NSString *key;
 @property (weak) id <STPViewDelegate> delegate;
 @property (readonly) BOOL pending;
 
