@@ -394,7 +394,7 @@
 - (void)testInvalidExpYearForYearSameAsCurrentYear
 {
     NSError *error = nil;
-    NSString *expYear = [NSString stringWithFormat:@"%d", [self getCurrentYear]];
+    NSString *expYear = [NSString stringWithFormat:@"%ld", (long)[self getCurrentYear]];
     card.expMonth = 1;
     STAssertFalse([card validateExpYear:&expYear error:&error], @"When the month is already set, if the combination of month and year is in the past, don't validate");
 
