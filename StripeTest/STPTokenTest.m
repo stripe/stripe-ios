@@ -17,11 +17,11 @@
     
     NSDictionary *tokenDict = [NSDictionary dictionaryWithObjectsAndKeys:@"id_for_token", @"id", @"token", @"object", [NSNumber numberWithBool:NO], @"livemode", [NSNumber numberWithDouble:1353025450], @"created", [NSNumber numberWithBool:NO], @"used", cardDict, @"card", nil];
     STPToken *token = [[STPToken alloc] initWithAttributeDictionary:tokenDict];
-    STAssertEqualObjects([token tokenId], @"id_for_token", @"Generated token has the correct id");
-    STAssertEqualObjects([token object], @"token", @"Generated token has the correct object type set");
-    STAssertEquals([token livemode], NO, @"Generated token has the correct livemode");
+    XCTAssertEqualObjects([token tokenId], @"id_for_token", @"Generated token has the correct id");
+    XCTAssertEqualObjects([token object], @"token", @"Generated token has the correct object type set");
+    XCTAssertEqual([token livemode], NO, @"Generated token has the correct livemode");
     
-    STAssertEquals([[token created] timeIntervalSince1970], 1353025450.0, @"Generated token has the correct created time");
-    STAssertEqualObjects([[token card] number], @"4242424242424242", @"Generated token has the correct card");
+    XCTAssertEqual([[token created] timeIntervalSince1970], 1353025450.0, @"Generated token has the correct created time");
+    XCTAssertEqualObjects([[token card] number], @"4242424242424242", @"Generated token has the correct card");
 }
 @end
