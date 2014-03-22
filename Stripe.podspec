@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.source_files          = 'Stripe/**/*.{h,m}'
   s.public_header_files   = 'Stripe/**/*.h'
   s.platform              = :ios
-  s.frameworks            = 'Foundation', 'QuartzCore'
+  s.frameworks            = 'Foundation', 'QuartzCore', 'SenTestingKit'
   s.requires_arc          = true
   s.ios.deployment_target = '5.0'
 
