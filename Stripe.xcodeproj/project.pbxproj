@@ -22,7 +22,6 @@
 		11E1F5E51651532B00B49816 /* TCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 11FBE9911647723B00299E6F /* TCAppDelegate.m */; };
 		11E1F5EA1651534E00B49816 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11FBE98B1647723B00299E6F /* InfoPlist.strings */; };
 		11E1F649165157CA00B49816 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
-		11E1F657165157F100B49816 /* StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11C74BB8164043050071C2CA /* StripeTest.m */; };
 		11E1F658165157F100B49816 /* STPCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11EE8255164786A40039CDD4 /* STPCardTest.m */; };
 		11E1F659165157F100B49816 /* STPTokenTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */; };
 		11F5800E1656C0CC0036F21E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 11F5800D1656C0CC0036F21E /* Default-568h@2x.png */; };
@@ -170,8 +169,6 @@
 		11C74BAB164043050071C2CA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		11C74BB3164043050071C2CA /* StripeTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "StripeTest-Info.plist"; sourceTree = "<group>"; };
 		11C74BB5164043050071C2CA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		11C74BB7164043050071C2CA /* StripeTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeTest.h; sourceTree = "<group>"; };
-		11C74BB8164043050071C2CA /* StripeTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StripeTest.m; sourceTree = "<group>"; };
 		11E1F55D16514A5500B49816 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		11E1F56016514A5500B49816 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		11E1F56116514A5500B49816 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -353,8 +350,6 @@
 		11C74BB1164043050071C2CA /* StripeTest */ = {
 			isa = PBXGroup;
 			children = (
-				11C74BB7164043050071C2CA /* StripeTest.h */,
-				11C74BB8164043050071C2CA /* StripeTest.m */,
 				11C74BB2164043050071C2CA /* Supporting Files */,
 				11EE8254164786A40039CDD4 /* STPCardTest.h */,
 				11EE8255164786A40039CDD4 /* STPCardTest.m */,
@@ -724,7 +719,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11E1F657165157F100B49816 /* StripeTest.m in Sources */,
 				11E1F658165157F100B49816 /* STPCardTest.m in Sources */,
 				11E1F659165157F100B49816 /* STPTokenTest.m in Sources */,
 				FAFC12CD16E57E700066297F /* STPView.m in Sources */,
