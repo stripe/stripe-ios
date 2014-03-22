@@ -21,11 +21,12 @@
     [super viewDidLoad];
     
     self.title = @"Add Card";
-    if([self respondsToSelector:@selector(setEdgesForExtendedLayout:)])
+    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
       self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
     
     // Setup save button
-    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:0 target:self action:@selector(save:)];
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStyleDone target:self action:@selector(save:)];
     saveButton.enabled = NO;
     self.navigationItem.rightBarButtonItem = saveButton;
     
