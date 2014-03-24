@@ -1,3 +1,21 @@
+Please also see the PaymentKit changelog: https://github.com/stripe/PaymentKit/blob/master/CHANGELOG
+
+=== 1.0.4 2014-03-24
+
+* Upgraded tests from OCUnit to XCTest
+* Fixed an issue with the SenTestingKit dependency
+* Removed some dead code
+
+=== 1.0.3 2014-03-21
+
+* Fixed: Some example files had target memberships set for StripeiOS and iOSTest.
+* Fixed: The example publishable key was expired.
+* Fixed: Podspec did not pass linting.
+* Some fixes for 64-bit.
+* Many improvements to the README.
+* Fixed example under iOS 7
+* Some source code cleaning and modernization.
+
 === 1.0.2 2013-09-09
 
 * Add exceptions for null successHandler and errorHandler. 
@@ -14,3 +32,5 @@
 === 1.0.0 2012-11-16
 
 * Initial release
+
+Special thanks to: Todd Heasley, jcjimenez.
