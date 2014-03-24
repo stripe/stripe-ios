@@ -6,10 +6,10 @@ Pod::Spec.new do |s|
   s.homepage              = "https://stripe.com"
   s.author                = { "Saikat Chakrabarti" => "saikat@stripe.com" }
   s.source                = { :git => "https://github.com/stripe/stripe-ios.git", :tag => "v1.0.3"}
-  s.source_files          = 'Stripe/**/*.{h,m}'
-  s.public_header_files   = 'Stripe/**/*.h'
+  s.source_files          = 'Stripe/*.{h,m}'
+  s.public_header_files   = 'Stripe/*.h'
   s.platform              = :ios
-  s.frameworks            = 'Foundation', 'QuartzCore', 'SenTestingKit'
+  s.frameworks            = 'Foundation', 'QuartzCore'
   s.requires_arc          = true
   s.ios.deployment_target = '5.0'
 
