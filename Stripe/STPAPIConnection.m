@@ -52,7 +52,6 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    NSLog(@"Received response: %@", response);
     _receivedResponse = response;
 }
 
