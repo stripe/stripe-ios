@@ -311,9 +311,10 @@ static NSString *const tokenEndpoint = @"tokens";
     request.HTTPBody = [self formEncodedDataFromCard:card];
 
     [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
-                                                                completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
-                                                                    [self handleTokenResponse:response body:body error:requestError completion:handler];
-                                                                }];
+                                                                 completion:^(NSURLResponse *response, NSData *body, NSError *requestError)
+                                                                 {
+                                                                     [self handleTokenResponse:response body:body error:requestError completion:handler];
+                                                                 }];
 }
 
 + (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
@@ -332,9 +333,10 @@ static NSString *const tokenEndpoint = @"tokens";
     request.HTTPMethod = @"GET";
 
     [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
-                                                             completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
-                                                                 [self handleTokenResponse:response body:body error:requestError completion:handler];
-                                                             }];
+                                                                 completion:^(NSURLResponse *response, NSData *body, NSError *requestError)
+                                                                 {
+                                                                     [self handleTokenResponse:response body:body error:requestError completion:handler];
+                                                                 }];
 }
 
 + (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)handler
