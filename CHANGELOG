@@ -1,5 +1,10 @@
 Please also see the PaymentKit changelog: https://github.com/stripe/PaymentKit/blob/master/CHANGELOG
 
+=== 1.1.0 2014-04-09
+
+* API methods now verify the server's SSL certificate against a preset blacklist.
+* Note: This version now requires the `Security` framework. You will need to add this to your app if you're not using CocoaPods.
+
 === 1.0.4 2014-03-24
 
 * Upgraded tests from OCUnit to XCTest
