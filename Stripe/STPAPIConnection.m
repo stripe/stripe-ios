@@ -102,13 +102,13 @@
 
 + (NSArray *)certificateBlacklist
 {
-    return @[@"86c0911d06a74fb66789119f1d732099"];
+    return @[@"05c0b3643694470a888c6e7feb5c9e24e823dc53"];
 }
 
 + (void)verifyCertificate:(SecCertificateRef)certificate forChallenge:(NSURLAuthenticationChallenge *)challenge
 {
     CFDataRef data = SecCertificateCopyData(certificate);
-    NSString *fingerprint = [self.class MD5FingerprintOfData:(__bridge NSData *) data];
+    NSString *fingerprint = [self.class SHA1FingerprintOfData:(__bridge NSData *) data];
     CFRelease(data);
 
     if ([[self certificateBlacklist] containsObject:fingerprint]) {
@@ -119,18 +119,18 @@
     }
 }
 
-+ (NSString *)MD5FingerprintOfData:(NSData *)data
++ (NSString *)SHA1FingerprintOfData:(NSData *)data
 {
-    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    unsigned char digest[CC_SHA1_DIGEST_LENGTH];
 
     // Convert the NSData into a C buffer.
     void *cData = malloc([data length]);
     [data getBytes:cData length:[data length]];
-    CC_MD5(cData, data.length, digest);
+    CC_SHA1(cData, data.length, digest);
 
     // Convert to NSString.
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
+    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
         [output appendFormat:@"%02x", digest[i]];
     }
 
