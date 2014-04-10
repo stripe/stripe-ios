@@ -126,7 +126,7 @@
     // Convert the NSData into a C buffer.
     void *cData = malloc([data length]);
     [data getBytes:cData length:[data length]];
-    CC_SHA1(cData, data.length, digest);
+    CC_SHA1(cData, (CC_LONG) data.length, digest);
 
     // Convert to NSString.
     NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
