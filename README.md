@@ -24,7 +24,7 @@ Note: be sure to use the `.xcworkspace` to open your project in Xcode instead of
 1. Make sure "Copy items into destination group's folder (if needed)" is checked"
 1. Click "Add"
 
-You will also need to add the `QuartzCore` framework to your project.
+You will also need to add the `QuartzCore` and `Security` frameworks to your project.
 
 ## Example app
 
