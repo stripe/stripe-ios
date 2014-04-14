@@ -81,6 +81,8 @@
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+        [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
+
         if ([[self.class trustedHosts] containsObject:challenge.protectionSpace.host]) {
             NSURLCredential *urlCredential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
             [challenge.sender useCredential:urlCredential forAuthenticationChallenge:challenge];
