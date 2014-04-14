@@ -30,6 +30,7 @@
 		347D1B2A15988CCAC0F93E43 /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 347D1807CBA4D6E3236FC558 /* STPAPIConnection.m */; };
 		4A0D74FA18F6106100966D7B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
 		4A0D74FB18F6109200966D7B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
+		4AAEFAE818FC928A001001CD /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
 		4AFE6F3318B29F7A006956CC /* STPaymentLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4AFE6F3118B29F7A006956CC /* STPaymentLocalizable.strings */; };
 		4AFE6F3418B29F7A006956CC /* STPaymentLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4AFE6F3118B29F7A006956CC /* STPaymentLocalizable.strings */; };
 		4CCA84E917146D130078A9DF /* PKAddressZip.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCA84C217146D130078A9DF /* PKAddressZip.m */; };
@@ -286,6 +287,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AAEFAE818FC928A001001CD /* Security.framework in Frameworks */,
 				11E1F649165157CA00B49816 /* Foundation.framework in Frameworks */,
 				FAFC12D616E57FB50066297F /* CoreGraphics.framework in Frameworks */,
 				FAFC12CB16E576E50066297F /* UIKit.framework in Frameworks */,
