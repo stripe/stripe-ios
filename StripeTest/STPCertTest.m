@@ -65,6 +65,8 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
     }
 }
 
+// These are broken into separate methods to make test reports nicer.
+
 - (void)testExpired
 {
     [self testCertificateErrorWithMethod:StripeCertificateFailMethodExpired];
