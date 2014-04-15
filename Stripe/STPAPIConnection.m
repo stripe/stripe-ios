@@ -96,7 +96,10 @@
 
 + (NSArray *)certificateBlacklist
 {
-    return @[@"05c0b3643694470a888c6e7feb5c9e24e823dc53", @"5b7dc7fbc98d78bf76d4d4fa6f597a0c901fad5c"];
+    return @[
+            @"05c0b3643694470a888c6e7feb5c9e24e823dc53", // api.stripe.com
+            @"5b7dc7fbc98d78bf76d4d4fa6f597a0c901fad5c" // revoked.stripe.com:444
+    ];
 }
 
 + (void)verifyCertificate:(SecCertificateRef)certificate forChallenge:(NSURLAuthenticationChallenge *)challenge
