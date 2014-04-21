@@ -120,20 +120,11 @@ If you're implementing a complex workflow, you may want to know if you've alread
 
 ### Handling errors
 
-See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/StripeError.h) for more, but the gist:
-
-1. All Stripe errors will be under the `StripeDomain` domain (excluding more general-purpose errors like NSURL errors)
-2. Their userInfo should have both:
-
-  - `NSLocalizedDescriptionKey`: a general message which you can show your users
-  - `STPErrorMessageKey`: a developer-friendly description that should help with debugging the issue)
+See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/StripeError.h).
 
 ### Operation queues
 
-When you are writing an iOS application, it is important to keep the main thread responsive even if your application performs a time-consuming task.  In most cases, you should be able to use the default `createToken` and `getToken` methods for creating and retrieving tokens, which will run your `completionHandler` block on `[NSOperationQueue mainQueue]`.  However, if you have a more complicated application and want to control where your `completionHandler` gets run, you can also pass in a queue as a parameter to both of these calls.  See:
-
-	+ (void)createTokenWithCard:publishableKey:operationQueue:completionHandler
-	+ (void)getTokenWithId:publishableKey:operationQueue:completionHandler
+API calls are run on `[NSOperationQueue mainQueue]` by default, but all methods have counterparts that can take a custom operation queue.
 
 ### Validation
 
