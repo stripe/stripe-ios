@@ -7,6 +7,7 @@
 
 #import <CommonCrypto/CommonDigest.h>
 #import "STPAPIConnection.h"
+#import "StripeError.h"
 
 @interface STPAPIConnection () <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
 @property (nonatomic) BOOL started;
@@ -14,6 +15,7 @@
 @property (nonatomic, strong) NSURLConnection *connection;
 @property (nonatomic, strong) NSMutableData *receivedData;
 @property (nonatomic, strong) NSURLResponse *receivedResponse;
+@property (nonatomic, strong) NSError *overrideError; // Replaces the request's error
 @property (nonatomic, copy) APIConnectionCompletionBlock completionBlock;
 
 @end
@@ -67,14 +69,16 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    _completionBlock(_receivedResponse, _receivedData, error); // Include what we received anyway.
+    if (_overrideError) {
+        error = _overrideError;
+    }
+    _completionBlock(_receivedResponse, _receivedData, error);
 }
 
 #pragma mark NSURLConnectionDelegate
 
 - (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
 {
-    // Force NSURLAuthenticationMethodServerTrust.
     return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
 }
 
@@ -83,13 +87,15 @@
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
         [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
 
-        if ([[self.class trustedHosts] containsObject:challenge.protectionSpace.host]) {
-            NSURLCredential *urlCredential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-            [challenge.sender useCredential:urlCredential forAuthenticationChallenge:challenge];
+        NSURLCredential *urlCredential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+        [challenge.sender useCredential:urlCredential forAuthenticationChallenge:challenge];
 
-            SecTrustRef serverTrust = [[challenge protectionSpace] serverTrust];
-            for (CFIndex i = 0, count = SecTrustGetCertificateCount(serverTrust); i < count; i++) {
-                [self.class verifyCertificate:SecTrustGetCertificateAtIndex(serverTrust, i) forChallenge:challenge];
+        SecTrustRef serverTrust = [[challenge protectionSpace] serverTrust];
+        for (CFIndex i = 0, count = SecTrustGetCertificateCount(serverTrust); i < count; i++) {
+            NSError *error = nil;
+            [self.class verifyCertificate:SecTrustGetCertificateAtIndex(serverTrust, i) forChallenge:challenge error:&error];
+            if (error) {
+                _overrideError = error;
             }
         }
     }
@@ -97,27 +103,31 @@
 
 #pragma mark Certificate verification
 
-+ (NSArray *)trustedHosts
-{
-    return @[@"api.stripe.com"];
-}
-
 + (NSArray *)certificateBlacklist
 {
-    return @[@"05c0b3643694470a888c6e7feb5c9e24e823dc53"];
+    return @[
+            @"05c0b3643694470a888c6e7feb5c9e24e823dc53", // api.stripe.com
+            @"5b7dc7fbc98d78bf76d4d4fa6f597a0c901fad5c" // revoked.stripe.com:444
+    ];
 }
 
-+ (void)verifyCertificate:(SecCertificateRef)certificate forChallenge:(NSURLAuthenticationChallenge *)challenge
++ (void)verifyCertificate:(SecCertificateRef)certificate forChallenge:(NSURLAuthenticationChallenge *)challenge error:(NSError **)error
 {
     CFDataRef data = SecCertificateCopyData(certificate);
     NSString *fingerprint = [self.class SHA1FingerprintOfData:(__bridge NSData *) data];
     CFRelease(data);
 
     if ([[self certificateBlacklist] containsObject:fingerprint]) {
+        *error = [[NSError alloc] initWithDomain:StripeDomain
+                                            code:STPConnectionError
+                                        userInfo:@{
+                                                NSLocalizedDescriptionKey : STPUnexpectedError,
+                                                STPErrorMessageKey : @"Invalid server certificate. You tried to connect to a server "
+                                                        "that has a revoked SSL certificate, which means we cannot securely send data to that server. "
+                                                        "Please email support@stripe.com if you need help connecting to the correct API server."
+                                        }];
+
         [[challenge sender] cancelAuthenticationChallenge:challenge];
-        [NSException raise:@"InvalidCertificate" format:@"Invalid server certificate. You tried to connect to a server "
-                "that has a revoked SSL certificate, which means we cannot securely send data to that server. "
-                "Please email support@stripe.com if you need help connecting to the correct API server."];
     }
 }
 

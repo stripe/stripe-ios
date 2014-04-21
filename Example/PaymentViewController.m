@@ -7,7 +7,7 @@
 
 #import "PaymentViewController.h"
 #import "MBProgressHUD.h"
-#define STRIPE_PUBLISHABLE_KEY @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"
+#define EXAMPLE_STRIPE_PUBLISHABLE_KEY @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"
 
 @interface PaymentViewController ()
 - (void)hasError:(NSError *)error;
@@ -31,7 +31,7 @@
     self.navigationItem.rightBarButtonItem = saveButton;
     
     // Setup checkout
-    self.checkoutView = [[STPView alloc] initWithFrame:CGRectMake(15,20,290,55) andKey:STRIPE_PUBLISHABLE_KEY];
+    self.checkoutView = [[STPView alloc] initWithFrame:CGRectMake(15,20,290,55) andKey:EXAMPLE_STRIPE_PUBLISHABLE_KEY];
     self.checkoutView.delegate = self;
     [self.view addSubview:self.checkoutView];
 }

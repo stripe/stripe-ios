@@ -128,15 +128,14 @@
 
 + (NSError *)createErrorWithMessage:(NSString *)userMessage parameter:(NSString *)parameter cardErrorCode:(NSString *)cardErrorCode devErrorMessage:(NSString *)devMessage
 {
-    NSDictionary *userInfoDict = @{NSLocalizedDescriptionKey : userMessage,
-            STPErrorParameterKey : parameter,
-            STPCardErrorCodeKey : cardErrorCode,
-            STPErrorMessageKey : devMessage};
-
-
     return [[NSError alloc] initWithDomain:StripeDomain
                                       code:STPCardError
-                                  userInfo:userInfoDict];
+                                  userInfo:@{
+                                          NSLocalizedDescriptionKey : userMessage,
+                                          STPErrorParameterKey : parameter,
+                                          STPCardErrorCodeKey : cardErrorCode,
+                                          STPErrorMessageKey : devMessage
+                                  }];
 }
 
 #pragma mark Public Interface
