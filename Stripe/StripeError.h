@@ -8,76 +8,45 @@
 
 #import <Foundation/Foundation.h>
 
-// The domain of all NSErrors returned by the Stripe iOS library
+// All Stripe iOS errors will be under this domain.
 FOUNDATION_EXPORT NSString *const StripeDomain;
 
-/*
- These NSError codes match up to the errors listed in the Stripe API docs:
- https://stripe.com/docs/api?lang=curl#errors .  In addition to being returned
- by our REST API, certain parts of the iOS bindings can return errors with these
- codes.
-*/
 typedef enum STPErrorCode {
-    STPInvalidRequestError = 50,
-    STPAPIError = 60,
-    STPCardError = 70
+    STPInvalidRequestError = 50, // Your request had invalid parameters.
+    STPAPIError = 60, // General-purpose API error (should be rare).
+    STPCardError = 70, // Something was wrong with the given card (most common).
 } STPErrorCode;
 
+#pragma mark userInfo keys
 
-
-/*
- The parameter that an NSError is for.  Corresponds to the "param" property
- returned in errors from the Stripe API.  These match up to the properties on
- STPCard.
- */
-FOUNDATION_EXPORT NSString *const STPErrorParameterKey;
-
-/*
- Stripe API error messages are intended to be developer-facing, not customer-
- facing, so this key holds the message.  Corresponds to the "message" property
- returned in errors from the Stripe API.
- */
+// A developer-friendly error message that explains what went wrong. You probably
+// shouldn't show this to your users, but might want to use it yourself.
 FOUNDATION_EXPORT NSString *const STPErrorMessageKey;
 
-/*
- NSErrors that have a code of STPCardError will have an STPCardErrorCodeKey
- in the userInfo dictionary.  This gives more information about the card error.
- */
+// What went wrong with your STPCard (e.g., STPInvalidCVC. See below for full list).
 FOUNDATION_EXPORT NSString *const STPCardErrorCodeKey;
 
+// Which parameter on the STPCard had an error (e.g., "cvc"). Useful for marking up the
+// right UI element.
+FOUNDATION_EXPORT NSString *const STPErrorParameterKey;
 
+#pragma mark STPCardErrorCodeKeys
 
-/*
- These are possible values for the STPCardErrorCodeKey in the userInfo dictionary
- of an NSError returned by this library
- */
-
-/*
- These four values may be returned for STPCardErrorCodeKey by the client-side
- validations done in STPCard as well as by the call to createTokenWithCard
- */
+// (Usually determined locally:)
 FOUNDATION_EXPORT NSString *const STPInvalidNumber;
 FOUNDATION_EXPORT NSString *const STPInvalidExpMonth;
 FOUNDATION_EXPORT NSString *const STPInvalidExpYear;
 FOUNDATION_EXPORT NSString *const STPInvalidCVC;
 
-/*
- These values may be returned for STPCardErrorCodeKey from the call to
- createTokenWithCard
- */
+// (Usually sent from the server:)
 FOUNDATION_EXPORT NSString *const STPIncorrectNumber;
 FOUNDATION_EXPORT NSString *const STPExpiredCard;
 FOUNDATION_EXPORT NSString *const STPCardDeclined;
 FOUNDATION_EXPORT NSString *const STPProcessingError;
 FOUNDATION_EXPORT NSString *const STPIncorrectCVC;
 
+#pragma mark Strings
 
-
-/*
- These define user-facing, localizable error messages in all NSErrors returned
- by this library. We use macros instead of string constants so that you can use
- genstrings to generate your Localizable.strings file
- */
 #define STPCardErrorInvalidNumberUserMessage NSLocalizedString(@"Your card's number is invalid", @"Error when the card number is not valid")
 #define STPCardErrorInvalidCVCUserMessage NSLocalizedString(@"Your card's security code is invalid", @"Error when the card's CVC is not valid")
 #define STPCardErrorInvalidExpMonthUserMessage NSLocalizedString(@"Your card's expiration month is invalid", @"Error when the card's expiration month is not valid")
