@@ -53,8 +53,13 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
                              completion:^(STPToken *token, NSError *error) {
                                  XCTAssertNil(token, @"Expected no response");
                                  XCTAssertNotNil(error, @"Expected error");
-                                 XCTAssertEqualObjects(error.domain, @"NSURLErrorDomain", @"Error should be NSURLErrorDomain");
-                                 if (method != StripeCertificateFailMethodRevoked) { // This won't be included when we fail the connection ourselves.
+
+                                 // Revoked errors are a bit special.
+                                 if (method == StripeCertificateFailMethodRevoked) {
+                                     XCTAssertEqualObjects(error.domain, StripeDomain, @"Revoked errors specifically are in the Stripe domain");
+                                     XCTAssertEqual(error.code, STPConnectionError, @"Revoked errors should generate the right code.");
+                                 } else {
+                                     XCTAssertEqualObjects(error.domain, @"NSURLErrorDomain", @"Error should be NSURLErrorDomain");
                                      XCTAssertNotNil(error.userInfo[@"NSURLErrorFailingURLPeerTrustErrorKey"], @"There should be a secTustRef for Foundation HTTPS errors");
                                  }
                                  dispatch_semaphore_signal(semaphore);
