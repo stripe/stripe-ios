@@ -24,10 +24,10 @@ typedef void (^STPTokenBlock)(STPToken *token, NSError *error);
 
 - (id)initWithFrame:(CGRect)frame andKey:(NSString *)stripeKey;
 
-@property (nonatomic) PKView *paymentView;
-@property (copy) NSString *key;
-@property (weak, nonatomic) IBOutlet id <STPViewDelegate> delegate;
-@property (readonly) BOOL pending;
+@property (nonatomic) IBOutlet PKView *paymentView;
+@property (nonatomic, copy) NSString *key;
+@property (nonatomic, weak) IBOutlet id <STPViewDelegate> delegate;
+@property (nonatomic, readonly) BOOL pending;
 
 - (void)createToken:(STPTokenBlock)block;
 
