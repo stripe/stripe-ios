@@ -120,11 +120,13 @@ If you're implementing a complex workflow, you may want to know if you've alread
 
 ### Handling errors
 
-Expected errors, such as a card being invalid, generate `NSError` objects.  The bindings will return errors that are in the `StripeDomain` domain and have a `code` of `STPInvalidRequestError`, `STPAPIError`, or `STPCardError` -- these match up to the `type` property of [errors returned by the Stripe API](https://stripe.com/docs/api#errors).  Additionally, as recommended by Cocoa guidelines, all errors in the `StripeDomain` also provide a localizable user-facing error message that can be retrieved by calling `[error localizedDescription]`.
+See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/StripeError.h) for more, but the gist:
 
-The `userInfo` dictionary of errors in the `StripeDomain` contains a developer-facing error message corresponding to the `message` property returned by the [Stripe API for an error](https://stripe.com/docs/api#errors), and, when applicable, a card error code corresponding to the `code` property and a parameter the error is for corresponding to the `param` property.  These are the values for the keys `STPErrorMessageKey`, `STPCardErrorCodeKey`, and `STPErrorParameterKey` in the `userInfo` dictionary, respectively.  Note that the values for `STPErrorParameterKey` will be camel cased and match up to the properties on `STPCard`.  For example, an invalid expiration month will have `expMonth`, not `exp_month`, as the value for `STPErrorParameterKey` in the `userInfo` dictionary).
+1. All Stripe errors will be under the `StripeDomain` domain (excluding more general-purpose errors like NSURL errors)
+2. Their userInfo should have both:
 
-Almost all calls made to methods in the Stripe iOS bindings return nothing but errors in the `StripeDomain`.  The only exception to this is calls to `createTokenWithCard` and `getTokenWithId`.  Both of these methods make requests using `NSURLConnection`, so if the request fails to even be made, these calls just return the error object that is generated and returned by `NSURLConnection` (which will be in the `NSURLErrorDomain`).
+  - `NSLocalizedDescriptionKey`: a general message which you can show your users
+  - `STPErrorMessageKey`: a developer-friendly description that should help with debugging the issue)
 
 ### Operation queues
 
