@@ -12,7 +12,7 @@ There are two ways to add Stripe to your project:
 
 [CocoaPods](http://cocoapods.org/) is a common library dependency management tool for Objective-C.  To use the Stripe iOS bindings with CocoaPods, simply add the following to your `Podfile` and run `pod install`:
 
-    pod 'Stripe', :git => 'https://github.com/stripe/stripe-ios.git'
+    pod 'Stripe'
 
 Note: be sure to use the `.xcworkspace` to open your project in Xcode instead of the `.xcproject`. You will also need to add the `QuartzCore` framework to your project.
 
