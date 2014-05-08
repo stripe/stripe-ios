@@ -18,10 +18,10 @@
     if (self = [super init]) {
         tokenId = [attributeDictionary valueForKey:@"id"];
         object = [attributeDictionary valueForKey:@"object"];
-        livemode = [[attributeDictionary objectForKey:@"livemode"] boolValue];
-        created = [NSDate dateWithTimeIntervalSince1970:[[attributeDictionary objectForKey:@"created"] doubleValue]];
-        used = [[attributeDictionary objectForKey:@"used"] boolValue];
-        card = [[STPCard alloc] initWithAttributeDictionary:[attributeDictionary objectForKey:@"card"]];
+        livemode = [attributeDictionary[@"livemode"] boolValue];
+        created = [NSDate dateWithTimeIntervalSince1970:[attributeDictionary[@"created"] doubleValue]];
+        used = [attributeDictionary[@"used"] boolValue];
+        card = [[STPCard alloc] initWithAttributeDictionary:attributeDictionary[@"card"]];
     }
     return self;
 }

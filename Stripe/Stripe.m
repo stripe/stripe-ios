@@ -93,9 +93,9 @@ static NSString *const tokenEndpoint = @"tokens";
     NSMutableDictionary *attributeDictionary = [NSMutableDictionary dictionary];
     for (NSString *key in jsonDictionary) {
         if ([key isEqualToString:@"card"])
-            [attributeDictionary setObject:[self camelCasedResponseFromStripeResponse:[jsonDictionary valueForKey:key]] forKey:key];
+            attributeDictionary[key] = [self camelCasedResponseFromStripeResponse:[jsonDictionary valueForKey:key]];
         else
-            [attributeDictionary setObject:[jsonDictionary valueForKey:key] forKey:[self camelCaseFromUnderscoredString:key]];
+            attributeDictionary[[self camelCaseFromUnderscoredString:key]] = [jsonDictionary valueForKey:key];
     }
     return attributeDictionary;
 }
@@ -156,19 +156,17 @@ static NSString *const tokenEndpoint = @"tokens";
 
 + (NSDictionary *)requestPropertiesFromCard:(STPCard *)card
 {
-    return [NSDictionary dictionaryWithObjectsAndKeys:
-            card.number ? card.number : [NSNull null], @"number",
-            card.expMonth ? [NSString stringWithFormat:@"%lu", (unsigned long) card.expMonth] : [NSNull null], @"exp_month",
-            card.expYear ? [NSString stringWithFormat:@"%lu", (unsigned long) card.expYear] : [NSNull null], @"exp_year",
-            card.cvc ? card.cvc : [NSNull null], @"cvc",
-            card.name ? card.name : [NSNull null], @"name",
-            card.addressLine1 ? card.addressLine1 : [NSNull null], @"address_line1",
-            card.addressLine2 ? card.addressLine2 : [NSNull null], @"address_line2",
-            card.addressCity ? card.addressCity : [NSNull null], @"address_city",
-            card.addressState ? card.addressState : [NSNull null], @"address_state",
-            card.addressZip ? card.addressZip : [NSNull null], @"address_zip",
-            card.addressCountry ? card.addressCountry : [NSNull null], @"address_country",
-            nil];
+    return @{@"number" : card.number ? card.number : [NSNull null],
+            @"exp_month" : card.expMonth ? [NSString stringWithFormat:@"%lu", (unsigned long) card.expMonth] : [NSNull null],
+            @"exp_year" : card.expYear ? [NSString stringWithFormat:@"%lu", (unsigned long) card.expYear] : [NSNull null],
+            @"cvc" : card.cvc ? card.cvc : [NSNull null],
+            @"name" : card.name ? card.name : [NSNull null],
+            @"address_line1" : card.addressLine1 ? card.addressLine1 : [NSNull null],
+            @"address_line2" : card.addressLine2 ? card.addressLine2 : [NSNull null],
+            @"address_city" : card.addressCity ? card.addressCity : [NSNull null],
+            @"address_state" : card.addressState ? card.addressState : [NSNull null],
+            @"address_zip" : card.addressZip ? card.addressZip : [NSNull null],
+            @"address_country" : card.addressCountry ? card.addressCountry : [NSNull null]};
 }
 
 + (NSData *)formEncodedDataFromCard:(STPCard *)card
@@ -177,7 +175,7 @@ static NSString *const tokenEndpoint = @"tokens";
     NSDictionary *attributes = [self requestPropertiesFromCard:card];
 
     for (NSString *key in attributes) {
-        NSString *value = [attributes objectForKey:key];
+        NSString *value = attributes[key];
         if ((id) value == [NSNull null]) continue;
 
         if (body.length != 0)
@@ -311,10 +309,9 @@ static NSString *const tokenEndpoint = @"tokens";
     request.HTTPBody = [self formEncodedDataFromCard:card];
 
     [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
-                                                                 completion:^(NSURLResponse *response, NSData *body, NSError *requestError)
-    {
-      [self handleTokenResponse:response body:body error:requestError completion:handler];
-    }];
+                                                                 completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
+                                                                     [self handleTokenResponse:response body:body error:requestError completion:handler];
+                                                                 }];
 }
 
 + (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
@@ -333,10 +330,9 @@ static NSString *const tokenEndpoint = @"tokens";
     request.HTTPMethod = @"GET";
 
     [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
-                                                                 completion:^(NSURLResponse *response, NSData *body, NSError *requestError)
-    {
-        [self handleTokenResponse:response body:body error:requestError completion:handler];
-    }];
+                                                                 completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
+                                                                     [self handleTokenResponse:response body:body error:requestError completion:handler];
+                                                                 }];
 }
 
 + (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)handler

@@ -54,7 +54,7 @@
 #pragma mark -initWithAttributeDictionary: tests
 - (void)testInitializingCardWithAttributeDictionary
 {
-    NSDictionary *attributeDict = [NSDictionary dictionaryWithObjectsAndKeys:@"4242424242424242", @"number", @"12", @"expMonth", @"2013", @"expYear", @"123", @"cvc", @"Smerlock Smolmes", @"name", @"221A Baker Street", @"addressLine1", @"New York", @"addressCity", @"NY", @"addressState", @"12345", @"addressZip", @"USA", @"addressCountry", @"something", @"object", @"1234", @"last4", @"Smastersmard", @"type", @"Fingolfin", @"fingerprint", @"Japan", @"country", nil];
+    NSDictionary *attributeDict = @{@"number": @"4242424242424242", @"expMonth": @"12", @"expYear": @"2013", @"cvc": @"123", @"name": @"Smerlock Smolmes", @"addressLine1": @"221A Baker Street", @"addressCity": @"New York", @"addressState": @"NY", @"addressZip": @"12345", @"addressCountry": @"USA", @"object": @"something", @"last4": @"1234", @"type": @"Smastersmard", @"fingerprint": @"Fingolfin", @"country": @"Japan"};
     STPCard *cardWithAttributes = [[STPCard alloc] initWithAttributeDictionary:attributeDict];
 
     XCTAssertEqualObjects([cardWithAttributes number], @"4242424242424242", @"number is set correctly");
@@ -141,7 +141,7 @@
     NSDictionary *userInfo = [error userInfo];
     XCTAssertEqualObjects([userInfo valueForKey:STPCardErrorCodeKey], STPInvalidNumber, @"Invalid card number returns the correct card error code");
     XCTAssertEqualObjects([userInfo valueForKey:STPErrorParameterKey], @"number", @"Invaild card number returns the correct error parameter");
-    XCTAssertTrue([userInfo objectForKey:STPErrorMessageKey] != nil, @"Invalid card number returns a developer-facing error message");
+    XCTAssertTrue(userInfo[STPErrorMessageKey] != nil, @"Invalid card number returns a developer-facing error message");
 }
 
 - (void)testCardNumberWithManySpaces
@@ -211,7 +211,7 @@
     NSDictionary *userInfo = [error userInfo];
     XCTAssertEqualObjects([userInfo valueForKey:STPCardErrorCodeKey], STPInvalidCVC, @"Invalid card number returns the correct card error code");
     XCTAssertEqualObjects([userInfo valueForKey:STPErrorParameterKey], @"cvc", @"Invaild CVC returns the correct error parameter");
-    XCTAssertTrue([userInfo objectForKey:STPErrorMessageKey] != nil, @"Invalid CVC returns a developer-facing error message");
+    XCTAssertTrue(userInfo[STPErrorMessageKey] != nil, @"Invalid CVC returns a developer-facing error message");
 }
 
 - (void)testValidCVC
@@ -290,7 +290,7 @@
     XCTAssertEqualObjects(@"Your card's expiration month is invalid", [error localizedDescription], @"Invalid card expiration month gives the correct user facing error message");
     NSDictionary *userInfo = [error userInfo];    XCTAssertEqualObjects([userInfo valueForKey:STPCardErrorCodeKey], STPInvalidExpMonth, @"Invalid card expiration month returns the correct card error code");
     XCTAssertEqualObjects([userInfo valueForKey:STPErrorParameterKey], @"expMonth", @"Invaild expiration month returns the correct error parameter");
-    XCTAssertTrue([userInfo objectForKey:STPErrorMessageKey] != nil, @"Invalid expiration month returns a developer-facing error message");
+    XCTAssertTrue(userInfo[STPErrorMessageKey] != nil, @"Invalid expiration month returns a developer-facing error message");
 }
 
 - (void)testNullExpMonth
@@ -366,7 +366,7 @@
     NSDictionary *userInfo = [error userInfo];
     XCTAssertEqualObjects([userInfo valueForKey:STPCardErrorCodeKey], STPInvalidExpYear, @"Invalid card expiration month returns the correct card error code");
     XCTAssertEqualObjects([userInfo valueForKey:STPErrorParameterKey], @"expYear", @"Invaild expiration year returns the correct error parameter");
-    XCTAssertTrue([userInfo objectForKey:STPErrorMessageKey] != nil, @"Invalid expiration year returns a developer-facing error message");
+    XCTAssertTrue(userInfo[STPErrorMessageKey] != nil, @"Invalid expiration year returns a developer-facing error message");
 }
 
 - (void)testNullExpYear
@@ -399,7 +399,7 @@
     XCTAssertFalse([card validateExpYear:&expYear error:&error], @"When the month is already set, if the combination of month and year is in the past, don't validate");
 
     NSDictionary *userInfo = [error userInfo];
-    XCTAssertEqualObjects([userInfo objectForKey:STPCardErrorCodeKey], STPInvalidExpMonth, @"The error returned should be for the expMonth");
+    XCTAssertEqualObjects(userInfo[STPCardErrorCodeKey], STPInvalidExpMonth, @"The error returned should be for the expMonth");
 }
 
 - (void)testValidExpYearWhenMonthIsSet
@@ -419,7 +419,7 @@
     card.expYear = 2012;
     XCTAssertFalse([card validateCardReturningError:&error], @"Card with invalid number should fail overall validation");
     NSDictionary *userInfo = [error userInfo];
-    XCTAssertEqualObjects([userInfo objectForKey:STPCardErrorCodeKey], STPInvalidNumber, @"The error returned should be for the number");
+    XCTAssertEqualObjects(userInfo[STPCardErrorCodeKey], STPInvalidNumber, @"The error returned should be for the number");
 }
 
 - (void)testExpiredCardDoesNotValidate
@@ -430,7 +430,7 @@
     card.expYear = 1997;
     XCTAssertFalse([card validateCardReturningError:&error], @"Expired card shoul fail overall validation");
     NSDictionary *userInfo = [error userInfo];
-    XCTAssertEqualObjects([userInfo objectForKey:STPCardErrorCodeKey], STPInvalidExpMonth, @"The error returned should be for the expMonth");
+    XCTAssertEqualObjects(userInfo[STPCardErrorCodeKey], STPInvalidExpMonth, @"The error returned should be for the expMonth");
 }
 
 - (void)testCardWithBadCVCDoesNotValidate
@@ -442,7 +442,7 @@
     card.expYear = 2012;
     XCTAssertFalse([card validateCardReturningError:&error], @"Card with bad CVC should fail overall validation");
     NSDictionary *userInfo = [error userInfo];
-    XCTAssertEqualObjects([userInfo objectForKey:STPCardErrorCodeKey], STPInvalidCVC, @"The error returned should be for the cvc");
+    XCTAssertEqualObjects(userInfo[STPCardErrorCodeKey], STPInvalidCVC, @"The error returned should be for the cvc");
 }
 
 - (void)testCardWithMissingExpYearDoesNotValidate
@@ -453,7 +453,7 @@
     card.expMonth = 12;
     XCTAssertFalse([card validateCardReturningError:&error], @"Card missing expYear should fail validation");
     NSDictionary *userInfo = [error userInfo];
-    XCTAssertEqualObjects([userInfo objectForKey:STPCardErrorCodeKey], STPInvalidExpYear, @"The error returned should be for the expYear");
+    XCTAssertEqualObjects(userInfo[STPCardErrorCodeKey], STPInvalidExpYear, @"The error returned should be for the expYear");
 }
 
 - (void)testCardWithMissingNumberDoesNotValidate
@@ -463,6 +463,6 @@
     card.expYear = 2012;
     XCTAssertFalse([card validateCardReturningError:&error], @"Card with missing number should fail overall validation");
     NSDictionary *userInfo = [error userInfo];
-    XCTAssertEqualObjects([userInfo objectForKey:STPCardErrorCodeKey], STPInvalidNumber, @"The error returned should be for the number");
+    XCTAssertEqualObjects(userInfo[STPCardErrorCodeKey], STPInvalidNumber, @"The error returned should be for the number");
 }
 @end

@@ -150,21 +150,21 @@
 {
     if (self = [self init]) {
         number = [attributeDictionary valueForKey:@"number"];
-        expMonth = [[attributeDictionary objectForKey:@"expMonth"] intValue];
-        expYear = [[attributeDictionary objectForKey:@"expYear"] intValue];
-        cvc = [attributeDictionary objectForKey:@"cvc"];
-        name = [attributeDictionary objectForKey:@"name"];
-        addressLine1 = [attributeDictionary objectForKey:@"addressLine1"];
-        addressLine2 = [attributeDictionary objectForKey:@"addressLine2"];
-        addressCity = [attributeDictionary objectForKey:@"addressCity"];
-        addressState = [attributeDictionary objectForKey:@"addressState"];
-        addressZip = [attributeDictionary objectForKey:@"addressZip"];
-        addressCountry = [attributeDictionary objectForKey:@"addressCountry"];
-        object = [attributeDictionary objectForKey:@"object"];
-        last4 = [attributeDictionary objectForKey:@"last4"];
-        type = [attributeDictionary objectForKey:@"type"];
-        fingerprint = [attributeDictionary objectForKey:@"fingerprint"];
-        country = [attributeDictionary objectForKey:@"country"];
+        expMonth = [attributeDictionary[@"expMonth"] intValue];
+        expYear = [attributeDictionary[@"expYear"] intValue];
+        cvc = attributeDictionary[@"cvc"];
+        name = attributeDictionary[@"name"];
+        addressLine1 = attributeDictionary[@"addressLine1"];
+        addressLine2 = attributeDictionary[@"addressLine2"];
+        addressCity = attributeDictionary[@"addressCity"];
+        addressState = attributeDictionary[@"addressState"];
+        addressZip = attributeDictionary[@"addressZip"];
+        addressCountry = attributeDictionary[@"addressCountry"];
+        object = attributeDictionary[@"object"];
+        last4 = attributeDictionary[@"last4"];
+        type = attributeDictionary[@"type"];
+        fingerprint = attributeDictionary[@"fingerprint"];
+        country = attributeDictionary[@"country"];
     }
     return self;
 }
