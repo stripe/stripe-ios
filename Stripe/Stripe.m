@@ -111,7 +111,7 @@ static NSString *const tokenEndpoint = @"tokens";
         NSString *character = [string substringWithRange:NSMakeRange(index, 1)];
         if ([character isEqualToString:@"_"] && index != [string length] - 1)
             makeNextCharacterUpperCase = YES;
-        else if (makeNextCharacterUpperCase == YES) {
+        else if (makeNextCharacterUpperCase) {
             [output appendString:[character uppercaseString]];
             makeNextCharacterUpperCase = NO;
         }
