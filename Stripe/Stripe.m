@@ -22,6 +22,8 @@
 + (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey;
 @end
 
+NSString *const kStripeiOSVersion = @"1.1.3";
+
 @implementation Stripe
 static NSString *defaultKey;
 static NSString *const apiURLBase = @"api.stripe.com";
