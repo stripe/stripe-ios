@@ -26,6 +26,11 @@
     return self;
 }
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%@ (%@)", tokenId ?: @"Unknown token", (livemode ? @"live mode" : @"test mode")];
+}
+
 - (void)postToURL:(NSURL *)url withParams:(NSMutableDictionary *)params completion:(void (^)(NSURLResponse *, NSData *, NSError *))handler
 {
 
