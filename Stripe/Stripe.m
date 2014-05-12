@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Stripe. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+#import <sys/utsname.h>
 #import "STPAPIConnection.h"
 #import "Stripe.h"
 
@@ -307,8 +309,8 @@ static NSString *const tokenEndpoint = @"tokens";
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
-
     request.HTTPBody = [self formEncodedDataFromCard:card];
+    [request setValue:[self JSONStringForObject:[self stripeUserAgentDetails]] forHTTPHeaderField:@"X-Stripe-User-Agent"];
 
     [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
                                                                  completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
@@ -330,12 +332,15 @@ static NSString *const tokenEndpoint = @"tokens";
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"GET";
+    [request setValue:[self JSONStringForObject:[self stripeUserAgentDetails]] forHTTPHeaderField:@"X-Stripe-User-Agent"];
 
     [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
                                                                  completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
                                                                      [self handleTokenResponse:response body:body error:requestError completion:handler];
                                                                  }];
 }
+
+#pragma mark Shorthand methods -
 
 + (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)handler
 {
@@ -365,6 +370,45 @@ static NSString *const tokenEndpoint = @"tokens";
 + (void)requestTokenWithID:(NSString *)tokenId completion:(STPCompletionBlock)handler
 {
     [self requestTokenWithID:tokenId publishableKey:[self defaultPublishableKey] operationQueue:[NSOperationQueue mainQueue] completion:handler];
+}
+
+#pragma mark Utility methods -
+
++ (NSDictionary *)stripeUserAgentDetails
+{
+    NSMutableDictionary *details = [@{
+            @"lang" : @"objective-c",
+            @"bindings_version" : kStripeiOSVersion,
+    } mutableCopy];
+
+    @try {
+        details[@"device"] = @{
+                @"os_version" : [UIDevice currentDevice].systemVersion,
+                @"type" : [self deviceType],
+                @"model" : [UIDevice currentDevice].localizedModel,
+                @"vendor_identifier" : [[UIDevice currentDevice].identifierForVendor UUIDString],
+        };
+    } @catch (NSException *exception) {
+        details[@"error"] = @"Error while fetching device details";
+    }
+
+    return details;
+}
+
++ (NSString *)JSONStringForObject:(id)object
+{
+    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:object
+                                                                          options:0
+                                                                            error:nil]
+                                 encoding:NSUTF8StringEncoding];
+}
+
++ (NSString *)deviceType
+{
+    struct utsname systemInfo;
+    uname(&systemInfo);
+
+    return [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
 }
 
 @end
