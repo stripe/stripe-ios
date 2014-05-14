@@ -79,6 +79,7 @@ After showing your view, create and populate a `STPCard` with the details you co
     card.number = @"4242424242424242";
     card.expMonth = 12;
     card.expYear = 2020;
+    card.cvc = "123";
 
 Then send it to Stripe:
 
