@@ -85,19 +85,20 @@
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
-
-        NSURLCredential *urlCredential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-        [challenge.sender useCredential:urlCredential forAuthenticationChallenge:challenge];
-
         SecTrustRef serverTrust = [[challenge protectionSpace] serverTrust];
+        SecTrustResultType resultType;
+        SecTrustEvaluate(serverTrust, &resultType);
+
+        // Check for revocation manually since CFNetworking doesn't. (see https://revoked.stripe.com for more)
         for (CFIndex i = 0, count = SecTrustGetCertificateCount(serverTrust); i < count; i++) {
-            NSError *error = nil;
-            [self.class verifyCertificate:SecTrustGetCertificateAtIndex(serverTrust, i) forChallenge:challenge error:&error];
-            if (error) {
-                _overrideError = error;
+            if ([self.class isCertificateBlacklisted:SecTrustGetCertificateAtIndex(serverTrust, i)]) {
+                _overrideError = [self.class blacklistedCertificateError];
+                [challenge.sender cancelAuthenticationChallenge:challenge];
+                return;
             }
         }
+
+        [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
     }
 }
 
@@ -111,24 +112,18 @@
     ];
 }
 
-+ (void)verifyCertificate:(SecCertificateRef)certificate forChallenge:(NSURLAuthenticationChallenge *)challenge error:(NSError **)error
++ (BOOL)isCertificateBlacklisted:(SecCertificateRef)certificate
+{
+    return [[self certificateBlacklist] containsObject:[self SHA1FingerprintOfCertificateData:certificate]];
+}
+
++ (NSString *)SHA1FingerprintOfCertificateData:(SecCertificateRef)certificate
 {
     CFDataRef data = SecCertificateCopyData(certificate);
-    NSString *fingerprint = [self.class SHA1FingerprintOfData:(__bridge NSData *) data];
+    NSString *fingerprint = [self SHA1FingerprintOfData:(__bridge NSData *) data];
     CFRelease(data);
 
-    if ([[self certificateBlacklist] containsObject:fingerprint]) {
-        *error = [[NSError alloc] initWithDomain:StripeDomain
-                                            code:STPConnectionError
-                                        userInfo:@{
-                                                NSLocalizedDescriptionKey : STPUnexpectedError,
-                                                STPErrorMessageKey : @"Invalid server certificate. You tried to connect to a server "
-                                                        "that has a revoked SSL certificate, which means we cannot securely send data to that server. "
-                                                        "Please email support@stripe.com if you need help connecting to the correct API server."
-                                        }];
-
-        [[challenge sender] cancelAuthenticationChallenge:challenge];
-    }
+    return fingerprint;
 }
 
 + (NSString *)SHA1FingerprintOfData:(NSData *)data
@@ -148,6 +143,18 @@
 
     free(cData);
     return [output lowercaseString];
+}
+
++ (NSError *)blacklistedCertificateError
+{
+    return [[NSError alloc] initWithDomain:StripeDomain
+                                      code:STPConnectionError
+                                  userInfo:@{
+                                          NSLocalizedDescriptionKey : STPUnexpectedError,
+                                          STPErrorMessageKey : @"Invalid server certificate. You tried to connect to a server "
+                                                  "that has a revoked SSL certificate, which means we cannot securely send data to that server. "
+                                                  "Please email support@stripe.com if you need help connecting to the correct API server."
+                                  }];
 }
 
 @end
