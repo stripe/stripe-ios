@@ -11,22 +11,10 @@
 #import "STPAPIConnection.h"
 #import "Stripe.h"
 
-@interface Stripe ()
-+ (NSString *)URLEncodedString:(NSString *)string;
-+ (NSString *)camelCaseFromUnderscoredString:(NSString *)string;
-+ (NSDictionary *)requestPropertiesFromCard:(STPCard *)card;
-+ (NSData *)formEncodedDataFromCard:(STPCard *)card;
-+ (void)validateKey:(NSString *)publishableKey;
-+ (NSError *)errorFromStripeResponse:(NSDictionary *)jsonDictionary;
-+ (NSDictionary *)camelCasedResponseFromStripeResponse:(NSDictionary *)jsonDictionary;
-+ (NSDictionary *)dictionaryFromJSONData:(NSData *)data error:(NSError **)outError;
-+ (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError completion:(STPCompletionBlock)handler;
-+ (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey;
-@end
-
 NSString *const kStripeiOSVersion = @"1.1.4";
 
 @implementation Stripe
+
 static NSString *defaultKey;
 static NSString *const apiURLBase = @"api.stripe.com";
 static NSString *const apiVersion = @"v1";
@@ -39,6 +27,7 @@ static NSString *const tokenEndpoint = @"tokens";
 }
 
 #pragma mark Private Helpers
+
 + (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey
 {
     NSURL *url = [[[NSURL URLWithString:
@@ -55,21 +44,20 @@ static NSString *const tokenEndpoint = @"tokens";
         NSDictionary *jsonDictionary = nil;
         if (body && (jsonDictionary = [self dictionaryFromJSONData:body error:nil]) && [jsonDictionary valueForKey:@"error"] != nil) {
             handler(nil, [self errorFromStripeResponse:jsonDictionary]);
-        }
-                // Otherwise, return the raw NSURLError error
-        else
+        } else {
             handler(nil, requestError);
-    }
-    else {
+        }
+    } else {
         NSError *parseError;
         NSDictionary *jsonDictionary = [self dictionaryFromJSONData:body error:&parseError];
 
-        if (jsonDictionary == nil)
+        if (jsonDictionary == nil) {
             handler(nil, parseError);
-        else if ([(NSHTTPURLResponse *) response statusCode] == 200)
+        } else if ([(NSHTTPURLResponse *) response statusCode] == 200) {
             handler([[STPToken alloc] initWithAttributeDictionary:[self camelCasedResponseFromStripeResponse:jsonDictionary]], nil);
-        else
+        } else {
             handler(nil, [self errorFromStripeResponse:jsonDictionary]);
+        }
     }
 }
 
@@ -96,42 +84,46 @@ static NSString *const tokenEndpoint = @"tokens";
 {
     NSMutableDictionary *attributeDictionary = [NSMutableDictionary dictionary];
     for (NSString *key in jsonDictionary) {
-        if ([key isEqualToString:@"card"])
+        if ([key isEqualToString:@"card"]) {
             attributeDictionary[key] = [self camelCasedResponseFromStripeResponse:[jsonDictionary valueForKey:key]];
-        else
+        } else {
             attributeDictionary[[self camelCaseFromUnderscoredString:key]] = [jsonDictionary valueForKey:key];
+        }
     }
     return attributeDictionary;
 }
 
 + (NSString *)camelCaseFromUnderscoredString:(NSString *)string
 {
-    if (string == nil || [string isEqualToString:@""])
+    if (string == nil || [string isEqualToString:@""]) {
         return @"";
+    }
 
     NSMutableString *output = [NSMutableString string];
     BOOL makeNextCharacterUpperCase = NO;
     for (NSInteger index = 0; index < [string length]; index += 1) {
         NSString *character = [string substringWithRange:NSMakeRange(index, 1)];
-        if ([character isEqualToString:@"_"] && index != [string length] - 1)
+        if ([character isEqualToString:@"_"] && index != [string length] - 1) {
             makeNextCharacterUpperCase = YES;
-        else if (makeNextCharacterUpperCase) {
+        } else if (makeNextCharacterUpperCase) {
             [output appendString:[character uppercaseString]];
             makeNextCharacterUpperCase = NO;
-        }
-        else
+        } else {
             [output appendString:character];
+        }
     }
     return output;
 }
 
 + (void)validateKey:(NSString *)publishableKey
 {
-    if (!publishableKey || [publishableKey isEqualToString:@""])
-        [NSException raise:@"InvalidPublishableKey" format:@"You must use a valid publishable key to create a token.  For more info, see https://stripe.com/docs/stripe.js"];
+    if (!publishableKey || [publishableKey isEqualToString:@""]) {
+        [NSException raise:@"InvalidPublishableKey" format:@"You must use a valid publishable key to create a token. For more info, see https://stripe.com/docs/stripe.js"];
+    }
 
-    if ([publishableKey hasPrefix:@"sk_"])
+    if ([publishableKey hasPrefix:@"sk_"]) {
         [NSException raise:@"InvalidPublishableKey" format:@"You are using a secret key to create a token, instead of the publishable one. For more info, see https://stripe.com/docs/stripe.js"];
+    }
 }
 
 /* This code is adapted from the code by David DeLong in this StackOverflow post:
@@ -145,15 +137,16 @@ static NSString *const tokenEndpoint = @"tokens";
     NSInteger sourceLen = strlen((const char *) source);
     for (int i = 0; i < sourceLen; ++i) {
         const unsigned char thisChar = source[i];
-        if (thisChar == ' ')
+        if (thisChar == ' ') {
             [output appendString:@"+"];
-        else if (thisChar == '.' || thisChar == '-' || thisChar == '_' || thisChar == '~' ||
-                (thisChar >= 'a' && thisChar <= 'z') ||
-                (thisChar >= 'A' && thisChar <= 'Z') ||
-                (thisChar >= '0' && thisChar <= '9'))
+        } else if (thisChar == '.' || thisChar == '-' || thisChar == '_' || thisChar == '~' ||
+                  (thisChar >= 'a' && thisChar <= 'z') ||
+                  (thisChar >= 'A' && thisChar <= 'Z') ||
+                  (thisChar >= '0' && thisChar <= '9')) {
             [output appendFormat:@"%c", thisChar];
-        else
+        } else {
             [output appendFormat:@"%%%02X", thisChar];
+        }
     }
     return output;
 }
@@ -182,11 +175,13 @@ static NSString *const tokenEndpoint = @"tokens";
         NSString *value = attributes[key];
         if ((id) value == [NSNull null]) continue;
 
-        if (body.length != 0)
+        if (body.length != 0) {
             [body appendString:@"&"];
+        }
 
-        if ([value isKindOfClass:[NSString class]])
+        if ([value isKindOfClass:[NSString class]]) {
             value = [self URLEncodedString:value];
+        }
 
         [body appendFormat:@"card[%@]=%@", [self URLEncodedString:key], value];
     }
@@ -270,8 +265,9 @@ static NSString *const tokenEndpoint = @"tokens";
             cardErrorCode = STPProcessingError;
             userMessage = STPCardErrorProcessingErrorUserMessage;
         }
-        else
+        else {
             userMessage = devMessage;
+        }
 
         [userInfoDict setValue:cardErrorCode forKey:STPCardErrorCodeKey];
     }
@@ -297,11 +293,13 @@ static NSString *const tokenEndpoint = @"tokens";
 
 + (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
 {
-    if (card == nil)
+    if (card == nil) {
         [NSException raise:@"RequiredParameter" format:@"'card' is required to create a token"];
+    }
 
-    if (handler == nil)
+    if (handler == nil) {
         [NSException raise:@"RequiredParameter" format:@"'handler' is required to use the token that is created"];
+    }
 
     [self validateKey:publishableKey];
 
@@ -320,11 +318,13 @@ static NSString *const tokenEndpoint = @"tokens";
 
 + (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
 {
-    if (tokenId == nil)
+    if (tokenId == nil) {
         [NSException raise:@"RequiredParameter" format:@"'tokenId' is required to retrieve a token"];
+    }
 
-    if (handler == nil)
+    if (handler == nil) {
         [NSException raise:@"RequiredParameter" format:@"'handler' is required to use the token that is requested"];
+    }
 
     [self validateKey:publishableKey];
 
