@@ -14,17 +14,18 @@
  form.  Then you create tokens from these.
  */
 @interface STPCard : NSObject
-@property (nonatomic, copy) NSString *number;
-@property (nonatomic, assign) NSUInteger expMonth;
-@property (nonatomic, assign) NSUInteger expYear;
-@property (nonatomic, copy) NSString *cvc;
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *addressLine1;
-@property (nonatomic, copy) NSString *addressLine2;
-@property (nonatomic, copy) NSString *addressCity;
-@property (nonatomic, copy) NSString *addressState;
-@property (nonatomic, copy) NSString *addressZip;
-@property (nonatomic, copy) NSString *addressCountry;
+
+@property (nonatomic) NSString *number;
+@property (nonatomic) NSUInteger expMonth;
+@property (nonatomic) NSUInteger expYear;
+@property (nonatomic) NSString *cvc;
+@property (nonatomic) NSString *name;
+@property (nonatomic) NSString *addressLine1;
+@property (nonatomic) NSString *addressLine2;
+@property (nonatomic) NSString *addressCity;
+@property (nonatomic) NSString *addressState;
+@property (nonatomic) NSString *addressZip;
+@property (nonatomic) NSString *addressCountry;
 
 @property (nonatomic, readonly) NSString *object;
 @property (nonatomic, readonly) NSString *last4;
@@ -56,4 +57,5 @@
  one.
  */
 - (BOOL)validateCardReturningError:(NSError **)outError;
+
 @end
