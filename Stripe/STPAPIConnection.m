@@ -99,6 +99,12 @@
         }
 
         [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
+    } else if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodDefault]) {
+        // If this is an HTTP Authorization request, just continue. We want to bubble this back through the
+        // request's error handler.
+        [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+    } else {
+        [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
     }
 }
 
