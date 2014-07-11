@@ -33,8 +33,10 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
     [FailableStripe createTokenWithCard:[self dummyCard]
                          publishableKey:EXAMPLE_STRIPE_PUBLISHABLE_KEY
                              completion:^(STPToken *token, NSError *error) {
-                                 XCTAssertNotNil(token, @"Expected token");
-                                 XCTAssertNil(error, @"Expected no error");
+                                 // Note that this API request *will* fail, but it will return error
+                                 // messages from the server and not be blocked by local cert checks
+                                 XCTAssertNil(token, @"Expected no token");
+                                 XCTAssertNotNil(error, @"Expected error");
                                  dispatch_semaphore_signal(semaphore);
                              }];
 
