@@ -9,6 +9,7 @@
 #import "STPCard.h"
 #import "StripeError.h"
 #import "STPCardTest.h"
+#import "STPUtils.h"
 
 @implementation NSDate(CardTestOverrides)
 + (NSDate *)date
@@ -52,10 +53,28 @@
 }
 
 #pragma mark -initWithAttributeDictionary: tests
+- (NSDictionary *)completeAttributeDictionary
+{
+    return @{@"number": @"4242424242424242",
+             @"expMonth": @"12",
+             @"expYear": @"2013",
+             @"cvc": @"123",
+             @"name": @"Smerlock Smolmes",
+             @"addressLine1": @"221A Baker Street",
+             @"addressCity": @"New York",
+             @"addressState": @"NY",
+             @"addressZip": @"12345",
+             @"addressCountry": @"USA",
+             @"object": @"something",
+             @"last4": @"1234",
+             @"type": @"Smastersmard",
+             @"fingerprint": @"Fingolfin",
+             @"country": @"Japan"};
+}
+
 - (void)testInitializingCardWithAttributeDictionary
 {
-    NSDictionary *attributeDict = @{@"number": @"4242424242424242", @"expMonth": @"12", @"expYear": @"2013", @"cvc": @"123", @"name": @"Smerlock Smolmes", @"addressLine1": @"221A Baker Street", @"addressCity": @"New York", @"addressState": @"NY", @"addressZip": @"12345", @"addressCountry": @"USA", @"object": @"something", @"last4": @"1234", @"type": @"Smastersmard", @"fingerprint": @"Fingolfin", @"country": @"Japan"};
-    STPCard *cardWithAttributes = [[STPCard alloc] initWithAttributeDictionary:attributeDict];
+    STPCard *cardWithAttributes = [[STPCard alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
 
     XCTAssertEqualObjects([cardWithAttributes number], @"4242424242424242", @"number is set correctly");
     XCTAssertTrue([cardWithAttributes expMonth] == 12, @"expMonth is set correctly");
@@ -72,6 +91,38 @@
     XCTAssertEqualObjects([cardWithAttributes type], @"Smastersmard", @"type is set correctly");
     XCTAssertEqualObjects([cardWithAttributes fingerprint], @"Fingolfin", @"fingerprint is set correctly");
     XCTAssertEqualObjects([cardWithAttributes country], @"Japan", @"country is set correctly");
+}
+
+- (void)testFormEncode
+{
+    NSDictionary *attributes = [self completeAttributeDictionary];
+    STPCard *cardWithAttributes = [[STPCard alloc] initWithAttributeDictionary:attributes];
+
+    NSData *encoded = [cardWithAttributes formEncode];
+    NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
+
+    NSArray *parts = [formData componentsSeparatedByString:@"&"];
+
+    NSSet *expectedKeys = [NSSet setWithObjects:@"number", @"exp_month", @"exp_year", @"cvc", @"name",
+                           @"address_line1", @"address_line2", @"address_city", @"address_state",
+                           @"address_zip", @"address_country", nil];
+
+    NSArray *values = [attributes allValues];
+    NSMutableArray *encodedValues = [NSMutableArray array];
+    [values enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [encodedValues addObject:[STPUtils stringByURLEncoding:obj]];
+    }];
+
+    NSSet *expectedValues = [NSSet setWithArray:encodedValues];
+
+    [parts enumerateObjectsUsingBlock:^(NSString *part, NSUInteger idx, BOOL *stop) {
+        NSArray *subparts = [part componentsSeparatedByString:@"="];
+        NSString *key = subparts[0];
+        NSString *value = subparts[1];
+
+        XCTAssertTrue([expectedKeys containsObject:key], @"unexpected key %@", key);
+        XCTAssertTrue([expectedValues containsObject:value], @"unexpected value %@", value);
+    }];
 }
 
 #pragma mark -last4 tests

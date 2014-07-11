@@ -40,6 +40,8 @@
  */
 - (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 
+- (NSData *)formEncode;
+
 
 /* These validation methods work as described in
     http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/KeyValueCoding/Articles/Validation.html#//apple_ref/doc/uid/20002173-CJBDBHCB

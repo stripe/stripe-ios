@@ -25,7 +25,7 @@ typedef void (^STPTokenBlock)(STPToken *token, NSError *error);
 - (id)initWithFrame:(CGRect)frame andKey:(NSString *)stripeKey;
 
 @property (nonatomic) IBOutlet PKView *paymentView;
-@property (nonatomic, copy) NSString *key;
+@property (nonatomic) NSString *key;
 @property (nonatomic, weak) IBOutlet id <STPViewDelegate> delegate;
 @property (nonatomic, readonly) BOOL pending;
 

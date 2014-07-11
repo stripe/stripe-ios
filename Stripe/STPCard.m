@@ -8,6 +8,7 @@
 
 #import "STPCard.h"
 #import "StripeError.h"
+#import "STPUtils.h"
 
 @interface STPCard ()
 
@@ -160,20 +161,20 @@
 - (id)init
 {
     self = [super init];
-    
+
     if (self) {
         _object = @"card";
     }
-    
+
     return self;
 }
 
 - (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary
 {
     self = [self init];
-    
+
     if (self) {
-        _number = [attributeDictionary valueForKey:@"number"];
+        _number = attributeDictionary[@"number"];
         _expMonth = [attributeDictionary[@"expMonth"] intValue];
         _expYear = [attributeDictionary[@"expYear"] intValue];
         _cvc = attributeDictionary[@"cvc"];
@@ -190,8 +191,33 @@
         _fingerprint = attributeDictionary[@"fingerprint"];
         _country = attributeDictionary[@"country"];
     }
-    
+
     return self;
+}
+
+- (NSData *)formEncode
+{
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+
+    if (_number) params[@"number"] = _number;
+    if (_cvc) params[@"cvc"] = _cvc;
+    if (_name) params[@"name"] = _name;
+    if (_addressLine1) params[@"address_line1"] = _addressLine1;
+    if (_addressLine2) params[@"address_line2"] = _addressLine2;
+    if (_addressCity) params[@"address_city"] = _addressCity;
+    if (_addressState) params[@"address_state"] = _addressState;
+    if (_addressZip) params[@"address_zip"] = _addressZip;
+    if (_addressCountry) params[@"address_country"] = _addressCountry;
+    if (_expMonth) params[@"exp_month"] = [NSString stringWithFormat:@"%lu", (unsigned long) _expMonth];
+    if (_expYear) params[@"exp_year"] = [NSString stringWithFormat:@"%lu", (unsigned long) _expYear];
+
+    NSMutableArray *parts = [NSMutableArray array];
+
+    [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop) {
+        [parts addObject:[NSString stringWithFormat:@"%@=%@", key, [STPUtils stringByURLEncoding:val]]];
+    }];
+
+    return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 - (NSString *)last4

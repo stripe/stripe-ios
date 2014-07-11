@@ -13,14 +13,17 @@
 
 - (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary
 {
-    if (self = [super init]) {
-        _tokenId = [attributeDictionary valueForKey:@"id"];
-        _object = [attributeDictionary valueForKey:@"object"];
+    self = [super init];
+
+    if (self) {
+        _tokenId = attributeDictionary[@"id"];
+        _object = attributeDictionary[@"object"];
         _livemode = [attributeDictionary[@"livemode"] boolValue];
         _created = [NSDate dateWithTimeIntervalSince1970:[attributeDictionary[@"created"] doubleValue]];
         _used = [attributeDictionary[@"used"] boolValue];
         _card = [[STPCard alloc] initWithAttributeDictionary:attributeDictionary[@"card"]];
     }
+
     return self;
 }
 

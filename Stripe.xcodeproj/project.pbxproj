@@ -100,6 +100,9 @@
 		4CCA852817146D130078A9DF /* textfield.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CCA84E717146D130078A9DF /* textfield.png */; };
 		4CCA852917146D130078A9DF /* textfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CCA84E817146D130078A9DF /* textfield@2x.png */; };
 		4CCA852A17146D130078A9DF /* textfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CCA84E817146D130078A9DF /* textfield@2x.png */; };
+		7106B4C7197087C2000A037E /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4C6197087C2000A037E /* STPUtils.m */; };
+		7106B4C919708CA5000A037E /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4C6197087C2000A037E /* STPUtils.m */; };
+		7106B4CA19708CA9000A037E /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4C6197087C2000A037E /* STPUtils.m */; };
 		A164C491170378B3001BE9E7 /* STPView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAFC118616E56B3E0066297F /* STPView.h */; };
 		B86FD14B18B6EED400B23911 /* PKComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = B86FD14A18B6EED400B23911 /* PKComponent.m */; };
 		B86FD14C18B6EF0400B23911 /* PKComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = B86FD14A18B6EED400B23911 /* PKComponent.m */; };
@@ -245,6 +248,8 @@
 		4CCA84E617146D130078A9DF /* gradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gradient@2x.png"; sourceTree = "<group>"; };
 		4CCA84E717146D130078A9DF /* textfield.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textfield.png; sourceTree = "<group>"; };
 		4CCA84E817146D130078A9DF /* textfield@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "textfield@2x.png"; sourceTree = "<group>"; };
+		7106B4C5197087C2000A037E /* STPUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPUtils.h; sourceTree = "<group>"; };
+		7106B4C6197087C2000A037E /* STPUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPUtils.m; sourceTree = "<group>"; };
 		B86FD14918B6EED400B23911 /* PKComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PKComponent.h; path = PaymentKit/PKComponent.h; sourceTree = "<group>"; };
 		B86FD14A18B6EED400B23911 /* PKComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PKComponent.m; path = PaymentKit/PKComponent.m; sourceTree = "<group>"; };
 		FAFC118616E56B3E0066297F /* STPView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPView.h; sourceTree = "<group>"; };
@@ -355,6 +360,8 @@
 				11FBE9A31647725D00299E6F /* StripeError.m */,
 				11EE825716478A440039CDD4 /* STPToken.h */,
 				11EE825816478A440039CDD4 /* STPToken.m */,
+				7106B4C5197087C2000A037E /* STPUtils.h */,
+				7106B4C6197087C2000A037E /* STPUtils.m */,
 			);
 			path = Stripe;
 			sourceTree = "<group>";
@@ -707,6 +714,7 @@
 				4CCA84F517146D130078A9DF /* PKCardNumber.m in Sources */,
 				4CCA84F817146D130078A9DF /* PKTextField.m in Sources */,
 				4CCA84FB17146D130078A9DF /* PKUSAddressZip.m in Sources */,
+				7106B4C7197087C2000A037E /* STPUtils.m in Sources */,
 				4CCA84FE17146D130078A9DF /* PKView.m in Sources */,
 				347D122716000C91BABA64C7 /* STPAPIConnection.m in Sources */,
 			);
@@ -731,6 +739,7 @@
 				4CCA84F017146D130078A9DF /* PKCardCVC.m in Sources */,
 				B86FD14C18B6EF0400B23911 /* PKComponent.m in Sources */,
 				4CCA84F317146D130078A9DF /* PKCardExpiry.m in Sources */,
+				7106B4CA19708CA9000A037E /* STPUtils.m in Sources */,
 				4CCA84F617146D130078A9DF /* PKCardNumber.m in Sources */,
 				4CCA84F917146D130078A9DF /* PKTextField.m in Sources */,
 				4CCA84FC17146D130078A9DF /* PKUSAddressZip.m in Sources */,
@@ -750,6 +759,7 @@
 				FAFC12CF16E57E980066297F /* STPCard.m in Sources */,
 				FAFC12D116E57E9B0066297F /* StripeError.m in Sources */,
 				FAFC12D316E57E9F0066297F /* Stripe.m in Sources */,
+				7106B4C919708CA5000A037E /* STPUtils.m in Sources */,
 				FAFC12D516E57EA30066297F /* STPToken.m in Sources */,
 				B86FD14D18B6EF0A00B23911 /* PKComponent.m in Sources */,
 				4CCA84EB17146D130078A9DF /* PKAddressZip.m in Sources */,
