@@ -224,7 +224,7 @@
 {
     if (_last4) {
         return _last4;
-    } else if (self.number) {
+    } else if (self.number && self.number.length >= 4) {
         return [self.number substringFromIndex:(self.number.length - 4)];
     } else {
         return nil;

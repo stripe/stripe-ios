@@ -137,6 +137,12 @@
     XCTAssertEqualObjects(nil, card.last4, @"last4 returns nil when nothing is set");
 }
 
+- (void)testLast4ReturnsNullWhenCardNumberIsLessThanLength4
+{
+    card.number = @"123";
+    XCTAssertEqualObjects(nil, card.last4, @"last4 returns nil when number length is < 3");
+}
+
 #pragma mark -type tests
 - (void)testTypeReturnsCorrectlyForAmexCard
 {
