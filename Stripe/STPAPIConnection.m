@@ -10,6 +10,7 @@
 #import "StripeError.h"
 
 @interface STPAPIConnection () <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
+
 @property (nonatomic) BOOL started;
 @property (nonatomic, strong) NSURLRequest *request;
 @property (nonatomic, strong) NSURLConnection *connection;

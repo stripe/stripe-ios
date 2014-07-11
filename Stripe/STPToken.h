@@ -14,6 +14,7 @@
  STPTokens get created by calls to + [Stripe createTokenWithCard:] and + [Stripe getTokenWithId:].  You should not construct these yourself.
  */
 @interface STPToken : NSObject
+
 @property (nonatomic, readonly) NSString *tokenId;
 @property (nonatomic, readonly) NSString *object;
 @property (nonatomic, readonly) BOOL livemode;

@@ -11,29 +11,29 @@
 
 @implementation STPToken
 
-@synthesize tokenId, object, livemode, card, created, used;
-
 - (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary
 {
     if (self = [super init]) {
-        tokenId = [attributeDictionary valueForKey:@"id"];
-        object = [attributeDictionary valueForKey:@"object"];
-        livemode = [attributeDictionary[@"livemode"] boolValue];
-        created = [NSDate dateWithTimeIntervalSince1970:[attributeDictionary[@"created"] doubleValue]];
-        used = [attributeDictionary[@"used"] boolValue];
-        card = [[STPCard alloc] initWithAttributeDictionary:attributeDictionary[@"card"]];
+        _tokenId = [attributeDictionary valueForKey:@"id"];
+        _object = [attributeDictionary valueForKey:@"object"];
+        _livemode = [attributeDictionary[@"livemode"] boolValue];
+        _created = [NSDate dateWithTimeIntervalSince1970:[attributeDictionary[@"created"] doubleValue]];
+        _used = [attributeDictionary[@"used"] boolValue];
+        _card = [[STPCard alloc] initWithAttributeDictionary:attributeDictionary[@"card"]];
     }
     return self;
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"%@ (%@)", tokenId ?: @"Unknown token", (livemode ? @"live mode" : @"test mode")];
+    NSString *token = self.tokenId ? self.tokenId : @"Unknown token";
+    NSString *livemode = self.livemode ? @"live mode" : @"test mode";
+
+    return [NSString stringWithFormat:@"%@ (%@)", token, livemode];
 }
 
 - (void)postToURL:(NSURL *)url withParams:(NSMutableDictionary *)params completion:(void (^)(NSURLResponse *, NSData *, NSError *))handler
 {
-
     NSMutableString *body = [NSMutableString stringWithFormat:@"stripeToken=%@", self.tokenId];
 
     [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
