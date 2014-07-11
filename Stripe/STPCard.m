@@ -330,10 +330,38 @@
     NSString *cvcRef = [self cvc];
 
     // Make sure expMonth, expYear, and number are set.  Validate CVC if it is provided
-    return [self validateNumber:&numberRef error:outError] &&
-            [self validateExpYear:&expYearRef error:outError] &&
-            [self validateExpMonth:&expMonthRef error:outError] &&
-            (cvcRef == nil || [self validateCvc:&cvcRef error:outError]);
+    return [self validateNumber:&numberRef error:outError]
+        && [self validateExpYear:&expYearRef error:outError]
+        && [self validateExpMonth:&expMonthRef error:outError]
+        && (cvcRef == nil || [self validateCvc:&cvcRef error:outError]);
+}
+
+- (BOOL)isEqual:(id)other
+{
+    return [self isEqualToCard:other];
+}
+
+- (BOOL)isEqualToCard:(STPCard *)other
+{
+    if (self == other) {
+        return YES;
+    }
+
+    if (!other || ![other isKindOfClass:self.class]) {
+        return NO;
+    }
+
+    return self.expMonth == other.expMonth
+        && self.expYear == other.expYear
+        && [self.number ?: @"" isEqualToString:other.number ?: @""]
+        && [self.cvc ?: @"" isEqualToString:other.cvc ?: @""]
+        && [self.name ?: @"" isEqualToString:other.name ?: @""]
+        && [self.addressLine1 ?: @"" isEqualToString:other.addressLine1 ?: @""]
+        && [self.addressLine2 ?: @"" isEqualToString:other.addressLine2 ?: @""]
+        && [self.addressCity ?: @"" isEqualToString:other.addressCity ?: @""]
+        && [self.addressState ?: @"" isEqualToString:other.addressState ?: @""]
+        && [self.addressZip ?: @"" isEqualToString:other.addressZip ?: @""]
+        && [self.addressCountry ?: @"" isEqualToString:other.addressCountry ?: @""];
 }
 
 @end

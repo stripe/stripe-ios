@@ -516,4 +516,17 @@
     NSDictionary *userInfo = [error userInfo];
     XCTAssertEqualObjects(userInfo[STPCardErrorCodeKey], STPInvalidNumber, @"The error returned should be for the number");
 }
+
+- (void)testCardEquals
+{
+    STPCard *card1 = [[STPCard alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
+    STPCard *card2 = [[STPCard alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
+
+    XCTAssertEqualObjects(card1, card1, @"card should equal itself");
+    XCTAssertEqualObjects(card1, card2, @"cards with equal data should be equal");
+
+    card2.addressCity = @"My Fake City";
+    XCTAssertNotEqualObjects(card1, card2, @"cards should not match");
+}
+
 @end
