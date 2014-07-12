@@ -145,13 +145,13 @@ static NSString *const tokenEndpoint = @"tokens";
     } else if ([type isEqualToString:@"card_error"]) {
         code = STPCardError;
 
-        NSDictionary *codeMapEntry = [Stripe cardErrorCodeMap][jsonDictionary[@"code"]];
+        NSDictionary *codeMapEntry = [Stripe cardErrorCodeMap][errorDictionary[@"code"]];
 
         if (codeMapEntry) {
             userInfo[STPCardErrorCodeKey] = codeMapEntry[@"code"];
             userInfo[NSLocalizedDescriptionKey] = codeMapEntry[@"message"];
         } else {
-            userInfo[STPCardErrorCodeKey] = jsonDictionary[@"code"];
+            userInfo[STPCardErrorCodeKey] = errorDictionary[@"code"];
             userInfo[NSLocalizedDescriptionKey] = devMessage;
         }
     }

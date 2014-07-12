@@ -158,7 +158,7 @@
 
 #pragma mark Public Interface
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
 
@@ -169,27 +169,37 @@
     return self;
 }
 
-- (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary
+- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary
 {
     self = [self init];
 
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+
+    [attributeDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if (obj != [NSNull null]) {
+            dict[key] = obj;
+        }
+    }];
+
     if (self) {
-        _number = attributeDictionary[@"number"];
-        _expMonth = [attributeDictionary[@"expMonth"] intValue];
-        _expYear = [attributeDictionary[@"expYear"] intValue];
-        _cvc = attributeDictionary[@"cvc"];
-        _name = attributeDictionary[@"name"];
-        _addressLine1 = attributeDictionary[@"addressLine1"];
-        _addressLine2 = attributeDictionary[@"addressLine2"];
-        _addressCity = attributeDictionary[@"addressCity"];
-        _addressState = attributeDictionary[@"addressState"];
-        _addressZip = attributeDictionary[@"addressZip"];
-        _addressCountry = attributeDictionary[@"addressCountry"];
-        _object = attributeDictionary[@"object"];
-        _last4 = attributeDictionary[@"last4"];
-        _type = attributeDictionary[@"type"];
-        _fingerprint = attributeDictionary[@"fingerprint"];
-        _country = attributeDictionary[@"country"];
+        _number = dict[@"number"];
+        _cvc = dict[@"cvc"];
+        _name = dict[@"name"];
+        _object = dict[@"object"];
+        _last4 = dict[@"last4"];
+        _type = dict[@"type"];
+        _fingerprint = dict[@"fingerprint"];
+        _country = dict[@"country"];
+
+        // Support both camelCase and snake_case keys
+        _expMonth = [(dict[@"exp_month"] ?: dict[@"expMonth"]) intValue];
+        _expYear = [(dict[@"exp_year"] ?: dict[@"expYear"]) intValue];
+        _addressLine1 = dict[@"address_line1"] ?: dict[@"addressLine1"];
+        _addressLine2 = dict[@"address_line2"] ?: dict[@"addressLine2"];
+        _addressCity = dict[@"address_city"] ?: dict[@"addressCity"];
+        _addressState = dict[@"address_state"] ?: dict[@"addressState"];
+        _addressZip = dict[@"address_zip"] ?: dict[@"addressZip"];
+        _addressCountry = dict[@"address_country"] ?: dict[@"addressCountry"];
     }
 
     return self;
@@ -214,7 +224,9 @@
     NSMutableArray *parts = [NSMutableArray array];
 
     [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop) {
-        [parts addObject:[NSString stringWithFormat:@"card[%@]=%@", key, [STPUtils stringByURLEncoding:val]]];
+        if (val != [NSNull null]) {
+            [parts addObject:[NSString stringWithFormat:@"card[%@]=%@", key, [STPUtils stringByURLEncoding:val]]];
+        }
     }];
 
     return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];

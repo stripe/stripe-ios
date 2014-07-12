@@ -7,13 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "STPFormEncodeProtocol.h"
 
 /*
  This object represents a credit card.  You should create these and populate
  its properties with information that your customer enters on your credit card
  form.  Then you create tokens from these.
  */
-@interface STPCard : NSObject
+@interface STPCard : NSObject <STPFormEncodeProtocol>
 
 @property (nonatomic) NSString *number;
 @property (nonatomic) NSUInteger expMonth;
@@ -39,9 +40,7 @@
  generate cards from the response of creating ar getting a token.
  */
 - (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
-
-- (NSData *)formEncode;
-
+- (BOOL)isEqualToCard:(STPCard *)other;
 
 /* These validation methods work as described in
     http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/KeyValueCoding/Articles/Validation.html#//apple_ref/doc/uid/20002173-CJBDBHCB

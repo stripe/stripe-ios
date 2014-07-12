@@ -52,4 +52,26 @@
                            completionHandler:handler];
 }
 
+- (BOOL)isEqual:(id)object
+{
+    return [self isEqualToToken:object];
+}
+
+- (BOOL)isEqualToToken:(STPToken *)object
+{
+    if (self == object) {
+        return YES;
+    }
+
+    if (!object || ![object isKindOfClass:self.class]) {
+        return NO;
+    }
+
+    return self.livemode == object.livemode
+        && self.used == object.used
+        && [self.tokenId isEqualToString:object.tokenId]
+        && [self.created isEqualToDate:object.created]
+        && [self.card isEqualToCard:object.card];
+}
+
 @end
