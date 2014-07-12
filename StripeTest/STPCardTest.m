@@ -103,9 +103,10 @@
 
     NSArray *parts = [formData componentsSeparatedByString:@"&"];
 
-    NSSet *expectedKeys = [NSSet setWithObjects:@"number", @"exp_month", @"exp_year", @"cvc", @"name",
-                           @"address_line1", @"address_line2", @"address_city", @"address_state",
-                           @"address_zip", @"address_country", nil];
+    NSSet *expectedKeys = [NSSet setWithObjects:
+                           @"card[number]", @"card[exp_month]", @"card[exp_year]", @"card[cvc]", @"card[name]",
+                           @"card[address_line1]", @"card[address_line2]", @"card[address_city]", @"card[address_state]",
+                           @"card[address_zip]", @"card[address_country]", nil];
 
     NSArray *values = [attributes allValues];
     NSMutableArray *encodedValues = [NSMutableArray array];

@@ -214,7 +214,7 @@
     NSMutableArray *parts = [NSMutableArray array];
 
     [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop) {
-        [parts addObject:[NSString stringWithFormat:@"%@=%@", key, [STPUtils stringByURLEncoding:val]]];
+        [parts addObject:[NSString stringWithFormat:@"card[%@]=%@", key, [STPUtils stringByURLEncoding:val]]];
     }];
 
     return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
