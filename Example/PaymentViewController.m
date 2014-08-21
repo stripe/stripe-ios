@@ -5,19 +5,21 @@
 //  Copyright (c) 2013 Stripe. All rights reserved.
 //
 
+#import "Stripe.h"
 #import "PaymentViewController.h"
 #import "MBProgressHUD.h"
+#import "PaymentKit/PKView.h"
 #define EXAMPLE_STRIPE_PUBLISHABLE_KEY @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"
 
-@interface PaymentViewController ()
+@interface PaymentViewController ()<PKViewDelegate>
 - (void)hasError:(NSError *)error;
 - (void)hasToken:(STPToken *)token;
+@property(weak, nonatomic) PKView *paymentView;
 @end
 
 @implementation PaymentViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     self.title = @"Add Card";
@@ -31,34 +33,38 @@
     self.navigationItem.rightBarButtonItem = saveButton;
     
     // Setup checkout
-    self.checkoutView = [[STPView alloc] initWithFrame:CGRectMake(15,20,290,55) andKey:EXAMPLE_STRIPE_PUBLISHABLE_KEY];
-    self.checkoutView.delegate = self;
-    [self.view addSubview:self.checkoutView];
+    PKView *paymentView = [[PKView alloc] initWithFrame:CGRectMake(15, 20, 290, 55)];
+    paymentView.delegate = self;
+    self.paymentView = paymentView;
+    [self.view addSubview:paymentView];
 }
 
-- (void)stripeView:(STPView *)view withCard:(PKCard *)card isValid:(BOOL)valid
-{
+- (void)paymentView:(PKView *)paymentView
+           withCard:(PKCard *)card
+            isValid:(BOOL)valid {
     // Enable save button if the Checkout is valid
     self.navigationItem.rightBarButtonItem.enabled = valid;
 }
 
-- (IBAction)save:(id)sender
-{
+- (IBAction)save:(id)sender {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    [self.checkoutView createToken:^(STPToken *token, NSError *error) {
+    STPCard *card = [[STPCard alloc] init];
+    card.number = self.paymentView.card.number;
+    card.expMonth = self.paymentView.card.expMonth;
+    card.expYear = self.paymentView.card.expYear;
+    card.cvc = self.paymentView.card.cvc;
+    [Stripe createTokenWithCard:card publishableKey:EXAMPLE_STRIPE_PUBLISHABLE_KEY completion:^(STPToken *token, NSError *error) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-        
         if (error) {
             [self hasError:error];
         } else {
             [self hasToken:token];
         }
+
     }];
 }
 
-- (void)hasError:(NSError *)error
-{
+- (void)hasError:(NSError *)error {
     UIAlertView *message = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error")
                                                       message:[error localizedDescription]
                                                      delegate:nil
@@ -71,6 +77,7 @@
 {
     NSLog(@"Received token %@", token.tokenId);
     
+    // Here is how you might upload the received token to your own servers.
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://example.com"]];
     request.HTTPMethod = @"POST";
     NSString *body     = [NSString stringWithFormat:@"stripeToken=%@", token.tokenId];
@@ -82,12 +89,11 @@
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                [MBProgressHUD hideHUDForView:self.view animated:YES];
-                               
-//                               if (error) {
-//                                   [self hasError:error];
-//                               } else {
+                               if (error) {
+                                   [self hasError:error];
+                               } else {
                                    [self.navigationController popViewControllerAnimated:YES];
-//                               }
+                               }
                            }];
 }
 

@@ -7,11 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "STPView.h"
 
-@interface PaymentViewController : UIViewController <STPViewDelegate>
-
-@property STPView* checkoutView;
+@interface PaymentViewController : UIViewController
 
 - (IBAction)save:(id)sender;
 
