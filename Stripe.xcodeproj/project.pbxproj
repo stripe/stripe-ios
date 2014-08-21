@@ -27,12 +27,8 @@
 		7106B4EB1970A58C000A037E /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4D81970A58C000A037E /* StripeError.m */; };
 		7106B4ED1970A58C000A037E /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4D81970A58C000A037E /* StripeError.m */; };
 		7106B4F71970B9EC000A037E /* STPCardFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4F61970B9EC000A037E /* STPCardFunctionalTest.m */; };
-		FAFC12C716E5769F0066297F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11FBE9B51647744200299E6F /* CoreGraphics.framework */; };
 		FAFC12C816E576A50066297F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC12C516E5767F0066297F /* UIKit.framework */; };
-		FAFC12C916E576B70066297F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC125016E56EFC0066297F /* QuartzCore.framework */; };
-		FAFC12CA16E576DF0066297F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC125016E56EFC0066297F /* QuartzCore.framework */; };
 		FAFC12CB16E576E50066297F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC12C516E5767F0066297F /* UIKit.framework */; };
-		FAFC12D616E57FB50066297F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11FBE9B51647744200299E6F /* CoreGraphics.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,16 +61,11 @@
 		11C74BAB164043050071C2CA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		11C74BB3164043050071C2CA /* StripeTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "StripeTest-Info.plist"; sourceTree = "<group>"; };
 		11C74BB5164043050071C2CA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		11E1F55D16514A5500B49816 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
-		11E1F56016514A5500B49816 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		11E1F56116514A5500B49816 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		11E1F56216514A5500B49816 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		11E1F58C165151F400B49816 /* libStripeiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStripeiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E1F646165157CA00B49816 /* iOSTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E1F65A1651585F00B49816 /* StripeTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StripeTest-Prefix.pch"; sourceTree = "<group>"; };
 		11EE8254164786A40039CDD4 /* STPCardTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCardTest.h; sourceTree = "<group>"; };
 		11EE8255164786A40039CDD4 /* STPCardTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = STPCardTest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		11FBE9B51647744200299E6F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4AAEFAEC18FC98E1001001CD /* STPCertTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCertTest.h; sourceTree = "<group>"; };
 		4AAEFAED18FC98E1001001CD /* STPCertTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCertTest.m; sourceTree = "<group>"; };
@@ -93,7 +84,6 @@
 		7106B4D81970A58C000A037E /* StripeError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StripeError.m; sourceTree = "<group>"; };
 		7106B4F31970B526000A037E /* STPFormEncodeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPFormEncodeProtocol.h; sourceTree = "<group>"; };
 		7106B4F61970B9EC000A037E /* STPCardFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCardFunctionalTest.m; sourceTree = "<group>"; };
-		FAFC125016E56EFC0066297F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -103,9 +93,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A0D74FA18F6106100966D7B /* Security.framework in Frameworks */,
-				FAFC12C916E576B70066297F /* QuartzCore.framework in Frameworks */,
 				FAFC12C816E576A50066297F /* UIKit.framework in Frameworks */,
-				FAFC12C716E5769F0066297F /* CoreGraphics.framework in Frameworks */,
 				11E1F58D165151F400B49816 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -116,9 +104,7 @@
 			files = (
 				4AAEFAE818FC928A001001CD /* Security.framework in Frameworks */,
 				11E1F649165157CA00B49816 /* Foundation.framework in Frameworks */,
-				FAFC12D616E57FB50066297F /* CoreGraphics.framework in Frameworks */,
 				FAFC12CB16E576E50066297F /* UIKit.framework in Frameworks */,
-				FAFC12CA16E576DF0066297F /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,13 +135,9 @@
 			children = (
 				4A0D74F918F6106100966D7B /* Security.framework */,
 				4AC8EF7818DD357800FF2E5A /* XCTest.framework */,
-				FAFC125016E56EFC0066297F /* QuartzCore.framework */,
 				11C74B9B164043050071C2CA /* Foundation.framework */,
 				11C74BAB164043050071C2CA /* UIKit.framework */,
 				FAFC12C516E5767F0066297F /* UIKit.framework */,
-				11FBE9B51647744200299E6F /* CoreGraphics.framework */,
-				11E1F55D16514A5500B49816 /* Cocoa.framework */,
-				11E1F55F16514A5500B49816 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -212,16 +194,6 @@
 				11C74BB4164043050071C2CA /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		11E1F55F16514A5500B49816 /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				11E1F56016514A5500B49816 /* AppKit.framework */,
-				11E1F56116514A5500B49816 /* CoreData.framework */,
-				11E1F56216514A5500B49816 /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
