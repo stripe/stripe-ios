@@ -18,9 +18,9 @@ Note: be sure to use the `.xcworkspace` to open your project in Xcode instead of
 
 ### Copy manually
 
-1. Clone this repository (`git clone --recursive`)
+1. Clone this repository (`git clone https://github.com/stripe/stripe-ios`)
 1. In the menubar, click on 'File' then 'Add files to "Project"...'
-1. Select the 'Stripe' directory in your cloned stripe-ios repository
+1. Select the 'Stripe' directory in your cloned stripe-ios repository (make sure not to include the stripe-ios top-level directory, you want the Stripe subfolder).
 1. Make sure "Copy items into destination group's folder (if needed)" is checked"
 1. Click "Add"
 
