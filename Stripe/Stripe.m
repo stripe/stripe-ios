@@ -51,7 +51,7 @@ static NSString *const tokenEndpoint = @"tokens";
     } else {
         NSError *parseError;
         NSDictionary *jsonDictionary = [self dictionaryFromJSONData:body error:&parseError];
-
+        
         if (jsonDictionary == nil) {
             handler(nil, parseError);
         } else if ([(NSHTTPURLResponse *) response statusCode] == 200) {
@@ -65,19 +65,19 @@ static NSString *const tokenEndpoint = @"tokens";
 + (NSDictionary *)dictionaryFromJSONData:(NSData *)data error:(NSError **)outError
 {
     NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-
+    
     if (jsonDictionary == nil) {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: STPUnexpectedError,
                                    STPErrorMessageKey: @"The response from Stripe failed to get parsed into valid JSON."
                                    };
-
+        
         if (outError) {
             *outError = [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
         }
-
+        
         return nil;
     }
-
+    
     return jsonDictionary;
 }
 
@@ -86,7 +86,7 @@ static NSString *const tokenEndpoint = @"tokens";
     if (!publishableKey || [publishableKey isEqualToString:@""]) {
         [NSException raise:@"InvalidPublishableKey" format:@"You must use a valid publishable key to create a token. For more info, see https://stripe.com/docs/stripe.js"];
     }
-
+    
     if ([publishableKey hasPrefix:@"sk_"]) {
         [NSException raise:@"InvalidPublishableKey" format:@"You are using a secret key to create a token, instead of the publishable one. For more info, see https://stripe.com/docs/stripe.js"];
     }
@@ -95,7 +95,7 @@ static NSString *const tokenEndpoint = @"tokens";
 + (NSDictionary *)cardErrorCodeMap
 {
     static id errorDictionary = nil;
-
+    
     if (!errorDictionary) {
         errorDictionary =
         @{@"incorrect_number":     @{@"code": STPIncorrectNumber, @"message": STPCardErrorInvalidNumberUserMessage},
@@ -109,7 +109,7 @@ static NSString *const tokenEndpoint = @"tokens";
           @"processing_error":     @{@"code": STPProcessingError, @"message": STPCardErrorProcessingErrorUserMessage},
           };
     }
-
+    
     return errorDictionary;
 }
 
@@ -120,7 +120,7 @@ static NSString *const tokenEndpoint = @"tokens";
     NSString *devMessage = errorDictionary[@"message"];
     NSString *parameter = errorDictionary[@"param"];
     NSInteger code = 0;
-
+    
     // There should always be a message and type for the error
     if (devMessage == nil || type == nil) {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: STPUnexpectedError,
@@ -128,14 +128,14 @@ static NSString *const tokenEndpoint = @"tokens";
                                    };
         return [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
     }
-
+    
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     userInfo[STPErrorMessageKey] = devMessage;
-
+    
     if (parameter) {
         userInfo[STPErrorParameterKey] = [STPUtils stringByReplacingSnakeCaseWithCamelCase:parameter];
     }
-
+    
     if ([type isEqualToString:@"api_error"]) {
         code = STPAPIError;
         userInfo[NSLocalizedDescriptionKey] = STPUnexpectedError;
@@ -144,9 +144,9 @@ static NSString *const tokenEndpoint = @"tokens";
         userInfo[NSLocalizedDescriptionKey] = devMessage;
     } else if ([type isEqualToString:@"card_error"]) {
         code = STPCardError;
-
+        
         NSDictionary *codeMapEntry = [Stripe cardErrorCodeMap][errorDictionary[@"code"]];
-
+        
         if (codeMapEntry) {
             userInfo[STPCardErrorCodeKey] = codeMapEntry[@"code"];
             userInfo[NSLocalizedDescriptionKey] = codeMapEntry[@"message"];
@@ -155,7 +155,7 @@ static NSString *const tokenEndpoint = @"tokens";
             userInfo[NSLocalizedDescriptionKey] = devMessage;
         }
     }
-
+    
     return [[NSError alloc] initWithDomain:StripeDomain code:code userInfo:userInfo];
 }
 
@@ -176,11 +176,11 @@ static NSString *const tokenEndpoint = @"tokens";
     if (card == nil) {
         [NSException raise:@"RequiredParameter" format:@"'card' is required to create a token"];
     }
-
+    
     if (handler == nil) {
         [NSException raise:@"RequiredParameter" format:@"'handler' is required to use the token that is created"];
     }
-
+    
     [self validateKey:publishableKey];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.apiURL];
@@ -200,11 +200,11 @@ static NSString *const tokenEndpoint = @"tokens";
     if (tokenId == nil) {
         [NSException raise:@"RequiredParameter" format:@"'tokenId' is required to retrieve a token"];
     }
-
+    
     if (handler == nil) {
         [NSException raise:@"RequiredParameter" format:@"'handler' is required to use the token that is requested"];
     }
-
+    
     [self validateKey:publishableKey];
 
     NSURL *url = [self.apiURL URLByAppendingPathComponent:tokenId];
@@ -257,22 +257,28 @@ static NSString *const tokenEndpoint = @"tokens";
 + (NSDictionary *)stripeUserAgentDetails
 {
     NSMutableDictionary *details = [@{
-            @"lang" : @"objective-c",
-            @"bindings_version" : kStripeiOSVersion,
-    } mutableCopy];
-
-    @try {
-        details[@"device"] = @{
-                @"os_version" : [UIDevice currentDevice].systemVersion,
-                @"type" : [self deviceType],
-                @"model" : [UIDevice currentDevice].localizedModel,
-                @"vendor_identifier" : [[UIDevice currentDevice].identifierForVendor UUIDString],
-        };
-    } @catch (NSException *exception) {
-        details[@"error"] = @"Error while fetching device details";
+                                      @"lang" : @"objective-c",
+                                      @"bindings_version" : kStripeiOSVersion,
+                                      } mutableCopy];
+    NSString *version = [UIDevice currentDevice].systemVersion;
+    if (version) {
+        details[@"os_version"] = version;
     }
-
-    return details;
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    NSString *deviceType = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+    if (deviceType) {
+        details[@"type"] = deviceType;
+    }
+    NSString *model = [UIDevice currentDevice].localizedModel;
+    if (model) {
+        details[@"model"] = model;
+    }
+    NSString *vendorIdentifier = [[UIDevice currentDevice].identifierForVendor UUIDString];
+    if (vendorIdentifier) {
+        details[@"vendor_identifier"] = vendorIdentifier;
+    }
+    return [details copy];
 }
 
 + (NSString *)JSONStringForObject:(id)object
@@ -281,14 +287,6 @@ static NSString *const tokenEndpoint = @"tokens";
                                                                           options:0
                                                                             error:nil]
                                  encoding:NSUTF8StringEncoding];
-}
-
-+ (NSString *)deviceType
-{
-    struct utsname systemInfo;
-    uname(&systemInfo);
-
-    return [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
 }
 
 @end
