@@ -1,4 +1,8 @@
-Please also see the PaymentKit changelog: https://github.com/stripe/PaymentKit/blob/master/CHANGELOG
+=== 1.2 2014-08-21
+* Removed PaymentKit as a dependency. If you'd like to use it, you may still do so by including it separately.
+* Removed STPView. PaymentKit provides a near-identical version of this functionality if you need to migrate.
+* Improve example project
+* Various code fixes
 
 === 1.1.4 2014-05-22
 * Fixed an issue where tokenization requests would fail under iOS 6 due to SSL certificate verification

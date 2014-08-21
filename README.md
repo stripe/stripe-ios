@@ -6,7 +6,7 @@ To get started, see our [tutorial](https://stripe.com/docs/mobile/ios).
 
 ## Installation
 
-There are two ways to add Stripe to your project:
+You can add Stripe to your project via Cocoapods or include it manually. These bindings support all versions of iOS after and including iOS 5.0.
 
 ### CocoaPods
 
@@ -37,6 +37,8 @@ First, you need to create a series of views to collect your users' card details.
 ### Using PaymentKit
 
 See the README at (https://github.com/stripe/PaymentKit).
+
+Note: Version 1.2 of this libary removes the STPView class. PaymentKit provides a near-identical version of this called PKView if you need to migrate.
 
 ### Tokenization
 
