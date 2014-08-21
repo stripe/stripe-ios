@@ -10,29 +10,29 @@
 	<string>Stripe</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>B262D30C-0903-4602-B6BA-E6B9962C78E5</key>
+		<key>A5C151FC3F18980DA2906AAA3DE9140767EF2310</key>
 		<string>ssh://github.com/stripe/stripe-ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Stripe.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>B262D30C-0903-4602-B6BA-E6B9962C78E5</key>
+		<key>A5C151FC3F18980DA2906AAA3DE9140767EF2310</key>
 		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://github.com/stripe/stripe-ios.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>B262D30C-0903-4602-B6BA-E6B9962C78E5</string>
+	<string>A5C151FC3F18980DA2906AAA3DE9140767EF2310</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>B262D30C-0903-4602-B6BA-E6B9962C78E5</string>
+			<string>A5C151FC3F18980DA2906AAA3DE9140767EF2310</string>
 			<key>IDESourceControlWCCName</key>
 			<string>stripe-ios</string>
 		</dict>
