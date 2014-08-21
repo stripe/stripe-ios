@@ -14,7 +14,7 @@ There are two ways to add Stripe to your project:
 
     pod 'Stripe'
 
-Note: be sure to use the `.xcworkspace` to open your project in Xcode instead of the `.xcproject`. You will also need to add the `QuartzCore` framework to your project.
+Note: be sure to use the `.xcworkspace` to open your project in Xcode instead of the `.xcodeproj`.
 
 ### Copy manually
 
@@ -24,78 +24,45 @@ Note: be sure to use the `.xcworkspace` to open your project in Xcode instead of
 1. Make sure "Copy items into destination group's folder (if needed)" is checked"
 1. Click "Add"
 
-You will also need to add the `QuartzCore` and `Security` frameworks to your project.
+You will also need to add the `Security` framework to your project.
 
 ## Example app
 
-You can also clone this repository to see our example app, TreatCar. To do so, just clone this repository, then initialize submodules:
-    
-    git submodule update --init --recursive
-    
-Then, simply open Stripe.xcodeproj in Xcode and run TreatCar.
+For a simple, annotated demonstration of how to use the Stripe bindings to obtain and charge a Stripe token, consult PaymentViewController in the StripeExample folder or run the StripeExample app.
 
 ## Integration
 
-First, you need to create a view to collect your users' card details. We've created the `STPView` class which does this all for you, or you can create a custom view of your own.
+First, you need to create a series of views to collect your users' card details. We've created a reusable component for this purpose called PaymentKit, or you can roll your own.
 
-### Using STPView
+### Using PaymentKit
 
-![PaymentKit](https://stripe.com/img/documentation/ios/PaymentKit.png)
+See the README at (https://github.com/stripe/PaymentKit).
 
-Create and show a `STPView`:
+### Tokenization
 
-    STPView *cardView = [[STPView alloc] initWithFrame:CGRectMake(15,20,290,55) andKey:@"my_publishable_key"];
-    [self.view addSubview:cardView];
+Once you have your card details, you'll want to package them into an STPCard object:
 
-To receive feedback about the state of the view:
+    STPCard *card = [STPCard new];
+    card.number = myCardField.number;
+    card.expMonth = myCardField.expMonth;
+    card.expYear = myCardField.expYear;
+    card.cvc = myCardField.cvc;
 
-    cardView.delegate = self // implement STPViewDelegate
-    
-    ...
-    
-    - (void)stripeView:(STPView *)view withCard:(PKCard *)card isValid:(BOOL)valid
-    {
-        // Enable the "save" button only if the card form is complete.
-        self.navigationItem.rightBarButtonItem.enabled = valid;
-    }
-
-Finally, submit the details to Stripe to receive a [token](https://stripe.com/docs/api#tokens):
-
-    [cardView createToken:^(STPToken *token, NSError *error) {
-        if (error) {
-            [self hasError:error];
-        } else {
-            [self hasToken:token]; // Hooray!
-        }
-    }];
-    
-(Replace `@"my_publishable_key"` with [your publishable key](https://manage.stripe.com/account/apikeys).)
-    
-### Using your own view
-
-After showing your view, create and populate a `STPCard` with the details you collected:
-
-    STPCard *card = [[STPCard alloc] init];
-    card.number = @"4242424242424242";
-    card.expMonth = 12;
-    card.expYear = 2020;
-    card.cvc = @"123";
-
-Then send it to Stripe:
+Then, send it off to Stripe:
 
     [Stripe createTokenWithCard:card
                  publishableKey:@"my_publishable_key"
                      completion:^(STPToken *token, NSError *error) {
                          if (error) {
-                             [self hasError:error];
+                            // alert the user to the error
                          } else {
-                             [self hasToken:token]; // Hooray!
+                            // use the token to create a charge (see below)
                          }
                      }];
 
-(Replace `@"my_publishable_key"` with [your publishable key](https://manage.stripe.com/account/apikeys).)
+(Replace `@"my_publishable_key"` in the above example with [your publishable key](https://manage.stripe.com/account/apikeys).)
 
-## Using tokens
+### Using tokens
 
 Once you've collected a token, you can send it to your server to [charge immediately](https://stripe.com/docs/api#create_charge) or [create a customer](https://stripe.com/docs/api#create_customer) to charge in the future.
 
