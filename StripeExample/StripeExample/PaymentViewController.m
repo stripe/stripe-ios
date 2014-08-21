@@ -92,7 +92,9 @@
                                if (error) {
                                    [self hasError:error];
                                } else {
-                                   [self.navigationController popViewControllerAnimated:YES];
+                                   [self.presentingViewController dismissViewControllerAnimated:YES completion:^{
+                                       [[[UIAlertView alloc] initWithTitle:@"Payment Succeeded" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:nil] show];
+                                   }];
                                }
                            }];
 }
