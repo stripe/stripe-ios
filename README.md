@@ -26,34 +26,13 @@ Note: be sure to use the `.xcworkspace` to open your project in Xcode instead of
 
 You will also need to add the `Security` framework to your project.
 
-## Example app
-
-The example app is a great way to see the flow of recording credit card details, converting them to a token with the Stripe iOS bindings, and then using that token to charge users on your backend. It uses [PaymentKit](https://github.com/stripe/PaymentKit) to create a simple credit card form, and a small backend hosted with Parse Cloud Code to process the actual transactions.
-
-### Running the example
-
-Before you can run the app, you need to provide it with your own Stripe and Parse API keys.
-
-#### Stripe
-1. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds). Then go to (https://dashboard.stripe.com/account/apikeys).
-2. Replace the `StripePublishableKey` constant in Example/StripeExample/Constants.m with your Test Publishable Key.
-3. Replace the `stripe_secret_key` variable in Example/Parse/cloud/main.js with your Test Secret Key.
-
-#### Parse
-1. Sign up for a [Parse account](https://parse.com/#signup), then create a new Parse app.
-2. Head to the "Application keys" section of your parse app's settings page. Replace the `ParseApplicationId` and `ParseClientKey` constants in Example/StripeExample/Constants.m with your app's Application ID and Client Key, respectively.
-3. Replace the appropriate values in Example/Parse/config/global.json with your Parse app's name, Application ID, and Master Secret. IMPORTANT: these values, along with your Stripe Secret Key, can be used to control your Stripe and Parse accounts. Thus, once you edit these files, you shoudn't check them back into git.
-4. Install the Parse command line tool at (https://www.parse.com/docs/cloud_code_guide#started), then run `parse deploy` from the Example/Parse directory.
-
-After this is done, you can make test payments through the app (use credit card number 4242 4242 4242 4242, along with any cvc and any future expiration date) and then view them in your Stripe Dashboard!
-
 ## Integration
 
 First, you need to create a series of views to collect your users' card details. We've created a reusable component for this purpose called PaymentKit, or you can roll your own.
 
 ### Using PaymentKit
 
-See the README at (https://github.com/stripe/PaymentKit).
+See the README at https://github.com/stripe/PaymentKit.
 
 Note: Version 1.2 of this libary removes the STPView class. PaymentKit provides a near-identical version of this called PKView if you need to migrate.
 
@@ -130,12 +109,29 @@ These methods follow the validation method convention used by [key-value validat
 
 When using these validation methods, you will want to set the property on your card object when a property does validate before validating the next property.  This allows the methods to use existing properties on the card correctly to validate a new property.  For example, validating `5` for the `expMonth` property will return YES if no `expYear` is set.  But if `expYear` is set and you try to set `expMonth` to 5 and the combination of `expMonth` and `expYear` is in the past, `5` will not validate.  The order in which you call the validate methods does not matter for this though.
 
+## Example app
+
+The example app is a great way to see the flow of recording credit card details, converting them to a token with the Stripe iOS bindings, and then using that token to charge users on your backend. It uses [PaymentKit](https://github.com/stripe/PaymentKit) to create a simple credit card form, and a small backend hosted with Parse Cloud Code to process the actual transactions.
+
+### Running the example
+
+Before you can run the app, you need to provide it with your own Stripe and Parse API keys.
+
+#### Stripe
+1. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds). Then go to https://dashboard.stripe.com/account/apikeys.
+2. Replace the `StripePublishableKey` constant in Example/StripeExample/Constants.m with your Test Publishable Key.
+3. Replace the `stripe_secret_key` variable in Example/Parse/cloud/main.js with your Test Secret Key.
+
+#### Parse
+1. Sign up for a [Parse account](https://parse.com/#signup), then create a new Parse app.
+2. Head to the "Application keys" section of your parse app's settings page. Replace the `ParseApplicationId` and `ParseClientKey` constants in Example/StripeExample/Constants.m with your app's Application ID and Client Key, respectively.
+3. Replace the appropriate values in Example/Parse/config/global.json with your Parse app's name, Application ID, and Master Secret. IMPORTANT: these values, along with your Stripe Secret Key, can be used to control your Stripe and Parse accounts. Thus, once you edit these files, you shoudn't check them back into git.
+4. Install the Parse command line tool at https://www.parse.com/docs/cloud_code_guide#started, then run `parse deploy` from the Example/Parse directory.
+
+After this is done, you can make test payments through the app (use credit card number 4242 4242 4242 4242, along with any cvc and any future expiration date) and then view them in your Stripe Dashboard!
+
 ## Running the tests
 
 1. Open Stripe.xcodeproj
 1. Select either the iOS or OS X scheme in the toolbar at the top
 1. Go to Product->Test
-
-## OS X Support
-
-OS X support is not yet well tested (though all the tests do run).  Feel free to give it a try and let us know of any problems you run into!
