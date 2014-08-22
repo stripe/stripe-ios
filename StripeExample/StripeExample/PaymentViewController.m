@@ -6,14 +6,14 @@
 //
 
 #import "Stripe.h"
-#import "PaymentViewController.h"
+
 #import "MBProgressHUD.h"
-#import "PaymentKit/PKView.h"
-#define EXAMPLE_STRIPE_PUBLISHABLE_KEY @"pk_test_6pRNASCoBOKtIshFeQd4XMUh"
+
+#import "PaymentViewController.h"
+#import "PKView.h"
+#import <Parse/Parse.h>
 
 @interface PaymentViewController ()<PKViewDelegate>
-- (void)hasError:(NSError *)error;
-- (void)hasToken:(STPToken *)token;
 @property(weak, nonatomic) PKView *paymentView;
 @end
 
@@ -53,14 +53,13 @@
     card.expMonth = self.paymentView.card.expMonth;
     card.expYear = self.paymentView.card.expYear;
     card.cvc = self.paymentView.card.cvc;
-    [Stripe createTokenWithCard:card publishableKey:EXAMPLE_STRIPE_PUBLISHABLE_KEY completion:^(STPToken *token, NSError *error) {
+    [Stripe createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         if (error) {
             [self hasError:error];
         } else {
             [self hasToken:token];
         }
-
     }];
 }
 
@@ -75,28 +74,25 @@
 
 - (void)hasToken:(STPToken *)token
 {
-    NSLog(@"Received token %@", token.tokenId);
-    
-    // Here is how you might upload the received token to your own servers.
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://example.com"]];
-    request.HTTPMethod = @"POST";
-    NSString *body     = [NSString stringWithFormat:@"stripeToken=%@", token.tokenId];
-    request.HTTPBody   = [body dataUsingEncoding:NSUTF8StringEncoding];
-    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                               [MBProgressHUD hideHUDForView:self.view animated:YES];
-                               if (error) {
-                                   [self hasError:error];
-                               } else {
-                                   [self.presentingViewController dismissViewControllerAnimated:YES completion:^{
-                                       [[[UIAlertView alloc] initWithTitle:@"Payment Succeeded" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:nil] show];
-                                   }];
-                               }
-                           }];
+    NSDictionary *chargeParams = @{
+                                   @"token": token.tokenId,
+                                   @"currency": @"usd",
+                                   @"amount": @"1000", // this is in cents (i.e. $10)
+                                   };
+    
+    // This passes the token off to our payment backend, which will then actually complete charging the card using your account's
+    [PFCloud callFunctionInBackground:@"charge" withParameters:chargeParams block:^(id object, NSError *error) {
+       [MBProgressHUD hideHUDForView:self.view animated:YES];
+        if (error) {
+            [self hasError:error];
+            return;
+        }
+        [self.presentingViewController dismissViewControllerAnimated:YES completion:^{
+            [[[UIAlertView alloc] initWithTitle:@"Payment Succeeded" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil] show];
+        }];
+    }];
 }
 
 @end

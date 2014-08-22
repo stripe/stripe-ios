@@ -28,7 +28,24 @@ You will also need to add the `Security` framework to your project.
 
 ## Example app
 
-For a simple, annotated demonstration of how to use the Stripe bindings to obtain and charge a Stripe token, consult PaymentViewController in the StripeExample folder or run the StripeExample app.
+The example app is a great way to see the flow of recording credit card details, converting them to a token with the Stripe iOS bindings, and then using that token to charge users on your backend. It uses [PaymentKit](https://github.com/stripe/PaymentKit) to create a simple credit card form, and a small backend hosted with Parse Cloud Code to process the actual transactions.
+
+### Running the example
+
+Before you can run the app, you need to provide it with your own Stripe and Parse API keys.
+
+#### Stripe
+1. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds). Then go to (https://dashboard.stripe.com/account/apikeys).
+2. Replace the `StripePublishableKey` constant in Example/StripeExample/Constants.m with your Test Publishable Key.
+3. Replace the `stripe_secret_key` variable in Example/Parse/cloud/main.js with your Test Secret Key.
+
+#### Parse
+1. Sign up for a [Parse account](https://parse.com/#signup), then create a new Parse app.
+2. Head to the "Application keys" section of your parse app's settings page. Replace the `ParseApplicationId` and `ParseClientKey` constants in Example/StripeExample/Constants.m with your app's Application ID and Client Key, respectively.
+3. Replace the appropriate values in Example/Parse/config/global.json with your Parse app's name, Application ID, and Master Secret. IMPORTANT: these values, along with your Stripe Secret Key, can be used to control your Stripe and Parse accounts. Thus, once you edit these files, you shoudn't check them back into git.
+4. Install the Parse command line tool at (https://www.parse.com/docs/cloud_code_guide#started), then run `parse deploy` from the Example/Parse directory.
+
+After this is done, you can make test payments through the app (use credit card number 4242 4242 4242 4242, along with any cvc and any future expiration date) and then view them in your Stripe Dashboard!
 
 ## Integration
 

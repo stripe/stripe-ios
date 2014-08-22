@@ -67,6 +67,17 @@
 		04E6C6BE19A5DBDB00EF287F /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E6C6AF19A5DBDB00EF287F /* STPToken.m */; };
 		04E6C6BF19A5DBDB00EF287F /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E6C6B119A5DBDB00EF287F /* STPUtils.m */; };
 		04E6C6C019A5DBDB00EF287F /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E6C6B119A5DBDB00EF287F /* STPUtils.m */; };
+		04E75A3B19A71BFD000003DE /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3A19A71BFD000003DE /* Parse.framework */; };
+		04E75A3D19A71C22000003DE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3C19A71C22000003DE /* AudioToolbox.framework */; };
+		04E75A3F19A71C2A000003DE /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3E19A71C2A000003DE /* CFNetwork.framework */; };
+		04E75A4119A71C4B000003DE /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A4019A71C4B000003DE /* CoreLocation.framework */; };
+		04E75A4319A71C53000003DE /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A4219A71C53000003DE /* libz.dylib */; };
+		04E75A4519A71C59000003DE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A4419A71C59000003DE /* MobileCoreServices.framework */; };
+		04E75A4719A71C5F000003DE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A4619A71C5F000003DE /* QuartzCore.framework */; };
+		04E75A4919A71C94000003DE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A4819A71C94000003DE /* Security.framework */; };
+		04E75A4B19A71C99000003DE /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A4A19A71C99000003DE /* StoreKit.framework */; };
+		04E75A4D19A71CA1000003DE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A4C19A71CA1000003DE /* SystemConfiguration.framework */; };
+		04E75A5119A734EA000003DE /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E75A5019A734EA000003DE /* Constants.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -159,6 +170,18 @@
 		04E6C6B019A5DBDB00EF287F /* STPUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPUtils.h; sourceTree = "<group>"; };
 		04E6C6B119A5DBDB00EF287F /* STPUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPUtils.m; sourceTree = "<group>"; };
 		04E6C6B219A5DBDB00EF287F /* Stripe-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe-Prefix.pch"; sourceTree = "<group>"; };
+		04E75A3A19A71BFD000003DE /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		04E75A3C19A71C22000003DE /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		04E75A3E19A71C2A000003DE /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		04E75A4019A71C4B000003DE /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		04E75A4219A71C53000003DE /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		04E75A4419A71C59000003DE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		04E75A4619A71C5F000003DE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		04E75A4819A71C94000003DE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		04E75A4A19A71C99000003DE /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		04E75A4C19A71CA1000003DE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		04E75A4F19A734EA000003DE /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		04E75A5019A734EA000003DE /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,8 +189,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04E75A4D19A71CA1000003DE /* SystemConfiguration.framework in Frameworks */,
+				04E75A4B19A71C99000003DE /* StoreKit.framework in Frameworks */,
+				04E75A4919A71C94000003DE /* Security.framework in Frameworks */,
+				04E75A4719A71C5F000003DE /* QuartzCore.framework in Frameworks */,
+				04E75A4519A71C59000003DE /* MobileCoreServices.framework in Frameworks */,
+				04E75A4319A71C53000003DE /* libz.dylib in Frameworks */,
+				04E75A4119A71C4B000003DE /* CoreLocation.framework in Frameworks */,
 				0470A29E19A5D5DB00B66DB7 /* CoreGraphics.framework in Frameworks */,
+				04E75A3F19A71C2A000003DE /* CFNetwork.framework in Frameworks */,
+				04E75A3D19A71C22000003DE /* AudioToolbox.framework in Frameworks */,
 				0470A2A019A5D5DB00B66DB7 /* UIKit.framework in Frameworks */,
+				04E75A3B19A71BFD000003DE /* Parse.framework in Frameworks */,
 				0470A29C19A5D5DB00B66DB7 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -188,6 +221,8 @@
 		0470A28F19A5D5DB00B66DB7 = {
 			isa = PBXGroup;
 			children = (
+				0470A2DA19A5D69E00B66DB7 /* PaymentKit */,
+				0470A2D719A5D69E00B66DB7 /* MBProgressHUD */,
 				04E6C6B419A5DBDB00EF287F /* Stripe */,
 				0470A2A119A5D5DB00B66DB7 /* StripeExample */,
 				0470A2C019A5D5DB00B66DB7 /* StripeExampleTests */,
@@ -208,6 +243,16 @@
 		0470A29A19A5D5DB00B66DB7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				04E75A4C19A71CA1000003DE /* SystemConfiguration.framework */,
+				04E75A4A19A71C99000003DE /* StoreKit.framework */,
+				04E75A4819A71C94000003DE /* Security.framework */,
+				04E75A4619A71C5F000003DE /* QuartzCore.framework */,
+				04E75A4419A71C59000003DE /* MobileCoreServices.framework */,
+				04E75A4219A71C53000003DE /* libz.dylib */,
+				04E75A4019A71C4B000003DE /* CoreLocation.framework */,
+				04E75A3E19A71C2A000003DE /* CFNetwork.framework */,
+				04E75A3C19A71C22000003DE /* AudioToolbox.framework */,
+				04E75A3A19A71BFD000003DE /* Parse.framework */,
 				0470A29B19A5D5DB00B66DB7 /* Foundation.framework */,
 				0470A29D19A5D5DB00B66DB7 /* CoreGraphics.framework */,
 				0470A29F19A5D5DB00B66DB7 /* UIKit.framework */,
@@ -221,14 +266,14 @@
 			children = (
 				0470A2D019A5D69E00B66DB7 /* Base.lproj */,
 				0470A2D319A5D69E00B66DB7 /* en.lproj */,
-				0470A2D719A5D69E00B66DB7 /* MBProgressHUD */,
-				0470A2DA19A5D69E00B66DB7 /* PaymentKit */,
-				0470A30519A5D69E00B66DB7 /* PaymentViewController.h */,
-				0470A30619A5D69E00B66DB7 /* PaymentViewController.m */,
+				04E75A4F19A734EA000003DE /* Constants.h */,
+				04E75A5019A734EA000003DE /* Constants.m */,
 				0470A2AA19A5D5DB00B66DB7 /* AppDelegate.h */,
 				0470A2AB19A5D5DB00B66DB7 /* AppDelegate.m */,
 				0470A2B019A5D5DB00B66DB7 /* ViewController.h */,
 				0470A2B119A5D5DB00B66DB7 /* ViewController.m */,
+				0470A30519A5D69E00B66DB7 /* PaymentViewController.h */,
+				0470A30619A5D69E00B66DB7 /* PaymentViewController.m */,
 				0470A2AD19A5D5DB00B66DB7 /* Main.storyboard */,
 				0470A2B319A5D5DB00B66DB7 /* Images.xcassets */,
 				0470A2A219A5D5DB00B66DB7 /* Supporting Files */,
@@ -287,7 +332,8 @@
 				0470A2D819A5D69E00B66DB7 /* MBProgressHUD.h */,
 				0470A2D919A5D69E00B66DB7 /* MBProgressHUD.m */,
 			);
-			path = MBProgressHUD;
+			name = MBProgressHUD;
+			path = StripeExample/MBProgressHUD;
 			sourceTree = "<group>";
 		};
 		0470A2DA19A5D69E00B66DB7 /* PaymentKit */ = {
@@ -314,7 +360,8 @@
 				0470A2ED19A5D69E00B66DB7 /* PKView.m */,
 				0470A2EE19A5D69E00B66DB7 /* Resources */,
 			);
-			path = PaymentKit;
+			name = PaymentKit;
+			path = StripeExample/PaymentKit;
 			sourceTree = "<group>";
 		};
 		0470A2EE19A5D69E00B66DB7 /* Resources */ = {
@@ -508,6 +555,7 @@
 				0470A2AC19A5D5DB00B66DB7 /* AppDelegate.m in Sources */,
 				0470A31719A5D69E00B66DB7 /* PKView.m in Sources */,
 				0470A31519A5D69E00B66DB7 /* PKTextField.m in Sources */,
+				04E75A5119A734EA000003DE /* Constants.m in Sources */,
 				04E6C6BD19A5DBDB00EF287F /* STPToken.m in Sources */,
 				0470A31119A5D69E00B66DB7 /* PKCardCVC.m in Sources */,
 				0470A32D19A5D69E00B66DB7 /* PaymentViewController.m in Sources */,
@@ -669,6 +717,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StripeExample/StripeExample-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -687,6 +739,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StripeExample/StripeExample-Prefix.pch";
 				HEADER_SEARCH_PATHS = (

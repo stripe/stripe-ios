@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "REPLACE ME WITH YOUR APPLICATION'S NAME": {
+            "applicationId": "REPLACE ME WITH YOUR PARSE APPLICATION ID", 
+            "masterKey": "REPLACE ME WITH YOUR PARSE MASTER KEY"
+        }, 
+        "_default": {
+            "link": "REPLACE ME WITH YOUR APPLICATION's NAME"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.2.19"
+    }
+}
