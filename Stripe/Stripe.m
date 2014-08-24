@@ -29,10 +29,10 @@ static NSString *const tokenEndpoint = @"tokens";
 
 #pragma mark Private Helpers
 
-+ (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey
++ (NSURL *)apiURL
 {
     NSURL *url = [[[NSURL URLWithString:
-            [NSString stringWithFormat:@"https://%@:@%@", [STPUtils stringByURLEncoding:publishableKey], apiURLBase]]
+            [NSString stringWithFormat:@"https://%@", apiURLBase]]
             URLByAppendingPathComponent:apiVersion]
             URLByAppendingPathComponent:tokenEndpoint];
     return url;
@@ -183,12 +183,11 @@ static NSString *const tokenEndpoint = @"tokens";
 
     [self validateKey:publishableKey];
 
-    NSURL *url = [self apiURLWithPublishableKey:publishableKey];
-
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.apiURL];
     request.HTTPMethod = @"POST";
     request.HTTPBody = [card formEncode];
     [request setValue:[self JSONStringForObject:[self stripeUserAgentDetails]] forHTTPHeaderField:@"X-Stripe-User-Agent"];
+    [request setValue:[@"Bearer " stringByAppendingString:publishableKey] forHTTPHeaderField:@"Authorization"];
 
     [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
                                                                  completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
@@ -208,11 +207,12 @@ static NSString *const tokenEndpoint = @"tokens";
 
     [self validateKey:publishableKey];
 
-    NSURL *url = [[self apiURLWithPublishableKey:publishableKey] URLByAppendingPathComponent:tokenId];
+    NSURL *url = [self.apiURL URLByAppendingPathComponent:tokenId];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"GET";
     [request setValue:[self JSONStringForObject:[self stripeUserAgentDetails]] forHTTPHeaderField:@"X-Stripe-User-Agent"];
+    [request setValue:[@"Bearer " stringByAppendingString:publishableKey] forHTTPHeaderField:@"Authorization"];
 
     [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
                                                                  completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {

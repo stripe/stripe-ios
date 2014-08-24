@@ -19,7 +19,6 @@
 - (void)setUp
 {
     [super setUp];
-    [Stripe setDefaultPublishableKey:@"pk_YT1CEhhujd0bklb2KGQZiaL3iTzj3"];
 }
 
 - (void)tearDown
@@ -31,6 +30,7 @@
 {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
+    [Stripe setDefaultPublishableKey:@"pk_YT1CEhhujd0bklb2KGQZiaL3iTzj3"];
     STPCard *card = [[STPCard alloc] init];
     
     card.number = @"4242 4242 4242 4242";
@@ -55,6 +55,30 @@
         }];
     }];
     
+    while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+    }
+}
+
+- (void)testInvalidKey
+{
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+    [Stripe setDefaultPublishableKey:@"not_a_valid_key_asdf"];
+    STPCard *card = [[STPCard alloc] init];
+
+    card.number = @"4242 4242 4242 4242";
+    card.expMonth = 6;
+    card.expYear = 2018;
+
+    [Stripe createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
+        XCTAssertNotNil(error, @"error should not be nil");
+        XCTAssert([error.localizedDescription rangeOfString:@"asdf"].location != NSNotFound,
+                  @"error should contain last 4 of key");
+
+        dispatch_semaphore_signal(semaphore);
+    }];
+
     while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1]];
     }

@@ -103,18 +103,18 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
 #pragma mark FailableStripe
 
 @interface Stripe ()
-+ (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey;
++ (NSURL *)apiURL;
 @end
 
 @implementation FailableStripe
 
 static StripeCertificateFailMethod failureMethod;
 
-+ (NSURL *)apiURLWithPublishableKey:(NSString *)publishableKey
++ (NSURL *)apiURL
 {
     switch (failureMethod) {
         case StripeCertificateFailMethodNoError:
-            return [Stripe apiURLWithPublishableKey:publishableKey];
+            return [Stripe apiURL];
         case StripeCertificateFailMethodExpired:
             return [NSURL URLWithString:@"https://testssl-expire.disig.sk/index.en.html"];
         case StripeCertificateFailMethodMismatched:
