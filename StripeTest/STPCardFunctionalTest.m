@@ -16,16 +16,6 @@
 
 @implementation STPCardFunctionalTest
 
-- (void)setUp
-{
-    [super setUp];
-}
-
-- (void)tearDown
-{
-    [super tearDown];
-}
-
 - (void)testCreateAndRetreiveCardToken
 {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
