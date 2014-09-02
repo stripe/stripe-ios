@@ -68,19 +68,14 @@
     _completionBlock(_receivedResponse, _receivedData, nil);
 }
 
+#pragma mark NSURLConnectionDelegate
+
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     if (_overrideError) {
         error = _overrideError;
     }
     _completionBlock(_receivedResponse, _receivedData, error);
-}
-
-#pragma mark NSURLConnectionDelegate
-
-- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
-{
-    return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
 }
 
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
