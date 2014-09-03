@@ -25,10 +25,8 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
 
 @implementation STPCertTest
 
-- (void)testNoError
-{
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-
+- (void)testNoError {
+    __block BOOL done = NO;
     [FailableStripe setFailureMethod:StripeCertificateFailMethodNoError];
     [FailableStripe createTokenWithCard:[self dummyCard]
                          publishableKey:EXAMPLE_STRIPE_PUBLISHABLE_KEY
@@ -37,18 +35,16 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
                                  // messages from the server and not be blocked by local cert checks
                                  XCTAssertNil(token, @"Expected no token");
                                  XCTAssertNotNil(error, @"Expected error");
-                                 dispatch_semaphore_signal(semaphore);
+                                 done = YES;
                              }];
 
-    while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+    while (!done) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
 }
 
-- (void)testCertificateErrorWithMethod:(StripeCertificateFailMethod)method
-{
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-
+- (void)testCertificateErrorWithMethod:(StripeCertificateFailMethod)method {
+    __block BOOL done = NO;
     [FailableStripe setFailureMethod:method];
     [FailableStripe createTokenWithCard:[self dummyCard]
                          publishableKey:EXAMPLE_STRIPE_PUBLISHABLE_KEY
@@ -64,11 +60,11 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
                                      XCTAssertEqualObjects(error.domain, @"NSURLErrorDomain", @"Error should be NSURLErrorDomain");
                                      XCTAssertNotNil(error.userInfo[@"NSURLErrorFailingURLPeerTrustErrorKey"], @"There should be a secTustRef for Foundation HTTPS errors");
                                  }
-                                 dispatch_semaphore_signal(semaphore);
+                                 done = YES;
                              }];
 
-    while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+    while (!done) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
 }
 
