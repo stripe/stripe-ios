@@ -1,4 +1,4 @@
 language: objective-c
 xcode_workspace: Stripe.xcworkspace
 xcode_scheme: StripeiOSExcludingFunctionalTests
-
+xcode_sdk: iphonesimulator
