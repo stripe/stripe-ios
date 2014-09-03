@@ -9,7 +9,7 @@
 #import "Stripe.h"
 #import "STPCertTest.h"
 
-#define EXAMPLE_STRIPE_PUBLISHABLE_KEY @"pk_test_9eiBtT0PmkdfvFiHBpktXKsr"
+#define EXAMPLE_STRIPE_PUBLISHABLE_KEY @"bad_key"
 
 typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
     StripeCertificateFailMethodNoError = 0,
