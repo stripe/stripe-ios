@@ -2,7 +2,7 @@
 
 The Stripe iOS bindings make it easy to collect your users' credit card details inside your iOS app. By creating [tokens](https://stripe.com/docs/api#tokens), Stripe handles the bulk of PCI compliance by preventing sensitive card data from hitting your server (for more, see [our article about PCI compliance](https://support.stripe.com/questions/do-i-need-to-be-pci-compliant-what-do-i-have-to-do)).
 
-To get started, see our [tutorial](https://stripe.com/docs/mobile/ios).
+We've written a [tutorial](https://stripe.com/docs/mobile/ios) that explains how to get started with Stripe on iOS, or read on!
 
 ## Installation
 
@@ -30,11 +30,11 @@ You will also need to add the `Security` framework to your project.
 
 First, you need to create a series of views to collect your users' card details. We've created a reusable component for this purpose called PaymentKit, or you can roll your own.
 
+Note: previous versions of Stripe-iOS included PaymentKit as a dependency. This, along with the `STPView` class (which interfaced with PaymentKit), has been removed as of version 1.2. If you are using any `STPView`s in your project and would like to upgrade, please see the "Migrating from versions < 1.2" section below.
+
 ### Using PaymentKit
 
 See the README at https://github.com/stripe/PaymentKit.
-
-Note: Version 1.2 of this libary removes the STPView class. PaymentKit provides a near-identical version of this called PKView if you need to migrate.
 
 ### Tokenization
 
@@ -135,3 +135,27 @@ After this is done, you can make test payments through the app (use credit card 
 1. Open Stripe.xcodeproj
 1. Select either the iOS or OS X scheme in the toolbar at the top
 1. Go to Product->Test
+
+## Migrating from versions < 1.2
+
+As mentioned above, versions of Stripe-iOS prior to 1.2 included a class called `STPView`, which provided a pre-built credit card form. This functionality has been moved from Stripe-iOS to PaymentKit, a separate project. If you were using `STPView` prior to version 1.2, migrating is simple:
+
+1. Add PaymentKit to your project, as explained on its [project page](https://github.com/stripe/PaymentKit).
+2. Replace any references to `STPView` with a `PKView` instead. Similarly, any classes that implement `STPViewDelegate` should now instead implement the equivalent `PKViewDelegate` methods. Note that unlike `STPView`, `PKView` does not take a Stripe API key in its constructor.
+3. To submit the credit card details from your `PKView` instance, where you would previously call `createToken` on your `STPView`, replace that with the following code (assuming `self.paymentView` is your `PKView` instance):
+
+        if (![self.paymentView isValid]) {
+            return;
+        }
+        STPCard *card = [[STPCard alloc] init];
+        card.number = self.paymentView.card.number;
+        card.expMonth = self.paymentView.card.expMonth;
+        card.expYear = self.paymentView.card.expYear;
+        card.cvc = self.paymentView.card.cvc;
+        [Stripe createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
+            if (error) {
+                // handle the error as you did previously
+            } else {
+                // submit the token to your payment backend as you did previously
+            }
+        }];
