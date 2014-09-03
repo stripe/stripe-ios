@@ -1,3 +1,4 @@
 language: objective-c
-before: gem install xcpretty
-script: xcodebuild test -scheme StripeiOS -sdk iphonesimulator | xcpretty -c && exit ${PIPESTATUS[0]}
+xcode_workspace: Stripe.xcworkspace
+xcode_scheme: StripeiOSExcludingFunctionalTests
+
