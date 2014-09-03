@@ -30,7 +30,7 @@ You will also need to add the `Security` framework to your project.
 
 First, you need to create a series of views to collect your users' card details. We've created a reusable component for this purpose called PaymentKit, or you can roll your own.
 
-Note: previous versions of Stripe-iOS included PaymentKit as a dependency. This, along with the `STPView` class (which interfaced with PaymentKit), has been removed as of version 1.2. If you are using any `STPView`s in your project and would like to upgrade, please see the "Migrating from versions < 1.2" section below.
+Note: previous versions of Stripe-iOS included PaymentKit as a dependency. We've decided to remove this dependency as of version 1.2. We've also removed the `STPView` class, which was mostly a wrapper for PaymentKit code. Separating these repositories will allow us to work on both faster. You are, of course, welcome to keep using PaymentKit in your project. If you're using any `STPView`s in your project and would like to upgrade, doing so is easy! Please see the "Migrating from versions < 1.2" section below.
 
 ### Using PaymentKit
 
