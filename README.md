@@ -1,5 +1,7 @@
 # Stripe iOS Bindings
 
+[![Build Status](https://travis-ci.org/stripe/stripe-ios.svg?branch=master)](https://travis-ci.org/stripe/stripe-ios)
+
 The Stripe iOS bindings make it easy to collect your users' credit card details inside your iOS app. By creating [tokens](https://stripe.com/docs/api#tokens), Stripe handles the bulk of PCI compliance by preventing sensitive card data from hitting your server (for more, see [our article about PCI compliance](https://support.stripe.com/questions/do-i-need-to-be-pci-compliant-what-do-i-have-to-do)).
 
 We've written a [tutorial](https://stripe.com/docs/mobile/ios) that explains how to get started with Stripe on iOS, or read on!
