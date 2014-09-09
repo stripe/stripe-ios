@@ -6,7 +6,7 @@
 //
 
 #import "Stripe.h"
-#import "Constants.h"
+
 #import "MBProgressHUD.h"
 
 #import "PaymentViewController.h"
@@ -22,13 +22,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"Enter your Credit Card";
+    self.title = @"Add Card";
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
       self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     
     // Setup save button
-    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(save:)];
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStyleDone target:self action:@selector(save:)];
     saveButton.enabled = NO;
     self.navigationItem.rightBarButtonItem = saveButton;
     

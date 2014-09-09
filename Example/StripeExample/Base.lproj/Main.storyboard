@@ -18,17 +18,20 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GJ6-hd-Wof">
-                                <rect key="frame" x="90" y="171" width="140" height="30"/>
-                                <state key="normal" title="Spend Some Money">
+                                <rect key="frame" x="105" y="171" width="110" height="30"/>
+                                <state key="normal" title="Create Payment">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="Yyu-dq-srZ" kind="modal" id="NZw-A6-7WN"/>
+                                    <action selector="beginPayment:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="pVL-Dg-LSY"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <segue destination="Yyu-dq-srZ" kind="custom" identifier="OldPaymentFlowSegue" id="Ume-RH-xYb"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
@@ -47,7 +50,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4RC-HX-PdL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1051" y="372"/>
+            <point key="canvasLocation" x="563" y="136"/>
         </scene>
         <!--Payment View Controller-->
         <scene sceneID="wOp-jH-yGg">
@@ -72,7 +75,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vCN-EA-sqe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1491" y="372"/>
+            <point key="canvasLocation" x="997" y="136"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
