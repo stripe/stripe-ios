@@ -4,11 +4,11 @@
 
 The Stripe iOS bindings make it easy to collect your users' credit card details inside your iOS app. By creating [tokens](https://stripe.com/docs/api#tokens), Stripe handles the bulk of PCI compliance by preventing sensitive card data from hitting your server (for more, see [our article about PCI compliance](https://support.stripe.com/questions/do-i-need-to-be-pci-compliant-what-do-i-have-to-do)).
 
-We also offer seamless integration with Apple's new Pay service that will allow you to securely collect payments from your customers in a way that prevents them from having to re-enter their credit card information.
+We also offer [seamless integration](https://stripe.com/applepay) with Apple's new [Apple Pay](https://apple.com/apple-pay) service that will allow you to securely collect payments from your customers in a way that prevents them from having to re-enter their credit card information.
 
 ## Integration
 
-We've written a [guide](https://stripe.com/docs/mobile/ios) that explains everything from installation, to creating payment tokens, to Pay integration and more.
+We've written a [guide](https://stripe.com/docs/mobile/ios) that explains everything from installation, to creating payment tokens, to Apple Pay integration and more.
 
 ## Example app
 
