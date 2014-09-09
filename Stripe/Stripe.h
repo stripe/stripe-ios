@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <PassKit/PassKit.h>
 #import "StripeError.h"
 #import "STPCard.h"
 #import "STPToken.h"
@@ -40,4 +41,26 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
 + (void)requestTokenWithID:(NSString *)tokenId operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler;
 
 + (void)requestTokenWithID:(NSString *)tokenId completion:(STPCompletionBlock)handler;
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+
++ (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest;
+
++ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier
+                                                    amount:(NSDecimalNumber *)amount
+                                                  currency:(NSString *)currency
+                                               description:(NSString *)description;
+
++ (UIViewController *)paymentControllerWithRequest:(PKPaymentRequest *)request
+                                          delegate:(id<PKPaymentAuthorizationViewControllerDelegate>)delegate;
+
++ (void)createTokenWithPayment:(PKPayment *)payment
+                    completion:(STPCompletionBlock)handler;
+
++ (void)createTokenWithPayment:(PKPayment *)payment
+                operationQueue:(NSOperationQueue *)queue
+                    completion:(STPCompletionBlock)handler;
+
+#endif
+
 @end

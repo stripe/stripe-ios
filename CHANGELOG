@@ -1,3 +1,6 @@
+=== 2.0 2014-09-09
+* Add support for native payments via Apple's new framework
+
 === 1.2 2014-08-21
 * Removed PaymentKit as a dependency. If you'd like to use it, you may still do so by including it separately.
 * Removed STPView. PaymentKit provides a near-identical version of this functionality if you need to migrate.
