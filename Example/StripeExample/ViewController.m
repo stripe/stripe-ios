@@ -18,7 +18,8 @@
 @implementation ViewController
 
 - (IBAction)beginPayment:(id)sender {
-    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:@"test"
+    NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId
                                                                              amount:[NSDecimalNumber decimalNumberWithString:@"10"]
                                                                            currency:@"USD"
                                                                         description:@"Premium Llama Food"];
