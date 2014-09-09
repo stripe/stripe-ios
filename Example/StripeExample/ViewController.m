@@ -54,6 +54,17 @@
 
 - (void)createBackendChargeWithToken:(STPToken *)token
                           completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    if (!ParseApplicationId || !ParseClientKey) {
+        UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Todo: Submit this token to your backend"
+                                                          message:[NSString stringWithFormat:@"Good news! Stripe turned your credit card into a token: %@ \nYou can follow the instructions in the README to set up Parse as an example backend, or use this token to manually create charges at dashboard.stripe.com .", token.tokenId]
+                                                         delegate:nil
+                                                cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
+                                                otherButtonTitles:nil];
+        
+        [message show];
+        completion(PKPaymentAuthorizationStatusSuccess);
+        return;
+    }
     NSDictionary *chargeParams = @{
                                    @"token": token.tokenId,
                                    @"currency": @"usd",

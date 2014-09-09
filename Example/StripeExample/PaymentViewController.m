@@ -6,12 +6,11 @@
 //
 
 #import "Stripe.h"
-
 #import "MBProgressHUD.h"
-
 #import "PaymentViewController.h"
 #import "PKView.h"
 #import <Parse/Parse.h>
+#import "Constants.h"
 
 @interface PaymentViewController ()<PKViewDelegate>
 @property(weak, nonatomic) PKView *paymentView;

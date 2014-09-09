@@ -9,7 +9,7 @@
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
 
 #import <UIKit/UIKit.h>
-#import "PKPaymentAuthorizationViewController.h"
+#import <PassKit/PassKit.h>
 
 @interface STPTestPaymentAuthorizationViewController : UIViewController
 

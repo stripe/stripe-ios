@@ -11,6 +11,8 @@
 #import "STPAPIConnection.h"
 #import "Stripe.h"
 #import "STPUtils.h"
+#import "STPTestPaymentAuthorizationViewController.h"
+#import "PKPayment+STPTestKeys.h"
 
 NSString *const kStripeiOSVersion = @"1.1.4";
 
@@ -314,6 +316,7 @@ static NSString *const tokenEndpoint = @"tokens";
     PKPaymentRequest *paymentRequest = [PKPaymentRequest new];
     PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:description amount:amount];
     [paymentRequest setMerchantIdentifier:merchantIdentifier];
+    [paymentRequest setSupportedNetworks:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa]];
     [paymentRequest setMerchantCapabilities:PKMerchantCapability3DS];
     [paymentRequest setCountryCode:@"US"];
     [paymentRequest setCurrencyCode:currency];
@@ -323,7 +326,7 @@ static NSString *const tokenEndpoint = @"tokens";
 
 + (UIViewController *)paymentControllerWithRequest:(PKPaymentRequest *)request
                                           delegate:(id<PKPaymentAuthorizationViewControllerDelegate>)delegate {
-    if ([self isSimulatorBuild] && ![PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:request.supportedNetworks]) {
+    if ([self isSimulatorBuild]) {
         STPTestPaymentAuthorizationViewController *test = [STPTestPaymentAuthorizationViewController new];
         test.delegate = delegate;
         return test;

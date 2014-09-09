@@ -8,7 +8,7 @@
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
 
-#import "PKPayment.h"
+#import <PassKit/PassKit.h>
 
 extern NSString * const STPSuccessfulChargeCardNumber;
 extern NSString * const STPFailingChargeCardNumber;
