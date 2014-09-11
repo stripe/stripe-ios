@@ -41,7 +41,7 @@
     PKPaymentAuthorizationViewController *auth = (PKPaymentAuthorizationViewController *)self;
     
     [self.activityIndicator startAnimating];
-    [self.delegate paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)auth
+    [self.delegate testPaymentAuthorizationViewController:(STPTestPaymentAuthorizationViewController *)auth
                                   didAuthorizePayment:payment
                                            completion:^(PKPaymentAuthorizationStatus status) {
                                                [self.activityIndicator stopAnimating];

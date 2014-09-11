@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 extern NSString * const StripePublishableKey;
+extern BOOL const StripeTestMode;
 extern NSString * const ParseApplicationId;
 extern NSString * const ParseClientKey;
 

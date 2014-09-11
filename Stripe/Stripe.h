@@ -11,6 +11,7 @@
 #import "StripeError.h"
 #import "STPCard.h"
 #import "STPToken.h"
+#import "STPTestPaymentAuthorizationViewController.h"
 
 FOUNDATION_EXPORT NSString *const kStripeiOSVersion; // Version of this library.
 
@@ -51,6 +52,8 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
                                                   currency:(NSString *)currency
                                                description:(NSString *)description;
 
++ (UIViewController *)testPaymentControllerWithRequest:(PKPaymentRequest *)request
+                                          delegate:(id<STPTestPKPaymentDelegate>)delegate;
 + (UIViewController *)paymentControllerWithRequest:(PKPaymentRequest *)request
                                           delegate:(id<PKPaymentAuthorizationViewControllerDelegate>)delegate;
 
