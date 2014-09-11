@@ -53,7 +53,7 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
                                                description:(NSString *)description;
 
 + (UIViewController *)testPaymentControllerWithRequest:(PKPaymentRequest *)request
-                                          delegate:(id<STPTestPKPaymentDelegate>)delegate;
+                                          delegate:(id<STPTestPaymentAuthorizationViewControllerDelegate>)delegate;
 + (UIViewController *)paymentControllerWithRequest:(PKPaymentRequest *)request
                                           delegate:(id<PKPaymentAuthorizationViewControllerDelegate>)delegate;
 

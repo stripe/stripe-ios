@@ -326,7 +326,7 @@ static NSString *const tokenEndpoint = @"tokens";
 
 
 + (UIViewController *)testPaymentControllerWithRequest:(PKPaymentRequest *)request
-                                          delegate:(id<STPTestPKPaymentDelegate>)delegate {
+                                          delegate:(id<STPTestPaymentAuthorizationViewControllerDelegate>)delegate {
     STPTestPaymentAuthorizationViewController *test = [STPTestPaymentAuthorizationViewController new];
     test.delegate = delegate;
     return test;

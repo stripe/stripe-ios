@@ -12,7 +12,7 @@
 #import "Stripe.h"
 #import "Constants.h"
 
-@interface ViewController()<PKPaymentAuthorizationViewControllerDelegate, STPTestPKPaymentDelegate>
+@interface ViewController()<PKPaymentAuthorizationViewControllerDelegate, STPTestPaymentAuthorizationViewControllerDelegate>
 @end
 
 @implementation ViewController

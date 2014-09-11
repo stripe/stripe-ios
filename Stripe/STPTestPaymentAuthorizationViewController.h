@@ -11,7 +11,7 @@
 #import <UIKit/UIKit.h>
 #import <PassKit/PassKit.h>
 
-@protocol STPTestPKPaymentDelegate <NSObject>
+@protocol STPTestPaymentAuthorizationViewControllerDelegate <NSObject>
 
 @required
 -(void)testPaymentAuthorizationViewController:(UIViewController *)controller
@@ -24,7 +24,7 @@
 
 @interface STPTestPaymentAuthorizationViewController : UIViewController
 
-@property(nonatomic, assign)id<STPTestPKPaymentDelegate>delegate;
+@property(nonatomic, assign)id<STPTestPaymentAuthorizationViewControllerDelegate>delegate;
 
 @end
 
