@@ -100,4 +100,8 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)testPaymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 @end

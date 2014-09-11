@@ -18,7 +18,7 @@
                           didAuthorizePayment:(PKPayment *)payment
                                    completion:(void (^)(PKPaymentAuthorizationStatus))completion;
 
--(void)paymentAuthorizationViewControllerDidFinish:(UIViewController *)controller;
+-(void)testPaymentAuthorizationViewControllerDidFinish:(UIViewController *)controller;
 @end
 
 
