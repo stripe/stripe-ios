@@ -45,7 +45,7 @@
                                   didAuthorizePayment:payment
                                            completion:^(PKPaymentAuthorizationStatus status) {
                                                [self.activityIndicator stopAnimating];
-                                               [self.delegate paymentAuthorizationViewControllerDidFinish:auth];
+                                               [self.delegate testPaymentAuthorizationViewControllerDidFinish:auth];
                                            }];
 }
 
@@ -67,7 +67,7 @@
 }
 
 - (void)actionSheetCancel:(UIActionSheet *)actionSheet {
-    [self.delegate paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)self];
+    [self.delegate testPaymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)self];
 }
 
 @end
