@@ -57,7 +57,7 @@
         return;
     }
     switch (buttonIndex) {
-        case 1:
+        case 0:
             [self makePaymentWithCardNumber:STPSuccessfulChargeCardNumber];
             break;
         default:
