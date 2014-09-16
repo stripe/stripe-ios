@@ -11,6 +11,7 @@
 #import "ViewController.h"
 #import "Stripe.h"
 #import "Constants.h"
+#import "STPCheckoutViewController.h"
 
 @interface ViewController()<PKPaymentAuthorizationViewControllerDelegate>
 @end
@@ -18,18 +19,28 @@
 @implementation ViewController
 
 - (IBAction)beginPayment:(id)sender {
-    NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
-    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId
-                                                                             amount:[NSDecimalNumber decimalNumberWithString:@"10"]
-                                                                           currency:@"USD"
-                                                                        description:@"Premium Llama Food"];
-    if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
-        UIViewController *paymentController = [Stripe paymentControllerWithRequest:paymentRequest delegate:self];
-        [self presentViewController:paymentController animated:YES completion:nil];
-    }
-    else {
-        [self performSegueWithIdentifier:@"OldPaymentFlowSegue" sender:sender];
-    }
+    STPCheckoutViewController *vc = [STPCheckoutViewController new];
+    [self presentViewController:vc animated:YES completion:nil];
+//    NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
+//    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId
+//                                                                             amount:[NSDecimalNumber decimalNumberWithString:@"10"]
+//                                                                           currency:@"USD"
+//                                                                        description:@"Premium Llama Food"];
+//    PKPaymentRequest *request = [PKPaymentRequest new];
+//    request.merchantIdentifier = @"MY_MERCHANT_ID";
+//    request.currencyCode = @"USD";
+//    PKPaymentSummaryItem *item = [PKPaymentSummaryItem
+//                                  summaryItemWithLabel:@"Fancy Llama Food"
+//                                  amount:@10.00];
+//    request.paymentSummaryItems = @[item];
+//    
+//    if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
+//        UIViewController *paymentController = [Stripe paymentControllerWithRequest:paymentRequest delegate:self];
+//        [self presentViewController:paymentController animated:YES completion:nil];
+//    }
+//    else {
+//        [self performSegueWithIdentifier:@"OldPaymentFlowSegue" sender:sender];
+//    }
 }
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller

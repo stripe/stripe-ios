@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0430C71819C7B7690089E6D8 /* STPCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0430C71719C7B7690089E6D8 /* STPCheckoutViewController.m */; };
+		0430C71B19C7CEA60089E6D8 /* checkoutBridge.js in Resources */ = {isa = PBXBuildFile; fileRef = 0430C71919C7CEA60089E6D8 /* checkoutBridge.js */; };
 		0470A29C19A5D5DB00B66DB7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29B19A5D5DB00B66DB7 /* Foundation.framework */; };
 		0470A29E19A5D5DB00B66DB7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29D19A5D5DB00B66DB7 /* CoreGraphics.framework */; };
 		0470A2A019A5D5DB00B66DB7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29F19A5D5DB00B66DB7 /* UIKit.framework */; };
@@ -88,6 +90,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0430C71619C7B7690089E6D8 /* STPCheckoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutViewController.h; sourceTree = "<group>"; };
+		0430C71719C7B7690089E6D8 /* STPCheckoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCheckoutViewController.m; sourceTree = "<group>"; };
+		0430C71919C7CEA60089E6D8 /* checkoutBridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = checkoutBridge.js; sourceTree = "<group>"; };
 		0470A29819A5D5DB00B66DB7 /* StripeExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StripeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0470A29B19A5D5DB00B66DB7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0470A29D19A5D5DB00B66DB7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -342,6 +347,9 @@
 				04CB47C519BF4D5600A4632A /* STPFormEncodeProtocol.h */,
 				04CB47C619BF4D5600A4632A /* STPTestPaymentAuthorizationViewController.h */,
 				04CB47C719BF4D5600A4632A /* STPTestPaymentAuthorizationViewController.m */,
+				0430C71619C7B7690089E6D8 /* STPCheckoutViewController.h */,
+				0430C71719C7B7690089E6D8 /* STPCheckoutViewController.m */,
+				0430C71919C7CEA60089E6D8 /* checkoutBridge.js */,
 				04CB47C819BF4D5600A4632A /* STPToken.h */,
 				04CB47C919BF4D5600A4632A /* STPToken.m */,
 				04CB47CA19BF4D5600A4632A /* STPUtils.h */,
@@ -525,6 +533,7 @@
 				04EEE27819CB834C00192164 /* placeholder.png in Resources */,
 				04EEE27B19CB834C00192164 /* visa@2x.png in Resources */,
 				04EEE27319CB834C00192164 /* discover@2x.png in Resources */,
+				0430C71B19C7CEA60089E6D8 /* checkoutBridge.js in Resources */,
 				0470A2AF19A5D5DB00B66DB7 /* Main.storyboard in Resources */,
 				04EEE27619CB834C00192164 /* mastercard.png in Resources */,
 				04EEE27719CB834C00192164 /* mastercard@2x.png in Resources */,
@@ -557,6 +566,7 @@
 				04CB47D219BF4D5600A4632A /* STPAPIConnection.m in Sources */,
 				04EEE26919CB834C00192164 /* PTKView.m in Sources */,
 				0470A32D19A5D69E00B66DB7 /* PaymentViewController.m in Sources */,
+				0430C71819C7B7690089E6D8 /* STPCheckoutViewController.m in Sources */,
 				04CB47D119BF4D5600A4632A /* PKPayment+STPTestKeys.m in Sources */,
 				04EEE26419CB834C00192164 /* PTKCardExpiry.m in Sources */,
 				04CB47D819BF4D5600A4632A /* StripeError.m in Sources */,
@@ -724,6 +734,7 @@
 				);
 				INFOPLIST_FILE = "StripeExample/StripeExample-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -746,6 +757,7 @@
 				);
 				INFOPLIST_FILE = "StripeExample/StripeExample-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
