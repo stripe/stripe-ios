@@ -7,10 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <PassKit/PassKit.h>
 #import "StripeError.h"
 #import "STPCard.h"
 #import "STPToken.h"
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+#import <PassKit/PassKit.h>
+#endif
 
 FOUNDATION_EXPORT NSString *const kStripeiOSVersion; // Version of this library.
 
