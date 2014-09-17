@@ -28,7 +28,7 @@
     if (self = [super init]) {
         _request = request;
         _connection = [[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO];
-        _receivedData = [NSMutableData data];
+        _receivedData = [[NSMutableData alloc] init];    ///[NSMutableData data];
     }
     return self;
 }
@@ -44,38 +44,44 @@
     if (!handler) {
         [NSException raise:@"RequiredParameter" format:@"'handler' is required"];
     }
-
-    _started = YES;
-    _completionBlock = [handler copy];
-    [_connection setDelegateQueue:queue];
-    [_connection start];
+    
+    self.started = YES;
+    self.completionBlock = [handler copy];
+    [self.connection setDelegateQueue:queue];
+    [self.connection start];
 }
 
 #pragma mark NSURLConnectionDataDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    _receivedResponse = response;
+    self.receivedResponse = response;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    [_receivedData appendData:data];
+    [self.receivedData appendData:data];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    _completionBlock(_receivedResponse, _receivedData, nil);
+    self.connection = nil;
+    self.completionBlock(self.receivedResponse, self.receivedData, nil);
+    self.receivedData = nil;
+    self.receivedResponse = nil;
 }
 
 #pragma mark NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    if (_overrideError) {
-        error = _overrideError;
+    if (self.overrideError) {
+        error = self.overrideError;
     }
-    _completionBlock(_receivedResponse, _receivedData, error);
+    self.connection = nil;
+    self.receivedData = nil;
+    self.receivedResponse = nil;
+    self.completionBlock(self.receivedResponse, self.receivedData, error);
 }
 
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
@@ -84,16 +90,16 @@
         SecTrustRef serverTrust = [[challenge protectionSpace] serverTrust];
         SecTrustResultType resultType;
         SecTrustEvaluate(serverTrust, &resultType);
-
+        
         // Check for revocation manually since CFNetworking doesn't. (see https://revoked.stripe.com for more)
         for (CFIndex i = 0, count = SecTrustGetCertificateCount(serverTrust); i < count; i++) {
             if ([self.class isCertificateBlacklisted:SecTrustGetCertificateAtIndex(serverTrust, i)]) {
-                _overrideError = [self.class blacklistedCertificateError];
+                self.overrideError = [self.class blacklistedCertificateError];
                 [challenge.sender cancelAuthenticationChallenge:challenge];
                 return;
             }
         }
-
+        
         [challenge.sender performDefaultHandlingForAuthenticationChallenge:challenge];
     } else if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodDefault]) {
         // If this is an HTTP Authorization request, just continue. We want to bubble this back through the
@@ -109,9 +115,9 @@
 + (NSArray *)certificateBlacklist
 {
     return @[
-            @"05c0b3643694470a888c6e7feb5c9e24e823dc53", // api.stripe.com
-            @"5b7dc7fbc98d78bf76d4d4fa6f597a0c901fad5c" // revoked.stripe.com:444
-    ];
+             @"05c0b3643694470a888c6e7feb5c9e24e823dc53", // api.stripe.com
+             @"5b7dc7fbc98d78bf76d4d4fa6f597a0c901fad5c" // revoked.stripe.com:444
+             ];
 }
 
 + (BOOL)isCertificateBlacklisted:(SecCertificateRef)certificate
@@ -124,25 +130,25 @@
     CFDataRef data = SecCertificateCopyData(certificate);
     NSString *fingerprint = [self SHA1FingerprintOfData:(__bridge NSData *) data];
     CFRelease(data);
-
+    
     return fingerprint;
 }
 
 + (NSString *)SHA1FingerprintOfData:(NSData *)data
 {
     unsigned char digest[CC_SHA1_DIGEST_LENGTH];
-
+    
     // Convert the NSData into a C buffer.
     void *cData = malloc([data length]);
     [data getBytes:cData length:[data length]];
     CC_SHA1(cData, (CC_LONG) data.length, digest);
-
+    
     // Convert to NSString.
     NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
     for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
         [output appendFormat:@"%02x", digest[i]];
     }
-
+    
     free(cData);
     return [output lowercaseString];
 }
@@ -152,11 +158,11 @@
     return [[NSError alloc] initWithDomain:StripeDomain
                                       code:STPConnectionError
                                   userInfo:@{
-                                          NSLocalizedDescriptionKey : STPUnexpectedError,
-                                          STPErrorMessageKey : @"Invalid server certificate. You tried to connect to a server "
-                                                  "that has a revoked SSL certificate, which means we cannot securely send data to that server. "
-                                                  "Please email support@stripe.com if you need help connecting to the correct API server."
-                                  }];
+                                             NSLocalizedDescriptionKey : STPUnexpectedError,
+                                             STPErrorMessageKey : @"Invalid server certificate. You tried to connect to a server "
+                                             "that has a revoked SSL certificate, which means we cannot securely send data to that server. "
+                                             "Please email support@stripe.com if you need help connecting to the correct API server."
+                                             }];
 }
 
 @end
