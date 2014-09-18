@@ -1,15 +1,15 @@
 //
-//  PKCardExpiry.h
-//  PKPayment Example
+//  PTKCardExpiry.h
+//  PTKPayment Example
 //
 //  Created by Alex MacCaw on 1/22/13.
 //  Copyright (c) 2013 Stripe. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "PKComponent.h"
+#import "PTKComponent.h"
 
-@interface PKCardExpiry : PKComponent
+@interface PTKCardExpiry : PTKComponent
 
 @property (nonatomic, readonly) NSUInteger month;
 @property (nonatomic, readonly) NSUInteger year;

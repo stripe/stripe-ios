@@ -1,15 +1,15 @@
 //
-//  PKZip.h
-//  PKPayment Example
+//  PTKZip.h
+//  PTKPayment Example
 //
 //  Created by Alex MacCaw on 2/1/13.
 //  Copyright (c) 2013 Stripe. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "PKComponent.h"
+#import "PTKComponent.h"
 
-@interface PKAddressZip : PKComponent {
+@interface PTKAddressZip : PTKComponent {
 @protected
     NSString *_zip;
 }

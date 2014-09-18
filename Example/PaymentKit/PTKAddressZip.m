@@ -1,14 +1,14 @@
 //
-//  PKZip.m
-//  PKPayment Example
+//  PTKZip.m
+//  PTKPayment Example
 //
 //  Created by Alex MacCaw on 2/1/13.
 //  Copyright (c) 2013 Stripe. All rights reserved.
 //
 
-#import "PKAddressZip.h"
+#import "PTKAddressZip.h"
 
-@implementation PKAddressZip
+@implementation PTKAddressZip
 
 + (instancetype)addressZipWithString:(NSString *)string
 {

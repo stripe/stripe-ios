@@ -8,12 +8,12 @@
 #import "Stripe.h"
 #import "MBProgressHUD.h"
 #import "PaymentViewController.h"
-#import "PKView.h"
+#import "PTKView.h"
 #import <Parse/Parse.h>
 #import "Constants.h"
 
-@interface PaymentViewController ()<PKViewDelegate>
-@property(weak, nonatomic) PKView *paymentView;
+@interface PaymentViewController ()<PTKViewDelegate>
+@property(weak, nonatomic) PTKView *paymentView;
 @end
 
 @implementation PaymentViewController
@@ -32,14 +32,14 @@
     self.navigationItem.rightBarButtonItem = saveButton;
     
     // Setup checkout
-    PKView *paymentView = [[PKView alloc] initWithFrame:CGRectMake(15, 20, 290, 55)];
+    PTKView *paymentView = [[PTKView alloc] initWithFrame:CGRectMake(15, 20, 290, 55)];
     paymentView.delegate = self;
     self.paymentView = paymentView;
     [self.view addSubview:paymentView];
 }
 
-- (void)paymentView:(PKView *)paymentView
-           withCard:(PKCard *)card
+- (void)paymentView:(PTKView *)paymentView
+           withCard:(PTKCard *)card
             isValid:(BOOL)valid {
     // Enable save button if the Checkout is valid
     self.navigationItem.rightBarButtonItem.enabled = valid;

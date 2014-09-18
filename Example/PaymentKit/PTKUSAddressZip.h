@@ -1,5 +1,5 @@
 //
-//  PKUSAddressZip.h
+//  PTKUSAddressZip.h
 //  PaymentKit Example
 //
 //  Created by Alex MacCaw on 2/17/13.
@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "PKAddressZip.h"
+#import "PTKAddressZip.h"
 
-@interface PKUSAddressZip : PKAddressZip
+@interface PTKUSAddressZip : PTKAddressZip
 @end
