@@ -32,7 +32,7 @@
 		04CB47D619BF4D5600A4632A /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47CB19BF4D5600A4632A /* STPUtils.m */; };
 		04CB47D719BF4D5600A4632A /* Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47CE19BF4D5600A4632A /* Stripe.m */; };
 		04CB47D819BF4D5600A4632A /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47D019BF4D5600A4632A /* StripeError.m */; };
-		04CB47DA19BF5A4100A4632A /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CB47D919BF5A4100A4632A /* PassKit.framework */; };
+		04CB47DA19BF5A4100A4632A /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CB47D919BF5A4100A4632A /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		04E75A3B19A71BFD000003DE /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3A19A71BFD000003DE /* Parse.framework */; };
 		04E75A3D19A71C22000003DE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3C19A71C22000003DE /* AudioToolbox.framework */; };
 		04E75A3F19A71C2A000003DE /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3E19A71C2A000003DE /* CFNetwork.framework */; };

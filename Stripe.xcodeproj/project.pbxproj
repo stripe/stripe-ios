@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		04CB47BC19BF4D4000A4632A /* PKPayment+STPTestKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47B919BF4D4000A4632A /* PKPayment+STPTestKeys.m */; };
 		04CB47BD19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47BB19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.m */; };
-		04D5BF9119BF958F009521A5 /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D5BF9019BF958F009521A5 /* PassKit.framework */; };
+		04D5BF9119BF958F009521A5 /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D5BF9019BF958F009521A5 /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		04D5BF9219BF95F7009521A5 /* STPTestPaymentAuthorizationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47BB19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.m */; };
 		04D5BF9319BF9606009521A5 /* PKPayment+STPTestKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47B919BF4D4000A4632A /* PKPayment+STPTestKeys.m */; };
 		11E1F58D165151F400B49816 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
