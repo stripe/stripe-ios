@@ -11,10 +11,6 @@
 #import "STPCard.h"
 #import "STPToken.h"
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-#import <PassKit/PassKit.h>
-#endif
-
 FOUNDATION_EXPORT NSString *const kStripeiOSVersion; // Version of this library.
 
 typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
@@ -45,25 +41,8 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
 
 + (void)requestTokenWithID:(NSString *)tokenId completion:(STPCompletionBlock)handler;
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-
-+ (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest;
-
-+ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier
-                                                    amount:(NSDecimalNumber *)amount
-                                                  currency:(NSString *)currency
-                                               description:(NSString *)description;
-
-+ (UIViewController *)paymentControllerWithRequest:(PKPaymentRequest *)request
-                                          delegate:(id<PKPaymentAuthorizationViewControllerDelegate>)delegate;
-
-+ (void)createTokenWithPayment:(PKPayment *)payment
-                    completion:(STPCompletionBlock)handler;
-
-+ (void)createTokenWithPayment:(PKPayment *)payment
-                operationQueue:(NSOperationQueue *)queue
-                    completion:(STPCompletionBlock)handler;
-
-#endif
++ (NSDictionary *)stripeUserAgentDetails;
++ (NSURL *)apiURL;
++ (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError completion:(STPCompletionBlock)handler;
 
 @end
