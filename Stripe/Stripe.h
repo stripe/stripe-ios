@@ -11,7 +11,7 @@
 #import "STPCard.h"
 #import "STPToken.h"
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000 && __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000
 #import <PassKit/PassKit.h>
 #endif
 
@@ -45,7 +45,7 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
 
 + (void)requestTokenWithID:(NSString *)tokenId completion:(STPCompletionBlock)handler;
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000 && __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000
 
 + (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest;
 
