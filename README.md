@@ -83,8 +83,8 @@ When using these validation methods, you will want to set the property on your c
 Versions of Stripe-iOS prior to 1.2 included a class called `STPView`, which provided a pre-built credit card form. This functionality has been moved from Stripe-iOS to PaymentKit, a separate project. If you were using `STPView` prior to version 1.2, migrating is simple:
 
 1. Add PaymentKit to your project, as explained on its [project page](https://github.com/stripe/PaymentKit).
-2. Replace any references to `STPView` with a `PKView` instead. Similarly, any classes that implement `STPViewDelegate` should now instead implement the equivalent `PKViewDelegate` methods. Note that unlike `STPView`, `PKView` does not take a Stripe API key in its constructor.
-3. To submit the credit card details from your `PKView` instance, where you would previously call `createToken` on your `STPView`, replace that with the following code (assuming `self.paymentView` is your `PKView` instance):
+2. Replace any references to `STPView` with a `PTKView` instead. Similarly, any classes that implement `STPViewDelegate` should now instead implement the equivalent `PTKViewDelegate` methods. Note that unlike `STPView`, `PTKView` does not take a Stripe API key in its constructor.
+3. To submit the credit card details from your `PTKView` instance, where you would previously call `createToken` on your `STPView`, replace that with the following code (assuming `self.paymentView` is your `PTKView` instance):
 
         if (![self.paymentView isValid]) {
             return;
