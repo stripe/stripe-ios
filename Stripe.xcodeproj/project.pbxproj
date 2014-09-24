@@ -123,6 +123,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04BAD22F19D2271500E45F04 /* Apple Pay */ = {
+			isa = PBXGroup;
+			children = (
+				04CB47B819BF4D4000A4632A /* PKPayment+STPTestKeys.h */,
+				04CB47B919BF4D4000A4632A /* PKPayment+STPTestKeys.m */,
+				04CB47BA19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.h */,
+				04CB47BB19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.m */,
+				0417CD2B19CA5D4700341C76 /* Stripe+ApplePay.h */,
+				0417CD2C19CA5D4700341C76 /* Stripe+ApplePay.m */,
+			);
+			name = "Apple Pay";
+			sourceTree = "<group>";
+		};
 		11C74B8D164043050071C2CA = {
 			isa = PBXGroup;
 			children = (
@@ -169,12 +182,7 @@
 				7106B4D01970A58C000A037E /* STPToken.m */,
 				7106B4D11970A58C000A037E /* STPUtils.h */,
 				7106B4D21970A58C000A037E /* STPUtils.m */,
-				04CB47B819BF4D4000A4632A /* PKPayment+STPTestKeys.h */,
-				04CB47B919BF4D4000A4632A /* PKPayment+STPTestKeys.m */,
-				04CB47BA19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.h */,
-				04CB47BB19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.m */,
-				0417CD2B19CA5D4700341C76 /* Stripe+ApplePay.h */,
-				0417CD2C19CA5D4700341C76 /* Stripe+ApplePay.m */,
+				04BAD22F19D2271500E45F04 /* Apple Pay */,
 				11C74B9E164043050071C2CA /* Supporting Files */,
 			);
 			path = Stripe;

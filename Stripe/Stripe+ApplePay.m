@@ -6,16 +6,22 @@
 //
 //
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-
+#import "Stripe.h"
 #import "Stripe+ApplePay.h"
+#import "STPAPIConnection.h"
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
+
+#import <PassKit/PassKit.h>
 #import "STPTestPaymentAuthorizationViewController.h"
 #import "PKPayment+STPTestKeys.h"
-#import "STPAPIConnection.h"
+
+#endif
 
 @implementation Stripe (ApplePay)
 
 + (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
     if (!paymentRequest) {
         return NO;
     }
@@ -26,12 +32,16 @@
         return NO;
     }
     return [self isSimulatorBuild];
+#else
+    return NO;
+#endif
 }
 
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier
                                                     amount:(NSDecimalNumber *)amount
                                                   currency:(NSString *)currency
                                                description:(NSString *)description {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
     if (![PKPaymentRequest class]) {
         return nil;
     }
@@ -44,7 +54,12 @@
     [paymentRequest setCurrencyCode:currency];
     [paymentRequest setPaymentSummaryItems:@[totalItem]];
     return paymentRequest;
+#else
+    return nil;
+#endif
 }
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
 
 + (UIViewController *)paymentControllerWithRequest:(PKPaymentRequest *)request
                                           delegate:(id<PKPaymentAuthorizationViewControllerDelegate>)delegate {
@@ -116,6 +131,6 @@
 #endif
 }
 
-@end
-
 #endif
+
+@end

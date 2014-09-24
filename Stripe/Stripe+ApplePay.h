@@ -6,9 +6,13 @@
 //
 //
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
 #import "Stripe.h"
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
 #import <PassKit/PassKit.h>
+#endif
+
+@class PKPaymentRequest;
 
 @interface Stripe (ApplePay)
 
@@ -18,6 +22,8 @@
                                                     amount:(NSDecimalNumber *)amount
                                                   currency:(NSString *)currency
                                                description:(NSString *)description;
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
 
 + (UIViewController *)paymentControllerWithRequest:(PKPaymentRequest *)request
                                           delegate:(id<PKPaymentAuthorizationViewControllerDelegate>)delegate;
@@ -29,6 +35,6 @@
                 operationQueue:(NSOperationQueue *)queue
                     completion:(STPCompletionBlock)handler;
 
-@end
-
 #endif
+
+@end

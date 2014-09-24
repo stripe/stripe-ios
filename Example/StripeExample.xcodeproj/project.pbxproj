@@ -333,6 +333,19 @@
 			path = en.lproj;
 			sourceTree = "<group>";
 		};
+		04BAD22E19D2270800E45F04 /* Apple Pay */ = {
+			isa = PBXGroup;
+			children = (
+				04EEE22419CB801E00192164 /* PKPayment+STPTestKeys.h */,
+				04EEE22519CB801E00192164 /* PKPayment+STPTestKeys.m */,
+				04EEE22619CB801E00192164 /* STPTestPaymentAuthorizationViewController.h */,
+				04EEE22719CB801E00192164 /* STPTestPaymentAuthorizationViewController.m */,
+				04EEE22819CB801E00192164 /* Stripe+ApplePay.h */,
+				04EEE22919CB801E00192164 /* Stripe+ApplePay.m */,
+			);
+			name = "Apple Pay";
+			sourceTree = "<group>";
+		};
 		04E75A5219A74329000003DE /* MBProgressHUD */ = {
 			isa = PBXGroup;
 			children = (
@@ -429,12 +442,7 @@
 				04EEE22119CB801E00192164 /* STPToken.m */,
 				04EEE22219CB801E00192164 /* STPUtils.h */,
 				04EEE22319CB801E00192164 /* STPUtils.m */,
-				04EEE22419CB801E00192164 /* PKPayment+STPTestKeys.h */,
-				04EEE22519CB801E00192164 /* PKPayment+STPTestKeys.m */,
-				04EEE22619CB801E00192164 /* STPTestPaymentAuthorizationViewController.h */,
-				04EEE22719CB801E00192164 /* STPTestPaymentAuthorizationViewController.m */,
-				04EEE22819CB801E00192164 /* Stripe+ApplePay.h */,
-				04EEE22919CB801E00192164 /* Stripe+ApplePay.m */,
+				04BAD22E19D2270800E45F04 /* Apple Pay */,
 				04EEE22B19CB801E00192164 /* Supporting Files */,
 			);
 			name = Stripe;
@@ -541,23 +549,9 @@
 				04EEE20719CB7ED500192164 /* placeholder.png in Resources */,
 				04EEE20A19CB7ED500192164 /* visa@2x.png in Resources */,
 				04EEE20219CB7ED500192164 /* discover@2x.png in Resources */,
-				04EEE26C19CB834C00192164 /* cvc-amex.png in Resources */,
-				04EEE27D19CB834C00192164 /* textfield.png in Resources */,
-				04EEE27919CB834C00192164 /* placeholder@2x.png in Resources */,
-				04EEE26A19CB834C00192164 /* amex.png in Resources */,
-				04EEE27419CB834C00192164 /* jcb.png in Resources */,
-				04EEE27E19CB834C00192164 /* textfield@2x.png in Resources */,
-				04EEE26F19CB834C00192164 /* cvc@2x.png in Resources */,
-				04EEE26D19CB834C00192164 /* cvc-amex@2x.png in Resources */,
-				04EEE27519CB834C00192164 /* jcb@2x.png in Resources */,
-				04EEE27819CB834C00192164 /* placeholder.png in Resources */,
-				04EEE27B19CB834C00192164 /* visa@2x.png in Resources */,
-				04EEE27319CB834C00192164 /* discover@2x.png in Resources */,
 				0470A2AF19A5D5DB00B66DB7 /* Main.storyboard in Resources */,
 				04EEE20519CB7ED500192164 /* mastercard.png in Resources */,
 				04EEE20619CB7ED500192164 /* mastercard@2x.png in Resources */,
-				04EEE27619CB834C00192164 /* mastercard.png in Resources */,
-				04EEE27719CB834C00192164 /* mastercard@2x.png in Resources */,
 				0470A30B19A5D69E00B66DB7 /* Main.storyboard in Resources */,
 				0470A30C19A5D69E00B66DB7 /* InfoPlist.strings in Resources */,
 			);
@@ -750,6 +744,11 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StripeExample/StripeExample-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					STRIPE_ENABLE_APPLEPAY,
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
