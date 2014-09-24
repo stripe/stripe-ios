@@ -12,6 +12,7 @@
 
 @interface STPCard ()
 
+@property (nonatomic, readwrite) NSString *cardId;
 @property (nonatomic, readwrite) NSString *object;
 @property (nonatomic, readwrite) NSString *last4;
 @property (nonatomic, readwrite) NSString *type;
@@ -182,6 +183,7 @@
     }];
 
     if (self) {
+        _cardId = dict[@"id"];
         _number = dict[@"number"];
         _cvc = dict[@"cvc"];
         _name = dict[@"name"];
