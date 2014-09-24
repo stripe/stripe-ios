@@ -103,7 +103,7 @@ static NSString *const tokenEndpoint = @"tokens";
         @{@"incorrect_number":     @{@"code": STPIncorrectNumber, @"message": STPCardErrorInvalidNumberUserMessage},
           @"invalid_number":       @{@"code": STPInvalidNumber, @"message": STPCardErrorInvalidNumberUserMessage},
           @"invalid_expiry_month": @{@"code": STPInvalidExpMonth, @"message": STPCardErrorInvalidExpMonthUserMessage},
-          @"invalid_expiry_year":  @{@"code": STPInvalidExpYear, @"message": STPInvalidExpYear},
+          @"invalid_expiry_year":  @{@"code": STPInvalidExpYear, @"message": STPCardErrorInvalidExpYearUserMessage},
           @"invalid_cvc":          @{@"code": STPInvalidCVC, @"message": STPCardErrorInvalidCVCUserMessage},
           @"expired_card":         @{@"code": STPExpiredCard, @"message": STPCardErrorExpiredCardUserMessage},
           @"incorrect_cvc":        @{@"code": STPIncorrectCVC, @"message": STPCardErrorInvalidCVCUserMessage},
