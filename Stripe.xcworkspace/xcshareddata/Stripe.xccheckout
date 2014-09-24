@@ -12,6 +12,8 @@
 	<dict>
 		<key>A5C151FC3F18980DA2906AAA3DE9140767EF2310</key>
 		<string>ssh://github.com/stripe/stripe-ios.git</string>
+		<key>D0DC6CE0350266C4AFFCC35DA49B75AE57E8D73E</key>
+		<string>github.com:stripe/PaymentKit.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Stripe.xcworkspace</string>
@@ -19,6 +21,8 @@
 	<dict>
 		<key>A5C151FC3F18980DA2906AAA3DE9140767EF2310</key>
 		<string>..</string>
+		<key>D0DC6CE0350266C4AFFCC35DA49B75AE57E8D73E</key>
+		<string>../Example/PaymentKit/</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://github.com/stripe/stripe-ios.git</string>
@@ -28,6 +32,14 @@
 	<string>A5C151FC3F18980DA2906AAA3DE9140767EF2310</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D0DC6CE0350266C4AFFCC35DA49B75AE57E8D73E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>PaymentKit</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
