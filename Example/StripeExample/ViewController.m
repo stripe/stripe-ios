@@ -12,7 +12,7 @@
 #import "Stripe.h"
 #import "Constants.h"
 
-@interface ViewController()<PKPaymentAuthorizationViewControllerDelegate>
+@interface ViewController()<PKPaymentAuthorizationViewControllerDelegate, STPTestPaymentAuthorizationViewControllerDelegate>
 @end
 
 @implementation ViewController
@@ -24,7 +24,13 @@
                                                                            currency:@"USD"
                                                                         description:@"Premium Llama Food"];
     if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
-        UIViewController *paymentController = [Stripe paymentControllerWithRequest:paymentRequest delegate:self];
+        UIViewController *paymentController;
+        
+        if (StripeTestMode)
+            paymentController = [Stripe testPaymentControllerWithRequest:paymentRequest delegate:self];
+        else
+            paymentController = [Stripe paymentControllerWithRequest:paymentRequest delegate:self];
+        
         [self presentViewController:paymentController animated:YES completion:nil];
     }
     else {
@@ -33,6 +39,12 @@
 }
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
+                       didAuthorizePayment:(PKPayment *)payment
+                                completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    [self handlePaymentAuthorizationWithPayment:payment completion:completion];
+}
+
+- (void)testPaymentAuthorizationViewController:(STPTestPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
     [self handlePaymentAuthorizationWithPayment:payment completion:completion];
@@ -85,6 +97,10 @@
 
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)testPaymentAuthorizationViewControllerDidFinish:(UIViewController *)controller {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

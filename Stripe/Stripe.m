@@ -324,13 +324,16 @@ static NSString *const tokenEndpoint = @"tokens";
     return paymentRequest;
 }
 
+
++ (UIViewController *)testPaymentControllerWithRequest:(PKPaymentRequest *)request
+                                          delegate:(id<STPTestPaymentAuthorizationViewControllerDelegate>)delegate {
+    STPTestPaymentAuthorizationViewController *test = [STPTestPaymentAuthorizationViewController new];
+    test.delegate = delegate;
+    return test;
+}
+
 + (UIViewController *)paymentControllerWithRequest:(PKPaymentRequest *)request
                                           delegate:(id<PKPaymentAuthorizationViewControllerDelegate>)delegate {
-    if ([self isSimulatorBuild]) {
-        STPTestPaymentAuthorizationViewController *test = [STPTestPaymentAuthorizationViewController new];
-        test.delegate = delegate;
-        return test;
-    }
     PKPaymentAuthorizationViewController *auth = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:request];
     auth.delegate = delegate;
     return auth;

@@ -11,9 +11,20 @@
 #import <UIKit/UIKit.h>
 #import <PassKit/PassKit.h>
 
+@protocol STPTestPaymentAuthorizationViewControllerDelegate <NSObject>
+
+@required
+-(void)testPaymentAuthorizationViewController:(UIViewController *)controller
+                          didAuthorizePayment:(PKPayment *)payment
+                                   completion:(void (^)(PKPaymentAuthorizationStatus))completion;
+
+-(void)testPaymentAuthorizationViewControllerDidFinish:(UIViewController *)controller;
+@end
+
+
 @interface STPTestPaymentAuthorizationViewController : UIViewController
 
-@property(nonatomic, assign)id<PKPaymentAuthorizationViewControllerDelegate>delegate;
+@property(nonatomic, assign)id<STPTestPaymentAuthorizationViewControllerDelegate>delegate;
 
 @end
 

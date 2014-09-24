@@ -41,11 +41,11 @@
     PKPaymentAuthorizationViewController *auth = (PKPaymentAuthorizationViewController *)self;
     
     [self.activityIndicator startAnimating];
-    [self.delegate paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)auth
+    [self.delegate testPaymentAuthorizationViewController:(STPTestPaymentAuthorizationViewController *)auth
                                   didAuthorizePayment:payment
                                            completion:^(PKPaymentAuthorizationStatus status) {
                                                [self.activityIndicator stopAnimating];
-                                               [self.delegate paymentAuthorizationViewControllerDidFinish:auth];
+                                               [self.delegate testPaymentAuthorizationViewControllerDidFinish:auth];
                                            }];
 }
 
@@ -67,7 +67,7 @@
 }
 
 - (void)actionSheetCancel:(UIActionSheet *)actionSheet {
-    [self.delegate paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)self];
+    [self.delegate testPaymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)self];
 }
 
 @end

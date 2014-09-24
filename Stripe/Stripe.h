@@ -10,6 +10,7 @@
 #import "StripeError.h"
 #import "STPCard.h"
 #import "STPToken.h"
+#import "STPTestPaymentAuthorizationViewController.h"
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
 #import <PassKit/PassKit.h>
@@ -54,6 +55,8 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
                                                   currency:(NSString *)currency
                                                description:(NSString *)description;
 
++ (UIViewController *)testPaymentControllerWithRequest:(PKPaymentRequest *)request
+                                          delegate:(id<STPTestPaymentAuthorizationViewControllerDelegate>)delegate;
 + (UIViewController *)paymentControllerWithRequest:(PKPaymentRequest *)request
                                           delegate:(id<PKPaymentAuthorizationViewControllerDelegate>)delegate;
 

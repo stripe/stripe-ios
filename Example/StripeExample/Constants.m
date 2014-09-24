@@ -12,6 +12,7 @@
 
 // This can be found at https://dashboard.stripe.com/account/apikeys
 NSString * const StripePublishableKey = @"pk_YT1CEhhujd0bklb2KGQZiaL3iTzj3"; // TODO: replace nil with your own value
+BOOL const StripeTestMode = TRUE; // TODO: replace with FALSE for production/live
 
 // These can be found at https://www.parse.com/apps/stripe-test/edit#app_keys
 NSString * const ParseApplicationId = nil; // TODO: replace nil with your own value
