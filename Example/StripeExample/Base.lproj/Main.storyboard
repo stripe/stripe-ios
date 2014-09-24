@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -30,7 +29,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
-                        <segue destination="Yyu-dq-srZ" kind="custom" identifier="OldPaymentFlowSegue" id="Ume-RH-xYb"/>
+                        <segue destination="Yyu-dq-srZ" kind="modal" identifier="OldPaymentFlowSegue" id="Ume-RH-xYb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -39,6 +38,7 @@
         <!--Navigation Controller-->
         <scene sceneID="CPz-8R-efh">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4RC-HX-PdL" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController id="Yyu-dq-srZ" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="dIz-cF-O3I">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -48,7 +48,6 @@
                         <segue destination="c8h-UZ-Fqo" kind="relationship" relationship="rootViewController" id="bef-t1-LD5"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4RC-HX-PdL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="563" y="136"/>
         </scene>

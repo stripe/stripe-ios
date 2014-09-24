@@ -6,20 +6,20 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
-#import <PassKit/PassKit.h>
 #import <Parse/Parse.h>
 #import "ViewController.h"
 #import "Stripe.h"
 #import "Constants.h"
+#import "Stripe+ApplePay.h"
 
-@interface ViewController()<PKPaymentAuthorizationViewControllerDelegate>
+@interface ViewController()
 @end
 
 @implementation ViewController
 
 - (IBAction)beginPayment:(id)sender {
     NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
-    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId
+    id paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId
                                                                              amount:[NSDecimalNumber decimalNumberWithString:@"10"]
                                                                            currency:@"USD"
                                                                         description:@"Premium Llama Food"];
