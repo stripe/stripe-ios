@@ -14,9 +14,21 @@ Pod::Spec.new do |s|
   s.weak_frameworks                = 'PassKit'
   s.requires_arc                   = true
   s.ios.deployment_target          = '5.0'
+  s.default_subspec                = 'Core'
+
+  s.subspec "Core" do |subspec|
+    subspec.source_files           = 'Stripe/*.{h,m}'
+    subspec.public_header_files    = 'Stripe/*.h'
+    subspec.exclude_files          = 'Stripe/ApplePay/*'
+  end
+
+  s.subspec "Card" do |subspec|
+    subspec.source_files           = 'Stripe/STPCard.h', 'Stripe/STPCard.m', 'Stripe/STPFormEncodeProtocol.h', 'Stripe/StripeError.h', 'Stripe/StripeError.m', 'Stripe/STPUtils.h', 'Stripe/STPUtils.m'
+  end
 
   s.subspec "ApplePay" do |subspec|
+    subspec.dependency               "Stripe/Core"
     subspec.source_files           = 'Stripe/ApplePay/*'
-    subspec.prefix_header_contents = "STRIPE_APPLEPAY_ENABLED"
+    subspec.prefix_header_contents = "#define STRIPE_ENABLE_APPLEPAY YES"
   end
 end
