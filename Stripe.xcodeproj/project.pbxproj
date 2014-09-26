@@ -1,535 +1,1360 @@
-// !$*UTF8*$!
-{
-	archiveVersion = 1;
-	classes = {
-	};
-	objectVersion = 46;
-	objects = {
-
-/* Begin PBXBuildFile section */
-		0417CD2D19CA5D4700341C76 /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 0417CD2C19CA5D4700341C76 /* Stripe+ApplePay.m */; };
-		04CB47BC19BF4D4000A4632A /* PKPayment+STPTestKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47B919BF4D4000A4632A /* PKPayment+STPTestKeys.m */; };
-		04CB47BD19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47BB19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.m */; };
-		04D5BF9119BF958F009521A5 /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D5BF9019BF958F009521A5 /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		04D5BF9219BF95F7009521A5 /* STPTestPaymentAuthorizationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47BB19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.m */; };
-		04D5BF9319BF9606009521A5 /* PKPayment+STPTestKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47B919BF4D4000A4632A /* PKPayment+STPTestKeys.m */; };
-		11E1F58D165151F400B49816 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
-		11E1F649165157CA00B49816 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
-		11E1F658165157F100B49816 /* STPCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11EE8255164786A40039CDD4 /* STPCardTest.m */; };
-		11E1F659165157F100B49816 /* STPTokenTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */; };
-		4A0D74FA18F6106100966D7B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
-		4AAEFAE818FC928A001001CD /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
-		4AAEFAEE18FC98E1001001CD /* STPCertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AAEFAED18FC98E1001001CD /* STPCertTest.m */; };
-		7106B4D91970A58C000A037E /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4CC1970A58C000A037E /* STPAPIConnection.m */; };
-		7106B4DB1970A58C000A037E /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4CC1970A58C000A037E /* STPAPIConnection.m */; };
-		7106B4DC1970A58C000A037E /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4CE1970A58C000A037E /* STPCard.m */; };
-		7106B4DE1970A58C000A037E /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4CE1970A58C000A037E /* STPCard.m */; };
-		7106B4DF1970A58C000A037E /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4D01970A58C000A037E /* STPToken.m */; };
-		7106B4E11970A58C000A037E /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4D01970A58C000A037E /* STPToken.m */; };
-		7106B4E21970A58C000A037E /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4D21970A58C000A037E /* STPUtils.m */; };
-		7106B4E41970A58C000A037E /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4D21970A58C000A037E /* STPUtils.m */; };
-		7106B4E81970A58C000A037E /* Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4D61970A58C000A037E /* Stripe.m */; };
-		7106B4EA1970A58C000A037E /* Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4D61970A58C000A037E /* Stripe.m */; };
-		7106B4EB1970A58C000A037E /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4D81970A58C000A037E /* StripeError.m */; };
-		7106B4ED1970A58C000A037E /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4D81970A58C000A037E /* StripeError.m */; };
-		7106B4F71970B9EC000A037E /* STPCardFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7106B4F61970B9EC000A037E /* STPCardFunctionalTest.m */; };
-		FAFC12C816E576A50066297F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC12C516E5767F0066297F /* UIKit.framework */; };
-		FAFC12CB16E576E50066297F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFC12C516E5767F0066297F /* UIKit.framework */; };
-/* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		11E1F65C165158B000B49816 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 11C74B8F164043050071C2CA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 11E1F58B165151F400B49816;
-			remoteInfo = iOS;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		11E1F58A165151F400B49816 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/${PRODUCT_NAME}";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
-/* Begin PBXFileReference section */
-		0417CD2B19CA5D4700341C76 /* Stripe+ApplePay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe+ApplePay.h"; sourceTree = "<group>"; };
-		0417CD2C19CA5D4700341C76 /* Stripe+ApplePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Stripe+ApplePay.m"; sourceTree = "<group>"; };
-		04CB47B819BF4D4000A4632A /* PKPayment+STPTestKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PKPayment+STPTestKeys.h"; sourceTree = "<group>"; };
-		04CB47B919BF4D4000A4632A /* PKPayment+STPTestKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKPayment+STPTestKeys.m"; sourceTree = "<group>"; };
-		04CB47BA19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTestPaymentAuthorizationViewController.h; sourceTree = "<group>"; };
-		04CB47BB19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTestPaymentAuthorizationViewController.m; sourceTree = "<group>"; };
-		04D5BF9019BF958F009521A5 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
-		112D5AEE164DAD2D0053BB76 /* STPTokenTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTokenTest.h; sourceTree = "<group>"; };
-		112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTokenTest.m; sourceTree = "<group>"; };
-		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		11C74B9F164043050071C2CA /* Stripe-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stripe-Prefix.pch"; sourceTree = "<group>"; };
-		11C74BB3164043050071C2CA /* StripeTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "StripeTest-Info.plist"; sourceTree = "<group>"; };
-		11C74BB5164043050071C2CA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		11E1F58C165151F400B49816 /* libStripeiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStripeiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		11E1F646165157CA00B49816 /* iOSTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		11E1F65A1651585F00B49816 /* StripeTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StripeTest-Prefix.pch"; sourceTree = "<group>"; };
-		11EE8254164786A40039CDD4 /* STPCardTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCardTest.h; sourceTree = "<group>"; };
-		11EE8255164786A40039CDD4 /* STPCardTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = STPCardTest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		4AAEFAEC18FC98E1001001CD /* STPCertTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCertTest.h; sourceTree = "<group>"; };
-		4AAEFAED18FC98E1001001CD /* STPCertTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCertTest.m; sourceTree = "<group>"; };
-		7106B4CB1970A58C000A037E /* STPAPIConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPAPIConnection.h; sourceTree = "<group>"; };
-		7106B4CC1970A58C000A037E /* STPAPIConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAPIConnection.m; sourceTree = "<group>"; };
-		7106B4CD1970A58C000A037E /* STPCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCard.h; sourceTree = "<group>"; };
-		7106B4CE1970A58C000A037E /* STPCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCard.m; sourceTree = "<group>"; };
-		7106B4CF1970A58C000A037E /* STPToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPToken.h; sourceTree = "<group>"; };
-		7106B4D01970A58C000A037E /* STPToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPToken.m; sourceTree = "<group>"; };
-		7106B4D11970A58C000A037E /* STPUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPUtils.h; sourceTree = "<group>"; };
-		7106B4D21970A58C000A037E /* STPUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPUtils.m; sourceTree = "<group>"; };
-		7106B4D51970A58C000A037E /* Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stripe.h; sourceTree = "<group>"; };
-		7106B4D61970A58C000A037E /* Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stripe.m; sourceTree = "<group>"; };
-		7106B4D71970A58C000A037E /* StripeError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StripeError.h; sourceTree = "<group>"; };
-		7106B4D81970A58C000A037E /* StripeError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StripeError.m; sourceTree = "<group>"; };
-		7106B4F31970B526000A037E /* STPFormEncodeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPFormEncodeProtocol.h; sourceTree = "<group>"; };
-		7106B4F61970B9EC000A037E /* STPCardFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCardFunctionalTest.m; sourceTree = "<group>"; };
-		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-/* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		11E1F589165151F400B49816 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4A0D74FA18F6106100966D7B /* Security.framework in Frameworks */,
-				FAFC12C816E576A50066297F /* UIKit.framework in Frameworks */,
-				11E1F58D165151F400B49816 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		11E1F642165157CA00B49816 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				04D5BF9119BF958F009521A5 /* PassKit.framework in Frameworks */,
-				4AAEFAE818FC928A001001CD /* Security.framework in Frameworks */,
-				11E1F649165157CA00B49816 /* Foundation.framework in Frameworks */,
-				FAFC12CB16E576E50066297F /* UIKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
-/* Begin PBXGroup section */
-		04BAD22F19D2271500E45F04 /* Apple Pay */ = {
-			isa = PBXGroup;
-			children = (
-				04CB47B819BF4D4000A4632A /* PKPayment+STPTestKeys.h */,
-				04CB47B919BF4D4000A4632A /* PKPayment+STPTestKeys.m */,
-				04CB47BA19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.h */,
-				04CB47BB19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.m */,
-				0417CD2B19CA5D4700341C76 /* Stripe+ApplePay.h */,
-				0417CD2C19CA5D4700341C76 /* Stripe+ApplePay.m */,
-			);
-			name = "Apple Pay";
-			sourceTree = "<group>";
-		};
-		11C74B8D164043050071C2CA = {
-			isa = PBXGroup;
-			children = (
-				11C74B9D164043050071C2CA /* Stripe */,
-				11C74BB1164043050071C2CA /* StripeTest */,
-				11C74B9A164043050071C2CA /* Frameworks */,
-				11C74B99164043050071C2CA /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		11C74B99164043050071C2CA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				11E1F58C165151F400B49816 /* libStripeiOS.a */,
-				11E1F646165157CA00B49816 /* iOSTest.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		11C74B9A164043050071C2CA /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				04D5BF9019BF958F009521A5 /* PassKit.framework */,
-				4A0D74F918F6106100966D7B /* Security.framework */,
-				11C74B9B164043050071C2CA /* Foundation.framework */,
-				FAFC12C516E5767F0066297F /* UIKit.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		11C74B9D164043050071C2CA /* Stripe */ = {
-			isa = PBXGroup;
-			children = (
-				7106B4D51970A58C000A037E /* Stripe.h */,
-				7106B4D61970A58C000A037E /* Stripe.m */,
-				7106B4D71970A58C000A037E /* StripeError.h */,
-				7106B4D81970A58C000A037E /* StripeError.m */,
-				7106B4CB1970A58C000A037E /* STPAPIConnection.h */,
-				7106B4CC1970A58C000A037E /* STPAPIConnection.m */,
-				7106B4CD1970A58C000A037E /* STPCard.h */,
-				7106B4CE1970A58C000A037E /* STPCard.m */,
-				7106B4F31970B526000A037E /* STPFormEncodeProtocol.h */,
-				7106B4CF1970A58C000A037E /* STPToken.h */,
-				7106B4D01970A58C000A037E /* STPToken.m */,
-				7106B4D11970A58C000A037E /* STPUtils.h */,
-				7106B4D21970A58C000A037E /* STPUtils.m */,
-				04BAD22F19D2271500E45F04 /* Apple Pay */,
-				11C74B9E164043050071C2CA /* Supporting Files */,
-			);
-			path = Stripe;
-			sourceTree = "<group>";
-		};
-		11C74B9E164043050071C2CA /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				11C74B9F164043050071C2CA /* Stripe-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		11C74BB1164043050071C2CA /* StripeTest */ = {
-			isa = PBXGroup;
-			children = (
-				11C74BB2164043050071C2CA /* Supporting Files */,
-				11EE8254164786A40039CDD4 /* STPCardTest.h */,
-				11EE8255164786A40039CDD4 /* STPCardTest.m */,
-				4AAEFAEC18FC98E1001001CD /* STPCertTest.h */,
-				4AAEFAED18FC98E1001001CD /* STPCertTest.m */,
-				112D5AEE164DAD2D0053BB76 /* STPTokenTest.h */,
-				112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */,
-				7106B4F61970B9EC000A037E /* STPCardFunctionalTest.m */,
-			);
-			path = StripeTest;
-			sourceTree = "<group>";
-		};
-		11C74BB2164043050071C2CA /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				11E1F65A1651585F00B49816 /* StripeTest-Prefix.pch */,
-				11C74BB3164043050071C2CA /* StripeTest-Info.plist */,
-				11C74BB4164043050071C2CA /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-/* End PBXGroup section */
-
-/* Begin PBXNativeTarget section */
-		11E1F58B165151F400B49816 /* StripeiOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 11E1F595165151F400B49816 /* Build configuration list for PBXNativeTarget "StripeiOS" */;
-			buildPhases = (
-				11E1F588165151F400B49816 /* Sources */,
-				11E1F589165151F400B49816 /* Frameworks */,
-				11E1F58A165151F400B49816 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = StripeiOS;
-			productName = iOS;
-			productReference = 11E1F58C165151F400B49816 /* libStripeiOS.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		11E1F645165157CA00B49816 /* iOSTest */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 11E1F654165157CA00B49816 /* Build configuration list for PBXNativeTarget "iOSTest" */;
-			buildPhases = (
-				11E1F641165157CA00B49816 /* Sources */,
-				11E1F642165157CA00B49816 /* Frameworks */,
-				11E1F643165157CA00B49816 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				11E1F65D165158B000B49816 /* PBXTargetDependency */,
-			);
-			name = iOSTest;
-			productName = iOSTest;
-			productReference = 11E1F646165157CA00B49816 /* iOSTest.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-/* End PBXNativeTarget section */
-
-/* Begin PBXProject section */
-		11C74B8F164043050071C2CA /* Project object */ = {
-			isa = PBXProject;
-			attributes = {
-				LastTestingUpgradeCheck = 0510;
-				LastUpgradeCheck = 0600;
-			};
-			buildConfigurationList = 11C74B92164043050071C2CA /* Build configuration list for PBXProject "Stripe" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
-			hasScannedForEncodings = 0;
-			knownRegions = (
-				en,
-			);
-			mainGroup = 11C74B8D164043050071C2CA;
-			productRefGroup = 11C74B99164043050071C2CA /* Products */;
-			projectDirPath = "";
-			projectRoot = "";
-			targets = (
-				11E1F58B165151F400B49816 /* StripeiOS */,
-				11E1F645165157CA00B49816 /* iOSTest */,
-			);
-		};
-/* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		11E1F643165157CA00B49816 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
-		11E1F588165151F400B49816 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0417CD2D19CA5D4700341C76 /* Stripe+ApplePay.m in Sources */,
-				7106B4E81970A58C000A037E /* Stripe.m in Sources */,
-				7106B4D91970A58C000A037E /* STPAPIConnection.m in Sources */,
-				7106B4EB1970A58C000A037E /* StripeError.m in Sources */,
-				04CB47BD19BF4D4000A4632A /* STPTestPaymentAuthorizationViewController.m in Sources */,
-				7106B4E21970A58C000A037E /* STPUtils.m in Sources */,
-				7106B4DF1970A58C000A037E /* STPToken.m in Sources */,
-				7106B4DC1970A58C000A037E /* STPCard.m in Sources */,
-				04CB47BC19BF4D4000A4632A /* PKPayment+STPTestKeys.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		11E1F641165157CA00B49816 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				11E1F658165157F100B49816 /* STPCardTest.m in Sources */,
-				04D5BF9319BF9606009521A5 /* PKPayment+STPTestKeys.m in Sources */,
-				11E1F659165157F100B49816 /* STPTokenTest.m in Sources */,
-				7106B4DB1970A58C000A037E /* STPAPIConnection.m in Sources */,
-				4AAEFAEE18FC98E1001001CD /* STPCertTest.m in Sources */,
-				7106B4DE1970A58C000A037E /* STPCard.m in Sources */,
-				04D5BF9219BF95F7009521A5 /* STPTestPaymentAuthorizationViewController.m in Sources */,
-				7106B4ED1970A58C000A037E /* StripeError.m in Sources */,
-				7106B4F71970B9EC000A037E /* STPCardFunctionalTest.m in Sources */,
-				7106B4EA1970A58C000A037E /* Stripe.m in Sources */,
-				7106B4E11970A58C000A037E /* STPToken.m in Sources */,
-				7106B4E41970A58C000A037E /* STPUtils.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		11E1F65D165158B000B49816 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 11E1F58B165151F400B49816 /* StripeiOS */;
-			targetProxy = 11E1F65C165158B000B49816 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		11C74BB4164043050071C2CA /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				11C74BB5164043050071C2CA /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
-/* Begin XCBuildConfiguration section */
-		11C74BBA164043050071C2CA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-			};
-			name = Debug;
-		};
-		11C74BBB164043050071C2CA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				SDKROOT = iphoneos;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		11E1F596165151F400B49816 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				DSTROOT = /tmp/iOS.dst;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Stripe/Stripe-Prefix.pch";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		11E1F597165151F400B49816 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				DSTROOT = /tmp/iOS.dst;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Stripe/Stripe-Prefix.pch";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		11E1F655165157CA00B49816 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "StripeTest/StripeTest-Prefix.pch";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "StripeTest/StripeTest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		11E1F656165157CA00B49816 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "StripeTest/StripeTest-Prefix.pch";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				INFOPLIST_FILE = "StripeTest/StripeTest-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-/* End XCBuildConfiguration section */
-
-/* Begin XCConfigurationList section */
-		11C74B92164043050071C2CA /* Build configuration list for PBXProject "Stripe" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				11C74BBA164043050071C2CA /* Debug */,
-				11C74BBB164043050071C2CA /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		11E1F595165151F400B49816 /* Build configuration list for PBXNativeTarget "StripeiOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				11E1F596165151F400B49816 /* Debug */,
-				11E1F597165151F400B49816 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		11E1F654165157CA00B49816 /* Build configuration list for PBXNativeTarget "iOSTest" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				11E1F655165157CA00B49816 /* Debug */,
-				11E1F656165157CA00B49816 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-/* End XCConfigurationList section */
-	};
-	rootObject = 11C74B8F164043050071C2CA /* Project object */;
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>archiveVersion</key>
+	<string>1</string>
+	<key>classes</key>
+	<dict/>
+	<key>objectVersion</key>
+	<string>46</string>
+	<key>objects</key>
+	<dict>
+		<key>0417CD2B19CA5D4700341C76</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>Stripe+ApplePay.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>0417CD2C19CA5D4700341C76</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>Stripe+ApplePay.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>0417CD2D19CA5D4700341C76</key>
+		<dict>
+			<key>fileRef</key>
+			<string>0417CD2C19CA5D4700341C76</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>04BAD22F19D2271500E45F04</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>04CB47B819BF4D4000A4632A</string>
+				<string>04CB47B919BF4D4000A4632A</string>
+				<string>04CB47BA19BF4D4000A4632A</string>
+				<string>04CB47BB19BF4D4000A4632A</string>
+				<string>0417CD2B19CA5D4700341C76</string>
+				<string>0417CD2C19CA5D4700341C76</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>ApplePay</string>
+			<key>path</key>
+			<string>ApplePay</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>04CB47B819BF4D4000A4632A</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>PKPayment+STPTestKeys.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>04CB47B919BF4D4000A4632A</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>PKPayment+STPTestKeys.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>04CB47BA19BF4D4000A4632A</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>STPTestPaymentAuthorizationViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>04CB47BB19BF4D4000A4632A</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>STPTestPaymentAuthorizationViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>04CB47BC19BF4D4000A4632A</key>
+		<dict>
+			<key>fileRef</key>
+			<string>04CB47B919BF4D4000A4632A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>04CB47BD19BF4D4000A4632A</key>
+		<dict>
+			<key>fileRef</key>
+			<string>04CB47BB19BF4D4000A4632A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>04D5BF9019BF958F009521A5</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>PassKit.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/PassKit.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>04D5BF9119BF958F009521A5</key>
+		<dict>
+			<key>fileRef</key>
+			<string>04D5BF9019BF958F009521A5</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>ATTRIBUTES</key>
+				<array>
+					<string>Weak</string>
+				</array>
+			</dict>
+		</dict>
+		<key>04D5BF9219BF95F7009521A5</key>
+		<dict>
+			<key>fileRef</key>
+			<string>04CB47BB19BF4D4000A4632A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>04D5BF9319BF9606009521A5</key>
+		<dict>
+			<key>fileRef</key>
+			<string>04CB47B919BF4D4000A4632A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>112D5AEE164DAD2D0053BB76</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>STPTokenTest.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>112D5AEF164DAD2D0053BB76</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>STPTokenTest.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11C74B8D164043050071C2CA</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>11C74B9D164043050071C2CA</string>
+				<string>11C74BB1164043050071C2CA</string>
+				<string>11C74B9A164043050071C2CA</string>
+				<string>11C74B99164043050071C2CA</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11C74B8F164043050071C2CA</key>
+		<dict>
+			<key>attributes</key>
+			<dict>
+				<key>LastTestingUpgradeCheck</key>
+				<string>0510</string>
+				<key>LastUpgradeCheck</key>
+				<string>0600</string>
+			</dict>
+			<key>buildConfigurationList</key>
+			<string>11C74B92164043050071C2CA</string>
+			<key>compatibilityVersion</key>
+			<string>Xcode 3.2</string>
+			<key>developmentRegion</key>
+			<string>English</string>
+			<key>hasScannedForEncodings</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXProject</string>
+			<key>knownRegions</key>
+			<array>
+				<string>en</string>
+			</array>
+			<key>mainGroup</key>
+			<string>11C74B8D164043050071C2CA</string>
+			<key>productRefGroup</key>
+			<string>11C74B99164043050071C2CA</string>
+			<key>projectDirPath</key>
+			<string></string>
+			<key>projectReferences</key>
+			<array/>
+			<key>projectRoot</key>
+			<string></string>
+			<key>targets</key>
+			<array>
+				<string>11E1F58B165151F400B49816</string>
+				<string>11E1F645165157CA00B49816</string>
+			</array>
+		</dict>
+		<key>11C74B92164043050071C2CA</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>11C74BBA164043050071C2CA</string>
+				<string>11C74BBB164043050071C2CA</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>11C74B99164043050071C2CA</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>11E1F58C165151F400B49816</string>
+				<string>11E1F646165157CA00B49816</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Products</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11C74B9A164043050071C2CA</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>04D5BF9019BF958F009521A5</string>
+				<string>4A0D74F918F6106100966D7B</string>
+				<string>11C74B9B164043050071C2CA</string>
+				<string>FAFC12C516E5767F0066297F</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Frameworks</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11C74B9B164043050071C2CA</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>Foundation.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/Foundation.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>11C74B9D164043050071C2CA</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7106B4D51970A58C000A037E</string>
+				<string>7106B4D61970A58C000A037E</string>
+				<string>7106B4D71970A58C000A037E</string>
+				<string>7106B4D81970A58C000A037E</string>
+				<string>7106B4CB1970A58C000A037E</string>
+				<string>7106B4CC1970A58C000A037E</string>
+				<string>7106B4CD1970A58C000A037E</string>
+				<string>7106B4CE1970A58C000A037E</string>
+				<string>7106B4F31970B526000A037E</string>
+				<string>7106B4CF1970A58C000A037E</string>
+				<string>7106B4D01970A58C000A037E</string>
+				<string>7106B4D11970A58C000A037E</string>
+				<string>7106B4D21970A58C000A037E</string>
+				<string>04BAD22F19D2271500E45F04</string>
+				<string>11C74B9E164043050071C2CA</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Stripe</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11C74B9E164043050071C2CA</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>11C74B9F164043050071C2CA</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Supporting Files</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11C74B9F164043050071C2CA</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>Stripe-Prefix.pch</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11C74BB1164043050071C2CA</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>11C74BB2164043050071C2CA</string>
+				<string>11EE8254164786A40039CDD4</string>
+				<string>11EE8255164786A40039CDD4</string>
+				<string>4AAEFAEC18FC98E1001001CD</string>
+				<string>4AAEFAED18FC98E1001001CD</string>
+				<string>112D5AEE164DAD2D0053BB76</string>
+				<string>112D5AEF164DAD2D0053BB76</string>
+				<string>7106B4F61970B9EC000A037E</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>StripeTest</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11C74BB2164043050071C2CA</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>11E1F65A1651585F00B49816</string>
+				<string>11C74BB3164043050071C2CA</string>
+				<string>11C74BB4164043050071C2CA</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Supporting Files</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11C74BB3164043050071C2CA</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>path</key>
+			<string>StripeTest-Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11C74BB4164043050071C2CA</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>11C74BB5164043050071C2CA</string>
+			</array>
+			<key>isa</key>
+			<string>PBXVariantGroup</string>
+			<key>name</key>
+			<string>InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11C74BB5164043050071C2CA</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.strings</string>
+			<key>name</key>
+			<string>en</string>
+			<key>path</key>
+			<string>en.lproj/InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11C74BBA164043050071C2CA</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_UNREACHABLE_CODE</key>
+				<string>YES</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>NO</string>
+				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
+				<string>YES</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu99</string>
+				<key>GCC_DYNAMIC_NO_PIC</key>
+				<string>NO</string>
+				<key>GCC_OPTIMIZATION_LEVEL</key>
+				<string>0</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>DEBUG=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>GCC_SYMBOLS_PRIVATE_EXTERN</key>
+				<string>NO</string>
+				<key>GCC_VERSION</key>
+				<string>com.apple.compilers.llvm.clang.1_0</string>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_MISSING_PROTOTYPES</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>5.0</string>
+				<key>ONLY_ACTIVE_ARCH</key>
+				<string>YES</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>11C74BBB164043050071C2CA</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_UNREACHABLE_CODE</key>
+				<string>YES</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>YES</string>
+				<key>ENABLE_STRICT_OBJC_MSGSEND</key>
+				<string>YES</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu99</string>
+				<key>GCC_VERSION</key>
+				<string>com.apple.compilers.llvm.clang.1_0</string>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_MISSING_PROTOTYPES</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>5.0</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+				<key>VALIDATE_PRODUCT</key>
+				<string>YES</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>11E1F588165151F400B49816</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>0417CD2D19CA5D4700341C76</string>
+				<string>7106B4E81970A58C000A037E</string>
+				<string>7106B4D91970A58C000A037E</string>
+				<string>7106B4EB1970A58C000A037E</string>
+				<string>04CB47BD19BF4D4000A4632A</string>
+				<string>7106B4E21970A58C000A037E</string>
+				<string>7106B4DF1970A58C000A037E</string>
+				<string>7106B4DC1970A58C000A037E</string>
+				<string>04CB47BC19BF4D4000A4632A</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>11E1F589165151F400B49816</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>4A0D74FA18F6106100966D7B</string>
+				<string>FAFC12C816E576A50066297F</string>
+				<string>11E1F58D165151F400B49816</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>11E1F58A165151F400B49816</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>dstPath</key>
+			<string>include/${PRODUCT_NAME}</string>
+			<key>dstSubfolderSpec</key>
+			<string>16</string>
+			<key>files</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXCopyFilesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>11E1F58B165151F400B49816</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>11E1F595165151F400B49816</string>
+			<key>buildPhases</key>
+			<array>
+				<string>11E1F588165151F400B49816</string>
+				<string>11E1F589165151F400B49816</string>
+				<string>11E1F58A165151F400B49816</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>StripeiOS</string>
+			<key>productName</key>
+			<string>iOS</string>
+			<key>productReference</key>
+			<string>11E1F58C165151F400B49816</string>
+			<key>productType</key>
+			<string>com.apple.product-type.library.static</string>
+		</dict>
+		<key>11E1F58C165151F400B49816</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>archive.ar</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>libStripeiOS.a</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>11E1F58D165151F400B49816</key>
+		<dict>
+			<key>fileRef</key>
+			<string>11C74B9B164043050071C2CA</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>11E1F595165151F400B49816</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>11E1F596165151F400B49816</string>
+				<string>11E1F597165151F400B49816</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>11E1F596165151F400B49816</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>DSTROOT</key>
+				<string>/tmp/iOS.dst</string>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>Stripe/Supporting Files/Stripe-Prefix.pch</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>5.0</string>
+				<key>ONLY_ACTIVE_ARCH</key>
+				<string>YES</string>
+				<key>OTHER_LDFLAGS</key>
+				<string>-ObjC</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>SKIP_INSTALL</key>
+				<string>YES</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>11E1F597165151F400B49816</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>DSTROOT</key>
+				<string>/tmp/iOS.dst</string>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>Stripe/Supporting Files/Stripe-Prefix.pch</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>5.0</string>
+				<key>OTHER_LDFLAGS</key>
+				<string>-ObjC</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>SKIP_INSTALL</key>
+				<string>YES</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>11E1F641165157CA00B49816</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>11E1F658165157F100B49816</string>
+				<string>04D5BF9319BF9606009521A5</string>
+				<string>11E1F659165157F100B49816</string>
+				<string>7106B4DB1970A58C000A037E</string>
+				<string>4AAEFAEE18FC98E1001001CD</string>
+				<string>7106B4DE1970A58C000A037E</string>
+				<string>04D5BF9219BF95F7009521A5</string>
+				<string>7106B4ED1970A58C000A037E</string>
+				<string>7106B4F71970B9EC000A037E</string>
+				<string>7106B4EA1970A58C000A037E</string>
+				<string>7106B4E11970A58C000A037E</string>
+				<string>7106B4E41970A58C000A037E</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>11E1F642165157CA00B49816</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>04D5BF9119BF958F009521A5</string>
+				<string>4AAEFAE818FC928A001001CD</string>
+				<string>11E1F649165157CA00B49816</string>
+				<string>FAFC12CB16E576E50066297F</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>11E1F643165157CA00B49816</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>11E1F645165157CA00B49816</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>11E1F654165157CA00B49816</string>
+			<key>buildPhases</key>
+			<array>
+				<string>11E1F641165157CA00B49816</string>
+				<string>11E1F642165157CA00B49816</string>
+				<string>11E1F643165157CA00B49816</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array>
+				<string>11E1F65D165158B000B49816</string>
+			</array>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>iOSTest</string>
+			<key>productName</key>
+			<string>iOSTest</string>
+			<key>productReference</key>
+			<string>11E1F646165157CA00B49816</string>
+			<key>productType</key>
+			<string>com.apple.product-type.bundle.unit-test</string>
+		</dict>
+		<key>11E1F646165157CA00B49816</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.cfbundle</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>iOSTest.xctest</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>11E1F649165157CA00B49816</key>
+		<dict>
+			<key>fileRef</key>
+			<string>11C74B9B164043050071C2CA</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>11E1F654165157CA00B49816</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>11E1F655165157CA00B49816</string>
+				<string>11E1F656165157CA00B49816</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>11E1F655165157CA00B49816</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
+					<string>$(inherited)</string>
+					<string>$(DEVELOPER_FRAMEWORKS_DIR)</string>
+				</array>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>StripeTest/Supporting Files/StripeTest-Prefix.pch</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES</string>
+				<key>INFOPLIST_FILE</key>
+				<string>StripeTest/Supporting Files/StripeTest-Info.plist</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>6.0</string>
+				<key>ONLY_ACTIVE_ARCH</key>
+				<string>YES</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>11E1F656165157CA00B49816</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
+					<string>$(inherited)</string>
+					<string>$(DEVELOPER_FRAMEWORKS_DIR)</string>
+				</array>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>StripeTest/Supporting Files/StripeTest-Prefix.pch</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES</string>
+				<key>INFOPLIST_FILE</key>
+				<string>StripeTest/Supporting Files/StripeTest-Info.plist</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>6.0</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>11E1F658165157F100B49816</key>
+		<dict>
+			<key>fileRef</key>
+			<string>11EE8255164786A40039CDD4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>11E1F659165157F100B49816</key>
+		<dict>
+			<key>fileRef</key>
+			<string>112D5AEF164DAD2D0053BB76</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>11E1F65A1651585F00B49816</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>StripeTest-Prefix.pch</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11E1F65C165158B000B49816</key>
+		<dict>
+			<key>containerPortal</key>
+			<string>11C74B8F164043050071C2CA</string>
+			<key>isa</key>
+			<string>PBXContainerItemProxy</string>
+			<key>proxyType</key>
+			<string>1</string>
+			<key>remoteGlobalIDString</key>
+			<string>11E1F58B165151F400B49816</string>
+			<key>remoteInfo</key>
+			<string>iOS</string>
+		</dict>
+		<key>11E1F65D165158B000B49816</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXTargetDependency</string>
+			<key>target</key>
+			<string>11E1F58B165151F400B49816</string>
+			<key>targetProxy</key>
+			<string>11E1F65C165158B000B49816</string>
+		</dict>
+		<key>11EE8254164786A40039CDD4</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>STPCardTest.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>11EE8255164786A40039CDD4</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>lineEnding</key>
+			<string>0</string>
+			<key>path</key>
+			<string>STPCardTest.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+			<key>xcLanguageSpecificationIdentifier</key>
+			<string>xcode.lang.objc</string>
+		</dict>
+		<key>4A0D74F918F6106100966D7B</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>Security.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/Security.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>4A0D74FA18F6106100966D7B</key>
+		<dict>
+			<key>fileRef</key>
+			<string>4A0D74F918F6106100966D7B</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>4AAEFAE818FC928A001001CD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>4A0D74F918F6106100966D7B</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>4AAEFAEC18FC98E1001001CD</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>STPCertTest.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4AAEFAED18FC98E1001001CD</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>STPCertTest.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4AAEFAEE18FC98E1001001CD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>4AAEFAED18FC98E1001001CD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4CB1970A58C000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>STPAPIConnection.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4CC1970A58C000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>STPAPIConnection.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4CD1970A58C000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>STPCard.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4CE1970A58C000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>STPCard.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4CF1970A58C000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>STPToken.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4D01970A58C000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>STPToken.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4D11970A58C000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>STPUtils.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4D21970A58C000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>STPUtils.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4D51970A58C000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>Stripe.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4D61970A58C000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>Stripe.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4D71970A58C000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>StripeError.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4D81970A58C000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>StripeError.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4D91970A58C000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4CC1970A58C000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4DB1970A58C000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4CC1970A58C000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4DC1970A58C000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4CE1970A58C000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4DE1970A58C000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4CE1970A58C000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4DF1970A58C000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4D01970A58C000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4E11970A58C000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4D01970A58C000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4E21970A58C000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4D21970A58C000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4E41970A58C000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4D21970A58C000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4E81970A58C000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4D61970A58C000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4EA1970A58C000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4D61970A58C000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4EB1970A58C000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4D81970A58C000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4ED1970A58C000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4D81970A58C000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7106B4F31970B526000A037E</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>STPFormEncodeProtocol.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4F61970B9EC000A037E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>STPCardFunctionalTest.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7106B4F71970B9EC000A037E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7106B4F61970B9EC000A037E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>FAFC12C516E5767F0066297F</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>UIKit.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/UIKit.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>FAFC12C816E576A50066297F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>FAFC12C516E5767F0066297F</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>FAFC12CB16E576E50066297F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>FAFC12C516E5767F0066297F</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+	</dict>
+	<key>rootObject</key>
+	<string>11C74B8F164043050071C2CA</string>
+</dict>
+</plist>
