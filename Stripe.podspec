@@ -6,9 +6,6 @@ Pod::Spec.new do |s|
   s.homepage                       = "https://stripe.com"
   s.author                         = { "Jack Flintermann" => "jack@stripe.com" }
   s.source                         = { :git => "https://github.com/stripe/stripe-ios.git", :tag => "v#{s.version}" }
-  s.source_files                   = 'Stripe/*.{h,m}'
-  s.public_header_files            = 'Stripe/*.h'
-  s.exclude_files                  = 'Stripe/ApplePay/*'
   s.platform                       = :ios
   s.frameworks                     = 'Foundation', 'Security'
   s.requires_arc                   = true
