@@ -1,16 +1,22 @@
 Pod::Spec.new do |s|
-  s.name                  = "Stripe"
-  s.version               = "2.0.2"
-  s.summary               = "Stripe is a web-based API for accepting payments online."
-  s.license               = { :type => 'MIT', :file => 'LICENSE' }
-  s.homepage              = "https://stripe.com"
-  s.author                = { "Jack Flintermann" => "jack@stripe.com" }
-  s.source                = { :git => "https://github.com/stripe/stripe-ios.git", :tag => "v2.0.2"}
-  s.source_files          = 'Stripe/*.{h,m}'
-  s.public_header_files   = 'Stripe/*.h'
-  s.platform              = :ios
-  s.frameworks            = 'Foundation', 'Security'
-  s.weak_frameworks       = 'PassKit'
-  s.requires_arc          = true
-  s.ios.deployment_target = '5.0'
+  s.name                           = "Stripe"
+  s.version                        = "2.0.3"
+  s.summary                        = "Stripe is a web-based API for accepting payments online."
+  s.license                        = { :type => 'MIT', :file => 'LICENSE' }
+  s.homepage                       = "https://stripe.com"
+  s.author                         = { "Jack Flintermann" => "jack@stripe.com" }
+  s.source                         = { :git => "https://github.com/stripe/stripe-ios.git", :tag => "v2.0.3"}
+  s.source_files                   = 'Stripe/*.{h,m}'
+  s.public_header_files            = 'Stripe/*.h'
+  s.exclude_files                  = 'Stripe/ApplePay/*'
+  s.platform                       = :ios
+  s.frameworks                     = 'Foundation', 'Security'
+  s.weak_frameworks                = 'PassKit'
+  s.requires_arc                   = true
+  s.ios.deployment_target          = '5.0'
+
+  s.subspec "ApplePay" do |subspec|
+    subspec.source_files           = 'Stripe/ApplePay/*'
+    subspec.prefix_header_contents = "STRIPE_APPLEPAY_ENABLED"
+  end
 end
