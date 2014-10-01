@@ -2,74 +2,55 @@
 //  STPTestPaymentAuthorizationViewController.m
 //  StripeExample
 //
-//  Created by Jack Flintermann on 9/8/14.
+//  Created by Jack Flintermann on 9/30/14.
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
-
 #import "STPTestPaymentAuthorizationViewController.h"
-#import "PKPayment+STPTestKeys.h"
+#import "STPTestPaymentSummaryViewController.h"
 
-@interface STPTestPaymentAuthorizationViewController()<UIActionSheetDelegate>
-@property(weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@interface STPTestPaymentAuthorizationViewController()<UIViewControllerTransitioningDelegate>
+@property (nonatomic) PKPaymentRequest *paymentRequest;
+@end
+
+@interface STPTestPaymentPresentationController : UIPresentationController
 @end
 
 @implementation STPTestPaymentAuthorizationViewController
 
+- (instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        _paymentRequest = paymentRequest;
+        self.transitioningDelegate = self;
+        self.modalPresentationStyle = UIModalPresentationCustom;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    self.activityIndicator = activityIndicator;
-    self.activityIndicator.center = self.view.center;
-    self.activityIndicator.hidesWhenStopped = YES;
+    STPTestPaymentSummaryViewController *summary = [[STPTestPaymentSummaryViewController alloc] initWithPaymentRequest:self.paymentRequest];
+    summary.delegate = self.delegate;
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:summary];
+    [self addChildViewController:navController];
+    navController.view.frame = self.view.bounds;
+    [self.view addSubview:navController.view];
 }
 
-- (void) viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Test Card Picker" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Select Test Working Card", @"Select Test Failing Card", nil];
-    [actionSheet showInView:self.view];
-}
+#pragma mark - UIViewControllerTransitioningDelegate
 
-- (void)makePaymentWithCardNumber:(NSString *)cardNumber {
-    [self.activityIndicator startAnimating];
-    PKPayment *payment = [PKPayment new];
-    payment.stp_testCardNumber = cardNumber;
-    
-    PKPaymentAuthorizationViewController *auth = (PKPaymentAuthorizationViewController *)self;
-    
-    [self.activityIndicator startAnimating];
-    [self.delegate paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)auth
-                                  didAuthorizePayment:payment
-                                           completion:^(PKPaymentAuthorizationStatus status) {
-                                               [self.activityIndicator stopAnimating];
-                                               [self.delegate paymentAuthorizationViewControllerDidFinish:auth];
-                                           }];
-}
-
-#pragma mark - UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (actionSheet.cancelButtonIndex == buttonIndex) {
-        [self actionSheetCancel:actionSheet];
-        return;
-    }
-    switch (buttonIndex) {
-        case 0:
-            [self makePaymentWithCardNumber:STPSuccessfulChargeCardNumber];
-            break;
-        default:
-            [self makePaymentWithCardNumber:STPFailingChargeCardNumber];
-            break;
-    }
-}
-
-- (void)actionSheetCancel:(UIActionSheet *)actionSheet {
-    [self.delegate paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)self];
+- (UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented presentingViewController:(UIViewController *)presenting sourceViewController:(UIViewController *)source {
+    return [[STPTestPaymentPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
 }
 
 @end
 
-#endif
+@implementation STPTestPaymentPresentationController
+- (CGRect)frameOfPresentedViewInContainerView {
+    CGRect rect = [super frameOfPresentedViewInContainerView];
+    rect.origin.y += 100;
+    rect.size.height -= 100;
+    return rect;
+}
+@end

@@ -64,7 +64,7 @@
 + (UIViewController *)paymentControllerWithRequest:(PKPaymentRequest *)request
                                           delegate:(id<PKPaymentAuthorizationViewControllerDelegate>)delegate {
     if ([self isSimulatorBuild]) {
-        STPTestPaymentAuthorizationViewController *test = [STPTestPaymentAuthorizationViewController new];
+        STPTestPaymentAuthorizationViewController *test = [[STPTestPaymentAuthorizationViewController alloc] initWithPaymentRequest:request];
         test.delegate = delegate;
         return test;
     }

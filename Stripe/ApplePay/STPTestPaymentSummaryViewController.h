@@ -1,8 +1,8 @@
 //
-//  STPTestPaymentAuthorizationViewController.h
+//  STPTestPaymentSummaryViewController.h
 //  StripeExample
 //
-//  Created by Jack Flintermann on 9/30/14.
+//  Created by Jack Flintermann on 9/8/14.
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
@@ -11,7 +11,7 @@
 #import <UIKit/UIKit.h>
 #import <PassKit/PassKit.h>
 
-@interface STPTestPaymentAuthorizationViewController : UIViewController
+@interface STPTestPaymentSummaryViewController : UIViewController
 
 - (instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest;
 @property(nonatomic, assign)id<PKPaymentAuthorizationViewControllerDelegate>delegate;
