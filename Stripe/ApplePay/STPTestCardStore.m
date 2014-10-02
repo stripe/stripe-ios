@@ -10,10 +10,12 @@
 #import "STPTestCardStore.h"
 
 @interface STPTestCardStore()
-@property(nonatomic)NSArray *allCards;
+@property(nonatomic)NSArray *allItems;
 @end
 
 @implementation STPTestCardStore
+
+@synthesize selectedItem;
 
 + (STPCard *)defaultCard {
     STPCard *card = [STPCard new];
@@ -38,10 +40,15 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _allCards = @[ [self.class defaultCard], [self.class defaultFailingCard] ];
-        _selectedCard = _allCards[0];
+        self.allItems = @[ [self.class defaultCard], [self.class defaultFailingCard] ];
+        self.selectedItem = self.allItems[0];
     }
     return self;
+}
+
+- (NSArray *)descriptionsForItem:(id)item {
+    STPCard *card = (STPCard *)item;
+    return @[card.name, [NSString stringWithFormat:@"**** **** **** %@", card.last4]];
 }
 
 @end

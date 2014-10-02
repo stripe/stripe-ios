@@ -1,5 +1,5 @@
 //
-//  STPTestCardStore.h
+//  STPTestAddressStore.h
 //  StripeExample
 //
 //  Created by Jack Flintermann on 9/30/14.
@@ -9,5 +9,5 @@
 #import <Foundation/Foundation.h>
 #import "STPTestDataStore.h"
 
-@interface STPTestCardStore : NSObject <STPTestDataStore>
+@interface STPTestAddressStore : NSObject<STPTestDataStore>
 @end

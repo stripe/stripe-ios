@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0459C73419DB9567002A48D1 /* STPTestPaymentCardSelectionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0459C73219DB9567002A48D1 /* STPTestPaymentCardSelectionTableViewController.m */; };
-		0459C73519DB9567002A48D1 /* STPTestPaymentCardSelectionTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0459C73319DB9567002A48D1 /* STPTestPaymentCardSelectionTableViewController.xib */; };
 		0459C73819DB9756002A48D1 /* STPTestCardStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 0459C73719DB9756002A48D1 /* STPTestCardStore.m */; };
+		0459C73B19DB9F40002A48D1 /* STPTestAddressStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 0459C73A19DB9F40002A48D1 /* STPTestAddressStore.m */; };
 		0470A29C19A5D5DB00B66DB7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29B19A5D5DB00B66DB7 /* Foundation.framework */; };
 		0470A29E19A5D5DB00B66DB7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29D19A5D5DB00B66DB7 /* CoreGraphics.framework */; };
 		0470A2A019A5D5DB00B66DB7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29F19A5D5DB00B66DB7 /* UIKit.framework */; };
@@ -30,6 +29,8 @@
 		0477976B19D4EE030022A00F /* PKPayment+STPTestKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 0477976619D4EE030022A00F /* PKPayment+STPTestKeys.m */; };
 		0477976C19D4EE030022A00F /* STPTestPaymentSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0477976819D4EE030022A00F /* STPTestPaymentSummaryViewController.m */; };
 		0477976D19D4EE030022A00F /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 0477976A19D4EE030022A00F /* Stripe+ApplePay.m */; };
+		0499F34B19DCD2870094E5E5 /* STPTestDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0499F34A19DCD2870094E5E5 /* STPTestDataTableViewController.m */; };
+		0499F34E19DCDBBC0094E5E5 /* STPTestShippingMethodStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 0499F34D19DCDBBC0094E5E5 /* STPTestShippingMethodStore.m */; };
 		04CB47DA19BF5A4100A4632A /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CB47D919BF5A4100A4632A /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		04E75A3B19A71BFD000003DE /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3A19A71BFD000003DE /* Parse.framework */; };
 		04E75A3D19A71C22000003DE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3C19A71C22000003DE /* AudioToolbox.framework */; };
@@ -94,11 +95,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0459C73119DB9567002A48D1 /* STPTestPaymentCardSelectionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTestPaymentCardSelectionTableViewController.h; sourceTree = "<group>"; };
-		0459C73219DB9567002A48D1 /* STPTestPaymentCardSelectionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTestPaymentCardSelectionTableViewController.m; sourceTree = "<group>"; };
-		0459C73319DB9567002A48D1 /* STPTestPaymentCardSelectionTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = STPTestPaymentCardSelectionTableViewController.xib; sourceTree = "<group>"; };
 		0459C73619DB9756002A48D1 /* STPTestCardStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTestCardStore.h; sourceTree = "<group>"; };
 		0459C73719DB9756002A48D1 /* STPTestCardStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTestCardStore.m; sourceTree = "<group>"; };
+		0459C73919DB9F40002A48D1 /* STPTestAddressStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTestAddressStore.h; sourceTree = "<group>"; };
+		0459C73A19DB9F40002A48D1 /* STPTestAddressStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTestAddressStore.m; sourceTree = "<group>"; };
 		0470A29819A5D5DB00B66DB7 /* StripeExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StripeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0470A29B19A5D5DB00B66DB7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0470A29D19A5D5DB00B66DB7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -128,6 +128,11 @@
 		0477976819D4EE030022A00F /* STPTestPaymentSummaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTestPaymentSummaryViewController.m; sourceTree = "<group>"; };
 		0477976919D4EE030022A00F /* Stripe+ApplePay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe+ApplePay.h"; sourceTree = "<group>"; };
 		0477976A19D4EE030022A00F /* Stripe+ApplePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Stripe+ApplePay.m"; sourceTree = "<group>"; };
+		0499F34819DCD0160094E5E5 /* STPTestDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTestDataStore.h; sourceTree = "<group>"; };
+		0499F34919DCD2870094E5E5 /* STPTestDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTestDataTableViewController.h; sourceTree = "<group>"; };
+		0499F34A19DCD2870094E5E5 /* STPTestDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTestDataTableViewController.m; sourceTree = "<group>"; };
+		0499F34C19DCDBBC0094E5E5 /* STPTestShippingMethodStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTestShippingMethodStore.h; sourceTree = "<group>"; };
+		0499F34D19DCDBBC0094E5E5 /* STPTestShippingMethodStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTestShippingMethodStore.m; sourceTree = "<group>"; };
 		04CB47D919BF5A4100A4632A /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		04E75A3A19A71BFD000003DE /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		04E75A3C19A71C22000003DE /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -356,11 +361,15 @@
 				0477976719D4EE030022A00F /* STPTestPaymentSummaryViewController.h */,
 				0477976819D4EE030022A00F /* STPTestPaymentSummaryViewController.m */,
 				04EC0D3719DA29780093970E /* STPTestPaymentSummaryViewController.xib */,
-				0459C73119DB9567002A48D1 /* STPTestPaymentCardSelectionTableViewController.h */,
-				0459C73219DB9567002A48D1 /* STPTestPaymentCardSelectionTableViewController.m */,
-				0459C73319DB9567002A48D1 /* STPTestPaymentCardSelectionTableViewController.xib */,
+				0499F34919DCD2870094E5E5 /* STPTestDataTableViewController.h */,
+				0499F34A19DCD2870094E5E5 /* STPTestDataTableViewController.m */,
+				0499F34819DCD0160094E5E5 /* STPTestDataStore.h */,
 				0459C73619DB9756002A48D1 /* STPTestCardStore.h */,
 				0459C73719DB9756002A48D1 /* STPTestCardStore.m */,
+				0499F34C19DCDBBC0094E5E5 /* STPTestShippingMethodStore.h */,
+				0499F34D19DCDBBC0094E5E5 /* STPTestShippingMethodStore.m */,
+				0459C73919DB9F40002A48D1 /* STPTestAddressStore.h */,
+				0459C73A19DB9F40002A48D1 /* STPTestAddressStore.m */,
 				0477976919D4EE030022A00F /* Stripe+ApplePay.h */,
 				0477976A19D4EE030022A00F /* Stripe+ApplePay.m */,
 			);
@@ -556,7 +565,6 @@
 				04EEE20119CB7ED500192164 /* discover.png in Resources */,
 				04EEE1FF19CB7ED500192164 /* diners.png in Resources */,
 				04EEE20019CB7ED500192164 /* diners@2x.png in Resources */,
-				0459C73519DB9567002A48D1 /* STPTestPaymentCardSelectionTableViewController.xib in Resources */,
 				04EEE1FA19CB7ED500192164 /* amex@2x.png in Resources */,
 				0470A2A619A5D5DB00B66DB7 /* InfoPlist.strings in Resources */,
 				04EEE1FB19CB7ED500192164 /* cvc-amex.png in Resources */,
@@ -605,7 +613,6 @@
 				04EEE1F819CB7ED500192164 /* PTKView.m in Sources */,
 				0459C73819DB9756002A48D1 /* STPTestCardStore.m in Sources */,
 				0470A32D19A5D69E00B66DB7 /* PaymentViewController.m in Sources */,
-				0459C73419DB9567002A48D1 /* STPTestPaymentCardSelectionTableViewController.m in Sources */,
 				04EEE1F319CB7ED500192164 /* PTKCardExpiry.m in Sources */,
 				04E75A5519A74329000003DE /* MBProgressHUD.m in Sources */,
 				04EEE1F019CB7ED500192164 /* PTKAddressZip.m in Sources */,
@@ -613,14 +620,17 @@
 				04EC0D4319DB89280093970E /* STPTestPaymentAuthorizationViewController.m in Sources */,
 				04EEE22D19CB801E00192164 /* Stripe.m in Sources */,
 				0470A2A819A5D5DB00B66DB7 /* main.m in Sources */,
+				0459C73B19DB9F40002A48D1 /* STPTestAddressStore.m in Sources */,
 				04EEE23219CB801E00192164 /* STPUtils.m in Sources */,
 				04EEE1F519CB7ED500192164 /* PTKComponent.m in Sources */,
+				0499F34B19DCD2870094E5E5 /* STPTestDataTableViewController.m in Sources */,
 				0477976C19D4EE030022A00F /* STPTestPaymentSummaryViewController.m in Sources */,
 				0477976D19D4EE030022A00F /* Stripe+ApplePay.m in Sources */,
 				04EEE1F719CB7ED500192164 /* PTKUSAddressZip.m in Sources */,
 				04EEE23119CB801E00192164 /* STPToken.m in Sources */,
 				0477976B19D4EE030022A00F /* PKPayment+STPTestKeys.m in Sources */,
 				04EEE1F619CB7ED500192164 /* PTKTextField.m in Sources */,
+				0499F34E19DCDBBC0094E5E5 /* STPTestShippingMethodStore.m in Sources */,
 				04EEE1F119CB7ED500192164 /* PTKCard.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

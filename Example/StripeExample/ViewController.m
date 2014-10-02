@@ -19,10 +19,17 @@
 
 - (IBAction)beginPayment:(id)sender {
     NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
-    id paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId
                                                                              amount:[NSDecimalNumber decimalNumberWithString:@"10"]
                                                                            currency:@"USD"
                                                                         description:@"Premium Llama Food"];
+    [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
+    [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
+    PKShippingMethod *shippingMethod = [PKShippingMethod summaryItemWithLabel:@"Llama Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
+    [paymentRequest setShippingMethods:@[shippingMethod]];
+    PKPaymentSummaryItem *foodItem = paymentRequest.paymentSummaryItems.firstObject;
+    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama Food Services, Inc." amount:[NSDecimalNumber decimalNumberWithString:@"30.00"]];
+    paymentRequest.paymentSummaryItems = @[foodItem, shippingMethod, totalItem];
     if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
         UIViewController *paymentController = [Stripe paymentControllerWithRequest:paymentRequest delegate:self];
         [self presentViewController:paymentController animated:YES completion:nil];

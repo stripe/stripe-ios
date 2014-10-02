@@ -9,14 +9,26 @@
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
 
 #import "STPTestPaymentSummaryViewController.h"
-#import "STPTestPaymentCardSelectionTableViewController.h"
+#import "STPTestDataTableViewController.h"
 #import "PKPayment+STPTestKeys.h"
 #import "STPTestCardStore.h"
+#import "STPTestAddressStore.h"
+#import "STPTestShippingMethodStore.h"
 #import "STPCard.h"
 
 NSString * const STPTestPaymentAuthorizationSummaryItemIdentifier = @"STPTestPaymentAuthorizationSummaryItemIdentifier";
+NSString * const STPTestPaymentAuthorizationTestDataIdentifier = @"STPTestPaymentAuthorizationTestDataIdentifier";
+
+NSString * const STPTestPaymentSectionTitleCards = @"Cards";
+NSString * const STPTestPaymentSectionTitleBillingAddress = @"Billing Address";
+NSString * const STPTestPaymentSectionTitleShippingAddress = @"Shipping Address";
+NSString * const STPTestPaymentSectionTitleShippingMethod = @"Shipping Method";
+NSString * const STPTestPaymentSectionTitlePayment = @"Payment";
 
 @interface STPTestPaymentSummaryItemCell : UITableViewCell
+@end
+
+@interface STPTestPaymentDataCell : UITableViewCell
 @end
 
 @interface STPTestPaymentSummaryViewController()<UITableViewDataSource, UITableViewDelegate>
@@ -24,7 +36,12 @@ NSString * const STPTestPaymentAuthorizationSummaryItemIdentifier = @"STPTestPay
 @property (weak, nonatomic) IBOutlet UIButton *payButton;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) PKPaymentRequest *paymentRequest;
-@property (nonatomic) STPTestCardStore *store;
+@property (nonatomic) NSArray *summaryItems;
+@property (nonatomic) STPTestCardStore *cardStore;
+@property (nonatomic) STPTestAddressStore *billingAddressStore;
+@property (nonatomic) STPTestAddressStore *shippingAddressStore;
+@property (nonatomic) STPTestShippingMethodStore *shippingMethodStore;
+@property (nonatomic) NSArray *sectionTitles;
 @end
 
 @implementation STPTestPaymentSummaryViewController
@@ -33,15 +50,37 @@ NSString * const STPTestPaymentAuthorizationSummaryItemIdentifier = @"STPTestPay
     self = [self initWithNibName:nil bundle:nil];
     if (self) {
         _paymentRequest = paymentRequest;
-        _store = [STPTestCardStore new];
+        _summaryItems = paymentRequest.paymentSummaryItems;
+        _cardStore = [STPTestCardStore new];
+        _billingAddressStore = [STPTestAddressStore new];
+        _shippingAddressStore = [STPTestAddressStore new];
+        _shippingMethodStore = [[STPTestShippingMethodStore alloc] initWithShippingMethods:paymentRequest.shippingMethods];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     }
     return self;
 }
 
+- (void)updateSectionTitles {
+    NSMutableArray *array = [NSMutableArray array];
+    [array addObject:STPTestPaymentSectionTitleCards];
+    if (self.paymentRequest.requiredBillingAddressFields != PKAddressFieldNone) {
+        [array addObject:STPTestPaymentSectionTitleBillingAddress];
+    }
+    if (self.paymentRequest.requiredShippingAddressFields != PKAddressFieldNone) {
+        [array addObject:STPTestPaymentSectionTitleShippingAddress];
+    }
+    if (self.shippingMethodStore.allItems.count) {
+        [array addObject:STPTestPaymentSectionTitleShippingMethod];
+    }
+    [array addObject:STPTestPaymentSectionTitlePayment];
+    self.sectionTitles = [array copy];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self updateSectionTitles];
     [self.tableView registerClass:[STPTestPaymentSummaryItemCell class] forCellReuseIdentifier:STPTestPaymentAuthorizationSummaryItemIdentifier];
+    [self.tableView registerClass:[STPTestPaymentDataCell class] forCellReuseIdentifier:STPTestPaymentAuthorizationTestDataIdentifier];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -54,7 +93,18 @@ NSString * const STPTestPaymentAuthorizationSummaryItemIdentifier = @"STPTestPay
     [self.activityIndicator startAnimating];
     
     PKPayment *payment = [PKPayment new];
-    payment.stp_testCardNumber = self.store.selectedCard.number;
+    STPCard *card = self.cardStore.selectedItem;
+    payment.stp_testCardNumber = card.number;
+
+    if ([payment respondsToSelector:@selector(setShippingMethod:)] && self.shippingMethodStore.selectedItem) {
+        [payment performSelector:@selector(setShippingMethod:) withObject:self.shippingMethodStore.selectedItem];
+    }
+    if ([payment respondsToSelector:@selector(setShippingAddress:)] && self.shippingAddressStore.selectedItem) {
+        [payment performSelector:@selector(setShippingAddress:) withObject:self.shippingAddressStore.selectedItem];
+    }
+    if ([payment respondsToSelector:@selector(setBillingAddress:)] && self.billingAddressStore.selectedItem) {
+        [payment performSelector:@selector(setBillingAddress:) withObject:self.billingAddressStore.selectedItem];
+    }
 
     PKPaymentAuthorizationViewController *auth = (PKPaymentAuthorizationViewController *)self;
 
@@ -74,76 +124,151 @@ NSString * const STPTestPaymentAuthorizationSummaryItemIdentifier = @"STPTestPay
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return self.sectionTitles.count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
-        return @"Cards";
-    }
-    return @"Payment";
+    return self.sectionTitles[section];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0) {
-        return 1;
+    NSString *title = self.sectionTitles[section];
+    if ([title isEqualToString:STPTestPaymentSectionTitlePayment]) {
+        return self.summaryItems.count;
     }
-    return self.paymentRequest.paymentSummaryItems.count;
+    return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STPTestPaymentAuthorizationSummaryItemIdentifier forIndexPath:indexPath];
+    NSString *title = self.sectionTitles[indexPath.section];
+    NSString *identifier = [title isEqualToString:STPTestPaymentSectionTitlePayment] ? STPTestPaymentAuthorizationTestDataIdentifier : STPTestPaymentAuthorizationSummaryItemIdentifier;
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier
+                                                            forIndexPath:indexPath];
     [self configureCell:cell forRowAtIndexPath:indexPath];
     return cell;
 }
 
 - (void)configureCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    cell.accessoryType = UITableViewCellAccessoryNone;
-    if (indexPath.section == 0) {
-        if (indexPath.row == 0) {
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            STPCard *card = self.store.selectedCard;
-            cell.textLabel.text = [card.name uppercaseString];
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"**** **** **** %@", card.last4];
+    NSString *title = self.sectionTitles[indexPath.section];
+    if ([title isEqualToString:STPTestPaymentSectionTitlePayment]) {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        PKPaymentSummaryItem *item = self.summaryItems[indexPath.row];
+        NSString *text = [item.label uppercaseString];
+        if (indexPath.row == [self.tableView numberOfRowsInSection:indexPath.section] - 1) {
+            text = [@"PAY " stringByAppendingString:text];
         }
+        cell.textLabel.text = text;
+        
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", item.amount.stringValue, self.paymentRequest.currencyCode];
         return;
     }
-    PKPaymentSummaryItem *item = self.paymentRequest.paymentSummaryItems[indexPath.row];
-    cell.textLabel.text = [item.label uppercaseString];
     
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", item.amount.stringValue, self.paymentRequest.currencyCode];
+    id<STPTestDataStore> store = [self storeForSection:title];
+    NSArray *descriptions = [store descriptionsForItem:store.selectedItem];
+    
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.textLabel.text = descriptions[0];
+    cell.detailTextLabel.text = descriptions[1];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *title = self.sectionTitles[indexPath.section];
+    if ([title isEqualToString:STPTestPaymentSectionTitlePayment]) {
+        return 20.0f;
+    }
+    return 44.0f;
+}
+
+- (id<STPTestDataStore>)storeForSection:(NSString *)section {
+    id<STPTestDataStore> store;
+    if ([section isEqualToString:STPTestPaymentSectionTitleCards]) {
+        store = self.cardStore;
+    }
+    if ([section isEqualToString:STPTestPaymentSectionTitleShippingAddress]) {
+        store = self.shippingAddressStore;
+    }
+    if ([section isEqualToString:STPTestPaymentSectionTitleBillingAddress]) {
+        store = self.billingAddressStore;
+    }
+    if ([section isEqualToString:STPTestPaymentSectionTitleShippingMethod]) {
+        store = self.shippingMethodStore;
+    }
+    return store;
 }
 
 #pragma mark - UITableViewDelegate
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.section == 0;
+    return indexPath.section != [tableView numberOfSections] - 1;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 0) {
-        if (indexPath.row == 0) {
-            STPTestPaymentCardSelectionTableViewController *controller = [[STPTestPaymentCardSelectionTableViewController alloc] initWithCardStore:self.store];
-            [self.navigationController pushViewController:controller animated:YES];
-        }
+    id<STPTestDataStore> store = [self storeForSection:self.sectionTitles[indexPath.section]];
+    STPTestDataTableViewController *controller = [[STPTestDataTableViewController alloc] initWithStore:store];
+    if (store == self.shippingAddressStore) {
+        controller.callback = ^void(id item) {
+            if ([self.delegate respondsToSelector:@selector(paymentAuthorizationViewController:didSelectShippingAddress:completion:)]) {
+                [self.activityIndicator startAnimating];
+                self.payButton.enabled = NO;
+                self.tableView.userInteractionEnabled = NO;
+                [self.delegate paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)self didSelectShippingAddress:nil completion:^(PKPaymentAuthorizationStatus status, NSArray *shippingMethods, NSArray *summaryItems) {
+                    self.summaryItems = summaryItems;
+                    [self.shippingMethodStore setShippingMethods:shippingMethods];
+                    [self updateSectionTitles];
+                    [self.tableView reloadData];
+                    self.payButton.enabled = YES;
+                    self.tableView.userInteractionEnabled = YES;
+                    [self.activityIndicator stopAnimating];
+                }];
+            }
+        };
     }
+    if (store == self.shippingMethodStore) {
+        controller.callback = ^void(id item) {
+            if ([self.delegate respondsToSelector:@selector(paymentAuthorizationViewController:didSelectShippingMethod:completion:)]) {
+                [self.activityIndicator startAnimating];
+                self.payButton.enabled = NO;
+                self.tableView.userInteractionEnabled = NO;
+                PKPaymentAuthorizationViewController *vc = (PKPaymentAuthorizationViewController *)self;
+                [self.delegate paymentAuthorizationViewController:vc didSelectShippingMethod:item completion:^(PKPaymentAuthorizationStatus status, NSArray *summaryItems) {
+                    if (status == PKPaymentAuthorizationStatusFailure) {
+                        [self.delegate paymentAuthorizationViewControllerDidFinish:vc];
+                        return;
+                    }
+                    self.summaryItems = summaryItems;
+                    [self updateSectionTitles];
+                    [self.tableView reloadData];
+                    self.payButton.enabled = YES;
+                    self.tableView.userInteractionEnabled = YES;
+                    [self.activityIndicator stopAnimating];
+                }];
+            }
+        };
+    }
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 @end
 
 @implementation STPTestPaymentSummaryItemCell
-
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    return [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
+    self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
+    if (self) {
+    }
+    return self;
 }
+@end
 
-- (void)prepareForReuse {
-    [super prepareForReuse];
-    self.textLabel.text = nil;
-    self.detailTextLabel.text = nil;
+@implementation STPTestPaymentDataCell
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:12.0];
+        self.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:12.0];
+    }
+    return self;
 }
-
 @end
 
 
