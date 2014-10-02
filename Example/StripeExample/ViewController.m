@@ -12,16 +12,37 @@
 #import "Constants.h"
 #import "Stripe+ApplePay.h"
 #import <AddressBook/AddressBook.h>
+#import "PaymentViewController.h"
 
 @interface ViewController()<PKPaymentAuthorizationViewControllerDelegate>
+@property (weak, nonatomic) IBOutlet UILabel *cartLabel;
+@property (weak, nonatomic) IBOutlet UIButton *checkoutButton;
+@property (nonatomic) NSDecimalNumber *amount;
 @end
 
 @implementation ViewController
 
+-(void)viewDidLoad {
+    [super viewDidLoad];
+    [self updateCartWithNumberOfShirts:0];
+}
+
+- (void)updateCartWithNumberOfShirts:(NSUInteger)numberOfShirts {
+    NSInteger price = 10;
+    self.amount = [NSDecimalNumber decimalNumberWithMantissa:numberOfShirts*price exponent:0 isNegative:NO];
+    self.cartLabel.text = [NSString stringWithFormat:@"%li shirts = $%@", numberOfShirts, self.amount];
+    self.checkoutButton.enabled = numberOfShirts > 0;
+}
+
+- (IBAction)changeCart:(UIStepper *)sender {
+    [self updateCartWithNumberOfShirts:sender.value];
+}
+
 - (IBAction)beginPayment:(id)sender {
     NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
+
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId
-                                                                             amount:[NSDecimalNumber decimalNumberWithString:@"10"]
+                                                                             amount:self.amount
                                                                            currency:@"USD"
                                                                         description:@"Premium Llama Food"];
     [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
@@ -29,12 +50,15 @@
     PKShippingMethod *shippingMethod = [PKShippingMethod summaryItemWithLabel:@"Llama Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
     [paymentRequest setShippingMethods:@[shippingMethod]];
     paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:shippingMethod];
-    if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
+    if (![Stripe canSubmitPaymentRequest:paymentRequest]) {
         UIViewController *paymentController = [Stripe paymentControllerWithRequest:paymentRequest delegate:self];
         [self presentViewController:paymentController animated:YES completion:nil];
     }
     else {
-        [self performSegueWithIdentifier:@"OldPaymentFlowSegue" sender:sender];
+        PaymentViewController *paymentViewController = [[PaymentViewController alloc] initWithNibName:nil bundle:nil];
+        paymentViewController.amount = self.amount;
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:paymentViewController];
+        [self presentViewController:navController animated:YES completion:nil];
     }
 }
 
@@ -76,7 +100,7 @@
 }
 
 - (NSArray *)summaryItemsForShippingMethod:(PKShippingMethod *)shippingMethod {
-    PKPaymentSummaryItem *foodItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Premium Llama food" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
+    PKPaymentSummaryItem *foodItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Premium Llama food" amount:self.amount];
     NSDecimalNumber *total = [foodItem.amount decimalNumberByAdding:shippingMethod.amount];
     PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama Food Services, Inc." amount:total];
     return @[foodItem, shippingMethod, totalItem];
@@ -112,6 +136,7 @@
                                                 otherButtonTitles:nil];
         
         [message show];
+        [self updateCartWithNumberOfShirts:0];
         completion(PKPaymentAuthorizationStatusSuccess);
         return;
     }
@@ -127,6 +152,7 @@
         }
         else {
             // We're done!
+            [self updateCartWithNumberOfShirts:0];
             completion(PKPaymentAuthorizationStatusSuccess);
             [[[UIAlertView alloc] initWithTitle:@"Payment Succeeded" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil] show];
         }

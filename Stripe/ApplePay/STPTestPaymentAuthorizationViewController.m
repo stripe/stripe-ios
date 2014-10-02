@@ -51,8 +51,8 @@
 @implementation STPTestPaymentPresentationController
 - (CGRect)frameOfPresentedViewInContainerView {
     CGRect rect = [super frameOfPresentedViewInContainerView];
-    rect.origin.y += 100;
-    rect.size.height -= 100;
+    rect.origin.y += 30;
+    rect.size.height -= 30;
     return rect;
 }
 @end

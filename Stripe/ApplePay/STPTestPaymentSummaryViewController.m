@@ -19,7 +19,7 @@
 NSString * const STPTestPaymentAuthorizationSummaryItemIdentifier = @"STPTestPaymentAuthorizationSummaryItemIdentifier";
 NSString * const STPTestPaymentAuthorizationTestDataIdentifier = @"STPTestPaymentAuthorizationTestDataIdentifier";
 
-NSString * const STPTestPaymentSectionTitleCards = @"Cards";
+NSString * const STPTestPaymentSectionTitleCards = @"Credit Card";
 NSString * const STPTestPaymentSectionTitleBillingAddress = @"Billing Address";
 NSString * const STPTestPaymentSectionTitleShippingAddress = @"Shipping Address";
 NSString * const STPTestPaymentSectionTitleShippingMethod = @"Shipping Method";
@@ -95,7 +95,9 @@ NSString * const STPTestPaymentSectionTitlePayment = @"Payment";
     PKPayment *payment = [PKPayment new];
     STPCard *card = self.cardStore.selectedItem;
     payment.stp_testCardNumber = card.number;
-
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
     if ([payment respondsToSelector:@selector(setShippingMethod:)] && self.shippingMethodStore.selectedItem) {
         [payment performSelector:@selector(setShippingMethod:) withObject:self.shippingMethodStore.selectedItem];
     }
@@ -107,7 +109,8 @@ NSString * const STPTestPaymentSectionTitlePayment = @"Payment";
     if ([payment respondsToSelector:@selector(setBillingAddress:)] && billingRecord) {
         [payment performSelector:@selector(setBillingAddress:) withObject:CFBridgingRelease(billingRecord)];
     }
-
+#pragma clang diagnostic pop
+    
     PKPaymentAuthorizationViewController *auth = (PKPaymentAuthorizationViewController *)self;
 
     [self.activityIndicator startAnimating];
@@ -262,6 +265,7 @@ NSString * const STPTestPaymentSectionTitlePayment = @"Payment";
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
@@ -271,6 +275,7 @@ NSString * const STPTestPaymentSectionTitlePayment = @"Payment";
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.backgroundColor = [UIColor clearColor];
         self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:12.0];
         self.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:12.0];
     }
