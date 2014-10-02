@@ -7,31 +7,81 @@
 //
 
 #import "STPCheckoutModernViewController.h"
+#import <WebKit/WebKit.h>
 
-@interface STPCheckoutModernViewController ()
-
+@interface STPCheckoutModernViewController()<WKNavigationDelegate>
+@property(weak, nonatomic)WKWebView *webView;
 @end
 
 @implementation STPCheckoutModernViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
+    
+    WKUserScript *script = [[WKUserScript alloc] initWithSource:[self initialJavascript] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];
+    
+    WKUserContentController *contentController = [WKUserContentController new];
+    [contentController addUserScript:script];
+    configuration.userContentController = contentController;
+    
+    WKWebView *webView = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:configuration];
+    [self.view addSubview:webView];
+    [webView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.view addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:|-0-[webView]-0-|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:NSDictionaryOfVariableBindings(webView)]];
+    [self.view addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"V:|-0-[webView]-0-|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:NSDictionaryOfVariableBindings(webView)]];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://localhost:5394/v3"]]];
+    webView.navigationDelegate = self;
+    self.webView = webView;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
+#pragma mark - WKNavigationDelegate
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+    NSURL *url = navigationAction.request.URL;
+    if ([url.scheme isEqualToString:@"stripecheckout"]) {
+        if ([url.host isEqualToString:@"frameReady"]) {
+            [webView evaluateJavaScript:@"window.checkoutJSBridge.loadOptions();"
+                      completionHandler:^(id obj, NSError *error) {
+                          if (error) {
+                    
+                          }
+            }];
+        }
+        else if ([url.host isEqualToString:@"frameCallback"]) {
+            NSString *callbackId = [[url.query componentsSeparatedByString:@"&id="] lastObject];
+            if ([callbackId isEqualToString:@"2"]) {
+                [webView evaluateJavaScript:@"window.checkoutJSBridge.frameCallback1();"
+                          completionHandler:^(id obj, NSError *error) {
+                              if (error) {
+                                  
+                              }
+                          }];
+            }
+        }
+        else if ([url.host isEqualToString:@"setToken"]) {
+            NSString *args = [[[[[url.query componentsSeparatedByString:@"&id="] firstObject] componentsSeparatedByString:@"args="] lastObject] stringByRemovingPercentEncoding];
+            NSArray *argData = [NSJSONSerialization JSONObjectWithData:[args dataUsingEncoding:NSUTF8StringEncoding]
+                                                               options:NSJSONReadingAllowFragments error:nil];
+            NSString *token = argData[0][@"token"][@"id"];
+            NSLog(@"Got a token! %@", token);
+            [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+        }
+        else if ([url.host isEqualToString:@"closed"]) {
+            [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+        }
+        decisionHandler(WKNavigationActionPolicyCancel);
+    }
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
-*/
 
 @end

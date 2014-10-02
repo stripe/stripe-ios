@@ -6,8 +6,7 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "STPCheckoutViewController.h"
 
-@interface STPCheckoutModernViewController : UIViewController
-
+@interface STPCheckoutModernViewController : STPCheckoutViewController
 @end

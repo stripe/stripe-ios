@@ -18,8 +18,13 @@
 
 @implementation ViewController
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self beginPayment:nil];
+}
+
 - (IBAction)beginPayment:(id)sender {
-    STPCheckoutViewController *vc = [STPCheckoutViewController new];
+    STPCheckoutViewController *vc = [STPCheckoutViewController viewController];
     [self presentViewController:vc animated:YES completion:nil];
 //    NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
 //    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId

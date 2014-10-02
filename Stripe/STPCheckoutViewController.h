@@ -10,4 +10,7 @@
 
 @interface STPCheckoutViewController : UIViewController
 
++ (STPCheckoutViewController *)viewController;
+- (NSString *)initialJavascript;
+
 @end
