@@ -8,6 +8,7 @@
 
 #import "STPToken.h"
 #import "STPCard.h"
+#import "STPBankAccount.h"
 
 @implementation STPToken
 
@@ -21,7 +22,16 @@
         _livemode = [attributeDictionary[@"livemode"] boolValue];
         _created = [NSDate dateWithTimeIntervalSince1970:[attributeDictionary[@"created"] doubleValue]];
         _used = [attributeDictionary[@"used"] boolValue];
-        _card = [[STPCard alloc] initWithAttributeDictionary:attributeDictionary[@"card"]];
+        
+        NSDictionary *cardDictionary = attributeDictionary[@"card"];
+        if (cardDictionary) {
+            _card = [[STPCard alloc] initWithAttributeDictionary:cardDictionary];
+        }
+        
+        NSDictionary *bankAccountDictionary = attributeDictionary[@"bank_account"];
+        if (bankAccountDictionary) {
+            _bankAccount = [[STPBankAccount alloc] initWithAttributeDictionary:bankAccountDictionary];
+        }
     }
 
     return self;
