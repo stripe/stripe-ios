@@ -76,6 +76,7 @@
 		04EEE23019CB801E00192164 /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EEE21E19CB801E00192164 /* STPCard.m */; };
 		04EEE23119CB801E00192164 /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EEE22119CB801E00192164 /* STPToken.m */; };
 		04EEE23219CB801E00192164 /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EEE22319CB801E00192164 /* STPUtils.m */; };
+		15BA982419DDB1800053986F /* STPBankAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 15BA982319DDB1800053986F /* STPBankAccount.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,6 +188,8 @@
 		04EEE22219CB801E00192164 /* STPUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPUtils.h; sourceTree = "<group>"; };
 		04EEE22319CB801E00192164 /* STPUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPUtils.m; sourceTree = "<group>"; };
 		04EEE22A19CB801E00192164 /* Stripe-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe-Prefix.pch"; sourceTree = "<group>"; };
+		15BA982219DDB1800053986F /* STPBankAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBankAccount.h; sourceTree = "<group>"; };
+		15BA982319DDB1800053986F /* STPBankAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBankAccount.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -435,6 +438,8 @@
 				04EEE21A19CB801E00192164 /* StripeError.m */,
 				04EEE21B19CB801E00192164 /* STPAPIConnection.h */,
 				04EEE21C19CB801E00192164 /* STPAPIConnection.m */,
+				15BA982219DDB1800053986F /* STPBankAccount.h */,
+				15BA982319DDB1800053986F /* STPBankAccount.m */,
 				04EEE21D19CB801E00192164 /* STPCard.h */,
 				04EEE21E19CB801E00192164 /* STPCard.m */,
 				04EEE21F19CB801E00192164 /* STPFormEncodeProtocol.h */,
@@ -591,6 +596,7 @@
 				04EEE1F519CB7ED500192164 /* PTKComponent.m in Sources */,
 				0477976C19D4EE030022A00F /* STPTestPaymentAuthorizationViewController.m in Sources */,
 				0477976D19D4EE030022A00F /* Stripe+ApplePay.m in Sources */,
+				15BA982419DDB1800053986F /* STPBankAccount.m in Sources */,
 				04EEE1F719CB7ED500192164 /* PTKUSAddressZip.m in Sources */,
 				04EEE23119CB801E00192164 /* STPToken.m in Sources */,
 				0477976B19D4EE030022A00F /* PKPayment+STPTestKeys.m in Sources */,
