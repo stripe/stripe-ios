@@ -195,6 +195,30 @@ static NSString *const tokenEndpoint = @"tokens";
                                                                  }];
 }
 
++ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
+{
+    if (bankAccount == nil) {
+        [NSException raise:@"RequiredParameter" format:@"'bankerAccount' is required to create a token"];
+    }
+    
+    if (handler == nil) {
+        [NSException raise:@"RequiredParameter" format:@"'handler' is required to use the token that is created"];
+    }
+    
+    [self validateKey:publishableKey];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.apiURL];
+    request.HTTPMethod = @"POST";
+    // request.HTTPBody = [bankAccount formEncode];
+    [request setValue:[self JSONStringForObject:[self stripeUserAgentDetails]] forHTTPHeaderField:@"X-Stripe-User-Agent"];
+    [request setValue:[@"Bearer " stringByAppendingString:publishableKey] forHTTPHeaderField:@"Authorization"];
+    
+    [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
+                                                                 completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
+                                                                     [self handleTokenResponse:response body:body error:requestError completion:handler];
+                                                                 }];
+}
+
 + (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
 {
     if (tokenId == nil) {
@@ -235,6 +259,21 @@ static NSString *const tokenEndpoint = @"tokens";
 + (void)createTokenWithCard:(STPCard *)card operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
 {
     [self createTokenWithCard:card publishableKey:[self defaultPublishableKey] operationQueue:queue completion:handler];
+}
+
++ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount completion:(STPCompletionBlock)handler
+{
+    [self createTokenWithBankAccount:bankAccount publishableKey:[self defaultPublishableKey] completion:handler];
+}
+
++ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler
+{
+    [self createTokenWithBankAccount:bankAccount publishableKey:publishableKey operationQueue:[NSOperationQueue mainQueue] completion:handler];
+}
+
++ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
+{
+    [self createTokenWithBankAccount:bankAccount publishableKey:[self defaultPublishableKey] operationQueue:queue completion:handler];
 }
 
 + (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler
