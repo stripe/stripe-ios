@@ -99,11 +99,13 @@ NSString * const STPTestPaymentSectionTitlePayment = @"Payment";
     if ([payment respondsToSelector:@selector(setShippingMethod:)] && self.shippingMethodStore.selectedItem) {
         [payment performSelector:@selector(setShippingMethod:) withObject:self.shippingMethodStore.selectedItem];
     }
-    if ([payment respondsToSelector:@selector(setShippingAddress:)] && self.shippingAddressStore.selectedItem) {
-        [payment performSelector:@selector(setShippingAddress:) withObject:self.shippingAddressStore.selectedItem];
+    ABRecordRef shippingRecord = [self.shippingAddressStore contactForSelectedItemObscure:NO];
+    if ([payment respondsToSelector:@selector(setShippingAddress:)] && shippingRecord) {
+        [payment performSelector:@selector(setShippingAddress:) withObject:CFBridgingRelease(shippingRecord)];
     }
-    if ([payment respondsToSelector:@selector(setBillingAddress:)] && self.billingAddressStore.selectedItem) {
-        [payment performSelector:@selector(setBillingAddress:) withObject:self.billingAddressStore.selectedItem];
+    ABRecordRef billingRecord = [self.billingAddressStore contactForSelectedItemObscure:NO];
+    if ([payment respondsToSelector:@selector(setBillingAddress:)] && billingRecord) {
+        [payment performSelector:@selector(setBillingAddress:) withObject:CFBridgingRelease(billingRecord)];
     }
 
     PKPaymentAuthorizationViewController *auth = (PKPaymentAuthorizationViewController *)self;
@@ -212,7 +214,12 @@ NSString * const STPTestPaymentSectionTitlePayment = @"Payment";
                 [self.activityIndicator startAnimating];
                 self.payButton.enabled = NO;
                 self.tableView.userInteractionEnabled = NO;
-                [self.delegate paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)self didSelectShippingAddress:nil completion:^(PKPaymentAuthorizationStatus status, NSArray *shippingMethods, NSArray *summaryItems) {
+                ABRecordRef record = [self.shippingAddressStore contactForSelectedItemObscure:YES];
+                [self.delegate paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)self didSelectShippingAddress:record completion:^(PKPaymentAuthorizationStatus status, NSArray *shippingMethods, NSArray *summaryItems) {
+                    if (status == PKPaymentAuthorizationStatusFailure) {
+                        [self.delegate paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)self];
+                        return;
+                    }
                     self.summaryItems = summaryItems;
                     [self.shippingMethodStore setShippingMethods:shippingMethods];
                     [self updateSectionTitles];

@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "STPTestDataStore.h"
+#import <AddressBook/AddressBook.h>
 
 @interface STPTestAddressStore : NSObject<STPTestDataStore>
+
+- (ABRecordRef)contactForSelectedItemObscure:(BOOL)obscure;
+
 @end
