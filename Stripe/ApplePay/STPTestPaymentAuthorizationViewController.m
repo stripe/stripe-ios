@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
+
 #import "STPTestPaymentAuthorizationViewController.h"
 #import "STPTestPaymentSummaryViewController.h"
 
@@ -54,3 +56,5 @@
     return rect;
 }
 @end
+
+#endif
