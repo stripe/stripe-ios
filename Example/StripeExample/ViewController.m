@@ -11,8 +11,9 @@
 #import "Stripe.h"
 #import "Constants.h"
 #import "Stripe+ApplePay.h"
+#import <AddressBook/AddressBook.h>
 
-@interface ViewController()
+@interface ViewController()<PKPaymentAuthorizationViewControllerDelegate>
 @end
 
 @implementation ViewController
@@ -27,9 +28,7 @@
     [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
     PKShippingMethod *shippingMethod = [PKShippingMethod summaryItemWithLabel:@"Llama Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
     [paymentRequest setShippingMethods:@[shippingMethod]];
-    PKPaymentSummaryItem *foodItem = paymentRequest.paymentSummaryItems.firstObject;
-    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama Food Services, Inc." amount:[NSDecimalNumber decimalNumberWithString:@"30.00"]];
-    paymentRequest.paymentSummaryItems = @[foodItem, shippingMethod, totalItem];
+    paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:shippingMethod];
     if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
         UIViewController *paymentController = [Stripe paymentControllerWithRequest:paymentRequest delegate:self];
         [self presentViewController:paymentController animated:YES completion:nil];
@@ -37,6 +36,50 @@
     else {
         [self performSegueWithIdentifier:@"OldPaymentFlowSegue" sender:sender];
     }
+}
+
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingAddress:(ABRecordRef)address completion:(void (^)(PKPaymentAuthorizationStatus status, NSArray *shippingMethods, NSArray *summaryItems))completion {
+    [self fetchShippingCostsForAddress:address completion:^(NSArray *shippingMethods, NSError *error) {
+        if (error) {
+            completion(PKPaymentAuthorizationStatusFailure, nil, nil);
+            return;
+        }
+        completion(PKPaymentAuthorizationStatusSuccess, shippingMethods, [self summaryItemsForShippingMethod:shippingMethods.firstObject]);
+    }];
+}
+
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingMethod:(PKShippingMethod *)shippingMethod completion:(void (^)(PKPaymentAuthorizationStatus, NSArray *summaryItems))completion {
+    completion(PKPaymentAuthorizationStatusSuccess, [self summaryItemsForShippingMethod:shippingMethod]);
+}
+
+- (void)fetchShippingCostsForAddress:(ABRecordRef)address completion:(void (^)(NSArray *shippingMethods, NSError *error))completion {
+    // you could, for example, go to UPS here and calculate shipping costs to that address.
+    ABMultiValueRef addressValues = ABRecordCopyValue(address, kABPersonAddressProperty);
+    NSString *country;
+    if (ABMultiValueGetCount(addressValues) > 0) {
+        CFDictionaryRef dict = ABMultiValueCopyValueAtIndex(addressValues, 0);
+        country = CFDictionaryGetValue(dict, kABPersonAddressCountryKey);
+    }
+    if (!country) {
+        completion(nil, [NSError new]);
+    }
+    if ([country isEqualToString:@"US"]) {
+        PKPaymentSummaryItem *normalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama Domestic Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
+        PKPaymentSummaryItem *expressItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama Domestic Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"30.00"]];
+        completion(@[normalItem, expressItem], nil);
+    }
+    else {
+        PKPaymentSummaryItem *normalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama International Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"40.00"]];
+        PKPaymentSummaryItem *expressItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama International Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"50.00"]];
+        completion(@[normalItem, expressItem], nil);
+    }
+}
+
+- (NSArray *)summaryItemsForShippingMethod:(PKShippingMethod *)shippingMethod {
+    PKPaymentSummaryItem *foodItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Premium Llama food" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
+    NSDecimalNumber *total = [foodItem.amount decimalNumberByAdding:shippingMethod.amount];
+    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama Food Services, Inc." amount:total];
+    return @[foodItem, shippingMethod, totalItem];
 }
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller

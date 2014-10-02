@@ -45,6 +45,8 @@
                               @"line1": @"SW1A 1AA",
                               @"line2": @"",
                               @"city": @"London",
+                              @"state": @"",
+                              @"zip": @"",
                               @"country": @"UK",
                               @"phone": @"07 987 654 321",
                               },
