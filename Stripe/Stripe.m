@@ -209,7 +209,7 @@ static NSString *const tokenEndpoint = @"tokens";
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.apiURL];
     request.HTTPMethod = @"POST";
-    // request.HTTPBody = [bankAccount formEncode];
+    request.HTTPBody = [bankAccount formEncode];
     [request setValue:[self JSONStringForObject:[self stripeUserAgentDetails]] forHTTPHeaderField:@"X-Stripe-User-Agent"];
     [request setValue:[@"Bearer " stringByAppendingString:publishableKey] forHTTPHeaderField:@"Authorization"];
     

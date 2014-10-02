@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "STPFormEncodeProtocol.h"
 
-@interface STPBankAccount : NSObject
+@interface STPBankAccount : NSObject <STPFormEncodeProtocol>
 
 @property (nonatomic) NSString *accountNumber;
 @property (nonatomic) NSString *routingNumber;
@@ -19,7 +20,7 @@
 @property (nonatomic, readonly) BOOL validated;
 @property (nonatomic, readonly) NSString *fingerprint;
 
-- (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
+- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 
 - (BOOL)isEqualToBankAccount:(STPBankAccount *)bankAccount;
 

@@ -7,6 +7,7 @@
 //
 
 #import "STPBankAccount.h"
+#import "STPUtils.h"
 
 @interface STPBankAccount ()
 
@@ -21,7 +22,7 @@
 
 #pragma mark - Constructors
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         self.object = @"bank_account";
@@ -29,15 +30,42 @@
     return self;
 }
 
-- (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary {
+- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary {
     self = [self init];
     if (self) {
-        self.last4 = attributeDictionary[@"last4"];
-        self.bankName = attributeDictionary[@"bank_name"];
-        self.country = attributeDictionary[@"country"];
-        self.validated = [attributeDictionary[@"validated"] boolValue];
+        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+        [attributeDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            if (obj != [NSNull null]) {
+                dictionary[key] = obj;
+            }
+        }];
+        
+        self.last4 = dictionary[@"last4"];
+        self.bankName = dictionary[@"bank_name"];
+        self.country = dictionary[@"country"];
+        self.validated = [dictionary[@"validated"] boolValue];
     }
     return self;
+}
+
+#pragma mark - STPFormEncodeProtocol
+
+- (NSData *)formEncode {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    
+    NSMutableArray *parts = [NSMutableArray array];
+    
+    if (_accountNumber) params[@"account_number"] = _accountNumber;
+    if (_routingNumber) params[@"routing_number"] = _routingNumber;
+    if (_country) params[@"country"] = _country;
+    
+    [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop) {
+        if (val != [NSNull null]) {
+            [parts addObject:[NSString stringWithFormat:@"bank_account[%@]=%@", key, [STPUtils stringByURLEncoding:val]]];
+        }
+    }];
+    
+    return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 #pragma mark - Equality
