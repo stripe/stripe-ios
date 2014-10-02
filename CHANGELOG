@@ -1,3 +1,6 @@
+== 2.0.3 2014-09-24
+* Group ApplePay code in a CocoaPods subspec
+
 == 2.0.2 2014-09-24
 * Move ApplePay code behind a compiler flag to avoid warnings from Apple when accidentally including it
 

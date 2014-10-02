@@ -22,7 +22,7 @@
 		<key>A5C151FC3F18980DA2906AAA3DE9140767EF2310</key>
 		<string>..</string>
 		<key>D0DC6CE0350266C4AFFCC35DA49B75AE57E8D73E</key>
-		<string>../Example/PaymentKit/</string>
+		<string>../Example/PaymentKit</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://github.com/stripe/stripe-ios.git</string>

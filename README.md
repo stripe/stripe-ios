@@ -16,6 +16,8 @@ The example app is a great way to see the flow of recording credit card details,
 
 ### Running the example
 
+Note: the example app requires Xcode 6 to build and run.
+
 Before you can run the app, you need to provide it with your own Stripe and Parse API keys.
 
 #### Stripe
