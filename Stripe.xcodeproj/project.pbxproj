@@ -17,6 +17,7 @@
 		11E1F649165157CA00B49816 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
 		11E1F658165157F100B49816 /* STPCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11EE8255164786A40039CDD4 /* STPCardTest.m */; };
 		11E1F659165157F100B49816 /* STPTokenTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */; };
+		15BA981E19DD9C600053986F /* STPBankAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 15D0694019DCEA0300E3AA18 /* STPBankAccount.m */; };
 		15D0694119DCEA0300E3AA18 /* STPBankAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 15D0694019DCEA0300E3AA18 /* STPBankAccount.m */; };
 		4A0D74FA18F6106100966D7B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
 		4AAEFAE818FC928A001001CD /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
@@ -330,6 +331,7 @@
 				4AAEFAEE18FC98E1001001CD /* STPCertTest.m in Sources */,
 				7106B4DE1970A58C000A037E /* STPCard.m in Sources */,
 				04D5BF9219BF95F7009521A5 /* STPTestPaymentAuthorizationViewController.m in Sources */,
+				15BA981E19DD9C600053986F /* STPBankAccount.m in Sources */,
 				7106B4ED1970A58C000A037E /* StripeError.m in Sources */,
 				7106B4F71970B9EC000A037E /* STPCardFunctionalTest.m in Sources */,
 				7106B4EA1970A58C000A037E /* Stripe.m in Sources */,
