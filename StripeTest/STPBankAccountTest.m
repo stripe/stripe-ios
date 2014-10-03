@@ -104,4 +104,17 @@
     XCTAssertEqualObjects(nil, bankAccount.last4, @"last4 returns nil when number length is < 4");
 }
 
+#pragma mark - Equality Tests
+
+- (void)testCardEquals {
+    STPBankAccount *bankAccount1 = [[STPBankAccount alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
+    STPBankAccount *bankAccount2 = [[STPBankAccount alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
+    
+    XCTAssertEqualObjects(bankAccount1, bankAccount1, @"bank account should equal itself");
+    XCTAssertEqualObjects(bankAccount1, bankAccount2, @"bank account with equal data should be equal");
+    
+    bankAccount1.accountNumber = @"1234";
+    XCTAssertNotEqualObjects(bankAccount1, bankAccount2, @"bank accounts should not match");
+}
+
 @end
