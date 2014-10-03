@@ -49,15 +49,13 @@
 }
 
 - (void)testInvalidKey {
-    STPCard *card = [[STPCard alloc] init];
-    
     STPBankAccount *bankAccount = [[STPBankAccount alloc] init];
     bankAccount.accountNumber = @"000123456789";
     bankAccount.routingNumber = @"110000000";
     bankAccount.country = @"US";
     
     __block BOOL done = NO;
-    [Stripe createTokenWithCard:card publishableKey:@"not_a_valid_key_asdf" operationQueue:[NSOperationQueue mainQueue] completion:^(STPToken *token, NSError *error) {
+    [Stripe createTokenWithBankAccount:bankAccount publishableKey:@"not_a_valid_key_asdf" operationQueue:[NSOperationQueue mainQueue] completion:^(STPToken *token, NSError *error) {
         done = YES;
         XCTAssertNotNil(error, @"error should not be nil");
         XCTAssert([error.localizedDescription rangeOfString:@"asdf"].location != NSNotFound,
