@@ -198,7 +198,7 @@ static NSString *const tokenEndpoint = @"tokens";
 + (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler
 {
     if (bankAccount == nil) {
-        [NSException raise:@"RequiredParameter" format:@"'bankerAccount' is required to create a token"];
+        [NSException raise:@"RequiredParameter" format:@"'bankAccount' is required to create a token"];
     }
     
     if (handler == nil) {
