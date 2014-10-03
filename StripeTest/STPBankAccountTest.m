@@ -90,16 +90,16 @@
 
 #pragma mark - Last4 Tests
 
-- (void)testLast4ReturnsCardNumberLast4WhenNotSet {
+- (void)testLast4ReturnsAccountNumberLast4WhenNotSet {
     bankAccount.accountNumber = @"000123456789";
     XCTAssertEqualObjects(bankAccount.last4, @"6789", @"last4 correctly returns the last 4 digits of the bank account number");
 }
 
-- (void)testLast4ReturnsNullWhenNoCardNumberSet {
+- (void)testLast4ReturnsNullWhenNoAccountNumberSet {
     XCTAssertEqualObjects(nil, bankAccount.last4, @"last4 returns nil when nothing is set");
 }
 
-- (void)testLast4ReturnsNullWhenCardNumberIsLessThanLength4 {
+- (void)testLast4ReturnsNullWhenAccountNumberIsLessThanLength4 {
     bankAccount.accountNumber = @"123";
     XCTAssertEqualObjects(nil, bankAccount.last4, @"last4 returns nil when number length is < 4");
 }
