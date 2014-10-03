@@ -76,12 +76,19 @@
     if (!object || ![object isKindOfClass:self.class]) {
         return NO;
     }
+    
+    if ((self.card || object.card) && (![self.card isEqualToCard:object.card])) {
+        return NO;
+    }
+    
+    if ((self.bankAccount || object.bankAccount) && (![self.bankAccount isEqualToBankAccount:object.bankAccount])) {
+        return NO;
+    }
 
     return self.livemode == object.livemode
         && self.used == object.used
         && [self.tokenId isEqualToString:object.tokenId]
-        && [self.created isEqualToDate:object.created]
-        && [self.card isEqualToCard:object.card];
+        && [self.created isEqualToDate:object.created];
 }
 
 @end
