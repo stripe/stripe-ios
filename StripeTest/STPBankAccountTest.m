@@ -106,7 +106,7 @@
 
 #pragma mark - Equality Tests
 
-- (void)testCardEquals {
+- (void)testBankAccountEquals {
     STPBankAccount *bankAccount1 = [[STPBankAccount alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
     STPBankAccount *bankAccount2 = [[STPBankAccount alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
     
