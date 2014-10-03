@@ -18,6 +18,7 @@
 		11E1F658165157F100B49816 /* STPCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11EE8255164786A40039CDD4 /* STPCardTest.m */; };
 		11E1F659165157F100B49816 /* STPTokenTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */; };
 		150F095519DE459600E7040B /* STPBankAccountFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 150F095319DE456200E7040B /* STPBankAccountFunctionalTest.m */; };
+		150F095919DE4EAD00E7040B /* STPBankAccountTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 150F095719DE4DE900E7040B /* STPBankAccountTest.m */; };
 		15BA981E19DD9C600053986F /* STPBankAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 15D0694019DCEA0300E3AA18 /* STPBankAccount.m */; };
 		15D0694119DCEA0300E3AA18 /* STPBankAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 15D0694019DCEA0300E3AA18 /* STPBankAccount.m */; };
 		4A0D74FA18F6106100966D7B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
@@ -82,6 +83,8 @@
 		11EE8254164786A40039CDD4 /* STPCardTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCardTest.h; sourceTree = "<group>"; };
 		11EE8255164786A40039CDD4 /* STPCardTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = STPCardTest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		150F095319DE456200E7040B /* STPBankAccountFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBankAccountFunctionalTest.m; sourceTree = "<group>"; };
+		150F095619DE4DE900E7040B /* STPBankAccountTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBankAccountTest.h; sourceTree = "<group>"; };
+		150F095719DE4DE900E7040B /* STPBankAccountTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBankAccountTest.m; sourceTree = "<group>"; };
 		15D0693F19DCEA0300E3AA18 /* STPBankAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBankAccount.h; sourceTree = "<group>"; };
 		15D0694019DCEA0300E3AA18 /* STPBankAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBankAccount.m; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -210,6 +213,8 @@
 				11C74BB2164043050071C2CA /* Supporting Files */,
 				11EE8254164786A40039CDD4 /* STPCardTest.h */,
 				11EE8255164786A40039CDD4 /* STPCardTest.m */,
+				150F095619DE4DE900E7040B /* STPBankAccountTest.h */,
+				150F095719DE4DE900E7040B /* STPBankAccountTest.m */,
 				4AAEFAEC18FC98E1001001CD /* STPCertTest.h */,
 				4AAEFAED18FC98E1001001CD /* STPCertTest.m */,
 				112D5AEE164DAD2D0053BB76 /* STPTokenTest.h */,
@@ -336,6 +341,7 @@
 				7106B4DE1970A58C000A037E /* STPCard.m in Sources */,
 				04D5BF9219BF95F7009521A5 /* STPTestPaymentAuthorizationViewController.m in Sources */,
 				15BA981E19DD9C600053986F /* STPBankAccount.m in Sources */,
+				150F095919DE4EAD00E7040B /* STPBankAccountTest.m in Sources */,
 				7106B4ED1970A58C000A037E /* StripeError.m in Sources */,
 				7106B4F71970B9EC000A037E /* STPCardFunctionalTest.m in Sources */,
 				7106B4EA1970A58C000A037E /* Stripe.m in Sources */,

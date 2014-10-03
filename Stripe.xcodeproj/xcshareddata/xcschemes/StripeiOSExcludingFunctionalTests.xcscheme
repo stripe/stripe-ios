@@ -39,6 +39,9 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "STPBankAccountFunctionalTest">
+               </Test>
+               <Test
                   Identifier = "STPCardFunctionalTest">
                </Test>
             </SkippedTests>
@@ -54,6 +57,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "11E1F58B165151F400B49816"
+            BuildableName = "libStripeiOS.a"
+            BlueprintName = "StripeiOS"
+            ReferencedContainer = "container:Stripe.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
