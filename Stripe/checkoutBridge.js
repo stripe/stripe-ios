@@ -8,7 +8,7 @@ window.checkoutJSBridge = {
     window.opener = opener;
   },
   loadOptions: function() {
-    var data = JSON.stringify({"method":"render","args":["","tab",{"timeLoaded":1410834790,"key":"pk_Fhlzwtm9SCx6Uxww5fNXX8CUbwwAc","amount":"2500","name":"Dribbble","description":"Pro Plan","currency":"usd","image":"http://f.cl.ly/items/1a0V0M1i3Y1M3A3N1U3O/dribbble.png","label":"Pay with Card", "allowRememberMe":false}],"id":1});
+    var data = JSON.stringify({"method":"render","args":["","tab",%@],"id":1});
     window.postMessage(data, '*');
   },
   frameCallback1: function() {

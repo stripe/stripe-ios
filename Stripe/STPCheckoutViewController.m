@@ -7,16 +7,29 @@
 //
 
 #import "STPCheckoutViewController.h"
+#import "STPCheckoutOptions.h"
+#import "STPToken.h"
 
 @interface STPCheckoutViewController()<UIWebViewDelegate>
 @property(weak, nonatomic)UIWebView *webView;
 @property(weak, nonatomic)UIActivityIndicatorView *activityIndicator;
+@property(nonatomic)STPCheckoutOptions *options;
 @end
 
 @implementation STPCheckoutViewController
 
+- (instancetype)initWithOptions:(STPCheckoutOptions *)options {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        _options = options;
+    }
+    return self;
+}
+
 - (NSString *)initialJavascript {
-    return [NSString stringWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"checkoutBridge" withExtension:@"js"] encoding:NSUTF8StringEncoding error:nil];
+    NSURL *fileUrl = [[NSBundle mainBundle] URLForResource:@"checkoutBridge" withExtension:@"js"];
+    NSString *fileContents = [NSString stringWithContentsOfURL:fileUrl encoding:NSUTF8StringEncoding error:nil];
+    return [NSString stringWithFormat:fileContents, [self.options stringifiedJavaScriptRepresentation]];
 }
 
 - (void)viewDidLoad {
@@ -35,6 +48,8 @@
                                metrics:nil
                                views:NSDictionaryOfVariableBindings(webView)]];
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://localhost:5394/v3"]]];
+    webView.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     webView.delegate = self;
     self.webView = webView;
     
@@ -73,9 +88,15 @@
             NSString *args = [[[[[url.query componentsSeparatedByString:@"&id="] firstObject] componentsSeparatedByString:@"args="] lastObject] stringByRemovingPercentEncoding];
             NSArray *argData = [NSJSONSerialization JSONObjectWithData:[args dataUsingEncoding:NSUTF8StringEncoding]
                                                                options:NSJSONReadingAllowFragments error:nil];
-            NSString *token = argData[0][@"token"][@"id"];
-            NSLog(@"Got a token! %@", token);
+            STPToken *token = [[STPToken alloc] initWithAttributeDictionary:argData[0][@"token"]];
+            [self.delegate checkoutController:self didFinishWithToken:token];
             [self dismissViewControllerAnimated:YES completion:nil];
+        }
+        else if ([url.host isEqualToString:@"closed"]) {
+            if ([self.delegate respondsToSelector:@selector(checkoutControllerDidCancel:)]) {
+                [self.delegate checkoutControllerDidCancel:self];
+            }
+            [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
         }
         return NO;
     }
@@ -92,7 +113,10 @@
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     [self.activityIndicator stopAnimating];
+    if ([self.delegate respondsToSelector:@selector(checkoutController:didFailWithError:)]) {
+        [self.delegate checkoutController:self didFailWithError:error];
+    }
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
-
 
 @end

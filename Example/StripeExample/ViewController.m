@@ -12,14 +12,19 @@
 #import "Stripe.h"
 #import "Constants.h"
 #import "STPCheckoutViewController.h"
+#import "STPCheckoutOptions.h"
 
-@interface ViewController()<PKPaymentAuthorizationViewControllerDelegate>
+@interface ViewController()<PKPaymentAuthorizationViewControllerDelegate, STPCheckoutViewControllerDelegate>
 @end
 
 @implementation ViewController
 
 - (IBAction)beginPayment:(id)sender {
-    STPCheckoutViewController *vc = [STPCheckoutViewController new];
+    STPCheckoutOptions *options = [STPCheckoutOptions new];
+    options.productDescription = @"Tasty Llama food";
+    options.purchaseAmount = 1000;
+    options.panelLabel = @"Pay {{amount}} for that food";
+    STPCheckoutViewController *vc = [[STPCheckoutViewController alloc] initWithOptions:options];
     [self presentViewController:vc animated:YES completion:nil];
 //    NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
 //    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId
