@@ -14,6 +14,11 @@
 #import <AddressBook/AddressBook.h>
 #import "PaymentViewController.h"
 
+#if DEBUG
+#import "STPTestPaymentAuthorizationViewController.h"
+#import "PKPayment+STPTestKeys.h"
+#endif
+
 @interface ViewController()<PKPaymentAuthorizationViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *cartLabel;
 @property (weak, nonatomic) IBOutlet UIButton *checkoutButton;
@@ -30,7 +35,7 @@
 - (void)updateCartWithNumberOfShirts:(NSUInteger)numberOfShirts {
     NSInteger price = 10;
     self.amount = [NSDecimalNumber decimalNumberWithMantissa:numberOfShirts*price exponent:0 isNegative:NO];
-    self.cartLabel.text = [NSString stringWithFormat:@"%li shirts = $%@", numberOfShirts, self.amount];
+    self.cartLabel.text = [NSString stringWithFormat:@"%@ shirts = $%@", @(numberOfShirts), self.amount];
     self.checkoutButton.enabled = numberOfShirts > 0;
 }
 
@@ -50,9 +55,14 @@
     PKShippingMethod *shippingMethod = [PKShippingMethod summaryItemWithLabel:@"Llama Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
     [paymentRequest setShippingMethods:@[shippingMethod]];
     paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:shippingMethod];
-    if (![Stripe canSubmitPaymentRequest:paymentRequest]) {
-        UIViewController *paymentController = [Stripe paymentControllerWithRequest:paymentRequest delegate:self];
-        [self presentViewController:paymentController animated:YES completion:nil];
+    if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
+#if DEBUG
+        STPTestPaymentAuthorizationViewController *auth = [[STPTestPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
+#else
+        PKPaymentAuthorizationViewController *auth = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
+#endif
+        auth.delegate = self;
+        [self presentViewController:auth animated:YES completion:nil];
     }
     else {
         PaymentViewController *paymentViewController = [[PaymentViewController alloc] initWithNibName:nil bundle:nil];
@@ -114,16 +124,27 @@
 
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
                                    completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    void(^tokenBlock)(STPToken *token, NSError *error) = ^void(STPToken *token, NSError *error) {
+        if (error) {
+            completion(PKPaymentAuthorizationStatusFailure);
+            return;
+        }
+        [self createBackendChargeWithToken:token completion:completion];
+    };
+#if DEBUG
+    if (payment.stp_testCardNumber) {
+        STPCard *card = [STPCard new];
+        card.number = payment.stp_testCardNumber;
+        card.expMonth = 12;
+        card.expYear = 2020;
+        card.cvc = @"123";
+        [Stripe createTokenWithCard:card completion:tokenBlock];
+        return;
+    }
+#endif
     [Stripe createTokenWithPayment:payment
                     operationQueue:[NSOperationQueue mainQueue]
-                        completion:^(STPToken *token, NSError *error) {
-                            if (error) {
-                                completion(PKPaymentAuthorizationStatusFailure);
-                                return;
-                            }
-                            [self createBackendChargeWithToken:token completion:completion];
-                        }];
-
+                        completion:tokenBlock];
 }
 
 - (void)createBackendChargeWithToken:(STPToken *)token

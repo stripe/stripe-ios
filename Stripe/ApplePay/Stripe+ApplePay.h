@@ -25,9 +25,6 @@
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
 
-+ (UIViewController *)paymentControllerWithRequest:(PKPaymentRequest *)request
-                                          delegate:(id<PKPaymentAuthorizationViewControllerDelegate>)delegate;
-
 + (void)createTokenWithPayment:(PKPayment *)payment
                     completion:(STPCompletionBlock)handler;
 

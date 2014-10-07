@@ -10,11 +10,10 @@
 
 #import "STPTestPaymentSummaryViewController.h"
 #import "STPTestDataTableViewController.h"
-#import "PKPayment+STPTestKeys.h"
 #import "STPTestCardStore.h"
 #import "STPTestAddressStore.h"
 #import "STPTestShippingMethodStore.h"
-#import "STPCard.h"
+#import "PKPayment+STPTestKeys.h"
 
 NSString * const STPTestPaymentAuthorizationSummaryItemIdentifier = @"STPTestPaymentAuthorizationSummaryItemIdentifier";
 NSString * const STPTestPaymentAuthorizationTestDataIdentifier = @"STPTestPaymentAuthorizationTestDataIdentifier";
@@ -81,6 +80,9 @@ NSString * const STPTestPaymentSectionTitlePayment = @"Payment";
     [self updateSectionTitles];
     [self.tableView registerClass:[STPTestPaymentSummaryItemCell class] forCellReuseIdentifier:STPTestPaymentAuthorizationSummaryItemIdentifier];
     [self.tableView registerClass:[STPTestPaymentDataCell class] forCellReuseIdentifier:STPTestPaymentAuthorizationTestDataIdentifier];
+    if (self.paymentRequest.requiredShippingAddressFields != PKAddressFieldNone) {
+        [self didSelectShippingAddress];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -93,8 +95,9 @@ NSString * const STPTestPaymentSectionTitlePayment = @"Payment";
     [self.activityIndicator startAnimating];
     
     PKPayment *payment = [PKPayment new];
-    STPCard *card = self.cardStore.selectedItem;
-    payment.stp_testCardNumber = card.number;
+    NSDictionary *card = self.cardStore.selectedItem;
+    
+    payment.stp_testCardNumber = card[@"number"];
     
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
@@ -207,31 +210,35 @@ NSString * const STPTestPaymentSectionTitlePayment = @"Payment";
     return indexPath.section != [tableView numberOfSections] - 1;
 }
 
+- (void)didSelectShippingAddress {
+    if ([self.delegate respondsToSelector:@selector(paymentAuthorizationViewController:didSelectShippingAddress:completion:)]) {
+        [self.activityIndicator startAnimating];
+        self.payButton.enabled = NO;
+        self.tableView.userInteractionEnabled = NO;
+        ABRecordRef record = [self.shippingAddressStore contactForSelectedItemObscure:YES];
+        [self.delegate paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)self didSelectShippingAddress:record completion:^(PKPaymentAuthorizationStatus status, NSArray *shippingMethods, NSArray *summaryItems) {
+            if (status == PKPaymentAuthorizationStatusFailure) {
+                [self.delegate paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)self];
+                return;
+            }
+            self.summaryItems = summaryItems;
+            [self.shippingMethodStore setShippingMethods:shippingMethods];
+            [self updateSectionTitles];
+            [self.tableView reloadData];
+            self.payButton.enabled = YES;
+            self.tableView.userInteractionEnabled = YES;
+            [self.activityIndicator stopAnimating];
+        }];
+    }
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     id<STPTestDataStore> store = [self storeForSection:self.sectionTitles[indexPath.section]];
     STPTestDataTableViewController *controller = [[STPTestDataTableViewController alloc] initWithStore:store];
     if (store == self.shippingAddressStore) {
         controller.callback = ^void(id item) {
-            if ([self.delegate respondsToSelector:@selector(paymentAuthorizationViewController:didSelectShippingAddress:completion:)]) {
-                [self.activityIndicator startAnimating];
-                self.payButton.enabled = NO;
-                self.tableView.userInteractionEnabled = NO;
-                ABRecordRef record = [self.shippingAddressStore contactForSelectedItemObscure:YES];
-                [self.delegate paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)self didSelectShippingAddress:record completion:^(PKPaymentAuthorizationStatus status, NSArray *shippingMethods, NSArray *summaryItems) {
-                    if (status == PKPaymentAuthorizationStatusFailure) {
-                        [self.delegate paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)self];
-                        return;
-                    }
-                    self.summaryItems = summaryItems;
-                    [self.shippingMethodStore setShippingMethods:shippingMethods];
-                    [self updateSectionTitles];
-                    [self.tableView reloadData];
-                    self.payButton.enabled = YES;
-                    self.tableView.userInteractionEnabled = YES;
-                    [self.activityIndicator stopAnimating];
-                }];
-            }
+            [self didSelectShippingAddress];
         };
     }
     if (store == self.shippingMethodStore) {
