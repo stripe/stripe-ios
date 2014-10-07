@@ -26,8 +26,6 @@
 		0470A30B19A5D69E00B66DB7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2D119A5D69E00B66DB7 /* Main.storyboard */; };
 		0470A30C19A5D69E00B66DB7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2D419A5D69E00B66DB7 /* InfoPlist.strings */; };
 		0470A32D19A5D69E00B66DB7 /* PaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0470A30619A5D69E00B66DB7 /* PaymentViewController.m */; };
-		0499F3B919DD45FD0094E5E5 /* STPCheckoutLegacyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0499F3B819DD45FD0094E5E5 /* STPCheckoutLegacyViewController.m */; };
-		0499F3BC19DD460B0094E5E5 /* STPCheckoutModernViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0499F3BB19DD460B0094E5E5 /* STPCheckoutModernViewController.m */; };
 		0499F3BE19DD49CC0094E5E5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0499F3BD19DD49CC0094E5E5 /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		04CB47D119BF4D5600A4632A /* PKPayment+STPTestKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47C019BF4D5600A4632A /* PKPayment+STPTestKeys.m */; };
 		04CB47D219BF4D5600A4632A /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB47C219BF4D5600A4632A /* STPAPIConnection.m */; };
@@ -119,10 +117,6 @@
 		0470A2D519A5D69E00B66DB7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		0470A30519A5D69E00B66DB7 /* PaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentViewController.h; sourceTree = "<group>"; };
 		0470A30619A5D69E00B66DB7 /* PaymentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentViewController.m; sourceTree = "<group>"; };
-		0499F3B719DD45FD0094E5E5 /* STPCheckoutLegacyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutLegacyViewController.h; sourceTree = "<group>"; };
-		0499F3B819DD45FD0094E5E5 /* STPCheckoutLegacyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCheckoutLegacyViewController.m; sourceTree = "<group>"; };
-		0499F3BA19DD460B0094E5E5 /* STPCheckoutModernViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutModernViewController.h; sourceTree = "<group>"; };
-		0499F3BB19DD460B0094E5E5 /* STPCheckoutModernViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCheckoutModernViewController.m; sourceTree = "<group>"; };
 		0499F3BD19DD49CC0094E5E5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		04CB47BF19BF4D5600A4632A /* PKPayment+STPTestKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PKPayment+STPTestKeys.h"; sourceTree = "<group>"; };
 		04CB47C019BF4D5600A4632A /* PKPayment+STPTestKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKPayment+STPTestKeys.m"; sourceTree = "<group>"; };
@@ -359,10 +353,6 @@
 				04CB47C719BF4D5600A4632A /* STPTestPaymentAuthorizationViewController.m */,
 				0430C71619C7B7690089E6D8 /* STPCheckoutViewController.h */,
 				0430C71719C7B7690089E6D8 /* STPCheckoutViewController.m */,
-				0499F3B719DD45FD0094E5E5 /* STPCheckoutLegacyViewController.h */,
-				0499F3B819DD45FD0094E5E5 /* STPCheckoutLegacyViewController.m */,
-				0499F3BA19DD460B0094E5E5 /* STPCheckoutModernViewController.h */,
-				0499F3BB19DD460B0094E5E5 /* STPCheckoutModernViewController.m */,
 				0430C71919C7CEA60089E6D8 /* checkoutBridge.js */,
 				04CB47C819BF4D5600A4632A /* STPToken.h */,
 				04CB47C919BF4D5600A4632A /* STPToken.m */,
@@ -580,7 +570,6 @@
 				04CB47D219BF4D5600A4632A /* STPAPIConnection.m in Sources */,
 				04EEE26919CB834C00192164 /* PTKView.m in Sources */,
 				0470A32D19A5D69E00B66DB7 /* PaymentViewController.m in Sources */,
-				0499F3B919DD45FD0094E5E5 /* STPCheckoutLegacyViewController.m in Sources */,
 				0430C71819C7B7690089E6D8 /* STPCheckoutViewController.m in Sources */,
 				04CB47D119BF4D5600A4632A /* PKPayment+STPTestKeys.m in Sources */,
 				04EEE26419CB834C00192164 /* PTKCardExpiry.m in Sources */,
@@ -588,7 +577,6 @@
 				04E75A5519A74329000003DE /* MBProgressHUD.m in Sources */,
 				04EEE26119CB834C00192164 /* PTKAddressZip.m in Sources */,
 				04CB47D619BF4D5600A4632A /* STPUtils.m in Sources */,
-				0499F3BC19DD460B0094E5E5 /* STPCheckoutModernViewController.m in Sources */,
 				0470A2A819A5D5DB00B66DB7 /* main.m in Sources */,
 				04EEE26619CB834C00192164 /* PTKComponent.m in Sources */,
 				04EEE26819CB834C00192164 /* PTKUSAddressZip.m in Sources */,
