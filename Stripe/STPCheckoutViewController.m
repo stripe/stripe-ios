@@ -10,6 +10,7 @@
 
 @interface STPCheckoutViewController()<UIWebViewDelegate>
 @property(weak, nonatomic)UIWebView *webView;
+@property(weak, nonatomic)UIActivityIndicatorView *activityIndicator;
 @end
 
 @implementation STPCheckoutViewController
@@ -36,14 +37,23 @@
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://localhost:5394/v3"]]];
     webView.delegate = self;
     self.webView = webView;
+    
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    activityIndicator.hidesWhenStopped = YES;
+    [self.view addSubview:activityIndicator];
+    self.activityIndicator = activityIndicator;
 }
 
-
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    self.activityIndicator.center = self.view.center;
+}
 
 #pragma mark - UIWebViewDelegate
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     [webView stringByEvaluatingJavaScriptFromString:[self initialJavascript]];
+    [self.activityIndicator startAnimating];
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
@@ -72,6 +82,17 @@
     return YES;
 }
 
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    [UIView animateWithDuration:0.2 animations:^{
+        self.activityIndicator.alpha = 0;
+    } completion:^(BOOL finished) {
+        [self.activityIndicator stopAnimating];
+    }];
+}
+
+-(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    [self.activityIndicator stopAnimating];
+}
 
 
 @end
