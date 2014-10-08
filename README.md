@@ -41,20 +41,6 @@ After this is done, you can make test payments through the app (use credit card 
 
 ## Misc. notes
 
-### Retrieving a token
-
-If you're implementing a complex workflow, you may want to know if you've already charged a token (since they can only be charged once).  You can do so if you have the token's ID:
-
-    [Stripe getTokenWithId:@"token_id"
-            publishableKey:@"my_publishable_key"
-                completion:^(STPToken *token, NSError *error)
-    {
-    	if (error)
-    	    NSLog(@"An error!");
-    	else
-    	    NSLog(@"A token for my troubles.");
-    }];
-
 ### Handling errors
 
 See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/StripeError.h).
