@@ -6,11 +6,10 @@
 //
 //
 
-#import "Stripe.h"
-
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
+
+#import "Stripe.h"
 #import <PassKit/PassKit.h>
-#endif
 
 @class PKPaymentRequest;
 
@@ -23,8 +22,6 @@
                                                   currency:(NSString *)currency
                                                description:(NSString *)description;
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
-
 + (void)createTokenWithPayment:(PKPayment *)payment
                     completion:(STPCompletionBlock)handler;
 
@@ -32,6 +29,6 @@
                 operationQueue:(NSOperationQueue *)queue
                     completion:(STPCompletionBlock)handler;
 
-#endif
-
 @end
+
+#endif

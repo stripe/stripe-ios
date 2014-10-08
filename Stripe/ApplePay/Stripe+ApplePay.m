@@ -6,18 +6,17 @@
 //
 //
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
+
 #import "Stripe.h"
 #import "Stripe+ApplePay.h"
 #import "STPAPIConnection.h"
-
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
-
 #import <PassKit/PassKit.h>
 
 @implementation Stripe (ApplePay)
 
 + (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest {
-    if (paymentRequest == nil || [self isSimulatorBuild]) {
+    if (paymentRequest == nil) {
         return NO;
     }
     return [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:paymentRequest.supportedNetworks];

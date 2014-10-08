@@ -12,7 +12,7 @@ We've written a [guide](https://stripe.com/docs/mobile/ios) that explains everyt
 
 ## Example app
 
-The example app is a great way to see the flow of recording credit card details, converting them to a token with the Stripe iOS bindings, and then using that token to charge users on your backend. It uses [PaymentKit](https://github.com/stripe/PaymentKit) to create a simple credit card form, and a small backend hosted with Parse Cloud Code to process the actual transactions.
+The example app is a great way to see the flow of recording credit card details, converting them to a token with the Stripe iOS bindings, and then using that token to charge users on your backend. It uses [PaymentKit](https://github.com/stripe/PaymentKit) to create a simple credit card form, and a small backend hosted with Parse Cloud Code to process the actual transactions. It also uses our [ApplePayStubs](https://github.com/stripe/ApplePayStubs) library to demonstrate how the Apple Pay flow works in the iOS simulator (normally Apple Pay requires a device to use).
 
 ### Running the example
 
