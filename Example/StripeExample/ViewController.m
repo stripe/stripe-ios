@@ -72,7 +72,8 @@
     }
 }
 
-- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingAddress:(ABRecordRef)address completion:(void (^)(PKPaymentAuthorizationStatus status, NSArray *shippingMethods, NSArray *summaryItems))completion {
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingAddress:(ABRecordRef)address
+                                completion:(void (^)(PKPaymentAuthorizationStatus status, NSArray *shippingMethods, NSArray *summaryItems))completion {
     [self fetchShippingCostsForAddress:address completion:^(NSArray *shippingMethods, NSError *error) {
         if (error) {
             completion(PKPaymentAuthorizationStatusFailure, nil, nil);
@@ -82,7 +83,8 @@
     }];
 }
 
-- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingMethod:(PKShippingMethod *)shippingMethod completion:(void (^)(PKPaymentAuthorizationStatus, NSArray *summaryItems))completion {
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
+                   didSelectShippingMethod:(PKShippingMethod *)shippingMethod completion:(void (^)(PKPaymentAuthorizationStatus, NSArray *summaryItems))completion {
     completion(PKPaymentAuthorizationStatusSuccess, [self summaryItemsForShippingMethod:shippingMethod]);
 }
 
@@ -119,7 +121,25 @@
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    [self handlePaymentAuthorizationWithPayment:payment completion:completion];
+    void(^tokenBlock)(STPToken *token, NSError *error) = ^void(STPToken *token, NSError *error) {
+        if (error) {
+            completion(PKPaymentAuthorizationStatusFailure);
+            return;
+        }
+        [self createBackendChargeWithToken:token completion:completion];
+    };
+#if DEBUG
+    STPCard *card = [STPCard new];
+    card.number = payment.stp_testCardNumber;
+    card.expMonth = 12;
+    card.expYear = 2020;
+    card.cvc = @"123";
+    [Stripe createTokenWithCard:card completion:tokenBlock];
+#else
+    [Stripe createTokenWithPayment:payment
+                    operationQueue:[NSOperationQueue mainQueue]
+                        completion:tokenBlock];
+#endif
 }
 
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
