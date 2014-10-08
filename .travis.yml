@@ -1,8 +1,3 @@
-before_install:
-  - brew update
-  - brew unlink xctool
-  - brew install xctool --HEAD
 language: objective-c
-xcode_workspace: Stripe.xcworkspace
-xcode_scheme: StripeiOSExcludingFunctionalTests
-xcode_sdk: iphonesimulator
+before_install: gem install xcpretty
+script: xcodebuild -workspace Stripe.xcworkspace -scheme StripeiOS -sdk iphonesimulator build test | xcpretty -c && exit ${PIPESTATUS[0]}
