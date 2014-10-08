@@ -20,15 +20,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.title = @"Add Card";
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.title = @"Checkout";
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
       self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     
     // Setup save button
-    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStyleDone target:self action:@selector(save:)];
+    NSString *title = [NSString stringWithFormat:@"Pay $%@", self.amount];
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:self action:@selector(save:)];
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     saveButton.enabled = NO;
+    self.navigationItem.leftBarButtonItem = cancelButton;
     self.navigationItem.rightBarButtonItem = saveButton;
     
     // Setup checkout
@@ -43,6 +46,10 @@
             isValid:(BOOL)valid {
     // Enable save button if the Checkout is valid
     self.navigationItem.rightBarButtonItem.enabled = valid;
+}
+
+- (void)cancel:(id)sender {
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)save:(id)sender {
