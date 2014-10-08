@@ -1,3 +1,7 @@
+== 2.1.0 2014-10-07
+* Remove token retrieval API method
+* Refactor functional tests to use new XCTestCase functionality
+
 == 2.0.3 2014-09-24
 * Group ApplePay code in a CocoaPods subspec
 

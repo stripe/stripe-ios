@@ -12,7 +12,7 @@
 #import "Stripe.h"
 #import "STPUtils.h"
 
-NSString *const kStripeiOSVersion = @"1.1.4";
+NSString *const kStripeiOSVersion = @"2.1.0";
 
 @implementation Stripe
 
