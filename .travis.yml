@@ -1,3 +1,7 @@
+before_install:
+  - brew update
+  - brew unlink xctool
+  - brew install xctool --HEAD
 language: objective-c
 xcode_workspace: Stripe.xcworkspace
 xcode_scheme: StripeiOSExcludingFunctionalTests
