@@ -9,6 +9,7 @@
 #import "STPCheckoutViewController.h"
 #import "STPCheckoutOptions.h"
 #import "STPToken.h"
+#import "Stripe.h"
 
 @interface STPCheckoutViewController()<UIWebViewDelegate>
 @property(weak, nonatomic)UIWebView *webView;
@@ -47,9 +48,13 @@
                                options:NSLayoutFormatDirectionLeadingToTrailing
                                metrics:nil
                                views:NSDictionaryOfVariableBindings(webView)]];
-    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://checkout.stripe.com/v3"]]];
+    [webView loadRequest:[[self class] checkoutURLRequest]];
     webView.backgroundColor = [UIColor whiteColor];
     self.view.backgroundColor = [UIColor whiteColor];
+    if (self.options.headerBackgroundColor) {
+        webView.backgroundColor = self.options.headerBackgroundColor;
+    }
+    
     webView.delegate = self;
     self.webView = webView;
     
@@ -57,6 +62,10 @@
     activityIndicator.hidesWhenStopped = YES;
     [self.view addSubview:activityIndicator];
     self.activityIndicator = activityIndicator;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return [[self class] colorIsLight:self.options.headerBackgroundColor] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -74,6 +83,10 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
  navigationType:(UIWebViewNavigationType)navigationType {
     NSURL *url = request.URL;
+    if (navigationType == UIWebViewNavigationTypeLinkClicked && [url.host isEqualToString:@"stripe.com"]) {
+        [[UIApplication sharedApplication] openURL:url];
+        return NO;
+    }
     if ([url.scheme isEqualToString:@"stripecheckout"]) {
         if ([url.host isEqualToString:@"frameReady"]) {
             [webView stringByEvaluatingJavaScriptFromString:@"window.checkoutJSBridge.loadOptions();"];
@@ -117,6 +130,25 @@
         [self.delegate checkoutController:self didFailWithError:error];
     }
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
++ (BOOL)colorIsLight:(UIColor *)color {
+    const CGFloat *componentColors = CGColorGetComponents(color.CGColor);
+    CGFloat colorBrightness = ((componentColors[0] * 299) + (componentColors[1] * 587) + (componentColors[2] * 114)) / 1000;
+    return colorBrightness < 0.5;
+}
+
++ (NSURLRequest *)checkoutURLRequest {
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://localhost:5394/v3"]];
+    NSMutableDictionary *userAgentDetails = [[Stripe stripeUserAgentDetails] mutableCopy];
+    [userAgentDetails setValue:@"checkout-ios" forKey:@"source"];
+    NSData *json = [NSJSONSerialization dataWithJSONObject:userAgentDetails
+                                                   options:0
+                                                     error:nil];
+    NSString *userAgent = [[NSString alloc] initWithData:json
+                                                encoding:NSUTF8StringEncoding];
+    [urlRequest setValue:userAgent forHTTPHeaderField:STPUserAgentFieldName];
+    return [urlRequest copy];
 }
 
 @end

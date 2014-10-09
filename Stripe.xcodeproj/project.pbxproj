@@ -130,15 +130,11 @@
 			isa = PBXGroup;
 			children = (
 				0426D89019E61A060097B74D /* ApplePay */,
-				0426D89319E61A060097B74D /* checkoutBridge.js */,
+				04BC613A19E61ED1001B0D84 /* Checkout */,
 				0426D89419E61A060097B74D /* STPAPIConnection.h */,
 				0426D89519E61A060097B74D /* STPAPIConnection.m */,
 				0426D89619E61A060097B74D /* STPCard.h */,
 				0426D89719E61A060097B74D /* STPCard.m */,
-				0426D89819E61A060097B74D /* STPCheckoutOptions.h */,
-				0426D89919E61A060097B74D /* STPCheckoutOptions.m */,
-				0426D89A19E61A060097B74D /* STPCheckoutViewController.h */,
-				0426D89B19E61A060097B74D /* STPCheckoutViewController.m */,
 				0426D89C19E61A060097B74D /* STPFormEncodeProtocol.h */,
 				0426D89D19E61A060097B74D /* STPToken.h */,
 				0426D89E19E61A060097B74D /* STPToken.m */,
@@ -168,6 +164,18 @@
 				0426D8A619E61A060097B74D /* Stripe-Prefix.pch */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		04BC613A19E61ED1001B0D84 /* Checkout */ = {
+			isa = PBXGroup;
+			children = (
+				0426D89319E61A060097B74D /* checkoutBridge.js */,
+				0426D89819E61A060097B74D /* STPCheckoutOptions.h */,
+				0426D89919E61A060097B74D /* STPCheckoutOptions.m */,
+				0426D89A19E61A060097B74D /* STPCheckoutViewController.h */,
+				0426D89B19E61A060097B74D /* STPCheckoutViewController.m */,
+			);
+			name = Checkout;
 			sourceTree = "<group>";
 		};
 		11C74B8D164043050071C2CA = {

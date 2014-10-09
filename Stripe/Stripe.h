@@ -11,7 +11,9 @@
 #import "STPCard.h"
 #import "STPToken.h"
 
-FOUNDATION_EXPORT NSString *const kStripeiOSVersion; // Version of this library.
+extern NSString *const STPLibraryVersionNumber; // Version of this library.
+extern NSString *const STPUserAgentFieldName; // We set our own custom HTTP header field on requests to better understand library usage.
+
 
 typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
 

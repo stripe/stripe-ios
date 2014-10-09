@@ -34,6 +34,9 @@
     if (self.logoImageURL) {
         values[@"image"] = [self.logoImageURL absoluteString];
     }
+    if (self.headerBackgroundColor) {
+        values[@"color"] = [[self class] hexCodeForColor:self.headerBackgroundColor];
+    }
     if (self.companyName) {
         values[@"name"] = self.companyName;
     }
@@ -57,6 +60,41 @@
     values[@"zipCode"] = @(self.validateZipCode);
     
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:values options:0 error:nil] encoding:NSUTF8StringEncoding];
+}
+
++ (NSString *)hexCodeForColor:(UIColor *)color {
+    CGFloat rgba[4];
+    CGColorSpaceModel model = CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor));
+    const CGFloat *components = CGColorGetComponents(color.CGColor);
+    switch (model) {
+        case kCGColorSpaceModelMonochrome: {
+            rgba[0] = components[0];
+            rgba[1] = components[0];
+            rgba[2] = components[0];
+            rgba[3] = components[1];
+            break;
+        }
+        case kCGColorSpaceModelRGB: {
+            rgba[0] = components[0];
+            rgba[1] = components[1];
+            rgba[2] = components[2];
+            rgba[3] = components[3];
+            break;
+        }
+        default: {
+            rgba[0] = 0;
+            rgba[1] = 0;
+            rgba[2] = 0;
+            rgba[3] = 1.0f;
+            break;
+        }
+    }
+    uint8_t red = rgba[0]*255;
+    uint8_t green = rgba[1]*255;
+    uint8_t blue = rgba[2]*255;
+    uint8_t alpha = rgba[3]*255;
+    unsigned long rgbaValue = (red << 24) + (green << 16) + (blue << 8) + alpha;
+    return [NSString stringWithFormat:@"#%.8lx", rgbaValue];
 }
 
 @end

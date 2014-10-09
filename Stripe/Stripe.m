@@ -12,7 +12,8 @@
 #import "Stripe.h"
 #import "STPUtils.h"
 
-NSString *const kStripeiOSVersion = @"2.2.0";
+NSString *const STPLibraryVersionNumber = @"2.2.0";
+NSString *const STPUserAgentFieldName = @"X-Stripe-User-Agent";
 
 @implementation Stripe
 
@@ -186,7 +187,7 @@ static NSString *const tokenEndpoint = @"tokens";
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.apiURL];
     request.HTTPMethod = @"POST";
     request.HTTPBody = [card formEncode];
-    [request setValue:[self JSONStringForObject:[self stripeUserAgentDetails]] forHTTPHeaderField:@"X-Stripe-User-Agent"];
+    [request setValue:[self JSONStringForObject:[self stripeUserAgentDetails]] forHTTPHeaderField:STPUserAgentFieldName];
     [request setValue:[@"Bearer " stringByAppendingString:publishableKey] forHTTPHeaderField:@"Authorization"];
 
     [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
@@ -258,7 +259,7 @@ static NSString *const tokenEndpoint = @"tokens";
 {
     NSMutableDictionary *details = [@{
                                       @"lang" : @"objective-c",
-                                      @"bindings_version" : kStripeiOSVersion,
+                                      @"bindings_version" : STPLibraryVersionNumber,
                                       } mutableCopy];
     NSString *version = [UIDevice currentDevice].systemVersion;
     if (version) {

@@ -52,6 +52,7 @@
     options.purchaseAmount = 1000;
     options.panelLabel = @"Pay {{amount}} for that food";
     options.validateZipCode = YES;
+    options.headerBackgroundColor = [UIColor redColor];
     STPCheckoutViewController *vc = [[STPCheckoutViewController alloc] initWithOptions:options];
     vc.delegate = self;
     [self presentViewController:vc animated:YES completion:nil];
