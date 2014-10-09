@@ -35,7 +35,6 @@
 		0470A30B19A5D69E00B66DB7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2D119A5D69E00B66DB7 /* Main.storyboard */; };
 		0470A30C19A5D69E00B66DB7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2D419A5D69E00B66DB7 /* InfoPlist.strings */; };
 		0470A32D19A5D69E00B66DB7 /* PaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0470A30619A5D69E00B66DB7 /* PaymentViewController.m */; };
-		0499F3BE19DD49CC0094E5E5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0499F3BD19DD49CC0094E5E5 /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		04CB47DA19BF5A4100A4632A /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CB47D919BF5A4100A4632A /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		04E75A3B19A71BFD000003DE /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3A19A71BFD000003DE /* Parse.framework */; };
 		04E75A3D19A71C22000003DE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3C19A71C22000003DE /* AudioToolbox.framework */; };
@@ -201,7 +200,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0499F3BE19DD49CC0094E5E5 /* WebKit.framework in Frameworks */,
 				04CB47DA19BF5A4100A4632A /* PassKit.framework in Frameworks */,
 				04E75A4D19A71CA1000003DE /* SystemConfiguration.framework in Frameworks */,
 				04E75A4B19A71C99000003DE /* StoreKit.framework in Frameworks */,
