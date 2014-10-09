@@ -47,7 +47,7 @@
                                options:NSLayoutFormatDirectionLeadingToTrailing
                                metrics:nil
                                views:NSDictionaryOfVariableBindings(webView)]];
-    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://localhost:5394/v3"]]];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://checkout.stripe.com/v3"]]];
     webView.backgroundColor = [UIColor whiteColor];
     self.view.backgroundColor = [UIColor whiteColor];
     webView.delegate = self;
@@ -100,7 +100,7 @@
         }
         return NO;
     }
-    return YES;
+    return navigationType == UIWebViewNavigationTypeOther;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {

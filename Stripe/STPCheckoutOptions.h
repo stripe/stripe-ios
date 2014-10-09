@@ -15,6 +15,7 @@
 
 // strongly recommended properties
 @property(nonatomic) UIImage *logoImage;
+@property(nonatomic) NSURL *logoImageURL;
 @property(nonatomic) NSString *companyName;
 @property(nonatomic) NSString *productDescription;
 @property(nonatomic) NSUInteger purchaseAmount;

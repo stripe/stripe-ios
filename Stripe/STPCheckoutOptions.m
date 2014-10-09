@@ -27,8 +27,12 @@
     if (self.publishableKey) {
         values[@"key"] = self.publishableKey;
     }
-    if (self.logoImage) {
-        values[@"image"] = [UIImagePNGRepresentation(self.logoImage) base64EncodedStringWithOptions:0];
+    if (self.logoImage && !self.logoImageURL) {
+        NSString *base64 = [UIImagePNGRepresentation(self.logoImage) base64EncodedStringWithOptions:0];
+        values[@"image"] = [NSString stringWithFormat:@"data:image/png;base64,%@", base64];
+    }
+    if (self.logoImageURL) {
+        values[@"image"] = [self.logoImageURL absoluteString];
     }
     if (self.companyName) {
         values[@"name"] = self.companyName;

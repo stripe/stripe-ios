@@ -24,7 +24,9 @@
     options.productDescription = @"Tasty Llama food";
     options.purchaseAmount = 1000;
     options.panelLabel = @"Pay {{amount}} for that food";
+    options.validateZipCode = YES;
     STPCheckoutViewController *vc = [[STPCheckoutViewController alloc] initWithOptions:options];
+    vc.delegate = self;
     [self presentViewController:vc animated:YES completion:nil];
 //    NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
 //    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId
@@ -46,6 +48,10 @@
 //    else {
 //        [self performSegueWithIdentifier:@"OldPaymentFlowSegue" sender:sender];
 //    }
+}
+
+- (void)checkoutController:(STPCheckoutViewController *)controller didFinishWithToken:(STPToken *)token {
+    [self createBackendChargeWithToken:token completion:nil];
 }
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
@@ -78,7 +84,9 @@
                                                 otherButtonTitles:nil];
         
         [message show];
-        completion(PKPaymentAuthorizationStatusSuccess);
+        if (completion) {
+            completion(PKPaymentAuthorizationStatusSuccess);
+        }
         return;
     }
     NSDictionary *chargeParams = @{
@@ -89,11 +97,15 @@
     // This passes the token off to our payment backend, which will then actually complete charging the card using your account's
     [PFCloud callFunctionInBackground:@"charge" withParameters:chargeParams block:^(id object, NSError *error) {
         if (error) {
-            completion(PKPaymentAuthorizationStatusFailure);
+            if (completion) {
+                completion(PKPaymentAuthorizationStatusFailure);
+            }
         }
         else {
             // We're done!
-            completion(PKPaymentAuthorizationStatusSuccess);
+            if (completion) {
+                completion(PKPaymentAuthorizationStatusSuccess);
+            }
             [[[UIAlertView alloc] initWithTitle:@"Payment Succeeded" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil] show];
         }
     }];
