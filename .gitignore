@@ -1,6 +1,7 @@
 build/*
 *.pbxuser
 *.mode1v3
+.idea
 
 .DS_Store
 profile
