@@ -28,6 +28,7 @@
 @property (nonatomic) NSString *addressZip;
 @property (nonatomic) NSString *addressCountry;
 
+@property (nonatomic, readonly) NSString *cardId;
 @property (nonatomic, readonly) NSString *object;
 @property (nonatomic, readonly) NSString *last4;
 @property (nonatomic, readonly) NSString *type;

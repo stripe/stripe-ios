@@ -1,3 +1,20 @@
+== 2.2.0 2014-10-08
+* Move Apple Pay testing functionality into a separate project, ApplePayStubs. For more info, see github.com/stripe/ApplePayStubs.
+* Improve the provided example app
+
+== 2.1.0 2014-10-07
+* Remove token retrieval API method
+* Refactor functional tests to use new XCTestCase functionality
+
+== 2.0.3 2014-09-24
+* Group ApplePay code in a CocoaPods subspec
+
+== 2.0.2 2014-09-24
+* Move ApplePay code behind a compiler flag to avoid warnings from Apple when accidentally including it
+
+== 2.0.1 2014-09-18
+* Fix some small bugs related to ApplePay and iOS8
+
 === 2.0 2014-09-09
 * Add support for native payments via Pay
 

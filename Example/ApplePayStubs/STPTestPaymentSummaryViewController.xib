@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment version="2048" defaultVersion="1808" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="STPTestPaymentSummaryViewController">
+            <connections>
+                <outlet property="activityIndicator" destination="HWL-sz-1EN" id="Grg-Rf-Wnr"/>
+                <outlet property="payButton" destination="3W7-r3-MuN" id="DIj-aN-z10"/>
+                <outlet property="tableView" destination="7xh-V2-Cso" id="dYK-cV-NyK"/>
+                <outlet property="view" destination="5Yg-Nv-03m" id="Y2P-FK-Iae"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="5Yg-Nv-03m">
+            <rect key="frame" x="0.0" y="0.0" width="298" height="407"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NkH-cS-cq6">
+                    <rect key="frame" x="0.0" y="0.0" width="298" height="407"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Q5v-gg-PyO">
+                        <rect key="frame" x="0.0" y="0.0" width="298" height="407"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <blurEffect style="extraLight"/>
+                </visualEffectView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3W7-r3-MuN">
+                    <rect key="frame" x="0.0" y="359" width="298" height="48"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="48" id="uH4-7h-pNc"/>
+                    </constraints>
+                    <state key="normal" title="Pay">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="makePayment:" destination="-1" eventType="touchUpInside" id="KSE-ol-b6u"/>
+                    </connections>
+                </button>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="HWL-sz-1EN">
+                    <rect key="frame" x="139" y="373" width="20" height="20"/>
+                </activityIndicatorView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="8" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="7xh-V2-Cso">
+                    <rect key="frame" x="0.0" y="30" width="298" height="329"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="yHS-Xa-uTm"/>
+                        <outlet property="delegate" destination="-1" id="Dey-iQ-ERm"/>
+                    </connections>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="7xh-V2-Cso" secondAttribute="trailing" id="7FB-yW-5MV"/>
+                <constraint firstAttribute="bottom" secondItem="3W7-r3-MuN" secondAttribute="bottom" id="FbM-MT-8e6"/>
+                <constraint firstItem="3W7-r3-MuN" firstAttribute="leading" secondItem="5Yg-Nv-03m" secondAttribute="leading" id="HQD-tx-QQo"/>
+                <constraint firstItem="7xh-V2-Cso" firstAttribute="leading" secondItem="5Yg-Nv-03m" secondAttribute="leading" id="PFC-7L-Nn5"/>
+                <constraint firstAttribute="trailing" secondItem="NkH-cS-cq6" secondAttribute="trailing" id="YSc-WJ-Lz0"/>
+                <constraint firstItem="7xh-V2-Cso" firstAttribute="top" secondItem="5Yg-Nv-03m" secondAttribute="top" constant="30" id="ZgZ-at-xth"/>
+                <constraint firstItem="HWL-sz-1EN" firstAttribute="centerY" secondItem="3W7-r3-MuN" secondAttribute="centerY" id="dXT-ul-c7b"/>
+                <constraint firstAttribute="bottom" secondItem="NkH-cS-cq6" secondAttribute="bottom" id="gav-lY-CZV"/>
+                <constraint firstItem="HWL-sz-1EN" firstAttribute="centerX" secondItem="3W7-r3-MuN" secondAttribute="centerX" id="h9j-cm-VP6"/>
+                <constraint firstItem="NkH-cS-cq6" firstAttribute="top" secondItem="5Yg-Nv-03m" secondAttribute="top" id="pD3-zK-B2g"/>
+                <constraint firstItem="3W7-r3-MuN" firstAttribute="top" secondItem="7xh-V2-Cso" secondAttribute="bottom" id="rv9-u2-9pX"/>
+                <constraint firstAttribute="trailing" secondItem="3W7-r3-MuN" secondAttribute="trailing" id="s6c-5I-Pq2"/>
+                <constraint firstItem="NkH-cS-cq6" firstAttribute="leading" secondItem="5Yg-Nv-03m" secondAttribute="leading" id="x8Y-Iy-8sQ"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="453" y="324.5"/>
+        </view>
+    </objects>
+</document>

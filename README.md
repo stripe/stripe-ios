@@ -12,9 +12,11 @@ We've written a [guide](https://stripe.com/docs/mobile/ios) that explains everyt
 
 ## Example app
 
-The example app is a great way to see the flow of recording credit card details, converting them to a token with the Stripe iOS bindings, and then using that token to charge users on your backend. It uses [PaymentKit](https://github.com/stripe/PaymentKit) to create a simple credit card form, and a small backend hosted with Parse Cloud Code to process the actual transactions.
+The example app is a great way to see the flow of recording credit card details, converting them to a token with the Stripe iOS bindings, and then using that token to charge users on your backend. It uses [PaymentKit](https://github.com/stripe/PaymentKit) to create a simple credit card form, and a small backend hosted with Parse Cloud Code to process the actual transactions. It also uses our [ApplePayStubs](https://github.com/stripe/ApplePayStubs) library to demonstrate how the Apple Pay flow works in the iOS simulator (normally Apple Pay requires a device to use).
 
 ### Running the example
+
+Note: the example app requires Xcode 6 to build and run.
 
 Before you can run the app, you need to provide it with your own Stripe and Parse API keys.
 
@@ -38,20 +40,6 @@ After this is done, you can make test payments through the app (use credit card 
 1. Go to Product->Test
 
 ## Misc. notes
-
-### Retrieving a token
-
-If you're implementing a complex workflow, you may want to know if you've already charged a token (since they can only be charged once).  You can do so if you have the token's ID:
-
-    [Stripe getTokenWithId:@"token_id"
-            publishableKey:@"my_publishable_key"
-                completion:^(STPToken *token, NSError *error)
-    {
-    	if (error)
-    	    NSLog(@"An error!");
-    	else
-    	    NSLog(@"A token for my troubles.");
-    }];
 
 ### Handling errors
 
