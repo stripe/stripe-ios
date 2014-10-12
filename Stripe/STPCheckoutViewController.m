@@ -23,6 +23,12 @@
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _options = options;
+        NSString *userAgent = [[UIWebView new] stringByEvaluatingJavaScriptFromString:@"window.navigator.userAgent"];
+        if ([userAgent rangeOfString:@"StripeCheckout"].location == NSNotFound) {
+            userAgent = [userAgent stringByAppendingString:@" StripeCheckout"];
+            NSDictionary *defaults = @{@"UserAgent": userAgent};
+            [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+        }
     }
     return self;
 }
@@ -139,7 +145,8 @@
 }
 
 + (NSURLRequest *)checkoutURLRequest {
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://localhost:5394/v3"]];
+    NSString *url = @"https://checkout.stripe.com/v3";
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     NSMutableDictionary *userAgentDetails = [[Stripe stripeUserAgentDetails] mutableCopy];
     [userAgentDetails setValue:@"checkout-ios" forKey:@"source"];
     NSData *json = [NSJSONSerialization dataWithJSONObject:userAgentDetails
