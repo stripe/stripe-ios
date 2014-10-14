@@ -121,25 +121,7 @@
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    void(^tokenBlock)(STPToken *token, NSError *error) = ^void(STPToken *token, NSError *error) {
-        if (error) {
-            completion(PKPaymentAuthorizationStatusFailure);
-            return;
-        }
-        [self createBackendChargeWithToken:token completion:completion];
-    };
-#if DEBUG
-    STPCard *card = [STPCard new];
-    card.number = payment.stp_testCardNumber;
-    card.expMonth = 12;
-    card.expYear = 2020;
-    card.cvc = @"123";
-    [Stripe createTokenWithCard:card completion:tokenBlock];
-#else
-    [Stripe createTokenWithPayment:payment
-                    operationQueue:[NSOperationQueue mainQueue]
-                        completion:tokenBlock];
-#endif
+    [self handlePaymentAuthorizationWithPayment:payment completion:completion];
 }
 
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
@@ -151,7 +133,7 @@
         }
         [self createBackendChargeWithToken:token completion:completion];
     };
-#if DEBUG
+#if !DEBUG
     if (payment.stp_testCardNumber) {
         STPCard *card = [STPCard new];
         card.number = payment.stp_testCardNumber;
