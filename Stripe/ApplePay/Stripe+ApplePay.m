@@ -99,7 +99,7 @@
                 params[@"address_country"] = country;
             }
             [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
-                NSString *param = [NSString stringWithFormat:@"&card[%@]=%@", key, obj];
+                NSString *param = [NSString stringWithFormat:@"&billing[%@]=%@", key, obj];
                 payloadString = [payloadString stringByAppendingString:param];
             }];
         }
