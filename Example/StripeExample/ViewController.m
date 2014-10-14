@@ -100,13 +100,17 @@
         completion(nil, [NSError new]);
     }
     if ([country isEqualToString:@"US"]) {
-        PKPaymentSummaryItem *normalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama Domestic Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
-        PKPaymentSummaryItem *expressItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama Domestic Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"30.00"]];
+        PKShippingMethod *normalItem = [PKShippingMethod summaryItemWithLabel:@"Llama Domestic Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
+        normalItem.detail = @"3-5 Business Days";
+        PKShippingMethod *expressItem = [PKShippingMethod summaryItemWithLabel:@"Llama Domestic Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"30.00"]];
+        expressItem.detail = @"Next Day";
         completion(@[normalItem, expressItem], nil);
     }
     else {
-        PKPaymentSummaryItem *normalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama International Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"40.00"]];
-        PKPaymentSummaryItem *expressItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama International Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"50.00"]];
+        PKShippingMethod *normalItem = [PKShippingMethod summaryItemWithLabel:@"Llama International Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"40.00"]];
+        normalItem.detail = @"3-5 Business Days";
+        PKShippingMethod *expressItem = [PKShippingMethod summaryItemWithLabel:@"Llama International Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"50.00"]];
+        expressItem.detail = @"Next Day";
         completion(@[normalItem, expressItem], nil);
     }
 }
@@ -133,7 +137,7 @@
         }
         [self createBackendChargeWithToken:token completion:completion];
     };
-#if !DEBUG
+#if DEBUG
     if (payment.stp_testCardNumber) {
         STPCard *card = [STPCard new];
         card.number = payment.stp_testCardNumber;
