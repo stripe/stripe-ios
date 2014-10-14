@@ -89,7 +89,9 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
  navigationType:(UIWebViewNavigationType)navigationType {
     NSURL *url = request.URL;
-    if (navigationType == UIWebViewNavigationTypeLinkClicked && [url.host isEqualToString:@"stripe.com"]) {
+    if (navigationType == UIWebViewNavigationTypeLinkClicked &&
+        [url.host isEqualToString:@"checkout.stripe.com"] &&
+        [url.path rangeOfString:@"/~/"].location == 0) {
         [[UIApplication sharedApplication] openURL:url];
         return NO;
     }
