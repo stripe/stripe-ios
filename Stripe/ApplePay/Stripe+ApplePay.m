@@ -6,7 +6,7 @@
 //
 //
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000// && defined(STRIPE_ENABLE_APPLEPAY)
 
 #import "Stripe.h"
 #import "Stripe+ApplePay.h"
@@ -92,8 +92,10 @@
             if (country) {
                 params[@"address_country"] = country;
             }
+            NSMutableCharacterSet *set = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
+            [set removeCharactersInString:@"+="];
             [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
-                NSString *param = [NSString stringWithFormat:@"&billing[%@]=%@", key, obj];
+                NSString *param = [NSString stringWithFormat:@"&billing[%@]=%@", key, [obj stringByAddingPercentEncodingWithAllowedCharacters:set]];
                 payloadString = [payloadString stringByAppendingString:param];
             }];
         }
