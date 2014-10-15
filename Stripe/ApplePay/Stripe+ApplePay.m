@@ -12,6 +12,7 @@
 #import "Stripe+ApplePay.h"
 #import "STPAPIConnection.h"
 #import <PassKit/PassKit.h>
+#import <AddressBook/AddressBook.h>
 
 @implementation Stripe (ApplePay)
 
@@ -64,7 +65,40 @@
     NSMutableCharacterSet *set = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
     [set removeCharactersInString:@"+="];
     NSString *paymentString = [[[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding] stringByAddingPercentEncodingWithAllowedCharacters:set];
-    NSString *payloadString = [@"pk_token=" stringByAppendingString:paymentString];
+    __block NSString *payloadString = [@"pk_token=" stringByAppendingString:paymentString];
+    
+    if (payment.billingAddress) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        ABMultiValueRef addressValues = ABRecordCopyValue(payment.billingAddress, kABPersonAddressProperty);
+        if (ABMultiValueGetCount(addressValues) > 0) {
+            CFDictionaryRef dict = ABMultiValueCopyValueAtIndex(addressValues, 0);
+            NSString *line1 = CFDictionaryGetValue(dict, kABPersonAddressStreetKey);
+            if (line1) {
+                params[@"address_line1"] = line1;
+            }
+            NSString *city = CFDictionaryGetValue(dict, kABPersonAddressCityKey);
+            if (city) {
+                params[@"address_city"] = city;
+            }
+            NSString *state = CFDictionaryGetValue(dict, kABPersonAddressStateKey);
+            if (state) {
+                params[@"address_state"] = state;
+            }
+            NSString *zip = CFDictionaryGetValue(dict, kABPersonAddressZIPKey);
+            if (zip) {
+                params[@"address_zip"] = zip;
+            }
+            NSString *country = CFDictionaryGetValue(dict, kABPersonAddressCountryKey);
+            if (country) {
+                params[@"address_country"] = country;
+            }
+            [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
+                NSString *param = [NSString stringWithFormat:@"&billing[%@]=%@", key, obj];
+                payloadString = [payloadString stringByAppendingString:param];
+            }];
+        }
+    }
+    
     request.HTTPBody = [payloadString dataUsingEncoding:NSUTF8StringEncoding];
     
     

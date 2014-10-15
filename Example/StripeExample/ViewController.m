@@ -97,13 +97,17 @@
         completion(nil, [NSError new]);
     }
     if ([country isEqualToString:@"US"]) {
-        PKPaymentSummaryItem *normalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama Domestic Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
-        PKPaymentSummaryItem *expressItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama Domestic Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"30.00"]];
+        PKShippingMethod *normalItem = [PKShippingMethod summaryItemWithLabel:@"Llama Domestic Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
+        normalItem.detail = @"3-5 Business Days";
+        PKShippingMethod *expressItem = [PKShippingMethod summaryItemWithLabel:@"Llama Domestic Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"30.00"]];
+        expressItem.detail = @"Next Day";
         completion(@[normalItem, expressItem], nil);
     }
     else {
-        PKPaymentSummaryItem *normalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama International Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"40.00"]];
-        PKPaymentSummaryItem *expressItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Llama International Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"50.00"]];
+        PKShippingMethod *normalItem = [PKShippingMethod summaryItemWithLabel:@"Llama International Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"40.00"]];
+        normalItem.detail = @"3-5 Business Days";
+        PKShippingMethod *expressItem = [PKShippingMethod summaryItemWithLabel:@"Llama International Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"50.00"]];
+        expressItem.detail = @"Next Day";
         completion(@[normalItem, expressItem], nil);
     }
 }
@@ -118,25 +122,7 @@
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    void(^tokenBlock)(STPToken *token, NSError *error) = ^void(STPToken *token, NSError *error) {
-        if (error) {
-            completion(PKPaymentAuthorizationStatusFailure);
-            return;
-        }
-        [self createBackendChargeWithToken:token completion:completion];
-    };
-#if DEBUG
-    STPCard *card = [STPCard new];
-    card.number = payment.stp_testCardNumber;
-    card.expMonth = 12;
-    card.expYear = 2020;
-    card.cvc = @"123";
-    [Stripe createTokenWithCard:card completion:tokenBlock];
-#else
-    [Stripe createTokenWithPayment:payment
-                    operationQueue:[NSOperationQueue mainQueue]
-                        completion:tokenBlock];
-#endif
+    [self handlePaymentAuthorizationWithPayment:payment completion:completion];
 }
 
 - (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
