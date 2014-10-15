@@ -22,21 +22,15 @@
     return [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:paymentRequest.supportedNetworks];
 }
 
-+ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier
-                                                    amount:(NSDecimalNumber *)amount
-                                                  currency:(NSString *)currency
-                                               description:(NSString *)description {
++ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier {
     if (![PKPaymentRequest class]) {
         return nil;
     }
     PKPaymentRequest *paymentRequest = [PKPaymentRequest new];
-    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:description amount:amount];
     [paymentRequest setMerchantIdentifier:merchantIdentifier];
     [paymentRequest setSupportedNetworks:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa]];
     [paymentRequest setMerchantCapabilities:PKMerchantCapability3DS];
     [paymentRequest setCountryCode:@"US"];
-    [paymentRequest setCurrencyCode:currency];
-    [paymentRequest setPaymentSummaryItems:@[totalItem]];
     return paymentRequest;
 }
 
