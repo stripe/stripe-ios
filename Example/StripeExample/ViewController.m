@@ -46,10 +46,7 @@
 - (IBAction)beginPayment:(id)sender {
     NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
 
-    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId
-                                                                             amount:self.amount
-                                                                           currency:@"USD"
-                                                                        description:@"Premium Llama Food"];
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId];
     [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
     [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
     PKShippingMethod *shippingMethod = [PKShippingMethod summaryItemWithLabel:@"Llama Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
