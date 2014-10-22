@@ -39,6 +39,7 @@
 		0499F3A719DCF1F30094E5E5 /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0499F39419DCF1F30094E5E5 /* STPUtils.m */; };
 		0499F3A819DCF1F30094E5E5 /* Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 0499F39619DCF1F30094E5E5 /* Stripe.m */; };
 		0499F3A919DCF1F30094E5E5 /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 0499F39819DCF1F30094E5E5 /* StripeError.m */; };
+		04C0A07619F85E5100D699BB /* ShippingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0A07519F85E5100D699BB /* ShippingManager.m */; };
 		04CB47DA19BF5A4100A4632A /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CB47D919BF5A4100A4632A /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		04E75A3B19A71BFD000003DE /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3A19A71BFD000003DE /* Parse.framework */; };
 		04E75A3D19A71C22000003DE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3C19A71C22000003DE /* AudioToolbox.framework */; };
@@ -150,6 +151,9 @@
 		0499F39719DCF1F30094E5E5 /* StripeError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StripeError.h; sourceTree = "<group>"; };
 		0499F39819DCF1F30094E5E5 /* StripeError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StripeError.m; sourceTree = "<group>"; };
 		0499F39A19DCF1F30094E5E5 /* Stripe-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe-Prefix.pch"; sourceTree = "<group>"; };
+		04C0A07319F85BD800D699BB /* StripeExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = StripeExample.entitlements; sourceTree = "<group>"; };
+		04C0A07419F85E5100D699BB /* ShippingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShippingManager.h; sourceTree = "<group>"; };
+		04C0A07519F85E5100D699BB /* ShippingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShippingManager.m; sourceTree = "<group>"; };
 		04CB47D919BF5A4100A4632A /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		04E75A3A19A71BFD000003DE /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		04E75A3C19A71C22000003DE /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -313,6 +317,7 @@
 		0470A2A119A5D5DB00B66DB7 /* StripeExample */ = {
 			isa = PBXGroup;
 			children = (
+				04C0A07319F85BD800D699BB /* StripeExample.entitlements */,
 				0470A2D019A5D69E00B66DB7 /* Base.lproj */,
 				0470A2D319A5D69E00B66DB7 /* en.lproj */,
 				04E75A4F19A734EA000003DE /* Constants.h */,
@@ -323,6 +328,8 @@
 				0470A2B119A5D5DB00B66DB7 /* ViewController.m */,
 				0470A30519A5D69E00B66DB7 /* PaymentViewController.h */,
 				0470A30619A5D69E00B66DB7 /* PaymentViewController.m */,
+				04C0A07419F85E5100D699BB /* ShippingManager.h */,
+				04C0A07519F85E5100D699BB /* ShippingManager.m */,
 				0470A2AD19A5D5DB00B66DB7 /* Main.storyboard */,
 				0470A2B319A5D5DB00B66DB7 /* Images.xcassets */,
 				0470A2A219A5D5DB00B66DB7 /* Supporting Files */,
@@ -536,6 +543,11 @@
 				TargetAttributes = {
 					0470A29719A5D5DB00B66DB7 = {
 						DevelopmentTeam = Y28TH9SHX7;
+						SystemCapabilities = {
+							com.apple.OMC = {
+								enabled = 0;
+							};
+						};
 					};
 					0470A2B819A5D5DB00B66DB7 = {
 						TestTargetID = 0470A29719A5D5DB00B66DB7;
@@ -628,6 +640,7 @@
 				0470A32D19A5D69E00B66DB7 /* PaymentViewController.m in Sources */,
 				04EEE1F319CB7ED500192164 /* PTKCardExpiry.m in Sources */,
 				04E75A5519A74329000003DE /* MBProgressHUD.m in Sources */,
+				04C0A07619F85E5100D699BB /* ShippingManager.m in Sources */,
 				0426D76C19E4B3FE0097B74D /* STPTestPaymentAuthorizationViewController.m in Sources */,
 				04EEE1F019CB7ED500192164 /* PTKAddressZip.m in Sources */,
 				0470A2A819A5D5DB00B66DB7 /* main.m in Sources */,

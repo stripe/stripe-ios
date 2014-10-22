@@ -11,8 +11,8 @@
 #import "Stripe.h"
 #import "Constants.h"
 #import "Stripe+ApplePay.h"
-#import <AddressBook/AddressBook.h>
 #import "PaymentViewController.h"
+#import "ShippingManager.h"
 
 #if DEBUG
 #import "STPTestPaymentAuthorizationViewController.h"
@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *cartLabel;
 @property (weak, nonatomic) IBOutlet UIButton *checkoutButton;
 @property (nonatomic) NSDecimalNumber *amount;
+@property (nonatomic) ShippingManager *shippingManager;
 @end
 
 @implementation ViewController
@@ -47,13 +48,11 @@
     NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
 
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId];
-    [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
-    [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
-    PKShippingMethod *shippingMethod =
-        [PKShippingMethod summaryItemWithLabel:@"Llama Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
-    [paymentRequest setShippingMethods:@[shippingMethod]];
-    paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:shippingMethod];
     if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
+        [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
+        [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
+        paymentRequest.shippingMethods = [self.shippingManager defaultShippingMethods];
+        paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:paymentRequest.shippingMethods.firstObject];
 #if DEBUG
         STPTestPaymentAuthorizationViewController *auth = [[STPTestPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
 #else
@@ -72,51 +71,22 @@
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                   didSelectShippingAddress:(ABRecordRef)address
                                 completion:(void (^)(PKPaymentAuthorizationStatus status, NSArray *shippingMethods, NSArray *summaryItems))completion {
-    [self fetchShippingCostsForAddress:address
-                            completion:^(NSArray *shippingMethods, NSError *error) {
-                                if (error) {
-                                    completion(PKPaymentAuthorizationStatusFailure, nil, nil);
-                                    return;
-                                }
-                                completion(
-                                    PKPaymentAuthorizationStatusSuccess, shippingMethods, [self summaryItemsForShippingMethod:shippingMethods.firstObject]);
-                            }];
+    [self.shippingManager fetchShippingCostsForAddress:address
+                                            completion:^(NSArray *shippingMethods, NSError *error) {
+                                                if (error) {
+                                                    completion(PKPaymentAuthorizationStatusFailure, nil, nil);
+                                                    return;
+                                                }
+                                                completion(PKPaymentAuthorizationStatusSuccess,
+                                                           shippingMethods,
+                                                           [self summaryItemsForShippingMethod:shippingMethods.firstObject]);
+                                            }];
 }
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                    didSelectShippingMethod:(PKShippingMethod *)shippingMethod
                                 completion:(void (^)(PKPaymentAuthorizationStatus, NSArray *summaryItems))completion {
     completion(PKPaymentAuthorizationStatusSuccess, [self summaryItemsForShippingMethod:shippingMethod]);
-}
-
-- (void)fetchShippingCostsForAddress:(ABRecordRef)address completion:(void (^)(NSArray *shippingMethods, NSError *error))completion {
-    // you could, for example, go to UPS here and calculate shipping costs to that address.
-    ABMultiValueRef addressValues = ABRecordCopyValue(address, kABPersonAddressProperty);
-    NSString *country;
-    if (ABMultiValueGetCount(addressValues) > 0) {
-        CFDictionaryRef dict = ABMultiValueCopyValueAtIndex(addressValues, 0);
-        country = CFDictionaryGetValue(dict, kABPersonAddressCountryKey);
-    }
-    if (!country) {
-        completion(nil, [NSError new]);
-    }
-    if ([country isEqualToString:@"US"]) {
-        PKShippingMethod *normalItem =
-            [PKShippingMethod summaryItemWithLabel:@"Llama Domestic Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
-        normalItem.detail = @"3-5 Business Days";
-        PKShippingMethod *expressItem =
-            [PKShippingMethod summaryItemWithLabel:@"Llama Domestic Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"30.00"]];
-        expressItem.detail = @"Next Day";
-        completion(@[normalItem, expressItem], nil);
-    } else {
-        PKShippingMethod *normalItem =
-            [PKShippingMethod summaryItemWithLabel:@"Llama International Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"40.00"]];
-        normalItem.detail = @"3-5 Business Days";
-        PKShippingMethod *expressItem =
-            [PKShippingMethod summaryItemWithLabel:@"Llama International Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"50.00"]];
-        expressItem.detail = @"Next Day";
-        completion(@[normalItem, expressItem], nil);
-    }
 }
 
 - (NSArray *)summaryItemsForShippingMethod:(PKShippingMethod *)shippingMethod {
@@ -197,6 +167,13 @@
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (ShippingManager *)shippingManager {
+    if (!_shippingManager) {
+        _shippingManager = [ShippingManager new];
+    }
+    return _shippingManager;
 }
 
 @end

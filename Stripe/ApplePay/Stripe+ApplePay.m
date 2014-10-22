@@ -32,6 +32,7 @@
     [paymentRequest setSupportedNetworks:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa]];
     [paymentRequest setMerchantCapabilities:PKMerchantCapability3DS];
     [paymentRequest setCountryCode:@"US"];
+    [paymentRequest setCurrencyCode:@"USD"];
     return paymentRequest;
 }
 
