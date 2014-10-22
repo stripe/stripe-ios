@@ -10,6 +10,7 @@
 #import "StripeError.h"
 #import "STPCardTest.h"
 #import "STPUtils.h"
+#import <XCTest/XCTest.h>
 
 @implementation NSDate(CardTestOverrides)
 + (NSDate *)date

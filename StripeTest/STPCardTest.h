@@ -6,7 +6,7 @@
 //
 //
 
-#import <XCTest/XCTest.h>
+#import <XCTest/XCTestCase.h>
 
 @interface STPCardTest : XCTestCase
 
