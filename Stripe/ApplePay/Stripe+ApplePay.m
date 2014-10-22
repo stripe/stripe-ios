@@ -87,7 +87,7 @@
             NSMutableCharacterSet *set = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
             [set removeCharactersInString:@"+="];
             [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
-                NSString *param = [NSString stringWithFormat:@"&billing[%@]=%@", key, [obj stringByAddingPercentEncodingWithAllowedCharacters:set]];
+                NSString *param = [NSString stringWithFormat:@"&card[%@]=%@", key, [obj stringByAddingPercentEncodingWithAllowedCharacters:set]];
                 payloadString = [payloadString stringByAppendingString:param];
             }];
         }
