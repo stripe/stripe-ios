@@ -10,7 +10,7 @@
 
 @interface PaymentViewController : UIViewController
 
-@property(nonatomic)NSDecimalNumber *amount;
+@property (nonatomic) NSDecimalNumber *amount;
 - (IBAction)save:(id)sender;
 
 @end

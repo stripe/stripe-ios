@@ -14,7 +14,7 @@
  its properties with information that your customer enters on your credit card
  form.  Then you create tokens from these.
  */
-@interface STPCard : NSObject <STPFormEncodeProtocol>
+@interface STPCard : NSObject<STPFormEncodeProtocol>
 
 @property (nonatomic) NSString *number;
 @property (nonatomic) NSUInteger expMonth;
@@ -34,7 +34,6 @@
 @property (nonatomic, readonly) NSString *type;
 @property (nonatomic, readonly) NSString *fingerprint;
 @property (nonatomic, readonly) NSString *country;
-
 
 /*
  You should not use this constructor.  This constructor is used by Stripe to

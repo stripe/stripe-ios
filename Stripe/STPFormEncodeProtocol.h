@@ -6,7 +6,7 @@
 //
 //
 
-@protocol STPFormEncodeProtocol <NSObject>
+@protocol STPFormEncodeProtocol<NSObject>
 
 @required
 - (NSData *)formEncode;

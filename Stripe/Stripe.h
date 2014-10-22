@@ -11,9 +11,9 @@
 #import "STPCard.h"
 #import "STPToken.h"
 
-FOUNDATION_EXPORT NSString *const kStripeiOSVersion; // Version of this library.
+FOUNDATION_EXPORT NSString* const kStripeiOSVersion; // Version of this library.
 
-typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
+typedef void (^STPCompletionBlock)(STPToken* token, NSError* error);
 
 // Stripe is a static class used to create and retrieve tokens.
 @interface Stripe : NSObject
@@ -22,27 +22,34 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
  If you set a default publishable key, it will be used in any of the methods
  below that do not accept a publishable key parameter
  */
-+ (NSString *)defaultPublishableKey;
-+ (void)setDefaultPublishableKey:(NSString *)publishableKey;
++ (NSString*)defaultPublishableKey;
++ (void)setDefaultPublishableKey:(NSString*)publishableKey;
 
-+ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler;
++ (void)createTokenWithCard:(STPCard*)card
+             publishableKey:(NSString*)publishableKey
+             operationQueue:(NSOperationQueue*)queue
+                 completion:(STPCompletionBlock)handler;
 
-+ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler;
++ (void)createTokenWithCard:(STPCard*)card publishableKey:(NSString*)publishableKey completion:(STPCompletionBlock)handler;
 
-+ (void)createTokenWithCard:(STPCard *)card operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler;
++ (void)createTokenWithCard:(STPCard*)card operationQueue:(NSOperationQueue*)queue completion:(STPCompletionBlock)handler;
 
-+ (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)handler;
++ (void)createTokenWithCard:(STPCard*)card completion:(STPCompletionBlock)handler;
 
-+ (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler;
++ (void)requestTokenWithID:(NSString*)tokenId
+            publishableKey:(NSString*)publishableKey
+            operationQueue:(NSOperationQueue*)queue
+                completion:(STPCompletionBlock)handler;
 
-+ (void)requestTokenWithID:(NSString *)tokenId publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler;
++ (void)requestTokenWithID:(NSString*)tokenId publishableKey:(NSString*)publishableKey completion:(STPCompletionBlock)handler;
 
-+ (void)requestTokenWithID:(NSString *)tokenId operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler;
++ (void)requestTokenWithID:(NSString*)tokenId operationQueue:(NSOperationQueue*)queue completion:(STPCompletionBlock)handler;
 
-+ (void)requestTokenWithID:(NSString *)tokenId completion:(STPCompletionBlock)handler;
++ (void)requestTokenWithID:(NSString*)tokenId completion:(STPCompletionBlock)handler;
 
-+ (NSDictionary *)stripeUserAgentDetails;
-+ (NSURL *)apiURL;
-+ (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError completion:(STPCompletionBlock)handler;
++ (NSDictionary*)stripeUserAgentDetails;
+
++ (NSURL*)apiURL;
++ (void)handleTokenResponse:(NSURLResponse*)response body:(NSData*)body error:(NSError*)requestError completion:(STPCompletionBlock)handler;
 
 @end

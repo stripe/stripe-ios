@@ -13,14 +13,12 @@
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     if (StripePublishableKey) {
         [Stripe setDefaultPublishableKey:StripePublishableKey];
     }
     if (ParseApplicationId && ParseClientKey) {
-        [Parse setApplicationId:ParseApplicationId
-                      clientKey:ParseClientKey];
+        [Parse setApplicationId:ParseApplicationId clientKey:ParseClientKey];
     }
     return YES;
 }

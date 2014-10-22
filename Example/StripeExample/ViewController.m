@@ -19,7 +19,7 @@
 #import "PKPayment+STPTestKeys.h"
 #endif
 
-@interface ViewController()<PKPaymentAuthorizationViewControllerDelegate>
+@interface ViewController () <PKPaymentAuthorizationViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *cartLabel;
 @property (weak, nonatomic) IBOutlet UIButton *checkoutButton;
 @property (nonatomic) NSDecimalNumber *amount;
@@ -27,14 +27,14 @@
 
 @implementation ViewController
 
--(void)viewDidLoad {
+- (void)viewDidLoad {
     [super viewDidLoad];
     [self updateCartWithNumberOfShirts:0];
 }
 
 - (void)updateCartWithNumberOfShirts:(NSUInteger)numberOfShirts {
     NSInteger price = 10;
-    self.amount = [NSDecimalNumber decimalNumberWithMantissa:numberOfShirts*price exponent:0 isNegative:NO];
+    self.amount = [NSDecimalNumber decimalNumberWithMantissa:numberOfShirts * price exponent:0 isNegative:NO];
     self.cartLabel.text = [NSString stringWithFormat:@"%@ shirts = $%@", @(numberOfShirts), self.amount];
     self.checkoutButton.enabled = numberOfShirts > 0;
 }
@@ -49,7 +49,8 @@
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId];
     [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
     [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
-    PKShippingMethod *shippingMethod = [PKShippingMethod summaryItemWithLabel:@"Llama Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
+    PKShippingMethod *shippingMethod =
+        [PKShippingMethod summaryItemWithLabel:@"Llama Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
     [paymentRequest setShippingMethods:@[shippingMethod]];
     paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:shippingMethod];
     if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
@@ -60,8 +61,7 @@
 #endif
         auth.delegate = self;
         [self presentViewController:auth animated:YES completion:nil];
-    }
-    else {
+    } else {
         PaymentViewController *paymentViewController = [[PaymentViewController alloc] initWithNibName:nil bundle:nil];
         paymentViewController.amount = self.amount;
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:paymentViewController];
@@ -69,19 +69,23 @@
     }
 }
 
-- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingAddress:(ABRecordRef)address
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
+                  didSelectShippingAddress:(ABRecordRef)address
                                 completion:(void (^)(PKPaymentAuthorizationStatus status, NSArray *shippingMethods, NSArray *summaryItems))completion {
-    [self fetchShippingCostsForAddress:address completion:^(NSArray *shippingMethods, NSError *error) {
-        if (error) {
-            completion(PKPaymentAuthorizationStatusFailure, nil, nil);
-            return;
-        }
-        completion(PKPaymentAuthorizationStatusSuccess, shippingMethods, [self summaryItemsForShippingMethod:shippingMethods.firstObject]);
-    }];
+    [self fetchShippingCostsForAddress:address
+                            completion:^(NSArray *shippingMethods, NSError *error) {
+                                if (error) {
+                                    completion(PKPaymentAuthorizationStatusFailure, nil, nil);
+                                    return;
+                                }
+                                completion(
+                                    PKPaymentAuthorizationStatusSuccess, shippingMethods, [self summaryItemsForShippingMethod:shippingMethods.firstObject]);
+                            }];
 }
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
-                   didSelectShippingMethod:(PKShippingMethod *)shippingMethod completion:(void (^)(PKPaymentAuthorizationStatus, NSArray *summaryItems))completion {
+                   didSelectShippingMethod:(PKShippingMethod *)shippingMethod
+                                completion:(void (^)(PKPaymentAuthorizationStatus, NSArray *summaryItems))completion {
     completion(PKPaymentAuthorizationStatusSuccess, [self summaryItemsForShippingMethod:shippingMethod]);
 }
 
@@ -97,16 +101,19 @@
         completion(nil, [NSError new]);
     }
     if ([country isEqualToString:@"US"]) {
-        PKShippingMethod *normalItem = [PKShippingMethod summaryItemWithLabel:@"Llama Domestic Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
+        PKShippingMethod *normalItem =
+            [PKShippingMethod summaryItemWithLabel:@"Llama Domestic Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
         normalItem.detail = @"3-5 Business Days";
-        PKShippingMethod *expressItem = [PKShippingMethod summaryItemWithLabel:@"Llama Domestic Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"30.00"]];
+        PKShippingMethod *expressItem =
+            [PKShippingMethod summaryItemWithLabel:@"Llama Domestic Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"30.00"]];
         expressItem.detail = @"Next Day";
         completion(@[normalItem, expressItem], nil);
-    }
-    else {
-        PKShippingMethod *normalItem = [PKShippingMethod summaryItemWithLabel:@"Llama International Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"40.00"]];
+    } else {
+        PKShippingMethod *normalItem =
+            [PKShippingMethod summaryItemWithLabel:@"Llama International Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"40.00"]];
         normalItem.detail = @"3-5 Business Days";
-        PKShippingMethod *expressItem = [PKShippingMethod summaryItemWithLabel:@"Llama International Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"50.00"]];
+        PKShippingMethod *expressItem =
+            [PKShippingMethod summaryItemWithLabel:@"Llama International Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"50.00"]];
         expressItem.detail = @"Next Day";
         completion(@[normalItem, expressItem], nil);
     }
@@ -125,9 +132,8 @@
     [self handlePaymentAuthorizationWithPayment:payment completion:completion];
 }
 
-- (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment
-                                   completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    void(^tokenBlock)(STPToken *token, NSError *error) = ^void(STPToken *token, NSError *error) {
+- (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    void (^tokenBlock)(STPToken * token, NSError * error) = ^void(STPToken *token, NSError *error) {
         if (error) {
             completion(PKPaymentAuthorizationStatusFailure);
             return;
@@ -145,44 +151,49 @@
         return;
     }
 #endif
-    [Stripe createTokenWithPayment:payment
-                    operationQueue:[NSOperationQueue mainQueue]
-                        completion:tokenBlock];
+    [Stripe createTokenWithPayment:payment operationQueue:[NSOperationQueue mainQueue] completion:tokenBlock];
 }
 
-- (void)createBackendChargeWithToken:(STPToken *)token
-                          completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+- (void)createBackendChargeWithToken:(STPToken *)token completion:(void (^)(PKPaymentAuthorizationStatus))completion {
     if (!ParseApplicationId || !ParseClientKey) {
-        UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Todo: Submit this token to your backend"
-                                                          message:[NSString stringWithFormat:@"Good news! Stripe turned your credit card into a token: %@ \nYou can follow the instructions in the README to set up Parse as an example backend, or use this token to manually create charges at dashboard.stripe.com .", token.tokenId]
-                                                         delegate:nil
-                                                cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                                                otherButtonTitles:nil];
-        
+        UIAlertView *message =
+            [[UIAlertView alloc] initWithTitle:@"Todo: Submit this token to your backend"
+                                       message:[NSString stringWithFormat:@"Good news! Stripe turned your credit card into a token: %@ \nYou can follow the "
+                                                                          @"instructions in the README to set up Parse as an example backend, or use this "
+                                                                          @"token to manually create charges at dashboard.stripe.com .",
+                                                                          token.tokenId]
+                                      delegate:nil
+                             cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
+                             otherButtonTitles:nil];
+
         [message show];
         [self updateCartWithNumberOfShirts:0];
         completion(PKPaymentAuthorizationStatusSuccess);
         return;
     }
     NSDictionary *chargeParams = @{
-                                   @"token": token.tokenId,
-                                   @"currency": @"usd",
-                                   @"amount": @"1000", // this is in cents (i.e. $10)
-                                   };
+        @"token": token.tokenId,
+        @"currency": @"usd",
+        @"amount": @"1000", // this is in cents (i.e. $10)
+    };
     // This passes the token off to our payment backend, which will then actually complete charging the card using your account's
-    [PFCloud callFunctionInBackground:@"charge" withParameters:chargeParams block:^(id object, NSError *error) {
-        if (error) {
-            completion(PKPaymentAuthorizationStatusFailure);
-        }
-        else {
-            // We're done!
-            [self updateCartWithNumberOfShirts:0];
-            completion(PKPaymentAuthorizationStatusSuccess);
-            [[[UIAlertView alloc] initWithTitle:@"Payment Succeeded" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil] show];
-        }
-    }];
+    [PFCloud callFunctionInBackground:@"charge"
+                       withParameters:chargeParams
+                                block:^(id object, NSError *error) {
+                                    if (error) {
+                                        completion(PKPaymentAuthorizationStatusFailure);
+                                    } else {
+                                        // We're done!
+                                        [self updateCartWithNumberOfShirts:0];
+                                        completion(PKPaymentAuthorizationStatusSuccess);
+                                        [[[UIAlertView alloc] initWithTitle:@"Payment Succeeded"
+                                                                    message:nil
+                                                                   delegate:nil
+                                                          cancelButtonTitle:nil
+                                                          otherButtonTitles:@"OK", nil] show];
+                                    }
+                                }];
 }
-
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     [self dismissViewControllerAnimated:YES completion:nil];

@@ -19,12 +19,9 @@
 
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier;
 
-+ (void)createTokenWithPayment:(PKPayment *)payment
-                    completion:(STPCompletionBlock)handler;
++ (void)createTokenWithPayment:(PKPayment *)payment completion:(STPCompletionBlock)handler;
 
-+ (void)createTokenWithPayment:(PKPayment *)payment
-                operationQueue:(NSOperationQueue *)queue
-                    completion:(STPCompletionBlock)handler;
++ (void)createTokenWithPayment:(PKPayment *)payment operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler;
 
 @end
 

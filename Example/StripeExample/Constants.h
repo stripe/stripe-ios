@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString * const StripePublishableKey;
-extern NSString * const ParseApplicationId;
-extern NSString * const ParseClientKey;
+extern NSString *const StripePublishableKey;
+extern NSString *const ParseApplicationId;
+extern NSString *const ParseClientKey;
 
 @interface Constants : NSObject
 
