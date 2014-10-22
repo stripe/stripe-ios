@@ -6,7 +6,7 @@
 //
 //
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000// && defined(STRIPE_ENABLE_APPLEPAY)
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
 
 #import "Stripe.h"
 #import "Stripe+ApplePay.h"
@@ -35,38 +35,30 @@
     return paymentRequest;
 }
 
-+ (void)createTokenWithPayment:(PKPayment *)payment
-                    completion:(STPCompletionBlock)handler {
-    [self createTokenWithPayment:payment
-                  operationQueue:[NSOperationQueue mainQueue]
-                      completion:handler];
++ (void)createTokenWithPayment:(PKPayment *)payment completion:(STPCompletionBlock)handler {
+    [self createTokenWithPayment:payment operationQueue:[NSOperationQueue mainQueue] completion:handler];
 }
 
-+ (void)createTokenWithPayment:(PKPayment *)payment
-                operationQueue:(NSOperationQueue *)queue
-                    completion:(STPCompletionBlock)handler {
-    
++ (void)createTokenWithPayment:(PKPayment *)payment operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler {
     if (handler == nil) {
         [NSException raise:@"RequiredParameter" format:@"'handler' is required to use the token that is created"];
     }
-    
+
     NSURL *url = [self apiURL];
-    
+
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
-    NSData *userAgentData = [NSJSONSerialization dataWithJSONObject:[self stripeUserAgentDetails]
-                                                            options:0
-                                                              error:nil];
-    NSString *userAgentDetails = [[NSString alloc] initWithData:userAgentData
-                                                       encoding:NSUTF8StringEncoding];
+    NSData *userAgentData = [NSJSONSerialization dataWithJSONObject:[self stripeUserAgentDetails] options:0 error:nil];
+    NSString *userAgentDetails = [[NSString alloc] initWithData:userAgentData encoding:NSUTF8StringEncoding];
     [request setValue:userAgentDetails forHTTPHeaderField:@"X-Stripe-User-Agent"];
     [request setValue:[@"Bearer " stringByAppendingString:[self defaultPublishableKey]] forHTTPHeaderField:@"Authorization"];
-    
+
     NSMutableCharacterSet *set = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
     [set removeCharactersInString:@"+="];
-    NSString *paymentString = [[[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding] stringByAddingPercentEncodingWithAllowedCharacters:set];
+    NSString *paymentString =
+        [[[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding] stringByAddingPercentEncodingWithAllowedCharacters:set];
     __block NSString *payloadString = [@"pk_token=" stringByAppendingString:paymentString];
-    
+
     if (payment.billingAddress) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         ABMultiValueRef addressValues = ABRecordCopyValue(payment.billingAddress, kABPersonAddressProperty);
@@ -100,17 +92,16 @@
             }];
         }
     }
-    
+
     request.HTTPBody = [payloadString dataUsingEncoding:NSUTF8StringEncoding];
-    
-    
+
     [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
                                                                  completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
                                                                      [self handleTokenResponse:response body:body error:requestError completion:handler];
                                                                  }];
 }
 
-+ (BOOL) isSimulatorBuild {
++ (BOOL)isSimulatorBuild {
 #if TARGET_IPHONE_SIMULATOR
     return YES;
 #else

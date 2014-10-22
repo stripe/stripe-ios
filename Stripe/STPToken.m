@@ -11,8 +11,7 @@
 
 @implementation STPToken
 
-- (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary
-{
+- (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary {
     self = [super init];
 
     if (self) {
@@ -27,38 +26,30 @@
     return self;
 }
 
-- (NSString *)description
-{
+- (NSString *)description {
     NSString *token = self.tokenId ? self.tokenId : @"Unknown token";
     NSString *livemode = self.livemode ? @"live mode" : @"test mode";
 
     return [NSString stringWithFormat:@"%@ (%@)", token, livemode];
 }
 
-- (void)postToURL:(NSURL *)url withParams:(NSMutableDictionary *)params completion:(void (^)(NSURLResponse *, NSData *, NSError *))handler
-{
+- (void)postToURL:(NSURL *)url withParams:(NSMutableDictionary *)params completion:(void (^)(NSURLResponse *, NSData *, NSError *))handler {
     NSMutableString *body = [NSMutableString stringWithFormat:@"stripeToken=%@", self.tokenId];
 
-    [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [body appendFormat:@"&%@=%@", key, obj];
-    }];
+    [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) { [body appendFormat:@"&%@=%@", key, obj]; }];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     request.HTTPBody = [body dataUsingEncoding:NSUTF8StringEncoding];
 
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:handler];
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:handler];
 }
 
-- (BOOL)isEqual:(id)object
-{
+- (BOOL)isEqual:(id)object {
     return [self isEqualToToken:object];
 }
 
-- (BOOL)isEqualToToken:(STPToken *)object
-{
+- (BOOL)isEqualToToken:(STPToken *)object {
     if (self == object) {
         return YES;
     }
@@ -67,11 +58,8 @@
         return NO;
     }
 
-    return self.livemode == object.livemode
-        && self.used == object.used
-        && [self.tokenId isEqualToString:object.tokenId]
-        && [self.created isEqualToDate:object.created]
-        && [self.card isEqualToCard:object.card];
+    return self.livemode == object.livemode && self.used == object.used && [self.tokenId isEqualToString:object.tokenId] &&
+           [self.created isEqualToDate:object.created] && [self.card isEqualToCard:object.card];
 }
 
 @end
