@@ -40,7 +40,6 @@
 		04BA873419F89D5400B79DAF /* STPTestPaymentSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04BA872B19F89D5400B79DAF /* STPTestPaymentSummaryViewController.xib */; };
 		04BA873519F89D5400B79DAF /* STPTestShippingMethodStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BA872D19F89D5400B79DAF /* STPTestShippingMethodStore.m */; };
 		04C0A07619F85E5100D699BB /* ShippingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0A07519F85E5100D699BB /* ShippingManager.m */; };
-		04CB47DA19BF5A4100A4632A /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CB47D919BF5A4100A4632A /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		04E75A3B19A71BFD000003DE /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3A19A71BFD000003DE /* Parse.framework */; };
 		04E75A3D19A71C22000003DE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3C19A71C22000003DE /* AudioToolbox.framework */; };
 		04E75A3F19A71C2A000003DE /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3E19A71C2A000003DE /* CFNetwork.framework */; };
@@ -49,7 +48,6 @@
 		04E75A4519A71C59000003DE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A4419A71C59000003DE /* MobileCoreServices.framework */; };
 		04E75A4719A71C5F000003DE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A4619A71C5F000003DE /* QuartzCore.framework */; };
 		04E75A4919A71C94000003DE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A4819A71C94000003DE /* Security.framework */; };
-		04E75A4B19A71C99000003DE /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A4A19A71C99000003DE /* StoreKit.framework */; };
 		04E75A4D19A71CA1000003DE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A4C19A71CA1000003DE /* SystemConfiguration.framework */; };
 		04E75A5119A734EA000003DE /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E75A5019A734EA000003DE /* Constants.m */; };
 		04E75A5519A74329000003DE /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E75A5419A74329000003DE /* MBProgressHUD.m */; };
@@ -154,7 +152,6 @@
 		04C0A07319F85BD800D699BB /* StripeExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = StripeExample.entitlements; sourceTree = "<group>"; };
 		04C0A07419F85E5100D699BB /* ShippingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShippingManager.h; sourceTree = "<group>"; };
 		04C0A07519F85E5100D699BB /* ShippingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShippingManager.m; sourceTree = "<group>"; };
-		04CB47D919BF5A4100A4632A /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		04E75A3A19A71BFD000003DE /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		04E75A3C19A71C22000003DE /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		04E75A3E19A71C2A000003DE /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -163,7 +160,6 @@
 		04E75A4419A71C59000003DE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		04E75A4619A71C5F000003DE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		04E75A4819A71C94000003DE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		04E75A4A19A71C99000003DE /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		04E75A4C19A71CA1000003DE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		04E75A4F19A734EA000003DE /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		04E75A5019A734EA000003DE /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
@@ -216,9 +212,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04CB47DA19BF5A4100A4632A /* PassKit.framework in Frameworks */,
 				04E75A4D19A71CA1000003DE /* SystemConfiguration.framework in Frameworks */,
-				04E75A4B19A71C99000003DE /* StoreKit.framework in Frameworks */,
 				04E75A4919A71C94000003DE /* Security.framework in Frameworks */,
 				04E75A4719A71C5F000003DE /* QuartzCore.framework in Frameworks */,
 				04E75A4519A71C59000003DE /* MobileCoreServices.framework in Frameworks */,
@@ -272,9 +266,7 @@
 		0470A29A19A5D5DB00B66DB7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				04CB47D919BF5A4100A4632A /* PassKit.framework */,
 				04E75A4C19A71CA1000003DE /* SystemConfiguration.framework */,
-				04E75A4A19A71C99000003DE /* StoreKit.framework */,
 				04E75A4819A71C94000003DE /* Security.framework */,
 				04E75A4619A71C5F000003DE /* QuartzCore.framework */,
 				04E75A4419A71C59000003DE /* MobileCoreServices.framework */,
@@ -544,7 +536,13 @@
 					0470A29719A5D5DB00B66DB7 = {
 						DevelopmentTeam = Y28TH9SHX7;
 						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
 							com.apple.OMC = {
+								enabled = 1;
+							};
+							com.apple.Passbook = {
 								enabled = 0;
 							};
 						};
@@ -793,6 +791,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = StripeExample/StripeExample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -824,6 +823,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = StripeExample/StripeExample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
