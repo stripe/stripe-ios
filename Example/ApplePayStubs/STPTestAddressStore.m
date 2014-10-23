@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
 #import "STPTestAddressStore.h"
 
 @interface STPTestAddressStore()
@@ -68,23 +69,26 @@
     ABMutableMultiValueRef address = ABMultiValueCreateMutable(kABDictionaryPropertyType);
     CFStringRef keys[5];
     CFStringRef values[5];
-    
-    keys[0] = kABPersonAddressStreetKey;
-    keys[1] = kABPersonAddressCityKey;
-    keys[2] = kABPersonAddressStateKey;
-    keys[3] = kABPersonAddressZIPKey;
-    keys[4] = kABPersonAddressCountryKey;
-    values[0] = obscure ? CFSTR("") : CFBridgingRetain(item[@"line1"]);
-    values[1] = CFBridgingRetain(item[@"city"]);
-    values[2] = CFBridgingRetain(item[@"state"]);
-    values[3] = CFBridgingRetain(item[@"zip"]);
-    values[4] = CFBridgingRetain(item[@"country"]);
-    
+    CFIndex numValues = 0;
+
+    if (!obscure) {
+        keys[numValues] = kABPersonAddressStreetKey;
+        values[numValues++] = CFBridgingRetain(item[@"line1"]);
+    }
+    keys[numValues] = kABPersonAddressCityKey;
+    values[numValues++] = CFBridgingRetain(item[@"city"]);
+    keys[numValues] = kABPersonAddressStateKey;
+    values[numValues++] = CFBridgingRetain(item[@"state"]);
+    keys[numValues] = kABPersonAddressZIPKey;
+    values[numValues++] = CFBridgingRetain(item[@"zip"]);
+    keys[numValues] = kABPersonAddressCountryKey;
+    values[numValues++] = CFBridgingRetain(item[@"country"]);
+
     CFDictionaryRef aDict = CFDictionaryCreate(
                                                kCFAllocatorDefault,
-                                               (void *)keys,
-                                               (void *)values,
-                                               5,
+                                               (const void **)keys,
+                                               (const void **)values,
+                                               numValues,
                                                &kCFCopyStringDictionaryKeyCallBacks,
                                                &kCFTypeDictionaryValueCallBacks
                                                );
@@ -120,3 +124,5 @@
 }
 
 @end
+
+#endif

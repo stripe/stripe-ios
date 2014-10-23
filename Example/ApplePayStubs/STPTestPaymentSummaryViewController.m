@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
 
 #import "STPTestPaymentSummaryViewController.h"
 #import "STPTestDataTableViewController.h"
@@ -163,6 +163,9 @@ NSString * const STPTestPaymentSectionTitlePayment = @"Payment";
         PKPaymentSummaryItem *item = self.summaryItems[indexPath.row];
         NSString *text = [item.label uppercaseString];
         if (indexPath.row == [self.tableView numberOfRowsInSection:indexPath.section] - 1) {
+            if (text == nil) {
+                text = @"";
+            }
             text = [@"PAY " stringByAppendingString:text];
         }
         cell.textLabel.text = text;

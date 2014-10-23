@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+
 #import "STPTestCardStore.h"
 
 @interface STPTestCardStore()
@@ -20,7 +22,6 @@
     NSMutableDictionary *card = [NSMutableDictionary new];
     card[@"name"] = @"Stripe Test Card";
     card[@"number"] = @"4242424242424242";
-    card[@"last4"] = @"4242";
     card[@"expMonth"] = @12;
     card[@"expYear"] = @2030;
     card[@"cvc"] = @"123";
@@ -29,9 +30,8 @@
 
 + (NSDictionary *)defaultFailingCard {
     NSMutableDictionary *card = [NSMutableDictionary new];
-    card[@"name"] = @"Stripe Test Failing Card";
+    card[@"name"] = @"Stripe Test Card";
     card[@"number"] = @"4000000000000002";
-    card[@"last4"] = @"0002";
     card[@"expMonth"] = @12;
     card[@"expYear"] = @2030;
     card[@"cvc"] = @"123";
@@ -53,3 +53,5 @@
 }
 
 @end
+
+#endif
