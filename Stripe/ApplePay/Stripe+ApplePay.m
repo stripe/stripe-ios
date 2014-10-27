@@ -85,6 +85,7 @@
             if (country) {
                 params[@"address_country"] = country;
             }
+            CFRelease(dict);
             NSMutableCharacterSet *set = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
             [set removeCharactersInString:@"+="];
             [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
@@ -92,6 +93,7 @@
                 payloadString = [payloadString stringByAppendingString:param];
             }];
         }
+        CFRelease(addressValues);
     }
 
     request.HTTPBody = [payloadString dataUsingEncoding:NSUTF8StringEncoding];

@@ -22,6 +22,7 @@
     if (ABMultiValueGetCount(addressValues) > 0) {
         CFDictionaryRef dict = ABMultiValueCopyValueAtIndex(addressValues, 0);
         state = CFDictionaryGetValue(dict, kABPersonAddressStateKey);
+        CFRelease(dict);
     }
     if (!state) {
         completion(nil, [NSError new]);
@@ -31,6 +32,7 @@
     } else {
         completion([self internationalShippingMethods], nil);
     }
+    CFRelease(addressValues);
 }
 
 - (NSArray *)californiaShippingMethods {
