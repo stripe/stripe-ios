@@ -1,3 +1,7 @@
+== 2.2.1 2014-10-27
+* Add billing address fields to our Apple Pay API
+* Various bug fixes and code improvements
+
 == 2.2.0 2014-10-08
 * Move Apple Pay testing functionality into a separate project, ApplePayStubs. For more info, see github.com/stripe/ApplePayStubs.
 * Improve the provided example app
