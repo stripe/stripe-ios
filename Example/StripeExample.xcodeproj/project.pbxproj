@@ -43,16 +43,10 @@
 		04CAFE221A018A2A00C36FC5 /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE0C1A018A2A00C36FC5 /* STPCard.m */; };
 		04CAFE231A018A2A00C36FC5 /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE0F1A018A2A00C36FC5 /* STPToken.m */; };
 		04CAFE241A018A2A00C36FC5 /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE0F1A018A2A00C36FC5 /* STPToken.m */; };
-		04CAFE251A018A2A00C36FC5 /* STPToken.m.orig in Resources */ = {isa = PBXBuildFile; fileRef = 04CAFE101A018A2A00C36FC5 /* STPToken.m.orig */; };
-		04CAFE261A018A2A00C36FC5 /* STPToken.m.orig in Resources */ = {isa = PBXBuildFile; fileRef = 04CAFE101A018A2A00C36FC5 /* STPToken.m.orig */; };
 		04CAFE271A018A2A00C36FC5 /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE121A018A2A00C36FC5 /* STPUtils.m */; };
 		04CAFE281A018A2A00C36FC5 /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE121A018A2A00C36FC5 /* STPUtils.m */; };
-		04CAFE291A018A2A00C36FC5 /* Stripe.h.orig in Resources */ = {isa = PBXBuildFile; fileRef = 04CAFE141A018A2A00C36FC5 /* Stripe.h.orig */; };
-		04CAFE2A1A018A2A00C36FC5 /* Stripe.h.orig in Resources */ = {isa = PBXBuildFile; fileRef = 04CAFE141A018A2A00C36FC5 /* Stripe.h.orig */; };
 		04CAFE2B1A018A2A00C36FC5 /* Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE151A018A2A00C36FC5 /* Stripe.m */; };
 		04CAFE2C1A018A2A00C36FC5 /* Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE151A018A2A00C36FC5 /* Stripe.m */; };
-		04CAFE2D1A018A2A00C36FC5 /* Stripe.m.orig in Resources */ = {isa = PBXBuildFile; fileRef = 04CAFE161A018A2A00C36FC5 /* Stripe.m.orig */; };
-		04CAFE2E1A018A2A00C36FC5 /* Stripe.m.orig in Resources */ = {isa = PBXBuildFile; fileRef = 04CAFE161A018A2A00C36FC5 /* Stripe.m.orig */; };
 		04CAFE2F1A018A2A00C36FC5 /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE181A018A2A00C36FC5 /* StripeError.m */; };
 		04CAFE301A018A2A00C36FC5 /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE181A018A2A00C36FC5 /* StripeError.m */; };
 		04E75A3B19A71BFD000003DE /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3A19A71BFD000003DE /* Parse.framework */; };
@@ -162,13 +156,10 @@
 		04CAFE0D1A018A2A00C36FC5 /* STPFormEncodeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPFormEncodeProtocol.h; sourceTree = "<group>"; };
 		04CAFE0E1A018A2A00C36FC5 /* STPToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPToken.h; sourceTree = "<group>"; };
 		04CAFE0F1A018A2A00C36FC5 /* STPToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPToken.m; sourceTree = "<group>"; };
-		04CAFE101A018A2A00C36FC5 /* STPToken.m.orig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = STPToken.m.orig; sourceTree = "<group>"; };
 		04CAFE111A018A2A00C36FC5 /* STPUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPUtils.h; sourceTree = "<group>"; };
 		04CAFE121A018A2A00C36FC5 /* STPUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPUtils.m; sourceTree = "<group>"; };
 		04CAFE131A018A2A00C36FC5 /* Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stripe.h; sourceTree = "<group>"; };
-		04CAFE141A018A2A00C36FC5 /* Stripe.h.orig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Stripe.h.orig; sourceTree = "<group>"; };
 		04CAFE151A018A2A00C36FC5 /* Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stripe.m; sourceTree = "<group>"; };
-		04CAFE161A018A2A00C36FC5 /* Stripe.m.orig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Stripe.m.orig; sourceTree = "<group>"; };
 		04CAFE171A018A2A00C36FC5 /* StripeError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StripeError.h; sourceTree = "<group>"; };
 		04CAFE181A018A2A00C36FC5 /* StripeError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StripeError.m; sourceTree = "<group>"; };
 		04CAFE1A1A018A2A00C36FC5 /* Stripe-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe-Prefix.pch"; sourceTree = "<group>"; };
@@ -407,13 +398,10 @@
 				04CAFE0D1A018A2A00C36FC5 /* STPFormEncodeProtocol.h */,
 				04CAFE0E1A018A2A00C36FC5 /* STPToken.h */,
 				04CAFE0F1A018A2A00C36FC5 /* STPToken.m */,
-				04CAFE101A018A2A00C36FC5 /* STPToken.m.orig */,
 				04CAFE111A018A2A00C36FC5 /* STPUtils.h */,
 				04CAFE121A018A2A00C36FC5 /* STPUtils.m */,
 				04CAFE131A018A2A00C36FC5 /* Stripe.h */,
-				04CAFE141A018A2A00C36FC5 /* Stripe.h.orig */,
 				04CAFE151A018A2A00C36FC5 /* Stripe.m */,
-				04CAFE161A018A2A00C36FC5 /* Stripe.m.orig */,
 				04CAFE171A018A2A00C36FC5 /* StripeError.h */,
 				04CAFE181A018A2A00C36FC5 /* StripeError.m */,
 				04CAFE191A018A2A00C36FC5 /* Supporting Files */,
@@ -605,7 +593,6 @@
 				04EEE1FD19CB7ED500192164 /* cvc.png in Resources */,
 				04EEE20B19CB7ED500192164 /* gradient@2x.png in Resources */,
 				0470A2B419A5D5DB00B66DB7 /* Images.xcassets in Resources */,
-				04CAFE2D1A018A2A00C36FC5 /* Stripe.m.orig in Resources */,
 				04EEE20119CB7ED500192164 /* discover.png in Resources */,
 				04EEE1FF19CB7ED500192164 /* diners.png in Resources */,
 				04EEE20019CB7ED500192164 /* diners@2x.png in Resources */,
@@ -615,11 +602,9 @@
 				04EEE20C19CB7ED500192164 /* textfield.png in Resources */,
 				04EEE20819CB7ED500192164 /* placeholder@2x.png in Resources */,
 				04EEE1F919CB7ED500192164 /* amex.png in Resources */,
-				04CAFE251A018A2A00C36FC5 /* STPToken.m.orig in Resources */,
 				04EEE20319CB7ED500192164 /* jcb.png in Resources */,
 				04EEE20D19CB7ED500192164 /* textfield@2x.png in Resources */,
 				04EEE1FE19CB7ED500192164 /* cvc@2x.png in Resources */,
-				04CAFE291A018A2A00C36FC5 /* Stripe.h.orig in Resources */,
 				04EEE1FC19CB7ED500192164 /* cvc-amex@2x.png in Resources */,
 				04EEE20419CB7ED500192164 /* jcb@2x.png in Resources */,
 				04EEE20719CB7ED500192164 /* placeholder.png in Resources */,
@@ -639,9 +624,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0470A2C519A5D5DB00B66DB7 /* InfoPlist.strings in Resources */,
-				04CAFE2A1A018A2A00C36FC5 /* Stripe.h.orig in Resources */,
-				04CAFE2E1A018A2A00C36FC5 /* Stripe.m.orig in Resources */,
-				04CAFE261A018A2A00C36FC5 /* STPToken.m.orig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
