@@ -12,7 +12,8 @@
 @class STPBankAccount;
 
 /*
- STPTokens get created by calls to + [Stripe createTokenWithCard:], + [Stripe createTokenWithBankAccount:], and + [Stripe getTokenWithId:].  You should not construct these yourself.
+ STPTokens get created by calls to + [Stripe createTokenWithCard:], + [Stripe createTokenWithBankAccount:], and + [Stripe getTokenWithId:].  You should not
+ construct these yourself.
  */
 @interface STPToken : NSObject
 

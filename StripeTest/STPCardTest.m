@@ -8,7 +8,6 @@
 
 #import "STPCard.h"
 #import "StripeError.h"
-#import "STPCardTest.h"
 #import "STPUtils.h"
 #import <XCTest/XCTest.h>
 
@@ -24,9 +23,7 @@
 }
 @end
 
-@interface STPCardTest ()
-- (NSDateComponents *)getCurrentDateComponents;
-- (NSInteger)getCurrentYear;
+@interface STPCardTest : XCTestCase
 @end
 
 @implementation STPCardTest {

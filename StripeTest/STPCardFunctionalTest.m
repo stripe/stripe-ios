@@ -11,7 +11,6 @@
 #import "STPCard.h"
 
 @interface STPCardFunctionalTest : XCTestCase
-
 @end
 
 @implementation STPCardFunctionalTest

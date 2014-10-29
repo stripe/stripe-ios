@@ -11,7 +11,6 @@
 #import "STPBankAccount.h"
 
 @interface STPBankAccountFunctionalTest : XCTestCase
-
 @end
 
 @implementation STPBankAccountFunctionalTest

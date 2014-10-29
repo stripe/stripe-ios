@@ -37,16 +37,16 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
              operationQueue:(NSOperationQueue *)queue
                  completion:(STPCompletionBlock)handler;
 
-+ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount
-                    publishableKey:(NSString *)publishableKey
-                    operationQueue:(NSOperationQueue *)queue
-                        completion:(STPCompletionBlock)handler;
++ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount completion:(STPCompletionBlock)handler;
 
 + (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler;
 
 + (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler;
 
-+ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount completion:(STPCompletionBlock)handler;
++ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount
+                    publishableKey:(NSString *)publishableKey
+                    operationQueue:(NSOperationQueue *)queue
+                        completion:(STPCompletionBlock)handler;
 
 + (NSDictionary *)stripeUserAgentDetails;
 

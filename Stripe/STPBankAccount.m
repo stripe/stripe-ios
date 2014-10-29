@@ -44,7 +44,7 @@
                 dictionary[key] = obj;
             }
         }];
-        
+
         self.object = dictionary[@"object"];
         self.bankAccountId = dictionary[@"id"];
         self.last4 = dictionary[@"last4"];
@@ -74,19 +74,22 @@
 
 - (NSData *)formEncode {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    
+
     NSMutableArray *parts = [NSMutableArray array];
-    
-    if (_accountNumber) params[@"account_number"] = _accountNumber;
-    if (_routingNumber) params[@"routing_number"] = _routingNumber;
-    if (_country) params[@"country"] = _country;
-    
+
+    if (_accountNumber)
+        params[@"account_number"] = _accountNumber;
+    if (_routingNumber)
+        params[@"routing_number"] = _routingNumber;
+    if (_country)
+        params[@"country"] = _country;
+
     [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop) {
         if (val != [NSNull null]) {
             [parts addObject:[NSString stringWithFormat:@"bank_account[%@]=%@", key, [STPUtils stringByURLEncoding:val]]];
         }
     }];
-    
+
     return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -100,17 +103,15 @@
     if (self == bankAccount) {
         return YES;
     }
-    
+
     if (!bankAccount || ![bankAccount isKindOfClass:self.class]) {
         return NO;
     }
-    
-    return [self.accountNumber ?: @"" isEqualToString:bankAccount.accountNumber ?: @""]
-        && [self.routingNumber ?: @"" isEqualToString:bankAccount.routingNumber ?: @""]
-        && [self.country ?: @"" isEqualToString:bankAccount.country ?: @""]
-        && [self.last4 ?: @"" isEqualToString:bankAccount.last4 ?: @""]
-        && [self.bankName ?: @"" isEqualToString:bankAccount.bankName ?: @""]
-        && [self.currency ?: @"" isEqualToString:bankAccount.currency ?: @""];
+
+    return [self.accountNumber ?: @"" isEqualToString:bankAccount.accountNumber ?: @""] &&
+           [self.routingNumber ?: @"" isEqualToString:bankAccount.routingNumber ?: @""] &&
+           [self.country ?: @"" isEqualToString:bankAccount.country ?: @""] && [self.last4 ?: @"" isEqualToString:bankAccount.last4 ?: @""] &&
+           [self.bankName ?: @"" isEqualToString:bankAccount.bankName ?: @""] && [self.currency ?: @"" isEqualToString:bankAccount.currency ?: @""];
 }
 
 @end

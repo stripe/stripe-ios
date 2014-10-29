@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "STPFormEncodeProtocol.h"
 
-@interface STPBankAccount : NSObject <STPFormEncodeProtocol>
+@interface STPBankAccount : NSObject<STPFormEncodeProtocol>
 
 @property (nonatomic) NSString *accountNumber;
 @property (nonatomic) NSString *routingNumber;
