@@ -9,9 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @class STPCard;
+@class STPBankAccount;
 
 /*
- STPTokens get created by calls to + [Stripe createTokenWithCard:] and + [Stripe getTokenWithId:].  You should not construct these yourself.
+ STPTokens get created by calls to + [Stripe createTokenWithCard:], + [Stripe createTokenWithBankAccount:], and + [Stripe getTokenWithId:].  You should not
+ construct these yourself.
  */
 @interface STPToken : NSObject
 
@@ -19,6 +21,7 @@
 @property (nonatomic, readonly) NSString *object;
 @property (nonatomic, readonly) BOOL livemode;
 @property (nonatomic, readonly) STPCard *card;
+@property (nonatomic, readonly) STPBankAccount *bankAccount;
 @property (nonatomic, readonly) NSDate *created;
 @property (nonatomic, readonly) BOOL used;
 

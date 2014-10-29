@@ -7,7 +7,7 @@
 //
 
 #import "Stripe.h"
-#import "STPCertTest.h"
+#import <XCTest/XCTest.h>
 
 #define EXAMPLE_STRIPE_PUBLISHABLE_KEY @"bad_key"
 
@@ -21,6 +21,9 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
 
 @interface FailableStripe : Stripe
 + (void)setFailureMethod:(StripeCertificateFailMethod)method;
+@end
+
+@interface STPCertTest : XCTestCase
 @end
 
 @implementation STPCertTest

@@ -6,9 +6,12 @@
 //
 //
 
-#import "STPTokenTest.h"
 #import "STPToken.h"
 #import "STPCard.h"
+#import <XCTest/XCTest.h>
+
+@interface STPTokenTest : XCTestCase
+@end
 
 @implementation STPTokenTest
 - (void)testCreatingTokenWithAttributeDictionarySetsAttributes {
