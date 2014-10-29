@@ -16,6 +16,8 @@
 
 @implementation STPBankAccountFunctionalTest
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+
 - (void)testCreateAndRetreiveBankAccountToken {
     [Stripe setDefaultPublishableKey:@"pk_test_5fhKkYDKKNr4Fp6q7Mq9CwJd"];
 
@@ -61,5 +63,7 @@
                             }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
+
+#endif
 
 @end
