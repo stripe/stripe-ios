@@ -31,6 +31,8 @@
 		11E1F649165157CA00B49816 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
 		11E1F658165157F100B49816 /* STPCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 11EE8255164786A40039CDD4 /* STPCardTest.m */; };
 		11E1F659165157F100B49816 /* STPTokenTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */; };
+		361382A41A03089B000D5442 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 361382A31A03089B000D5442 /* CoreGraphics.framework */; };
+		361382A51A0308CE000D5442 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 361382A31A03089B000D5442 /* CoreGraphics.framework */; };
 		4A0D74FA18F6106100966D7B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
 		4AAEFAE818FC928A001001CD /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
 		4AAEFAEE18FC98E1001001CD /* STPCertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AAEFAED18FC98E1001001CD /* STPCertTest.m */; };
@@ -94,6 +96,7 @@
 		11E1F65A1651585F00B49816 /* StripeTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StripeTest-Prefix.pch"; sourceTree = "<group>"; };
 		11EE8254164786A40039CDD4 /* STPCardTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCardTest.h; sourceTree = "<group>"; };
 		11EE8255164786A40039CDD4 /* STPCardTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = STPCardTest.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		361382A31A03089B000D5442 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4AAEFAEC18FC98E1001001CD /* STPCertTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCertTest.h; sourceTree = "<group>"; };
 		4AAEFAED18FC98E1001001CD /* STPCertTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCertTest.m; sourceTree = "<group>"; };
@@ -106,6 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				361382A41A03089B000D5442 /* CoreGraphics.framework in Frameworks */,
 				4A0D74FA18F6106100966D7B /* Security.framework in Frameworks */,
 				FAFC12C816E576A50066297F /* UIKit.framework in Frameworks */,
 				11E1F58D165151F400B49816 /* Foundation.framework in Frameworks */,
@@ -116,6 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				361382A51A0308CE000D5442 /* CoreGraphics.framework in Frameworks */,
 				04D5BF9119BF958F009521A5 /* PassKit.framework in Frameworks */,
 				4AAEFAE818FC928A001001CD /* Security.framework in Frameworks */,
 				11E1F649165157CA00B49816 /* Foundation.framework in Frameworks */,
@@ -200,6 +205,7 @@
 		11C74B9A164043050071C2CA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				361382A31A03089B000D5442 /* CoreGraphics.framework */,
 				04D5BF9019BF958F009521A5 /* PassKit.framework */,
 				4A0D74F918F6106100966D7B /* Security.framework */,
 				11C74B9B164043050071C2CA /* Foundation.framework */,
