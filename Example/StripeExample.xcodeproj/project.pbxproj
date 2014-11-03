@@ -32,7 +32,6 @@
 		0470A30C19A5D69E00B66DB7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2D419A5D69E00B66DB7 /* InfoPlist.strings */; };
 		0470A32D19A5D69E00B66DB7 /* PaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0470A30619A5D69E00B66DB7 /* PaymentViewController.m */; };
 		04BC615419E6250C001B0D84 /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BC613C19E6250C001B0D84 /* Stripe+ApplePay.m */; };
-		04BC615519E6250C001B0D84 /* checkoutBridge.js in Resources */ = {isa = PBXBuildFile; fileRef = 04BC613E19E6250C001B0D84 /* checkoutBridge.js */; };
 		04BC615619E6250C001B0D84 /* STPCheckoutOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BC614019E6250C001B0D84 /* STPCheckoutOptions.m */; };
 		04BC615719E6250C001B0D84 /* STPCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BC614219E6250C001B0D84 /* STPCheckoutViewController.m */; };
 		04BC615819E6250C001B0D84 /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BC614519E6250C001B0D84 /* STPAPIConnection.m */; };
@@ -84,6 +83,7 @@
 		04EEE20B19CB7ED500192164 /* gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04EEE1ED19CB7ED500192164 /* gradient@2x.png */; };
 		04EEE20C19CB7ED500192164 /* textfield.png in Resources */ = {isa = PBXBuildFile; fileRef = 04EEE1EE19CB7ED500192164 /* textfield.png */; };
 		04EEE20D19CB7ED500192164 /* textfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04EEE1EF19CB7ED500192164 /* textfield@2x.png */; };
+		361382A81A043D72000D5442 /* STPCheckoutOptions.js in Resources */ = {isa = PBXBuildFile; fileRef = 361382A71A043D72000D5442 /* STPCheckoutOptions.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,7 +138,6 @@
 		0470A30619A5D69E00B66DB7 /* PaymentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentViewController.m; sourceTree = "<group>"; };
 		04BC613B19E6250C001B0D84 /* Stripe+ApplePay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe+ApplePay.h"; sourceTree = "<group>"; };
 		04BC613C19E6250C001B0D84 /* Stripe+ApplePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Stripe+ApplePay.m"; sourceTree = "<group>"; };
-		04BC613E19E6250C001B0D84 /* checkoutBridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = checkoutBridge.js; sourceTree = "<group>"; };
 		04BC613F19E6250C001B0D84 /* STPCheckoutOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutOptions.h; sourceTree = "<group>"; };
 		04BC614019E6250C001B0D84 /* STPCheckoutOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCheckoutOptions.m; sourceTree = "<group>"; };
 		04BC614119E6250C001B0D84 /* STPCheckoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutViewController.h; sourceTree = "<group>"; };
@@ -212,6 +211,7 @@
 		04EEE1ED19CB7ED500192164 /* gradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gradient@2x.png"; sourceTree = "<group>"; };
 		04EEE1EE19CB7ED500192164 /* textfield.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textfield.png; sourceTree = "<group>"; };
 		04EEE1EF19CB7ED500192164 /* textfield@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "textfield@2x.png"; sourceTree = "<group>"; };
+		361382A71A043D72000D5442 /* STPCheckoutOptions.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = STPCheckoutOptions.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -394,7 +394,7 @@
 		04BC614319E6250C001B0D84 /* Checkout */ = {
 			isa = PBXGroup;
 			children = (
-				04BC613E19E6250C001B0D84 /* checkoutBridge.js */,
+				361382A71A043D72000D5442 /* STPCheckoutOptions.js */,
 				04BC613F19E6250C001B0D84 /* STPCheckoutOptions.h */,
 				04BC614019E6250C001B0D84 /* STPCheckoutOptions.m */,
 				04BC614119E6250C001B0D84 /* STPCheckoutViewController.h */,
@@ -586,6 +586,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				361382A81A043D72000D5442 /* STPCheckoutOptions.js in Resources */,
 				0426D8F519E61C590097B74D /* Main.storyboard in Resources */,
 				04EEE20919CB7ED500192164 /* visa.png in Resources */,
 				04EEE1FD19CB7ED500192164 /* cvc.png in Resources */,
@@ -607,7 +608,6 @@
 				04EEE1FC19CB7ED500192164 /* cvc-amex@2x.png in Resources */,
 				04EEE20419CB7ED500192164 /* jcb@2x.png in Resources */,
 				04EEE20719CB7ED500192164 /* placeholder.png in Resources */,
-				04BC615519E6250C001B0D84 /* checkoutBridge.js in Resources */,
 				04EEE20A19CB7ED500192164 /* visa@2x.png in Resources */,
 				04EEE20219CB7ED500192164 /* discover@2x.png in Resources */,
 				04EEE20519CB7ED500192164 /* mastercard.png in Resources */,

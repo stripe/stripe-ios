@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0426D8A719E61A060097B74D /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 0426D89219E61A060097B74D /* Stripe+ApplePay.m */; };
 		0426D8A819E61A060097B74D /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 0426D89219E61A060097B74D /* Stripe+ApplePay.m */; };
-		0426D8A919E61A060097B74D /* checkoutBridge.js in Resources */ = {isa = PBXBuildFile; fileRef = 0426D89319E61A060097B74D /* checkoutBridge.js */; };
+		0426D8A919E61A060097B74D /* STPCheckoutOptions.js in Resources */ = {isa = PBXBuildFile; fileRef = 0426D89319E61A060097B74D /* STPCheckoutOptions.js */; };
 		0426D8AA19E61A060097B74D /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0426D89519E61A060097B74D /* STPAPIConnection.m */; };
 		0426D8AB19E61A060097B74D /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0426D89519E61A060097B74D /* STPAPIConnection.m */; };
 		0426D8AC19E61A060097B74D /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 0426D89719E61A060097B74D /* STPCard.m */; };
@@ -64,7 +64,7 @@
 /* Begin PBXFileReference section */
 		0426D89119E61A060097B74D /* Stripe+ApplePay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe+ApplePay.h"; sourceTree = "<group>"; };
 		0426D89219E61A060097B74D /* Stripe+ApplePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Stripe+ApplePay.m"; sourceTree = "<group>"; };
-		0426D89319E61A060097B74D /* checkoutBridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = checkoutBridge.js; sourceTree = "<group>"; };
+		0426D89319E61A060097B74D /* STPCheckoutOptions.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = STPCheckoutOptions.js; sourceTree = "<group>"; };
 		0426D89419E61A060097B74D /* STPAPIConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPAPIConnection.h; sourceTree = "<group>"; };
 		0426D89519E61A060097B74D /* STPAPIConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAPIConnection.m; sourceTree = "<group>"; };
 		0426D89619E61A060097B74D /* STPCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCard.h; sourceTree = "<group>"; };
@@ -169,7 +169,7 @@
 		04BC613A19E61ED1001B0D84 /* Checkout */ = {
 			isa = PBXGroup;
 			children = (
-				0426D89319E61A060097B74D /* checkoutBridge.js */,
+				0426D89319E61A060097B74D /* STPCheckoutOptions.js */,
 				0426D89819E61A060097B74D /* STPCheckoutOptions.h */,
 				0426D89919E61A060097B74D /* STPCheckoutOptions.m */,
 				0426D89A19E61A060097B74D /* STPCheckoutViewController.h */,
@@ -303,7 +303,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0426D8A919E61A060097B74D /* checkoutBridge.js in Resources */,
+				0426D8A919E61A060097B74D /* STPCheckoutOptions.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
