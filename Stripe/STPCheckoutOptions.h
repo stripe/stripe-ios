@@ -15,20 +15,20 @@
 @property(nonatomic) NSString *publishableKey;
 
 // strongly recommended properties
+@property(nonatomic) NSURL *logoURL;
 @property(nonatomic) UIImage *logoImage;
-@property(nonatomic) NSURL *logoImageURL;
-@property(nonatomic) UIColor *headerBackgroundColor;
+@property(nonatomic) UIColor *logoColor;
 @property(nonatomic) NSString *companyName;
-@property(nonatomic) NSString *productDescription;
-@property(nonatomic) NSUInteger purchaseAmount;
+@property(nonatomic) NSString *purchaseDescription;
+@property(nonatomic) NSString *purchaseLabel;
+@property(nonatomic) NSString *purchaseCurrency;
+@property(nonatomic) NSNumber *purchaseAmount;
 
 // optional properties
-@property(nonatomic) NSString *currency;
-@property(nonatomic) NSString *panelLabel;
-@property(nonatomic) BOOL validateZipCode;
 @property(nonatomic) NSString *customerEmail;
-@property(nonatomic) BOOL allowRememberMe;
+@property(nonatomic) NSNumber *enableRememberMe;
+@property(nonatomic) NSNumber *enablePostalCode;
 
-- (NSString *)stringifiedJavaScriptRepresentation;
+- (NSString *)stringifiedJSONRepresentation;
 
 @end

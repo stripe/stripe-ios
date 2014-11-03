@@ -11,90 +11,78 @@
 
 @implementation STPCheckoutOptions
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _publishableKey = [Stripe defaultPublishableKey];
-        _currency = @"USD";
-        _validateZipCode = NO;
-        _allowRememberMe = YES;
-    }
-    return self;
-}
-
-- (NSString *)stringifiedJavaScriptRepresentation {
+- (NSString *)stringifiedJSONRepresentation {
     NSMutableDictionary *values = [NSMutableDictionary dictionary];
     if (self.publishableKey) {
-        values[@"key"] = self.publishableKey;
+        values[@"publishableKey"] = self.publishableKey;
     }
-    if (self.logoImage && !self.logoImageURL) {
+    if (self.logoURL) {
+        values[@"logoURL"] = [self.logoURL absoluteString];
+    }
+    if (self.logoImage && !self.logoURL) {
         NSString *base64 = [UIImagePNGRepresentation(self.logoImage) base64EncodedStringWithOptions:0];
-        values[@"image"] = [NSString stringWithFormat:@"data:image/png;base64,%@", base64];
+        values[@"logoImage"] = [NSString stringWithFormat:@"data:image/png;base64,%@", base64];
     }
-    if (self.logoImageURL) {
-        values[@"image"] = [self.logoImageURL absoluteString];
-    }
-    if (self.headerBackgroundColor) {
-        values[@"color"] = [[self class] hexCodeForColor:self.headerBackgroundColor];
+    if (self.logoColor) {
+        values[@"logoColor"] = [[self class] hexCodeForColor:self.logoColor];
     }
     if (self.companyName) {
-        values[@"name"] = self.companyName;
+        values[@"companyName"] = self.companyName;
     }
-    if (self.productDescription) {
-        values[@"description"] = self.productDescription;
+    if (self.purchaseDescription) {
+        values[@"purchaseDescription"] = self.purchaseDescription;
+    }
+    if (self.purchaseLabel) {
+        values[@"purchaseLabel"] = self.purchaseLabel;
+    }
+    if (self.purchaseCurrency) {
+        values[@"purchaseCurrency"] = [self.purchaseCurrency uppercaseString];
     }
     if (self.purchaseAmount) {
-        values[@"amount"] = @(self.purchaseAmount);
-    }
-    if (self.currency) {
-        values[@"currency"] = [self.currency uppercaseString];
-    }
-    if (self.panelLabel) {
-        values[@"panelLabel"] = self.panelLabel;
+        values[@"purchaseAmount"] = self.purchaseAmount;
     }
     if (self.customerEmail) {
-        values[@"email"] = self.customerEmail;
+        values[@"customerEmail"] = self.customerEmail;
     }
-    
-    values[@"allowRememberMe"] = @(self.allowRememberMe);
-    values[@"zipCode"] = @(self.validateZipCode);
+    if (self.enableRememberMe) {
+        values[@"enableRememberMe"] = self.enableRememberMe;
+    }
+    if (self.enablePostalCode) {
+        values[@"enablePostalCode"] = self.enablePostalCode;
+    }
     
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:values options:0 error:nil] encoding:NSUTF8StringEncoding];
 }
 
 + (NSString *)hexCodeForColor:(UIColor *)color {
-    CGFloat rgba[4];
+    CGFloat rgb[3];
     CGColorSpaceModel model = CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor));
     const CGFloat *components = CGColorGetComponents(color.CGColor);
     switch (model) {
         case kCGColorSpaceModelMonochrome: {
-            rgba[0] = components[0];
-            rgba[1] = components[0];
-            rgba[2] = components[0];
-            rgba[3] = components[1];
+            rgb[0] = components[0];
+            rgb[1] = components[0];
+            rgb[2] = components[0];
             break;
         }
         case kCGColorSpaceModelRGB: {
-            rgba[0] = components[0];
-            rgba[1] = components[1];
-            rgba[2] = components[2];
-            rgba[3] = components[3];
+            rgb[0] = components[0];
+            rgb[1] = components[1];
+            rgb[2] = components[2];
             break;
         }
         default: {
-            rgba[0] = 0;
-            rgba[1] = 0;
-            rgba[2] = 0;
-            rgba[3] = 1.0f;
+            rgb[0] = 0;
+            rgb[1] = 0;
+            rgb[2] = 0;
             break;
         }
     }
-    uint8_t red = rgba[0]*255;
-    uint8_t green = rgba[1]*255;
-    uint8_t blue = rgba[2]*255;
-    uint8_t alpha = rgba[3]*255;
-    unsigned long rgbaValue = (red << 24) + (green << 16) + (blue << 8) + alpha;
-    return [NSString stringWithFormat:@"#%.8lx", rgbaValue];
+    uint8_t red = rgb[0]*255;
+    uint8_t green = rgb[1]*255;
+    uint8_t blue = rgb[2]*255;
+    unsigned long rgbValue = (red << 16) + (green << 8) + blue;
+    return [NSString stringWithFormat:@"#%.6lx", rgbValue];
 }
 
 @end
