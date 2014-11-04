@@ -7,7 +7,7 @@
 //
 
 #import "Stripe.h"
-#import "STPCertTest.h"
+#import <XCTest/XCTest.h>
 
 #define EXAMPLE_STRIPE_PUBLISHABLE_KEY @"bad_key"
 
@@ -21,6 +21,9 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
 
 @interface FailableStripe : Stripe
 + (void)setFailureMethod:(StripeCertificateFailMethod)method;
+@end
+
+@interface STPCertTest : XCTestCase
 @end
 
 @implementation STPCertTest
@@ -58,7 +61,8 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
                                      XCTAssertEqual(error.code, STPConnectionError, @"Revoked errors should generate the right code.");
                                  } else {
                                      XCTAssertEqualObjects(error.domain, @"NSURLErrorDomain", @"Error should be NSURLErrorDomain");
-                                     XCTAssertNotNil(error.userInfo[@"NSURLErrorFailingURLPeerTrustErrorKey"], @"There should be a secTustRef for Foundation HTTPS errors");
+                                     XCTAssertNotNil(error.userInfo[@"NSURLErrorFailingURLPeerTrustErrorKey"],
+                                                     @"There should be a secTustRef for Foundation HTTPS errors");
                                  }
                                  done = YES;
                              }];
@@ -70,23 +74,19 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
 
 // These are broken into separate methods to make test reports nicer.
 
-- (void)testExpired
-{
+- (void)testExpired {
     [self testCertificateErrorWithMethod:StripeCertificateFailMethodExpired];
 }
 
-- (void)testMismatched
-{
+- (void)testMismatched {
     [self testCertificateErrorWithMethod:StripeCertificateFailMethodMismatched];
 }
 
-- (void)testRevoked
-{
+- (void)testRevoked {
     [self testCertificateErrorWithMethod:StripeCertificateFailMethodRevoked];
 }
 
-- (STPCard *)dummyCard
-{
+- (STPCard *)dummyCard {
     STPCard *card = [[STPCard alloc] init];
     card.number = @"4242424242424242";
     card.expMonth = 12;
@@ -106,26 +106,24 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
 
 static StripeCertificateFailMethod failureMethod;
 
-+ (NSURL *)apiURL
-{
++ (NSURL *)apiURL {
     switch (failureMethod) {
-        case StripeCertificateFailMethodNoError:
-            return [Stripe apiURL];
-        case StripeCertificateFailMethodExpired:
-            return [NSURL URLWithString:@"https://testssl-expire.disig.sk/index.en.html"];
-        case StripeCertificateFailMethodMismatched:
-            return [NSURL URLWithString:@"https://mismatched.stripe.com"];
-        case StripeCertificateFailMethodRevoked:
-            return [NSURL URLWithString:@"https://revoked.stripe.com:444"];
-        default:
-            [NSException raise:@"InvalidFailureMethod" format:@""];
+    case StripeCertificateFailMethodNoError:
+        return [Stripe apiURL];
+    case StripeCertificateFailMethodExpired:
+        return [NSURL URLWithString:@"https://testssl-expire.disig.sk/index.en.html"];
+    case StripeCertificateFailMethodMismatched:
+        return [NSURL URLWithString:@"https://mismatched.stripe.com"];
+    case StripeCertificateFailMethodRevoked:
+        return [NSURL URLWithString:@"https://revoked.stripe.com:444"];
+    default:
+        [NSException raise:@"InvalidFailureMethod" format:@""];
     }
 
     return nil;
 }
 
-+ (void)setFailureMethod:(StripeCertificateFailMethod)method
-{
++ (void)setFailureMethod:(StripeCertificateFailMethod)method {
     failureMethod = method;
 }
 

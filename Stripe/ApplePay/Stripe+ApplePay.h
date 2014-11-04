@@ -17,17 +17,11 @@
 
 + (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest;
 
-+ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier
-                                                    amount:(NSDecimalNumber *)amount
-                                                  currency:(NSString *)currency
-                                               description:(NSString *)description;
++ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier;
 
-+ (void)createTokenWithPayment:(PKPayment *)payment
-                    completion:(STPCompletionBlock)handler;
++ (void)createTokenWithPayment:(PKPayment *)payment completion:(STPCompletionBlock)handler;
 
-+ (void)createTokenWithPayment:(PKPayment *)payment
-                operationQueue:(NSOperationQueue *)queue
-                    completion:(STPCompletionBlock)handler;
++ (void)createTokenWithPayment:(PKPayment *)payment operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler;
 
 @end
 
