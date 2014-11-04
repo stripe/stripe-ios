@@ -16,6 +16,7 @@
 		0426D8F319E61A710097B74D /* STPTestPaymentSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0426D8EA19E61A710097B74D /* STPTestPaymentSummaryViewController.xib */; };
 		0426D8F419E61A710097B74D /* STPTestShippingMethodStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 0426D8EC19E61A710097B74D /* STPTestShippingMethodStore.m */; };
 		0426D8F519E61C590097B74D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2D119A5D69E00B66DB7 /* Main.storyboard */; };
+		045F62751A08394000134D19 /* STPColorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 045F62741A08394000134D19 /* STPColorUtils.m */; };
 		0470A29C19A5D5DB00B66DB7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29B19A5D5DB00B66DB7 /* Foundation.framework */; };
 		0470A29E19A5D5DB00B66DB7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29D19A5D5DB00B66DB7 /* CoreGraphics.framework */; };
 		0470A2A019A5D5DB00B66DB7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29F19A5D5DB00B66DB7 /* UIKit.framework */; };
@@ -83,7 +84,6 @@
 		04EEE20B19CB7ED500192164 /* gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04EEE1ED19CB7ED500192164 /* gradient@2x.png */; };
 		04EEE20C19CB7ED500192164 /* textfield.png in Resources */ = {isa = PBXBuildFile; fileRef = 04EEE1EE19CB7ED500192164 /* textfield.png */; };
 		04EEE20D19CB7ED500192164 /* textfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04EEE1EF19CB7ED500192164 /* textfield@2x.png */; };
-		361382A81A043D72000D5442 /* STPCheckoutOptions.js in Resources */ = {isa = PBXBuildFile; fileRef = 361382A71A043D72000D5442 /* STPCheckoutOptions.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +113,8 @@
 		0426D8EA19E61A710097B74D /* STPTestPaymentSummaryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = STPTestPaymentSummaryViewController.xib; sourceTree = "<group>"; };
 		0426D8EB19E61A710097B74D /* STPTestShippingMethodStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTestShippingMethodStore.h; sourceTree = "<group>"; };
 		0426D8EC19E61A710097B74D /* STPTestShippingMethodStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTestShippingMethodStore.m; sourceTree = "<group>"; };
+		045F62731A08394000134D19 /* STPColorUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPColorUtils.h; sourceTree = "<group>"; };
+		045F62741A08394000134D19 /* STPColorUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPColorUtils.m; sourceTree = "<group>"; };
 		0470A29819A5D5DB00B66DB7 /* StripeExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StripeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0470A29B19A5D5DB00B66DB7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0470A29D19A5D5DB00B66DB7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -211,7 +213,6 @@
 		04EEE1ED19CB7ED500192164 /* gradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gradient@2x.png"; sourceTree = "<group>"; };
 		04EEE1EE19CB7ED500192164 /* textfield.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textfield.png; sourceTree = "<group>"; };
 		04EEE1EF19CB7ED500192164 /* textfield@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "textfield@2x.png"; sourceTree = "<group>"; };
-		361382A71A043D72000D5442 /* STPCheckoutOptions.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = STPCheckoutOptions.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -394,11 +395,12 @@
 		04BC614319E6250C001B0D84 /* Checkout */ = {
 			isa = PBXGroup;
 			children = (
-				361382A71A043D72000D5442 /* STPCheckoutOptions.js */,
 				04BC613F19E6250C001B0D84 /* STPCheckoutOptions.h */,
 				04BC614019E6250C001B0D84 /* STPCheckoutOptions.m */,
 				04BC614119E6250C001B0D84 /* STPCheckoutViewController.h */,
 				04BC614219E6250C001B0D84 /* STPCheckoutViewController.m */,
+				045F62731A08394000134D19 /* STPColorUtils.h */,
+				045F62741A08394000134D19 /* STPColorUtils.m */,
 			);
 			name = Checkout;
 			sourceTree = "<group>";
@@ -586,7 +588,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				361382A81A043D72000D5442 /* STPCheckoutOptions.js in Resources */,
 				0426D8F519E61C590097B74D /* Main.storyboard in Resources */,
 				04EEE20919CB7ED500192164 /* visa.png in Resources */,
 				04EEE1FD19CB7ED500192164 /* cvc.png in Resources */,
@@ -648,6 +649,7 @@
 				0426D8EF19E61A710097B74D /* STPTestCardStore.m in Sources */,
 				04E75A5119A734EA000003DE /* Constants.m in Sources */,
 				04EEE1F819CB7ED500192164 /* PTKView.m in Sources */,
+				045F62751A08394000134D19 /* STPColorUtils.m in Sources */,
 				04BC615C19E6250C001B0D84 /* Stripe.m in Sources */,
 				0470A32D19A5D69E00B66DB7 /* PaymentViewController.m in Sources */,
 				0426D8ED19E61A710097B74D /* PKPayment+STPTestKeys.m in Sources */,

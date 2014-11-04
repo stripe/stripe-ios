@@ -53,7 +53,7 @@
     options.purchaseAmount = @1000;
     options.purchaseLabel = @"Pay {{amount}} for that food";
     options.enablePostalCode = @YES;
-    options.logoColor = [UIColor redColor];
+    options.logoColor = [UIColor whiteColor];
     STPCheckoutViewController *vc = [[STPCheckoutViewController alloc] initWithOptions:options];
     vc.delegate = self;
     [self presentViewController:vc animated:YES completion:nil];

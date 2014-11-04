@@ -10,12 +10,15 @@
 #import "STPCheckoutOptions.h"
 #import "STPToken.h"
 #import "Stripe.h"
+#import "STPColorUtils.h"
 
 @interface STPCheckoutViewController()<UIWebViewDelegate>
 @property(weak, nonatomic)UIWebView *webView;
 @property(weak, nonatomic)UIActivityIndicatorView *activityIndicator;
 @property(nonatomic)STPCheckoutOptions *options;
 @property(nonatomic)NSURL *url;
+@property(nonatomic)UIStatusBarStyle previousStyle;
+
 @end
 
 @implementation STPCheckoutViewController
@@ -35,14 +38,13 @@ static NSString *const checkoutRedirectPrefix = @"/-/";
             NSDictionary *defaults = @{@"UserAgent": userAgent};
             [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
         }
+            _previousStyle = [[UIApplication sharedApplication] statusBarStyle];
     }
     return self;
 }
 
 - (NSString *)optionsJavaScript {
-    NSURL *fileUrl = [[NSBundle mainBundle] URLForResource:@"STPCheckoutOptions" withExtension:@"js"];
-    NSString *fileContents = [NSString stringWithContentsOfURL:fileUrl encoding:NSUTF8StringEncoding error:nil];
-    return [NSString stringWithFormat:fileContents, [self.options stringifiedJSONRepresentation]];
+    return [NSString stringWithFormat:@"window.StripeCheckoutOptions = %@;", [self.options stringifiedJSONRepresentation]];
 }
 
 - (void)viewDidLoad {
@@ -79,9 +81,11 @@ static NSString *const checkoutRedirectPrefix = @"/-/";
     self.activityIndicator = activityIndicator;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return [[self class] colorIsLight:self.options.logoColor] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+    return [STPColorUtils colorIsLight:self.options.logoColor] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
 }
+#endif
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
@@ -114,10 +118,8 @@ static NSString *const checkoutRedirectPrefix = @"/-/";
         }
         
         if ([event isEqualToString:@"CheckoutDidOpen"]) {
-            if (payload != nil && payload[@"logoColor"] != nil) {
-                //TODO: parse out color (payload[@"logoColor"] is a hex string)
-                //TODO: make sure that an update to self.options.logoColor actually adjusts the status bar
-                self.options.logoColor = [UIColor blackColor];
+            if (payload[@"logoColor"]) {
+                [self setLogoColor:[STPColorUtils colorForHexCode:payload[@"logoColor"]]];
             }
         }
         else if ([event isEqualToString:@"CheckoutDidTokenize"]) {
@@ -126,12 +128,14 @@ static NSString *const checkoutRedirectPrefix = @"/-/";
                 token = [[STPToken alloc] initWithAttributeDictionary:payload[@"token"]];
             }
             [self.delegate checkoutController:self didFinishWithToken:token];
+            [self resetStatusBarColor];
             [self dismissViewControllerAnimated:YES completion:nil];
         }
         else if ([url.host isEqualToString:@"CheckoutDidClose"]) {
             if ([self.delegate respondsToSelector:@selector(checkoutControllerDidCancel:)]) {
                 [self.delegate checkoutControllerDidCancel:self];
             }
+            [self resetStatusBarColor];
             [self dismissViewControllerAnimated:YES completion:nil];
         }
         else if ([event isEqualToString:@"CheckoutDidError"]) {
@@ -139,11 +143,27 @@ static NSString *const checkoutRedirectPrefix = @"/-/";
                 NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
                 [self.delegate checkoutController:self didFailWithError:error];
             }
+            [self resetStatusBarColor];
             [self dismissViewControllerAnimated:YES completion:nil];
         }
         return NO;
     }
     return navigationType == UIWebViewNavigationTypeOther;
+}
+
+- (void)resetStatusBarColor {
+    [[UIApplication sharedApplication] setStatusBarStyle:self.previousStyle animated:YES];
+}
+
+- (void)setLogoColor:(UIColor *)color {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+    self.options.logoColor = color;
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        [self setNeedsStatusBarAppearanceUpdate];
+        UIStatusBarStyle style = [STPColorUtils colorIsLight:color] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+        [[UIApplication sharedApplication] setStatusBarStyle:style animated:YES];
+    }
+#endif
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
@@ -159,13 +179,8 @@ static NSString *const checkoutRedirectPrefix = @"/-/";
     if ([self.delegate respondsToSelector:@selector(checkoutController:didFailWithError:)]) {
         [self.delegate checkoutController:self didFailWithError:error];
     }
+    [self resetStatusBarColor];
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-+ (BOOL)colorIsLight:(UIColor *)color {
-    const CGFloat *componentColors = CGColorGetComponents(color.CGColor);
-    CGFloat colorBrightness = ((componentColors[0] * 299) + (componentColors[1] * 587) + (componentColors[2] * 114)) / 1000;
-    return colorBrightness < 0.5;
 }
 
 @end
