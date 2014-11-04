@@ -10,37 +10,48 @@
 #import "STPCheckoutOptions.h"
 #import "STPToken.h"
 #import "Stripe.h"
+#import "STPColorUtils.h"
 
 @interface STPCheckoutViewController()<UIWebViewDelegate>
 @property(weak, nonatomic)UIWebView *webView;
 @property(weak, nonatomic)UIActivityIndicatorView *activityIndicator;
 @property(nonatomic)STPCheckoutOptions *options;
+@property(nonatomic)NSURL *url;
+@property(nonatomic)UIStatusBarStyle previousStyle;
+
 @end
 
 @implementation STPCheckoutViewController
+
+static NSString *const checkoutUserAgent = @"Stripe";
+static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
+static NSString *const checkoutRPCScheme = @"stripecheckout";
+static NSString *const checkoutRedirectPrefix = @"/-/";
 
 - (instancetype)initWithOptions:(STPCheckoutOptions *)options {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _options = options;
         NSString *userAgent = [[UIWebView new] stringByEvaluatingJavaScriptFromString:@"window.navigator.userAgent"];
-        if ([userAgent rangeOfString:@"StripeCheckout"].location == NSNotFound) {
-            userAgent = [userAgent stringByAppendingString:@" StripeCheckout"];
+        if ([userAgent rangeOfString:checkoutUserAgent].location == NSNotFound) {
+            userAgent = [NSString stringWithFormat:@"%@ %@/%@", userAgent, checkoutUserAgent, STPLibraryVersionNumber];
             NSDictionary *defaults = @{@"UserAgent": userAgent};
             [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
         }
+            _previousStyle = [[UIApplication sharedApplication] statusBarStyle];
     }
     return self;
 }
 
-- (NSString *)initialJavascript {
-    NSURL *fileUrl = [[NSBundle mainBundle] URLForResource:@"checkoutBridge" withExtension:@"js"];
-    NSString *fileContents = [NSString stringWithContentsOfURL:fileUrl encoding:NSUTF8StringEncoding error:nil];
-    return [NSString stringWithFormat:fileContents, [self.options stringifiedJavaScriptRepresentation]];
+- (NSString *)optionsJavaScript {
+    return [NSString stringWithFormat:@"window.StripeCheckoutOptions = %@;", [self.options stringifiedJSONRepresentation]];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.url = [NSURL URLWithString:checkoutURL];
+    
     UIWebView *webView = [UIWebView new];
     [self.view addSubview:webView];
     [webView setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -54,13 +65,13 @@
                                options:NSLayoutFormatDirectionLeadingToTrailing
                                metrics:nil
                                views:NSDictionaryOfVariableBindings(webView)]];
-    [webView loadRequest:[[self class] checkoutURLRequest]];
+    webView.keyboardDisplayRequiresUserAction = NO;
     webView.backgroundColor = [UIColor whiteColor];
     self.view.backgroundColor = [UIColor whiteColor];
-    if (self.options.headerBackgroundColor) {
-        webView.backgroundColor = self.options.headerBackgroundColor;
+    if (self.options.logoColor) {
+        webView.backgroundColor = self.options.logoColor;
     }
-    
+    [webView loadRequest:[NSURLRequest requestWithURL:self.url]];
     webView.delegate = self;
     self.webView = webView;
     
@@ -70,9 +81,11 @@
     self.activityIndicator = activityIndicator;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return [[self class] colorIsLight:self.options.headerBackgroundColor] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+    return [STPColorUtils colorIsLight:self.options.logoColor] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
 }
+#endif
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
@@ -82,7 +95,7 @@
 #pragma mark - UIWebViewDelegate
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
-    [webView stringByEvaluatingJavaScriptFromString:[self initialJavascript]];
+    [webView stringByEvaluatingJavaScriptFromString:[self optionsJavaScript]];
     [self.activityIndicator startAnimating];
 }
 
@@ -90,38 +103,67 @@
  navigationType:(UIWebViewNavigationType)navigationType {
     NSURL *url = request.URL;
     if (navigationType == UIWebViewNavigationTypeLinkClicked &&
-        [url.host isEqualToString:@"checkout.stripe.com"] &&
-        [url.path rangeOfString:@"/~/"].location == 0) {
+        [url.host isEqualToString:self.url.host] &&
+        [url.path rangeOfString:checkoutRedirectPrefix].location == 0) {
         [[UIApplication sharedApplication] openURL:url];
         return NO;
     }
-    if ([url.scheme isEqualToString:@"stripecheckout"]) {
-        if ([url.host isEqualToString:@"frameReady"]) {
-            [webView stringByEvaluatingJavaScriptFromString:@"window.checkoutJSBridge.loadOptions();"];
+    if ([url.scheme isEqualToString:checkoutRPCScheme]) {
+        NSString *event = url.host;
+        NSString *path = [url.path componentsSeparatedByString:@"/"][1];
+        NSDictionary *payload = nil;
+        if (path != nil) {
+            payload = [NSJSONSerialization JSONObjectWithData:[path dataUsingEncoding:NSUTF8StringEncoding]
+                                                      options:0 error:nil];
         }
-        else if ([url.host isEqualToString:@"frameCallback"]) {
-            NSString *callbackId = [[url.query componentsSeparatedByString:@"&id="] lastObject];
-            if ([callbackId isEqualToString:@"2"]) {
-                [webView stringByEvaluatingJavaScriptFromString:@"window.checkoutJSBridge.frameCallback1();"];
+        
+        if ([event isEqualToString:@"CheckoutDidOpen"]) {
+            if (payload[@"logoColor"]) {
+                [self setLogoColor:[STPColorUtils colorForHexCode:payload[@"logoColor"]]];
             }
         }
-        else if ([url.host isEqualToString:@"setToken"]) {
-            NSString *args = [[[[[url.query componentsSeparatedByString:@"&id="] firstObject] componentsSeparatedByString:@"args="] lastObject] stringByRemovingPercentEncoding];
-            NSArray *argData = [NSJSONSerialization JSONObjectWithData:[args dataUsingEncoding:NSUTF8StringEncoding]
-                                                               options:NSJSONReadingAllowFragments error:nil];
-            STPToken *token = [[STPToken alloc] initWithAttributeDictionary:argData[0][@"token"]];
+        else if ([event isEqualToString:@"CheckoutDidTokenize"]) {
+            STPToken *token = nil;
+            if (payload != nil && payload[@"token"] != nil) {
+                token = [[STPToken alloc] initWithAttributeDictionary:payload[@"token"]];
+            }
             [self.delegate checkoutController:self didFinishWithToken:token];
+            [self resetStatusBarColor];
             [self dismissViewControllerAnimated:YES completion:nil];
         }
-        else if ([url.host isEqualToString:@"closed"]) {
+        else if ([url.host isEqualToString:@"CheckoutDidClose"]) {
             if ([self.delegate respondsToSelector:@selector(checkoutControllerDidCancel:)]) {
                 [self.delegate checkoutControllerDidCancel:self];
             }
-            [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+            [self resetStatusBarColor];
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+        else if ([event isEqualToString:@"CheckoutDidError"]) {
+            if ([self.delegate respondsToSelector:@selector(checkoutController:didFailWithError:)]) {
+                NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
+                [self.delegate checkoutController:self didFailWithError:error];
+            }
+            [self resetStatusBarColor];
+            [self dismissViewControllerAnimated:YES completion:nil];
         }
         return NO;
     }
     return navigationType == UIWebViewNavigationTypeOther;
+}
+
+- (void)resetStatusBarColor {
+    [[UIApplication sharedApplication] setStatusBarStyle:self.previousStyle animated:YES];
+}
+
+- (void)setLogoColor:(UIColor *)color {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+    self.options.logoColor = color;
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        [self setNeedsStatusBarAppearanceUpdate];
+        UIStatusBarStyle style = [STPColorUtils colorIsLight:color] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+        [[UIApplication sharedApplication] setStatusBarStyle:style animated:YES];
+    }
+#endif
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
@@ -132,32 +174,13 @@
     }];
 }
 
--(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     [self.activityIndicator stopAnimating];
     if ([self.delegate respondsToSelector:@selector(checkoutController:didFailWithError:)]) {
         [self.delegate checkoutController:self didFailWithError:error];
     }
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-}
-
-+ (BOOL)colorIsLight:(UIColor *)color {
-    const CGFloat *componentColors = CGColorGetComponents(color.CGColor);
-    CGFloat colorBrightness = ((componentColors[0] * 299) + (componentColors[1] * 587) + (componentColors[2] * 114)) / 1000;
-    return colorBrightness < 0.5;
-}
-
-+ (NSURLRequest *)checkoutURLRequest {
-    NSString *url = @"https://checkout.stripe.com/v3";
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSMutableDictionary *userAgentDetails = [[Stripe stripeUserAgentDetails] mutableCopy];
-    [userAgentDetails setValue:@"checkout-ios" forKey:@"source"];
-    NSData *json = [NSJSONSerialization dataWithJSONObject:userAgentDetails
-                                                   options:0
-                                                     error:nil];
-    NSString *userAgent = [[NSString alloc] initWithData:json
-                                                encoding:NSUTF8StringEncoding];
-    [urlRequest setValue:userAgent forHTTPHeaderField:STPUserAgentFieldName];
-    return [urlRequest copy];
+    [self resetStatusBarColor];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

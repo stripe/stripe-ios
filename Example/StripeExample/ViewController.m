@@ -48,11 +48,12 @@
 - (IBAction)beginPayment:(id)sender {
     STPCheckoutOptions *options = [STPCheckoutOptions new];
 
-    options.productDescription = @"Tasty Llama food";
-    options.purchaseAmount = 1000;
-    options.panelLabel = @"Pay {{amount}} for that food";
-    options.validateZipCode = YES;
-    options.headerBackgroundColor = [UIColor redColor];
+    options.publishableKey = @"pk_test_09IUAkhSGIz8mQP3prdgKm06";
+    options.purchaseDescription = @"Tasty Llama food";
+    options.purchaseAmount = @1000;
+    options.purchaseLabel = @"Pay {{amount}} for that food";
+    options.enablePostalCode = @YES;
+    options.logoColor = [UIColor whiteColor];
     STPCheckoutViewController *vc = [[STPCheckoutViewController alloc] initWithOptions:options];
     vc.delegate = self;
     [self presentViewController:vc animated:YES completion:nil];
