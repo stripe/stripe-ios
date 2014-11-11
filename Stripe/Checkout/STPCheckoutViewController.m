@@ -84,7 +84,10 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return [STPColorUtils colorIsLight:self.options.logoColor] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+    if (self.options.logoColor) {
+        return [STPColorUtils colorIsLight:self.options.logoColor] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+    }
+    return UIStatusBarStyleDefault;
 }
 #endif
 
