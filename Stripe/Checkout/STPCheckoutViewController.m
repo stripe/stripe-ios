@@ -160,9 +160,9 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
     self.options.logoColor = color;
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        [self setNeedsStatusBarAppearanceUpdate];
         UIStatusBarStyle style = [STPColorUtils colorIsLight:color] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
         [[UIApplication sharedApplication] setStatusBarStyle:style animated:YES];
+        [self setNeedsStatusBarAppearanceUpdate];
     }
 #endif
 }
