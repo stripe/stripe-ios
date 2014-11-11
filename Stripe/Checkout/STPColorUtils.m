@@ -26,28 +26,27 @@
     uint32_t rgba;
     NSScanner *scanner = [NSScanner scannerWithString:hexCode];
     [scanner scanHexInt:&rgba];
-    CGFloat red = ((rgba & 0xFF000000) >> 24) / 255.0f;
-    CGFloat green = ((rgba & 0x00FF0000) >> 16) / 255.0f;
-    CGFloat blue = ((rgba & 0x0000FF00) >> 8) / 255.0f;
-    CGFloat alpha = (rgba & 0x000000FF) / 255.0f;
-    return [[UIColor alloc] initWithRed:red green:green blue:blue alpha:alpha];
+    CGFloat red = ((rgba & 0xFF0000) >> 24) / 255.0f;
+    CGFloat green = ((rgba & 0x00FF00) >> 16) / 255.0f;
+    CGFloat blue = ((rgba & 0x0000FF) >> 8) / 255.0f;
+    return [[UIColor alloc] initWithRed:red green:green blue:blue alpha:1.0f];
 }
 
 + (NSString *)hexCodeForColor:(UIColor *)color {
-    CGFloat rgb[3];
+    uint8_t rgb[3];
     CGColorSpaceModel model = CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor));
     const CGFloat *components = CGColorGetComponents(color.CGColor);
     switch (model) {
         case kCGColorSpaceModelMonochrome: {
-            rgb[0] = components[0];
-            rgb[1] = components[0];
-            rgb[2] = components[0];
+            rgb[0] = components[0]*255;
+            rgb[1] = components[0]*255;
+            rgb[2] = components[0]*255;
             break;
         }
         case kCGColorSpaceModelRGB: {
-            rgb[0] = components[0];
-            rgb[1] = components[1];
-            rgb[2] = components[2];
+            rgb[0] = components[0]*255;
+            rgb[1] = components[1]*255;
+            rgb[2] = components[2]*255;
             break;
         }
         default: {
@@ -57,10 +56,7 @@
             break;
         }
     }
-    uint8_t red = rgb[0]*255;
-    uint8_t green = rgb[1]*255;
-    uint8_t blue = rgb[2]*255;
-    unsigned long rgbValue = (red << 16) + (green << 8) + blue;
+    unsigned long rgbValue = (rgb[0] << 16) + (rgb[1] << 8) + rgb[2];
     return [NSString stringWithFormat:@"#%.6lx", rgbValue];
 }
 

@@ -23,28 +23,29 @@
 
 @implementation STPCheckoutViewController
 
+static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
+static NSString *const checkoutRedirectPrefix = @"/-/";
+static NSString *const checkoutRPCScheme = @"stripecheckout";
 static NSString *const checkoutUserAgent = @"Stripe";
 static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
-static NSString *const checkoutRPCScheme = @"stripecheckout";
-static NSString *const checkoutRedirectPrefix = @"/-/";
 
 - (instancetype)initWithOptions:(STPCheckoutOptions *)options {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _options = options;
+        _previousStyle = [[UIApplication sharedApplication] statusBarStyle];
         NSString *userAgent = [[UIWebView new] stringByEvaluatingJavaScriptFromString:@"window.navigator.userAgent"];
         if ([userAgent rangeOfString:checkoutUserAgent].location == NSNotFound) {
             userAgent = [NSString stringWithFormat:@"%@ %@/%@", userAgent, checkoutUserAgent, STPLibraryVersionNumber];
             NSDictionary *defaults = @{@"UserAgent": userAgent};
             [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
         }
-            _previousStyle = [[UIApplication sharedApplication] statusBarStyle];
     }
     return self;
 }
 
 - (NSString *)optionsJavaScript {
-    return [NSString stringWithFormat:@"window.StripeCheckoutOptions = %@;", [self.options stringifiedJSONRepresentation]];
+    return [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentation]];
 }
 
 - (void)viewDidLoad {
@@ -83,7 +84,10 @@ static NSString *const checkoutRedirectPrefix = @"/-/";
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return [STPColorUtils colorIsLight:self.options.logoColor] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+    if (self.options.logoColor) {
+        return [STPColorUtils colorIsLight:self.options.logoColor] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+    }
+    return UIStatusBarStyleDefault;
 }
 #endif
 
@@ -159,9 +163,8 @@ static NSString *const checkoutRedirectPrefix = @"/-/";
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
     self.options.logoColor = color;
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        [[UIApplication sharedApplication] setStatusBarStyle:[self preferredStatusBarStyle] animated:YES];
         [self setNeedsStatusBarAppearanceUpdate];
-        UIStatusBarStyle style = [STPColorUtils colorIsLight:color] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
-        [[UIApplication sharedApplication] setStatusBarStyle:style animated:YES];
     }
 #endif
 }
