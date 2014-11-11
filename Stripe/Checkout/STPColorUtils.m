@@ -26,11 +26,10 @@
     uint32_t rgba;
     NSScanner *scanner = [NSScanner scannerWithString:hexCode];
     [scanner scanHexInt:&rgba];
-    CGFloat red = ((rgba & 0xFF000000) >> 24) / 255.0f;
-    CGFloat green = ((rgba & 0x00FF0000) >> 16) / 255.0f;
-    CGFloat blue = ((rgba & 0x0000FF00) >> 8) / 255.0f;
-    CGFloat alpha = (rgba & 0x000000FF) / 255.0f;
-    return [[UIColor alloc] initWithRed:red green:green blue:blue alpha:alpha];
+    CGFloat red = ((rgba & 0xFF0000) >> 24) / 255.0f;
+    CGFloat green = ((rgba & 0x00FF00) >> 16) / 255.0f;
+    CGFloat blue = ((rgba & 0x0000FF) >> 8) / 255.0f;
+    return [[UIColor alloc] initWithRed:red green:green blue:blue alpha:1.0f];
 }
 
 + (NSString *)hexCodeForColor:(UIColor *)color {
