@@ -29,7 +29,7 @@ static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
 static NSString *const checkoutRedirectPrefix = @"/-/";
 static NSString *const checkoutRPCScheme = @"stripecheckout";
 static NSString *const checkoutUserAgent = @"Stripe";
-static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
+static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
 
 - (instancetype)initWithOptions:(STPCheckoutOptions *)options {
     self = [super initWithNibName:nil bundle:nil];

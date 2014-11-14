@@ -14,6 +14,7 @@
 #import "Stripe+ApplePay.h"
 #import "PaymentViewController.h"
 #import "ShippingManager.h"
+#import "STPCheckoutOptions.h"
 
 #if DEBUG
 #import "STPTestPaymentAuthorizationViewController.h"

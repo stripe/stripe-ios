@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		042364571A16CC1E00E32245 /* STPCheckoutURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 042364561A16CC1E00E32245 /* STPCheckoutURLProtocol.m */; };
+		0449C99D1A157645000AA6E3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0449C99B1A157645000AA6E3 /* Main.storyboard */; };
 		045F629F1A085A6800134D19 /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 045F62861A085A6800134D19 /* Stripe+ApplePay.m */; };
 		045F62A01A085A6800134D19 /* STPCheckoutOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 045F62891A085A6800134D19 /* STPCheckoutOptions.m */; };
 		045F62A11A085A6800134D19 /* STPCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045F628B1A085A6800134D19 /* STPCheckoutViewController.m */; };
@@ -102,6 +103,7 @@
 
 /* Begin PBXFileReference section */
 		042364551A16CC1E00E32245 /* STPCheckoutURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutURLProtocol.h; sourceTree = "<group>"; };
+		0449C99C1A157645000AA6E3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
 		042364561A16CC1E00E32245 /* STPCheckoutURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCheckoutURLProtocol.m; sourceTree = "<group>"; };
 		045F62851A085A6800134D19 /* Stripe+ApplePay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe+ApplePay.h"; sourceTree = "<group>"; };
 		045F62861A085A6800134D19 /* Stripe+ApplePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Stripe+ApplePay.m"; sourceTree = "<group>"; };
@@ -137,7 +139,6 @@
 		0470A2A919A5D5DB00B66DB7 /* StripeExample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StripeExample-Prefix.pch"; sourceTree = "<group>"; };
 		0470A2AA19A5D5DB00B66DB7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0470A2AB19A5D5DB00B66DB7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		0470A2AE19A5D5DB00B66DB7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0470A2B019A5D5DB00B66DB7 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		0470A2B119A5D5DB00B66DB7 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		0470A2B319A5D5DB00B66DB7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -257,6 +258,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0449C99A1A157645000AA6E3 /* Base.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				0449C99B1A157645000AA6E3 /* Main.storyboard */,
+			);
+			path = Base.lproj;
+			sourceTree = "<group>";
+		};
 		045F62831A085A6800134D19 /* Stripe */ = {
 			isa = PBXGroup;
 			children = (
@@ -361,6 +370,7 @@
 		0470A2A119A5D5DB00B66DB7 /* StripeExample */ = {
 			isa = PBXGroup;
 			children = (
+				0449C99A1A157645000AA6E3 /* Base.lproj */,
 				04C0A07319F85BD800D699BB /* StripeExample.entitlements */,
 				0470A2D019A5D69E00B66DB7 /* Base.lproj */,
 				0470A2D319A5D69E00B66DB7 /* en.lproj */,
@@ -374,7 +384,6 @@
 				0470A30619A5D69E00B66DB7 /* PaymentViewController.m */,
 				04C0A07419F85E5100D699BB /* ShippingManager.h */,
 				04C0A07519F85E5100D699BB /* ShippingManager.m */,
-				0470A2AD19A5D5DB00B66DB7 /* Main.storyboard */,
 				0470A2B319A5D5DB00B66DB7 /* Images.xcassets */,
 				0470A2A219A5D5DB00B66DB7 /* Supporting Files */,
 			);
@@ -569,13 +578,13 @@
 				ORGANIZATIONNAME = Stripe;
 				TargetAttributes = {
 					0470A29719A5D5DB00B66DB7 = {
-						DevelopmentTeam = Y28TH9SHX7;
+						DevelopmentTeam = 2N6HG2F4PB;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
 								enabled = 0;
 							};
 							com.apple.OMC = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Passbook = {
 								enabled = 0;
@@ -618,6 +627,7 @@
 				04EEE20119CB7ED500192164 /* discover.png in Resources */,
 				04EEE1FF19CB7ED500192164 /* diners.png in Resources */,
 				04EEE20019CB7ED500192164 /* diners@2x.png in Resources */,
+				0449C99D1A157645000AA6E3 /* Main.storyboard in Resources */,
 				04EEE1FA19CB7ED500192164 /* amex@2x.png in Resources */,
 				0470A2A619A5D5DB00B66DB7 /* InfoPlist.strings in Resources */,
 				04EEE1FB19CB7ED500192164 /* cvc-amex.png in Resources */,
@@ -715,20 +725,20 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		0449C99B1A157645000AA6E3 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0449C99C1A157645000AA6E3 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
 		0470A2A419A5D5DB00B66DB7 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				0470A2A519A5D5DB00B66DB7 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		0470A2AD19A5D5DB00B66DB7 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0470A2AE19A5D5DB00B66DB7 /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 		0470A2C319A5D5DB00B66DB7 /* InfoPlist.strings */ = {
@@ -866,8 +876,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = StripeExample/StripeExample.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Stripe, Inc";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Stripe, Inc";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
