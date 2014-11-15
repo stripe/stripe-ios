@@ -1,3 +1,6 @@
+== 2.2.2 2014-11-17
+* Add bank account tokenization methods
+
 == 2.2.1 2014-10-27
 * Add billing address fields to our Apple Pay API
 * Various bug fixes and code improvements
