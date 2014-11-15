@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		042364571A16CC1E00E32245 /* STPCheckoutURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 042364561A16CC1E00E32245 /* STPCheckoutURLProtocol.m */; };
 		045F629F1A085A6800134D19 /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 045F62861A085A6800134D19 /* Stripe+ApplePay.m */; };
 		045F62A01A085A6800134D19 /* STPCheckoutOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 045F62891A085A6800134D19 /* STPCheckoutOptions.m */; };
 		045F62A11A085A6800134D19 /* STPCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045F628B1A085A6800134D19 /* STPCheckoutViewController.m */; };
@@ -100,6 +101,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		042364551A16CC1E00E32245 /* STPCheckoutURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutURLProtocol.h; sourceTree = "<group>"; };
+		042364561A16CC1E00E32245 /* STPCheckoutURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCheckoutURLProtocol.m; sourceTree = "<group>"; };
 		045F62851A085A6800134D19 /* Stripe+ApplePay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe+ApplePay.h"; sourceTree = "<group>"; };
 		045F62861A085A6800134D19 /* Stripe+ApplePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Stripe+ApplePay.m"; sourceTree = "<group>"; };
 		045F62881A085A6800134D19 /* STPCheckoutOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutOptions.h; sourceTree = "<group>"; };
@@ -292,6 +295,8 @@
 		045F62871A085A6800134D19 /* Checkout */ = {
 			isa = PBXGroup;
 			children = (
+				042364551A16CC1E00E32245 /* STPCheckoutURLProtocol.h */,
+				042364561A16CC1E00E32245 /* STPCheckoutURLProtocol.m */,
 				045F62881A085A6800134D19 /* STPCheckoutOptions.h */,
 				045F62891A085A6800134D19 /* STPCheckoutOptions.m */,
 				045F628A1A085A6800134D19 /* STPCheckoutViewController.h */,
@@ -651,6 +656,7 @@
 			files = (
 				045F62A41A085A6800134D19 /* STPBankAccount.m in Sources */,
 				04BA873019F89D5400B79DAF /* STPTestCardStore.m in Sources */,
+				042364571A16CC1E00E32245 /* STPCheckoutURLProtocol.m in Sources */,
 				045F62A61A085A6800134D19 /* STPToken.m in Sources */,
 				04BA872E19F89D5400B79DAF /* PKPayment+STPTestKeys.m in Sources */,
 				04BC615D19E6250C001B0D84 /* (null) in Sources */,
