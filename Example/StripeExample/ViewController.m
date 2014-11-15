@@ -18,8 +18,9 @@
 #if DEBUG
 #import "STPTestPaymentAuthorizationViewController.h"
 #import "PKPayment+STPTestKeys.h"
-#import "STPCheckoutOptions.h"
 #endif
+
+#import "STPCheckoutOptions.h"
 
 @interface ViewController () <PKPaymentAuthorizationViewControllerDelegate, STPCheckoutViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *cartLabel;
