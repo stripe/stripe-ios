@@ -38,7 +38,7 @@
 - (NSDateComponents *)getCurrentDateComponents {
     // FIXME This is a copy of the code that already exists in a private method in STPCard
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    return [gregorian components:NSYearCalendarUnit fromDate:[NSDate date]];
+    return [gregorian components:NSCalendarUnitYear fromDate:[NSDate date]];
 }
 
 - (NSInteger)getCurrentYear {

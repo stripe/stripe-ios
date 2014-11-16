@@ -63,7 +63,7 @@
 + (BOOL)isExpiredMonth:(NSInteger)month andYear:(NSInteger)year {
     NSDate *now = [NSDate date];
 
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setYear:year];
     // Cards expire at end of month
@@ -74,8 +74,8 @@
 }
 
 + (NSInteger)currentYear {
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *components = [gregorian components:NSYearCalendarUnit fromDate:[NSDate date]];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:NSCalendarUnitYear fromDate:[NSDate date]];
     return [components year];
 }
 
