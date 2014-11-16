@@ -33,6 +33,6 @@ typedef void (^STPCardServerResponseCallback)(NSURLResponse *response, NSData *d
  This method should not be invoked in your code.  This is used by Stripe to
  create tokens using a Stripe API response
  */
-- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 
 @end

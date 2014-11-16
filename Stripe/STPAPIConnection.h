@@ -12,7 +12,7 @@ typedef void (^APIConnectionCompletionBlock)(NSURLResponse *response, NSData *bo
 // Like NSURLConnection but verifies that the server isn't using a revoked certificate.
 @interface STPAPIConnection : NSObject
 
-- (instancetype)initWithRequest:(NSURLRequest *)request NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithRequest:(NSURLRequest *)request;
 - (void)runOnOperationQueue:(NSOperationQueue *)queue completion:(APIConnectionCompletionBlock)handler;
 
 #pragma mark - Private methods, exposed here for testing
