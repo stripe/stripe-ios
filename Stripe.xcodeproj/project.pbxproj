@@ -67,7 +67,6 @@
 		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		11C74B9F164043050071C2CA /* Stripe-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stripe-Prefix.pch"; sourceTree = "<group>"; };
 		11C74BB3164043050071C2CA /* StripeTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "StripeTest-Info.plist"; sourceTree = "<group>"; };
-		11C74BB5164043050071C2CA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		11E1F58C165151F400B49816 /* libStripeiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStripeiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E1F646165157CA00B49816 /* iOSTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E1F65A1651585F00B49816 /* StripeTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StripeTest-Prefix.pch"; sourceTree = "<group>"; };
@@ -210,7 +209,6 @@
 			children = (
 				11E1F65A1651585F00B49816 /* StripeTest-Prefix.pch */,
 				11C74BB3164043050071C2CA /* StripeTest-Info.plist */,
-				11C74BB4164043050071C2CA /* InfoPlist.strings */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -354,17 +352,6 @@
 			targetProxy = 11E1F65C165158B000B49816 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		11C74BB4164043050071C2CA /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				11C74BB5164043050071C2CA /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		11C74BBA164043050071C2CA /* Debug */ = {

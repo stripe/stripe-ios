@@ -12,7 +12,7 @@
 
 @implementation STPToken
 
-- (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary {
+- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary {
     self = [super init];
 
     if (self) {

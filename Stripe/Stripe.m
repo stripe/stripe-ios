@@ -256,7 +256,7 @@ static NSString *const tokenEndpoint = @"tokens";
     }
     struct utsname systemInfo;
     uname(&systemInfo);
-    NSString *deviceType = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+    NSString *deviceType = @(systemInfo.machine);
     if (deviceType) {
         details[@"type"] = deviceType;
     }

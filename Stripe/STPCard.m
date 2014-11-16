@@ -63,12 +63,11 @@
 + (BOOL)isExpiredMonth:(NSInteger)month andYear:(NSInteger)year {
     NSDate *now = [NSDate date];
 
-    // Cards expire at end of month
-    month = month + 1;
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setYear:year];
-    [components setMonth:month];
+    // Cards expire at end of month
+    [components setMonth:month + 1];
     [components setDay:1];
     NSDate *expiryDate = [calendar dateFromComponents:components];
     return ([expiryDate compare:now] == NSOrderedAscending);

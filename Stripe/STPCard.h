@@ -39,7 +39,7 @@
  You should not use this constructor.  This constructor is used by Stripe to
  generate cards from the response of creating ar getting a token.
  */
-- (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
+- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 - (BOOL)isEqualToCard:(STPCard *)other;
 
 /* These validation methods work as described in

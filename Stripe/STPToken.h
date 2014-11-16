@@ -31,6 +31,6 @@
  This method should not be invoked in your code.  This is used by Stripe to
  create tokens using a Stripe API response
  */
-- (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
+- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary NS_DESIGNATED_INITIALIZER;
 
 @end

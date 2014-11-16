@@ -23,7 +23,7 @@
 
 @implementation STPAPIConnection
 
-- (id)initWithRequest:(NSURLRequest *)request {
+- (instancetype)initWithRequest:(NSURLRequest *)request {
     if (self = [super init]) {
         _request = request;
         _connection = [[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO];
@@ -69,13 +69,10 @@
 #pragma mark NSURLConnectionDelegate
 
 - (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
-    if (self.overrideError) {
-        error = self.overrideError;
-    }
     self.connection = nil;
     self.receivedData = nil;
     self.receivedResponse = nil;
-    self.completionBlock(self.receivedResponse, self.receivedData, error);
+    self.completionBlock(self.receivedResponse, self.receivedData, self.overrideError ?: error);
 }
 
 - (void)connection:(__unused NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
