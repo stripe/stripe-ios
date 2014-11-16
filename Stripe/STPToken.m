@@ -37,7 +37,7 @@
 }
 
 - (NSString *)description {
-    NSString *token = self.tokenId ? self.tokenId : @"Unknown token";
+    NSString *token = self.tokenId ?: @"Unknown token";
     NSString *livemode = self.livemode ? @"live mode" : @"test mode";
 
     return [NSString stringWithFormat:@"%@ (%@)", token, livemode];
@@ -46,7 +46,7 @@
 - (void)postToURL:(NSURL *)url withParams:(NSMutableDictionary *)params completion:(void (^)(NSURLResponse *, NSData *, NSError *))handler {
     NSMutableString *body = [NSMutableString stringWithFormat:@"stripeToken=%@", self.tokenId];
 
-    [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) { [body appendFormat:@"&%@=%@", key, obj]; }];
+    [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) { [body appendFormat:@"&%@=%@", key, obj]; }];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
@@ -57,6 +57,10 @@
 
 - (BOOL)isEqual:(id)object {
     return [self isEqualToToken:object];
+}
+
+- (NSUInteger)hash {
+    return [self.tokenId hash];
 }
 
 - (BOOL)isEqualToToken:(STPToken *)object {

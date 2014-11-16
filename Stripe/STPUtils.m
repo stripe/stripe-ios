@@ -13,7 +13,7 @@
 + (NSString *)stringByReplacingSnakeCaseWithCamelCase:(NSString *)input {
     NSArray *parts = [input componentsSeparatedByString:@"_"];
     NSMutableString *camelCaseParam = [NSMutableString string];
-    [parts enumerateObjectsUsingBlock:^(NSString *part, NSUInteger idx, BOOL *stop) {
+    [parts enumerateObjectsUsingBlock:^(NSString *part, NSUInteger idx, __unused BOOL *stop) {
         [camelCaseParam appendString:(idx == 0 ? part : [part capitalizedString])];
 
         if (idx > 0) {

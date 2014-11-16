@@ -64,28 +64,28 @@
 
     NSArray *values = [attributes allValues];
     NSMutableArray *encodedValues = [NSMutableArray array];
-    [values enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    for (NSString *value in values) {
         NSString *stringValue = nil;
-        if ([obj isKindOfClass:[NSString class]]) {
-            stringValue = obj;
-        } else if ([obj isKindOfClass:[NSNumber class]]) {
-            stringValue = [((NSNumber *)obj)stringValue];
+        if ([value isKindOfClass:[NSString class]]) {
+            stringValue = value;
+        } else if ([value isKindOfClass:[NSNumber class]]) {
+            stringValue = [((NSNumber *)value)stringValue];
         }
         if (stringValue) {
             [encodedValues addObject:[STPUtils stringByURLEncoding:stringValue]];
         }
-    }];
+    }
 
     NSSet *expectedValues = [NSSet setWithArray:encodedValues];
 
-    [parts enumerateObjectsUsingBlock:^(NSString *part, NSUInteger idx, BOOL *stop) {
+    for (NSString *part in parts) {
         NSArray *subparts = [part componentsSeparatedByString:@"="];
         NSString *key = subparts[0];
         NSString *value = subparts[1];
 
         XCTAssertTrue([expectedKeys containsObject:key], @"unexpected key %@", key);
         XCTAssertTrue([expectedValues containsObject:value], @"unexpected value %@", value);
-    }];
+    }
 }
 
 #pragma mark - Last4 Tests

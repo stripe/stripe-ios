@@ -110,18 +110,19 @@
 
     NSArray *values = [attributes allValues];
     NSMutableArray *encodedValues = [NSMutableArray array];
-    [values enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) { [encodedValues addObject:[STPUtils stringByURLEncoding:obj]]; }];
+    for (NSString *value in values) {
+        [encodedValues addObject:[STPUtils stringByURLEncoding:value]];
+    }
 
     NSSet *expectedValues = [NSSet setWithArray:encodedValues];
-
-    [parts enumerateObjectsUsingBlock:^(NSString *part, NSUInteger idx, BOOL *stop) {
+    for (NSString *part in parts) {
         NSArray *subparts = [part componentsSeparatedByString:@"="];
         NSString *key = subparts[0];
         NSString *value = subparts[1];
 
         XCTAssertTrue([expectedKeys containsObject:key], @"unexpected key %@", key);
         XCTAssertTrue([expectedValues containsObject:value], @"unexpected value %@", value);
-    }];
+    }
 }
 
 #pragma mark -last4 tests

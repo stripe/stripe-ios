@@ -264,9 +264,11 @@ static NSString *const tokenEndpoint = @"tokens";
     if (model) {
         details[@"model"] = model;
     }
-    NSString *vendorIdentifier = [[UIDevice currentDevice].identifierForVendor UUIDString];
-    if (vendorIdentifier) {
-        details[@"vendor_identifier"] = vendorIdentifier;
+    if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
+        NSString *vendorIdentifier = [[[UIDevice currentDevice] performSelector:@selector(identifierForVendor)] performSelector:@selector(UUIDString)];
+        if (vendorIdentifier) {
+            details[@"vendor_identifier"] = vendorIdentifier;
+        }
     }
     return [details copy];
 }

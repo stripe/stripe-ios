@@ -51,15 +51,15 @@
 
 #pragma mark NSURLConnectionDataDelegate
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+- (void)connection:(__unused NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     self.receivedResponse = response;
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+- (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
     [self.receivedData appendData:data];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+- (void)connectionDidFinishLoading:(__unused NSURLConnection *)connection {
     self.connection = nil;
     self.completionBlock(self.receivedResponse, self.receivedData, nil);
     self.receivedData = nil;
@@ -68,7 +68,7 @@
 
 #pragma mark NSURLConnectionDelegate
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+- (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
     if (self.overrideError) {
         error = self.overrideError;
     }
@@ -78,7 +78,7 @@
     self.completionBlock(self.receivedResponse, self.receivedData, error);
 }
 
-- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+- (void)connection:(__unused NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
         SecTrustRef serverTrust = [[challenge protectionSpace] serverTrust];
         SecTrustResultType resultType;
