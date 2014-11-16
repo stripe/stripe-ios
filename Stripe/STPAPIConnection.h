@@ -13,7 +13,9 @@ typedef void (^APIConnectionCompletionBlock)(NSURLResponse *response, NSData *bo
 @interface STPAPIConnection : NSObject
 
 - (instancetype)initWithRequest:(NSURLRequest *)request NS_DESIGNATED_INITIALIZER;
-
 - (void)runOnOperationQueue:(NSOperationQueue *)queue completion:(APIConnectionCompletionBlock)handler;
+
+#pragma mark - Private methods, exposed here for testing
++ (NSString *)SHA1FingerprintOfData:(NSData *)data;
 
 @end

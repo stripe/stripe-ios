@@ -43,7 +43,7 @@
     return [NSString stringWithFormat:@"%@ (%@)", token, livemode];
 }
 
-- (void)postToURL:(NSURL *)url withParams:(NSMutableDictionary *)params completion:(void (^)(NSURLResponse *, NSData *, NSError *))handler {
+- (void)postToURL:(NSURL *)url withParams:(NSMutableDictionary *)params completion:(STPCardServerResponseCallback)handler {
     NSMutableString *body = [NSMutableString stringWithFormat:@"stripeToken=%@", self.tokenId];
 
     [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) { [body appendFormat:@"&%@=%@", key, obj]; }];

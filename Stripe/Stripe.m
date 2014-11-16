@@ -22,7 +22,7 @@ static NSString *const apiVersion = @"v1";
 static NSString *const tokenEndpoint = @"tokens";
 
 + (id)alloc {
-    [NSException raise:@"CannotInstantiateStaticClass" format:@"'Stripe' is a static class and cannot be instantiated."];
+    NSCAssert(NO, @"'Stripe' is a static class and cannot be instantiated.");
     return nil;
 }
 
@@ -38,7 +38,7 @@ static NSString *const tokenEndpoint = @"tokens";
     if (requestError) {
         // If this is an error that Stripe returned, let's handle it as a StripeDomain error
         NSDictionary *jsonDictionary = nil;
-        if (body && (jsonDictionary = [self dictionaryFromJSONData:body error:nil]) && [jsonDictionary valueForKey:@"error"] != nil) {
+        if (body && (jsonDictionary = [self dictionaryFromJSONData:body error:NULL]) && [jsonDictionary valueForKey:@"error"] != nil) {
             handler(nil, [self errorFromStripeResponse:jsonDictionary]);
         } else {
             handler(nil, requestError);
@@ -58,7 +58,7 @@ static NSString *const tokenEndpoint = @"tokens";
 }
 
 + (NSDictionary *)dictionaryFromJSONData:(NSData *)data error:(NSError **)outError {
-    NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
 
     if (jsonDictionary == nil) {
         NSDictionary *userInfo = @{
@@ -76,18 +76,16 @@ static NSString *const tokenEndpoint = @"tokens";
     return jsonDictionary;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-variable"
 + (void)validateKey:(NSString *)publishableKey {
-    if (!publishableKey || [publishableKey isEqualToString:@""]) {
-        [NSException raise:@"InvalidPublishableKey"
-                    format:@"You must use a valid publishable key to create a token. For more info, see https://stripe.com/docs/stripe.js"];
-    }
-
-    if ([publishableKey hasPrefix:@"sk_"]) {
-        [NSException
-             raise:@"InvalidPublishableKey"
-            format:@"You are using a secret key to create a token, instead of the publishable one. For more info, see https://stripe.com/docs/stripe.js"];
-    }
+    NSCAssert(publishableKey != nil && ![publishableKey isEqualToString:@""],
+              @"You must use a valid publishable key to create a token. For more info, see https://stripe.com/docs/stripe.js");
+    BOOL secretKey = [publishableKey hasPrefix:@"sk_"];
+    NSCAssert(!secretKey,
+              @"You are using a secret key to create a token, instead of the publishable one. For more info, see https://stripe.com/docs/stripe.js");
 }
+#pragma clang diagnostic pop
 
 + (NSDictionary *)cardErrorCodeMap {
     static id errorDictionary = nil;
@@ -169,13 +167,8 @@ static NSString *const tokenEndpoint = @"tokens";
              publishableKey:(NSString *)publishableKey
              operationQueue:(NSOperationQueue *)queue
                  completion:(STPCompletionBlock)handler {
-    if (card == nil) {
-        [NSException raise:@"RequiredParameter" format:@"'card' is required to create a token"];
-    }
-
-    if (handler == nil) {
-        [NSException raise:@"RequiredParameter" format:@"'handler' is required to use the token that is created"];
-    }
+    NSCAssert(card != nil, @"'card' is required to create a token");
+    NSCAssert(handler != nil, @"'handler' is required to use the token that is created");
 
     [self validateKey:publishableKey];
 
@@ -195,13 +188,8 @@ static NSString *const tokenEndpoint = @"tokens";
                     publishableKey:(NSString *)publishableKey
                     operationQueue:(NSOperationQueue *)queue
                         completion:(STPCompletionBlock)handler {
-    if (bankAccount == nil) {
-        [NSException raise:@"RequiredParameter" format:@"'bankAccount' is required to create a token"];
-    }
-
-    if (handler == nil) {
-        [NSException raise:@"RequiredParameter" format:@"'handler' is required to use the token that is created"];
-    }
+    NSCAssert(bankAccount != nil, @"'bankAccount' is required to create a token");
+    NSCAssert(handler != nil, @"'handler' is required to use the token that is created");
 
     [self validateKey:publishableKey];
 
@@ -274,7 +262,7 @@ static NSString *const tokenEndpoint = @"tokens";
 }
 
 + (NSString *)JSONStringForObject:(id)object {
-    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:object options:0 error:nil] encoding:NSUTF8StringEncoding];
+    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:object options:0 error:NULL] encoding:NSUTF8StringEncoding];
 }
 
 @end

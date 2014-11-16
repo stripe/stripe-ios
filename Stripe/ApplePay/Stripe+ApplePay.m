@@ -49,7 +49,7 @@
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
-    NSData *userAgentData = [NSJSONSerialization dataWithJSONObject:[self stripeUserAgentDetails] options:0 error:nil];
+    NSData *userAgentData = [NSJSONSerialization dataWithJSONObject:[self stripeUserAgentDetails] options:0 error:NULL];
     NSString *userAgentDetails = [[NSString alloc] initWithData:userAgentData encoding:NSUTF8StringEncoding];
     [request setValue:userAgentDetails forHTTPHeaderField:@"X-Stripe-User-Agent"];
     [request setValue:[@"Bearer " stringByAppendingString:[self defaultPublishableKey]] forHTTPHeaderField:@"Authorization"];

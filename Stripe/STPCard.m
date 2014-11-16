@@ -261,7 +261,7 @@
     }
 
     NSString *ioValueString = (NSString *)*ioValue;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[\\s+|-]" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[\\s+|-]" options:NSRegularExpressionCaseInsensitive error:NULL];
 
     NSString *rawNumber = [regex stringByReplacingMatchesInString:ioValueString options:0 range:NSMakeRange(0, [ioValueString length]) withTemplate:@""];
 

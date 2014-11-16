@@ -33,18 +33,12 @@
 }
 
 - (void)runOnOperationQueue:(NSOperationQueue *)queue completion:(APIConnectionCompletionBlock)handler {
-    if (self.started) {
-        [NSException raise:@"OperationNotPermitted" format:@"This API connection has already started."];
-    }
-    if (!queue) {
-        [NSException raise:@"RequiredParameter" format:@"'queue' is required"];
-    }
-    if (!handler) {
-        [NSException raise:@"RequiredParameter" format:@"'handler' is required"];
-    }
+    NSCAssert(!self.started, @"This API connection has already started.");
+    NSCAssert(queue, @"'queue' is required");
+    NSCAssert(handler, @"'handler' is required");
 
     self.started = YES;
-    self.completionBlock = [handler copy];
+    self.completionBlock = handler;
     [self.connection setDelegateQueue:queue];
     [self.connection start];
 }
@@ -122,21 +116,15 @@
 }
 
 + (NSString *)SHA1FingerprintOfData:(NSData *)data {
-    unsigned char digest[CC_SHA1_DIGEST_LENGTH];
+    unsigned int outputLength = CC_SHA1_DIGEST_LENGTH;
+    unsigned char output[outputLength];
 
-    // Convert the NSData into a C buffer.
-    void *cData = malloc([data length]);
-    [data getBytes:cData length:[data length]];
-    CC_SHA1(cData, (CC_LONG)data.length, digest);
-
-    // Convert to NSString.
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
-    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
-        [output appendFormat:@"%02x", digest[i]];
+    CC_SHA1(data.bytes, (unsigned int)data.length, output);
+    NSMutableString *hash = [NSMutableString stringWithCapacity:outputLength * 2];
+    for (unsigned int i = 0; i < outputLength; i++) {
+        [hash appendFormat:@"%02x", output[i]];
     }
-
-    free(cData);
-    return [output lowercaseString];
+    return [hash copy];
 }
 
 + (NSError *)blacklistedCertificateError {
