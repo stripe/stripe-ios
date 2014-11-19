@@ -11,9 +11,9 @@
 
 @interface STPBankAccount : NSObject<STPFormEncodeProtocol>
 
-@property (nonatomic) NSString *accountNumber;
-@property (nonatomic) NSString *routingNumber;
-@property (nonatomic) NSString *country;
+@property (nonatomic, copy) NSString *accountNumber;
+@property (nonatomic, copy) NSString *routingNumber;
+@property (nonatomic, copy) NSString *country;
 
 @property (nonatomic, readonly) NSString *object;
 @property (nonatomic, readonly) NSString *bankAccountId;

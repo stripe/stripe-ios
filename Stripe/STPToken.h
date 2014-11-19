@@ -25,12 +25,14 @@
 @property (nonatomic, readonly) NSDate *created;
 @property (nonatomic, readonly) BOOL used;
 
-- (void)postToURL:(NSURL *)url withParams:(NSDictionary *)params completion:(void (^)(NSURLResponse *, NSData *, NSError *))handler;
+typedef void (^STPCardServerResponseCallback)(NSURLResponse *response, NSData *data, NSError *error);
+
+- (void)postToURL:(NSURL *)url withParams:(NSDictionary *)params completion:(STPCardServerResponseCallback)handler;
 
 /*
  This method should not be invoked in your code.  This is used by Stripe to
  create tokens using a Stripe API response
  */
-- (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
+- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 
 @end

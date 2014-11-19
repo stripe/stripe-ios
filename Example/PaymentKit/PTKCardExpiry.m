@@ -9,18 +9,16 @@
 #import "PTKCardExpiry.h"
 
 @implementation PTKCardExpiry {
-@private
+  @private
     NSString *_month;
     NSString *_year;
 }
 
-+ (instancetype)cardExpiryWithString:(NSString *)string
-{
++ (instancetype)cardExpiryWithString:(NSString *)string {
     return [[self alloc] initWithString:string];
 }
 
-- (instancetype)initWithString:(NSString *)string
-{
+- (instancetype)initWithString:(NSString *)string {
     if (!string) {
         return [self initWithMonth:@"" year:@""];
     }
@@ -46,9 +44,8 @@
     return [self initWithMonth:monthStr year:yearStr];
 }
 
-- (instancetype)initWithMonth:(NSString *)monthStr year:(NSString *)yearStr
-{
-   if (self = [super init]) {
+- (instancetype)initWithMonth:(NSString *)monthStr year:(NSString *)yearStr {
+    if (self = [super init]) {
         _month = monthStr;
         _year = yearStr;
 
@@ -61,16 +58,14 @@
     return self;
 }
 
-- (NSString *)formattedString
-{
+- (NSString *)formattedString {
     if (_year.length > 0)
         return [NSString stringWithFormat:@"%@/%@", _month, _year];
 
     return [NSString stringWithFormat:@"%@", _month];
 }
 
-- (NSString *)formattedStringWithTrail
-{
+- (NSString *)formattedStringWithTrail {
     if (_month.length == 2 && _year.length == 0) {
         return [NSString stringWithFormat:@"%@/", [self formattedString]];
     } else {
@@ -78,40 +73,35 @@
     }
 }
 
-- (BOOL)isValid
-{
+- (BOOL)isValid {
     return [self isValidLength] && [self isValidDate];
 }
 
-- (BOOL)isValidLength
-{
+- (BOOL)isValidLength {
     return _month.length == 2 && (_year.length == 2 || _year.length == 4);
 }
 
-- (BOOL)isValidDate
-{
-    if ([self month] <= 0 || [self month] > 12) return NO;
+- (BOOL)isValidDate {
+    if ([self month] <= 0 || [self month] > 12)
+        return NO;
 
     return [self isValidWithDate:[NSDate date]];
 }
 
-- (BOOL)isValidWithDate:(NSDate *)dateToCompare
-{
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *components = [gregorian components:NSYearCalendarUnit | NSMonthCalendarUnit fromDate:dateToCompare];
+- (BOOL)isValidWithDate:(NSDate *)dateToCompare {
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:dateToCompare];
     BOOL valid = NO;
 
     if (components.year < self.year) {
         valid = YES;
-    }
-    else if (components.year == self.year) {
+    } else if (components.year == self.year) {
         valid = components.month <= self.month;
     }
     return valid;
 }
 
-- (BOOL)isPartiallyValid
-{
+- (BOOL)isPartiallyValid {
     if ([self isValidLength]) {
         return [self isValidDate];
     } else {
@@ -119,8 +109,7 @@
     }
 }
 
-- (NSDate *)expiryDate
-{
+- (NSDate *)expiryDate {
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setDay:1];
     [components setMonth:[self month]];
@@ -132,9 +121,7 @@
     }
 
     // Move to the last day of the month.
-    NSRange monthRange = [gregorian rangeOfUnit:NSCalendarUnitDay
-                                         inUnit:NSCalendarUnitMonth
-                                        forDate:[gregorian dateFromComponents:components]];
+    NSRange monthRange = [gregorian rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitMonth forDate:[gregorian dateFromComponents:components]];
 
     [components setDay:monthRange.length];
     [components setHour:23];
@@ -143,13 +130,11 @@
     return [gregorian dateFromComponents:components];
 }
 
-- (NSUInteger)month
-{
-    return (NSUInteger) [_month integerValue];
+- (NSUInteger)month {
+    return (NSUInteger)[_month integerValue];
 }
 
-- (NSUInteger)year
-{
+- (NSUInteger)year {
     if (!_year) {
         return 0;
     }
@@ -168,7 +153,7 @@
         yearStr = [NSString stringWithFormat:@"%@%@", prefix, yearStr];
     }
 
-    return (NSUInteger) [yearStr integerValue];
+    return (NSUInteger)[yearStr integerValue];
 }
 
 @end

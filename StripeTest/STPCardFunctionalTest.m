@@ -35,8 +35,8 @@
                          XCTAssertNotNil(token, @"token should not be nil");
 
                          XCTAssertNotNil(token.tokenId);
-                         XCTAssertEqual(6, token.card.expMonth);
-                         XCTAssertEqual(2018, token.card.expYear);
+                         XCTAssertEqual(6U, token.card.expMonth);
+                         XCTAssertEqual(2018U, token.card.expYear);
                          XCTAssertEqualObjects(@"4242", token.card.last4);
                      }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
@@ -55,6 +55,7 @@
                  operationQueue:[NSOperationQueue mainQueue]
                      completion:^(STPToken *token, NSError *error) {
                          [expectation fulfill];
+                         XCTAssertNil(token, @"token should be nil");
                          XCTAssertNotNil(error, @"error should not be nil");
                          XCTAssert([error.localizedDescription rangeOfString:@"asdf"].location != NSNotFound, @"error should contain last 4 of key");
                      }];

@@ -9,7 +9,7 @@
 #import "Stripe.h"
 #import <XCTest/XCTest.h>
 
-#define EXAMPLE_STRIPE_PUBLISHABLE_KEY @"bad_key"
+NSString *const STPExamplePublishableKey = @"bad_key";
 
 typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
     StripeCertificateFailMethodNoError = 0,
@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
     __block BOOL done = NO;
     [FailableStripe setFailureMethod:StripeCertificateFailMethodNoError];
     [FailableStripe createTokenWithCard:[self dummyCard]
-                         publishableKey:EXAMPLE_STRIPE_PUBLISHABLE_KEY
+                         publishableKey:STPExamplePublishableKey
                              completion:^(STPToken *token, NSError *error) {
                                  // Note that this API request *will* fail, but it will return error
                                  // messages from the server and not be blocked by local cert checks
@@ -50,7 +50,7 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
     __block BOOL done = NO;
     [FailableStripe setFailureMethod:method];
     [FailableStripe createTokenWithCard:[self dummyCard]
-                         publishableKey:EXAMPLE_STRIPE_PUBLISHABLE_KEY
+                         publishableKey:STPExamplePublishableKey
                              completion:^(STPToken *token, NSError *error) {
                                  XCTAssertNil(token, @"Expected no response");
                                  XCTAssertNotNil(error, @"Expected error");
@@ -117,10 +117,8 @@ static StripeCertificateFailMethod failureMethod;
     case StripeCertificateFailMethodRevoked:
         return [NSURL URLWithString:@"https://revoked.stripe.com:444"];
     default:
-        [NSException raise:@"InvalidFailureMethod" format:@""];
+        return nil;
     }
-
-    return nil;
 }
 
 + (void)setFailureMethod:(StripeCertificateFailMethod)method {
