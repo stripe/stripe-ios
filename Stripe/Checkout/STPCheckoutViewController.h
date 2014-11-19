@@ -12,13 +12,11 @@
 
 @protocol STPCheckoutViewControllerDelegate<NSObject>
 
-- (void)checkoutController:(STPCheckoutViewController *)controller
-        didFinishWithToken:(STPToken *)token;
+- (void)checkoutController:(STPCheckoutViewController *)controller didFinishWithToken:(STPToken *)token;
 
 @optional
 
-- (void)checkoutController:(STPCheckoutViewController *)controller
-       didFailWithError:(NSError *)error;
+- (void)checkoutController:(STPCheckoutViewController *)controller didFailWithError:(NSError *)error;
 - (void)checkoutControllerDidCancel:(STPCheckoutViewController *)controller;
 
 @end
@@ -26,6 +24,6 @@
 @interface STPCheckoutViewController : UIViewController
 
 - (instancetype)initWithOptions:(STPCheckoutOptions *)options;
-@property(nonatomic)id<STPCheckoutViewControllerDelegate>delegate;
+@property (nonatomic, weak) id<STPCheckoutViewControllerDelegate> delegate;
 
 @end

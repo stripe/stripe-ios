@@ -11,7 +11,7 @@
 
 static NSString *const STPCheckoutURLProtocolRequestKey = @"STPCheckoutURLProtocolRequestKey";
 
-@interface STPCheckoutURLProtocol ()
+@interface STPCheckoutURLProtocol () <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSURLConnection *connection;
 @end
 
@@ -45,7 +45,7 @@ static NSString *const STPCheckoutURLProtocolRequestKey = @"STPCheckoutURLProtoc
                                                     userInfo:@{
                                                         NSLocalizedDescriptionKey: STPUnexpectedError,
                                                         STPErrorMessageKey: @"There was an unexpected error connecting to Stripe Checkout. Please contact "
-                                                                            @"support@stripe.com if you're repeatedly seeing this error."
+                                                        @"support@stripe.com if you're repeatedly seeing this error."
                                                     }];
             [self.client URLProtocol:self didFailWithError:error];
             [connection cancel];
@@ -56,15 +56,15 @@ static NSString *const STPCheckoutURLProtocolRequestKey = @"STPCheckoutURLProtoc
     [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+- (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
     [self.client URLProtocol:self didLoadData:data];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+- (void)connectionDidFinishLoading:(__unused NSURLConnection *)connection {
     [self.client URLProtocolDidFinishLoading:self];
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+- (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
     [self.client URLProtocol:self didFailWithError:error];
 }
 

@@ -12,22 +12,22 @@
 @interface STPCheckoutOptions : NSObject
 
 // required property
-@property(nonatomic) NSString *publishableKey;
+@property (nonatomic, copy) NSString *publishableKey;
 
 // strongly recommended properties
-@property(nonatomic) NSURL *logoURL;
-@property(nonatomic) UIImage *logoImage;
-@property(nonatomic) UIColor *logoColor;
-@property(nonatomic) NSString *companyName;
-@property(nonatomic) NSString *purchaseDescription;
-@property(nonatomic) NSString *purchaseLabel;
-@property(nonatomic) NSString *purchaseCurrency;
-@property(nonatomic) NSNumber *purchaseAmount;
+@property (nonatomic) NSURL *logoURL;
+@property (nonatomic) UIImage *logoImage;
+@property (nonatomic) UIColor *logoColor;
+@property (nonatomic, copy) NSString *companyName;
+@property (nonatomic, copy) NSString *purchaseDescription;
+@property (nonatomic, copy) NSString *purchaseLabel;
+@property (nonatomic, copy) NSString *purchaseCurrency;
+@property (nonatomic) NSNumber *purchaseAmount;
 
 // optional properties
-@property(nonatomic) NSString *customerEmail;
-@property(nonatomic) NSNumber *enableRememberMe;
-@property(nonatomic) NSNumber *enablePostalCode;
+@property (nonatomic, copy) NSString *customerEmail;
+@property (nonatomic) NSNumber *enableRememberMe;
+@property (nonatomic) NSNumber *enablePostalCode;
 
 - (NSString *)stringifiedJSONRepresentation;
 

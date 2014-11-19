@@ -35,14 +35,16 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
     if (self) {
         _options = options;
         _previousStyle = [[UIApplication sharedApplication] statusBarStyle];
-        NSString *userAgent = [[UIWebView new] stringByEvaluatingJavaScriptFromString:@"window.navigator.userAgent"];
-        if ([userAgent rangeOfString:checkoutUserAgent].location == NSNotFound) {
-            userAgent = [NSString stringWithFormat:@"%@ %@/%@", userAgent, checkoutUserAgent, STPLibraryVersionNumber];
-            NSDictionary *defaults = @{ @"UserAgent": userAgent };
-            [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
-        }
         static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{ [NSURLProtocol registerClass:[STPCheckoutURLProtocol class]]; });
+        dispatch_once(&onceToken, ^{
+            NSString *userAgent = [[[UIWebView alloc] init] stringByEvaluatingJavaScriptFromString:@"window.navigator.userAgent"];
+            if ([userAgent rangeOfString:checkoutUserAgent].location == NSNotFound) {
+                userAgent = [NSString stringWithFormat:@"%@ %@/%@", userAgent, checkoutUserAgent, STPLibraryVersionNumber];
+                NSDictionary *defaults = @{ @"UserAgent": userAgent };
+                [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+            }
+            [NSURLProtocol registerClass:[STPCheckoutURLProtocol class]];
+        });
     }
     return self;
 }
@@ -56,7 +58,7 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
 
     self.url = [NSURL URLWithString:checkoutURL];
 
-    UIWebView *webView = [UIWebView new];
+    UIWebView *webView = [[UIWebView alloc] init];
     [self.view addSubview:webView];
     [webView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[webView]-0-|"
@@ -104,7 +106,7 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
     [self.activityIndicator startAnimating];
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+- (BOOL)webView:(__unused UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSURL *url = request.URL;
     if (navigationType == UIWebViewNavigationTypeLinkClicked && [url.host isEqualToString:self.url.host] &&
         [url.path rangeOfString:checkoutRedirectPrefix].location == 0) {
@@ -164,11 +166,13 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
 #endif
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-    [UIView animateWithDuration:0.2 animations:^{ self.activityIndicator.alpha = 0; } completion:^(BOOL finished) { [self.activityIndicator stopAnimating]; }];
+- (void)webViewDidFinishLoad:(__unused UIWebView *)webView {
+    [UIView animateWithDuration:0.2
+        animations:^{ self.activityIndicator.alpha = 0; }
+        completion:^(__unused BOOL finished) { [self.activityIndicator stopAnimating]; }];
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+- (void)webView:(__unused UIWebView *)webView didFailLoadWithError:(NSError *)error {
     [self.activityIndicator stopAnimating];
     if ([self.delegate respondsToSelector:@selector(checkoutController:didFailWithError:)]) {
         [self.delegate checkoutController:self didFailWithError:error];

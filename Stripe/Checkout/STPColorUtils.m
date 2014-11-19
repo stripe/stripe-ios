@@ -18,8 +18,8 @@
 
 // These methods are adapted from https://github.com/nicklockwood/ColorUtils
 
-+ (UIColor *)colorForHexCode:(NSString *)hexCode {
-    hexCode = [hexCode stringByReplacingOccurrencesOfString:@"#" withString:@""];
++ (UIColor *)colorForHexCode:(NSString *)aHexCode {
+    NSString *hexCode = [aHexCode stringByReplacingOccurrencesOfString:@"#" withString:@""];
     if (hexCode.length != 6) {
         return [UIColor blackColor];
     }
@@ -37,24 +37,24 @@
     CGColorSpaceModel model = CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor));
     const CGFloat *components = CGColorGetComponents(color.CGColor);
     switch (model) {
-        case kCGColorSpaceModelMonochrome: {
-            rgb[0] = components[0]*255;
-            rgb[1] = components[0]*255;
-            rgb[2] = components[0]*255;
-            break;
-        }
-        case kCGColorSpaceModelRGB: {
-            rgb[0] = components[0]*255;
-            rgb[1] = components[1]*255;
-            rgb[2] = components[2]*255;
-            break;
-        }
-        default: {
-            rgb[0] = 0;
-            rgb[1] = 0;
-            rgb[2] = 0;
-            break;
-        }
+    case kCGColorSpaceModelMonochrome: {
+        rgb[0] = (uint8_t)components[0] * 255;
+        rgb[1] = (uint8_t)components[0] * 255;
+        rgb[2] = (uint8_t)components[0] * 255;
+        break;
+    }
+    case kCGColorSpaceModelRGB: {
+        rgb[0] = (uint8_t)components[0] * 255;
+        rgb[1] = (uint8_t)components[1] * 255;
+        rgb[2] = (uint8_t)components[2] * 255;
+        break;
+    }
+    default: {
+        rgb[0] = 0;
+        rgb[1] = 0;
+        rgb[2] = 0;
+        break;
+    }
     }
     unsigned long rgbValue = (rgb[0] << 16) + (rgb[1] << 8) + rgb[2];
     return [NSString stringWithFormat:@"#%.6lx", rgbValue];
