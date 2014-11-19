@@ -21,6 +21,12 @@
 
 @end
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+#define STPGregorianCalendarIdentifier NSCalendarIdentifierGregorian
+#else
+#define STPGregorianCalendarIdentifier NSGregorianCalendar
+#endif
+
 @implementation STPCard
 
 #pragma mark Private Helpers
@@ -60,21 +66,19 @@
     return [numericOnly isSupersetOfSet:aStringSet];
 }
 
-+ (BOOL)isExpiredMonth:(NSInteger)month andYear:(NSInteger)year {
-    NSDate *now = [NSDate date];
-
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
++ (BOOL)isExpiredMonth:(NSInteger)month andYear:(NSInteger)year atDate:(NSDate *)date {
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:STPGregorianCalendarIdentifier];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setYear:year];
     // Cards expire at end of month
     [components setMonth:month + 1];
     [components setDay:1];
     NSDate *expiryDate = [calendar dateFromComponents:components];
-    return ([expiryDate compare:now] == NSOrderedAscending);
+    return ([expiryDate compare:date] == NSOrderedAscending);
 }
 
 + (NSInteger)currentYear {
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:STPGregorianCalendarIdentifier];
     NSDateComponents *components = [gregorian components:NSCalendarUnitYear fromDate:[NSDate date]];
     return [components year];
 }
@@ -297,7 +301,7 @@
 
     if ((![STPCard isNumericOnlyString:ioValueString] || expMonthInt > 12 || expMonthInt < 1)) {
         return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
-    } else if ([self expYear] && [STPCard isExpiredMonth:expMonthInt andYear:[self expYear]]) {
+    } else if ([self expYear] && [STPCard isExpiredMonth:expMonthInt andYear:[self expYear] atDate:[NSDate date]]) {
         NSUInteger currentYear = [STPCard currentYear];
         // If the year is in the past, this is actually a problem with the expYear parameter, but it still means this month is not a valid month. This is pretty
         // rare - it means someone set expYear on the card without validating it
@@ -320,7 +324,7 @@
 
     if ((![STPCard isNumericOnlyString:ioValueString] || expYearInt < [STPCard currentYear])) {
         return [STPCard handleValidationErrorForParameter:@"expYear" error:outError];
-    } else if ([self expMonth] && [STPCard isExpiredMonth:[self expMonth] andYear:expYearInt]) {
+    } else if ([self expMonth] && [STPCard isExpiredMonth:[self expMonth] andYear:expYearInt atDate:[NSDate date]]) {
         return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
     }
 

@@ -11,14 +11,13 @@
 #import <XCTest/XCTest.h>
 
 @interface STPBankAccountTest : XCTestCase
+@property (nonatomic) STPBankAccount *bankAccount;
 @end
 
-@implementation STPBankAccountTest {
-    STPBankAccount *bankAccount;
-}
+@implementation STPBankAccountTest
 
 - (void)setUp {
-    bankAccount = [[STPBankAccount alloc] init];
+    _bankAccount = [[STPBankAccount alloc] init];
 }
 
 #pragma mark - initWithAttributeDictionary: Tests
@@ -91,17 +90,17 @@
 #pragma mark - Last4 Tests
 
 - (void)testLast4ReturnsAccountNumberLast4WhenNotSet {
-    bankAccount.accountNumber = @"000123456789";
-    XCTAssertEqualObjects(bankAccount.last4, @"6789", @"last4 correctly returns the last 4 digits of the bank account number");
+    self.bankAccount.accountNumber = @"000123456789";
+    XCTAssertEqualObjects(self.bankAccount.last4, @"6789", @"last4 correctly returns the last 4 digits of the bank account number");
 }
 
 - (void)testLast4ReturnsNullWhenNoAccountNumberSet {
-    XCTAssertEqualObjects(nil, bankAccount.last4, @"last4 returns nil when nothing is set");
+    XCTAssertEqualObjects(nil, self.bankAccount.last4, @"last4 returns nil when nothing is set");
 }
 
 - (void)testLast4ReturnsNullWhenAccountNumberIsLessThanLength4 {
-    bankAccount.accountNumber = @"123";
-    XCTAssertEqualObjects(nil, bankAccount.last4, @"last4 returns nil when number length is < 4");
+    self.bankAccount.accountNumber = @"123";
+    XCTAssertEqualObjects(nil, self.bankAccount.last4, @"last4 returns nil when number length is < 4");
 }
 
 #pragma mark - Equality Tests
