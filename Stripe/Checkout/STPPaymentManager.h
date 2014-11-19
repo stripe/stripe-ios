@@ -16,11 +16,12 @@ typedef NS_ENUM(NSInteger, STPPaymentAuthorizationStatus) {
 };
 
 typedef void (^STPPaymentCompletionHandler)(STPPaymentAuthorizationStatus status);
+typedef void (^STPPaymentTokenHandler)(STPToken *token, NSError *error, STPPaymentCompletionHandler handler);
 
 @interface STPPaymentManager : NSObject
 
 - (void)requestPaymentWithOptions:(STPCheckoutOptions *)options
      fromPresentingViewController:(UIViewController *)presentingViewController
-                       completion:(void (^)(STPToken *token, NSError *error, STPPaymentCompletionHandler handler))completion;
+                 withTokenHandler:(STPPaymentTokenHandler)tokenHandler;
 
 @end
