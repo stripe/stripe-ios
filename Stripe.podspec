@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.author                         = { "Jack Flintermann" => "jack@stripe.com" }
   s.source                         = { :git => "https://github.com/stripe/stripe-ios.git", :tag => "v#{s.version}" }
   s.platform                       = :ios
-  s.frameworks                     = 'Foundation', 'Security'
+  s.frameworks                     = 'Foundation', 'Security', 'CoreGraphics'
   s.requires_arc                   = true
   s.ios.deployment_target          = '5.0'
   s.default_subspec                = 'Core'

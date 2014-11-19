@@ -12,6 +12,7 @@
 #import "Stripe.h"
 #import "STPColorUtils.h"
 #import "STPCheckoutURLProtocol.h"
+#import "FauxPasAnnotations.h"
 
 @interface STPCheckoutViewController () <UIWebViewDelegate>
 @property (weak, nonatomic) UIWebView *webView;
@@ -88,6 +89,7 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
 - (UIStatusBarStyle)preferredStatusBarStyle {
     if (self.options.logoColor) {
+        FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
         return [STPColorUtils colorIsLight:self.options.logoColor] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
     }
     return UIStatusBarStyleDefault;
@@ -160,6 +162,7 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
     self.options.logoColor = color;
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
         [[UIApplication sharedApplication] setStatusBarStyle:[self preferredStatusBarStyle] animated:YES];
         [self setNeedsStatusBarAppearanceUpdate];
     }

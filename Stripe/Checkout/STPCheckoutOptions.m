@@ -21,8 +21,8 @@
         values[@"logoURL"] = [self.logoURL absoluteString];
     }
     if (self.logoImage && !self.logoURL) {
-        NSString *base64 = [UIImagePNGRepresentation(self.logoImage) base64EncodedStringWithOptions:0];
-        values[@"logoImage"] = [NSString stringWithFormat:@"data:image/png;base64,%@", base64];
+        //        NSString *fileName = [[NSUUID UUID] UUIDString];
+        //        NSURL *fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName]];
     }
     if (self.logoColor) {
         values[@"logoColor"] = [STPColorUtils hexCodeForColor:self.logoColor];
@@ -51,7 +51,7 @@
     if (self.enablePostalCode) {
         values[@"enablePostalCode"] = self.enablePostalCode;
     }
-    
+
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:values options:0 error:nil] encoding:NSUTF8StringEncoding];
 }
 
