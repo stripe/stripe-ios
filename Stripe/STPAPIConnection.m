@@ -23,7 +23,7 @@
 
 @implementation STPAPIConnection
 
-- (id)initWithRequest:(NSURLRequest *)request {
+- (instancetype)initWithRequest:(NSURLRequest *)request {
     if (self = [super init]) {
         _request = request;
         _connection = [[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO];
@@ -33,33 +33,27 @@
 }
 
 - (void)runOnOperationQueue:(NSOperationQueue *)queue completion:(APIConnectionCompletionBlock)handler {
-    if (self.started) {
-        [NSException raise:@"OperationNotPermitted" format:@"This API connection has already started."];
-    }
-    if (!queue) {
-        [NSException raise:@"RequiredParameter" format:@"'queue' is required"];
-    }
-    if (!handler) {
-        [NSException raise:@"RequiredParameter" format:@"'handler' is required"];
-    }
+    NSCAssert(!self.started, @"This API connection has already started.");
+    NSCAssert(queue, @"'queue' is required");
+    NSCAssert(handler, @"'handler' is required");
 
     self.started = YES;
-    self.completionBlock = [handler copy];
+    self.completionBlock = handler;
     [self.connection setDelegateQueue:queue];
     [self.connection start];
 }
 
 #pragma mark NSURLConnectionDataDelegate
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+- (void)connection:(__unused NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     self.receivedResponse = response;
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+- (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
     [self.receivedData appendData:data];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+- (void)connectionDidFinishLoading:(__unused NSURLConnection *)connection {
     self.connection = nil;
     self.completionBlock(self.receivedResponse, self.receivedData, nil);
     self.receivedData = nil;
@@ -68,17 +62,14 @@
 
 #pragma mark NSURLConnectionDelegate
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    if (self.overrideError) {
-        error = self.overrideError;
-    }
+- (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
     self.connection = nil;
     self.receivedData = nil;
     self.receivedResponse = nil;
-    self.completionBlock(self.receivedResponse, self.receivedData, error);
+    self.completionBlock(self.receivedResponse, self.receivedData, self.overrideError ?: error);
 }
 
-- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+- (void)connection:(__unused NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
         SecTrustRef serverTrust = [[challenge protectionSpace] serverTrust];
         SecTrustResultType resultType;
@@ -125,21 +116,15 @@
 }
 
 + (NSString *)SHA1FingerprintOfData:(NSData *)data {
-    unsigned char digest[CC_SHA1_DIGEST_LENGTH];
+    unsigned int outputLength = CC_SHA1_DIGEST_LENGTH;
+    unsigned char output[outputLength];
 
-    // Convert the NSData into a C buffer.
-    void *cData = malloc([data length]);
-    [data getBytes:cData length:[data length]];
-    CC_SHA1(cData, (CC_LONG)data.length, digest);
-
-    // Convert to NSString.
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
-    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
-        [output appendFormat:@"%02x", digest[i]];
+    CC_SHA1(data.bytes, (unsigned int)data.length, output);
+    NSMutableString *hash = [NSMutableString stringWithCapacity:outputLength * 2];
+    for (unsigned int i = 0; i < outputLength; i++) {
+        [hash appendFormat:@"%02x", output[i]];
     }
-
-    free(cData);
-    return [output lowercaseString];
+    return [hash copy];
 }
 
 + (NSError *)blacklistedCertificateError {

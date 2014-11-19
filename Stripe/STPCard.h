@@ -16,17 +16,17 @@
  */
 @interface STPCard : NSObject<STPFormEncodeProtocol>
 
-@property (nonatomic) NSString *number;
+@property (nonatomic, copy) NSString *number;
 @property (nonatomic) NSUInteger expMonth;
 @property (nonatomic) NSUInteger expYear;
-@property (nonatomic) NSString *cvc;
-@property (nonatomic) NSString *name;
-@property (nonatomic) NSString *addressLine1;
-@property (nonatomic) NSString *addressLine2;
-@property (nonatomic) NSString *addressCity;
-@property (nonatomic) NSString *addressState;
-@property (nonatomic) NSString *addressZip;
-@property (nonatomic) NSString *addressCountry;
+@property (nonatomic, copy) NSString *cvc;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *addressLine1;
+@property (nonatomic, copy) NSString *addressLine2;
+@property (nonatomic, copy) NSString *addressCity;
+@property (nonatomic, copy) NSString *addressState;
+@property (nonatomic, copy) NSString *addressZip;
+@property (nonatomic, copy) NSString *addressCountry;
 
 @property (nonatomic, readonly) NSString *cardId;
 @property (nonatomic, readonly) NSString *object;
@@ -39,7 +39,7 @@
  You should not use this constructor.  This constructor is used by Stripe to
  generate cards from the response of creating ar getting a token.
  */
-- (id)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
+- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 - (BOOL)isEqualToCard:(STPCard *)other;
 
 /* These validation methods work as described in

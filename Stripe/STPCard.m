@@ -21,6 +21,12 @@
 
 @end
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+#define STPGregorianCalendarIdentifier NSCalendarIdentifierGregorian
+#else
+#define STPGregorianCalendarIdentifier NSGregorianCalendar
+#endif
+
 @implementation STPCard
 
 #pragma mark Private Helpers
@@ -60,23 +66,20 @@
     return [numericOnly isSupersetOfSet:aStringSet];
 }
 
-+ (BOOL)isExpiredMonth:(NSInteger)month andYear:(NSInteger)year {
-    NSDate *now = [NSDate date];
-
-    // Cards expire at end of month
-    month = month + 1;
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
++ (BOOL)isExpiredMonth:(NSInteger)month andYear:(NSInteger)year atDate:(NSDate *)date {
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:STPGregorianCalendarIdentifier];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setYear:year];
-    [components setMonth:month];
+    // Cards expire at end of month
+    [components setMonth:month + 1];
     [components setDay:1];
     NSDate *expiryDate = [calendar dateFromComponents:components];
-    return ([expiryDate compare:now] == NSOrderedAscending);
+    return ([expiryDate compare:date] == NSOrderedAscending);
 }
 
 + (NSInteger)currentYear {
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *components = [gregorian components:NSYearCalendarUnit fromDate:[NSDate date]];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:STPGregorianCalendarIdentifier];
+    NSDateComponents *components = [gregorian components:NSCalendarUnitYear fromDate:[NSDate date]];
     return [components year];
 }
 
@@ -168,7 +171,7 @@
 
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 
-    [attributeDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    [attributeDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
         if (obj != [NSNull null]) {
             dict[key] = obj;
         }
@@ -227,7 +230,7 @@
 
     NSMutableArray *parts = [NSMutableArray array];
 
-    [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop) {
+    [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, __unused BOOL *stop) {
         if (val != [NSNull null]) {
             [parts addObject:[NSString stringWithFormat:@"card[%@]=%@", key, [STPUtils stringByURLEncoding:val]]];
         }
@@ -261,9 +264,8 @@
         return [STPCard handleValidationErrorForParameter:@"number" error:outError];
     }
 
-    NSError *regexError = nil;
     NSString *ioValueString = (NSString *)*ioValue;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[\\s+|-]" options:NSRegularExpressionCaseInsensitive error:&regexError];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[\\s+|-]" options:NSRegularExpressionCaseInsensitive error:NULL];
 
     NSString *rawNumber = [regex stringByReplacingMatchesInString:ioValueString options:0 range:NSMakeRange(0, [ioValueString length]) withTemplate:@""];
 
@@ -299,8 +301,8 @@
 
     if ((![STPCard isNumericOnlyString:ioValueString] || expMonthInt > 12 || expMonthInt < 1)) {
         return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
-    } else if ([self expYear] && [STPCard isExpiredMonth:expMonthInt andYear:[self expYear]]) {
-        NSInteger currentYear = [STPCard currentYear];
+    } else if ([self expYear] && [STPCard isExpiredMonth:expMonthInt andYear:[self expYear] atDate:[NSDate date]]) {
+        NSUInteger currentYear = [STPCard currentYear];
         // If the year is in the past, this is actually a problem with the expYear parameter, but it still means this month is not a valid month. This is pretty
         // rare - it means someone set expYear on the card without validating it
         if (currentYear > [self expYear]) {
@@ -322,15 +324,14 @@
 
     if ((![STPCard isNumericOnlyString:ioValueString] || expYearInt < [STPCard currentYear])) {
         return [STPCard handleValidationErrorForParameter:@"expYear" error:outError];
-    } else if ([self expMonth] && [STPCard isExpiredMonth:[self expMonth] andYear:expYearInt]) {
+    } else if ([self expMonth] && [STPCard isExpiredMonth:[self expMonth] andYear:expYearInt atDate:[NSDate date]]) {
         return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
     }
 
     return YES;
 }
 
-- (BOOL)validateCardReturningError:(NSError **)outError;
-{
+- (BOOL)validateCardReturningError:(NSError **)outError {
     // Order matters here
     NSString *numberRef = [self number];
     NSString *expMonthRef = [NSString stringWithFormat:@"%lu", (unsigned long)[self expMonth]];
@@ -344,6 +345,10 @@
 
 - (BOOL)isEqual:(id)other {
     return [self isEqualToCard:other];
+}
+
+- (NSUInteger)hash {
+    return [self.fingerprint hash];
 }
 
 - (BOOL)isEqualToCard:(STPCard *)other {

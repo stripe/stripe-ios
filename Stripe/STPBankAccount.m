@@ -29,7 +29,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.object = @"bank_account";
+        _object = @"bank_account";
     }
     return self;
 }
@@ -39,21 +39,21 @@
     if (self) {
         // sanitize NSNull
         NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-        [attributeDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [attributeDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
             if (obj != [NSNull null]) {
                 dictionary[key] = obj;
             }
         }];
 
-        self.object = dictionary[@"object"];
-        self.bankAccountId = dictionary[@"id"];
-        self.last4 = dictionary[@"last4"];
-        self.bankName = dictionary[@"bank_name"];
-        self.country = dictionary[@"country"];
-        self.fingerprint = dictionary[@"fingerprint"];
-        self.currency = dictionary[@"currency"];
-        self.validated = [dictionary[@"validated"] boolValue];
-        self.disabled = [dictionary[@"disabled"] boolValue];
+        _object = dictionary[@"object"];
+        _bankAccountId = dictionary[@"id"];
+        _last4 = dictionary[@"last4"];
+        _bankName = dictionary[@"bank_name"];
+        _country = dictionary[@"country"];
+        _fingerprint = dictionary[@"fingerprint"];
+        _currency = dictionary[@"currency"];
+        _validated = [dictionary[@"validated"] boolValue];
+        _disabled = [dictionary[@"disabled"] boolValue];
     }
     return self;
 }
@@ -84,7 +84,7 @@
     if (_country)
         params[@"country"] = _country;
 
-    [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop) {
+    [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, __unused BOOL *stop) {
         if (val != [NSNull null]) {
             [parts addObject:[NSString stringWithFormat:@"bank_account[%@]=%@", key, [STPUtils stringByURLEncoding:val]]];
         }
@@ -97,6 +97,10 @@
 
 - (BOOL)isEqual:(STPBankAccount *)bankAccount {
     return [self isEqualToBankAccount:bankAccount];
+}
+
+- (NSUInteger)hash {
+    return [self.fingerprint hash];
 }
 
 - (BOOL)isEqualToBankAccount:(STPBankAccount *)bankAccount {
