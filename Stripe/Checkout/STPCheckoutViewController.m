@@ -170,15 +170,15 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
                                        }
                                    }];
         } else if ([event isEqualToString:@"CheckoutDidFinish"]) {
-            [self cleanup];
             [self.delegate checkoutControllerDidFinish:self];
-        } else if ([url.host isEqualToString:@"CheckoutDidClose"]) {
+            [self cleanup];
+        } else if ([url.host isEqualToString:@"CheckoutDidCancel"]) {
             [self.delegate checkoutControllerDidCancel:self];
             [self cleanup];
         } else if ([event isEqualToString:@"CheckoutDidError"]) {
-            [self cleanup];
             NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
             [self.delegate checkoutController:self didFailWithError:error];
+            [self cleanup];
         }
         return NO;
     }
@@ -193,8 +193,8 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
 
 - (void)webView:(__unused UIWebView *)webView didFailLoadWithError:(NSError *)error {
     [self.activityIndicator stopAnimating];
-    [self cleanup];
     [self.delegate checkoutController:self didFailWithError:error];
+    [self cleanup];
 }
 
 @end
