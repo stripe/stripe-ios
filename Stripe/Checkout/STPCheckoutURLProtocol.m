@@ -39,6 +39,8 @@ static NSString *const STPCheckoutURLProtocolRequestKey = @"STPCheckoutURLProtoc
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        // 30x redirects are automatically followed and will not reach here,
+        // so we only need to check for successful 20x status codes.
         if (httpResponse.statusCode / 100 != 2) {
             NSError *error = [[NSError alloc] initWithDomain:StripeDomain
                                                         code:STPConnectionError
