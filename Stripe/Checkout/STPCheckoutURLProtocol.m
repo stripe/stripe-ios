@@ -44,8 +44,7 @@ static NSString *const STPCheckoutURLProtocolRequestKey = @"STPCheckoutURLProtoc
                                                         code:STPConnectionError
                                                     userInfo:@{
                                                         NSLocalizedDescriptionKey: STPUnexpectedError,
-                                                        STPErrorMessageKey: @"There was an unexpected error connecting to Stripe Checkout. Please contact "
-                                                        @"support@stripe.com if you're repeatedly seeing this error."
+                                                        STPErrorMessageKey: @"Stripe Checkout couldn't open. Please check your internet connection and try again. If the problem persists, please contact support@stripe.com."
                                                     }];
             [self.client URLProtocol:self didFailWithError:error];
             [connection cancel];
