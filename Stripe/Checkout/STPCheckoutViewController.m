@@ -148,7 +148,7 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
         }
 
         if ([event isEqualToString:@"CheckoutDidOpen"]) {
-            if (payload[@"logoColor"]) {
+            if (payload != nil && payload[@"logoColor"]) {
                 [self setLogoColor:[STPColorUtils colorForHexCode:payload[@"logoColor"]]];
             }
         } else if ([event isEqualToString:@"CheckoutDidTokenize"]) {
