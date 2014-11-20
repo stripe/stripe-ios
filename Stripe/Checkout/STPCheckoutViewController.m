@@ -17,10 +17,10 @@
 @interface STPCheckoutViewController () <UIWebViewDelegate>
 @property (weak, nonatomic) UIWebView *webView;
 @property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
-@property (nonatomic) STPCheckoutOptions *options;
-@property (nonatomic) NSURL *url;
 @property (nonatomic) UIStatusBarStyle previousStyle;
-@property (nonatomic) NSURL *logoImageUrl;
+@property (nonatomic) STPCheckoutOptions *options;
+@property (nonatomic) NSURL *logoURL;
+@property (nonatomic) NSURL *url;
 @end
 
 @implementation STPCheckoutViewController
@@ -55,13 +55,11 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
 
     self.url = [NSURL URLWithString:checkoutURL];
 
-    self.logoImageUrl = self.options.logoURL;
     if (self.options.logoImage && !self.options.logoURL) {
-        NSString *fileName = [[NSUUID UUID] UUIDString];
-        _logoImageUrl = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName]];
-        BOOL success = [UIImagePNGRepresentation(self.options.logoImage) writeToURL:self.logoImageUrl options:0 error:nil];
-        if (!success) {
-            self.logoImageUrl = nil;
+        NSURL *url = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]]];
+        BOOL success = [UIImagePNGRepresentation(self.options.logoImage) writeToURL:url options:0 error:nil];
+        if (success) {
+            self.logoURL = self.options.logoURL = url;
         }
     }
 
@@ -109,8 +107,8 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
 
 - (void)cleanup {
     [[UIApplication sharedApplication] setStatusBarStyle:self.previousStyle animated:YES];
-    if ([self.logoImageUrl isFileURL]) {
-        [[NSFileManager defaultManager] removeItemAtURL:self.logoImageUrl error:nil];
+    if (self.logoURL) {
+        [[NSFileManager defaultManager] removeItemAtURL:self.logoURL error:nil];
     }
 }
 
@@ -129,7 +127,7 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     NSString *optionsJavaScript =
-        [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentationForImageURL:self.logoImageUrl]];
+        [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentation]];
     [webView stringByEvaluatingJavaScriptFromString:optionsJavaScript];
     [self.activityIndicator startAnimating];
 }
