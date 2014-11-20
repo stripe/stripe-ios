@@ -8,14 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "STPCheckoutOptions.h"
+#import "STPCheckoutViewController.h"
 #import "STPToken.h"
 
-typedef NS_ENUM(NSInteger, STPPaymentAuthorizationStatus) {
-    STPPaymentAuthorizationStatusSuccess, // Merchant auth'd (or expects to auth) the transaction successfully.
-    STPPaymentAuthorizationStatusFailure, // Merchant failed to auth the transaction.
-};
-
-typedef void (^STPPaymentCompletionHandler)(STPPaymentAuthorizationStatus status);
 typedef void (^STPPaymentTokenHandler)(STPToken *token, NSError *error, STPPaymentCompletionHandler handler);
 
 @interface STPPaymentManager : NSObject

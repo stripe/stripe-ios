@@ -10,12 +10,17 @@
 
 @class STPCheckoutOptions, STPCheckoutViewController, STPToken;
 
+typedef NS_ENUM(NSInteger, STPPaymentAuthorizationStatus) {
+    STPPaymentAuthorizationStatusSuccess, // Merchant auth'd (or expects to auth) the transaction successfully.
+    STPPaymentAuthorizationStatusFailure, // Merchant failed to auth the transaction.
+};
+
+typedef void (^STPPaymentCompletionHandler)(STPPaymentAuthorizationStatus status);
+
 @protocol STPCheckoutViewControllerDelegate<NSObject>
 
-- (void)checkoutController:(STPCheckoutViewController *)controller didFinishWithToken:(STPToken *)token;
-
-@optional
-
+- (void)checkoutController:(STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPPaymentCompletionHandler)completion;
+- (void)checkoutControllerDidFinish:(STPCheckoutViewController *)controller;
 - (void)checkoutController:(STPCheckoutViewController *)controller didFailWithError:(NSError *)error;
 - (void)checkoutControllerDidCancel:(STPCheckoutViewController *)controller;
 

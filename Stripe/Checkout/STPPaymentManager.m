@@ -78,25 +78,40 @@ typedef void (^STPPaymentTokenHandler)(STPToken *token, NSError *error, STPPayme
 }
 
 - (void)checkoutController:(STPCheckoutViewController *)controller didFinishWithToken:(STPToken *)token {
-    STPPaymentCompletionHandler completion = nil; // todo
+    STPPaymentCompletionHandler completion = ^(STPPaymentAuthorizationStatus status) {
+        if (status == STPPaymentAuthorizationStatusSuccess) {
+        } else {
+        }
+    };
     self.tokenHandler(token, nil, completion);
 }
 
+#if APPLEPAY
 #pragma mark - PKPaymentAuthorizatoinViewControllerDelegate
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))pkCompletion {
-    [Stripe createTokenWithPayment:payment completion:^(STPToken *token, NSError *error) {
-        if (error) {
-            self.tokenHandler(nil, error, nil);
-        }
-        STPPaymentCompletionHandler completion = nil; // todo
-        self.tokenHandler(token, nil, completion);
-    }];
+    [Stripe createTokenWithPayment:payment
+                        completion:^(STPToken *token, NSError *error) {
+                            if (error) {
+                                self.tokenHandler(nil, error, nil);
+                            }
+                            STPPaymentCompletionHandler completion = ^(STPPaymentAuthorizationStatus status) {
+                                if (status == STPPaymentAuthorizationStatusSuccess) {
+                                    pkCompletion(PKPaymentAuthorizationStatusSuccess);
+                                } else {
+                                    pkCompletion(PKPaymentAuthorizationStatusFailure);
+                                }
+                            };
+                            self.tokenHandler(token, nil, completion);
+                        }];
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
+    
 }
+
+#endif
 
 @end

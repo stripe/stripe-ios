@@ -132,22 +132,29 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
             if (payload != nil && payload[@"token"] != nil) {
                 token = [[STPToken alloc] initWithAttributeDictionary:payload[@"token"]];
             }
-            [self.delegate checkoutController:self didFinishWithToken:token];
+            [self.delegate checkoutController:self
+                               didCreateToken:token
+                                   completion:^(STPPaymentAuthorizationStatus status) {
+                                       if (status == STPPaymentAuthorizationStatusSuccess) {
+                                           // @reggio: do something here like [self.webView
+                                           // stringByEvaluatingStringFromJavascript:@"showCheckoutSuccessAnimation();"]
+                                           // that should probably trigger the "CheckoutDidFinish" event when the animation is complete
+                                       } else {
+                                           // @reggio: do something here like [self.webView
+                                           // stringByEvaluatingStringFromJavascript:@"showCheckoutFailureAnimation();"]
+                                           // that should probably trigger the "CheckoutDidError" event when the animation is complete
+                                       }
+                                   }];
+        } else if ([event isEqualToString:@"CheckoutDidFinish"]) {
             [self resetStatusBarColor];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self.delegate checkoutControllerDidFinish:self];
         } else if ([url.host isEqualToString:@"CheckoutDidClose"]) {
-            if ([self.delegate respondsToSelector:@selector(checkoutControllerDidCancel:)]) {
-                [self.delegate checkoutControllerDidCancel:self];
-            }
+            [self.delegate checkoutControllerDidCancel:self];
             [self resetStatusBarColor];
-            [self dismissViewControllerAnimated:YES completion:nil];
         } else if ([event isEqualToString:@"CheckoutDidError"]) {
-            if ([self.delegate respondsToSelector:@selector(checkoutController:didFailWithError:)]) {
-                NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
-                [self.delegate checkoutController:self didFailWithError:error];
-            }
             [self resetStatusBarColor];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
+            [self.delegate checkoutController:self didFailWithError:error];
         }
         return NO;
     }
@@ -177,11 +184,8 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
 
 - (void)webView:(__unused UIWebView *)webView didFailLoadWithError:(NSError *)error {
     [self.activityIndicator stopAnimating];
-    if ([self.delegate respondsToSelector:@selector(checkoutController:didFailWithError:)]) {
-        [self.delegate checkoutController:self didFailWithError:error];
-    }
     [self resetStatusBarColor];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.delegate checkoutController:self didFailWithError:error];
 }
 
 @end
