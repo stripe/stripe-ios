@@ -20,7 +20,7 @@
 @property (nonatomic) STPCheckoutOptions *options;
 @property (nonatomic) NSURL *url;
 @property (nonatomic) UIStatusBarStyle previousStyle;
-
+@property (nonatomic) NSURL *logoImageUrl;
 @end
 
 @implementation STPCheckoutViewController
@@ -50,14 +50,20 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
     return self;
 }
 
-- (NSString *)optionsJavaScript {
-    return [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentation]];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 
     self.url = [NSURL URLWithString:checkoutURL];
+
+    self.logoImageUrl = self.options.logoURL;
+    if (self.options.logoImage && !self.options.logoURL) {
+        NSString *fileName = [[NSUUID UUID] UUIDString];
+        _logoImageUrl = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName]];
+        BOOL success = [UIImagePNGRepresentation(self.options.logoImage) writeToURL:self.logoImageUrl options:0 error:nil];
+        if (!success) {
+            self.logoImageUrl = nil;
+        }
+    }
 
     UIWebView *webView = [[UIWebView alloc] init];
     [self.view addSubview:webView];
@@ -101,10 +107,30 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
     self.activityIndicator.center = self.view.center;
 }
 
+- (void)cleanup {
+    [[UIApplication sharedApplication] setStatusBarStyle:self.previousStyle animated:YES];
+    if ([self.logoImageUrl isFileURL]) {
+        [[NSFileManager defaultManager] removeItemAtURL:self.logoImageUrl error:nil];
+    }
+}
+
+- (void)setLogoColor:(UIColor *)color {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+    self.options.logoColor = color;
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
+        [[UIApplication sharedApplication] setStatusBarStyle:[self preferredStatusBarStyle] animated:YES];
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
+#endif
+}
+
 #pragma mark - UIWebViewDelegate
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
-    [webView stringByEvaluatingJavaScriptFromString:[self optionsJavaScript]];
+    NSString *optionsJavaScript =
+        [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentationForImageURL:self.logoImageUrl]];
+    [webView stringByEvaluatingJavaScriptFromString:optionsJavaScript];
     [self.activityIndicator startAnimating];
 }
 
@@ -146,34 +172,19 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
                                        }
                                    }];
         } else if ([event isEqualToString:@"CheckoutDidFinish"]) {
-            [self resetStatusBarColor];
+            [self cleanup];
             [self.delegate checkoutControllerDidFinish:self];
         } else if ([url.host isEqualToString:@"CheckoutDidClose"]) {
             [self.delegate checkoutControllerDidCancel:self];
-            [self resetStatusBarColor];
+            [self cleanup];
         } else if ([event isEqualToString:@"CheckoutDidError"]) {
-            [self resetStatusBarColor];
+            [self cleanup];
             NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
             [self.delegate checkoutController:self didFailWithError:error];
         }
         return NO;
     }
     return navigationType == UIWebViewNavigationTypeOther;
-}
-
-- (void)resetStatusBarColor {
-    [[UIApplication sharedApplication] setStatusBarStyle:self.previousStyle animated:YES];
-}
-
-- (void)setLogoColor:(UIColor *)color {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-    self.options.logoColor = color;
-    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
-        [[UIApplication sharedApplication] setStatusBarStyle:[self preferredStatusBarStyle] animated:YES];
-        [self setNeedsStatusBarAppearanceUpdate];
-    }
-#endif
 }
 
 - (void)webViewDidFinishLoad:(__unused UIWebView *)webView {
@@ -184,7 +195,7 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
 
 - (void)webView:(__unused UIWebView *)webView didFailLoadWithError:(NSError *)error {
     [self.activityIndicator stopAnimating];
-    [self resetStatusBarColor];
+    [self cleanup];
     [self.delegate checkoutController:self didFailWithError:error];
 }
 

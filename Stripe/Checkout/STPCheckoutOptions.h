@@ -37,6 +37,6 @@
 @property (nonatomic) NSNumber *enableRememberMe;
 @property (nonatomic) NSNumber *enablePostalCode;
 
-- (NSString *)stringifiedJSONRepresentation;
+- (NSString *)stringifiedJSONRepresentationForImageURL:(NSURL *)imageURL;
 
 @end

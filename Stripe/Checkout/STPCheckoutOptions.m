@@ -12,17 +12,13 @@
 
 @implementation STPCheckoutOptions
 
-- (NSString *)stringifiedJSONRepresentation {
+- (NSString *)stringifiedJSONRepresentationForImageURL:(NSURL *)imageURL {
     NSMutableDictionary *values = [NSMutableDictionary dictionary];
     if (self.publishableKey) {
         values[@"publishableKey"] = self.publishableKey;
     }
-    if (self.logoURL) {
-        values[@"logoURL"] = [self.logoURL absoluteString];
-    }
-    if (self.logoImage && !self.logoURL) {
-        //        NSString *fileName = [[NSUUID UUID] UUIDString];
-        //        NSURL *fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName]];
+    if (imageURL) {
+        values[@"logoURL"] = [imageURL absoluteString];
     }
     if (self.logoColor) {
         values[@"logoColor"] = [STPColorUtils hexCodeForColor:self.logoColor];
