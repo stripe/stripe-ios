@@ -11,12 +11,14 @@
 #import "STPCheckoutViewController.h"
 #import "STPToken.h"
 
-typedef void (^STPPaymentTokenHandler)(STPToken *token, NSError *error, STPPaymentCompletionHandler handler);
+typedef void (^STPPaymentTokenHandler)(STPToken *token, STPTokenSubmissionHandler handler);
+typedef void (^STPPaymentCompletionHandler)(BOOL success, NSError *error);
 
 @interface STPPaymentManager : NSObject
 
 - (void)requestPaymentWithOptions:(STPCheckoutOptions *)options
      fromPresentingViewController:(UIViewController *)presentingViewController
-                 withTokenHandler:(STPPaymentTokenHandler)tokenHandler;
+                 withTokenHandler:(STPPaymentTokenHandler)tokenHandler
+                       completion:(STPPaymentCompletionHandler)completion;
 
 @end

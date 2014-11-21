@@ -15,7 +15,7 @@ typedef NS_ENUM(NSInteger, STPPaymentAuthorizationStatus) {
     STPPaymentAuthorizationStatusFailure, // Merchant failed to auth the transaction.
 };
 
-typedef void (^STPPaymentCompletionHandler)(STPPaymentAuthorizationStatus status);
+typedef void (^STPTokenSubmissionHandler)(STPPaymentAuthorizationStatus status);
 
 @protocol STPCheckoutViewControllerDelegate<NSObject>
 

@@ -17,11 +17,10 @@
 #import "Stripe+ApplePay.h"
 #endif
 
-typedef void (^STPPaymentTokenHandler)(STPToken *token, NSError *error, STPPaymentCompletionHandler handler);
-
 @interface STPPaymentManager () <STPCheckoutViewControllerDelegate>
 @property (weak, nonatomic) UIViewController *presentingViewController;
 @property (copy, nonatomic) STPPaymentTokenHandler tokenHandler;
+@property (copy, nonatomic) STPPaymentCompletionHandler completion;
 @end
 
 #if APPLEPAY
@@ -33,23 +32,27 @@ typedef void (^STPPaymentTokenHandler)(STPToken *token, NSError *error, STPPayme
 
 - (void)requestPaymentWithOptions:(STPCheckoutOptions *)options
      fromPresentingViewController:(UIViewController *)presentingViewController
-                 withTokenHandler:(STPPaymentTokenHandler)tokenHandler {
+                 withTokenHandler:(STPPaymentTokenHandler)tokenHandler
+                       completion:(STPPaymentCompletionHandler)completion {
+    NSCParameterAssert(options);
+    NSCParameterAssert(presentingViewController);
+    NSCParameterAssert(tokenHandler);
+    NSCParameterAssert(completion);
     self.presentingViewController = presentingViewController;
     self.tokenHandler = tokenHandler;
+    self.completion = completion;
 #if APPLEPAY
     if (options.paymentRequest) {
-        if (options.paymentRequest.requiredShippingAddressFields != PKAddressFieldNone ||
-            options.paymentRequest.requiredShippingAddressFields != PKAddressFieldNone) {
-            NSError *error =
-                [[NSError alloc] initWithDomain:StripeDomain
-                                           code:STPInvalidRequestError
-                                       userInfo:@{
-                                           NSLocalizedDescriptionKey: NSLocalizedString(
-                                               @"Your payment request has required billing or shipping address fields, which isn't supported by Stripe "
-                                               @"Checkout yet. You should collect that information ahead of time if you want to use this feature.",
-                                               nil),
-                                       }];
-            self.tokenHandler(nil, error, nil);
+        if (options.paymentRequest.requiredShippingAddressFields != PKAddressFieldNone) {
+            NSError *error = [[NSError alloc] initWithDomain:StripeDomain
+                                                        code:STPInvalidRequestError
+                                                    userInfo:@{
+                                                        NSLocalizedDescriptionKey: NSLocalizedString(
+                                                            @"Your payment request has required shipping address fields, which isn't supported by Stripe "
+                                                            @"Checkout yet. You should collect that information ahead of time if you want to use this feature.",
+                                                            nil),
+                                                    }];
+            self.completion(NO, error);
             return;
         }
         if ([Stripe canSubmitPaymentRequest:options.paymentRequest]) {
@@ -70,20 +73,27 @@ typedef void (^STPPaymentTokenHandler)(STPToken *token, NSError *error, STPPayme
 #pragma mark - STPCheckoutViewControllerDelegate
 
 - (void)checkoutController:(STPCheckoutViewController *)controller didFailWithError:(NSError *)error {
-    self.tokenHandler(nil, error, nil);
+    self.completion(NO, error);
 }
 
 - (void)checkoutControllerDidCancel:(STPCheckoutViewController *)controller {
-    self.tokenHandler(nil, nil, nil);
+    self.completion(NO, nil);
 }
 
-- (void)checkoutController:(STPCheckoutViewController *)controller didFinishWithToken:(STPToken *)token {
-    STPPaymentCompletionHandler completion = ^(STPPaymentAuthorizationStatus status) {
+- (void)checkoutControllerDidFinish:(STPCheckoutViewController *)controller {
+    [self.presentingViewController dismissViewControllerAnimated:YES
+                                                      completion:^{
+
+                                                      }];
+}
+
+- (void)checkoutController:(STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
+    STPTokenSubmissionHandler paymentCompletion = ^(STPPaymentAuthorizationStatus status) {
         if (status == STPPaymentAuthorizationStatusSuccess) {
         } else {
         }
     };
-    self.tokenHandler(token, nil, completion);
+    self.tokenHandler(token, paymentCompletion);
 }
 
 #if APPLEPAY
@@ -95,21 +105,20 @@ typedef void (^STPPaymentTokenHandler)(STPToken *token, NSError *error, STPPayme
     [Stripe createTokenWithPayment:payment
                         completion:^(STPToken *token, NSError *error) {
                             if (error) {
-                                self.tokenHandler(nil, error, nil);
+                                self.completion(NO, error);
                             }
-                            STPPaymentCompletionHandler completion = ^(STPPaymentAuthorizationStatus status) {
+                            STPTokenSubmissionHandler completion = ^(STPPaymentAuthorizationStatus status) {
                                 if (status == STPPaymentAuthorizationStatusSuccess) {
                                     pkCompletion(PKPaymentAuthorizationStatusSuccess);
                                 } else {
                                     pkCompletion(PKPaymentAuthorizationStatusFailure);
                                 }
                             };
-                            self.tokenHandler(token, nil, completion);
+                            self.tokenHandler(token, completion);
                         }];
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
-    
 }
 
 #endif

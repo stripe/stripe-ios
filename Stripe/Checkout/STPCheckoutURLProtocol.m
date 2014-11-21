@@ -9,7 +9,7 @@
 #import "STPCheckoutURLProtocol.h"
 #import "StripeError.h"
 
-static NSString *const STPCheckoutURLProtocolRequestKey = @"STPCheckoutURLProtocolRequestKey";
+NSString *const STPCheckoutURLProtocolRequestScheme = @"STPCheckoutURLProtocolRequestScheme";
 
 @interface STPCheckoutURLProtocol () <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSURLConnection *connection;
@@ -18,7 +18,7 @@ static NSString *const STPCheckoutURLProtocolRequestKey = @"STPCheckoutURLProtoc
 @implementation STPCheckoutURLProtocol
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request {
-    return [request.URL.host isEqualToString:@"checkout.stripe.com"] && ![NSURLProtocol propertyForKey:STPCheckoutURLProtocolRequestKey inRequest:request];
+    return [request.URL.scheme.lowercaseString isEqualToString:STPCheckoutURLProtocolRequestScheme.lowercaseString];
 }
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request {
@@ -27,7 +27,9 @@ static NSString *const STPCheckoutURLProtocolRequestKey = @"STPCheckoutURLProtoc
 
 - (void)startLoading {
     NSMutableURLRequest *newRequest = [self.request mutableCopy];
-    [NSURLProtocol setProperty:@YES forKey:STPCheckoutURLProtocolRequestKey inRequest:newRequest];
+    NSString *oldURLString = [[newRequest.URL absoluteString] lowercaseString];
+    newRequest.URL =
+        [NSURL URLWithString:[oldURLString stringByReplacingOccurrencesOfString:STPCheckoutURLProtocolRequestScheme.lowercaseString withString:@"http"]];
     self.connection = [NSURLConnection connectionWithRequest:newRequest delegate:self];
 }
 
@@ -41,7 +43,7 @@ static NSString *const STPCheckoutURLProtocolRequestKey = @"STPCheckoutURLProtoc
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         // 30x redirects are automatically followed and will not reach here,
         // so we only need to check for successful 20x status codes.
-        if (httpResponse.statusCode / 100 != 2) {
+        if (httpResponse.statusCode / 100 != 2 && httpResponse.statusCode != 301) {
             NSError *error = [[NSError alloc] initWithDomain:StripeDomain
                                                         code:STPConnectionError
                                                     userInfo:@{

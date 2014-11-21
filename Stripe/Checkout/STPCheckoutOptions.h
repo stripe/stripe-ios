@@ -36,6 +36,7 @@
 @property (nonatomic, copy) NSString *customerEmail;
 @property (nonatomic) NSNumber *enableRememberMe;
 @property (nonatomic) NSNumber *enablePostalCode;
+@property (nonatomic) NSNumber *requireBillingAddress;
 
 - (NSString *)stringifiedJSONRepresentation;
 

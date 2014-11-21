@@ -29,7 +29,8 @@ static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
 static NSString *const checkoutRedirectPrefix = @"/-/";
 static NSString *const checkoutRPCScheme = @"stripecheckout";
 static NSString *const checkoutUserAgent = @"Stripe";
-static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
+//static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios";
+static NSString *const checkoutURL = @"localhost:5394/v3/ios";
 
 - (instancetype)initWithOptions:(STPCheckoutOptions *)options {
     self = [super initWithNibName:nil bundle:nil];
@@ -52,8 +53,9 @@ static NSString *const checkoutURL = @"http://checkout.stripe.com/v3/ios";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    self.url = [NSURL URLWithString:checkoutURL];
+    
+    NSString *fullURLString = [NSString stringWithFormat:@"%@://%@", STPCheckoutURLProtocolRequestScheme, checkoutURL];
+    self.url = [NSURL URLWithString:fullURLString];
 
     if (self.options.logoImage && !self.options.logoURL) {
         NSURL *url = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]]];

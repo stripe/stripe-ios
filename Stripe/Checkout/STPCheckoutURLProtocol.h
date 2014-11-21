@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NSString *const STPCheckoutURLProtocolRequestScheme;
+
 @interface STPCheckoutURLProtocol : NSURLProtocol
 
 @end
