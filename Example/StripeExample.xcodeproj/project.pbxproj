@@ -35,7 +35,6 @@
 		0470A2C519A5D5DB00B66DB7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2C319A5D5DB00B66DB7 /* InfoPlist.strings */; };
 		0470A2C719A5D5DB00B66DB7 /* StripeExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0470A2C619A5D5DB00B66DB7 /* StripeExampleTests.m */; };
 		0470A30C19A5D69E00B66DB7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2D419A5D69E00B66DB7 /* InfoPlist.strings */; };
-		0470A32D19A5D69E00B66DB7 /* PaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0470A30619A5D69E00B66DB7 /* PaymentViewController.m */; };
 		04BA872E19F89D5400B79DAF /* PKPayment+STPTestKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BA871F19F89D5400B79DAF /* PKPayment+STPTestKeys.m */; };
 		04BA872F19F89D5400B79DAF /* STPTestAddressStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BA872119F89D5400B79DAF /* STPTestAddressStore.m */; };
 		04BA873019F89D5400B79DAF /* STPTestCardStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BA872319F89D5400B79DAF /* STPTestCardStore.m */; };
@@ -152,8 +151,6 @@
 		0470A2C619A5D5DB00B66DB7 /* StripeExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StripeExampleTests.m; sourceTree = "<group>"; };
 		0470A2D219A5D69E00B66DB7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
 		0470A2D519A5D69E00B66DB7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
-		0470A30519A5D69E00B66DB7 /* PaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentViewController.h; sourceTree = "<group>"; };
-		0470A30619A5D69E00B66DB7 /* PaymentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentViewController.m; sourceTree = "<group>"; };
 		04BA871E19F89D5400B79DAF /* PKPayment+STPTestKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PKPayment+STPTestKeys.h"; sourceTree = "<group>"; };
 		04BA871F19F89D5400B79DAF /* PKPayment+STPTestKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKPayment+STPTestKeys.m"; sourceTree = "<group>"; };
 		04BA872019F89D5400B79DAF /* STPTestAddressStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTestAddressStore.h; sourceTree = "<group>"; };
@@ -385,8 +382,6 @@
 				0470A2AB19A5D5DB00B66DB7 /* AppDelegate.m */,
 				0470A2B019A5D5DB00B66DB7 /* ViewController.h */,
 				0470A2B119A5D5DB00B66DB7 /* ViewController.m */,
-				0470A30519A5D69E00B66DB7 /* PaymentViewController.h */,
-				0470A30619A5D69E00B66DB7 /* PaymentViewController.m */,
 				04C0A07419F85E5100D699BB /* ShippingManager.h */,
 				04C0A07519F85E5100D699BB /* ShippingManager.m */,
 				0470A2B319A5D5DB00B66DB7 /* Images.xcassets */,
@@ -692,7 +687,6 @@
 				045F62A81A085A6800134D19 /* Stripe.m in Sources */,
 				04EEE1F819CB7ED500192164 /* PTKView.m in Sources */,
 				04BC615C19E6250C001B0D84 /* (null) in Sources */,
-				0470A32D19A5D69E00B66DB7 /* PaymentViewController.m in Sources */,
 				045F62A51A085A6800134D19 /* STPCard.m in Sources */,
 				045F62A71A085A6800134D19 /* STPUtils.m in Sources */,
 				045F62A21A085A6800134D19 /* STPColorUtils.m in Sources */,

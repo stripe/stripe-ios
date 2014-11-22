@@ -50,8 +50,17 @@
 }
 
 - (IBAction)beginPayment:(id)sender {
-    STPCheckoutOptions *options = [STPCheckoutOptions new];
+    NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId];
+    paymentRequest.requiredBillingAddressFields = PKAddressFieldPostalAddress;
+    paymentRequest.paymentSummaryItems = @[
+        [PKPaymentSummaryItem summaryItemWithLabel:@"Llama food" amount:[NSDecimalNumber decimalNumberWithString:@"9.00"]],
+        [PKPaymentSummaryItem summaryItemWithLabel:@"Llama food co" amount:[NSDecimalNumber decimalNumberWithString:@"1.00"]],
+        [PKPaymentSummaryItem summaryItemWithLabel:@"Llama food co" amount:[NSDecimalNumber decimalNumberWithString:@"10.00"]],
+    ];
 
+    STPCheckoutOptions *options = [STPCheckoutOptions new];
+    options.paymentRequest = paymentRequest;
     options.publishableKey = @"pk_test_09IUAkhSGIz8mQP3prdgKm06";
     options.purchaseDescription = @"Tasty Llama food";
     options.purchaseAmount = @1000;
@@ -64,40 +73,18 @@
         withTokenHandler:^(STPToken *token, STPTokenSubmissionHandler handler) { [self createBackendChargeWithToken:token completion:handler]; }
         completion:^(BOOL success, NSError *error) {
             if (success) {
+                // display an alert view
             } else if (error) {
                 // display error
             } else {
                 // user canceled the request; do nothing
             }
         }];
-    //    NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
-    //    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId
-    //                                                                             amount:[NSDecimalNumber decimalNumberWithString:@"10"]
-    //                                                                           currency:@"USD"
-    //    [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
-    //    [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
-    //    PKShippingMethod *shippingMethod = [PKShippingMethod summaryItemWithLabel:@"Llama Express Shipping" amount:[NSDecimalNumber
-    //    decimalNumberWithString:@"20.00"]];
-    //    [paymentRequest setShippingMethods:@[shippingMethod]];
-    //    if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
-    //#if DEBUG
-    ////                                                                        description:@"Premium Llama Food"];
-    //#else
-    //        PKPaymentAuthorizationViewController *auth = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
-    //#endif
-    //        auth.delegate = self;
-    //        [self presentViewController:auth animated:YES completion:nil];
-    //    }
-    //    else {
-    //    PKPaymentRequest *request = [PKPaymentRequest new];
-    //    request.merchantIdentifier = @"MY_MERCHANT_ID";
-    //    request.currencyCode = @"USD";
-    //        [self presentViewController:navController animated:YES completion:nil];
-    //    }
 }
 
 - (void)createBackendChargeWithToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
     if (!ParseApplicationId || !ParseClientKey) {
+        NSLog(@"Token received, but no way to handle it: %@", token.tokenId);
         completion(STPPaymentAuthorizationStatusFailure);
         return;
     }
@@ -112,6 +99,7 @@
                                 block:^(id object, NSError *error) {
                                     if (error) {
                                         if (completion) {
+                                            NSLog(@"Error occurred making payment");
                                             completion(STPPaymentAuthorizationStatusFailure);
                                         }
                                         return;
