@@ -21,6 +21,7 @@
 @property (nonatomic) STPCheckoutOptions *options;
 @property (nonatomic) NSURL *logoURL;
 @property (nonatomic) NSURL *url;
+@property (nonatomic) UIToolbar *cancelToolbar;
 @end
 
 @implementation STPCheckoutViewController
@@ -67,7 +68,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
 
     UIWebView *webView = [[UIWebView alloc] init];
     [self.view addSubview:webView];
-    [webView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    webView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[webView]-0-|"
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
                                                                       metrics:nil
@@ -88,11 +89,56 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
 
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityIndicator.hidesWhenStopped = YES;
+    activityIndicator.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:activityIndicator];
     self.activityIndicator = activityIndicator;
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:activityIndicator
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1
+                                                           constant:0.0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:activityIndicator
+                                                          attribute:NSLayoutAttributeCenterY
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterY
+                                                         multiplier:1
+                                                           constant:-40.0]];
+
+    // We're going to use a toolbar here instead of a UIButton so that we can get UIKit's localization of the word "Cancel" for free.
+    UIToolbar *cancelToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 44)];
+    cancelToolbar.translatesAutoresizingMaskIntoConstraints = NO;
+    cancelToolbar.translucent = NO;
+    cancelToolbar.backgroundColor = [UIColor clearColor];
+    cancelToolbar.clipsToBounds = YES;
+    UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    cancelToolbar.items = @[leftItem, cancelItem, rightItem];
+    cancelToolbar.alpha = 0;
+    cancelToolbar.hidden = YES;
+    [self.view addSubview:cancelToolbar];
+    self.cancelToolbar = cancelToolbar;
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[cancelToolbar]-0-|"
+                                                                      options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                      metrics:nil
+                                                                        views:NSDictionaryOfVariableBindings(cancelToolbar)]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:cancelToolbar
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:activityIndicator
+                                                          attribute:NSLayoutAttributeBottom
+                                                         multiplier:1
+                                                           constant:10.0]];
 }
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+- (void)cancel:(UIBarButtonItem *)sender {
+    [self.delegate checkoutControllerDidCancel:self];
+    [self cleanup];
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle {
     if (self.options.logoColor) {
         FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
@@ -100,14 +146,11 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
     }
     return UIStatusBarStyleDefault;
 }
-#endif
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    self.activityIndicator.center = self.view.center;
-}
 
 - (void)cleanup {
+    if ([self.webView isLoading]) {
+        [self.webView stopLoading];
+    }
     [[UIApplication sharedApplication] setStatusBarStyle:self.previousStyle animated:YES];
     if (self.logoURL) {
         [[NSFileManager defaultManager] removeItemAtURL:self.logoURL error:nil];
@@ -115,14 +158,12 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
 }
 
 - (void)setLogoColor:(UIColor *)color {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
     self.options.logoColor = color;
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
         FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
         [[UIApplication sharedApplication] setStatusBarStyle:[self preferredStatusBarStyle] animated:YES];
         [self setNeedsStatusBarAppearanceUpdate];
     }
-#endif
 }
 
 #pragma mark - UIWebViewDelegate
@@ -131,6 +172,10 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
     NSString *optionsJavaScript = [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentation]];
     [webView stringByEvaluatingJavaScriptFromString:optionsJavaScript];
     [self.activityIndicator startAnimating];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.cancelToolbar.hidden = NO;
+        [UIView animateWithDuration:0.3 animations:^{ self.cancelToolbar.alpha = 1.0f; }];
+    });
 }
 
 - (BOOL)webView:(__unused UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -187,9 +232,15 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
 }
 
 - (void)webViewDidFinishLoad:(__unused UIWebView *)webView {
-    [UIView animateWithDuration:0.2
-        animations:^{ self.activityIndicator.alpha = 0; }
-        completion:^(__unused BOOL finished) { [self.activityIndicator stopAnimating]; }];
+    [UIView animateWithDuration:0.1
+        animations:^{
+            self.cancelToolbar.alpha = 0;
+            self.activityIndicator.alpha = 0;
+        }
+        completion:^(BOOL finished) {
+            self.cancelToolbar.hidden = YES;
+            [self.activityIndicator stopAnimating];
+        }];
 }
 
 - (void)webView:(__unused UIWebView *)webView didFailLoadWithError:(NSError *)error {
