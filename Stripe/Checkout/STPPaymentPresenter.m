@@ -42,7 +42,7 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
     self.presentingViewController = presentingViewController;
 
     // we really don't want to get dealloc'ed in case the caller doesn't remember to retain this object.
-    objc_setAssociatedObject(self, &STPPaymentPresenterAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN);
+    objc_setAssociatedObject(self.presentingViewController, &STPPaymentPresenterAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN);
 #ifdef STRIPE_ENABLE_APPLEPAY
     if (self.paymentRequest) {
         if (self.paymentRequest.requiredShippingAddressFields != PKAddressFieldNone) {
@@ -54,7 +54,7 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
                                                             @"Checkout yet. You should collect that information ahead of time if you want to use this feature.",
                                                             nil),
                                                     }];
-            [self.delegate paymentPresenter:self didFinishWithStatus:STPPaymentStatusError error:error];
+            [self finishWithStatus:STPPaymentStatusError error:error];
             return;
         }
         if ([Stripe canSubmitPaymentRequest:self.paymentRequest]) {
@@ -73,18 +73,23 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
     [self.presentingViewController presentViewController:checkoutViewController animated:YES completion:nil];
 }
 
+- (void)finishWithStatus:(STPPaymentStatus)status error:(NSError *)error {
+    [self.delegate paymentPresenter:self didFinishWithStatus:status error:error];
+    objc_setAssociatedObject(self.presentingViewController, &STPPaymentPresenterAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN);
+}
+
 #pragma mark - STPCheckoutViewControllerDelegate
 
 - (void)checkoutController:(__unused STPCheckoutViewController *)controller didFailWithError:(NSError *)error {
-    [self.delegate paymentPresenter:self didFinishWithStatus:STPPaymentStatusError error:error];
+    [self finishWithStatus:STPPaymentStatusError error:error];
 }
 
 - (void)checkoutControllerDidCancel:(__unused STPCheckoutViewController *)controller {
-    [self.delegate paymentPresenter:self didFinishWithStatus:STPPaymentStatusUserCanceled error:nil];
+    [self finishWithStatus:STPPaymentStatusUserCanceled error:nil];
 }
 
 - (void)checkoutControllerDidFinish:(__unused STPCheckoutViewController *)controller {
-    [self.delegate paymentPresenter:self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+    [self finishWithStatus:STPPaymentStatusSuccess error:nil];
 }
 
 - (void)checkoutController:(__unused STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
@@ -104,7 +109,7 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
     [Stripe createTokenWithPayment:payment
                         completion:^(STPToken *token, NSError *error) {
                             if (error) {
-                                [self.delegate paymentPresenter:self didFinishWithStatus:STPPaymentStatusError error:error];
+                                [self finishWithStatus:STPPaymentStatusError error:error];
                                 return;
                             }
                             STPTokenSubmissionHandler completion = ^(STPBackendChargeResult status, NSError *error) {
@@ -129,7 +134,7 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
     } else {
         status = STPPaymentStatusUserCanceled;
     }
-    [self.delegate paymentPresenter:self didFinishWithStatus:status error:self.error];
+    [self finishWithStatus:status error:self.error];
 }
 
 @end
