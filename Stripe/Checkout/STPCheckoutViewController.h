@@ -21,7 +21,7 @@ typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError
 
 - (void)checkoutControllerDidCancel:(STPCheckoutViewController *)controller;
 - (void)checkoutControllerDidFinish:(STPCheckoutViewController *)controller;
-- (void)checkoutController:(STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPPaymentCompletionHandler)completion;
+- (void)checkoutController:(STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion;
 - (void)checkoutController:(STPCheckoutViewController *)controller didFailWithError:(NSError *)error;
 
 @end
