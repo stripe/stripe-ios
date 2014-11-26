@@ -26,9 +26,11 @@
 @implementation STPPaymentPresenter
 
 - (void)requestPaymentFromPresentingViewController:(UIViewController *)presentingViewController {
-    NSCParameterAssert(self.checkoutOptions);
-    NSCParameterAssert(self.delegate);
-    NSCParameterAssert(presentingViewController);
+    NSCAssert(
+        self.checkoutOptions,
+        @"Your must provide an instance of STPCheckoutOptions to your STPPaymentManager before calling requestPaymentFromPresentingViewController: on it.");
+    NSCAssert(self.delegate, @"Your must specify a delegate for your STPPaymentManager before calling requestPaymentFromPresentingViewController: on it.");
+    NSCAssert(presentingViewController, @"You cannot call requestPaymentFromPresentingViewController: with a nil argument.");
     self.presentingViewController = presentingViewController;
 #ifdef STRIPE_ENABLE_APPLEPAY
     if (self.paymentRequest) {
@@ -45,7 +47,6 @@
             return;
         }
         if ([Stripe canSubmitPaymentRequest:self.paymentRequest]) {
-            // do ApplePay things
             PKPaymentAuthorizationViewController *paymentViewController =
                 [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:self.paymentRequest];
             paymentViewController.delegate = self;
@@ -92,6 +93,7 @@
                             STPTokenSubmissionHandler completion = ^(STPBackendChargeResult status, NSError *error) {
                                 self.error = error;
                                 if (status == STPBackendChargeResultSuccess) {
+                                    self.hasAuthorizedPayment = YES;
                                     pkCompletion(PKPaymentAuthorizationStatusSuccess);
                                 } else {
                                     pkCompletion(PKPaymentAuthorizationStatusFailure);
