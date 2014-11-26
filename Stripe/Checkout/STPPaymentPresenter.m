@@ -1,0 +1,118 @@
+//
+//  STPPaymentPresenter.m
+//  Stripe
+//
+//  Created by Jack Flintermann on 11/25/14.
+//  Copyright (c) 2014 Stripe, Inc. All rights reserved.
+//
+
+#import "STPPaymentPresenter.h"
+#import <PassKit/PassKit.h>
+#import "StripeError.h"
+#import "Stripe.h"
+#import "Stripe+ApplePay.h"
+
+@interface STPPaymentPresenter () <STPCheckoutViewControllerDelegate>
+@property (weak, nonatomic) UIViewController *presentingViewController;
+@property (nonatomic) BOOL hasAuthorizedPayment;
+@property (nonatomic) NSError *error;
+@end
+
+#ifdef STRIPE_ENABLE_APPLEPAY
+@interface STPPaymentPresenter (ApplePay) <PKPaymentAuthorizationViewControllerDelegate>
+@end
+#endif
+
+@implementation STPPaymentPresenter
+
+- (void)requestPaymentFromPresentingViewController:(UIViewController *)presentingViewController {
+    NSCParameterAssert(self.checkoutOptions);
+    NSCParameterAssert(self.delegate);
+    NSCParameterAssert(presentingViewController);
+    self.presentingViewController = presentingViewController;
+#ifdef STRIPE_ENABLE_APPLEPAY
+    if (self.paymentRequest) {
+        if (self.paymentRequest.requiredShippingAddressFields != PKAddressFieldNone) {
+            NSError *error = [[NSError alloc] initWithDomain:StripeDomain
+                                                        code:STPInvalidRequestError
+                                                    userInfo:@{
+                                                        NSLocalizedDescriptionKey: NSLocalizedString(
+                                                            @"Your payment request has required shipping address fields, which isn't supported by Stripe "
+                                                            @"Checkout yet. You should collect that information ahead of time if you want to use this feature.",
+                                                            nil),
+                                                    }];
+            [self.delegate paymentPresenter:self didFinishWithStatus:STPPaymentStatusError error:error];
+            return;
+        }
+        if ([Stripe canSubmitPaymentRequest:self.paymentRequest]) {
+            // do ApplePay things
+            PKPaymentAuthorizationViewController *paymentViewController =
+                [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:self.paymentRequest];
+            paymentViewController.delegate = self;
+            [self.presentingViewController presentViewController:paymentViewController animated:YES completion:nil];
+            return;
+        }
+    }
+#endif
+    STPCheckoutViewController *checkoutViewController = [[STPCheckoutViewController alloc] initWithOptions:self.checkoutOptions];
+    checkoutViewController.delegate = self;
+    [self.presentingViewController presentViewController:checkoutViewController animated:YES completion:nil];
+}
+
+#pragma mark - STPCheckoutViewControllerDelegate
+
+- (void)checkoutController:(__unused STPCheckoutViewController *)controller didFailWithError:(NSError *)error {
+    [self.delegate paymentPresenter:self didFinishWithStatus:STPPaymentStatusError error:error];
+}
+
+- (void)checkoutControllerDidCancel:(__unused STPCheckoutViewController *)controller {
+    [self.delegate paymentPresenter:self didFinishWithStatus:STPPaymentStatusUserCanceled error:nil];
+}
+
+- (void)checkoutControllerDidFinish:(__unused STPCheckoutViewController *)controller {
+    [self.delegate paymentPresenter:self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+}
+
+- (void)checkoutController:(__unused STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
+    [self.delegate paymentPresenter:self didCreateStripeToken:token completion:completion];
+}
+
+#ifdef STRIPE_ENABLE_APPLEPAY
+#pragma mark - PKPaymentAuthorizatoinViewControllerDelegate
+
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
+                       didAuthorizePayment:(PKPayment *)payment
+                                completion:(void (^)(PKPaymentAuthorizationStatus))pkCompletion {
+    [Stripe createTokenWithPayment:payment
+                        completion:^(STPToken *token, NSError *error) {
+                            if (error) {
+                                [self.delegate paymentPresenter:self didFinishWithStatus:STPPaymentStatusError error:error];
+                                return;
+                            }
+                            STPTokenSubmissionHandler completion = ^(STPBackendChargeResult status, NSError *error) {
+                                self.error = error;
+                                if (status == STPBackendChargeResultSuccess) {
+                                    pkCompletion(PKPaymentAuthorizationStatusSuccess);
+                                } else {
+                                    pkCompletion(PKPaymentAuthorizationStatusFailure);
+                                }
+                            };
+                            [self.delegate paymentPresenter:self didCreateStripeToken:token completion:completion];
+                        }];
+}
+
+- (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
+    STPPaymentStatus status;
+    if (self.error) {
+        status = STPPaymentStatusError;
+    } else if (self.hasAuthorizedPayment) {
+        status = STPPaymentStatusSuccess;
+    } else {
+        status = STPPaymentStatusUserCanceled;
+    }
+    [self.delegate paymentPresenter:self didFinishWithStatus:status error:self.error];
+}
+
+#endif
+
+@end

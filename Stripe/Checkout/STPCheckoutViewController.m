@@ -29,7 +29,7 @@ static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
 static NSString *const checkoutRedirectPrefix = @"/-/";
 static NSString *const checkoutRPCScheme = @"stripecheckout";
 static NSString *const checkoutUserAgent = @"Stripe";
-//static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios";
+// static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios";
 static NSString *const checkoutURL = @"localhost:5394/v3/ios";
 
 - (instancetype)initWithOptions:(STPCheckoutOptions *)options {
@@ -53,7 +53,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     NSString *fullURLString = [NSString stringWithFormat:@"%@://%@", STPCheckoutURLProtocolRequestScheme, checkoutURL];
     self.url = [NSURL URLWithString:fullURLString];
 
@@ -128,8 +128,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
 #pragma mark - UIWebViewDelegate
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
-    NSString *optionsJavaScript =
-        [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentation]];
+    NSString *optionsJavaScript = [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentation]];
     [webView stringByEvaluatingJavaScriptFromString:optionsJavaScript];
     [self.activityIndicator startAnimating];
 }
@@ -160,8 +159,8 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
             }
             [self.delegate checkoutController:self
                                didCreateToken:token
-                                   completion:^(STPPaymentAuthorizationStatus status) {
-                                       if (status == STPPaymentAuthorizationStatusSuccess) {
+                                   completion:^(STPBackendChargeResult status, NSError *error) {
+                                       if (status == STPBackendChargeResultSuccess) {
                                            // @reggio: do something here like [self.webView
                                            // stringByEvaluatingStringFromJavascript:@"showCheckoutSuccessAnimation();"]
                                            // that should probably trigger the "CheckoutDidFinish" event when the animation is complete

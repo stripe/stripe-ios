@@ -6,7 +6,7 @@
 //
 //
 
-#if defined(STRIPE_ENABLE_APPLEPAY)
+#ifdef STRIPE_ENABLE_APPLEPAY
 
 #import "Stripe.h"
 #import "Stripe+ApplePay.h"

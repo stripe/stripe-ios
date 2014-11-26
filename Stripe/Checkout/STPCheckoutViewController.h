@@ -10,12 +10,12 @@
 
 @class STPCheckoutOptions, STPCheckoutViewController, STPToken;
 
-typedef NS_ENUM(NSInteger, STPPaymentAuthorizationStatus) {
-    STPPaymentAuthorizationStatusSuccess, // Merchant auth'd (or expects to auth) the transaction successfully.
-    STPPaymentAuthorizationStatusFailure, // Merchant failed to auth the transaction.
+typedef NS_ENUM(NSInteger, STPBackendChargeResult) {
+    STPBackendChargeResultSuccess, // Merchant auth'd (or expects to auth) the transaction successfully.
+    STPBackendChargeResultFailure, // Merchant failed to auth the transaction.
 };
 
-typedef void (^STPTokenSubmissionHandler)(STPPaymentAuthorizationStatus status);
+typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError *error);
 
 @protocol STPCheckoutViewControllerDelegate<NSObject>
 

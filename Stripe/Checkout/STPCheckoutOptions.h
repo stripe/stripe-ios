@@ -9,18 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
-#import <PassKit/PassKit.h>
-#endif
-
 @interface STPCheckoutOptions : NSObject
 
 // required property
 @property (nonatomic, copy) NSString *publishableKey;
-
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000 && defined(STRIPE_ENABLE_APPLEPAY)
-@property (nonatomic) PKPaymentRequest *paymentRequest;
-#endif
 
 // strongly recommended properties
 @property (nonatomic) NSURL *logoURL;

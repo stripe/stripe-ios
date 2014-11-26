@@ -14,7 +14,7 @@
 #import "Stripe+ApplePay.h"
 #import "ShippingManager.h"
 #import "STPCheckoutOptions.h"
-#import "STPPaymentManager.h"
+#import "STPPaymentPresenter.h"
 
 #if DEBUG
 #import "STPTestPaymentAuthorizationViewController.h"
@@ -23,12 +23,12 @@
 
 #import "STPCheckoutOptions.h"
 
-@interface ViewController ()
+@interface ViewController () <STPPaymentPresenterDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *cartLabel;
 @property (weak, nonatomic) IBOutlet UIButton *checkoutButton;
 @property (nonatomic) NSDecimalNumber *amount;
 @property (nonatomic) ShippingManager *shippingManager;
-@property (nonatomic) STPPaymentManager *paymentManager;
+@property (nonatomic) STPPaymentPresenter *paymentPresenter;
 @end
 
 @implementation ViewController
@@ -60,38 +60,48 @@
     ];
 
     STPCheckoutOptions *options = [STPCheckoutOptions new];
-    options.paymentRequest = paymentRequest;
     options.publishableKey = @"pk_test_09IUAkhSGIz8mQP3prdgKm06";
     options.purchaseDescription = @"Tasty Llama food";
     options.purchaseAmount = @1000;
     options.purchaseLabel = @"Pay {{amount}} for that food";
     options.enablePostalCode = @YES;
     options.logoColor = [UIColor whiteColor];
-    self.paymentManager = [[STPPaymentManager alloc] init];
-    [self.paymentManager requestPaymentWithOptions:options
-        fromPresentingViewController:self
-        withTokenHandler:^(STPToken *token, STPTokenSubmissionHandler handler) { [self createBackendChargeWithToken:token completion:handler]; }
-        completion:^(BOOL success, NSError *error) {
-            if (success) {
-                // display an alert view
-            } else if (error) {
-                // display error
-            } else {
-                // user canceled the request; do nothing
-            }
-        }];
+    self.paymentPresenter = [[STPPaymentPresenter alloc] init];
+    self.paymentPresenter.checkoutOptions = options;
+    self.paymentPresenter.paymentRequest = paymentRequest;
+    self.paymentPresenter.delegate = self;
+    [self.paymentPresenter requestPaymentFromPresentingViewController:self];
+}
+
+- (void)paymentPresenter:(STPPaymentPresenter *)presenter didCreateStripeToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
+    [self createBackendChargeWithToken:token completion:completion];
+}
+
+- (void)paymentPresenter:(STPPaymentPresenter *)presenter didFinishWithStatus:(STPPaymentStatus)status error:(NSError *)error {
+    [self dismissViewControllerAnimated:YES completion:nil];
+    if (error) {
+        // present error
+    }
+    if (status == STPPaymentStatusSuccess) {
+        // yay!
+    }
 }
 
 - (void)createBackendChargeWithToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
     if (!ParseApplicationId || !ParseClientKey) {
-        NSLog(@"Token received, but no way to handle it: %@", token.tokenId);
-        completion(STPPaymentAuthorizationStatusFailure);
+        NSDictionary *userInfo = @{
+            NSLocalizedDescriptionKey: [NSString
+                stringWithFormat:@"You created a token! Its value is %@. Now, you need to configure your Parse backend in order to charge this customer.",
+                                 token.tokenId]
+        };
+        NSError *error = [NSError errorWithDomain:StripeDomain code:STPInvalidRequestError userInfo:userInfo];
+        completion(STPBackendChargeResultFailure, error);
         return;
     }
     NSDictionary *chargeParams = @{
         @"token": token.tokenId,
         @"currency": @"usd",
-        @"amount": @"1000", // this is in cents (i.e. $10)
+        @"amount": self.amount.stringValue, // this is in cents (i.e. $10)
     };
     // This passes the token off to our payment backend, which will then actually complete charging the card using your account's secret key.
     [PFCloud callFunctionInBackground:@"charge"
@@ -100,13 +110,13 @@
                                     if (error) {
                                         if (completion) {
                                             NSLog(@"Error occurred making payment");
-                                            completion(STPPaymentAuthorizationStatusFailure);
+                                            completion(STPBackendChargeResultFailure, error);
                                         }
                                         return;
                                     }
                                     // We're done!
                                     if (completion) {
-                                        completion(STPPaymentAuthorizationStatusSuccess);
+                                        completion(STPBackendChargeResultSuccess, nil);
                                     }
                                 }];
 }
