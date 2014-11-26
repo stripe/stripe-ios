@@ -11,9 +11,13 @@
 #import "StripeError.h"
 #import "Stripe.h"
 #import "Stripe+ApplePay.h"
+#import <objc/runtime.h>
+
+static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPresenterAssociatedObjectKey";
 
 @interface STPPaymentPresenter () <STPCheckoutViewControllerDelegate>
 @property (weak, nonatomic) UIViewController *presentingViewController;
+@property (weak, nonatomic) UIViewController *presentedViewController;
 @property (nonatomic) BOOL hasAuthorizedPayment;
 @property (nonatomic) NSError *error;
 @end
@@ -26,12 +30,19 @@
 @implementation STPPaymentPresenter
 
 - (void)requestPaymentFromPresentingViewController:(UIViewController *)presentingViewController {
+    if (presentingViewController.presentedViewController && presentingViewController.presentedViewController == self.presentedViewController) {
+        NSLog(@"Error: called requestPaymentFromPresentingViewController: while already presenting a payment view controller.");
+        return;
+    }
     NSCAssert(
         self.checkoutOptions,
         @"Your must provide an instance of STPCheckoutOptions to your STPPaymentManager before calling requestPaymentFromPresentingViewController: on it.");
     NSCAssert(self.delegate, @"Your must specify a delegate for your STPPaymentManager before calling requestPaymentFromPresentingViewController: on it.");
     NSCAssert(presentingViewController, @"You cannot call requestPaymentFromPresentingViewController: with a nil argument.");
     self.presentingViewController = presentingViewController;
+
+    // we really don't want to get dealloc'ed in case the caller doesn't remember to retain this object.
+    objc_setAssociatedObject(self, &STPPaymentPresenterAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN);
 #ifdef STRIPE_ENABLE_APPLEPAY
     if (self.paymentRequest) {
         if (self.paymentRequest.requiredShippingAddressFields != PKAddressFieldNone) {
@@ -51,12 +62,14 @@
                 [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:self.paymentRequest];
             paymentViewController.delegate = self;
             [self.presentingViewController presentViewController:paymentViewController animated:YES completion:nil];
+            self.presentedViewController = paymentViewController;
             return;
         }
     }
 #endif
     STPCheckoutViewController *checkoutViewController = [[STPCheckoutViewController alloc] initWithOptions:self.checkoutOptions];
     checkoutViewController.delegate = self;
+    self.presentedViewController = checkoutViewController;
     [self.presentingViewController presentViewController:checkoutViewController animated:YES completion:nil];
 }
 
@@ -78,8 +91,12 @@
     [self.delegate paymentPresenter:self didCreateStripeToken:token completion:completion];
 }
 
+@end
+
 #ifdef STRIPE_ENABLE_APPLEPAY
 #pragma mark - PKPaymentAuthorizatoinViewControllerDelegate
+
+@implementation STPPaymentPresenter (ApplePay)
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
@@ -115,6 +132,6 @@
     [self.delegate paymentPresenter:self didFinishWithStatus:status error:self.error];
 }
 
-#endif
-
 @end
+
+#endif
