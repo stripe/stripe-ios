@@ -12,6 +12,7 @@
 #import "Stripe.h"
 #import "Stripe+ApplePay.h"
 #import <objc/runtime.h>
+#import "STPCheckoutViewController.h"
 
 static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPresenterAssociatedObjectKey";
 
@@ -45,18 +46,9 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
     objc_setAssociatedObject(self.presentingViewController, &STPPaymentPresenterAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN);
 #ifdef STRIPE_ENABLE_APPLEPAY
     if (self.paymentRequest) {
-        if (self.paymentRequest.requiredShippingAddressFields != PKAddressFieldNone) {
-            NSError *error = [[NSError alloc] initWithDomain:StripeDomain
-                                                        code:STPInvalidRequestError
-                                                    userInfo:@{
-                                                        NSLocalizedDescriptionKey: NSLocalizedString(
-                                                            @"Your payment request has required shipping address fields, which isn't supported by Stripe "
-                                                            @"Checkout yet. You should collect that information ahead of time if you want to use this feature.",
-                                                            nil),
-                                                    }];
-            [self finishWithStatus:STPPaymentStatusError error:error];
-            return;
-        }
+        NSCAssert(self.paymentRequest.requiredShippingAddressFields == PKAddressFieldNone,
+                  @"Your payment request has required shipping address fields, which isn't supported by Stripe "
+                  @"Checkout yet. You should collect that information ahead of time if you want to use this feature.");
         if ([Stripe canSubmitPaymentRequest:self.paymentRequest]) {
             PKPaymentAuthorizationViewController *paymentViewController =
                 [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:self.paymentRequest];

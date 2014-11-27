@@ -78,13 +78,14 @@
 }
 
 - (void)paymentPresenter:(STPPaymentPresenter *)presenter didFinishWithStatus:(STPPaymentStatus)status error:(NSError *)error {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    if (error) {
-        // present error
-    }
-    if (status == STPPaymentStatusSuccess) {
-        // yay!
-    }
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (error) {
+            // present error
+        }
+        if (status == STPPaymentStatusSuccess) {
+            // yay!
+        }
+    }];
 }
 
 - (void)createBackendChargeWithToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {

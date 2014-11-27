@@ -11,14 +11,19 @@
 #import "STPToken.h"
 #import "Stripe.h"
 #import "STPColorUtils.h"
-#import "STPCheckoutURLProtocol.h"
 #import "FauxPasAnnotations.h"
+
+@interface STPCheckoutURLProtocol : NSURLProtocol<NSURLConnectionDataDelegate>
+@property (nonatomic, strong) NSURLConnection *connection;
+@end
+
+NSString *const STPCheckoutURLProtocolRequestScheme = @"beginstripecheckout";
 
 @interface STPCheckoutViewController () <UIWebViewDelegate>
 @property (weak, nonatomic) UIWebView *webView;
 @property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic) UIStatusBarStyle previousStyle;
-@property (nonatomic) STPCheckoutOptions *options;
+@property (nonatomic, copy) STPCheckoutOptions *options;
 @property (nonatomic) NSURL *logoURL;
 @property (nonatomic) NSURL *url;
 @property (nonatomic) UIToolbar *cancelToolbar;
@@ -53,6 +58,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
 }
 
 - (void)viewDidLoad {
+    NSCAssert(self.delegate, @"You must provide a delegate to STPCheckoutViewController before showing it.");
     [super viewDidLoad];
 
     NSString *fullURLString = [NSString stringWithFormat:@"%@://%@", STPCheckoutURLProtocolRequestScheme, checkoutURL];
@@ -134,7 +140,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
                                                            constant:10.0]];
 }
 
-- (void)cancel:(UIBarButtonItem *)sender {
+- (void)cancel:(__unused UIBarButtonItem *)sender {
     [self.delegate checkoutControllerDidCancel:self];
     [self cleanup];
 }
@@ -204,7 +210,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
             }
             [self.delegate checkoutController:self
                                didCreateToken:token
-                                   completion:^(STPBackendChargeResult status, NSError *error) {
+                                   completion:^(STPBackendChargeResult status, __unused NSError *error) {
                                        if (status == STPBackendChargeResultSuccess) {
                                            // @reggio: do something here like [self.webView
                                            // stringByEvaluatingStringFromJavascript:@"showCheckoutSuccessAnimation();"]
@@ -237,7 +243,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
             self.cancelToolbar.alpha = 0;
             self.activityIndicator.alpha = 0;
         }
-        completion:^(BOOL finished) {
+        completion:^(__unused BOOL finished) {
             self.cancelToolbar.hidden = YES;
             [self.activityIndicator stopAnimating];
         }];
@@ -247,6 +253,71 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
     [self.activityIndicator stopAnimating];
     [self.delegate checkoutController:self didFailWithError:error];
     [self cleanup];
+}
+
+@end
+
+#pragma mark - STPCheckoutURLProtocol
+
+/**
+ *  This URL protocol treats any non-20x or 30x response from checkout as an error (unlike the default UIWebView behavior, which e.g. displays a 404 page).
+ */
+@implementation STPCheckoutURLProtocol
+
++ (BOOL)canInitWithRequest:(NSURLRequest *)request {
+    return [request.URL.scheme.lowercaseString isEqualToString:STPCheckoutURLProtocolRequestScheme.lowercaseString];
+}
+
++ (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request {
+    return request;
+}
+
+- (void)startLoading {
+    NSMutableURLRequest *newRequest = [self.request mutableCopy];
+    NSString *oldURLString = [[newRequest.URL absoluteString] lowercaseString];
+    //#warning todo: https
+    newRequest.URL =
+        [NSURL URLWithString:[oldURLString stringByReplacingOccurrencesOfString:STPCheckoutURLProtocolRequestScheme.lowercaseString withString:@"http"]];
+    self.connection = [NSURLConnection connectionWithRequest:newRequest delegate:self];
+}
+
+- (void)stopLoading {
+    [self.connection cancel];
+    self.connection = nil;
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        // 30x redirects are automatically followed and will not reach here,
+        // so we only need to check for successful 20x status codes.
+        if (httpResponse.statusCode / 100 != 2 && httpResponse.statusCode != 301) {
+            NSError *error = [[NSError alloc] initWithDomain:StripeDomain
+                                                        code:STPConnectionError
+                                                    userInfo:@{
+                                                        NSLocalizedDescriptionKey: STPUnexpectedError,
+                                                        STPErrorMessageKey: @"Stripe Checkout couldn't open. Please check your internet connection and try "
+                                                        @"again. If the problem persists, please contact support@stripe.com."
+                                                    }];
+            [self.client URLProtocol:self didFailWithError:error];
+            [connection cancel];
+            self.connection = nil;
+            return;
+        }
+    }
+    [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+}
+
+- (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
+    [self.client URLProtocol:self didLoadData:data];
+}
+
+- (void)connectionDidFinishLoading:(__unused NSURLConnection *)connection {
+    [self.client URLProtocolDidFinishLoading:self];
+}
+
+- (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
+    [self.client URLProtocol:self didFailWithError:error];
 }
 
 @end
