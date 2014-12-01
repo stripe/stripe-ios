@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
     STPPaymentStatusUserCanceled, // The user canceled the payment sheet.
 };
 
-@class PKPaymentRequest, STPPaymentPresenter;
+@class PKPaymentRequest, PKPayment, STPPaymentPresenter;
 @protocol STPPaymentPresenterDelegate;
 
 /**
@@ -33,24 +33,28 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
  Example use:
 
  // In your view controller
- PKPaymentRequest *paymentRequest = ...;
  STPCheckoutOptions *options = ...;
  STPPaymentPresenter *presenter = [[STPPaymentPresenter alloc] initWithCheckoutOptions:options
-                                                                        paymentRequest:paymentRequest
                                                                               delegate:self];
  [presenter requestPaymentFromPresentingViewController:self];
 
  For more context, see ViewController.m in the StripeExample app (which uses STPPaymentPresenter).
 
- Other notes:
- - Stripe Checkout doesn't currently support collecting shipping address. If the `requiredShippingAddressFields` property of your PKPaymentRequest is non-nil,
- calling requestPaymentFromPresentingViewController: will raise an exception. Instead, collect this information ahead of time.
  */
 @interface STPPaymentPresenter : NSObject
 
-- (instancetype)initWithCheckoutOptions:(STPCheckoutOptions *)checkoutOptions
-                         paymentRequest:(PKPaymentRequest *)paymentRequest
-                               delegate:(id<STPPaymentPresenterDelegate>)delegate;
+/**
+ *  Initializes a payment presenter.
+ *
+ *  @param checkoutOptions These options will configure the appearance of Apple Pay and Stripe Checkout. Cannot be nil.
+ *  @param delegate        A delegate to receive callbacks around payment creation events. Cannot be nil. For more information see STPPaymentPresenterDelegate
+ *below.
+ *
+ *  @return The presenter. After initialization, one cannot modify the checkoutOptions or delegate properties.
+ */
+- (instancetype)initWithCheckoutOptions:(STPCheckoutOptions *)checkoutOptions delegate:(id<STPPaymentPresenterDelegate>)delegate;
+@property (nonatomic, weak, readonly) id<STPPaymentPresenterDelegate> delegate;
+@property (nonatomic, copy, readonly) STPCheckoutOptions *checkoutOptions;
 
 /**
  *  @param presentingViewController Calling this method will tell this view controller to present an appropriate payment view controller (either a
@@ -69,7 +73,8 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
  call.
  *
  *  @param presenter  The payment presenter that has returned a token
- *  @param token      The returned Stripe token. See https://stripe.com/docs/tutorials/charges for more information on what to do with this on your backend.
+ *  @param token      The returned Stripe token. See https://stripe.com/docs/tutorials/charges for more information on what to do with this on your backend. If
+ the user used Apple Pay to purchase, the returned PKPayment will be attached to the token. Otherwise, it will be nil.
  *  @param completion call this block when you're done talking to your backend.
  */
 - (void)paymentPresenter:(STPPaymentPresenter *)presenter didCreateStripeToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion;
@@ -99,6 +104,19 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
 - (void)paymentPresenter:(STPPaymentPresenter *)presenter didFinishWithStatus:(STPPaymentStatus)status error:(NSError *)error;
 
 @optional
+
+/**
+ *  When the user's device is capable of using Apple Pay, STPPaymentPresenter will automatically generate a PKPaymentRequest object based on the
+ *STPCheckoutOptions you initialized it with. The default is for the request to have 2 PKPaymentSummaryItems: one for the item being purchased (e.g. "BEATS
+ *HEADPHONES - $200"), followed one with the name of your company for the total amount (e.g. "PAY APPLE $200"). If you'd like to change this (for example, to
+ *display a more itemized receipt that breaks down the sales tax, etc), you can modify the
+ *paymentSummaryItems property of the paymentRequest here.
+
+ *
+ *  @param presenter the presenter that is deciding which payment UI to display.
+ *  @param request   the payment request that has been generated from the presenters checkoutOptions
+ */
+- (void)paymentPresenter:(STPPaymentPresenter *)presenter didPreparePaymentRequest:(PKPaymentRequest *)request;
 
 @end
 

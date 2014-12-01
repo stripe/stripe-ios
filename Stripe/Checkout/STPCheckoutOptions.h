@@ -25,6 +25,12 @@
 #pragma mark - Strongly recommended options
 
 /**
+ *  The merchant ID that you've obtained from Apple while creating your Apple Pay certificate. If you haven't done this, you can learn how at
+ * https://stripe.com/docs/mobile/apple-pay . This property needs to be set in order to use Apple Pay with STPPaymentPresenter.
+ */
+@property (nonatomic, copy) NSString *appleMerchantId;
+
+/**
  *  This can be an external image URL that will load in the header of Stripe Checkout. This takes precedent over the logoImage property. The recommended minimum
  * size for this image is 128x128px.
  */
@@ -42,7 +48,8 @@
 @property (nonatomic, copy) UIColor *logoColor;
 
 /**
- *  The name of your company or website. Displayed in the header. Defaults to your app's name.
+ *  The name of your company or website. Displayed in the header. Defaults to your app's name. This property needs to be set in order to use Apple Pay with
+ * STPPaymentPresenter.
  */
 @property (nonatomic, copy) NSString *companyName;
 
@@ -53,9 +60,9 @@
 
 /**
  *  The amount (in cents) that's shown to the user. Note that this is for display purposes only; you will still have to explicitly specify the amount when you
- * create a charge using the Stripe API.
+ * create a charge using the Stripe API. This property needs to be set in order to use Apple Pay with STPPaymentPresenter.
  */
-@property (nonatomic, copy) NSNumber *purchaseAmount;
+@property (nonatomic, copy) NSDecimalNumber *purchaseAmount;
 
 /**
  *  If you already know the email address of your user, you can provide it to Checkout to be pre-filled.

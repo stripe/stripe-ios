@@ -13,6 +13,10 @@
 
 @class PKPaymentRequest;
 
+@interface STPToken (ApplePayAdditions)
+@property (nonatomic, readonly) PKPayment *payment;
+@end
+
 @interface Stripe (ApplePay)
 
 + (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest;

@@ -50,23 +50,15 @@
 }
 
 - (IBAction)beginPayment:(id)sender {
-    NSString *merchantId = @"<#Replace me with your Apple Merchant ID #>";
-    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId];
-    paymentRequest.requiredBillingAddressFields = PKAddressFieldPostalAddress;
-    paymentRequest.paymentSummaryItems = @[
-        [PKPaymentSummaryItem summaryItemWithLabel:@"Llama food" amount:[NSDecimalNumber decimalNumberWithString:@"9.00"]],
-        [PKPaymentSummaryItem summaryItemWithLabel:@"Llama food co" amount:[NSDecimalNumber decimalNumberWithString:@"1.00"]],
-        [PKPaymentSummaryItem summaryItemWithLabel:@"Llama food co" amount:[NSDecimalNumber decimalNumberWithString:@"10.00"]],
-    ];
-
     STPCheckoutOptions *options = [STPCheckoutOptions new];
     options.publishableKey = @"pk_test_09IUAkhSGIz8mQP3prdgKm06";
+    options.appleMerchantId = @"<#Replace me with your Apple Merchant ID #>";
     options.purchaseDescription = @"Tasty Llama food";
-    options.purchaseAmount = @1000;
+    options.purchaseAmount = [NSDecimalNumber decimalNumberWithString:@"10.00"];
     options.purchaseLabel = @"Pay {{amount}} for that food";
     options.enablePostalCode = @YES;
     options.logoColor = [UIColor whiteColor];
-    self.paymentPresenter = [[STPPaymentPresenter alloc] initWithCheckoutOptions:options paymentRequest:paymentRequest delegate:self];
+    self.paymentPresenter = [[STPPaymentPresenter alloc] initWithCheckoutOptions:options delegate:self];
     [self.paymentPresenter requestPaymentFromPresentingViewController:self];
 }
 

@@ -18,11 +18,14 @@
 
 static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPresenterAssociatedObjectKey";
 
+@interface STPCheckoutOptions (PaymentRequestAdditions)
+@property (nonatomic, readonly) PKPaymentRequest *paymentRequest;
+@end
+
 @interface STPPaymentPresenter () <STPCheckoutViewControllerDelegate, PKPaymentAuthorizationViewControllerDelegate>
 
 @property (nonatomic, weak) id<STPPaymentPresenterDelegate> delegate;
-@property (nonatomic) STPCheckoutOptions *checkoutOptions;
-@property (nonatomic) PKPaymentRequest *paymentRequest;
+@property (nonatomic, copy) STPCheckoutOptions *checkoutOptions;
 @property (weak, nonatomic) UIViewController *presentingViewController;
 @property (weak, nonatomic) UIViewController *presentedViewController;
 @property (nonatomic) BOOL hasAuthorizedPayment;
@@ -31,14 +34,12 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
 
 @implementation STPPaymentPresenter
 
-- (instancetype)initWithCheckoutOptions:(STPCheckoutOptions *)checkoutOptions
-                         paymentRequest:(PKPaymentRequest *)paymentRequest
-                               delegate:(id<STPPaymentPresenterDelegate>)delegate {
+- (instancetype)initWithCheckoutOptions:(STPCheckoutOptions *)checkoutOptions delegate:(id<STPPaymentPresenterDelegate>)delegate {
+    NSCAssert(checkoutOptions && delegate, @"You cannot pass nil values for checkoutOptions or delegate when creating an STPPaymentPresenter.");
     self = [super init];
     if (self) {
         _delegate = delegate;
         _checkoutOptions = checkoutOptions;
-        _paymentRequest = paymentRequest;
     }
     return self;
 }
@@ -48,30 +49,24 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
         NSLog(@"Error: called requestPaymentFromPresentingViewController: while already presenting a payment view controller.");
         return;
     }
-    NSCAssert(
-        self.checkoutOptions,
-        @"Your must provide an instance of STPCheckoutOptions to your STPPaymentManager before calling requestPaymentFromPresentingViewController: on it.");
-    NSCAssert(self.delegate, @"Your must specify a delegate for your STPPaymentManager before calling requestPaymentFromPresentingViewController: on it.");
     NSCAssert(presentingViewController, @"You cannot call requestPaymentFromPresentingViewController: with a nil argument.");
     self.presentingViewController = presentingViewController;
 
     // we really don't want to get dealloc'ed in case the caller doesn't remember to retain this object.
     objc_setAssociatedObject(self.presentingViewController, &STPPaymentPresenterAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN);
-#ifdef STRIPE_ENABLE_APPLEPAY
-    if (self.paymentRequest) {
-        NSCAssert(self.paymentRequest.requiredShippingAddressFields == PKAddressFieldNone,
-                  @"Your payment request has required shipping address fields, which isn't supported by Stripe "
-                  @"Checkout yet. You should collect that information ahead of time if you want to use this feature.");
-        if ([Stripe canSubmitPaymentRequest:self.paymentRequest]) {
-            PKPaymentAuthorizationViewController *paymentViewController =
-                [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:self.paymentRequest];
+    PKPaymentRequest *paymentRequest = self.checkoutOptions.paymentRequest;
+    if (paymentRequest) {
+        if ([self.delegate respondsToSelector:@selector(paymentPresenter:didPreparePaymentRequest:)]) {
+            [self.delegate paymentPresenter:self didPreparePaymentRequest:paymentRequest];
+        }
+        if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
+            PKPaymentAuthorizationViewController *paymentViewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
             paymentViewController.delegate = self;
             [self.presentingViewController presentViewController:paymentViewController animated:YES completion:nil];
             self.presentedViewController = paymentViewController;
             return;
         }
     }
-#endif
     STPCheckoutViewController *checkoutViewController = [[STPCheckoutViewController alloc] initWithOptions:self.checkoutOptions];
     checkoutViewController.delegate = self;
     self.presentedViewController = checkoutViewController;
@@ -135,6 +130,33 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
         status = STPPaymentStatusUserCanceled;
     }
     [self finishWithStatus:status error:self.error];
+}
+
+@end
+
+@implementation STPCheckoutOptions (PaymentRequestAdditions)
+
+- (PKPaymentRequest *)paymentRequest {
+    if (!self.appleMerchantId || !self.purchaseAmount || !self.companyName) {
+        return nil;
+    }
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.appleMerchantId];
+    paymentRequest.currencyCode = self.purchaseCurrency;
+
+    NSMutableArray *paymentSummaryItems = [@[] mutableCopy];
+    if (self.purchaseDescription) {
+        PKPaymentSummaryItem *item = [PKPaymentSummaryItem summaryItemWithLabel:self.purchaseDescription amount:self.purchaseAmount];
+        [paymentSummaryItems addObject:item];
+    }
+    PKPaymentSummaryItem *total = [PKPaymentSummaryItem summaryItemWithLabel:self.companyName amount:self.purchaseAmount];
+    [paymentSummaryItems addObject:total];
+    paymentRequest.paymentSummaryItems = [paymentSummaryItems copy];
+
+    if ([self.requireBillingAddress boolValue]) {
+        paymentRequest.requiredBillingAddressFields = PKAddressFieldPostalAddress;
+    }
+
+    return paymentRequest;
 }
 
 @end
