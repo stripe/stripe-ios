@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Stripe, Inc. All rights reserved.
 //
 
+#ifdef STRIPE_ENABLE_APPLEPAY
+
 #import "STPPaymentPresenter.h"
 #import <PassKit/PassKit.h>
 #import "StripeError.h"
@@ -16,19 +18,30 @@
 
 static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPresenterAssociatedObjectKey";
 
-@interface STPPaymentPresenter () <STPCheckoutViewControllerDelegate>
+@interface STPPaymentPresenter () <STPCheckoutViewControllerDelegate, PKPaymentAuthorizationViewControllerDelegate>
+
+@property (nonatomic, weak) id<STPPaymentPresenterDelegate> delegate;
+@property (nonatomic) STPCheckoutOptions *checkoutOptions;
+@property (nonatomic) PKPaymentRequest *paymentRequest;
 @property (weak, nonatomic) UIViewController *presentingViewController;
 @property (weak, nonatomic) UIViewController *presentedViewController;
 @property (nonatomic) BOOL hasAuthorizedPayment;
 @property (nonatomic) NSError *error;
 @end
 
-#ifdef STRIPE_ENABLE_APPLEPAY
-@interface STPPaymentPresenter (ApplePay) <PKPaymentAuthorizationViewControllerDelegate>
-@end
-#endif
-
 @implementation STPPaymentPresenter
+
+- (instancetype)initWithCheckoutOptions:(STPCheckoutOptions *)checkoutOptions
+                         paymentRequest:(PKPaymentRequest *)paymentRequest
+                               delegate:(id<STPPaymentPresenterDelegate>)delegate {
+    self = [super init];
+    if (self) {
+        _delegate = delegate;
+        _checkoutOptions = checkoutOptions;
+        _paymentRequest = paymentRequest;
+    }
+    return self;
+}
 
 - (void)requestPaymentFromPresentingViewController:(UIViewController *)presentingViewController {
     if (presentingViewController.presentedViewController && presentingViewController.presentedViewController == self.presentedViewController) {
@@ -88,12 +101,7 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
     [self.delegate paymentPresenter:self didCreateStripeToken:token completion:completion];
 }
 
-@end
-
-#ifdef STRIPE_ENABLE_APPLEPAY
-#pragma mark - PKPaymentAuthorizatoinViewControllerDelegate
-
-@implementation STPPaymentPresenter (ApplePay)
+#pragma mark - PKPaymentAuthorizationViewControllerDelegate
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment

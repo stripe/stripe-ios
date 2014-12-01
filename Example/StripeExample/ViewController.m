@@ -66,10 +66,7 @@
     options.purchaseLabel = @"Pay {{amount}} for that food";
     options.enablePostalCode = @YES;
     options.logoColor = [UIColor whiteColor];
-    self.paymentPresenter = [[STPPaymentPresenter alloc] init];
-    self.paymentPresenter.checkoutOptions = options;
-    self.paymentPresenter.paymentRequest = paymentRequest;
-    self.paymentPresenter.delegate = self;
+    self.paymentPresenter = [[STPPaymentPresenter alloc] initWithCheckoutOptions:options paymentRequest:paymentRequest delegate:self];
     [self.paymentPresenter requestPaymentFromPresentingViewController:self];
 }
 
@@ -78,14 +75,15 @@
 }
 
 - (void)paymentPresenter:(STPPaymentPresenter *)presenter didFinishWithStatus:(STPPaymentStatus)status error:(NSError *)error {
-    [self dismissViewControllerAnimated:YES completion:^{
-        if (error) {
-            // present error
-        }
-        if (status == STPPaymentStatusSuccess) {
-            // yay!
-        }
-    }];
+    [self dismissViewControllerAnimated:YES
+                             completion:^{
+                                 if (error) {
+                                     // present error
+                                 }
+                                 if (status == STPPaymentStatusSuccess) {
+                                     // yay!
+                                 }
+                             }];
 }
 
 - (void)createBackendChargeWithToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {

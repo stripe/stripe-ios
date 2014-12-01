@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Stripe, Inc. All rights reserved.
 //
 
+#ifdef STRIPE_ENABLE_APPLEPAY
+
 #import <Foundation/Foundation.h>
 #import "STPCheckoutOptions.h"
 #import "STPToken.h"
@@ -25,15 +27,17 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
  capable of using Apple Pay, it'll automatically use that. If not, it will fall back to use Stripe Checkout. For both methods, it'll automatically turn the
  user's credit card into a Stripe token and give the token to its delegate.
 
+ You'll need to add STRIPE_ENABLE_APPLEPAY to your app's build settings under "Preprocessor Macros" before using this class. For more information,
+ see https://stripe.com/docs/mobile/ios#applepay
+
  Example use:
 
  // In your view controller
  PKPaymentRequest *paymentRequest = ...;
  STPCheckoutOptions *options = ...;
- STPPaymentPresenter *presenter = [[STPPaymentPresenter alloc] init];
- presenter.checkoutOptions = options;
- presenter.paymentRequest = ...; // optional if you want to support Apple Pay when available
- presenter.delegate = self;
+ STPPaymentPresenter *presenter = [[STPPaymentPresenter alloc] initWithCheckoutOptions:options
+                                                                        paymentRequest:paymentRequest
+                                                                              delegate:self];
  [presenter requestPaymentFromPresentingViewController:self];
 
  For more context, see ViewController.m in the StripeExample app (which uses STPPaymentPresenter).
@@ -41,19 +45,12 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
  Other notes:
  - Stripe Checkout doesn't currently support collecting shipping address. If the `requiredShippingAddressFields` property of your PKPaymentRequest is non-nil,
  calling requestPaymentFromPresentingViewController: will raise an exception. Instead, collect this information ahead of time.
- - You'll need to add STRIPE_ENABLE_APPLEPAY to your app's build settings under "Preprocessor Macros" before using the Apple Pay features. For more information,
- see https://stripe.com/docs/mobile/ios#applepay
  */
 @interface STPPaymentPresenter : NSObject
 
-// You must set these 2 fields before calling requestPaymentFromPresentingViewController.
-@property (nonatomic, weak) id<STPPaymentPresenterDelegate> delegate;
-@property (nonatomic) STPCheckoutOptions *checkoutOptions;
-
-#ifdef STRIPE_ENABLE_APPLEPAY
-// Set this property to enable Apple Pay.
-@property (nonatomic) PKPaymentRequest *paymentRequest;
-#endif
+- (instancetype)initWithCheckoutOptions:(STPCheckoutOptions *)checkoutOptions
+                         paymentRequest:(PKPaymentRequest *)paymentRequest
+                               delegate:(id<STPPaymentPresenterDelegate>)delegate;
 
 /**
  *  @param presentingViewController Calling this method will tell this view controller to present an appropriate payment view controller (either a
@@ -104,3 +101,5 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
 @optional
 
 @end
+
+#endif
