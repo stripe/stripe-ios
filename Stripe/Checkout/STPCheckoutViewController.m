@@ -111,7 +111,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
                                                              toItem:self.view
                                                           attribute:NSLayoutAttributeCenterY
                                                          multiplier:1
-                                                           constant:-40.0]];
+                                                           constant:0]];
 
     // We're going to use a toolbar here instead of a UIButton so that we can get UIKit's localization of the word "Cancel" for free.
     UIToolbar *cancelToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 44)];
@@ -120,24 +120,22 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
     cancelToolbar.backgroundColor = [UIColor clearColor];
     cancelToolbar.clipsToBounds = YES;
     UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    cancelToolbar.items = @[leftItem, cancelItem, rightItem];
-    cancelToolbar.alpha = 0;
-    cancelToolbar.hidden = YES;
+    cancelToolbar.items = @[cancelItem, rightItem];
     [self.view addSubview:cancelToolbar];
     self.cancelToolbar = cancelToolbar;
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[cancelToolbar]-0-|"
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
                                                                       metrics:nil
                                                                         views:NSDictionaryOfVariableBindings(cancelToolbar)]];
+    CGFloat statusBarHeight = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:cancelToolbar
                                                           attribute:NSLayoutAttributeTop
                                                           relatedBy:NSLayoutRelationEqual
-                                                             toItem:activityIndicator
-                                                          attribute:NSLayoutAttributeBottom
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeTop
                                                          multiplier:1
-                                                           constant:10.0]];
+                                                           constant:statusBarHeight]];
 }
 
 - (void)cancel:(__unused UIBarButtonItem *)sender {
@@ -178,10 +176,6 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios";
     NSString *optionsJavaScript = [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentation]];
     [webView stringByEvaluatingJavaScriptFromString:optionsJavaScript];
     [self.activityIndicator startAnimating];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.cancelToolbar.hidden = NO;
-        [UIView animateWithDuration:0.3 animations:^{ self.cancelToolbar.alpha = 1.0f; }];
-    });
 }
 
 - (BOOL)webView:(__unused UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {

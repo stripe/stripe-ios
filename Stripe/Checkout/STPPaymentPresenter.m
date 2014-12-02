@@ -60,11 +60,16 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
             [self.delegate paymentPresenter:self didPreparePaymentRequest:paymentRequest];
         }
         if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
-            PKPaymentAuthorizationViewController *paymentViewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
-            paymentViewController.delegate = self;
-            [self.presentingViewController presentViewController:paymentViewController animated:YES completion:nil];
-            self.presentedViewController = paymentViewController;
-            return;
+            if ([self.class isSimulatorBuild]) {
+                NSLog(@"Apple Pay is properly configured but can't run in the simulator. Falling back to Stripe Checkout.");
+            } else {
+                PKPaymentAuthorizationViewController *paymentViewController =
+                    [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
+                paymentViewController.delegate = self;
+                [self.presentingViewController presentViewController:paymentViewController animated:YES completion:nil];
+                self.presentedViewController = paymentViewController;
+                return;
+            }
         }
     }
     STPCheckoutViewController *checkoutViewController = [[STPCheckoutViewController alloc] initWithOptions:self.checkoutOptions];
@@ -76,6 +81,14 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
 - (void)finishWithStatus:(STPPaymentStatus)status error:(NSError *)error {
     [self.delegate paymentPresenter:self didFinishWithStatus:status error:error];
     objc_setAssociatedObject(self.presentingViewController, &STPPaymentPresenterAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN);
+}
+
++ (BOOL)isSimulatorBuild {
+#if TARGET_IPHONE_SIMULATOR
+    return YES;
+#else
+    return NO;
+#endif
 }
 
 #pragma mark - STPCheckoutViewControllerDelegate
@@ -144,11 +157,12 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
     paymentRequest.currencyCode = self.purchaseCurrency;
 
     NSMutableArray *paymentSummaryItems = [@[] mutableCopy];
+    NSDecimalNumber *amount = [NSDecimalNumber decimalNumberWithDecimal:[self.purchaseAmount decimalValue]];
     if (self.purchaseDescription) {
-        PKPaymentSummaryItem *item = [PKPaymentSummaryItem summaryItemWithLabel:self.purchaseDescription amount:self.purchaseAmount];
+        PKPaymentSummaryItem *item = [PKPaymentSummaryItem summaryItemWithLabel:self.purchaseDescription amount:amount];
         [paymentSummaryItems addObject:item];
     }
-    PKPaymentSummaryItem *total = [PKPaymentSummaryItem summaryItemWithLabel:self.companyName amount:self.purchaseAmount];
+    PKPaymentSummaryItem *total = [PKPaymentSummaryItem summaryItemWithLabel:self.companyName amount:amount];
     [paymentSummaryItems addObject:total];
     paymentRequest.paymentSummaryItems = [paymentSummaryItems copy];
 

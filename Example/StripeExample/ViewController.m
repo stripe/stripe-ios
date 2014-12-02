@@ -54,7 +54,7 @@
     options.publishableKey = @"pk_test_09IUAkhSGIz8mQP3prdgKm06";
     options.appleMerchantId = @"<#Replace me with your Apple Merchant ID #>";
     options.purchaseDescription = @"Tasty Llama food";
-    options.purchaseAmount = [NSDecimalNumber decimalNumberWithString:@"10.00"];
+    options.purchaseAmount = @1000;
     options.purchaseLabel = @"Pay {{amount}} for that food";
     options.enablePostalCode = @YES;
     options.logoColor = [UIColor whiteColor];
