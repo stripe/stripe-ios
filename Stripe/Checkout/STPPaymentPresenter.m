@@ -54,21 +54,28 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
 
     // we really don't want to get dealloc'ed in case the caller doesn't remember to retain this object.
     objc_setAssociatedObject(self.presentingViewController, &STPPaymentPresenterAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN);
-    PKPaymentRequest *paymentRequest = self.checkoutOptions.paymentRequest;
-    if (paymentRequest) {
-        if ([self.delegate respondsToSelector:@selector(paymentPresenter:didPreparePaymentRequest:)]) {
-            [self.delegate paymentPresenter:self didPreparePaymentRequest:paymentRequest];
-        }
-        if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
-            if ([self.class isSimulatorBuild]) {
-                NSLog(@"Apple Pay is properly configured but can't run in the simulator. Falling back to Stripe Checkout.");
-            } else {
-                PKPaymentAuthorizationViewController *paymentViewController =
-                    [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
-                paymentViewController.delegate = self;
-                [self.presentingViewController presentViewController:paymentViewController animated:YES completion:nil];
-                self.presentedViewController = paymentViewController;
-                return;
+    if ([PKPaymentRequest class]) {
+        PKPaymentRequest *paymentRequest = self.checkoutOptions.paymentRequest;
+        if (paymentRequest) {
+            if ([self.delegate respondsToSelector:@selector(paymentPresenter:didPreparePaymentRequest:)]) {
+                [self.delegate paymentPresenter:self didPreparePaymentRequest:paymentRequest];
+            }
+            if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
+                if ([self.class isSimulatorBuild]) {
+                    NSLog(@"Apple Pay is properly configured but can't run in the simulator. Falling back to Stripe Checkout.");
+                } else {
+                    PKPaymentAuthorizationViewController *paymentViewController =
+                        [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
+                    if (paymentViewController) {
+                        paymentViewController.delegate = self;
+                        [self.presentingViewController presentViewController:paymentViewController animated:YES completion:nil];
+                        self.presentedViewController = paymentViewController;
+                        return;
+                    } else {
+                        NSLog(@"Warning: -[PKPaymentAuthorizationViewController initWithPaymentRequest:] returned nil. Something is wrong with your "
+                              @"PKPaymentRequest.");
+                    }
+                }
             }
         }
     }

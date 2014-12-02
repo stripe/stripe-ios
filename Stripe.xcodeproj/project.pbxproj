@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		042C643D1A1880B800752E2E /* STPAPIConnectionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 042C643C1A1880B800752E2E /* STPAPIConnectionTest.m */; };
+		043A49741A2E323B0043AFB7 /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D5BF9019BF958F009521A5 /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		044EDAB81A1C923C003D7C24 /* STPCheckoutOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 045F62781A085A4400134D19 /* STPCheckoutOptions.m */; };
 		044EDAB91A1C923C003D7C24 /* STPCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045F627A1A085A4400134D19 /* STPCheckoutViewController.m */; };
 		044EDABA1A1C923C003D7C24 /* STPColorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 045F627C1A085A4400134D19 /* STPColorUtils.m */; };
@@ -123,6 +124,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				043A49741A2E323B0043AFB7 /* PassKit.framework in Frameworks */,
 				4A0D74FA18F6106100966D7B /* Security.framework in Frameworks */,
 				FAFC12C816E576A50066297F /* UIKit.framework in Frameworks */,
 				11E1F58D165151F400B49816 /* Foundation.framework in Frameworks */,
