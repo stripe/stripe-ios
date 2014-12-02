@@ -17,6 +17,7 @@
     if (self) {
         _publishableKey = [Stripe defaultPublishableKey];
         _companyName = [[NSBundle mainBundle] infoDictionary][@"CFBundleDisplayName"];
+        _purchaseCurrency = @"USD";
     }
     return self;
 }
