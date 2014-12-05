@@ -14,7 +14,6 @@
 + (BOOL)colorIsLight:(UIColor *)color;
 
 + (UIColor *)colorForHexCode:(NSString *)hexCode;
-
 + (NSString *)hexCodeForColor:(UIColor *)color;
 
 @end

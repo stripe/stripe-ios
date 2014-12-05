@@ -6,12 +6,16 @@
 //
 //
 
-#if defined(STRIPE_ENABLE_APPLEPAY)
+#ifdef STRIPE_ENABLE_APPLEPAY
 
 #import "Stripe.h"
 #import <PassKit/PassKit.h>
 
 @class PKPaymentRequest;
+
+@interface STPToken (ApplePayAdditions)
+@property (nonatomic, readonly) PKPayment *payment;
+@end
 
 @interface Stripe (ApplePay)
 

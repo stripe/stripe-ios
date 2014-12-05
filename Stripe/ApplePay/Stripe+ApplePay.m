@@ -6,13 +6,17 @@
 //
 //
 
-#if defined(STRIPE_ENABLE_APPLEPAY)
+#ifdef STRIPE_ENABLE_APPLEPAY
 
 #import "Stripe.h"
 #import "Stripe+ApplePay.h"
 #import "STPAPIConnection.h"
 #import <PassKit/PassKit.h>
 #import <AddressBook/AddressBook.h>
+
+@interface STPToken (PrivateApplePayAdditions)
+@property (nonatomic) PKPayment *payment;
+@end
 
 @implementation Stripe (ApplePay)
 
@@ -100,16 +104,14 @@
 
     [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
                                                                  completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
-                                                                     [self handleTokenResponse:response body:body error:requestError completion:handler];
+                                                                     [self handleTokenResponse:response
+                                                                                          body:body
+                                                                                         error:requestError
+                                                                                    completion:^(STPToken *token, NSError *error) {
+                                                                                        token.payment = payment;
+                                                                                        handler(token, error);
+                                                                                    }];
                                                                  }];
-}
-
-+ (BOOL)isSimulatorBuild {
-#if TARGET_IPHONE_SIMULATOR
-    return YES;
-#else
-    return NO;
-#endif
 }
 
 @end

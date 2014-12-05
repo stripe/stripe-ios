@@ -11,16 +11,22 @@
 #import "STPToken.h"
 #import "Stripe.h"
 #import "STPColorUtils.h"
-#import "STPCheckoutURLProtocol.h"
 #import "FauxPasAnnotations.h"
+
+@interface STPCheckoutURLProtocol : NSURLProtocol<NSURLConnectionDataDelegate>
+@property (nonatomic, strong) NSURLConnection *connection;
+@end
+
+NSString *const STPCheckoutURLProtocolRequestScheme = @"beginstripecheckout";
 
 @interface STPCheckoutViewController () <UIWebViewDelegate>
 @property (weak, nonatomic) UIWebView *webView;
 @property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
-@property (nonatomic) STPCheckoutOptions *options;
-@property (nonatomic) NSURL *url;
 @property (nonatomic) UIStatusBarStyle previousStyle;
-
+@property (nonatomic, copy) STPCheckoutOptions *options;
+@property (nonatomic) NSURL *logoURL;
+@property (nonatomic) NSURL *url;
+@property (nonatomic) UIToolbar *cancelToolbar;
 @end
 
 @implementation STPCheckoutViewController
@@ -29,7 +35,8 @@ static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
 static NSString *const checkoutRedirectPrefix = @"/-/";
 static NSString *const checkoutRPCScheme = @"stripecheckout";
 static NSString *const checkoutUserAgent = @"Stripe";
-static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
+// static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios";
+static NSString *const checkoutURL = @"localhost:5394/v3/ios";
 
 - (instancetype)initWithOptions:(STPCheckoutOptions *)options {
     self = [super initWithNibName:nil bundle:nil];
@@ -50,18 +57,24 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
     return self;
 }
 
-- (NSString *)optionsJavaScript {
-    return [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentation]];
-}
-
 - (void)viewDidLoad {
+    NSCAssert(self.delegate, @"You must provide a delegate to STPCheckoutViewController before showing it.");
     [super viewDidLoad];
 
-    self.url = [NSURL URLWithString:checkoutURL];
+    NSString *fullURLString = [NSString stringWithFormat:@"%@://%@", STPCheckoutURLProtocolRequestScheme, checkoutURL];
+    self.url = [NSURL URLWithString:fullURLString];
+
+    if (self.options.logoImage && !self.options.logoURL) {
+        NSURL *url = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]]];
+        BOOL success = [UIImagePNGRepresentation(self.options.logoImage) writeToURL:url options:0 error:nil];
+        if (success) {
+            self.logoURL = self.options.logoURL = url;
+        }
+    }
 
     UIWebView *webView = [[UIWebView alloc] init];
     [self.view addSubview:webView];
-    [webView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    webView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[webView]-0-|"
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
                                                                       metrics:nil
@@ -82,11 +95,54 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
 
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityIndicator.hidesWhenStopped = YES;
+    activityIndicator.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:activityIndicator];
     self.activityIndicator = activityIndicator;
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:activityIndicator
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1
+                                                           constant:0.0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:activityIndicator
+                                                          attribute:NSLayoutAttributeCenterY
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterY
+                                                         multiplier:1
+                                                           constant:0]];
+
+    // We're going to use a toolbar here instead of a UIButton so that we can get UIKit's localization of the word "Cancel" for free.
+    UIToolbar *cancelToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 44)];
+    cancelToolbar.translatesAutoresizingMaskIntoConstraints = NO;
+    cancelToolbar.translucent = NO;
+    cancelToolbar.backgroundColor = [UIColor clearColor];
+    cancelToolbar.clipsToBounds = YES;
+    UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    cancelToolbar.items = @[cancelItem, rightItem];
+    [self.view addSubview:cancelToolbar];
+    self.cancelToolbar = cancelToolbar;
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[cancelToolbar]-0-|"
+                                                                      options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                      metrics:nil
+                                                                        views:NSDictionaryOfVariableBindings(cancelToolbar)]];
+    CGFloat statusBarHeight = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:cancelToolbar
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeTop
+                                                         multiplier:1
+                                                           constant:statusBarHeight]];
 }
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+- (void)cancel:(__unused UIBarButtonItem *)sender {
+    [self.delegate checkoutControllerDidCancel:self];
+    [self cleanup];
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle {
     if (self.options.logoColor) {
         FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
@@ -94,17 +150,31 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
     }
     return UIStatusBarStyleDefault;
 }
-#endif
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    self.activityIndicator.center = self.view.center;
+- (void)cleanup {
+    if ([self.webView isLoading]) {
+        [self.webView stopLoading];
+    }
+    [[UIApplication sharedApplication] setStatusBarStyle:self.previousStyle animated:YES];
+    if (self.logoURL) {
+        [[NSFileManager defaultManager] removeItemAtURL:self.logoURL error:nil];
+    }
+}
+
+- (void)setLogoColor:(UIColor *)color {
+    self.options.logoColor = color;
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
+        [[UIApplication sharedApplication] setStatusBarStyle:[self preferredStatusBarStyle] animated:YES];
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
 }
 
 #pragma mark - UIWebViewDelegate
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
-    [webView stringByEvaluatingJavaScriptFromString:[self optionsJavaScript]];
+    NSString *optionsJavaScript = [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentation]];
+    [webView stringByEvaluatingJavaScriptFromString:optionsJavaScript];
     [self.activityIndicator startAnimating];
 }
 
@@ -124,7 +194,7 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
         }
 
         if ([event isEqualToString:@"CheckoutDidOpen"]) {
-            if (payload[@"logoColor"]) {
+            if (payload != nil && payload[@"logoColor"]) {
                 [self setLogoColor:[STPColorUtils colorForHexCode:payload[@"logoColor"]]];
             }
         } else if ([event isEqualToString:@"CheckoutDidTokenize"]) {
@@ -132,56 +202,116 @@ static NSString *const checkoutURL = @"http://localhost:5394/v3/ios";
             if (payload != nil && payload[@"token"] != nil) {
                 token = [[STPToken alloc] initWithAttributeDictionary:payload[@"token"]];
             }
-            [self.delegate checkoutController:self didFinishWithToken:token];
-            [self resetStatusBarColor];
-            [self dismissViewControllerAnimated:YES completion:nil];
-        } else if ([url.host isEqualToString:@"CheckoutDidClose"]) {
-            if ([self.delegate respondsToSelector:@selector(checkoutControllerDidCancel:)]) {
-                [self.delegate checkoutControllerDidCancel:self];
-            }
-            [self resetStatusBarColor];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self.delegate checkoutController:self
+                               didCreateToken:token
+                                   completion:^(STPBackendChargeResult status, __unused NSError *error) {
+                                       if (status == STPBackendChargeResultSuccess) {
+                                           // @reggio: do something here like [self.webView
+                                           // stringByEvaluatingStringFromJavascript:@"showCheckoutSuccessAnimation();"]
+                                           // that should probably trigger the "CheckoutDidFinish" event when the animation is complete
+                                       } else {
+                                           // @reggio: do something here like [self.webView
+                                           // stringByEvaluatingStringFromJavascript:@"showCheckoutFailureAnimation();"]
+                                           // that should probably trigger the "CheckoutDidError" event when the animation is complete
+                                       }
+                                   }];
+        } else if ([event isEqualToString:@"CheckoutDidFinish"]) {
+            [self.delegate checkoutControllerDidFinish:self];
+            [self cleanup];
+        } else if ([url.host isEqualToString:@"CheckoutDidCancel"]) {
+            [self.delegate checkoutControllerDidCancel:self];
+            [self cleanup];
         } else if ([event isEqualToString:@"CheckoutDidError"]) {
-            if ([self.delegate respondsToSelector:@selector(checkoutController:didFailWithError:)]) {
-                NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
-                [self.delegate checkoutController:self didFailWithError:error];
-            }
-            [self resetStatusBarColor];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
+            [self.delegate checkoutController:self didFailWithError:error];
+            [self cleanup];
         }
         return NO;
     }
     return navigationType == UIWebViewNavigationTypeOther;
 }
 
-- (void)resetStatusBarColor {
-    [[UIApplication sharedApplication] setStatusBarStyle:self.previousStyle animated:YES];
-}
-
-- (void)setLogoColor:(UIColor *)color {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-    self.options.logoColor = color;
-    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
-        [[UIApplication sharedApplication] setStatusBarStyle:[self preferredStatusBarStyle] animated:YES];
-        [self setNeedsStatusBarAppearanceUpdate];
-    }
-#endif
-}
-
 - (void)webViewDidFinishLoad:(__unused UIWebView *)webView {
-    [UIView animateWithDuration:0.2
-        animations:^{ self.activityIndicator.alpha = 0; }
-        completion:^(__unused BOOL finished) { [self.activityIndicator stopAnimating]; }];
+    [UIView animateWithDuration:0.1
+        animations:^{
+            self.cancelToolbar.alpha = 0;
+            self.activityIndicator.alpha = 0;
+        }
+        completion:^(__unused BOOL finished) {
+            self.cancelToolbar.hidden = YES;
+            [self.activityIndicator stopAnimating];
+        }];
 }
 
 - (void)webView:(__unused UIWebView *)webView didFailLoadWithError:(NSError *)error {
     [self.activityIndicator stopAnimating];
-    if ([self.delegate respondsToSelector:@selector(checkoutController:didFailWithError:)]) {
-        [self.delegate checkoutController:self didFailWithError:error];
+    [self.delegate checkoutController:self didFailWithError:error];
+    [self cleanup];
+}
+
+@end
+
+#pragma mark - STPCheckoutURLProtocol
+
+/**
+ *  This URL protocol treats any non-20x or 30x response from checkout as an error (unlike the default UIWebView behavior, which e.g. displays a 404 page).
+ */
+@implementation STPCheckoutURLProtocol
+
++ (BOOL)canInitWithRequest:(NSURLRequest *)request {
+    return [request.URL.scheme.lowercaseString isEqualToString:STPCheckoutURLProtocolRequestScheme.lowercaseString];
+}
+
++ (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request {
+    return request;
+}
+
+- (void)startLoading {
+    NSMutableURLRequest *newRequest = [self.request mutableCopy];
+    NSString *oldURLString = [[newRequest.URL absoluteString] lowercaseString];
+    //#warning todo: https
+    newRequest.URL =
+        [NSURL URLWithString:[oldURLString stringByReplacingOccurrencesOfString:STPCheckoutURLProtocolRequestScheme.lowercaseString withString:@"http"]];
+    self.connection = [NSURLConnection connectionWithRequest:newRequest delegate:self];
+}
+
+- (void)stopLoading {
+    [self.connection cancel];
+    self.connection = nil;
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        // 30x redirects are automatically followed and will not reach here,
+        // so we only need to check for successful 20x status codes.
+        if (httpResponse.statusCode / 100 != 2 && httpResponse.statusCode != 301) {
+            NSError *error = [[NSError alloc] initWithDomain:StripeDomain
+                                                        code:STPConnectionError
+                                                    userInfo:@{
+                                                        NSLocalizedDescriptionKey: STPUnexpectedError,
+                                                        STPErrorMessageKey: @"Stripe Checkout couldn't open. Please check your internet connection and try "
+                                                        @"again. If the problem persists, please contact support@stripe.com."
+                                                    }];
+            [self.client URLProtocol:self didFailWithError:error];
+            [connection cancel];
+            self.connection = nil;
+            return;
+        }
     }
-    [self resetStatusBarColor];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+}
+
+- (void)connection:(__unused NSURLConnection *)connection didReceiveData:(NSData *)data {
+    [self.client URLProtocol:self didLoadData:data];
+}
+
+- (void)connectionDidFinishLoading:(__unused NSURLConnection *)connection {
+    [self.client URLProtocolDidFinishLoading:self];
+}
+
+- (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
+    [self.client URLProtocol:self didFailWithError:error];
 }
 
 @end
