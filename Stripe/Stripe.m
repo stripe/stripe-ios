@@ -12,7 +12,7 @@
 #import "Stripe.h"
 #import "STPUtils.h"
 
-NSString *const STPLibraryVersionNumber = @"2.2.2";
+NSString *const STPLibraryVersionNumber = @"3.0.0";
 NSString *const STPUserAgentFieldName = @"X-Stripe-User-Agent";
 
 @implementation Stripe
