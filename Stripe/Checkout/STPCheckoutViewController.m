@@ -27,6 +27,8 @@ NSString *const STPCheckoutURLProtocolRequestScheme = @"beginstripecheckout";
 @property (nonatomic) NSURL *logoURL;
 @property (nonatomic) NSURL *url;
 @property (nonatomic) UIToolbar *cancelToolbar;
+@property (nonatomic) UIView *tmp1;
+@property (nonatomic) UIView *tmp2;
 @end
 
 @implementation STPCheckoutViewController
@@ -74,6 +76,16 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 
     UIWebView *webView = [[UIWebView alloc] init];
     [self.view addSubview:webView];
+    UIView *tmp1 = [[UIView alloc] initWithFrame:webView.bounds];
+    tmp1.backgroundColor = [UIColor purpleColor];
+    _tmp1 = tmp1;
+    [webView insertSubview:tmp1 atIndex:0];
+    
+    UIView *tmp2 = [[UIView alloc] initWithFrame:webView.bounds];
+    tmp2.backgroundColor = [UIColor yellowColor];
+    _tmp2 = tmp2;
+    [webView insertSubview:tmp2 atIndex:1];
+    
     webView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[webView]-0-|"
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
@@ -85,10 +97,6 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                                                                         views:NSDictionaryOfVariableBindings(webView)]];
     webView.keyboardDisplayRequiresUserAction = NO;
     webView.backgroundColor = [UIColor whiteColor];
-    self.view.backgroundColor = [UIColor whiteColor];
-    if (self.options.logoColor) {
-        webView.backgroundColor = self.options.logoColor;
-    }
     [webView loadRequest:[NSURLRequest requestWithURL:self.url]];
     webView.delegate = self;
     self.webView = webView;
@@ -136,6 +144,14 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                                                           attribute:NSLayoutAttributeTop
                                                          multiplier:1
                                                            constant:statusBarHeight]];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    CGRect rect = self.webView.bounds;
+    self.tmp1.frame = rect;
+    rect.origin.y += 50;
+    self.tmp2.frame = rect;
 }
 
 - (void)cancel:(__unused UIBarButtonItem *)sender {
