@@ -11,6 +11,7 @@
 @implementation STPColorUtils
 
 + (BOOL)colorIsLight:(UIColor *)color {
+    //TODO: make work for other colorspaces
     const CGFloat *componentColors = CGColorGetComponents(color.CGColor);
     CGFloat colorBrightness = ((componentColors[0] * 299) + (componentColors[1] * 587) + (componentColors[2] * 114)) / 1000;
     return colorBrightness > 0.5;
@@ -23,12 +24,12 @@
     if (hexCode.length != 6) {
         return [UIColor blackColor];
     }
-    uint32_t rgba;
+    uint32_t rgb;
     NSScanner *scanner = [NSScanner scannerWithString:hexCode];
-    [scanner scanHexInt:&rgba];
-    CGFloat red = ((rgba & 0xFF0000) >> 24) / 255.0f;
-    CGFloat green = ((rgba & 0x00FF00) >> 16) / 255.0f;
-    CGFloat blue = ((rgba & 0x0000FF) >> 8) / 255.0f;
+    [scanner scanHexInt:&rgb];
+    CGFloat red = ((rgb & 0xFF0000) >> 16) / 255.0f;
+    CGFloat green = ((rgb & 0x00FF00) >> 8) / 255.0f;
+    CGFloat blue = (rgb & 0x0000FF) / 255.0f;
     return [[UIColor alloc] initWithRed:red green:green blue:blue alpha:1.0f];
 }
 
