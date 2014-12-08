@@ -36,7 +36,7 @@ static NSString *const checkoutRedirectPrefix = @"/-/";
 static NSString *const checkoutRPCScheme = @"stripecheckout";
 static NSString *const checkoutUserAgent = @"Stripe";
 // static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios";
-static NSString *const checkoutURL = @"localhost:5394/v3/ios";
+static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 
 - (instancetype)initWithOptions:(STPCheckoutOptions *)options {
     self = [super initWithNibName:nil bundle:nil];
