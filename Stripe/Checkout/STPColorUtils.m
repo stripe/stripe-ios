@@ -11,10 +11,18 @@
 @implementation STPColorUtils
 
 + (BOOL)colorIsLight:(UIColor *)color {
-    //TODO: make work for other colorspaces
-    const CGFloat *componentColors = CGColorGetComponents(color.CGColor);
-    CGFloat colorBrightness = ((componentColors[0] * 299) + (componentColors[1] * 587) + (componentColors[2] * 114)) / 1000;
-    return colorBrightness > 0.5;
+    CGColorSpaceModel model = CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor));
+    const CGFloat *components = CGColorGetComponents(color.CGColor);
+    switch (model) {
+    case kCGColorSpaceModelMonochrome: {
+        return components[1] > 0.5;
+    }
+    case kCGColorSpaceModelRGB: {
+        CGFloat colorBrightness = ((components[0] * 299) + (components[1] * 587) + (components[2] * 114)) / 1000;
+        return colorBrightness > 0.5;
+    }
+    default: { return YES; }
+    }
 }
 
 // These methods are adapted from https://github.com/nicklockwood/ColorUtils
