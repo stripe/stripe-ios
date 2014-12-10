@@ -57,7 +57,7 @@
     options.purchaseAmount = @1000;
     options.purchaseLabel = @"Pay {{amount}} for that food";
     options.enablePostalCode = @YES;
-    options.logoColor = [UIColor whiteColor];
+    options.logoColor = [UIColor yellowColor];
     self.paymentPresenter = [[STPPaymentPresenter alloc] initWithCheckoutOptions:options delegate:self];
     [self.paymentPresenter requestPaymentFromPresentingViewController:self];
 }

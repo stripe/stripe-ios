@@ -26,9 +26,8 @@ NSString *const STPCheckoutURLProtocolRequestScheme = @"beginstripecheckout";
 @property (nonatomic, copy) STPCheckoutOptions *options;
 @property (nonatomic) NSURL *logoURL;
 @property (nonatomic) NSURL *url;
-@property (nonatomic) UIToolbar *cancelToolbar;
-@property (nonatomic) UIView *tmp1;
-@property (nonatomic) UIView *tmp2;
+@property (weak, nonatomic) UIToolbar *cancelToolbar;
+@property (weak, nonatomic) UIView *headerBackground;
 @end
 
 @implementation STPCheckoutViewController
@@ -76,16 +75,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 
     UIWebView *webView = [[UIWebView alloc] init];
     [self.view addSubview:webView];
-    UIView *tmp1 = [[UIView alloc] initWithFrame:webView.bounds];
-    tmp1.backgroundColor = [UIColor purpleColor];
-    _tmp1 = tmp1;
-    [webView insertSubview:tmp1 atIndex:0];
-    
-    UIView *tmp2 = [[UIView alloc] initWithFrame:webView.bounds];
-    tmp2.backgroundColor = [UIColor yellowColor];
-    _tmp2 = tmp2;
-    [webView insertSubview:tmp2 atIndex:1];
-    
+
     webView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[webView]-0-|"
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
@@ -96,10 +86,38 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                                                                       metrics:nil
                                                                         views:NSDictionaryOfVariableBindings(webView)]];
     webView.keyboardDisplayRequiresUserAction = NO;
-    webView.backgroundColor = [UIColor whiteColor];
+
     [webView loadRequest:[NSURLRequest requestWithURL:self.url]];
     webView.delegate = self;
     self.webView = webView;
+
+    UIView *headerBackground = [[UIView alloc] initWithFrame:self.view.bounds];
+    headerBackground.backgroundColor = [UIColor whiteColor];
+    self.headerBackground = headerBackground;
+    [self.webView insertSubview:headerBackground atIndex:0];
+    headerBackground.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[headerBackground]-0-|"
+                                                                      options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                      metrics:nil
+                                                                        views:NSDictionaryOfVariableBindings(headerBackground)]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:headerBackground
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeTop
+                                                         multiplier:1
+                                                           constant:0]];
+    CGFloat bottomMargin = -150;
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+        bottomMargin = 0;
+    }
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:headerBackground
+                                                          attribute:NSLayoutAttributeHeight
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeHeight
+                                                         multiplier:1
+                                                           constant:bottomMargin]];
 
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityIndicator.hidesWhenStopped = YES;
@@ -146,14 +164,6 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                                                            constant:statusBarHeight]];
 }
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    CGRect rect = self.webView.bounds;
-    self.tmp1.frame = rect;
-    rect.origin.y += 50;
-    self.tmp2.frame = rect;
-}
-
 - (void)cancel:(__unused UIBarButtonItem *)sender {
     [self.delegate checkoutControllerDidCancel:self];
     [self cleanup];
@@ -179,6 +189,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 
 - (void)setLogoColor:(UIColor *)color {
     self.options.logoColor = color;
+    self.headerBackground.backgroundColor = color;
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
         FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
         [[UIApplication sharedApplication] setStatusBarStyle:[self preferredStatusBarStyle] animated:YES];

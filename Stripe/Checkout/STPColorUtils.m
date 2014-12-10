@@ -10,6 +10,8 @@
 
 @implementation STPColorUtils
 
+// Some of this code is adapted from https://github.com/nicklockwood/ColorUtils
+
 + (BOOL)colorIsLight:(UIColor *)color {
     CGColorSpaceModel model = CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor));
     const CGFloat *components = CGColorGetComponents(color.CGColor);
@@ -24,8 +26,6 @@
     default: { return YES; }
     }
 }
-
-// These methods are adapted from https://github.com/nicklockwood/ColorUtils
 
 + (UIColor *)colorForHexCode:(NSString *)aHexCode {
     NSString *hexCode = [aHexCode stringByReplacingOccurrencesOfString:@"#" withString:@""];
