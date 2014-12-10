@@ -3,7 +3,6 @@
 //  Stripe
 //
 //  Created by Jack Flintermann on 11/25/14.
-//  Copyright (c) 2014 Stripe, Inc. All rights reserved.
 //
 
 #ifdef STRIPE_ENABLE_APPLEPAY

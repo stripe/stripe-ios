@@ -3,7 +3,6 @@
 //  StripeExample
 //
 //  Created by Jack Flintermann on 10/6/14.
-//  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

@@ -3,7 +3,6 @@
 //  StripeExample
 //
 //  Created by Jack Flintermann on 9/15/14.
-//  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -45,16 +44,18 @@
 - (void)checkoutControllerDidCancel:(STPCheckoutViewController *)controller;
 
 /**
- *  Called when the checkout view controller has finished displaying the "success" or "error" animation. At this point, the controller is done with its work. You should dismiss the view controller at this point, probably by calling `dismissViewControllerAnimated:completion:`.
+ *  Called when the checkout view controller has finished displaying the "success" or "error" animation. At this point, the controller is done with its work.
+ *You should dismiss the view controller at this point, probably by calling `dismissViewControllerAnimated:completion:`.
  *
  *  @param controller the controller that has finished.
  */
 - (void)checkoutControllerDidFinish:(STPCheckoutViewController *)controller;
 
 /**
- *  After the user has provided valid credit card information and pressed the "pay" button, Checkout will communicate with Stripe and obtain a tokenized version of their credit card.
+ *  After the user has provided valid credit card information and pressed the "pay" button, Checkout will communicate with Stripe and obtain a tokenized version
+ of their credit card.
 
-    At this point, you should submit this token to your backend, which should use this token to create a charge. For more information on this, see 
+    At this point, you should submit this token to your backend, which should use this token to create a charge. For more information on this, see
  // The delegate must call completion with an appropriate authorization status, as may be determined
  // by submitting the payment credential to a processing gateway for payment authorization.
  *

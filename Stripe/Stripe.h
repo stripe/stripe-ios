@@ -3,7 +3,6 @@
 //  Stripe
 //
 //  Created by Saikat Chakrabarti on 10/30/12.
-//  Copyright (c) 2012 Stripe. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,8 +12,7 @@
 #import "STPToken.h"
 
 extern NSString *const STPLibraryVersionNumber; // Version of this library.
-extern NSString *const STPUserAgentFieldName; // We set our own custom HTTP header field on requests to better understand library usage.
-
+extern NSString *const STPUserAgentFieldName;   // We set our own custom HTTP header field on requests to better understand library usage.
 
 typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
 

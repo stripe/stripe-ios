@@ -3,7 +3,6 @@
 //  Stripe
 //
 //  Created by Jack Flintermann on 11/15/14.
-//  Copyright (c) 2014 Stripe, Inc. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>
