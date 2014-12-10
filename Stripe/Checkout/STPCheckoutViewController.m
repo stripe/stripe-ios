@@ -76,6 +76,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
     UIWebView *webView = [[UIWebView alloc] init];
     [self.view addSubview:webView];
 
+    webView.backgroundColor = [UIColor whiteColor];
     webView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[webView]-0-|"
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
@@ -92,7 +93,6 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
     self.webView = webView;
 
     UIView *headerBackground = [[UIView alloc] initWithFrame:self.view.bounds];
-    headerBackground.backgroundColor = [UIColor whiteColor];
     self.headerBackground = headerBackground;
     [self.webView insertSubview:headerBackground atIndex:0];
     headerBackground.translatesAutoresizingMaskIntoConstraints = NO;
