@@ -12,7 +12,7 @@
 #import "STPColorUtils.h"
 #import "FauxPasAnnotations.h"
 
-@interface STPCheckoutChildViewController : UIViewController<UIWebViewDelegate>
+@interface STPCheckoutWebViewController : UIViewController<UIWebViewDelegate>
 
 - (instancetype)initWithCheckoutViewController:(STPCheckoutViewController *)checkoutViewController;
 
@@ -34,29 +34,24 @@
 NSString *const STPCheckoutURLProtocolRequestScheme = @"beginstripecheckout";
 
 @interface STPCheckoutViewController ()
-@property (nonatomic, weak) STPCheckoutChildViewController *child;
+@property (nonatomic, weak) STPCheckoutWebViewController *webViewController;
 @property (nonatomic) UIStatusBarStyle previousStyle;
 @end
 
 @implementation STPCheckoutViewController
 
 - (instancetype)initWithOptions:(STPCheckoutOptions *)options {
-    STPCheckoutChildViewController *child = [[STPCheckoutChildViewController alloc] initWithCheckoutViewController:self];
-    child.options = options;
-    self = [super initWithRootViewController:child];
+    STPCheckoutWebViewController *webViewController = [[STPCheckoutWebViewController alloc] initWithCheckoutViewController:self];
+    webViewController.options = options;
+    self = [super initWithRootViewController:webViewController];
     if (self) {
-        _child = child;
+        _webViewController = webViewController;
         _previousStyle = [[UIApplication sharedApplication] statusBarStyle];
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
             self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         }
     }
     return self;
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self.view addSubview:self.child.navigationController.view];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -70,19 +65,19 @@ NSString *const STPCheckoutURLProtocolRequestScheme = @"beginstripecheckout";
 }
 
 - (UIViewController *)childViewControllerForStatusBarStyle {
-    return self.child;
+    return self.webViewController;
 }
 
 - (void)setCheckoutDelegate:(id<STPCheckoutViewControllerDelegate>)delegate {
-    _child.delegate = delegate;
+    self.webViewController.delegate = delegate;
 }
 
 - (id<STPCheckoutViewControllerDelegate>)checkoutDelegate {
-    return self.child.delegate;
+    return self.webViewController.delegate;
 }
 
 - (STPCheckoutOptions *)options {
-    return self.child.options;
+    return self.webViewController.options;
 }
 
 @end
@@ -94,7 +89,7 @@ static NSString *const checkoutUserAgent = @"Stripe";
 // static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios";
 static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 
-@implementation STPCheckoutChildViewController
+@implementation STPCheckoutWebViewController
 
 - (instancetype)initWithCheckoutViewController:(STPCheckoutViewController *)checkoutViewController {
     self = [super initWithNibName:nil bundle:nil];
