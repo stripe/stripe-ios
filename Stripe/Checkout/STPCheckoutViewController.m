@@ -12,24 +12,80 @@
 #import "STPColorUtils.h"
 #import "FauxPasAnnotations.h"
 
+@interface STPCheckoutChildViewController : UIViewController<UIWebViewDelegate>
+
+- (instancetype)initWithCheckoutViewController:(STPCheckoutViewController *)checkoutViewController;
+
+@property (weak, nonatomic, readonly) STPCheckoutViewController *checkoutController;
+@property (weak, nonatomic) UIWebView *webView;
+@property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
+@property (nonatomic) STPCheckoutOptions *options;
+@property (nonatomic) NSURL *logoURL;
+@property (nonatomic) NSURL *url;
+@property (weak, nonatomic) UIView *headerBackground;
+@property (nonatomic, weak) id<STPCheckoutViewControllerDelegate> delegate;
+
+@end
+
 @interface STPCheckoutURLProtocol : NSURLProtocol<NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSURLConnection *connection;
 @end
 
 NSString *const STPCheckoutURLProtocolRequestScheme = @"beginstripecheckout";
 
-@interface STPCheckoutViewController () <UIWebViewDelegate>
-@property (weak, nonatomic) UIWebView *webView;
-@property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
+@interface STPCheckoutViewController ()
+@property (nonatomic, weak) STPCheckoutChildViewController *child;
 @property (nonatomic) UIStatusBarStyle previousStyle;
-@property (nonatomic, copy) STPCheckoutOptions *options;
-@property (nonatomic) NSURL *logoURL;
-@property (nonatomic) NSURL *url;
-@property (weak, nonatomic) UIToolbar *cancelToolbar;
-@property (weak, nonatomic) UIView *headerBackground;
 @end
 
 @implementation STPCheckoutViewController
+
+- (instancetype)initWithOptions:(STPCheckoutOptions *)options {
+    STPCheckoutChildViewController *child = [[STPCheckoutChildViewController alloc] initWithCheckoutViewController:self];
+    child.options = options;
+    self = [super initWithRootViewController:child];
+    if (self) {
+        _child = child;
+        _previousStyle = [[UIApplication sharedApplication] statusBarStyle];
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        }
+    }
+    return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self.view addSubview:self.child.navigationController.view];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    NSCAssert(self.checkoutDelegate, @"You must provide a delegate to STPCheckoutViewController before showing it.");
+    [super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:self.previousStyle animated:YES];
+}
+
+- (UIViewController *)childViewControllerForStatusBarStyle {
+    return self.child;
+}
+
+- (void)setCheckoutDelegate:(id<STPCheckoutViewControllerDelegate>)delegate {
+    _child.delegate = delegate;
+}
+
+- (id<STPCheckoutViewControllerDelegate>)checkoutDelegate {
+    return self.child.delegate;
+}
+
+- (STPCheckoutOptions *)options {
+    return self.child.options;
+}
+
+@end
 
 static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
 static NSString *const checkoutRedirectPrefix = @"/-/";
@@ -38,11 +94,14 @@ static NSString *const checkoutUserAgent = @"Stripe";
 // static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios";
 static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 
-- (instancetype)initWithOptions:(STPCheckoutOptions *)options {
+@implementation STPCheckoutChildViewController
+
+- (instancetype)initWithCheckoutViewController:(STPCheckoutViewController *)checkoutViewController {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        _options = options;
-        _previousStyle = [[UIApplication sharedApplication] statusBarStyle];
+        UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+        self.navigationItem.leftBarButtonItem = cancelItem;
+        _checkoutController = checkoutViewController;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             NSString *userAgent = [[[UIWebView alloc] init] stringByEvaluatingJavaScriptFromString:@"window.navigator.userAgent"];
@@ -58,7 +117,6 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 }
 
 - (void)viewDidLoad {
-    NSCAssert(self.delegate, @"You must provide a delegate to STPCheckoutViewController before showing it.");
     [super viewDidLoad];
 
     NSString *fullURLString = [NSString stringWithFormat:@"%@://%@", STPCheckoutURLProtocolRequestScheme, checkoutURL];
@@ -76,6 +134,12 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
     [self.view addSubview:webView];
 
     webView.backgroundColor = [UIColor whiteColor];
+    if (self.options.logoColor && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        self.view.backgroundColor = self.options.logoColor;
+        webView.backgroundColor = self.options.logoColor;
+        webView.opaque = NO;
+    }
+
     webView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[webView]-0-|"
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
@@ -137,62 +201,37 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                                                           attribute:NSLayoutAttributeCenterY
                                                          multiplier:1
                                                            constant:0]];
-
-    // We're going to use a toolbar here instead of a UIButton so that we can get UIKit's localization of the word "Cancel" for free.
-    UIToolbar *cancelToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 44)];
-    cancelToolbar.translatesAutoresizingMaskIntoConstraints = NO;
-    cancelToolbar.translucent = NO;
-    cancelToolbar.backgroundColor = [UIColor clearColor];
-    cancelToolbar.clipsToBounds = YES;
-    UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    cancelToolbar.items = @[cancelItem, rightItem];
-    [self.view addSubview:cancelToolbar];
-    self.cancelToolbar = cancelToolbar;
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[cancelToolbar]-0-|"
-                                                                      options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                      metrics:nil
-                                                                        views:NSDictionaryOfVariableBindings(cancelToolbar)]];
-    CGFloat statusBarHeight = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:cancelToolbar
-                                                          attribute:NSLayoutAttributeTop
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeTop
-                                                         multiplier:1
-                                                           constant:statusBarHeight]];
 }
 
 - (void)cancel:(__unused UIBarButtonItem *)sender {
-    [self.delegate checkoutControllerDidCancel:self];
+    [self.delegate checkoutControllerDidCancel:self.checkoutController];
     [self cleanup];
-}
-
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    if (self.options.logoColor) {
-        FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
-        return [STPColorUtils colorIsLight:self.options.logoColor] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
-    }
-    return UIStatusBarStyleDefault;
 }
 
 - (void)cleanup {
     if ([self.webView isLoading]) {
         [self.webView stopLoading];
     }
-    [[UIApplication sharedApplication] setStatusBarStyle:self.previousStyle animated:YES];
     if (self.logoURL) {
         [[NSFileManager defaultManager] removeItemAtURL:self.logoURL error:nil];
     }
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    if (self.options.logoColor && self.checkoutController.navigationBarHidden) {
+        FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
+        return [STPColorUtils colorIsLight:self.options.logoColor] ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent;
+    }
+    return UIStatusBarStyleDefault;
+}
+
 - (void)setLogoColor:(UIColor *)color {
     self.options.logoColor = color;
     self.headerBackground.backgroundColor = color;
-    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+    if ([self.checkoutController respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
         FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
         [[UIApplication sharedApplication] setStatusBarStyle:[self preferredStatusBarStyle] animated:YES];
-        [self setNeedsStatusBarAppearanceUpdate];
+        [self.checkoutController setNeedsStatusBarAppearanceUpdate];
     }
 }
 
@@ -228,7 +267,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
             if (payload != nil && payload[@"token"] != nil) {
                 token = [[STPToken alloc] initWithAttributeDictionary:payload[@"token"]];
             }
-            [self.delegate checkoutController:self
+            [self.delegate checkoutController:self.checkoutController
                                didCreateToken:token
                                    completion:^(STPBackendChargeResult status, __unused NSError *error) {
                                        if (status == STPBackendChargeResultSuccess) {
@@ -242,14 +281,14 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                                        }
                                    }];
         } else if ([event isEqualToString:@"CheckoutDidFinish"]) {
-            [self.delegate checkoutControllerDidFinish:self];
+            [self.delegate checkoutControllerDidFinish:self.checkoutController];
             [self cleanup];
         } else if ([url.host isEqualToString:@"CheckoutDidCancel"]) {
-            [self.delegate checkoutControllerDidCancel:self];
+            [self.delegate checkoutControllerDidCancel:self.checkoutController];
             [self cleanup];
         } else if ([event isEqualToString:@"CheckoutDidError"]) {
             NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
-            [self.delegate checkoutController:self didFailWithError:error];
+            [self.delegate checkoutController:self.checkoutController didFailWithError:error];
             [self cleanup];
         }
         return NO;
@@ -260,18 +299,15 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 - (void)webViewDidFinishLoad:(__unused UIWebView *)webView {
     [UIView animateWithDuration:0.1
         animations:^{
-            self.cancelToolbar.alpha = 0;
             self.activityIndicator.alpha = 0;
+            [self.navigationController setNavigationBarHidden:YES animated:YES];
         }
-        completion:^(__unused BOOL finished) {
-            self.cancelToolbar.hidden = YES;
-            [self.activityIndicator stopAnimating];
-        }];
+        completion:^(__unused BOOL finished) { [self.activityIndicator stopAnimating]; }];
 }
 
 - (void)webView:(__unused UIWebView *)webView didFailLoadWithError:(NSError *)error {
     [self.activityIndicator stopAnimating];
-    [self.delegate checkoutController:self didFailWithError:error];
+    [self.delegate checkoutController:self.checkoutController didFailWithError:error];
     [self cleanup];
 }
 

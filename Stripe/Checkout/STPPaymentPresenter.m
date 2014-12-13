@@ -79,7 +79,7 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
         }
     }
     STPCheckoutViewController *checkoutViewController = [[STPCheckoutViewController alloc] initWithOptions:self.checkoutOptions];
-    checkoutViewController.delegate = self;
+    checkoutViewController.checkoutDelegate = self;
     self.presentedViewController = checkoutViewController;
     [self.presentingViewController presentViewController:checkoutViewController animated:YES completion:nil];
 }

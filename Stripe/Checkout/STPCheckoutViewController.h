@@ -12,10 +12,10 @@
 @protocol STPCheckoutViewControllerDelegate;
 
 /**
- Controls a UIWebView that loads an iOS-optimized version of Stripe Checkout. You can present it modally or push it onto a UINavigationController stack. Note
+ Controls a UIWebView that loads an iOS-optimized version of Stripe Checkout that you can present modally. Note
  that if you're using an STPPaymentPresenter to collect your user's payment details (highly recommended), you do not have to use this class directly.
  */
-@interface STPCheckoutViewController : UIViewController
+@interface STPCheckoutViewController : UINavigationController
 
 /**
  *  Creates an STPCheckoutViewController with the desired options. The options are copied at this step, so changing any of their values after instantiating an
@@ -30,7 +30,7 @@
 /**
  *  Note: you must set a delegate before showing an STPViewController.
  */
-@property (nonatomic, weak) id<STPCheckoutViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<STPCheckoutViewControllerDelegate> checkoutDelegate;
 
 @end
 
