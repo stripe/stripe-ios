@@ -269,11 +269,13 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
             }
             [self.delegate checkoutController:self.checkoutController
                                didCreateToken:token
-                                   completion:^(STPBackendChargeResult status, __unused NSError *error) {
+                                   completion:^(STPBackendChargeResult status, NSError *error) {
                                        if (status == STPBackendChargeResultSuccess) {
                                            [webView stringByEvaluatingJavaScriptFromString:payload[@"success"]];
                                        } else {
-                                           [webView stringByEvaluatingJavaScriptFromString:payload[@"failure"]];
+                                           NSString *failure = payload[@"failure"];
+                                           NSString *script = [NSString stringWithFormat:failure, error.localizedDescription];
+                                           [webView stringByEvaluatingJavaScriptFromString:script];
                                        }
                                    }];
         } else if ([event isEqualToString:@"CheckoutDidFinish"]) {
