@@ -57,7 +57,7 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
         PKPaymentRequest *paymentRequest = self.checkoutOptions.paymentRequest;
         if (paymentRequest) {
             if ([self.delegate respondsToSelector:@selector(paymentPresenter:didPreparePaymentRequest:)]) {
-                [self.delegate paymentPresenter:self didPreparePaymentRequest:paymentRequest];
+                paymentRequest = [self.delegate paymentPresenter:self didPreparePaymentRequest:paymentRequest];
             }
             if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
                 if ([self.class isSimulatorBuild]) {

@@ -112,10 +112,11 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
  *paymentSummaryItems property of the paymentRequest here.
 
  *
- *  @param presenter the presenter that is deciding which payment UI to display.
- *  @param request   the payment request that has been generated from the presenters checkoutOptions
+ *  @param  presenter the presenter that is deciding which payment UI to display.
+ *  @param  request   the payment request that has been generated from the presenters checkoutOptions
+ *  @return the modified payment request to display.
  */
-- (void)paymentPresenter:(STPPaymentPresenter *)presenter didPreparePaymentRequest:(PKPaymentRequest *)request;
+- (PKPaymentRequest *)paymentPresenter:(STPPaymentPresenter *)presenter didPreparePaymentRequest:(PKPaymentRequest *)request;
 
 @end
 
