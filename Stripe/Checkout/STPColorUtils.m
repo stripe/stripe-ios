@@ -47,15 +47,15 @@
     const CGFloat *components = CGColorGetComponents(color.CGColor);
     switch (model) {
     case kCGColorSpaceModelMonochrome: {
-        rgb[0] = (uint8_t)components[0] * 255;
-        rgb[1] = (uint8_t)components[0] * 255;
-        rgb[2] = (uint8_t)components[0] * 255;
+        rgb[0] = (uint8_t)(components[0] * 255);
+        rgb[1] = (uint8_t)(components[0] * 255);
+        rgb[2] = (uint8_t)(components[0] * 255);
         break;
     }
     case kCGColorSpaceModelRGB: {
-        rgb[0] = (uint8_t)components[0] * 255;
-        rgb[1] = (uint8_t)components[1] * 255;
-        rgb[2] = (uint8_t)components[2] * 255;
+        rgb[0] = (uint8_t)(components[0] * 255);
+        rgb[1] = (uint8_t)(components[1] * 255);
+        rgb[2] = (uint8_t)(components[2] * 255);
         break;
     }
     default: {
