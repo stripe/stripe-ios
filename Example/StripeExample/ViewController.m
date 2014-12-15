@@ -37,6 +37,12 @@
     [self updateCartWithNumberOfShirts:0];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self updateCartWithNumberOfShirts:1];
+    [self beginPayment:nil];
+}
+
 - (void)updateCartWithNumberOfShirts:(NSUInteger)numberOfShirts {
     NSInteger price = 10;
     self.amount = [NSDecimalNumber decimalNumberWithMantissa:numberOfShirts * price exponent:0 isNegative:NO];
@@ -84,8 +90,8 @@
                 stringWithFormat:@"You created a token! Its value is %@. Now, you need to configure your Parse backend in order to charge this customer.",
                                  token.tokenId]
         };
-        NSError *error = [NSError errorWithDomain:StripeDomain code:STPInvalidRequestError userInfo:userInfo];
-        completion(STPBackendChargeResultFailure, error);
+//        NSError *error = [NSError errorWithDomain:StripeDomain code:STPInvalidRequestError userInfo:userInfo];
+        completion(STPBackendChargeResultSuccess, nil);
         return;
     }
     NSDictionary *chargeParams = @{

@@ -31,8 +31,6 @@
 @property (nonatomic, strong) NSURLConnection *connection;
 @end
 
-NSString *const STPCheckoutURLProtocolRequestScheme = @"beginstripecheckout";
-
 @interface STPCheckoutViewController ()
 @property (nonatomic, weak) STPCheckoutWebViewController *webViewController;
 @property (nonatomic) UIStatusBarStyle previousStyle;
@@ -84,6 +82,7 @@ NSString *const STPCheckoutURLProtocolRequestScheme = @"beginstripecheckout";
 
 static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
 static NSString *const checkoutRedirectPrefix = @"/-/";
+static NSString *const STPCheckoutURLProtocolRequestScheme = @"beginstripecheckout";
 static NSString *const checkoutRPCScheme = @"stripecheckout";
 static NSString *const checkoutUserAgent = @"Stripe";
 // static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios";
@@ -235,6 +234,40 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
     }
 }
 
+- (void)handleCheckoutEvent:(NSString *)event withPayload:(NSDictionary *)payload {
+    if ([event isEqualToString:@"CheckoutDidOpen"]) {
+        if (payload != nil && payload[@"logoColor"]) {
+            [self setLogoColor:[STPColorUtils colorForHexCode:payload[@"logoColor"]]];
+        }
+    } else if ([event isEqualToString:@"CheckoutDidTokenize"]) {
+        STPToken *token = nil;
+        if (payload != nil && payload[@"token"] != nil) {
+            token = [[STPToken alloc] initWithAttributeDictionary:payload[@"token"]];
+        }
+        [self.delegate checkoutController:self.checkoutController
+                           didCreateToken:token
+                               completion:^(STPBackendChargeResult status, NSError *error) {
+                                   if (status == STPBackendChargeResultSuccess) {
+                                       [self.webView stringByEvaluatingJavaScriptFromString:payload[@"success"]];
+                                   } else {
+                                       NSString *failure = payload[@"failure"];
+                                       NSString *script = [NSString stringWithFormat:failure, error.localizedDescription];
+                                       [self.webView stringByEvaluatingJavaScriptFromString:script];
+                                   }
+                               }];
+    } else if ([event isEqualToString:@"CheckoutDidFinish"]) {
+        [self.delegate checkoutControllerDidFinish:self.checkoutController];
+        [self cleanup];
+    } else if ([event isEqualToString:@"CheckoutDidCancel"]) {
+        [self.delegate checkoutControllerDidCancel:self.checkoutController];
+        [self cleanup];
+    } else if ([event isEqualToString:@"CheckoutDidError"]) {
+        NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
+        [self.delegate checkoutController:self.checkoutController didFailWithError:error];
+        [self cleanup];
+    }
+}
+
 #pragma mark - UIWebViewDelegate
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
@@ -245,53 +278,32 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 
 - (BOOL)webView:(__unused UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSURL *url = request.URL;
-    if (navigationType == UIWebViewNavigationTypeLinkClicked && [url.host isEqualToString:self.url.host] &&
-        [url.path rangeOfString:checkoutRedirectPrefix].location == 0) {
-        [[UIApplication sharedApplication] openURL:url];
-        return NO;
-    }
-    if ([url.scheme isEqualToString:checkoutRPCScheme]) {
-        NSString *event = url.host;
-        NSString *path = [url.path componentsSeparatedByString:@"/"][1];
-        NSDictionary *payload = nil;
-        if (path != nil) {
-            payload = [NSJSONSerialization JSONObjectWithData:[path dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
-        }
-
-        if ([event isEqualToString:@"CheckoutDidOpen"]) {
-            if (payload != nil && payload[@"logoColor"]) {
-                [self setLogoColor:[STPColorUtils colorForHexCode:payload[@"logoColor"]]];
+    switch (navigationType) {
+    case UIWebViewNavigationTypeLinkClicked: {
+        if ([url.host isEqualToString:self.url.host]) {
+            if ([url.path rangeOfString:checkoutRedirectPrefix].location == 0) {
+                [[UIApplication sharedApplication] openURL:url];
+                return NO;
             }
-        } else if ([event isEqualToString:@"CheckoutDidTokenize"]) {
-            STPToken *token = nil;
-            if (payload != nil && payload[@"token"] != nil) {
-                token = [[STPToken alloc] initWithAttributeDictionary:payload[@"token"]];
+            return YES;
+        } else if ([url.scheme isEqualToString:checkoutRPCScheme]) {
+            NSString *event = url.host;
+            NSString *path = [url.path componentsSeparatedByString:@"/"][1];
+            NSDictionary *payload = nil;
+            if (path != nil) {
+                payload = [NSJSONSerialization JSONObjectWithData:[path dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
             }
-            [self.delegate checkoutController:self.checkoutController
-                               didCreateToken:token
-                                   completion:^(STPBackendChargeResult status, NSError *error) {
-                                       if (status == STPBackendChargeResultSuccess) {
-                                           [webView stringByEvaluatingJavaScriptFromString:payload[@"success"]];
-                                       } else {
-                                           NSString *failure = payload[@"failure"];
-                                           NSString *script = [NSString stringWithFormat:failure, error.localizedDescription];
-                                           [webView stringByEvaluatingJavaScriptFromString:script];
-                                       }
-                                   }];
-        } else if ([event isEqualToString:@"CheckoutDidFinish"]) {
-            [self.delegate checkoutControllerDidFinish:self.checkoutController];
-            [self cleanup];
-        } else if ([url.host isEqualToString:@"CheckoutDidCancel"]) {
-            [self.delegate checkoutControllerDidCancel:self.checkoutController];
-            [self cleanup];
-        } else if ([event isEqualToString:@"CheckoutDidError"]) {
-            NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
-            [self.delegate checkoutController:self.checkoutController didFailWithError:error];
-            [self cleanup];
+            [self handleCheckoutEvent:event withPayload:payload];
         }
         return NO;
     }
-    return navigationType == UIWebViewNavigationTypeOther;
+    case UIWebViewNavigationTypeOther: {
+        return YES;
+    }
+    default:
+        // add tracking
+        return NO;
+    }
 }
 
 - (void)webViewDidFinishLoad:(__unused UIWebView *)webView {
