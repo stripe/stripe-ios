@@ -177,6 +177,11 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                                                          multiplier:1
                                                            constant:bottomMargin]];
 
+    UIActivityIndicatorViewStyle style = UIActivityIndicatorViewStyleGray;
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && self.options.logoColor &&
+        ![STPColorUtils colorIsLight:self.options.logoColor]) {
+        style = UIActivityIndicatorViewStyleWhiteLarge;
+    }
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityIndicator.hidesWhenStopped = YES;
     activityIndicator.translatesAutoresizingMaskIntoConstraints = NO;
@@ -266,13 +271,9 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                                didCreateToken:token
                                    completion:^(STPBackendChargeResult status, __unused NSError *error) {
                                        if (status == STPBackendChargeResultSuccess) {
-                                           // @reggio: do something here like [self.webView
-                                           // stringByEvaluatingStringFromJavascript:@"showCheckoutSuccessAnimation();"]
-                                           // that should probably trigger the "CheckoutDidFinish" event when the animation is complete
+                                           [webView stringByEvaluatingJavaScriptFromString:payload[@"success"]];
                                        } else {
-                                           // @reggio: do something here like [self.webView
-                                           // stringByEvaluatingStringFromJavascript:@"showCheckoutFailureAnimation();"]
-                                           // that should probably trigger the "CheckoutDidError" event when the animation is complete
+                                           [webView stringByEvaluatingJavaScriptFromString:payload[@"failure"]];
                                        }
                                    }];
         } else if ([event isEqualToString:@"CheckoutDidFinish"]) {
