@@ -9,6 +9,23 @@
 #import <Foundation/Foundation.h>
 #import "STPFormEncodeProtocol.h"
 
+typedef NS_ENUM(NSInteger, STPCardFundingType) {
+    STPCardFundingTypeDebit,
+    STPCardFundingTypeCredit,
+    STPCardFundingTypePrepaid,
+    STPCardFundingTypeOther,
+};
+
+typedef NS_ENUM(NSInteger, STPCardBrand) {
+    STPCardBrandVisa,
+    STPCardBrandAmex,
+    STPCardBrandMasterCard,
+    STPCardBrandDiscover,
+    STPCardBrandJCB,
+    STPCardBrandDinersClub,
+    STPCardBrandUnknown,
+};
+
 /*
  This object represents a credit card.  You should create these and populate
  its properties with information that your customer enters on your credit card
@@ -31,15 +48,24 @@
 @property (nonatomic, readonly) NSString *cardId;
 @property (nonatomic, readonly) NSString *object;
 @property (nonatomic, readonly) NSString *last4;
-@property (nonatomic, readonly) NSString *type;
+/**
+ *  The issuer of the card.
+ */
+@property (nonatomic, readonly) STPCardBrand brand;
+/**
+ *  The issuer of the card.
+ *  Can be one of "Visa", "American Express", "MasterCard", "Discover", "JCB", "Diners Club", or "Unknown"
+ *  @deprecated use "brand" instead.
+ */
+@property (nonatomic, readonly) NSString *type __attribute__((deprecated));
+;
+/**
+ *  The funding source for the card (credit, debit, prepaid, or other)
+ */
+@property (nonatomic, readonly) STPCardFundingType funding;
 @property (nonatomic, readonly) NSString *fingerprint;
 @property (nonatomic, readonly) NSString *country;
 
-/*
- You should not use this constructor.  This constructor is used by Stripe to
- generate cards from the response of creating ar getting a token.
- */
-- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 - (BOOL)isEqualToCard:(STPCard *)other;
 
 /* These validation methods work as described in
@@ -59,4 +85,12 @@
  */
 - (BOOL)validateCardReturningError:(NSError **)outError;
 
+@end
+
+@interface STPCard (StripePrivateMethods)
+/*
+ You should not use this constructor.  This constructor is used by Stripe to
+ generate cards from the response of creating ar getting a token.
+ */
+- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 @end

@@ -15,7 +15,8 @@
 @property (nonatomic, readwrite) NSString *cardId;
 @property (nonatomic, readwrite) NSString *object;
 @property (nonatomic, readwrite) NSString *last4;
-@property (nonatomic, readwrite) NSString *type;
+@property (nonatomic, readwrite) STPCardBrand brand;
+@property (nonatomic, readwrite) STPCardFundingType funding;
 @property (nonatomic, readwrite) NSString *fingerprint;
 @property (nonatomic, readwrite) NSString *country;
 
@@ -137,21 +138,21 @@
                                   }];
 }
 
-+ (NSString *)cardBrandFromNumber:(NSString *)number {
++ (STPCardBrand)cardTypeFromNumber:(NSString *)number {
     if ([number hasPrefix:@"34"] || [number hasPrefix:@"37"]) {
-        return @"American Express";
+        return STPCardBrandAmex;
     } else if ([number hasPrefix:@"60"] || [number hasPrefix:@"62"] || [number hasPrefix:@"64"] || [number hasPrefix:@"65"]) {
-        return @"Discover";
+        return STPCardBrandDiscover;
     } else if ([number hasPrefix:@"35"]) {
-        return @"JCB";
+        return STPCardBrandJCB;
     } else if ([number hasPrefix:@"30"] || [number hasPrefix:@"36"] || [number hasPrefix:@"38"] || [number hasPrefix:@"39"]) {
-        return @"Diners Club";
+        return STPCardBrandDinersClub;
     } else if ([number hasPrefix:@"4"]) {
-        return @"Visa";
+        return STPCardBrandVisa;
     } else if ([number hasPrefix:@"5"]) {
-        return @"MasterCard";
+        return STPCardBrandMasterCard;
     } else {
-        return @"Unknown";
+        return STPCardBrandUnknown;
     }
 }
 
@@ -185,10 +186,34 @@
         _name = dict[@"name"];
         _object = dict[@"object"];
         _last4 = dict[@"last4"];
-        _type = dict[@"type"];
+        NSString *brand = dict[@"brand"] ?: dict[@"type"];
+        if ([brand isEqualToString:@"Visa"]) {
+            _brand = STPCardBrandVisa;
+        } else if ([brand isEqualToString:@"American Express"]) {
+            _brand = STPCardBrandAmex;
+        } else if ([brand isEqualToString:@"MasterCard"]) {
+            _brand = STPCardBrandMasterCard;
+        } else if ([brand isEqualToString:@"Discover"]) {
+            _brand = STPCardBrandDiscover;
+        } else if ([brand isEqualToString:@"JCB"]) {
+            _brand = STPCardBrandJCB;
+        } else if ([brand isEqualToString:@"Diners Club"]) {
+            _brand = STPCardBrandDinersClub;
+        } else {
+            _brand = STPCardBrandUnknown;
+        }
+        NSString *funding = dict[@"funding"];
+        if ([funding.lowercaseString isEqualToString:@"credit"]) {
+            _funding = STPCardFundingTypeCredit;
+        } else if ([funding.lowercaseString isEqualToString:@"debit"]) {
+            _funding = STPCardFundingTypeDebit;
+        } else if ([funding.lowercaseString isEqualToString:@"prepaid"]) {
+            _funding = STPCardFundingTypePrepaid;
+        } else {
+            _funding = STPCardFundingTypeOther;
+        }
         _fingerprint = dict[@"fingerprint"];
         _country = dict[@"country"];
-
         // Support both camelCase and snake_case keys
         _expMonth = [(dict[@"exp_month"] ?: dict[@"expMonth"])intValue];
         _expYear = [(dict[@"exp_year"] ?: dict[@"expYear"])intValue];
@@ -250,13 +275,26 @@
     }
 }
 
+- (STPCardBrand)brand {
+    return _brand ?: [self.class cardTypeFromNumber:self.number];
+}
+
 - (NSString *)type {
-    if (_type) {
-        return _type;
-    } else if (self.number) {
-        return [self.class cardBrandFromNumber:self.number];
-    } else {
-        return nil;
+    switch (self.brand) {
+    case STPCardBrandAmex:
+        return @"American Express";
+    case STPCardBrandDinersClub:
+        return @"Diners Club";
+    case STPCardBrandDiscover:
+        return @"Discover";
+    case STPCardBrandJCB:
+        return @"JCB";
+    case STPCardBrandMasterCard:
+        return @"MasterCard";
+    case STPCardBrandVisa:
+        return @"Visa";
+    default:
+        return @"Unknown";
     }
 }
 
@@ -281,12 +319,22 @@
         return [STPCard handleValidationErrorForParameter:@"number" error:outError];
     }
     NSString *ioValueString = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    NSString *cardType = [self type];
-    BOOL validLength = ((cardType == nil && [ioValueString length] >= 3 && [ioValueString length] <= 4) ||
-                        ([cardType isEqualToString:@"American Express"] && [ioValueString length] == 4) ||
-                        (![cardType isEqualToString:@"American Express"] && [ioValueString length] == 3));
+    BOOL validCvcLength = ({
+        BOOL valid;
+        switch (self.brand) {
+        case STPCardBrandAmex:
+            valid = ([ioValueString length] == 4);
+            break;
+        case STPCardBrandUnknown:
+            valid = ([ioValueString length] >= 3 && [ioValueString length] <= 4);
+        default:
+            valid = ([ioValueString length] == 3);
+            break;
+        }
+        valid;
+    });
 
-    if (![STPCard isNumericOnlyString:ioValueString] || !validLength) {
+    if (![STPCard isNumericOnlyString:ioValueString] || !validCvcLength) {
         return [STPCard handleValidationErrorForParameter:@"cvc" error:outError];
     }
     return YES;
