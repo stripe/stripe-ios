@@ -21,12 +21,6 @@
 
 @end
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-#define STPGregorianCalendarIdentifier NSCalendarIdentifierGregorian
-#else
-#define STPGregorianCalendarIdentifier NSGregorianCalendar
-#endif
-
 @implementation STPCard
 
 #pragma mark Private Helpers
@@ -66,20 +60,27 @@
     return [numericOnly isSupersetOfSet:aStringSet];
 }
 
++ (NSCalendar *)gregorianCalendar {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+#pragma clang diagnostic ignored "-Wunreachable-code"
+    NSString *identifier = (&NSCalendarIdentifierGregorian != nil) ? NSCalendarIdentifierGregorian : NSGregorianCalendar;
+#pragma clang diagnostic pop
+    return [[NSCalendar alloc] initWithCalendarIdentifier:identifier];
+}
+
 + (BOOL)isExpiredMonth:(NSInteger)month andYear:(NSInteger)year atDate:(NSDate *)date {
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:STPGregorianCalendarIdentifier];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setYear:year];
     // Cards expire at end of month
     [components setMonth:month + 1];
     [components setDay:1];
-    NSDate *expiryDate = [calendar dateFromComponents:components];
+    NSDate *expiryDate = [[self gregorianCalendar] dateFromComponents:components];
     return ([expiryDate compare:date] == NSOrderedAscending);
 }
 
 + (NSInteger)currentYear {
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:STPGregorianCalendarIdentifier];
-    NSDateComponents *components = [gregorian components:NSCalendarUnitYear fromDate:[NSDate date]];
+    NSDateComponents *components = [[self gregorianCalendar] components:NSCalendarUnitYear fromDate:[NSDate date]];
     return [components year];
 }
 
