@@ -24,138 +24,6 @@
 
 @implementation STPCard
 
-#pragma mark Private Helpers
-+ (BOOL)isLuhnValidString:(NSString *)number {
-    BOOL isOdd = true;
-    NSInteger sum = 0;
-
-    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    for (NSInteger index = [number length] - 1; index >= 0; index--) {
-        NSString *digit = [number substringWithRange:NSMakeRange(index, 1)];
-        NSNumber *digitNumber = [numberFormatter numberFromString:digit];
-
-        if (digitNumber == nil) {
-            return NO;
-        }
-
-        NSInteger digitInteger = [digitNumber intValue];
-        isOdd = !isOdd;
-        if (isOdd) {
-            digitInteger *= 2;
-        }
-
-        if (digitInteger > 9) {
-            digitInteger -= 9;
-        }
-
-        sum += digitInteger;
-    }
-
-    return sum % 10 == 0;
-}
-
-+ (BOOL)isNumericOnlyString:(NSString *)aString {
-    NSCharacterSet *numericOnly = [NSCharacterSet decimalDigitCharacterSet];
-    NSCharacterSet *aStringSet = [NSCharacterSet characterSetWithCharactersInString:aString];
-
-    return [numericOnly isSupersetOfSet:aStringSet];
-}
-
-+ (NSCalendar *)gregorianCalendar {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-#pragma clang diagnostic ignored "-Wunreachable-code"
-    NSString *identifier = (&NSCalendarIdentifierGregorian != nil) ? NSCalendarIdentifierGregorian : NSGregorianCalendar;
-#pragma clang diagnostic pop
-    return [[NSCalendar alloc] initWithCalendarIdentifier:identifier];
-}
-
-+ (BOOL)isExpiredMonth:(NSInteger)month andYear:(NSInteger)year atDate:(NSDate *)date {
-    NSDateComponents *components = [[NSDateComponents alloc] init];
-    [components setYear:year];
-    // Cards expire at end of month
-    [components setMonth:month + 1];
-    [components setDay:1];
-    NSDate *expiryDate = [[self gregorianCalendar] dateFromComponents:components];
-    return ([expiryDate compare:date] == NSOrderedAscending);
-}
-
-+ (NSInteger)currentYear {
-    NSDateComponents *components = [[self gregorianCalendar] components:NSCalendarUnitYear fromDate:[NSDate date]];
-    return [components year];
-}
-
-+ (BOOL)handleValidationErrorForParameter:(NSString *)parameter error:(NSError **)outError {
-    if (outError != nil) {
-        if ([parameter isEqualToString:@"number"]) {
-            *outError = [self createErrorWithMessage:STPCardErrorInvalidNumberUserMessage
-                                           parameter:parameter
-                                       cardErrorCode:STPInvalidNumber
-                                     devErrorMessage:@"Card number must be between 10 and 19 digits long and Luhn valid."];
-        } else if ([parameter isEqualToString:@"cvc"]) {
-            *outError = [self createErrorWithMessage:STPCardErrorInvalidCVCUserMessage
-                                           parameter:parameter
-                                       cardErrorCode:STPInvalidCVC
-                                     devErrorMessage:@"Card CVC must be numeric, 3 digits for Visa, Discover, MasterCard, JCB, and Discover cards, and 4 "
-                                     @"digits for American Express cards."];
-        } else if ([parameter isEqualToString:@"expMonth"]) {
-            *outError = [self createErrorWithMessage:STPCardErrorInvalidExpMonthUserMessage
-                                           parameter:parameter
-                                       cardErrorCode:STPInvalidExpMonth
-                                     devErrorMessage:@"expMonth must be less than 13"];
-        } else if ([parameter isEqualToString:@"expYear"]) {
-            *outError = [self createErrorWithMessage:STPCardErrorInvalidExpYearUserMessage
-                                           parameter:parameter
-                                       cardErrorCode:STPInvalidExpYear
-                                     devErrorMessage:@"expYear must be this year or a year in the future"];
-        } else {
-            // This should not be possible since this is a private method so we
-            // know exactly how it is called.  We use STPAPIError for all errors
-            // that are unexpected within the bindings as well.
-            *outError = [[NSError alloc] initWithDomain:StripeDomain
-                                                   code:STPAPIError
-                                               userInfo:@{
-                                                   NSLocalizedDescriptionKey: STPUnexpectedError,
-                                                   STPErrorMessageKey: @"There was an error within the Stripe client library when trying to generate the "
-                                                   @"proper validation error. Contact support@stripe.com if you see this."
-                                               }];
-        }
-    }
-    return NO;
-}
-
-+ (NSError *)createErrorWithMessage:(NSString *)userMessage
-                          parameter:(NSString *)parameter
-                      cardErrorCode:(NSString *)cardErrorCode
-                    devErrorMessage:(NSString *)devMessage {
-    return [[NSError alloc] initWithDomain:StripeDomain
-                                      code:STPCardError
-                                  userInfo:@{
-                                      NSLocalizedDescriptionKey: userMessage,
-                                      STPErrorParameterKey: parameter,
-                                      STPCardErrorCodeKey: cardErrorCode,
-                                      STPErrorMessageKey: devMessage
-                                  }];
-}
-
-+ (STPCardBrand)cardTypeFromNumber:(NSString *)number {
-    if ([number hasPrefix:@"34"] || [number hasPrefix:@"37"]) {
-        return STPCardBrandAmex;
-    } else if ([number hasPrefix:@"60"] || [number hasPrefix:@"62"] || [number hasPrefix:@"64"] || [number hasPrefix:@"65"]) {
-        return STPCardBrandDiscover;
-    } else if ([number hasPrefix:@"35"]) {
-        return STPCardBrandJCB;
-    } else if ([number hasPrefix:@"30"] || [number hasPrefix:@"36"] || [number hasPrefix:@"38"] || [number hasPrefix:@"39"]) {
-        return STPCardBrandDinersClub;
-    } else if ([number hasPrefix:@"4"]) {
-        return STPCardBrandVisa;
-    } else if ([number hasPrefix:@"5"]) {
-        return STPCardBrandMasterCard;
-    } else {
-        return STPCardBrandUnknown;
-    }
-}
-
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -418,83 +286,91 @@
            [self.addressZip ?: @"" isEqualToString:other.addressZip ?: @""] && [self.addressCountry ?: @"" isEqualToString:other.addressCountry ?: @""];
 }
 
+
 #pragma mark Private Helpers
 + (BOOL)isLuhnValidString:(NSString *)number {
     BOOL isOdd = true;
     NSInteger sum = 0;
-
+    
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     for (NSInteger index = [number length] - 1; index >= 0; index--) {
         NSString *digit = [number substringWithRange:NSMakeRange(index, 1)];
         NSNumber *digitNumber = [numberFormatter numberFromString:digit];
-
+        
         if (digitNumber == nil) {
             return NO;
         }
-
+        
         NSInteger digitInteger = [digitNumber intValue];
         isOdd = !isOdd;
         if (isOdd) {
             digitInteger *= 2;
         }
-
+        
         if (digitInteger > 9) {
             digitInteger -= 9;
         }
-
+        
         sum += digitInteger;
     }
-
+    
     return sum % 10 == 0;
 }
 
 + (BOOL)isNumericOnlyString:(NSString *)aString {
     NSCharacterSet *numericOnly = [NSCharacterSet decimalDigitCharacterSet];
     NSCharacterSet *aStringSet = [NSCharacterSet characterSetWithCharactersInString:aString];
-
+    
     return [numericOnly isSupersetOfSet:aStringSet];
 }
 
++ (NSCalendar *)gregorianCalendar {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+#pragma clang diagnostic ignored "-Wunreachable-code"
+    NSString *identifier = (&NSCalendarIdentifierGregorian != nil) ? NSCalendarIdentifierGregorian : NSGregorianCalendar;
+#pragma clang diagnostic pop
+    return [[NSCalendar alloc] initWithCalendarIdentifier:identifier];
+}
+
 + (BOOL)isExpiredMonth:(NSInteger)month andYear:(NSInteger)year atDate:(NSDate *)date {
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:STPGregorianCalendarIdentifier];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setYear:year];
     // Cards expire at end of month
     [components setMonth:month + 1];
     [components setDay:1];
-    NSDate *expiryDate = [calendar dateFromComponents:components];
+    NSDate *expiryDate = [[self gregorianCalendar] dateFromComponents:components];
     return ([expiryDate compare:date] == NSOrderedAscending);
 }
 
 + (NSInteger)currentYear {
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:STPGregorianCalendarIdentifier];
-    NSDateComponents *components = [gregorian components:NSCalendarUnitYear fromDate:[NSDate date]];
+    NSDateComponents *components = [[self gregorianCalendar] components:NSCalendarUnitYear fromDate:[NSDate date]];
     return [components year];
 }
 
 + (BOOL)handleValidationErrorForParameter:(NSString *)parameter error:(NSError **)outError {
     if (outError != nil) {
         if ([parameter isEqualToString:@"number"]) {
-            *outError = [self errorWithMessage:STPCardErrorInvalidNumberUserMessage
-                                     parameter:parameter
-                                 cardErrorCode:STPInvalidNumber
-                               devErrorMessage:@"Card number must be between 10 and 19 digits long and Luhn valid."];
+            *outError = [self createErrorWithMessage:STPCardErrorInvalidNumberUserMessage
+                                           parameter:parameter
+                                       cardErrorCode:STPInvalidNumber
+                                     devErrorMessage:@"Card number must be between 10 and 19 digits long and Luhn valid."];
         } else if ([parameter isEqualToString:@"cvc"]) {
-            *outError = [self errorWithMessage:STPCardErrorInvalidCVCUserMessage
-                                     parameter:parameter
-                                 cardErrorCode:STPInvalidCVC
-                               devErrorMessage:@"Card CVC must be numeric, 3 digits for Visa, Discover, MasterCard, JCB, and Discover cards, and 4 "
-                               @"digits for American Express cards."];
+            *outError = [self createErrorWithMessage:STPCardErrorInvalidCVCUserMessage
+                                           parameter:parameter
+                                       cardErrorCode:STPInvalidCVC
+                                     devErrorMessage:@"Card CVC must be numeric, 3 digits for Visa, Discover, MasterCard, JCB, and Discover cards, and 4 "
+                         @"digits for American Express cards."];
         } else if ([parameter isEqualToString:@"expMonth"]) {
-            *outError = [self errorWithMessage:STPCardErrorInvalidExpMonthUserMessage
-                                     parameter:parameter
-                                 cardErrorCode:STPInvalidExpMonth
-                               devErrorMessage:@"expMonth must be less than 13"];
+            *outError = [self createErrorWithMessage:STPCardErrorInvalidExpMonthUserMessage
+                                           parameter:parameter
+                                       cardErrorCode:STPInvalidExpMonth
+                                     devErrorMessage:@"expMonth must be less than 13"];
         } else if ([parameter isEqualToString:@"expYear"]) {
-            *outError = [self errorWithMessage:STPCardErrorInvalidExpYearUserMessage
-                                     parameter:parameter
-                                 cardErrorCode:STPInvalidExpYear
-                               devErrorMessage:@"expYear must be this year or a year in the future"];
+            *outError = [self createErrorWithMessage:STPCardErrorInvalidExpYearUserMessage
+                                           parameter:parameter
+                                       cardErrorCode:STPInvalidExpYear
+                                     devErrorMessage:@"expYear must be this year or a year in the future"];
         } else {
             // This should not be possible since this is a private method so we
             // know exactly how it is called.  We use STPAPIError for all errors
@@ -502,27 +378,27 @@
             *outError = [[NSError alloc] initWithDomain:StripeDomain
                                                    code:STPAPIError
                                                userInfo:@{
-                                                   NSLocalizedDescriptionKey: STPUnexpectedError,
-                                                   STPErrorMessageKey: @"There was an error within the Stripe client library when trying to generate the "
-                                                   @"proper validation error. Contact support@stripe.com if you see this."
-                                               }];
+                                                          NSLocalizedDescriptionKey: STPUnexpectedError,
+                                                          STPErrorMessageKey: @"There was an error within the Stripe client library when trying to generate the "
+                                                          @"proper validation error. Contact support@stripe.com if you see this."
+                                                          }];
         }
     }
     return NO;
 }
 
-+ (NSError *)errorWithMessage:(NSString *)userMessage
-                    parameter:(NSString *)parameter
-                cardErrorCode:(NSString *)cardErrorCode
-              devErrorMessage:(NSString *)devMessage {
++ (NSError *)createErrorWithMessage:(NSString *)userMessage
+                          parameter:(NSString *)parameter
+                      cardErrorCode:(NSString *)cardErrorCode
+                    devErrorMessage:(NSString *)devMessage {
     return [[NSError alloc] initWithDomain:StripeDomain
                                       code:STPCardError
                                   userInfo:@{
-                                      NSLocalizedDescriptionKey: userMessage,
-                                      STPErrorParameterKey: parameter,
-                                      STPCardErrorCodeKey: cardErrorCode,
-                                      STPErrorMessageKey: devMessage
-                                  }];
+                                             NSLocalizedDescriptionKey: userMessage,
+                                             STPErrorParameterKey: parameter,
+                                             STPCardErrorCodeKey: cardErrorCode,
+                                             STPErrorMessageKey: devMessage
+                                             }];
 }
 
 + (STPCardBrand)cardTypeFromNumber:(NSString *)number {
