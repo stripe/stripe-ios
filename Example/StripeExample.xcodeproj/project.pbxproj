@@ -16,11 +16,6 @@
 		0470A2AF19A5D5DB00B66DB7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2AD19A5D5DB00B66DB7 /* Main.storyboard */; };
 		0470A2B219A5D5DB00B66DB7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0470A2B119A5D5DB00B66DB7 /* ViewController.m */; };
 		0470A2B419A5D5DB00B66DB7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2B319A5D5DB00B66DB7 /* Images.xcassets */; };
-		0470A2BB19A5D5DB00B66DB7 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A2BA19A5D5DB00B66DB7 /* XCTest.framework */; };
-		0470A2BC19A5D5DB00B66DB7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29B19A5D5DB00B66DB7 /* Foundation.framework */; };
-		0470A2BD19A5D5DB00B66DB7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29F19A5D5DB00B66DB7 /* UIKit.framework */; };
-		0470A2C519A5D5DB00B66DB7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2C319A5D5DB00B66DB7 /* InfoPlist.strings */; };
-		0470A2C719A5D5DB00B66DB7 /* StripeExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0470A2C619A5D5DB00B66DB7 /* StripeExampleTests.m */; };
 		0470A30B19A5D69E00B66DB7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2D119A5D69E00B66DB7 /* Main.storyboard */; };
 		0470A30C19A5D69E00B66DB7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2D419A5D69E00B66DB7 /* InfoPlist.strings */; };
 		0470A32D19A5D69E00B66DB7 /* PaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0470A30619A5D69E00B66DB7 /* PaymentViewController.m */; };
@@ -34,21 +29,13 @@
 		04BA873519F89D5400B79DAF /* STPTestShippingMethodStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BA872D19F89D5400B79DAF /* STPTestShippingMethodStore.m */; };
 		04C0A07619F85E5100D699BB /* ShippingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0A07519F85E5100D699BB /* ShippingManager.m */; };
 		04CAFE1B1A018A2A00C36FC5 /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE061A018A2A00C36FC5 /* Stripe+ApplePay.m */; };
-		04CAFE1C1A018A2A00C36FC5 /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE061A018A2A00C36FC5 /* Stripe+ApplePay.m */; };
 		04CAFE1D1A018A2A00C36FC5 /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE081A018A2A00C36FC5 /* STPAPIConnection.m */; };
-		04CAFE1E1A018A2A00C36FC5 /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE081A018A2A00C36FC5 /* STPAPIConnection.m */; };
 		04CAFE1F1A018A2A00C36FC5 /* STPBankAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE0A1A018A2A00C36FC5 /* STPBankAccount.m */; };
-		04CAFE201A018A2A00C36FC5 /* STPBankAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE0A1A018A2A00C36FC5 /* STPBankAccount.m */; };
 		04CAFE211A018A2A00C36FC5 /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE0C1A018A2A00C36FC5 /* STPCard.m */; };
-		04CAFE221A018A2A00C36FC5 /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE0C1A018A2A00C36FC5 /* STPCard.m */; };
 		04CAFE231A018A2A00C36FC5 /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE0F1A018A2A00C36FC5 /* STPToken.m */; };
-		04CAFE241A018A2A00C36FC5 /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE0F1A018A2A00C36FC5 /* STPToken.m */; };
 		04CAFE271A018A2A00C36FC5 /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE121A018A2A00C36FC5 /* STPUtils.m */; };
-		04CAFE281A018A2A00C36FC5 /* STPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE121A018A2A00C36FC5 /* STPUtils.m */; };
 		04CAFE2B1A018A2A00C36FC5 /* Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE151A018A2A00C36FC5 /* Stripe.m */; };
-		04CAFE2C1A018A2A00C36FC5 /* Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE151A018A2A00C36FC5 /* Stripe.m */; };
 		04CAFE2F1A018A2A00C36FC5 /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE181A018A2A00C36FC5 /* StripeError.m */; };
-		04CAFE301A018A2A00C36FC5 /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAFE181A018A2A00C36FC5 /* StripeError.m */; };
 		04E75A3B19A71BFD000003DE /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3A19A71BFD000003DE /* Parse.framework */; };
 		04E75A3D19A71C22000003DE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3C19A71C22000003DE /* AudioToolbox.framework */; };
 		04E75A3F19A71C2A000003DE /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3E19A71C2A000003DE /* CFNetwork.framework */; };
@@ -92,16 +79,6 @@
 		04EEE20D19CB7ED500192164 /* textfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04EEE1EF19CB7ED500192164 /* textfield@2x.png */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		0470A2BE19A5D5DB00B66DB7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0470A29019A5D5DB00B66DB7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0470A29719A5D5DB00B66DB7;
-			remoteInfo = StripeExample;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		0470A29819A5D5DB00B66DB7 /* StripeExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StripeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0470A29B19A5D5DB00B66DB7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -117,11 +94,7 @@
 		0470A2B019A5D5DB00B66DB7 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		0470A2B119A5D5DB00B66DB7 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		0470A2B319A5D5DB00B66DB7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		0470A2B919A5D5DB00B66DB7 /* StripeExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0470A2BA19A5D5DB00B66DB7 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		0470A2C219A5D5DB00B66DB7 /* StripeExampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "StripeExampleTests-Info.plist"; sourceTree = "<group>"; };
-		0470A2C419A5D5DB00B66DB7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		0470A2C619A5D5DB00B66DB7 /* StripeExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StripeExampleTests.m; sourceTree = "<group>"; };
 		0470A2D219A5D69E00B66DB7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
 		0470A2D519A5D69E00B66DB7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		0470A30519A5D69E00B66DB7 /* PaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentViewController.h; sourceTree = "<group>"; };
@@ -238,16 +211,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0470A2B619A5D5DB00B66DB7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0470A2BB19A5D5DB00B66DB7 /* XCTest.framework in Frameworks */,
-				0470A2BD19A5D5DB00B66DB7 /* UIKit.framework in Frameworks */,
-				0470A2BC19A5D5DB00B66DB7 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -259,7 +222,6 @@
 				04EEE1C519CB7ED400192164 /* PaymentKit */,
 				04E75A5219A74329000003DE /* MBProgressHUD */,
 				0470A2A119A5D5DB00B66DB7 /* StripeExample */,
-				0470A2C019A5D5DB00B66DB7 /* StripeExampleTests */,
 				0470A29A19A5D5DB00B66DB7 /* Frameworks */,
 				0470A29919A5D5DB00B66DB7 /* Products */,
 			);
@@ -269,7 +231,6 @@
 			isa = PBXGroup;
 			children = (
 				0470A29819A5D5DB00B66DB7 /* StripeExample.app */,
-				0470A2B919A5D5DB00B66DB7 /* StripeExampleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -324,24 +285,6 @@
 				0470A2A419A5D5DB00B66DB7 /* InfoPlist.strings */,
 				0470A2A719A5D5DB00B66DB7 /* main.m */,
 				0470A2A919A5D5DB00B66DB7 /* StripeExample-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		0470A2C019A5D5DB00B66DB7 /* StripeExampleTests */ = {
-			isa = PBXGroup;
-			children = (
-				0470A2C619A5D5DB00B66DB7 /* StripeExampleTests.m */,
-				0470A2C119A5D5DB00B66DB7 /* Supporting Files */,
-			);
-			path = StripeExampleTests;
-			sourceTree = "<group>";
-		};
-		0470A2C119A5D5DB00B66DB7 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				0470A2C219A5D5DB00B66DB7 /* StripeExampleTests-Info.plist */,
-				0470A2C319A5D5DB00B66DB7 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -519,24 +462,6 @@
 			productReference = 0470A29819A5D5DB00B66DB7 /* StripeExample.app */;
 			productType = "com.apple.product-type.application";
 		};
-		0470A2B819A5D5DB00B66DB7 /* StripeExampleTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0470A2CD19A5D5DB00B66DB7 /* Build configuration list for PBXNativeTarget "StripeExampleTests" */;
-			buildPhases = (
-				0470A2B519A5D5DB00B66DB7 /* Sources */,
-				0470A2B619A5D5DB00B66DB7 /* Frameworks */,
-				0470A2B719A5D5DB00B66DB7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				0470A2BF19A5D5DB00B66DB7 /* PBXTargetDependency */,
-			);
-			name = StripeExampleTests;
-			productName = StripeExampleTests;
-			productReference = 0470A2B919A5D5DB00B66DB7 /* StripeExampleTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -560,9 +485,6 @@
 							};
 						};
 					};
-					0470A2B819A5D5DB00B66DB7 = {
-						TestTargetID = 0470A29719A5D5DB00B66DB7;
-					};
 				};
 			};
 			buildConfigurationList = 0470A29319A5D5DB00B66DB7 /* Build configuration list for PBXProject "StripeExample" */;
@@ -579,7 +501,6 @@
 			projectRoot = "";
 			targets = (
 				0470A29719A5D5DB00B66DB7 /* StripeExample */,
-				0470A2B819A5D5DB00B66DB7 /* StripeExampleTests */,
 			);
 		};
 /* End PBXProject section */
@@ -616,14 +537,6 @@
 				04EEE20619CB7ED500192164 /* mastercard@2x.png in Resources */,
 				0470A30B19A5D69E00B66DB7 /* Main.storyboard in Resources */,
 				0470A30C19A5D69E00B66DB7 /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0470A2B719A5D5DB00B66DB7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0470A2C519A5D5DB00B66DB7 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -668,31 +581,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0470A2B519A5D5DB00B66DB7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				04CAFE221A018A2A00C36FC5 /* STPCard.m in Sources */,
-				04CAFE281A018A2A00C36FC5 /* STPUtils.m in Sources */,
-				04CAFE2C1A018A2A00C36FC5 /* Stripe.m in Sources */,
-				04CAFE1E1A018A2A00C36FC5 /* STPAPIConnection.m in Sources */,
-				04CAFE1C1A018A2A00C36FC5 /* Stripe+ApplePay.m in Sources */,
-				04CAFE241A018A2A00C36FC5 /* STPToken.m in Sources */,
-				0470A2C719A5D5DB00B66DB7 /* StripeExampleTests.m in Sources */,
-				04CAFE301A018A2A00C36FC5 /* StripeError.m in Sources */,
-				04CAFE201A018A2A00C36FC5 /* STPBankAccount.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		0470A2BF19A5D5DB00B66DB7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0470A29719A5D5DB00B66DB7 /* StripeExample */;
-			targetProxy = 0470A2BE19A5D5DB00B66DB7 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0470A2A419A5D5DB00B66DB7 /* InfoPlist.strings */ = {
@@ -709,14 +598,6 @@
 				0470A2AE19A5D5DB00B66DB7 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		0470A2C319A5D5DB00B66DB7 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0470A2C419A5D5DB00B66DB7 /* en */,
-			);
-			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 		0470A2D119A5D69E00B66DB7 /* Main.storyboard */ = {
@@ -868,46 +749,6 @@
 			};
 			name = Release;
 		};
-		0470A2CE19A5D5DB00B66DB7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/StripeExample.app/StripeExample";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "StripeExample/StripeExample-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "StripeExampleTests/StripeExampleTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		0470A2CF19A5D5DB00B66DB7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/StripeExample.app/StripeExample";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "StripeExample/StripeExample-Prefix.pch";
-				INFOPLIST_FILE = "StripeExampleTests/StripeExampleTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -925,15 +766,6 @@
 			buildConfigurations = (
 				0470A2CB19A5D5DB00B66DB7 /* Debug */,
 				0470A2CC19A5D5DB00B66DB7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		0470A2CD19A5D5DB00B66DB7 /* Build configuration list for PBXNativeTarget "StripeExampleTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0470A2CE19A5D5DB00B66DB7 /* Debug */,
-				0470A2CF19A5D5DB00B66DB7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
