@@ -285,41 +285,40 @@
            [self.addressZip ?: @"" isEqualToString:other.addressZip ?: @""] && [self.addressCountry ?: @"" isEqualToString:other.addressCountry ?: @""];
 }
 
-
 #pragma mark Private Helpers
 + (BOOL)isLuhnValidString:(NSString *)number {
     BOOL isOdd = true;
     NSInteger sum = 0;
-    
+
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     for (NSInteger index = [number length] - 1; index >= 0; index--) {
         NSString *digit = [number substringWithRange:NSMakeRange(index, 1)];
         NSNumber *digitNumber = [numberFormatter numberFromString:digit];
-        
+
         if (digitNumber == nil) {
             return NO;
         }
-        
+
         NSInteger digitInteger = [digitNumber intValue];
         isOdd = !isOdd;
         if (isOdd) {
             digitInteger *= 2;
         }
-        
+
         if (digitInteger > 9) {
             digitInteger -= 9;
         }
-        
+
         sum += digitInteger;
     }
-    
+
     return sum % 10 == 0;
 }
 
 + (BOOL)isNumericOnlyString:(NSString *)aString {
     NSCharacterSet *numericOnly = [NSCharacterSet decimalDigitCharacterSet];
     NSCharacterSet *aStringSet = [NSCharacterSet characterSetWithCharactersInString:aString];
-    
+
     return [numericOnly isSupersetOfSet:aStringSet];
 }
 
@@ -377,10 +376,10 @@
             *outError = [[NSError alloc] initWithDomain:StripeDomain
                                                    code:STPAPIError
                                                userInfo:@{
-                                                          NSLocalizedDescriptionKey: STPUnexpectedError,
-                                                          STPErrorMessageKey: @"There was an error within the Stripe client library when trying to generate the "
-                                                          @"proper validation error. Contact support@stripe.com if you see this."
-                                                          }];
+                                                   NSLocalizedDescriptionKey: STPUnexpectedError,
+                                                   STPErrorMessageKey: @"There was an error within the Stripe client library when trying to generate the "
+                                                   @"proper validation error. Contact support@stripe.com if you see this."
+                                               }];
         }
     }
     return NO;
@@ -393,11 +392,11 @@
     return [[NSError alloc] initWithDomain:StripeDomain
                                       code:STPCardError
                                   userInfo:@{
-                                             NSLocalizedDescriptionKey: userMessage,
-                                             STPErrorParameterKey: parameter,
-                                             STPCardErrorCodeKey: cardErrorCode,
-                                             STPErrorMessageKey: devMessage
-                                             }];
+                                      NSLocalizedDescriptionKey: userMessage,
+                                      STPErrorParameterKey: parameter,
+                                      STPCardErrorCodeKey: cardErrorCode,
+                                      STPErrorMessageKey: devMessage
+                                  }];
 }
 
 + (STPCardBrand)cardTypeFromNumber:(NSString *)number {
