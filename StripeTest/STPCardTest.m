@@ -59,7 +59,7 @@
         @"address_country": @"USA",
         @"object": @"something",
         @"last4": @"1234",
-        @"type": @"Smastersmard",
+        @"brand": @"MasterCard",
         @"fingerprint": @"Fingolfin",
         @"country": @"Japan"
     };
@@ -80,7 +80,7 @@
     XCTAssertEqualObjects([cardWithAttributes addressCountry], @"USA", @"addressCountry is set correctly");
     XCTAssertEqualObjects([cardWithAttributes object], @"something", @"object is set correctly");
     XCTAssertEqualObjects([cardWithAttributes last4], @"1234", @"last4 is set correctly");
-    XCTAssertEqualObjects([cardWithAttributes type], @"Smastersmard", @"type is set correctly");
+    XCTAssertEqual([cardWithAttributes brand], STPCardBrandMasterCard, @"type is set correctly");
     XCTAssertEqualObjects([cardWithAttributes fingerprint], @"Fingolfin", @"fingerprint is set correctly");
     XCTAssertEqualObjects([cardWithAttributes country], @"Japan", @"country is set correctly");
 }
@@ -140,34 +140,42 @@
 }
 
 #pragma mark -type tests
-- (void)testTypeReturnsCorrectlyForAmexCard {
+- (void)testBrandReturnsCorrectlyForAmexCard {
     self.card.number = @"3412123412341234";
-    XCTAssertEqualObjects(@"American Express", self.card.type, @"Correct card type returned for Amex card");
+    XCTAssertEqual(STPCardBrandAmex, self.card.brand, @"Correct card brand returned for Amex card");
 }
 
-- (void)testTypeReturnsCorrectlyForDiscoverCard {
+- (void)testBrandReturnsCorrectlyForDiscoverCard {
     self.card.number = @"6452123412341234";
-    XCTAssertEqualObjects(@"Discover", self.card.type, @"Correct card type returned for Discover card");
+    XCTAssertEqual(STPCardBrandDiscover, self.card.brand, @"Correct card brand returned for Discover card");
 }
 
-- (void)testTypeReturnsCorrectlyForJCBCard {
+- (void)testBrandReturnsCorrectlyForJCBCard {
     self.card.number = @"3512123412341234";
-    XCTAssertEqualObjects(@"JCB", self.card.type, @"Correct card type returned for JCB card");
+    XCTAssertEqual(STPCardBrandJCB, self.card.brand, @"Correct card brand returned for JCB card");
 }
 
-- (void)testTypeReturnsCorrectlyForDinersClubCard {
+- (void)testBrandReturnsCorrectlyForDinersClubCard {
     self.card.number = @"3612123412341234";
-    XCTAssertEqualObjects(@"Diners Club", self.card.type, @"Correct card type returned for Diners Club card");
+    XCTAssertEqual(STPCardBrandDinersClub, self.card.brand, @"Correct card brand returned for Diners Club card");
 }
 
-- (void)testTypeReturnsCorrectlyForVisaCard {
+- (void)testBrandReturnsCorrectlyForVisaCard {
     self.card.number = @"4123123412341234";
-    XCTAssertEqualObjects(@"Visa", self.card.type, @"Correct card type returned for Visa card");
+    XCTAssertEqual(STPCardBrandVisa, self.card.brand, @"Correct card brand returned for Visa card");
+}
+
+- (void)testBrandReturnsCorrectlyForMasterCardCard {
+    self.card.number = @"5123123412341234";
+    XCTAssertEqual(STPCardBrandMasterCard, self.card.brand, @"Correct card brand returned for MasterCard card");
 }
 
 - (void)testTypeReturnsCorrectlyForMasterCardCard {
     self.card.number = @"5123123412341234";
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertEqualObjects(@"MasterCard", self.card.type, @"Correct card type returned for MasterCard card");
+#pragma clang diagnostic pop
 }
 
 #pragma mark -validateNumber:error: tests
