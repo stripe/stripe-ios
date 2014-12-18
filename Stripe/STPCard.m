@@ -188,23 +188,22 @@
     if (*ioValue == nil) {
         return [STPCard handleValidationErrorForParameter:@"number" error:outError];
     }
-    NSString *ioValueString = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *cvc = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     BOOL validCvcLength = ({
         BOOL valid;
         switch (self.brand) {
         case STPCardBrandAmex:
-            valid = ([ioValueString length] == 4);
-            break;
         case STPCardBrandUnknown:
-            valid = ([ioValueString length] >= 3 && [ioValueString length] <= 4);
+            valid = (cvc.length == 3 || cvc.length == 4);
+            break;
         default:
-            valid = ([ioValueString length] == 3);
+            valid = (cvc.length == 3);
             break;
         }
         valid;
     });
 
-    if (![STPCard isNumericOnlyString:ioValueString] || !validCvcLength) {
+    if (![STPCard isNumericOnlyString:cvc] || !validCvcLength) {
         return [STPCard handleValidationErrorForParameter:@"cvc" error:outError];
     }
     return YES;
@@ -359,8 +358,8 @@
             *outError = [self createErrorWithMessage:STPCardErrorInvalidCVCUserMessage
                                            parameter:parameter
                                        cardErrorCode:STPInvalidCVC
-                                     devErrorMessage:@"Card CVC must be numeric, 3 digits for Visa, Discover, MasterCard, JCB, and Discover cards, and 4 "
-                         @"digits for American Express cards."];
+                                     devErrorMessage:@"Card CVC must be numeric, 3 digits for Visa, Discover, MasterCard, JCB, and Discover cards, and 3 or 4 "
+                                     @"digits for American Express cards."];
         } else if ([parameter isEqualToString:@"expMonth"]) {
             *outError = [self createErrorWithMessage:STPCardErrorInvalidExpMonthUserMessage
                                            parameter:parameter
