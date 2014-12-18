@@ -276,7 +276,10 @@
 }
 
 - (STPCardBrand)brand {
-    return _brand ?: [self.class cardTypeFromNumber:self.number];
+    if (_brand == STPCardBrandUnknown) {
+        return [self.class cardTypeFromNumber:self.number];
+    }
+    return _brand;
 }
 
 - (NSString *)type {
