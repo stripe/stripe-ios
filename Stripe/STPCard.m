@@ -156,12 +156,11 @@
     }
 }
 
-#pragma mark Public Interface
-
 - (instancetype)init {
     self = [super init];
-
     if (self) {
+        _brand = STPCardBrandUnknown;
+        _funding = STPCardFundingTypeOther;
         _object = @"card";
     }
 
@@ -417,6 +416,131 @@
            [self.addressLine1 ?: @"" isEqualToString:other.addressLine1 ?: @""] && [self.addressLine2 ?: @"" isEqualToString:other.addressLine2 ?: @""] &&
            [self.addressCity ?: @"" isEqualToString:other.addressCity ?: @""] && [self.addressState ?: @"" isEqualToString:other.addressState ?: @""] &&
            [self.addressZip ?: @"" isEqualToString:other.addressZip ?: @""] && [self.addressCountry ?: @"" isEqualToString:other.addressCountry ?: @""];
+}
+
+#pragma mark Private Helpers
++ (BOOL)isLuhnValidString:(NSString *)number {
+    BOOL isOdd = true;
+    NSInteger sum = 0;
+
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    for (NSInteger index = [number length] - 1; index >= 0; index--) {
+        NSString *digit = [number substringWithRange:NSMakeRange(index, 1)];
+        NSNumber *digitNumber = [numberFormatter numberFromString:digit];
+
+        if (digitNumber == nil) {
+            return NO;
+        }
+
+        NSInteger digitInteger = [digitNumber intValue];
+        isOdd = !isOdd;
+        if (isOdd) {
+            digitInteger *= 2;
+        }
+
+        if (digitInteger > 9) {
+            digitInteger -= 9;
+        }
+
+        sum += digitInteger;
+    }
+
+    return sum % 10 == 0;
+}
+
++ (BOOL)isNumericOnlyString:(NSString *)aString {
+    NSCharacterSet *numericOnly = [NSCharacterSet decimalDigitCharacterSet];
+    NSCharacterSet *aStringSet = [NSCharacterSet characterSetWithCharactersInString:aString];
+
+    return [numericOnly isSupersetOfSet:aStringSet];
+}
+
++ (BOOL)isExpiredMonth:(NSInteger)month andYear:(NSInteger)year atDate:(NSDate *)date {
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:STPGregorianCalendarIdentifier];
+    NSDateComponents *components = [[NSDateComponents alloc] init];
+    [components setYear:year];
+    // Cards expire at end of month
+    [components setMonth:month + 1];
+    [components setDay:1];
+    NSDate *expiryDate = [calendar dateFromComponents:components];
+    return ([expiryDate compare:date] == NSOrderedAscending);
+}
+
++ (NSInteger)currentYear {
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:STPGregorianCalendarIdentifier];
+    NSDateComponents *components = [gregorian components:NSCalendarUnitYear fromDate:[NSDate date]];
+    return [components year];
+}
+
++ (BOOL)handleValidationErrorForParameter:(NSString *)parameter error:(NSError **)outError {
+    if (outError != nil) {
+        if ([parameter isEqualToString:@"number"]) {
+            *outError = [self errorWithMessage:STPCardErrorInvalidNumberUserMessage
+                                     parameter:parameter
+                                 cardErrorCode:STPInvalidNumber
+                               devErrorMessage:@"Card number must be between 10 and 19 digits long and Luhn valid."];
+        } else if ([parameter isEqualToString:@"cvc"]) {
+            *outError = [self errorWithMessage:STPCardErrorInvalidCVCUserMessage
+                                     parameter:parameter
+                                 cardErrorCode:STPInvalidCVC
+                               devErrorMessage:@"Card CVC must be numeric, 3 digits for Visa, Discover, MasterCard, JCB, and Discover cards, and 4 "
+                               @"digits for American Express cards."];
+        } else if ([parameter isEqualToString:@"expMonth"]) {
+            *outError = [self errorWithMessage:STPCardErrorInvalidExpMonthUserMessage
+                                     parameter:parameter
+                                 cardErrorCode:STPInvalidExpMonth
+                               devErrorMessage:@"expMonth must be less than 13"];
+        } else if ([parameter isEqualToString:@"expYear"]) {
+            *outError = [self errorWithMessage:STPCardErrorInvalidExpYearUserMessage
+                                     parameter:parameter
+                                 cardErrorCode:STPInvalidExpYear
+                               devErrorMessage:@"expYear must be this year or a year in the future"];
+        } else {
+            // This should not be possible since this is a private method so we
+            // know exactly how it is called.  We use STPAPIError for all errors
+            // that are unexpected within the bindings as well.
+            *outError = [[NSError alloc] initWithDomain:StripeDomain
+                                                   code:STPAPIError
+                                               userInfo:@{
+                                                   NSLocalizedDescriptionKey: STPUnexpectedError,
+                                                   STPErrorMessageKey: @"There was an error within the Stripe client library when trying to generate the "
+                                                   @"proper validation error. Contact support@stripe.com if you see this."
+                                               }];
+        }
+    }
+    return NO;
+}
+
++ (NSError *)errorWithMessage:(NSString *)userMessage
+                    parameter:(NSString *)parameter
+                cardErrorCode:(NSString *)cardErrorCode
+              devErrorMessage:(NSString *)devMessage {
+    return [[NSError alloc] initWithDomain:StripeDomain
+                                      code:STPCardError
+                                  userInfo:@{
+                                      NSLocalizedDescriptionKey: userMessage,
+                                      STPErrorParameterKey: parameter,
+                                      STPCardErrorCodeKey: cardErrorCode,
+                                      STPErrorMessageKey: devMessage
+                                  }];
+}
+
++ (STPCardBrand)cardTypeFromNumber:(NSString *)number {
+    if ([number hasPrefix:@"34"] || [number hasPrefix:@"37"]) {
+        return STPCardBrandAmex;
+    } else if ([number hasPrefix:@"60"] || [number hasPrefix:@"62"] || [number hasPrefix:@"64"] || [number hasPrefix:@"65"]) {
+        return STPCardBrandDiscover;
+    } else if ([number hasPrefix:@"35"]) {
+        return STPCardBrandJCB;
+    } else if ([number hasPrefix:@"30"] || [number hasPrefix:@"36"] || [number hasPrefix:@"38"] || [number hasPrefix:@"39"]) {
+        return STPCardBrandDinersClub;
+    } else if ([number hasPrefix:@"4"]) {
+        return STPCardBrandVisa;
+    } else if ([number hasPrefix:@"5"]) {
+        return STPCardBrandMasterCard;
+    } else {
+        return STPCardBrandUnknown;
+    }
 }
 
 @end
