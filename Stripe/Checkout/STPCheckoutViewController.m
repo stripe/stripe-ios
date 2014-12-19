@@ -286,7 +286,11 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                 return NO;
             }
             return YES;
-        } else if ([url.scheme isEqualToString:checkoutRPCScheme]) {
+        }
+        return NO;
+    }
+    case UIWebViewNavigationTypeOther: {
+        if ([url.scheme isEqualToString:checkoutRPCScheme]) {
             NSString *event = url.host;
             NSString *path = [url.path componentsSeparatedByString:@"/"][1];
             NSDictionary *payload = nil;
@@ -294,10 +298,8 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                 payload = [NSJSONSerialization JSONObjectWithData:[path dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
             }
             [self handleCheckoutEvent:event withPayload:payload];
+            return NO;
         }
-        return NO;
-    }
-    case UIWebViewNavigationTypeOther: {
         return YES;
     }
     default:
