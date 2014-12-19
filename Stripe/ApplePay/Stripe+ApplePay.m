@@ -10,11 +10,10 @@
 
 #import "Stripe.h"
 #import "Stripe+ApplePay.h"
-#import "STPAPIConnection.h"
-#import <PassKit/PassKit.h>
+#import "STPAPIClient.h"
 #import <AddressBook/AddressBook.h>
 
-@implementation Stripe (ApplePay)
+@implementation STPAPIClient (ApplePay)
 
 + (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest {
     if (paymentRequest == nil) {
@@ -36,24 +35,12 @@
     return paymentRequest;
 }
 
-+ (void)createTokenWithPayment:(PKPayment *)payment completion:(STPCompletionBlock)handler {
-    [self createTokenWithPayment:payment operationQueue:[NSOperationQueue mainQueue] completion:handler];
+- (void)createTokenWithPayment:(PKPayment *)payment completion:(STPCompletionBlock)completion {
+    [self createTokenWithData:[self.class formEncodedDataForPayment:payment] completion:completion];
 }
 
-+ (void)createTokenWithPayment:(PKPayment *)payment operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler {
-    if (handler == nil) {
-        [NSException raise:@"RequiredParameter" format:@"'handler' is required to use the token that is created"];
-    }
-
-    NSURL *url = [self apiURL];
-
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    request.HTTPMethod = @"POST";
-    NSData *userAgentData = [NSJSONSerialization dataWithJSONObject:[self stripeUserAgentDetails] options:0 error:NULL];
-    NSString *userAgentDetails = [[NSString alloc] initWithData:userAgentData encoding:NSUTF8StringEncoding];
-    [request setValue:userAgentDetails forHTTPHeaderField:@"X-Stripe-User-Agent"];
-    [request setValue:[@"Bearer " stringByAppendingString:[self defaultPublishableKey]] forHTTPHeaderField:@"Authorization"];
-
++ (NSData *)formEncodedDataForPayment:(PKPayment *)payment {
+    NSCAssert(payment != nil, @"Cannot create a token with a nil payment.");
     NSMutableCharacterSet *set = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
     [set removeCharactersInString:@"+="];
     NSString *paymentString =
@@ -86,9 +73,7 @@
                 params[@"address_country"] = country;
             }
             CFRelease(dict);
-            NSMutableCharacterSet *set = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
-            [set removeCharactersInString:@"+="];
-            [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
+            [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, __unused BOOL *stop) {
                 NSString *param = [NSString stringWithFormat:@"&card[%@]=%@", key, [obj stringByAddingPercentEncodingWithAllowedCharacters:set]];
                 payloadString = [payloadString stringByAppendingString:param];
             }];
@@ -96,20 +81,29 @@
         CFRelease(addressValues);
     }
 
-    request.HTTPBody = [payloadString dataUsingEncoding:NSUTF8StringEncoding];
-
-    [[[STPAPIConnection alloc] initWithRequest:request] runOnOperationQueue:queue
-                                                                 completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
-                                                                     [self handleTokenResponse:response body:body error:requestError completion:handler];
-                                                                 }];
+    return [payloadString dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-+ (BOOL)isSimulatorBuild {
-#if TARGET_IPHONE_SIMULATOR
-    return YES;
-#else
-    return NO;
-#endif
+@end
+
+@implementation Stripe (ApplePay)
+
++ (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest {
+    return [STPAPIClient canSubmitPaymentRequest:paymentRequest];
+}
+
++ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier {
+    return [STPAPIClient paymentRequestWithMerchantIdentifier:merchantIdentifier];
+}
+
++ (void)createTokenWithPayment:(PKPayment *)payment completion:(STPCompletionBlock)handler {
+    [self createTokenWithPayment:payment operationQueue:[NSOperationQueue mainQueue] completion:handler];
+}
+
++ (void)createTokenWithPayment:(PKPayment *)payment operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler {
+    STPAPIClient *client = [[STPAPIClient alloc] init];
+    client.operationQueue = queue;
+    [client createTokenWithPayment:payment completion:handler];
 }
 
 @end

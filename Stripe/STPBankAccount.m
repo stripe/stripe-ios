@@ -103,6 +103,7 @@
 }
 
 + (NSData *)formEncodedDataForBankAccount:(STPBankAccount *)bankAccount {
+    NSCAssert(bankAccount != nil, @"Cannot create a token with a nil bank account.");
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSMutableArray *parts = [NSMutableArray array];
 

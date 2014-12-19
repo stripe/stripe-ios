@@ -388,6 +388,7 @@
 }
 
 + (NSData *)formEncodedDataForCard:(STPCard *)card {
+    NSCAssert(card != nil, @"Cannot create a token with a nil card.");
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
 
     if (card.number) {

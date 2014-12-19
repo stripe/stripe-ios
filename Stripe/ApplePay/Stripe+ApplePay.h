@@ -8,10 +8,20 @@
 
 #if defined(STRIPE_ENABLE_APPLEPAY)
 
-#import "Stripe.h"
 #import <PassKit/PassKit.h>
+@class Stripe, STPAPIClient;
 
-@class PKPaymentRequest;
+@interface STPAPIClient (ApplePay)
+
++ (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest;
+
++ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier;
+
+- (void)createTokenWithPayment:(PKPayment *)payment completion:(STPCompletionBlock)completion;
+
++ (NSData *)formEncodedDataForPayment:(PKPayment *)payment;
+
+@end
 
 @interface Stripe (ApplePay)
 
