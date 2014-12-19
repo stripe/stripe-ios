@@ -29,11 +29,3 @@
 - (BOOL)isEqualToBankAccount:(STPBankAccount *)bankAccount;
 
 @end
-
-@interface STPAPIClient (BankAccounts)
-
-- (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount completion:(STPCompletionBlock)completion;
-
-+ (NSData *)formEncodedDataForBankAccount:(STPBankAccount *)bankAccount;
-
-@end

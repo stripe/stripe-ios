@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   end
 
   s.subspec "Card" do |subspec|
-    subspec.source_files           = 'Stripe/STPCard.h', 'Stripe/STPCard.m', 'Stripe/STPFormEncodeProtocol.h', 'Stripe/StripeError.h', 'Stripe/StripeError.m', 'Stripe/STPUtils.h', 'Stripe/STPUtils.m'
+    subspec.source_files           = 'Stripe/CreditCards/STPCard.h', 'Stripe/CreditCards/STPCard.m', 'Stripe/StripeError.h', 'Stripe/StripeError.m'
   end
 
   s.subspec "ApplePay" do |subspec|

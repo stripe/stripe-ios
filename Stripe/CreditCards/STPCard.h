@@ -94,9 +94,3 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
  */
 - (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 @end
-
-@interface STPAPIClient (CreditCards)
-- (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)completion;
-
-+ (NSData *)formEncodedDataForCard:(STPCard *)card;
-@end

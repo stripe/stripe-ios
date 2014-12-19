@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "StripeError.h"
 #import "STPAPIClient.h"
+#import "STPAPIClient+BankAccounts.h"
+#import "STPAPIClient+CreditCards.h"
 #import "STPCard.h"
 #import "STPBankAccount.h"
 #import "STPToken.h"
@@ -45,4 +47,3 @@
                         completion:(STPCompletionBlock)handler;
 
 @end
-
