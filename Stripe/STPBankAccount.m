@@ -7,7 +7,6 @@
 //
 
 #import "STPBankAccount.h"
-#import "STPUtils.h"
 
 @interface STPBankAccount ()
 
@@ -70,29 +69,6 @@
     }
 }
 
-#pragma mark - STPFormEncodeProtocol
-
-- (NSData *)formEncode {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-
-    NSMutableArray *parts = [NSMutableArray array];
-
-    if (_accountNumber)
-        params[@"account_number"] = _accountNumber;
-    if (_routingNumber)
-        params[@"routing_number"] = _routingNumber;
-    if (_country)
-        params[@"country"] = _country;
-
-    [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, __unused BOOL *stop) {
-        if (val != [NSNull null]) {
-            [parts addObject:[NSString stringWithFormat:@"bank_account[%@]=%@", key, [STPUtils stringByURLEncoding:val]]];
-        }
-    }];
-
-    return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
-}
-
 #pragma mark - Equality
 
 - (BOOL)isEqual:(STPBankAccount *)bankAccount {
@@ -116,6 +92,35 @@
            [self.routingNumber ?: @"" isEqualToString:bankAccount.routingNumber ?: @""] &&
            [self.country ?: @"" isEqualToString:bankAccount.country ?: @""] && [self.last4 ?: @"" isEqualToString:bankAccount.last4 ?: @""] &&
            [self.bankName ?: @"" isEqualToString:bankAccount.bankName ?: @""] && [self.currency ?: @"" isEqualToString:bankAccount.currency ?: @""];
+}
+
+@end
+
+@implementation STPAPIClient (BankAccounts)
+
+- (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount completion:(STPCompletionBlock)completion {
+    [self createTokenWithData:[self.class formEncodedDataForBankAccount:bankAccount] completion:completion];
+}
+
++ (NSData *)formEncodedDataForBankAccount:(STPBankAccount *)bankAccount {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSMutableArray *parts = [NSMutableArray array];
+
+    if (bankAccount.accountNumber) {
+        params[@"account_number"] = bankAccount.accountNumber;
+    }
+    if (bankAccount.routingNumber) {
+        params[@"routing_number"] = bankAccount.routingNumber;
+    }
+    if (bankAccount.country) {
+        params[@"country"] = bankAccount.country;
+    }
+
+    [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, __unused BOOL *stop) {
+        [parts addObject:[NSString stringWithFormat:@"bank_account[%@]=%@", key, [self.class stringByURLEncoding:val]]];
+    }];
+
+    return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 @end

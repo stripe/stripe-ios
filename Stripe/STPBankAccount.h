@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STPFormEncodeProtocol.h"
+#import "STPAPIClient.h"
 
-@interface STPBankAccount : NSObject<STPFormEncodeProtocol>
+@interface STPBankAccount : NSObject
 
 @property (nonatomic, copy) NSString *accountNumber;
 @property (nonatomic, copy) NSString *routingNumber;
@@ -27,5 +27,13 @@
 - (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 
 - (BOOL)isEqualToBankAccount:(STPBankAccount *)bankAccount;
+
+@end
+
+@interface STPAPIClient (BankAccounts)
+
+- (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount completion:(STPCompletionBlock)completion;
+
++ (NSData *)formEncodedDataForBankAccount:(STPBankAccount *)bankAccount;
 
 @end

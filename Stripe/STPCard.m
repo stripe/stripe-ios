@@ -8,7 +8,6 @@
 
 #import "STPCard.h"
 #import "StripeError.h"
-#import "STPUtils.h"
 
 @interface STPCard ()
 
@@ -93,43 +92,6 @@
     }
 
     return self;
-}
-
-- (NSData *)formEncode {
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-
-    if (_number)
-        params[@"number"] = _number;
-    if (_cvc)
-        params[@"cvc"] = _cvc;
-    if (_name)
-        params[@"name"] = _name;
-    if (_addressLine1)
-        params[@"address_line1"] = _addressLine1;
-    if (_addressLine2)
-        params[@"address_line2"] = _addressLine2;
-    if (_addressCity)
-        params[@"address_city"] = _addressCity;
-    if (_addressState)
-        params[@"address_state"] = _addressState;
-    if (_addressZip)
-        params[@"address_zip"] = _addressZip;
-    if (_addressCountry)
-        params[@"address_country"] = _addressCountry;
-    if (_expMonth)
-        params[@"exp_month"] = [NSString stringWithFormat:@"%lu", (unsigned long)_expMonth];
-    if (_expYear)
-        params[@"exp_year"] = [NSString stringWithFormat:@"%lu", (unsigned long)_expYear];
-
-    NSMutableArray *parts = [NSMutableArray array];
-
-    [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, __unused BOOL *stop) {
-        if (val != [NSNull null]) {
-            [parts addObject:[NSString stringWithFormat:@"card[%@]=%@", key, [STPUtils stringByURLEncoding:val]]];
-        }
-    }];
-
-    return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 - (NSString *)last4 {
@@ -415,6 +377,61 @@
     } else {
         return STPCardBrandUnknown;
     }
+}
+
+@end
+
+@implementation STPAPIClient (CreditCards)
+
+- (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)completion {
+    [self createTokenWithData:[self.class formEncodedDataForCard:card] completion:completion];
+}
+
++ (NSData *)formEncodedDataForCard:(STPCard *)card {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+
+    if (card.number) {
+        params[@"number"] = card.number;
+    }
+    if (card.cvc) {
+        params[@"cvc"] = card.cvc;
+    }
+    if (card.name) {
+        params[@"name"] = card.name;
+    }
+    if (card.addressLine1) {
+        params[@"address_line1"] = card.addressLine1;
+    }
+    if (card.addressLine2) {
+        params[@"address_line2"] = card.addressLine2;
+    }
+    if (card.addressCity) {
+        params[@"address_city"] = card.addressCity;
+    }
+    if (card.addressState) {
+        params[@"address_state"] = card.addressState;
+    }
+    if (card.addressZip) {
+        params[@"address_zip"] = card.addressZip;
+    }
+    if (card.addressCountry) {
+        params[@"address_country"] = card.addressCountry;
+    }
+    if (card.expMonth) {
+        params[@"exp_month"] = @(card.expMonth).stringValue;
+    }
+    if (card.expYear) {
+        params[@"exp_year"] = @(card.expYear).stringValue;
+    }
+
+    NSMutableArray *parts = [NSMutableArray array];
+
+    [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, __unused BOOL *stop) {
+        [parts addObject:[NSString stringWithFormat:@"card[%@]=%@", key, [self.class stringByURLEncoding:val]]];
+
+    }];
+
+    return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 @end

@@ -8,24 +8,17 @@
 
 #import <Foundation/Foundation.h>
 #import "StripeError.h"
-#import "STPCard.h"
-#import "STPBankAccount.h"
-#import "STPToken.h"
+#import "STPAPIClient.h"
 
-FOUNDATION_EXPORT NSString *const kStripeiOSVersion; // Version of this library.
-
-typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
+@class Stripe, STPCard, STPBankAccount;
 
 // Stripe is a static class used to create and retrieve tokens.
-@interface Stripe : NSObject
+@interface Stripe (DeprecatedMethods)
 
 /*
  If you set a default publishable key, it will be used in any of the methods
  below that do not accept a publishable key parameter
  */
-+ (NSString *)defaultPublishableKey;
-+ (void)setDefaultPublishableKey:(NSString *)publishableKey;
-
 + (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)handler;
 
 + (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler;
@@ -48,9 +41,11 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
                     operationQueue:(NSOperationQueue *)queue
                         completion:(STPCompletionBlock)handler;
 
-+ (NSDictionary *)stripeUserAgentDetails;
+@end
 
-+ (NSURL *)apiURL;
-+ (void)handleTokenResponse:(NSURLResponse *)response body:(NSData *)body error:(NSError *)requestError completion:(STPCompletionBlock)handler;
+@interface STPUtils : NSObject
+
++ (NSString *)stringByReplacingSnakeCaseWithCamelCase:(NSString *)input;
++ (NSString *)stringByURLEncoding:(NSString *)string;
 
 @end

@@ -6,9 +6,11 @@
 //
 //
 
+#import "STPAPIClient.h"
 #import <XCTest/XCTest.h>
 #import "Stripe.h"
 #import "STPBankAccount.h"
+#import "STPToken.h"
 
 @interface STPBankAccountFunctionalTest : XCTestCase
 @end

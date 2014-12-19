@@ -6,6 +6,7 @@
 //
 //
 
+#import "STPAPIClient.h"
 #import "Stripe.h"
 #import <XCTest/XCTest.h>
 
@@ -19,8 +20,9 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
     NumStripeCertificateFailMethods
 };
 
-@interface FailableStripe : Stripe
-+ (void)setFailureMethod:(StripeCertificateFailMethod)method;
+@interface STPAPIClient(Failure)
+@property(nonatomic, readwrite)NSURL *apiURL;
+- (void)setFailureMethod:(StripeCertificateFailMethod)method;
 @end
 
 @interface STPCertTest : XCTestCase
@@ -29,29 +31,27 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
 @implementation STPCertTest
 
 - (void)testNoError {
-    __block BOOL done = NO;
-    [FailableStripe setFailureMethod:StripeCertificateFailMethodNoError];
-    [FailableStripe createTokenWithCard:[self dummyCard]
-                         publishableKey:STPExamplePublishableKey
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Token creation"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPExamplePublishableKey];
+    [client setFailureMethod:StripeCertificateFailMethodNoError];
+    [client createTokenWithData:[NSData new]
                              completion:^(STPToken *token, NSError *error) {
+                                 [expectation fulfill];
                                  // Note that this API request *will* fail, but it will return error
                                  // messages from the server and not be blocked by local cert checks
                                  XCTAssertNil(token, @"Expected no token");
                                  XCTAssertNotNil(error, @"Expected error");
-                                 done = YES;
                              }];
-
-    while (!done) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-    }
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
 - (void)testCertificateErrorWithMethod:(StripeCertificateFailMethod)method {
-    __block BOOL done = NO;
-    [FailableStripe setFailureMethod:method];
-    [FailableStripe createTokenWithCard:[self dummyCard]
-                         publishableKey:STPExamplePublishableKey
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Token creation"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPExamplePublishableKey];
+    [client setFailureMethod:method];
+    [client createTokenWithData:[NSData new]
                              completion:^(STPToken *token, NSError *error) {
+                                 [expectation fulfill];
                                  XCTAssertNil(token, @"Expected no response");
                                  XCTAssertNotNil(error, @"Expected error");
 
@@ -64,12 +64,9 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
                                      XCTAssertNotNil(error.userInfo[@"NSURLErrorFailingURLPeerTrustErrorKey"],
                                                      @"There should be a secTustRef for Foundation HTTPS errors");
                                  }
-                                 done = YES;
                              }];
 
-    while (!done) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-    }
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
 // These are broken into separate methods to make test reports nicer.
@@ -86,43 +83,32 @@ typedef NS_ENUM(NSInteger, StripeCertificateFailMethod) {
     [self testCertificateErrorWithMethod:StripeCertificateFailMethodRevoked];
 }
 
-- (STPCard *)dummyCard {
-    STPCard *card = [[STPCard alloc] init];
-    card.number = @"4242424242424242";
-    card.expMonth = 12;
-    card.expYear = 2020;
-    return card;
-}
-
 @end
 
-#pragma mark FailableStripe
+@implementation STPAPIClient(Failure)
 
-@interface Stripe ()
-+ (NSURL *)apiURL;
-@end
+@dynamic apiURL;
 
-@implementation FailableStripe
-
-static StripeCertificateFailMethod failureMethod;
-
-+ (NSURL *)apiURL {
+- (void)setFailureMethod:(StripeCertificateFailMethod)failureMethod {
+    NSURL *url;
     switch (failureMethod) {
-    case StripeCertificateFailMethodNoError:
-        return [Stripe apiURL];
-    case StripeCertificateFailMethodExpired:
-        return [NSURL URLWithString:@"https://testssl-expire.disig.sk/index.en.html"];
-    case StripeCertificateFailMethodMismatched:
-        return [NSURL URLWithString:@"https://mismatched.stripe.com"];
-    case StripeCertificateFailMethodRevoked:
-        return [NSURL URLWithString:@"https://revoked.stripe.com:444"];
-    default:
-        return nil;
+            break;
+        case StripeCertificateFailMethodExpired:
+            url = [NSURL URLWithString:@"https://testssl-expire.disig.sk/index.en.html"];
+            break;
+        case StripeCertificateFailMethodMismatched:
+            url = [NSURL URLWithString:@"https://mismatched.stripe.com"];
+            break;
+        case StripeCertificateFailMethodRevoked:
+            url = [NSURL URLWithString:@"https://revoked.stripe.com:444"];
+            break;
+        case StripeCertificateFailMethodNoError:
+        default:
+            break;
     }
-}
-
-+ (void)setFailureMethod:(StripeCertificateFailMethod)method {
-    failureMethod = method;
+    if (url) {
+        self.apiURL = url;
+    }
 }
 
 @end

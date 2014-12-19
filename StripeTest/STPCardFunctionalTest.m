@@ -6,9 +6,11 @@
 //
 //
 
+#import "STPAPIClient.h"
 #import <XCTest/XCTest.h>
 #import "Stripe.h"
 #import "STPCard.h"
+#import "STPToken.h"
 
 @interface STPCardFunctionalTest : XCTestCase
 @end

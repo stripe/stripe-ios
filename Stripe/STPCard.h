@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STPFormEncodeProtocol.h"
+#import "STPAPIClient.h"
 
 typedef NS_ENUM(NSInteger, STPCardFundingType) {
     STPCardFundingTypeDebit,
@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
  its properties with information that your customer enters on your credit card
  form.  Then you create tokens from these.
  */
-@interface STPCard : NSObject<STPFormEncodeProtocol>
+@interface STPCard : NSObject
 
 @property (nonatomic, copy) NSString *number;
 @property (nonatomic) NSUInteger expMonth;
@@ -93,4 +93,10 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
  generate cards from the response of creating ar getting a token.
  */
 - (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
+@end
+
+@interface STPAPIClient (CreditCards)
+- (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)completion;
+
++ (NSData *)formEncodedDataForCard:(STPCard *)card;
 @end

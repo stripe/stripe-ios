@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Stripe, Inc. All rights reserved.
 //
 
+#import "STPAPIClient.h"
 #import <XCTest/XCTest.h>
 #import "STPAPIConnection.h"
 
