@@ -29,7 +29,8 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
 
 @end
 
-@interface STPAPIClient(PrivateMethods)
+@interface STPAPIClient (PrivateMethods)
 + (NSString *)stringByURLEncoding:(NSString *)string;
 + (NSString *)stringByReplacingSnakeCaseWithCamelCase:(NSString *)input;
++ (NSString *)SHA1FingerprintOfData:(NSData *)data;
 @end

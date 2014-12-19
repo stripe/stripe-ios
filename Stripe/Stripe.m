@@ -7,9 +7,6 @@
 //
 
 #import "Stripe.h"
-#import "STPAPIClient.h"
-#import "STPCard.h"
-#import "STPBankAccount.h"
 
 NSString *const kStripeiOSVersion = @"2.2.2";
 
@@ -74,18 +71,6 @@ static NSString *const tokenEndpoint = @"tokens";
 
 + (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler {
     [self createTokenWithBankAccount:bankAccount publishableKey:[self defaultPublishableKey] operationQueue:queue completion:handler];
-}
-
-@end
-
-@implementation STPUtils
-
-+ (NSString *)stringByReplacingSnakeCaseWithCamelCase:(NSString *)input {
-    return [STPAPIClient stringByURLEncoding:input];
-}
-
-+ (NSString *)stringByURLEncoding:(NSString *)string {
-    return [STPAPIClient stringByURLEncoding:string];
 }
 
 @end

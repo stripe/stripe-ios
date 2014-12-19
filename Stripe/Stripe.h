@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "StripeError.h"
 #import "STPAPIClient.h"
+#import "STPCard.h"
+#import "STPBankAccount.h"
+#import "STPToken.h"
 
 @class Stripe, STPCard, STPBankAccount;
 
@@ -43,9 +46,3 @@
 
 @end
 
-@interface STPUtils : NSObject
-
-+ (NSString *)stringByReplacingSnakeCaseWithCamelCase:(NSString *)input;
-+ (NSString *)stringByURLEncoding:(NSString *)string;
-
-@end
