@@ -8,6 +8,7 @@
 
 #import "STPAPIClient.h"
 #import "STPCard.h"
+#import "STPAPIClient+CreditCards.h"
 #import "StripeError.h"
 #import <XCTest/XCTest.h>
 

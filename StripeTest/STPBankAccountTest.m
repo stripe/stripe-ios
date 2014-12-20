@@ -8,6 +8,7 @@
 
 #import "STPAPIClient.h"
 #import "STPBankAccount.h"
+#import "STPAPIClient+BankAccounts.h"
 #import <XCTest/XCTest.h>
 
 @interface STPBankAccountTest : XCTestCase
