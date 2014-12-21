@@ -69,7 +69,7 @@
     card.expMonth = self.paymentView.card.expMonth;
     card.expYear = self.paymentView.card.expYear;
     card.cvc = self.paymentView.card.cvc;
-    [Stripe createTokenWithCard:card
+    [[STPAPIClient sharedClient] createTokenWithCard:card
                      completion:^(STPToken *token, NSError *error) {
                          [MBProgressHUD hideHUDForView:self.view animated:YES];
                          if (error) {

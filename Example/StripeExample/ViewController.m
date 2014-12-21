@@ -117,11 +117,11 @@
         card.expMonth = 12;
         card.expYear = 2020;
         card.cvc = @"123";
-        [Stripe createTokenWithCard:card completion:tokenBlock];
+        [[STPAPIClient sharedClient] createTokenWithCard:card completion:tokenBlock];
         return;
     }
 #endif
-    [Stripe createTokenWithPayment:payment operationQueue:[NSOperationQueue mainQueue] completion:tokenBlock];
+    [[STPAPIClient sharedClient] createTokenWithPayment:payment completion:tokenBlock];
 }
 
 - (void)createBackendChargeWithToken:(STPToken *)token completion:(void (^)(PKPaymentAuthorizationStatus))completion {
