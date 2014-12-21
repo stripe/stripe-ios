@@ -20,16 +20,17 @@
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
 
 - (void)testCreateCardToken {
-    [Stripe setDefaultPublishableKey:@"pk_test_5fhKkYDKKNr4Fp6q7Mq9CwJd"];
     STPCard *card = [[STPCard alloc] init];
 
     card.number = @"4242 4242 4242 4242";
     card.expMonth = 6;
     card.expYear = 2018;
 
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_5fhKkYDKKNr4Fp6q7Mq9CwJd"];
+
     XCTestExpectation *expectation = [self expectationWithDescription:@"Card creation"];
 
-    [Stripe createTokenWithCard:card
+    [client createTokenWithCard:card
                      completion:^(STPToken *token, NSError *error) {
                          [expectation fulfill];
 
@@ -51,10 +52,10 @@
     card.expMonth = 6;
     card.expYear = 2018;
 
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"not_a_valid_key_asdf"];
+
     XCTestExpectation *expectation = [self expectationWithDescription:@"Card failure"];
-    [Stripe createTokenWithCard:card
-                 publishableKey:@"not_a_valid_key_asdf"
-                 operationQueue:[NSOperationQueue mainQueue]
+    [client createTokenWithCard:card
                      completion:^(STPToken *token, NSError *error) {
                          [expectation fulfill];
                          XCTAssertNil(token, @"token should be nil");
