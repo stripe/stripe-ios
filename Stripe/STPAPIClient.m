@@ -80,8 +80,7 @@ typedef void (^STPAPIConnectionCompletionBlock)(NSURLResponse *response, NSData 
         _apiURL = [[[NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]] URLByAppendingPathComponent:apiVersion]
             URLByAppendingPathComponent:tokenEndpoint];
         _publishableKey = [publishableKey copy];
-        _operationQueue = [[NSOperationQueue alloc] init];
-        _operationQueue.maxConcurrentOperationCount = 1;
+        _operationQueue = [NSOperationQueue mainQueue];
     }
     return self;
 }
@@ -369,11 +368,6 @@ typedef void (^STPAPIConnectionCompletionBlock)(NSURLResponse *response, NSData 
     NSMutableString *camelCaseParam = [NSMutableString string];
     [parts enumerateObjectsUsingBlock:^(NSString *part, NSUInteger idx, __unused BOOL *stop) {
         [camelCaseParam appendString:(idx == 0 ? part : [part capitalizedString])];
-        if (idx > 0) {
-            [camelCaseParam appendString:[part capitalizedString]];
-        } else {
-            [camelCaseParam appendString:part];
-        }
     }];
 
     return [camelCaseParam copy];
@@ -399,7 +393,7 @@ typedef void (^STPAPIConnectionCompletionBlock)(NSURLResponse *response, NSData 
     if (self = [super init]) {
         _request = request;
         _connection = [[NSURLConnection alloc] initWithRequest:_request delegate:self startImmediately:NO];
-        _receivedData = [[NSMutableData alloc] init]; ///[NSMutableData data];
+        _receivedData = [[NSMutableData alloc] init];
     }
     return self;
 }
