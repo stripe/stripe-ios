@@ -8,7 +8,6 @@
 
 #import "STPAPIClient.h"
 #import "STPCard.h"
-#import "STPAPIClient+CreditCards.h"
 #import "StripeError.h"
 #import <XCTest/XCTest.h>
 
@@ -58,7 +57,6 @@
         @"address_state": @"NY",
         @"address_zip": @"12345",
         @"address_country": @"USA",
-        @"object": @"something",
         @"last4": @"1234",
         @"brand": @"MasterCard",
         @"fingerprint": @"Fingolfin",
@@ -79,7 +77,6 @@
     XCTAssertEqualObjects([cardWithAttributes addressState], @"NY", @"addressState is set correctly");
     XCTAssertEqualObjects([cardWithAttributes addressZip], @"12345", @"addressZip is set correctly");
     XCTAssertEqualObjects([cardWithAttributes addressCountry], @"USA", @"addressCountry is set correctly");
-    XCTAssertEqualObjects([cardWithAttributes object], @"something", @"object is set correctly");
     XCTAssertEqualObjects([cardWithAttributes last4], @"1234", @"last4 is set correctly");
     XCTAssertEqual([cardWithAttributes brand], STPCardBrandMasterCard, @"type is set correctly");
     XCTAssertEqualObjects([cardWithAttributes fingerprint], @"Fingolfin", @"fingerprint is set correctly");

@@ -4,7 +4,6 @@
 //
 //  Created by Jack Flintermann on 9/17/14.
 //
-//
 
 #if defined(STRIPE_ENABLE_APPLEPAY)
 

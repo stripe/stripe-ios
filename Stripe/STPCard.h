@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STPAPIClient.h"
 
 typedef NS_ENUM(NSInteger, STPCardFundingType) {
     STPCardFundingTypeDebit,
@@ -26,18 +25,45 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
     STPCardBrandUnknown,
 };
 
-/*
- This object represents a credit card.  You should create these and populate
- its properties with information that your customer enters on your credit card
- form.  Then you create tokens from these.
+/**
+ *  Representation of a user's credit card details. You can assemble these with information that your user enters and
+ *  then create Stripe tokens with them using an STPAPIClient. @see https://stripe.com/docs/api#cards
  */
 @interface STPCard : NSObject
 
+/**
+ *  The card's number. This will be nil for cards retrieved from the Stripe API.
+ */
 @property (nonatomic, copy) NSString *number;
+
+/**
+ *  The last 4 digits of the card. Unlike number, this will be present on cards retrieved from the Stripe API.
+ */
+@property (nonatomic, readonly) NSString *last4;
+
+/**
+ *  The card's expiration month.
+ */
 @property (nonatomic) NSUInteger expMonth;
+
+/**
+ *  The card's expiration month.
+ */
 @property (nonatomic) NSUInteger expYear;
+
+/**
+ *  The card's security code, found on the back. This will be nil for cards retrieved from the Stripe API.
+ */
 @property (nonatomic, copy) NSString *cvc;
+
+/**
+ *  The cardholder's name.
+ */
 @property (nonatomic, copy) NSString *name;
+
+/**
+ *  The cardholder's address.
+ */
 @property (nonatomic, copy) NSString *addressLine1;
 @property (nonatomic, copy) NSString *addressLine2;
 @property (nonatomic, copy) NSString *addressCity;
@@ -45,52 +71,66 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
 @property (nonatomic, copy) NSString *addressZip;
 @property (nonatomic, copy) NSString *addressCountry;
 
+/**
+ *  The Stripe ID for the card.
+ */
 @property (nonatomic, readonly) NSString *cardId;
-@property (nonatomic, readonly) NSString *object;
-@property (nonatomic, readonly) NSString *last4;
+
 /**
  *  The issuer of the card.
  */
 @property (nonatomic, readonly) STPCardBrand brand;
+
 /**
  *  The issuer of the card.
  *  Can be one of "Visa", "American Express", "MasterCard", "Discover", "JCB", "Diners Club", or "Unknown"
  *  @deprecated use "brand" instead.
  */
 @property (nonatomic, readonly) NSString *type __attribute__((deprecated));
-;
+
 /**
  *  The funding source for the card (credit, debit, prepaid, or other)
  */
 @property (nonatomic, readonly) STPCardFundingType funding;
+
+/**
+ *  A proxy for the card's number, this uniquely identifies the credit card and can be used to compare different cards.
+ */
 @property (nonatomic, readonly) NSString *fingerprint;
+
+/**
+ *  Two-letter ISO code representing the issuing country of the card.
+ */
 @property (nonatomic, readonly) NSString *country;
 
-- (BOOL)isEqualToCard:(STPCard *)other;
+// These validation methods work as described in
+// http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/KeyValueCoding/Articles/Validation.html#//apple_ref/doc/uid/20002173-CJBDBHCB
 
-/* These validation methods work as described in
-    http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/KeyValueCoding/Articles/Validation.html#//apple_ref/doc/uid/20002173-CJBDBHCB
-*/
 - (BOOL)validateNumber:(id *)ioValue error:(NSError **)outError;
 - (BOOL)validateCvc:(id *)ioValue error:(NSError **)outError;
 - (BOOL)validateExpMonth:(id *)ioValue error:(NSError **)outError;
 - (BOOL)validateExpYear:(id *)ioValue error:(NSError **)outError;
 
-/*
- This validates a fully populated card to check for all errors, including ones
+/**
+ *   This validates a fully populated card to check for all errors, including ones
  that come about from the interaction of more than one property. It will also do
  all the validations on individual properties, so if you only want to call one
  method on your card to validate it after setting all the properties, call this
  one.
+ *
+ *  @param outError a pointer to an NSError that, after calling this method, will be populated with an error if the card is not valid. @see StripeError.h for
+ possible values.
+ *
+ *  @return whether or not the card is valid.
  */
 - (BOOL)validateCardReturningError:(NSError **)outError;
 
 @end
 
-@interface STPCard (StripePrivateMethods)
-/*
- You should not use this constructor.  This constructor is used by Stripe to
- generate cards from the response of creating ar getting a token.
+/**
+ This method is used internally by Stripe to deserialize API responses and exposed here for convenience and testing purposes only. You should not use it in your
+ own code.
  */
+@interface STPCard (PrivateMethods)
 - (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 @end

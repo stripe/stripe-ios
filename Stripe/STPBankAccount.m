@@ -10,7 +10,6 @@
 
 @interface STPBankAccount ()
 
-@property (nonatomic, readwrite) NSString *object;
 @property (nonatomic, readwrite) NSString *bankAccountId;
 @property (nonatomic, readwrite) NSString *last4;
 @property (nonatomic, readwrite) NSString *bankName;
@@ -22,40 +21,6 @@
 @end
 
 @implementation STPBankAccount
-
-#pragma mark - Constructors
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _object = @"bank_account";
-    }
-    return self;
-}
-
-- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary {
-    self = [self init];
-    if (self) {
-        // sanitize NSNull
-        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-        [attributeDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
-            if (obj != [NSNull null]) {
-                dictionary[key] = obj;
-            }
-        }];
-
-        _object = dictionary[@"object"];
-        _bankAccountId = dictionary[@"id"];
-        _last4 = dictionary[@"last4"];
-        _bankName = dictionary[@"bank_name"];
-        _country = dictionary[@"country"];
-        _fingerprint = dictionary[@"fingerprint"];
-        _currency = dictionary[@"currency"];
-        _validated = [dictionary[@"validated"] boolValue];
-        _disabled = [dictionary[@"disabled"] boolValue];
-    }
-    return self;
-}
 
 #pragma mark - Getters
 
@@ -92,6 +57,33 @@
            [self.routingNumber ?: @"" isEqualToString:bankAccount.routingNumber ?: @""] &&
            [self.country ?: @"" isEqualToString:bankAccount.country ?: @""] && [self.last4 ?: @"" isEqualToString:bankAccount.last4 ?: @""] &&
            [self.bankName ?: @"" isEqualToString:bankAccount.bankName ?: @""] && [self.currency ?: @"" isEqualToString:bankAccount.currency ?: @""];
+}
+
+@end
+
+@implementation STPBankAccount (PrivateMethods)
+
+- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary {
+    self = [self init];
+    if (self) {
+        // sanitize NSNull
+        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+        [attributeDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
+            if (obj != [NSNull null]) {
+                dictionary[key] = obj;
+            }
+        }];
+
+        _bankAccountId = dictionary[@"id"];
+        _last4 = dictionary[@"last4"];
+        _bankName = dictionary[@"bank_name"];
+        _country = dictionary[@"country"];
+        _fingerprint = dictionary[@"fingerprint"];
+        _currency = dictionary[@"currency"];
+        _validated = [dictionary[@"validated"] boolValue];
+        _disabled = [dictionary[@"disabled"] boolValue];
+    }
+    return self;
 }
 
 @end
