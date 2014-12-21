@@ -24,7 +24,6 @@
 
 - (NSDictionary *)completeAttributeDictionary {
     return @{
-        @"object": @"bank_account",
         @"id": @"something",
         @"last4": @"6789",
         @"bank_name": @"STRIPE TEST BANK",
@@ -39,7 +38,6 @@
 - (void)testInitializingBankAccountWithAttributeDictionary {
     STPBankAccount *bankAccountWithAttributes = [[STPBankAccount alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
 
-    XCTAssertEqualObjects([bankAccountWithAttributes object], @"bank_account", @"object is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes bankAccountId], @"something", @"bankAccountId is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes last4], @"6789", @"last4 is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes bankName], @"STRIPE TEST BANK", @"bankName is set correctly");

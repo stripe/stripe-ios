@@ -27,11 +27,10 @@
     bankAccount.routingNumber = @"110000000";
     bankAccount.country = @"US";
 
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Bank account creation"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_5fhKkYDKKNr4Fp6q7Mq9CwJd"];
 
-    [Stripe createTokenWithBankAccount:bankAccount
-                        publishableKey:@"pk_test_5fhKkYDKKNr4Fp6q7Mq9CwJd"
-                        operationQueue:[NSOperationQueue mainQueue]
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Bank account creation"];
+    [client createTokenWithBankAccount:bankAccount
                             completion:^(STPToken *token, NSError *error) {
                                 [expectation fulfill];
                                 XCTAssertNil(error, @"error should be nil %@", error.localizedDescription);
@@ -52,11 +51,11 @@
     bankAccount.routingNumber = @"110000000";
     bankAccount.country = @"US";
 
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"not_a_valid_key_asdf"];
+
     XCTestExpectation *expectation = [self expectationWithDescription:@"Bad bank account creation"];
 
-    [Stripe createTokenWithBankAccount:bankAccount
-                        publishableKey:@"not_a_valid_key_asdf"
-                        operationQueue:[NSOperationQueue mainQueue]
+    [client createTokenWithBankAccount:bankAccount
                             completion:^(STPToken *token, NSError *error) {
                                 [expectation fulfill];
                                 XCTAssertNil(token, @"token should be nil");
