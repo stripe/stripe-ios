@@ -24,6 +24,8 @@
 		04B94BA61A47862800092C46 /* Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B94B941A47862800092C46 /* Stripe.m */; };
 		04B94BA71A47862800092C46 /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B94B961A47862800092C46 /* StripeError.m */; };
 		04B94BA81A47862800092C46 /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B94B961A47862800092C46 /* StripeError.m */; };
+		04B94BC61A479E0A00092C46 /* STPApplePayTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B94BC51A479E0A00092C46 /* STPApplePayTest.m */; };
+		04B94BC81A47B78A00092C46 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04B94BC71A47B78A00092C46 /* AddressBook.framework */; };
 		04D5BF9119BF958F009521A5 /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D5BF9019BF958F009521A5 /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		11E1F58D165151F400B49816 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
 		11E1F649165157CA00B49816 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
@@ -80,6 +82,8 @@
 		04B94B951A47862800092C46 /* StripeError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StripeError.h; sourceTree = "<group>"; };
 		04B94B961A47862800092C46 /* StripeError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StripeError.m; sourceTree = "<group>"; };
 		04B94B981A47862800092C46 /* Stripe-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe-Prefix.pch"; sourceTree = "<group>"; };
+		04B94BC51A479E0A00092C46 /* STPApplePayTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPApplePayTest.m; sourceTree = "<group>"; };
+		04B94BC71A47B78A00092C46 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		04D5BF9019BF958F009521A5 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		112D5AEF164DAD2D0053BB76 /* STPTokenTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTokenTest.m; sourceTree = "<group>"; };
 		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -111,6 +115,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04B94BC81A47B78A00092C46 /* AddressBook.framework in Frameworks */,
 				04D5BF9119BF958F009521A5 /* PassKit.framework in Frameworks */,
 				4AAEFAE818FC928A001001CD /* Security.framework in Frameworks */,
 				11E1F649165157CA00B49816 /* Foundation.framework in Frameworks */,
@@ -183,6 +188,7 @@
 		11C74B9A164043050071C2CA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				04B94BC71A47B78A00092C46 /* AddressBook.framework */,
 				04D5BF9019BF958F009521A5 /* PassKit.framework */,
 				4A0D74F918F6106100966D7B /* Security.framework */,
 				11C74B9B164043050071C2CA /* Foundation.framework */,
@@ -202,6 +208,7 @@
 				7106B4F61970B9EC000A037E /* STPCardFunctionalTest.m */,
 				150F095319DE456200E7040B /* STPBankAccountFunctionalTest.m */,
 				04B94B2E1A44D47D00092C46 /* STPAPIClientTest.m */,
+				04B94BC51A479E0A00092C46 /* STPApplePayTest.m */,
 			);
 			path = StripeTest;
 			sourceTree = "<group>";
@@ -344,6 +351,7 @@
 				7106B4F71970B9EC000A037E /* STPCardFunctionalTest.m in Sources */,
 				04B94BA61A47862800092C46 /* Stripe.m in Sources */,
 				04B94B9E1A47862800092C46 /* STPAPIClient.m in Sources */,
+				04B94BC61A479E0A00092C46 /* STPApplePayTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,6 +522,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = STRIPE_ENABLE_APPLEPAY;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -538,6 +547,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "StripeTest/Supporting Files/StripeTest-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = STRIPE_ENABLE_APPLEPAY;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;

@@ -18,8 +18,6 @@
 @implementation STPBankAccountFunctionalTest
 
 - (void)testCreateAndRetreiveBankAccountToken {
-    [Stripe setDefaultPublishableKey:@"pk_test_5fhKkYDKKNr4Fp6q7Mq9CwJd"];
-
     STPBankAccount *bankAccount = [[STPBankAccount alloc] init];
     bankAccount.accountNumber = @"000123456789";
     bankAccount.routingNumber = @"110000000";
