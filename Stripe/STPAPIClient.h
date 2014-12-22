@@ -18,18 +18,26 @@
  */
 typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
 
+/**
+ A top-level class that imports the rest of the Stripe SDK. This class used to contain several methods to create Stripe tokens, but those are now deprecated in
+ favor of STPAPIClient.
+ */
 @interface Stripe : NSObject
+
 /**
  *  Set your Stripe API key with this method. New instances of STPAPIClient will be initialized with this value. You should call this method as early as
- possible in your application's lifecycle, preferably in your AppDelegate.
+ *  possible in your application's lifecycle, preferably in your AppDelegate.
  *
- *  @param   publishableKey Your publishable key, obtained from https://stripe.com/account/apikeys .
-    @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.
+ *  @param   publishableKey Your publishable key, obtained from https://stripe.com/account/apikeys
+ *  @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.
  */
 + (void)setDefaultPublishableKey:(NSString *)publishableKey;
+
+/// The current default publishable key.
 + (NSString *)defaultPublishableKey;
 @end
 
+/// A client for making connections to the Stripe API.
 @interface STPAPIClient : NSObject
 
 /**
@@ -39,12 +47,12 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey NS_DESIGNATED_INITIALIZER;
 
 /**
- *  @see [Stripe setDefaultPublishableKey]
+ *  @see [Stripe setDefaultPublishableKey:]
  */
 @property (nonatomic, copy) NSString *publishableKey;
 
 /**
- *  The operation queue on which to run the url connection and delegate methods. Cannot be nil. @see [NSURLConnection setDelegateQueue:]
+ *  The operation queue on which to run the url connection and delegate methods. Cannot be nil. @see NSURLConnection
  */
 @property (nonatomic) NSOperationQueue *operationQueue;
 
@@ -78,9 +86,7 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
 
 @end
 
-/**
- *  These methods are used internally and exposed here only for the sake of writing tests more easily. You should not use them in your own application.
- */
+// These methods are used internally and exposed here only for the sake of writing tests more easily. You should not use them in your own application.
 @interface STPAPIClient (PrivateMethods)
 
 - (void)createTokenWithData:(NSData *)data completion:(STPCompletionBlock)completion;

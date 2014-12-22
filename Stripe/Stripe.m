@@ -12,7 +12,7 @@ NSString *const kStripeiOSVersion = @"2.2.2";
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
-@implementation Stripe (DeprecatedMethods)
+@implementation Stripe (Deprecated)
 #pragma clang diagnostic pop
 
 static NSString *defaultKey;

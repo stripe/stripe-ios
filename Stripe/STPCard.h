@@ -112,14 +112,13 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
 - (BOOL)validateExpYear:(id *)ioValue error:(NSError **)outError;
 
 /**
- *   This validates a fully populated card to check for all errors, including ones
- that come about from the interaction of more than one property. It will also do
- all the validations on individual properties, so if you only want to call one
- method on your card to validate it after setting all the properties, call this
- one.
+ *  This validates a fully populated card to check for all errors, including ones that come about
+ *  from the interaction of more than one property. It will also do all the validations on individual
+ *  properties, so if you only want to call one method on your card to validate it after setting all the
+ *  properties, call this one
  *
- *  @param outError a pointer to an NSError that, after calling this method, will be populated with an error if the card is not valid. @see StripeError.h for
- possible values.
+ *  @param outError a pointer to an NSError that, after calling this method, will be populated with an error if the card is not valid. See StripeError.h for
+ possible values
  *
  *  @return whether or not the card is valid.
  */
@@ -127,10 +126,8 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
 
 @end
 
-/**
- This method is used internally by Stripe to deserialize API responses and exposed here for convenience and testing purposes only. You should not use it in your
- own code.
- */
+// This method is used internally by Stripe to deserialize API responses and exposed here for convenience and testing purposes only. You should not use it in
+// your own code.
 @interface STPCard (PrivateMethods)
 - (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
 @end

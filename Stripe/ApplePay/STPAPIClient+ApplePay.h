@@ -20,9 +20,7 @@
  */
 - (void)createTokenWithPayment:(PKPayment *)payment completion:(STPCompletionBlock)completion;
 
-/**
- *  Form-encodes a PKPayment object for POSTing to the Stripe API. This method is used internally by STPAPIClient; you should not use it in your own code.
- */
+// Form-encodes a PKPayment object for POSTing to the Stripe API. This method is used internally by STPAPIClient; you should not use it in your own code.
 + (NSData *)formEncodedDataForPayment:(PKPayment *)payment;
 
 @end

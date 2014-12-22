@@ -52,11 +52,11 @@
  *  The URL connection will run on the main queue. Uses the value of [Stripe defaultPublishableKey] for authentication.
  *
  *  @param payment The PKPayment instance to convert, as returned from a PKPaymentAuthorizationViewController
- *  @param queue   The operation queue on which to run the URL connection. @see -[NSURLConnection setDelegateQueue].
+ *  @param queue   The operation queue on which to run the URL connection. @see NSURLConnection
  *  @param handler Code to run when the token has been returned (along with any errors encountered).
  *  @deprecated use [[STPAPIClient sharedClient] createTokenWithPayment:completion:] instead.
- */ +(void)createTokenWithPayment : (PKPayment *)payment operationQueue : (NSOperationQueue *)queue completion : (STPCompletionBlock)handler
-                                                                                                                 __attribute__((deprecated));
+ */
++ (void)createTokenWithPayment:(PKPayment *)payment operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler __attribute__((deprecated));
 
 @end
 

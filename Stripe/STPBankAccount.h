@@ -67,10 +67,8 @@
 
 @end
 
-/**
- This method is used internally by Stripe to deserialize API responses and exposed here for convenience and testing purposes only. You should not use it in your
- own code.
- */
+
+// This method is used internally by Stripe to deserialize API responses and exposed here for convenience and testing purposes only. You should not use it in your own code.
 @interface STPBankAccount (PrivateMethods)
 
 - (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary;
