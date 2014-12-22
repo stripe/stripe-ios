@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                           = "Stripe"
-  s.version                        = "2.2.2"
+  s.version                        = File.open('VERSION').first.strip
   s.summary                        = "Stripe is a web-based API for accepting payments online."
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
   s.homepage                       = "https://stripe.com"
@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.platform                       = :ios
   s.frameworks                     = 'Foundation', 'Security'
   s.requires_arc                   = true
-  s.ios.deployment_target          = '5.0'
+  s.ios.deployment_target          = '6.0'
   s.default_subspec                = 'Core'
 
   s.subspec "Core" do |subspec|
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   end
 
   s.subspec "Card" do |subspec|
-    subspec.source_files           = 'Stripe/CreditCards/STPCard.h', 'Stripe/CreditCards/STPCard.m', 'Stripe/StripeError.h', 'Stripe/StripeError.m'
+    subspec.source_files           = 'Stripe/STPCard.h', 'Stripe/STPCard.m', 'Stripe/StripeError.h', 'Stripe/StripeError.m'
   end
 
   s.subspec "ApplePay" do |subspec|
