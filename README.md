@@ -39,31 +39,7 @@ After this is done, you can make test payments through the app (use credit card 
 ## Running the tests
 
 1. Open Stripe.xcodeproj
-1. Select either the iOS or OS X scheme in the toolbar at the top
 1. Go to Product->Test
-
-## Misc. notes
-
-### Handling errors
-
-See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/StripeError.h).
-
-### Validating STPCards
-
-You have a few options for handling validation of credit card data on the client, depending on what your application does.  Client-side validation of credit card data is not required since our API will correctly reject invalid card information, but can be useful to validate information as soon as a user enters it, or simply to save a network request.
-
-The simplest thing you can do is to populate an `STPCard` object and, before sending the request, call `- (BOOL)validateCardReturningError:` on the card.  This validates the entire card object, but is not useful for validating card properties one at a time.
-
-To validate `STPCard` properties individually, you should use the following:
-
-     - (BOOL)validateNumber:error:
-     - (BOOL)validateCvc:error:
-     - (BOOL)validateExpMonth:error:
-     - (BOOL)validateExpYear:error:
-
-These methods follow the validation method convention used by [key-value validation](http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/KeyValueCoding/Articles/Validation.html).  So, you can use these methods by invoking them directly, or by calling `[card validateValue:forKey:error]` for a property on the `STPCard` object.
-
-When using these validation methods, you will want to set the property on your card object when a property does validate before validating the next property.  This allows the methods to use existing properties on the card correctly to validate a new property.  For example, validating `5` for the `expMonth` property will return YES if no `expYear` is set.  But if `expYear` is set and you try to set `expMonth` to 5 and the combination of `expMonth` and `expYear` is in the past, `5` will not validate.  The order in which you call the validate methods does not matter for this though.
 
 ## Migration Guides
 
@@ -101,3 +77,27 @@ Versions of Stripe-iOS prior to 1.2 included a class called `STPView`, which pro
                 // submit the token to your payment backend as you did previously
             }
         }];
+
+## Misc. notes
+
+### Handling errors
+
+See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/StripeError.h) for a list of error codes that may be returned from the Stripe API.
+
+### Validating STPCards
+
+You have a few options for handling validation of credit card data on the client, depending on what your application does.  Client-side validation of credit card data is not required since our API will correctly reject invalid card information, but can be useful to validate information as soon as a user enters it, or simply to save a network request.
+
+The simplest thing you can do is to populate an `STPCard` object and, before sending the request, call `- (BOOL)validateCardReturningError:` on the card.  This validates the entire card object, but is not useful for validating card properties one at a time.
+
+To validate `STPCard` properties individually, you should use the following:
+
+ - (BOOL)validateNumber:error:
+ - (BOOL)validateCvc:error:
+ - (BOOL)validateExpMonth:error:
+ - (BOOL)validateExpYear:error:
+
+These methods follow the validation method convention used by [key-value validation](http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/KeyValueCoding/Articles/Validation.html).  So, you can use these methods by invoking them directly, or by calling `[card validateValue:forKey:error]` for a property on the `STPCard` object.
+
+When using these validation methods, you will want to set the property on your card object when a property does validate before validating the next property.  This allows the methods to use existing properties on the card correctly to validate a new property.  For example, validating `5` for the `expMonth` property will return YES if no `expYear` is set.  But if `expYear` is set and you try to set `expMonth` to 5 and the combination of `expMonth` and `expYear` is in the past, `5` will not validate.  The order in which you call the validate methods does not matter for this though.
+
