@@ -7,13 +7,14 @@
 
 #import <Parse/Parse.h>
 #import "ViewController.h"
-#import "Stripe.h"
+#import "STPAPIClient.h"
 #import "Constants.h"
 #import "STPCheckoutViewController.h"
 #import "Stripe+ApplePay.h"
 #import "ShippingManager.h"
 #import "STPCheckoutOptions.h"
 #import "STPPaymentPresenter.h"
+#import "StripeError.h"
 
 #if DEBUG
 #import "STPTestPaymentAuthorizationViewController.h"
@@ -86,19 +87,19 @@
 - (void)createBackendChargeWithToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
     if (!ParseApplicationId || !ParseClientKey) {
         NSDictionary *userInfo = @{
-            NSLocalizedDescriptionKey: [NSString
-                stringWithFormat:@"You created a token! Its value is %@. Now, you need to configure your Parse backend in order to charge this customer.",
-                                 token.tokenId]
-        };
-//        NSError *error = [NSError errorWithDomain:StripeDomain code:STPInvalidRequestError userInfo:userInfo];
-        completion(STPBackendChargeResultSuccess, nil);
+                                   NSLocalizedDescriptionKey: [NSString
+                                                               stringWithFormat:@"You created a token! Its value is %@. Now, you need to configure your Parse backend in order to charge this customer.",
+                                                               token.tokenId]
+                                   };
+        NSError *error = [NSError errorWithDomain:StripeDomain code:STPInvalidRequestError userInfo:userInfo];
+        completion(STPBackendChargeResultFailure, error);
         return;
     }
     NSDictionary *chargeParams = @{
-        @"token": token.tokenId,
-        @"currency": @"usd",
-        @"amount": self.amount.stringValue, // this is in cents (i.e. $10)
-    };
+                                   @"token": token.tokenId,
+                                   @"currency": @"usd",
+                                   @"amount": self.amount.stringValue, // this is in cents (i.e. $10)
+                                   };
     // This passes the token off to our payment backend, which will then actually complete charging the card using your account's secret key.
     [PFCloud callFunctionInBackground:@"charge"
                        withParameters:chargeParams

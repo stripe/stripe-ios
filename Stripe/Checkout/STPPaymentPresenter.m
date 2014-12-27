@@ -10,10 +10,11 @@
 #import "STPPaymentPresenter.h"
 #import <PassKit/PassKit.h>
 #import "StripeError.h"
-#import "Stripe.h"
-#import "Stripe+ApplePay.h"
 #import <objc/runtime.h>
 #import "STPCheckoutViewController.h"
+#import "STPAPIClient.h"
+#import "STPAPIClient+ApplePay.h"
+#import "Stripe+ApplePay.h"
 
 static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPresenterAssociatedObjectKey";
 
@@ -29,6 +30,7 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
 @property (weak, nonatomic) UIViewController *presentedViewController;
 @property (nonatomic) BOOL hasAuthorizedPayment;
 @property (nonatomic) NSError *error;
+@property (nonatomic) STPAPIClient *apiClient;
 @end
 
 @implementation STPPaymentPresenter
@@ -39,6 +41,7 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
     if (self) {
         _delegate = delegate;
         _checkoutOptions = checkoutOptions;
+        _apiClient = [[STPAPIClient alloc] init];
     }
     return self;
 }
@@ -117,29 +120,29 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
 
 #pragma mark - PKPaymentAuthorizationViewControllerDelegate
 
-- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
+- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))pkCompletion {
-    [Stripe createTokenWithPayment:payment
-                        completion:^(STPToken *token, NSError *error) {
-                            if (error) {
-                                [self finishWithStatus:STPPaymentStatusError error:error];
-                                return;
-                            }
-                            STPTokenSubmissionHandler completion = ^(STPBackendChargeResult status, NSError *error) {
-                                self.error = error;
-                                if (status == STPBackendChargeResultSuccess) {
-                                    self.hasAuthorizedPayment = YES;
-                                    pkCompletion(PKPaymentAuthorizationStatusSuccess);
-                                } else {
-                                    pkCompletion(PKPaymentAuthorizationStatusFailure);
-                                }
-                            };
-                            [self.delegate paymentPresenter:self didCreateStripeToken:token completion:completion];
-                        }];
+    [self.apiClient createTokenWithPayment:payment
+                                completion:^(STPToken *token, NSError *error) {
+                                    if (error) {
+                                        [self finishWithStatus:STPPaymentStatusError error:error];
+                                        return;
+                                    }
+                                    STPTokenSubmissionHandler completion = ^(STPBackendChargeResult status, NSError *backendError) {
+                                        self.error = backendError;
+                                        if (status == STPBackendChargeResultSuccess) {
+                                            self.hasAuthorizedPayment = YES;
+                                            pkCompletion(PKPaymentAuthorizationStatusSuccess);
+                                        } else {
+                                            pkCompletion(PKPaymentAuthorizationStatusFailure);
+                                        }
+                                    };
+                                    [self.delegate paymentPresenter:self didCreateStripeToken:token completion:completion];
+                                }];
 }
 
-- (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
+- (void)paymentAuthorizationViewControllerDidFinish:(__unused PKPaymentAuthorizationViewController *)controller {
     STPPaymentStatus status;
     if (self.error) {
         status = STPPaymentStatusError;

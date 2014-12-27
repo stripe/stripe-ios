@@ -10,14 +10,42 @@
 #import "STPToken.h"
 #import "Stripe.h"
 #import "STPColorUtils.h"
-#import "FauxPasAnnotations.h"
 
-@interface STPCheckoutWebViewController : UIViewController<UIWebViewDelegate>
+#define FAUXPAS_IGNORED_IN_METHOD(...)
+#if TARGET_OS_IPHONE
+#define STP_VIEW_CLASS UIView
+#else
+#define STP_VIEW_CLASS NSView
+#endif
+
+@protocol STPCheckoutDelegate;
+
+@protocol STPCheckoutWebViewAdapter<NSObject>
+@property (nonatomic, weak) id<STPCheckoutDelegate> delegate;
+@property (nonatomic, readonly) STP_VIEW_CLASS *webView;
+- (void)loadRequest:(NSURLRequest *)request;
+- (void)evaluateJavaScript:(NSString *)js;
+- (void)cleanup;
+@end
+
+@protocol STPCheckoutDelegate<NSObject>
+- (void)checkoutAdapterDidStartLoad:(id<STPCheckoutWebViewAdapter>)adapter;
+- (void)checkoutAdapterDidFinishLoad:(id<STPCheckoutWebViewAdapter>)adapter;
+- (void)checkoutAdapter:(id<STPCheckoutWebViewAdapter>)adapter didTriggerEvent:(NSString *)event withPayload:(NSDictionary *)payload;
+- (void)checkoutAdapter:(id<STPCheckoutWebViewAdapter>)adapter didError:(NSError *)error;
+@end
+
+@interface STPCheckoutUIWebViewAdapter : NSObject<STPCheckoutWebViewAdapter, UIWebViewDelegate>
+@property (nonatomic) UIWebView *webView;
+@end
+
+@interface STPCheckoutWebViewController : UIViewController<STPCheckoutDelegate>
 
 - (instancetype)initWithCheckoutViewController:(STPCheckoutViewController *)checkoutViewController;
 
 @property (weak, nonatomic, readonly) STPCheckoutViewController *checkoutController;
-@property (weak, nonatomic) UIWebView *webView;
+@property (weak, nonatomic) STP_VIEW_CLASS *webView;
+@property (nonatomic) id<STPCheckoutWebViewAdapter> adapter;
 @property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic) STPCheckoutOptions *options;
 @property (nonatomic) NSURL *logoURL;
@@ -82,11 +110,11 @@
 
 static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
 static NSString *const checkoutRedirectPrefix = @"/-/";
-static NSString *const STPCheckoutURLProtocolRequestScheme = @"beginstripecheckout";
 static NSString *const checkoutRPCScheme = @"stripecheckout";
 static NSString *const checkoutUserAgent = @"Stripe";
-// static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios";
-static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
+
+static NSString *const checkoutHost = @"checkout.stripe.com";
+static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios/index.html";
 
 @implementation STPCheckoutWebViewController
 
@@ -100,11 +128,10 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
         dispatch_once(&onceToken, ^{
             NSString *userAgent = [[[UIWebView alloc] init] stringByEvaluatingJavaScriptFromString:@"window.navigator.userAgent"];
             if ([userAgent rangeOfString:checkoutUserAgent].location == NSNotFound) {
-                userAgent = [NSString stringWithFormat:@"%@ %@/%@", userAgent, checkoutUserAgent, STPLibraryVersionNumber];
+                userAgent = [NSString stringWithFormat:@"%@ %@/%@", userAgent, checkoutUserAgent, STPSDKVersion];
                 NSDictionary *defaults = @{ @"UserAgent": userAgent };
                 [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
             }
-            [NSURLProtocol registerClass:[STPCheckoutURLProtocol class]];
         });
     }
     return self;
@@ -113,7 +140,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    NSString *fullURLString = [NSString stringWithFormat:@"%@://%@", STPCheckoutURLProtocolRequestScheme, checkoutURL];
+    NSString *fullURLString = [NSString stringWithFormat:@"https://%@", checkoutURL];
     self.url = [NSURL URLWithString:fullURLString];
 
     if (self.options.logoImage && !self.options.logoURL) {
@@ -124,7 +151,9 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
         }
     }
 
-    UIWebView *webView = [[UIWebView alloc] init];
+    self.adapter = [[STPCheckoutUIWebViewAdapter alloc] init];
+    self.adapter.delegate = self;
+    UIView *webView = self.adapter.webView;
     [self.view addSubview:webView];
 
     webView.backgroundColor = [UIColor whiteColor];
@@ -143,10 +172,8 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
                                                                       metrics:nil
                                                                         views:NSDictionaryOfVariableBindings(webView)]];
-    webView.keyboardDisplayRequiresUserAction = NO;
 
-    [webView loadRequest:[NSURLRequest requestWithURL:self.url]];
-    webView.delegate = self;
+    [self.adapter loadRequest:[NSURLRequest requestWithURL:self.url]];
     self.webView = webView;
 
     UIView *headerBackground = [[UIView alloc] initWithFrame:self.view.bounds];
@@ -208,9 +235,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 }
 
 - (void)cleanup {
-    if ([self.webView isLoading]) {
-        [self.webView stopLoading];
-    }
+    [self.adapter cleanup];
     if (self.logoURL) {
         [[NSFileManager defaultManager] removeItemAtURL:self.logoURL error:nil];
     }
@@ -234,7 +259,16 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
     }
 }
 
-- (void)handleCheckoutEvent:(NSString *)event withPayload:(NSDictionary *)payload {
+#pragma mark - UIWebViewDelegate
+#pragma mark - STPCheckoutAdapterDelegate
+
+- (void)checkoutAdapterDidStartLoad:(id<STPCheckoutWebViewAdapter>)adapter {
+    NSString *optionsJavaScript = [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentation]];
+    [adapter evaluateJavaScript:optionsJavaScript];
+    [self.activityIndicator startAnimating];
+}
+
+- (void)checkoutAdapter:(id<STPCheckoutWebViewAdapter>)adapter didTriggerEvent:(NSString *)event withPayload:(NSDictionary *)payload {
     if ([event isEqualToString:@"CheckoutDidOpen"]) {
         if (payload != nil && payload[@"logoColor"]) {
             [self setLogoColor:[STPColorUtils colorForHexCode:payload[@"logoColor"]]];
@@ -248,11 +282,11 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                            didCreateToken:token
                                completion:^(STPBackendChargeResult status, NSError *error) {
                                    if (status == STPBackendChargeResultSuccess) {
-                                       [self.webView stringByEvaluatingJavaScriptFromString:payload[@"success"]];
+                                       [adapter evaluateJavaScript:payload[@"success"]];
                                    } else {
                                        NSString *failure = payload[@"failure"];
                                        NSString *script = [NSString stringWithFormat:failure, error.localizedDescription];
-                                       [self.webView stringByEvaluatingJavaScriptFromString:script];
+                                       [adapter evaluateJavaScript:script];
                                    }
                                }];
     } else if ([event isEqualToString:@"CheckoutDidFinish"]) {
@@ -268,47 +302,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
     }
 }
 
-#pragma mark - UIWebViewDelegate
-
-- (void)webViewDidStartLoad:(UIWebView *)webView {
-    NSString *optionsJavaScript = [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentation]];
-    [webView stringByEvaluatingJavaScriptFromString:optionsJavaScript];
-    [self.activityIndicator startAnimating];
-}
-
-- (BOOL)webView:(__unused UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    NSURL *url = request.URL;
-    switch (navigationType) {
-    case UIWebViewNavigationTypeLinkClicked: {
-        if ([url.host isEqualToString:self.url.host]) {
-            if ([url.path rangeOfString:checkoutRedirectPrefix].location == 0) {
-                [[UIApplication sharedApplication] openURL:url];
-                return NO;
-            }
-            return YES;
-        }
-        return NO;
-    }
-    case UIWebViewNavigationTypeOther: {
-        if ([url.scheme isEqualToString:checkoutRPCScheme]) {
-            NSString *event = url.host;
-            NSString *path = [url.path componentsSeparatedByString:@"/"][1];
-            NSDictionary *payload = nil;
-            if (path != nil) {
-                payload = [NSJSONSerialization JSONObjectWithData:[path dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
-            }
-            [self handleCheckoutEvent:event withPayload:payload];
-            return NO;
-        }
-        return YES;
-    }
-    default:
-        // add tracking
-        return NO;
-    }
-}
-
-- (void)webViewDidFinishLoad:(__unused UIWebView *)webView {
+- (void)checkoutAdapterDidFinishLoad:(__unused id<STPCheckoutWebViewAdapter>)adapter {
     [UIView animateWithDuration:0.1
         animations:^{
             self.activityIndicator.alpha = 0;
@@ -317,7 +311,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
         completion:^(__unused BOOL finished) { [self.activityIndicator stopAnimating]; }];
 }
 
-- (void)webView:(__unused UIWebView *)webView didFailLoadWithError:(NSError *)error {
+- (void)checkoutAdapter:(__unused id<STPCheckoutWebViewAdapter>)adapter didError:(__unused NSError *)error {
     [self.activityIndicator stopAnimating];
     [self.delegate checkoutController:self.checkoutController didFailWithError:error];
     [self cleanup];
@@ -330,10 +324,13 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 /**
  *  This URL protocol treats any non-20x or 30x response from checkout as an error (unlike the default UIWebView behavior, which e.g. displays a 404 page).
  */
+
+static NSString *STPCheckoutURLProtocolKey = @"STPCheckoutURLProtocolKey";
+
 @implementation STPCheckoutURLProtocol
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request {
-    return [request.URL.scheme.lowercaseString isEqualToString:STPCheckoutURLProtocolRequestScheme.lowercaseString];
+    return [self propertyForKey:STPCheckoutURLProtocolKey inRequest:request] != nil;
 }
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request {
@@ -342,11 +339,8 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 
 - (void)startLoading {
     NSMutableURLRequest *newRequest = [self.request mutableCopy];
-    NSString *oldURLString = [[newRequest.URL absoluteString] lowercaseString];
-    //#warning todo: https
-    newRequest.URL =
-        [NSURL URLWithString:[oldURLString stringByReplacingOccurrencesOfString:STPCheckoutURLProtocolRequestScheme.lowercaseString withString:@"http"]];
-    self.connection = [NSURLConnection connectionWithRequest:newRequest delegate:self];
+    [self.class removePropertyForKey:STPCheckoutURLProtocolKey inRequest:newRequest];
+    self.connection = [NSURLConnection connectionWithRequest:[newRequest copy] delegate:self];
 }
 
 - (void)stopLoading {
@@ -386,6 +380,90 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 
 - (void)connection:(__unused NSURLConnection *)connection didFailWithError:(NSError *)error {
     [self.client URLProtocol:self didFailWithError:error];
+}
+
+@end
+
+@implementation STPCheckoutUIWebViewAdapter
+
+@synthesize delegate;
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _webView = [[UIWebView alloc] initWithFrame:CGRectZero];
+        _webView.delegate = self;
+        _webView.keyboardDisplayRequiresUserAction = NO;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{ [NSURLProtocol registerClass:[STPCheckoutURLProtocol class]]; });
+    }
+    return self;
+}
+
+- (void)dealloc {
+    _webView.delegate = nil;
+}
+
+- (void)loadRequest:(NSURLRequest *)request {
+    NSMutableURLRequest *mutableRequest = [request mutableCopy];
+    [STPCheckoutURLProtocol setProperty:@(YES) forKey:STPCheckoutURLProtocolKey inRequest:mutableRequest];
+    [self.webView loadRequest:[mutableRequest copy]];
+}
+
+- (void)evaluateJavaScript:(NSString *)js {
+    [self.webView stringByEvaluatingJavaScriptFromString:js];
+}
+
+- (void)cleanup {
+    if ([self.webView isLoading]) {
+        [self.webView stopLoading];
+    }
+}
+
+#pragma mark - UIWebViewDelegate
+
+- (void)webViewDidStartLoad:(__unused UIWebView *)webView {
+    [self.delegate checkoutAdapterDidStartLoad:self];
+}
+
+- (BOOL)webView:(__unused UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    NSURL *url = request.URL;
+    switch (navigationType) {
+    case UIWebViewNavigationTypeLinkClicked: {
+        if ([url.host isEqualToString:checkoutHost]) {
+            if ([url.path rangeOfString:checkoutRedirectPrefix].location == 0) {
+                [[UIApplication sharedApplication] openURL:url];
+                return NO;
+            }
+            return YES;
+        }
+        return NO;
+    }
+    case UIWebViewNavigationTypeOther: {
+        if ([url.scheme isEqualToString:checkoutRPCScheme]) {
+            NSString *event = url.host;
+            NSString *path = [url.path componentsSeparatedByString:@"/"][1];
+            NSDictionary *payload = nil;
+            if (path != nil) {
+                payload = [NSJSONSerialization JSONObjectWithData:[path dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+            }
+            [self.delegate checkoutAdapter:self didTriggerEvent:event withPayload:payload];
+            return NO;
+        }
+        return YES;
+    }
+    default:
+        // add tracking
+        return NO;
+    }
+}
+
+- (void)webViewDidFinishLoad:(__unused UIWebView *)webView {
+    [self.delegate checkoutAdapterDidFinishLoad:self];
+}
+
+- (void)webView:(__unused UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    [self.delegate checkoutAdapter:self didError:error];
 }
 
 @end
