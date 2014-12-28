@@ -12,7 +12,7 @@
 
 // Some of this code is adapted from https://github.com/nicklockwood/ColorUtils
 
-+ (BOOL)colorIsLight:(UIColor *)color {
++ (BOOL)colorIsLight:(STP_COLOR_CLASS *)color {
     CGColorSpaceModel model = CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor));
     const CGFloat *components = CGColorGetComponents(color.CGColor);
     switch (model) {
@@ -27,10 +27,10 @@
     }
 }
 
-+ (UIColor *)colorForHexCode:(NSString *)aHexCode {
++ (STP_COLOR_CLASS *)colorForHexCode:(NSString *)aHexCode {
     NSString *hexCode = [aHexCode stringByReplacingOccurrencesOfString:@"#" withString:@""];
     if (hexCode.length != 6) {
-        return [UIColor blackColor];
+        return [STP_COLOR_CLASS blackColor];
     }
     uint32_t rgb;
     NSScanner *scanner = [NSScanner scannerWithString:hexCode];
@@ -38,10 +38,10 @@
     CGFloat red = ((rgb & 0xFF0000) >> 16) / 255.0f;
     CGFloat green = ((rgb & 0x00FF00) >> 8) / 255.0f;
     CGFloat blue = (rgb & 0x0000FF) / 255.0f;
-    return [[UIColor alloc] initWithRed:red green:green blue:blue alpha:1.0f];
+    return [STP_COLOR_CLASS colorWithRed:red green:green blue:blue alpha:1.0f];
 }
 
-+ (NSString *)hexCodeForColor:(UIColor *)color {
++ (NSString *)hexCodeForColor:(STP_COLOR_CLASS *)color {
     uint8_t rgb[3];
     CGColorSpaceModel model = CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor));
     const CGFloat *components = CGColorGetComponents(color.CGColor);
