@@ -91,12 +91,13 @@
 
 - (void)hasToken:(STPToken *)token {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-
+    NSString *amount = [NSString stringWithFormat:@"%ld00",(long)self.amount.integerValue];
     NSDictionary *chargeParams = @{
         @"token": token.tokenId,
         @"currency": @"usd",
-        @"amount": @"1000", // this is in cents (i.e. $10)
+        @"amount": amount
     };
+
 
     if (!ParseApplicationId || !ParseClientKey) {
         UIAlertView *message =
