@@ -6,7 +6,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#else
+#import <AppKit/AppKit.h>
+#endif
 
 /**
  *  This class represents a configurable set of options that you can pass to an STPCheckoutViewController or an STPPaymentPresenter to control the appearance of
@@ -38,13 +42,21 @@
 /**
  *  You can also specify a local UIImage to be used as the Checkout logo header (see logoURL).
  */
+#if TARGET_OS_IPHONE
 @property (nonatomic) UIImage *logoImage;
+#else
+@property (nonatomic) NSImage *logoImage;
+#endif
 
 /**
  *  This specifies the color of the header shown in Stripe Checkout. If you specify a logoURL (but not a logoImage) and leave this property nil, Checkout will
  * auto-detect the background color of the image you point to and use that as the header color.
  */
+#if TARGET_OS_IPHONE
 @property (nonatomic, copy) UIColor *logoColor;
+#else
+@property (nonatomic, copy) NSColor *logoColor;
+#endif
 
 /**
  *  The name of your company or website. Displayed in the header. Defaults to your app's name. This property needs to be set in order to use Apple Pay with
