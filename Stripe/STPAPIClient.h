@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+static NSString *const STPSDKVersion = @"3.0.0";
+
 @class STPBankAccount, STPCard, STPToken;
 
 /**

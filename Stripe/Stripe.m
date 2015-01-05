@@ -8,17 +8,10 @@
 
 #import "Stripe.h"
 
-NSString *const kStripeiOSVersion = @"2.2.2";
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation Stripe (Deprecated)
 #pragma clang diagnostic pop
-
-static NSString *defaultKey;
-static NSString *const apiURLBase = @"api.stripe.com";
-static NSString *const apiVersion = @"v1";
-static NSString *const tokenEndpoint = @"tokens";
 
 + (id)alloc {
     NSCAssert(NO, @"'Stripe' is a static class and cannot be instantiated.");

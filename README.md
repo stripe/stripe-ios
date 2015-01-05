@@ -43,9 +43,9 @@ After this is done, you can make test payments through the app (use credit card 
 
 ## Migration Guides
 
-### Migrating from versions < 2.3
+### Migrating from versions < 3.0
 
-Before version 2.3, most token-creation methods were class methods on the `Stripe` class. These are now all instance methods on the `STPAPIClient` class. Where previously you might write
+Before version 3.0, most token-creation methods were class methods on the `Stripe` class. These are now all instance methods on the `STPAPIClient` class. Where previously you might write
     [Stripe createTokenFromCard:card publishableKey:myPublishableKey completion:completion];
 you would now instead write
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:myPublishableKey];

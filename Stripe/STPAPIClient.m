@@ -22,7 +22,6 @@
 static NSString *const apiURLBase = @"api.stripe.com";
 static NSString *const apiVersion = @"v1";
 static NSString *const tokenEndpoint = @"tokens";
-static NSString *const kStripeiOSVersion = @"2.2.2";
 static NSString *STPDefaultPublishableKey;
 static char kAssociatedClientKey;
 
@@ -170,7 +169,7 @@ typedef void (^STPAPIConnectionCompletionBlock)(NSURLResponse *response, NSData 
 + (NSDictionary *)stripeUserAgentDetails {
     NSMutableDictionary *details = [@{
         @"lang": @"objective-c",
-        @"bindings_version": kStripeiOSVersion,
+        @"bindings_version": STPSDKVersion,
     } mutableCopy];
 #if TARGET_OS_IPHONE
     NSString *version = [UIDevice currentDevice].systemVersion;
