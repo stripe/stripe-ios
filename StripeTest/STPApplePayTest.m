@@ -23,8 +23,7 @@
     }
     PKPayment *payment = [PKPayment new];
     PKPaymentToken *paymentToken = [PKPaymentToken new];
-    NSString *tokenDataString =
-        @"{\"version\":\"EC_v1\",\"data\":\"lF8RBjPvhc2GuhjEh7qFNijDJjxD/ApmGdQhgn8tpJcJDOwn2E1BkOfSvnhrR8BUGT6+zeBx8OocvalHZ5ba/WA/"
+    NSString *tokenDataString = @"{\"version\":\"EC_v1\",\"data\":\"lF8RBjPvhc2GuhjEh7qFNijDJjxD/ApmGdQhgn8tpJcJDOwn2E1BkOfSvnhrR8BUGT6+zeBx8OocvalHZ5ba/WA/"
         @"tDxGhcEcOMp8sIJrXMVcJ6WqT5P1ZY+utmdORhxyH4nUw2wuEY4lAE7/GtEU/RNDhaKx/"
         @"m93l0oLlk84qD1ynTA5JP3gjkdX+RK23iCAZDScXCcCU0OnYlJV8sDyf3+8hIo0gpN43AxoY6N1xAsVbGsO4ZjSCahaXbgt0egFug3s7Fyt9W4uzu07SKKCA2+"
         @"DNZeZeerefpN1d1YbiCNlxFmffZKLCGdFERc7Ci3+yrHWWnYhKdQh8FeKCiiAvY5gbZJgQ91lNumCuP1IkHdHqxYI0qFk9c2R6KStJDtoUbVEYbxwnGdEJJPiMPjuKlgi7E+"
@@ -69,7 +68,15 @@
     [client createTokenWithPayment:payment
                         completion:^(__unused STPToken *token, NSError *error) {
                             [expectation fulfill];
-                            XCTAssertNil(error, @"error should be nil %@", error.localizedDescription);
+                            XCTAssertNil(token, @"token should be nil");
+                            XCTAssertNotNil(error, @"error should not be nil");
+
+                            // Since we can't actually generate a new cryptogram in a CI environment, we should just post a blob of expired token data and
+                            // make sure we get the "too long since tokenization" error. This at least asserts that our blob has been correctly formatted and
+                            // can be decrypted by the backend.
+                            XCTAssert([error.localizedDescription rangeOfString:@"too long"].location != NSNotFound,
+                                      @"Error is unrelated to 24-hour expiry: %@",
+                                      error.localizedDescription);
                         }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
