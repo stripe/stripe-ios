@@ -312,7 +312,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "[[ ${FAUXPAS_SKIP} == 1 ]] && exit 0\n \n FAUXPAS_PATH=\"/usr/local/bin/fauxpas\"\n if [[ -f \"${FAUXPAS_PATH}\" ]]; then\n pwd\n \"${FAUXPAS_PATH}\" check-xcode --configFile \"./FauxPasConfig/main.fauxpas.json\"\n else\n echo \"warning: Faux Pas was not found at '${FAUXPAS_PATH}'\"\n fi";
+			shellScript = "[[ ${FAUXPAS_SKIP} == 1 ]] && exit 0\n[[ ! -z \"${TRAVIS}\" ]] && exit 0\n \n FAUXPAS_PATH=\"/usr/local/bin/fauxpas\"\n if [[ -f \"${FAUXPAS_PATH}\" ]]; then\n pwd\n \"${FAUXPAS_PATH}\" check-xcode --configFile \"./FauxPasConfig/main.fauxpas.json\"\n else\n echo \"warning: Faux Pas was not found at '${FAUXPAS_PATH}'\"\n fi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
