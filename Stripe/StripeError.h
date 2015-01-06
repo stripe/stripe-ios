@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-// All Stripe iOS errors will be under this domain.
+/**
+ *  All Stripe iOS errors will be under this domain.
+ */
 FOUNDATION_EXPORT NSString *const StripeDomain;
 
 typedef enum STPErrorCode {

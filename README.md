@@ -1,10 +1,13 @@
-# Stripe iOS Bindings
+# Stripe iOS SDK
 
 [![Build Status](https://travis-ci.org/stripe/stripe-ios.svg?branch=master)](https://travis-ci.org/stripe/stripe-ios)
 
-The Stripe iOS bindings make it easy to collect your users' credit card details inside your iOS app. By creating [tokens](https://stripe.com/docs/api#tokens), Stripe handles the bulk of PCI compliance by preventing sensitive card data from hitting your server (for more, see [our article about PCI compliance](https://support.stripe.com/questions/do-i-need-to-be-pci-compliant-what-do-i-have-to-do)).
+The Stripe iOS SDK make it easy to collect your users' credit card details inside your iOS app. By creating [tokens](https://stripe.com/docs/api#tokens), Stripe handles the bulk of PCI compliance by preventing sensitive card data from hitting your server (for more, see [our article about PCI compliance](https://support.stripe.com/questions/do-i-need-to-be-pci-compliant-what-do-i-have-to-do)).
 
 We also offer [seamless integration](https://stripe.com/applepay) with Apple's new [Apple Pay](https://apple.com/apple-pay) service that will allow you to securely collect payments from your customers in a way that prevents them from having to re-enter their credit card information.
+
+## Requirements
+Our SDK is compatible with iOS apps supporting iOS6 and above. It requires XCode 6 and the iOS8 SDK to build the source.
 
 ## Integration
 
@@ -36,35 +39,22 @@ After this is done, you can make test payments through the app (use credit card 
 ## Running the tests
 
 1. Open Stripe.xcodeproj
-1. Select either the iOS or OS X scheme in the toolbar at the top
 1. Go to Product->Test
 
-## Misc. notes
+## Migration Guides
 
-### Handling errors
+### Migrating from versions < 3.0
 
-See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/StripeError.h).
-
-### Operation queues
-
-API calls are run on `[NSOperationQueue mainQueue]` by default, but all methods have counterparts that can take a custom operation queue.
-
-### Validating STPCards
-
-You have a few options for handling validation of credit card data on the client, depending on what your application does.  Client-side validation of credit card data is not required since our API will correctly reject invalid card information, but can be useful to validate information as soon as a user enters it, or simply to save a network request.
-
-The simplest thing you can do is to populate an `STPCard` object and, before sending the request, call `- (BOOL)validateCardReturningError:` on the card.  This validates the entire card object, but is not useful for validating card properties one at a time.
-
-To validate `STPCard` properties individually, you should use the following:
-
-     - (BOOL)validateNumber:error:
-     - (BOOL)validateCvc:error:
-     - (BOOL)validateExpMonth:error:
-     - (BOOL)validateExpYear:error:
-
-These methods follow the validation method convention used by [key-value validation](http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/KeyValueCoding/Articles/Validation.html).  So, you can use these methods by invoking them directly, or by calling `[card validateValue:forKey:error]` for a property on the `STPCard` object.
-
-When using these validation methods, you will want to set the property on your card object when a property does validate before validating the next property.  This allows the methods to use existing properties on the card correctly to validate a new property.  For example, validating `5` for the `expMonth` property will return YES if no `expYear` is set.  But if `expYear` is set and you try to set `expMonth` to 5 and the combination of `expMonth` and `expYear` is in the past, `5` will not validate.  The order in which you call the validate methods does not matter for this though.
+Before version 3.0, most token-creation methods were class methods on the `Stripe` class. These are now all instance methods on the `STPAPIClient` class. Where previously you might write
+```objective-c
+[Stripe createTokenFromCard:card publishableKey:myPublishableKey completion:completion];
+```
+you would now instead write
+```objective-c
+STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:myPublishableKey];
+[client createTokenFromCard:card completion:completion];
+```
+This version also made several helper classes, including `STPAPIConnection` and `STPUtils`, private. You should remove any references to them from your code (most apps shouldn't have any).
 
 ## Migrating from versions < 1.2
 
@@ -82,10 +72,35 @@ Versions of Stripe-iOS prior to 1.2 included a class called `STPView`, which pro
         card.expMonth = self.paymentView.card.expMonth;
         card.expYear = self.paymentView.card.expYear;
         card.cvc = self.paymentView.card.cvc;
-        [Stripe createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
+        STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
+        [client createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
             if (error) {
                 // handle the error as you did previously
             } else {
                 // submit the token to your payment backend as you did previously
             }
         }];
+
+## Misc. notes
+
+### Handling errors
+
+See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/StripeError.h) for a list of error codes that may be returned from the Stripe API.
+
+### Validating STPCards
+
+You have a few options for handling validation of credit card data on the client, depending on what your application does.  Client-side validation of credit card data is not required since our API will correctly reject invalid card information, but can be useful to validate information as soon as a user enters it, or simply to save a network request.
+
+The simplest thing you can do is to populate an `STPCard` object and, before sending the request, call `- (BOOL)validateCardReturningError:` on the card.  This validates the entire card object, but is not useful for validating card properties one at a time.
+
+To validate `STPCard` properties individually, you should use the following:
+
+ - (BOOL)validateNumber:error:
+ - (BOOL)validateCvc:error:
+ - (BOOL)validateExpMonth:error:
+ - (BOOL)validateExpYear:error:
+
+These methods follow the validation method convention used by [key-value validation](http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/KeyValueCoding/Articles/Validation.html).  So, you can use these methods by invoking them directly, or by calling `[card validateValue:forKey:error]` for a property on the `STPCard` object.
+
+When using these validation methods, you will want to set the property on your card object when a property does validate before validating the next property.  This allows the methods to use existing properties on the card correctly to validate a new property.  For example, validating `5` for the `expMonth` property will return YES if no `expYear` is set.  But if `expYear` is set and you try to set `expMonth` to 5 and the combination of `expMonth` and `expYear` is in the past, `5` will not validate.  The order in which you call the validate methods does not matter for this though.
+

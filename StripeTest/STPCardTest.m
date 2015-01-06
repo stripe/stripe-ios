@@ -6,9 +6,9 @@
 //
 //
 
+#import "STPAPIClient.h"
 #import "STPCard.h"
 #import "StripeError.h"
-#import "STPUtils.h"
 #import <XCTest/XCTest.h>
 
 @implementation NSDate (CardTestOverrides)
@@ -36,7 +36,7 @@
 #pragma mark Helpers
 - (NSDateComponents *)currentDateComponents {
     // FIXME This is a copy of the code that already exists in a private method in STPCard
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     return [gregorian components:NSCalendarUnitYear fromDate:[NSDate date]];
 }
 
@@ -57,7 +57,6 @@
         @"address_state": @"NY",
         @"address_zip": @"12345",
         @"address_country": @"USA",
-        @"object": @"something",
         @"last4": @"1234",
         @"brand": @"MasterCard",
         @"fingerprint": @"Fingolfin",
@@ -78,7 +77,6 @@
     XCTAssertEqualObjects([cardWithAttributes addressState], @"NY", @"addressState is set correctly");
     XCTAssertEqualObjects([cardWithAttributes addressZip], @"12345", @"addressZip is set correctly");
     XCTAssertEqualObjects([cardWithAttributes addressCountry], @"USA", @"addressCountry is set correctly");
-    XCTAssertEqualObjects([cardWithAttributes object], @"something", @"object is set correctly");
     XCTAssertEqualObjects([cardWithAttributes last4], @"1234", @"last4 is set correctly");
     XCTAssertEqual([cardWithAttributes brand], STPCardBrandMasterCard, @"type is set correctly");
     XCTAssertEqualObjects([cardWithAttributes fingerprint], @"Fingolfin", @"fingerprint is set correctly");
@@ -89,7 +87,7 @@
     NSDictionary *attributes = [self completeAttributeDictionary];
     STPCard *cardWithAttributes = [[STPCard alloc] initWithAttributeDictionary:attributes];
 
-    NSData *encoded = [cardWithAttributes formEncode];
+    NSData *encoded = [STPAPIClient formEncodedDataForCard:cardWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
 
     NSArray *parts = [formData componentsSeparatedByString:@"&"];
@@ -110,7 +108,7 @@
     NSArray *values = [attributes allValues];
     NSMutableArray *encodedValues = [NSMutableArray array];
     for (NSString *value in values) {
-        [encodedValues addObject:[STPUtils stringByURLEncoding:value]];
+        [encodedValues addObject:[STPAPIClient stringByURLEncoding:value]];
     }
 
     NSSet *expectedValues = [NSSet setWithArray:encodedValues];

@@ -6,8 +6,8 @@
 //
 //
 
+#import "STPAPIClient.h"
 #import "STPBankAccount.h"
-#import "STPUtils.h"
 #import <XCTest/XCTest.h>
 
 @interface STPBankAccountTest : XCTestCase
@@ -24,7 +24,6 @@
 
 - (NSDictionary *)completeAttributeDictionary {
     return @{
-        @"object": @"bank_account",
         @"id": @"something",
         @"last4": @"6789",
         @"bank_name": @"STRIPE TEST BANK",
@@ -39,7 +38,6 @@
 - (void)testInitializingBankAccountWithAttributeDictionary {
     STPBankAccount *bankAccountWithAttributes = [[STPBankAccount alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
 
-    XCTAssertEqualObjects([bankAccountWithAttributes object], @"bank_account", @"object is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes bankAccountId], @"something", @"bankAccountId is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes last4], @"6789", @"last4 is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes bankName], @"STRIPE TEST BANK", @"bankName is set correctly");
@@ -54,7 +52,7 @@
     NSDictionary *attributes = [self completeAttributeDictionary];
     STPBankAccount *bankAccountWithAttributes = [[STPBankAccount alloc] initWithAttributeDictionary:attributes];
 
-    NSData *encoded = [bankAccountWithAttributes formEncode];
+    NSData *encoded = [STPAPIClient formEncodedDataForBankAccount:bankAccountWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
 
     NSArray *parts = [formData componentsSeparatedByString:@"&"];
@@ -71,7 +69,7 @@
             stringValue = [((NSNumber *)value)stringValue];
         }
         if (stringValue) {
-            [encodedValues addObject:[STPUtils stringByURLEncoding:stringValue]];
+            [encodedValues addObject:[STPAPIClient stringByURLEncoding:stringValue]];
         }
     }
 

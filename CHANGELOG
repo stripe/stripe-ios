@@ -1,3 +1,7 @@
+== 3.0.0 2015-01-05
+* Migrate code into STPAPIClient
+* Add 'brand' and 'funding' properties to STPCard
+
 == 2.2.2 2014-11-17
 * Add bank account tokenization methods
 
