@@ -45,14 +45,11 @@ NSString *const STPExamplePublishableKey = @"bad_key";
                       }];
 }
 
-// pending - need to reconfigure mismatched.stripe.com
-- (void)pendingTestMismatched {
+- (void)testMismatched {
     [self createTokenWithBaseURL:[NSURL URLWithString:@"https://mismatched.stripe.com"]
                       completion:^(STPToken *token, NSError *error) {
                           XCTAssertNil(token, @"Token should be nil.");
                           XCTAssertEqualObjects(error.domain, @"NSURLErrorDomain", @"Error should be NSURLErrorDomain");
-                          XCTAssertNotNil(error.userInfo[@"NSURLErrorFailingURLPeerTrustErrorKey"],
-                                          @"There should be a secTustRef for Foundation HTTPS errors");
                       }];
 }
 
