@@ -1,5 +1,5 @@
 language: objective-c
 before_install: gem install xcpretty --no-ri --no-rdoc
 script:
-- xcodebuild test -workspace Stripe.xcworkspace -scheme StripeiOS -destination 'platform=iOS Simulator,name=iPhone 5s,OS=7.1' -destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.1' | xcpretty -c && exit ${PIPESTATUS[0]}
 - ./check_version.rb
+- xcodebuild test -workspace Stripe.xcworkspace -scheme StripeiOS -destination 'platform=iOS Simulator,name=iPhone 5s,OS=7.1' -destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.1' | xcpretty -c && exit ${PIPESTATUS[0]}
