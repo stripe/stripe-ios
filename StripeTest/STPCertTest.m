@@ -45,7 +45,8 @@ NSString *const STPExamplePublishableKey = @"bad_key";
                       }];
 }
 
-- (void)testMismatched {
+// pending - need to reconfigure mismatched.stripe.com
+- (void)pendingTestMismatched {
     [self createTokenWithBaseURL:[NSURL URLWithString:@"https://mismatched.stripe.com"]
                       completion:^(STPToken *token, NSError *error) {
                           XCTAssertNil(token, @"Token should be nil.");
