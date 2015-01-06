@@ -1,9 +1,9 @@
 # Stripe iOS SDK
 
-[![Travis](https://img.shields.io/travis/stripe/stripe-ios.svg?style=flat)]()
-[![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)]()
-[![CocoaPods](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)]()
-[![CocoaPods](https://img.shields.io/cocoapods/p/Stripe.svg?style=flat)]()
+[![Travis](https://img.shields.io/travis/stripe/stripe-ios.svg?style=flat)](https://travis-ci.org/stripe/stripe-ios)
+[![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
+[![CocoaPods](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios/blob/master/LICENSE)
+[![CocoaPods](https://img.shields.io/cocoapods/p/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios#)
 
 The Stripe iOS SDK make it easy to collect your users' credit card details inside your iOS app. By creating [tokens](https://stripe.com/docs/api#tokens), Stripe handles the bulk of PCI compliance by preventing sensitive card data from hitting your server (for more, see [our article about PCI compliance](https://support.stripe.com/questions/do-i-need-to-be-pci-compliant-what-do-i-have-to-do)).
 
