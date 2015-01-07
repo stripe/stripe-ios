@@ -77,14 +77,14 @@
 		04C227051A5DF80E009251A5 /* Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stripe.m; sourceTree = "<group>"; };
 		04C227061A5DF80E009251A5 /* StripeError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StripeError.h; path = PublicHeaders/StripeError.h; sourceTree = "<group>"; };
 		04C227071A5DF80E009251A5 /* StripeError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StripeError.m; sourceTree = "<group>"; };
-		04FCF6441A41F76D00DBF696 /* OSXExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OSXExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		04FCF6441A41F76D00DBF696 /* Stripe OSX Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe OSX Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04FCF6481A41F76D00DBF696 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04FCF6491A41F76D00DBF696 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		04FCF64A1A41F76D00DBF696 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		04FCF64C1A41F76D00DBF696 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		04FCF64E1A41F76D00DBF696 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		04FCF6511A41F76D00DBF696 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		04FCF6571A41F76D00DBF696 /* OSXExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OSXExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		04FCF6571A41F76D00DBF696 /* Stripe OSX ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stripe OSX ExampleTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04FCF65C1A41F76D00DBF696 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04FCF65D1A41F76D00DBF696 /* OSXExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSXExampleTests.m; sourceTree = "<group>"; };
 		04FCF6701A41FB7700DBF696 /* ExampleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleWindowController.h; sourceTree = "<group>"; };
@@ -180,8 +180,8 @@
 		04FCF6451A41F76D00DBF696 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04FCF6441A41F76D00DBF696 /* OSXExample.app */,
-				04FCF6571A41F76D00DBF696 /* OSXExampleTests.xctest */,
+				04FCF6441A41F76D00DBF696 /* Stripe OSX Example.app */,
+				04FCF6571A41F76D00DBF696 /* Stripe OSX ExampleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -240,9 +240,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04FCF6431A41F76D00DBF696 /* OSXExample */ = {
+		04FCF6431A41F76D00DBF696 /* Stripe OSX Example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04FCF6611A41F76D00DBF696 /* Build configuration list for PBXNativeTarget "OSXExample" */;
+			buildConfigurationList = 04FCF6611A41F76D00DBF696 /* Build configuration list for PBXNativeTarget "Stripe OSX Example" */;
 			buildPhases = (
 				04FCF6401A41F76D00DBF696 /* Sources */,
 				04FCF6411A41F76D00DBF696 /* Frameworks */,
@@ -252,14 +252,14 @@
 			);
 			dependencies = (
 			);
-			name = OSXExample;
+			name = "Stripe OSX Example";
 			productName = OSXExample;
-			productReference = 04FCF6441A41F76D00DBF696 /* OSXExample.app */;
+			productReference = 04FCF6441A41F76D00DBF696 /* Stripe OSX Example.app */;
 			productType = "com.apple.product-type.application";
 		};
-		04FCF6561A41F76D00DBF696 /* OSXExampleTests */ = {
+		04FCF6561A41F76D00DBF696 /* Stripe OSX ExampleTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04FCF6641A41F76D00DBF696 /* Build configuration list for PBXNativeTarget "OSXExampleTests" */;
+			buildConfigurationList = 04FCF6641A41F76D00DBF696 /* Build configuration list for PBXNativeTarget "Stripe OSX ExampleTests" */;
 			buildPhases = (
 				04FCF6531A41F76D00DBF696 /* Sources */,
 				04FCF6541A41F76D00DBF696 /* Frameworks */,
@@ -270,9 +270,9 @@
 			dependencies = (
 				04FCF6591A41F76D00DBF696 /* PBXTargetDependency */,
 			);
-			name = OSXExampleTests;
+			name = "Stripe OSX ExampleTests";
 			productName = OSXExampleTests;
-			productReference = 04FCF6571A41F76D00DBF696 /* OSXExampleTests.xctest */;
+			productReference = 04FCF6571A41F76D00DBF696 /* Stripe OSX ExampleTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -293,7 +293,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 04FCF63F1A41F76D00DBF696 /* Build configuration list for PBXProject "OSXExample" */;
+			buildConfigurationList = 04FCF63F1A41F76D00DBF696 /* Build configuration list for PBXProject "Stripe OSX Example" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -306,8 +306,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				04FCF6431A41F76D00DBF696 /* OSXExample */,
-				04FCF6561A41F76D00DBF696 /* OSXExampleTests */,
+				04FCF6431A41F76D00DBF696 /* Stripe OSX Example */,
+				04FCF6561A41F76D00DBF696 /* Stripe OSX ExampleTests */,
 			);
 		};
 /* End PBXProject section */
@@ -372,7 +372,7 @@
 /* Begin PBXTargetDependency section */
 		04FCF6591A41F76D00DBF696 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 04FCF6431A41F76D00DBF696 /* OSXExample */;
+			target = 04FCF6431A41F76D00DBF696 /* Stripe OSX Example */;
 			targetProxy = 04FCF6581A41F76D00DBF696 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -472,7 +472,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = OSXExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Stripe OSX Example";
 			};
 			name = Debug;
 		};
@@ -483,7 +483,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = OSXExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Stripe OSX Example";
 			};
 			name = Release;
 		};
@@ -502,7 +502,7 @@
 				);
 				INFOPLIST_FILE = OSXExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Stripe OSX ExampleTests";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OSXExample.app/Contents/MacOS/OSXExample";
 			};
 			name = Debug;
@@ -518,7 +518,7 @@
 				);
 				INFOPLIST_FILE = OSXExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Stripe OSX ExampleTests";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OSXExample.app/Contents/MacOS/OSXExample";
 			};
 			name = Release;
@@ -526,7 +526,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		04FCF63F1A41F76D00DBF696 /* Build configuration list for PBXProject "OSXExample" */ = {
+		04FCF63F1A41F76D00DBF696 /* Build configuration list for PBXProject "Stripe OSX Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04FCF65F1A41F76D00DBF696 /* Debug */,
@@ -535,7 +535,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04FCF6611A41F76D00DBF696 /* Build configuration list for PBXNativeTarget "OSXExample" */ = {
+		04FCF6611A41F76D00DBF696 /* Build configuration list for PBXNativeTarget "Stripe OSX Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04FCF6621A41F76D00DBF696 /* Debug */,
@@ -544,7 +544,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04FCF6641A41F76D00DBF696 /* Build configuration list for PBXNativeTarget "OSXExampleTests" */ = {
+		04FCF6641A41F76D00DBF696 /* Build configuration list for PBXNativeTarget "Stripe OSX ExampleTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04FCF6651A41F76D00DBF696 /* Debug */,

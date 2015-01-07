@@ -62,10 +62,10 @@
 		0470A29B19A5D5DB00B66DB7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0470A29D19A5D5DB00B66DB7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		0470A29F19A5D5DB00B66DB7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		0470A2A319A5D5DB00B66DB7 /* StripeExample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "StripeExample-Info.plist"; sourceTree = "<group>"; };
+		0470A2A319A5D5DB00B66DB7 /* Stripe iOS Example-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Stripe iOS Example-Info.plist"; sourceTree = "<group>"; };
 		0470A2A519A5D5DB00B66DB7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0470A2A719A5D5DB00B66DB7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		0470A2A919A5D5DB00B66DB7 /* StripeExample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "StripeExample-Prefix.pch"; sourceTree = "<group>"; };
+		0470A2A919A5D5DB00B66DB7 /* Stripe iOS Example-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stripe iOS Example-Prefix.pch"; sourceTree = "<group>"; };
 		0470A2AA19A5D5DB00B66DB7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0470A2AB19A5D5DB00B66DB7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		0470A2AE19A5D5DB00B66DB7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -228,10 +228,10 @@
 		0470A2A219A5D5DB00B66DB7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				0470A2A319A5D5DB00B66DB7 /* StripeExample-Info.plist */,
+				0470A2A319A5D5DB00B66DB7 /* Stripe iOS Example-Info.plist */,
 				0470A2A419A5D5DB00B66DB7 /* InfoPlist.strings */,
 				0470A2A719A5D5DB00B66DB7 /* main.m */,
-				0470A2A919A5D5DB00B66DB7 /* StripeExample-Prefix.pch */,
+				0470A2A919A5D5DB00B66DB7 /* Stripe iOS Example-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -345,9 +345,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0470A29719A5D5DB00B66DB7 /* StripeExample */ = {
+		0470A29719A5D5DB00B66DB7 /* Stripe iOS Example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0470A2CA19A5D5DB00B66DB7 /* Build configuration list for PBXNativeTarget "StripeExample" */;
+			buildConfigurationList = 0470A2CA19A5D5DB00B66DB7 /* Build configuration list for PBXNativeTarget "Stripe iOS Example" */;
 			buildPhases = (
 				0470A29419A5D5DB00B66DB7 /* Sources */,
 				0470A29519A5D5DB00B66DB7 /* Frameworks */,
@@ -357,7 +357,7 @@
 			);
 			dependencies = (
 			);
-			name = StripeExample;
+			name = "Stripe iOS Example";
 			productName = StripeExample;
 			productReference = 0470A29819A5D5DB00B66DB7 /* StripeExample.app */;
 			productType = "com.apple.product-type.application";
@@ -387,7 +387,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0470A29319A5D5DB00B66DB7 /* Build configuration list for PBXProject "StripeExample" */;
+			buildConfigurationList = 0470A29319A5D5DB00B66DB7 /* Build configuration list for PBXProject "Stripe iOS Example" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -400,7 +400,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0470A29719A5D5DB00B66DB7 /* StripeExample */,
+				0470A29719A5D5DB00B66DB7 /* Stripe iOS Example */,
 			);
 		};
 /* End PBXProject section */
@@ -579,7 +579,7 @@
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "StripeExample/StripeExample-Prefix.pch";
+				GCC_PREFIX_HEADER = "StripeExample/Stripe iOS Example-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -590,8 +590,8 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../Stripe/**",
 				);
-				INFOPLIST_FILE = "StripeExample/StripeExample-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "StripeExample/Stripe iOS Example-Info.plist";
+				PRODUCT_NAME = "Stripe iOS Example";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -611,15 +611,15 @@
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "StripeExample/StripeExample-Prefix.pch";
+				GCC_PREFIX_HEADER = "StripeExample/Stripe iOS Example-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = STRIPE_ENABLE_APPLEPAY;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../Stripe/**",
 				);
-				INFOPLIST_FILE = "StripeExample/StripeExample-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "StripeExample/Stripe iOS Example-Info.plist";
+				PRODUCT_NAME = "Stripe iOS Example";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -628,7 +628,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0470A29319A5D5DB00B66DB7 /* Build configuration list for PBXProject "StripeExample" */ = {
+		0470A29319A5D5DB00B66DB7 /* Build configuration list for PBXProject "Stripe iOS Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0470A2C819A5D5DB00B66DB7 /* Debug */,
@@ -637,7 +637,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0470A2CA19A5D5DB00B66DB7 /* Build configuration list for PBXNativeTarget "StripeExample" */ = {
+		0470A2CA19A5D5DB00B66DB7 /* Build configuration list for PBXNativeTarget "Stripe iOS Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0470A2CB19A5D5DB00B66DB7 /* Debug */,
