@@ -11,6 +11,9 @@
 #if !TARGET_OS_IPHONE
 
 #import "STPOSXCheckoutWebViewAdapter.h"
+#import "STPStrictURLProtocol.h"
+#import "STPCheckoutWebViewAdapter.h"
+#import "STPCheckoutDelegate.h"
 
 @implementation STPOSXCheckoutWebViewAdapter
 
@@ -76,7 +79,7 @@ decidePolicyForNavigationAction:(NSDictionary *)actionInformation
           frame:(WebFrame *)frame
 decisionListener:(id<WebPolicyDecisionListener>)listener {
     NSURL *url = request.URL;
-    if ([STPStrictURLProtocol propertyForKey:STPStrictURLProtocolRequestKey inRequest:request] != nil) {
+    if ([NSURLProtocol propertyForKey:STPStrictURLProtocolRequestKey inRequest:request] != nil) {
         [listener use];
         return;
     }

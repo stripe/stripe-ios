@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-static NSString *const STPStrictURLProtocolRequestKey;
+static NSString *const STPStrictURLProtocolRequestKey = @"STPStrictURLProtocolRequestKey";
 
 /**
  *  This URL protocol treats any non-20x or 30x response from checkout as an error (unlike the default UIWebView behavior, which e.g. displays a 404 page).

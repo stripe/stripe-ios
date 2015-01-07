@@ -9,8 +9,6 @@
 #import "STPStrictURLProtocol.h"
 #import "StripeError.h"
 
-static NSString *const STPStrictURLProtocolRequestKey = @"STPStrictURLProtocolRequestKey";
-
 @interface STPStrictURLProtocol()<NSURLConnectionDataDelegate>
 @end
 

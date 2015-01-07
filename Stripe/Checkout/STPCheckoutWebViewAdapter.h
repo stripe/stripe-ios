@@ -10,8 +10,10 @@
 
 #if TARGET_OS_IPHONE
 #define STP_VIEW_CLASS UIView
+#import <UIKit/UIKit.h>
 #else
 #define STP_VIEW_CLASS NSView
+#import <AppKit/AppKit.h>
 #endif
 
 static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
