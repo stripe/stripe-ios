@@ -13,16 +13,6 @@
 #import <AppKit/AppKit.h>
 #endif
 
-/**
- *  Use these options to inform Stripe Checkout of the success or failure of your backend charge.
- */
-typedef NS_ENUM(NSInteger, STPBackendChargeResult) {
-    STPBackendChargeResultSuccess, // Passing this value will display a "success" animation in the payment button.
-    STPBackendChargeResultFailure, // Passing this value will display an "error" animation in the payment button.
-};
-
-typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError *error);
-
 @class STPCheckoutOptions, STPToken;
 @protocol STPCheckoutViewControllerDelegate;
 
@@ -69,6 +59,16 @@ typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError
  *  @param controller the controller that has finished.
  */
 - (void)checkoutControllerDidFinish:(STPCheckoutViewController *)controller;
+
+/**
+ *  Use these options to inform Stripe Checkout of the success or failure of your backend charge.
+ */
+typedef NS_ENUM(NSInteger, STPBackendChargeResult) {
+    STPBackendChargeResultSuccess, // Passing this value will display a "success" animation in the payment button.
+    STPBackendChargeResultFailure, // Passing this value will display an "error" animation in the payment button.
+};
+
+typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError *error);
 
 /**
  *  After the user has provided valid credit card information and pressed the "pay" button, Checkout will communicate with Stripe and obtain a tokenized version
