@@ -5,12 +5,23 @@
 //  Created by Jack Flintermann on 9/15/14.
 //
 
+#import <Foundation/Foundation.h>
+
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #else
 #import <AppKit/AppKit.h>
 #endif
-#import "STPCheckoutProtocols.h"
+
+/**
+ *  Use these options to inform Stripe Checkout of the success or failure of your backend charge.
+ */
+typedef NS_ENUM(NSInteger, STPBackendChargeResult) {
+    STPBackendChargeResultSuccess, // Passing this value will display a "success" animation in the payment button.
+    STPBackendChargeResultFailure, // Passing this value will display an "error" animation in the payment button.
+};
+
+typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError *error);
 
 @class STPCheckoutOptions, STPToken;
 @protocol STPCheckoutViewControllerDelegate;

@@ -37,15 +37,13 @@
 
 static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
 static NSString *const checkoutRedirectPrefix = @"/-/";
-static NSString *const STPCheckoutURLProtocolRequestScheme = @"beginstripecheckout";
 static NSString *const checkoutRPCScheme = @"stripecheckout";
 static NSString *const checkoutUserAgent = @"Stripe";
-// TODO replace these
-static NSString *const checkoutHost = @"localhost:5394";
-// static NSString *const checkoutHost = @"checkout.stripe.com";
-static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
-// static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios";
 
+static NSString *const checkoutHost = @"checkout.stripe.com";
+static NSString *const checkoutURL = @"https://checkout.stripe.com/v3/ios/index.html";
+
+static NSString *STPCheckoutURLProtocolKey = @"STPCheckoutURLProtocolKey";
 @interface STPCheckoutURLProtocol : NSURLProtocol<NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSURLConnection *connection;
 @end
@@ -133,7 +131,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
         dispatch_once(&onceToken, ^{
             NSString *userAgent = [[[UIWebView alloc] init] stringByEvaluatingJavaScriptFromString:@"window.navigator.userAgent"];
             if ([userAgent rangeOfString:checkoutUserAgent].location == NSNotFound) {
-                userAgent = [NSString stringWithFormat:@"%@ %@/%@", userAgent, checkoutUserAgent, STPLibraryVersionNumber];
+                userAgent = [NSString stringWithFormat:@"%@ %@/%@", userAgent, checkoutUserAgent, STPSDKVersion];
                 NSDictionary *defaults = @{ @"UserAgent": userAgent };
                 [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
             }
@@ -145,8 +143,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    NSString *fullURLString = [NSString stringWithFormat:@"%@://%@", STPCheckoutURLProtocolRequestScheme, checkoutURL];
-    self.url = [NSURL URLWithString:fullURLString];
+    self.url = [NSURL URLWithString:checkoutURL];
 
     if (self.options.logoImage && !self.options.logoURL) {
         NSURL *url = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]]];
@@ -467,8 +464,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
     if (!self.adapter) {
         self.adapter = [STPCheckoutOSXWebViewAdapter new];
         self.adapter.delegate = self;
-        NSString *fullURLString = [NSString stringWithFormat:@"%@://%@", STPCheckoutURLProtocolRequestScheme, checkoutURL];
-        NSURL *url = [NSURL URLWithString:fullURLString];
+        NSURL *url = [NSURL URLWithString:checkoutURL];
         [self.adapter loadRequest:[NSURLRequest requestWithURL:url]];
     }
 }
@@ -582,7 +578,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
                               frame:(WebFrame *)frame
                    decisionListener:(id<WebPolicyDecisionListener>)listener {
     NSURL *url = request.URL;
-    if ([url.scheme.lowercaseString isEqualToString:STPCheckoutURLProtocolRequestScheme.lowercaseString]) {
+    if ([STPCheckoutURLProtocol propertyForKey:STPCheckoutURLProtocolKey inRequest:request] != nil) {
         [listener use];
         return;
     }
@@ -648,7 +644,7 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 @implementation STPCheckoutURLProtocol
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request {
-    return [request.URL.scheme.lowercaseString isEqualToString:STPCheckoutURLProtocolRequestScheme.lowercaseString];
+    return [self propertyForKey:STPCheckoutURLProtocolKey inRequest:request] != nil;
 }
 
 + (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request {
@@ -657,11 +653,8 @@ static NSString *const checkoutURL = @"localhost:5394/v3/ios/index.html";
 
 - (void)startLoading {
     NSMutableURLRequest *newRequest = [self.request mutableCopy];
-    NSString *oldURLString = [[newRequest.URL absoluteString] lowercaseString];
-    //#warning todo: https
-    newRequest.URL =
-        [NSURL URLWithString:[oldURLString stringByReplacingOccurrencesOfString:STPCheckoutURLProtocolRequestScheme.lowercaseString withString:@"http"]];
-    self.connection = [NSURLConnection connectionWithRequest:newRequest delegate:self];
+    [self.class removePropertyForKey:STPCheckoutURLProtocolKey inRequest:newRequest];
+    self.connection = [NSURLConnection connectionWithRequest:[newRequest copy] delegate:self];
 }
 
 - (void)stopLoading {

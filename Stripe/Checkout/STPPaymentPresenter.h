@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 #import "STPCheckoutOptions.h"
 #import "STPToken.h"
-#import "STPCheckoutProtocols.h"
+#import "STPCheckoutViewController.h"
 
 typedef NS_ENUM(NSInteger, STPPaymentStatus) {
     STPPaymentStatusSuccess,      // The transaction was a success.
