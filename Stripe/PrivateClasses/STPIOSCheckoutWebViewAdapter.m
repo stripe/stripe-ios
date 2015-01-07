@@ -68,21 +68,14 @@
         return NO;
     }
     case UIWebViewNavigationTypeOther: {
-        if (url.path && [url.path rangeOfString:checkoutURLPathIdentifier].location != NSNotFound) {
-            NSRange checkoutURLRange = [url.path rangeOfString:checkoutURLPathIdentifier];
-            NSString *substring = [url.path substringFromIndex:(checkoutURLRange.location + checkoutURLRange.length)];
-            if ([substring hasPrefix:@"/"]) {
-                substring = [substring substringFromIndex:1];
+        if ([url.scheme isEqualToString:checkoutRPCScheme]) {
+            NSString *event = url.host;
+            NSString *path = [url.path componentsSeparatedByString:@"/"][1];
+            NSDictionary *payload = nil;
+            if (path != nil) {
+                payload = [NSJSONSerialization JSONObjectWithData:[path dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
             }
-            NSArray *properties = [substring componentsSeparatedByString:@"/"];
-            if (properties.count) {
-                NSString *event = properties.firstObject;
-                NSDictionary *payload = nil;
-                if (properties.count > 1) {
-                    payload = [NSJSONSerialization JSONObjectWithData:[properties[1] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
-                }
-                [self.delegate checkoutAdapter:self didTriggerEvent:event withPayload:payload];
-            }
+            [self.delegate checkoutAdapter:self didTriggerEvent:event withPayload:payload];
             return NO;
         }
         return YES;

@@ -74,8 +74,10 @@
 #else // OSX
 #pragma mark - OSX
 
+#import "STPOSXCheckoutWebViewAdapter.h"
+
 @interface STPCheckoutViewController () <STPCheckoutDelegate>
-@property (nonatomic) STPCheckoutOSXWebViewAdapter *adapter;
+@property (nonatomic) STPOSXCheckoutWebViewAdapter *adapter;
 @end
 
 @implementation STPCheckoutViewController
@@ -106,7 +108,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     if (!self.adapter) {
-        self.adapter = [STPCheckoutOSXWebViewAdapter new];
+        self.adapter = [STPOSXCheckoutWebViewAdapter new];
         self.adapter.delegate = self;
         NSURL *url = [NSURL URLWithString:checkoutURLString];
         [self.adapter loadRequest:[NSURLRequest requestWithURL:url]];
@@ -136,9 +138,9 @@
 }
 
 - (void)checkoutAdapter:(id<STPCheckoutWebViewAdapter>)adapter didTriggerEvent:(NSString *)event withPayload:(NSDictionary *)payload {
-    if ([event isEqualToString:@"CheckoutDidOpen"]) {
+    if ([event isEqualToString:STPCheckoutEventOpen]) {
         // no-op for now
-    } else if ([event isEqualToString:@"CheckoutDidTokenize"]) {
+    } else if ([event isEqualToString:STPCheckoutEventTokenize]) {
         STPToken *token = nil;
         if (payload != nil && payload[@"token"] != nil) {
             token = [[STPToken alloc] initWithAttributeDictionary:payload[@"token"]];
@@ -154,11 +156,11 @@
                                                [adapter evaluateJavaScript:script];
                                            }
                                        }];
-    } else if ([event isEqualToString:@"CheckoutDidFinish"]) {
+    } else if ([event isEqualToString:STPCheckoutEventFinish]) {
         [self.checkoutDelegate checkoutControllerDidFinish:self];
-    } else if ([event isEqualToString:@"CheckoutDidCancel"]) {
+    } else if ([event isEqualToString:STPCheckoutEventCancel]) {
         [self.checkoutDelegate checkoutControllerDidCancel:self];
-    } else if ([event isEqualToString:@"CheckoutDidError"]) {
+    } else if ([event isEqualToString:STPCheckoutEventError]) {
         NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
         [self.checkoutDelegate checkoutController:self didFailWithError:error];
     }
