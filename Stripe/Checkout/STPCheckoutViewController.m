@@ -110,11 +110,13 @@
 
 static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
 static NSString *const checkoutRedirectPrefix = @"/-/";
-static NSString *const checkoutRPCScheme = @"stripecheckout";
+static NSString *const checkoutURLPathIdentifier = @"NativeCheckoutEvent";
 static NSString *const checkoutUserAgent = @"Stripe";
 
-static NSString *const checkoutHost = @"checkout.stripe.com";
-static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios/index.html";
+static NSString *const checkoutHost = @"localhost:5394";
+// static NSString *const checkoutHost = @"checkout.stripe.com";
+static NSString *const checkoutURLString = @"http://localhost:5394/v3/ios/index.html";
+// static NSString *const checkoutURLString = @"https://checkout.stripe.com/v3/ios/index.html";
 
 @implementation STPCheckoutWebViewController
 
@@ -140,8 +142,7 @@ static NSString *const checkoutURL = @"checkout.stripe.com/v3/ios/index.html";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    NSString *fullURLString = [NSString stringWithFormat:@"https://%@", checkoutURL];
-    self.url = [NSURL URLWithString:fullURLString];
+    self.url = [NSURL URLWithString:checkoutURLString];
 
     if (self.options.logoImage && !self.options.logoURL) {
         NSURL *url = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]]];
@@ -440,14 +441,21 @@ static NSString *STPCheckoutURLProtocolKey = @"STPCheckoutURLProtocolKey";
         return NO;
     }
     case UIWebViewNavigationTypeOther: {
-        if ([url.scheme isEqualToString:checkoutRPCScheme]) {
-            NSString *event = url.host;
-            NSString *path = [url.path componentsSeparatedByString:@"/"][1];
-            NSDictionary *payload = nil;
-            if (path != nil) {
-                payload = [NSJSONSerialization JSONObjectWithData:[path dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+        if (url.path && [url.path rangeOfString:checkoutURLPathIdentifier].location != NSNotFound) {
+            NSRange checkoutURLRange = [url.path rangeOfString:checkoutURLPathIdentifier];
+            NSString *substring = [url.path substringFromIndex:(checkoutURLRange.location + checkoutURLRange.length)];
+            if ([substring hasPrefix:@"/"]) {
+                substring = [substring substringFromIndex:1];
             }
-            [self.delegate checkoutAdapter:self didTriggerEvent:event withPayload:payload];
+            NSArray *properties = [substring componentsSeparatedByString:@"/"];
+            if (properties.count) {
+                NSString *event = properties.firstObject;
+                NSDictionary *payload = nil;
+                if (properties.count > 1) {
+                    payload = [NSJSONSerialization JSONObjectWithData:[properties[1] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+                }
+                [self.delegate checkoutAdapter:self didTriggerEvent:event withPayload:payload];
+            }
             return NO;
         }
         return YES;
