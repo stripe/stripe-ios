@@ -45,9 +45,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.url = [NSURL URLWithString:checkoutURLString];
-    
+
     if (self.options.logoImage && !self.options.logoURL) {
         NSURL *url = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]]];
         BOOL success = [UIImagePNGRepresentation(self.options.logoImage) writeToURL:url options:0 error:nil];
@@ -55,19 +55,19 @@
             self.logoURL = self.options.logoURL = url;
         }
     }
-    
+
     self.adapter = [[STPIOSCheckoutWebViewAdapter alloc] init];
     self.adapter.delegate = self;
     UIView *webView = self.adapter.webView;
     [self.view addSubview:webView];
-    
+
     webView.backgroundColor = [UIColor whiteColor];
     if (self.options.logoColor && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         self.view.backgroundColor = self.options.logoColor;
         webView.backgroundColor = self.options.logoColor;
         webView.opaque = NO;
     }
-    
+
     webView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[webView]-0-|"
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
@@ -77,10 +77,10 @@
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
                                                                       metrics:nil
                                                                         views:NSDictionaryOfVariableBindings(webView)]];
-    
+
     [self.adapter loadRequest:[NSURLRequest requestWithURL:self.url]];
     self.webView = webView;
-    
+
     UIView *headerBackground = [[UIView alloc] initWithFrame:self.view.bounds];
     self.headerBackground = headerBackground;
     [self.webView insertSubview:headerBackground atIndex:0];
@@ -107,7 +107,7 @@
                                                           attribute:NSLayoutAttributeHeight
                                                          multiplier:1
                                                            constant:bottomMargin]];
-    
+
     UIActivityIndicatorViewStyle style = UIActivityIndicatorViewStyleGray;
     if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && self.options.logoColor &&
         ![STPColorUtils colorIsLight:self.options.logoColor]) {
@@ -173,11 +173,11 @@
 }
 
 - (void)checkoutAdapter:(id<STPCheckoutWebViewAdapter>)adapter didTriggerEvent:(NSString *)event withPayload:(NSDictionary *)payload {
-    if ([event isEqualToString:@"CheckoutDidOpen"]) {
+    if ([event isEqualToString:STPCheckoutEventOpen]) {
         if (payload != nil && payload[@"logoColor"]) {
             [self setLogoColor:[STPColorUtils colorForHexCode:payload[@"logoColor"]]];
         }
-    } else if ([event isEqualToString:@"CheckoutDidTokenize"]) {
+    } else if ([event isEqualToString:STPCheckoutEventTokenize]) {
         STPToken *token = nil;
         if (payload != nil && payload[@"token"] != nil) {
             token = [[STPToken alloc] initWithAttributeDictionary:payload[@"token"]];
@@ -193,13 +193,13 @@
                                        [adapter evaluateJavaScript:script];
                                    }
                                }];
-    } else if ([event isEqualToString:@"CheckoutDidFinish"]) {
+    } else if ([event isEqualToString:STPCheckoutEventFinish]) {
         [self.delegate checkoutControllerDidFinish:self.checkoutController];
         [self cleanup];
-    } else if ([event isEqualToString:@"CheckoutDidCancel"]) {
+    } else if ([event isEqualToString:STPCheckoutEventCancel]) {
         [self.delegate checkoutControllerDidCancel:self.checkoutController];
         [self cleanup];
-    } else if ([event isEqualToString:@"CheckoutDidError"]) {
+    } else if ([event isEqualToString:STPCheckoutEventError]) {
         NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
         [self.delegate checkoutController:self.checkoutController didFailWithError:error];
         [self cleanup];
@@ -208,11 +208,11 @@
 
 - (void)checkoutAdapterDidFinishLoad:(__unused id<STPCheckoutWebViewAdapter>)adapter {
     [UIView animateWithDuration:0.1
-                     animations:^{
-                         self.activityIndicator.alpha = 0;
-                         [self.navigationController setNavigationBarHidden:YES animated:YES];
-                     }
-                     completion:^(__unused BOOL finished) { [self.activityIndicator stopAnimating]; }];
+        animations:^{
+            self.activityIndicator.alpha = 0;
+            [self.navigationController setNavigationBarHidden:YES animated:YES];
+        }
+        completion:^(__unused BOOL finished) { [self.activityIndicator stopAnimating]; }];
 }
 
 - (void)checkoutAdapter:(__unused id<STPCheckoutWebViewAdapter>)adapter didError:(__unused NSError *)error {

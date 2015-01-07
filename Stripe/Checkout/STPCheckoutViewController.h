@@ -78,9 +78,9 @@ typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError
  // The delegate must call completion with an appropriate authorization status, as may be determined
  // by submitting the payment credential to a processing gateway for payment authorization.
  *
- *  @param controller <#controller description#>
- *  @param token      <#token description#>
- *  @param completion <#completion description#>
+ *  @param controller the checkout controller being presented
+ *  @param token      a Stripe token
+ *  @param completion call this function with STPBackendChargeResultSuccess/Failure when you're done charging your user
  */
 - (void)checkoutController:(STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion;
 - (void)checkoutController:(STPCheckoutViewController *)controller didFailWithError:(NSError *)error;

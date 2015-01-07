@@ -16,13 +16,17 @@
 
 static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
 static NSString *const checkoutRedirectPrefix = @"/-/";
-static NSString *const checkoutURLPathIdentifier = @"NativeCheckoutEvent";
 static NSString *const checkoutUserAgent = @"Stripe";
+static NSString *const checkoutRPCScheme = @"stripecheckout";
 
-static NSString *const checkoutHost = @"localhost:5394";
-// static NSString *const checkoutHost = @"checkout.stripe.com";
-static NSString *const checkoutURLString = @"http://localhost:5394/v3/ios/index.html";
-// static NSString *const checkoutURLString = @"https://checkout.stripe.com/v3/ios/index.html";
+static NSString *const checkoutHost = @"checkout.stripe.com";
+static NSString *const checkoutURLString = @"https://checkout.stripe.com/v3/ios/index.html";
+
+static NSString *const STPCheckoutEventOpen = @"CheckoutDidOpen";
+static NSString *const STPCheckoutEventTokenize = @"CheckoutDidTokenize";
+static NSString *const STPCheckoutEventCancel = @"CheckoutDidCancel";
+static NSString *const STPCheckoutEventFinish = @"CheckoutDidFinish";
+static NSString *const STPCheckoutEventError = @"CheckoutDidError";
 
 @protocol STPCheckoutDelegate;
 @protocol STPCheckoutWebViewAdapter<NSObject>
