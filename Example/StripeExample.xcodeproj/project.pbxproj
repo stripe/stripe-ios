@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		04006F2B1A4ECC92009711A9 /* PSPDFKitMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = 04006F2A1A4ECC92009711A9 /* PSPDFKitMainThreadGuard.m */; };
 		04365D4D1A4CF8EC00A3E1D4 /* STPCheckoutOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 04365D301A4CF8EC00A3E1D4 /* STPCheckoutOptions.m */; };
 		04365D4E1A4CF8EC00A3E1D4 /* STPCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04365D331A4CF8EC00A3E1D4 /* STPCheckoutViewController.m */; };
 		04365D4F1A4CF8EC00A3E1D4 /* STPColorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 04365D351A4CF8EC00A3E1D4 /* STPColorUtils.m */; };
@@ -54,7 +53,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		04006F2A1A4ECC92009711A9 /* PSPDFKitMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSPDFKitMainThreadGuard.m; sourceTree = "<group>"; };
 		04365D2F1A4CF8EC00A3E1D4 /* STPCheckoutOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutOptions.h; sourceTree = "<group>"; };
 		04365D301A4CF8EC00A3E1D4 /* STPCheckoutOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCheckoutOptions.m; sourceTree = "<group>"; };
 		04365D311A4CF8EC00A3E1D4 /* STPCheckoutProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutProtocols.h; sourceTree = "<group>"; };
@@ -207,7 +205,6 @@
 				04365D471A4CF8EC00A3E1D4 /* Stripe.m */,
 				04365D481A4CF8EC00A3E1D4 /* StripeError.h */,
 				04365D491A4CF8EC00A3E1D4 /* StripeError.m */,
-				04006F2A1A4ECC92009711A9 /* PSPDFKitMainThreadGuard.m */,
 				04365D4B1A4CF8EC00A3E1D4 /* Supporting Files */,
 			);
 			name = Stripe;
@@ -436,7 +433,6 @@
 				0470A2A819A5D5DB00B66DB7 /* main.m in Sources */,
 				04BA873119F89D5400B79DAF /* STPTestDataTableViewController.m in Sources */,
 				04BA873219F89D5400B79DAF /* STPTestPaymentAuthorizationViewController.m in Sources */,
-				04006F2B1A4ECC92009711A9 /* PSPDFKitMainThreadGuard.m in Sources */,
 				04365D571A4CF8EC00A3E1D4 /* Stripe.m in Sources */,
 				04365D561A4CF8EC00A3E1D4 /* STPToken.m in Sources */,
 				04365D4F1A4CF8EC00A3E1D4 /* STPColorUtils.m in Sources */,

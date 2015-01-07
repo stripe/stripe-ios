@@ -76,7 +76,6 @@
 /* Begin PBXFileReference section */
 		04365D1B1A4CF64C00A3E1D4 /* STPCheckoutOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutOptions.h; sourceTree = "<group>"; };
 		04365D1C1A4CF64C00A3E1D4 /* STPCheckoutOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCheckoutOptions.m; sourceTree = "<group>"; };
-		04365D1D1A4CF64C00A3E1D4 /* STPCheckoutProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutProtocols.h; sourceTree = "<group>"; };
 		04365D1E1A4CF64C00A3E1D4 /* STPCheckoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCheckoutViewController.h; sourceTree = "<group>"; };
 		04365D1F1A4CF64C00A3E1D4 /* STPCheckoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCheckoutViewController.m; sourceTree = "<group>"; };
 		04365D201A4CF64C00A3E1D4 /* STPColorUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPColorUtils.h; sourceTree = "<group>"; };
@@ -152,7 +151,6 @@
 			children = (
 				04365D1B1A4CF64C00A3E1D4 /* STPCheckoutOptions.h */,
 				04365D1C1A4CF64C00A3E1D4 /* STPCheckoutOptions.m */,
-				04365D1D1A4CF64C00A3E1D4 /* STPCheckoutProtocols.h */,
 				04365D1E1A4CF64C00A3E1D4 /* STPCheckoutViewController.h */,
 				04365D1F1A4CF64C00A3E1D4 /* STPCheckoutViewController.m */,
 				04365D201A4CF64C00A3E1D4 /* STPColorUtils.h */,
