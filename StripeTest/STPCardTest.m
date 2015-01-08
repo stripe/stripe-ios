@@ -6,9 +6,9 @@
 //
 //
 
+#import "STPAPIClient.h"
 #import "STPCard.h"
 #import "StripeError.h"
-#import "STPUtils.h"
 #import <XCTest/XCTest.h>
 
 @implementation NSDate (CardTestOverrides)
@@ -36,7 +36,7 @@
 #pragma mark Helpers
 - (NSDateComponents *)currentDateComponents {
     // FIXME This is a copy of the code that already exists in a private method in STPCard
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     return [gregorian components:NSCalendarUnitYear fromDate:[NSDate date]];
 }
 
@@ -57,9 +57,8 @@
         @"address_state": @"NY",
         @"address_zip": @"12345",
         @"address_country": @"USA",
-        @"object": @"something",
         @"last4": @"1234",
-        @"type": @"Smastersmard",
+        @"brand": @"MasterCard",
         @"fingerprint": @"Fingolfin",
         @"country": @"Japan"
     };
@@ -78,9 +77,8 @@
     XCTAssertEqualObjects([cardWithAttributes addressState], @"NY", @"addressState is set correctly");
     XCTAssertEqualObjects([cardWithAttributes addressZip], @"12345", @"addressZip is set correctly");
     XCTAssertEqualObjects([cardWithAttributes addressCountry], @"USA", @"addressCountry is set correctly");
-    XCTAssertEqualObjects([cardWithAttributes object], @"something", @"object is set correctly");
     XCTAssertEqualObjects([cardWithAttributes last4], @"1234", @"last4 is set correctly");
-    XCTAssertEqualObjects([cardWithAttributes type], @"Smastersmard", @"type is set correctly");
+    XCTAssertEqual([cardWithAttributes brand], STPCardBrandMasterCard, @"type is set correctly");
     XCTAssertEqualObjects([cardWithAttributes fingerprint], @"Fingolfin", @"fingerprint is set correctly");
     XCTAssertEqualObjects([cardWithAttributes country], @"Japan", @"country is set correctly");
 }
@@ -89,7 +87,7 @@
     NSDictionary *attributes = [self completeAttributeDictionary];
     STPCard *cardWithAttributes = [[STPCard alloc] initWithAttributeDictionary:attributes];
 
-    NSData *encoded = [cardWithAttributes formEncode];
+    NSData *encoded = [STPAPIClient formEncodedDataForCard:cardWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
 
     NSArray *parts = [formData componentsSeparatedByString:@"&"];
@@ -110,7 +108,7 @@
     NSArray *values = [attributes allValues];
     NSMutableArray *encodedValues = [NSMutableArray array];
     for (NSString *value in values) {
-        [encodedValues addObject:[STPUtils stringByURLEncoding:value]];
+        [encodedValues addObject:[STPAPIClient stringByURLEncoding:value]];
     }
 
     NSSet *expectedValues = [NSSet setWithArray:encodedValues];
@@ -140,34 +138,42 @@
 }
 
 #pragma mark -type tests
-- (void)testTypeReturnsCorrectlyForAmexCard {
+- (void)testBrandReturnsCorrectlyForAmexCard {
     self.card.number = @"3412123412341234";
-    XCTAssertEqualObjects(@"American Express", self.card.type, @"Correct card type returned for Amex card");
+    XCTAssertEqual(STPCardBrandAmex, self.card.brand, @"Correct card brand returned for Amex card");
 }
 
-- (void)testTypeReturnsCorrectlyForDiscoverCard {
+- (void)testBrandReturnsCorrectlyForDiscoverCard {
     self.card.number = @"6452123412341234";
-    XCTAssertEqualObjects(@"Discover", self.card.type, @"Correct card type returned for Discover card");
+    XCTAssertEqual(STPCardBrandDiscover, self.card.brand, @"Correct card brand returned for Discover card");
 }
 
-- (void)testTypeReturnsCorrectlyForJCBCard {
+- (void)testBrandReturnsCorrectlyForJCBCard {
     self.card.number = @"3512123412341234";
-    XCTAssertEqualObjects(@"JCB", self.card.type, @"Correct card type returned for JCB card");
+    XCTAssertEqual(STPCardBrandJCB, self.card.brand, @"Correct card brand returned for JCB card");
 }
 
-- (void)testTypeReturnsCorrectlyForDinersClubCard {
+- (void)testBrandReturnsCorrectlyForDinersClubCard {
     self.card.number = @"3612123412341234";
-    XCTAssertEqualObjects(@"Diners Club", self.card.type, @"Correct card type returned for Diners Club card");
+    XCTAssertEqual(STPCardBrandDinersClub, self.card.brand, @"Correct card brand returned for Diners Club card");
 }
 
-- (void)testTypeReturnsCorrectlyForVisaCard {
+- (void)testBrandReturnsCorrectlyForVisaCard {
     self.card.number = @"4123123412341234";
-    XCTAssertEqualObjects(@"Visa", self.card.type, @"Correct card type returned for Visa card");
+    XCTAssertEqual(STPCardBrandVisa, self.card.brand, @"Correct card brand returned for Visa card");
+}
+
+- (void)testBrandReturnsCorrectlyForMasterCardCard {
+    self.card.number = @"5123123412341234";
+    XCTAssertEqual(STPCardBrandMasterCard, self.card.brand, @"Correct card brand returned for MasterCard card");
 }
 
 - (void)testTypeReturnsCorrectlyForMasterCardCard {
     self.card.number = @"5123123412341234";
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertEqualObjects(@"MasterCard", self.card.type, @"Correct card type returned for MasterCard card");
+#pragma clang diagnostic pop
 }
 
 #pragma mark -validateNumber:error: tests
@@ -265,12 +271,6 @@
 - (void)testTooLongCVC {
     NSString *cvc = @"12345";
     XCTAssertFalse([self.card validateCvc:&cvc error:nil], @"Too long CVC should not validate");
-}
-
-- (void)testThreeDigitCVCDoesNotValidateForAmexCard {
-    NSString *cvc = @"123";
-    self.card.number = @"3412123412341234";
-    XCTAssertFalse([self.card validateCvc:&cvc error:nil], @"Three digit CVC is too short for Amex card");
 }
 
 - (void)testFourDigitCVCValidatesForAmexCard {

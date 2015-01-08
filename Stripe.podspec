@@ -1,15 +1,15 @@
 Pod::Spec.new do |s|
   s.name                           = "Stripe"
-  s.version                        = "3.0.0"
+  s.version                        = File.open('VERSION').first.strip
   s.summary                        = "Stripe is a web-based API for accepting payments online."
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
-  s.homepage                       = "https://stripe.com"
-  s.author                         = { "Jack Flintermann" => "jack@stripe.com" }
+  s.homepage                       = "https://stripe.com/docs/mobile/ios"
+  s.authors                        = { "Jack Flintermann" => "jack@stripe.com", "Stripe" => "support+github@stripe.com" }
   s.source                         = { :git => "https://github.com/stripe/stripe-ios.git", :tag => "v#{s.version}" }
   s.platform                       = :ios
-  s.frameworks                     = 'Foundation', 'Security', 'CoreGraphics'
+  s.frameworks                     = 'Foundation', 'Security'
   s.requires_arc                   = true
-  s.ios.deployment_target          = '5.0'
+  s.ios.deployment_target          = '6.0'
   s.default_subspec                = 'Core'
 
   s.subspec "Core" do |subspec|
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   end
 
   s.subspec "Card" do |subspec|
-    subspec.source_files           = 'Stripe/STPCard.h', 'Stripe/STPCard.m', 'Stripe/STPFormEncodeProtocol.h', 'Stripe/StripeError.h', 'Stripe/StripeError.m', 'Stripe/STPUtils.h', 'Stripe/STPUtils.m'
+    subspec.source_files           = 'Stripe/STPCard.h', 'Stripe/STPCard.m', 'Stripe/StripeError.h', 'Stripe/StripeError.m'
   end
 
   s.subspec "ApplePay" do |subspec|

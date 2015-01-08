@@ -27,10 +27,8 @@
 
     if (self) {
         _tokenId = attributeDictionary[@"id"];
-        _object = attributeDictionary[@"object"];
         _livemode = [attributeDictionary[@"livemode"] boolValue];
         _created = [NSDate dateWithTimeIntervalSince1970:[attributeDictionary[@"created"] doubleValue]];
-        _used = [attributeDictionary[@"used"] boolValue];
 
         NSDictionary *cardDictionary = attributeDictionary[@"card"];
         if (cardDictionary) {
@@ -82,17 +80,16 @@
         return NO;
     }
 
-    if ((self.card || object.card) && (![self.card isEqualToCard:object.card])) {
+    if ((self.card || object.card) && (![self.card isEqual:object.card])) {
         return NO;
     }
 
-    if ((self.bankAccount || object.bankAccount) && (![self.bankAccount isEqualToBankAccount:object.bankAccount])) {
+    if ((self.bankAccount || object.bankAccount) && (![self.bankAccount isEqual:object.bankAccount])) {
         return NO;
     }
 
-    return self.livemode == object.livemode && self.used == object.used && [self.tokenId isEqualToString:object.tokenId] &&
-           [self.created isEqualToDate:object.created] && [self.card isEqualToCard:object.card] && [self.tokenId isEqualToString:object.tokenId] &&
-           [self.created isEqualToDate:object.created];
+    return self.livemode == object.livemode && [self.tokenId isEqualToString:object.tokenId] && [self.created isEqualToDate:object.created] &&
+           [self.card isEqual:object.card] && [self.tokenId isEqualToString:object.tokenId] && [self.created isEqualToDate:object.created];
 }
 
 @end
