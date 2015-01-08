@@ -1,5 +1,5 @@
 build/*
-Stripe\ Tests/build/*
+Tests/build/*
 
 *.pbxuser
 *.mode1v3

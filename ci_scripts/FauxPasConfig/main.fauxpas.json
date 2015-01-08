@@ -437,7 +437,7 @@
         "UnusedMethod": {
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            "ignoredFileRegexes": ["Stripe Test/*"]
+            "ignoredFileRegexes": ["Tests/*"]
         },
         // Options for rule: Possibly unused resource
         "UnusedResource": {
@@ -630,7 +630,7 @@
             //"allowIfSoleStatement": false,
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            "ignoredFileRegexes": ["Stripe Tests/*"]
+            "ignoredFileRegexes": ["Tests/*"]
         },
         // Options for rule: Translation border punctuation mismatch
         "TranslationPunctuation": {
