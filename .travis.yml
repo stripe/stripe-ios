@@ -5,9 +5,9 @@ env:
 language: objective-c
 before_install:
   - gem install xcpretty --no-ri --no-rdoc
-  - ./install_fauxpas.sh
+  - ./ci_scripts/install_fauxpas.sh
 script:
-  - "./check_fauxpas.sh"
-  - "./check_version.rb"
+  - "./ci_scripts/check_fauxpas.sh"
+  - "./ci_scripts/check_version.rb"
   - set -o pipefail && xcodebuild test -project "Stripe Tests/Stripe Tests.xcodeproj" -scheme "iOS Tests" -destination 'platform=iOS Simulator,name=iPhone 5s,OS=7.1' -destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.1' | xcpretty -c
   - set -o pipefail && xcodebuild test -project "Stripe Tests/Stripe Tests.xcodeproj" -scheme "OSX Tests" | xcpretty -c
