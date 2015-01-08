@@ -14,7 +14,7 @@
 @implementation NSDate (CardTestOverrides)
 + (NSDate *)date {
     // All card tests will pretend the current date is August 29, 1997.
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setYear:1997];
     [components setMonth:8];
