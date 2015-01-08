@@ -73,8 +73,6 @@
 		04FCF64C1A41F76D00DBF696 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		04FCF64E1A41F76D00DBF696 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		04FCF6511A41F76D00DBF696 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		04FCF65C1A41F76D00DBF696 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		04FCF65D1A41F76D00DBF696 /* OSXExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSXExampleTests.m; sourceTree = "<group>"; };
 		04FCF6701A41FB7700DBF696 /* ExampleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleWindowController.h; sourceTree = "<group>"; };
 		04FCF6711A41FB7700DBF696 /* ExampleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleWindowController.m; sourceTree = "<group>"; };
 		04FCF6721A41FB7700DBF696 /* ExampleWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleWindowController.xib; sourceTree = "<group>"; };
@@ -153,7 +151,6 @@
 			isa = PBXGroup;
 			children = (
 				04FCF6461A41F76D00DBF696 /* OSXExample */,
-				04FCF65A1A41F76D00DBF696 /* OSXExampleTests */,
 				04FCF6451A41F76D00DBF696 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -187,23 +184,6 @@
 			children = (
 				04FCF6481A41F76D00DBF696 /* Info.plist */,
 				04FCF64C1A41F76D00DBF696 /* main.m */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		04FCF65A1A41F76D00DBF696 /* OSXExampleTests */ = {
-			isa = PBXGroup;
-			children = (
-				04FCF65D1A41F76D00DBF696 /* OSXExampleTests.m */,
-				04FCF65B1A41F76D00DBF696 /* Supporting Files */,
-			);
-			path = OSXExampleTests;
-			sourceTree = "<group>";
-		};
-		04FCF65B1A41F76D00DBF696 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				04FCF65C1A41F76D00DBF696 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
