@@ -9,16 +9,6 @@
 #import "STPToken.h"
 #import "STPCard.h"
 #import "STPBankAccount.h"
-#ifdef STRIPE_ENABLE_APPLEPAY
-@class PKPayment;
-#endif
-
-
-@interface STPToken()
-#ifdef STRIPE_ENABLE_APPLEPAY
-@property(nonatomic) PKPayment *payment;
-#endif
-@end
 
 @implementation STPToken
 

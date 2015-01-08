@@ -5,13 +5,13 @@
     // Xcode build configuration to check (String)
     "buildConfig": "Release",
     // Rules to apply (Array of strings)
-    "rules": ["XIBUnknownClassReference"],
+    "rules": ["IdentifierNaming","NewInitializer","StrongInsteadOfRetain","XIBUnknownClassReference"],
     // Rules to apply only (Array of strings)
     //"onlyRules": [],
     // Rule tags to apply (Array of strings)
-    "ruleTags": ["APIUsage","BestPractice","Config","Localization","Pedantic","Recommended","Resources","Style","VCS"],
+    "ruleTags": ["APIUsage","BestPractice","Config","Localization","Pedantic","Recommended","Resources","VCS"],
     // Rules to exclude (Array of strings)
-    "excludedRules": ["DotSyntax","OrderedComparisonOpDirection","PrefixHeaderIncludeSuggestion"],
+    //"excludedRules": [],
     // Prefixes of files to exclude (Array of strings)
     //"fileExclusionPrefixes": [],
     // Xcode groups to exclude (Array of strings)

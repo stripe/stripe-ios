@@ -5,15 +5,11 @@
 //  Created by Jack Flintermann on 9/17/14.
 //
 
-#ifdef STRIPE_ENABLE_APPLEPAY
+#if defined(STRIPE_ENABLE_APPLEPAY)
 
 #import <PassKit/PassKit.h>
 #import "STPAPIClient+ApplePay.h"
 @class Stripe;
-
-@interface STPToken (ApplePayAdditions)
-@property (nonatomic, readonly) PKPayment *payment;
-@end
 
 @interface Stripe (ApplePay)
 

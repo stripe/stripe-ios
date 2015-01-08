@@ -3,27 +3,24 @@
     {
       "idiom" : "iphone",
       "scale" : "1x",
-      "filename" : "llamas@2x-3.jpg"
+      "filename" : "llamas.jpg"
     },
     {
       "idiom" : "iphone",
       "scale" : "2x",
-      "filename" : "llamas@2x-2.jpg"
-    },
-    {
-      "idiom" : "iphone",
-      "scale" : "3x",
-      "filename" : "llamas@2x-1.jpg"
-    },
-    {
-      "idiom" : "ipad",
-      "scale" : "1x",
       "filename" : "llamas@2x.jpg"
     },
     {
+      "idiom" : "iphone",
+      "scale" : "3x"
+    },
+    {
       "idiom" : "ipad",
-      "scale" : "2x",
-      "filename" : "llamas.jpg"
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "ipad",
+      "scale" : "2x"
     }
   ],
   "info" : {
