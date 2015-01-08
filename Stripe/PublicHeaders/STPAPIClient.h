@@ -93,14 +93,4 @@ typedef void (^STPCompletionBlock)(STPToken *token, NSError *error);
 
 - (void)createTokenWithData:(NSData *)data completion:(STPCompletionBlock)completion;
 
-+ (NSData *)formEncodedDataForBankAccount:(STPBankAccount *)bankAccount;
-
-+ (NSData *)formEncodedDataForCard:(STPCard *)card;
-
-+ (NSString *)stringByURLEncoding:(NSString *)string;
-
-+ (NSString *)stringByReplacingSnakeCaseWithCamelCase:(NSString *)input;
-
-+ (NSString *)SHA1FingerprintOfData:(NSData *)data;
-
 @end

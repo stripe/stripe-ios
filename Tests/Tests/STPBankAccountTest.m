@@ -6,7 +6,7 @@
 //
 //
 
-#import "STPAPIClient.h"
+#import "STPFormEncoder.h"
 #import "STPBankAccount.h"
 #import <XCTest/XCTest.h>
 
@@ -52,7 +52,7 @@
     NSDictionary *attributes = [self completeAttributeDictionary];
     STPBankAccount *bankAccountWithAttributes = [[STPBankAccount alloc] initWithAttributeDictionary:attributes];
 
-    NSData *encoded = [STPAPIClient formEncodedDataForBankAccount:bankAccountWithAttributes];
+    NSData *encoded = [STPFormEncoder formEncodedDataForBankAccount:bankAccountWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
 
     NSArray *parts = [formData componentsSeparatedByString:@"&"];
@@ -69,7 +69,7 @@
             stringValue = [((NSNumber *)value)stringValue];
         }
         if (stringValue) {
-            [encodedValues addObject:[STPAPIClient stringByURLEncoding:stringValue]];
+            [encodedValues addObject:[STPFormEncoder stringByURLEncoding:stringValue]];
         }
     }
 

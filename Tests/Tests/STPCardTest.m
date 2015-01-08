@@ -6,7 +6,7 @@
 //
 //
 
-#import "STPAPIClient.h"
+#import "STPFormEncoder.h"
 #import "STPCard.h"
 #import "StripeError.h"
 #import <XCTest/XCTest.h>
@@ -90,7 +90,7 @@
     NSDictionary *attributes = [self completeAttributeDictionary];
     STPCard *cardWithAttributes = [[STPCard alloc] initWithAttributeDictionary:attributes];
 
-    NSData *encoded = [STPAPIClient formEncodedDataForCard:cardWithAttributes];
+    NSData *encoded = [STPFormEncoder formEncodedDataForCard:cardWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
 
     NSArray *parts = [formData componentsSeparatedByString:@"&"];
@@ -111,7 +111,7 @@
     NSArray *values = [attributes allValues];
     NSMutableArray *encodedValues = [NSMutableArray array];
     for (NSString *value in values) {
-        [encodedValues addObject:[STPAPIClient stringByURLEncoding:value]];
+        [encodedValues addObject:[STPFormEncoder stringByURLEncoding:value]];
     }
 
     NSSet *expectedValues = [NSSet setWithArray:encodedValues];
