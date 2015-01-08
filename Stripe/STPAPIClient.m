@@ -72,6 +72,54 @@ static char kAssociatedClientKey;
     _operationQueue = operationQueue;
 }
 
+- (void)createTokenWithData:(NSData *)data completion:(STPCompletionBlock)completion {
+    NSCAssert(data != nil, @"'data' is required to create a token");
+    NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.apiURL];
+    request.HTTPMethod = @"POST";
+    request.HTTPBody = data;
+    [request setValue:[self.class JSONStringForObject:[self.class stripeUserAgentDetails]] forHTTPHeaderField:@"X-Stripe-User-Agent"];
+    [request setValue:[@"Bearer " stringByAppendingString:self.publishableKey] forHTTPHeaderField:@"Authorization"];
+    
+    STPAPIConnection *connection = [[STPAPIConnection alloc] initWithRequest:request];
+    
+    // use the runtime to ensure we're not dealloc'ed before completion
+    objc_setAssociatedObject(connection, &kAssociatedClientKey, self, OBJC_ASSOCIATION_RETAIN);
+    
+    [connection runOnOperationQueue:self.operationQueue
+                         completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
+                             if (requestError) {
+                                 // If this is an error that Stripe returned, let's handle it as a StripeDomain error
+                                 if (body) {
+                                     NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL];
+                                     if ([jsonDictionary valueForKey:@"error"] != nil) {
+                                         completion(nil, [self.class errorFromStripeResponse:jsonDictionary]);
+                                         return;
+                                     }
+                                 }
+                                 completion(nil, requestError);
+                                 return;
+                             } else {
+                                 NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL];
+                                 if (!jsonDictionary) {
+                                     NSDictionary *userInfo = @{
+                                                                NSLocalizedDescriptionKey: STPUnexpectedError,
+                                                                STPErrorMessageKey: @"The response from Stripe failed to get parsed into valid JSON."
+                                                                };
+                                     NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
+                                     completion(nil, error);
+                                 } else if ([(NSHTTPURLResponse *)response statusCode] == 200) {
+                                     completion([[STPToken alloc] initWithAttributeDictionary:jsonDictionary], nil);
+                                 } else {
+                                     completion(nil, [self.class errorFromStripeResponse:jsonDictionary]);
+                                 }
+                             }
+                             // at this point it's safe to be dealloced
+                             objc_setAssociatedObject(connection, &kAssociatedClientKey, nil, OBJC_ASSOCIATION_RETAIN);
+                         }];
+}
+
 #pragma mark - private helpers
 
 #pragma clang diagnostic push
@@ -189,7 +237,7 @@ static char kAssociatedClientKey;
 @implementation STPAPIClient (BankAccounts)
 
 - (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount completion:(STPCompletionBlock)completion {
-    [self createTokenWithData:[self.class formEncodedDataForBankAccount:bankAccount] completion:completion];
+    [self createTokenWithData:[STPFormEncoder formEncodedDataForBankAccount:bankAccount] completion:completion];
 }
 
 @end
@@ -198,59 +246,8 @@ static char kAssociatedClientKey;
 @implementation STPAPIClient (CreditCards)
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)completion {
-    [self createTokenWithData:[self.class formEncodedDataForCard:card] completion:completion];
+    [self createTokenWithData:[STPFormEncoder formEncodedDataForCard:card] completion:completion];
 }
 
 @end
 
-@implementation STPAPIClient (PrivateMethods)
-
-- (void)createTokenWithData:(NSData *)data completion:(STPCompletionBlock)completion {
-    NSCAssert(data != nil, @"'data' is required to create a token");
-    NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
-
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.apiURL];
-    request.HTTPMethod = @"POST";
-    request.HTTPBody = data;
-    [request setValue:[self.class JSONStringForObject:[self.class stripeUserAgentDetails]] forHTTPHeaderField:@"X-Stripe-User-Agent"];
-    [request setValue:[@"Bearer " stringByAppendingString:self.publishableKey] forHTTPHeaderField:@"Authorization"];
-
-    STPAPIConnection *connection = [[STPAPIConnection alloc] initWithRequest:request];
-
-    // use the runtime to ensure we're not dealloc'ed before completion
-    objc_setAssociatedObject(connection, &kAssociatedClientKey, self, OBJC_ASSOCIATION_RETAIN);
-
-    [connection runOnOperationQueue:self.operationQueue
-                         completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
-                             if (requestError) {
-                                 // If this is an error that Stripe returned, let's handle it as a StripeDomain error
-                                 if (body) {
-                                     NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL];
-                                     if ([jsonDictionary valueForKey:@"error"] != nil) {
-                                         completion(nil, [self.class errorFromStripeResponse:jsonDictionary]);
-                                         return;
-                                     }
-                                 }
-                                 completion(nil, requestError);
-                                 return;
-                             } else {
-                                 NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL];
-                                 if (!jsonDictionary) {
-                                     NSDictionary *userInfo = @{
-                                         NSLocalizedDescriptionKey: STPUnexpectedError,
-                                         STPErrorMessageKey: @"The response from Stripe failed to get parsed into valid JSON."
-                                     };
-                                     NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
-                                     completion(nil, error);
-                                 } else if ([(NSHTTPURLResponse *)response statusCode] == 200) {
-                                     completion([[STPToken alloc] initWithAttributeDictionary:jsonDictionary], nil);
-                                 } else {
-                                     completion(nil, [self.class errorFromStripeResponse:jsonDictionary]);
-                                 }
-                             }
-                             // at this point it's safe to be dealloced
-                             objc_setAssociatedObject(connection, &kAssociatedClientKey, nil, OBJC_ASSOCIATION_RETAIN);
-                         }];
-}
-
-@end
