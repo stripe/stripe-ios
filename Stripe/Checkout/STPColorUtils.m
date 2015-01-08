@@ -65,7 +65,7 @@
         break;
     }
     }
-    unsigned long rgbValue = (rgb[0] << 16) + (rgb[1] << 8) + rgb[2];
+    unsigned long rgbValue = (unsigned long)((rgb[0] << 16) + (rgb[1] << 8) + rgb[2]);
     return [NSString stringWithFormat:@"#%.6lx", rgbValue];
 }
 

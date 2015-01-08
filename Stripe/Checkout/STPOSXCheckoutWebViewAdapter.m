@@ -54,29 +54,29 @@
 }
 
 #pragma mark - ResourceLoadDelegate
-- (NSURLRequest *)webView:(WebView *)sender
-                 resource:(id)identifier
+- (NSURLRequest *)webView:(__unused WebView *)sender
+                 resource:(__unused id)identifier
           willSendRequest:(NSURLRequest *)request
-         redirectResponse:(NSURLResponse *)redirectResponse
-           fromDataSource:(WebDataSource *)dataSource {
+         redirectResponse:(__unused NSURLResponse *)redirectResponse
+           fromDataSource:(__unused WebDataSource *)dataSource {
     return request;
 }
 
-- (id)webView:(WebView *)sender identifierForInitialRequest:(NSURLRequest *)request fromDataSource:(WebDataSource *)dataSource {
+- (id)webView:(__unused WebView *)sender identifierForInitialRequest:(NSURLRequest *)request fromDataSource:(__unused WebDataSource *)dataSource {
     return request.URL;
 }
 
-- (void)webView:(WebView *)sender resource:(id)identifier didFailLoadingWithError:(NSError *)error fromDataSource:(WebDataSource *)dataSource {
+- (void)webView:(__unused WebView *)sender resource:(id)identifier didFailLoadingWithError:(NSError *)error fromDataSource:(WebDataSource *)dataSource {
     if ([identifier isEqual:dataSource.initialRequest.URL]) {
         [self.delegate checkoutAdapter:self didError:error];
     }
 }
 
 #pragma mark - WebPolicyDelegate
-- (void)webView:(WebView *)webView
+- (void)webView:(__unused WebView *)webView
 decidePolicyForNavigationAction:(NSDictionary *)actionInformation
         request:(NSURLRequest *)request
-          frame:(WebFrame *)frame
+          frame:(__unused WebFrame *)frame
 decisionListener:(id<WebPolicyDecisionListener>)listener {
     NSURL *url = request.URL;
     if ([NSURLProtocol propertyForKey:STPStrictURLProtocolRequestKey inRequest:request] != nil) {
@@ -121,15 +121,15 @@ decisionListener:(id<WebPolicyDecisionListener>)listener {
 }
 
 #pragma mark - WebFrameLoadDelegate
-- (void)webView:(WebView *)sender didStartProvisionalLoadForFrame:(WebFrame *)frame {
+- (void)webView:(__unused WebView *)sender didStartProvisionalLoadForFrame:(__unused WebFrame *)frame {
     [self.delegate checkoutAdapterDidStartLoad:self];
 }
 
-- (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
+- (void)webView:(__unused WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(__unused WebFrame *)frame {
     [self.delegate checkoutAdapter:self didError:error];
 }
 
-- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
+- (void)webView:(__unused WebView *)sender didFinishLoadForFrame:(__unused WebFrame *)frame {
     [self.delegate checkoutAdapterDidFinishLoad:self];
 }
 

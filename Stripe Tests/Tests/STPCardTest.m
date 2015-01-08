@@ -10,9 +10,12 @@
 #import "STPCard.h"
 #import "StripeError.h"
 #import <XCTest/XCTest.h>
+#define FAUXPAS_IGNORED_IN_METHOD(...)
 
 @implementation NSDate (CardTestOverrides)
 + (NSDate *)date {
+    FAUXPAS_IGNORED_IN_METHOD(UnprefixedCategoryMethod)
+    FAUXPAS_IGNORED_IN_METHOD(CategoryMethodConflict)
     // All card tests will pretend the current date is August 29, 1997.
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [[NSDateComponents alloc] init];
@@ -336,7 +339,7 @@
 }
 
 - (void)testInvalidExpMonthForYearSameAsCurrentYear {
-    self.card.expYear = [self currentYear];
+    self.card.expYear = (NSUInteger)[self currentYear];
     NSString *expMonth = @"1";
     XCTAssertFalse([self.card validateExpMonth:&expMonth error:nil],
                    @"When the year is already set, if it is the same as the current year and the month is before the current month, the month is invalid");
@@ -344,12 +347,12 @@
 
 - (void)testValidExpMonthForYearInFuture {
     NSString *expMonth = @"1";
-    self.card.expYear = [self currentYear] + 1;
+    self.card.expYear = (NSUInteger)[self currentYear] + 1;
     XCTAssertTrue([self.card validateExpMonth:&expMonth error:nil], @"When the year is already set, if it is in the future, any numeric expMonth is valid");
 }
 
 - (void)testValidExpMonthForYearSameAsCurrentYear {
-    self.card.expYear = [self currentYear];
+    self.card.expYear = (NSUInteger)[self currentYear];
     NSString *expMonth = @"12";
     XCTAssertTrue([self.card validateExpMonth:&expMonth error:nil],
                   @"When the year is already set, if it is the same as the current year and the month is the same as the current month, the month is invalid");

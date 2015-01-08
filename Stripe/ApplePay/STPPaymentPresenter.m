@@ -120,9 +120,10 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
 
 #pragma mark - PKPaymentAuthorizationViewControllerDelegate
 
+typedef void (^STPPaymentAuthorizationStatusBlock)(PKPaymentAuthorizationStatus status);
 - (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
-                                completion:(void (^)(PKPaymentAuthorizationStatus))pkCompletion {
+                                completion:(STPPaymentAuthorizationStatusBlock)pkCompletion {
     [self.apiClient createTokenWithPayment:payment
                                 completion:^(STPToken *token, NSError *error) {
                                     if (error) {
