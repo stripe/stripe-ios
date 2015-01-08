@@ -54,8 +54,6 @@
 		04CDB2701A5EF84000B854EE /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB24B1A5EF84000B854EE /* STPCard.m */; };
 		04CDB2711A5EF84000B854EE /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB24D1A5EF84000B854EE /* STPToken.m */; };
 		04CDB2721A5EF84000B854EE /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB24D1A5EF84000B854EE /* STPToken.m */; };
-		04CDB2731A5EF84000B854EE /* Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB24F1A5EF84000B854EE /* Stripe.m */; };
-		04CDB2741A5EF84000B854EE /* Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB24F1A5EF84000B854EE /* Stripe.m */; };
 		04CDB2751A5EF84000B854EE /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB2511A5EF84000B854EE /* StripeError.m */; };
 		04CDB2761A5EF84000B854EE /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB2511A5EF84000B854EE /* StripeError.m */; };
 		04CDB2EE1A5EF8B800B854EE /* STPFormEncoderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB2ED1A5EF8B800B854EE /* STPFormEncoderTest.m */; };
@@ -112,7 +110,6 @@
 		04CDB24C1A5EF84000B854EE /* STPToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPToken.h; path = PublicHeaders/STPToken.h; sourceTree = "<group>"; };
 		04CDB24D1A5EF84000B854EE /* STPToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPToken.m; sourceTree = "<group>"; };
 		04CDB24E1A5EF84000B854EE /* Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Stripe.h; path = PublicHeaders/Stripe.h; sourceTree = "<group>"; };
-		04CDB24F1A5EF84000B854EE /* Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stripe.m; sourceTree = "<group>"; };
 		04CDB2501A5EF84000B854EE /* StripeError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StripeError.h; path = PublicHeaders/StripeError.h; sourceTree = "<group>"; };
 		04CDB2511A5EF84000B854EE /* StripeError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StripeError.m; sourceTree = "<group>"; };
 		04CDB2ED1A5EF8B800B854EE /* STPFormEncoderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFormEncoderTest.m; sourceTree = "<group>"; };
@@ -260,7 +257,6 @@
 				04CDB24C1A5EF84000B854EE /* STPToken.h */,
 				04CDB24D1A5EF84000B854EE /* STPToken.m */,
 				04CDB24E1A5EF84000B854EE /* Stripe.h */,
-				04CDB24F1A5EF84000B854EE /* Stripe.m */,
 				04CDB2501A5EF84000B854EE /* StripeError.h */,
 				04CDB2511A5EF84000B854EE /* StripeError.m */,
 			);
@@ -410,7 +406,6 @@
 				04CDB26F1A5EF84000B854EE /* STPCard.m in Sources */,
 				04CDB1131A5E05BA00B854EE /* STPCardFunctionalTest.m in Sources */,
 				04CDB1141A5E05BA00B854EE /* STPCardTest.m in Sources */,
-				04CDB2731A5EF84000B854EE /* Stripe.m in Sources */,
 				04CDB25F1A5EF84000B854EE /* STPColorUtils.m in Sources */,
 				04CDB2611A5EF84000B854EE /* STPIOSCheckoutWebViewAdapter.m in Sources */,
 				04CDB2571A5EF84000B854EE /* STPPaymentPresenter.m in Sources */,
@@ -438,7 +433,6 @@
 				04CDB26C1A5EF84000B854EE /* STPAPIConnection.m in Sources */,
 				04CDB2581A5EF84000B854EE /* STPPaymentPresenter.m in Sources */,
 				04CDB2621A5EF84000B854EE /* STPIOSCheckoutWebViewAdapter.m in Sources */,
-				04CDB2741A5EF84000B854EE /* Stripe.m in Sources */,
 				04CDB2701A5EF84000B854EE /* STPCard.m in Sources */,
 				04CDB11B1A5E05C600B854EE /* STPCardFunctionalTest.m in Sources */,
 				04CDB26A1A5EF84000B854EE /* STPFormEncoder.m in Sources */,
