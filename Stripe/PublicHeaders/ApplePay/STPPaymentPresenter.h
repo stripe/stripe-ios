@@ -5,8 +5,6 @@
 //  Created by Jack Flintermann on 11/25/14.
 //
 
-#ifdef STRIPE_ENABLE_APPLEPAY
-
 #import <Foundation/Foundation.h>
 #import "STPCheckoutOptions.h"
 #import "STPToken.h"
@@ -119,5 +117,3 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
 - (PKPaymentRequest *)paymentPresenter:(STPPaymentPresenter *)presenter didPreparePaymentRequest:(PKPaymentRequest *)request;
 
 @end
-
-#endif

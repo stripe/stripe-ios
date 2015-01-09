@@ -13,3 +13,13 @@
 #import "STPToken.h"
 #import "STPCheckoutOptions.h"
 #import "STPCheckoutViewController.h"
+
+#if TARGET_OS_IPHONE
+#import "STPPaymentPresenter.h"
+#endif
+
+//! Project version number for Stripe.
+FOUNDATION_EXPORT double StripeVersionNumber;
+
+//! Project version string for Stripe.
+FOUNDATION_EXPORT const unsigned char StripeVersionString[];

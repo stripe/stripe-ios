@@ -5,8 +5,6 @@
 //  Created by Jack Flintermann on 11/25/14.
 //
 
-#ifdef STRIPE_ENABLE_APPLEPAY
-
 #import "STPPaymentPresenter.h"
 #import <PassKit/PassKit.h>
 #import "StripeError.h"
@@ -184,5 +182,3 @@ typedef void (^STPPaymentAuthorizationStatusBlock)(PKPaymentAuthorizationStatus 
 }
 
 @end
-
-#endif

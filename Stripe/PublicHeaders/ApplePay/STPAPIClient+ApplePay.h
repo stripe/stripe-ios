@@ -5,8 +5,6 @@
 //  Created by Jack Flintermann on 12/19/14.
 //
 
-#if defined(STRIPE_ENABLE_APPLEPAY)
-
 #import "STPAPIClient.h"
 #import <PassKit/PassKit.h>
 
@@ -24,5 +22,3 @@
 + (NSData *)formEncodedDataForPayment:(PKPayment *)payment;
 
 @end
-
-#endif

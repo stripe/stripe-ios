@@ -5,10 +5,10 @@
 //  Created by Jack Flintermann on 9/17/14.
 //
 
-#if defined(STRIPE_ENABLE_APPLEPAY)
-
 #import <PassKit/PassKit.h>
+#import "Stripe.h"
 #import "STPAPIClient+ApplePay.h"
+
 @class Stripe;
 
 @interface Stripe (ApplePay)
@@ -59,5 +59,3 @@
 + (void)createTokenWithPayment:(PKPayment *)payment operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler __attribute__((deprecated));
 
 @end
-
-#endif

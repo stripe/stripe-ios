@@ -5,17 +5,12 @@
 //  Created by Jack Flintermann on 8/21/14.
 //
 
+#import <Stripe.h>
 #import <Parse/Parse.h>
+
 #import "ViewController.h"
-#import "STPAPIClient.h"
 #import "Constants.h"
-#import "STPCheckoutViewController.h"
-#import "Stripe+ApplePay.h"
 #import "ShippingManager.h"
-#import "STPCheckoutOptions.h"
-#import "STPPaymentPresenter.h"
-#import "StripeError.h"
-#import "STPCheckoutOptions.h"
 
 @interface ViewController () <STPPaymentPresenterDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *cartLabel;

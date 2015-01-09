@@ -5,8 +5,6 @@
 //  Created by Jack Flintermann on 12/19/14.
 //
 
-#if defined(STRIPE_ENABLE_APPLEPAY)
-
 #import "STPAPIClient+ApplePay.h"
 #import <AddressBook/AddressBook.h>
 
@@ -62,5 +60,3 @@
 }
 
 @end
-
-#endif

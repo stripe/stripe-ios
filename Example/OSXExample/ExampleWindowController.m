@@ -6,9 +6,8 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
+#import "Stripe.h"
 #import "ExampleWindowController.h"
-#import "STPCheckoutViewController.h"
-#import "STPCheckoutOptions.h"
 
 @interface ExampleWindowController () <STPCheckoutViewControllerDelegate>
 @property STPCheckoutViewController *checkoutController;
