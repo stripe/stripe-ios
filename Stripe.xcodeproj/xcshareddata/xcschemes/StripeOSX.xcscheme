@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "04D12C051A5F556D0010446E"
-               BuildableName = "StripeOSX.framework"
+               BuildableName = "Stripe.framework"
                BlueprintName = "StripeOSX"
                ReferencedContainer = "container:Stripe.xcodeproj">
             </BuildableReference>
@@ -57,7 +57,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04D12C051A5F556D0010446E"
-            BuildableName = "StripeOSX.framework"
+            BuildableName = "Stripe.framework"
             BlueprintName = "StripeOSX"
             ReferencedContainer = "container:Stripe.xcodeproj">
          </BuildableReference>
@@ -76,7 +76,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04D12C051A5F556D0010446E"
-            BuildableName = "StripeOSX.framework"
+            BuildableName = "Stripe.framework"
             BlueprintName = "StripeOSX"
             ReferencedContainer = "container:Stripe.xcodeproj">
          </BuildableReference>
@@ -94,7 +94,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04D12C051A5F556D0010446E"
-            BuildableName = "StripeOSX.framework"
+            BuildableName = "Stripe.framework"
             BlueprintName = "StripeOSX"
             ReferencedContainer = "container:Stripe.xcodeproj">
          </BuildableReference>
