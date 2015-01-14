@@ -8,23 +8,112 @@
 
 /* Begin PBXBuildFile section */
 		04415C871A660D8A001225ED /* Stripe-WithoutApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04415C861A660D8A001225ED /* Stripe-WithoutApplePay.framework */; };
-		04415E241A670129001225ED /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E191A670129001225ED /* AppDelegate.m */; };
-		04415E271A670129001225ED /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04415E1F1A670129001225ED /* Images.xcassets */; };
 		04415E291A670129001225ED /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E211A670129001225ED /* main.m */; };
-		04415E2A1A670129001225ED /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E231A670129001225ED /* ViewController.m */; };
+		04415E651A6723F4001225ED /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E2C1A6723F4001225ED /* AppDelegate.m */; };
+		04415E671A6723F4001225ED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04415E301A6723F4001225ED /* Main.storyboard */; };
+		04415E681A6723F4001225ED /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04415E321A6723F4001225ED /* Images.xcassets */; };
+		04415E691A6723F4001225ED /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E351A6723F4001225ED /* MBProgressHUD.m */; };
+		04415E6A1A6723F4001225ED /* PTKAddressZip.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E381A6723F4001225ED /* PTKAddressZip.m */; };
+		04415E6B1A6723F4001225ED /* PTKCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E3A1A6723F4001225ED /* PTKCard.m */; };
+		04415E6C1A6723F4001225ED /* PTKCardCVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E3C1A6723F4001225ED /* PTKCardCVC.m */; };
+		04415E6D1A6723F4001225ED /* PTKCardExpiry.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E3E1A6723F4001225ED /* PTKCardExpiry.m */; };
+		04415E6E1A6723F4001225ED /* PTKCardNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E401A6723F4001225ED /* PTKCardNumber.m */; };
+		04415E6F1A6723F4001225ED /* PTKComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E431A6723F4001225ED /* PTKComponent.m */; };
+		04415E701A6723F4001225ED /* PTKTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E451A6723F4001225ED /* PTKTextField.m */; };
+		04415E711A6723F4001225ED /* PTKUSAddressZip.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E471A6723F4001225ED /* PTKUSAddressZip.m */; };
+		04415E721A6723F4001225ED /* PTKView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E491A6723F4001225ED /* PTKView.m */; };
+		04415E731A6723F4001225ED /* amex.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E4C1A6723F4001225ED /* amex.png */; };
+		04415E741A6723F4001225ED /* amex@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E4D1A6723F4001225ED /* amex@2x.png */; };
+		04415E751A6723F4001225ED /* cvc-amex.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E4E1A6723F4001225ED /* cvc-amex.png */; };
+		04415E761A6723F4001225ED /* cvc-amex@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E4F1A6723F4001225ED /* cvc-amex@2x.png */; };
+		04415E771A6723F4001225ED /* cvc.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E501A6723F4001225ED /* cvc.png */; };
+		04415E781A6723F4001225ED /* cvc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E511A6723F4001225ED /* cvc@2x.png */; };
+		04415E791A6723F4001225ED /* diners.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E521A6723F4001225ED /* diners.png */; };
+		04415E7A1A6723F4001225ED /* diners@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E531A6723F4001225ED /* diners@2x.png */; };
+		04415E7B1A6723F4001225ED /* discover.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E541A6723F4001225ED /* discover.png */; };
+		04415E7C1A6723F4001225ED /* discover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E551A6723F4001225ED /* discover@2x.png */; };
+		04415E7D1A6723F4001225ED /* jcb.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E561A6723F4001225ED /* jcb.png */; };
+		04415E7E1A6723F4001225ED /* jcb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E571A6723F4001225ED /* jcb@2x.png */; };
+		04415E7F1A6723F4001225ED /* mastercard.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E581A6723F4001225ED /* mastercard.png */; };
+		04415E801A6723F4001225ED /* mastercard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E591A6723F4001225ED /* mastercard@2x.png */; };
+		04415E811A6723F4001225ED /* placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E5A1A6723F4001225ED /* placeholder.png */; };
+		04415E821A6723F4001225ED /* placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E5B1A6723F4001225ED /* placeholder@2x.png */; };
+		04415E831A6723F4001225ED /* visa.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E5C1A6723F4001225ED /* visa.png */; };
+		04415E841A6723F4001225ED /* visa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E5D1A6723F4001225ED /* visa@2x.png */; };
+		04415E851A6723F4001225ED /* gradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E5E1A6723F4001225ED /* gradient@2x.png */; };
+		04415E861A6723F4001225ED /* textfield.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E5F1A6723F4001225ED /* textfield.png */; };
+		04415E871A6723F4001225ED /* textfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04415E601A6723F4001225ED /* textfield@2x.png */; };
+		04415E881A6723F4001225ED /* PaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E621A6723F4001225ED /* PaymentViewController.m */; };
+		04415E891A6723F4001225ED /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E641A6723F4001225ED /* ViewController.m */; };
+		04415E8C1A672441001225ED /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 04415E8B1A672441001225ED /* Constants.m */; };
+		04415E8E1A672481001225ED /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04415E8D1A672481001225ED /* Parse.framework */; };
+		04415E901A6724C7001225ED /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04415E8F1A6724C7001225ED /* SystemConfiguration.framework */; };
+		04415E921A6724CE001225ED /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04415E911A6724CE001225ED /* Security.framework */; };
+		04415E941A6724D4001225ED /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04415E931A6724D4001225ED /* QuartzCore.framework */; };
+		04415E961A6724D9001225ED /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04415E951A6724D9001225ED /* MobileCoreServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		04415C861A660D8A001225ED /* Stripe-WithoutApplePay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Stripe-WithoutApplePay.framework"; sourceTree = "<group>"; };
-		04415E181A670129001225ED /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = "iOSExample-WithoutApplePay/AppDelegate.h"; sourceTree = SOURCE_ROOT; };
-		04415E191A670129001225ED /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = "iOSExample-WithoutApplePay/AppDelegate.m"; sourceTree = SOURCE_ROOT; };
-		04415E1C1A670129001225ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = LaunchScreen.xib; sourceTree = "<group>"; };
-		04415E1E1A670129001225ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
-		04415E1F1A670129001225ED /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "iOSExample-WithoutApplePay/Images.xcassets"; sourceTree = SOURCE_ROOT; };
 		04415E201A670129001225ED /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "iOSExample-WithoutApplePay/Info.plist"; sourceTree = SOURCE_ROOT; };
 		04415E211A670129001225ED /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "iOSExample-WithoutApplePay/main.m"; sourceTree = SOURCE_ROOT; };
-		04415E221A670129001225ED /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = "iOSExample-WithoutApplePay/ViewController.h"; sourceTree = SOURCE_ROOT; };
-		04415E231A670129001225ED /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = "iOSExample-WithoutApplePay/ViewController.m"; sourceTree = SOURCE_ROOT; };
+		04415E2B1A6723F4001225ED /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = "iOSExample-WithoutApplePay/AppDelegate.h"; sourceTree = SOURCE_ROOT; };
+		04415E2C1A6723F4001225ED /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = "iOSExample-WithoutApplePay/AppDelegate.m"; sourceTree = SOURCE_ROOT; };
+		04415E311A6723F4001225ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
+		04415E321A6723F4001225ED /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "iOSExample-WithoutApplePay/Images.xcassets"; sourceTree = SOURCE_ROOT; };
+		04415E341A6723F4001225ED /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		04415E351A6723F4001225ED /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		04415E371A6723F4001225ED /* PTKAddressZip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTKAddressZip.h; sourceTree = "<group>"; };
+		04415E381A6723F4001225ED /* PTKAddressZip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTKAddressZip.m; sourceTree = "<group>"; };
+		04415E391A6723F4001225ED /* PTKCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTKCard.h; sourceTree = "<group>"; };
+		04415E3A1A6723F4001225ED /* PTKCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTKCard.m; sourceTree = "<group>"; };
+		04415E3B1A6723F4001225ED /* PTKCardCVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTKCardCVC.h; sourceTree = "<group>"; };
+		04415E3C1A6723F4001225ED /* PTKCardCVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTKCardCVC.m; sourceTree = "<group>"; };
+		04415E3D1A6723F4001225ED /* PTKCardExpiry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTKCardExpiry.h; sourceTree = "<group>"; };
+		04415E3E1A6723F4001225ED /* PTKCardExpiry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTKCardExpiry.m; sourceTree = "<group>"; };
+		04415E3F1A6723F4001225ED /* PTKCardNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTKCardNumber.h; sourceTree = "<group>"; };
+		04415E401A6723F4001225ED /* PTKCardNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTKCardNumber.m; sourceTree = "<group>"; };
+		04415E411A6723F4001225ED /* PTKCardType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTKCardType.h; sourceTree = "<group>"; };
+		04415E421A6723F4001225ED /* PTKComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTKComponent.h; sourceTree = "<group>"; };
+		04415E431A6723F4001225ED /* PTKComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTKComponent.m; sourceTree = "<group>"; };
+		04415E441A6723F4001225ED /* PTKTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTKTextField.h; sourceTree = "<group>"; };
+		04415E451A6723F4001225ED /* PTKTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTKTextField.m; sourceTree = "<group>"; };
+		04415E461A6723F4001225ED /* PTKUSAddressZip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTKUSAddressZip.h; sourceTree = "<group>"; };
+		04415E471A6723F4001225ED /* PTKUSAddressZip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTKUSAddressZip.m; sourceTree = "<group>"; };
+		04415E481A6723F4001225ED /* PTKView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTKView.h; sourceTree = "<group>"; };
+		04415E491A6723F4001225ED /* PTKView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTKView.m; sourceTree = "<group>"; };
+		04415E4C1A6723F4001225ED /* amex.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = amex.png; sourceTree = "<group>"; };
+		04415E4D1A6723F4001225ED /* amex@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "amex@2x.png"; sourceTree = "<group>"; };
+		04415E4E1A6723F4001225ED /* cvc-amex.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cvc-amex.png"; sourceTree = "<group>"; };
+		04415E4F1A6723F4001225ED /* cvc-amex@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cvc-amex@2x.png"; sourceTree = "<group>"; };
+		04415E501A6723F4001225ED /* cvc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cvc.png; sourceTree = "<group>"; };
+		04415E511A6723F4001225ED /* cvc@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cvc@2x.png"; sourceTree = "<group>"; };
+		04415E521A6723F4001225ED /* diners.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = diners.png; sourceTree = "<group>"; };
+		04415E531A6723F4001225ED /* diners@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "diners@2x.png"; sourceTree = "<group>"; };
+		04415E541A6723F4001225ED /* discover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = discover.png; sourceTree = "<group>"; };
+		04415E551A6723F4001225ED /* discover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "discover@2x.png"; sourceTree = "<group>"; };
+		04415E561A6723F4001225ED /* jcb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jcb.png; sourceTree = "<group>"; };
+		04415E571A6723F4001225ED /* jcb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "jcb@2x.png"; sourceTree = "<group>"; };
+		04415E581A6723F4001225ED /* mastercard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mastercard.png; sourceTree = "<group>"; };
+		04415E591A6723F4001225ED /* mastercard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mastercard@2x.png"; sourceTree = "<group>"; };
+		04415E5A1A6723F4001225ED /* placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = placeholder.png; sourceTree = "<group>"; };
+		04415E5B1A6723F4001225ED /* placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder@2x.png"; sourceTree = "<group>"; };
+		04415E5C1A6723F4001225ED /* visa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = visa.png; sourceTree = "<group>"; };
+		04415E5D1A6723F4001225ED /* visa@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "visa@2x.png"; sourceTree = "<group>"; };
+		04415E5E1A6723F4001225ED /* gradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gradient@2x.png"; sourceTree = "<group>"; };
+		04415E5F1A6723F4001225ED /* textfield.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textfield.png; sourceTree = "<group>"; };
+		04415E601A6723F4001225ED /* textfield@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "textfield@2x.png"; sourceTree = "<group>"; };
+		04415E611A6723F4001225ED /* PaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PaymentViewController.h; path = "iOSExample-WithoutApplePay/PaymentViewController.h"; sourceTree = SOURCE_ROOT; };
+		04415E621A6723F4001225ED /* PaymentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PaymentViewController.m; path = "iOSExample-WithoutApplePay/PaymentViewController.m"; sourceTree = SOURCE_ROOT; };
+		04415E631A6723F4001225ED /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = "iOSExample-WithoutApplePay/ViewController.h"; sourceTree = SOURCE_ROOT; };
+		04415E641A6723F4001225ED /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = "iOSExample-WithoutApplePay/ViewController.m"; sourceTree = SOURCE_ROOT; };
+		04415E8A1A672441001225ED /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constants.h; path = "iOSExample-WithoutApplePay/Constants.h"; sourceTree = SOURCE_ROOT; };
+		04415E8B1A672441001225ED /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Constants.m; path = "iOSExample-WithoutApplePay/Constants.m"; sourceTree = SOURCE_ROOT; };
+		04415E8D1A672481001225ED /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		04415E8F1A6724C7001225ED /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		04415E911A6724CE001225ED /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		04415E931A6724D4001225ED /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		04415E951A6724D9001225ED /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		049E84F61A6077B4000B66CD /* Stripe iOS Example  (Without Apple Pay).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example  (Without Apple Pay).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -33,6 +122,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04415E961A6724D9001225ED /* MobileCoreServices.framework in Frameworks */,
+				04415E941A6724D4001225ED /* QuartzCore.framework in Frameworks */,
+				04415E921A6724CE001225ED /* Security.framework in Frameworks */,
+				04415E901A6724C7001225ED /* SystemConfiguration.framework in Frameworks */,
+				04415E8E1A672481001225ED /* Parse.framework in Frameworks */,
 				04415C871A660D8A001225ED /* Stripe-WithoutApplePay.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -40,15 +134,97 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		04415E1A1A670129001225ED /* Base.lproj */ = {
+		04415E2D1A6723F4001225ED /* Base.lproj */ = {
 			isa = PBXGroup;
 			children = (
-				04415E1B1A670129001225ED /* LaunchScreen.xib */,
-				04415E1D1A670129001225ED /* Main.storyboard */,
+				04415E301A6723F4001225ED /* Main.storyboard */,
 			);
 			name = Base.lproj;
 			path = "iOSExample-WithoutApplePay/Base.lproj";
 			sourceTree = SOURCE_ROOT;
+		};
+		04415E331A6723F4001225ED /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				04415E341A6723F4001225ED /* MBProgressHUD.h */,
+				04415E351A6723F4001225ED /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
+			path = "iOSExample-WithoutApplePay/MBProgressHUD";
+			sourceTree = SOURCE_ROOT;
+		};
+		04415E361A6723F4001225ED /* PaymentKit */ = {
+			isa = PBXGroup;
+			children = (
+				04415E371A6723F4001225ED /* PTKAddressZip.h */,
+				04415E381A6723F4001225ED /* PTKAddressZip.m */,
+				04415E391A6723F4001225ED /* PTKCard.h */,
+				04415E3A1A6723F4001225ED /* PTKCard.m */,
+				04415E3B1A6723F4001225ED /* PTKCardCVC.h */,
+				04415E3C1A6723F4001225ED /* PTKCardCVC.m */,
+				04415E3D1A6723F4001225ED /* PTKCardExpiry.h */,
+				04415E3E1A6723F4001225ED /* PTKCardExpiry.m */,
+				04415E3F1A6723F4001225ED /* PTKCardNumber.h */,
+				04415E401A6723F4001225ED /* PTKCardNumber.m */,
+				04415E411A6723F4001225ED /* PTKCardType.h */,
+				04415E421A6723F4001225ED /* PTKComponent.h */,
+				04415E431A6723F4001225ED /* PTKComponent.m */,
+				04415E441A6723F4001225ED /* PTKTextField.h */,
+				04415E451A6723F4001225ED /* PTKTextField.m */,
+				04415E461A6723F4001225ED /* PTKUSAddressZip.h */,
+				04415E471A6723F4001225ED /* PTKUSAddressZip.m */,
+				04415E481A6723F4001225ED /* PTKView.h */,
+				04415E491A6723F4001225ED /* PTKView.m */,
+				04415E4A1A6723F4001225ED /* Resources */,
+			);
+			name = PaymentKit;
+			path = "iOSExample-WithoutApplePay/PaymentKit";
+			sourceTree = SOURCE_ROOT;
+		};
+		04415E4A1A6723F4001225ED /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				04415E4B1A6723F4001225ED /* Cards */,
+				04415E5E1A6723F4001225ED /* gradient@2x.png */,
+				04415E5F1A6723F4001225ED /* textfield.png */,
+				04415E601A6723F4001225ED /* textfield@2x.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		04415E4B1A6723F4001225ED /* Cards */ = {
+			isa = PBXGroup;
+			children = (
+				04415E4C1A6723F4001225ED /* amex.png */,
+				04415E4D1A6723F4001225ED /* amex@2x.png */,
+				04415E4E1A6723F4001225ED /* cvc-amex.png */,
+				04415E4F1A6723F4001225ED /* cvc-amex@2x.png */,
+				04415E501A6723F4001225ED /* cvc.png */,
+				04415E511A6723F4001225ED /* cvc@2x.png */,
+				04415E521A6723F4001225ED /* diners.png */,
+				04415E531A6723F4001225ED /* diners@2x.png */,
+				04415E541A6723F4001225ED /* discover.png */,
+				04415E551A6723F4001225ED /* discover@2x.png */,
+				04415E561A6723F4001225ED /* jcb.png */,
+				04415E571A6723F4001225ED /* jcb@2x.png */,
+				04415E581A6723F4001225ED /* mastercard.png */,
+				04415E591A6723F4001225ED /* mastercard@2x.png */,
+				04415E5A1A6723F4001225ED /* placeholder.png */,
+				04415E5B1A6723F4001225ED /* placeholder@2x.png */,
+				04415E5C1A6723F4001225ED /* visa.png */,
+				04415E5D1A6723F4001225ED /* visa@2x.png */,
+			);
+			path = Cards;
+			sourceTree = "<group>";
+		};
+		04415E971A67275C001225ED /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				04415E331A6723F4001225ED /* MBProgressHUD */,
+				04415E361A6723F4001225ED /* PaymentKit */,
+			);
+			name = Vendor;
+			sourceTree = "<group>";
 		};
 		049E84ED1A6077B4000B66CD = {
 			isa = PBXGroup;
@@ -70,12 +246,17 @@
 		049E84F81A6077B4000B66CD /* Stripe iOS Example  (Without Apple Pay) */ = {
 			isa = PBXGroup;
 			children = (
-				04415E181A670129001225ED /* AppDelegate.h */,
-				04415E191A670129001225ED /* AppDelegate.m */,
-				04415E1A1A670129001225ED /* Base.lproj */,
-				04415E1F1A670129001225ED /* Images.xcassets */,
-				04415E221A670129001225ED /* ViewController.h */,
-				04415E231A670129001225ED /* ViewController.m */,
+				04415E971A67275C001225ED /* Vendor */,
+				04415E2B1A6723F4001225ED /* AppDelegate.h */,
+				04415E2C1A6723F4001225ED /* AppDelegate.m */,
+				04415E8A1A672441001225ED /* Constants.h */,
+				04415E8B1A672441001225ED /* Constants.m */,
+				04415E2D1A6723F4001225ED /* Base.lproj */,
+				04415E321A6723F4001225ED /* Images.xcassets */,
+				04415E611A6723F4001225ED /* PaymentViewController.h */,
+				04415E621A6723F4001225ED /* PaymentViewController.m */,
+				04415E631A6723F4001225ED /* ViewController.h */,
+				04415E641A6723F4001225ED /* ViewController.m */,
 				049E84F91A6077B4000B66CD /* Supporting Files */,
 			);
 			path = "Stripe iOS Example  (Without Apple Pay)";
@@ -93,6 +274,11 @@
 		049E852D1A60964F000B66CD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				04415E951A6724D9001225ED /* MobileCoreServices.framework */,
+				04415E931A6724D4001225ED /* QuartzCore.framework */,
+				04415E911A6724CE001225ED /* Security.framework */,
+				04415E8F1A6724C7001225ED /* SystemConfiguration.framework */,
+				04415E8D1A672481001225ED /* Parse.framework */,
 				04415C861A660D8A001225ED /* Stripe-WithoutApplePay.framework */,
 			);
 			name = Frameworks;
@@ -155,7 +341,29 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04415E271A670129001225ED /* Images.xcassets in Resources */,
+				04415E801A6723F4001225ED /* mastercard@2x.png in Resources */,
+				04415E861A6723F4001225ED /* textfield.png in Resources */,
+				04415E741A6723F4001225ED /* amex@2x.png in Resources */,
+				04415E751A6723F4001225ED /* cvc-amex.png in Resources */,
+				04415E791A6723F4001225ED /* diners.png in Resources */,
+				04415E681A6723F4001225ED /* Images.xcassets in Resources */,
+				04415E841A6723F4001225ED /* visa@2x.png in Resources */,
+				04415E851A6723F4001225ED /* gradient@2x.png in Resources */,
+				04415E831A6723F4001225ED /* visa.png in Resources */,
+				04415E7C1A6723F4001225ED /* discover@2x.png in Resources */,
+				04415E821A6723F4001225ED /* placeholder@2x.png in Resources */,
+				04415E761A6723F4001225ED /* cvc-amex@2x.png in Resources */,
+				04415E7F1A6723F4001225ED /* mastercard.png in Resources */,
+				04415E871A6723F4001225ED /* textfield@2x.png in Resources */,
+				04415E7B1A6723F4001225ED /* discover.png in Resources */,
+				04415E731A6723F4001225ED /* amex.png in Resources */,
+				04415E781A6723F4001225ED /* cvc@2x.png in Resources */,
+				04415E7E1A6723F4001225ED /* jcb@2x.png in Resources */,
+				04415E811A6723F4001225ED /* placeholder.png in Resources */,
+				04415E7A1A6723F4001225ED /* diners@2x.png in Resources */,
+				04415E771A6723F4001225ED /* cvc.png in Resources */,
+				04415E671A6723F4001225ED /* Main.storyboard in Resources */,
+				04415E7D1A6723F4001225ED /* jcb.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,27 +374,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04415E241A670129001225ED /* AppDelegate.m in Sources */,
+				04415E891A6723F4001225ED /* ViewController.m in Sources */,
+				04415E6B1A6723F4001225ED /* PTKCard.m in Sources */,
+				04415E651A6723F4001225ED /* AppDelegate.m in Sources */,
+				04415E6F1A6723F4001225ED /* PTKComponent.m in Sources */,
+				04415E691A6723F4001225ED /* MBProgressHUD.m in Sources */,
+				04415E8C1A672441001225ED /* Constants.m in Sources */,
+				04415E6A1A6723F4001225ED /* PTKAddressZip.m in Sources */,
+				04415E711A6723F4001225ED /* PTKUSAddressZip.m in Sources */,
+				04415E6E1A6723F4001225ED /* PTKCardNumber.m in Sources */,
+				04415E881A6723F4001225ED /* PaymentViewController.m in Sources */,
+				04415E6D1A6723F4001225ED /* PTKCardExpiry.m in Sources */,
+				04415E701A6723F4001225ED /* PTKTextField.m in Sources */,
+				04415E6C1A6723F4001225ED /* PTKCardCVC.m in Sources */,
+				04415E721A6723F4001225ED /* PTKView.m in Sources */,
 				04415E291A670129001225ED /* main.m in Sources */,
-				04415E2A1A670129001225ED /* ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		04415E1B1A670129001225ED /* LaunchScreen.xib */ = {
+		04415E301A6723F4001225ED /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				04415E1C1A670129001225ED /* Base */,
-			);
-			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
-		04415E1D1A670129001225ED /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				04415E1E1A670129001225ED /* Base */,
+				04415E311A6723F4001225ED /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
