@@ -400,8 +400,8 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(TARGET_BUILD_DIR)/**",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../Stripe/**",
 				);
 				INFOPLIST_FILE = "StripeExample/Stripe iOS Example-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -429,8 +429,8 @@
 				GCC_PREPROCESSOR_DEFINITIONS = STRIPE_ENABLE_APPLEPAY;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(TARGET_BUILD_DIR)/**",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../Stripe/**",
 				);
 				INFOPLIST_FILE = "StripeExample/Stripe iOS Example-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

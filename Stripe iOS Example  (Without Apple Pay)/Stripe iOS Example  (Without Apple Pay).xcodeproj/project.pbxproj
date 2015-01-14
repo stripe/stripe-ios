@@ -1,0 +1,319 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		049E84FC1A6077B4000B66CD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 049E84FB1A6077B4000B66CD /* main.m */; };
+		049E84FF1A6077B4000B66CD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 049E84FE1A6077B4000B66CD /* AppDelegate.m */; };
+		049E85021A6077B4000B66CD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 049E85011A6077B4000B66CD /* ViewController.m */; };
+		049E85051A6077B4000B66CD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 049E85031A6077B4000B66CD /* Main.storyboard */; };
+		049E85071A6077B5000B66CD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 049E85061A6077B5000B66CD /* Images.xcassets */; };
+		049E850A1A6077B5000B66CD /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 049E85081A6077B5000B66CD /* LaunchScreen.xib */; };
+		049E852C1A60963E000B66CD /* libStripe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 049E852B1A60963E000B66CD /* libStripe.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		049E84F61A6077B4000B66CD /* Stripe iOS Example  (Without Apple Pay).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example  (Without Apple Pay).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		049E84FA1A6077B4000B66CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		049E84FB1A6077B4000B66CD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		049E84FD1A6077B4000B66CD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		049E84FE1A6077B4000B66CD /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		049E85001A6077B4000B66CD /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		049E85011A6077B4000B66CD /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		049E85041A6077B4000B66CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		049E85061A6077B5000B66CD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		049E85091A6077B5000B66CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		049E852B1A60963E000B66CD /* libStripe.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libStripe.a; path = "../build/Debug-iphoneos/libStripe.a"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		049E84F31A6077B4000B66CD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				049E852C1A60963E000B66CD /* libStripe.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		049E84ED1A6077B4000B66CD = {
+			isa = PBXGroup;
+			children = (
+				049E84F81A6077B4000B66CD /* Stripe iOS Example  (Without Apple Pay) */,
+				049E852D1A60964F000B66CD /* Frameworks */,
+				049E84F71A6077B4000B66CD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		049E84F71A6077B4000B66CD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				049E84F61A6077B4000B66CD /* Stripe iOS Example  (Without Apple Pay).app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		049E84F81A6077B4000B66CD /* Stripe iOS Example  (Without Apple Pay) */ = {
+			isa = PBXGroup;
+			children = (
+				049E84FD1A6077B4000B66CD /* AppDelegate.h */,
+				049E84FE1A6077B4000B66CD /* AppDelegate.m */,
+				049E85001A6077B4000B66CD /* ViewController.h */,
+				049E85011A6077B4000B66CD /* ViewController.m */,
+				049E85031A6077B4000B66CD /* Main.storyboard */,
+				049E85061A6077B5000B66CD /* Images.xcassets */,
+				049E85081A6077B5000B66CD /* LaunchScreen.xib */,
+				049E84F91A6077B4000B66CD /* Supporting Files */,
+			);
+			path = "Stripe iOS Example  (Without Apple Pay)";
+			sourceTree = "<group>";
+		};
+		049E84F91A6077B4000B66CD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				049E84FA1A6077B4000B66CD /* Info.plist */,
+				049E84FB1A6077B4000B66CD /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		049E852D1A60964F000B66CD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				049E852B1A60963E000B66CD /* libStripe.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		049E84F51A6077B4000B66CD /* Stripe iOS Example  (Without Apple Pay) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 049E85191A6077B5000B66CD /* Build configuration list for PBXNativeTarget "Stripe iOS Example  (Without Apple Pay)" */;
+			buildPhases = (
+				049E84F21A6077B4000B66CD /* Sources */,
+				049E84F31A6077B4000B66CD /* Frameworks */,
+				049E84F41A6077B4000B66CD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stripe iOS Example  (Without Apple Pay)";
+			productName = "Stripe iOS Example  (Without Apple Pay)";
+			productReference = 049E84F61A6077B4000B66CD /* Stripe iOS Example  (Without Apple Pay).app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		049E84EE1A6077B4000B66CD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = Stripe;
+				TargetAttributes = {
+					049E84F51A6077B4000B66CD = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 049E84F11A6077B4000B66CD /* Build configuration list for PBXProject "Stripe iOS Example  (Without Apple Pay)" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 049E84ED1A6077B4000B66CD;
+			productRefGroup = 049E84F71A6077B4000B66CD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				049E84F51A6077B4000B66CD /* Stripe iOS Example  (Without Apple Pay) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		049E84F41A6077B4000B66CD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				049E85051A6077B4000B66CD /* Main.storyboard in Resources */,
+				049E850A1A6077B5000B66CD /* LaunchScreen.xib in Resources */,
+				049E85071A6077B5000B66CD /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		049E84F21A6077B4000B66CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				049E85021A6077B4000B66CD /* ViewController.m in Sources */,
+				049E84FF1A6077B4000B66CD /* AppDelegate.m in Sources */,
+				049E84FC1A6077B4000B66CD /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		049E85031A6077B4000B66CD /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				049E85041A6077B4000B66CD /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		049E85081A6077B5000B66CD /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				049E85091A6077B5000B66CD /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		049E85171A6077B5000B66CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		049E85181A6077B5000B66CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		049E851A1A6077B5000B66CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "Stripe iOS Example  (Without Apple Pay)/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/jack/stripe/stripe-ios/build/Debug-iphoneos",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		049E851B1A6077B5000B66CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "Stripe iOS Example  (Without Apple Pay)/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/jack/stripe/stripe-ios/build/Debug-iphoneos",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		049E84F11A6077B4000B66CD /* Build configuration list for PBXProject "Stripe iOS Example  (Without Apple Pay)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				049E85171A6077B5000B66CD /* Debug */,
+				049E85181A6077B5000B66CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		049E85191A6077B5000B66CD /* Build configuration list for PBXNativeTarget "Stripe iOS Example  (Without Apple Pay)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				049E851A1A6077B5000B66CD /* Debug */,
+				049E851B1A6077B5000B66CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 049E84EE1A6077B4000B66CD /* Project object */;
+}
