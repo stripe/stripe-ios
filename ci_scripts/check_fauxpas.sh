@@ -6,4 +6,4 @@ if [[ $CI && "$TRAVIS_SECURE_ENV_VARS" != "true" ]]; then
 fi
 
 echo "Linting with Faux Pas..."
-fauxpas check "./Tests/Stripe Tests.xcodeproj" --scheme "iOS Tests" --configFile "./ci_scripts/FauxPasConfig/main.fauxpas.json" --minErrorStatusSeverity Concern && fauxpas check "./Tests/Stripe Tests.xcodeproj" --scheme "OSX Tests" --configFile "./ci_scripts/FauxPasConfig/main.fauxpas.json" --minErrorStatusSeverity Concern
+fauxpas check Stripe.xcodeproj/ --target "StripeiOS" --configFile "./ci_scripts/FauxPasConfig/main.fauxpas.json" --minErrorStatusSeverity Concern && fauxpas check Stripe.xcodeproj/ --target "StripeOSX" --configFile "./ci_scripts/FauxPasConfig/main.fauxpas.json" --minErrorStatusSeverity Concern

@@ -215,7 +215,7 @@
         completion:^(__unused BOOL finished) { [self.activityIndicator stopAnimating]; }];
 }
 
-- (void)checkoutAdapter:(__unused id<STPCheckoutWebViewAdapter>)adapter didError:(__unused NSError *)error {
+- (void)checkoutAdapter:(__unused id<STPCheckoutWebViewAdapter>)adapter didError:(NSError *)error {
     [self.activityIndicator stopAnimating];
     [self.delegate checkoutController:self.checkoutController didFailWithError:error];
     [self cleanup];

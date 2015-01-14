@@ -169,7 +169,7 @@
 - (void)checkoutAdapterDidFinishLoad:(__unused id<STPCheckoutWebViewAdapter>)adapter {
 }
 
-- (void)checkoutAdapter:(__unused id<STPCheckoutWebViewAdapter>)adapter didError:(__unused NSError *)error {
+- (void)checkoutAdapter:(__unused id<STPCheckoutWebViewAdapter>)adapter didError:(NSError *)error {
     [self.checkoutDelegate checkoutController:self didFailWithError:error];
 }
 

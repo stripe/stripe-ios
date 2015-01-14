@@ -66,7 +66,7 @@
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Bank account creation"];
     [client createTokenWithPayment:payment
-                        completion:^(__unused STPToken *token, NSError *error) {
+                        completion:^(STPToken *token, NSError *error) {
                             [expectation fulfill];
                             XCTAssertNil(token, @"token should be nil");
                             XCTAssertNotNil(error, @"error should not be nil");

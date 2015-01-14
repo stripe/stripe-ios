@@ -21,3 +21,5 @@ if ENV["TRAVIS_BRANCH"] == "master"
   end
 
 end
+
+puts "Done!"

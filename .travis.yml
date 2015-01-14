@@ -9,5 +9,5 @@ before_install:
 script:
   - "./ci_scripts/check_fauxpas.sh"
   - "./ci_scripts/check_version.rb"
-  - set -o pipefail && xcodebuild test -project "Tests/Stripe Tests.xcodeproj" -scheme "iOS Tests" -destination 'platform=iOS Simulator,name=iPhone 5s,OS=7.1' -destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.1' | xcpretty -c
-  - set -o pipefail && xcodebuild test -project "Tests/Stripe Tests.xcodeproj" -scheme "OSX Tests" | xcpretty -c
+  - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeiOS Tests" -destination 'platform=iOS Simulator,name=iPhone 5s,OS=7.1' -destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.1' | xcpretty -c
+  - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeOSX Tests" | xcpretty -c
