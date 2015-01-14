@@ -5,8 +5,8 @@
 //  Created by Jack Flintermann on 10/6/14.
 //
 
-#import "STPCheckoutOptions.h"
 #import "Stripe.h"
+#import "STPCheckoutOptions.h"
 #import "STPColorUtils.h"
 
 @implementation STPCheckoutOptions

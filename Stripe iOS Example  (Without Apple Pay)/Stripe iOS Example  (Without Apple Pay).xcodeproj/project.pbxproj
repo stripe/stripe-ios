@@ -7,16 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04415C871A660D8A001225ED /* Stripe-WithoutApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04415C861A660D8A001225ED /* Stripe-WithoutApplePay.framework */; };
 		049E84FC1A6077B4000B66CD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 049E84FB1A6077B4000B66CD /* main.m */; };
 		049E84FF1A6077B4000B66CD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 049E84FE1A6077B4000B66CD /* AppDelegate.m */; };
 		049E85021A6077B4000B66CD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 049E85011A6077B4000B66CD /* ViewController.m */; };
 		049E85051A6077B4000B66CD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 049E85031A6077B4000B66CD /* Main.storyboard */; };
 		049E85071A6077B5000B66CD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 049E85061A6077B5000B66CD /* Images.xcassets */; };
 		049E850A1A6077B5000B66CD /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 049E85081A6077B5000B66CD /* LaunchScreen.xib */; };
-		049E852C1A60963E000B66CD /* libStripe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 049E852B1A60963E000B66CD /* libStripe.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		04415C861A660D8A001225ED /* Stripe-WithoutApplePay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Stripe-WithoutApplePay.framework"; sourceTree = "<group>"; };
 		049E84F61A6077B4000B66CD /* Stripe iOS Example  (Without Apple Pay).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example  (Without Apple Pay).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		049E84FA1A6077B4000B66CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		049E84FB1A6077B4000B66CD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -27,7 +28,6 @@
 		049E85041A6077B4000B66CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		049E85061A6077B5000B66CD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		049E85091A6077B5000B66CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		049E852B1A60963E000B66CD /* libStripe.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libStripe.a; path = "../build/Debug-iphoneos/libStripe.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,7 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				049E852C1A60963E000B66CD /* libStripe.a in Frameworks */,
+				04415C871A660D8A001225ED /* Stripe-WithoutApplePay.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,6 +45,7 @@
 		049E84ED1A6077B4000B66CD = {
 			isa = PBXGroup;
 			children = (
+				04415C861A660D8A001225ED /* Stripe-WithoutApplePay.framework */,
 				049E84F81A6077B4000B66CD /* Stripe iOS Example  (Without Apple Pay) */,
 				049E852D1A60964F000B66CD /* Frameworks */,
 				049E84F71A6077B4000B66CD /* Products */,
@@ -86,7 +87,6 @@
 		049E852D1A60964F000B66CD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				049E852B1A60963E000B66CD /* libStripe.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -269,11 +269,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Stripe iOS Example  (Without Apple Pay)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/jack/stripe/stripe-ios/build/Debug-iphoneos",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Stripe-cxajdjnrspmiamhaiixwkuuqmmgg/Build/Products/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -283,11 +288,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Stripe iOS Example  (Without Apple Pay)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/jack/stripe/stripe-ios/build/Debug-iphoneos",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Stripe-cxajdjnrspmiamhaiixwkuuqmmgg/Build/Products/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -312,6 +322,7 @@
 				049E851B1A6077B5000B66CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -14,8 +14,14 @@
 #import "STPCheckoutOptions.h"
 #import "STPCheckoutViewController.h"
 
-#if __has_include("Stripe+ApplePay.h") && TARGET_OS_IPHONE
+#if __has_include("Stripe+ApplePay.h")
 #import "Stripe+ApplePay.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentPresenter.h"
 #endif
+
+//! Project version number for Stripe.
+FOUNDATION_EXPORT double StripeVersionNumber;
+
+//! Project version string for Stripe.
+FOUNDATION_EXPORT const unsigned char StripeVersionString[];

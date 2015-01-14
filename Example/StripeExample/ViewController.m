@@ -5,7 +5,8 @@
 //  Created by Jack Flintermann on 8/21/14.
 //
 
-#import <Stripe.h>
+#import <Stripe/Stripe.h>
+#import <Stripe/Stripe+ApplePay.h>
 #import <Parse/Parse.h>
 
 #import "ViewController.h"

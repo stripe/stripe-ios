@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		04365D5A1A4CFBBB00A3E1D4 /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04365D591A4CFBBB00A3E1D4 /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		04415C891A66105B001225ED /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04415C881A66105B001225ED /* Stripe.framework */; };
 		0470A29C19A5D5DB00B66DB7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29B19A5D5DB00B66DB7 /* Foundation.framework */; };
 		0470A29E19A5D5DB00B66DB7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29D19A5D5DB00B66DB7 /* CoreGraphics.framework */; };
 		0470A2A019A5D5DB00B66DB7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0470A29F19A5D5DB00B66DB7 /* UIKit.framework */; };
@@ -20,7 +21,6 @@
 		0470A30B19A5D69E00B66DB7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2D119A5D69E00B66DB7 /* Main.storyboard */; };
 		0470A30C19A5D69E00B66DB7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0470A2D419A5D69E00B66DB7 /* InfoPlist.strings */; };
 		04C0A07619F85E5100D699BB /* ShippingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0A07519F85E5100D699BB /* ShippingManager.m */; };
-		04CDB51D1A5F33B800B854EE /* StripeiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB51C1A5F33B800B854EE /* StripeiOS.framework */; };
 		04E75A3B19A71BFD000003DE /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3A19A71BFD000003DE /* Parse.framework */; };
 		04E75A3D19A71C22000003DE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3C19A71C22000003DE /* AudioToolbox.framework */; };
 		04E75A3F19A71C2A000003DE /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E75A3E19A71C2A000003DE /* CFNetwork.framework */; };
@@ -35,6 +35,7 @@
 
 /* Begin PBXFileReference section */
 		04365D591A4CFBBB00A3E1D4 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
+		04415C881A66105B001225ED /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe.framework; path = "../build/Debug-iphoneos/Stripe.framework"; sourceTree = "<group>"; };
 		0470A29819A5D5DB00B66DB7 /* Stripe iOS Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0470A29B19A5D5DB00B66DB7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0470A29D19A5D5DB00B66DB7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -54,7 +55,6 @@
 		04C0A07319F85BD800D699BB /* StripeExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = StripeExample.entitlements; sourceTree = "<group>"; };
 		04C0A07419F85E5100D699BB /* ShippingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShippingManager.h; sourceTree = "<group>"; };
 		04C0A07519F85E5100D699BB /* ShippingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShippingManager.m; sourceTree = "<group>"; };
-		04CDB51C1A5F33B800B854EE /* StripeiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StripeiOS.framework; path = "../build/Debug-iphoneos/StripeiOS.framework"; sourceTree = "<group>"; };
 		04E75A3A19A71BFD000003DE /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		04E75A3C19A71C22000003DE /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		04E75A3E19A71C2A000003DE /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -73,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04CDB51D1A5F33B800B854EE /* StripeiOS.framework in Frameworks */,
+				04415C891A66105B001225ED /* Stripe.framework in Frameworks */,
 				04365D5A1A4CFBBB00A3E1D4 /* PassKit.framework in Frameworks */,
 				04E75A4D19A71CA1000003DE /* SystemConfiguration.framework in Frameworks */,
 				04E75A4919A71C94000003DE /* Security.framework in Frameworks */,
@@ -113,7 +113,7 @@
 		0470A29A19A5D5DB00B66DB7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				04CDB51C1A5F33B800B854EE /* StripeiOS.framework */,
+				04415C881A66105B001225ED /* Stripe.framework */,
 				04365D591A4CFBBB00A3E1D4 /* PassKit.framework */,
 				04E75A4C19A71CA1000003DE /* SystemConfiguration.framework */,
 				04E75A4819A71C94000003DE /* Security.framework */,
@@ -387,8 +387,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/../**",
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"/Users/jack/stripe/stripe-ios/build/Debug-iphoneos",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -420,8 +422,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/../**",
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"/Users/jack/stripe/stripe-ios/build/Debug-iphoneos",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
