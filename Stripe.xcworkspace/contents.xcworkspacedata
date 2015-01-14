@@ -11,6 +11,6 @@
       location = "group:Example/Stripe OSX Example.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Stripe iOS Example  (Without Apple Pay)/Stripe iOS Example  (Without Apple Pay).xcodeproj">
+      location = "group:Example/Stripe iOS Example  (Without Apple Pay).xcodeproj">
    </FileRef>
 </Workspace>
