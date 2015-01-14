@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                           = 'Stripe'
-  s.version                        = File.open('VERSION').first.strip
+  s.version                        = "3.1"#File.open('VERSION').first.strip
   s.summary                        = 'Stripe is a web-based API for accepting payments online.'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.default_subspecs               = 'Core', 'Checkout'
 
   s.subspec 'Core' do |subspec|
-    subspec.source_files           = 'Stripe/*.{h,m}'
+    subspec.source_files           = 'Stripe/**.{h,m}'
     subspec.public_header_files    = 'Stripe/PublicHeaders/*.h'
     subspec.exclude_files          = 'Stripe/ApplePay/*', 'Stripe/PublicHeaders/ApplePay/*'
   end
@@ -35,7 +35,6 @@ Pod::Spec.new do |s|
     subspec.ios.public_header_files = 'Stripe/PublicHeaders/ApplePay/*.h'
     subspec.osx.source_files        = ''
     subspec.osx.public_header_files = ''
-    subspec.prefix_header_contents  = '#define STRIPE_ENABLE_APPLEPAY YES'
     subspec.ios.weak_frameworks     = 'PassKit', 'AddressBook'
   end
 end
