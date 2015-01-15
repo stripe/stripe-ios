@@ -39,7 +39,7 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
     if (self) {
         _delegate = delegate;
         _checkoutOptions = checkoutOptions;
-        _apiClient = [[STPAPIClient alloc] init];
+        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:_checkoutOptions.publishableKey];
     }
     return self;
 }

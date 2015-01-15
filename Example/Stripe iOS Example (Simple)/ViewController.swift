@@ -16,6 +16,8 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
     let parseApplicationId = ""
     let parseClientKey = ""
     
+    let shirtPrice = 1000 // this is in cents, so $10
+    
     @IBAction func beginPayment(sender: AnyObject) {
         if (stripePublishableKey == "") {
             let alert = UIAlertController(
@@ -29,6 +31,11 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
             return
         }
         let options = STPCheckoutOptions()
+        options.publishableKey = stripePublishableKey
+        options.appleMerchantId = "<#Replace me with your Apple Merchant ID#>"
+        options.purchaseDescription = "Cool Shirt"
+        options.purchaseAmount = shirtPrice
+        options.logoColor = UIColor.purpleColor()
         let presenter = STPPaymentPresenter(checkoutOptions: options, delegate: self)
         presenter.requestPaymentFromPresentingViewController(self)
     }
