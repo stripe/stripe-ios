@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.frameworks                     = 'Foundation', 'Security'
   s.requires_arc                   = true
   s.ios.deployment_target          = '6.0'
-  s.osx.deployment_target          = '10.10'
+  s.osx.deployment_target          = '10.9'
   s.default_subspecs               = 'Core', 'Checkout'
 
   s.subspec 'Core' do |subspec|

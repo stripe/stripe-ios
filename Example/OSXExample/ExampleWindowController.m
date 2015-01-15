@@ -11,13 +11,14 @@
 
 @interface ExampleWindowController () <STPCheckoutViewControllerDelegate>
 @property STPCheckoutViewController *checkoutController;
+@property (weak) IBOutlet NSButton *buyButton;
 @end
 
 @implementation ExampleWindowController
 
 - (IBAction)beginPayment:(id)sender {
     STPCheckoutOptions *options = [STPCheckoutOptions new];
-    options.publishableKey = @"pk_test_09IUAkhSGIz8mQP3prdgKm06";
+    options.publishableKey = [Stripe defaultPublishableKey];
     options.appleMerchantId = @"<#Replace me with your Apple Merchant ID #>";
     options.purchaseDescription = @"Tasty Llama food";
     options.purchaseAmount = @1000;
@@ -38,26 +39,27 @@
                                                                                     options:NSLayoutFormatDirectionLeadingToTrailing
                                                                                     metrics:nil
                                                                                       views:NSDictionaryOfVariableBindings(webView)]];
-    [self.window.contentViewController addChildViewController:self.checkoutController];
+    self.buyButton.enabled = NO;
 }
 
 - (void)checkoutController:(STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
+    self.buyButton.enabled = YES;
     completion(STPBackendChargeResultSuccess, nil);
 }
 
 - (void)checkoutController:(STPCheckoutViewController *)controller didFailWithError:(NSError *)error {
+    self.buyButton.enabled = YES;
     [controller.view removeFromSuperview];
-    [controller removeFromParentViewController];
 }
 
 - (void)checkoutControllerDidCancel:(STPCheckoutViewController *)controller {
+    self.buyButton.enabled = YES;
     [controller.view removeFromSuperview];
-    [controller removeFromParentViewController];
 }
 
 - (void)checkoutControllerDidFinish:(STPCheckoutViewController *)controller {
+    self.buyButton.enabled = YES;
     [controller.view removeFromSuperview];
-    [controller removeFromParentViewController];
 }
 
 @end

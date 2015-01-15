@@ -103,10 +103,6 @@
 - (void)loadView {
     NSView *view = [[NSView alloc] initWithFrame:CGRectZero];
     self.view = view;
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
     if (!self.adapter) {
         self.adapter = [STPOSXCheckoutWebViewAdapter new];
         self.adapter.delegate = self;
@@ -124,10 +120,6 @@
                                                                       options:NSLayoutFormatDirectionLeadingToTrailing
                                                                       metrics:nil
                                                                         views:NSDictionaryOfVariableBindings(webView)]];
-}
-
-- (void)viewDidAppear {
-    [super viewDidAppear];
 }
 
 #pragma mark STPCheckoutAdapterDelegate

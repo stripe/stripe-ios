@@ -6,6 +6,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ExampleWindowController">
             <connections>
+                <outlet property="buyButton" destination="xya-P8-w67" id="ws1-rq-Rk1"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
