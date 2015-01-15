@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		04D12C4A1A5F56470010446E /* StripeOSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D12C491A5F56470010446E /* StripeOSX.framework */; };
+		04823F6E1A677FF00098400B /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04823F6D1A677FF00098400B /* Stripe.framework */; };
 		04FCF64B1A41F76D00DBF696 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FCF64A1A41F76D00DBF696 /* AppDelegate.m */; };
 		04FCF64D1A41F76D00DBF696 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FCF64C1A41F76D00DBF696 /* main.m */; };
 		04FCF64F1A41F76D00DBF696 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04FCF64E1A41F76D00DBF696 /* Images.xcassets */; };
@@ -17,7 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		04D12C491A5F56470010446E /* StripeOSX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StripeOSX.framework; path = ../build/Debug/StripeOSX.framework; sourceTree = "<group>"; };
+		04823F6D1A677FF00098400B /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe.framework; path = "../../../Library/Developer/Xcode/DerivedData/Stripe-cxajdjnrspmiamhaiixwkuuqmmgg/Build/Products/Debug-iphoneos/Stripe.framework"; sourceTree = "<group>"; };
 		04FCF6441A41F76D00DBF696 /* Stripe OSX Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe OSX Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04FCF6481A41F76D00DBF696 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04FCF6491A41F76D00DBF696 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -35,7 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04D12C4A1A5F56470010446E /* StripeOSX.framework in Frameworks */,
+				04823F6E1A677FF00098400B /* Stripe.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,7 +45,7 @@
 		04D957D41A5F442800AE0A79 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				04D12C491A5F56470010446E /* StripeOSX.framework */,
+				04823F6D1A677FF00098400B /* Stripe.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -262,7 +262,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Stripe-cxajdjnrspmiamhaiixwkuuqmmgg/Build/Products/Debug-iphoneos",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -280,7 +283,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Stripe-cxajdjnrspmiamhaiixwkuuqmmgg/Build/Products/Debug-iphoneos",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
