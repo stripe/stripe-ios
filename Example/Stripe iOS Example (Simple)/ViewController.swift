@@ -15,8 +15,9 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
     let stripePublishableKey = ""
     let parseApplicationId = ""
     let parseClientKey = ""
+    let appleMerchantId = ""
     
-    let shirtPrice = 1000 // this is in cents, so $10
+    let shirtPrice : UInt = 1000 // this is in cents
     
     @IBAction func beginPayment(sender: AnyObject) {
         if (stripePublishableKey == "") {
@@ -32,7 +33,10 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
         }
         let options = STPCheckoutOptions()
         options.publishableKey = stripePublishableKey
-        options.appleMerchantId = "<#Replace me with your Apple Merchant ID#>"
+        if (appleMerchantId != "") {
+            options.appleMerchantId = appleMerchantId
+        }
+        options.companyName = "Shirt Shop"
         options.purchaseDescription = "Cool Shirt"
         options.purchaseAmount = shirtPrice
         options.logoColor = UIColor.purpleColor()
@@ -47,7 +51,7 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
             completion(STPBackendChargeResult.Failure, error)
             return
         }
-        let chargeParams = ["token": token.tokenId, "currency": "usd", "amount": 1000]
+        let chargeParams = ["token": token.tokenId, "currency": "usd", "amount": shirtPrice]
         Parse.setApplicationId(parseApplicationId, clientKey: parseClientKey)
         PFCloud.callFunctionInBackground("charge", withParameters: chargeParams) { (object, error) -> Void in
             if error != nil {
@@ -60,7 +64,11 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
     }
     
     func paymentPresenter(presenter: STPPaymentPresenter!, didFinishWithStatus status: STPPaymentStatus, error: NSError!) {
+        
         self.dismissViewControllerAnimated(true, completion: { () -> Void in
+            if (status == STPPaymentStatus.UserCanceled) {
+                return
+            }
             let alert = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
             if error != nil {
                 alert.message = error.localizedDescription

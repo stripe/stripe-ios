@@ -38,8 +38,8 @@
     if (self.purchaseDescription) {
         values[@"purchaseDescription"] = self.purchaseDescription;
     }
-    if (self.purchaseAmount) {
-        values[@"purchaseAmount"] = self.purchaseAmount;
+    if (self.purchaseAmount != 0) {
+        values[@"purchaseAmount"] = @(self.purchaseAmount);
     }
     if (self.customerEmail) {
         values[@"customerEmail"] = self.customerEmail;

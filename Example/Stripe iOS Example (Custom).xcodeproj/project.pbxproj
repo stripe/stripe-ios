@@ -60,7 +60,22 @@
 		04533F301A68956A00C7E52E /* STPTestPaymentSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533F271A68956A00C7E52E /* STPTestPaymentSummaryViewController.m */; };
 		04533F311A68956A00C7E52E /* STPTestPaymentSummaryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04533F281A68956A00C7E52E /* STPTestPaymentSummaryViewController.xib */; };
 		04533F321A68956A00C7E52E /* STPTestShippingMethodStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533F2A1A68956A00C7E52E /* STPTestShippingMethodStore.m */; };
+		04D076171A69C11600094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F0C1A68812D00C7E52E /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		04D076181A69C11600094431 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				04D076171A69C11600094431 /* Stripe.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		04533E871A687F5D00C7E52E /* Stripe iOS Example (Custom).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example (Custom).app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -336,6 +351,7 @@
 				04533E831A687F5D00C7E52E /* Sources */,
 				04533E841A687F5D00C7E52E /* Frameworks */,
 				04533E851A687F5D00C7E52E /* Resources */,
+				04D076181A69C11600094431 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

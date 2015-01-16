@@ -72,8 +72,9 @@
 /**
  *  The amount (in cents) that's shown to the user. Note that this is for display purposes only; you will still have to explicitly specify the amount when you
  * create a charge using the Stripe API. This property needs to be set in order to use Apple Pay with STPPaymentPresenter.
+ *  @warning don't forget this is in cents! So for a $10 charge, specify 1000 here.
  */
-@property (nonatomic, copy) NSNumber *purchaseAmount;
+@property (nonatomic) NSUInteger purchaseAmount;
 
 /**
  *  If you already know the email address of your user, you can provide it to Checkout to be pre-filled.

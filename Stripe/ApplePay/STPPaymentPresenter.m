@@ -162,7 +162,8 @@ typedef void (^STPPaymentAuthorizationStatusBlock)(PKPaymentAuthorizationStatus 
     paymentRequest.currencyCode = self.purchaseCurrency;
 
     NSMutableArray *paymentSummaryItems = [@[] mutableCopy];
-    NSDecimalNumber *amount = [NSDecimalNumber decimalNumberWithDecimal:[self.purchaseAmount decimalValue]];
+    
+    NSDecimalNumber *amount = [NSDecimalNumber decimalNumberWithDecimal:@(self.purchaseAmount / 100).decimalValue];
     if (self.purchaseDescription) {
         PKPaymentSummaryItem *item = [PKPaymentSummaryItem summaryItemWithLabel:self.purchaseDescription amount:amount];
         [paymentSummaryItems addObject:item];

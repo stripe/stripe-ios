@@ -14,9 +14,23 @@
 		042CA41F1A685E8D00D778E7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 042CA4171A685E8D00D778E7 /* Main.storyboard */; };
 		042CA4201A685E8D00D778E7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 042CA4191A685E8D00D778E7 /* Images.xcassets */; };
 		042CA4221A685E8D00D778E7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CA41C1A685E8D00D778E7 /* ViewController.swift */; };
-		04533E7C1A68773400C7E52E /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04533E7B1A68773400C7E52E /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		04823F9E1A6849810098400B /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04823F9D1A6849810098400B /* Stripe.framework */; };
+		04D0761A1A69C14700094431 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; };
+		04D0761B1A69C14700094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		04D0761C1A69C14800094431 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				04D0761B1A69C14700094431 /* Stripe.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		042CA40A1A684F6100D778E7 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
@@ -28,9 +42,9 @@
 		042CA41A1A685E8D00D778E7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		042CA41B1A685E8D00D778E7 /* Stripe iOS Example (Simple)-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe iOS Example (Simple)-Bridging-Header.h"; sourceTree = "<group>"; };
 		042CA41C1A685E8D00D778E7 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		04533E7B1A68773400C7E52E /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		04823F781A6849200098400B /* Stripe iOS Example (Simple).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example (Simple).app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		04823F9D1A6849810098400B /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Stripe-cxajdjnrspmiamhaiixwkuuqmmgg/Build/Products/Debug-iphoneos/Stripe.framework"; sourceTree = "<group>"; };
+		04D075D91A69B82B00094431 /* Stripe iOS Example (Simple).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Stripe iOS Example (Simple).entitlements"; sourceTree = "<group>"; };
+		04D076191A69C14700094431 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Stripe.framework; path = "/Users/jack/Library/Developer/Xcode/DerivedData/Stripe-cxajdjnrspmiamhaiixwkuuqmmgg/Build/Products/Debug-iphoneos/Stripe.framework"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,11 +52,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04533E7C1A68773400C7E52E /* PassKit.framework in Frameworks */,
 				042CA4121A685E2200D778E7 /* SystemConfiguration.framework in Frameworks */,
 				042CA4101A685DF200D778E7 /* MobileCoreServices.framework in Frameworks */,
 				042CA40B1A684F6100D778E7 /* Parse.framework in Frameworks */,
-				04823F9E1A6849810098400B /* Stripe.framework in Frameworks */,
+				04D0761A1A69C14700094431 /* Stripe.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,6 +71,7 @@
 				042CA4191A685E8D00D778E7 /* Images.xcassets */,
 				042CA41A1A685E8D00D778E7 /* Info.plist */,
 				042CA41B1A685E8D00D778E7 /* Stripe iOS Example (Simple)-Bridging-Header.h */,
+				04D075D91A69B82B00094431 /* Stripe iOS Example (Simple).entitlements */,
 			);
 			path = "Stripe iOS Example (Simple)";
 			sourceTree = "<group>";
@@ -82,11 +96,10 @@
 		04823F9F1A6849850098400B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				04533E7B1A68773400C7E52E /* PassKit.framework */,
+				04D076191A69C14700094431 /* Stripe.framework */,
 				042CA4111A685E2200D778E7 /* SystemConfiguration.framework */,
 				042CA40F1A685DF200D778E7 /* MobileCoreServices.framework */,
 				042CA40A1A684F6100D778E7 /* Parse.framework */,
-				04823F9D1A6849810098400B /* Stripe.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -101,6 +114,7 @@
 				04823F741A6849200098400B /* Sources */,
 				04823F751A6849200098400B /* Frameworks */,
 				04823F761A6849200098400B /* Resources */,
+				04D0761C1A69C14800094431 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -122,6 +136,14 @@
 				TargetAttributes = {
 					04823F771A6849200098400B = {
 						CreatedOnToolsVersion = 6.1.1;
+						SystemCapabilities = {
+							com.apple.OMC = {
+								enabled = 1;
+							};
+							com.apple.Passbook = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -263,15 +285,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple).entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Stripe-cxajdjnrspmiamhaiixwkuuqmmgg/Build/Products/Debug-iphoneos",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "Stripe iOS Example (Simple)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple)-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -282,15 +307,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple).entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/Stripe-cxajdjnrspmiamhaiixwkuuqmmgg/Build/Products/Debug-iphoneos",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "Stripe iOS Example (Simple)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple)-Bridging-Header.h";
 			};
 			name = Release;

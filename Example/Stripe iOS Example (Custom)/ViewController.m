@@ -168,7 +168,7 @@
     options.publishableKey = [Stripe defaultPublishableKey];
     options.appleMerchantId = @"woo";
     options.purchaseDescription = @"Cool Shirt";
-    options.purchaseAmount = @1000; // this is in cents
+    options.purchaseAmount = 1000; // this is in cents
     options.logoColor = [UIColor purpleColor];
     STPCheckoutViewController *checkoutViewController = [[STPCheckoutViewController alloc] initWithOptions:options];
     checkoutViewController.checkoutDelegate = self;
