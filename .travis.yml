@@ -11,3 +11,6 @@ script:
   - "./ci_scripts/check_version.rb"
   - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeiOS Tests" -destination 'platform=iOS Simulator,name=iPhone 5s,OS=7.1' -destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.1' | xcpretty -c
   - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeOSX Tests" | xcpretty -c
+  - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe iOS Example (Simple)" | xcpretty -c
+  - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe iOS Example (Custom)" | xcpretty -c
+  - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe OSX Example" | xcpretty -c
