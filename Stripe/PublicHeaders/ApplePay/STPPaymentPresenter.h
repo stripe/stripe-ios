@@ -18,9 +18,6 @@
  capable of using Apple Pay, it'll automatically use that. If not, it will fall back to use Stripe Checkout. For both methods, it'll automatically turn the
  user's credit card into a Stripe token and give the token to its delegate.
 
- You'll need to add STRIPE_ENABLE_APPLEPAY to your app's build settings under "Preprocessor Macros" before using this class. For more information,
- see https://stripe.com/docs/mobile/ios#applepay
-
  Example use:
 
  // In your view controller
@@ -29,7 +26,7 @@
                                                                               delegate:self];
  [presenter requestPaymentFromPresentingViewController:self];
 
- For more context, see ViewController.m in the StripeExample app (which uses STPPaymentPresenter).
+ For more context, see ViewController.swift in the Simple iOS Example app (which uses STPPaymentPresenter).
 
  */
 @interface STPPaymentPresenter : NSObject
