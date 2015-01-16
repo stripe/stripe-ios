@@ -37,7 +37,6 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="beginPayment:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="uaP-XL-iBd"/>
                                             <action selector="beginStripeCheckout:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="1W9-33-kTM"/>
                                         </connections>
                                     </button>
