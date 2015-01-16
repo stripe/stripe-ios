@@ -187,7 +187,7 @@
     case STPPaymentStatusError:
         [self presentError:error];
         break;
-    case STPPaymentStatusUserCanceled:
+    case STPPaymentStatusUserCancelled:
         // do nothing
         break;
     }

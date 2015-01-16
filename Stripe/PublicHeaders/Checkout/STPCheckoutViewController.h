@@ -16,7 +16,7 @@
 typedef NS_ENUM(NSInteger, STPPaymentStatus) {
     STPPaymentStatusSuccess,      // The transaction was a success.
     STPPaymentStatusError,        // The transaction failed.
-    STPPaymentStatusUserCanceled, // The user canceled the payment sheet.
+    STPPaymentStatusUserCancelled, // The user Cancelled the payment sheet.
 };
 
 @class STPCheckoutOptions, STPToken;

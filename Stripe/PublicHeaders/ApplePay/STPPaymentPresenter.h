@@ -84,7 +84,7 @@
 
  *
  *  @param presenter The payment presenter that has finished.
- *  @param status    This will be one of STPPaymentStatusSuccess, STPPaymentStatusError, or STPPaymentStatusUserCanceled depending on what happened with the
+ *  @param status    This will be one of STPPaymentStatusSuccess, STPPaymentStatusError, or STPPaymentStatusUserCancelled depending on what happened with the
  user's transaction.
  *  @param error     This will only be set if status == STPPaymentStatusError. If you returned STPBackendChargeResultFailure from your API call above, this will
  be the error you (optionally) included there. If not, see StripeError.h for the possible values it may contain.

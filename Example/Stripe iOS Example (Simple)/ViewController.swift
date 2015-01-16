@@ -66,7 +66,7 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
     func paymentPresenter(presenter: STPPaymentPresenter!, didFinishWithStatus status: STPPaymentStatus, error: NSError!) {
         
         self.dismissViewControllerAnimated(true, completion: { () -> Void in
-            if (status == STPPaymentStatus.UserCanceled) {
+            if (status == STPPaymentStatus.UserCancelled) {
                 return
             }
             let alert = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.Alert)

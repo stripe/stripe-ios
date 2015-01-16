@@ -145,7 +145,7 @@ typedef void (^STPPaymentAuthorizationStatusBlock)(PKPaymentAuthorizationStatus 
     } else if (self.hasAuthorizedPayment) {
         status = STPPaymentStatusSuccess;
     } else {
-        status = STPPaymentStatusUserCanceled;
+        status = STPPaymentStatusUserCancelled;
     }
     [self finishWithStatus:status error:self.error];
 }

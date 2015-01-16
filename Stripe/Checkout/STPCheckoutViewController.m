@@ -166,7 +166,7 @@
             [self.checkoutDelegate checkoutController:self didFinishWithStatus:STPPaymentStatusError error:self.backendChargeError];
         }
     } else if ([event isEqualToString:STPCheckoutEventCancel]) {
-        [self.checkoutDelegate checkoutController:self didFinishWithStatus:STPPaymentStatusUserCanceled error:nil];
+        [self.checkoutDelegate checkoutController:self didFinishWithStatus:STPPaymentStatusUserCancelled error:nil];
     } else if ([event isEqualToString:STPCheckoutEventError]) {
         NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
         [self.checkoutDelegate checkoutController:self didFinishWithStatus:STPPaymentStatusError error:error];
