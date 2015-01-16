@@ -78,6 +78,8 @@
 
 @interface STPCheckoutViewController () <STPCheckoutDelegate>
 @property (nonatomic) STPOSXCheckoutWebViewAdapter *adapter;
+@property (nonatomic) BOOL backendChargeSuccessful;
+@property (nonatomic) NSError *backendChargeError;
 @end
 
 @implementation STPCheckoutViewController
@@ -122,7 +124,7 @@
                                                                         views:NSDictionaryOfVariableBindings(webView)]];
 }
 
-#pragma mark STPCheckoutAdapterDelegate
+#pragma mark STPCheckoutDelegate
 
 - (void)checkoutAdapterDidStartLoad:(id<STPCheckoutWebViewAdapter>)adapter {
     NSString *optionsJavaScript = [NSString stringWithFormat:@"window.%@ = %@;", checkoutOptionsGlobal, [self.options stringifiedJSONRepresentation]];
@@ -143,18 +145,31 @@
                                            if (status == STPBackendChargeResultSuccess) {
                                                [adapter evaluateJavaScript:payload[@"success"]];
                                            } else {
+                                               self.backendChargeSuccessful = (status == STPBackendChargeResultSuccess);
+                                               self.backendChargeError = error;
+                                               NSString *encodedError = @"";
+                                               if (error.localizedDescription) {
+                                                   encodedError = [[NSString alloc]
+                                                       initWithData:[NSJSONSerialization dataWithJSONObject:@[error.localizedDescription] options:0 error:nil]
+                                                           encoding:NSUTF8StringEncoding];
+                                                   encodedError = [encodedError substringWithRange:NSMakeRange(2, encodedError.length - 4)];
+                                               }
                                                NSString *failure = payload[@"failure"];
-                                               NSString *script = [NSString stringWithFormat:failure, error.localizedDescription];
+                                               NSString *script = [NSString stringWithFormat:failure, encodedError];
                                                [adapter evaluateJavaScript:script];
                                            }
                                        }];
     } else if ([event isEqualToString:STPCheckoutEventFinish]) {
-        [self.checkoutDelegate checkoutControllerDidFinish:self];
+        if (self.backendChargeSuccessful) {
+            [self.checkoutDelegate checkoutController:self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+        } else {
+            [self.checkoutDelegate checkoutController:self didFinishWithStatus:STPPaymentStatusError error:self.backendChargeError];
+        }
     } else if ([event isEqualToString:STPCheckoutEventCancel]) {
-        [self.checkoutDelegate checkoutControllerDidCancel:self];
+        [self.checkoutDelegate checkoutController:self didFinishWithStatus:STPPaymentStatusUserCanceled error:nil];
     } else if ([event isEqualToString:STPCheckoutEventError]) {
         NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
-        [self.checkoutDelegate checkoutController:self didFailWithError:error];
+        [self.checkoutDelegate checkoutController:self didFinishWithStatus:STPPaymentStatusError error:error];
     }
 }
 
@@ -162,7 +177,7 @@
 }
 
 - (void)checkoutAdapter:(__unused id<STPCheckoutWebViewAdapter>)adapter didError:(NSError *)error {
-    [self.checkoutDelegate checkoutController:self didFailWithError:error];
+    [self.checkoutDelegate checkoutController:self didFinishWithStatus:STPPaymentStatusError error:error];
 }
 
 @end

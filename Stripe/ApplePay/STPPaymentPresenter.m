@@ -100,19 +100,16 @@ static const NSString *STPPaymentPresenterAssociatedObjectKey = @"STPPaymentPres
 
 #pragma mark - STPCheckoutViewControllerDelegate
 
-- (void)checkoutController:(__unused STPCheckoutViewController *)controller didFailWithError:(NSError *)error {
-    [self finishWithStatus:STPPaymentStatusError error:error];
+- (void)checkoutController:(__unused STPCheckoutViewController *)controller didFinishWithStatus:(STPPaymentStatus)status error:(NSError *)error {
+    [self finishWithStatus:status error:error];
 }
 
-- (void)checkoutControllerDidCancel:(__unused STPCheckoutViewController *)controller {
-    [self finishWithStatus:STPPaymentStatusUserCanceled error:nil];
-}
-
-- (void)checkoutControllerDidFinish:(__unused STPCheckoutViewController *)controller {
-    [self finishWithStatus:STPPaymentStatusSuccess error:nil];
-}
-
-- (void)checkoutController:(__unused STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
+- (void)checkoutController:(__unused STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPTokenSubmissionHandler)checkoutCompletion {
+    STPTokenSubmissionHandler completion = ^(STPBackendChargeResult status, NSError *backendError) {
+        self.error = backendError;
+        self.hasAuthorizedPayment = (status == STPBackendChargeResultSuccess);
+        checkoutCompletion(status, backendError);
+    };
     [self.delegate paymentPresenter:self didCreateStripeToken:token completion:completion];
 }
 

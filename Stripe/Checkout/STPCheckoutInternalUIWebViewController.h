@@ -27,6 +27,8 @@
 @property (nonatomic) NSURL *logoURL;
 @property (nonatomic) NSURL *url;
 @property (nonatomic, weak) id<STPCheckoutViewControllerDelegate> delegate;
+@property (nonatomic) BOOL backendChargeSuccessful;
+@property (nonatomic) NSError *backendChargeError;
 
 @end
 

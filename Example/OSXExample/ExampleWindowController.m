@@ -44,22 +44,16 @@
 
 - (void)checkoutController:(STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
     self.buyButton.enabled = YES;
+    // Todo: post the token to our server and make a charge
     completion(STPBackendChargeResultSuccess, nil);
 }
 
-- (void)checkoutController:(STPCheckoutViewController *)controller didFailWithError:(NSError *)error {
+- (void)checkoutController:(STPCheckoutViewController *)controller didFinishWithStatus:(STPPaymentStatus)status error:(NSError *)error {
     self.buyButton.enabled = YES;
     [controller.view removeFromSuperview];
-}
-
-- (void)checkoutControllerDidCancel:(STPCheckoutViewController *)controller {
-    self.buyButton.enabled = YES;
-    [controller.view removeFromSuperview];
-}
-
-- (void)checkoutControllerDidFinish:(STPCheckoutViewController *)controller {
-    self.buyButton.enabled = YES;
-    [controller.view removeFromSuperview];
+    if (status == STPPaymentStatusSuccess) {
+        // yay!
+    }
 }
 
 @end

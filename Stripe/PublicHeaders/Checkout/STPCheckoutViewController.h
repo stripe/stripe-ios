@@ -13,6 +13,12 @@
 #import <AppKit/AppKit.h>
 #endif
 
+typedef NS_ENUM(NSInteger, STPPaymentStatus) {
+    STPPaymentStatusSuccess,      // The transaction was a success.
+    STPPaymentStatusError,        // The transaction failed.
+    STPPaymentStatusUserCanceled, // The user canceled the payment sheet.
+};
+
 @class STPCheckoutOptions, STPToken;
 @protocol STPCheckoutViewControllerDelegate;
 
@@ -46,19 +52,15 @@
 @protocol STPCheckoutViewControllerDelegate<NSObject>
 
 /**
- *  Called when the user taps the cancel button inside the Checkout web view.
- *
- *  @param controller the controller that was canceled.
- */
-- (void)checkoutControllerDidCancel:(STPCheckoutViewController *)controller;
-
-/**
  *  Called when the checkout view controller has finished displaying the "success" or "error" animation. At this point, the controller is done with its work.
- *You should dismiss the view controller at this point, probably by calling `dismissViewControllerAnimated:completion:`.
+ *  You should dismiss the view controller at this point, probably by calling `dismissViewControllerAnimated:completion:`.
  *
- *  @param controller the controller that has finished.
+ *  @param controller the checkout view controller that has finished.
+ *  @param status     the result of the payment (success, failure, or cancelled by the user). You should use this to determine whether to proceed to the success
+ *state, for example.
+ *  @param error      the returned error, if it exists. Can be nil.
  */
-- (void)checkoutControllerDidFinish:(STPCheckoutViewController *)controller;
+- (void)checkoutController:(STPCheckoutViewController *)controller didFinishWithStatus:(STPPaymentStatus)status error:(NSError *)error;
 
 /**
  *  Use these options to inform Stripe Checkout of the success or failure of your backend charge.
@@ -83,6 +85,5 @@ typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError
  *  @param completion call this function with STPBackendChargeResultSuccess/Failure when you're done charging your user
  */
 - (void)checkoutController:(STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion;
-- (void)checkoutController:(STPCheckoutViewController *)controller didFailWithError:(NSError *)error;
 
 @end

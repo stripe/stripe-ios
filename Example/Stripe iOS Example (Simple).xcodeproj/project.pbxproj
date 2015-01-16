@@ -53,11 +53,11 @@
 			isa = PBXGroup;
 			children = (
 				042CA4141A685E8D00D778E7 /* AppDelegate.swift */,
+				042CA41C1A685E8D00D778E7 /* ViewController.swift */,
 				042CA4171A685E8D00D778E7 /* Main.storyboard */,
 				042CA4191A685E8D00D778E7 /* Images.xcassets */,
 				042CA41A1A685E8D00D778E7 /* Info.plist */,
 				042CA41B1A685E8D00D778E7 /* Stripe iOS Example (Simple)-Bridging-Header.h */,
-				042CA41C1A685E8D00D778E7 /* ViewController.swift */,
 			);
 			path = "Stripe iOS Example (Simple)";
 			sourceTree = "<group>";

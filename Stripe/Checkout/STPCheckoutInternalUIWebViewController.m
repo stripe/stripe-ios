@@ -135,7 +135,7 @@
 }
 
 - (void)cancel:(__unused id)sender {
-    [self.delegate checkoutControllerDidCancel:self.checkoutController];
+    [self.delegate checkoutController:self.checkoutController didFinishWithStatus:STPPaymentStatusUserCanceled error:nil];
     [self cleanup];
 }
 
@@ -185,23 +185,36 @@
         [self.delegate checkoutController:self.checkoutController
                            didCreateToken:token
                                completion:^(STPBackendChargeResult status, NSError *error) {
+                                   self.backendChargeSuccessful = (status == STPBackendChargeResultSuccess);
+                                   self.backendChargeError = error;
                                    if (status == STPBackendChargeResultSuccess) {
                                        [adapter evaluateJavaScript:payload[@"success"]];
                                    } else {
                                        NSString *failure = payload[@"failure"];
-                                       NSString *script = [NSString stringWithFormat:failure, error.localizedDescription];
+                                       NSString *encodedError = @"";
+                                       if (error.localizedDescription) {
+                                           encodedError = [[NSString alloc]
+                                               initWithData:[NSJSONSerialization dataWithJSONObject:@[error.localizedDescription] options:0 error:nil]
+                                                   encoding:NSUTF8StringEncoding];
+                                           encodedError = [encodedError substringWithRange:NSMakeRange(2, encodedError.length - 4)];
+                                       }
+                                       NSString *script = [NSString stringWithFormat:failure, encodedError];
                                        [adapter evaluateJavaScript:script];
                                    }
                                }];
     } else if ([event isEqualToString:STPCheckoutEventFinish]) {
-        [self.delegate checkoutControllerDidFinish:self.checkoutController];
+        if (self.backendChargeSuccessful) {
+            [self.delegate checkoutController:self.checkoutController didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+        } else {
+            [self.delegate checkoutController:self.checkoutController didFinishWithStatus:STPPaymentStatusError error:self.backendChargeError];
+        }
         [self cleanup];
     } else if ([event isEqualToString:STPCheckoutEventCancel]) {
-        [self.delegate checkoutControllerDidCancel:self.checkoutController];
+        [self.delegate checkoutController:self.checkoutController didFinishWithStatus:STPPaymentStatusUserCanceled error:nil];
         [self cleanup];
     } else if ([event isEqualToString:STPCheckoutEventError]) {
         NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPCheckoutError userInfo:payload];
-        [self.delegate checkoutController:self.checkoutController didFailWithError:error];
+        [self.delegate checkoutController:self.checkoutController didFinishWithStatus:STPPaymentStatusError error:error];
         [self cleanup];
     }
 }
@@ -217,7 +230,7 @@
 
 - (void)checkoutAdapter:(__unused id<STPCheckoutWebViewAdapter>)adapter didError:(NSError *)error {
     [self.activityIndicator stopAnimating];
-    [self.delegate checkoutController:self.checkoutController didFailWithError:error];
+    [self.delegate checkoutController:self.checkoutController didFinishWithStatus:STPPaymentStatusError error:error];
     [self cleanup];
 }
 

@@ -10,12 +10,6 @@
 #import "STPToken.h"
 #import "STPCheckoutViewController.h"
 
-typedef NS_ENUM(NSInteger, STPPaymentStatus) {
-    STPPaymentStatusSuccess,      // The transaction was a success.
-    STPPaymentStatusError,        // The transaction failed.
-    STPPaymentStatusUserCanceled, // The user canceled the payment sheet.
-};
-
 @class PKPaymentRequest, PKPayment, STPPaymentPresenter;
 @protocol STPPaymentPresenterDelegate;
 

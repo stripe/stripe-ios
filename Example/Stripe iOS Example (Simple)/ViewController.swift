@@ -12,7 +12,7 @@ import Stripe
 class ViewController: UIViewController, STPPaymentPresenterDelegate {
 
     // Replace these values with your application's keys
-    let stripePublishableKey = ""
+    let stripePublishableKey = "pk_test_vOo1umqsYxSrP5UXfOeL3ecm"
     let parseApplicationId = ""
     let parseClientKey = ""
     
@@ -63,7 +63,6 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
         self.dismissViewControllerAnimated(true, completion: { () -> Void in
             let alert = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
             if error != nil {
-                alert.title = "Something went wrong."
                 alert.message = error.localizedDescription
             }
             if status == STPPaymentStatus.Success {

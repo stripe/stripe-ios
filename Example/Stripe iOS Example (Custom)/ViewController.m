@@ -165,6 +165,8 @@
 
 - (IBAction)beginStripeCheckout:(id)sender {
     STPCheckoutOptions *options = [[STPCheckoutOptions alloc] init];
+    options.publishableKey = [Stripe defaultPublishableKey];
+    options.appleMerchantId = @"woo";
     options.purchaseDescription = @"Cool Shirt";
     options.purchaseAmount = @1000; // this is in cents
     options.logoColor = [UIColor purpleColor];
@@ -177,16 +179,19 @@
     [self createBackendChargeWithToken:token completion:completion];
 }
 
-- (void)checkoutController:(STPCheckoutViewController *)controller didFailWithError:(NSError *)error {
-    [self dismissViewControllerAnimated:YES completion:^{ [self presentError:error]; }];
-}
-
-- (void)checkoutControllerDidCancel:(STPCheckoutViewController *)controller {
+- (void)checkoutController:(STPCheckoutViewController *)controller didFinishWithStatus:(STPPaymentStatus)status error:(NSError *)error {
+    switch (status) {
+    case STPPaymentStatusSuccess:
+        [self paymentSucceeded];
+        break;
+    case STPPaymentStatusError:
+        [self presentError:error];
+        break;
+    case STPPaymentStatusUserCanceled:
+        // do nothing
+        break;
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)checkoutControllerDidFinish:(STPCheckoutViewController *)controller {
-    [self dismissViewControllerAnimated:YES completion:^{ [self paymentSucceeded]; }];
 }
 
 #pragma mark - Custom Credit Card Form
