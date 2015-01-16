@@ -269,7 +269,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "Stripe iOS Example (Simple)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple)-Bridging-Header.h";
@@ -288,7 +288,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "Stripe iOS Example (Simple)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple)-Bridging-Header.h";

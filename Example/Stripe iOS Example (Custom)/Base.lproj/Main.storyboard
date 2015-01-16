@@ -9,7 +9,7 @@
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="Stripe_iOS_Example__Custom_" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -30,23 +30,42 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GJ6-hd-Wof">
-                                        <rect key="frame" x="8" y="37" width="224" height="30"/>
-                                        <state key="normal" title="Buy a shirt">
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="scC-aT-HzE">
+                                        <rect key="frame" x="91" y="37" width="58" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <state key="normal" title="Checkout">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="beginPayment:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="iwe-DW-8db"/>
+                                            <action selector="beginPayment:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="uaP-XL-iBd"/>
+                                            <action selector="beginStripeCheckout:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="1W9-33-kTM"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rtb-Le-Tel">
+                                        <rect key="frame" x="157" y="37" width="49" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <state key="normal" title="Custom">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="beginCustomPayment:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="nWi-eP-XZJ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GJ6-hd-Wof">
+                                        <rect key="frame" x="20" y="37" width="63" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <state key="normal" title="Apple Pay">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="beginApplePay:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="nIN-gu-LPB"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="0.91000000000000003" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="75" id="5hf-mO-fc1"/>
-                                    <constraint firstAttribute="trailing" secondItem="GJ6-hd-Wof" secondAttribute="trailing" constant="8" id="7ci-J0-Hn4"/>
                                     <constraint firstAttribute="centerX" secondItem="Ptu-D9-jyU" secondAttribute="centerX" constant="-0.5" id="EeU-Jg-DXL"/>
-                                    <constraint firstItem="GJ6-hd-Wof" firstAttribute="leading" secondItem="dMV-m3-RoV" secondAttribute="leading" constant="8" id="VWc-YX-4It"/>
-                                    <constraint firstAttribute="bottom" secondItem="GJ6-hd-Wof" secondAttribute="bottom" constant="8" id="Ya8-9A-58o"/>
                                     <constraint firstAttribute="width" secondItem="Ptu-D9-jyU" secondAttribute="width" id="mSH-U8-VRy"/>
                                     <constraint firstItem="Ptu-D9-jyU" firstAttribute="top" secondItem="dMV-m3-RoV" secondAttribute="top" constant="8" id="yTJ-Sp-QyH"/>
                                 </constraints>
@@ -70,6 +89,9 @@
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="568"/>
+                    <connections>
+                        <outlet property="applePayButton" destination="GJ6-hd-Wof" id="FiX-tn-gab"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
