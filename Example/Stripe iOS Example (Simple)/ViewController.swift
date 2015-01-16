@@ -12,7 +12,7 @@ import Stripe
 class ViewController: UIViewController, STPPaymentPresenterDelegate {
 
     // Replace these values with your application's keys
-    let stripePublishableKey = "pk_test_vOo1umqsYxSrP5UXfOeL3ecm"
+    let stripePublishableKey = ""
     let parseApplicationId = ""
     let parseClientKey = ""
     
