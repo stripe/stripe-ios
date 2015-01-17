@@ -44,7 +44,7 @@
 		042CA41C1A685E8D00D778E7 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		04823F781A6849200098400B /* Stripe iOS Example (Simple).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example (Simple).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D075D91A69B82B00094431 /* Stripe iOS Example (Simple).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Stripe iOS Example (Simple).entitlements"; sourceTree = "<group>"; };
-		04D076191A69C14700094431 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Stripe.framework; path = "/Users/jack/Library/Developer/Xcode/DerivedData/Stripe-cxajdjnrspmiamhaiixwkuuqmmgg/Build/Products/Debug-iphoneos/Stripe.framework"; sourceTree = "<absolute>"; };
+		04D076191A69C14700094431 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
