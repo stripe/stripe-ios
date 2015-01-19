@@ -1,3 +1,8 @@
+== 3.1.0 2015-01-19
+* Add support for native Stripe Checkout, as well as STPPaymentPresenter for automatically using Checkout as a fallback for Apple Pay
+* Add OSX support, including Checkout
+* Add framework targets and Carthage support
+
 == 3.0.0 2015-01-05
 * Migrate code into STPAPIClient
 * Add 'brand' and 'funding' properties to STPCard
