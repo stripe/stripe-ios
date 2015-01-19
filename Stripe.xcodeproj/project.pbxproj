@@ -193,7 +193,7 @@
 		04CDB5141A5F30A700B854EE /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4CD1A5F30A700B854EE /* STPToken.m */; };
 		04CDB5161A5F30A700B854EE /* StripeError.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CE1A5F30A700B854EE /* StripeError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04CDB5181A5F30A700B854EE /* StripeError.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4CF1A5F30A700B854EE /* StripeError.m */; };
-		04D12C111A5F556D0010446E /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D12C061A5F556D0010446E /* Stripe.framework */; };
+		04D12C111A5F556D0010446E /* StripeOSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D12C061A5F556D0010446E /* StripeOSX.framework */; };
 		04D12C1F1A5F55AD0010446E /* STPCheckoutOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4B21A5F30A700B854EE /* STPCheckoutOptions.m */; };
 		04D12C201A5F55AD0010446E /* STPCheckoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4B41A5F30A700B854EE /* STPCheckoutViewController.m */; };
 		04D12C211A5F55AD0010446E /* STPCheckoutInternalUIWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4B71A5F30A700B854EE /* STPCheckoutInternalUIWebViewController.m */; };
@@ -343,7 +343,7 @@
 		04CDB5261A5F3A9300B854EE /* STPCertTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCertTest.m; sourceTree = "<group>"; };
 		04CDB5271A5F3A9300B854EE /* STPTokenTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTokenTest.m; sourceTree = "<group>"; };
 		04CDB5621A5F3D2000B854EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		04D12C061A5F556D0010446E /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		04D12C061A5F556D0010446E /* StripeOSX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeOSX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D12C101A5F556D0010446E /* StripeOSXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeOSXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D5BF9019BF958F009521A5 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -398,7 +398,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04D12C111A5F556D0010446E /* Stripe.framework in Frameworks */,
+				04D12C111A5F556D0010446E /* StripeOSX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -509,7 +509,7 @@
 			children = (
 				04CDB4421A5F2E1800B854EE /* Stripe.framework */,
 				045E7C031A5F41DE004751EF /* StripeiOS Tests.xctest */,
-				04D12C061A5F556D0010446E /* Stripe.framework */,
+				04D12C061A5F556D0010446E /* StripeOSX.framework */,
 				04D12C101A5F556D0010446E /* StripeOSXTests.xctest */,
 				049E84AB1A605D93000B66CD /* libStripe.a */,
 				047E67A81A65E769001D7493 /* libStripe.a */,
@@ -755,7 +755,7 @@
 			);
 			name = StripeOSX;
 			productName = StripeOSX;
-			productReference = 04D12C061A5F556D0010446E /* Stripe.framework */;
+			productReference = 04D12C061A5F556D0010446E /* StripeOSX.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		04D12C0F1A5F556D0010446E /* StripeOSXTests */ = {
@@ -1372,7 +1372,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = Stripe;
+				PRODUCT_NAME = StripeOSX;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1405,7 +1405,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = Stripe;
+				PRODUCT_NAME = StripeOSX;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
