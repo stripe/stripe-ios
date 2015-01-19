@@ -1,0 +1,336 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		041015671A6DB6C900B65789 /* StripeOSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 041015661A6DB6C900B65789 /* StripeOSX.framework */; };
+		041015681A6DB6C900B65789 /* StripeOSX.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 041015661A6DB6C900B65789 /* StripeOSX.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04FCF64B1A41F76D00DBF696 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FCF64A1A41F76D00DBF696 /* AppDelegate.m */; };
+		04FCF64D1A41F76D00DBF696 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FCF64C1A41F76D00DBF696 /* main.m */; };
+		04FCF64F1A41F76D00DBF696 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04FCF64E1A41F76D00DBF696 /* Images.xcassets */; };
+		04FCF6521A41F76D00DBF696 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04FCF6501A41F76D00DBF696 /* MainMenu.xib */; };
+		04FCF6731A41FB7700DBF696 /* ExampleWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FCF6711A41FB7700DBF696 /* ExampleWindowController.m */; };
+		04FCF6741A41FB7700DBF696 /* ExampleWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04FCF6721A41FB7700DBF696 /* ExampleWindowController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		041015651A6DB66300B65789 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				041015681A6DB6C900B65789 /* StripeOSX.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		041015661A6DB6C900B65789 /* StripeOSX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = StripeOSX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		04FCF6441A41F76D00DBF696 /* Stripe OSX Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe OSX Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04FCF6481A41F76D00DBF696 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04FCF6491A41F76D00DBF696 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		04FCF64A1A41F76D00DBF696 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		04FCF64C1A41F76D00DBF696 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		04FCF64E1A41F76D00DBF696 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		04FCF6511A41F76D00DBF696 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		04FCF6701A41FB7700DBF696 /* ExampleWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleWindowController.h; sourceTree = "<group>"; };
+		04FCF6711A41FB7700DBF696 /* ExampleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleWindowController.m; sourceTree = "<group>"; };
+		04FCF6721A41FB7700DBF696 /* ExampleWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExampleWindowController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		04FCF6411A41F76D00DBF696 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				041015671A6DB6C900B65789 /* StripeOSX.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		04D957D41A5F442800AE0A79 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				041015661A6DB6C900B65789 /* StripeOSX.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		04FCF63B1A41F76D00DBF696 = {
+			isa = PBXGroup;
+			children = (
+				04FCF6461A41F76D00DBF696 /* OSXExample */,
+				04D957D41A5F442800AE0A79 /* Frameworks */,
+				04FCF6451A41F76D00DBF696 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		04FCF6451A41F76D00DBF696 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				04FCF6441A41F76D00DBF696 /* Stripe OSX Example.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		04FCF6461A41F76D00DBF696 /* OSXExample */ = {
+			isa = PBXGroup;
+			children = (
+				04FCF6491A41F76D00DBF696 /* AppDelegate.h */,
+				04FCF64A1A41F76D00DBF696 /* AppDelegate.m */,
+				04FCF6701A41FB7700DBF696 /* ExampleWindowController.h */,
+				04FCF6711A41FB7700DBF696 /* ExampleWindowController.m */,
+				04FCF6721A41FB7700DBF696 /* ExampleWindowController.xib */,
+				04FCF64E1A41F76D00DBF696 /* Images.xcassets */,
+				04FCF6501A41F76D00DBF696 /* MainMenu.xib */,
+				04FCF6471A41F76D00DBF696 /* Supporting Files */,
+			);
+			path = OSXExample;
+			sourceTree = "<group>";
+		};
+		04FCF6471A41F76D00DBF696 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				04FCF6481A41F76D00DBF696 /* Info.plist */,
+				04FCF64C1A41F76D00DBF696 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		04FCF6431A41F76D00DBF696 /* Stripe OSX Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04FCF6611A41F76D00DBF696 /* Build configuration list for PBXNativeTarget "Stripe OSX Example" */;
+			buildPhases = (
+				04FCF6401A41F76D00DBF696 /* Sources */,
+				04FCF6411A41F76D00DBF696 /* Frameworks */,
+				04FCF6421A41F76D00DBF696 /* Resources */,
+				041015651A6DB66300B65789 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Stripe OSX Example";
+			productName = OSXExample;
+			productReference = 04FCF6441A41F76D00DBF696 /* Stripe OSX Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		04FCF63C1A41F76D00DBF696 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = Stripe;
+				TargetAttributes = {
+					04FCF6431A41F76D00DBF696 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 04FCF63F1A41F76D00DBF696 /* Build configuration list for PBXProject "Stripe OSX Example" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 04FCF63B1A41F76D00DBF696;
+			productRefGroup = 04FCF6451A41F76D00DBF696 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				04FCF6431A41F76D00DBF696 /* Stripe OSX Example */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		04FCF6421A41F76D00DBF696 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04FCF64F1A41F76D00DBF696 /* Images.xcassets in Resources */,
+				04FCF6741A41FB7700DBF696 /* ExampleWindowController.xib in Resources */,
+				04FCF6521A41F76D00DBF696 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		04FCF6401A41F76D00DBF696 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04FCF6731A41FB7700DBF696 /* ExampleWindowController.m in Sources */,
+				04FCF64D1A41F76D00DBF696 /* main.m in Sources */,
+				04FCF64B1A41F76D00DBF696 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		04FCF6501A41F76D00DBF696 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				04FCF6511A41F76D00DBF696 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		04FCF65F1A41F76D00DBF696 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		04FCF6601A41F76D00DBF696 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		04FCF6621A41F76D00DBF696 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../Stripe/**",
+				);
+				INFOPLIST_FILE = OSXExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "Stripe OSX Example";
+			};
+			name = Debug;
+		};
+		04FCF6631A41F76D00DBF696 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../Stripe/**",
+				);
+				INFOPLIST_FILE = OSXExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "Stripe OSX Example";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		04FCF63F1A41F76D00DBF696 /* Build configuration list for PBXProject "Stripe OSX Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04FCF65F1A41F76D00DBF696 /* Debug */,
+				04FCF6601A41F76D00DBF696 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04FCF6611A41F76D00DBF696 /* Build configuration list for PBXNativeTarget "Stripe OSX Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04FCF6621A41F76D00DBF696 /* Debug */,
+				04FCF6631A41F76D00DBF696 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 04FCF63C1A41F76D00DBF696 /* Project object */;
+}

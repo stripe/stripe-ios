@@ -5,9 +5,6 @@
 //  Created by Jack Flintermann on 9/17/14.
 //
 
-#if defined(STRIPE_ENABLE_APPLEPAY)
-
-#import "Stripe.h"
 #import "Stripe+ApplePay.h"
 #import "STPAPIClient.h"
 
@@ -44,5 +41,3 @@
 }
 
 @end
-
-#endif

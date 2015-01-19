@@ -7,7 +7,7 @@
 
 The Stripe iOS SDK make it easy to collect your users' credit card details inside your iOS app. By creating [tokens](https://stripe.com/docs/api#tokens), Stripe handles the bulk of PCI compliance by preventing sensitive card data from hitting your server (for more, see [our article about PCI compliance](https://support.stripe.com/questions/do-i-need-to-be-pci-compliant-what-do-i-have-to-do)).
 
-We also offer [seamless integration](https://stripe.com/applepay) with Apple's new [Apple Pay](https://apple.com/apple-pay) service that will allow you to securely collect payments from your customers in a way that prevents them from having to re-enter their credit card information.
+We also offer [seamless integration](https://stripe.com/applepay) with [Apple Pay](https://apple.com/apple-pay) that will allow you to securely collect payments from your customers in a way that prevents them from having to re-enter their credit card information.
 
 ## Requirements
 Our SDK is compatible with iOS apps supporting iOS6 and above. It requires XCode 6 and the iOS8 SDK to build the source.
@@ -16,24 +16,27 @@ Our SDK is compatible with iOS apps supporting iOS6 and above. It requires XCode
 
 We've written a [guide](https://stripe.com/docs/mobile/ios) that explains everything from installation, to creating payment tokens, to Apple Pay integration and more.
 
-## Example app
+## Example apps
 
-The example app is a great way to see the flow of recording credit card details, converting them to a token with the Stripe iOS bindings, and then using that token to charge users on your backend. It uses [PaymentKit](https://github.com/stripe/PaymentKit) to create a simple credit card form, and a small backend hosted with Parse Cloud Code to process the actual transactions. It also uses our [ApplePayStubs](https://github.com/stripe/ApplePayStubs) library to demonstrate how the Apple Pay flow works in the iOS simulator (normally Apple Pay requires a device to use).
+There are 3 example apps included in the repository:
+- Stripe iOS Example (Simple) shows how to use STPPaymentPresenter to really easily obtain your user's payment information with Apple Pay. When Apple Pay isn't available on the device, it'll use Stripe Checkout instead. It uses a small Parse backend to create a charge. The app is written in Swift.
+- Stripe iOS Example (Custom) demonstrates 3 different ways of collecting your user's payment details: via Apple Pay, via Stripe Checkout, and via your own credit card form. It also uses our [ApplePayStubs](https://github.com/stripe/ApplePayStubs) library to demonstrate how the Apple Pay flow appears in the iOS simulator (normally Apple Pay requires a device to use). It, too, uses Parse to make charges.
+- Stripe OSX Example demonstrates how to use Stripe Checkout inside a native Mac app.
 
-### Running the example
+### Getting started with the Simple iOS Example App
 
-Note: the example app requires Xcode 6 to build and run.
+Note: all the example apps require Xcode 6 to build and run.
 
 Before you can run the app, you need to provide it with your own Stripe and Parse API keys.
 
 #### Stripe
 1. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds). Then go to https://dashboard.stripe.com/account/apikeys.
-2. Replace the `StripePublishableKey` constant in Example/StripeExample/Constants.m with your Test Publishable Key.
+2. Replace the `stripePublishableKey` constant in ViewController.swift with your Test Publishable Key.
 3. Replace the `stripe_secret_key` variable in Example/Parse/cloud/main.js with your Test Secret Key.
 
 #### Parse
 1. Sign up for a [Parse account](https://parse.com/#signup), then create a new Parse app.
-2. Head to the "Application keys" section of your parse app's settings page. Replace the `ParseApplicationId` and `ParseClientKey` constants in Example/StripeExample/Constants.m with your app's Application ID and Client Key, respectively.
+2. Head to the "Application keys" section of your parse app's settings page. Replace the `parseApplicationId` and `parseClientKey` constants in ViewController.swift with your app's Application ID and Client Key, respectively.
 3. Replace the appropriate values in Example/Parse/config/global.json with your Parse app's name, Application ID, and Master Secret. IMPORTANT: these values, along with your Stripe Secret Key, can be used to control your Stripe and Parse accounts. Thus, once you edit these files, you shoudn't check them back into git.
 4. Install the Parse command line tool at https://www.parse.com/docs/cloud_code_guide#started, then run `parse deploy` from the Example/Parse directory.
 
@@ -41,8 +44,9 @@ After this is done, you can make test payments through the app (use credit card 
 
 ## Running the tests
 
-1. Open Stripe.xcodeproj
-1. Go to Product->Test
+1. Open Stripe.xcworkspace
+1. Choose the "iOS Tests" or "OSX Tests" scheme
+1. Run Product -> Test
 
 ## Migration Guides
 

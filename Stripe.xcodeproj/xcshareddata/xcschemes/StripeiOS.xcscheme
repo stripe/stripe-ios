@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0600"
+   LastUpgradeVersion = "0610"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,23 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "11E1F58B165151F400B49816"
-               BuildableName = "libStripeiOS.a"
+               BlueprintIdentifier = "04CDB4411A5F2E1800B854EE"
+               BuildableName = "Stripe.framework"
                BlueprintName = "StripeiOS"
-               ReferencedContainer = "container:Stripe.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "11E1F645165157CA00B49816"
-               BuildableName = "iOSTest.xctest"
-               BlueprintName = "iOSTest"
                ReferencedContainer = "container:Stripe.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,26 +28,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "11E1F645165157CA00B49816"
-               BuildableName = "iOSTest.xctest"
-               BlueprintName = "iOSTest"
-               ReferencedContainer = "container:Stripe.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "11E1F58B165151F400B49816"
-            BuildableName = "libStripeiOS.a"
-            BlueprintName = "StripeiOS"
-            ReferencedContainer = "container:Stripe.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
@@ -75,8 +42,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "11E1F58B165151F400B49816"
-            BuildableName = "libStripeiOS.a"
+            BlueprintIdentifier = "04CDB4411A5F2E1800B854EE"
+            BuildableName = "Stripe.framework"
             BlueprintName = "StripeiOS"
             ReferencedContainer = "container:Stripe.xcodeproj">
          </BuildableReference>
@@ -93,8 +60,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "11E1F58B165151F400B49816"
-            BuildableName = "libStripeiOS.a"
+            BlueprintIdentifier = "04CDB4411A5F2E1800B854EE"
+            BuildableName = "Stripe.framework"
             BlueprintName = "StripeiOS"
             ReferencedContainer = "container:Stripe.xcodeproj">
          </BuildableReference>
