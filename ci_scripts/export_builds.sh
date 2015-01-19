@@ -1,5 +1,4 @@
 BUILDDIR="${PWD}/build"
-rm -rf $BUILDDIR
 
 xcodebuild build -workspace Stripe.xcworkspace -scheme StripeOSX -configuration Release OBJROOT=$BUILDDIR SYMROOT=$BUILDDIR | xcpretty -c
 cd $BUILDDIR/Release
