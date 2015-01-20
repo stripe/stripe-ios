@@ -14,16 +14,15 @@ Pod::Spec.new do |s|
   s.default_subspecs               = 'Core'
 
   s.subspec 'Core' do |subspec|
-    subspec.source_files           = 'Stripe/**.{h,m}'
     subspec.public_header_files    = 'Stripe/PublicHeaders/*.h', 'Stripe/PublicHeaders/Checkout/*.h'
-    subspec.exclude_files          = 'Stripe/ApplePay/*', 'Stripe/PublicHeaders/ApplePay/*'
+    subspec.source_files           = 'Stripe/PublicHeaders/*.h', 'Stripe/PublicHeaders/Checkout/*.h', 'Stripe/*.{h,m}', 'Stripe/Checkout/*.{h,m}'
   end
 
   s.subspec 'ApplePay' do |subspec|
     subspec.platform                = :ios
     subspec.dependency                'Stripe/Core'
-    subspec.ios.source_files        = 'Stripe/ApplePay/*.{h,m}'
     subspec.ios.public_header_files = 'Stripe/PublicHeaders/ApplePay/*.h'
+    subspec.ios.source_files        = 'Stripe/PublicHeaders/ApplePay/*.h', 'Stripe/ApplePay/*.{h,m}'
     subspec.ios.weak_frameworks     = 'PassKit', 'AddressBook'
   end
 end
