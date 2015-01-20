@@ -45,6 +45,32 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
     }
     
     func paymentPresenter(presenter: STPPaymentPresenter!, didCreateStripeToken token: STPToken!, completion: STPTokenSubmissionHandler!) {
+        createBackendChargeWithToken(token, completion: completion)
+    }
+    
+    func paymentPresenter(presenter: STPPaymentPresenter!, didFinishWithStatus status: STPPaymentStatus, error: NSError!) {
+        self.dismissViewControllerAnimated(true, completion: {
+            switch(status) {
+            case .UserCancelled:
+                return // just do nothing in this case
+            case .Success:
+                println("great success!")
+            case .Error:
+                println("oh no, an error: \(error.localizedDescription)")
+            }
+        })
+    }
+    
+    // This is optional, and used to customize the line items shown on the Apple Pay sheet.
+    func paymentPresenter(presenter: STPPaymentPresenter!, didPreparePaymentRequest request: PKPaymentRequest!) -> PKPaymentRequest! {
+        request.paymentSummaryItems = [
+            PKPaymentSummaryItem(label: "Cool Shirt", amount: NSDecimalNumber(string: "10.00")),
+            PKPaymentSummaryItem(label: "Free shipping", amount: NSDecimalNumber(string: "0.00"))
+        ]
+        return request
+    }
+    
+    func createBackendChargeWithToken(token: STPToken, completion: STPTokenSubmissionHandler) {
         if (parseApplicationId == "" || parseClientKey == "") {
             let userInfo : [NSObject: AnyObject] = [NSLocalizedDescriptionKey: "You created a token! Its value is \(token.tokenId). Now, you need to configure your Parse backend in order to charge this customer."]
             let error = NSError(domain: StripeDomain, code: STPErrorCode.STPInvalidRequestError.rawValue, userInfo: userInfo)
@@ -53,7 +79,7 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
         }
         let chargeParams = ["token": token.tokenId, "currency": "usd", "amount": shirtPrice]
         Parse.setApplicationId(parseApplicationId, clientKey: parseClientKey)
-        PFCloud.callFunctionInBackground("charge", withParameters: chargeParams) { (object, error) -> Void in
+        PFCloud.callFunctionInBackground("charge", withParameters: chargeParams) { (_, error) -> Void in
             if error != nil {
                 completion(STPBackendChargeResult.Failure, error)
             }
@@ -62,26 +88,5 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
             }
         }
     }
-    
-    func paymentPresenter(presenter: STPPaymentPresenter!, didFinishWithStatus status: STPPaymentStatus, error: NSError!) {
-        
-        self.dismissViewControllerAnimated(true, completion: { () -> Void in
-            if (status == STPPaymentStatus.UserCancelled) {
-                return
-            }
-            let alert = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            if error != nil {
-                alert.message = error.localizedDescription
-            }
-            if status == STPPaymentStatus.Success {
-                alert.title = "Yay!"
-                alert.message = "Your shirt's in the mail!"
-            }
-            let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-            alert.addAction(action)
-            self.presentViewController(alert, animated: true, completion: nil)
-        })
-    }
-
 }
 
