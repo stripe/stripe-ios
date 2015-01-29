@@ -142,10 +142,11 @@
         [self.checkoutDelegate checkoutController:self
                                    didCreateToken:token
                                        completion:^(STPBackendChargeResult status, NSError *error) {
+                                           self.backendChargeSuccessful = (status == STPBackendChargeResultSuccess);
+
                                            if (status == STPBackendChargeResultSuccess) {
                                                [adapter evaluateJavaScript:payload[@"success"]];
                                            } else {
-                                               self.backendChargeSuccessful = (status == STPBackendChargeResultSuccess);
                                                self.backendChargeError = error;
                                                NSString *encodedError = @"";
                                                if (error.localizedDescription) {
