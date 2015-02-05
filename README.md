@@ -54,12 +54,12 @@ After this is done, you can make test payments through the app (use credit card 
 
 Before version 3.0, most token-creation methods were class methods on the `Stripe` class. These are now all instance methods on the `STPAPIClient` class. Where previously you might write
 ```objective-c
-[Stripe createTokenFromCard:card publishableKey:myPublishableKey completion:completion];
+[Stripe createTokenWithCard:card publishableKey:myPublishableKey completion:completion];
 ```
 you would now instead write
 ```objective-c
 STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:myPublishableKey];
-[client createTokenFromCard:card completion:completion];
+[client createTokenWithCard:card completion:completion];
 ```
 This version also made several helper classes, including `STPAPIConnection` and `STPUtils`, private. You should remove any references to them from your code (most apps shouldn't have any).
 
