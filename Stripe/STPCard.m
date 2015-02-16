@@ -226,7 +226,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 #pragma clang diagnostic ignored "-Wunreachable-code"
-    NSString *identifier = (&NSCalendarIdentifierGregorian != nil) ? NSCalendarIdentifierGregorian : NSGregorianCalendar;
+    NSString *identifier = (true) ? NSCalendarIdentifierGregorian : NSGregorianCalendar;
 #pragma clang diagnostic pop
     return [[NSCalendar alloc] initWithCalendarIdentifier:identifier];
 }
