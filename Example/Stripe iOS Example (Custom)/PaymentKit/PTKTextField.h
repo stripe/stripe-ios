@@ -22,7 +22,7 @@
 
 + (NSString*)textByRemovingUselessSpacesFromString:(NSString*)string;
 
-@property (nonatomic, weak) id<PTKTextFieldDelegate> delegate;
+@property (nonatomic, weak) id<PTKTextFieldDelegate> paymentDelegate;
 
 @end
 
