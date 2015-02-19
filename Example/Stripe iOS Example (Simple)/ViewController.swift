@@ -77,7 +77,7 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
             completion(STPBackendChargeResult.Failure, error)
             return
         }
-        let chargeParams = ["token": token.tokenId, "currency": "usd", "amount": shirtPrice]
+        let chargeParams : [NSObject : AnyObject] = ["token": token.tokenId, "currency": "usd", "amount": shirtPrice]
         Parse.setApplicationId(parseApplicationId, clientKey: parseClientKey)
         PFCloud.callFunctionInBackground("charge", withParameters: chargeParams) { (_, error) -> Void in
             if error != nil {

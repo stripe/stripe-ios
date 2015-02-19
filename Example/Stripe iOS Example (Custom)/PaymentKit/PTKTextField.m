@@ -53,8 +53,8 @@
 {
     if ([keyPath isEqualToString:@"text"] && object == self) {
         if (self.text.length == 0) {
-            if ([self.delegate respondsToSelector:@selector(pkTextFieldDidBackSpaceWhileTextIsEmpty:)])
-                [self.delegate performSelector:@selector(pkTextFieldDidBackSpaceWhileTextIsEmpty:)
+            if ([self.paymentDelegate respondsToSelector:@selector(pkTextFieldDidBackSpaceWhileTextIsEmpty:)])
+                [self.paymentDelegate performSelector:@selector(pkTextFieldDidBackSpaceWhileTextIsEmpty:)
                                     withObject:self];
             self.text = kPTKTextFieldSpaceChar;
         }
