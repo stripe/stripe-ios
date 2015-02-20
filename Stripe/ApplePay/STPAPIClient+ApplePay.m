@@ -56,6 +56,21 @@
         CFRelease(addressValues);
     }
 
+    if (payment.token.paymentInstrumentName) {
+        NSString *param = [NSString stringWithFormat:@"&pk_token_instrument_name=%@", payment.token.paymentInstrumentName];
+        payloadString = [payloadString stringByAppendingString:param];
+    }
+
+    if (payment.token.paymentNetwork) {
+        NSString *param = [NSString stringWithFormat:@"&pk_token_payment_network=%@", payment.token.paymentNetwork];
+        payloadString = [payloadString stringByAppendingString:param];
+    }
+
+    if (payment.token.transactionIdentifier) {
+        NSString *param = [NSString stringWithFormat:@"&pk_token_transaction_id=%@", payment.token.transactionIdentifier];
+        payloadString = [payloadString stringByAppendingString:param];
+    }
+
     return [payloadString dataUsingEncoding:NSUTF8StringEncoding];
 }
 
