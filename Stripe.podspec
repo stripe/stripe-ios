@@ -11,11 +11,17 @@ Pod::Spec.new do |s|
   s.requires_arc                   = true
   s.ios.deployment_target          = '6.0'
   s.osx.deployment_target          = '10.9'
-  s.default_subspecs               = 'Core'
+  s.default_subspecs               = 'Core', 'Checkout'
 
   s.subspec 'Core' do |subspec|
-    subspec.public_header_files    = 'Stripe/PublicHeaders/*.h', 'Stripe/PublicHeaders/Checkout/*.h'
-    subspec.source_files           = 'Stripe/PublicHeaders/*.h', 'Stripe/PublicHeaders/Checkout/*.h', 'Stripe/*.{h,m}', 'Stripe/Checkout/*.{h,m}'
+    subspec.public_header_files    = 'Stripe/PublicHeaders/*.h'
+    subspec.source_files           = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}'
+  end
+
+  s.subspec 'Checkout' do |subspec|
+    subspec.dependency               'Stripe/Core'
+    subspec.public_header_files    = 'Stripe/PublicHeaders/Checkout/*.h'
+    subspec.source_files           = 'Stripe/PublicHeaders/Checkout/*.h', 'Stripe/Checkout/*.{h,m}'
   end
 
   s.subspec 'ApplePay' do |subspec|
