@@ -13,8 +13,7 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
 
     // Replace these values with your application's keys
     let stripePublishableKey = ""
-    let parseApplicationId = ""
-    let parseClientKey = ""
+    let backendChargeURLString = ""
     let appleMerchantId = ""
     
     let shirtPrice : UInt = 1000 // this is in cents
@@ -64,29 +63,27 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
     // This is optional, and used to customize the line items shown on the Apple Pay sheet.
     func paymentPresenter(presenter: STPPaymentPresenter!, didPreparePaymentRequest request: PKPaymentRequest!) -> PKPaymentRequest! {
         request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "Cool Shirt", amount: NSDecimalNumber(string: "10.00")),
-            PKPaymentSummaryItem(label: "Free shipping", amount: NSDecimalNumber(string: "0.00"))
+            PKPaymentSummaryItem(label: "Stripe Shop", amount: NSDecimalNumber(string: "5.00"))
         ]
         return request
     }
     
     func createBackendChargeWithToken(token: STPToken, completion: STPTokenSubmissionHandler) {
-        if (parseApplicationId == "" || parseClientKey == "") {
-            let userInfo : [NSObject: AnyObject] = [NSLocalizedDescriptionKey: "You created a token! Its value is \(token.tokenId). Now, you need to configure your Parse backend in order to charge this customer."]
-            let error = NSError(domain: StripeDomain, code: STPErrorCode.STPInvalidRequestError.rawValue, userInfo: userInfo)
-            completion(STPBackendChargeResult.Failure, error)
-            return
-        }
-        let chargeParams : [NSObject : AnyObject] = ["token": token.tokenId, "currency": "usd", "amount": shirtPrice]
-        Parse.setApplicationId(parseApplicationId, clientKey: parseClientKey)
-        PFCloud.callFunctionInBackground("charge", withParameters: chargeParams) { (_, error) -> Void in
-            if error != nil {
-                completion(STPBackendChargeResult.Failure, error)
-            }
-            else {
-                completion(STPBackendChargeResult.Success, nil)
+        if backendChargeURLString != "" {
+            if let url = NSURL(string: backendChargeURLString) {
+                let chargeParams : [String: AnyObject] = ["stripeToken": token.tokenId, "amount": shirtPrice]
+                request(.POST, url, parameters: chargeParams)
+                    .responseJSON { (_, response, _, error) in
+                        if response?.statusCode == 200 {
+                            completion(STPBackendChargeResult.Success, nil)
+                        } else {
+                            completion(STPBackendChargeResult.Failure, error)
+                        }
+                }
+                return
             }
         }
+        completion(STPBackendChargeResult.Failure, nil)
     }
 }
 
