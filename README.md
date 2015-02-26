@@ -19,26 +19,20 @@ We've written a [guide](https://stripe.com/docs/mobile/ios) that explains everyt
 ## Example apps
 
 There are 3 example apps included in the repository:
-- Stripe iOS Example (Simple) shows how to use STPPaymentPresenter to really easily obtain your user's payment information with Apple Pay. When Apple Pay isn't available on the device, it'll use Stripe Checkout instead. It uses a small Parse backend to create a charge. The app is written in Swift.
-- Stripe iOS Example (Custom) demonstrates 3 different ways of collecting your user's payment details: via Apple Pay, via Stripe Checkout, and via your own credit card form. It also uses our [ApplePayStubs](https://github.com/stripe/ApplePayStubs) library to demonstrate how the Apple Pay flow appears in the iOS simulator (normally Apple Pay requires a device to use). It, too, uses Parse to make charges.
+- Stripe iOS Example (Simple) shows how to use STPPaymentPresenter to really easily obtain your user's payment information with Apple Pay. When Apple Pay isn't available on the device, it'll use Stripe Checkout instead. It uses a small backend to create a charge. The app is written in Swift.
+- Stripe iOS Example (Custom) demonstrates 3 different ways of collecting your user's payment details: via Apple Pay, via Stripe Checkout, and via your own credit card form. It also uses our [ApplePayStubs](https://github.com/stripe/ApplePayStubs) library to demonstrate how the Apple Pay flow appears in the iOS simulator (normally Apple Pay requires a device to use). It, too, uses a small example backend to make charges.
 - Stripe OSX Example demonstrates how to use Stripe Checkout inside a native Mac app.
 
 ### Getting started with the Simple iOS Example App
 
 Note: all the example apps require Xcode 6 to build and run.
 
-Before you can run the app, you need to provide it with your own Stripe and Parse API keys.
+Before you can run the app, you need to provide it with your Stripe publishable key.
 
-#### Stripe
 1. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds). Then go to https://dashboard.stripe.com/account/apikeys.
-2. Replace the `stripePublishableKey` constant in ViewController.swift with your Test Publishable Key.
-3. Replace the `stripe_secret_key` variable in Example/Parse/cloud/main.js with your Test Secret Key.
-
-#### Parse
-1. Sign up for a [Parse account](https://parse.com/#signup), then create a new Parse app.
-2. Head to the "Application keys" section of your parse app's settings page. Replace the `parseApplicationId` and `parseClientKey` constants in ViewController.swift with your app's Application ID and Client Key, respectively.
-3. Replace the appropriate values in Example/Parse/config/global.json with your Parse app's name, Application ID, and Master Secret. IMPORTANT: these values, along with your Stripe Secret Key, can be used to control your Stripe and Parse accounts. Thus, once you edit these files, you shoudn't check them back into git.
-4. Install the Parse command line tool at https://www.parse.com/docs/cloud_code_guide#started, then run `parse deploy` from the Example/Parse directory.
+2. Replace the `stripePublishableKey` constant in ViewController.swift (for the Simple app) or Constants.m (for the Custom app) with your Test Publishable Key.
+3. Head to https://github.com/stripe/example-ios-backend and click "Deploy to Heroku" (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under 'Env'. Click "Deploy for Free".
+4. Replace the `backendChargeURLString` variable in the example iOS app with the app URL Heroku provides you with (e.g. "https://my-example-app.herokuapp.com")
 
 After this is done, you can make test payments through the app (use credit card number 4242 4242 4242 4242, along with any cvc and any future expiration date) and then view them in your Stripe Dashboard!
 

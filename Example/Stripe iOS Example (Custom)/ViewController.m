@@ -7,7 +7,7 @@
 //
 
 #import <Stripe/Stripe.h>
-#import <Parse/Parse.h>
+#import "AFNetworking.h"
 
 #import "ViewController.h"
 #import "PaymentViewController.h"
@@ -217,15 +217,15 @@
 #pragma mark - STPBackendCharging
 
 - (void)createBackendChargeWithToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
-    NSDictionary *chargeParams = @{ @"token": token.tokenId, @"currency": @"usd", @"amount": @"1000" };
+    NSDictionary *chargeParams = @{ @"stripeToken": token.tokenId, @"amount": @"1000" };
 
-    if (!ParseApplicationId || !ParseClientKey) {
+    if (!BackendChargeURLString) {
         NSError *error = [NSError
             errorWithDomain:StripeDomain
                        code:STPInvalidRequestError
                    userInfo:@{
                        NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Good news! Stripe turned your credit card into a token: %@ \nYou can follow the "
-                                                                             @"instructions in the README to set up Parse as an example backend, or use this "
+                                                                             @"instructions in the README to set up an example backend, or use this "
                                                                              @"token to manually create charges at dashboard.stripe.com .",
                                                                              token.tokenId]
                    }];
@@ -234,15 +234,11 @@
     }
 
     // This passes the token off to our payment backend, which will then actually complete charging the card using your Stripe account's secret key
-    [PFCloud callFunctionInBackground:@"charge"
-                       withParameters:chargeParams
-                                block:^(id object, NSError *error) {
-                                    if (error) {
-                                        completion(STPBackendChargeResultFailure, error);
-                                        return;
-                                    }
-                                    completion(STPBackendChargeResultSuccess, nil);
-                                }];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager POST:[BackendChargeURLString stringByAppendingString:@"/charge"]
+        parameters:chargeParams
+        success:^(AFHTTPRequestOperation *operation, id responseObject) { completion(STPBackendChargeResultSuccess, nil); }
+        failure:^(AFHTTPRequestOperation *operation, NSError *error) { completion(STPBackendChargeResultFailure, error); }];
 }
 
 @end

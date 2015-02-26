@@ -6,7 +6,6 @@
 //
 
 #import <Stripe/Stripe.h>
-#import <Parse/Parse.h>
 #import "ViewController.h"
 #import "MBProgressHUD.h"
 #import "PTKView.h"

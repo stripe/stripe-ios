@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		042CA40B1A684F6100D778E7 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 042CA40A1A684F6100D778E7 /* Parse.framework */; };
-		042CA4101A685DF200D778E7 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 042CA40F1A685DF200D778E7 /* MobileCoreServices.framework */; };
-		042CA4121A685E2200D778E7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 042CA4111A685E2200D778E7 /* SystemConfiguration.framework */; };
 		042CA41D1A685E8D00D778E7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CA4141A685E8D00D778E7 /* AppDelegate.swift */; };
 		042CA41F1A685E8D00D778E7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 042CA4171A685E8D00D778E7 /* Main.storyboard */; };
 		042CA4201A685E8D00D778E7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 042CA4191A685E8D00D778E7 /* Images.xcassets */; };
@@ -34,14 +31,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		042CA40A1A684F6100D778E7 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
-		042CA40F1A685DF200D778E7 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		042CA4111A685E2200D778E7 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		042CA4141A685E8D00D778E7 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		042CA4181A685E8D00D778E7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		042CA4191A685E8D00D778E7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		042CA41A1A685E8D00D778E7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		042CA41B1A685E8D00D778E7 /* Stripe iOS Example (Simple)-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe iOS Example (Simple)-Bridging-Header.h"; sourceTree = "<group>"; };
 		042CA41C1A685E8D00D778E7 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		04823F781A6849200098400B /* Stripe iOS Example (Simple).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example (Simple).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		048BC5031A9BC38400B2FDC3 /* Alamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alamofire.swift; sourceTree = "<group>"; };
@@ -54,9 +47,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				042CA4121A685E2200D778E7 /* SystemConfiguration.framework in Frameworks */,
-				042CA4101A685DF200D778E7 /* MobileCoreServices.framework in Frameworks */,
-				042CA40B1A684F6100D778E7 /* Parse.framework in Frameworks */,
 				04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,7 +63,6 @@
 				042CA4171A685E8D00D778E7 /* Main.storyboard */,
 				042CA4191A685E8D00D778E7 /* Images.xcassets */,
 				042CA41A1A685E8D00D778E7 /* Info.plist */,
-				042CA41B1A685E8D00D778E7 /* Stripe iOS Example (Simple)-Bridging-Header.h */,
 				04D075D91A69B82B00094431 /* Stripe iOS Example (Simple).entitlements */,
 			);
 			path = "Stripe iOS Example (Simple)";
@@ -100,9 +89,6 @@
 			isa = PBXGroup;
 			children = (
 				04D076191A69C14700094431 /* Stripe.framework */,
-				042CA4111A685E2200D778E7 /* SystemConfiguration.framework */,
-				042CA40F1A685DF200D778E7 /* MobileCoreServices.framework */,
-				042CA40A1A684F6100D778E7 /* Parse.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -310,7 +296,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "Stripe iOS Example (Simple)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple)-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -334,7 +320,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "Stripe iOS Example (Simple)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple)-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

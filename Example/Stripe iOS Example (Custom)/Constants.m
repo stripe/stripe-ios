@@ -16,9 +16,9 @@
 // This can be found at https://dashboard.stripe.com/account/apikeys
 NSString *const StripePublishableKey = nil; // TODO: replace nil with your own value
 
-// These can be found at https://www.parse.com/apps/stripe-test/edit#app_keys
-NSString *const ParseApplicationId = nil; // TODO: replace nil with your own value
-NSString *const ParseClientKey = nil;     // TODO: replace nil with your own value
+// To set this up, check out https://github.com/stripe/example-ios-backend
+// This should be in the format https://my-shiny-backend.herokuapp.com
+NSString *const BackendChargeURLString = nil; // TODO: replace nil with your own value
 
 // To learn how to obtain an Apple Merchant ID, head to https://stripe.com/docs/mobile/apple-pay
 NSString *const AppleMerchantId = nil; // TODO: replace nil with your own value
