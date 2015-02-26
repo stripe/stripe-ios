@@ -8,7 +8,6 @@
 #import <PassKit/PassKit.h>
 #import "Stripe.h"
 #import "STPAPIClient+ApplePay.h"
-#import "STPPaymentPresenter.h"
 
 @class Stripe;
 

@@ -14,8 +14,8 @@
 #endif
 
 typedef NS_ENUM(NSInteger, STPPaymentStatus) {
-    STPPaymentStatusSuccess,      // The transaction was a success.
-    STPPaymentStatusError,        // The transaction failed.
+    STPPaymentStatusSuccess,       // The transaction was a success.
+    STPPaymentStatusError,         // The transaction failed.
     STPPaymentStatusUserCancelled, // The user Cancelled the payment sheet.
 };
 
@@ -23,8 +23,8 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
 @protocol STPCheckoutViewControllerDelegate;
 
 /**
- Controls a UIWebView that loads an iOS-optimized version of Stripe Checkout that you can present modally. Note
- that if you're using an STPPaymentPresenter to collect your user's payment details (highly recommended), you do not have to use this class directly.
+ Controls a UIWebView that loads an iOS-optimized version of Stripe Checkout that you can present modally. Note that this functionality is considered in beta
+ and may change.
  */
 #if TARGET_OS_IPHONE
 @interface STPCheckoutViewController : UINavigationController

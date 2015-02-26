@@ -19,7 +19,6 @@
 - (IBAction)beginPayment:(id)sender {
     STPCheckoutOptions *options = [STPCheckoutOptions new];
     options.publishableKey = [Stripe defaultPublishableKey];
-    options.appleMerchantId = @"<#Replace me with your Apple Merchant ID #>";
     options.purchaseDescription = @"Tasty Llama food";
     options.purchaseAmount = 1000;
     options.purchaseLabel = @"Pay {{amount}} for that food";

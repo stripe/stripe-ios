@@ -13,7 +13,7 @@
 #endif
 
 /**
- *  This class represents a configurable set of options that you can pass to an STPCheckoutViewController or an STPPaymentPresenter to control the appearance of
+ *  This class represents a configurable set of options that you can pass to an STPCheckoutViewController to control the appearance of
  * Stripe Checkout. For more information on how these properties behave, see https://stripe.com/docs/checkout#integration-custom
  */
 @interface STPCheckoutOptions : NSObject<NSCopying>
@@ -26,12 +26,6 @@
 @property (nonatomic, copy) NSString *publishableKey;
 
 #pragma mark - Strongly recommended options
-
-/**
- *  The merchant ID that you've obtained from Apple while creating your Apple Pay certificate. If you haven't done this, you can learn how at
- * https://stripe.com/docs/mobile/apple-pay . This property needs to be set in order to use Apple Pay with STPPaymentPresenter.
- */
-@property (nonatomic, copy) NSString *appleMerchantId;
 
 /**
  *  This can be an external image URL that will load in the header of Stripe Checkout. This takes precedent over the logoImage property. The recommended minimum
@@ -59,8 +53,7 @@
 #endif
 
 /**
- *  The name of your company or website. Displayed in the header. Defaults to your app's name. This property needs to be set in order to use Apple Pay with
- * STPPaymentPresenter.
+ *  The name of your company or website. Displayed in the header. Defaults to your app's name.
  */
 @property (nonatomic, copy) NSString *companyName;
 
@@ -71,7 +64,7 @@
 
 /**
  *  The amount (in cents) that's shown to the user. Note that this is for display purposes only; you will still have to explicitly specify the amount when you
- * create a charge using the Stripe API. This property needs to be set in order to use Apple Pay with STPPaymentPresenter.
+ * create a charge using the Stripe API.
  *  @warning don't forget this is in cents! So for a $10 charge, specify 1000 here.
  */
 @property (nonatomic) NSUInteger purchaseAmount;

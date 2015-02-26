@@ -9,7 +9,7 @@
 import UIKit
 import Stripe
 
-class ViewController: UIViewController, STPPaymentPresenterDelegate {
+class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPaymentAuthorizationViewControllerDelegate {
 
     // Replace these values with your application's keys
     
@@ -33,28 +33,36 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
             )
             let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
             alert.addAction(action)
-            self.presentViewController(alert, animated: true, completion: nil)
+            presentViewController(alert, animated: true, completion: nil)
             return
+        }
+        if (appleMerchantId != "") {
+            let paymentRequest = Stripe.paymentRequestWithMerchantIdentifier(appleMerchantId)
+            if Stripe.canSubmitPaymentRequest(paymentRequest) {
+                paymentRequest.paymentSummaryItems = [PKPaymentSummaryItem(label: "Cool shirt", amount: NSDecimalNumber(string: "10.00")), PKPaymentSummaryItem(label: "Stripe shirt shop", amount: NSDecimalNumber(string: "10.00"))]
+                let paymentAuthVC = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest)
+                paymentAuthVC.delegate = self
+                presentViewController(paymentAuthVC, animated: true, completion: nil)
+                return
+            }
         }
         let options = STPCheckoutOptions()
         options.publishableKey = stripePublishableKey
-        if (appleMerchantId != "") {
-            options.appleMerchantId = appleMerchantId
-        }
         options.companyName = "Shirt Shop"
         options.purchaseDescription = "Cool Shirt"
         options.purchaseAmount = shirtPrice
         options.logoColor = UIColor.purpleColor()
-        let presenter = STPPaymentPresenter(checkoutOptions: options, delegate: self)
-        presenter.requestPaymentFromPresentingViewController(self)
+        let checkoutViewController = STPCheckoutViewController(options: options)
+        checkoutViewController.checkoutDelegate = self
+        presentViewController(checkoutViewController, animated: true, completion: nil)
     }
     
-    func paymentPresenter(presenter: STPPaymentPresenter!, didCreateStripeToken token: STPToken!, completion: STPTokenSubmissionHandler!) {
+    func checkoutController(controller: STPCheckoutViewController!, didCreateToken token: STPToken!, completion: STPTokenSubmissionHandler!) {
         createBackendChargeWithToken(token, completion: completion)
     }
     
-    func paymentPresenter(presenter: STPPaymentPresenter!, didFinishWithStatus status: STPPaymentStatus, error: NSError!) {
-        self.dismissViewControllerAnimated(true, completion: {
+    func checkoutController(controller: STPCheckoutViewController!, didFinishWithStatus status: STPPaymentStatus, error: NSError!) {
+        dismissViewControllerAnimated(true, completion: {
             switch(status) {
             case .UserCancelled:
                 return // just do nothing in this case
@@ -66,12 +74,21 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
         })
     }
     
-    // This is optional, and used to customize the line items shown on the Apple Pay sheet.
-    func paymentPresenter(presenter: STPPaymentPresenter!, didPreparePaymentRequest request: PKPaymentRequest!) -> PKPaymentRequest! {
-        request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "Stripe Shop", amount: NSDecimalNumber(string: "5.00"))
-        ]
-        return request
+    func paymentAuthorizationViewController(controller: PKPaymentAuthorizationViewController!, didAuthorizePayment payment: PKPayment!, completion: ((PKPaymentAuthorizationStatus) -> Void)!) {
+        let apiClient = STPAPIClient(publishableKey: stripePublishableKey)
+        apiClient.createTokenWithPayment(payment, completion: { (token, error) -> Void in
+            self.createBackendChargeWithToken(token, completion: { (result, error) -> Void in
+                if result == STPBackendChargeResult.Success {
+                    completion(PKPaymentAuthorizationStatus.Success)
+                } else {
+                    completion(PKPaymentAuthorizationStatus.Failure)
+                }
+            })
+        })
+    }
+    
+    func paymentAuthorizationViewControllerDidFinish(controller: PKPaymentAuthorizationViewController!) {
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
     func createBackendChargeWithToken(token: STPToken, completion: STPTokenSubmissionHandler) {
@@ -91,7 +108,7 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
                 return
             }
         }
-        completion(STPBackendChargeResult.Failure, nil)
+        completion(STPBackendChargeResult.Failure, NSError(domain: StripeDomain, code: 50, userInfo: [NSLocalizedDescriptionKey: "You created a token! Its value is \(token.tokenId). Now configure your backend to accept this token and complete a charge."]))
     }
 }
 

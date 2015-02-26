@@ -68,7 +68,6 @@
 - (id)copyWithZone:(__unused NSZone *)zone {
     STPCheckoutOptions *options = [[[self class] alloc] init];
     options.publishableKey = self.publishableKey;
-    options.appleMerchantId = self.appleMerchantId;
     options.logoURL = self.logoURL;
     options.logoImage = self.logoImage;
     options.logoColor = self.logoColor;
