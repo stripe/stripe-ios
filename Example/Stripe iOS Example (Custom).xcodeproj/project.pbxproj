@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04467BC11A9EE96D00A3C50B /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 04467BAF1A9EE96D00A3C50B /* AFHTTPRequestOperation.m */; };
+		04467BC21A9EE96D00A3C50B /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04467BB11A9EE96D00A3C50B /* AFHTTPRequestOperationManager.m */; };
+		04467BC31A9EE96D00A3C50B /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04467BB31A9EE96D00A3C50B /* AFHTTPSessionManager.m */; };
+		04467BC41A9EE96D00A3C50B /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04467BB61A9EE96D00A3C50B /* AFNetworkReachabilityManager.m */; };
+		04467BC51A9EE96D00A3C50B /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 04467BB81A9EE96D00A3C50B /* AFSecurityPolicy.m */; };
+		04467BC61A9EE96D00A3C50B /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 04467BBA1A9EE96D00A3C50B /* AFURLConnectionOperation.m */; };
+		04467BC71A9EE96D00A3C50B /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 04467BBC1A9EE96D00A3C50B /* AFURLRequestSerialization.m */; };
+		04467BC81A9EE96D00A3C50B /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 04467BBE1A9EE96D00A3C50B /* AFURLResponseSerialization.m */; };
+		04467BC91A9EE96D00A3C50B /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04467BC01A9EE96D00A3C50B /* AFURLSessionManager.m */; };
 		04533E8D1A687F5D00C7E52E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533E8C1A687F5D00C7E52E /* main.m */; };
 		04533E901A687F5D00C7E52E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533E8F1A687F5D00C7E52E /* AppDelegate.m */; };
 		04533E931A687F5D00C7E52E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533E921A687F5D00C7E52E /* ViewController.m */; };
@@ -45,12 +54,9 @@
 		04533F001A68805000C7E52E /* textfield.png in Resources */ = {isa = PBXBuildFile; fileRef = 04533EDF1A68805000C7E52E /* textfield.png */; };
 		04533F011A68805000C7E52E /* textfield@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04533EE01A68805000C7E52E /* textfield@2x.png */; };
 		04533F021A68805000C7E52E /* PaymentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533EE21A68805000C7E52E /* PaymentViewController.m */; };
-		04533F0B1A68810E00C7E52E /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F0A1A68810E00C7E52E /* Parse.framework */; };
 		04533F0D1A68812D00C7E52E /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F0C1A68812D00C7E52E /* Stripe.framework */; };
 		04533F101A68813C00C7E52E /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F0F1A68813C00C7E52E /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		04533F121A68814100C7E52E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F111A68814100C7E52E /* Security.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		04533F141A68814E00C7E52E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F131A68814E00C7E52E /* MobileCoreServices.framework */; };
-		04533F161A68815600C7E52E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F151A68815600C7E52E /* SystemConfiguration.framework */; };
 		04533F191A688A0A00C7E52E /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533F181A688A0A00C7E52E /* Constants.m */; };
 		04533F2B1A68956A00C7E52E /* PKPayment+STPTestKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533F1C1A68956A00C7E52E /* PKPayment+STPTestKeys.m */; };
 		04533F2C1A68956A00C7E52E /* STPTestAddressStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533F1E1A68956A00C7E52E /* STPTestAddressStore.m */; };
@@ -78,6 +84,25 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		04467BAE1A9EE96D00A3C50B /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
+		04467BAF1A9EE96D00A3C50B /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
+		04467BB01A9EE96D00A3C50B /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
+		04467BB11A9EE96D00A3C50B /* AFHTTPRequestOperationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperationManager.m; sourceTree = "<group>"; };
+		04467BB21A9EE96D00A3C50B /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
+		04467BB31A9EE96D00A3C50B /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPSessionManager.m; sourceTree = "<group>"; };
+		04467BB41A9EE96D00A3C50B /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; };
+		04467BB51A9EE96D00A3C50B /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
+		04467BB61A9EE96D00A3C50B /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
+		04467BB71A9EE96D00A3C50B /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFSecurityPolicy.h; sourceTree = "<group>"; };
+		04467BB81A9EE96D00A3C50B /* AFSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFSecurityPolicy.m; sourceTree = "<group>"; };
+		04467BB91A9EE96D00A3C50B /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; };
+		04467BBA1A9EE96D00A3C50B /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
+		04467BBB1A9EE96D00A3C50B /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLRequestSerialization.h; sourceTree = "<group>"; };
+		04467BBC1A9EE96D00A3C50B /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLRequestSerialization.m; sourceTree = "<group>"; };
+		04467BBD1A9EE96D00A3C50B /* AFURLResponseSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLResponseSerialization.h; sourceTree = "<group>"; };
+		04467BBE1A9EE96D00A3C50B /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
+		04467BBF1A9EE96D00A3C50B /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
+		04467BC01A9EE96D00A3C50B /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
 		04533E871A687F5D00C7E52E /* Stripe iOS Example (Custom).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example (Custom).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04533E8B1A687F5D00C7E52E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04533E8C1A687F5D00C7E52E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -133,12 +158,9 @@
 		04533EE01A68805000C7E52E /* textfield@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "textfield@2x.png"; sourceTree = "<group>"; };
 		04533EE11A68805000C7E52E /* PaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentViewController.h; sourceTree = "<group>"; };
 		04533EE21A68805000C7E52E /* PaymentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentViewController.m; sourceTree = "<group>"; };
-		04533F0A1A68810E00C7E52E /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		04533F0C1A68812D00C7E52E /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		04533F0F1A68813C00C7E52E /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		04533F111A68814100C7E52E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		04533F131A68814E00C7E52E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		04533F151A68815600C7E52E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		04533F171A688A0A00C7E52E /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		04533F181A688A0A00C7E52E /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		04533F1B1A68956A00C7E52E /* PKPayment+STPTestKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PKPayment+STPTestKeys.h"; sourceTree = "<group>"; };
@@ -164,18 +186,41 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04533F161A68815600C7E52E /* SystemConfiguration.framework in Frameworks */,
-				04533F141A68814E00C7E52E /* MobileCoreServices.framework in Frameworks */,
 				04533F121A68814100C7E52E /* Security.framework in Frameworks */,
 				04533F101A68813C00C7E52E /* PassKit.framework in Frameworks */,
 				04533F0D1A68812D00C7E52E /* Stripe.framework in Frameworks */,
-				04533F0B1A68810E00C7E52E /* Parse.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04467BAD1A9EE96D00A3C50B /* AFNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				04467BAE1A9EE96D00A3C50B /* AFHTTPRequestOperation.h */,
+				04467BAF1A9EE96D00A3C50B /* AFHTTPRequestOperation.m */,
+				04467BB01A9EE96D00A3C50B /* AFHTTPRequestOperationManager.h */,
+				04467BB11A9EE96D00A3C50B /* AFHTTPRequestOperationManager.m */,
+				04467BB21A9EE96D00A3C50B /* AFHTTPSessionManager.h */,
+				04467BB31A9EE96D00A3C50B /* AFHTTPSessionManager.m */,
+				04467BB41A9EE96D00A3C50B /* AFNetworking.h */,
+				04467BB51A9EE96D00A3C50B /* AFNetworkReachabilityManager.h */,
+				04467BB61A9EE96D00A3C50B /* AFNetworkReachabilityManager.m */,
+				04467BB71A9EE96D00A3C50B /* AFSecurityPolicy.h */,
+				04467BB81A9EE96D00A3C50B /* AFSecurityPolicy.m */,
+				04467BB91A9EE96D00A3C50B /* AFURLConnectionOperation.h */,
+				04467BBA1A9EE96D00A3C50B /* AFURLConnectionOperation.m */,
+				04467BBB1A9EE96D00A3C50B /* AFURLRequestSerialization.h */,
+				04467BBC1A9EE96D00A3C50B /* AFURLRequestSerialization.m */,
+				04467BBD1A9EE96D00A3C50B /* AFURLResponseSerialization.h */,
+				04467BBE1A9EE96D00A3C50B /* AFURLResponseSerialization.m */,
+				04467BBF1A9EE96D00A3C50B /* AFURLSessionManager.h */,
+				04467BC01A9EE96D00A3C50B /* AFURLSessionManager.m */,
+			);
+			path = AFNetworking;
+			sourceTree = "<group>";
+		};
 		04533E7E1A687F5D00C7E52E = {
 			isa = PBXGroup;
 			children = (
@@ -298,6 +343,7 @@
 		04533F031A68805D00C7E52E /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				04467BAD1A9EE96D00A3C50B /* AFNetworking */,
 				04533F1A1A68956A00C7E52E /* ApplePayStubs */,
 				04533EB31A68805000C7E52E /* MBProgressHUD */,
 				04533EB61A68805000C7E52E /* PaymentKit */,
@@ -308,12 +354,9 @@
 		04533F0E1A68813100C7E52E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				04533F151A68815600C7E52E /* SystemConfiguration.framework */,
-				04533F131A68814E00C7E52E /* MobileCoreServices.framework */,
 				04533F111A68814100C7E52E /* Security.framework */,
 				04533F0F1A68813C00C7E52E /* PassKit.framework */,
 				04533F0C1A68812D00C7E52E /* Stripe.framework */,
-				04533F0A1A68810E00C7E52E /* Parse.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -433,29 +476,38 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04467BC51A9EE96D00A3C50B /* AFSecurityPolicy.m in Sources */,
 				04533F2C1A68956A00C7E52E /* STPTestAddressStore.m in Sources */,
 				04533EE41A68805000C7E52E /* PTKAddressZip.m in Sources */,
 				04533F2E1A68956A00C7E52E /* STPTestDataTableViewController.m in Sources */,
 				04533EEB1A68805000C7E52E /* PTKUSAddressZip.m in Sources */,
+				04467BC61A9EE96D00A3C50B /* AFURLConnectionOperation.m in Sources */,
 				04533EEA1A68805000C7E52E /* PTKTextField.m in Sources */,
 				04533F191A688A0A00C7E52E /* Constants.m in Sources */,
 				04533F021A68805000C7E52E /* PaymentViewController.m in Sources */,
+				04467BC91A9EE96D00A3C50B /* AFURLSessionManager.m in Sources */,
 				04533E931A687F5D00C7E52E /* ViewController.m in Sources */,
 				04533EB21A68802E00C7E52E /* ShippingManager.m in Sources */,
 				04533EE31A68805000C7E52E /* MBProgressHUD.m in Sources */,
 				04533F2B1A68956A00C7E52E /* PKPayment+STPTestKeys.m in Sources */,
 				04533EE61A68805000C7E52E /* PTKCardCVC.m in Sources */,
+				04467BC81A9EE96D00A3C50B /* AFURLResponseSerialization.m in Sources */,
+				04467BC21A9EE96D00A3C50B /* AFHTTPRequestOperationManager.m in Sources */,
+				04467BC11A9EE96D00A3C50B /* AFHTTPRequestOperation.m in Sources */,
 				04533E901A687F5D00C7E52E /* AppDelegate.m in Sources */,
 				04533EE51A68805000C7E52E /* PTKCard.m in Sources */,
 				04533F301A68956A00C7E52E /* STPTestPaymentSummaryViewController.m in Sources */,
 				04533F321A68956A00C7E52E /* STPTestShippingMethodStore.m in Sources */,
 				04533F2D1A68956A00C7E52E /* STPTestCardStore.m in Sources */,
+				04467BC41A9EE96D00A3C50B /* AFNetworkReachabilityManager.m in Sources */,
 				04533E8D1A687F5D00C7E52E /* main.m in Sources */,
 				04533F2F1A68956A00C7E52E /* STPTestPaymentAuthorizationViewController.m in Sources */,
 				04533EEC1A68805000C7E52E /* PTKView.m in Sources */,
 				04533EE81A68805000C7E52E /* PTKCardNumber.m in Sources */,
 				04533EE91A68805000C7E52E /* PTKComponent.m in Sources */,
+				04467BC71A9EE96D00A3C50B /* AFURLRequestSerialization.m in Sources */,
 				04533EE71A68805000C7E52E /* PTKCardExpiry.m in Sources */,
+				04467BC31A9EE96D00A3C50B /* AFHTTPSessionManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

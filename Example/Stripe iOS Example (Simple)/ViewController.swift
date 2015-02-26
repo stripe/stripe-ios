@@ -12,8 +12,14 @@ import Stripe
 class ViewController: UIViewController, STPPaymentPresenterDelegate {
 
     // Replace these values with your application's keys
+    
+    // Find this at https://dashboard.stripe.com/account/apikeys
     let stripePublishableKey = ""
+    
+    // To set this up, see https://github.com/stripe/example-ios-backend
     let backendChargeURLString = ""
+    
+    // To set this up, see https://stripe.com/docs/mobile/apple-pay
     let appleMerchantId = ""
     
     let shirtPrice : UInt = 1000 // this is in cents
@@ -70,8 +76,10 @@ class ViewController: UIViewController, STPPaymentPresenterDelegate {
     
     func createBackendChargeWithToken(token: STPToken, completion: STPTokenSubmissionHandler) {
         if backendChargeURLString != "" {
-            if let url = NSURL(string: backendChargeURLString) {
+            if let url = NSURL(string: backendChargeURLString  + "/charge") {
                 let chargeParams : [String: AnyObject] = ["stripeToken": token.tokenId, "amount": shirtPrice]
+                
+                // This uses Alamofire to simplify the request code. For more information see github.com/Alamofire/Alamofire
                 request(.POST, url, parameters: chargeParams)
                     .responseJSON { (_, response, _, error) in
                         if response?.statusCode == 200 {

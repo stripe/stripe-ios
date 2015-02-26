@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import "Constants.h"
-#import <Parse/Parse.h>
 #import <Stripe/Stripe.h>
 
 @implementation AppDelegate
@@ -16,9 +15,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     if (StripePublishableKey) {
         [Stripe setDefaultPublishableKey:StripePublishableKey];
-    }
-    if (ParseApplicationId && ParseClientKey) {
-        [Parse setApplicationId:ParseApplicationId clientKey:ParseClientKey];
     }
     return YES;
 }
