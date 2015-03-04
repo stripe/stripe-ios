@@ -26,6 +26,9 @@
     if (bankAccount.country) {
         params[@"country"] = bankAccount.country;
     }
+    if (bankAccount.currency) {
+        params[@"currency"] = bankAccount.currency;
+    }
     
     [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, __unused BOOL *stop) {
         [parts addObject:[NSString stringWithFormat:@"bank_account[%@]=%@", key, [self.class stringByURLEncoding:val]]];
