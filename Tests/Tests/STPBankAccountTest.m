@@ -57,7 +57,8 @@
 
     NSArray *parts = [formData componentsSeparatedByString:@"&"];
 
-    NSSet *expectedKeys = [NSSet setWithObjects:@"bank_account[account_number]", @"bank_account[routing_number]", @"bank_account[country]", nil];
+    NSSet *expectedKeys =
+        [NSSet setWithObjects:@"bank_account[account_number]", @"bank_account[routing_number]", @"bank_account[country]", @"bank_account[currency]", nil];
 
     NSArray *values = [attributes allValues];
     NSMutableArray *encodedValues = [NSMutableArray array];
