@@ -22,11 +22,18 @@
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
+@interface STPCheckoutInternalUIWebViewController ()
+@property (nonatomic) BOOL statusBarHidden;
+@end
+
 @implementation STPCheckoutInternalUIWebViewController
 
 - (instancetype)initWithCheckoutViewController:(STPCheckoutViewController *)checkoutViewController {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
+        if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+            self.edgesForExtendedLayout = UIRectEdgeNone;
+        }
         UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
         self.navigationItem.leftBarButtonItem = cancelItem;
         _checkoutController = checkoutViewController;
@@ -58,10 +65,10 @@
 
     self.adapter = [[STPIOSCheckoutWebViewAdapter alloc] init];
     self.adapter.delegate = self;
-    UIView *webView = self.adapter.webView;
+    UIWebView *webView = self.adapter.webView;
+    webView.scrollView.delegate = self;
     [self.view addSubview:webView];
 
-    webView.backgroundColor = [UIColor whiteColor];
     if (self.options.logoColor && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         self.view.backgroundColor = self.options.logoColor;
         webView.backgroundColor = self.options.logoColor;
@@ -80,33 +87,6 @@
 
     [self.adapter loadRequest:[NSURLRequest requestWithURL:self.url]];
     self.webView = webView;
-
-    UIView *headerBackground = [[UIView alloc] initWithFrame:self.view.bounds];
-    self.headerBackground = headerBackground;
-    [self.webView insertSubview:headerBackground atIndex:0];
-    headerBackground.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[headerBackground]-0-|"
-                                                                      options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                      metrics:nil
-                                                                        views:NSDictionaryOfVariableBindings(headerBackground)]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:headerBackground
-                                                          attribute:NSLayoutAttributeTop
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeTop
-                                                         multiplier:1
-                                                           constant:0]];
-    CGFloat bottomMargin = -150;
-    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-        bottomMargin = 0;
-    }
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:headerBackground
-                                                          attribute:NSLayoutAttributeHeight
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeHeight
-                                                         multiplier:1
-                                                           constant:bottomMargin]];
 
     UIActivityIndicatorViewStyle style = UIActivityIndicatorViewStyleGray;
     if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && self.options.logoColor &&
@@ -156,7 +136,6 @@
 
 - (void)setLogoColor:(STP_COLOR_CLASS *)color {
     self.options.logoColor = color;
-    self.headerBackground.backgroundColor = color;
     if ([self.checkoutController respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
         FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
         [[UIApplication sharedApplication] setStatusBarStyle:[self preferredStatusBarStyle] animated:YES];
@@ -232,6 +211,27 @@
     [self.activityIndicator stopAnimating];
     [self.delegate checkoutController:self.checkoutController didFinishWithStatus:STPPaymentStatusError error:error];
     [self cleanup];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        NSString *statusHidden = [NSString stringWithFormat:@"window.IsStripeCheckoutStatusBarHidden(%@)", @(scrollView.contentOffset.y)];
+        self.statusBarHidden = [[self.adapter evaluateJavaScript:statusHidden] boolValue];
+        [UIView animateWithDuration:0.1 animations:^{ [self setNeedsStatusBarAppearanceUpdate]; }];
+        [[UIApplication sharedApplication] setStatusBarHidden:[self prefersStatusBarHidden] withAnimation:UIStatusBarAnimationSlide];
+    }
+
+    NSString *colorForHex = [NSString stringWithFormat:@"window.ColorForStripeCheckoutBackground(%@)", @(scrollView.contentOffset.y)];
+    NSString *hex = [self.adapter evaluateJavaScript:colorForHex];
+    if ([hex isEqualToString:@""]) {
+        self.webView.backgroundColor = [UIColor whiteColor];
+    } else {
+        self.webView.backgroundColor = [STPColorUtils colorForHexCode:hex];
+    }
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return self.statusBarHidden;
 }
 
 @end

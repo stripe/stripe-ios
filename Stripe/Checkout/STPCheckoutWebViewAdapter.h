@@ -35,6 +35,6 @@ static NSString *const STPCheckoutEventError = @"CheckoutDidError";
 @property (nonatomic, weak) id<STPCheckoutDelegate> delegate;
 @property (nonatomic, readonly) STP_VIEW_CLASS *webView;
 - (void)loadRequest:(NSURLRequest *)request;
-- (void)evaluateJavaScript:(NSString *)js;
+- (NSString *)evaluateJavaScript:(NSString *)js;
 - (void)cleanup;
 @end

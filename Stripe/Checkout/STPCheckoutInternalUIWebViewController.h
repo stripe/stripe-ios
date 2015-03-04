@@ -14,15 +14,14 @@
 #import "STPCheckoutDelegate.h"
 #import "STPCheckoutViewController.h"
 
-@interface STPCheckoutInternalUIWebViewController : UIViewController<STPCheckoutDelegate>
+@interface STPCheckoutInternalUIWebViewController : UIViewController<STPCheckoutDelegate, UIScrollViewDelegate>
 
 - (instancetype)initWithCheckoutViewController:(STPCheckoutViewController *)checkoutViewController;
 
 @property (weak, nonatomic, readonly) STPCheckoutViewController *checkoutController;
 @property (weak, nonatomic) UIView *webView;
-@property (nonatomic) id<STPCheckoutWebViewAdapter> adapter;
+@property (nonatomic) STPIOSCheckoutWebViewAdapter *adapter;
 @property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
-@property (weak, nonatomic) UIView *headerBackground;
 @property (nonatomic) STPCheckoutOptions *options;
 @property (nonatomic) NSURL *logoURL;
 @property (nonatomic) NSURL *url;

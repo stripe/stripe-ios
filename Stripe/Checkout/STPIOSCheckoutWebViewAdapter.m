@@ -38,8 +38,8 @@
     [self.webView loadRequest:request];
 }
 
-- (void)evaluateJavaScript:(NSString *)js {
-    [self.webView stringByEvaluatingJavaScriptFromString:js];
+- (NSString *)evaluateJavaScript:(NSString *)js {
+    return [self.webView stringByEvaluatingJavaScriptFromString:js];
 }
 
 - (void)cleanup {
