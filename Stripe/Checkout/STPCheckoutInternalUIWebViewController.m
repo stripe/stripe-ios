@@ -214,24 +214,26 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    NSDictionary *options = [self checkoutDisplayOptionsForScrollViewOffset:scrollView.contentOffset];
+    BOOL statusBarHidden = [options[@"statusBarHidden"] boolValue];
+    NSString *backgroundColorHex = options[@"backgroundColor"];
+    UIColor *color = backgroundColorHex ? [STPColorUtils colorForHexCode:backgroundColorHex] : [UIColor whiteColor];
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        NSString *statusHidden = [NSString stringWithFormat:@"window.IsStripeCheckoutStatusBarHidden(%@)", @(scrollView.contentOffset.y)];
-        self.statusBarHidden = [[self.adapter evaluateJavaScript:statusHidden] boolValue];
+        self.statusBarHidden = statusBarHidden;
         [UIView animateWithDuration:0.1 animations:^{ [self setNeedsStatusBarAppearanceUpdate]; }];
         [[UIApplication sharedApplication] setStatusBarHidden:[self prefersStatusBarHidden] withAnimation:UIStatusBarAnimationSlide];
     }
-
-    NSString *colorForHex = [NSString stringWithFormat:@"window.ColorForStripeCheckoutBackground(%@)", @(scrollView.contentOffset.y)];
-    NSString *hex = [self.adapter evaluateJavaScript:colorForHex];
-    if ([hex isEqualToString:@""]) {
-        self.webView.backgroundColor = [UIColor whiteColor];
-    } else {
-        self.webView.backgroundColor = [STPColorUtils colorForHexCode:hex];
-    }
+    self.webView.backgroundColor = color;
 }
 
 - (BOOL)prefersStatusBarHidden {
     return self.statusBarHidden;
+}
+
+- (NSDictionary *)checkoutDisplayOptionsForScrollViewOffset:(CGPoint)offset {
+    NSString *javascript = [NSString stringWithFormat:@"try { window.CheckoutDisplayOptionsForScrollPosition(%@, %@) } catch(e){ null };", @(offset.x), @(offset.y)];
+    NSString *output = [self.adapter evaluateJavaScript:javascript];
+    return [NSJSONSerialization JSONObjectWithData:[output dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil] ?: @{};
 }
 
 @end
