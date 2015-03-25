@@ -231,7 +231,7 @@
 }
 
 - (NSDictionary *)checkoutDisplayOptionsForScrollViewOffset:(CGPoint)offset {
-    NSString *javascript = [NSString stringWithFormat:@"try { window.CheckoutDisplayOptionsForScrollPosition(%@, %@) } catch(e){ null };", @(offset.x), @(offset.y)];
+    NSString *javascript = [NSString stringWithFormat:@"try { window.StripeCheckoutDidScroll(%@, %@) } catch(e){ null };", @(offset.x), @(offset.y)];
     NSString *output = [self.adapter evaluateJavaScript:javascript];
     return [NSJSONSerialization JSONObjectWithData:[output dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil] ?: @{};
 }
