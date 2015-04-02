@@ -24,7 +24,4 @@ typedef void (^STPAPIConnectionCompletionBlock)(NSURLResponse *response, NSData 
 @property (nonatomic, strong) NSError *overrideError; // Replaces the request's error
 @property (nonatomic, copy) STPAPIConnectionCompletionBlock completionBlock;
 
-// utility methods
-+ (NSString *)SHA1FingerprintOfData:(NSData *)data;
-
 @end
