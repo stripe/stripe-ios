@@ -53,15 +53,6 @@ NSString *const STPExamplePublishableKey = @"bad_key";
                       }];
 }
 
-- (void)testRevoked {
-    [self createTokenWithBaseURL:[NSURL URLWithString:@"https://revoked.stripe.com:444"]
-                      completion:^(STPToken *token, NSError *error) {
-                          XCTAssertNil(token, @"Token should be nil.");
-                          XCTAssertEqualObjects(error.domain, StripeDomain, @"Revoked errors specifically are in the Stripe domain");
-                          XCTAssertEqual(error.code, STPConnectionError, @"Revoked errors should generate the right code.");
-                      }];
-}
-
 // helper method
 - (void)createTokenWithBaseURL:(NSURL *)baseURL completion:(STPCompletionBlock)completion {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Token creation"];
