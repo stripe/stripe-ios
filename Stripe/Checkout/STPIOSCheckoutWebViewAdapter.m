@@ -91,7 +91,8 @@
 }
 
 - (void)webView:(__unused UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    [self.delegate checkoutAdapter:self didError:error];
+    if ([error code] != NSURLErrorCancelled) 
+        [self.delegate checkoutAdapter:self didError:error];
 }
 
 @end
