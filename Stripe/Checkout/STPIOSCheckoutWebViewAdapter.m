@@ -39,7 +39,9 @@
 }
 
 - (void)evaluateJavaScript:(NSString *)js {
-    [self.webView stringByEvaluatingJavaScriptFromString:js];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.webView stringByEvaluatingJavaScriptFromString:js];
+    });
 }
 
 - (void)cleanup {
