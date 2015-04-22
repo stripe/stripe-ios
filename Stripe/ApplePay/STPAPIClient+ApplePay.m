@@ -24,6 +24,13 @@
 
     if (payment.billingAddress) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        
+        NSString *firstName = (__bridge NSString*)ABRecordCopyValue(payment.billingAddress, kABPersonFirstNameProperty);
+        NSString *lastName = (__bridge NSString*)ABRecordCopyValue(payment.billingAddress, kABPersonLastNameProperty);
+        if (firstName.length && lastName.length) {
+            params[@"name"] = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+        }
+        
         ABMultiValueRef addressValues = ABRecordCopyValue(payment.billingAddress, kABPersonAddressProperty);
         if (ABMultiValueGetCount(addressValues) > 0) {
             CFDictionaryRef dict = ABMultiValueCopyValueAtIndex(addressValues, 0);
