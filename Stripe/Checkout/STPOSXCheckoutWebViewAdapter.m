@@ -43,8 +43,8 @@
     [self.webView.mainFrame loadRequest:request];
 }
 
-- (void)evaluateJavaScript:(NSString *)js {
-    [self.webView.windowScriptObject evaluateWebScript:js];
+- (NSString *)evaluateJavaScript:(NSString *)js {
+    return [self.webView.windowScriptObject evaluateWebScript:js];
 }
 
 - (void)cleanup {

@@ -34,6 +34,7 @@
     webViewController.options = options;
     self = [super initWithRootViewController:webViewController];
     if (self) {
+        self.navigationBar.translucent = NO;
         _webViewController = webViewController;
         _previousStyle = [[UIApplication sharedApplication] statusBarStyle];
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
