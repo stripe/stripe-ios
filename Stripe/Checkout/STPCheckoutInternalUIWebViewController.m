@@ -93,7 +93,7 @@
         ![STPColorUtils colorIsLight:self.options.logoColor]) {
         style = UIActivityIndicatorViewStyleWhiteLarge;
     }
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:style];
     activityIndicator.hidesWhenStopped = YES;
     activityIndicator.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:activityIndicator];

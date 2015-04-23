@@ -2,6 +2,7 @@
 
 [![Travis](https://img.shields.io/travis/stripe/stripe-ios.svg?style=flat)](https://travis-ci.org/stripe/stripe-ios)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios/blob/master/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/p/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios#)
 
@@ -10,7 +11,7 @@ The Stripe iOS SDK make it easy to collect your users' credit card details insid
 We also offer [seamless integration](https://stripe.com/applepay) with [Apple Pay](https://apple.com/apple-pay) that will allow you to securely collect payments from your customers in a way that prevents them from having to re-enter their credit card information.
 
 ## Requirements
-Our SDK is compatible with iOS apps supporting iOS6 and above. It requires XCode 6 and the iOS8 SDK to build the source.
+Our SDK is compatible with iOS apps supporting iOS6 and above. It requires XCode 6.1 and the iOS8 SDK to build the source.
 
 ## Integration
 
@@ -25,7 +26,7 @@ There are 3 example apps included in the repository:
 
 ### Getting started with the Simple iOS Example App
 
-Note: all the example apps require Xcode 6 to build and run.
+Note: all the example apps require Xcode 6.1 to build and run.
 
 Before you can run the app, you need to provide it with your Stripe publishable key.
 
@@ -86,7 +87,7 @@ Versions of Stripe-iOS prior to 1.2 included a class called `STPView`, which pro
 
 ### Handling errors
 
-See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/StripeError.h) for a list of error codes that may be returned from the Stripe API.
+See [StripeError.h](https://github.com/stripe/stripe-ios/blob/master/Stripe/PublicHeaders/StripeError.h) for a list of error codes that may be returned from the Stripe API.
 
 ### Validating STPCards
 
