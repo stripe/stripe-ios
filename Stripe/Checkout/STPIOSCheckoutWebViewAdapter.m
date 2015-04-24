@@ -51,7 +51,9 @@
 #pragma mark - UIWebViewDelegate
 
 - (void)webViewDidStartLoad:(__unused UIWebView *)webView {
-    [self.delegate checkoutAdapterDidStartLoad:self];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate checkoutAdapterDidStartLoad:self];
+    });
 }
 
 - (BOOL)webView:(__unused UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -75,7 +77,9 @@
             if (path != nil) {
                 payload = [NSJSONSerialization JSONObjectWithData:[path dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
             }
-            [self.delegate checkoutAdapter:self didTriggerEvent:event withPayload:payload];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate checkoutAdapter:self didTriggerEvent:event withPayload:payload];
+            });
             return NO;
         }
         return YES;
@@ -87,11 +91,15 @@
 }
 
 - (void)webViewDidFinishLoad:(__unused UIWebView *)webView {
-    [self.delegate checkoutAdapterDidFinishLoad:self];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate checkoutAdapterDidFinishLoad:self];
+    });
 }
 
 - (void)webView:(__unused UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    [self.delegate checkoutAdapter:self didError:error];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.delegate checkoutAdapter:self didError:error];
+    });
 }
 
 @end
