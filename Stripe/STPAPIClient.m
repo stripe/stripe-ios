@@ -251,6 +251,7 @@ static char kAssociatedClientKey;
 
 @end
 
+
 @implementation Stripe (Deprecated)
 
 + (id)alloc {
