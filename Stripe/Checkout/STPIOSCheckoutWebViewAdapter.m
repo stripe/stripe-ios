@@ -97,9 +97,12 @@
 }
 
 - (void)webView:(__unused UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate checkoutAdapter:self didError:error];
-    });
+    // Cancellation callbacks are handled directly by the webview, so no need to catch them here.
+    if ([error code] != NSURLErrorCancelled) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate checkoutAdapter:self didError:error];
+        });
+    }
 }
 
 @end
