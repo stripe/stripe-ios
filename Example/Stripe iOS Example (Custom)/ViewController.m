@@ -234,6 +234,7 @@
 
     // This passes the token off to our payment backend, which will then actually complete charging the card using your Stripe account's secret key
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager POST:[BackendChargeURLString stringByAppendingString:@"/charge"]
         parameters:chargeParams
         success:^(AFHTTPRequestOperation *operation, id responseObject) { completion(STPBackendChargeResultSuccess, nil); }
