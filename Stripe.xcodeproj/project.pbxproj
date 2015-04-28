@@ -344,18 +344,10 @@
 		04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		04F39F121AEF2AFE005B926E /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
-		04F39F131AEF2AFE005B926E /* StripeiOSStatic-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOSStatic-Debug.xcconfig"; sourceTree = "<group>"; };
-		04F39F141AEF2AFE005B926E /* StripeiOSStatic-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOSStatic-Release.xcconfig"; sourceTree = "<group>"; };
-		04F39F151AEF2AFE005B926E /* StripeiOSStatic-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOSStatic-Shared.xcconfig"; sourceTree = "<group>"; };
-		04F39F161AEF2AFE005B926E /* StripeiOSStaticFramework-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOSStaticFramework-Debug.xcconfig"; sourceTree = "<group>"; };
-		04F39F171AEF2AFE005B926E /* StripeiOSStaticFramework-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOSStaticFramework-Release.xcconfig"; sourceTree = "<group>"; };
-		04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOSStaticFramework-Shared.xcconfig"; sourceTree = "<group>"; };
-		04F39F191AEF2AFE005B926E /* StripeiOSStaticFrameworkWithoutApplePay-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOSStaticFrameworkWithoutApplePay-Debug.xcconfig"; sourceTree = "<group>"; };
-		04F39F1A1AEF2AFE005B926E /* StripeiOSStaticFrameworkWithoutApplePay-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOSStaticFrameworkWithoutApplePay-Release.xcconfig"; sourceTree = "<group>"; };
-		04F39F1B1AEF2AFE005B926E /* StripeiOSStaticFrameworkWithoutApplePay-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOSStaticFrameworkWithoutApplePay-Shared.xcconfig"; sourceTree = "<group>"; };
-		04F39F1C1AEF2AFE005B926E /* StripeiOSStaticWithoutApplePay-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOSStaticWithoutApplePay-Debug.xcconfig"; sourceTree = "<group>"; };
-		04F39F1D1AEF2AFE005B926E /* StripeiOSStaticWithoutApplePay-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOSStaticWithoutApplePay-Release.xcconfig"; sourceTree = "<group>"; };
-		04F39F1E1AEF2AFE005B926E /* StripeiOSStaticWithoutApplePay-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOSStaticWithoutApplePay-Shared.xcconfig"; sourceTree = "<group>"; };
+		04F39F151AEF2AFE005B926E /* StripeiOSStatic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StripeiOSStatic.xcconfig; sourceTree = "<group>"; };
+		04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StripeiOSStaticFramework.xcconfig; sourceTree = "<group>"; };
+		04F39F1B1AEF2AFE005B926E /* StripeiOSStaticFrameworkWithoutApplePay.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StripeiOSStaticFrameworkWithoutApplePay.xcconfig; sourceTree = "<group>"; };
+		04F39F1E1AEF2AFE005B926E /* StripeiOSStaticWithoutApplePay.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StripeiOSStaticWithoutApplePay.xcconfig; sourceTree = "<group>"; };
 		04F39F1F1AEF2AFE005B926E /* StripeOSX-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeOSX-Debug.xcconfig"; sourceTree = "<group>"; };
 		04F39F201AEF2AFE005B926E /* StripeOSX-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeOSX-Release.xcconfig"; sourceTree = "<group>"; };
 		04F39F211AEF2AFE005B926E /* StripeOSX-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeOSX-Shared.xcconfig"; sourceTree = "<group>"; };
@@ -511,33 +503,25 @@
 		04F39F091AEF2AFE005B926E /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
+				04F39F0C1AEF2AFE005B926E /* Project-Shared.xcconfig */,
 				04F39F0A1AEF2AFE005B926E /* Project-Debug.xcconfig */,
 				04F39F0B1AEF2AFE005B926E /* Project-Release.xcconfig */,
-				04F39F0C1AEF2AFE005B926E /* Project-Shared.xcconfig */,
+				04F39F0F1AEF2AFE005B926E /* StripeiOS Tests-Shared.xcconfig */,
 				04F39F0D1AEF2AFE005B926E /* StripeiOS Tests-Debug.xcconfig */,
 				04F39F0E1AEF2AFE005B926E /* StripeiOS Tests-Release.xcconfig */,
-				04F39F0F1AEF2AFE005B926E /* StripeiOS Tests-Shared.xcconfig */,
+				04F39F121AEF2AFE005B926E /* StripeiOS-Shared.xcconfig */,
 				04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */,
 				04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */,
-				04F39F121AEF2AFE005B926E /* StripeiOS-Shared.xcconfig */,
-				04F39F131AEF2AFE005B926E /* StripeiOSStatic-Debug.xcconfig */,
-				04F39F141AEF2AFE005B926E /* StripeiOSStatic-Release.xcconfig */,
-				04F39F151AEF2AFE005B926E /* StripeiOSStatic-Shared.xcconfig */,
-				04F39F161AEF2AFE005B926E /* StripeiOSStaticFramework-Debug.xcconfig */,
-				04F39F171AEF2AFE005B926E /* StripeiOSStaticFramework-Release.xcconfig */,
-				04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework-Shared.xcconfig */,
-				04F39F191AEF2AFE005B926E /* StripeiOSStaticFrameworkWithoutApplePay-Debug.xcconfig */,
-				04F39F1A1AEF2AFE005B926E /* StripeiOSStaticFrameworkWithoutApplePay-Release.xcconfig */,
-				04F39F1B1AEF2AFE005B926E /* StripeiOSStaticFrameworkWithoutApplePay-Shared.xcconfig */,
-				04F39F1C1AEF2AFE005B926E /* StripeiOSStaticWithoutApplePay-Debug.xcconfig */,
-				04F39F1D1AEF2AFE005B926E /* StripeiOSStaticWithoutApplePay-Release.xcconfig */,
-				04F39F1E1AEF2AFE005B926E /* StripeiOSStaticWithoutApplePay-Shared.xcconfig */,
+				04F39F151AEF2AFE005B926E /* StripeiOSStatic.xcconfig */,
+				04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework.xcconfig */,
+				04F39F1B1AEF2AFE005B926E /* StripeiOSStaticFrameworkWithoutApplePay.xcconfig */,
+				04F39F1E1AEF2AFE005B926E /* StripeiOSStaticWithoutApplePay.xcconfig */,
+				04F39F211AEF2AFE005B926E /* StripeOSX-Shared.xcconfig */,
 				04F39F1F1AEF2AFE005B926E /* StripeOSX-Debug.xcconfig */,
 				04F39F201AEF2AFE005B926E /* StripeOSX-Release.xcconfig */,
-				04F39F211AEF2AFE005B926E /* StripeOSX-Shared.xcconfig */,
+				04F39F241AEF2AFE005B926E /* StripeOSXTests-Shared.xcconfig */,
 				04F39F221AEF2AFE005B926E /* StripeOSXTests-Debug.xcconfig */,
 				04F39F231AEF2AFE005B926E /* StripeOSXTests-Release.xcconfig */,
-				04F39F241AEF2AFE005B926E /* StripeOSXTests-Shared.xcconfig */,
 			);
 			path = BuildConfigurations;
 			sourceTree = "<group>";
@@ -1147,56 +1131,56 @@
 		};
 		047E67BA1A65E76A001D7493 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 04F39F1C1AEF2AFE005B926E /* StripeiOSStaticWithoutApplePay-Debug.xcconfig */;
+			baseConfigurationReference = 04F39F1E1AEF2AFE005B926E /* StripeiOSStaticWithoutApplePay.xcconfig */;
 			buildSettings = {
 			};
 			name = Debug;
 		};
 		047E67BB1A65E76A001D7493 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 04F39F1D1AEF2AFE005B926E /* StripeiOSStaticWithoutApplePay-Release.xcconfig */;
+			baseConfigurationReference = 04F39F1E1AEF2AFE005B926E /* StripeiOSStaticWithoutApplePay.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
 		};
 		047E67E11A65E82D001D7493 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 04F39F191AEF2AFE005B926E /* StripeiOSStaticFrameworkWithoutApplePay-Debug.xcconfig */;
+			baseConfigurationReference = 04F39F1B1AEF2AFE005B926E /* StripeiOSStaticFrameworkWithoutApplePay.xcconfig */;
 			buildSettings = {
 			};
 			name = Debug;
 		};
 		047E67E21A65E82D001D7493 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 04F39F1A1AEF2AFE005B926E /* StripeiOSStaticFrameworkWithoutApplePay-Release.xcconfig */;
+			baseConfigurationReference = 04F39F1B1AEF2AFE005B926E /* StripeiOSStaticFrameworkWithoutApplePay.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
 		};
 		049E84BD1A605D93000B66CD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 04F39F131AEF2AFE005B926E /* StripeiOSStatic-Debug.xcconfig */;
+			baseConfigurationReference = 04F39F151AEF2AFE005B926E /* StripeiOSStatic.xcconfig */;
 			buildSettings = {
 			};
 			name = Debug;
 		};
 		049E84BE1A605D93000B66CD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 04F39F141AEF2AFE005B926E /* StripeiOSStatic-Release.xcconfig */;
+			baseConfigurationReference = 04F39F151AEF2AFE005B926E /* StripeiOSStatic.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
 		};
 		049E85241A607FFD000B66CD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 04F39F161AEF2AFE005B926E /* StripeiOSStaticFramework-Debug.xcconfig */;
+			baseConfigurationReference = 04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework.xcconfig */;
 			buildSettings = {
 			};
 			name = Debug;
 		};
 		049E85251A607FFD000B66CD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 04F39F171AEF2AFE005B926E /* StripeiOSStaticFramework-Release.xcconfig */;
+			baseConfigurationReference = 04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
