@@ -13,8 +13,7 @@
 #import "PaymentViewController.h"
 #import "Constants.h"
 #import "ShippingManager.h"
-#import "STPTestPaymentAuthorizationViewController.h"
-#import "PKPayment+STPTestKeys.h"
+#import <ApplePayStubs/ApplePayStubs.h>
 
 @interface ViewController () <PaymentViewControllerDelegate, STPCheckoutViewControllerDelegate, PKPaymentAuthorizationViewControllerDelegate>
 @property (nonatomic) BOOL applePaySucceeded;
@@ -111,30 +110,6 @@
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                        didAuthorizePayment:(PKPayment *)payment
                                 completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-#if DEBUG // This is to handle a test result from ApplePayStubs
-    if (payment.stp_testCardNumber) {
-        STPCard *card = [STPCard new];
-        card.number = payment.stp_testCardNumber;
-        card.expMonth = 12;
-        card.expYear = 2020;
-        card.cvc = @"123";
-        [[STPAPIClient sharedClient] createTokenWithCard:card
-                                              completion:^(STPToken *token, NSError *error) {
-                                                  [self createBackendChargeWithToken:token
-                                                                          completion:^(STPBackendChargeResult status, NSError *error) {
-                                                                              if (status == STPBackendChargeResultSuccess) {
-                                                                                  self.applePaySucceeded = YES;
-                                                                                  completion(PKPaymentAuthorizationStatusSuccess);
-                                                                              } else {
-                                                                                  self.applePayError = error;
-                                                                                  completion(PKPaymentAuthorizationStatusFailure);
-                                                                              }
-                                                                          }];
-
-                                              }];
-        return;
-    }
-#endif
     [[STPAPIClient sharedClient] createTokenWithPayment:payment
                                              completion:^(STPToken *token, NSError *error) {
                                                  [self createBackendChargeWithToken:token
@@ -153,7 +128,7 @@
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
     if (self.applePaySucceeded) {
         [self paymentSucceeded];
-    } else {
+    } else if (self.applePayError) {
         [self presentError:self.applePayError];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
