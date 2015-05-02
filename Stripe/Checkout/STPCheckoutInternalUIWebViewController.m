@@ -24,6 +24,13 @@
 
 @interface STPCheckoutInternalUIWebViewController ()
 @property (nonatomic) BOOL statusBarHidden;
+@property (weak, nonatomic, stp_nullable) UIView *webView;
+@property (nonatomic, stp_nullable) STPIOSCheckoutWebViewAdapter *adapter;
+@property (nonatomic, stp_nullable) NSURL *logoURL;
+@property (nonatomic, stp_nonnull) NSURL *url;
+@property (weak, nonatomic, stp_nullable) UIActivityIndicatorView *activityIndicator;
+@property (nonatomic) BOOL backendChargeSuccessful;
+@property (nonatomic, stp_nullable) NSError *backendChargeError;
 @end
 
 @implementation STPCheckoutInternalUIWebViewController
@@ -34,6 +41,8 @@
         if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
             self.edgesForExtendedLayout = UIRectEdgeNone;
         }
+        self.options = checkoutViewController.options;
+        self.url = [NSURL URLWithString:checkoutURLString];
         UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
         self.navigationItem.leftBarButtonItem = cancelItem;
         _checkoutController = checkoutViewController;
@@ -52,8 +61,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    self.url = [NSURL URLWithString:checkoutURLString];
 
     if (self.options.logoImage && !self.options.logoURL) {
         NSURL *url = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]]];

@@ -17,8 +17,7 @@
 @implementation ExampleWindowController
 
 - (IBAction)beginPayment:(id)sender {
-    STPCheckoutOptions *options = [STPCheckoutOptions new];
-    options.publishableKey = [Stripe defaultPublishableKey];
+    STPCheckoutOptions *options = [[STPCheckoutOptions alloc] initWithPublishableKey:[Stripe defaultPublishableKey]];
     options.purchaseDescription = @"Tasty Llama food";
     options.purchaseAmount = 1000;
     options.purchaseLabel = @"Pay {{amount}} for that food";

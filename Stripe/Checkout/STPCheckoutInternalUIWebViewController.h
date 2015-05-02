@@ -6,28 +6,23 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 #if TARGET_OS_IPHONE
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+
 #import "STPCheckoutDelegate.h"
 #import "STPCheckoutViewController.h"
+#import "STPNullabilityMacros.h"
 
 @interface STPCheckoutInternalUIWebViewController : UIViewController<STPCheckoutDelegate, UIScrollViewDelegate>
 
-- (instancetype)initWithCheckoutViewController:(STPCheckoutViewController *)checkoutViewController;
+- (stp_nonnull instancetype)initWithCheckoutViewController:(stp_nonnull STPCheckoutViewController *)checkoutViewController;
 
-@property (weak, nonatomic, readonly) STPCheckoutViewController *checkoutController;
-@property (weak, nonatomic) UIView *webView;
-@property (nonatomic) STPIOSCheckoutWebViewAdapter *adapter;
-@property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
-@property (nonatomic) STPCheckoutOptions *options;
-@property (nonatomic) NSURL *logoURL;
-@property (nonatomic) NSURL *url;
-@property (nonatomic, weak) id<STPCheckoutViewControllerDelegate> delegate;
-@property (nonatomic) BOOL backendChargeSuccessful;
-@property (nonatomic) NSError *backendChargeError;
+@property (weak, nonatomic, readonly, stp_nonnull) STPCheckoutViewController *checkoutController;
+@property (weak, nonatomic, readonly, stp_nullable) UIView *webView;
+@property (nonatomic, stp_nonnull) STPCheckoutOptions *options;
+@property (nonatomic, weak, stp_nullable) id<STPCheckoutViewControllerDelegate> delegate;
 
 @end
 

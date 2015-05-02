@@ -16,7 +16,7 @@
     self = [super init];
 
     if (self) {
-        _tokenId = attributeDictionary[@"id"];
+        _tokenId = attributeDictionary[@"id"] ?: @"";
         _livemode = [attributeDictionary[@"livemode"] boolValue];
         _created = [NSDate dateWithTimeIntervalSince1970:[attributeDictionary[@"created"] doubleValue]];
 

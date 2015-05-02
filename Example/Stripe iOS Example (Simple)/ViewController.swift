@@ -37,17 +37,17 @@ class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPay
             return
         }
         if (appleMerchantId != "") {
-            let paymentRequest = Stripe.paymentRequestWithMerchantIdentifier(appleMerchantId)
-            if Stripe.canSubmitPaymentRequest(paymentRequest) {
-                paymentRequest.paymentSummaryItems = [PKPaymentSummaryItem(label: "Cool shirt", amount: NSDecimalNumber(string: "10.00")), PKPaymentSummaryItem(label: "Stripe shirt shop", amount: NSDecimalNumber(string: "10.00"))]
-                let paymentAuthVC = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest)
-                paymentAuthVC.delegate = self
-                presentViewController(paymentAuthVC, animated: true, completion: nil)
-                return
+            if let paymentRequest = Stripe.paymentRequestWithMerchantIdentifier(appleMerchantId) {
+                if Stripe.canSubmitPaymentRequest(paymentRequest) {
+                    paymentRequest.paymentSummaryItems = [PKPaymentSummaryItem(label: "Cool shirt", amount: NSDecimalNumber(string: "10.00")), PKPaymentSummaryItem(label: "Stripe shirt shop", amount: NSDecimalNumber(string: "10.00"))]
+                    let paymentAuthVC = PKPaymentAuthorizationViewController(paymentRequest: paymentRequest)
+                    paymentAuthVC.delegate = self
+                    presentViewController(paymentAuthVC, animated: true, completion: nil)
+                    return
+                }
             }
         }
-        let options = STPCheckoutOptions()
-        options.publishableKey = stripePublishableKey
+        let options = STPCheckoutOptions(publishableKey: stripePublishableKey)
         options.companyName = "Shirt Shop"
         options.purchaseDescription = "Cool Shirt"
         options.purchaseAmount = shirtPrice
@@ -57,11 +57,11 @@ class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPay
         presentViewController(checkoutViewController, animated: true, completion: nil)
     }
     
-    func checkoutController(controller: STPCheckoutViewController!, didCreateToken token: STPToken!, completion: STPTokenSubmissionHandler!) {
+    func checkoutController(controller: STPCheckoutViewController, didCreateToken token: STPToken, completion: STPTokenSubmissionHandler) {
         createBackendChargeWithToken(token, completion: completion)
     }
     
-    func checkoutController(controller: STPCheckoutViewController!, didFinishWithStatus status: STPPaymentStatus, error: NSError!) {
+    func checkoutController(controller: STPCheckoutViewController, didFinishWithStatus status: STPPaymentStatus, error: NSError?) {
         dismissViewControllerAnimated(true, completion: {
             switch(status) {
             case .UserCancelled:
@@ -69,21 +69,25 @@ class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPay
             case .Success:
                 println("great success!")
             case .Error:
-                println("oh no, an error: \(error.localizedDescription)")
+                println("oh no, an error: \(error?.localizedDescription)")
             }
         })
     }
     
-    func paymentAuthorizationViewController(controller: PKPaymentAuthorizationViewController!, didAuthorizePayment payment: PKPayment!, completion: ((PKPaymentAuthorizationStatus) -> Void)!) {
+    func paymentAuthorizationViewController(controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {
         let apiClient = STPAPIClient(publishableKey: stripePublishableKey)
         apiClient.createTokenWithPayment(payment, completion: { (token, error) -> Void in
-            self.createBackendChargeWithToken(token, completion: { (result, error) -> Void in
-                if result == STPBackendChargeResult.Success {
-                    completion(PKPaymentAuthorizationStatus.Success)
-                } else {
-                    completion(PKPaymentAuthorizationStatus.Failure)
+            if error != nil {
+                if let token = token {
+                    self.createBackendChargeWithToken(token, completion: { (result, error) -> Void in
+                        if result == STPBackendChargeResult.Success {
+                            completion(PKPaymentAuthorizationStatus.Success)
+                            return
+                        }
+                    })
                 }
-            })
+            }
+            completion(PKPaymentAuthorizationStatus.Failure)
         })
     }
     

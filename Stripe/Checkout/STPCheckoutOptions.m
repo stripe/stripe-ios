@@ -11,14 +11,18 @@
 
 @implementation STPCheckoutOptions
 
-- (instancetype)init {
+- (instancetype)initWithPublishableKey:(NSString *)publishableKey {
     self = [super init];
     if (self) {
-        _publishableKey = [Stripe defaultPublishableKey];
+        _publishableKey = publishableKey;
         _companyName = [[NSBundle mainBundle] infoDictionary][@"CFBundleDisplayName"];
         _purchaseCurrency = @"USD";
     }
     return self;
+}
+
+- (instancetype)init {
+    return [self initWithPublishableKey:[Stripe defaultPublishableKey]];
 }
 
 - (NSString *)stringifiedJSONRepresentation {

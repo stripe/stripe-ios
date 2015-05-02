@@ -104,7 +104,7 @@ decisionListener:(id<WebPolicyDecisionListener>)listener {
             if ([url.scheme isEqualToString:checkoutRPCScheme]) {
                 NSString *event = url.host;
                 NSString *path = [url.path componentsSeparatedByString:@"/"][1];
-                NSDictionary *payload = nil;
+                NSDictionary *payload = @{};
                 if (path != nil) {
                     payload = [NSJSONSerialization JSONObjectWithData:[path dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
                 }

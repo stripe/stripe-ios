@@ -6,12 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #else
 #import <AppKit/AppKit.h>
 #endif
+
+#import "STPNullabilityMacros.h"
 
 typedef NS_ENUM(NSInteger, STPPaymentStatus) {
     STPPaymentStatusSuccess,       // The transaction was a success.
@@ -39,13 +40,13 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
  *  @param options A configuration object that describes how to display Stripe Checkout.
  *
  */
-- (instancetype)initWithOptions:(STPCheckoutOptions *)options NS_DESIGNATED_INITIALIZER;
-@property (nonatomic, readonly, copy) STPCheckoutOptions *options;
+- (stp_nonnull instancetype)initWithOptions:(stp_nonnull STPCheckoutOptions *)options NS_DESIGNATED_INITIALIZER;
+@property (nonatomic, readonly, copy, stp_nonnull) STPCheckoutOptions *options;
 
 /**
  *  Note: you must set a delegate before showing an STPViewController.
  */
-@property (nonatomic, weak) id<STPCheckoutViewControllerDelegate> checkoutDelegate;
+@property (nonatomic, weak, stp_nullable) id<STPCheckoutViewControllerDelegate> checkoutDelegate;
 
 @end
 
@@ -60,7 +61,7 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
  *state, for example.
  *  @param error      the returned error, if it exists. Can be nil.
  */
-- (void)checkoutController:(STPCheckoutViewController *)controller didFinishWithStatus:(STPPaymentStatus)status error:(NSError *)error;
+- (void)checkoutController:(stp_nonnull STPCheckoutViewController *)controller didFinishWithStatus:(STPPaymentStatus)status error:(stp_nullable NSError *)error;
 
 /**
  *  Use these options to inform Stripe Checkout of the success or failure of your backend charge.
@@ -70,7 +71,7 @@ typedef NS_ENUM(NSInteger, STPBackendChargeResult) {
     STPBackendChargeResultFailure, // Passing this value will display an "error" animation in the payment button.
 };
 
-typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError *error);
+typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError * __stp_nullable error);
 
 /**
  *  After the user has provided valid credit card information and pressed the "pay" button, Checkout will communicate with Stripe and obtain a tokenized version
@@ -84,6 +85,8 @@ typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError
  *  @param token      a Stripe token
  *  @param completion call this function with STPBackendChargeResultSuccess/Failure when you're done charging your user
  */
-- (void)checkoutController:(STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion;
+- (void)checkoutController:(stp_nonnull STPCheckoutViewController *)controller
+            didCreateToken:(stp_nonnull STPToken *)token
+                completion:(stp_nonnull STPTokenSubmissionHandler)completion;
 
 @end
