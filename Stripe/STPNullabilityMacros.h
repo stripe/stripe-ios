@@ -7,9 +7,7 @@
 //
 //  Based on https://gist.github.com/steipete/d9f519858fe5fb5533eb
 
-
-#ifndef Stripe_STPNullabilityMacros_h
-#define Stripe_STPNullabilityMacros_h
+#pragma once
 
 #if __has_feature(nullability)
 #define STP_ASSUME_NONNULL_BEGIN _Pragma("clang assume_nonnull begin")
@@ -31,6 +29,4 @@
 #define __stp_nullable
 #define __stp_nonnull
 #define __stp_null_unspecified
-#endif
-
 #endif

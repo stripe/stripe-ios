@@ -537,13 +537,13 @@
         // Options for rule: Reserved identifier name
         "ReservedIdentifierNaming": {
             // Check for identifier names reserved by the C standard (Boolean)
-            //"checkCStandard": true
+            //"checkCStandard": true,
             // Check for identifier names reserved by the POSIX standard
             // (Boolean)
-            //"checkPOSIXStandard": true
+            //"checkPOSIXStandard": true,
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            //"ignoredFileRegexes": null
+            "ignoredFileRegexes": ["STPNullabilityMacros.h"]
         },
         // Options for rule: Reserved symbol prefix
         "ReservedPrefix": {

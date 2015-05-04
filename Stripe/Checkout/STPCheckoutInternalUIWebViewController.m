@@ -41,8 +41,8 @@
         if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
             self.edgesForExtendedLayout = UIRectEdgeNone;
         }
-        self.options = checkoutViewController.options;
-        self.url = [NSURL URLWithString:checkoutURLString];
+        _options = checkoutViewController.options;
+        _url = [NSURL URLWithString:checkoutURLString];
         UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
         self.navigationItem.leftBarButtonItem = cancelItem;
         _checkoutController = checkoutViewController;
