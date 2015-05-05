@@ -63,10 +63,10 @@
     [super viewDidLoad];
 
     if (self.options.logoImage && !self.options.logoURL) {
-        NSURL *url = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]]];
-        BOOL success = [UIImagePNGRepresentation(self.options.logoImage) writeToURL:url options:0 error:nil];
-        if (success) {
-            self.logoURL = self.options.logoURL = url;
+        NSString *base64 = [UIImagePNGRepresentation(self.options.logoImage) base64Encoding];
+        if (base64) {
+            NSString *dataURLString = [NSString stringWithFormat:@"data:png;base64,%@", base64];
+            self.logoURL = self.options.logoURL = [NSURL URLWithString:dataURLString];
         }
     }
 
