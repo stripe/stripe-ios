@@ -32,35 +32,37 @@
         }
         
         ABMultiValueRef addressValues = ABRecordCopyValue(payment.billingAddress, kABPersonAddressProperty);
-        if (ABMultiValueGetCount(addressValues) > 0) {
-            CFDictionaryRef dict = ABMultiValueCopyValueAtIndex(addressValues, 0);
-            NSString *line1 = CFDictionaryGetValue(dict, kABPersonAddressStreetKey);
-            if (line1) {
-                params[@"address_line1"] = line1;
+        if (addressValues != NULL) {
+            if (ABMultiValueGetCount(addressValues) > 0) {
+                CFDictionaryRef dict = ABMultiValueCopyValueAtIndex(addressValues, 0);
+                NSString *line1 = CFDictionaryGetValue(dict, kABPersonAddressStreetKey);
+                if (line1) {
+                    params[@"address_line1"] = line1;
+                }
+                NSString *city = CFDictionaryGetValue(dict, kABPersonAddressCityKey);
+                if (city) {
+                    params[@"address_city"] = city;
+                }
+                NSString *state = CFDictionaryGetValue(dict, kABPersonAddressStateKey);
+                if (state) {
+                    params[@"address_state"] = state;
+                }
+                NSString *zip = CFDictionaryGetValue(dict, kABPersonAddressZIPKey);
+                if (zip) {
+                    params[@"address_zip"] = zip;
+                }
+                NSString *country = CFDictionaryGetValue(dict, kABPersonAddressCountryKey);
+                if (country) {
+                    params[@"address_country"] = country;
+                }
+                CFRelease(dict);
+                [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, __unused BOOL *stop) {
+                    NSString *param = [NSString stringWithFormat:@"&card[%@]=%@", key, [obj stringByAddingPercentEncodingWithAllowedCharacters:set]];
+                    payloadString = [payloadString stringByAppendingString:param];
+                }];
             }
-            NSString *city = CFDictionaryGetValue(dict, kABPersonAddressCityKey);
-            if (city) {
-                params[@"address_city"] = city;
-            }
-            NSString *state = CFDictionaryGetValue(dict, kABPersonAddressStateKey);
-            if (state) {
-                params[@"address_state"] = state;
-            }
-            NSString *zip = CFDictionaryGetValue(dict, kABPersonAddressZIPKey);
-            if (zip) {
-                params[@"address_zip"] = zip;
-            }
-            NSString *country = CFDictionaryGetValue(dict, kABPersonAddressCountryKey);
-            if (country) {
-                params[@"address_country"] = country;
-            }
-            CFRelease(dict);
-            [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, __unused BOOL *stop) {
-                NSString *param = [NSString stringWithFormat:@"&card[%@]=%@", key, [obj stringByAddingPercentEncodingWithAllowedCharacters:set]];
-                payloadString = [payloadString stringByAppendingString:param];
-            }];
+            CFRelease(addressValues);
         }
-        CFRelease(addressValues);
     }
 
     if (payment.token.paymentInstrumentName) {
