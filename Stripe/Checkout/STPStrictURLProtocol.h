@@ -8,11 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-static NSString *const STPStrictURLProtocolRequestKey = @"STPStrictURLProtocolRequestKey";
+#import "STPNullabilityMacros.h"
+
+static NSString * __stp_nonnull const STPStrictURLProtocolRequestKey = @"STPStrictURLProtocolRequestKey";
 
 /**
  *  This URL protocol treats any non-20x or 30x response from checkout as an error (unlike the default UIWebView behavior, which e.g. displays a 404 page).
  */
 @interface STPStrictURLProtocol : NSURLProtocol
-@property (nonatomic, strong) NSURLConnection *connection;
+@property (nonatomic, strong, stp_nullable) NSURLConnection *connection;
 @end

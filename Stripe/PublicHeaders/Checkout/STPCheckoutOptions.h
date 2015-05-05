@@ -12,18 +12,22 @@
 #import <AppKit/AppKit.h>
 #endif
 
+#import "STPNullabilityMacros.h"
+
 /**
  *  This class represents a configurable set of options that you can pass to an STPCheckoutViewController to control the appearance of
  * Stripe Checkout. For more information on how these properties behave, see https://stripe.com/docs/checkout#integration-custom
  */
 @interface STPCheckoutOptions : NSObject<NSCopying>
 
+-(stp_nonnull instancetype)initWithPublishableKey:(stp_nonnull NSString *)publishableKey;
+
 #pragma mark - Required options
 
 /**
  *  The Stripe publishable key to use for your Checkout requests. Defaults to [Stripe defaultPublishableKey]. Required.
  */
-@property (nonatomic, copy) NSString *publishableKey;
+@property (nonatomic, copy, stp_nonnull) NSString *publishableKey;
 
 #pragma mark - Strongly recommended options
 
@@ -31,15 +35,15 @@
  *  This can be an external image URL that will load in the header of Stripe Checkout. This takes precedent over the logoImage property. The recommended minimum
  * size for this image is 128x128px.
  */
-@property (nonatomic, copy) NSURL *logoURL;
+@property (nonatomic, copy, stp_nullable) NSURL *logoURL;
 
 /**
  *  You can also specify a local UIImage to be used as the Checkout logo header (see logoURL).
  */
 #if TARGET_OS_IPHONE
-@property (nonatomic) UIImage *logoImage;
+@property (nonatomic, stp_nullable) UIImage *logoImage;
 #else
-@property (nonatomic) NSImage *logoImage;
+@property (nonatomic, stp_nullable) NSImage *logoImage;
 #endif
 
 /**
@@ -47,20 +51,20 @@
  * auto-detect the background color of the image you point to and use that as the header color.
  */
 #if TARGET_OS_IPHONE
-@property (nonatomic, copy) UIColor *logoColor;
+@property (nonatomic, copy, stp_nullable) UIColor *logoColor;
 #else
-@property (nonatomic, copy) NSColor *logoColor;
+@property (nonatomic, copy, stp_nullable) NSColor *logoColor;
 #endif
 
 /**
  *  The name of your company or website. Displayed in the header. Defaults to your app's name.
  */
-@property (nonatomic, copy) NSString *companyName;
+@property (nonatomic, copy, stp_nullable) NSString *companyName;
 
 /**
  *  A description of the product or service being purchased. Appears in the header.
  */
-@property (nonatomic, copy) NSString *purchaseDescription;
+@property (nonatomic, copy, stp_nullable) NSString *purchaseDescription;
 
 /**
  *  The amount (in cents) that's shown to the user. Note that this is for display purposes only; you will still have to explicitly specify the amount when you
@@ -72,7 +76,7 @@
 /**
  *  If you already know the email address of your user, you can provide it to Checkout to be pre-filled.
  */
-@property (nonatomic, copy) NSString *customerEmail;
+@property (nonatomic, copy, stp_nullable) NSString *customerEmail;
 
 #pragma mark - Additional options
 
@@ -80,33 +84,33 @@
  *  The label of the payment button in the Checkout form (e.g. “Subscribe”, “Pay {{amount}}”, etc.). If you include {{amount}}, it will be replaced by the
  * provided amount. Otherwise, the amount will be appended to the end of your label. Defaults to "Pay {{amount}}".
  */
-@property (nonatomic, copy) NSString *purchaseLabel;
+@property (nonatomic, copy, stp_nullable) NSString *purchaseLabel;
 
 /**
  *  The currency of the amount (3-letter ISO code). The default is "USD".
  */
-@property (nonatomic, copy) NSString *purchaseCurrency;
+@property (nonatomic, copy, stp_nonnull) NSString *purchaseCurrency;
 
 /**
  *  Specify whether to include the option to "Remember Me" for future purchases (true or false). The default is true.
  */
-@property (nonatomic, copy) NSNumber *enableRememberMe;
+@property (nonatomic, copy, stp_nullable) NSNumber *enableRememberMe;
 
 /**
  *  Specify whether Checkout should validate your user's billing ZIP code (true or false). The default is false.
  */
-@property (nonatomic, copy) NSNumber *enablePostalCode;
+@property (nonatomic, copy, stp_nullable) NSNumber *enablePostalCode;
 
 /**
  *  Specify whether Checkout should require the user to enter their billing address. The default is false.
  */
-@property (nonatomic, copy) NSNumber *requireBillingAddress;
+@property (nonatomic, copy, stp_nullable) NSNumber *requireBillingAddress;
 
 /**
  *  Used internally by Stripe Checkout.
  *
  *  @return a JSON string representing the options.
  */
-- (NSString *)stringifiedJSONRepresentation;
+- (stp_nonnull NSString *)stringifiedJSONRepresentation;
 
 @end

@@ -34,6 +34,10 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		042983321AF424A700B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983311AF41B2600B8AD2C /* STPNullabilityMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		042983331AF424AA00B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983311AF41B2600B8AD2C /* STPNullabilityMacros.h */; };
+		042983351AF424CE00B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983311AF41B2600B8AD2C /* STPNullabilityMacros.h */; };
+		042983361AF424CF00B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983311AF41B2600B8AD2C /* STPNullabilityMacros.h */; };
 		04415C561A6605B5001225ED /* STPAPIClient+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4AB1A5F30A700B854EE /* STPAPIClient+ApplePay.m */; };
 		04415C571A6605B5001225ED /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4AD1A5F30A700B854EE /* Stripe+ApplePay.m */; };
 		04415C591A6605B5001225ED /* STPCheckoutOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4B21A5F30A700B854EE /* STPCheckoutOptions.m */; };
@@ -281,6 +285,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		042983311AF41B2600B8AD2C /* STPNullabilityMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPNullabilityMacros.h; sourceTree = "<group>"; };
 		04365D2C1A4CF86C00A3E1D4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		045E7C031A5F41DE004751EF /* StripeiOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "StripeiOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		047E67A81A65E769001D7493 /* libStripe.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStripe.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -468,6 +473,7 @@
 				04CDB4CD1A5F30A700B854EE /* STPToken.m */,
 				04CDB4CE1A5F30A700B854EE /* StripeError.h */,
 				04CDB4CF1A5F30A700B854EE /* StripeError.m */,
+				042983311AF41B2600B8AD2C /* STPNullabilityMacros.h */,
 			);
 			name = Stripe;
 			path = Tests/../Stripe;
@@ -610,6 +616,7 @@
 				047E67D51A65E7BC001D7493 /* STPIOSCheckoutWebViewAdapter.h in Headers */,
 				047E67D61A65E7BC001D7493 /* STPOSXCheckoutWebViewAdapter.h in Headers */,
 				047E67D71A65E7BC001D7493 /* STPStrictURLProtocol.h in Headers */,
+				042983361AF424CF00B8AD2C /* STPNullabilityMacros.h in Headers */,
 				047E67D91A65E7BC001D7493 /* STPFormEncoder.h in Headers */,
 				047E67DA1A65E7BC001D7493 /* STPAPIConnection.h in Headers */,
 			);
@@ -620,6 +627,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				049E84D91A605EF0000B66CD /* Stripe.h in Headers */,
+				042983351AF424CE00B8AD2C /* STPNullabilityMacros.h in Headers */,
 				049E84DA1A605EF0000B66CD /* STPAPIClient+ApplePay.h in Headers */,
 				049E84DB1A605EF0000B66CD /* Stripe+ApplePay.h in Headers */,
 				049E84DD1A605EF0000B66CD /* STPCheckoutOptions.h in Headers */,
@@ -654,6 +662,7 @@
 				04CDB4D81A5F30A700B854EE /* Stripe+ApplePay.h in Headers */,
 				04CDB5161A5F30A700B854EE /* StripeError.h in Headers */,
 				04CDB4D41A5F30A700B854EE /* STPAPIClient+ApplePay.h in Headers */,
+				042983321AF424A700B8AD2C /* STPNullabilityMacros.h in Headers */,
 				04CDB4E01A5F30A700B854EE /* STPCheckoutOptions.h in Headers */,
 				04CDB5021A5F30A700B854EE /* STPFormEncoder.h in Headers */,
 				04CDB4E81A5F30A700B854EE /* STPCheckoutDelegate.h in Headers */,
@@ -686,6 +695,7 @@
 				04D12C361A5F55D10010446E /* STPIOSCheckoutWebViewAdapter.h in Headers */,
 				04D12C371A5F55D10010446E /* STPOSXCheckoutWebViewAdapter.h in Headers */,
 				04D12C381A5F55D10010446E /* STPStrictURLProtocol.h in Headers */,
+				042983331AF424AA00B8AD2C /* STPNullabilityMacros.h in Headers */,
 				04D12C3A1A5F55D10010446E /* STPFormEncoder.h in Headers */,
 				04D12C3B1A5F55D10010446E /* STPAPIConnection.h in Headers */,
 			);

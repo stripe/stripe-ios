@@ -139,8 +139,7 @@
 #pragma mark - Stripe Checkout
 
 - (IBAction)beginStripeCheckout:(id)sender {
-    STPCheckoutOptions *options = [[STPCheckoutOptions alloc] init];
-    options.publishableKey = [Stripe defaultPublishableKey];
+    STPCheckoutOptions *options = [[STPCheckoutOptions alloc] initWithPublishableKey:[Stripe defaultPublishableKey]];
     options.purchaseDescription = @"Cool Shirt";
     options.purchaseAmount = 1000; // this is in cents
     options.logoColor = [UIColor purpleColor];

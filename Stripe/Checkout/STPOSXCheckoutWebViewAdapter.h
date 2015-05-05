@@ -6,15 +6,16 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
 #if !TARGET_OS_IPHONE
 
-#import "STPCheckoutWebViewAdapter.h"
+#import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
 
+#import "STPCheckoutWebViewAdapter.h"
+#import "STPNullabilityMacros.h"
+
 @interface STPOSXCheckoutWebViewAdapter : NSObject<STPCheckoutWebViewAdapter>
-@property (nonatomic) WebView *webView;
+@property (nonatomic, stp_nullable) WebView *webView;
 @end
 
 #endif

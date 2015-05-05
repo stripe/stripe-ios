@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #if TARGET_OS_IPHONE
 #define STP_VIEW_CLASS UIView
 #import <UIKit/UIKit.h>
@@ -16,25 +15,29 @@
 #import <AppKit/AppKit.h>
 #endif
 
-static NSString *const checkoutOptionsGlobal = @"StripeCheckoutOptions";
-static NSString *const checkoutRedirectPrefix = @"/-/";
-static NSString *const checkoutUserAgent = @"Stripe";
-static NSString *const checkoutRPCScheme = @"stripecheckout";
+#import "STPNullabilityMacros.h"
 
-static NSString *const checkoutHost = @"checkout.stripe.com";
-static NSString *const checkoutURLString = @"https://checkout.stripe.com/v3/ios/index.html";
+static NSString * __stp_nonnull const checkoutOptionsGlobal = @"StripeCheckoutOptions";
+static NSString * __stp_nonnull const checkoutRedirectPrefix = @"/-/";
+static NSString * __stp_nonnull const checkoutUserAgent = @"Stripe";
+static NSString * __stp_nonnull const checkoutRPCScheme = @"stripecheckout";
 
-static NSString *const STPCheckoutEventOpen = @"CheckoutDidOpen";
-static NSString *const STPCheckoutEventTokenize = @"CheckoutDidTokenize";
-static NSString *const STPCheckoutEventCancel = @"CheckoutDidCancel";
-static NSString *const STPCheckoutEventFinish = @"CheckoutDidFinish";
-static NSString *const STPCheckoutEventError = @"CheckoutDidError";
+static NSString * __stp_nonnull const checkoutHost = @"checkout.stripe.com";
+static NSString * __stp_nonnull const checkoutURLString = @"https://checkout.stripe.com/v3/ios/index.html";
+
+static NSString * __stp_nonnull const STPCheckoutEventOpen = @"CheckoutDidOpen";
+static NSString * __stp_nonnull const STPCheckoutEventTokenize = @"CheckoutDidTokenize";
+static NSString * __stp_nonnull const STPCheckoutEventCancel = @"CheckoutDidCancel";
+static NSString * __stp_nonnull const STPCheckoutEventFinish = @"CheckoutDidFinish";
+static NSString * __stp_nonnull const STPCheckoutEventError = @"CheckoutDidError";
 
 @protocol STPCheckoutDelegate;
 @protocol STPCheckoutWebViewAdapter<NSObject>
-@property (nonatomic, weak) id<STPCheckoutDelegate> delegate;
-@property (nonatomic, readonly) STP_VIEW_CLASS *webView;
-- (void)loadRequest:(NSURLRequest *)request;
-- (NSString *)evaluateJavaScript:(NSString *)js;
+
+@property (nonatomic, weak, stp_nullable) id<STPCheckoutDelegate> delegate;
+@property (nonatomic, readonly, stp_nullable) STP_VIEW_CLASS *webView;
+- (void)loadRequest:(stp_nonnull NSURLRequest *)request;
+- (stp_nullable NSString *)evaluateJavaScript:(stp_nonnull NSString *)js;
 - (void)cleanup;
+
 @end
