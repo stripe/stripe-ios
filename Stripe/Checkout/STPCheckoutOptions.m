@@ -69,14 +69,18 @@
 
 - (void)setLogoImage:(STP_IMAGE_CLASS * __stp_nullable)logoImage {
     _logoImage = logoImage;
+    NSString *base64;
 #if TARGET_OS_IPHONE
-    NSString *base64 = [UIImagePNGRepresentation(logoImage) base64Encoding];
+    NSData *pngRepresentation = UIImagePNGRepresentation(logoImage);
+    if ([pngRepresentation respondsToSelector:@selector(base64EncodedStringWithOptions:)]) {
+        base64 = [pngRepresentation base64EncodedStringWithOptions:0];
+    }
 #else
     NSData *imageData = [logoImage TIFFRepresentation];
     NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
     imageData = [imageRep representationUsingType:NSPNGFileType
                                        properties:@{NSImageCompressionFactor: @1.0}];
-    NSString *base64 = [imageData base64EncodedStringWithOptions:0];
+    base64 = [imageData base64EncodedStringWithOptions:0];
 #endif
     if (base64) {
         NSString *dataURLString = [NSString stringWithFormat:@"data:png;base64,%@", base64];
