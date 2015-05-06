@@ -26,7 +26,6 @@
 @property (nonatomic) BOOL statusBarHidden;
 @property (weak, nonatomic, stp_nullable) UIView *webView;
 @property (nonatomic, stp_nullable) STPIOSCheckoutWebViewAdapter *adapter;
-@property (nonatomic, stp_nullable) NSURL *logoURL;
 @property (nonatomic, stp_nonnull) NSURL *url;
 @property (weak, nonatomic, stp_nullable) UIActivityIndicatorView *activityIndicator;
 @property (nonatomic) BOOL backendChargeSuccessful;
@@ -61,15 +60,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    if (self.options.logoImage && !self.options.logoURL) {
-        NSString *base64 = [UIImagePNGRepresentation(self.options.logoImage) base64Encoding];
-        if (base64) {
-            NSString *dataURLString = [NSString stringWithFormat:@"data:png;base64,%@", base64];
-            self.logoURL = self.options.logoURL = [NSURL URLWithString:dataURLString];
-        }
-    }
-
     self.adapter = [[STPIOSCheckoutWebViewAdapter alloc] init];
     self.adapter.delegate = self;
     UIWebView *webView = self.adapter.webView;
@@ -128,9 +118,6 @@
 
 - (void)cleanup {
     [self.adapter cleanup];
-    if (self.logoURL) {
-        [[NSFileManager defaultManager] removeItemAtURL:self.logoURL error:nil];
-    }
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {

@@ -8,8 +8,10 @@
 #import <Foundation/Foundation.h>
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#define STP_IMAGE_CLASS UIImage
 #else
 #import <AppKit/AppKit.h>
+#define STP_IMAGE_CLASS NSImage
 #endif
 
 #import "STPNullabilityMacros.h"
@@ -40,11 +42,7 @@
 /**
  *  You can also specify a local UIImage to be used as the Checkout logo header (see logoURL).
  */
-#if TARGET_OS_IPHONE
-@property (nonatomic, stp_nullable) UIImage *logoImage;
-#else
-@property (nonatomic, stp_nullable) NSImage *logoImage;
-#endif
+@property (nonatomic, stp_nullable) STP_IMAGE_CLASS *logoImage;
 
 /**
  *  This specifies the color of the header shown in Stripe Checkout. If you specify a logoURL (but not a logoImage) and leave this property nil, Checkout will

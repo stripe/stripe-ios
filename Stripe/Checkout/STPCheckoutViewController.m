@@ -86,11 +86,11 @@
 @implementation STPCheckoutViewController
 
 - (instancetype)initWithNibName:(__unused NSString *)nibNameOrNil bundle:(__unused NSBundle *)nibBundleOrNil {
-    return [self initWithOptions:nil];
+    return [self initWithOptions:[[STPCheckoutOptions alloc] init]];
 }
 
 - (instancetype)initWithCoder:(__unused NSCoder *)coder {
-    return [self initWithOptions:nil];
+    return [self initWithOptions:[[STPCheckoutOptions alloc] init]];
 }
 
 - (instancetype)initWithOptions:(STPCheckoutOptions *)options {
