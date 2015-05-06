@@ -67,6 +67,23 @@
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:values options:0 error:nil] encoding:NSUTF8StringEncoding];
 }
 
+- (void)setLogoImage:(STP_IMAGE_CLASS * __stp_nullable)logoImage {
+    _logoImage = logoImage;
+#if TARGET_OS_IPHONE
+    NSString *base64 = [UIImagePNGRepresentation(logoImage) base64Encoding];
+#else
+    NSData *imageData = [logoImage TIFFRepresentation];
+    NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:imageData];
+    imageData = [imageRep representationUsingType:NSPNGFileType
+                                       properties:@{NSImageCompressionFactor: @1.0}];
+    NSString *base64 = [imageData base64EncodedStringWithOptions:0];
+#endif
+    if (base64) {
+        NSString *dataURLString = [NSString stringWithFormat:@"data:png;base64,%@", base64];
+        self.logoURL = [NSURL URLWithString:dataURLString];
+    }
+}
+
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(__unused NSZone *)zone {
