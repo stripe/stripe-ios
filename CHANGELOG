@@ -1,3 +1,9 @@
+== 4.0.0 2015-05-06
+* Remove STPPaymentPresenter
+* Support for latest ApplePayStubs
+* Add nullability annotations to improve Swift support (note: this now requires Swift 1.2)
+* Bug fixes
+
 == 3.1.0 2015-01-19
 * Add support for native Stripe Checkout, as well as STPPaymentPresenter for automatically using Checkout as a fallback for Apple Pay
 * Add OSX support, including Checkout
