@@ -4,6 +4,7 @@ env:
 
 language: objective-c
 before_install:
+  - gem update cocoapods
   - gem install xcpretty --no-ri --no-rdoc
   - ./ci_scripts/install_fauxpas.sh
 script:
@@ -16,4 +17,3 @@ script:
   - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe iOS Example (Custom)" -sdk iphonesimulator | xcpretty -c
   - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe OSX Example" | xcpretty -c
   - "./Tests/installation_tests/cocoapods/test.sh"
-  
