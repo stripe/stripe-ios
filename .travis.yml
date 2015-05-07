@@ -4,7 +4,7 @@ env:
 
 language: objective-c
 before_install:
-  - gem update cocoapods
+  - gem update cocoapods --no-ri --no-rdoc
   - gem install xcpretty --no-ri --no-rdoc
   - ./ci_scripts/install_fauxpas.sh
 script:
