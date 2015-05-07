@@ -1,0 +1,2 @@
+use_frameworks!
+pod 'Stripe', path: '../../..'
