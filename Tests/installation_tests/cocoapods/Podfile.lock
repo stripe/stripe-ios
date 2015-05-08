@@ -2,12 +2,15 @@ PODS:
   - Stripe (4.0.2):
     - Stripe/Checkout (= 4.0.2)
     - Stripe/Core (= 4.0.2)
+  - Stripe/ApplePay (4.0.2):
+    - Stripe/Core
   - Stripe/Checkout (4.0.2):
     - Stripe/Core
   - Stripe/Core (4.0.2)
 
 DEPENDENCIES:
   - Stripe (from `../../..`)
+  - Stripe/ApplePay (from `../../..`)
 
 EXTERNAL SOURCES:
   Stripe:
