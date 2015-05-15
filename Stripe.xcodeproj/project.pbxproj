@@ -35,10 +35,10 @@
 
 /* Begin PBXBuildFile section */
 		042983391AFB27A900B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983381AFB27A900B8AD2C /* STPNullabilityMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0429833A1AFB27AD00B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983381AFB27A900B8AD2C /* STPNullabilityMacros.h */; };
-		0429833B1AFB27AE00B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983381AFB27A900B8AD2C /* STPNullabilityMacros.h */; };
-		0429833C1AFB27B400B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983381AFB27A900B8AD2C /* STPNullabilityMacros.h */; };
-		0429833D1AFB27B600B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983381AFB27A900B8AD2C /* STPNullabilityMacros.h */; };
+		0429833A1AFB27AD00B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983381AFB27A900B8AD2C /* STPNullabilityMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0429833B1AFB27AE00B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983381AFB27A900B8AD2C /* STPNullabilityMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0429833C1AFB27B400B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983381AFB27A900B8AD2C /* STPNullabilityMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0429833D1AFB27B600B8AD2C /* STPNullabilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 042983381AFB27A900B8AD2C /* STPNullabilityMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04415C561A6605B5001225ED /* STPAPIClient+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4AB1A5F30A700B854EE /* STPAPIClient+ApplePay.m */; };
 		04415C571A6605B5001225ED /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4AD1A5F30A700B854EE /* Stripe+ApplePay.m */; };
 		04415C591A6605B5001225ED /* STPCheckoutOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4B21A5F30A700B854EE /* STPCheckoutOptions.m */; };
@@ -577,7 +577,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				04415C721A6605D9001225ED /* Stripe.h in Headers */,
-				0429833A1AFB27AD00B8AD2C /* STPNullabilityMacros.h in Headers */,
 				04415C731A6605D9001225ED /* STPAPIClient+ApplePay.h in Headers */,
 				04415C741A6605D9001225ED /* Stripe+ApplePay.h in Headers */,
 				04415C761A6605D9001225ED /* STPCheckoutOptions.h in Headers */,
@@ -586,6 +585,7 @@
 				04415C821A6605D9001225ED /* STPBankAccount.h in Headers */,
 				04415C831A6605D9001225ED /* STPCard.h in Headers */,
 				04415C841A6605D9001225ED /* STPToken.h in Headers */,
+				0429833A1AFB27AD00B8AD2C /* STPNullabilityMacros.h in Headers */,
 				04415C851A6605D9001225ED /* StripeError.h in Headers */,
 				04415C781A6605D9001225ED /* STPCheckoutDelegate.h in Headers */,
 				04415C791A6605D9001225ED /* STPCheckoutInternalUIWebViewController.h in Headers */,
@@ -611,6 +611,7 @@
 				047E67DC1A65E7BC001D7493 /* STPCard.h in Headers */,
 				047E67DD1A65E7BC001D7493 /* STPToken.h in Headers */,
 				047E67DE1A65E7BC001D7493 /* StripeError.h in Headers */,
+				0429833D1AFB27B600B8AD2C /* STPNullabilityMacros.h in Headers */,
 				047E67D11A65E7BC001D7493 /* STPCheckoutDelegate.h in Headers */,
 				047E67D21A65E7BC001D7493 /* STPCheckoutInternalUIWebViewController.h in Headers */,
 				047E67D31A65E7BC001D7493 /* STPCheckoutWebViewAdapter.h in Headers */,
@@ -618,7 +619,6 @@
 				047E67D51A65E7BC001D7493 /* STPIOSCheckoutWebViewAdapter.h in Headers */,
 				047E67D61A65E7BC001D7493 /* STPOSXCheckoutWebViewAdapter.h in Headers */,
 				047E67D71A65E7BC001D7493 /* STPStrictURLProtocol.h in Headers */,
-				0429833D1AFB27B600B8AD2C /* STPNullabilityMacros.h in Headers */,
 				047E67D91A65E7BC001D7493 /* STPFormEncoder.h in Headers */,
 				047E67DA1A65E7BC001D7493 /* STPAPIConnection.h in Headers */,
 			);
@@ -629,7 +629,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				049E84D91A605EF0000B66CD /* Stripe.h in Headers */,
-				0429833C1AFB27B400B8AD2C /* STPNullabilityMacros.h in Headers */,
 				049E84DA1A605EF0000B66CD /* STPAPIClient+ApplePay.h in Headers */,
 				049E84DB1A605EF0000B66CD /* Stripe+ApplePay.h in Headers */,
 				049E84DD1A605EF0000B66CD /* STPCheckoutOptions.h in Headers */,
@@ -638,6 +637,7 @@
 				049E84E91A605EF0000B66CD /* STPBankAccount.h in Headers */,
 				049E84EA1A605EF0000B66CD /* STPCard.h in Headers */,
 				049E84EB1A605EF0000B66CD /* STPToken.h in Headers */,
+				0429833C1AFB27B400B8AD2C /* STPNullabilityMacros.h in Headers */,
 				049E84EC1A605EF0000B66CD /* StripeError.h in Headers */,
 				049E84DF1A605EF0000B66CD /* STPCheckoutDelegate.h in Headers */,
 				049E84E01A605EF0000B66CD /* STPCheckoutInternalUIWebViewController.h in Headers */,
@@ -689,6 +689,7 @@
 				04D12C3C1A5F55D10010446E /* STPBankAccount.h in Headers */,
 				04D12C3D1A5F55D10010446E /* STPCard.h in Headers */,
 				04D12C3E1A5F55D10010446E /* STPToken.h in Headers */,
+				0429833B1AFB27AE00B8AD2C /* STPNullabilityMacros.h in Headers */,
 				04D12C3F1A5F55D10010446E /* StripeError.h in Headers */,
 				04D12C321A5F55D10010446E /* STPCheckoutDelegate.h in Headers */,
 				04D12C331A5F55D10010446E /* STPCheckoutInternalUIWebViewController.h in Headers */,
@@ -697,7 +698,6 @@
 				04D12C361A5F55D10010446E /* STPIOSCheckoutWebViewAdapter.h in Headers */,
 				04D12C371A5F55D10010446E /* STPOSXCheckoutWebViewAdapter.h in Headers */,
 				04D12C381A5F55D10010446E /* STPStrictURLProtocol.h in Headers */,
-				0429833B1AFB27AE00B8AD2C /* STPNullabilityMacros.h in Headers */,
 				04D12C3A1A5F55D10010446E /* STPFormEncoder.h in Headers */,
 				04D12C3B1A5F55D10010446E /* STPAPIConnection.h in Headers */,
 			);
