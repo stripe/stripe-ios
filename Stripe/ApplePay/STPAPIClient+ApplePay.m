@@ -25,8 +25,8 @@
     if (payment.billingAddress) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         
-        NSString *firstName = (__bridge NSString*)ABRecordCopyValue(payment.billingAddress, kABPersonFirstNameProperty);
-        NSString *lastName = (__bridge NSString*)ABRecordCopyValue(payment.billingAddress, kABPersonLastNameProperty);
+        NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(payment.billingAddress, kABPersonFirstNameProperty);
+        NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(payment.billingAddress, kABPersonLastNameProperty);
         if (firstName.length && lastName.length) {
             params[@"name"] = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
         }
