@@ -17,3 +17,4 @@ script:
   - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe iOS Example (Custom)" -sdk iphonesimulator | xcpretty -c
   - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe OSX Example" | xcpretty -c
   - "./Tests/installation_tests/cocoapods/test.sh"
+  - "./Tests/installation_tests/manual_installation/test.sh"

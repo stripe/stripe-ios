@@ -13,4 +13,4 @@ xcodebuild build -workspace "${PROJECTDIR}/Stripe.xcworkspace" -scheme StripeiOS
 rm -rf ./ManualInstallationTest/Frameworks/Stripe.framework
 mv $BUILDDIR/Release-iphonesimulator/Stripe.framework ./ManualInstallationTest/Frameworks
 
-set -o pipefail && xcodebuild build -project ManualInstallationTest.xcodeproj/ | xcpretty -c
+xctool build -project ManualInstallationTest.xcodeproj
