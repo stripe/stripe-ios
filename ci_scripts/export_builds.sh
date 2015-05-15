@@ -1,4 +1,8 @@
-BUILDDIR="${PWD}/build"
+PROJECTDIR="$(cd $(dirname $0)/..; pwd)"
+BUILDDIR="${PROJECTDIR}/build"
+rm -rf $BUILDDIR
+mkdir $BUILDDIR
+cd $PROJECTDIR
 
 xcodebuild build -workspace Stripe.xcworkspace -scheme StripeOSX -configuration Release OBJROOT=$BUILDDIR SYMROOT=$BUILDDIR | xcpretty -c
 cd $BUILDDIR/Release
@@ -9,7 +13,7 @@ cp StripeOSX.zip $BUILDDIR
 cd -
 
 xcodebuild build -workspace Stripe.xcworkspace -scheme StripeiOSStaticFramework -configuration Release OBJROOT=$BUILDDIR SYMROOT=$BUILDDIR | xcpretty -c
-cd $PWD/build/Release-iphonesimulator
+cd $BUILDDIR/Release-iphonesimulator
 mkdir StripeiOS
 mv Stripe.framework StripeiOS
 ditto -ck --rsrc --sequesterRsrc --keepParent StripeiOS StripeiOS.zip
@@ -17,7 +21,7 @@ cp StripeiOS.zip $BUILDDIR
 cd -
 
 xcodebuild build -workspace Stripe.xcworkspace -scheme StripeiOSStaticFrameworkWithoutApplePay -configuration Release OBJROOT=$BUILDDIR SYMROOT=$BUILDDIR | xcpretty -c
-cd $PWD/build/Release-iphonesimulator
+cd $BUILDDIR/Release-iphonesimulator
 mkdir StripeiOS-WithoutApplePay
 mv Stripe.framework StripeiOS-WithoutApplePay
 ditto -ck --rsrc --sequesterRsrc --keepParent StripeiOS-WithoutApplePay StripeiOS-WithoutApplePay.zip
