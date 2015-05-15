@@ -4,17 +4,17 @@ env:
 
 language: objective-c
 before_install:
-  - gem update cocoapods --no-ri --no-rdoc
+  # - gem update cocoapods --no-ri --no-rdoc
   - gem install xcpretty --no-ri --no-rdoc
-  - ./ci_scripts/install_fauxpas.sh
+  # - ./ci_scripts/install_fauxpas.sh
 script:
-  - "./ci_scripts/check_fauxpas.sh"
-  - "./ci_scripts/check_version.rb"
-  - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeiOS Tests" -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 5s,OS=7.1' -destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.1' | xcpretty -c
-  - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeOSX Tests" | xcpretty -c
-  # Temporarily disabled; waiting on https://github.com/travis-ci/travis-ci/issues/3216
-  # - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe iOS Example (Simple)" -sdk iphonesimulator | xcpretty -c
-  - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe iOS Example (Custom)" -sdk iphonesimulator | xcpretty -c
-  - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe OSX Example" | xcpretty -c
-  - "./Tests/installation_tests/cocoapods/test.sh"
+  # - "./ci_scripts/check_fauxpas.sh"
+  # - "./ci_scripts/check_version.rb"
+  # - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeiOS Tests" -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 5s,OS=7.1' -destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.1' | xcpretty -c
+  # - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeOSX Tests" | xcpretty -c
+  # # Temporarily disabled; waiting on https://github.com/travis-ci/travis-ci/issues/3216
+  # # - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe iOS Example (Simple)" -sdk iphonesimulator | xcpretty -c
+  # - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe iOS Example (Custom)" -sdk iphonesimulator | xcpretty -c
+  # - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe OSX Example" | xcpretty -c
+  # - "./Tests/installation_tests/cocoapods/test.sh"
   - "./Tests/installation_tests/manual_installation/test.sh"
