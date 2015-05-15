@@ -18,6 +18,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [Stripe setDefaultPublishableKey:@"test"];
+    [Stripe paymentRequestWithMerchantIdentifier:@"test"];
     return YES;
 }
 

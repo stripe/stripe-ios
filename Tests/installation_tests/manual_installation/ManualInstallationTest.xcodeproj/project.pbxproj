@@ -14,7 +14,7 @@
 		047C06B01B06830800360F75 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 047C06AF1B06830800360F75 /* Images.xcassets */; };
 		047C06B31B06830800360F75 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047C06B11B06830800360F75 /* LaunchScreen.xib */; };
 		047C06BF1B06830800360F75 /* ManualInstallationTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 047C06BE1B06830800360F75 /* ManualInstallationTestTests.m */; };
-		047C06C91B0686A700360F75 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 047C06C81B0686A700360F75 /* Stripe.framework */; };
+		047C06CD1B068D0200360F75 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 047C06CC1B068D0200360F75 /* Stripe.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,7 +41,7 @@
 		047C06B81B06830800360F75 /* ManualInstallationTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ManualInstallationTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		047C06BD1B06830800360F75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		047C06BE1B06830800360F75 /* ManualInstallationTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ManualInstallationTestTests.m; sourceTree = "<group>"; };
-		047C06C81B0686A700360F75 /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe.framework; path = Frameworks/Stripe.framework; sourceTree = "<group>"; };
+		047C06CC1B068D0200360F75 /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe.framework; path = ManualInstallationTest/Frameworks/Stripe.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,7 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				047C06C91B0686A700360F75 /* Stripe.framework in Frameworks */,
+				047C06CD1B068D0200360F75 /* Stripe.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +66,7 @@
 		047C06961B06830800360F75 = {
 			isa = PBXGroup;
 			children = (
+				047C06CC1B068D0200360F75 /* Stripe.framework */,
 				047C06A11B06830800360F75 /* ManualInstallationTest */,
 				047C06BB1B06830800360F75 /* ManualInstallationTestTests */,
 				047C06A01B06830800360F75 /* Products */,
@@ -91,7 +92,6 @@
 				047C06AC1B06830800360F75 /* Main.storyboard */,
 				047C06AF1B06830800360F75 /* Images.xcassets */,
 				047C06B11B06830800360F75 /* LaunchScreen.xib */,
-				047C06C81B0686A700360F75 /* Stripe.framework */,
 				047C06A21B06830800360F75 /* Supporting Files */,
 			);
 			path = ManualInstallationTest;
