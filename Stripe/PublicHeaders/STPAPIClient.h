@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "STPNullabilityMacros.h"
 
-static NSString *const __stp_nonnull STPSDKVersion = @"4.0.2";
+static NSString *const __stp_nonnull STPSDKVersion = @"4.0.3";
 
 @class STPBankAccount, STPCard, STPToken;
 

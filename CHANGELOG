@@ -1,3 +1,6 @@
+== 4.0.3 2015-05-15
+* Fix an issue with Carthage installation
+
 == 4.0.2 2015-05-07
 * Fix an issue with Cocoapods installation
 
