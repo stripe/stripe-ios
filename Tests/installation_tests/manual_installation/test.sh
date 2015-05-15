@@ -12,6 +12,9 @@ mkdir $BUILDDIR
 xcodebuild build -workspace "${PROJECTDIR}/Stripe.xcworkspace" -scheme StripeiOSStaticFramework -configuration Release OBJROOT=$BUILDDIR SYMROOT=$BUILDDIR -sdk iphonesimulator | xcpretty -c
 
 rm -rf $TESTDIR/ManualInstallationTest/Frameworks/Stripe.framework
+echo "Copying framework..."
+find $BUILDDIR
+find $TESTDIR
 mv $BUILDDIR/Release-iphonesimulator/Stripe.framework $TESTDIR/ManualInstallationTest/Frameworks
 
 xctool build -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator
