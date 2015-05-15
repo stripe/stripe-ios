@@ -13,6 +13,8 @@ xcodebuild build -workspace "${PROJECTDIR}/Stripe.xcworkspace" -scheme StripeiOS
 
 rm -rf $TESTDIR/ManualInstallationTest/Frameworks/Stripe.framework
 echo "Copying framework..."
+echo $BUILDDIR
+echo $TESTDIR
 find $BUILDDIR
 find $TESTDIR
 mv $BUILDDIR/Release-iphonesimulator/Stripe.framework $TESTDIR/ManualInstallationTest/Frameworks
