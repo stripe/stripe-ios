@@ -77,7 +77,7 @@ class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPay
     func paymentAuthorizationViewController(controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {
         let apiClient = STPAPIClient(publishableKey: stripePublishableKey)
         apiClient.createTokenWithPayment(payment, completion: { (token, error) -> Void in
-            if error != nil {
+            if error == nil {
                 if let token = token {
                     self.createBackendChargeWithToken(token, completion: { (result, error) -> Void in
                         if result == STPBackendChargeResult.Success {
