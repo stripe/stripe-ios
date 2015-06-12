@@ -19,7 +19,7 @@
 
 - (stp_nonnull instancetype)initWithCheckoutViewController:(stp_nonnull STPCheckoutViewController *)checkoutViewController;
 
-@property (weak, nonatomic, readonly, stp_nonnull) STPCheckoutViewController *checkoutController;
+@property (weak, nonatomic, readonly, stp_nullable) STPCheckoutViewController *checkoutController;
 @property (weak, nonatomic, readonly, stp_nullable) UIView *webView;
 @property (nonatomic, stp_nonnull) STPCheckoutOptions *options;
 @property (nonatomic, weak, stp_nullable) id<STPCheckoutViewControllerDelegate> delegate;
