@@ -82,7 +82,6 @@ class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPay
                     self.createBackendChargeWithToken(token, completion: { (result, error) -> Void in
                         if result == STPBackendChargeResult.Success {
                             completion(PKPaymentAuthorizationStatus.Success)
-                            return
                         }
                         else {
                             completion(PKPaymentAuthorizationStatus.Failure)
