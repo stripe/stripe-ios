@@ -84,10 +84,15 @@ class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPay
                             completion(PKPaymentAuthorizationStatus.Success)
                             return
                         }
+                        else {
+                            completion(PKPaymentAuthorizationStatus.Failure)
+                        }
                     })
                 }
             }
-            completion(PKPaymentAuthorizationStatus.Failure)
+            else {
+                completion(PKPaymentAuthorizationStatus.Failure)
+            }
         })
     }
     
