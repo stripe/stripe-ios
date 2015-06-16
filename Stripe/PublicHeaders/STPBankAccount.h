@@ -33,7 +33,7 @@
 /**
  *  The default currency for the bank account.
  */
-@property (nonatomic, readwrite, stp_nullable) NSString *currency;
+@property (nonatomic, copy, stp_nullable) NSString *currency;
 
 #pragma mark - These fields are only present on objects returned from the Stripe API.
 /**
