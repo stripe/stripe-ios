@@ -26,9 +26,14 @@
 @property (nonatomic, copy, stp_nullable) NSString *routingNumber;
 
 /**
- *  The country the bank account is in. Currently, only US is supported.
+ *  The country the bank account is in.
  */
 @property (nonatomic, copy, stp_nullable) NSString *country;
+
+/**
+ *  The default currency for the bank account.
+ */
+@property (nonatomic, readwrite, stp_nullable) NSString *currency;
 
 #pragma mark - These fields are only present on objects returned from the Stripe API.
 /**
@@ -50,11 +55,6 @@
  *  A proxy for the account number, this uniquely identifies the account and can be used to compare equality of different bank accounts.
  */
 @property (nonatomic, readonly, stp_nullable) NSString *fingerprint;
-
-/**
- *  The default currency for the bank account.
- */
-@property (nonatomic, readonly, stp_nullable) NSString *currency;
 
 /**
  *  Whether or not the bank account has been validated via microdeposits or other means.

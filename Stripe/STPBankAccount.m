@@ -14,7 +14,6 @@
 @property (nonatomic, readwrite) NSString *last4;
 @property (nonatomic, readwrite) NSString *bankName;
 @property (nonatomic, readwrite) NSString *fingerprint;
-@property (nonatomic, readwrite) NSString *currency;
 @property (nonatomic, readwrite) BOOL validated;
 @property (nonatomic, readwrite) BOOL disabled;
 
