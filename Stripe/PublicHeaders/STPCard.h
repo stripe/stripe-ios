@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
 @property (nonatomic) NSUInteger expMonth;
 
 /**
- *  The card's expiration month.
+ *  The card's expiration year.
  */
 @property (nonatomic) NSUInteger expYear;
 
