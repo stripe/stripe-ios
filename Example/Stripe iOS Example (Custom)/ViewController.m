@@ -7,7 +7,6 @@
 //
 
 #import <Stripe/Stripe.h>
-#import "AFNetworking.h"
 
 #import "ViewController.h"
 #import "PaymentViewController.h"
@@ -65,15 +64,15 @@
 
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId];
     if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
-        [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
-        [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
-        paymentRequest.shippingMethods = [self.shippingManager defaultShippingMethods];
+//        [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
+//        [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
+//        paymentRequest.shippingMethods = [self.shippingManager defaultShippingMethods];
         paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:paymentRequest.shippingMethods.firstObject];
-#if DEBUG
-        STPTestPaymentAuthorizationViewController *auth = [[STPTestPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
-#else
+//#if DEBUG
+//        STPTestPaymentAuthorizationViewController *auth = [[STPTestPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
+//#else
         PKPaymentAuthorizationViewController *auth = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
-#endif
+//#endif
         auth.delegate = self;
         [self presentViewController:auth animated:YES completion:nil];
     }
@@ -81,7 +80,7 @@
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                   didSelectShippingAddress:(ABRecordRef)address
-                                completion:(void (^)(PKPaymentAuthorizationStatus status, NSArray *shippingMethods, NSArray *summaryItems))completion {
+                                completion:(void (^)(PKPaymentAuthorizationStatus status, NSArray<PKShippingMethod *> *shippingMethods, NSArray<PKPaymentSummaryItem *> *summaryItems))completion {
     [self.shippingManager fetchShippingCostsForAddress:address
                                             completion:^(NSArray *shippingMethods, NSError *error) {
                                                 if (error) {
@@ -96,15 +95,15 @@
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
                    didSelectShippingMethod:(PKShippingMethod *)shippingMethod
-                                completion:(void (^)(PKPaymentAuthorizationStatus, NSArray *summaryItems))completion {
+                                completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKPaymentSummaryItem *> *summaryItems))completion {
     completion(PKPaymentAuthorizationStatusSuccess, [self summaryItemsForShippingMethod:shippingMethod]);
 }
 
 - (NSArray *)summaryItemsForShippingMethod:(PKShippingMethod *)shippingMethod {
     PKPaymentSummaryItem *shirtItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Cool Shirt" amount:[NSDecimalNumber decimalNumberWithString:@"10.00"]];
-    NSDecimalNumber *total = [shirtItem.amount decimalNumberByAdding:shippingMethod.amount];
-    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Stripe Shirt Shop" amount:total];
-    return @[shirtItem, shippingMethod, totalItem];
+//    NSDecimalNumber *total = [shirtItem.amount decimalNumberByAdding:shippingMethod.amount];
+    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Stripe Shirt Shop" amount:shirtItem.amount];
+    return @[shirtItem, /*shippingMethod,*/ totalItem];
 }
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
@@ -159,29 +158,29 @@
 #pragma mark - STPBackendCharging
 
 - (void)createBackendChargeWithToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
-    NSDictionary *chargeParams = @{ @"stripeToken": token.tokenId, @"amount": @"1000" };
-
-    if (!BackendChargeURLString) {
-        NSError *error = [NSError
-            errorWithDomain:StripeDomain
-                       code:STPInvalidRequestError
-                   userInfo:@{
-                       NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Good news! Stripe turned your credit card into a token: %@ \nYou can follow the "
-                                                                             @"instructions in the README to set up an example backend, or use this "
-                                                                             @"token to manually create charges at dashboard.stripe.com .",
-                                                                             token.tokenId]
-                   }];
-        completion(STPBackendChargeResultFailure, error);
-        return;
-    }
-
-    // This passes the token off to our payment backend, which will then actually complete charging the card using your Stripe account's secret key
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    [manager POST:[BackendChargeURLString stringByAppendingString:@"/charge"]
-        parameters:chargeParams
-        success:^(AFHTTPRequestOperation *operation, id responseObject) { completion(STPBackendChargeResultSuccess, nil); }
-        failure:^(AFHTTPRequestOperation *operation, NSError *error) { completion(STPBackendChargeResultFailure, error); }];
+//    NSDictionary *chargeParams = @{ @"stripeToken": token.tokenId, @"amount": @"1000" };
+//
+//    if (!BackendChargeURLString) {
+//        NSError *error = [NSError
+//            errorWithDomain:StripeDomain
+//                       code:STPInvalidRequestError
+//                   userInfo:@{
+//                       NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Good news! Stripe turned your credit card into a token: %@ \nYou can follow the "
+//                                                                             @"instructions in the README to set up an example backend, or use this "
+//                                                                             @"token to manually create charges at dashboard.stripe.com .",
+//                                                                             token.tokenId]
+//                   }];
+//        completion(STPBackendChargeResultFailure, error);
+//        return;
+//    }
+//
+//    // This passes the token off to our payment backend, which will then actually complete charging the card using your Stripe account's secret key
+//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+//    [manager POST:[BackendChargeURLString stringByAppendingString:@"/charge"]
+//        parameters:chargeParams
+//        success:^(AFHTTPRequestOperation *operation, id responseObject) { completion(STPBackendChargeResultSuccess, nil); }
+//        failure:^(AFHTTPRequestOperation *operation, NSError *error) { completion(STPBackendChargeResultFailure, error); }];
 }
 
 @end

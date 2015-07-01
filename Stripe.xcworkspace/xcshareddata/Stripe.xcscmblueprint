@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "A5C151FC3F18980DA2906AAA3DE9140767EF2310",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "A5C151FC3F18980DA2906AAA3DE9140767EF2310" : 0,
+    "D0DC6CE0350266C4AFFCC35DA49B75AE57E8D73E" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "1610AC64-BC46-4B78-8270-41A398C514B7",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "A5C151FC3F18980DA2906AAA3DE9140767EF2310" : "stripe-ios",
+    "D0DC6CE0350266C4AFFCC35DA49B75AE57E8D73E" : "stripe-ios\/Example\/PaymentKit"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Stripe",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Stripe.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "ssh:\/\/github.com\/stripe\/stripe-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A5C151FC3F18980DA2906AAA3DE9140767EF2310"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:stripe\/PaymentKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D0DC6CE0350266C4AFFCC35DA49B75AE57E8D73E"
+    }
+  ]
+}

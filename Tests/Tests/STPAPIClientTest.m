@@ -25,4 +25,10 @@
     XCTAssertEqualObjects(client.publishableKey, @"test");
 }
 
+- (void)testFabric {
+    Protocol *fabKit = NSProtocolFromString(@"FABKit");
+    XCTAssertNotNil(fabKit);
+    XCTAssert([STPAPIClient conformsToProtocol:fabKit]);
+}
+
 @end

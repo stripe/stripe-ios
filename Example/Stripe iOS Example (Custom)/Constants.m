@@ -21,7 +21,7 @@ NSString *const StripePublishableKey = nil; // TODO: replace nil with your own v
 NSString *const BackendChargeURLString = nil; // TODO: replace nil with your own value
 
 // To learn how to obtain an Apple Merchant ID, head to https://stripe.com/docs/mobile/apple-pay
-NSString *const AppleMerchantId = nil; // TODO: replace nil with your own value
+NSString *const AppleMerchantId = @"sup"; // TODO: replace nil with your own value
 
 @implementation Constants
 @end
