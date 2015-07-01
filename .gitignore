@@ -14,6 +14,7 @@ Tests/installation_tests/carthage/Carthage/*
 *.perspectivev3
 *.swp
 *.moved-aside
+*.xcscmblueprint
 .idea
 
 .DS_Store
