@@ -8,22 +8,23 @@
 
 import UIKit
 import Stripe
+import Alamofire
 
 class ViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate {
 
     // Replace these values with your application's keys
-    
+
     // Find this at https://dashboard.stripe.com/account/apikeys
     let stripePublishableKey = ""
-    
+
     // To set this up, see https://github.com/stripe/example-ios-backend
     let backendChargeURLString = ""
-    
+
     // To set this up, see https://stripe.com/docs/mobile/apple-pay
     let appleMerchantId = ""
-    
+
     let shirtPrice : UInt = 1000 // this is in cents
-    
+
     @IBAction func beginPayment(sender: AnyObject) {
         if (stripePublishableKey == "") {
             let alert = UIAlertController(
@@ -50,7 +51,7 @@ class ViewController: UIViewController, PKPaymentAuthorizationViewControllerDele
             println("You should set an appleMerchantId.")
         }
     }
-
+    
     func paymentAuthorizationViewController(controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {
         let apiClient = STPAPIClient(publishableKey: stripePublishableKey)
         apiClient.createTokenWithPayment(payment, completion: { (token, error) -> Void in
@@ -71,18 +72,18 @@ class ViewController: UIViewController, PKPaymentAuthorizationViewControllerDele
             }
         })
     }
-    
+
     func paymentAuthorizationViewControllerDidFinish(controller: PKPaymentAuthorizationViewController!) {
         dismissViewControllerAnimated(true, completion: nil)
     }
-    
+
     func createBackendChargeWithToken(token: STPToken, completion: STPTokenSubmissionHandler) {
         if backendChargeURLString != "" {
             if let url = NSURL(string: backendChargeURLString  + "/charge") {
                 let chargeParams : [String: AnyObject] = ["stripeToken": token.tokenId, "amount": shirtPrice]
-                
+
                 // This uses Alamofire to simplify the request code. For more information see github.com/Alamofire/Alamofire
-                request(.POST, url, parameters: chargeParams)
+                request(.POST, URLString: url, parameters: chargeParams)
                     .responseJSON { (_, response, _, error) in
                         if response?.statusCode == 200 {
                             completion(STPBackendChargeResult.Success, nil)
@@ -96,4 +97,3 @@ class ViewController: UIViewController, PKPaymentAuthorizationViewControllerDele
         completion(STPBackendChargeResult.Failure, NSError(domain: StripeDomain, code: 50, userInfo: [NSLocalizedDescriptionKey: "You created a token! Its value is \(token.tokenId). Now configure your backend to accept this token and complete a charge."]))
     }
 }
-
