@@ -11,6 +11,7 @@ Tests/installation_tests/manual_installation/ManualInstallationTest/Frameworks/S
 *.perspectivev3
 *.swp
 *.moved-aside
+*.xcscmblueprint
 .idea
 
 .DS_Store
