@@ -12,7 +12,6 @@
 #import "PaymentViewController.h"
 #import "Constants.h"
 #import "ShippingManager.h"
-#import <ApplePayStubs/ApplePayStubs.h>
 
 @interface ViewController () <PaymentViewControllerDelegate, STPCheckoutViewControllerDelegate, PKPaymentAuthorizationViewControllerDelegate>
 @property (nonatomic) BOOL applePaySucceeded;
@@ -64,15 +63,8 @@
 
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId];
     if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
-//        [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
-//        [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
-//        paymentRequest.shippingMethods = [self.shippingManager defaultShippingMethods];
         paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:paymentRequest.shippingMethods.firstObject];
-//#if DEBUG
-//        STPTestPaymentAuthorizationViewController *auth = [[STPTestPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
-//#else
         PKPaymentAuthorizationViewController *auth = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
-//#endif
         auth.delegate = self;
         [self presentViewController:auth animated:YES completion:nil];
     }
@@ -101,9 +93,8 @@
 
 - (NSArray *)summaryItemsForShippingMethod:(PKShippingMethod *)shippingMethod {
     PKPaymentSummaryItem *shirtItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Cool Shirt" amount:[NSDecimalNumber decimalNumberWithString:@"10.00"]];
-//    NSDecimalNumber *total = [shirtItem.amount decimalNumberByAdding:shippingMethod.amount];
     PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"Stripe Shirt Shop" amount:shirtItem.amount];
-    return @[shirtItem, /*shippingMethod,*/ totalItem];
+    return @[shirtItem, totalItem];
 }
 
 - (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller

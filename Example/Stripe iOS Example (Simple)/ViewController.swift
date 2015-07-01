@@ -8,6 +8,7 @@
 
 import UIKit
 import Stripe
+import Alamofire
 
 class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPaymentAuthorizationViewControllerDelegate {
 
@@ -67,9 +68,9 @@ class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPay
             case .UserCancelled:
                 return // just do nothing in this case
             case .Success:
-                println("great success!")
+                print("great success!")
             case .Error:
-                println("oh no, an error: \(error?.localizedDescription)")
+                print("oh no, an error: \(error?.localizedDescription)")
             }
         })
     }
@@ -105,7 +106,7 @@ class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPay
                 let chargeParams : [String: AnyObject] = ["stripeToken": token.tokenId, "amount": shirtPrice]
                 
                 // This uses Alamofire to simplify the request code. For more information see github.com/Alamofire/Alamofire
-                request(.POST, url, parameters: chargeParams)
+                request(.POST, URLString: url, parameters: chargeParams)
                     .responseJSON { (_, response, _, error) in
                         if response?.statusCode == 200 {
                             completion(STPBackendChargeResult.Success, nil)
