@@ -96,7 +96,7 @@ class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPay
         })
     }
     
-    func paymentAuthorizationViewControllerDidFinish(controller: PKPaymentAuthorizationViewController!) {
+    func paymentAuthorizationViewControllerDidFinish(controller: PKPaymentAuthorizationViewController) {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
