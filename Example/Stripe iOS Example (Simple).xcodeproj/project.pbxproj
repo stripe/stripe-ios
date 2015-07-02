@@ -182,7 +182,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Stripe;
 				TargetAttributes = {
 					04823F771A6849200098400B = {
@@ -393,6 +393,7 @@
 				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "Stripe iOS Example (Simple)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -418,6 +419,7 @@
 				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "Stripe iOS Example (Simple)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
