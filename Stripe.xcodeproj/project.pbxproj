@@ -825,7 +825,7 @@
 			attributes = {
 				CLASSPREFIX = STP;
 				LastTestingUpgradeCheck = 0510;
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
 					045E7C021A5F41DE004751EF = {
@@ -1131,6 +1131,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0D1AEF2AFE005B926E /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
 		};
@@ -1138,6 +1139,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0E1AEF2AFE005B926E /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
 		};
@@ -1202,6 +1204,7 @@
 			baseConfigurationReference = 04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
 		};
@@ -1210,6 +1213,7 @@
 			baseConfigurationReference = 04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
 		};
@@ -1217,6 +1221,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F1F1AEF2AFE005B926E /* StripeOSX-Debug.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
 		};
@@ -1224,6 +1229,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F201AEF2AFE005B926E /* StripeOSX-Release.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
 		};
@@ -1231,6 +1237,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F221AEF2AFE005B926E /* StripeOSXTests-Debug.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
 		};
@@ -1238,6 +1245,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F231AEF2AFE005B926E /* StripeOSXTests-Release.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
 		};
@@ -1245,6 +1253,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0A1AEF2AFE005B926E /* Project-Debug.xcconfig */;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};
@@ -1252,6 +1263,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0B1AEF2AFE005B926E /* Project-Release.xcconfig */;
 			buildSettings = {
+				GCC_NO_COMMON_BLOCKS = YES;
 			};
 			name = Release;
 		};
