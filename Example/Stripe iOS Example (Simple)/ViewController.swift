@@ -51,7 +51,7 @@ class ViewController: UIViewController, PKPaymentAuthorizationViewControllerDele
             println("You should set an appleMerchantId.")
         }
     }
-    
+
     func paymentAuthorizationViewController(controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {
         let apiClient = STPAPIClient(publishableKey: stripePublishableKey)
         apiClient.createTokenWithPayment(payment, completion: { (token, error) -> Void in
@@ -73,7 +73,7 @@ class ViewController: UIViewController, PKPaymentAuthorizationViewControllerDele
         })
     }
 
-    func paymentAuthorizationViewControllerDidFinish(controller: PKPaymentAuthorizationViewController!) {
+    func paymentAuthorizationViewControllerDidFinish(controller: PKPaymentAuthorizationViewController) {
         dismissViewControllerAnimated(true, completion: nil)
     }
 
