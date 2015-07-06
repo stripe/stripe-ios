@@ -20,5 +20,6 @@
 
 #if __has_include("Stripe+ApplePay.h") && TARGET_OS_IPHONE
 #import "Stripe+ApplePay.h"
+#import "PKPayment+Stripe.h"
 #import "STPAPIClient+ApplePay.h"
 #endif

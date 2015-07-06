@@ -5,8 +5,10 @@
 //  Created by Jack Flintermann on 12/19/14.
 //
 
+@import AddressBook;
+
 #import "STPAPIClient+ApplePay.h"
-#import <AddressBook/AddressBook.h>
+#import "PKPayment+Stripe.m"
 
 @implementation STPAPIClient (ApplePay)
 
@@ -21,6 +23,10 @@
     NSString *paymentString =
         [[[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding] stringByAddingPercentEncodingWithAllowedCharacters:set];
     __block NSString *payloadString = [@"pk_token=" stringByAppendingString:paymentString];
+
+    if ([payment isSimulated]) {
+        [payment setFakeTransactionIdentifier];
+    }
 
     if (payment.billingAddress) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
