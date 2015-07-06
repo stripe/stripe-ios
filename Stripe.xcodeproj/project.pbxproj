@@ -294,6 +294,7 @@
 		04D12C461A5F55FA0010446E /* STPCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB5251A5F3A9300B854EE /* STPCardTest.m */; };
 		04D12C471A5F55FA0010446E /* STPCertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB5261A5F3A9300B854EE /* STPCertTest.m */; };
 		04D12C481A5F55FA0010446E /* STPTokenTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB5271A5F3A9300B854EE /* STPTokenTest.m */; };
+		C105BBE01B4AE90400C7339D /* PKPayment+StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C105BBDF1B4AE90400C7339D /* PKPayment+StripeTest.m */; };
 		C14C19D61B46193A005DC2A1 /* PKPayment+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = C14C19D41B46193A005DC2A1 /* PKPayment+Stripe.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C14C19D81B46193A005DC2A1 /* PKPayment+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = C14C19D51B46193A005DC2A1 /* PKPayment+Stripe.m */; };
 		C14C19DA1B46194D005DC2A1 /* PKPayment+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = C14C19D51B46193A005DC2A1 /* PKPayment+Stripe.m */; };
@@ -455,6 +456,7 @@
 		04F39F241AEF2AFE005B926E /* StripeOSXTests-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeOSXTests-Shared.xcconfig"; sourceTree = "<group>"; };
 		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		C105BBDF1B4AE90400C7339D /* PKPayment+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKPayment+StripeTest.m"; sourceTree = "<group>"; };
 		C14C19D41B46193A005DC2A1 /* PKPayment+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PKPayment+Stripe.h"; sourceTree = "<group>"; };
 		C14C19D51B46193A005DC2A1 /* PKPayment+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKPayment+Stripe.m"; sourceTree = "<group>"; };
 		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -648,6 +650,7 @@
 				04CDB5251A5F3A9300B854EE /* STPCardTest.m */,
 				04CDB5261A5F3A9300B854EE /* STPCertTest.m */,
 				04CDB5271A5F3A9300B854EE /* STPTokenTest.m */,
+				C105BBDF1B4AE90400C7339D /* PKPayment+StripeTest.m */,
 				04CDB5611A5F3D2000B854EE /* Supporting Files */,
 			);
 			name = StripeTests;
@@ -1154,6 +1157,7 @@
 			files = (
 				04415C561A6605B5001225ED /* STPAPIClient+ApplePay.m in Sources */,
 				04415C571A6605B5001225ED /* Stripe+ApplePay.m in Sources */,
+				C105BBE01B4AE90400C7339D /* PKPayment+StripeTest.m in Sources */,
 				04415C591A6605B5001225ED /* STPCheckoutOptions.m in Sources */,
 				04415C5A1A6605B5001225ED /* STPCheckoutViewController.m in Sources */,
 				C14C19DA1B46194D005DC2A1 /* PKPayment+Stripe.m in Sources */,

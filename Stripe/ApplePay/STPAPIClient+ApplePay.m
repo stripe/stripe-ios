@@ -8,6 +8,7 @@
 #import <AddressBook/AddressBook.h>
 
 #import "STPAPIClient+ApplePay.h"
+#import "PKPayment+Stripe.m"
 
 @implementation STPAPIClient (ApplePay)
 
@@ -23,15 +24,19 @@
         [[[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding] stringByAddingPercentEncodingWithAllowedCharacters:set];
     __block NSString *payloadString = [@"pk_token=" stringByAppendingString:paymentString];
 
+    if ([payment isSimulated]) {
+        [payment setFakeTransactionIdentifier];
+    }
+
     if (payment.billingAddress) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
-        
+
         NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(payment.billingAddress, kABPersonFirstNameProperty);
         NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(payment.billingAddress, kABPersonLastNameProperty);
         if (firstName.length && lastName.length) {
             params[@"name"] = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
         }
-        
+
         ABMultiValueRef addressValues = ABRecordCopyValue(payment.billingAddress, kABPersonAddressProperty);
         if (addressValues != NULL) {
             if (ABMultiValueGetCount(addressValues) > 0) {

@@ -20,6 +20,7 @@
 
 #if TARGET_OS_IPHONE
 #import "Stripe+ApplePay.h"
+#import "PKPayment+Stripe.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentCardTextField.h"
 #endif
