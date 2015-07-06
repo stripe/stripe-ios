@@ -106,15 +106,8 @@
     [client createTokenWithPayment:payment
                         completion:^(STPToken *token, NSError *error) {
                             [expectation fulfill];
-                            XCTAssertNil(token, @"token should be nil");
-                            XCTAssertNotNil(error, @"error should not be nil");
-
-                            // Since we can't actually generate a new cryptogram in a CI environment, we should just post a blob of expired token data and
-                            // make sure we get the "too long since tokenization" error. This at least asserts that our blob has been correctly formatted and
-                            // can be decrypted by the backend.
-                            XCTAssert([error.localizedDescription rangeOfString:@"too long"].location != NSNotFound,
-                                      @"Error is unrelated to 24-hour expiry: %@",
-                                      error.localizedDescription);
+                            XCTAssertNotNil(token, @"token should not be nil");
+                            XCTAssertNil(error, @"error should be nil");
                         }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
