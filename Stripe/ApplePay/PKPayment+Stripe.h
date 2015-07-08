@@ -12,7 +12,7 @@
 /// Returns true if the instance is a payment from the simulator.
 - (BOOL)isSimulated;
 
-/// Sets the simulated instance's transaction identifier to the expected ~-separated format.
-- (void)setFakeTransactionIdentifier;
+/// Returns a fake transaction identifier with the expected ~-separated format.
++ (NSString *)testTransactionIdentifier;
 
 @end

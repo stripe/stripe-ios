@@ -24,10 +24,6 @@
         [[[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding] stringByAddingPercentEncodingWithAllowedCharacters:set];
     __block NSString *payloadString = [@"pk_token=" stringByAppendingString:paymentString];
 
-    if ([payment isSimulated]) {
-        [payment setFakeTransactionIdentifier];
-    }
-
     if (payment.billingAddress) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
 
@@ -82,7 +78,11 @@
     }
 
     if (payment.token.transactionIdentifier) {
-        NSString *param = [NSString stringWithFormat:@"&pk_token_transaction_id=%@", payment.token.transactionIdentifier];
+        NSString *transactionIdentifier = payment.token.transactionIdentifier;
+        if ([payment isSimulated]) {
+            transactionIdentifier = [PKPayment testTransactionIdentifier];
+        }
+        NSString *param = [NSString stringWithFormat:@"&pk_token_transaction_id=%@", transactionIdentifier];
         payloadString = [payloadString stringByAppendingString:param];
     }
 
