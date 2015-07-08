@@ -9,11 +9,11 @@
 
 @implementation PKPayment (Stripe)
 
-- (BOOL)isSimulated {
+- (BOOL)stp_isSimulated {
     return [self.token.transactionIdentifier isEqualToString:@"Simulated Identifier"];
 }
 
-+ (NSString *)testTransactionIdentifier {
++ (NSString *)stp_testTransactionIdentifier {
     NSString *uuid = [[NSUUID UUID] UUIDString];
     uuid = [uuid stringByReplacingOccurrencesOfString:@"~" withString:@""
                                               options:0

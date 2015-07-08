@@ -10,9 +10,9 @@
 @interface PKPayment (Stripe)
 
 /// Returns true if the instance is a payment from the simulator.
-- (BOOL)isSimulated;
+- (BOOL)stp_isSimulated;
 
 /// Returns a fake transaction identifier with the expected ~-separated format.
-+ (NSString *)testTransactionIdentifier;
++ (NSString *)stp_testTransactionIdentifier;
 
 @end

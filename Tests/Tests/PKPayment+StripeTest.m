@@ -6,8 +6,9 @@
 //  Copyright © 2015 Stripe, Inc. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
-#import <PassKit/PassKit.h>
+@import XCTest;
+@import PassKit;
+
 #import "PKPayment+Stripe.h"
 
 @interface PKPayment_StripeTest : XCTestCase
@@ -30,7 +31,7 @@
     [payment performSelector:@selector(setToken:) withObject:paymentToken];
 #pragma clang diagnostic pop
 
-    XCTAssertTrue([payment isSimulated]);
+    XCTAssertTrue([payment stp_isSimulated]);
 }
 
 - (void)testTestTransactionIdentifier
@@ -38,8 +39,8 @@
     if (![PKPayment class]) {
         return;
     }
-    NSString *identifier = [PKPayment testTransactionIdentifier];
-    XCTAssertTrue([identifier containsString:@"ApplePayStubs~4242424242424242~2000~USD~"]);
+    NSString *identifier = [PKPayment stp_testTransactionIdentifier];
+    XCTAssertTrue([identifier containsString:@"ApplePayStubs~4242424242424242~0~USD~"]);
 }
 
 @end

@@ -79,8 +79,8 @@
 
     if (payment.token.transactionIdentifier) {
         NSString *transactionIdentifier = payment.token.transactionIdentifier;
-        if ([payment isSimulated]) {
-            transactionIdentifier = [PKPayment testTransactionIdentifier];
+        if ([payment stp_isSimulated]) {
+            transactionIdentifier = [PKPayment stp_testTransactionIdentifier];
         }
         NSString *param = [NSString stringWithFormat:@"&pk_token_transaction_id=%@", transactionIdentifier];
         payloadString = [payloadString stringByAppendingString:param];
