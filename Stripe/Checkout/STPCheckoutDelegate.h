@@ -6,7 +6,8 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
+
 #import "STPNullabilityMacros.h"
 
 @protocol STPCheckoutWebViewAdapter;

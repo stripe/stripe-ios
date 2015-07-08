@@ -6,8 +6,9 @@
 //  Copyright (c) 2014 Stripe, Inc. All rights reserved.
 //
 
+@import XCTest;
+
 #import "STPAPIClient.h"
-#import <XCTest/XCTest.h>
 
 @interface STPAPIClientTest : XCTestCase
 @end

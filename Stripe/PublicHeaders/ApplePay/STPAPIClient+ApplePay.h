@@ -5,8 +5,8 @@
 //  Created by Jack Flintermann on 12/19/14.
 //
 
-#import <Foundation/Foundation.h>
-#import <PassKit/PassKit.h>
+@import Foundation;
+@import PassKit;
 
 #import "STPAPIClient.h"
 #import "STPNullabilityMacros.h"

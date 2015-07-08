@@ -8,7 +8,7 @@
 
 #import <objc/runtime.h>
 #if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
+@import UIKit;
 #import <sys/utsname.h>
 #endif
 

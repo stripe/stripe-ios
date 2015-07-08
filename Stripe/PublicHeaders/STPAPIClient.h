@@ -6,7 +6,8 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
+
 #import "STPNullabilityMacros.h"
 
 static NSString *const __stp_nonnull STPSDKVersion = @"4.0.3";

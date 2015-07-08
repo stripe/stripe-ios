@@ -6,7 +6,8 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
+
 #import "STPNullabilityMacros.h"
 
 typedef void (^STPAPIConnectionCompletionBlock)(NSURLResponse * __stp_nullable response, NSData * __stp_nullable body, NSError * __stp_nullable requestError);

@@ -5,8 +5,9 @@
 //  Created by Jack Flintermann on 12/19/14.
 //
 
+@import AddressBook;
+
 #import "STPAPIClient+ApplePay.h"
-#import <AddressBook/AddressBook.h>
 
 @implementation STPAPIClient (ApplePay)
 

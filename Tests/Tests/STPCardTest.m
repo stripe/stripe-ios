@@ -6,10 +6,12 @@
 //
 //
 
+@import XCTest;
+
 #import "STPFormEncoder.h"
 #import "STPCard.h"
 #import "StripeError.h"
-#import <XCTest/XCTest.h>
+
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
 @implementation NSDate (CardTestOverrides)

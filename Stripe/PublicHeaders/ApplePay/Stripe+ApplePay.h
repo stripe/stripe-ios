@@ -5,8 +5,8 @@
 //  Created by Jack Flintermann on 9/17/14.
 //
 
-#import <Foundation/Foundation.h>
-#import <PassKit/PassKit.h>
+@import Foundation;
+@import PassKit;
 
 #import "Stripe.h"
 #import "STPAPIClient+ApplePay.h"

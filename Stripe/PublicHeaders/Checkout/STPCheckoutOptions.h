@@ -5,12 +5,13 @@
 //  Created by Jack Flintermann on 10/6/14.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
+
 #if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
+@import UIKit;
 #define STP_IMAGE_CLASS UIImage
 #else
-#import <AppKit/AppKit.h>
+@import AppKit;
 #define STP_IMAGE_CLASS NSImage
 #endif
 

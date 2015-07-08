@@ -6,9 +6,10 @@
 //
 //
 
+@import XCTest;
+
 #import "STPToken.h"
 #import "STPCard.h"
-#import <XCTest/XCTest.h>
 
 @interface STPTokenTest : XCTestCase
 @end

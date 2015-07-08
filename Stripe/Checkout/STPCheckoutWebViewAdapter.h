@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 #if TARGET_OS_IPHONE
 #define STP_VIEW_CLASS UIView
-#import <UIKit/UIKit.h>
+@import UIKit;
 #else
 #define STP_VIEW_CLASS NSView
-#import <AppKit/AppKit.h>
+@import AppKit;
 #endif
 
 #import "STPNullabilityMacros.h"
