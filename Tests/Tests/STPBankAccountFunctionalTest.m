@@ -6,8 +6,9 @@
 //
 //
 
+@import XCTest;
+
 #import "STPAPIClient.h"
-#import <XCTest/XCTest.h>
 #import "Stripe.h"
 #import "STPBankAccount.h"
 #import "STPToken.h"

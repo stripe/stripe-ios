@@ -6,12 +6,12 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 #if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
+@import UIKit;
 #define STP_COLOR_CLASS UIColor
 #else
-#import <AppKit/AppKit.h>
+@import AppKit;
 #define STP_COLOR_CLASS NSColor
 #endif
 

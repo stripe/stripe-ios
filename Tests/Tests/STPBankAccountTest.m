@@ -6,9 +6,10 @@
 //
 //
 
+@import XCTest;
+
 #import "STPFormEncoder.h"
 #import "STPBankAccount.h"
-#import <XCTest/XCTest.h>
 
 @interface STPBankAccountTest : XCTestCase
 @property (nonatomic) STPBankAccount *bankAccount;

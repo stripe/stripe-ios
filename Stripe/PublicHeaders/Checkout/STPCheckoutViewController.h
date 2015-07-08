@@ -5,11 +5,11 @@
 //  Created by Jack Flintermann on 9/15/14.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 #if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
+@import UIKit;
 #else
-#import <AppKit/AppKit.h>
+@import AppKit;
 #endif
 
 #import "STPNullabilityMacros.h"

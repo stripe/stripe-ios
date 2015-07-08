@@ -6,10 +6,11 @@
 //  Copyright (c) 2014 Stripe, Inc. All rights reserved.
 //
 
+@import XCTest;
+@import PassKit;
+
 #import "STPAPIClient.h"
 #import "STPAPIClient+ApplePay.h"
-#import <XCTest/XCTest.h>
-#import <PassKit/PassKit.h>
 
 @interface STPApplePayTest : XCTestCase
 

@@ -7,9 +7,8 @@
 //
 
 #if TARGET_OS_IPHONE
-
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+@import Foundation;
+@import UIKit;
 
 #import "STPCheckoutWebViewAdapter.h"
 #import "STPNullabilityMacros.h"
