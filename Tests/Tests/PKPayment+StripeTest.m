@@ -33,14 +33,13 @@
     XCTAssertTrue([payment isSimulated]);
 }
 
-- (void)testSetFakeTransactionIdentifier
+- (void)testTestTransactionIdentifier
 {
     if (![PKPayment class]) {
         return;
     }
-    PKPayment *payment = [PKPayment new];
-    [payment setFakeTransactionIdentifier];
-    XCTAssertTrue([payment.token.transactionIdentifier containsString:@"ApplePayStubs~4242424242424242~2000~USD~"]);
+    NSString *identifier = [PKPayment testTransactionIdentifier];
+    XCTAssertTrue([identifier containsString:@"ApplePayStubs~4242424242424242~2000~USD~"]);
 }
 
 @end
