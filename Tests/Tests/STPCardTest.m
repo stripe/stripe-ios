@@ -63,6 +63,7 @@
         @"address_zip": @"12345",
         @"address_country": @"USA",
         @"last4": @"1234",
+        @"dynamic_last4": @"5678",
         @"brand": @"MasterCard",
         @"fingerprint": @"Fingolfin",
         @"country": @"Japan"
@@ -83,6 +84,7 @@
     XCTAssertEqualObjects([cardWithAttributes addressZip], @"12345", @"addressZip is set correctly");
     XCTAssertEqualObjects([cardWithAttributes addressCountry], @"USA", @"addressCountry is set correctly");
     XCTAssertEqualObjects([cardWithAttributes last4], @"1234", @"last4 is set correctly");
+    XCTAssertEqualObjects([cardWithAttributes dynamicLast4], @"5678", @"last4 is set correctly");
     XCTAssertEqual([cardWithAttributes brand], STPCardBrandMasterCard, @"type is set correctly");
     XCTAssertEqualObjects([cardWithAttributes fingerprint], @"Fingolfin", @"fingerprint is set correctly");
     XCTAssertEqualObjects([cardWithAttributes country], @"Japan", @"country is set correctly");

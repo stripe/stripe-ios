@@ -13,6 +13,7 @@
 
 @property (nonatomic, readwrite) NSString *cardId;
 @property (nonatomic, readwrite) NSString *last4;
+@property (nonatomic, readwrite) NSString *dynamicLast4;
 @property (nonatomic, readwrite) STPCardBrand brand;
 @property (nonatomic, readwrite) STPCardFundingType funding;
 @property (nonatomic, readwrite) NSString *fingerprint;
@@ -340,6 +341,7 @@
         _cvc = dict[@"cvc"];
         _name = dict[@"name"];
         _last4 = dict[@"last4"];
+        _dynamicLast4 = dict[@"dynamic_last4"];
         NSString *brand = dict[@"brand"] ?: dict[@"type"];
         if ([brand isEqualToString:@"Visa"]) {
             _brand = STPCardBrandVisa;

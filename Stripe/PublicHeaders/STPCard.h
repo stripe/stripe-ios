@@ -44,6 +44,11 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
 @property (nonatomic, readonly, stp_nullable) NSString *last4;
 
 /**
+ *  For cards made with Apple Pay, this refers to the last 4 digits of the "Device Account Number" for the tokenized card. For regular cards, it will be nil.
+ */
+@property (nonatomic, readonly, stp_nullable) NSString *dynamicLast4;
+
+/**
  *  The card's expiration month.
  */
 @property (nonatomic) NSUInteger expMonth;
