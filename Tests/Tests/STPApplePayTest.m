@@ -6,23 +6,21 @@
 //  Copyright (c) 2014 Stripe, Inc. All rights reserved.
 //
 
+@import XCTest;
+@import PassKit;
+
 #import "STPAPIClient.h"
 #import "STPAPIClient+ApplePay.h"
-#import <XCTest/XCTest.h>
-#import <PassKit/PassKit.h>
 
 @interface STPApplePayTest : XCTestCase
+
+@property (nonatomic, strong) NSData *tokenData;
 
 @end
 
 @implementation STPApplePayTest
 
-- (void)testCreateTokenWithPayment {
-    if (![PKPayment class]) {
-        return;
-    }
-    PKPayment *payment = [PKPayment new];
-    PKPaymentToken *paymentToken = [PKPaymentToken new];
+- (void)setUp {
     NSString *tokenDataString = @"{\"version\":\"EC_v1\",\"data\":\"lF8RBjPvhc2GuhjEh7qFNijDJjxD/ApmGdQhgn8tpJcJDOwn2E1BkOfSvnhrR8BUGT6+zeBx8OocvalHZ5ba/WA/"
         @"tDxGhcEcOMp8sIJrXMVcJ6WqT5P1ZY+utmdORhxyH4nUw2wuEY4lAE7/GtEU/RNDhaKx/"
         @"m93l0oLlk84qD1ynTA5JP3gjkdX+RK23iCAZDScXCcCU0OnYlJV8sDyf3+8hIo0gpN43AxoY6N1xAsVbGsO4ZjSCahaXbgt0egFug3s7Fyt9W4uzu07SKKCA2+"
@@ -54,11 +52,19 @@
         @"\"header\":{\"transactionId\":\"a530c7d68b6a69791d8864df2646c8aa3d09d33b56d8f8162ab23e1b26afe5e9\",\"ephemeralPublicKey\":"
         @"\"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhKpIc6wTNQGy39bHM0a0qziDb20jMBFZT9XKSdjGULpDGRdyil6MLwMyIf3lQxaV/"
         @"P7CQztw28IvYozvKvjBPQ==\",\"publicKeyHash\":\"yRcyn7njT6JL3AY9nmg0KD/xm/ch7gW1sGl2OuEucZY=\"}}";
-    NSData *data = [tokenDataString dataUsingEncoding:NSUTF8StringEncoding];
+    self.tokenData = [tokenDataString dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+- (void)testCreateTokenWithPayment {
+    if (![PKPayment class]) {
+        return;
+    }
+    PKPayment *payment = [PKPayment new];
+    PKPaymentToken *paymentToken = [PKPaymentToken new];
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
-    [paymentToken performSelector:@selector(setPaymentData:) withObject:data];
+    [paymentToken performSelector:@selector(setPaymentData:) withObject:self.tokenData];
     [payment performSelector:@selector(setToken:) withObject:paymentToken];
 #pragma clang diagnostic pop
 
@@ -77,6 +83,31 @@
                             XCTAssert([error.localizedDescription rangeOfString:@"too long"].location != NSNotFound,
                                       @"Error is unrelated to 24-hour expiry: %@",
                                       error.localizedDescription);
+                        }];
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
+- (void)testCreateTokenWithSimulatedPayment {
+    if (![PKPayment class]) {
+        return;
+    }
+    PKPayment *payment = [PKPayment new];
+    PKPaymentToken *paymentToken = [PKPaymentToken new];
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+    [paymentToken performSelector:@selector(setTransactionIdentifier:) withObject:@"Simulated Identifier"];
+    [payment performSelector:@selector(setToken:) withObject:paymentToken];
+#pragma clang diagnostic pop
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Bank account creation"];
+    [client createTokenWithPayment:payment
+                        completion:^(STPToken *token, NSError *error) {
+                            [expectation fulfill];
+                            XCTAssertNotNil(token, @"token should not be nil");
+                            XCTAssertNil(error, @"error should be nil");
                         }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }

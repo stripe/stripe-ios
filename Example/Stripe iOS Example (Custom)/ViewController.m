@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
+#import <AFNetworking/AFNetworking.h>
 #import <Stripe/Stripe.h>
 
 #import "ViewController.h"
@@ -180,29 +181,29 @@
 #pragma mark - STPBackendCharging
 
 - (void)createBackendChargeWithToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
-//    NSDictionary *chargeParams = @{ @"stripeToken": token.tokenId, @"amount": @"1000" };
-//
-//    if (!BackendChargeURLString) {
-//        NSError *error = [NSError
-//            errorWithDomain:StripeDomain
-//                       code:STPInvalidRequestError
-//                   userInfo:@{
-//                       NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Good news! Stripe turned your credit card into a token: %@ \nYou can follow the "
-//                                                                             @"instructions in the README to set up an example backend, or use this "
-//                                                                             @"token to manually create charges at dashboard.stripe.com .",
-//                                                                             token.tokenId]
-//                   }];
-//        completion(STPBackendChargeResultFailure, error);
-//        return;
-//    }
-//
-//    // This passes the token off to our payment backend, which will then actually complete charging the card using your Stripe account's secret key
-//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-//    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-//    [manager POST:[BackendChargeURLString stringByAppendingString:@"/charge"]
-//        parameters:chargeParams
-//        success:^(AFHTTPRequestOperation *operation, id responseObject) { completion(STPBackendChargeResultSuccess, nil); }
-//        failure:^(AFHTTPRequestOperation *operation, NSError *error) { completion(STPBackendChargeResultFailure, error); }];
+    NSDictionary *chargeParams = @{ @"stripeToken": token.tokenId, @"amount": @"1000" };
+
+    if (!BackendChargeURLString) {
+        NSError *error = [NSError
+            errorWithDomain:StripeDomain
+                       code:STPInvalidRequestError
+                   userInfo:@{
+                       NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Good news! Stripe turned your credit card into a token: %@ \nYou can follow the "
+                                                                             @"instructions in the README to set up an example backend, or use this "
+                                                                             @"token to manually create charges at dashboard.stripe.com .",
+                                                                             token.tokenId]
+                   }];
+        completion(STPBackendChargeResultFailure, error);
+        return;
+    }
+
+    // This passes the token off to our payment backend, which will then actually complete charging the card using your Stripe account's secret key
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    [manager POST:[BackendChargeURLString stringByAppendingString:@"/charge"]
+        parameters:chargeParams
+        success:^(AFHTTPRequestOperation *operation, id responseObject) { completion(STPBackendChargeResultSuccess, nil); }
+        failure:^(AFHTTPRequestOperation *operation, NSError *error) { completion(STPBackendChargeResultFailure, error); }];
 }
 
 @end
