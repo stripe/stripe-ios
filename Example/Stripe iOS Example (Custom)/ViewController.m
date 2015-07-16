@@ -15,7 +15,7 @@
 #import "ShippingManager.h"
 #import <ApplePayStubs/ApplePayStubs.h>
 
-@interface ViewController () <PaymentViewControllerDelegate, STPCheckoutViewControllerDelegate, PKPaymentAuthorizationViewControllerDelegate>
+@interface ViewController () <PaymentViewControllerDelegate, PKPaymentAuthorizationViewControllerDelegate>
 @property (nonatomic) BOOL applePaySucceeded;
 @property (nonatomic) NSError *applePayError;
 @property (nonatomic) ShippingManager *shippingManager;
@@ -134,37 +134,6 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     self.applePaySucceeded = NO;
     self.applePayError = nil;
-}
-
-#pragma mark - Stripe Checkout
-
-- (IBAction)beginStripeCheckout:(id)sender {
-    STPCheckoutOptions *options = [[STPCheckoutOptions alloc] initWithPublishableKey:[Stripe defaultPublishableKey]];
-    options.purchaseDescription = @"Cool Shirt";
-    options.purchaseAmount = 1000; // this is in cents
-    options.logoColor = [UIColor purpleColor];
-    STPCheckoutViewController *checkoutViewController = [[STPCheckoutViewController alloc] initWithOptions:options];
-    checkoutViewController.checkoutDelegate = self;
-    [self presentViewController:checkoutViewController animated:YES completion:nil];
-}
-
-- (void)checkoutController:(STPCheckoutViewController *)controller didCreateToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
-    [self createBackendChargeWithToken:token completion:completion];
-}
-
-- (void)checkoutController:(STPCheckoutViewController *)controller didFinishWithStatus:(STPPaymentStatus)status error:(NSError *)error {
-    switch (status) {
-    case STPPaymentStatusSuccess:
-        [self paymentSucceeded];
-        break;
-    case STPPaymentStatusError:
-        [self presentError:error];
-        break;
-    case STPPaymentStatusUserCancelled:
-        // do nothing
-        break;
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Custom Credit Card Form

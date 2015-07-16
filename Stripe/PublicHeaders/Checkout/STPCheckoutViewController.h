@@ -26,10 +26,13 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
 /**
  Controls a UIWebView that loads an iOS-optimized version of Stripe Checkout that you can present modally. Note that this functionality is considered in beta
  and may change.
+ @deprecated this functionality is now deprecated. You should build your own UI to collect your user's credit card details.
  */
 #if TARGET_OS_IPHONE
+__attribute__((deprecated("We've deprecated Checkout for iOS. You should build your own credit card form. See also: https://github.com/stripe/PaymentKit")))
 @interface STPCheckoutViewController : UINavigationController
 #else
+__attribute__((deprecated("We've deprecated Checkout for OSX. You should build your own credit card form. See also: https://github.com/stripe/PaymentKit")))
 @interface STPCheckoutViewController : NSViewController
 #endif
 
@@ -42,7 +45,6 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
  */
 - (stp_nonnull instancetype)initWithOptions:(stp_nonnull STPCheckoutOptions *)options NS_DESIGNATED_INITIALIZER;
 @property (nonatomic, readonly, copy, stp_nonnull) STPCheckoutOptions *options;
-
 /**
  *  Note: you must set a delegate before showing an STPViewController.
  */
@@ -61,7 +63,10 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
  *state, for example.
  *  @param error      the returned error, if it exists. Can be nil.
  */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 - (void)checkoutController:(stp_nonnull STPCheckoutViewController *)controller didFinishWithStatus:(STPPaymentStatus)status error:(stp_nullable NSError *)error;
+#pragma clang diagnostic pop
 
 /**
  *  Use these options to inform Stripe Checkout of the success or failure of your backend charge.
@@ -85,8 +90,11 @@ typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError
  *  @param token      a Stripe token
  *  @param completion call this function with STPBackendChargeResultSuccess/Failure when you're done charging your user
  */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 - (void)checkoutController:(stp_nonnull STPCheckoutViewController *)controller
             didCreateToken:(stp_nonnull STPToken *)token
                 completion:(stp_nonnull STPTokenSubmissionHandler)completion;
+#pragma clang diagnostic pop
 
 @end

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <deployment version="2048" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -30,16 +30,6 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="scC-aT-HzE">
-                                        <rect key="frame" x="91" y="38" width="58" height="28"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <state key="normal" title="Checkout">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="beginStripeCheckout:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="1W9-33-kTM"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rtb-Le-Tel">
                                         <rect key="frame" x="184" y="38" width="48" height="28"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
@@ -64,10 +54,8 @@
                                 <color key="backgroundColor" white="1" alpha="0.91000000000000003" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="75" id="5hf-mO-fc1"/>
-                                    <constraint firstAttribute="centerY" secondItem="scC-aT-HzE" secondAttribute="centerY" constant="-14.5" id="Acu-0f-5N5"/>
                                     <constraint firstAttribute="centerX" secondItem="Ptu-D9-jyU" secondAttribute="centerX" constant="-0.5" id="EeU-Jg-DXL"/>
                                     <constraint firstAttribute="trailing" secondItem="rtb-Le-Tel" secondAttribute="trailing" constant="8" id="Gii-xx-gFR"/>
-                                    <constraint firstAttribute="centerX" secondItem="scC-aT-HzE" secondAttribute="centerX" id="SU2-2I-ZtZ"/>
                                     <constraint firstItem="GJ6-hd-Wof" firstAttribute="leading" secondItem="dMV-m3-RoV" secondAttribute="leading" constant="8" id="UJb-sv-Nnb"/>
                                     <constraint firstAttribute="width" secondItem="Ptu-D9-jyU" secondAttribute="width" id="mSH-U8-VRy"/>
                                     <constraint firstAttribute="centerY" secondItem="GJ6-hd-Wof" secondAttribute="centerY" constant="-14.5" id="pra-v3-6ce"/>

@@ -9,7 +9,7 @@
 import UIKit
 import Stripe
 
-class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPaymentAuthorizationViewControllerDelegate {
+class ViewController: UIViewController, PKPaymentAuthorizationViewControllerDelegate {
 
     // Replace these values with your application's keys
     
@@ -46,34 +46,11 @@ class ViewController: UIViewController, STPCheckoutViewControllerDelegate, PKPay
                     return
                 }
             }
+        } else {
+            println("You should set an appleMerchantId.")
         }
-        let options = STPCheckoutOptions(publishableKey: stripePublishableKey)
-        options.companyName = "Shirt Shop"
-        options.purchaseDescription = "Cool Shirt"
-        options.purchaseAmount = shirtPrice
-        options.logoColor = UIColor.purpleColor()
-        let checkoutViewController = STPCheckoutViewController(options: options)
-        checkoutViewController.checkoutDelegate = self
-        presentViewController(checkoutViewController, animated: true, completion: nil)
     }
-    
-    func checkoutController(controller: STPCheckoutViewController, didCreateToken token: STPToken, completion: STPTokenSubmissionHandler) {
-        createBackendChargeWithToken(token, completion: completion)
-    }
-    
-    func checkoutController(controller: STPCheckoutViewController, didFinishWithStatus status: STPPaymentStatus, error: NSError?) {
-        dismissViewControllerAnimated(true, completion: {
-            switch(status) {
-            case .UserCancelled:
-                return // just do nothing in this case
-            case .Success:
-                println("great success!")
-            case .Error:
-                println("oh no, an error: \(error?.localizedDescription)")
-            }
-        })
-    }
-    
+
     func paymentAuthorizationViewController(controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {
         let apiClient = STPAPIClient(publishableKey: stripePublishableKey)
         apiClient.createTokenWithPayment(payment, completion: { (token, error) -> Void in
