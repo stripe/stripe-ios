@@ -24,7 +24,6 @@ static NSString *const apiURLBase = @"api.stripe.com";
 static NSString *const apiVersion = @"v1";
 static NSString *const tokenEndpoint = @"tokens";
 static NSString *STPDefaultPublishableKey;
-static char kAssociatedClientKey;
 
 @implementation Stripe
 
@@ -84,9 +83,6 @@ static char kAssociatedClientKey;
     
     STPAPIConnection *connection = [[STPAPIConnection alloc] initWithRequest:request];
     
-    // use the runtime to ensure we're not dealloc'ed before completion
-    objc_setAssociatedObject(connection, &kAssociatedClientKey, self, OBJC_ASSOCIATION_RETAIN);
-    
     [connection runOnOperationQueue:self.operationQueue
                          completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
                              if (requestError) {
@@ -115,8 +111,6 @@ static char kAssociatedClientKey;
                                      completion(nil, [self.class errorFromStripeResponse:jsonDictionary]);
                                  }
                              }
-                             // at this point it's safe to be dealloced
-                             objc_setAssociatedObject(connection, &kAssociatedClientKey, nil, OBJC_ASSOCIATION_RETAIN);
                          }];
 }
 
