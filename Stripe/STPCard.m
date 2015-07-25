@@ -8,6 +8,7 @@
 
 #import "STPCard.h"
 #import "StripeError.h"
+#import "STPCardValidator.h"
 
 @interface STPCard ()
 
@@ -74,14 +75,11 @@
         return [STPCard handleValidationErrorForParameter:@"number" error:outError];
     }
 
-    NSString *ioValueString = (NSString *)*ioValue;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[\\s+|-]" options:NSRegularExpressionCaseInsensitive error:NULL];
-
-    NSString *rawNumber = [regex stringByReplacingMatchesInString:ioValueString options:0 range:NSMakeRange(0, [ioValueString length]) withTemplate:@""];
-
-    if (rawNumber == nil || rawNumber.length < 10 || rawNumber.length > 19 || ![STPCard isLuhnValidString:rawNumber]) {
+    NSString *cardNumber = (NSString *)*ioValue;
+    if ([STPCardValidator validationStateForNumber:cardNumber] != STPCardValidationStateValid) {
         return [STPCard handleValidationErrorForParameter:@"number" error:outError];
     }
+
     return YES;
 }
 

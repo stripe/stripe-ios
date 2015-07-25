@@ -10,6 +10,7 @@
 #import "StripeError.h"
 #import "STPBankAccount.h"
 #import "STPCard.h"
+#import "STPCardBrand.h"
 #import "STPToken.h"
 #import "STPNullabilityMacros.h"
 
