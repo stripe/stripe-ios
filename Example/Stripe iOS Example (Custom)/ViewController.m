@@ -169,6 +169,11 @@
 
 #pragma mark - Custom Credit Card Form
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self beginCustomPayment:nil];
+}
+
 - (IBAction)beginCustomPayment:(id)sender {
     PaymentViewController *paymentViewController = [[PaymentViewController alloc] initWithNibName:nil bundle:nil];
     paymentViewController.amount = [NSDecimalNumber decimalNumberWithString:@"10.00"];

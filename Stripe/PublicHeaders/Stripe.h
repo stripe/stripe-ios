@@ -14,6 +14,11 @@
 #import "STPToken.h"
 #import "STPNullabilityMacros.h"
 
+#if __has_include("STPCreditCardTextField.h")
+#import "STPCreditCardTextField.h"
+#endif
+
+
 #if __has_include("STPCheckoutOptions.h")
 #import "STPCheckoutOptions.h"
 #import "STPCheckoutViewController.h"
