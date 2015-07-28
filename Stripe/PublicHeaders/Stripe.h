@@ -18,7 +18,6 @@
 #import "STPCreditCardTextField.h"
 #endif
 
-
 #if __has_include("STPCheckoutOptions.h")
 #import "STPCheckoutOptions.h"
 #import "STPCheckoutViewController.h"

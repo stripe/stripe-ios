@@ -54,6 +54,7 @@
 		0433EAD81B634913006E07DB /* STPCardBrand.h in Headers */ = {isa = PBXBuildFile; fileRef = 0433EAD51B634902006E07DB /* STPCardBrand.h */; };
 		0433EAD91B634919006E07DB /* STPCardBrand.h in Headers */ = {isa = PBXBuildFile; fileRef = 0433EAD51B634902006E07DB /* STPCardBrand.h */; };
 		0433EADA1B63491A006E07DB /* STPCardBrand.h in Headers */ = {isa = PBXBuildFile; fileRef = 0433EAD51B634902006E07DB /* STPCardBrand.h */; };
+		0433EADB1B6353FB006E07DB /* STPCardBrand.h in Headers */ = {isa = PBXBuildFile; fileRef = 0433EAD51B634902006E07DB /* STPCardBrand.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04415C561A6605B5001225ED /* STPAPIClient+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4AB1A5F30A700B854EE /* STPAPIClient+ApplePay.m */; };
 		04415C571A6605B5001225ED /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4AD1A5F30A700B854EE /* Stripe+ApplePay.m */; };
 		04415C591A6605B5001225ED /* STPCheckoutOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4B21A5F30A700B854EE /* STPCheckoutOptions.m */; };
@@ -834,6 +835,7 @@
 				0445EF061B573D7C00C4E3F2 /* STPCardValidator.h in Headers */,
 				0445EF151B581A9400C4E3F2 /* STPCreditCardTextField.h in Headers */,
 				04CDB4D41A5F30A700B854EE /* STPAPIClient+ApplePay.h in Headers */,
+				0433EADB1B6353FB006E07DB /* STPCardBrand.h in Headers */,
 				042983391AFB27A900B8AD2C /* STPNullabilityMacros.h in Headers */,
 				04518A981B62BEDA00423491 /* STPFormTextField.h in Headers */,
 				04CDB4E01A5F30A700B854EE /* STPCheckoutOptions.h in Headers */,

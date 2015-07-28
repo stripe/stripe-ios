@@ -30,13 +30,8 @@
 @property(nonatomic, readwrite, weak)UIView *dateContainer;
 @property(nonatomic, readwrite, weak)NSLayoutConstraint *dateContainerLeftConstraint;
 
-@property(nonatomic, readwrite, weak)STPFormTextField *monthField;
-@property(nonatomic, readwrite, weak)NSLayoutConstraint *monthWidthConstraint;
-
-@property(nonatomic, readwrite, weak)UILabel *slashLabel;
-
-@property(nonatomic, readwrite, weak)STPFormTextField *yearField;
-@property(nonatomic, readwrite, weak)NSLayoutConstraint *yearWidthConstraint;
+@property(nonatomic, readwrite, weak)STPFormTextField *expirationField;
+@property(nonatomic, readwrite, weak)NSLayoutConstraint *expirationWidthConstraint;
 
 @property(nonatomic, readwrite, weak)STPFormTextField *cvcField;
 @property(nonatomic, readwrite, weak)NSLayoutConstraint *cvcWidthConstraint;
@@ -98,26 +93,13 @@
     self.dateContainer = dateContainer;
     [self addSubview:dateContainer];
 
-    STPFormTextField *monthField = [self buildTextField];
-    monthField.tag = STPCardFieldTypeMonth;
-    monthField.placeholder = @"MM";
-    monthField.alpha = 0;
-    self.monthField = monthField;
-    [dateContainer addSubview:monthField];
-    
-    STPFormTextField *yearField = [self buildTextField];
-    yearField.tag = STPCardFieldTypeYear;
-    yearField.placeholder = @"YY";
-    yearField.alpha = 0;
-    self.yearField = yearField;
-    [dateContainer addSubview:yearField];
-    
-    UILabel *slashLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    slashLabel.text = @"/";
-    slashLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.slashLabel = slashLabel;
-    [self.dateContainer addSubview:slashLabel];
-    
+    STPFormTextField *expirationField = [self buildTextField];
+    expirationField.tag = STPCardFieldTypeExpiration;
+    expirationField.placeholder = @"MM/YY";
+    expirationField.alpha = 0;
+    self.expirationField = expirationField;
+    [dateContainer addSubview:expirationField];
+        
     STPFormTextField *cvcField = [self buildTextField];
     cvcField.tag = STPCardFieldTypeCVC;
     cvcField.placeholder = @"CVC";
@@ -218,7 +200,7 @@
     self.numberWidthConstraint = numberWidthConstraint;
     [self addConstraint:numberWidthConstraint];
     
-    //Date fields
+    //Expiration field
     NSLayoutConstraint *dateLeftConstraint = [NSLayoutConstraint constraintWithItem:self.dateContainer
                                                                           attribute:NSLayoutAttributeLeft
                                                                           relatedBy:NSLayoutRelationEqual
@@ -237,15 +219,15 @@
                                                     multiplier:1.0f
                                                       constant:-10.0f]];
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.monthField
-                                                     attribute:NSLayoutAttributeRight
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.expirationField
+                                                     attribute:NSLayoutAttributeCenterX
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self.dateContainer
                                                      attribute:NSLayoutAttributeCenterX
                                                     multiplier:1.0f
                                                       constant:0.0f]];
     
-    NSLayoutConstraint *monthWidthConstraint = [NSLayoutConstraint constraintWithItem:self.monthField
+    NSLayoutConstraint *expirationWidthConstraint = [NSLayoutConstraint constraintWithItem:self.expirationField
                                                                             attribute:NSLayoutAttributeWidth
                                                                             relatedBy:NSLayoutRelationEqual
                                                                                toItem:nil
@@ -253,35 +235,10 @@
                                                                            multiplier:1.0f
                                                                              constant:0.0f];
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.slashLabel
-                                                     attribute:NSLayoutAttributeRight
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.dateContainer
-                                                     attribute:NSLayoutAttributeCenterX
-                                                    multiplier:1.0f
-                                                      constant:0.0f]];
+    self.expirationWidthConstraint = expirationWidthConstraint;
+    [self addConstraint:expirationWidthConstraint];
     
-    self.monthWidthConstraint = monthWidthConstraint;
-    [self addConstraint:monthWidthConstraint];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.yearField
-                                                     attribute:NSLayoutAttributeLeft
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.dateContainer
-                                                     attribute:NSLayoutAttributeCenterX
-                                                    multiplier:1.0f
-                                                      constant:0.0f]];
-    
-    NSLayoutConstraint *yearWidthConstraint = [NSLayoutConstraint constraintWithItem:self.yearField
-                                                                           attribute:NSLayoutAttributeWidth
-                                                                           relatedBy:NSLayoutRelationEqual
-                                                                              toItem:nil
-                                                                           attribute:NSLayoutAttributeNotAnAttribute
-                                                                          multiplier:1.0f
-                                                                            constant:0.0f];
-    self.yearWidthConstraint = yearWidthConstraint;
-    [self addConstraint:yearWidthConstraint];
-    
+    // CVC field
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cvcField
                                                      attribute:NSLayoutAttributeRight
                                                      relatedBy:NSLayoutRelationEqual
@@ -298,12 +255,11 @@
                                                                          multiplier:1.0f
                                                                            constant:0];
     
-    // CVC fields
     self.cvcWidthConstraint = cvcWidthConstraint;
     [self addConstraint:cvcWidthConstraint];
     
     // Make everything be 100% height and vertically centered
-    for (UIView *view in @[self.backgroundTextField, self.brandImageView, self.interstitialView, self.dateContainer, self.numberField, self.slashLabel, self.monthField, self.yearField, self.cvcField]) {
+    for (UIView *view in @[self.backgroundTextField, self.brandImageView, self.interstitialView, self.dateContainer, self.numberField, self.expirationField, self.cvcField]) {
         
         [self addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                          attribute:NSLayoutAttributeTop
@@ -335,7 +291,7 @@
 }
 
 - (NSArray *)allFields {
-    return @[self.numberField, self.monthField, self.yearField, self.cvcField];
+    return @[self.numberField, self.expirationField, self.cvcField];
 }
 
 - (void)setNumberFieldShrunk:(BOOL)shrunk animated:(BOOL)animated {
@@ -356,7 +312,7 @@
     
     [UIView animateWithDuration:(animated * 0.3) animations:^{
         self.numberLeftConstraint.constant = shrunk ? -nonFragmentWidth : 0;
-        for (UIView *view in @[self.monthField, self.yearField, self.cvcField]) {
+        for (UIView *view in @[self.expirationField, self.cvcField]) {
             view.alpha = 1.0f * shrunk;
         }
         [self layoutSubviews];
@@ -446,14 +402,20 @@
             self.viewModel.cardNumber = newText;
             textField.text = self.viewModel.cardNumber;
             break;
-        case STPCardFieldTypeMonth:
-            self.viewModel.expirationMonth = newText;
-            textField.text = self.viewModel.expirationMonth;
+        case STPCardFieldTypeExpiration: {
+            self.viewModel.rawExpiration = newText;
+            NSString *text = self.viewModel.expirationMonth;
+            if ([self.viewModel validationStateForExpirationMonth] == STPCardValidationStateValid) {
+                BOOL adding = (newText.length > textField.text.length);
+                if (adding) {
+                    text = [text stringByAppendingString:@"/"];
+                } else {
+                    
+                }
+            }
+            textField.text = text;//[[self.viewModel.expirationMonth stringByAppendingString:@"/"] stringByAppendingString:self.viewModel.expirationYear];
             break;
-        case STPCardFieldTypeYear:
-            self.viewModel.expirationYear = newText;
-            textField.text = self.viewModel.expirationYear;
-            break;
+        }
         case STPCardFieldTypeCVC:
             self.viewModel.cvc = newText;
             textField.text = self.viewModel.cvc;
@@ -496,12 +458,10 @@
     }
     
     self.sizingField.font = _font;
-    self.slashLabel.font = _font;
     
-    self.numberWidthConstraint.constant = [self widthForCardNumber:@"8888888888888888"];
-    self.monthWidthConstraint.constant = [self widthForTextWithLength:2];
-    self.yearWidthConstraint.constant = [self widthForTextWithLength:2];
-    self.cvcWidthConstraint.constant = [self widthForTextWithLength:4];
+    self.numberWidthConstraint.constant = [self widthForCardNumber:self.numberField.placeholder];
+    self.expirationWidthConstraint.constant = [self widthForText:self.expirationField.placeholder];
+    self.cvcWidthConstraint.constant = MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"]);
     
     [self setNeedsUpdateConstraints];
 }
@@ -560,10 +520,8 @@
 
 - (STPFormTextField *)nextField {
     if (self.selectedField == self.numberField) {
-        return self.monthField;
-    } else if (self.selectedField == self.monthField) {
-        return self.yearField;
-    } else if (self.selectedField == self.yearField) {
+        return self.expirationField;
+    } else if (self.selectedField == self.expirationField) {
         return self.cvcField;
     }
     return nil;
@@ -571,10 +529,8 @@
 
 - (STPFormTextField *)previousField {
     if (self.selectedField == self.cvcField) {
-        return self.yearField;
-    } else if (self.selectedField == self.yearField) {
-        return self.monthField;
-    } else if (self.selectedField == self.monthField) {
+        return self.expirationField;
+    } else if (self.selectedField == self.expirationField) {
         return self.numberField;
     }
     return nil;

@@ -14,19 +14,21 @@
 
 typedef NS_ENUM(NSInteger, STPCardFieldType) {
     STPCardFieldTypeNumber,
-    STPCardFieldTypeMonth,
-    STPCardFieldTypeYear,
+    STPCardFieldTypeExpiration,
     STPCardFieldTypeCVC,
 };
 
 @interface STPCreditCardTextFieldViewModel : NSObject
 
 @property(nonatomic, readwrite)NSString *cardNumber;
-@property(nonatomic, readwrite)NSString *expirationMonth;
-@property(nonatomic, readwrite)NSString *expirationYear;
+@property(nonatomic, readwrite)NSString *rawExpiration;
+@property(nonatomic, readonly)NSString *expirationMonth;
+@property(nonatomic, readonly)NSString *expirationYear;
 @property(nonatomic, readwrite)NSString *cvc;
 @property(nonatomic, readonly) STPCardBrand brand;
 
+- (STPCardValidationState)validationStateForExpirationMonth;
+- (STPCardValidationState)validationStateForExpirationYear;
 - (STPCardValidationState)validationStateForField:(STPCardFieldType)fieldType;
 - (UIImage *)brandImage;
 - (UIImage *)cvcImage;

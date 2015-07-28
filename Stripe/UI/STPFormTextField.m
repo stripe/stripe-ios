@@ -33,6 +33,9 @@
 }
 
 - (NSAttributedString *)attributedStringForString:(NSString *)string attributes:(NSDictionary *)attributes {
+    if (!string) {
+        return nil;
+    }
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string attributes:attributes];
     if (self.formatsCardNumbers) {
         NSArray *cardSpacing;
