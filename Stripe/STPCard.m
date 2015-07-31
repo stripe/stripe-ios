@@ -71,7 +71,7 @@
 
 - (BOOL)validateNumber:(id *)ioValue error:(NSError **)outError {
     if (*ioValue == nil) {
-        return [STPCard handleValidationErrorForParameter:@"number" error:outError];
+        return [self.class handleValidationErrorForParameter:@"number" error:outError];
     }
 
     NSString *ioValueString = (NSString *)*ioValue;
@@ -79,15 +79,15 @@
 
     NSString *rawNumber = [regex stringByReplacingMatchesInString:ioValueString options:0 range:NSMakeRange(0, [ioValueString length]) withTemplate:@""];
 
-    if (rawNumber == nil || rawNumber.length < 10 || rawNumber.length > 19 || ![STPCard isLuhnValidString:rawNumber]) {
-        return [STPCard handleValidationErrorForParameter:@"number" error:outError];
+    if (rawNumber == nil || rawNumber.length < 10 || rawNumber.length > 19 || ![self.class isLuhnValidString:rawNumber]) {
+        return [self.class handleValidationErrorForParameter:@"number" error:outError];
     }
     return YES;
 }
 
 - (BOOL)validateCvc:(id *)ioValue error:(NSError **)outError {
     if (*ioValue == nil) {
-        return [STPCard handleValidationErrorForParameter:@"number" error:outError];
+        return [self.class handleValidationErrorForParameter:@"number" error:outError];
     }
     NSString *cvc = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     BOOL validCvcLength = ({
@@ -104,30 +104,30 @@
         valid;
     });
 
-    if (![STPCard isNumericOnlyString:cvc] || !validCvcLength) {
-        return [STPCard handleValidationErrorForParameter:@"cvc" error:outError];
+    if (![self.class isNumericOnlyString:cvc] || !validCvcLength) {
+        return [self.class handleValidationErrorForParameter:@"cvc" error:outError];
     }
     return YES;
 }
 
 - (BOOL)validateExpMonth:(id *)ioValue error:(NSError **)outError {
     if (*ioValue == nil) {
-        return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
+        return [self.class handleValidationErrorForParameter:@"expMonth" error:outError];
     }
 
     NSString *ioValueString = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSInteger expMonthInt = [ioValueString integerValue];
 
-    if ((![STPCard isNumericOnlyString:ioValueString] || expMonthInt > 12 || expMonthInt < 1)) {
-        return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
-    } else if ([self expYear] && [STPCard isExpiredMonth:expMonthInt andYear:[self expYear] atDate:[NSDate date]]) {
-        NSUInteger currentYear = [STPCard currentYear];
+    if ((![self.class isNumericOnlyString:ioValueString] || expMonthInt > 12 || expMonthInt < 1)) {
+        return [self.class handleValidationErrorForParameter:@"expMonth" error:outError];
+    } else if ([self expYear] && [self.class isExpiredMonth:expMonthInt andYear:[self expYear] atDate:[NSDate date]]) {
+        NSUInteger currentYear = [self.class currentYear];
         // If the year is in the past, this is actually a problem with the expYear parameter, but it still means this month is not a valid month. This is pretty
         // rare - it means someone set expYear on the card without validating it
         if (currentYear > [self expYear]) {
-            return [STPCard handleValidationErrorForParameter:@"expYear" error:outError];
+            return [self.class handleValidationErrorForParameter:@"expYear" error:outError];
         } else {
-            return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
+            return [self.class handleValidationErrorForParameter:@"expMonth" error:outError];
         }
     }
     return YES;
@@ -135,16 +135,16 @@
 
 - (BOOL)validateExpYear:(id *)ioValue error:(NSError **)outError {
     if (*ioValue == nil) {
-        return [STPCard handleValidationErrorForParameter:@"expYear" error:outError];
+        return [self.class handleValidationErrorForParameter:@"expYear" error:outError];
     }
 
     NSString *ioValueString = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSInteger expYearInt = [ioValueString integerValue];
 
-    if ((![STPCard isNumericOnlyString:ioValueString] || expYearInt < [STPCard currentYear])) {
-        return [STPCard handleValidationErrorForParameter:@"expYear" error:outError];
-    } else if ([self expMonth] && [STPCard isExpiredMonth:[self expMonth] andYear:expYearInt atDate:[NSDate date]]) {
-        return [STPCard handleValidationErrorForParameter:@"expMonth" error:outError];
+    if ((![self.class isNumericOnlyString:ioValueString] || expYearInt < [self.class currentYear])) {
+        return [self.class handleValidationErrorForParameter:@"expYear" error:outError];
+    } else if ([self expMonth] && [self.class isExpiredMonth:[self expMonth] andYear:expYearInt atDate:[NSDate date]]) {
+        return [self.class handleValidationErrorForParameter:@"expMonth" error:outError];
     }
 
     return YES;
