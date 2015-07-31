@@ -14,16 +14,19 @@
 #import "STPToken.h"
 #import "STPNullabilityMacros.h"
 
-#if __has_include("STPCreditCardTextField.h")
-#import "STPCreditCardTextField.h"
+#import "STPPaymentCardTextField.h"
+#if __has_include("STPPaymentCardTextField.h") && TARGET_OS_IPHONE
+#import "STPPaymentCardTextField.h"
 #endif
 
-#if __has_include("STPCheckoutOptions.h")
 #import "STPCheckoutOptions.h"
+#if __has_include("STPCheckoutOptions.h")
+//#import "STPCheckoutOptions.h"
 #import "STPCheckoutViewController.h"
 #endif
 
-#if __has_include("Stripe+ApplePay.h") && TARGET_OS_IPHONE
 #import "Stripe+ApplePay.h"
+#if __has_include("Stripe+ApplePay.h") && TARGET_OS_IPHONE
+//#import "Stripe+ApplePay.h"
 #import "STPAPIClient+ApplePay.h"
 #endif

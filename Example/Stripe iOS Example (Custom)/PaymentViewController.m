@@ -12,7 +12,7 @@
 #import "PaymentViewController.h"
 
 @interface PaymentViewController ()
-@property (weak, nonatomic) STPCreditCardTextField *paymentView;
+@property (weak, nonatomic) STPPaymentCardTextField *paymentView;
 @end
 
 @implementation PaymentViewController
@@ -34,7 +34,7 @@
     self.navigationItem.rightBarButtonItem = saveButton;
 
     // Setup checkout
-    STPCreditCardTextField *paymentView = [[STPCreditCardTextField alloc] initWithFrame:CGRectMake(15, 10, 340, 44)];
+    STPPaymentCardTextField *paymentView = [[STPPaymentCardTextField alloc] initWithFrame:CGRectMake(15, 10, 340, 44)];
 //    paymentView.delegate = self;
     self.paymentView = paymentView;
     [self.view addSubview:paymentView];

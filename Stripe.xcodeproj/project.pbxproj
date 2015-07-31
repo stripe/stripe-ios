@@ -99,17 +99,22 @@
 		04415C831A6605D9001225ED /* STPCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CA1A5F30A700B854EE /* STPCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04415C841A6605D9001225ED /* STPToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CC1A5F30A700B854EE /* STPToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04415C851A6605D9001225ED /* StripeError.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CE1A5F30A700B854EE /* StripeError.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0445EF061B573D7C00C4E3F2 /* STPCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 0445EF041B573D7C00C4E3F2 /* STPCardValidator.h */; };
 		0445EF071B573D7C00C4E3F2 /* STPCardValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445EF051B573D7C00C4E3F2 /* STPCardValidator.m */; };
-		0445EF151B581A9400C4E3F2 /* STPCreditCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0445EF131B581A9400C4E3F2 /* STPCreditCardTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0445EF161B581A9400C4E3F2 /* STPCreditCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0445EF131B581A9400C4E3F2 /* STPCreditCardTextField.h */; };
-		0445EF171B581A9400C4E3F2 /* STPCreditCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0445EF131B581A9400C4E3F2 /* STPCreditCardTextField.h */; };
-		0445EF181B581A9400C4E3F2 /* STPCreditCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0445EF131B581A9400C4E3F2 /* STPCreditCardTextField.h */; };
-		0445EF191B581A9400C4E3F2 /* STPCreditCardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445EF141B581A9400C4E3F2 /* STPCreditCardTextField.m */; };
-		0445EF1A1B581A9400C4E3F2 /* STPCreditCardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445EF141B581A9400C4E3F2 /* STPCreditCardTextField.m */; };
-		0445EF1B1B581A9400C4E3F2 /* STPCreditCardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445EF141B581A9400C4E3F2 /* STPCreditCardTextField.m */; };
-		0445EF1C1B581A9400C4E3F2 /* STPCreditCardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445EF141B581A9400C4E3F2 /* STPCreditCardTextField.m */; };
+		0445EF151B581A9400C4E3F2 /* STPPaymentCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0445EF131B581A9400C4E3F2 /* STPPaymentCardTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0445EF161B581A9400C4E3F2 /* STPPaymentCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0445EF131B581A9400C4E3F2 /* STPPaymentCardTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0445EF171B581A9400C4E3F2 /* STPPaymentCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0445EF131B581A9400C4E3F2 /* STPPaymentCardTextField.h */; };
+		0445EF181B581A9400C4E3F2 /* STPPaymentCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0445EF131B581A9400C4E3F2 /* STPPaymentCardTextField.h */; };
+		0445EF191B581A9400C4E3F2 /* STPPaymentCardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445EF141B581A9400C4E3F2 /* STPPaymentCardTextField.m */; };
+		0445EF1A1B581A9400C4E3F2 /* STPPaymentCardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445EF141B581A9400C4E3F2 /* STPPaymentCardTextField.m */; };
+		0445EF1B1B581A9400C4E3F2 /* STPPaymentCardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445EF141B581A9400C4E3F2 /* STPPaymentCardTextField.m */; };
+		0445EF1C1B581A9400C4E3F2 /* STPPaymentCardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445EF141B581A9400C4E3F2 /* STPPaymentCardTextField.m */; };
 		0445EF241B581BE200C4E3F2 /* STPCreditCardTextFieldTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445EF1E1B581BE200C4E3F2 /* STPCreditCardTextFieldTest.m */; };
+		044A6F6E1B69665600E6B6A7 /* STPFormTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 04518A961B62BEDA00423491 /* STPFormTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		044A6F701B69665C00E6B6A7 /* STPFormTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 04518A961B62BEDA00423491 /* STPFormTextField.h */; };
+		044A6F711B69665E00E6B6A7 /* STPFormTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 04518A961B62BEDA00423491 /* STPFormTextField.h */; };
+		044A6F721B69666C00E6B6A7 /* STPFormTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 04518A971B62BEDA00423491 /* STPFormTextField.m */; };
+		044A6F731B69666D00E6B6A7 /* STPFormTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 04518A971B62BEDA00423491 /* STPFormTextField.m */; };
+		044A6F741B69666E00E6B6A7 /* STPFormTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 04518A971B62BEDA00423491 /* STPFormTextField.m */; };
 		04518A981B62BEDA00423491 /* STPFormTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 04518A961B62BEDA00423491 /* STPFormTextField.h */; };
 		04518A991B62BEDA00423491 /* STPFormTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 04518A971B62BEDA00423491 /* STPFormTextField.m */; };
 		04533E7D1A6877F400C7E52E /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D5BF9019BF958F009521A5 /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -221,14 +226,14 @@
 		04BF36931B5DFCA6008A83E0 /* visa.png in Resources */ = {isa = PBXBuildFile; fileRef = 04BF36701B5DFCA6008A83E0 /* visa.png */; };
 		04BF36941B5DFCA6008A83E0 /* visa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04BF36711B5DFCA6008A83E0 /* visa@2x.png */; };
 		04BF36951B5DFCA6008A83E0 /* visa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04BF36711B5DFCA6008A83E0 /* visa@2x.png */; };
-		04BF36981B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BF36961B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h */; };
-		04BF36991B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BF36961B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h */; };
-		04BF369A1B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BF36961B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h */; };
-		04BF369B1B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BF36961B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h */; };
-		04BF369C1B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BF36971B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m */; };
-		04BF369D1B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BF36971B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m */; };
-		04BF369E1B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BF36971B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m */; };
-		04BF369F1B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BF36971B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m */; };
+		04BF36981B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BF36961B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h */; };
+		04BF36991B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BF36961B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h */; };
+		04BF369A1B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BF36961B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h */; };
+		04BF369B1B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BF36961B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h */; };
+		04BF369C1B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BF36971B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m */; };
+		04BF369D1B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BF36971B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m */; };
+		04BF369E1B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BF36971B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m */; };
+		04BF369F1B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BF36971B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m */; };
 		04CDB4D31A5F30A700B854EE /* Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4A91A5F30A700B854EE /* Stripe.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04CDB4D41A5F30A700B854EE /* STPAPIClient+ApplePay.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4AA1A5F30A700B854EE /* STPAPIClient+ApplePay.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04CDB4D61A5F30A700B854EE /* STPAPIClient+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4AB1A5F30A700B854EE /* STPAPIClient+ApplePay.m */; };
@@ -365,8 +370,8 @@
 		04365D2C1A4CF86C00A3E1D4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		0445EF041B573D7C00C4E3F2 /* STPCardValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCardValidator.h; sourceTree = "<group>"; };
 		0445EF051B573D7C00C4E3F2 /* STPCardValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCardValidator.m; sourceTree = "<group>"; };
-		0445EF131B581A9400C4E3F2 /* STPCreditCardTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCreditCardTextField.h; path = Stripe/UI/STPCreditCardTextField.h; sourceTree = SOURCE_ROOT; };
-		0445EF141B581A9400C4E3F2 /* STPCreditCardTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = STPCreditCardTextField.m; path = Stripe/UI/STPCreditCardTextField.m; sourceTree = SOURCE_ROOT; };
+		0445EF131B581A9400C4E3F2 /* STPPaymentCardTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentCardTextField.h; path = Stripe/UI/STPPaymentCardTextField.h; sourceTree = SOURCE_ROOT; };
+		0445EF141B581A9400C4E3F2 /* STPPaymentCardTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = STPPaymentCardTextField.m; path = Stripe/UI/STPPaymentCardTextField.m; sourceTree = SOURCE_ROOT; };
 		0445EF1E1B581BE200C4E3F2 /* STPCreditCardTextFieldTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCreditCardTextFieldTest.m; sourceTree = "<group>"; };
 		04518A961B62BEDA00423491 /* STPFormTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPFormTextField.h; path = Stripe/UI/STPFormTextField.h; sourceTree = SOURCE_ROOT; };
 		04518A971B62BEDA00423491 /* STPFormTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = STPFormTextField.m; path = Stripe/UI/STPFormTextField.m; sourceTree = SOURCE_ROOT; };
@@ -392,8 +397,8 @@
 		04BF366F1B5DFCA6008A83E0 /* placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder@2x.png"; sourceTree = "<group>"; };
 		04BF36701B5DFCA6008A83E0 /* visa.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = visa.png; sourceTree = "<group>"; };
 		04BF36711B5DFCA6008A83E0 /* visa@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "visa@2x.png"; sourceTree = "<group>"; };
-		04BF36961B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCreditCardTextFieldViewModel.h; path = Stripe/UI/STPCreditCardTextFieldViewModel.h; sourceTree = SOURCE_ROOT; };
-		04BF36971B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = STPCreditCardTextFieldViewModel.m; path = Stripe/UI/STPCreditCardTextFieldViewModel.m; sourceTree = SOURCE_ROOT; };
+		04BF36961B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentCardTextFieldViewModel.h; path = Stripe/UI/STPPaymentCardTextFieldViewModel.h; sourceTree = SOURCE_ROOT; };
+		04BF36971B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = STPPaymentCardTextFieldViewModel.m; path = Stripe/UI/STPPaymentCardTextFieldViewModel.m; sourceTree = SOURCE_ROOT; };
 		04CDB4421A5F2E1800B854EE /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		04CDB4A91A5F30A700B854EE /* Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Stripe.h; path = PublicHeaders/Stripe.h; sourceTree = "<group>"; };
 		04CDB4AA1A5F30A700B854EE /* STPAPIClient+ApplePay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "STPAPIClient+ApplePay.h"; path = "../PublicHeaders/ApplePay/STPAPIClient+ApplePay.h"; sourceTree = "<group>"; };
@@ -526,10 +531,10 @@
 			children = (
 				04518A961B62BEDA00423491 /* STPFormTextField.h */,
 				04518A971B62BEDA00423491 /* STPFormTextField.m */,
-				0445EF131B581A9400C4E3F2 /* STPCreditCardTextField.h */,
-				0445EF141B581A9400C4E3F2 /* STPCreditCardTextField.m */,
-				04BF36961B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h */,
-				04BF36971B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m */,
+				0445EF131B581A9400C4E3F2 /* STPPaymentCardTextField.h */,
+				0445EF141B581A9400C4E3F2 /* STPPaymentCardTextField.m */,
+				04BF36961B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h */,
+				04BF36971B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m */,
 			);
 			name = UI;
 			path = Checkout;
@@ -738,7 +743,7 @@
 				0433EACE1B6347EC006E07DB /* STPCardValidator.h in Headers */,
 				04415C761A6605D9001225ED /* STPCheckoutOptions.h in Headers */,
 				04415C771A6605D9001225ED /* STPCheckoutViewController.h in Headers */,
-				04BF36991B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h in Headers */,
+				04BF36991B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h in Headers */,
 				04415C7F1A6605D9001225ED /* STPAPIClient.h in Headers */,
 				04415C821A6605D9001225ED /* STPBankAccount.h in Headers */,
 				04415C831A6605D9001225ED /* STPCard.h in Headers */,
@@ -746,10 +751,11 @@
 				0429833A1AFB27AD00B8AD2C /* STPNullabilityMacros.h in Headers */,
 				0433EAD71B634912006E07DB /* STPCardBrand.h in Headers */,
 				04415C851A6605D9001225ED /* StripeError.h in Headers */,
+				044A6F6E1B69665600E6B6A7 /* STPFormTextField.h in Headers */,
 				04415C781A6605D9001225ED /* STPCheckoutDelegate.h in Headers */,
 				04415C791A6605D9001225ED /* STPCheckoutInternalUIWebViewController.h in Headers */,
 				04415C7A1A6605D9001225ED /* STPCheckoutWebViewAdapter.h in Headers */,
-				0445EF161B581A9400C4E3F2 /* STPCreditCardTextField.h in Headers */,
+				0445EF161B581A9400C4E3F2 /* STPPaymentCardTextField.h in Headers */,
 				04415C7B1A6605D9001225ED /* STPColorUtils.h in Headers */,
 				04415C7C1A6605D9001225ED /* STPIOSCheckoutWebViewAdapter.h in Headers */,
 				04415C7D1A6605D9001225ED /* STPOSXCheckoutWebViewAdapter.h in Headers */,
@@ -775,12 +781,13 @@
 				0429833D1AFB27B600B8AD2C /* STPNullabilityMacros.h in Headers */,
 				047E67D11A65E7BC001D7493 /* STPCheckoutDelegate.h in Headers */,
 				047E67D21A65E7BC001D7493 /* STPCheckoutInternalUIWebViewController.h in Headers */,
+				044A6F711B69665E00E6B6A7 /* STPFormTextField.h in Headers */,
 				047E67D31A65E7BC001D7493 /* STPCheckoutWebViewAdapter.h in Headers */,
 				047E67D41A65E7BC001D7493 /* STPColorUtils.h in Headers */,
 				0433EADA1B63491A006E07DB /* STPCardBrand.h in Headers */,
 				047E67D51A65E7BC001D7493 /* STPIOSCheckoutWebViewAdapter.h in Headers */,
-				04BF369B1B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h in Headers */,
-				0445EF181B581A9400C4E3F2 /* STPCreditCardTextField.h in Headers */,
+				04BF369B1B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h in Headers */,
+				0445EF181B581A9400C4E3F2 /* STPPaymentCardTextField.h in Headers */,
 				047E67D61A65E7BC001D7493 /* STPOSXCheckoutWebViewAdapter.h in Headers */,
 				047E67D71A65E7BC001D7493 /* STPStrictURLProtocol.h in Headers */,
 				047E67D91A65E7BC001D7493 /* STPFormEncoder.h in Headers */,
@@ -798,7 +805,7 @@
 				0433EAD01B6347EF006E07DB /* STPCardValidator.h in Headers */,
 				049E84DD1A605EF0000B66CD /* STPCheckoutOptions.h in Headers */,
 				049E84DE1A605EF0000B66CD /* STPCheckoutViewController.h in Headers */,
-				04BF369A1B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h in Headers */,
+				04BF369A1B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h in Headers */,
 				049E84E61A605EF0000B66CD /* STPAPIClient.h in Headers */,
 				049E84E91A605EF0000B66CD /* STPBankAccount.h in Headers */,
 				049E84EA1A605EF0000B66CD /* STPCard.h in Headers */,
@@ -806,10 +813,11 @@
 				0429833C1AFB27B400B8AD2C /* STPNullabilityMacros.h in Headers */,
 				0433EAD91B634919006E07DB /* STPCardBrand.h in Headers */,
 				049E84EC1A605EF0000B66CD /* StripeError.h in Headers */,
+				044A6F701B69665C00E6B6A7 /* STPFormTextField.h in Headers */,
 				049E84DF1A605EF0000B66CD /* STPCheckoutDelegate.h in Headers */,
 				049E84E01A605EF0000B66CD /* STPCheckoutInternalUIWebViewController.h in Headers */,
 				049E84E11A605EF0000B66CD /* STPCheckoutWebViewAdapter.h in Headers */,
-				0445EF171B581A9400C4E3F2 /* STPCreditCardTextField.h in Headers */,
+				0445EF171B581A9400C4E3F2 /* STPPaymentCardTextField.h in Headers */,
 				049E84E21A605EF0000B66CD /* STPColorUtils.h in Headers */,
 				049E84E31A605EF0000B66CD /* STPIOSCheckoutWebViewAdapter.h in Headers */,
 				049E84E41A605EF0000B66CD /* STPOSXCheckoutWebViewAdapter.h in Headers */,
@@ -823,7 +831,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04BF36981B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.h in Headers */,
+				04BF36981B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.h in Headers */,
 				04CDB4EE1A5F30A700B854EE /* STPColorUtils.h in Headers */,
 				04CDB4F61A5F30A700B854EE /* STPOSXCheckoutWebViewAdapter.h in Headers */,
 				04CDB50E1A5F30A700B854EE /* STPCard.h in Headers */,
@@ -832,14 +840,12 @@
 				04CDB5121A5F30A700B854EE /* STPToken.h in Headers */,
 				04CDB4D81A5F30A700B854EE /* Stripe+ApplePay.h in Headers */,
 				04CDB5161A5F30A700B854EE /* StripeError.h in Headers */,
-				0445EF061B573D7C00C4E3F2 /* STPCardValidator.h in Headers */,
-				0445EF151B581A9400C4E3F2 /* STPCreditCardTextField.h in Headers */,
+				0445EF151B581A9400C4E3F2 /* STPPaymentCardTextField.h in Headers */,
 				04CDB4D41A5F30A700B854EE /* STPAPIClient+ApplePay.h in Headers */,
 				0433EADB1B6353FB006E07DB /* STPCardBrand.h in Headers */,
 				042983391AFB27A900B8AD2C /* STPNullabilityMacros.h in Headers */,
 				04518A981B62BEDA00423491 /* STPFormTextField.h in Headers */,
 				04CDB4E01A5F30A700B854EE /* STPCheckoutOptions.h in Headers */,
-				0445EF061B573D7C00C4E3F2 /* STPCardValidator.h in Headers */,
 				04CDB5021A5F30A700B854EE /* STPFormEncoder.h in Headers */,
 				04CDB4E81A5F30A700B854EE /* STPCheckoutDelegate.h in Headers */,
 				04CDB4ED1A5F30A700B854EE /* STPCheckoutWebViewAdapter.h in Headers */,
@@ -1195,7 +1201,7 @@
 				04415C5E1A6605B5001225ED /* STPOSXCheckoutWebViewAdapter.m in Sources */,
 				0433EAD31B634880006E07DB /* STPCardValidatorTest.m in Sources */,
 				04415C5F1A6605B5001225ED /* STPStrictURLProtocol.m in Sources */,
-				0445EF1A1B581A9400C4E3F2 /* STPCreditCardTextField.m in Sources */,
+				0445EF1A1B581A9400C4E3F2 /* STPPaymentCardTextField.m in Sources */,
 				04415C601A6605B5001225ED /* STPAPIClient.m in Sources */,
 				04415C611A6605B5001225ED /* STPFormEncoder.m in Sources */,
 				04415C621A6605B5001225ED /* STPAPIConnection.m in Sources */,
@@ -1204,8 +1210,9 @@
 				04415C651A6605B5001225ED /* STPToken.m in Sources */,
 				04415C661A6605B5001225ED /* StripeError.m in Sources */,
 				04415C671A6605B5001225ED /* STPAPIClientTest.m in Sources */,
+				044A6F721B69666C00E6B6A7 /* STPFormTextField.m in Sources */,
 				04415C681A6605B5001225ED /* STPFormEncoderTest.m in Sources */,
-				04BF369D1B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m in Sources */,
+				04BF369D1B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m in Sources */,
 				04415C6A1A6605B5001225ED /* STPApplePayTest.m in Sources */,
 				04415C6B1A6605B5001225ED /* STPBankAccountFunctionalTest.m in Sources */,
 				04415C6C1A6605B5001225ED /* STPBankAccountTest.m in Sources */,
@@ -1227,8 +1234,9 @@
 				047E67C21A65E793001D7493 /* STPColorUtils.m in Sources */,
 				047E67C31A65E793001D7493 /* STPIOSCheckoutWebViewAdapter.m in Sources */,
 				047E67C41A65E793001D7493 /* STPOSXCheckoutWebViewAdapter.m in Sources */,
+				044A6F741B69666E00E6B6A7 /* STPFormTextField.m in Sources */,
 				047E67C51A65E793001D7493 /* STPStrictURLProtocol.m in Sources */,
-				0445EF1C1B581A9400C4E3F2 /* STPCreditCardTextField.m in Sources */,
+				0445EF1C1B581A9400C4E3F2 /* STPPaymentCardTextField.m in Sources */,
 				047E67C61A65E793001D7493 /* STPAPIClient.m in Sources */,
 				047E67C71A65E793001D7493 /* STPFormEncoder.m in Sources */,
 				047E67C81A65E793001D7493 /* STPAPIConnection.m in Sources */,
@@ -1236,7 +1244,7 @@
 				047E67CA1A65E793001D7493 /* STPCard.m in Sources */,
 				047E67CB1A65E793001D7493 /* STPToken.m in Sources */,
 				047E67CC1A65E793001D7493 /* StripeError.m in Sources */,
-				04BF369F1B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m in Sources */,
+				04BF369F1B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1244,15 +1252,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0445EF1B1B581A9400C4E3F2 /* STPCreditCardTextField.m in Sources */,
+				0445EF1B1B581A9400C4E3F2 /* STPPaymentCardTextField.m in Sources */,
 				049E84C21A605DE0000B66CD /* STPAPIClient+ApplePay.m in Sources */,
 				049E84C31A605DE0000B66CD /* Stripe+ApplePay.m in Sources */,
-				04BF369E1B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m in Sources */,
+				04BF369E1B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m in Sources */,
 				049E84C51A605DE0000B66CD /* STPCheckoutOptions.m in Sources */,
 				049E84C61A605DE0000B66CD /* STPCheckoutViewController.m in Sources */,
 				049E84C71A605DE0000B66CD /* STPCheckoutInternalUIWebViewController.m in Sources */,
 				049E84C81A605DE0000B66CD /* STPColorUtils.m in Sources */,
 				049E84C91A605DE0000B66CD /* STPIOSCheckoutWebViewAdapter.m in Sources */,
+				044A6F731B69666D00E6B6A7 /* STPFormTextField.m in Sources */,
 				049E84CA1A605DE0000B66CD /* STPOSXCheckoutWebViewAdapter.m in Sources */,
 				049E84CB1A605DE0000B66CD /* STPStrictURLProtocol.m in Sources */,
 				049E84CC1A605DE0000B66CD /* STPAPIClient.m in Sources */,
@@ -1282,14 +1291,14 @@
 				04CDB4FC1A5F30A700B854EE /* STPStrictURLProtocol.m in Sources */,
 				04CDB5041A5F30A700B854EE /* STPFormEncoder.m in Sources */,
 				04CDB4F41A5F30A700B854EE /* STPIOSCheckoutWebViewAdapter.m in Sources */,
-				0445EF191B581A9400C4E3F2 /* STPCreditCardTextField.m in Sources */,
+				0445EF191B581A9400C4E3F2 /* STPPaymentCardTextField.m in Sources */,
 				04CDB4DA1A5F30A700B854EE /* Stripe+ApplePay.m in Sources */,
 				04CDB4F01A5F30A700B854EE /* STPColorUtils.m in Sources */,
 				04CDB5141A5F30A700B854EE /* STPToken.m in Sources */,
 				04CDB4D61A5F30A700B854EE /* STPAPIClient+ApplePay.m in Sources */,
 				04CDB4E61A5F30A700B854EE /* STPCheckoutViewController.m in Sources */,
 				04518A991B62BEDA00423491 /* STPFormTextField.m in Sources */,
-				04BF369C1B5E1E89008A83E0 /* STPCreditCardTextFieldViewModel.m in Sources */,
+				04BF369C1B5E1E89008A83E0 /* STPPaymentCardTextFieldViewModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

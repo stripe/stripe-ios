@@ -28,6 +28,9 @@ typedef NS_ENUM(NSInteger, STPCardValidationState) {
 + (STPCardValidationState)validationStateForExpirationMonth:(NSString *)expirationMonth;
 + (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear inMonth:(NSString *)expirationMonth;
 
+// For testing
++ (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear inMonth:(NSString *)expirationMonth inCurrentYear:(NSInteger)currentYear currentMonth:(NSInteger)currentMonth;
+
 + (NSUInteger)maxCvcLengthForCardBrand:(STPCardBrand)brand;
 + (STPCardValidationState)validationStateForCVC:(NSString *)cvc cardBrand:(STPCardBrand)brand;
 

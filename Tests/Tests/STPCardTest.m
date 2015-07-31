@@ -14,19 +14,19 @@
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
-@implementation NSDate (CardTestOverrides)
-+ (NSDate *)date {
-    FAUXPAS_IGNORED_IN_METHOD(UnprefixedCategoryMethod)
-    FAUXPAS_IGNORED_IN_METHOD(CategoryMethodConflict)
-    // All card tests will pretend the current date is August 29, 1997.
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [[NSDateComponents alloc] init];
-    [components setYear:1997];
-    [components setMonth:8];
-    [components setDay:29];
-    return [calendar dateFromComponents:components];
-}
-@end
+//@implementation NSDate (CardTestOverrides)
+//+ (NSDate *)date {
+//    FAUXPAS_IGNORED_IN_METHOD(UnprefixedCategoryMethod)
+//    FAUXPAS_IGNORED_IN_METHOD(CategoryMethodConflict)
+//    // All card tests will pretend the current date is August 29, 1997.
+//    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+//    NSDateComponents *components = [[NSDateComponents alloc] init];
+//    [components setYear:1997];
+//    [components setMonth:8];
+//    [components setDay:29];
+//    return [calendar dateFromComponents:components];
+//}
+//@end
 
 @interface STPCardTest : XCTestCase
 @property (nonatomic) STPCard *card;

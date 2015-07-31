@@ -1,5 +1,5 @@
 //
-//  STPCreditCardTextFieldViewModel.h
+//  STPPaymentCardTextFieldViewModel.h
 //  Stripe
 //
 //  Created by Jack Flintermann on 7/21/15.
@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, STPCardFieldType) {
     STPCardFieldTypeCVC,
 };
 
-@interface STPCreditCardTextFieldViewModel : NSObject
+@interface STPPaymentCardTextFieldViewModel : NSObject
 
 @property(nonatomic, readwrite)NSString *cardNumber;
 @property(nonatomic, readwrite)NSString *rawExpiration;
@@ -27,8 +27,11 @@ typedef NS_ENUM(NSInteger, STPCardFieldType) {
 @property(nonatomic, readwrite)NSString *cvc;
 @property(nonatomic, readonly) STPCardBrand brand;
 
-- (STPCardValidationState)validationStateForExpirationMonth;
-- (STPCardValidationState)validationStateForExpirationYear;
+- (NSString *)placeholder;
+- (NSString *)numberWithoutLastDigits;
+
+- (BOOL)isValid;
+
 - (STPCardValidationState)validationStateForField:(STPCardFieldType)fieldType;
 - (UIImage *)brandImage;
 - (UIImage *)cvcImage;

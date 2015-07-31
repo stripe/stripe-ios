@@ -1,5 +1,5 @@
 //
-//  STPCreditCardTextField.m
+//  STPPaymentCardTextField.m
 //  Stripe
 //
 //  Created by Jack Flintermann on 7/16/15.
@@ -8,13 +8,13 @@
 
 @import UIKit;
 
-#import "STPCreditCardTextField.h"
-#import "STPCreditCardTextFieldViewModel.h"
+#import "Stripe.h"
+#import "STPPaymentCardTextField.h"
+#import "STPPaymentCardTextFieldViewModel.h"
 #import "STPFormTextField.h"
-#import "STPCard.h"
 #import "STPCardValidator.h"
 
-@interface STPCreditCardTextField()<STPFormTextFieldDelegate>
+@interface STPPaymentCardTextField()<STPFormTextFieldDelegate>
 
 @property(nonatomic, readwrite, strong)STPFormTextField *sizingField;
 
@@ -36,13 +36,21 @@
 @property(nonatomic, readwrite, weak)STPFormTextField *cvcField;
 @property(nonatomic, readwrite, weak)NSLayoutConstraint *cvcWidthConstraint;
 
-@property(nonatomic, readwrite, strong)STPCreditCardTextFieldViewModel *viewModel;
+@property(nonatomic, readwrite, strong)STPPaymentCardTextFieldViewModel *viewModel;
 
 @property(nonatomic, readwrite, weak)UITextField *selectedField;
 
 @end
 
-@implementation STPCreditCardTextField
+@implementation STPPaymentCardTextField
+
+@synthesize font = _font;
+@synthesize textColor = _textColor;
+@synthesize textErrorColor = _textErrorColor;
+@synthesize placeholderColor = _placeholderColor;
+@synthesize borderStyle = _borderStyle;
+
+#pragma mark initializers
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
@@ -64,69 +72,254 @@
 
     self.clipsToBounds = YES;
     
-    _viewModel = [STPCreditCardTextFieldViewModel new];
+    _viewModel = [STPPaymentCardTextFieldViewModel new];
     _sizingField = [self buildTextField];
     
-    STPFormTextField *backgroundTextField = [[STPFormTextField alloc] initWithFrame:CGRectZero];
-    backgroundTextField.translatesAutoresizingMaskIntoConstraints = NO;
-    backgroundTextField.backgroundColor = [UIColor clearColor];
+    STPFormTextField *backgroundTextField = [self buildTextField];
+    backgroundTextField.borderStyle = self.borderStyle;
     backgroundTextField.ignoresTouches = YES;
-    [self addSubview:backgroundTextField];
     _backgroundTextField = backgroundTextField;
 
     UIImageView *brandImageView = [[UIImageView alloc] initWithImage:_viewModel.brandImage];
+    brandImageView.translatesAutoresizingMaskIntoConstraints = NO;
     brandImageView.contentMode = UIViewContentModeCenter;
     brandImageView.backgroundColor = [UIColor clearColor];
     self.brandImageView = brandImageView;
-    brandImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:brandImageView];
+    
+    UIView *interstitialView = [[UIView alloc] initWithFrame:CGRectZero];
+    interstitialView.backgroundColor = self.backgroundColor;
+    interstitialView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.interstitialView = interstitialView;
     
     STPFormTextField *numberField = [self buildTextField];
     numberField.formatsCardNumbers = YES;
     numberField.tag = STPCardFieldTypeNumber;
-    numberField.placeholder = @"1234 5678 9012 3456";
+    numberField.placeholder = [self.viewModel placeholder];
     self.numberField = numberField;
-    [self addSubview:numberField];
     
     UIView *dateContainer = [[UIView alloc] initWithFrame:CGRectZero];
+    dateContainer.backgroundColor = self.backgroundColor;
     dateContainer.translatesAutoresizingMaskIntoConstraints = NO;
     self.dateContainer = dateContainer;
-    [self addSubview:dateContainer];
 
     STPFormTextField *expirationField = [self buildTextField];
     expirationField.tag = STPCardFieldTypeExpiration;
     expirationField.placeholder = @"MM/YY";
     expirationField.alpha = 0;
     self.expirationField = expirationField;
-    [dateContainer addSubview:expirationField];
         
     STPFormTextField *cvcField = [self buildTextField];
     cvcField.tag = STPCardFieldTypeCVC;
     cvcField.placeholder = @"CVC";
     cvcField.alpha = 0;
     self.cvcField = cvcField;
+    
+    [dateContainer addSubview:expirationField];
     [self addSubview:cvcField];
+    [self addSubview:dateContainer];
+    [self addSubview:numberField];
+    [self addSubview:interstitialView];
+    [self addSubview:brandImageView];
+    [self addSubview:backgroundTextField];
     
     [self setupConstraints];
+}
+
+- (STPPaymentCardTextFieldViewModel *)viewModel {
+    if (_viewModel == nil) {
+        _viewModel = [STPPaymentCardTextFieldViewModel new];
+    }
+    return _viewModel;
+}
+
+#pragma mark appearance properties
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    [super setBackgroundColor:[backgroundColor copy]];
+    self.numberField.backgroundColor = self.backgroundColor;
+    self.interstitialView.backgroundColor = self.backgroundColor;
+    self.dateContainer.backgroundColor = self.backgroundColor;
+}
+
+- (UIColor *)backgroundColor {
+    return [super backgroundColor] ?: [UIColor whiteColor];
+}
+
+- (void)setFont:(UIFont *)font {
+    _font = [font copy];
     
-    self.font = [UIFont systemFontOfSize:18];
-    self.backgroundColor = [UIColor whiteColor];
-    self.textColor = [UIColor blackColor];
-    self.textErrorColor = [UIColor redColor];
+    for (UITextField *field in [self allFields]) {
+        field.font = _font;
+    }
     
-    [self sendSubviewToBack:numberField];
-    [self sendSubviewToBack:dateContainer];
-    [self sendSubviewToBack:cvcField];
-    [self bringSubviewToFront:brandImageView];
-    [self bringSubviewToFront:self.backgroundTextField];
+    self.sizingField.font = _font;
     
-    self.borderStyle = UITextBorderStyleRoundedRect;
+    self.numberWidthConstraint.constant = [self widthForCardNumber:self.numberField.placeholder];
+    self.expirationWidthConstraint.constant = [self widthForText:self.expirationField.placeholder];
+    self.cvcWidthConstraint.constant = MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"]);
     
-//    numberField.backgroundColor = [UIColor yellowColor];
-//    dateContainer.backgroundColor = [UIColor yellowColor];
-//    monthField.backgroundColor = [UIColor lightGrayColor];
-//    yearField.backgroundColor = [UIColor yellowColor];
-//    slashLabel.textColor = [UIColor redColor];
+    [self setNeedsUpdateConstraints];
+}
+
+- (UIFont *)font {
+    return _font ?: [UIFont systemFontOfSize:18];
+}
+
+- (void)setTextColor:(UIColor *)textColor {
+    _textColor = [textColor copy];
+    
+    for (STPFormTextField *field in [self allFields]) {
+        field.defaultColor = _textColor;
+    }
+}
+
+- (UIColor *)textColor {
+    return _textColor ?: [UIColor blackColor];
+}
+
+- (void)setTextErrorColor:(UIColor *)textErrorColor {
+    _textErrorColor = [textErrorColor copy];
+    
+    for (STPFormTextField *field in [self allFields]) {
+        field.errorColor = _textErrorColor;
+    }
+}
+
+- (UIColor *)textErrorColor {
+    return _textErrorColor ?: [UIColor redColor];
+}
+
+- (void)setPlaceholderColor:(UIColor *)placeholderColor {
+    _placeholderColor = [placeholderColor copy];
+    
+    for (STPFormTextField *field in [self allFields]) {
+        field.placeholderColor = _placeholderColor;
+    }
+}
+
+- (UIColor *)placeholderColor {
+    return _placeholderColor ?: [UIColor lightGrayColor];
+}
+
+- (void)setBorderStyle:(UITextBorderStyle)borderStyle {
+    _borderStyle = borderStyle;
+    self.backgroundTextField.borderStyle = borderStyle;
+}
+
+- (UITextBorderStyle)borderStyle {
+    return _borderStyle ?: UITextBorderStyleRoundedRect;
+}
+
+- (void)setInputAccessoryView:(UIView *)inputAccessoryView {
+    _inputAccessoryView = inputAccessoryView;
+    
+    for (STPFormTextField *field in [self allFields]) {
+        field.inputAccessoryView = inputAccessoryView;
+    }
+}
+
+#pragma mark UIResponder & related methods
+
+- (BOOL)canBecomeFirstResponder {
+    return [self.numberField canBecomeFirstResponder];
+}
+
+- (BOOL)becomeFirstResponder {
+    return [self.numberField becomeFirstResponder];
+}
+
+- (BOOL)canResignFirstResponder {
+    return [self.selectedField canResignFirstResponder];
+}
+
+- (BOOL)resignFirstResponder {
+    BOOL success = [self.selectedField resignFirstResponder];
+    [self setNumberFieldShrunk:[self shouldShrinkNumberField] animated:YES];
+    return success;
+}
+
+- (BOOL)canSelectNextField {
+    return [[self nextField] canBecomeFirstResponder];
+}
+
+- (BOOL)canSelectPreviousField {
+    return [[self previousField] canBecomeFirstResponder];
+}
+
+- (BOOL)selectNextField {
+    return [[self nextField] becomeFirstResponder];
+}
+
+- (BOOL)selectPreviousField {
+    return [[self previousField] becomeFirstResponder];
+}
+
+- (STPFormTextField *)nextField {
+    if (self.selectedField == self.numberField) {
+        return self.expirationField;
+    } else if (self.selectedField == self.expirationField) {
+        return self.cvcField;
+    }
+    return nil;
+}
+
+- (STPFormTextField *)previousField {
+    if (self.selectedField == self.cvcField) {
+        return self.expirationField;
+    } else if (self.selectedField == self.expirationField) {
+        return self.numberField;
+    }
+    return nil;
+}
+
+#pragma mark public convenience methods
+
+- (void)clear {
+    for (STPFormTextField *field in [self allFields]) {
+        field.text = @"";
+    }
+//    self.viewModel =
+    [self setNumberFieldShrunk:NO animated:YES];
+}
+
+- (BOOL)hasValidContents {
+    return [self.viewModel isValid];
+}
+
+#pragma mark readonly variables
+
+- (NSString *)cardNumber {
+    return self.viewModel.cardNumber;
+}
+
+- (NSUInteger)expirationMonth {
+    return [self.viewModel.expirationMonth integerValue];
+}
+
+- (NSUInteger)expirationYear {
+    return [self.viewModel.expirationYear integerValue];
+}
+
+- (NSString *)cvc {
+    return self.viewModel.cvc;
+}
+
+#pragma mark - private helper methods
+
+- (STPFormTextField *)buildTextField {
+    STPFormTextField *textField = [[STPFormTextField alloc] initWithFrame:CGRectZero];
+    textField.backgroundColor = [UIColor clearColor];
+    textField.font = self.font;
+    textField.defaultColor = self.textColor;
+    textField.errorColor = self.textErrorColor;
+    textField.placeholderColor = self.placeholderColor;
+    textField.translatesAutoresizingMaskIntoConstraints = NO;
+    textField.formDelegate = self;
+    return textField;
+}
+
+- (NSArray *)allFields {
+    return @[self.numberField, self.expirationField, self.cvcField];
 }
 
 - (void)setupConstraints {
@@ -157,13 +350,7 @@
                                                     multiplier:1.0f
                                                       constant:10.0f]];
     
-    // Interstitial view
-    UIView *interstitialView = [[UIView alloc] initWithFrame:CGRectZero];
-    interstitialView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.interstitialView = interstitialView;
-    [self addSubview:interstitialView];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:interstitialView
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.interstitialView
                                                      attribute:NSLayoutAttributeLeft
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self
@@ -171,7 +358,7 @@
                                                     multiplier:1.0f
                                                       constant:0.0f]];
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:interstitialView
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.interstitialView
                                                      attribute:NSLayoutAttributeRight
                                                      relatedBy:NSLayoutRelationEqual
                                                         toItem:self.brandImageView
@@ -196,7 +383,7 @@
                                                                                 toItem:nil
                                                                              attribute:NSLayoutAttributeNotAnAttribute
                                                                             multiplier:1.0f
-                                                                              constant:0];
+                                                                              constant:[self widthForCardNumber:self.numberField.placeholder]];
     self.numberWidthConstraint = numberWidthConstraint;
     [self addConstraint:numberWidthConstraint];
     
@@ -233,7 +420,7 @@
                                                                                toItem:nil
                                                                             attribute:NSLayoutAttributeNotAnAttribute
                                                                            multiplier:1.0f
-                                                                             constant:0.0f];
+                                                                             constant:[self widthForText:self.expirationField.placeholder]];
     
     self.expirationWidthConstraint = expirationWidthConstraint;
     [self addConstraint:expirationWidthConstraint];
@@ -253,7 +440,7 @@
                                                                              toItem:nil
                                                                           attribute:NSLayoutAttributeNotAnAttribute
                                                                          multiplier:1.0f
-                                                                           constant:0];
+                                                                           constant:MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"])];
     
     self.cvcWidthConstraint = cvcWidthConstraint;
     [self addConstraint:cvcWidthConstraint];
@@ -280,29 +467,9 @@
     }
 }
 
-- (STPFormTextField *)buildTextField {
-    STPFormTextField *textField = [[STPFormTextField alloc] initWithFrame:CGRectZero];
-    textField.backgroundColor = [UIColor clearColor];
-    textField.defaultColor = self.textColor;
-    textField.errorColor = self.textErrorColor;
-    textField.translatesAutoresizingMaskIntoConstraints = NO;
-    textField.formDelegate = self;
-    return textField;
-}
-
-- (NSArray *)allFields {
-    return @[self.numberField, self.expirationField, self.cvcField];
-}
-
 - (void)setNumberFieldShrunk:(BOOL)shrunk animated:(BOOL)animated {
-
-    NSUInteger length = [STPCardValidator fragmentLengthForCardBrand:[STPCardValidator brandForNumber:self.numberField.text]];
-    NSUInteger toIndex = self.numberField.text.length - length;
     
-    // TODO better fallback
-    NSString *fragment =  (toIndex < self.numberField.text.length) ? [self.numberField.text substringToIndex:toIndex] : @"4242";
-    
-    CGFloat nonFragmentWidth = [self widthForCardNumber:fragment] - 16;
+    CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 16;
     CGFloat fragmentWidth = self.numberWidthConstraint.constant - nonFragmentWidth;
     
     if (shrunk) {
@@ -346,24 +513,6 @@
     return [self.sizingField measureTextSize].width + 15;
 }
 
-- (BOOL)canBecomeFirstResponder {
-    return [self.numberField canBecomeFirstResponder];
-}
-
-- (BOOL)becomeFirstResponder {
-    return [self.numberField becomeFirstResponder];
-}
-
-- (BOOL)canResignFirstResponder {
-    return [self.selectedField canResignFirstResponder];
-}
-
-- (BOOL)resignFirstResponder {
-    BOOL success = [self.selectedField resignFirstResponder];
-    [self setNumberFieldShrunk:[self shouldShrinkNumberField] animated:YES];
-    return success;
-}
-
 #pragma mark STPPaymentTextFieldDelegate
 
 - (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
@@ -394,6 +543,12 @@
 }
 
 - (BOOL)textField:(STPFormTextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+
+    BOOL deletingLastCharacter = (range.location == textField.text.length - 1 && range.length == 1 && [string isEqualToString:@""]);
+    if (deletingLastCharacter && [textField.text hasSuffix:@"/"] && range.location > 0) {
+        range.location -= 1;
+        range.length += 1;
+    }
     
     NSString *newText = [textField.text stringByReplacingCharactersInRange:range withString:string];
     STPCardFieldType fieldType = textField.tag;
@@ -404,16 +559,7 @@
             break;
         case STPCardFieldTypeExpiration: {
             self.viewModel.rawExpiration = newText;
-            NSString *text = self.viewModel.expirationMonth;
-            if ([self.viewModel validationStateForExpirationMonth] == STPCardValidationStateValid) {
-                BOOL adding = (newText.length > textField.text.length);
-                if (adding) {
-                    text = [text stringByAppendingString:@"/"];
-                } else {
-                    
-                }
-            }
-            textField.text = text;//[[self.viewModel.expirationMonth stringByAppendingString:@"/"] stringByAppendingString:self.viewModel.expirationYear];
+            textField.text = self.viewModel.rawExpiration;
             break;
         }
         case STPCardFieldTypeCVC:
@@ -444,96 +590,18 @@
             break;
         }
     }
+    [self onChange];
 
     return NO;
 }
 
-#pragma mark UITextField properties
-
-- (void)setFont:(UIFont *)font {
-    _font = [font copy];
-    
-    for (UITextField *field in [self allFields]) {
-        field.font = _font;
+- (void)onChange {
+    if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidChange:)]) {
+        [self.delegate paymentCardTextFieldDidChange:self];
     }
-    
-    self.sizingField.font = _font;
-    
-    self.numberWidthConstraint.constant = [self widthForCardNumber:self.numberField.placeholder];
-    self.expirationWidthConstraint.constant = [self widthForText:self.expirationField.placeholder];
-    self.cvcWidthConstraint.constant = MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"]);
-    
-    [self setNeedsUpdateConstraints];
-}
-
-- (void)setBackgroundColor:(UIColor *)backgroundColor {
-    [super setBackgroundColor:[backgroundColor copy]];
-    self.numberField.backgroundColor = self.backgroundColor;
-    self.interstitialView.backgroundColor = self.backgroundColor;
-    self.dateContainer.backgroundColor = self.backgroundColor;
-}
-
-- (void)setTextColor:(UIColor *)textColor {
-    _textColor = [textColor copy];
-    
-    for (STPFormTextField *field in [self allFields]) {
-        field.defaultColor = _textColor;
+    if ([self hasValidContents]) {
+        [self.delegate paymentCardTextFieldDidValidateSuccessfully:self];
     }
-}
-
-- (void)setTextErrorColor:(UIColor *)textErrorColor {
-    _textErrorColor = [textErrorColor copy];
-    
-    for (STPFormTextField *field in [self allFields]) {
-        field.errorColor = _textErrorColor;
-    }
-}
-
-- (void)setBorderStyle:(UITextBorderStyle)borderStyle {
-    _borderStyle = borderStyle;
-    self.backgroundTextField.borderStyle = borderStyle;
-}
-
-- (void)setInputAccessoryView:(UIView *)inputAccessoryView {
-    _inputAccessoryView = inputAccessoryView;
-    
-    for (STPFormTextField *field in [self allFields]) {
-        field.inputAccessoryView = inputAccessoryView;
-    }
-}
-
-- (BOOL)canSelectNextField {
-    return [[self nextField] canBecomeFirstResponder];
-}
-
-- (BOOL)canSelectPreviousField {
-    return [[self previousField] canBecomeFirstResponder];
-}
-
-- (BOOL)selectNextField {
-    return [[self nextField] becomeFirstResponder];
-}
-
-- (BOOL)selectPreviousField {
-    return [[self previousField] becomeFirstResponder];
-}
-
-- (STPFormTextField *)nextField {
-    if (self.selectedField == self.numberField) {
-        return self.expirationField;
-    } else if (self.selectedField == self.expirationField) {
-        return self.cvcField;
-    }
-    return nil;
-}
-
-- (STPFormTextField *)previousField {
-    if (self.selectedField == self.cvcField) {
-        return self.expirationField;
-    } else if (self.selectedField == self.expirationField) {
-        return self.numberField;
-    }
-    return nil;
 }
 
 @end

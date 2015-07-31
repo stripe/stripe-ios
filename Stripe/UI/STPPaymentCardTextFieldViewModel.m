@@ -1,12 +1,13 @@
 //
-//  STPCreditCardTextFieldViewModel.m
+//  STPPaymentCardTextFieldViewModel.m
 //  Stripe
 //
 //  Created by Jack Flintermann on 7/21/15.
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-#import "STPCreditCardTextFieldViewModel.h"
+#import "STPPaymentCardTextFieldViewModel.h"
+#import "STPCardValidator.h"
 
 @interface NSString(StripeSubstring)
 - (NSString *)stp_safeSubstringToIndex:(NSUInteger)index;
@@ -25,7 +26,7 @@
 
 @end
 
-@implementation STPCreditCardTextFieldViewModel
+@implementation STPPaymentCardTextFieldViewModel
 
 - (void)setCardNumber:(NSString *)cardNumber {
     cardNumber = [STPCardValidator sanitizedNumericStringForString:cardNumber];
@@ -34,11 +35,23 @@
     _cardNumber = [cardNumber stp_safeSubstringToIndex:maxLength];
 }
 
+// This might contain slashes.
 - (void)setRawExpiration:(NSString *)expiration {
     expiration = [STPCardValidator sanitizedNumericStringForString:expiration];
-    _rawExpiration = expiration;
     self.expirationMonth = [expiration stp_safeSubstringToIndex:2];
     self.expirationYear = [[expiration stp_safeSubstringFromIndex:2] stp_safeSubstringToIndex:2];
+}
+
+- (NSString *)rawExpiration {
+    NSMutableArray *array = [@[] mutableCopy];
+    if (self.expirationMonth && ![self.expirationMonth isEqualToString:@""]) {
+        [array addObject:self.expirationMonth];
+    }
+    
+    if ([STPCardValidator validationStateForExpirationMonth:self.expirationMonth] == STPCardValidationStateValid) {
+        [array addObject:self.expirationYear];
+    }
+    return [array componentsJoinedByString:@"/"];
 }
 
 - (void)setExpirationMonth:(NSString *)expirationMonth {
@@ -64,22 +77,21 @@
     return [STPCardValidator brandForNumber:self.cardNumber];
 }
 
-- (STPCardValidationState)validationStateForExpirationMonth {
-    return [STPCardValidator validationStateForExpirationMonth:self.expirationMonth];
-}
-
-- (STPCardValidationState)validationStateForExpirationYear {
-    return [STPCardValidator validationStateForExpirationYear:self.expirationYear inMonth:self.expirationMonth];
-}
-
 - (STPCardValidationState)validationStateForField:(STPCardFieldType)fieldType {
     switch (fieldType) {
         case STPCardFieldTypeNumber:
             return [STPCardValidator validationStateForNumber:self.cardNumber];
             break;
         case STPCardFieldTypeExpiration: {
-            //TODO
-            return STPCardValidationStatePossible;
+            STPCardValidationState monthState = [STPCardValidator validationStateForExpirationMonth:self.expirationMonth];
+            STPCardValidationState yearState = [STPCardValidator validationStateForExpirationYear:self.expirationYear inMonth:self.expirationMonth];
+            if (monthState == STPCardValidationStateValid && yearState == STPCardValidationStateValid) {
+                return STPCardValidationStateValid;
+            } else if (monthState == STPCardValidationStateInvalid || yearState == STPCardValidationStateInvalid) {
+                return STPCardValidationStateInvalid;
+            } else {
+                return STPCardValidationStatePossible;
+            }
             break;
         }
         case STPCardFieldTypeCVC:
@@ -121,6 +133,26 @@
     //todo: bundle stuff
     //    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     return [UIImage imageNamed:imageName];
+}
+
+- (BOOL)isValid {
+    return ([self validationStateForField:STPCardFieldTypeNumber] == STPCardValidationStateValid &&
+            [self validationStateForField:STPCardFieldTypeExpiration] == STPCardValidationStateValid &&
+            [self validationStateForField:STPCardFieldTypeCVC] == STPCardValidationStateValid);
+}
+
+- (NSString *)placeholder {
+    return @"1234567812345678";
+}
+
+- (NSString *)numberWithoutLastDigits {
+    NSUInteger length = [STPCardValidator fragmentLengthForCardBrand:[STPCardValidator brandForNumber:self.cardNumber]];
+    NSUInteger toIndex = self.cardNumber.length - length;
+    
+    return (toIndex < self.cardNumber.length) ?
+        [self.cardNumber substringToIndex:toIndex] :
+        [self.placeholder stp_safeSubstringToIndex:[self placeholder].length - 4];
+
 }
 
 @end

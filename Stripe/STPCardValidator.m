@@ -16,8 +16,24 @@
     return [components componentsJoinedByString:@""];
 }
 
++ (NSString *)stringByRemovingSpacesFromString:(NSString *)string {
+    NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
+    NSArray *components = [string componentsSeparatedByCharactersInSet:set];
+    return [components componentsJoinedByString:@""];
+}
+
++ (BOOL)stringIsNumeric:(NSString *)string {
+    return [[self sanitizedNumericStringForString:string] isEqualToString:string];
+}
+
 + (STPCardValidationState)validationStateForExpirationMonth:(NSString *)expirationMonth {
-    expirationMonth = [self sanitizedNumericStringForString:expirationMonth];
+
+    expirationMonth = [self stringByRemovingSpacesFromString:expirationMonth];
+    
+    if (![self stringIsNumeric:expirationMonth]) {
+        return STPCardValidationStateInvalid;
+    }
+    
     switch (expirationMonth.length) {
         case 0:
             return STPCardValidationStatePossible;
@@ -30,12 +46,16 @@
     }
 }
 
-+ (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear inMonth:(NSString *)expirationMonth {
-    expirationYear = [self sanitizedNumericStringForString:expirationYear];
++ (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear inMonth:(NSString *)expirationMonth inCurrentYear:(NSInteger)currentYear currentMonth:(NSInteger)currentMonth {
     
-    NSDateComponents *dateComponents = [[NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian] components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:[NSDate date]];
-    NSInteger currentYear = dateComponents.year % 100;
-    NSInteger currentMonth = dateComponents.month;
+    currentYear = currentYear % 100;
+    
+    if (![self stringIsNumeric:expirationMonth] || ![self stringIsNumeric:expirationYear]) {
+        return STPCardValidationStateInvalid;
+    }
+    
+    expirationMonth = [self sanitizedNumericStringForString:expirationMonth];
+    expirationYear = [self sanitizedNumericStringForString:expirationYear];
     
     switch (expirationYear.length) {
         case 0:
@@ -54,7 +74,25 @@
 }
 
 
++ (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear
+                                                   inMonth:(NSString *)expirationMonth {
+    
+    NSDateComponents *dateComponents = [[NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian] components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:[NSDate date]];
+    NSInteger currentYear = dateComponents.year % 100;
+    NSInteger currentMonth = dateComponents.month;
+    
+    return [self validationStateForExpirationYear:expirationYear inMonth:expirationMonth inCurrentYear:currentYear currentMonth:currentMonth];
+}
+
+
 + (STPCardValidationState)validationStateForCVC:(NSString *)cvc cardBrand:(STPCardBrand)brand {
+    
+    if (![self stringIsNumeric:cvc]) {
+        return STPCardValidationStateInvalid;
+    }
+    
+    cvc = [self sanitizedNumericStringForString:cvc];
+    
     NSUInteger length = [self maxCvcLengthForCardBrand:brand];
     if (cvc.length > length) {
         return STPCardValidationStateInvalid;
@@ -66,7 +104,11 @@
 }
 
 + (STPCardValidationState)validationStateForNumber:(NSString *)cardNumber {
-    cardNumber = [self sanitizedNumericStringForString:cardNumber];
+    
+    cardNumber = [self stringByRemovingSpacesFromString:cardNumber];
+    if (![self stringIsNumeric:cardNumber]) {
+        return STPCardValidationStateInvalid;
+    }
     
     NSArray *brands = [self possibleBrandsForNumber:cardNumber];
     if (brands.count == 0) {

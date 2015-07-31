@@ -11,6 +11,8 @@
 
 @implementation STPFormTextField
 
+@synthesize placeholderColor = _placeholderColor;
+
 - (void)setFormDelegate:(id<STPFormTextFieldDelegate>)formDelegate {
     _formDelegate = formDelegate;
     self.delegate = formDelegate;
@@ -30,6 +32,15 @@
 - (void)setText:(NSString *)text {
     NSAttributedString *attributed = [self attributedStringForString:text attributes:[self defaultTextAttributes]];
     [self setAttributedText:attributed];
+}
+
+- (void)setPlaceholder:(NSString *)placeholder {
+    NSMutableDictionary *attributes = [[self defaultTextAttributes] mutableCopy];
+    if (self.placeholderColor) {
+        attributes[NSForegroundColorAttributeName] = self.placeholderColor;
+    }
+    NSAttributedString *attributed = [self attributedStringForString:placeholder attributes:[attributes copy]];
+    [self setAttributedPlaceholder:attributed];
 }
 
 - (NSAttributedString *)attributedStringForString:(NSString *)string attributes:(NSDictionary *)attributes {
@@ -72,7 +83,7 @@
 
 - (void)setPlaceholderColor:(UIColor *)placeholderColor {
     _placeholderColor = placeholderColor;
-    // TODO
+    [self setPlaceholder:self.placeholder]; //explicitly rebuild attributed placeholder
 }
 
 - (void)updateColor {
