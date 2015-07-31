@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.requires_arc                   = true
   s.ios.deployment_target          = '6.0'
   s.osx.deployment_target          = '10.9'
-  s.default_subspecs               = 'Core', 'Checkout'
+  s.default_subspecs               = 'Core', 'Checkout', 'ApplePay'
 
   s.subspec 'Core' do |subspec|
     subspec.public_header_files    = 'Stripe/PublicHeaders/*.h'
