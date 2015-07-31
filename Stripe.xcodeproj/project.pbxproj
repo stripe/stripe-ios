@@ -650,6 +650,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04CDB4551A5F2E1800B854EE /* Build configuration list for PBXNativeTarget "StripeiOS" */;
 			buildPhases = (
+				045EB0DB1B6C21BD00747A59 /* Lint with FauxPas (if installed) */,
 				04CDB43D1A5F2E1800B854EE /* Sources */,
 				04CDB43E1A5F2E1800B854EE /* Frameworks */,
 				04CDB43F1A5F2E1800B854EE /* Headers */,
@@ -668,6 +669,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04D12C191A5F556D0010446E /* Build configuration list for PBXNativeTarget "StripeOSX" */;
 			buildPhases = (
+				045EB0DC1B6C232400747A59 /* Lint with FauxPas (if installed) */,
 				04D12C011A5F556D0010446E /* Sources */,
 				04D12C021A5F556D0010446E /* Frameworks */,
 				04D12C031A5F556D0010446E /* Headers */,
@@ -708,7 +710,7 @@
 			attributes = {
 				CLASSPREFIX = STP;
 				LastTestingUpgradeCheck = 0510;
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
 					045E7C021A5F41DE004751EF = {
@@ -785,6 +787,34 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		045EB0DB1B6C21BD00747A59 /* Lint with FauxPas (if installed) */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Lint with FauxPas (if installed)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "[[ ${FAUXPAS_SKIP} == 1 ]] && exit 0\n[[ ${CI} == 1 ]] && exit 0\n \n FAUXPAS_PATH=\"/usr/local/bin/fauxpas\"\n if [[ -f \"${FAUXPAS_PATH}\" ]]; then\n \"${FAUXPAS_PATH}\" check-xcode --configFile \"./ci_scripts/FauxPasConfig/main.fauxpas.json\"\n else\n echo \"warning: Faux Pas was not found at '${FAUXPAS_PATH}'\"\n fi";
+		};
+		045EB0DC1B6C232400747A59 /* Lint with FauxPas (if installed) */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Lint with FauxPas (if installed)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "[[ ${FAUXPAS_SKIP} == 1 ]] && exit 0\n [[ ${CI} == 1 ]] && exit 0\n \n FAUXPAS_PATH=\"/usr/local/bin/fauxpas\"\n if [[ -f \"${FAUXPAS_PATH}\" ]]; then\n \"${FAUXPAS_PATH}\" check-xcode --configFile \"./ci_scripts/FauxPasConfig/main.fauxpas.json\"\n else\n echo \"warning: Faux Pas was not found at '${FAUXPAS_PATH}'\"\n fi";
+		};
 		049E85211A607DA4000B66CD /* Build Framework */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
