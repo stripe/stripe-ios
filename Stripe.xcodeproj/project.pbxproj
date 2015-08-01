@@ -799,7 +799,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "[[ ${FAUXPAS_SKIP} == 1 ]] && exit 0\n[[ ${CI} == 1 ]] && exit 0\n \n FAUXPAS_PATH=\"/usr/local/bin/fauxpas\"\n if [[ -f \"${FAUXPAS_PATH}\" ]]; then\n \"${FAUXPAS_PATH}\" check-xcode --configFile \"./ci_scripts/FauxPasConfig/main.fauxpas.json\"\n else\n echo \"warning: Faux Pas was not found at '${FAUXPAS_PATH}'\"\n fi";
+			shellScript = "[[ ${FAUXPAS_SKIP} == 1 ]] && exit 0\n[[ ${CI} ]] && exit 0\n \n FAUXPAS_PATH=\"/usr/local/bin/fauxpas\"\n if [[ -f \"${FAUXPAS_PATH}\" ]]; then\n \"${FAUXPAS_PATH}\" check-xcode --configFile \"./ci_scripts/FauxPasConfig/main.fauxpas.json\"\n else\n echo \"warning: Faux Pas was not found at '${FAUXPAS_PATH}'\"\n fi";
 		};
 		045EB0DC1B6C232400747A59 /* Lint with FauxPas (if installed) */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -813,7 +813,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "[[ ${FAUXPAS_SKIP} == 1 ]] && exit 0\n [[ ${CI} == 1 ]] && exit 0\n \n FAUXPAS_PATH=\"/usr/local/bin/fauxpas\"\n if [[ -f \"${FAUXPAS_PATH}\" ]]; then\n \"${FAUXPAS_PATH}\" check-xcode --configFile \"./ci_scripts/FauxPasConfig/main.fauxpas.json\"\n else\n echo \"warning: Faux Pas was not found at '${FAUXPAS_PATH}'\"\n fi";
+			shellScript = "[[ ${FAUXPAS_SKIP} == 1 ]] && exit 0\n [[ ${CI} ]] && exit 0\n \n FAUXPAS_PATH=\"/usr/local/bin/fauxpas\"\n if [[ -f \"${FAUXPAS_PATH}\" ]]; then\n \"${FAUXPAS_PATH}\" check-xcode --configFile \"./ci_scripts/FauxPasConfig/main.fauxpas.json\"\n else\n echo \"warning: Faux Pas was not found at '${FAUXPAS_PATH}'\"\n fi";
 		};
 		049E85211A607DA4000B66CD /* Build Framework */ = {
 			isa = PBXShellScriptBuildPhase;
