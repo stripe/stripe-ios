@@ -1,1 +1,0 @@
-../../../../../../../../Stripe/Checkout/STPCheckoutWebViewAdapter.h

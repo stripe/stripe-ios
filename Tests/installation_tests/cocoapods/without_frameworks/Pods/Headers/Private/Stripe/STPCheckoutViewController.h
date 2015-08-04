@@ -1,1 +1,0 @@
-../../../../../../../../Stripe/PublicHeaders/Checkout/STPCheckoutViewController.h
