@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:Stripe.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Example/Stripe iOS Example (Simple).xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Example/Stripe iOS Example (Custom).xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Example/Stripe OSX Example.xcodeproj">
+   </FileRef>
+</Workspace>

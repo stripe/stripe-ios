@@ -1,0 +1,1 @@
+../../../../../../../../Stripe/Checkout/STPStrictURLProtocol.h

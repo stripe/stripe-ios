@@ -1,0 +1,2 @@
+pod 'Stripe', path: '../../../..'
+pod 'Stripe/ApplePay', path: '../../../..'

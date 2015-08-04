@@ -1,0 +1,1 @@
+STRIPE_OTHER_LDFLAGS = -framework "Foundation" -framework "Security" -weak_framework "AddressBook" -weak_framework "PassKit"
