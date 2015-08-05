@@ -22,4 +22,4 @@ script:
   - "./Tests/installation_tests/cocoapods/with_frameworks/test.sh"
   - "./Tests/installation_tests/cocoapods/without_frameworks/test.sh"
   - "./Tests/installation_tests/manual_installation/test.sh"
-  - "./Tests/installation_tests/carthage/test.sh"
+  # - "./Tests/installation_tests/carthage/test.sh"
