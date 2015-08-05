@@ -1,9 +1,12 @@
 #!/bin/sh
 
 echo "Checking test Carthage app (with frameworks)..."
+
+TESTDIR="$(cd $(dirname $0); pwd)"
+
 cd $(dirname $0)
 
-brew install carthage
+export FAUXPAS_SKIP=true
 
 GIT_REPO=`cd "../../.."; pwd`
 cd -
@@ -15,4 +18,4 @@ echo "git \"$GIT_REPO\" \"$GIT_BRANCH\"" > Cartfile
 
 carthage update
 
-xctool build -project CarthageTest.xcodeproj -target CarthageTest -sdk iphonesimulator
+xctool build -project "$TESTDIR/CarthageTest.xcodeproj" -scheme CarthageTest -sdk iphonesimulator
