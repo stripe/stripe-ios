@@ -7,28 +7,25 @@ Pod::Spec.new do |s|
   s.authors                        = { 'Jack Flintermann' => 'jack@stripe.com', 'Stripe' => 'support+github@stripe.com' }
   s.source                         = { :git => 'https://github.com/stripe/stripe-ios.git', :tag => "v#{s.version}" }
   s.ios.frameworks                 = 'Foundation', 'Security'
+  s.ios.weak_frameworks            = 'PassKit', 'AddressBook'
   s.osx.frameworks                 = 'Foundation', 'Security', 'WebKit'
   s.requires_arc                   = true
   s.ios.deployment_target          = '6.0'
   s.osx.deployment_target          = '10.9'
-  s.default_subspecs               = 'Core', 'Checkout', 'ApplePay'
+  s.default_subspecs               = 'Core'
 
-  s.subspec 'Core' do |subspec|
-    subspec.public_header_files    = 'Stripe/PublicHeaders/*.h'
-    subspec.source_files           = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}'
+  s.subspec 'Core' do |ss|
+    ss.public_header_files         = 'Stripe/PublicHeaders/*.h', 'Stripe/PublicHeaders/Checkout/*.h'
+    ss.ios.public_header_files     = 'Stripe/PublicHeaders/ApplePay/*.h'
+    ss.source_files                = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}', 'Stripe/PublicHeaders/Checkout/*.h', 'Stripe/Checkout/*.{h,m}'
+    ss.ios.source_files            = 'Stripe/PublicHeaders/ApplePay/*.h', 'Stripe/ApplePay/*.{h,m}'
   end
 
   s.subspec 'Checkout' do |subspec|
-    subspec.dependency               'Stripe/Core'
-    subspec.public_header_files    = 'Stripe/PublicHeaders/Checkout/*.h'
-    subspec.source_files           = 'Stripe/PublicHeaders/Checkout/*.h', 'Stripe/Checkout/*.{h,m}'
+    # This has been merged with the core subspec and is now empty; it's still around to avoid breaking legacy Podfiles.
   end
 
   s.subspec 'ApplePay' do |subspec|
-    subspec.platform                = :ios
-    subspec.dependency                'Stripe/Core'
-    subspec.ios.public_header_files = 'Stripe/PublicHeaders/ApplePay/*.h'
-    subspec.ios.source_files        = 'Stripe/PublicHeaders/ApplePay/*.h', 'Stripe/ApplePay/*.{h,m}'
-    subspec.ios.weak_frameworks     = 'PassKit', 'AddressBook'
+    # This has been merged with the core subspec and is now empty; it's still around to avoid breaking legacy Podfiles.
   end
 end

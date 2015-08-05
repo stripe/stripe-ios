@@ -20,6 +20,8 @@
 #import "STPToken.h"
 #import "StripeError.h"
 
+#define FAUXPAS_IGNORED_IN_METHOD(...)
+
 static NSString *const apiURLBase = @"api.stripe.com";
 static NSString *const apiVersion = @"v1";
 static NSString *const tokenEndpoint = @"tokens";
@@ -132,6 +134,7 @@ static char kAssociatedClientKey;
               @"You are using a secret key to create a token, instead of the publishable one. For more info, see https://stripe.com/docs/stripe.js");
 #ifndef DEBUG
     if ([publishableKey.lowercaseString hasPrefix:@"pk_test"]) {
+        FAUXPAS_IGNORED_IN_METHOD(NSLogUsed);
         NSLog(@"⚠️ Warning! You're building your app in a non-debug configuration, but appear to be using your Stripe test key. Make sure not to submit to "
               @"the App Store with your test keys!⚠️");
     }
