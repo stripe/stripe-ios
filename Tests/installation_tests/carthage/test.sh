@@ -3,18 +3,16 @@
 echo "Checking test Carthage app (with frameworks)..."
 
 TESTDIR="$(cd $(dirname $0); pwd)"
-
-cd $(dirname $0)
-
-export FAUXPAS_SKIP=true
+echo $TESTDIR
+cd $TESTDIR
 
 GIT_REPO=`cd "../../.."; pwd`
-cd -
+cd $TESTDIR
 
 GIT_BRANCH=`git branch | sed -n '/\* /s///p'`
 
-rm -f Cartfile*
-echo "git \"$GIT_REPO\" \"$GIT_BRANCH\"" > Cartfile
+rm -f "$TESTDIR/Cartfile*"
+echo "git \"$GIT_REPO\" \"$GIT_BRANCH\"" > "$TESTDIR/Cartfile"
 
 carthage update
 
