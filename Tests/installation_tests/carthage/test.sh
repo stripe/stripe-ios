@@ -14,6 +14,6 @@ GIT_BRANCH=${TRAVIS_COMMIT-`git branch | sed -n '/\* /s///p'`}
 rm -f "$TESTDIR/Cartfile*"
 echo "git \"$GIT_REPO\" \"$GIT_BRANCH\"" > "$TESTDIR/Cartfile"
 
-carthage update --verbose
+carthage update --verbose --configuration Debug
 
 xctool build -project "$TESTDIR/CarthageTest.xcodeproj" -scheme CarthageTest -sdk iphonesimulator
