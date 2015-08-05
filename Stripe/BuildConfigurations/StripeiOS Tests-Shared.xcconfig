@@ -21,7 +21,7 @@ CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR
 CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR
 
 
-IPHONEOS_DEPLOYMENT_TARGET = 6.0 // Target 6.0 in tests so that FauxPas can detect accidental usage of unavailable APIs
+IPHONEOS_DEPLOYMENT_TARGET = 8.0
 
 
 // Code Signing Identity
