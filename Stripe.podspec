@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                           = 'Stripe'
-  s.version                        = '4.0.3'
+  s.version                        = '5.0.0'
   s.summary                        = 'Stripe is a web-based API for accepting payments online.'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'
@@ -21,11 +21,13 @@ Pod::Spec.new do |s|
     ss.ios.source_files            = 'Stripe/PublicHeaders/ApplePay/*.h', 'Stripe/ApplePay/*.{h,m}'
   end
 
-  s.subspec 'Checkout' do |subspec|
+  s.subspec 'Checkout' do |ss|
     # This has been merged with the core subspec and is now empty; it's still around to avoid breaking legacy Podfiles.
+    ss.dependency 'Stripe/Core'
   end
 
-  s.subspec 'ApplePay' do |subspec|
+  s.subspec 'ApplePay' do |ss|
     # This has been merged with the core subspec and is now empty; it's still around to avoid breaking legacy Podfiles.
+    ss.dependency 'Stripe/Core'
   end
 end
