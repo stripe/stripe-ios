@@ -16,6 +16,9 @@
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+
 #if TARGET_OS_IPHONE
 #pragma mark - iOS
 
@@ -184,3 +187,5 @@
 @end
 
 #endif
+
+#pragma clang diagnostic pop

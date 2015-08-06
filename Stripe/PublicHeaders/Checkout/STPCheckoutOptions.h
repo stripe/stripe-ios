@@ -21,7 +21,7 @@
  *  This class represents a configurable set of options that you can pass to an STPCheckoutViewController to control the appearance of
  * Stripe Checkout. For more information on how these properties behave, see https://stripe.com/docs/checkout#integration-custom
  */
-@interface STPCheckoutOptions : NSObject<NSCopying>
+@interface STPCheckoutOptions : NSObject<NSCopying>;
 
 -(stp_nonnull instancetype)initWithPublishableKey:(stp_nonnull NSString *)publishableKey;
 

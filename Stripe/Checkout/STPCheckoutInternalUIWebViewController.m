@@ -20,6 +20,9 @@
 #import "STPToken.h"
 #import "STPColorUtils.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
 @interface STPCheckoutInternalUIWebViewController ()
@@ -231,5 +234,7 @@
 }
 
 @end
+
+#pragma clang diagnostic pop
 
 #endif
