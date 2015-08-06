@@ -67,7 +67,7 @@
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:values options:0 error:nil] encoding:NSUTF8StringEncoding];
 }
 
-- (void)setLogoImage:(STP_IMAGE_CLASS * __stp_nullable)logoImage {
+- (void)setLogoImage:(STP_IMAGE_CLASS * __nullable)logoImage {
     _logoImage = logoImage;
     NSString *base64;
 #if TARGET_OS_IPHONE

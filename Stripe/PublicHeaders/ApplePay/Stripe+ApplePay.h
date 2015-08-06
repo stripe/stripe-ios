@@ -10,7 +10,7 @@
 
 #import "Stripe.h"
 #import "STPAPIClient+ApplePay.h"
-#import "STPNullabilityMacros.h"
+
 
 @class Stripe;
 
@@ -25,7 +25,7 @@
  *
  *  @return whether or not the user is currently able to pay with Apple Pay.
  */
-+ (BOOL)canSubmitPaymentRequest:(stp_nullable PKPaymentRequest *)paymentRequest;
++ (BOOL)canSubmitPaymentRequest:(nullable PKPaymentRequest *)paymentRequest;
 
 /**
  *  A convenience method to return a PKPaymentRequest with sane default values. You will still need to configure the paymentSummaryItems property to indicate
@@ -36,7 +36,7 @@
  *
  *  @return a PKPaymentRequest with proper default values. Returns nil if running on < iOS8.
  */
-+ (stp_nullable PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(stp_nonnull NSString *)merchantIdentifier;
++ (nullable PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(nonnull NSString *)merchantIdentifier;
 
 #pragma mark - deprecated methods
 
@@ -48,7 +48,7 @@
  *  @param handler Code to run when the token has been returned (along with any errors encountered).
  *  @deprecated use [[STPAPIClient sharedClient] createTokenWithPayment:completion:] instead.
  */
-+ (void)createTokenWithPayment:(stp_nonnull PKPayment *)payment completion:(stp_nonnull STPCompletionBlock)handler __attribute__((deprecated));
++ (void)createTokenWithPayment:(nonnull PKPayment *)payment completion:(nonnull STPCompletionBlock)handler __attribute__((deprecated));
 
 /**
  *  Securely convert your user's Apple Pay payment information into a Stripe token, which you can then safely store on your server and use to charge the user.
@@ -59,6 +59,6 @@
  *  @param handler Code to run when the token has been returned (along with any errors encountered).
  *  @deprecated use [[STPAPIClient sharedClient] createTokenWithPayment:completion:] instead.
  */
-+ (void)createTokenWithPayment:(stp_nonnull PKPayment *)payment operationQueue:(stp_nonnull NSOperationQueue *)queue completion:(stp_nonnull STPCompletionBlock)handler __attribute__((deprecated));
++ (void)createTokenWithPayment:(nonnull PKPayment *)payment operationQueue:(nonnull NSOperationQueue *)queue completion:(nonnull STPCompletionBlock)handler __attribute__((deprecated));
 
 @end

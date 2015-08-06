@@ -11,7 +11,6 @@
 #import "STPBankAccount.h"
 #import "STPCard.h"
 #import "STPToken.h"
-#import "STPNullabilityMacros.h"
 
 #import "STPCheckoutOptions.h"
 #import "STPCheckoutViewController.h"

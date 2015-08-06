@@ -11,10 +11,10 @@
 @import UIKit;
 
 #import "STPCheckoutWebViewAdapter.h"
-#import "STPNullabilityMacros.h"
+
 
 @interface STPIOSCheckoutWebViewAdapter : NSObject<STPCheckoutWebViewAdapter, UIWebViewDelegate>
-@property (nonatomic, stp_nullable) UIWebView *webView;
+@property (nonatomic, nullable) UIWebView *webView;
 @end
 
 #endif

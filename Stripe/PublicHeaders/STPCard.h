@@ -8,7 +8,7 @@
 
 @import Foundation;
 
-#import "STPNullabilityMacros.h"
+
 
 typedef NS_ENUM(NSInteger, STPCardFundingType) {
     STPCardFundingTypeDebit,
@@ -36,17 +36,17 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
 /**
  *  The card's number. This will be nil for cards retrieved from the Stripe API.
  */
-@property (nonatomic, copy, stp_nullable) NSString *number;
+@property (nonatomic, copy, nullable) NSString *number;
 
 /**
  *  The last 4 digits of the card. Unlike number, this will be present on cards retrieved from the Stripe API.
  */
-@property (nonatomic, readonly, stp_nullable) NSString *last4;
+@property (nonatomic, readonly, nullable) NSString *last4;
 
 /**
  *  For cards made with Apple Pay, this refers to the last 4 digits of the "Device Account Number" for the tokenized card. For regular cards, it will be nil.
  */
-@property (nonatomic, readonly, stp_nullable) NSString *dynamicLast4;
+@property (nonatomic, readonly, nullable) NSString *dynamicLast4;
 
 /**
  *  The card's expiration month.
@@ -61,27 +61,27 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
 /**
  *  The card's security code, found on the back. This will be nil for cards retrieved from the Stripe API.
  */
-@property (nonatomic, copy, stp_nullable) NSString *cvc;
+@property (nonatomic, copy, nullable) NSString *cvc;
 
 /**
  *  The cardholder's name.
  */
-@property (nonatomic, copy, stp_nullable) NSString *name;
+@property (nonatomic, copy, nullable) NSString *name;
 
 /**
  *  The cardholder's address.
  */
-@property (nonatomic, copy, stp_nullable) NSString *addressLine1;
-@property (nonatomic, copy, stp_nullable) NSString *addressLine2;
-@property (nonatomic, copy, stp_nullable) NSString *addressCity;
-@property (nonatomic, copy, stp_nullable) NSString *addressState;
-@property (nonatomic, copy, stp_nullable) NSString *addressZip;
-@property (nonatomic, copy, stp_nullable) NSString *addressCountry;
+@property (nonatomic, copy, nullable) NSString *addressLine1;
+@property (nonatomic, copy, nullable) NSString *addressLine2;
+@property (nonatomic, copy, nullable) NSString *addressCity;
+@property (nonatomic, copy, nullable) NSString *addressState;
+@property (nonatomic, copy, nullable) NSString *addressZip;
+@property (nonatomic, copy, nullable) NSString *addressCountry;
 
 /**
  *  The Stripe ID for the card.
  */
-@property (nonatomic, readonly, stp_nullable) NSString *cardId;
+@property (nonatomic, readonly, nullable) NSString *cardId;
 
 /**
  *  The issuer of the card.
@@ -93,7 +93,7 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
  *  Can be one of "Visa", "American Express", "MasterCard", "Discover", "JCB", "Diners Club", or "Unknown"
  *  @deprecated use "brand" instead.
  */
-@property (nonatomic, readonly, stp_nonnull) NSString *type __attribute__((deprecated));
+@property (nonatomic, readonly, nonnull) NSString *type __attribute__((deprecated));
 
 /**
  *  The funding source for the card (credit, debit, prepaid, or other)
@@ -103,24 +103,24 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
 /**
  *  A proxy for the card's number, this uniquely identifies the credit card and can be used to compare different cards.
  */
-@property (nonatomic, readonly, stp_nullable) NSString *fingerprint;
+@property (nonatomic, readonly, nullable) NSString *fingerprint;
 
 /**
  *  Two-letter ISO code representing the issuing country of the card.
  */
-@property (nonatomic, readonly, stp_nullable) NSString *country;
+@property (nonatomic, readonly, nullable) NSString *country;
 
 // These validation methods work as described in
 // http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/KeyValueCoding/Articles/Validation.html#//apple_ref/doc/uid/20002173-CJBDBHCB
 
-- (BOOL)validateNumber:(__stp_nullable id * __stp_nullable )ioValue
-                 error:(NSError * __stp_nullable * __stp_nullable )outError;
-- (BOOL)validateCvc:(__stp_nullable id * __stp_nullable )ioValue
-              error:(NSError * __stp_nullable * __stp_nullable )outError;
-- (BOOL)validateExpMonth:(__stp_nullable  id * __stp_nullable )ioValue
-                   error:(NSError * __stp_nullable * __stp_nullable )outError;
-- (BOOL)validateExpYear:(__stp_nullable id * __stp_nullable)ioValue
-                  error:(NSError * __stp_nullable * __stp_nullable )outError;
+- (BOOL)validateNumber:(__nullable id * __nullable )ioValue
+                 error:(NSError * __nullable * __nullable )outError;
+- (BOOL)validateCvc:(__nullable id * __nullable )ioValue
+              error:(NSError * __nullable * __nullable )outError;
+- (BOOL)validateExpMonth:(__nullable  id * __nullable )ioValue
+                   error:(NSError * __nullable * __nullable )outError;
+- (BOOL)validateExpYear:(__nullable id * __nullable)ioValue
+                  error:(NSError * __nullable * __nullable )outError;
 
 /**
  *  This validates a fully populated card to check for all errors, including ones that come about
@@ -133,12 +133,12 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
  *
  *  @return whether or not the card is valid.
  */
-- (BOOL)validateCardReturningError:(NSError * __stp_nullable * __stp_nullable)outError;
+- (BOOL)validateCardReturningError:(NSError * __nullable * __nullable)outError;
 
 @end
 
 // This method is used internally by Stripe to deserialize API responses and exposed here for convenience and testing purposes only. You should not use it in
 // your own code.
 @interface STPCard (PrivateMethods)
-- (stp_nonnull instancetype)initWithAttributeDictionary:(stp_nonnull NSDictionary *)attributeDictionary;
+- (nonnull instancetype)initWithAttributeDictionary:(nonnull NSDictionary *)attributeDictionary;
 @end
