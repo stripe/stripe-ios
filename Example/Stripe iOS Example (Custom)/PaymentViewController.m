@@ -34,7 +34,7 @@
     self.navigationItem.rightBarButtonItem = saveButton;
 
     // Setup checkout
-    STPPaymentCardTextField *paymentView = [[STPPaymentCardTextField alloc] initWithFrame:CGRectMake(15, 20, 290, 55)];
+    STPPaymentCardTextField *paymentView = [[STPPaymentCardTextField alloc] initWithFrame:CGRectMake(15, 20, 320, 55)];
     paymentView.delegate = self;
     self.paymentView = paymentView;
     [self.view addSubview:paymentView];
