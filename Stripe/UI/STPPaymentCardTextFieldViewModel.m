@@ -103,35 +103,38 @@
     NSString *imageName;
     switch (self.brand) {
         case STPCardBrandAmex:
-            imageName = @"amex";
+            imageName = @"stp_card_amex";
             break;
         case STPCardBrandDinersClub:
-            imageName = @"diners";
+            imageName = @"stp_card_diners";
             break;
         case STPCardBrandDiscover:
-            imageName = @"discover";
+            imageName = @"stp_card_discover";
             break;
         case STPCardBrandJCB:
-            imageName = @"jcb";
+            imageName = @"stp_card_jcb";
             break;
         case STPCardBrandMasterCard:
-            imageName = @"mastercard";
+            imageName = @"stp_card_mastercard";
             break;
         case STPCardBrandUnknown:
-            imageName = @"placeholder";
+            imageName = @"stp_card_placeholder";
             break;
         case STPCardBrandVisa:
-            imageName = @"visa";
+            imageName = @"stp_card_visa";
     }
-    //todo: bundle stuff
-    //    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    return [UIImage imageNamed:imageName];
+    return [self.class safeImageNamed:imageName];
 }
 
 - (UIImage *)cvcImage {
-    NSString *imageName = self.brand == STPCardBrandAmex ? @"cvc-amex" : @"cvc";
-    //todo: bundle stuff
-    //    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSString *imageName = self.brand == STPCardBrandAmex ? @"stp_card_cvc_amex" : @"stp_card_cvc";
+    return [self.class safeImageNamed:imageName];
+}
+
++ (UIImage *)safeImageNamed:(NSString *)imageName {
+    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
+        return [UIImage imageNamed:imageName inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
+    }
     return [UIImage imageNamed:imageName];
 }
 

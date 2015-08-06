@@ -309,6 +309,7 @@
 - (STPFormTextField *)buildTextField {
     STPFormTextField *textField = [[STPFormTextField alloc] initWithFrame:CGRectZero];
     textField.backgroundColor = [UIColor clearColor];
+    textField.keyboardType = UIKeyboardTypeNumberPad;
     textField.font = self.font;
     textField.defaultColor = self.textColor;
     textField.errorColor = self.textErrorColor;
@@ -477,7 +478,12 @@
         [self layoutSubviews];
     }
     
-    [UIView animateWithDuration:(animated * 0.3) animations:^{
+    [UIView animateWithDuration:(animated * 0.3)
+                          delay:0
+         usingSpringWithDamping:0.85f
+          initialSpringVelocity:0
+                        options:0
+                     animations:^{
         self.numberLeftConstraint.constant = shrunk ? -nonFragmentWidth : 0;
         for (UIView *view in @[self.expirationField, self.cvcField]) {
             view.alpha = 1.0f * shrunk;
@@ -531,11 +537,7 @@
         default:
             break;
     }
-    if (textField == self.cvcField) {
-        self.brandImageView.image = self.viewModel.cvcImage;
-    } else {
-        self.brandImageView.image = self.viewModel.brandImage;
-    }
+    [self updateImageForFieldType:textField.tag];
 }
 
 - (void)textFieldDidEndEditing:(__unused UITextField *)textField {
@@ -568,11 +570,7 @@
             break;
     }
     
-    if (fieldType == STPCardFieldTypeCVC) {
-        self.brandImageView.image = self.viewModel.cvcImage;
-    } else {
-        self.brandImageView.image = self.viewModel.brandImage;
-    }
+    [self updateImageForFieldType:fieldType];
 
     STPCardValidationState state = [self.viewModel validationStateForField:fieldType];
     textField.validText = YES;
@@ -593,6 +591,20 @@
     [self onChange];
 
     return NO;
+}
+
+- (void)updateImageForFieldType:(STPCardFieldType)fieldType {
+    UIImage *image = fieldType == STPCardFieldTypeCVC ? self.viewModel.cvcImage : self.viewModel.brandImage;
+    if (image != self.brandImageView.image) {
+        self.brandImageView.image = image;
+        
+        CATransition *transition = [CATransition animation];
+        transition.duration = 0.2f;
+        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        transition.type = kCATransitionFade;
+        
+        [self.brandImageView.layer addAnimation:transition forKey:nil];
+    }
 }
 
 - (void)onChange {

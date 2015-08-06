@@ -468,10 +468,10 @@
 		0438EF251B74162700D506CC /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				0438EF261B7416BB00D506CC /* STPFormTextField.h */,
-				0438EF271B7416BB00D506CC /* STPFormTextField.m */,
 				0438EF281B7416BB00D506CC /* STPPaymentCardTextField.h */,
 				0438EF291B7416BB00D506CC /* STPPaymentCardTextField.m */,
+				0438EF261B7416BB00D506CC /* STPFormTextField.h */,
+				0438EF271B7416BB00D506CC /* STPFormTextField.m */,
 				0438EF2A1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h */,
 				0438EF2B1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m */,
 			);
