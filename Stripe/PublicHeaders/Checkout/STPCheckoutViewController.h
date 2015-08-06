@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger, STPPaymentStatus) {
 __attribute__((deprecated("We've deprecated Checkout for iOS. You should build your own credit card form. See also: https://github.com/stripe/PaymentKit")))
 @interface STPCheckoutViewController : UINavigationController
 #else
-__attribute__((deprecated("We've deprecated Checkout for OSX. You should build your own credit card form. See also: https://github.com/stripe/PaymentKit")))
+__attribute__((deprecated("We've deprecated Checkout for OSX. You should build your own credit card form.")))
 @interface STPCheckoutViewController : NSViewController
 #endif
 

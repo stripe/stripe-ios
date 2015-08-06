@@ -10,7 +10,4 @@
    <FileRef
       location = "group:Example/Stripe iOS Example (Custom).xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:Example/Stripe OSX Example.xcodeproj">
-   </FileRef>
 </Workspace>
