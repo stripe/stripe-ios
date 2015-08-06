@@ -7,24 +7,13 @@
 //
 
 @import Foundation;
-
-
+#import "STPCardBrand.h"
 
 typedef NS_ENUM(NSInteger, STPCardFundingType) {
     STPCardFundingTypeDebit,
     STPCardFundingTypeCredit,
     STPCardFundingTypePrepaid,
     STPCardFundingTypeOther,
-};
-
-typedef NS_ENUM(NSInteger, STPCardBrand) {
-    STPCardBrandVisa,
-    STPCardBrandAmex,
-    STPCardBrandMasterCard,
-    STPCardBrandDiscover,
-    STPCardBrandJCB,
-    STPCardBrandDinersClub,
-    STPCardBrandUnknown,
 };
 
 /**
