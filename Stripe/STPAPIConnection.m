@@ -7,7 +7,6 @@
 //
 
 #import "STPAPIConnection.h"
-#import "STPAPIClient.h"
 #import "StripeError.h"
 #import <CommonCrypto/CommonDigest.h>
 
