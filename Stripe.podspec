@@ -21,11 +21,13 @@ Pod::Spec.new do |s|
     ss.ios.source_files            = 'Stripe/PublicHeaders/ApplePay/*.h', 'Stripe/ApplePay/*.{h,m}'
   end
 
-  s.subspec 'Checkout' do |subspec|
+  s.subspec 'Checkout' do |ss|
     # This has been merged with the core subspec and is now empty; it's still around to avoid breaking legacy Podfiles.
+    ss.dependency 'Stripe/Core'
   end
 
-  s.subspec 'ApplePay' do |subspec|
+  s.subspec 'ApplePay' do |ss|
     # This has been merged with the core subspec and is now empty; it's still around to avoid breaking legacy Podfiles.
+    ss.dependency 'Stripe/Core'
   end
 end
