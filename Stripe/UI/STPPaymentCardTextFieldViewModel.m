@@ -29,17 +29,17 @@
 @implementation STPPaymentCardTextFieldViewModel
 
 - (void)setCardNumber:(NSString *)cardNumber {
-    cardNumber = [STPCardValidator sanitizedNumericStringForString:cardNumber];
-    STPCardBrand brand = [STPCardValidator brandForNumber:cardNumber];
+    NSString *sanitizedNumber = [STPCardValidator sanitizedNumericStringForString:cardNumber];
+    STPCardBrand brand = [STPCardValidator brandForNumber:sanitizedNumber];
     NSInteger maxLength = [STPCardValidator lengthForCardBrand:brand];
-    _cardNumber = [cardNumber stp_safeSubstringToIndex:maxLength];
+    _cardNumber = [sanitizedNumber stp_safeSubstringToIndex:maxLength];
 }
 
 // This might contain slashes.
 - (void)setRawExpiration:(NSString *)expiration {
-    expiration = [STPCardValidator sanitizedNumericStringForString:expiration];
-    self.expirationMonth = [expiration stp_safeSubstringToIndex:2];
-    self.expirationYear = [[expiration stp_safeSubstringFromIndex:2] stp_safeSubstringToIndex:2];
+    NSString *sanitizedExpiration = [STPCardValidator sanitizedNumericStringForString:expiration];
+    self.expirationMonth = [sanitizedExpiration stp_safeSubstringToIndex:2];
+    self.expirationYear = [[sanitizedExpiration stp_safeSubstringFromIndex:2] stp_safeSubstringToIndex:2];
 }
 
 - (NSString *)rawExpiration {
@@ -55,22 +55,20 @@
 }
 
 - (void)setExpirationMonth:(NSString *)expirationMonth {
-    expirationMonth = [STPCardValidator sanitizedNumericStringForString:expirationMonth];
-    if (expirationMonth.length == 1 && ![expirationMonth isEqualToString:@"0"] && ![expirationMonth isEqualToString:@"1"]) {
-        expirationMonth = [@"0" stringByAppendingString:expirationMonth];
+    NSString *sanitizedExpiration = [STPCardValidator sanitizedNumericStringForString:expirationMonth];
+    if (sanitizedExpiration.length == 1 && ![sanitizedExpiration isEqualToString:@"0"] && ![sanitizedExpiration isEqualToString:@"1"]) {
+        sanitizedExpiration = [@"0" stringByAppendingString:sanitizedExpiration];
     }
-    _expirationMonth = [expirationMonth stp_safeSubstringToIndex:2];
+    _expirationMonth = [sanitizedExpiration stp_safeSubstringToIndex:2];
 }
 
 - (void)setExpirationYear:(NSString *)expirationYear {
-    expirationYear = [STPCardValidator sanitizedNumericStringForString:expirationYear];
-    _expirationYear = [expirationYear stp_safeSubstringToIndex:2];
+    _expirationYear = [[STPCardValidator sanitizedNumericStringForString:expirationYear] stp_safeSubstringToIndex:2];
 }
 
 - (void)setCvc:(NSString *)cvc {
-    cvc = [STPCardValidator sanitizedNumericStringForString:cvc];
     NSInteger maxLength = [STPCardValidator maxCvcLengthForCardBrand:self.brand];
-    _cvc = [cvc stp_safeSubstringToIndex:maxLength];
+    _cvc = [[STPCardValidator sanitizedNumericStringForString:cvc] stp_safeSubstringToIndex:maxLength];
 }
 
 - (STPCardBrand)brand {
@@ -90,7 +88,7 @@
             } else if (monthState == STPCardValidationStateInvalid || yearState == STPCardValidationStateInvalid) {
                 return STPCardValidationStateInvalid;
             } else {
-                return STPCardValidationStatePossible;
+                return STPCardValidationStateIncomplete;
             }
             break;
         }

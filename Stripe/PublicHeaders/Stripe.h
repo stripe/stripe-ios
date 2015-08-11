@@ -11,6 +11,8 @@
 #import "STPBankAccount.h"
 #import "STPCardBrand.h"
 #import "STPCard.h"
+#import "STPCardValidationState.h"
+#import "STPCardValidator.h"
 #import "STPToken.h"
 
 #import "STPCheckoutOptions.h"

@@ -10,38 +10,126 @@
 
 @class STPPaymentCardTextField;
 
+/**
+ *  This protocol allows a delegate to be notified when a payment text field's contents change, which can in turn be used to take further actions depending on the validity of its contents.
+ */
 @protocol STPPaymentCardTextFieldDelegate <NSObject>
 
-- (void)paymentCardTextFieldDidValidateSuccessfully:(STPPaymentCardTextField *)textField;
-@optional
-- (void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField;
+/**
+ *  Called when either the card number, expiration, or CVC changes. At this point, one can call -isValid on the text field to determine, for example, whether or not to enable a button to submit the form. Example:
+ 
+ - (void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
+      self.paymentButton.enabled = textField.isValid;
+ }
+ 
+ *
+ *  @param textField the text field that has changed
+ */
+- (void)paymentCardTextFieldDidChange:(nonnull STPPaymentCardTextField *)textField;
 
 @end
 
+
+/**
+ *  STPPaymentCardTextField is a text field with similar properties to UITextField, but specialized for collecting credit/debit card information. It manages multiple UITextFields under the hood to collect this information. It's designed to fit on a single line, and from a design perspective can be used anywhere a UITextField would be appropriate.
+ */
 @interface STPPaymentCardTextField : UIControl
 
-@property(nonatomic, weak) id<STPPaymentCardTextFieldDelegate> delegate;
+/**
+ *  @see STPPaymentCardTextFieldDelegate
+ */
+@property(nonatomic, weak, nullable) id<STPPaymentCardTextFieldDelegate> delegate;
 
-@property(nonatomic, copy) UIFont *font UI_APPEARANCE_SELECTOR;
-@property(nonatomic, copy) UIColor *textColor UI_APPEARANCE_SELECTOR;
-@property(nonatomic, copy) UIColor *textErrorColor UI_APPEARANCE_SELECTOR;
-@property(nonatomic, copy) UIColor *placeholderColor UI_APPEARANCE_SELECTOR;
-@property(nonatomic, assign) UITextBorderStyle borderStyle UI_APPEARANCE_SELECTOR;
-@property(nonatomic, strong) UIView *inputAccessoryView;
+/**
+ *  The font used in each child field. Default is [UIFont systemFontOfSize:18]. Set this property to nil to reset to the default.
+ */
+@property(nonatomic, copy, null_resettable) UIFont *font UI_APPEARANCE_SELECTOR;
 
-- (BOOL)canSelectNextField;
-- (BOOL)canSelectPreviousField;
+/**
+ *  The text color to be used when entering valid text. Default is [UIColor blackColor]. Set this property to nil to reset to the default.
+ */
+@property(nonatomic, copy, null_resettable) UIColor *textColor UI_APPEARANCE_SELECTOR;
 
-- (BOOL)selectNextField;
-- (BOOL)selectPreviousField;
+/**
+ *  The text color to be used when the user has entered invalid information, such as an invalid card number. Default is [UIColor redColor]. Set this property to nil to reset to the default.
+ */
+@property(nonatomic, copy, null_resettable) UIColor *textErrorColor UI_APPEARANCE_SELECTOR;
 
+/**
+ *  The text placeholder color used in each child field. Default is RGB 217/218/221 (light gray). Set this property to nil to reset to the default.
+ */
+@property(nonatomic, copy, null_resettable) UIColor *placeholderColor UI_APPEARANCE_SELECTOR;
+
+/**
+ *  The border color for the field. Default is RGB 217/218/221 (light gray). Can be nil (in which case no border will be drawn).
+ */
+@property(nonatomic, copy, nullable) UIColor *borderColor UI_APPEARANCE_SELECTOR;
+
+/**
+ *  The width of the field's border. Default is 1.0.
+ */
+@property(nonatomic, assign) CGFloat borderWidth UI_APPEARANCE_SELECTOR;
+
+/**
+ *  The corner radius for the field's border. Default is 5.0.
+ */
+@property(nonatomic, assign) CGFloat cornerRadius UI_APPEARANCE_SELECTOR;
+
+/**
+ *  This behaves identically to setting the inputAccessoryView for each child text field.
+ */
+@property(nonatomic, strong, nullable) UIView *inputAccessoryView;
+
+/**
+ *  Causes the text field to begin editing. Presents the keyboard.
+ *
+ *  @return Whether or not the text field successfully began editing.
+ *  @see UIResponder
+ */
+- (BOOL)becomeFirstResponder;
+
+/**
+ *  Causes the text field to stop editing. Dismisses the keyboard.
+ *
+ *  @return Whether or not the field successfully stopped editing.
+ *  @see UIResponder
+ */
+- (BOOL)resignFirstResponder;
+
+/**
+ *  Resets all of the contents of all of the fields. If the field is currently being edited, the number field will become selected.
+ */
 - (void)clear;
 
-- (BOOL)hasValidContents;
+/**
+ *  Whether or not the form currently contains a valid card number, expiration date, and CVC.
+ *  @see STPCardValidator
+ */
+@property(nonatomic, readonly, getter=isValid)BOOL valid;
 
-@property(nonatomic, readonly) NSString *cardNumber;
+/**
+ *  Enable/disable selecting or editing the field. Useful when submitting card details to Stripe.
+ */
+@property(nonatomic, getter=isEnabled) BOOL enabled;
+
+/**
+ *  The current card number displayed by the field. May or may not be valid, unless isValid is true, in which case it is guaranteed to be valid.
+ */
+@property(nonatomic, readonly, nullable) NSString *cardNumber;
+
+/**
+ *  The current expiration month displayed by the field (1 = January, etc). May or may not be valid, unless isValid is true, in which case it is guaranteed to be valid.
+ */
 @property(nonatomic, readonly) NSUInteger expirationMonth;
+
+/**
+ *  The current expiration year displayed by the field, modulo 100 (e.g. the year 2015 will be represented as 15). May or may not be valid, unless isValid is true, in which case it is guaranteed to be valid.
+ */
 @property(nonatomic, readonly) NSUInteger expirationYear;
-@property(nonatomic, readonly) NSString *cvc;
+
+/**
+ *  The current card CVC displayed by the field. May or may not be valid, unless isValid is true, in which case it is guaranteed to be valid.
+ */
+@property(nonatomic, readonly, nullable) NSString *cvc;
 
 @end

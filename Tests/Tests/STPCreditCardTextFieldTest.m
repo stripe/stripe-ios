@@ -39,18 +39,18 @@
 
 - (void)testRawExpiration {
     NSArray *tests = @[
-                       @[@"", @"", @"", @"", @(STPCardValidationStatePossible)],
+                       @[@"", @"", @"", @"", @(STPCardValidationStateIncomplete)],
                        @[@"12/23", @"12/23", @"12", @"23", @(STPCardValidationStateValid)],
                        @[@"1223", @"12/23", @"12", @"23", @(STPCardValidationStateValid)],
-                       @[@"1", @"1", @"1", @"", @(STPCardValidationStatePossible)],
-                       @[@"2", @"02/", @"02", @"", @(STPCardValidationStatePossible)],
-                       @[@"12", @"12/", @"12", @"", @(STPCardValidationStatePossible)],
-                       @[@"12/2", @"12/2", @"12", @"2", @(STPCardValidationStatePossible)],
+                       @[@"1", @"1", @"1", @"", @(STPCardValidationStateIncomplete)],
+                       @[@"2", @"02/", @"02", @"", @(STPCardValidationStateIncomplete)],
+                       @[@"12", @"12/", @"12", @"", @(STPCardValidationStateIncomplete)],
+                       @[@"12/2", @"12/2", @"12", @"2", @(STPCardValidationStateIncomplete)],
                        @[@"99/23", @"99", @"99", @"23", @(STPCardValidationStateInvalid)],
                        @[@"10/12", @"10/12", @"10", @"12", @(STPCardValidationStateInvalid)],
                        @[@"12*23", @"12/23", @"12", @"23", @(STPCardValidationStateValid)],
-                       @[@"12/*", @"12/", @"12", @"", @(STPCardValidationStatePossible)],
-                       @[@"*", @"", @"", @"", @(STPCardValidationStatePossible)],
+                       @[@"12/*", @"12/", @"12", @"", @(STPCardValidationStateIncomplete)],
+                       @[@"*", @"", @"", @"", @(STPCardValidationStateIncomplete)],
                        ];
     for (NSArray *test in tests) {
         self.viewModel.rawExpiration = test[0];

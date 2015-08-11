@@ -12,21 +12,19 @@
 
 @protocol STPFormTextFieldDelegate <UITextFieldDelegate>
 
-- (void)formTextFieldDidBackspaceOnEmpty:(STPFormTextField *)formTextField;
+- (void)formTextFieldDidBackspaceOnEmpty:(nonnull STPFormTextField *)formTextField;
 
 @end
 
 @interface STPFormTextField : UITextField
 
-@property(nonatomic, readwrite) BOOL ignoresTouches;
-
-@property(nonatomic, readwrite) UIColor *defaultColor;
-@property(nonatomic, readwrite) UIColor *errorColor;
-@property(nonatomic, readwrite) UIColor *placeholderColor;
+@property(nonatomic, readwrite, nullable) UIColor *defaultColor;
+@property(nonatomic, readwrite, nullable) UIColor *errorColor;
+@property(nonatomic, readwrite, nullable) UIColor *placeholderColor;
 
 @property(nonatomic, readwrite, assign)BOOL formatsCardNumbers;
 @property(nonatomic, readwrite, assign)BOOL validText;
-@property(nonatomic, readwrite, weak)id<STPFormTextFieldDelegate>formDelegate;
+@property(nonatomic, readwrite, weak, nullable)id<STPFormTextFieldDelegate>formDelegate;
 
 - (CGSize)measureTextSize;
 

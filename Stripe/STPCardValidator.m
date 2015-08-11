@@ -13,7 +13,7 @@
 + (NSString *)sanitizedNumericStringForString:(NSString *)string {
     NSCharacterSet *set = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
     NSArray *components = [string componentsSeparatedByCharactersInSet:set];
-    return [components componentsJoinedByString:@""];
+    return [components componentsJoinedByString:@""] ?: @"";
 }
 
 + (NSString *)stringByRemovingSpacesFromString:(NSString *)string {
@@ -28,19 +28,19 @@
 
 + (STPCardValidationState)validationStateForExpirationMonth:(NSString *)expirationMonth {
 
-    expirationMonth = [self stringByRemovingSpacesFromString:expirationMonth];
+    NSString *sanitizedExpiration = [self stringByRemovingSpacesFromString:expirationMonth];
     
-    if (![self stringIsNumeric:expirationMonth]) {
+    if (![self stringIsNumeric:sanitizedExpiration]) {
         return STPCardValidationStateInvalid;
     }
     
-    switch (expirationMonth.length) {
+    switch (sanitizedExpiration.length) {
         case 0:
-            return STPCardValidationStatePossible;
+            return STPCardValidationStateIncomplete;
         case 1:
-            return ([expirationMonth isEqualToString:@"0"] || [expirationMonth isEqualToString:@"1"]) ? STPCardValidationStatePossible : STPCardValidationStateValid;
+            return ([sanitizedExpiration isEqualToString:@"0"] || [sanitizedExpiration isEqualToString:@"1"]) ? STPCardValidationStateIncomplete : STPCardValidationStateValid;
         case 2:
-            return (0 < expirationMonth.integerValue && expirationMonth.integerValue <= 12) ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+            return (0 < sanitizedExpiration.integerValue && sanitizedExpiration.integerValue <= 12) ? STPCardValidationStateValid : STPCardValidationStateInvalid;
         default:
             return STPCardValidationStateInvalid;
     }
@@ -48,24 +48,24 @@
 
 + (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear inMonth:(NSString *)expirationMonth inCurrentYear:(NSInteger)currentYear currentMonth:(NSInteger)currentMonth {
     
-    currentYear = currentYear % 100;
+    NSInteger moddedYear = currentYear % 100;
     
     if (![self stringIsNumeric:expirationMonth] || ![self stringIsNumeric:expirationYear]) {
         return STPCardValidationStateInvalid;
     }
     
-    expirationMonth = [self sanitizedNumericStringForString:expirationMonth];
-    expirationYear = [self sanitizedNumericStringForString:expirationYear];
+    NSString *sanitizedMonth = [self sanitizedNumericStringForString:expirationMonth];
+    NSString *sanitizedYear = [self sanitizedNumericStringForString:expirationYear];
     
-    switch (expirationYear.length) {
+    switch (sanitizedYear.length) {
         case 0:
         case 1:
-            return STPCardValidationStatePossible;
+            return STPCardValidationStateIncomplete;
         case 2: {
-            if (expirationYear.integerValue == currentYear) {
-                return expirationMonth.integerValue >= currentMonth ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+            if (sanitizedYear.integerValue == moddedYear) {
+                return sanitizedMonth.integerValue >= currentMonth ? STPCardValidationStateValid : STPCardValidationStateInvalid;
             } else {
-                return expirationYear.integerValue > currentYear ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+                return sanitizedYear.integerValue > moddedYear ? STPCardValidationStateValid : STPCardValidationStateInvalid;
             }
         }
         default:
@@ -77,7 +77,8 @@
 + (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear
                                                    inMonth:(NSString *)expirationMonth {
     
-    NSDateComponents *dateComponents = [[NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian] components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:[NSDate date]];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:[NSDate date]];
     NSInteger currentYear = dateComponents.year % 100;
     NSInteger currentMonth = dateComponents.month;
     
@@ -91,39 +92,39 @@
         return STPCardValidationStateInvalid;
     }
     
-    cvc = [self sanitizedNumericStringForString:cvc];
+    NSString *sanitizedCvc = [self sanitizedNumericStringForString:cvc];
     
     NSUInteger length = [self maxCvcLengthForCardBrand:brand];
-    if (cvc.length > length) {
+    if (sanitizedCvc.length > length) {
         return STPCardValidationStateInvalid;
-    } else if (cvc.length == length) {
+    } else if (sanitizedCvc.length == length) {
         return STPCardValidationStateValid;
     } else {
-        return STPCardValidationStatePossible;
+        return STPCardValidationStateIncomplete;
     }
 }
 
 + (STPCardValidationState)validationStateForNumber:(NSString *)cardNumber {
     
-    cardNumber = [self stringByRemovingSpacesFromString:cardNumber];
-    if (![self stringIsNumeric:cardNumber]) {
+    NSString *sanitizedNumber = [self stringByRemovingSpacesFromString:cardNumber];
+    if (![self stringIsNumeric:sanitizedNumber]) {
         return STPCardValidationStateInvalid;
     }
     
-    NSArray *brands = [self possibleBrandsForNumber:cardNumber];
+    NSArray *brands = [self possibleBrandsForNumber:sanitizedNumber];
     if (brands.count == 0) {
         return STPCardValidationStateInvalid;
     } else if (brands.count >= 2) {
-        return STPCardValidationStatePossible;
+        return STPCardValidationStateIncomplete;
     } else {
         STPCardBrand brand = (STPCardBrand)[brands.firstObject integerValue];
         NSInteger desiredLength = [self lengthForCardBrand:brand];
-        if ((NSInteger)cardNumber.length > desiredLength) {
+        if ((NSInteger)sanitizedNumber.length > desiredLength) {
             return STPCardValidationStateInvalid;
-        } else if ((NSInteger)cardNumber.length == desiredLength) {
-            return [self stringIsValidLuhn:cardNumber] ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+        } else if ((NSInteger)sanitizedNumber.length == desiredLength) {
+            return [self stringIsValidLuhn:sanitizedNumber] ? STPCardValidationStateValid : STPCardValidationStateInvalid;
         } else {
-            return STPCardValidationStatePossible;
+            return STPCardValidationStateIncomplete;
         }
     }
 }
@@ -139,8 +140,8 @@
 }
 
 + (STPCardBrand)brandForNumber:(NSString *)cardNumber {
-    cardNumber = [self sanitizedNumericStringForString:cardNumber];
-    NSArray *brands = [self possibleBrandsForNumber:cardNumber];
+    NSString *sanitizedNumber = [self sanitizedNumericStringForString:cardNumber];
+    NSArray *brands = [self possibleBrandsForNumber:sanitizedNumber];
     if (brands.count == 1) {
         return (STPCardBrand)[brands.firstObject integerValue];
     }

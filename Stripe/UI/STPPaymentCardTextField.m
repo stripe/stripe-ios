@@ -14,11 +14,11 @@
 #import "STPFormTextField.h"
 #import "STPCardValidator.h"
 
+#define FAUXPAS_IGNORED_IN_METHOD(...)
+
 @interface STPPaymentCardTextField()<STPFormTextFieldDelegate>
 
 @property(nonatomic, readwrite, strong)STPFormTextField *sizingField;
-
-@property(nonatomic, readwrite, weak)UITextField *backgroundTextField;
 
 @property(nonatomic, readwrite, weak)UIImageView *brandImageView;
 @property(nonatomic, readwrite, weak)UIView *interstitialView;
@@ -48,7 +48,7 @@
 @synthesize textColor = _textColor;
 @synthesize textErrorColor = _textErrorColor;
 @synthesize placeholderColor = _placeholderColor;
-@synthesize borderStyle = _borderStyle;
+@dynamic enabled;
 
 #pragma mark initializers
 
@@ -69,17 +69,16 @@
 }
 
 - (void)commonInit {
+    
+    self.borderColor = [self.class placeholderGrayColor];
+    self.cornerRadius = 5.0f;
+    self.borderWidth = 1.0f;
 
     self.clipsToBounds = YES;
     
     _viewModel = [STPPaymentCardTextFieldViewModel new];
     _sizingField = [self buildTextField];
     
-    STPFormTextField *backgroundTextField = [self buildTextField];
-    backgroundTextField.borderStyle = self.borderStyle;
-    backgroundTextField.ignoresTouches = YES;
-    _backgroundTextField = backgroundTextField;
-
     UIImageView *brandImageView = [[UIImageView alloc] initWithImage:_viewModel.brandImage];
     brandImageView.translatesAutoresizingMaskIntoConstraints = NO;
     brandImageView.contentMode = UIViewContentModeCenter;
@@ -120,7 +119,6 @@
     [self addSubview:numberField];
     [self addSubview:interstitialView];
     [self addSubview:brandImageView];
-    [self addSubview:backgroundTextField];
     
     [self setupConstraints];
 }
@@ -133,6 +131,10 @@
 }
 
 #pragma mark appearance properties
+
++ (UIColor *)placeholderGrayColor {
+    return [UIColor colorWithRed:217.0f/255.0f green:218.0f/255.0f blue:221.0f/255.0f alpha:1.0f];
+}
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
     [super setBackgroundColor:[backgroundColor copy]];
@@ -198,16 +200,31 @@
 }
 
 - (UIColor *)placeholderColor {
-    return _placeholderColor ?: [UIColor lightGrayColor];
+    return _placeholderColor ?: [self.class placeholderGrayColor];
 }
 
-- (void)setBorderStyle:(UITextBorderStyle)borderStyle {
-    _borderStyle = borderStyle;
-    self.backgroundTextField.borderStyle = borderStyle;
+- (void)setBorderColor:(UIColor * __nullable)borderColor {
+    self.layer.borderColor = [[borderColor copy] CGColor];
 }
 
-- (UITextBorderStyle)borderStyle {
-    return _borderStyle ?: UITextBorderStyleRoundedRect;
+- (UIColor * __nullable)borderColor {
+    return [[UIColor alloc] initWithCGColor:self.layer.borderColor];
+}
+
+- (void)setCornerRadius:(CGFloat)cornerRadius {
+    self.layer.cornerRadius = cornerRadius;
+}
+
+- (CGFloat)cornerRadius {
+    return self.layer.cornerRadius;
+}
+
+- (void)setBorderWidth:(CGFloat)borderWidth {
+    self.layer.borderWidth = borderWidth;
+}
+
+- (CGFloat)borderWidth {
+    return self.layer.borderWidth;
 }
 
 - (void)setInputAccessoryView:(UIView *)inputAccessoryView {
@@ -216,6 +233,15 @@
     for (STPFormTextField *field in [self allFields]) {
         field.inputAccessoryView = inputAccessoryView;
     }
+}
+
+#pragma mark UIControl
+
+- (void)setEnabled:(BOOL)enabled {
+    [super setEnabled:enabled];
+    for (STPFormTextField *textField in [self allFields]) {
+        textField.enabled = enabled;
+    };
 }
 
 #pragma mark UIResponder & related methods
@@ -236,14 +262,6 @@
     BOOL success = [self.selectedField resignFirstResponder];
     [self setNumberFieldShrunk:[self shouldShrinkNumberField] animated:YES];
     return success;
-}
-
-- (BOOL)canSelectNextField {
-    return [[self nextField] canBecomeFirstResponder];
-}
-
-- (BOOL)canSelectPreviousField {
-    return [[self previousField] canBecomeFirstResponder];
 }
 
 - (BOOL)selectNextField {
@@ -278,11 +296,14 @@
     for (STPFormTextField *field in [self allFields]) {
         field.text = @"";
     }
-//    self.viewModel =
+    self.viewModel = [STPPaymentCardTextFieldViewModel new];
     [self setNumberFieldShrunk:NO animated:YES];
+    if ([self isFirstResponder]) {
+        [self.numberField becomeFirstResponder];
+    }
 }
 
-- (BOOL)hasValidContents {
+- (BOOL)isValid {
     return [self.viewModel isValid];
 }
 
@@ -324,23 +345,6 @@
 }
 
 - (void)setupConstraints {
-    
-    // Background text view
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.backgroundTextField
-                                                     attribute:NSLayoutAttributeLeft
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeLeft
-                                                    multiplier:1.0f
-                                                      constant:0.0f]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.backgroundTextField
-                                                     attribute:NSLayoutAttributeRight
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeRight
-                                                    multiplier:1.0f
-                                                      constant:0.0f]];
     
     // Image view
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.brandImageView
@@ -447,7 +451,7 @@
     [self addConstraint:cvcWidthConstraint];
     
     // Make everything be 100% height and vertically centered
-    for (UIView *view in @[self.backgroundTextField, self.brandImageView, self.interstitialView, self.dateContainer, self.numberField, self.expirationField, self.cvcField]) {
+    for (UIView *view in @[self.brandImageView, self.interstitialView, self.dateContainer, self.numberField, self.expirationField, self.cvcField]) {
         
         [self addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                          attribute:NSLayoutAttributeTop
@@ -478,24 +482,36 @@
         [self layoutSubviews];
     }
     
-    [UIView animateWithDuration:(animated * 0.3)
-                          delay:0
-         usingSpringWithDamping:0.85f
-          initialSpringVelocity:0
-                        options:0
-                     animations:^{
+    void (^animations)() = ^void() {
         self.numberLeftConstraint.constant = shrunk ? -nonFragmentWidth : 0;
         for (UIView *view in @[self.expirationField, self.cvcField]) {
             view.alpha = 1.0f * shrunk;
         }
         [self layoutSubviews];
-    } completion:^(__unused BOOL finished) {
+    };
+    
+    void (^completion)(BOOL) = ^void(__unused BOOL succeeded) {
         if (!shrunk) {
             self.dateContainerLeftConstraint.constant = 10.0f;
             [self layoutSubviews];
         }
-    }];
+    };
     
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
+    NSTimeInterval duration = animated * 0.3;
+    if ([UIView respondsToSelector:@selector(animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)]) {
+        [UIView animateWithDuration:duration
+                              delay:0
+             usingSpringWithDamping:0.85f
+              initialSpringVelocity:0
+                            options:0
+                         animations:animations
+                         completion:completion];
+    } else {
+        [UIView animateWithDuration:duration
+                         animations:animations
+                         completion:completion];
+    }
 }
 
 - (BOOL)shouldShrinkNumberField {
@@ -578,7 +594,7 @@
         case STPCardValidationStateInvalid:
             textField.validText = NO;
             break;
-        case STPCardValidationStatePossible:
+        case STPCardValidationStateIncomplete:
             break;
         case STPCardValidationStateValid: {
             [self selectNextField];
@@ -611,9 +627,7 @@
     if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidChange:)]) {
         [self.delegate paymentCardTextFieldDidChange:self];
     }
-    if ([self hasValidContents]) {
-        [self.delegate paymentCardTextFieldDidValidateSuccessfully:self];
-    }
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
 @end

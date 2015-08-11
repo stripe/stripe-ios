@@ -9,6 +9,7 @@
 @import UIKit;
 @import XCTest;
 
+#import "STPCardValidationState.h"
 #import "STPCardValidator.h"
 
 @interface STPCardValidatorTest : XCTestCase
@@ -54,12 +55,15 @@
         [tests addObject:@[card[2], card[1]]];
     }
     
+    [tests addObject:@[@(STPCardValidationStateValid), @"4242 4242 4242 4242"]];
+    
     NSArray *badCardNumbers = @[
                                 @"1",
                                 @"1234123412341234",
                                 @"xxx",
                                 @"9999999999999999999999",
                                 @"42424242424242424242",
+                                @"4242-4242-4242-4242",
                                 ];
     
     for (NSString *card in badCardNumbers) {
@@ -71,11 +75,12 @@
                                      @"5",
                                      @"3",
                                      @"",
+                                     @"    ",
                                      @"6011",
                                      ];
     
     for (NSString *card in possibleCardNumbers) {
-        [tests addObject:@[@(STPCardValidationStatePossible), card]];
+        [tests addObject:@[@(STPCardValidationStateIncomplete), card]];
     }
     
     for (NSArray *test in tests) {
@@ -126,14 +131,15 @@
 
 - (void)testMonthValidation {
     NSArray *tests = @[
-                       @[@"", @(STPCardValidationStatePossible)],
-                       @[@"0", @(STPCardValidationStatePossible)],
-                       @[@"1", @(STPCardValidationStatePossible)],
+                       @[@"", @(STPCardValidationStateIncomplete)],
+                       @[@"0", @(STPCardValidationStateIncomplete)],
+                       @[@"1", @(STPCardValidationStateIncomplete)],
                        @[@"2", @(STPCardValidationStateValid)],
                        @[@"9", @(STPCardValidationStateValid)],
                        @[@"10", @(STPCardValidationStateValid)],
                        @[@"12", @(STPCardValidationStateValid)],
                        @[@"13", @(STPCardValidationStateInvalid)],
+                       @[@"11a", @(STPCardValidationStateInvalid)],
                        @[@"x", @(STPCardValidationStateInvalid)],
                        @[@"100", @(STPCardValidationStateInvalid)],
                        @[@"00", @(STPCardValidationStateInvalid)],
@@ -155,9 +161,9 @@
                        @[@"12", @"14", @(STPCardValidationStateInvalid)],
                        @[@"7", @"15", @(STPCardValidationStateInvalid)],
                        @[@"12", @"00", @(STPCardValidationStateInvalid)],
-                       @[@"12", @"2", @(STPCardValidationStatePossible)],
-                       @[@"12", @"1", @(STPCardValidationStatePossible)],
-                       @[@"12", @"0", @(STPCardValidationStatePossible)],
+                       @[@"12", @"2", @(STPCardValidationStateIncomplete)],
+                       @[@"12", @"1", @(STPCardValidationStateIncomplete)],
+                       @[@"12", @"0", @(STPCardValidationStateIncomplete)],
                        ];
     
     for (NSArray *test in tests) {
@@ -184,12 +190,13 @@
 - (void)testCVCValidation {
     NSArray *tests = @[
                        @[@"x", @(STPCardBrandVisa), @(STPCardValidationStateInvalid)],
-                       @[@"", @(STPCardBrandVisa), @(STPCardValidationStatePossible)],
-                       @[@"1", @(STPCardBrandVisa), @(STPCardValidationStatePossible)],
-                       @[@"12", @(STPCardBrandVisa), @(STPCardValidationStatePossible)],
+                       @[@"", @(STPCardBrandVisa), @(STPCardValidationStateIncomplete)],
+                       @[@"1", @(STPCardBrandVisa), @(STPCardValidationStateIncomplete)],
+                       @[@"12", @(STPCardBrandVisa), @(STPCardValidationStateIncomplete)],
+                       @[@"1x3", @(STPCardBrandVisa), @(STPCardValidationStateInvalid)],
                        @[@"123", @(STPCardBrandVisa), @(STPCardValidationStateValid)],
-                       @[@"123", @(STPCardBrandAmex), @(STPCardValidationStatePossible)],
-                       @[@"123", @(STPCardBrandUnknown), @(STPCardValidationStatePossible)],
+                       @[@"123", @(STPCardBrandAmex), @(STPCardValidationStateIncomplete)],
+                       @[@"123", @(STPCardBrandUnknown), @(STPCardValidationStateIncomplete)],
                        @[@"1234", @(STPCardBrandVisa), @(STPCardValidationStateInvalid)],
                        @[@"1234", @(STPCardBrandAmex), @(STPCardValidationStateValid)],
                        @[@"12345", @(STPCardBrandAmex), @(STPCardValidationStateInvalid)],

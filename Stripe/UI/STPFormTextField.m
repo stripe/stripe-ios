@@ -9,6 +9,8 @@
 #import "STPFormTextField.h"
 #import "STPCardValidator.h"
 
+#define FAUXPAS_IGNORED_IN_METHOD(...)
+
 @implementation STPFormTextField
 
 @synthesize placeholderColor = _placeholderColor;
@@ -30,12 +32,12 @@
 }
 
 - (void)setText:(NSString *)text {
-    NSAttributedString *attributed = [self attributedStringForString:text attributes:[self defaultTextAttributes]];
+    NSAttributedString *attributed = [self attributedStringForString:text attributes:[self safeDefaultTextAttributes]];
     [self setAttributedText:attributed];
 }
 
 - (void)setPlaceholder:(NSString *)placeholder {
-    NSMutableDictionary *attributes = [[self defaultTextAttributes] mutableCopy];
+    NSMutableDictionary *attributes = [[self safeDefaultTextAttributes] mutableCopy];
     if (self.placeholderColor) {
         attributes[NSForegroundColorAttributeName] = self.placeholderColor;
     }
@@ -66,6 +68,21 @@
     return [attributedString copy];
 }
 
+- (NSDictionary *)safeDefaultTextAttributes {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
+    if ([self respondsToSelector:@selector(defaultTextAttributes)]) {
+        return [self defaultTextAttributes];
+    }
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    if (self.textColor) {
+        attributes[NSForegroundColorAttributeName] = self.textColor;
+    }
+    if (self.font) {
+        attributes[NSFontAttributeName] = self.font;
+    }
+    return [attributes copy];
+}
+
 - (void)setDefaultColor:(UIColor *)defaultColor {
     _defaultColor = defaultColor;
     [self updateColor];
@@ -90,12 +107,21 @@
     self.textColor = _validText ? self.defaultColor : self.errorColor;
 }
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    UIView *view = [super hitTest:point withEvent:event];
-    if (view == self && self.ignoresTouches) {
-        return nil;
+// Workaround for http://www.openradar.appspot.com/19374610
+- (CGRect)editingRectForBounds:(CGRect)bounds {
+    if (UIDevice.currentDevice.systemVersion.integerValue != 8) {
+        return [self textRectForBounds:bounds];
     }
-    return view;
+    
+    CGFloat const scale = UIScreen.mainScreen.scale;
+    CGFloat const preferred = self.attributedText.size.height;
+    CGFloat const delta = (CGFloat)ceil(preferred) - preferred;
+    CGFloat const adjustment = (CGFloat)floor(delta * scale) / scale;
+    
+    CGRect const textRect = [self textRectForBounds:bounds];
+    CGRect const editingRect = CGRectOffset(textRect, 0.0, adjustment);
+    
+    return editingRect;
 }
 
 @end

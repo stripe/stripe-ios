@@ -34,18 +34,17 @@
     self.navigationItem.rightBarButtonItem = saveButton;
 
     // Setup checkout
-    STPPaymentCardTextField *paymentView = [[STPPaymentCardTextField alloc] initWithFrame:CGRectMake(15, 20, 320, 55)];
+    STPPaymentCardTextField *paymentView = [[STPPaymentCardTextField alloc] initWithFrame:CGRectMake(15, 20, 320, 44)];
     paymentView.delegate = self;
     self.paymentView = paymentView;
     [self.view addSubview:paymentView];
 }
 
 - (void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
-    self.navigationItem.rightBarButtonItem.enabled = [textField hasValidContents];
-}
-
-- (void)paymentCardTextFieldDidValidateSuccessfully:(STPPaymentCardTextField *)textField {
-    
+    if (textField.isValid) {
+        textField.enabled = NO;
+    }
+    self.navigationItem.rightBarButtonItem.enabled = textField.isValid;
 }
 
 - (void)cancel:(id)sender {

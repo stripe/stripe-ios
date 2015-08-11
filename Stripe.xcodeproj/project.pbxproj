@@ -29,8 +29,8 @@
 		0438EF301B7416BB00D506CC /* STPFormTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF271B7416BB00D506CC /* STPFormTextField.m */; };
 		0438EF311B7416BB00D506CC /* STPFormTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF271B7416BB00D506CC /* STPFormTextField.m */; };
 		0438EF321B7416BB00D506CC /* STPPaymentCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF281B7416BB00D506CC /* STPPaymentCardTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0438EF331B7416BB00D506CC /* STPPaymentCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF281B7416BB00D506CC /* STPPaymentCardTextField.h */; };
-		0438EF341B7416BB00D506CC /* STPPaymentCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF281B7416BB00D506CC /* STPPaymentCardTextField.h */; };
+		0438EF331B7416BB00D506CC /* STPPaymentCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF281B7416BB00D506CC /* STPPaymentCardTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0438EF341B7416BB00D506CC /* STPPaymentCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF281B7416BB00D506CC /* STPPaymentCardTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0438EF351B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF291B7416BB00D506CC /* STPPaymentCardTextField.m */; };
 		0438EF361B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF291B7416BB00D506CC /* STPPaymentCardTextField.m */; };
 		0438EF371B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF291B7416BB00D506CC /* STPPaymentCardTextField.m */; };
@@ -40,15 +40,12 @@
 		0438EF3B1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF2B1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m */; };
 		0438EF3C1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF2B1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m */; };
 		0438EF3D1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF2B1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m */; };
-		0438EF401B74170D00D506CC /* STPCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF3E1B74170D00D506CC /* STPCardValidator.h */; };
-		0438EF411B74170D00D506CC /* STPCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF3E1B74170D00D506CC /* STPCardValidator.h */; };
-		0438EF421B74170D00D506CC /* STPCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF3E1B74170D00D506CC /* STPCardValidator.h */; };
 		0438EF431B74170D00D506CC /* STPCardValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF3F1B74170D00D506CC /* STPCardValidator.m */; };
 		0438EF441B74170D00D506CC /* STPCardValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF3F1B74170D00D506CC /* STPCardValidator.m */; };
 		0438EF451B74170D00D506CC /* STPCardValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF3F1B74170D00D506CC /* STPCardValidator.m */; };
 		0438EF471B74183100D506CC /* STPCardBrand.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF461B74183100D506CC /* STPCardBrand.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0438EF481B74183100D506CC /* STPCardBrand.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF461B74183100D506CC /* STPCardBrand.h */; };
-		0438EF491B74183100D506CC /* STPCardBrand.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF461B74183100D506CC /* STPCardBrand.h */; };
+		0438EF481B74183100D506CC /* STPCardBrand.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF461B74183100D506CC /* STPCardBrand.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0438EF491B74183100D506CC /* STPCardBrand.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF461B74183100D506CC /* STPCardBrand.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0438EF4C1B741B0100D506CC /* STPCardValidatorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF4A1B741B0100D506CC /* STPCardValidatorTest.m */; };
 		0438EF4D1B741B0100D506CC /* STPCreditCardTextFieldTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF4B1B741B0100D506CC /* STPCreditCardTextFieldTest.m */; };
 		0438EFA41B741C2800D506CC /* stp_card_amex.png in Resources */ = {isa = PBXBuildFile; fileRef = 0438EF891B741C2800D506CC /* stp_card_amex.png */; };
@@ -105,6 +102,7 @@
 		0438EFD71B741C2800D506CC /* stp_card_visa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0438EFA21B741C2800D506CC /* stp_card_visa@2x.png */; };
 		0438EFD81B741C2800D506CC /* stp_card_visa@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0438EFA31B741C2800D506CC /* stp_card_visa@3x.png */; };
 		0438EFD91B741C2800D506CC /* stp_card_visa@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0438EFA31B741C2800D506CC /* stp_card_visa@3x.png */; };
+		0438EFDB1B7524AA00D506CC /* STPCardBrand.h in Headers */ = {isa = PBXBuildFile; fileRef = 0438EF461B74183100D506CC /* STPCardBrand.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04415C561A6605B5001225ED /* STPAPIClient+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4AB1A5F30A700B854EE /* STPAPIClient+ApplePay.m */; };
 		04415C571A6605B5001225ED /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4AD1A5F30A700B854EE /* Stripe+ApplePay.m */; };
 		04415C591A6605B5001225ED /* STPCheckoutOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4B21A5F30A700B854EE /* STPCheckoutOptions.m */; };
@@ -265,6 +263,14 @@
 		04D12C461A5F55FA0010446E /* STPCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB5251A5F3A9300B854EE /* STPCardTest.m */; };
 		04D12C471A5F55FA0010446E /* STPCertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB5261A5F3A9300B854EE /* STPCertTest.m */; };
 		04D12C481A5F55FA0010446E /* STPTokenTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB5271A5F3A9300B854EE /* STPTokenTest.m */; };
+		04EBC7531B7533C300A0E6AE /* STPCardValidationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04EBC7541B7533C300A0E6AE /* STPCardValidationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04EBC7551B7533C300A0E6AE /* STPCardValidationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04EBC7561B7533C300A0E6AE /* STPCardValidationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04EBC7571B7533C300A0E6AE /* STPCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7521B7533C300A0E6AE /* STPCardValidator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04EBC7581B7533C300A0E6AE /* STPCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7521B7533C300A0E6AE /* STPCardValidator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04EBC7591B7533C300A0E6AE /* STPCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7521B7533C300A0E6AE /* STPCardValidator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04EBC75A1B7533C300A0E6AE /* STPCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7521B7533C300A0E6AE /* STPCardValidator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -312,7 +318,6 @@
 		0438EF291B7416BB00D506CC /* STPPaymentCardTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = STPPaymentCardTextField.m; path = UI/STPPaymentCardTextField.m; sourceTree = "<group>"; };
 		0438EF2A1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentCardTextFieldViewModel.h; path = UI/STPPaymentCardTextFieldViewModel.h; sourceTree = "<group>"; };
 		0438EF2B1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = STPPaymentCardTextFieldViewModel.m; path = UI/STPPaymentCardTextFieldViewModel.m; sourceTree = "<group>"; };
-		0438EF3E1B74170D00D506CC /* STPCardValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCardValidator.h; sourceTree = "<group>"; };
 		0438EF3F1B74170D00D506CC /* STPCardValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCardValidator.m; sourceTree = "<group>"; };
 		0438EF461B74183100D506CC /* STPCardBrand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCardBrand.h; path = PublicHeaders/STPCardBrand.h; sourceTree = "<group>"; };
 		0438EF4A1B741B0100D506CC /* STPCardValidatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCardValidatorTest.m; sourceTree = "<group>"; };
@@ -396,6 +401,8 @@
 		04D12C061A5F556D0010446E /* StripeOSX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeOSX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D12C101A5F556D0010446E /* StripeOSXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeOSXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D5BF9019BF958F009521A5 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
+		04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCardValidationState.h; path = PublicHeaders/STPCardValidationState.h; sourceTree = "<group>"; };
+		04EBC7521B7533C300A0E6AE /* STPCardValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCardValidator.h; path = PublicHeaders/STPCardValidator.h; sourceTree = "<group>"; };
 		04F39F0A1AEF2AFE005B926E /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		04F39F0B1AEF2AFE005B926E /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		04F39F0C1AEF2AFE005B926E /* Project-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Shared.xcconfig"; sourceTree = "<group>"; };
@@ -574,7 +581,8 @@
 				0438EF461B74183100D506CC /* STPCardBrand.h */,
 				04CDB4CA1A5F30A700B854EE /* STPCard.h */,
 				04CDB4CB1A5F30A700B854EE /* STPCard.m */,
-				0438EF3E1B74170D00D506CC /* STPCardValidator.h */,
+				04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */,
+				04EBC7521B7533C300A0E6AE /* STPCardValidator.h */,
 				0438EF3F1B74170D00D506CC /* STPCardValidator.m */,
 				04CDB4CC1A5F30A700B854EE /* STPToken.h */,
 				04CDB4CD1A5F30A700B854EE /* STPToken.m */,
@@ -680,19 +688,20 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04EBC7541B7533C300A0E6AE /* STPCardValidationState.h in Headers */,
+				04EBC7581B7533C300A0E6AE /* STPCardValidator.h in Headers */,
 				04415C721A6605D9001225ED /* Stripe.h in Headers */,
 				04415C731A6605D9001225ED /* STPAPIClient+ApplePay.h in Headers */,
 				04415C741A6605D9001225ED /* Stripe+ApplePay.h in Headers */,
-				0438EF411B74170D00D506CC /* STPCardValidator.h in Headers */,
 				04415C761A6605D9001225ED /* STPCheckoutOptions.h in Headers */,
 				0438EF2D1B7416BB00D506CC /* STPFormTextField.h in Headers */,
 				04415C771A6605D9001225ED /* STPCheckoutViewController.h in Headers */,
 				04415C7F1A6605D9001225ED /* STPAPIClient.h in Headers */,
-				0438EF331B7416BB00D506CC /* STPPaymentCardTextField.h in Headers */,
 				04415C821A6605D9001225ED /* STPBankAccount.h in Headers */,
 				04415C831A6605D9001225ED /* STPCard.h in Headers */,
-				04415C841A6605D9001225ED /* STPToken.h in Headers */,
+				0438EF331B7416BB00D506CC /* STPPaymentCardTextField.h in Headers */,
 				0438EF481B74183100D506CC /* STPCardBrand.h in Headers */,
+				04415C841A6605D9001225ED /* STPToken.h in Headers */,
 				04415C851A6605D9001225ED /* StripeError.h in Headers */,
 				04415C781A6605D9001225ED /* STPCheckoutDelegate.h in Headers */,
 				04415C791A6605D9001225ED /* STPCheckoutInternalUIWebViewController.h in Headers */,
@@ -711,17 +720,18 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04EBC7561B7533C300A0E6AE /* STPCardValidationState.h in Headers */,
+				04EBC75A1B7533C300A0E6AE /* STPCardValidator.h in Headers */,
 				049E84D91A605EF0000B66CD /* Stripe.h in Headers */,
 				049E84DA1A605EF0000B66CD /* STPAPIClient+ApplePay.h in Headers */,
 				049E84DB1A605EF0000B66CD /* Stripe+ApplePay.h in Headers */,
-				0438EF421B74170D00D506CC /* STPCardValidator.h in Headers */,
 				049E84DD1A605EF0000B66CD /* STPCheckoutOptions.h in Headers */,
 				0438EF2E1B7416BB00D506CC /* STPFormTextField.h in Headers */,
 				049E84DE1A605EF0000B66CD /* STPCheckoutViewController.h in Headers */,
 				049E84E61A605EF0000B66CD /* STPAPIClient.h in Headers */,
-				0438EF341B7416BB00D506CC /* STPPaymentCardTextField.h in Headers */,
 				049E84E91A605EF0000B66CD /* STPBankAccount.h in Headers */,
 				049E84EA1A605EF0000B66CD /* STPCard.h in Headers */,
+				0438EF341B7416BB00D506CC /* STPPaymentCardTextField.h in Headers */,
 				049E84EB1A605EF0000B66CD /* STPToken.h in Headers */,
 				0438EF491B74183100D506CC /* STPCardBrand.h in Headers */,
 				049E84EC1A605EF0000B66CD /* StripeError.h in Headers */,
@@ -742,10 +752,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04EBC7531B7533C300A0E6AE /* STPCardValidationState.h in Headers */,
+				04EBC7571B7533C300A0E6AE /* STPCardValidator.h in Headers */,
 				04CDB4EE1A5F30A700B854EE /* STPColorUtils.h in Headers */,
 				04CDB4F61A5F30A700B854EE /* STPOSXCheckoutWebViewAdapter.h in Headers */,
 				04CDB50E1A5F30A700B854EE /* STPCard.h in Headers */,
-				0438EF401B74170D00D506CC /* STPCardValidator.h in Headers */,
 				04CDB4E41A5F30A700B854EE /* STPCheckoutViewController.h in Headers */,
 				0438EF2C1B7416BB00D506CC /* STPFormTextField.h in Headers */,
 				04CDB50A1A5F30A700B854EE /* STPBankAccount.h in Headers */,
@@ -773,6 +784,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04EBC7591B7533C300A0E6AE /* STPCardValidator.h in Headers */,
+				04EBC7551B7533C300A0E6AE /* STPCardValidationState.h in Headers */,
 				04D12C2C1A5F55D10010446E /* Stripe.h in Headers */,
 				04D12C301A5F55D10010446E /* STPCheckoutOptions.h in Headers */,
 				04D12C311A5F55D10010446E /* STPCheckoutViewController.h in Headers */,
@@ -781,6 +794,7 @@
 				04D12C3D1A5F55D10010446E /* STPCard.h in Headers */,
 				04D12C3E1A5F55D10010446E /* STPToken.h in Headers */,
 				04D12C3F1A5F55D10010446E /* StripeError.h in Headers */,
+				0438EFDB1B7524AA00D506CC /* STPCardBrand.h in Headers */,
 				04D12C321A5F55D10010446E /* STPCheckoutDelegate.h in Headers */,
 				04D12C331A5F55D10010446E /* STPCheckoutInternalUIWebViewController.h in Headers */,
 				04D12C341A5F55D10010446E /* STPCheckoutWebViewAdapter.h in Headers */,
@@ -800,7 +814,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 045E7C0C1A5F41DE004751EF /* Build configuration list for PBXNativeTarget "StripeiOS Tests" */;
 			buildPhases = (
-				04E6FC431B702BCC000C8759 /* Lint with FauxPas (if installed) */,
 				045E7BFF1A5F41DE004751EF /* Sources */,
 				045E7C001A5F41DE004751EF /* Frameworks */,
 				045E7C011A5F41DE004751EF /* Resources */,
@@ -1055,20 +1068,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\n# If we're already inside this script then die\nif [ -n \"$RW_MULTIPLATFORM_BUILD_IN_PROGRESS\" ]; then\nexit 0\nfi\nexport RW_MULTIPLATFORM_BUILD_IN_PROGRESS=1\n\nRW_FRAMEWORK_NAME=\"Stripe\"\nRW_INPUT_STATIC_LIB=\"libStripe.a\"\nRW_FRAMEWORK_LOCATION=\"${BUILT_PRODUCTS_DIR}/${RW_FRAMEWORK_NAME}.framework\"\n\nfunction build_static_library {\n    # Will rebuild the static library as specified\n    #     build_static_library sdk\n    xcrun xcodebuild -project \"${PROJECT_FILE_PATH}\" \\\n    -target \"${TARGET_NAME}\" \\\n    -configuration \"${CONFIGURATION}\" \\\n    -sdk \"${1}\" \\\n    ONLY_ACTIVE_ARCH=NO \\\n    BUILD_DIR=\"${BUILD_DIR}\" \\\n    OBJROOT=\"${OBJROOT}\" \\\n    BUILD_ROOT=\"${BUILD_ROOT}\" \\\n    SYMROOT=\"${SYMROOT}\" $ACTION\n}\n\nfunction make_fat_library {\n    # Will smash 2 static libs together\n    #     make_fat_library in1 in2 out\n    xcrun lipo -create \"${1}\" \"${2}\" -output \"${3}\"\n}\n\n# 1 - Extract the platform (iphoneos/iphonesimulator) from the SDK name\nif [[ \"$SDK_NAME\" =~ ([A-Za-z]+) ]]; then\nRW_SDK_PLATFORM=${BASH_REMATCH[1]}\nelse\necho \"Could not find platform name from SDK_NAME: $SDK_NAME\"\nexit 1\nfi\n\n# 2 - Extract the version from the SDK\nif [[ \"$SDK_NAME\" =~ ([0-9]+.*$) ]]; then\nRW_SDK_VERSION=${BASH_REMATCH[1]}\nelse\necho \"Could not find sdk version from SDK_NAME: $SDK_NAME\"\nexit 1\nfi\n\n# 3 - Determine the other platform\nif [ \"$RW_SDK_PLATFORM\" == \"iphoneos\" ]; then\nRW_OTHER_PLATFORM=iphonesimulator\nelse\nRW_OTHER_PLATFORM=iphoneos\nfi\n\n# 4 - Find the build directory\nif [[ \"$BUILT_PRODUCTS_DIR\" =~ (.*)$RW_SDK_PLATFORM$ ]]; then\nRW_OTHER_BUILT_PRODUCTS_DIR=\"${BASH_REMATCH[1]}${RW_OTHER_PLATFORM}\"\nelse\necho \"Could not find other platform build directory.\"\nexit 1\nfi\n\n# Build the other platform.\nbuild_static_library \"${RW_OTHER_PLATFORM}${RW_SDK_VERSION}\"\n\n# If we're currently building for iphonesimulator, then need to rebuild\n#   to ensure that we get both i386 and x86_64\nif [ \"$RW_SDK_PLATFORM\" == \"iphonesimulator\" ]; then\nbuild_static_library \"${SDK_NAME}\"\nfi\n\n# Join the 2 static libs into 1 and push into the .framework\nmake_fat_library \"${BUILT_PRODUCTS_DIR}/${RW_INPUT_STATIC_LIB}\" \\\n\"${RW_OTHER_BUILT_PRODUCTS_DIR}/${RW_INPUT_STATIC_LIB}\" \\\n\"${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}\"\n\n# Ensure that the framework is present in both platform's build directories\ncp -a \"${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}\" \\\n\"${RW_OTHER_BUILT_PRODUCTS_DIR}/${RW_FRAMEWORK_NAME}.framework/Versions/A/${RW_FRAMEWORK_NAME}\"";
-		};
-		04E6FC431B702BCC000C8759 /* Lint with FauxPas (if installed) */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Lint with FauxPas (if installed)";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "[[ ${FAUXPAS_SKIP} == 1 ]] && exit 0\n [[ ${CI} == 1 ]] && exit 0\n \n FAUXPAS_PATH=\"/usr/local/bin/fauxpas\"\n if [[ -f \"${FAUXPAS_PATH}\" ]]; then\n \"${FAUXPAS_PATH}\" check-xcode --configFile \"./ci_scripts/FauxPasConfig/main.fauxpas.json\"\n else\n echo \"warning: Faux Pas was not found at '${FAUXPAS_PATH}'\"\n fi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
