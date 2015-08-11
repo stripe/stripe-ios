@@ -213,7 +213,7 @@
         case STPCardBrandDinersClub:
             return @[@"30", @"36", @"38", @"39"];
         case STPCardBrandDiscover:
-            return @[@"6011", @"622", @"644", @"65"];
+            return @[@"6011", @"622", @"64", @"65"];
         case STPCardBrandJCB:
             return @[@"35"];
         case STPCardBrandMasterCard:
