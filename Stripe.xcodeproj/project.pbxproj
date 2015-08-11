@@ -263,6 +263,7 @@
 		04D12C461A5F55FA0010446E /* STPCardTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB5251A5F3A9300B854EE /* STPCardTest.m */; };
 		04D12C471A5F55FA0010446E /* STPCertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB5261A5F3A9300B854EE /* STPCertTest.m */; };
 		04D12C481A5F55FA0010446E /* STPTokenTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB5271A5F3A9300B854EE /* STPTokenTest.m */; };
+		04E32A9B1B7A93FC009C9E35 /* STPCardValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0438EF3F1B74170D00D506CC /* STPCardValidator.m */; };
 		04EBC7531B7533C300A0E6AE /* STPCardValidationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04EBC7541B7533C300A0E6AE /* STPCardValidationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04EBC7551B7533C300A0E6AE /* STPCardValidationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1172,6 +1173,7 @@
 				04D12C201A5F55AD0010446E /* STPCheckoutViewController.m in Sources */,
 				04D12C211A5F55AD0010446E /* STPCheckoutInternalUIWebViewController.m in Sources */,
 				04D12C221A5F55AD0010446E /* STPColorUtils.m in Sources */,
+				04E32A9B1B7A93FC009C9E35 /* STPCardValidator.m in Sources */,
 				04D12C231A5F55AD0010446E /* STPOSXCheckoutWebViewAdapter.m in Sources */,
 				04D12C241A5F55AD0010446E /* STPStrictURLProtocol.m in Sources */,
 				04D12C251A5F55AD0010446E /* STPAPIClient.m in Sources */,
