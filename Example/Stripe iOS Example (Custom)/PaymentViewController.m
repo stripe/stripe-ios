@@ -12,7 +12,7 @@
 #import "PaymentViewController.h"
 
 @interface PaymentViewController () <STPPaymentCardTextFieldDelegate>
-@property (weak, nonatomic) STPPaymentCardTextField *paymentView;
+@property (weak, nonatomic) STPPaymentCardTextField *paymentTextField;
 @end
 
 @implementation PaymentViewController
@@ -34,17 +34,17 @@
     self.navigationItem.rightBarButtonItem = saveButton;
     
     // Setup payment view
-    STPPaymentCardTextField *paymentView = [[STPPaymentCardTextField alloc] init];
-    paymentView.delegate = self;
-    self.paymentView = paymentView;
-    [self.view addSubview:paymentView];
+    STPPaymentCardTextField *paymentTextField = [[STPPaymentCardTextField alloc] init];
+    paymentTextField.delegate = self;
+    self.paymentTextField = paymentTextField;
+    [self.view addSubview:paymentTextField];
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     CGFloat padding = 15;
     CGFloat width = CGRectGetWidth(self.view.frame) - (padding * 2);
-    self.paymentView.frame = CGRectMake(padding, padding, width, 44);
+    self.paymentTextField.frame = CGRectMake(padding, padding, width, 44);
 }
 
 - (void)paymentCardTextFieldDidChange:(nonnull STPPaymentCardTextField *)textField {
@@ -56,7 +56,7 @@
 }
 
 - (void)save:(id)sender {
-    if (![self.paymentView isValid]) {
+    if (![self.paymentTextField isValid]) {
         return;
     }
     if (![Stripe defaultPublishableKey]) {
@@ -70,10 +70,10 @@
     }
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     STPCard *card = [[STPCard alloc] init];
-    card.number = self.paymentView.cardNumber;
-    card.expMonth = self.paymentView.expirationMonth;
-    card.expYear = self.paymentView.expirationYear;
-    card.cvc = self.paymentView.cvc;
+    card.number = self.paymentTextField.cardNumber;
+    card.expMonth = self.paymentTextField.expirationMonth;
+    card.expYear = self.paymentTextField.expirationYear;
+    card.cvc = self.paymentTextField.cvc;
     [[STPAPIClient sharedClient] createTokenWithCard:card
                                           completion:^(STPToken *token, NSError *error) {
                                               [MBProgressHUD hideHUDForView:self.view animated:YES];

@@ -71,7 +71,7 @@
 /**
  *  The max CVC length for a card brand (for context, American Express CVCs are 4 digits, while all others are 3).
  */
-+ (NSUInteger)maxCvcLengthForCardBrand:(STPCardBrand)brand;
++ (NSUInteger)maxCVCLengthForCardBrand:(STPCardBrand)brand;
 
 /**
  *  Validates a card's CVC, passed as a numeric string, for the given card brand.

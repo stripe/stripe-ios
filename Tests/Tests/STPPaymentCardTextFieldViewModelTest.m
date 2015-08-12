@@ -11,11 +11,11 @@
 #import "Stripe.h"
 #import "STPPaymentCardTextFieldViewModel.h"
 
-@interface STPCreditCardTextFieldTest : XCTestCase
+@interface STPPaymentCardTextFieldViewModelTest : XCTestCase
 @property(nonatomic)STPPaymentCardTextFieldViewModel *viewModel;
 @end
 
-@implementation STPCreditCardTextFieldTest
+@implementation STPPaymentCardTextFieldViewModelTest
 
 - (void)setUp {
     [super setUp];

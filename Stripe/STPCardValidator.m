@@ -94,7 +94,7 @@
     
     NSString *sanitizedCvc = [self sanitizedNumericStringForString:cvc];
     
-    NSUInteger length = [self maxCvcLengthForCardBrand:brand];
+    NSUInteger length = [self maxCVCLengthForCardBrand:brand];
     if (sanitizedCvc.length > length) {
         return STPCardValidationStateInvalid;
     } else if (sanitizedCvc.length == length) {
@@ -129,7 +129,7 @@
     }
 }
 
-+ (NSUInteger)maxCvcLengthForCardBrand:(STPCardBrand)brand {
++ (NSUInteger)maxCVCLengthForCardBrand:(STPCardBrand)brand {
     switch (brand) {
         case STPCardBrandAmex:
         case STPCardBrandUnknown:

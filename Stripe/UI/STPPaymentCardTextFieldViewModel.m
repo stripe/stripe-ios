@@ -69,7 +69,7 @@
 }
 
 - (void)setCvc:(NSString *)cvc {
-    NSInteger maxLength = [STPCardValidator maxCvcLengthForCardBrand:self.brand];
+    NSInteger maxLength = [STPCardValidator maxCVCLengthForCardBrand:self.brand];
     _cvc = [[STPCardValidator sanitizedNumericStringForString:cvc] stp_safeSubstringToIndex:maxLength];
 }
 
@@ -160,7 +160,7 @@
     
     return (toIndex < self.cardNumber.length) ?
         [self.cardNumber substringToIndex:toIndex] :
-        [self.placeholder stp_safeSubstringToIndex:[self placeholder].length - 4];
+        [self.placeholder stp_safeSubstringToIndex:[self placeholder].length - length];
 
 }
 
