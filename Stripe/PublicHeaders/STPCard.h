@@ -108,13 +108,13 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
  *  @deprecated use STPCardValidator instead.
  */
 - (BOOL)validateNumber:(__nullable id * __nullable )ioValue
-                 error:(NSError * __nullable * __nullable )outError __attribute__((deprecated));
+                 error:(NSError * __nullable * __nullable )outError __attribute__((deprecated("Use STPCardValidator instead.")));
 - (BOOL)validateCvc:(__nullable id * __nullable )ioValue
-              error:(NSError * __nullable * __nullable )outError __attribute__((deprecated));
+              error:(NSError * __nullable * __nullable )outError __attribute__((deprecated("Use STPCardValidator instead.")));
 - (BOOL)validateExpMonth:(__nullable  id * __nullable )ioValue
-                   error:(NSError * __nullable * __nullable )outError __attribute__((deprecated));
+                   error:(NSError * __nullable * __nullable )outError __attribute__((deprecated("Use STPCardValidator instead.")));
 - (BOOL)validateExpYear:(__nullable id * __nullable)ioValue
-                  error:(NSError * __nullable * __nullable )outError __attribute__((deprecated));
+                  error:(NSError * __nullable * __nullable )outError __attribute__((deprecated("Use STPCardValidator instead.")));
 
 /**
  *  This validates a fully populated card to check for all errors, including ones that come about
@@ -128,7 +128,7 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
  *  @return whether or not the card is valid.
  *  @deprecated use STPCardValidator instead.
  */
-- (BOOL)validateCardReturningError:(NSError * __nullable * __nullable)outError __attribute__((deprecated));
+- (BOOL)validateCardReturningError:(NSError * __nullable * __nullable)outError __attribute__((deprecated("Use STPCardValidator instead.")));
 
 @end
 
