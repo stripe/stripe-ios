@@ -20,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    self.title = @"Checkout";
+    self.title = @"Buy a shirt";
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
@@ -33,11 +33,18 @@
     self.navigationItem.leftBarButtonItem = cancelButton;
     self.navigationItem.rightBarButtonItem = saveButton;
     
-    // Setup checkout
+    // Setup payment view
     STPPaymentCardTextField *paymentView = [[STPPaymentCardTextField alloc] init];
     paymentView.delegate = self;
     self.paymentView = paymentView;
     [self.view addSubview:paymentView];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    CGFloat padding = 15;
+    CGFloat width = CGRectGetWidth(self.view.frame) - (padding * 2);
+    self.paymentView.frame = CGRectMake(padding, padding, width, 44);
 }
 
 - (void)paymentCardTextFieldDidChange:(nonnull STPPaymentCardTextField *)textField {
