@@ -491,7 +491,9 @@
     }
 }
 
-- (void)setNumberFieldShrunk:(BOOL)shrunk animated:(BOOL)animated completion:(void (^)())afterCompletion{
+typedef void (^STPNumberShrunkCompletionBlock)();
+- (void)setNumberFieldShrunk:(BOOL)shrunk animated:(BOOL)animated
+                  completion:(STPNumberShrunkCompletionBlock)afterCompletion {
     
     if (_numberFieldShrunk == shrunk) {
         if (afterCompletion) {
