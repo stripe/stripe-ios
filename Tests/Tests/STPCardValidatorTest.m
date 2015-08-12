@@ -183,7 +183,7 @@
                        @[@(STPCardBrandUnknown), @4],
                        ];
     for (NSArray *test in tests) {
-        XCTAssertEqualObjects(@([STPCardValidator maxCvcLengthForCardBrand:[test[0] integerValue]]), test[1]);
+        XCTAssertEqualObjects(@([STPCardValidator maxCVCLengthForCardBrand:[test[0] integerValue]]), test[1]);
     }
 }
 
