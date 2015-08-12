@@ -14,7 +14,7 @@
  *  This protocol allows a delegate to be notified when a payment text field's contents change, which can in turn be used to take further actions depending on the validity of its contents.
  */
 @protocol STPPaymentCardTextFieldDelegate <NSObject>
-
+@optional
 /**
  *  Called when either the card number, expiration, or CVC changes. At this point, one can call -isValid on the text field to determine, for example, whether or not to enable a button to submit the form. Example:
  
@@ -133,3 +133,29 @@
 @property(nonatomic, readonly, nullable) NSString *cvc;
 
 @end
+
+#pragma mark - PaymentKit compatibility
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+
+__attribute__((deprecated("This class is provided only for backwards-compatibility with PaymentKit. You shouldn't use it - use STPCard instead.")))
+@interface PTKCard : STPCard
+@end
+
+@class PTKView;
+
+@protocol PTKViewDelegate <STPPaymentCardTextFieldDelegate>
+
+@optional
+- (void)paymentView:(nonnull PTKView *)paymentView withCard:(nonnull PTKCard *)card isValid:(BOOL)valid;
+
+@end
+
+__attribute__((deprecated("This class is provided only for backwards-compatibility with PaymentKit. You shouldn't use it - use STPPaymentCardTextField instead.")))
+@interface PTKView : STPPaymentCardTextField
+@property(nonatomic, weak, nullable)id<PTKViewDelegate>delegate;
+@property(nonatomic, readonly, nonnull) PTKCard *card;
+@end
+
+#pragma clang diagnostic pop
