@@ -40,6 +40,8 @@
 
 @property(nonatomic, readwrite, weak)UITextField *selectedField;
 
+@property(nonatomic, assign)BOOL numberFieldShrunk;
+
 @end
 
 @implementation STPPaymentCardTextField
@@ -83,6 +85,9 @@
     brandImageView.translatesAutoresizingMaskIntoConstraints = NO;
     brandImageView.contentMode = UIViewContentModeCenter;
     brandImageView.backgroundColor = [UIColor clearColor];
+    if ([brandImageView respondsToSelector:@selector(setTintColor:)]) {
+        brandImageView.tintColor = self.placeholderColor;
+    }
     self.brandImageView = brandImageView;
     
     UIView *interstitialView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -133,7 +138,7 @@
 #pragma mark appearance properties
 
 + (UIColor *)placeholderGrayColor {
-    return [UIColor colorWithRed:217.0f/255.0f green:218.0f/255.0f blue:221.0f/255.0f alpha:1.0f];
+    return [UIColor lightGrayColor];
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
@@ -194,6 +199,10 @@
 - (void)setPlaceholderColor:(UIColor *)placeholderColor {
     _placeholderColor = [placeholderColor copy];
     
+    if ([self.brandImageView respondsToSelector:@selector(setTintColor:)]) {
+        self.brandImageView.tintColor = placeholderColor;
+    }
+    
     for (STPFormTextField *field in [self allFields]) {
         field.placeholderColor = _placeholderColor;
     }
@@ -246,6 +255,10 @@
 
 #pragma mark UIResponder & related methods
 
+- (BOOL)isFirstResponder {
+    return [self.selectedField isFirstResponder];
+}
+
 - (BOOL)canBecomeFirstResponder {
     return [self.numberField canBecomeFirstResponder];
 }
@@ -259,8 +272,9 @@
 }
 
 - (BOOL)resignFirstResponder {
+    [super resignFirstResponder];
     BOOL success = [self.selectedField resignFirstResponder];
-    [self setNumberFieldShrunk:[self shouldShrinkNumberField] animated:YES];
+    [self setNumberFieldShrunk:[self shouldShrinkNumberField] animated:YES completion:nil];
     return success;
 }
 
@@ -297,10 +311,15 @@
         field.text = @"";
     }
     self.viewModel = [STPPaymentCardTextFieldViewModel new];
-    [self setNumberFieldShrunk:NO animated:YES];
-    if ([self isFirstResponder]) {
-        [self.numberField becomeFirstResponder];
-    }
+    [self onChange];
+    [self updateImageForFieldType:STPCardFieldTypeNumber];
+    __weak id weakself = self;
+    [self setNumberFieldShrunk:NO animated:YES completion:^{
+        __strong id strongself = weakself;
+        if ([strongself isFirstResponder]) {
+            [[strongself numberField] becomeFirstResponder];
+        }
+    }];
 }
 
 - (BOOL)isValid {
@@ -472,7 +491,16 @@
     }
 }
 
-- (void)setNumberFieldShrunk:(BOOL)shrunk animated:(BOOL)animated {
+- (void)setNumberFieldShrunk:(BOOL)shrunk animated:(BOOL)animated completion:(void (^)())afterCompletion{
+    
+    if (_numberFieldShrunk == shrunk) {
+        if (afterCompletion) {
+            afterCompletion();
+        }
+        return;
+    }
+    
+    _numberFieldShrunk = shrunk;
     
     CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 16;
     CGFloat fragmentWidth = self.numberWidthConstraint.constant - nonFragmentWidth;
@@ -494,6 +522,9 @@
         if (!shrunk) {
             self.dateContainerLeftConstraint.constant = 10.0f;
             [self layoutSubviews];
+        }
+        if (afterCompletion) {
+            afterCompletion();
         }
     };
     
@@ -547,10 +578,11 @@
     self.selectedField = (STPFormTextField *)textField;
     switch ((STPCardFieldType)textField.tag) {
         case STPCardFieldTypeNumber:
-            [self setNumberFieldShrunk:NO animated:YES];
+            [self setNumberFieldShrunk:NO animated:YES completion:nil];
             break;
             
         default:
+            [self setNumberFieldShrunk:YES animated:YES completion:nil];
             break;
     }
     [self updateImageForFieldType:textField.tag];
@@ -598,9 +630,6 @@
             break;
         case STPCardValidationStateValid: {
             [self selectNextField];
-            if (fieldType == STPCardFieldTypeNumber) {
-                [self setNumberFieldShrunk:YES animated:YES];
-            }
             break;
         }
     }

@@ -56,12 +56,12 @@
 @property(nonatomic, copy, null_resettable) UIColor *textErrorColor UI_APPEARANCE_SELECTOR;
 
 /**
- *  The text placeholder color used in each child field. Default is RGB 217/218/221 (light gray). Set this property to nil to reset to the default.
+ *  The text placeholder color used in each child field. Default is [UIColor lightGreyColor]. Set this property to nil to reset to the default.
  */
 @property(nonatomic, copy, null_resettable) UIColor *placeholderColor UI_APPEARANCE_SELECTOR;
 
 /**
- *  The border color for the field. Default is RGB 217/218/221 (light gray). Can be nil (in which case no border will be drawn).
+ *  The border color for the field. Default is [UIColor lightGreyColor]. Can be nil (in which case no border will be drawn).
  */
 @property(nonatomic, copy, nullable) UIColor *borderColor UI_APPEARANCE_SELECTOR;
 

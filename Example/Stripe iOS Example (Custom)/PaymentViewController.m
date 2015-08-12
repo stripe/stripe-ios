@@ -36,6 +36,7 @@
     // Setup checkout
     STPPaymentCardTextField *paymentView = [[STPPaymentCardTextField alloc] initWithFrame:CGRectMake(15, 20, 345, 44)];
     paymentView.delegate = self;
+    paymentView.placeholderColor = [UIColor lightGrayColor];
     self.paymentView = paymentView;
     [self.view addSubview:paymentView];
 }
@@ -49,6 +50,10 @@
 }
 
 - (void)save:(id)sender {
+    [self.paymentView resignFirstResponder];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.paymentView clear];
+    });
 //    if (![self.paymentView isValid]) {
 //        return;
 //    }

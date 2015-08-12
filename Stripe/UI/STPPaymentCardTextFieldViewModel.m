@@ -9,6 +9,8 @@
 #import "STPPaymentCardTextFieldViewModel.h"
 #import "STPCardValidator.h"
 
+#define FAUXPAS_IGNORED_IN_METHOD(...)
+
 @interface NSString(StripeSubstring)
 - (NSString *)stp_safeSubstringToIndex:(NSUInteger)index;
 - (NSString *)stp_safeSubstringFromIndex:(NSUInteger)index;
@@ -98,7 +100,9 @@
 }
 
 - (UIImage *)brandImage {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     NSString *imageName;
+    BOOL templateSupported = [[UIImage new] respondsToSelector:@selector(imageWithRenderingMode:)];
     switch (self.brand) {
         case STPCardBrandAmex:
             imageName = @"stp_card_amex";
@@ -116,12 +120,16 @@
             imageName = @"stp_card_mastercard";
             break;
         case STPCardBrandUnknown:
-            imageName = @"stp_card_placeholder";
+            imageName = templateSupported ? @"stp_card_placeholder_template" : @"stp_card_placeholder";
             break;
         case STPCardBrandVisa:
             imageName = @"stp_card_visa";
     }
-    return [self.class safeImageNamed:imageName];
+    UIImage *image = [self.class safeImageNamed:imageName];
+    if (self.brand == STPCardBrandUnknown && templateSupported) {
+        image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    }
+    return image;
 }
 
 - (UIImage *)cvcImage {
