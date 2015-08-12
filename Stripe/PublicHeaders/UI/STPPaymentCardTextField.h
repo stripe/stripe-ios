@@ -56,7 +56,7 @@
 @property(nonatomic, copy, null_resettable) UIColor *textErrorColor UI_APPEARANCE_SELECTOR;
 
 /**
- *  The text placeholder color used in each child field. Default is [UIColor lightGreyColor]. Set this property to nil to reset to the default.
+ *  The text placeholder color used in each child field. Default is [UIColor lightGreyColor]. Set this property to nil to reset to the default. On iOS 7 and above, this will also set the color of the card placeholder icon.
  */
 @property(nonatomic, copy, null_resettable) UIColor *placeholderColor UI_APPEARANCE_SELECTOR;
 
@@ -145,6 +145,7 @@ __attribute__((deprecated("This class is provided only for backwards-compatibili
 
 @class PTKView;
 
+__attribute__((deprecated("This protocol is provided only for backwards-compatibility with PaymentKit. You shouldn't use it - use STPPaymentCardTextFieldDelegate instead.")))
 @protocol PTKViewDelegate <STPPaymentCardTextFieldDelegate>
 
 @optional

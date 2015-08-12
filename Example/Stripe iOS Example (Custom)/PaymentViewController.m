@@ -11,11 +11,8 @@
 
 #import "PaymentViewController.h"
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-
-@interface PaymentViewController () <PTKViewDelegate>
-@property (weak, nonatomic) PTKView *paymentView;
+@interface PaymentViewController () <STPPaymentCardTextFieldDelegate>
+@property (weak, nonatomic) STPPaymentCardTextField *paymentView;
 @end
 
 @implementation PaymentViewController
@@ -37,15 +34,14 @@
     self.navigationItem.rightBarButtonItem = saveButton;
     
     // Setup checkout
-    PTKView *paymentView = [[PTKView alloc] initWithFrame:CGRectMake(15, 20, 290, 55)];
+    STPPaymentCardTextField *paymentView = [[STPPaymentCardTextField alloc] init];
     paymentView.delegate = self;
     self.paymentView = paymentView;
     [self.view addSubview:paymentView];
 }
 
-- (void)paymentView:(PTKView *)paymentView withCard:(PTKCard *)card isValid:(BOOL)valid {
-    // Enable save button if the Checkout is valid
-    self.navigationItem.rightBarButtonItem.enabled = valid;
+- (void)paymentCardTextFieldDidChange:(nonnull STPPaymentCardTextField *)textField {
+    self.navigationItem.rightBarButtonItem.enabled = textField.isValid;
 }
 
 - (void)cancel:(id)sender {
@@ -67,10 +63,10 @@
     }
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     STPCard *card = [[STPCard alloc] init];
-    card.number = self.paymentView.card.number;
-    card.expMonth = self.paymentView.card.expMonth;
-    card.expYear = self.paymentView.card.expYear;
-    card.cvc = self.paymentView.card.cvc;
+    card.number = self.paymentView.cardNumber;
+    card.expMonth = self.paymentView.expirationMonth;
+    card.expYear = self.paymentView.expirationYear;
+    card.cvc = self.paymentView.cvc;
     [[STPAPIClient sharedClient] createTokenWithCard:card
                                           completion:^(STPToken *token, NSError *error) {
                                               [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -87,7 +83,5 @@
                                                                                      }];
                                           }];
 }
-
-#pragma clang diagnostic pop
 
 @end
