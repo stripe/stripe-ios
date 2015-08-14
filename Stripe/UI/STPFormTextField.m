@@ -9,6 +9,9 @@
 #import "STPFormTextField.h"
 #import "STPCardValidator.h"
 
+@import Foundation;
+#import "TargetConditionals.h"
+
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
 @implementation STPFormTextField
@@ -130,6 +133,15 @@
     CGRect const editingRect = CGRectOffset(textRect, 0.0, adjustment);
     
     return editingRect;
+}
+
+// Fixes a weird issue related to our custom override of deleteBackwards. This only affects the simulator and iPads with custom keyboards.
+- (NSArray *)keyCommands {
+    return @[[UIKeyCommand keyCommandWithInput:@"\b" modifierFlags:UIKeyModifierCommand action:@selector(commandDeleteBackwards)]];
+}
+
+- (void)commandDeleteBackwards {
+    self.text = @"";
 }
 
 @end
