@@ -24,17 +24,10 @@
 @property(nonatomic, readwrite, weak)UIView *interstitialView;
 
 @property(nonatomic, readwrite, weak)STPFormTextField *numberField;
-@property(nonatomic, readwrite, weak)NSLayoutConstraint *numberLeftConstraint;
-@property(nonatomic, readwrite, weak)NSLayoutConstraint *numberWidthConstraint;
-
-@property(nonatomic, readwrite, weak)UIView *dateContainer;
-@property(nonatomic, readwrite, weak)NSLayoutConstraint *dateContainerLeftConstraint;
 
 @property(nonatomic, readwrite, weak)STPFormTextField *expirationField;
-@property(nonatomic, readwrite, weak)NSLayoutConstraint *expirationWidthConstraint;
 
 @property(nonatomic, readwrite, weak)STPFormTextField *cvcField;
-@property(nonatomic, readwrite, weak)NSLayoutConstraint *cvcWidthConstraint;
 
 @property(nonatomic, readwrite, strong)STPPaymentCardTextFieldViewModel *viewModel;
 
@@ -82,7 +75,6 @@
     _sizingField = [self buildTextField];
     
     UIImageView *brandImageView = [[UIImageView alloc] initWithImage:_viewModel.brandImage];
-    brandImageView.translatesAutoresizingMaskIntoConstraints = NO;
     brandImageView.contentMode = UIViewContentModeCenter;
     brandImageView.backgroundColor = [UIColor clearColor];
     if ([brandImageView respondsToSelector:@selector(setTintColor:)]) {
@@ -92,7 +84,6 @@
     
     UIView *interstitialView = [[UIView alloc] initWithFrame:CGRectZero];
     interstitialView.backgroundColor = self.backgroundColor;
-    interstitialView.translatesAutoresizingMaskIntoConstraints = NO;
     self.interstitialView = interstitialView;
     
     STPFormTextField *numberField = [self buildTextField];
@@ -100,11 +91,6 @@
     numberField.tag = STPCardFieldTypeNumber;
     numberField.placeholder = [self.viewModel placeholder];
     self.numberField = numberField;
-    
-    UIView *dateContainer = [[UIView alloc] initWithFrame:CGRectZero];
-    dateContainer.backgroundColor = self.backgroundColor;
-    dateContainer.translatesAutoresizingMaskIntoConstraints = NO;
-    self.dateContainer = dateContainer;
 
     STPFormTextField *expirationField = [self buildTextField];
     expirationField.tag = STPCardFieldTypeExpiration;
@@ -118,14 +104,11 @@
     cvcField.alpha = 0;
     self.cvcField = cvcField;
     
-    [dateContainer addSubview:expirationField];
     [self addSubview:cvcField];
-    [self addSubview:dateContainer];
+    [self addSubview:expirationField];
     [self addSubview:numberField];
     [self addSubview:interstitialView];
     [self addSubview:brandImageView];
-    
-    [self setupConstraints];
 }
 
 - (STPPaymentCardTextFieldViewModel *)viewModel {
@@ -145,7 +128,6 @@
     [super setBackgroundColor:[backgroundColor copy]];
     self.numberField.backgroundColor = self.backgroundColor;
     self.interstitialView.backgroundColor = self.backgroundColor;
-    self.dateContainer.backgroundColor = self.backgroundColor;
 }
 
 - (UIColor *)backgroundColor {
@@ -161,11 +143,7 @@
     
     self.sizingField.font = _font;
     
-    self.numberWidthConstraint.constant = [self widthForCardNumber:self.numberField.placeholder];
-    self.expirationWidthConstraint.constant = [self widthForText:self.expirationField.placeholder];
-    self.cvcWidthConstraint.constant = MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"]);
-    
-    [self setNeedsUpdateConstraints];
+    [self setNeedsLayout];
 }
 
 - (UIFont *)font {
@@ -325,7 +303,7 @@
     [self onChange];
     [self updateImageForFieldType:STPCardFieldTypeNumber];
     __weak id weakself = self;
-    [self setNumberFieldShrunk:NO animated:YES completion:^{
+    [self setNumberFieldShrunk:NO animated:YES completion:^(__unused BOOL completed){
         __strong id strongself = weakself;
         if ([strongself isFirstResponder]) {
             [[strongself numberField] becomeFirstResponder];
@@ -355,6 +333,31 @@
     return self.viewModel.cvc;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    self.brandImageView.frame = CGRectMake(10, 0, self.brandImageView.image.size.width, self.frame.size.height);
+    self.interstitialView.frame = CGRectMake(0, 0, CGRectGetMaxX(self.brandImageView.frame) + 8, self.frame.size.height);
+    
+    CGFloat numberFieldWidth = [self widthForCardNumber:self.numberField.placeholder] - 8;
+    CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 8;
+    CGFloat numberFieldX = self.numberFieldShrunk ?
+        CGRectGetMaxX(self.interstitialView.frame) + 10 - nonFragmentWidth :
+        CGRectGetMaxX(self.interstitialView.frame);
+    self.numberField.frame = CGRectMake(numberFieldX, 0, numberFieldWidth, self.frame.size.height);
+    
+    CGFloat cvcWidth = MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"]) + 8;
+    CGFloat cvcX = self.numberFieldShrunk ?
+        CGRectGetMaxX(self.frame) - cvcWidth - 10 :
+        CGRectGetMaxX(self.frame);
+    self.cvcField.frame = CGRectMake(cvcX, 0, cvcWidth, self.frame.size.height);
+    
+    CGFloat expirationWidth = [self widthForText:self.expirationField.placeholder];
+    CGFloat expirationX = (CGRectGetMaxX(self.numberField.frame) + CGRectGetMinX(self.cvcField.frame) - expirationWidth) / 2;
+    self.expirationField.frame = CGRectMake(expirationX, 0, expirationWidth, self.frame.size.height);
+    
+}
+
 #pragma mark - private helper methods
 
 - (STPFormTextField *)buildTextField {
@@ -365,7 +368,6 @@
     textField.defaultColor = self.textColor;
     textField.errorColor = self.textErrorColor;
     textField.placeholderColor = self.placeholderColor;
-    textField.translatesAutoresizingMaskIntoConstraints = NO;
     textField.formDelegate = self;
     return textField;
 }
@@ -374,171 +376,23 @@
     return @[self.numberField, self.expirationField, self.cvcField];
 }
 
-- (void)setupConstraints {
-    
-    // Image view
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.brandImageView
-                                                     attribute:NSLayoutAttributeLeft
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeLeft
-                                                    multiplier:1.0f
-                                                      constant:10.0f]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.interstitialView
-                                                     attribute:NSLayoutAttributeLeft
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeLeft
-                                                    multiplier:1.0f
-                                                      constant:0.0f]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.interstitialView
-                                                     attribute:NSLayoutAttributeRight
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.brandImageView
-                                                     attribute:NSLayoutAttributeRight
-                                                    multiplier:1.0f
-                                                      constant:10.0f]];
-    
-    // Number field
-    NSLayoutConstraint *numberLeftConstraint = [NSLayoutConstraint constraintWithItem:self.numberField
-                                                                            attribute:NSLayoutAttributeLeft
-                                                                            relatedBy:NSLayoutRelationEqual
-                                                                               toItem:self.interstitialView
-                                                                            attribute:NSLayoutAttributeRight
-                                                                           multiplier:1.0f
-                                                                             constant:0.0f];
-    self.numberLeftConstraint = numberLeftConstraint;
-    [self addConstraint:numberLeftConstraint];
-    
-    NSLayoutConstraint *numberWidthConstraint = [NSLayoutConstraint constraintWithItem:self.numberField
-                                                                             attribute:NSLayoutAttributeWidth
-                                                                             relatedBy:NSLayoutRelationEqual
-                                                                                toItem:nil
-                                                                             attribute:NSLayoutAttributeNotAnAttribute
-                                                                            multiplier:1.0f
-                                                                              constant:[self widthForCardNumber:self.numberField.placeholder]];
-    self.numberWidthConstraint = numberWidthConstraint;
-    [self addConstraint:numberWidthConstraint];
-    
-    //Expiration field
-    NSLayoutConstraint *dateLeftConstraint = [NSLayoutConstraint constraintWithItem:self.dateContainer
-                                                                          attribute:NSLayoutAttributeLeft
-                                                                          relatedBy:NSLayoutRelationEqual
-                                                                             toItem:self.brandImageView
-                                                                          attribute:NSLayoutAttributeRight
-                                                                         multiplier:1.0f
-                                                                           constant:10.0f];
-    self.dateContainerLeftConstraint = dateLeftConstraint;
-    [self addConstraint:dateLeftConstraint];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.dateContainer
-                                                     attribute:NSLayoutAttributeRight
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.cvcField
-                                                     attribute:NSLayoutAttributeLeft
-                                                    multiplier:1.0f
-                                                      constant:-10.0f]];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.expirationField
-                                                     attribute:NSLayoutAttributeCenterX
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.dateContainer
-                                                     attribute:NSLayoutAttributeCenterX
-                                                    multiplier:1.0f
-                                                      constant:0.0f]];
-    
-    NSLayoutConstraint *expirationWidthConstraint = [NSLayoutConstraint constraintWithItem:self.expirationField
-                                                                            attribute:NSLayoutAttributeWidth
-                                                                            relatedBy:NSLayoutRelationEqual
-                                                                               toItem:nil
-                                                                            attribute:NSLayoutAttributeNotAnAttribute
-                                                                           multiplier:1.0f
-                                                                             constant:[self widthForText:self.expirationField.placeholder]];
-    
-    self.expirationWidthConstraint = expirationWidthConstraint;
-    [self addConstraint:expirationWidthConstraint];
-    
-    // CVC field
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cvcField
-                                                     attribute:NSLayoutAttributeRight
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeRight
-                                                    multiplier:1.0f
-                                                      constant:0.0f]];
-    
-    NSLayoutConstraint *cvcWidthConstraint = [NSLayoutConstraint constraintWithItem:self.cvcField
-                                                                          attribute:NSLayoutAttributeWidth
-                                                                          relatedBy:NSLayoutRelationEqual
-                                                                             toItem:nil
-                                                                          attribute:NSLayoutAttributeNotAnAttribute
-                                                                         multiplier:1.0f
-                                                                           constant:MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"])];
-    
-    self.cvcWidthConstraint = cvcWidthConstraint;
-    [self addConstraint:cvcWidthConstraint];
-    
-    // Make everything be 100% height and vertically centered
-    for (UIView *view in @[self.brandImageView, self.interstitialView, self.dateContainer, self.numberField, self.expirationField, self.cvcField]) {
-        
-        [self addConstraint:[NSLayoutConstraint constraintWithItem:view
-                                                         attribute:NSLayoutAttributeTop
-                                                         relatedBy:NSLayoutRelationEqual
-                                                            toItem:view.superview
-                                                         attribute:NSLayoutAttributeTop
-                                                        multiplier:1.0f
-                                                          constant:0.0f]];
-        
-        [self addConstraint:[NSLayoutConstraint constraintWithItem:view
-                                                         attribute:NSLayoutAttributeHeight
-                                                         relatedBy:NSLayoutRelationEqual
-                                                            toItem:view.superview
-                                                         attribute:NSLayoutAttributeHeight
-                                                        multiplier:1.0f
-                                                          constant:0.0f]];
-        
-    }
-}
-
-typedef void (^STPNumberShrunkCompletionBlock)();
+typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 - (void)setNumberFieldShrunk:(BOOL)shrunk animated:(BOOL)animated
-                  completion:(STPNumberShrunkCompletionBlock)afterCompletion {
+                  completion:(STPNumberShrunkCompletionBlock)completion {
     
     if (_numberFieldShrunk == shrunk) {
-        if (afterCompletion) {
-            afterCompletion();
+        if (completion) {
+            completion(YES);
         }
         return;
     }
     
     _numberFieldShrunk = shrunk;
-    
-    CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 16;
-    CGFloat fragmentWidth = self.numberWidthConstraint.constant - nonFragmentWidth;
-    
-    if (shrunk) {
-        self.dateContainerLeftConstraint.constant = fragmentWidth + 10.0f;
-        [self layoutSubviews];
-    }
-    
     void (^animations)() = ^void() {
-        self.numberLeftConstraint.constant = shrunk ? -nonFragmentWidth : 0;
         for (UIView *view in @[self.expirationField, self.cvcField]) {
             view.alpha = 1.0f * shrunk;
         }
         [self layoutSubviews];
-    };
-    
-    void (^completion)(BOOL) = ^void(__unused BOOL succeeded) {
-        if (!shrunk) {
-            self.dateContainerLeftConstraint.constant = 10.0f;
-            [self layoutSubviews];
-        }
-        if (afterCompletion) {
-            afterCompletion();
-        }
     };
     
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
