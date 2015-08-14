@@ -260,11 +260,22 @@
 }
 
 - (BOOL)canBecomeFirstResponder {
-    return [self.numberField canBecomeFirstResponder];
+    return [[self firstResponderField] canBecomeFirstResponder];
 }
 
 - (BOOL)becomeFirstResponder {
-    return [self.numberField becomeFirstResponder];
+    return [[self firstResponderField] becomeFirstResponder];
+}
+
+- (STPFormTextField *)firstResponderField {
+
+    if ([self.viewModel validationStateForField:STPCardFieldTypeNumber] != STPCardValidationStateValid) {
+        return self.numberField;
+    } else if ([self.viewModel validationStateForField:STPCardFieldTypeExpiration] != STPCardValidationStateValid) {
+        return self.expirationField;
+    } else {
+        return self.cvcField;
+    }
 }
 
 - (BOOL)canResignFirstResponder {

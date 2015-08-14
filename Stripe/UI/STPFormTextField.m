@@ -21,10 +21,15 @@
 }
 
 - (void)deleteBackward {
+    // This deliberately doesn't call super, because the superclass' implementation replaces text without calling delegate methods.
     if (self.text.length == 0) {
         [self.formDelegate formTextFieldDidBackspaceOnEmpty:self];
+        return;
     }
-    [super deleteBackward];
+    NSRange range = NSMakeRange(self.text.length - 1, 1);
+    if ([self.delegate textField:self shouldChangeCharactersInRange:range replacementString:@""])  {
+        self.text = [self.text stringByReplacingCharactersInRange:range withString:@""];
+    }
 }
 
 - (CGSize)measureTextSize {
@@ -61,6 +66,9 @@
         for (NSUInteger i = 0; i < attributedString.length; i++) {
             if ([cardSpacing containsObject:@(i)]) {
                 [attributedString addAttribute:NSKernAttributeName value:@(5)
+                                         range:NSMakeRange(i, 1)];
+            } else {
+                [attributedString addAttribute:NSKernAttributeName value:@(0)
                                          range:NSMakeRange(i, 1)];
             }
         }
