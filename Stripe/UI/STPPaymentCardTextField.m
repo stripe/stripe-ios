@@ -339,7 +339,7 @@
     self.brandImageView.frame = CGRectMake(10, 0, self.brandImageView.image.size.width, self.frame.size.height);
     self.interstitialView.frame = CGRectMake(0, 0, CGRectGetMaxX(self.brandImageView.frame) + 8, self.frame.size.height);
     
-    CGFloat numberFieldWidth = [self widthForCardNumber:self.numberField.placeholder] - 8;
+    CGFloat numberFieldWidth = [self widthForCardNumber:self.numberField.placeholder] - 4;
     CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 8;
     CGFloat numberFieldX = self.numberFieldShrunk ?
         CGRectGetMaxX(self.interstitialView.frame) + 10 - nonFragmentWidth :
