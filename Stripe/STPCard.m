@@ -136,7 +136,7 @@
 }
 
 - (NSUInteger)hash {
-    return [self.fingerprint hash] ?: [self.number hash];
+    return [self.number hash];
 }
 
 - (BOOL)isEqualToCard:(STPCard *)other {

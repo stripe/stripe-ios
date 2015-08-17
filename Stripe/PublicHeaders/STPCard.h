@@ -94,8 +94,9 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 
 /**
  *  A proxy for the card's number, this uniquely identifies the credit card and can be used to compare different cards.
+ *  @deprecated This field will no longer be present in responses when using your publishable key. If you want to access the value of this field, you can look it up on your backend using your secret key.
  */
-@property (nonatomic, readonly, nullable) NSString *fingerprint;
+@property (nonatomic, readonly, nullable) NSString *fingerprint __attribute__((deprecated("This field will no longer be present in responses when using your publishable key. If you want to access the value of this field, you can look it up on your backend using your secret key.")));
 
 /**
  *  Two-letter ISO code representing the issuing country of the card.
