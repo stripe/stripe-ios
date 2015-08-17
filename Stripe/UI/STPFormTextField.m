@@ -137,6 +137,7 @@
 
 // Fixes a weird issue related to our custom override of deleteBackwards. This only affects the simulator and iPads with custom keyboards.
 - (NSArray *)keyCommands {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     return @[[UIKeyCommand keyCommandWithInput:@"\b" modifierFlags:UIKeyModifierCommand action:@selector(commandDeleteBackwards)]];
 }
 

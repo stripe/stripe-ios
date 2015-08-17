@@ -13,6 +13,8 @@
 
 @interface PaymentViewController () <STPPaymentCardTextFieldDelegate>
 @property (weak, nonatomic) STPPaymentCardTextField *paymentTextField;
+@property (weak, nonatomic) UIButton *button1;
+@property (weak, nonatomic) UIButton *button2;
 @end
 
 @implementation PaymentViewController
@@ -38,6 +40,28 @@
     paymentTextField.delegate = self;
     self.paymentTextField = paymentTextField;
     [self.view addSubview:paymentTextField];
+    
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    [button setTitle:@"become" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(doIt) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+    self.button1 = button;
+    
+    UIButton *button2 = [UIButton buttonWithType:UIButtonTypeSystem];
+    [button2 setTitle:@"resign" forState:UIControlStateNormal];
+    button2.titleLabel.text = @"resign";
+    [button2 addTarget:self action:@selector(doIt2) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button2];
+    self.button2 = button2;
+}
+
+- (void)doIt {
+    [self.paymentTextField becomeFirstResponder];
+}
+
+- (void)doIt2 {
+    [self.paymentTextField resignFirstResponder];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -45,6 +69,9 @@
     CGFloat padding = 15;
     CGFloat width = CGRectGetWidth(self.view.frame) - (padding * 2);
     self.paymentTextField.frame = CGRectMake(padding, padding, width, 44);
+    self.button1.frame = CGRectMake(0, 100, 320, 50);
+    self.button2.frame = CGRectMake(0, 200, 320, 50);
+    
 }
 
 - (void)paymentCardTextFieldDidChange:(nonnull STPPaymentCardTextField *)textField {
