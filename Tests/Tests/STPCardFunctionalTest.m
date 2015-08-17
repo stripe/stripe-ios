@@ -21,6 +21,7 @@
     card.number = @"4242 4242 4242 4242";
     card.expMonth = 6;
     card.expYear = 2018;
+    card.currency = @"usd";
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_5fhKkYDKKNr4Fp6q7Mq9CwJd"];
 
@@ -37,6 +38,7 @@
                          XCTAssertEqual(6U, token.card.expMonth);
                          XCTAssertEqual(2018U, token.card.expYear);
                          XCTAssertEqualObjects(@"4242", token.card.last4);
+                         XCTAssertEqualObjects(@"usd", token.card.currency);
                      }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }

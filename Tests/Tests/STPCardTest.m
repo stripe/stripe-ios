@@ -50,7 +50,8 @@
         @"dynamic_last4": @"5678",
         @"brand": @"MasterCard",
         @"fingerprint": @"Fingolfin",
-        @"country": @"Japan"
+        @"country": @"Japan",
+        @"currency": @"usd",
     };
 }
 
@@ -72,6 +73,7 @@
     XCTAssertEqual([cardWithAttributes brand], STPCardBrandMasterCard, @"type is set correctly");
     XCTAssertEqualObjects([cardWithAttributes fingerprint], @"Fingolfin", @"fingerprint is set correctly");
     XCTAssertEqualObjects([cardWithAttributes country], @"Japan", @"country is set correctly");
+    XCTAssertEqualObjects([cardWithAttributes currency], @"usd", @"currency is set correctly");
 }
 
 - (void)testFormEncode {
@@ -94,6 +96,7 @@
                                                 @"card[address_state]",
                                                 @"card[address_zip]",
                                                 @"card[address_country]",
+                                                @"card[currency]",
                                                 nil];
 
     NSArray *values = [attributes allValues];
