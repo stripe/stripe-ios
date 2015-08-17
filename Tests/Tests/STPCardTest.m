@@ -49,7 +49,8 @@
         @"last4": @"1234",
         @"dynamic_last4": @"5678",
         @"brand": @"MasterCard",
-        @"country": @"Japan"
+        @"country": @"Japan",
+        @"currency": @"usd",
     };
 }
 
@@ -70,6 +71,7 @@
     XCTAssertEqualObjects([cardWithAttributes dynamicLast4], @"5678", @"last4 is set correctly");
     XCTAssertEqual([cardWithAttributes brand], STPCardBrandMasterCard, @"type is set correctly");
     XCTAssertEqualObjects([cardWithAttributes country], @"Japan", @"country is set correctly");
+    XCTAssertEqualObjects([cardWithAttributes currency], @"usd", @"currency is set correctly");
 }
 
 - (void)testFormEncode {
@@ -92,6 +94,7 @@
                                                 @"card[address_state]",
                                                 @"card[address_zip]",
                                                 @"card[address_country]",
+                                                @"card[currency]",
                                                 nil];
 
     NSArray *values = [attributes allValues];

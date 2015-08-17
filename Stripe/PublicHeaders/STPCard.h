@@ -104,6 +104,11 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 @property (nonatomic, readonly, nullable) NSString *country;
 
 /**
+ *  This is only applicable when tokenizing debit cards to issue payouts to managed accounts. You should not set it otherwise. The card can then be used as a transfer destination for funds in this currency.
+ */
+@property (nonatomic, copy, nullable) NSString *currency;
+
+/**
  *  Validate each field of the card.
  *  @return whether or not that field is valid.
  *  @deprecated use STPCardValidator instead.

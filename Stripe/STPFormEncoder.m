@@ -74,6 +74,9 @@
     if (card.expYear) {
         params[@"exp_year"] = @(card.expYear).stringValue;
     }
+    if (card.currency) {
+        params[@"currency"] = card.currency;
+    }
     
     NSMutableArray *parts = [NSMutableArray array];
     

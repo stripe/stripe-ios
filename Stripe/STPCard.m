@@ -260,6 +260,7 @@
         }
         _fingerprint = dict[@"fingerprint"];
         _country = dict[@"country"];
+        _currency = dict[@"currency"];
         // Support both camelCase and snake_case keys
         _expMonth = [(dict[@"exp_month"] ?: dict[@"expMonth"])intValue];
         _expYear = [(dict[@"exp_year"] ?: dict[@"expYear"])intValue];
