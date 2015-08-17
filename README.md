@@ -20,7 +20,7 @@ We've written a [guide](https://stripe.com/docs/mobile/ios) that explains everyt
 
 There are 2 example apps included in the repository:
 - Stripe iOS Example (Simple) shows a minimal Swift integration with our iOS SDK.
-- Stripe iOS Example (Custom) demonstrates 2 different ways of collecting your user's payment details: via Apple Pay, and via your own credit card form. It also uses our [ApplePayStubs](https://github.com/stripe/ApplePayStubs) library to demonstrate how the Apple Pay flow appears in the iOS simulator (normally Apple Pay requires a device to use). It, too, uses a small example backend to make charges.
+- Stripe iOS Example (Custom) demonstrates 2 different ways of collecting your user's payment details: via Apple Pay, and STPPaymentCardTextField, a native credit card UI form component we provide. It also uses our [ApplePayStubs](https://github.com/stripe/ApplePayStubs) library to demonstrate how the Apple Pay flow appears in the iOS simulator (normally Apple Pay requires a device to use). It, too, uses a small example backend to make charges.
 
 ### Getting started with the Simple iOS Example App
 
