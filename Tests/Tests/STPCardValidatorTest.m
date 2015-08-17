@@ -58,6 +58,8 @@
     [tests addObject:@[@(STPCardValidationStateValid), @"4242 4242 4242 4242"]];
     
     NSArray *badCardNumbers = @[
+                                @"0000000000000000",
+                                @"9999999999999995",
                                 @"1",
                                 @"1234123412341234",
                                 @"xxx",
@@ -85,12 +87,16 @@
     
     for (NSArray *test in tests) {
         NSString *card = test[1];
-        NSNumber *validationState = @([STPCardValidator validationStateForNumber:card]);
+        NSNumber *validationState = @([STPCardValidator validationStateForNumber:card validatingCardBrand:YES]);
         NSNumber *expected = test[0];
         if (![validationState isEqual:expected]) {
             XCTFail();
         }
     }
+    
+    XCTAssertEqual(STPCardValidationStateIncomplete, [STPCardValidator validationStateForNumber:@"1" validatingCardBrand:NO]);
+    XCTAssertEqual(STPCardValidationStateValid, [STPCardValidator validationStateForNumber:@"0000000000000000" validatingCardBrand:NO]);
+    XCTAssertEqual(STPCardValidationStateValid, [STPCardValidator validationStateForNumber:@"9999999999999995" validatingCardBrand:NO]);
 }
 
 - (void)testBrand {

@@ -22,13 +22,14 @@
 + (nonnull NSString *)sanitizedNumericStringForString:(nonnull NSString *)string;
 
 /**
- *  Validates a card number, passed as a string. This will return STPCardValidationStateInvalid for numbers that are too short or long, contain invalid characters, do not pass Luhn validation, or do not match a number format issued by a major card brand.
+ *  Validates a card number, passed as a string. This will return STPCardValidationStateInvalid for numbers that are too short or long, contain invalid characters, do not pass Luhn validation, or (optionally) do not match a number format issued by a major card brand.
  *
  *  @param cardNumber The card number to validate. Ex. @"4242424242424242"
+ *  @param validatingCardBrand Whether or not to enforce that the number appears to be issued by a major card brand (or could be). For example, no issuing card network currently issues card numbers beginning with the digit 9; if an otherwise correct-length and luhn-valid card number beginning with 9 (example: 9999999999999995) were passed to this method, it would return STPCardValidationStateInvalid if this parameter were YES and STPCardValidationStateValid if this parameter were NO. If unsure, you should use YES for this value.
  *
  *  @return STPCardValidationStateValid if the number is valid, STPCardValidationStateInvalid if the number is invalid, or STPCardValidationStateIncomplete if the number is a substring of a valid card (e.g. @"4242").
  */
-+ (STPCardValidationState)validationStateForNumber:(nonnull NSString *)cardNumber;
++ (STPCardValidationState)validationStateForNumber:(nonnull NSString *)cardNumber validatingCardBrand:(BOOL)validatingCardBrand;
 
 /**
  *  The card brand for a card number or substring thereof.

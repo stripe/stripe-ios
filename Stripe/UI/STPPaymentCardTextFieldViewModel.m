@@ -80,7 +80,7 @@
 - (STPCardValidationState)validationStateForField:(STPCardFieldType)fieldType {
     switch (fieldType) {
         case STPCardFieldTypeNumber:
-            return [STPCardValidator validationStateForNumber:self.cardNumber];
+            return [STPCardValidator validationStateForNumber:self.cardNumber validatingCardBrand:YES];
             break;
         case STPCardFieldTypeExpiration: {
             STPCardValidationState monthState = [STPCardValidator validationStateForExpirationMonth:self.expirationMonth];

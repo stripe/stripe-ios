@@ -104,7 +104,8 @@
     }
 }
 
-+ (STPCardValidationState)validationStateForNumber:(NSString *)cardNumber {
++ (STPCardValidationState)validationStateForNumber:(nonnull NSString *)cardNumber
+                               validatingCardBrand:(BOOL)validatingCardBrand {
     
     NSString *sanitizedNumber = [self stringByRemovingSpacesFromString:cardNumber];
     if (![self stringIsNumeric:sanitizedNumber]) {
@@ -112,7 +113,7 @@
     }
     
     NSArray *brands = [self possibleBrandsForNumber:sanitizedNumber];
-    if (brands.count == 0) {
+    if (brands.count == 0 && validatingCardBrand) {
         return STPCardValidationStateInvalid;
     } else if (brands.count >= 2) {
         return STPCardValidationStateIncomplete;

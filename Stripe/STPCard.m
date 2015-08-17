@@ -76,7 +76,7 @@
     }
     NSString *ioValueString = (NSString *)*ioValue;
     
-    if ([STPCardValidator validationStateForNumber:ioValueString] != STPCardValidationStateValid) {
+    if ([STPCardValidator validationStateForNumber:ioValueString validatingCardBrand:NO] != STPCardValidationStateValid) {
         return [self.class handleValidationErrorForParameter:@"number" error:outError];
     }
     return YES;
