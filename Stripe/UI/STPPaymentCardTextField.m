@@ -334,6 +334,17 @@
     return self.viewModel.cvc;
 }
 
+- (STPCard *)card {
+    if (!self.isValid) { return nil; }
+    
+    STPCard *c = [[STPCard alloc] init];
+    c.number = self.cardNumber;
+    c.expMonth = self.expirationMonth;
+    c.expYear = self.expirationYear;
+    c.cvc = self.cvc;
+    return c;
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     
