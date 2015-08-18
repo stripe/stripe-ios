@@ -9,7 +9,7 @@
 @import Foundation;
 
 
-static NSString *const __nonnull STPSDKVersion = @"5.1.0";
+static NSString *const __nonnull STPSDKVersion = @"5.1.1";
 
 @class STPBankAccount, STPCard, STPToken;
 

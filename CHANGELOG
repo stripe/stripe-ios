@@ -1,4 +1,4 @@
-== 5.1.0 2015-08-17
+== 5.1.1 2015-08-17
 * Adds STPPaymentCardTextField, a new version of github.com/stripe/PaymentKit featuring many bugfixes. It's useful if you need a pre-built credit card entry form.
 * Adds the currency param to STPCard for those using managed accounts & debit card payouts.
 
