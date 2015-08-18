@@ -132,6 +132,11 @@
  */
 @property(nonatomic, readonly, nullable) NSString *cvc;
 
+/**
+ *  Convenience method to create a STPCard from the currently entered information. Will return nil if not valid.
+ */
+@property(nonatomic, readonly, nullable) STPCard *card;
+
 @end
 
 #pragma mark - PaymentKit compatibility
