@@ -19,6 +19,7 @@ Pod::Spec.new do |s|
     ss.ios.public_header_files     = 'Stripe/PublicHeaders/ApplePay/*.h', 'Stripe/PublicHeaders/UI/*.h'
     ss.source_files                = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}', 'Stripe/PublicHeaders/Checkout/*.h', 'Stripe/Checkout/*.{h,m}'
     ss.ios.source_files            = 'Stripe/PublicHeaders/ApplePay/*.h', 'Stripe/ApplePay/*.{h,m}', 'Stripe/PublicHeaders/UI/*.h', 'Stripe/UI/*.{h,m}'
+    ss.resources                   = 'Stripe/Resources/**/*'
   end
 
   s.subspec 'Checkout' do |ss|
