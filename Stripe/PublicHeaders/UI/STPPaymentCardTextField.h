@@ -8,6 +8,8 @@
 
 @import UIKit;
 
+#import "STPCard.h"
+
 @class STPPaymentCardTextField;
 
 /**
