@@ -10,7 +10,7 @@ The Stripe iOS SDK make it easy to collect your users' credit card details insid
 We also offer [seamless integration](https://stripe.com/applepay) with [Apple Pay](https://apple.com/apple-pay) that will allow you to securely collect payments from your customers in a way that prevents them from having to re-enter their credit card information.
 
 ## Requirements
-Our SDK is compatible with iOS apps supporting iOS6 and above. It requires Xcode 6.3+ and the iOS8 SDK to build the source.
+Our SDK is compatible with iOS apps supporting iOS 6 and above. It requires Xcode 6.3+ and the iOS 8 SDK to build the source.
 
 ## Integration
 
@@ -38,7 +38,7 @@ After this is done, you can make test payments through the app (use credit card 
 ## Running the tests
 
 1. Open Stripe.xcworkspace
-1. Choose the "iOS Tests" or "OSX Tests" scheme
+1. Choose the "iOS Tests" or "OS X Tests" scheme
 1. Run Product -> Test
 
 ## Migrating from older versions
