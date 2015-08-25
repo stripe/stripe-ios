@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Checking test Cocoapods app..."
+echo "Checking test CocoaPods app..."
 cd $(dirname $0)
 
 rm -rf Pods
