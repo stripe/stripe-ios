@@ -1,16 +1,16 @@
 == 5.1.0 2015-08-17
 * Adds STPPaymentCardTextField, a new version of github.com/stripe/PaymentKit featuring many bugfixes. It's useful if you need a pre-built credit card entry form.
 * Adds the currency param to STPCard for those using managed accounts & debit card payouts.
-* Versions 5.1.1 and 5.1.2 fix minor issues with Cocoapods installation
+* Versions 5.1.1 and 5.1.2 fix minor issues with CocoaPods installation
 
 == 5.0.0 2015-08-06
 * Fix an issue with Carthage installation
-* Fix an issue with Cocoapods frameworks
+* Fix an issue with CocoaPods frameworks
 * Deprecate native Stripe Checkout
 
 == 4.0.1 2015-05-06
 * Fix a compiler warning
-* Versions 4.0.1 and 4.0.2 fix minor issues with Cocoapods and Carthage installation.
+* Versions 4.0.1 and 4.0.2 fix minor issues with CocoaPods and Carthage installation.
 
 == 4.0.0 2015-05-06
 * Remove STPPaymentPresenter
