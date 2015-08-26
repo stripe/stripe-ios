@@ -200,7 +200,6 @@
 
 - (void)setCornerRadius:(CGFloat)cornerRadius {
     self.layer.cornerRadius = cornerRadius;
-    self.layer.masksToBounds = cornerRadius > 0;
 }
 
 - (CGFloat)cornerRadius {
