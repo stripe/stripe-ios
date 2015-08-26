@@ -45,6 +45,14 @@
 @synthesize placeholderColor = _placeholderColor;
 @dynamic enabled;
 
+CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
+
+#if CGFLOAT_IS_DOUBLE
+#define stp_roundCGFloat(x) round(x)
+#else
+#define stp_roundCGFloat(x) roundf(x)
+#endif
+
 #pragma mark initializers
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -344,10 +352,24 @@
     return c;
 }
 
+- (CGSize)intrinsicContentSize {
+    
+    CGSize imageSize = self.viewModel.brandImage.size;
+    
+    self.sizingField.text = self.numberField.placeholder;
+    CGFloat textHeight = [self.sizingField measureTextSize].height;
+    CGFloat imageHeight = imageSize.height + (STPPaymentCardTextFieldDefaultPadding * 2);
+    CGFloat height = stp_roundCGFloat((MAX(MAX(imageHeight, textHeight), 44)));
+    
+    CGFloat width = stp_roundCGFloat([self widthForCardNumber:self.numberField.placeholder] + imageSize.width + (STPPaymentCardTextFieldDefaultPadding * 3));
+    
+    return CGSizeMake(width, height);
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.brandImageView.frame = CGRectMake(10, 0, self.brandImageView.image.size.width, self.frame.size.height);
+    self.brandImageView.frame = CGRectMake(STPPaymentCardTextFieldDefaultPadding, 0, self.brandImageView.image.size.width, self.frame.size.height);
     self.interstitialView.frame = CGRectMake(0, 0, CGRectGetMaxX(self.brandImageView.frame) + 8, self.frame.size.height);
     
     CGFloat numberFieldWidth = [self widthForCardNumber:self.numberField.placeholder] - 4;
@@ -359,7 +381,7 @@
     
     CGFloat cvcWidth = MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"]) + 8;
     CGFloat cvcX = self.numberFieldShrunk ?
-        CGRectGetMaxX(self.frame) - cvcWidth - 10 :
+        CGRectGetMaxX(self.frame) - cvcWidth - STPPaymentCardTextFieldDefaultPadding :
         CGRectGetMaxX(self.frame);
     self.cvcField.frame = CGRectMake(cvcX, 0, cvcWidth, self.frame.size.height);
     
