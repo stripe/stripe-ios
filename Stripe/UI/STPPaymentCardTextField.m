@@ -375,14 +375,14 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     CGFloat numberFieldWidth = [self widthForCardNumber:self.numberField.placeholder] - 4;
     CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 8;
     CGFloat numberFieldX = self.numberFieldShrunk ?
-        CGRectGetMaxX(self.interstitialView.frame) + 10 - nonFragmentWidth :
+        CGRectGetMaxX(self.interstitialView.frame) + STPPaymentCardTextFieldDefaultPadding - nonFragmentWidth :
         CGRectGetMaxX(self.interstitialView.frame);
-    self.numberField.frame = CGRectMake(numberFieldX, 0, numberFieldWidth, self.frame.size.height);
+    self.numberField.frame = CGRectMake(numberFieldX, 0, numberFieldWidth, CGRectGetHeight(self.bounds));
     
-    CGFloat cvcWidth = MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"]) + 8;
+    CGFloat cvcWidth = MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"]);
     CGFloat cvcX = self.numberFieldShrunk ?
-        CGRectGetMaxX(self.frame) - cvcWidth - STPPaymentCardTextFieldDefaultPadding :
-        CGRectGetMaxX(self.frame);
+        CGRectGetMaxX(self.bounds) - cvcWidth - STPPaymentCardTextFieldDefaultPadding / 2 :
+        CGRectGetMaxX(self.bounds);
     self.cvcField.frame = CGRectMake(cvcX, 0, cvcWidth, self.frame.size.height);
     
     CGFloat expirationWidth = [self widthForText:self.expirationField.placeholder];
