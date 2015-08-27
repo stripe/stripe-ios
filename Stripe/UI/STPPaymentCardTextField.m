@@ -21,7 +21,7 @@
 @property(nonatomic, readwrite, strong)STPFormTextField *sizingField;
 
 @property(nonatomic, readwrite, weak)UIImageView *brandImageView;
-@property(nonatomic, readwrite, weak)UIView *interstitialView;
+@property(nonatomic, readwrite, weak)UIView *fieldsView;
 
 @property(nonatomic, readwrite, weak)STPFormTextField *numberField;
 
@@ -90,10 +90,6 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     }
     self.brandImageView = brandImageView;
     
-    UIView *interstitialView = [[UIView alloc] initWithFrame:CGRectZero];
-    interstitialView.backgroundColor = self.backgroundColor;
-    self.interstitialView = interstitialView;
-    
     STPFormTextField *numberField = [self buildTextField];
     numberField.formatsCardNumbers = YES;
     numberField.tag = STPCardFieldTypeNumber;
@@ -112,10 +108,15 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     cvcField.alpha = 0;
     self.cvcField = cvcField;
     
-    [self addSubview:cvcField];
-    [self addSubview:expirationField];
-    [self addSubview:numberField];
-    [self addSubview:interstitialView];
+    UIView *fieldsView = [[UIView alloc] init];
+    fieldsView.clipsToBounds = YES;
+    fieldsView.backgroundColor = [UIColor clearColor];
+    self.fieldsView = fieldsView;
+    
+    [self addSubview:self.fieldsView];
+    [self.fieldsView addSubview:cvcField];
+    [self.fieldsView addSubview:expirationField];
+    [self.fieldsView addSubview:numberField];
     [self addSubview:brandImageView];
 }
 
@@ -135,7 +136,6 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
     [super setBackgroundColor:[backgroundColor copy]];
     self.numberField.backgroundColor = self.backgroundColor;
-    self.interstitialView.backgroundColor = self.backgroundColor;
 }
 
 - (UIColor *)backgroundColor {
@@ -370,19 +370,17 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     [super layoutSubviews];
     
     self.brandImageView.frame = CGRectMake(STPPaymentCardTextFieldDefaultPadding, 0, self.brandImageView.image.size.width, self.frame.size.height);
-    self.interstitialView.frame = CGRectMake(0, 0, CGRectGetMaxX(self.brandImageView.frame) + 8, self.frame.size.height);
+    self.fieldsView.frame = CGRectMake(CGRectGetMaxX(self.brandImageView.frame), 0, self.bounds.size.width - CGRectGetMaxX(self.brandImageView.frame), self.frame.size.height);
     
     CGFloat numberFieldWidth = [self widthForCardNumber:self.numberField.placeholder] - 4;
     CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 8;
-    CGFloat numberFieldX = self.numberFieldShrunk ?
-        CGRectGetMaxX(self.interstitialView.frame) + STPPaymentCardTextFieldDefaultPadding - nonFragmentWidth :
-        CGRectGetMaxX(self.interstitialView.frame);
-    self.numberField.frame = CGRectMake(numberFieldX, 0, numberFieldWidth, CGRectGetHeight(self.bounds));
+    CGFloat numberFieldX = self.numberFieldShrunk ? STPPaymentCardTextFieldDefaultPadding - nonFragmentWidth : 8;
+    self.numberField.frame = CGRectMake(numberFieldX, 0, numberFieldWidth, self.frame.size.height);
     
     CGFloat cvcWidth = MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"]);
     CGFloat cvcX = self.numberFieldShrunk ?
-        CGRectGetMaxX(self.bounds) - cvcWidth - STPPaymentCardTextFieldDefaultPadding / 2 :
-        CGRectGetMaxX(self.bounds);
+        self.fieldsView.bounds.size.width - cvcWidth - STPPaymentCardTextFieldDefaultPadding / 2  :
+        self.fieldsView.bounds.size.width;
     self.cvcField.frame = CGRectMake(cvcX, 0, cvcWidth, self.frame.size.height);
     
     CGFloat expirationWidth = [self widthForText:self.expirationField.placeholder];
