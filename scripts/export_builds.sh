@@ -1,3 +1,5 @@
+#!/bin/bash
+
 PROJECTDIR="$(cd $(dirname $0)/..; pwd)"
 BUILDDIR="${PROJECTDIR}/build"
 rm -rf $BUILDDIR

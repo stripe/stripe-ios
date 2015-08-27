@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [[ $CI && "$TRAVIS_SECURE_ENV_VARS" != "true" ]]; then
   echo "Skipping Faux Pas installation."
   exit 0

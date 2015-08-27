@@ -16,6 +16,8 @@ Tests/installation_tests/carthage/Carthage/*
 *.moved-aside
 .idea
 
+.old
+
 .DS_Store
 profile
 DerivedData

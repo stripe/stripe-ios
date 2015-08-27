@@ -14,7 +14,7 @@
  */
 
 // This can be found at https://dashboard.stripe.com/account/apikeys
-NSString *const StripePublishableKey = nil; // TODO: replace nil with your own value
+NSString *const StripePublishableKey = @"REPLACE_ME"; // TODO: replace this with your own value
 
 // To set this up, check out https://github.com/stripe/example-ios-backend
 // This should be in the format https://my-shiny-backend.herokuapp.com

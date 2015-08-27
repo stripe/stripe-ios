@@ -1,0 +1,5 @@
+try:
+  install:
+    pre:
+      - ./scripts/prompt_for_key.sh
+  project: 'Example/StripeExample-ObjC.xcodeproj'
