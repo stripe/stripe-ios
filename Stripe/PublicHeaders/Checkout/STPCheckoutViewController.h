@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, STPBackendChargeResult) {
     STPBackendChargeResultFailure, // Passing this value will display an "error" animation in the payment button.
 };
 
-typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError * __stp_nullable error);
+typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError * __nullable error);
 
 @class STPCheckoutOptions, STPToken;
 @protocol STPCheckoutViewControllerDelegate;
