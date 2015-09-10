@@ -13,6 +13,8 @@
 		042CA4221A685E8D00D778E7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CA41C1A685E8D00D778E7 /* ViewController.swift */; };
 		04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; };
 		04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C11058CF1BA2238E005AC42B /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C11058CE1BA2238E005AC42B /* Alamofire.framework */; settings = {ASSET_TAGS = (); }; };
+		C11058D11BA224DA005AC42B /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C11058CE1BA2238E005AC42B /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,6 +25,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */,
+				C11058D11BA224DA005AC42B /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -38,6 +41,7 @@
 		04823F781A6849200098400B /* Stripe iOS Example (Simple).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example (Simple).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04D075D91A69B82B00094431 /* Stripe iOS Example (Simple).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Stripe iOS Example (Simple).entitlements"; sourceTree = "<group>"; };
 		04D076191A69C14700094431 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C11058CE1BA2238E005AC42B /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +50,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */,
+				C11058CF1BA2238E005AC42B /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +99,7 @@
 		048BC5021A9BC38400B2FDC3 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				C11058CE1BA2238E005AC42B /* Alamofire.framework */,
 			);
 			path = Vendor;
 			sourceTree = "<group>";
@@ -287,6 +293,15 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Stripe",
+					Stripe,
+					iOS,
+					Example,
+					"(Simple)/Vendor/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Stripe",
+					iOS,
+					Example,
+					"(Simple)/Vendor/Carthage/Build/iOS",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
@@ -313,6 +328,15 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Stripe",
+					Stripe,
+					iOS,
+					Example,
+					"(Simple)/Vendor/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Stripe",
+					iOS,
+					Example,
+					"(Simple)/Vendor/Carthage/Build/iOS",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";

@@ -48,7 +48,7 @@ class ViewController: UIViewController, PKPaymentAuthorizationViewControllerDele
                 }
             }
         } else {
-            println("You should set an appleMerchantId.")
+            print("You should set an appleMerchantId.")
         }
     }
 
