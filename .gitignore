@@ -25,3 +25,6 @@ xcuserdata
 
 project.xcworkspace
 
+# Carthage 
+**/Carthage/Checkouts
+
