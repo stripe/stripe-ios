@@ -83,12 +83,13 @@ class ViewController: UIViewController, PKPaymentAuthorizationViewControllerDele
                 let chargeParams : [String: AnyObject] = ["stripeToken": token.tokenId, "amount": shirtPrice]
 
                 // This uses Alamofire to simplify the request code. For more information see github.com/Alamofire/Alamofire
-                request(.POST, URLString: url, parameters: chargeParams)
-                    .responseJSON { (_, response, _, error) in
+                request(.POST, url, parameters: chargeParams)
+                    .responseJSON { (_, response, result) in
                         if response?.statusCode == 200 {
                             completion(STPBackendChargeResult.Success, nil)
                         } else {
-                            completion(STPBackendChargeResult.Failure, error)
+                            completion(STPBackendChargeResult.Failure,
+                                result.error as? NSError ?? nil)
                         }
                 }
                 return
