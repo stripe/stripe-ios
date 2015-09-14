@@ -166,6 +166,27 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     }
 }
 
+- (void)setContentVerticalAlignment:(UIControlContentVerticalAlignment)contentVerticalAlignment {
+    [super setContentVerticalAlignment:contentVerticalAlignment];
+    for (UITextField *field in [self allFields]) {
+        field.contentVerticalAlignment = contentVerticalAlignment;
+    }
+    switch (contentVerticalAlignment) {
+        case UIControlContentVerticalAlignmentCenter:
+            self.brandImageView.contentMode = UIViewContentModeCenter;
+            break;
+        case UIControlContentVerticalAlignmentBottom:
+            self.brandImageView.contentMode = UIViewContentModeBottom;
+            break;
+        case UIControlContentVerticalAlignmentFill:
+            self.brandImageView.contentMode = UIViewContentModeTop;
+            break;
+        case UIControlContentVerticalAlignmentTop:
+            self.brandImageView.contentMode = UIViewContentModeTop;
+            break;
+    }
+}
+
 - (UIColor *)textColor {
     return _textColor ?: [UIColor blackColor];
 }
@@ -369,7 +390,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.brandImageView.frame = CGRectMake(STPPaymentCardTextFieldDefaultPadding, 0, self.brandImageView.image.size.width, self.frame.size.height);
+    self.brandImageView.frame = CGRectMake(STPPaymentCardTextFieldDefaultPadding, 2, self.brandImageView.image.size.width, self.frame.size.height - 2);
     self.fieldsView.frame = CGRectMake(CGRectGetMaxX(self.brandImageView.frame), 0, self.bounds.size.width - CGRectGetMaxX(self.brandImageView.frame), self.frame.size.height);
     
     CGFloat numberFieldWidth = [self widthForCardNumber:self.numberField.placeholder] - 4;
