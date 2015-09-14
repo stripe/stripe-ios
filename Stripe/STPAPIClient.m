@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
-#import <objc/runtime.h>
+#import "TargetConditionals.h"
 #if TARGET_OS_IPHONE
-@import UIKit;
+#import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 #endif
 

@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 /**
  *  These fields indicate whether a card field represents a valid value, invalid value, or incomplete value.

@@ -6,9 +6,7 @@
 //
 //
 
-@import Foundation;
-
-
+#import <Foundation/Foundation.h>
 
 /**
  *  All Stripe iOS errors will be under this domain.
