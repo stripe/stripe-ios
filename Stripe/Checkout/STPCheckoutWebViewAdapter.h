@@ -6,16 +6,14 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 #if TARGET_OS_IPHONE
 #define STP_VIEW_CLASS UIView
-@import UIKit;
+#import <UIKit/UIKit.h>
 #else
 #define STP_VIEW_CLASS NSView
-@import AppKit;
+#import <AppKit/AppKit.h>
 #endif
-
-
 
 static NSString * __nonnull const checkoutOptionsGlobal = @"StripeCheckoutOptions";
 static NSString * __nonnull const checkoutRedirectPrefix = @"/-/";

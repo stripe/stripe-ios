@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 /**
  *  The various card brands to which a payment card can belong.

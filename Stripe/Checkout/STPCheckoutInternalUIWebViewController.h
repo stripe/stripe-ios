@@ -8,8 +8,8 @@
 
 #if TARGET_OS_IPHONE
 
-@import Foundation;
-@import UIKit;
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import "STPCheckoutDelegate.h"
 #import "STPCheckoutViewController.h"

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 
 static NSString *const __nonnull STPSDKVersion = @"5.1.2";

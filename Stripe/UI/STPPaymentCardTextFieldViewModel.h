@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Stripe, Inc. All rights reserved.
 //
 
-@import Foundation;
-@import UIKit;
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import "STPCard.h"
 #import "STPCardValidator.h"

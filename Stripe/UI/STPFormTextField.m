@@ -9,7 +9,7 @@
 #import "STPFormTextField.h"
 #import "STPCardValidator.h"
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 #import "TargetConditionals.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
