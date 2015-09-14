@@ -94,13 +94,16 @@
     
     NSString *sanitizedCvc = [self sanitizedNumericStringForString:cvc];
     
-    NSUInteger length = [self maxCVCLengthForCardBrand:brand];
-    if (sanitizedCvc.length > length) {
-        return STPCardValidationStateInvalid;
-    } else if (sanitizedCvc.length == length) {
-        return STPCardValidationStateValid;
-    } else {
+    NSUInteger minLength = [self minCVCLength];
+    NSUInteger maxLength = [self maxCVCLengthForCardBrand:brand];
+    if (sanitizedCvc.length < minLength) {
         return STPCardValidationStateIncomplete;
+    }
+    else if (sanitizedCvc.length > maxLength) {
+        return STPCardValidationStateInvalid;
+    }
+    else {
+        return STPCardValidationStateValid;
     }
 }
 
@@ -128,6 +131,10 @@
             return STPCardValidationStateIncomplete;
         }
     }
+}
+
++ (NSUInteger)minCVCLength {
+    return 3;
 }
 
 + (NSUInteger)maxCVCLengthForCardBrand:(STPCardBrand)brand {
