@@ -93,20 +93,20 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     STPFormTextField *numberField = [self buildTextField];
     numberField.formatsCardNumbers = YES;
     numberField.tag = STPCardFieldTypeNumber;
-    numberField.placeholder = [self.viewModel placeholder];
     self.numberField = numberField;
+    self.numberPlaceholder = [self.viewModel defaultPlaceholder];
 
     STPFormTextField *expirationField = [self buildTextField];
     expirationField.tag = STPCardFieldTypeExpiration;
-    expirationField.placeholder = @"MM/YY";
     expirationField.alpha = 0;
     self.expirationField = expirationField;
+    self.expirationPlaceholder = @"MM/YY";
         
     STPFormTextField *cvcField = [self buildTextField];
     cvcField.tag = STPCardFieldTypeCVC;
-    cvcField.placeholder = @"CVC";
     cvcField.alpha = 0;
     self.cvcField = cvcField;
+    self.cvcPlaceholder = @"CVC";
     
     UIView *fieldsView = [[UIView alloc] init];
     fieldsView.clipsToBounds = YES;
@@ -217,6 +217,21 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 
 - (UIColor *)placeholderColor {
     return _placeholderColor ?: [self.class placeholderGrayColor];
+}
+
+- (void)setNumberPlaceholder:(NSString * __nullable)numberPlaceholder {
+    _numberPlaceholder = [numberPlaceholder copy];
+    self.numberField.placeholder = _numberPlaceholder;
+}
+
+- (void)setExpirationPlaceholder:(NSString * __nullable)expirationPlaceholder {
+    _expirationPlaceholder = [expirationPlaceholder copy];
+    self.expirationField.placeholder = _expirationPlaceholder;
+}
+
+- (void)setCvcPlaceholder:(NSString * __nullable)cvcPlaceholder {
+    _cvcPlaceholder = [cvcPlaceholder copy];
+    self.cvcField.placeholder = _cvcPlaceholder;
 }
 
 - (void)setBorderColor:(UIColor * __nullable)borderColor {
@@ -377,12 +392,12 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     
     CGSize imageSize = self.viewModel.brandImage.size;
     
-    self.sizingField.text = self.numberField.placeholder;
+    self.sizingField.text = self.viewModel.defaultPlaceholder;
     CGFloat textHeight = [self.sizingField measureTextSize].height;
     CGFloat imageHeight = imageSize.height + (STPPaymentCardTextFieldDefaultPadding * 2);
     CGFloat height = stp_roundCGFloat((MAX(MAX(imageHeight, textHeight), 44)));
     
-    CGFloat width = stp_roundCGFloat([self widthForCardNumber:self.numberField.placeholder] + imageSize.width + (STPPaymentCardTextFieldDefaultPadding * 3));
+    CGFloat width = stp_roundCGFloat([self widthForCardNumber:self.viewModel.defaultPlaceholder] + imageSize.width + (STPPaymentCardTextFieldDefaultPadding * 3));
     
     return CGSizeMake(width, height);
 }
@@ -393,7 +408,9 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     self.brandImageView.frame = CGRectMake(STPPaymentCardTextFieldDefaultPadding, 2, self.brandImageView.image.size.width, self.frame.size.height - 2);
     self.fieldsView.frame = CGRectMake(CGRectGetMaxX(self.brandImageView.frame), 0, self.bounds.size.width - CGRectGetMaxX(self.brandImageView.frame), self.frame.size.height);
     
-    CGFloat numberFieldWidth = [self widthForCardNumber:self.numberField.placeholder] - 4;
+    CGFloat placeholderWidth = [self widthForCardNumber:self.numberField.placeholder] - 4;
+    CGFloat numberWidth = [self widthForCardNumber:self.viewModel.defaultPlaceholder] - 4;
+    CGFloat numberFieldWidth = MAX(placeholderWidth, numberWidth);
     CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 8;
     CGFloat numberFieldX = self.numberFieldShrunk ? STPPaymentCardTextFieldDefaultPadding - nonFragmentWidth : 8;
     self.numberField.frame = CGRectMake(numberFieldX, 0, numberFieldWidth, self.frame.size.height);
@@ -404,7 +421,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
         self.fieldsView.bounds.size.width;
     self.cvcField.frame = CGRectMake(cvcX, 0, cvcWidth, self.frame.size.height);
     
-    CGFloat expirationWidth = [self widthForText:self.expirationField.placeholder];
+    CGFloat expirationWidth = MAX([self widthForText:self.expirationField.placeholder], [self widthForText:@"88/88"]);
     CGFloat expirationX = (CGRectGetMaxX(self.numberField.frame) + CGRectGetMinX(self.cvcField.frame) - expirationWidth) / 2;
     self.expirationField.frame = CGRectMake(expirationX, 0, expirationWidth, self.frame.size.height);
     

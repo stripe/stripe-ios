@@ -58,7 +58,7 @@
         return nil;
     }
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string attributes:attributes];
-    if (self.formatsCardNumbers) {
+    if (self.formatsCardNumbers && [STPCardValidator stringIsNumeric:string]) {
         NSArray *cardSpacing;
         STPCardBrand currentBrand = [STPCardValidator brandForNumber:attributedString.string];
         if (currentBrand == STPCardBrandAmex) {

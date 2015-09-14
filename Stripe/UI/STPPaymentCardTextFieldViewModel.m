@@ -150,7 +150,7 @@
             [self validationStateForField:STPCardFieldTypeCVC] == STPCardValidationStateValid);
 }
 
-- (NSString *)placeholder {
+- (NSString *)defaultPlaceholder {
     return @"1234567812345678";
 }
 
@@ -160,7 +160,7 @@
     
     return (toIndex < self.cardNumber.length) ?
         [self.cardNumber substringToIndex:toIndex] :
-        [self.placeholder stp_safeSubstringToIndex:[self placeholder].length - length];
+        [self.defaultPlaceholder stp_safeSubstringToIndex:[self defaultPlaceholder].length - length];
 
 }
 

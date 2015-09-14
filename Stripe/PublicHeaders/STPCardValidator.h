@@ -22,6 +22,11 @@
 + (nonnull NSString *)sanitizedNumericStringForString:(nonnull NSString *)string;
 
 /**
+ *  Whether or not the target string contains only numeric characters.
+ */
++ (BOOL)stringIsNumeric:(nonnull NSString *)string;
+
+/**
  *  Validates a card number, passed as a string. This will return STPCardValidationStateInvalid for numbers that are too short or long, contain invalid characters, do not pass Luhn validation, or (optionally) do not match a number format issued by a major card brand.
  *
  *  @param cardNumber The card number to validate. Ex. @"4242424242424242"

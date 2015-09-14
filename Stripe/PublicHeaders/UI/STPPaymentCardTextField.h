@@ -63,6 +63,21 @@
 @property(nonatomic, copy, null_resettable) IBInspectable UIColor *placeholderColor UI_APPEARANCE_SELECTOR IBInspectable;
 
 /**
+ *  The placeholder for the card number field. Default is @"1234567812345678". If this is set to something that resembles a card number, it will automatically format it as such (in other words, you don't need to add spaces to this string).
+ */
+@property(nonatomic, copy, nullable) NSString *numberPlaceholder;
+
+/**
+ *  The placeholder for the expiration field. Defaults to @"MM/YY".
+ */
+@property(nonatomic, copy, nullable) NSString *expirationPlaceholder;
+
+/**
+ *  The placeholder for the cvc field. Defaults to @"CVC".
+ */
+@property(nonatomic, copy, nullable) NSString *cvcPlaceholder;
+
+/**
  *  The border color for the field. Default is [UIColor lightGreyColor]. Can be nil (in which case no border will be drawn).
  */
 @property(nonatomic, copy, nullable) IBInspectable UIColor *borderColor UI_APPEARANCE_SELECTOR IBInspectable;
