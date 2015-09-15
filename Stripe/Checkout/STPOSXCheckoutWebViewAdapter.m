@@ -15,6 +15,11 @@
 #import "STPCheckoutWebViewAdapter.h"
 #import "STPCheckoutDelegate.h"
 
+#ifdef MAC_OS_X_VERSION_10_11
+@interface STPOSXCheckoutWebViewAdapter()<WebFrameLoadDelegate, WebPolicyDelegate, WebResourceLoadDelegate>
+@end
+#endif
+
 @implementation STPOSXCheckoutWebViewAdapter
 
 @synthesize delegate;
