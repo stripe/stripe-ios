@@ -79,17 +79,26 @@ class ViewController: UIViewController, PKPaymentAuthorizationViewControllerDele
     func createBackendChargeWithToken(token: STPToken, completion: STPTokenSubmissionHandler) {
         if backendChargeURLString != "" {
             if let url = NSURL(string: backendChargeURLString  + "/charge") {
-                let chargeParams : [String: AnyObject] = ["stripeToken": token.tokenId, "amount": shirtPrice]
                 
-                // This uses Alamofire to simplify the request code. For more information see github.com/Alamofire/Alamofire
-                request(.POST, url, parameters: chargeParams)
-                    .responseJSON { (_, response, _, error) in
-                        if response?.statusCode == 200 {
-                            completion(STPBackendChargeResult.Success, nil)
+                let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+                let request = NSMutableURLRequest(URL: url)
+                request.HTTPMethod = "POST"
+                let postBody = "stripeToken=\(token.tokenId)&amount=\(shirtPrice)"
+                let postData = postBody.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+                session.uploadTaskWithRequest(request, fromData: postData, completionHandler: { data, response, error in
+                    let successfulResponse = (response as? NSHTTPURLResponse)?.statusCode == 200
+                    if successfulResponse && error == nil {
+                        completion(.Success, nil)
+                    } else {
+                        if error != nil {
+                            completion(.Failure, error)
                         } else {
-                            completion(STPBackendChargeResult.Failure, error)
+                            completion(.Failure, NSError(domain: StripeDomain, code: 50, userInfo: [NSLocalizedDescriptionKey: "There was an error communicating with your payment backend."]))
                         }
-                }
+                        
+                    }
+                }).resume()
+                
                 return
             }
         }
