@@ -7,7 +7,6 @@
 //
 
 #import <Stripe/Stripe.h>
-#import "AFNetworking.h"
 
 #import "ViewController.h"
 #import "PaymentViewController.h"
@@ -31,20 +30,17 @@
 }
 
 - (void)presentError:(NSError *)error {
-    UIAlertView *message = [[UIAlertView alloc] initWithTitle:nil
-                                                      message:[error localizedDescription]
-                                                     delegate:nil
-                                            cancelButtonTitle:NSLocalizedString(@"OK", @"OK")
-                                            otherButtonTitles:nil];
-    [message show];
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:[error localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [controller addAction:action];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)paymentSucceeded {
-    [[[UIAlertView alloc] initWithTitle:@"Success!"
-                                message:@"Payment successfully created!"
-                               delegate:nil
-                      cancelButtonTitle:nil
-                      otherButtonTitles:@"OK", nil] show];
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Success" message:@"Payment successfully created!" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [controller addAction:action];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 #pragma mark - Apple Pay
@@ -126,14 +122,15 @@
 }
 
 - (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
-    if (self.applePaySucceeded) {
-        [self paymentSucceeded];
-    } else if (self.applePayError) {
-        [self presentError:self.applePayError];
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
-    self.applePaySucceeded = NO;
-    self.applePayError = nil;
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (self.applePaySucceeded) {
+            [self paymentSucceeded];
+        } else if (self.applePayError) {
+            [self presentError:self.applePayError];
+        }
+        self.applePaySucceeded = NO;
+        self.applePayError = nil;
+    }];
 }
 
 #pragma mark - Custom Credit Card Form
@@ -148,18 +145,18 @@
 }
 
 - (void)paymentViewController:(PaymentViewController *)controller didFinish:(NSError *)error {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    if (error) {
-        [self presentError:error];
-    } else {
-        [self paymentSucceeded];
-    }
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (error) {
+            [self presentError:error];
+        } else {
+            [self paymentSucceeded];
+        }
+    }];
 }
 
 #pragma mark - STPBackendCharging
 
 - (void)createBackendChargeWithToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion {
-    NSDictionary *chargeParams = @{ @"stripeToken": token.tokenId, @"amount": @"1000" };
 
     if (!BackendChargeURLString) {
         NSError *error = [NSError
@@ -176,12 +173,33 @@
     }
 
     // This passes the token off to our payment backend, which will then actually complete charging the card using your Stripe account's secret key
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    [manager POST:[BackendChargeURLString stringByAppendingString:@"/charge"]
-        parameters:chargeParams
-        success:^(AFHTTPRequestOperation *operation, id responseObject) { completion(STPBackendChargeResultSuccess, nil); }
-        failure:^(AFHTTPRequestOperation *operation, NSError *error) { completion(STPBackendChargeResultFailure, error); }];
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    
+    NSString *urlString = [BackendChargeURLString stringByAppendingPathComponent:@"charge"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    NSString *postBody = [NSString stringWithFormat:@"stripeToken=%@&amount=%@", token.tokenId, @1000];
+    NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                               fromData:data
+                                                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                                   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                                                   if (!error && httpResponse.statusCode != 200) {
+                                                                       error = [NSError errorWithDomain:StripeDomain
+                                                                                                   code:STPInvalidRequestError
+                                                                                               userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
+                                                                   }
+                                                                   if (error) {
+                                                                       completion(STPBackendChargeResultFailure, error);
+                                                                   } else {
+                                                                       completion(STPBackendChargeResultSuccess, nil);
+                                                                   }
+                                                               }];
+    
+    [uploadTask resume];
 }
 
 @end
