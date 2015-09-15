@@ -7,12 +7,12 @@
 
 #import <Stripe/Stripe.h>
 #import "ViewController.h"
-#import "MBProgressHUD.h"
 
 #import "PaymentViewController.h"
 
 @interface PaymentViewController () <STPPaymentCardTextFieldDelegate>
 @property (weak, nonatomic) STPPaymentCardTextField *paymentTextField;
+@property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
 @end
 
 @implementation PaymentViewController
@@ -38,6 +38,12 @@
     paymentTextField.delegate = self;
     self.paymentTextField = paymentTextField;
     [self.view addSubview:paymentTextField];
+    
+    // Setup Activity Indicator
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    activityIndicator.hidesWhenStopped = YES;
+    self.activityIndicator = activityIndicator;
+    [self.view addSubview:activityIndicator];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -46,6 +52,7 @@
     CGFloat width = CGRectGetWidth(self.view.frame) - (padding * 2);
     self.paymentTextField.frame = CGRectMake(padding, padding, width, 44);
     
+    self.activityIndicator.center = self.view.center;
 }
 
 - (void)paymentCardTextFieldDidChange:(nonnull STPPaymentCardTextField *)textField {
@@ -69,7 +76,7 @@
         [self.delegate paymentViewController:self didFinish:error];
         return;
     }
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [self.activityIndicator startAnimating];
     STPCard *card = [[STPCard alloc] init];
     card.number = self.paymentTextField.cardNumber;
     card.expMonth = self.paymentTextField.expirationMonth;
@@ -77,7 +84,7 @@
     card.cvc = self.paymentTextField.cvc;
     [[STPAPIClient sharedClient] createTokenWithCard:card
                                           completion:^(STPToken *token, NSError *error) {
-                                              [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                              [self.activityIndicator stopAnimating];
                                               if (error) {
                                                   [self.delegate paymentViewController:self didFinish:error];
                                               }
