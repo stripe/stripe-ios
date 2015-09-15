@@ -12,7 +12,6 @@
 #import "PaymentViewController.h"
 #import "Constants.h"
 #import "ShippingManager.h"
-#import <ApplePayStubs/ApplePayStubs.h>
 
 @interface ViewController () <PaymentViewControllerDelegate, PKPaymentAuthorizationViewControllerDelegate>
 @property (nonatomic) BOOL applePaySucceeded;
@@ -65,23 +64,17 @@
         [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
         paymentRequest.shippingMethods = [self.shippingManager defaultShippingMethods];
         paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:paymentRequest.shippingMethods.firstObject];
-#if DEBUG
-        STPTestPaymentAuthorizationViewController *auth = [[STPTestPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
-#else
         PKPaymentAuthorizationViewController *auth = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
-#endif
         auth.delegate = self;
         [self presentViewController:auth animated:YES completion:nil];
     }
 }
 
-- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
-                  didSelectShippingAddress:(ABRecordRef)address
-                                completion:(void (^)(PKPaymentAuthorizationStatus status, NSArray *shippingMethods, NSArray *summaryItems))completion {
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingAddress:(ABRecordRef)address completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKShippingMethod *> * _Nonnull, NSArray<PKPaymentSummaryItem *> * _Nonnull))completion {
     [self.shippingManager fetchShippingCostsForAddress:address
                                             completion:^(NSArray *shippingMethods, NSError *error) {
                                                 if (error) {
-                                                    completion(PKPaymentAuthorizationStatusFailure, nil, nil);
+                                                    completion(PKPaymentAuthorizationStatusFailure, @[], @[]);
                                                     return;
                                                 }
                                                 completion(PKPaymentAuthorizationStatusSuccess,
@@ -90,9 +83,7 @@
                                             }];
 }
 
-- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
-                   didSelectShippingMethod:(PKShippingMethod *)shippingMethod
-                                completion:(void (^)(PKPaymentAuthorizationStatus, NSArray *summaryItems))completion {
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didSelectShippingMethod:(PKShippingMethod *)shippingMethod completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKPaymentSummaryItem *> * _Nonnull))completion {
     completion(PKPaymentAuthorizationStatusSuccess, [self summaryItemsForShippingMethod:shippingMethod]);
 }
 

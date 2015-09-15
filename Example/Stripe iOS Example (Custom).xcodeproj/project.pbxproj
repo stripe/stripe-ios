@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0429832F1AF2D63100B8AD2C /* ApplePayStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0429832E1AF2D63100B8AD2C /* ApplePayStubs.framework */; };
-		042983301AF2D64500B8AD2C /* ApplePayStubs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0429832E1AF2D63100B8AD2C /* ApplePayStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		04533E8D1A687F5D00C7E52E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533E8C1A687F5D00C7E52E /* main.m */; };
 		04533E901A687F5D00C7E52E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533E8F1A687F5D00C7E52E /* AppDelegate.m */; };
 		04533E931A687F5D00C7E52E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533E921A687F5D00C7E52E /* ViewController.m */; };
@@ -30,7 +28,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				042983301AF2D64500B8AD2C /* ApplePayStubs.framework in Embed Frameworks */,
 				04D076171A69C11600094431 /* Stripe.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -39,7 +36,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0429832E1AF2D63100B8AD2C /* ApplePayStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplePayStubs.framework; path = "Stripe iOS Example (Custom)/ApplePayStubs.framework"; sourceTree = "<group>"; };
 		04533E871A687F5D00C7E52E /* Stripe iOS Example (Custom).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example (Custom).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04533E8B1A687F5D00C7E52E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04533E8C1A687F5D00C7E52E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -65,7 +61,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0429832F1AF2D63100B8AD2C /* ApplePayStubs.framework in Frameworks */,
 				04533F121A68814100C7E52E /* Security.framework in Frameworks */,
 				04533F101A68813C00C7E52E /* PassKit.framework in Frameworks */,
 				04533F0D1A68812D00C7E52E /* Stripe.framework in Frameworks */,
@@ -124,7 +119,6 @@
 		04533F0E1A68813100C7E52E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0429832E1AF2D63100B8AD2C /* ApplePayStubs.framework */,
 				04533F111A68814100C7E52E /* Security.framework */,
 				04533F0F1A68813C00C7E52E /* PassKit.framework */,
 				04533F0C1A68812D00C7E52E /* Stripe.framework */,
