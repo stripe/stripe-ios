@@ -24,7 +24,7 @@ There are 2 example apps included in the repository:
 
 ### Getting started with the Simple iOS Example App
 
-Note: all the example apps require Xcode 6.4 to build and run.
+Note: all the example apps require Xcode 7.0 to build and run.
 
 Before you can run the app, you need to provide it with your Stripe publishable key.
 
