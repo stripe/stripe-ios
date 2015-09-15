@@ -55,3 +55,5 @@ ONLY_ACTIVE_ARCH = YES
 // iOS 8.3 - Code will not load on systems earlier than 8.3. [8.3]
 
 IPHONEOS_DEPLOYMENT_TARGET = 6.0
+
+ENABLE_TESTABILITY = YES

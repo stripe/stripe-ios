@@ -8,6 +8,7 @@
 #import <AddressBook/AddressBook.h>
 
 #import "STPAPIClient+ApplePay.h"
+#import "PKPayment+Stripe.h"
 
 @implementation STPAPIClient (ApplePay)
 
@@ -75,9 +76,13 @@
         NSString *param = [NSString stringWithFormat:@"&pk_token_payment_network=%@", payment.token.paymentNetwork];
         payloadString = [payloadString stringByAppendingString:param];
     }
-
+    
     if (payment.token.transactionIdentifier) {
-        NSString *param = [NSString stringWithFormat:@"&pk_token_transaction_id=%@", payment.token.transactionIdentifier];
+        NSString *transactionIdentifier = payment.token.transactionIdentifier;
+        if ([payment stp_isSimulated]) {
+            transactionIdentifier = [PKPayment stp_testTransactionIdentifier];
+        }
+        NSString *param = [NSString stringWithFormat:@"&pk_token_transaction_id=%@", transactionIdentifier];
         payloadString = [payloadString stringByAppendingString:param];
     }
 
