@@ -47,6 +47,8 @@ CURRENT_PROJECT_VERSION = 1
 
 DEFINES_MODULE = YES
 
+MODULEMAP_FILE = Stripe/module.modulemap
+
 
 // Compatibility Version
 // 
