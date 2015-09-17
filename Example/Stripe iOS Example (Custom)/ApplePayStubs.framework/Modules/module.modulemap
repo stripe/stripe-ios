@@ -1,6 +1,0 @@
-framework module ApplePayStubs {
-  umbrella header "ApplePayStubs.h"
-
-  export *
-  module * { export * }
-}

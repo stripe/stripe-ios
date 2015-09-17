@@ -47,7 +47,7 @@ class ViewController: UIViewController, PKPaymentAuthorizationViewControllerDele
                 }
             }
         } else {
-            println("You should set an appleMerchantId.")
+            print("You should set an appleMerchantId.")
         }
     }
 
@@ -72,7 +72,7 @@ class ViewController: UIViewController, PKPaymentAuthorizationViewControllerDele
         })
     }
     
-    func paymentAuthorizationViewControllerDidFinish(controller: PKPaymentAuthorizationViewController!) {
+    func paymentAuthorizationViewControllerDidFinish(controller: PKPaymentAuthorizationViewController) {
         dismissViewControllerAnimated(true, completion: nil)
     }
     

@@ -11,7 +11,7 @@
     // Rule tags to apply (Array of strings)
     //"ruleTags": ["Recommended"],
     // Rules to exclude (Array of strings)
-    "excludedRules": ["ImplicitBundleId","RecommendedVCSIgnores"],
+    "excludedRules": ["ImplicitBundleId","NullCoalescingOp","RecommendedVCSIgnores"],
     // Prefixes of files to exclude (Array of strings)
     //"fileExclusionPrefixes": [],
     // Xcode groups to exclude (Array of strings)
