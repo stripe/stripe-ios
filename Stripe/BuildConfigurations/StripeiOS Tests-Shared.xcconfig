@@ -40,7 +40,7 @@ CODE_SIGN_IDENTITY = iPhone Developer
 // delimited by whitespace, so any paths with spaces in them need to be properly quoted.
 // [-F]
 
-FRAMEWORK_SEARCH_PATHS = $(SDKROOT)/Developer/Library/Frameworks $(inherited)
+FRAMEWORK_SEARCH_PATHS = $(inherited)
 
 
 GCC_TREAT_WARNINGS_AS_ERRORS = YES
