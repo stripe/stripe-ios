@@ -93,6 +93,11 @@
 @property(nonatomic, assign) IBInspectable CGFloat cornerRadius UI_APPEARANCE_SELECTOR IBInspectable;
 
 /**
+ *  The keyboard appearance for the field. Default is UIKeyboardAppearanceDefault.
+ */
+@property(nonatomic, assign) IBInspectable UIKeyboardAppearance keyboardAppearance UI_APPEARANCE_SELECTOR;
+
+/**
  *  This behaves identically to setting the inputAccessoryView for each child text field.
  */
 @property(nonatomic, strong, nullable) UIView *inputAccessoryView;

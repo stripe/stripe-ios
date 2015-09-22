@@ -258,6 +258,13 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     return self.layer.borderWidth;
 }
 
+- (void)setKeyboardAppearance:(UIKeyboardAppearance)keyboardAppearance {
+    _keyboardAppearance = keyboardAppearance;
+    for (STPFormTextField *field in [self allFields]) {
+        field.keyboardAppearance = keyboardAppearance;
+    }
+}
+
 - (void)setInputAccessoryView:(UIView *)inputAccessoryView {
     _inputAccessoryView = inputAccessoryView;
     
