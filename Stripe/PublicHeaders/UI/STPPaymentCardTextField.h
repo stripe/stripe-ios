@@ -40,7 +40,7 @@
 /**
  *  @see STPPaymentCardTextFieldDelegate
  */
-@property(nonatomic, weak, nullable) id<STPPaymentCardTextFieldDelegate> delegate;
+@property(nonatomic, weak, nullable) IBOutlet id<STPPaymentCardTextFieldDelegate> delegate;
 
 /**
  *  The font used in each child field. Default is [UIFont systemFontOfSize:18]. Set this property to nil to reset to the default.
