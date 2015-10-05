@@ -8,6 +8,7 @@
 
 #import "STPAPIClient.h"
 #import "StripeError.h"
+#import "STPBankAccountParams.h"
 #import "STPBankAccount.h"
 #import "STPCardBrand.h"
 #import "STPCardParams.h"

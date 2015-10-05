@@ -7,19 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
-
-
-
-/**
- *  Representation of a user's credit card details. You can assemble these with information that your user enters and
- *  then create Stripe tokens with them using an STPAPIClient. @see https://stripe.com/docs/api#create_bank_account_token
- */
-@interface STPBankAccount : NSObject
+#import "STPBankAccountParams.h"
 
 /**
- *  The account number for the bank account. Currently must be a checking account.
+ *  Representation of a user's bank account details that have been tokenized with the Stripe API. @see https://stripe.com/docs/api#cards
  */
-@property (nonatomic, copy, nullable) NSString *accountNumber;
+@interface STPBankAccount : STPBankAccountParams
+
+/**
+ *  The last 4 digits of the bank account's account number, if it's been set, otherwise nil.
+ */
+- (nonnull NSString *)last4;
 
 /**
  *  The routing number for the bank account. This should be the ACH routing number, not the wire routing number.
@@ -36,7 +34,6 @@
  */
 @property (nonatomic, copy, nullable) NSString *currency;
 
-#pragma mark - These fields are only present on objects returned from the Stripe API.
 /**
  *  The Stripe ID for the bank account.
  */
@@ -67,8 +64,13 @@
  */
 @property (nonatomic, readonly) BOOL disabled;
 
-@end
+#pragma mark - deprecated setters for STPBankAccountParams properties
 
+#define DEPRECATED_IN_FAVOR_OF_STPBANKACCOUNTPARAMS __attribute__((deprecated("For collecting your users' bank account details, you should use an STPBankAccountParams object instead of an STPBankAccount.")))
+
+- (void)setAccountNumber:(nullable NSString *)accountNumber DEPRECATED_IN_FAVOR_OF_STPBANKACCOUNTPARAMS;
+
+@end
 
 // This method is used internally by Stripe to deserialize API responses and exposed here for convenience and testing purposes only. You should not use it in your own code.
 @interface STPBankAccount (PrivateMethods)

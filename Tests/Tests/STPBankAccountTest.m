@@ -12,7 +12,7 @@
 #import "STPBankAccount.h"
 
 @interface STPBankAccountTest : XCTestCase
-@property (nonatomic) STPBankAccount *bankAccount;
+@property (nonatomic) STPBankAccountParams *bankAccount;
 @end
 
 @implementation STPBankAccountTest
@@ -53,7 +53,7 @@
     NSDictionary *attributes = [self completeAttributeDictionary];
     STPBankAccount *bankAccountWithAttributes = [[STPBankAccount alloc] initWithAttributeDictionary:attributes];
 
-    NSData *encoded = [STPFormEncoder formEncodedDataForBankAccount:bankAccountWithAttributes];
+    NSData *encoded = [STPFormEncoder formEncodedDataForBankAccountParams:bankAccountWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
 
     NSArray *parts = [formData componentsSeparatedByString:@"&"];
@@ -111,9 +111,6 @@
 
     XCTAssertEqualObjects(bankAccount1, bankAccount1, @"bank account should equal itself");
     XCTAssertEqualObjects(bankAccount1, bankAccount2, @"bank account with equal data should be equal");
-
-    bankAccount1.accountNumber = @"1234";
-    XCTAssertNotEqualObjects(bankAccount1, bankAccount2, @"bank accounts should not match");
 }
 
 @end

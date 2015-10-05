@@ -7,12 +7,12 @@
 //
 
 #import "STPFormEncoder.h"
-#import "STPBankAccount.h"
+#import "STPBankAccountParams.h"
 #import "STPCardParams.h"
 
 @implementation STPFormEncoder
 
-+ (NSData *)formEncodedDataForBankAccount:(STPBankAccount *)bankAccount {
++ (NSData *)formEncodedDataForBankAccountParams:(STPBankAccountParams *)bankAccount {
     NSCAssert(bankAccount != nil, @"Cannot create a token with a nil bank account.");
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     NSMutableArray *parts = [NSMutableArray array];

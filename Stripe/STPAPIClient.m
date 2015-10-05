@@ -233,8 +233,8 @@ static NSString *STPDefaultPublishableKey;
 #pragma mark - Bank Accounts
 @implementation STPAPIClient (BankAccounts)
 
-- (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount completion:(STPCompletionBlock)completion {
-    [self createTokenWithData:[STPFormEncoder formEncodedDataForBankAccount:bankAccount] completion:completion];
+- (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount completion:(STPCompletionBlock)completion {
+    [self createTokenWithData:[STPFormEncoder formEncodedDataForBankAccountParams:bankAccount] completion:completion];
 }
 
 @end
