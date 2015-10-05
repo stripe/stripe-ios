@@ -20,6 +20,11 @@
 @property (nonatomic, copy, nullable) NSString *number;
 
 /**
+ *  The last 4 digits of the card's number, if it's been set, otherwise nil.
+ */
+- (nullable NSString *)last4;
+
+/**
  *  The card's expiration month.
  */
 @property (nonatomic) NSUInteger expMonth;

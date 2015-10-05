@@ -20,30 +20,6 @@
     }
 }
 
-- (BOOL)isEqual:(id)other {
-    return [self isEqualToCardParams:other];
-}
-
-- (NSUInteger)hash {
-    return [self.number hash];
-}
-
-- (BOOL)isEqualToCardParams:(STPCardParams *)other {
-    if (self == other) {
-        return YES;
-    }
-    
-    if (!other || ![other isKindOfClass:self.class]) {
-        return NO;
-    }
-    
-    return self.expMonth == other.expMonth && self.expYear == other.expYear && [self.number ?: @"" isEqualToString:other.number ?: @""] &&
-    [self.cvc ?: @"" isEqualToString:other.cvc ?: @""] && [self.name ?: @"" isEqualToString:other.name ?: @""] &&
-    [self.addressLine1 ?: @"" isEqualToString:other.addressLine1 ?: @""] && [self.addressLine2 ?: @"" isEqualToString:other.addressLine2 ?: @""] &&
-    [self.addressCity ?: @"" isEqualToString:other.addressCity ?: @""] && [self.addressState ?: @"" isEqualToString:other.addressState ?: @""] &&
-    [self.addressZip ?: @"" isEqualToString:other.addressZip ?: @""] && [self.addressCountry ?: @"" isEqualToString:other.addressCountry ?: @""];
-}
-
 - (BOOL)validateNumber:(id *)ioValue error:(NSError **)outError {
     if (*ioValue == nil) {
         return [self.class handleValidationErrorForParameter:@"number" error:outError];
