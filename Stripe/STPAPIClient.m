@@ -243,7 +243,7 @@ static NSString *STPDefaultPublishableKey;
 @implementation STPAPIClient (CreditCards)
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)completion {
-    [self createTokenWithData:[STPFormEncoder formEncodedDataForCard:card] completion:completion];
+    [self createTokenWithData:[STPFormEncoder formEncodedDataForCardParams:card] completion:completion];
 }
 
 @end

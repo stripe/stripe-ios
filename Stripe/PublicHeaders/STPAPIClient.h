@@ -11,7 +11,7 @@
 
 static NSString *const __nonnull STPSDKVersion = @"5.1.4";
 
-@class STPBankAccount, STPCard, STPToken;
+@class STPBankAccount, STPCard, STPCardParams, STPToken;
 
 /**
  *  A callback to be run with the response from the Stripe API.
@@ -80,12 +80,12 @@ typedef void (^STPCompletionBlock)(STPToken * __nullable token, NSError * __null
 @interface STPAPIClient (CreditCards)
 
 /**
- *  Converts an STPCard object into a Stripe token using the Stripe API.
+ *  Converts an STPCardParams object into a Stripe token using the Stripe API.
  *
  *  @param card        The user's card details. Cannot be nil. @see https://stripe.com/docs/api#create_card_token
  *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
-- (void)createTokenWithCard:(nonnull STPCard *)card completion:(nullable STPCompletionBlock)completion;
+- (void)createTokenWithCard:(nonnull STPCardParams *)card completion:(nullable STPCompletionBlock)completion;
 
 @end
 

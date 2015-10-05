@@ -8,7 +8,7 @@
 
 #import "STPFormEncoder.h"
 #import "STPBankAccount.h"
-#import "STPCard.h"
+#import "STPCardParams.h"
 
 @implementation STPFormEncoder
 
@@ -37,7 +37,7 @@
     return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-+ (NSData *)formEncodedDataForCard:(STPCard *)card {
++ (NSData *)formEncodedDataForCardParams:(STPCardParams *)card {
     NSCAssert(card != nil, @"Cannot create a token with a nil card.");
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     
