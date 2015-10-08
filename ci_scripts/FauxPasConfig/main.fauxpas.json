@@ -747,7 +747,7 @@
         "UnprefixedClass": {
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            "ignoredFileRegexes": ["STPAPIClient.h"]
+            "ignoredFileRegexes": ["Fabric.h","STPAPIClient.h"]
         },
         // Options for rule: Unprefixed category method
         "UnprefixedCategoryMethod": {
