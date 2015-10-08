@@ -45,7 +45,11 @@ static NSString *STPDefaultPublishableKey;
 
 @end
 
+#if __has_include("Fabric.h")
 @interface STPAPIClient ()<NSURLSessionDelegate, FABKit>
+#else
+@interface STPAPIClient()
+#endif
 @property (nonatomic, readwrite) NSURL *apiURL;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
 @end
