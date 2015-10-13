@@ -311,8 +311,8 @@
 		04F3BB3E1BA89B1200DE235E /* PKPayment+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04F3BB3B1BA89B1200DE235E /* PKPayment+Stripe.h */; settings = {ASSET_TAGS = (); }; };
 		04F3BB3F1BA89B1200DE235E /* PKPayment+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F3BB3C1BA89B1200DE235E /* PKPayment+Stripe.m */; settings = {ASSET_TAGS = (); }; };
 		04F3BB401BA89B1200DE235E /* PKPayment+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F3BB3C1BA89B1200DE235E /* PKPayment+Stripe.m */; settings = {ASSET_TAGS = (); }; };
-		B445E57B0124E5D3A07C33FE /* stp_card_isracard@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B445E779D90A061CE0F08244 /* stp_card_isracard@3x.png */; };
-		B445E835E2B250D67EFC6B38 /* stp_card_isracard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B445EE6992B60B972FD284AB /* stp_card_isracard@2x.png */; };
+		B445E64B2C702318963835FB /* stp_card_isracard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B445E61F73F41FA28EB9A558 /* stp_card_isracard@2x.png */; };
+		B445EB19A26EEEF4EC67896F /* stp_card_isracard@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B445EC551AAFA2EC067F2FA3 /* stp_card_isracard@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -472,8 +472,8 @@
 		04F3BB3C1BA89B1200DE235E /* PKPayment+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKPayment+Stripe.m"; sourceTree = "<group>"; };
 		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		B445E779D90A061CE0F08244 /* stp_card_isracard@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stp_card_isracard@3x.png"; path = "Stripe/Resources/Images/stp_card_isracard@3x.png"; sourceTree = SOURCE_ROOT; };
-		B445EE6992B60B972FD284AB /* stp_card_isracard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stp_card_isracard@2x.png"; path = "Stripe/Resources/Images/stp_card_isracard@2x.png"; sourceTree = SOURCE_ROOT; };
+		B445E61F73F41FA28EB9A558 /* stp_card_isracard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stp_card_isracard@2x.png"; path = "Stripe/Resources/Images/stp_card_isracard@2x.png"; sourceTree = SOURCE_ROOT; };
+		B445EC551AAFA2EC067F2FA3 /* stp_card_isracard@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stp_card_isracard@3x.png"; path = "Stripe/Resources/Images/stp_card_isracard@3x.png"; sourceTree = SOURCE_ROOT; };
 		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -578,8 +578,8 @@
 				0438EFA11B741C2800D506CC /* stp_card_visa.png */,
 				0438EFA21B741C2800D506CC /* stp_card_visa@2x.png */,
 				0438EFA31B741C2800D506CC /* stp_card_visa@3x.png */,
-				B445EE6992B60B972FD284AB /* stp_card_isracard@2x.png */,
-				B445E779D90A061CE0F08244 /* stp_card_isracard@3x.png */,
+				B445E61F73F41FA28EB9A558 /* stp_card_isracard@2x.png */,
+				B445EC551AAFA2EC067F2FA3 /* stp_card_isracard@3x.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -1091,8 +1091,8 @@
 				0438EFBC1B741C2800D506CC /* stp_card_discover.png in Resources */,
 				0438EFA61B741C2800D506CC /* stp_card_amex@2x.png in Resources */,
 				0438EFD41B741C2800D506CC /* stp_card_visa.png in Resources */,
-				B445E835E2B250D67EFC6B38 /* stp_card_isracard@2x.png in Resources */,
-				B445E57B0124E5D3A07C33FE /* stp_card_isracard@3x.png in Resources */,
+				B445E64B2C702318963835FB /* stp_card_isracard@2x.png in Resources */,
+				B445EB19A26EEEF4EC67896F /* stp_card_isracard@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
