@@ -114,7 +114,6 @@
 		04415C5F1A6605B5001225ED /* STPStrictURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C01A5F30A700B854EE /* STPStrictURLProtocol.m */; };
 		04415C601A6605B5001225ED /* STPAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C31A5F30A700B854EE /* STPAPIClient.m */; };
 		04415C611A6605B5001225ED /* STPFormEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C51A5F30A700B854EE /* STPFormEncoder.m */; };
-		04415C621A6605B5001225ED /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C71A5F30A700B854EE /* STPAPIConnection.m */; };
 		04415C631A6605B5001225ED /* STPBankAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C91A5F30A700B854EE /* STPBankAccount.m */; };
 		04415C641A6605B5001225ED /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4CB1A5F30A700B854EE /* STPCard.m */; };
 		04415C651A6605B5001225ED /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4CD1A5F30A700B854EE /* STPToken.m */; };
@@ -142,7 +141,6 @@
 		04415C7E1A6605D9001225ED /* STPStrictURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4BF1A5F30A700B854EE /* STPStrictURLProtocol.h */; };
 		04415C7F1A6605D9001225ED /* STPAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C21A5F30A700B854EE /* STPAPIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04415C801A6605D9001225ED /* STPFormEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C41A5F30A700B854EE /* STPFormEncoder.h */; };
-		04415C811A6605D9001225ED /* STPAPIConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C61A5F30A700B854EE /* STPAPIConnection.h */; };
 		04415C821A6605D9001225ED /* STPBankAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C81A5F30A700B854EE /* STPBankAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04415C831A6605D9001225ED /* STPCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CA1A5F30A700B854EE /* STPCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04415C841A6605D9001225ED /* STPToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CC1A5F30A700B854EE /* STPToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -191,7 +189,6 @@
 		049E84CB1A605DE0000B66CD /* STPStrictURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C01A5F30A700B854EE /* STPStrictURLProtocol.m */; };
 		049E84CC1A605DE0000B66CD /* STPAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C31A5F30A700B854EE /* STPAPIClient.m */; };
 		049E84CD1A605DE0000B66CD /* STPFormEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C51A5F30A700B854EE /* STPFormEncoder.m */; };
-		049E84CE1A605DE0000B66CD /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C71A5F30A700B854EE /* STPAPIConnection.m */; };
 		049E84CF1A605DE0000B66CD /* STPBankAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C91A5F30A700B854EE /* STPBankAccount.m */; };
 		049E84D01A605DE0000B66CD /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4CB1A5F30A700B854EE /* STPCard.m */; };
 		049E84D11A605DE0000B66CD /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4CD1A5F30A700B854EE /* STPToken.m */; };
@@ -215,7 +212,6 @@
 		049E84E51A605EF0000B66CD /* STPStrictURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4BF1A5F30A700B854EE /* STPStrictURLProtocol.h */; };
 		049E84E61A605EF0000B66CD /* STPAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C21A5F30A700B854EE /* STPAPIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		049E84E71A605EF0000B66CD /* STPFormEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C41A5F30A700B854EE /* STPFormEncoder.h */; };
-		049E84E81A605EF0000B66CD /* STPAPIConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C61A5F30A700B854EE /* STPAPIConnection.h */; };
 		049E84E91A605EF0000B66CD /* STPBankAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C81A5F30A700B854EE /* STPBankAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		049E84EA1A605EF0000B66CD /* STPCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CA1A5F30A700B854EE /* STPCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		049E84EB1A605EF0000B66CD /* STPToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CC1A5F30A700B854EE /* STPToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -246,8 +242,6 @@
 		04CDB5001A5F30A700B854EE /* STPAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C31A5F30A700B854EE /* STPAPIClient.m */; };
 		04CDB5021A5F30A700B854EE /* STPFormEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C41A5F30A700B854EE /* STPFormEncoder.h */; };
 		04CDB5041A5F30A700B854EE /* STPFormEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C51A5F30A700B854EE /* STPFormEncoder.m */; };
-		04CDB5061A5F30A700B854EE /* STPAPIConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C61A5F30A700B854EE /* STPAPIConnection.h */; };
-		04CDB5081A5F30A700B854EE /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C71A5F30A700B854EE /* STPAPIConnection.m */; };
 		04CDB50A1A5F30A700B854EE /* STPBankAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C81A5F30A700B854EE /* STPBankAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04CDB50C1A5F30A700B854EE /* STPBankAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C91A5F30A700B854EE /* STPBankAccount.m */; };
 		04CDB50E1A5F30A700B854EE /* STPCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CA1A5F30A700B854EE /* STPCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -279,7 +273,6 @@
 		04D12C241A5F55AD0010446E /* STPStrictURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C01A5F30A700B854EE /* STPStrictURLProtocol.m */; };
 		04D12C251A5F55AD0010446E /* STPAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C31A5F30A700B854EE /* STPAPIClient.m */; };
 		04D12C261A5F55AD0010446E /* STPFormEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C51A5F30A700B854EE /* STPFormEncoder.m */; };
-		04D12C271A5F55AD0010446E /* STPAPIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C71A5F30A700B854EE /* STPAPIConnection.m */; };
 		04D12C281A5F55AD0010446E /* STPBankAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4C91A5F30A700B854EE /* STPBankAccount.m */; };
 		04D12C291A5F55AD0010446E /* STPCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4CB1A5F30A700B854EE /* STPCard.m */; };
 		04D12C2A1A5F55AD0010446E /* STPToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4CD1A5F30A700B854EE /* STPToken.m */; };
@@ -296,7 +289,6 @@
 		04D12C381A5F55D10010446E /* STPStrictURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4BF1A5F30A700B854EE /* STPStrictURLProtocol.h */; };
 		04D12C391A5F55D10010446E /* STPAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C21A5F30A700B854EE /* STPAPIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04D12C3A1A5F55D10010446E /* STPFormEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C41A5F30A700B854EE /* STPFormEncoder.h */; };
-		04D12C3B1A5F55D10010446E /* STPAPIConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C61A5F30A700B854EE /* STPAPIConnection.h */; };
 		04D12C3C1A5F55D10010446E /* STPBankAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C81A5F30A700B854EE /* STPBankAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04D12C3D1A5F55D10010446E /* STPCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CA1A5F30A700B854EE /* STPCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04D12C3E1A5F55D10010446E /* STPToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CC1A5F30A700B854EE /* STPToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -439,12 +431,10 @@
 		04CDB4BE1A5F30A700B854EE /* STPOSXCheckoutWebViewAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPOSXCheckoutWebViewAdapter.m; sourceTree = "<group>"; };
 		04CDB4BF1A5F30A700B854EE /* STPStrictURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPStrictURLProtocol.h; sourceTree = "<group>"; };
 		04CDB4C01A5F30A700B854EE /* STPStrictURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPStrictURLProtocol.m; sourceTree = "<group>"; };
-		04CDB4C21A5F30A700B854EE /* STPAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPAPIClient.h; path = PublicHeaders/STPAPIClient.h; sourceTree = "<group>"; };
+		04CDB4C21A5F30A700B854EE /* STPAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = STPAPIClient.h; path = PublicHeaders/STPAPIClient.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		04CDB4C31A5F30A700B854EE /* STPAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAPIClient.m; sourceTree = "<group>"; };
 		04CDB4C41A5F30A700B854EE /* STPFormEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPFormEncoder.h; sourceTree = "<group>"; };
 		04CDB4C51A5F30A700B854EE /* STPFormEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFormEncoder.m; sourceTree = "<group>"; };
-		04CDB4C61A5F30A700B854EE /* STPAPIConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPAPIConnection.h; sourceTree = "<group>"; };
-		04CDB4C71A5F30A700B854EE /* STPAPIConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAPIConnection.m; sourceTree = "<group>"; };
 		04CDB4C81A5F30A700B854EE /* STPBankAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPBankAccount.h; path = PublicHeaders/STPBankAccount.h; sourceTree = "<group>"; };
 		04CDB4C91A5F30A700B854EE /* STPBankAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBankAccount.m; sourceTree = "<group>"; };
 		04CDB4CA1A5F30A700B854EE /* STPCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCard.h; path = PublicHeaders/STPCard.h; sourceTree = "<group>"; };
@@ -653,8 +643,6 @@
 				04CDB4C31A5F30A700B854EE /* STPAPIClient.m */,
 				04CDB4C41A5F30A700B854EE /* STPFormEncoder.h */,
 				04CDB4C51A5F30A700B854EE /* STPFormEncoder.m */,
-				04CDB4C61A5F30A700B854EE /* STPAPIConnection.h */,
-				04CDB4C71A5F30A700B854EE /* STPAPIConnection.m */,
 				04CDE5C81BC20B1D00548833 /* STPBankAccountParams.h */,
 				04CDE5C11BC20AF800548833 /* STPBankAccountParams.m */,
 				04CDB4C81A5F30A700B854EE /* STPBankAccount.h */,
@@ -802,7 +790,6 @@
 				04415C7D1A6605D9001225ED /* STPOSXCheckoutWebViewAdapter.h in Headers */,
 				04415C7E1A6605D9001225ED /* STPStrictURLProtocol.h in Headers */,
 				04415C801A6605D9001225ED /* STPFormEncoder.h in Headers */,
-				04415C811A6605D9001225ED /* STPAPIConnection.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -839,7 +826,6 @@
 				049E84E41A605EF0000B66CD /* STPOSXCheckoutWebViewAdapter.h in Headers */,
 				049E84E51A605EF0000B66CD /* STPStrictURLProtocol.h in Headers */,
 				049E84E71A605EF0000B66CD /* STPFormEncoder.h in Headers */,
-				049E84E81A605EF0000B66CD /* STPAPIConnection.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -872,7 +858,6 @@
 				0438EF381B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h in Headers */,
 				04CDE5BC1BC1F21500548833 /* STPCardParams.h in Headers */,
 				04F213351BCECB1C001D6F22 /* STPAPIResponseDecodable.h in Headers */,
-				04CDB5061A5F30A700B854EE /* STPAPIConnection.h in Headers */,
 				04CDB4FA1A5F30A700B854EE /* STPStrictURLProtocol.h in Headers */,
 				04CDB4D31A5F30A700B854EE /* Stripe.h in Headers */,
 				04CDB4F21A5F30A700B854EE /* STPIOSCheckoutWebViewAdapter.h in Headers */,
@@ -907,7 +892,6 @@
 				04D12C371A5F55D10010446E /* STPOSXCheckoutWebViewAdapter.h in Headers */,
 				04D12C381A5F55D10010446E /* STPStrictURLProtocol.h in Headers */,
 				04D12C3A1A5F55D10010446E /* STPFormEncoder.h in Headers */,
-				04D12C3B1A5F55D10010446E /* STPAPIConnection.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1229,7 +1213,6 @@
 				04415C5F1A6605B5001225ED /* STPStrictURLProtocol.m in Sources */,
 				04415C601A6605B5001225ED /* STPAPIClient.m in Sources */,
 				04415C611A6605B5001225ED /* STPFormEncoder.m in Sources */,
-				04415C621A6605B5001225ED /* STPAPIConnection.m in Sources */,
 				045A62AB1B8E7259000165CE /* STPPaymentCardTextFieldTest.m in Sources */,
 				04415C631A6605B5001225ED /* STPBankAccount.m in Sources */,
 				0438EF4D1B741B0100D506CC /* STPPaymentCardTextFieldViewModelTest.m in Sources */,
@@ -1267,7 +1250,6 @@
 				0438EF371B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */,
 				049E84CC1A605DE0000B66CD /* STPAPIClient.m in Sources */,
 				049E84CD1A605DE0000B66CD /* STPFormEncoder.m in Sources */,
-				049E84CE1A605DE0000B66CD /* STPAPIConnection.m in Sources */,
 				049E84CF1A605DE0000B66CD /* STPBankAccount.m in Sources */,
 				049E84D01A605DE0000B66CD /* STPCard.m in Sources */,
 				04F3BB401BA89B1200DE235E /* PKPayment+Stripe.m in Sources */,
@@ -1290,7 +1272,6 @@
 				04CDB50C1A5F30A700B854EE /* STPBankAccount.m in Sources */,
 				04CDB5181A5F30A700B854EE /* StripeError.m in Sources */,
 				04CDB4E21A5F30A700B854EE /* STPCheckoutOptions.m in Sources */,
-				04CDB5081A5F30A700B854EE /* STPAPIConnection.m in Sources */,
 				04CDB4F81A5F30A700B854EE /* STPOSXCheckoutWebViewAdapter.m in Sources */,
 				04CDB4EB1A5F30A700B854EE /* STPCheckoutInternalUIWebViewController.m in Sources */,
 				04CDB4FC1A5F30A700B854EE /* STPStrictURLProtocol.m in Sources */,
@@ -1324,7 +1305,6 @@
 				04D12C241A5F55AD0010446E /* STPStrictURLProtocol.m in Sources */,
 				04D12C251A5F55AD0010446E /* STPAPIClient.m in Sources */,
 				04D12C261A5F55AD0010446E /* STPFormEncoder.m in Sources */,
-				04D12C271A5F55AD0010446E /* STPAPIConnection.m in Sources */,
 				04D12C281A5F55AD0010446E /* STPBankAccount.m in Sources */,
 				04D12C291A5F55AD0010446E /* STPCard.m in Sources */,
 				04D12C2A1A5F55AD0010446E /* STPToken.m in Sources */,

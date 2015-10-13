@@ -13,7 +13,6 @@
 #endif
 
 #import "STPAPIClient.h"
-#import "STPAPIConnection.h"
 #import "STPFormEncoder.h"
 #import "STPBankAccount.h"
 #import "STPCard.h"
@@ -39,8 +38,9 @@ static NSString *STPDefaultPublishableKey;
 
 @end
 
-@interface STPAPIClient ()
+@interface STPAPIClient ()<NSURLSessionDelegate>
 @property (nonatomic, readwrite) NSURL *apiURL;
+@property (nonatomic, readwrite) NSURLSession *urlSession;
 @end
 
 @implementation STPAPIClient
@@ -64,6 +64,13 @@ static NSString *STPDefaultPublishableKey;
             URLByAppendingPathComponent:tokenEndpoint];
         _publishableKey = [publishableKey copy];
         _operationQueue = [NSOperationQueue mainQueue];
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSString *auth = [@"Bearer " stringByAppendingString:self.publishableKey];
+        config.HTTPAdditionalHeaders = @{
+                                         @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
+                                         @"Authorization": auth,
+                                         };
+        _urlSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:_operationQueue];
     }
     return self;
 }
@@ -80,41 +87,44 @@ static NSString *STPDefaultPublishableKey;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.apiURL];
     request.HTTPMethod = @"POST";
     request.HTTPBody = data;
-    [request setValue:[self.class JSONStringForObject:[self.class stripeUserAgentDetails]] forHTTPHeaderField:@"X-Stripe-User-Agent"];
-    [request setValue:[@"Bearer " stringByAppendingString:self.publishableKey] forHTTPHeaderField:@"Authorization"];
     
-    STPAPIConnection *connection = [[STPAPIConnection alloc] initWithRequest:request];
-    
-    [connection runOnOperationQueue:self.operationQueue
-                         completion:^(NSURLResponse *response, NSData *body, NSError *requestError) {
-                             if (requestError) {
-                                 // If this is an error that Stripe returned, let's handle it as a StripeDomain error
-                                 if (body) {
-                                     NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL];
-                                     if ([jsonDictionary valueForKey:@"error"] != nil) {
-                                         completion(nil, [self.class errorFromStripeResponse:jsonDictionary]);
-                                         return;
-                                     }
-                                 }
-                                 completion(nil, requestError);
-                                 return;
-                             } else {
-                                 NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL];
-                                 if (!jsonDictionary) {
-                                     NSDictionary *userInfo = @{
-                                                                NSLocalizedDescriptionKey: STPUnexpectedError,
-                                                                STPErrorMessageKey: @"The response from Stripe failed to get parsed into valid JSON."
-                                                                };
-                                     NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
-                                     completion(nil, error);
-                                 } else if ([(NSHTTPURLResponse *)response statusCode] == 200) {
+    [[self.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            // If this is an error that Stripe returned, let's handle it as a StripeDomain error
+            if (body) {
+                NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL];
+                if ([jsonDictionary valueForKey:@"error"] != nil) {
+                    [self.operationQueue addOperationWithBlock:^{
+                        completion(nil, [self.class errorFromStripeResponse:jsonDictionary]);
+                    }];
+                    return;
+                }
+            }
+            [self.operationQueue addOperationWithBlock:^{
+                completion(nil, error);
+            }];
+            return;
+        } else {
+            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL];
+            if (!jsonDictionary) {
+                NSDictionary *userInfo = @{
+                                           NSLocalizedDescriptionKey: STPUnexpectedError,
+                                           STPErrorMessageKey: @"The response from Stripe failed to get parsed into valid JSON."
+                                           };
+                NSError *jsonError = [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
+                completion(nil, jsonError);
+            } else if ([(NSHTTPURLResponse *)response statusCode] == 200) {
+                [self.operationQueue addOperationWithBlock:^{
                                      STPToken *token = [STPToken decodedObjectFromAPIResponse:jsonDictionary];
                                      completion(token, nil);
-                                 } else {
-                                     completion(nil, [self.class errorFromStripeResponse:jsonDictionary]);
-                                 }
-                             }
-                         }];
+                }];
+            } else {
+                [self.operationQueue addOperationWithBlock:^{
+                    completion(nil, [self.class errorFromStripeResponse:jsonDictionary]);
+                }];
+            }
+        }
+    }] resume];
 }
 
 #pragma mark - private helpers
@@ -195,7 +205,7 @@ static NSString *STPDefaultPublishableKey;
 
 #pragma mark Utility methods -
 
-+ (NSDictionary *)stripeUserAgentDetails {
++ (NSString *)stripeUserAgentDetails {
     NSMutableDictionary *details = [@{
         @"lang": @"objective-c",
         @"bindings_version": STPSDKVersion,
@@ -222,11 +232,7 @@ static NSString *STPDefaultPublishableKey;
         }
     }
 #endif
-    return [details copy];
-}
-
-+ (NSString *)JSONStringForObject:(id)object {
-    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:object options:0 error:NULL] encoding:NSUTF8StringEncoding];
+    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[details copy] options:0 error:NULL] encoding:NSUTF8StringEncoding];
 }
 
 @end
