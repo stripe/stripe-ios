@@ -65,6 +65,8 @@
         return @"MasterCard";
     case STPCardBrandVisa:
         return @"Visa";
+    case STPCardBrandIsracard:
+        return @"Isracard";
     default:
         return @"Unknown";
     }
@@ -245,6 +247,8 @@
             _brand = STPCardBrandJCB;
         } else if ([brand isEqualToString:@"Diners Club"]) {
             _brand = STPCardBrandDinersClub;
+        } else if ([brand isEqualToString:@"Isracard"]) {
+            _brand = STPCardBrandIsracard;
         } else {
             _brand = STPCardBrandUnknown;
         }

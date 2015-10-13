@@ -119,6 +119,9 @@
         case STPCardBrandMasterCard:
             imageName = @"stp_card_mastercard";
             break;
+        case STPCardBrandIsracard:
+            imageName = @"stp_card_isracard";
+            break;
         case STPCardBrandUnknown:
             imageName = templateSupported ? @"stp_card_placeholder_template" : @"stp_card_placeholder";
             break;

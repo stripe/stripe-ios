@@ -420,6 +420,12 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     CGFloat numberFieldWidth = MAX(placeholderWidth, numberWidth);
     CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 8;
     CGFloat numberFieldX = self.numberFieldShrunk ? STPPaymentCardTextFieldDefaultPadding - nonFragmentWidth : 8;
+    //I have to cut some numberField width when it's filled by Isracard to provide correct layouts for expiration date and CVC.
+    if (self.numberFieldShrunk) {
+        if (self.numberField.text.length <= 9) {
+            numberFieldWidth -= [self widthForText:@"88888888"];
+        }
+    }
     self.numberField.frame = CGRectMake(numberFieldX, 0, numberFieldWidth, self.frame.size.height);
     
     CGFloat cvcWidth = MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"]);

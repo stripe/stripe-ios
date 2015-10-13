@@ -63,6 +63,12 @@
         STPCardBrand currentBrand = [STPCardValidator brandForNumber:attributedString.string];
         if (currentBrand == STPCardBrandAmex) {
             cardSpacing = @[@3, @9];
+        } else if (currentBrand == STPCardBrandIsracard) {
+            if (attributedString.string.length == 8) {
+                cardSpacing = @[@3];
+            } else {
+                cardSpacing = @[@4];
+            }
         } else {
             cardSpacing = @[@3, @7, @11];
         }

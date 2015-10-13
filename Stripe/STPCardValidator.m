@@ -115,6 +115,11 @@
         return STPCardValidationStateInvalid;
     }
     
+    //special validation algorithm for Isracard
+    if ([self stringIsValidIsracard:sanitizedNumber] && [self possibleBrandsForNumber:sanitizedNumber].count == 0) {
+        return STPCardValidationStateValid;
+    }
+
     NSArray *brands = [self possibleBrandsForNumber:sanitizedNumber];
     if (brands.count == 0 && validatingCardBrand) {
         return STPCardValidationStateInvalid;
@@ -131,6 +136,26 @@
             return STPCardValidationStateIncomplete;
         }
     }
+}
+
++ (BOOL)stringIsValidIsracard:(NSString *)cardNumber {
+    if (cardNumber.length < 8 || cardNumber.length > 9) {
+        return NO;
+    }
+
+    if (cardNumber.length == 8) {
+        cardNumber = [@"0" stringByAppendingString:cardNumber];
+    }
+
+    NSString *diff = @"987654321";
+    NSInteger sum = 0;
+    for (NSUInteger i = 0; i < 9; i++) {
+        NSInteger int1 = [diff substringWithRange:NSMakeRange(i, 1)].integerValue;
+        NSInteger int2 = [cardNumber substringWithRange:NSMakeRange(i, 1)].integerValue;
+        sum += int1 * int2;
+    }
+
+    return sum % 11 == 0;
 }
 
 + (NSUInteger)minCVCLength {
@@ -152,6 +177,8 @@
     NSArray *brands = [self possibleBrandsForNumber:sanitizedNumber];
     if (brands.count == 1) {
         return (STPCardBrand)[brands.firstObject integerValue];
+    } else if ([self stringIsValidIsracard:sanitizedNumber]) {
+        return STPCardBrandIsracard;
     }
     return STPCardBrandUnknown;
 }
@@ -175,6 +202,7 @@
              @(STPCardBrandJCB),
              @(STPCardBrandMasterCard),
              @(STPCardBrandVisa),
+             @(STPCardBrandIsracard)
          ];
 }
 
@@ -184,6 +212,8 @@
             return 15;
         case STPCardBrandDinersClub:
             return 14;
+        case STPCardBrandIsracard:
+            return 9;
         default:
             return 16;
     }
@@ -231,6 +261,7 @@
         case STPCardBrandUnknown:
             return @[];
     }
+    return @[];
 }
 
 + (BOOL)stringIsValidLuhn:(NSString *)number {
