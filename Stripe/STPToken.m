@@ -59,7 +59,7 @@
 #pragma mark STPAPIResponseDecodable
 
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    STPToken *token = [STPToken new];
+    STPToken *token = [self new];
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [response enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
         if (obj != [NSNull null]) {

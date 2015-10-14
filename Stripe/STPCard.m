@@ -83,7 +83,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    STPCard *card = [STPCard new];
+    STPCard *card = [self new];
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [response enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
         if (obj != [NSNull null]) {

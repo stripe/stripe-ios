@@ -56,7 +56,7 @@
 #pragma mark STPAPIResponseDecodable
 
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    STPBankAccount *bankAccount = [STPBankAccount new];
+    STPBankAccount *bankAccount = [self new];
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [response enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
         if (obj != [NSNull null]) {
