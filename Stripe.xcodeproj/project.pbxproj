@@ -231,9 +231,6 @@
 		049E84EA1A605EF0000B66CD /* STPCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CA1A5F30A700B854EE /* STPCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		049E84EB1A605EF0000B66CD /* STPToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CC1A5F30A700B854EE /* STPToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		049E84EC1A605EF0000B66CD /* StripeError.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CE1A5F30A700B854EE /* StripeError.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		04A58A491BC603BB004E7BC2 /* FABKitProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A58A461BC603BB004E7BC2 /* FABKitProtocol.h */; settings = {ASSET_TAGS = (); }; };
-		04A58A4A1BC603BB004E7BC2 /* Fabric+FABKits.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A58A471BC603BB004E7BC2 /* Fabric+FABKits.h */; settings = {ASSET_TAGS = (); }; };
-		04A58A4B1BC603BB004E7BC2 /* Fabric.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A58A481BC603BB004E7BC2 /* Fabric.h */; settings = {ASSET_TAGS = (); }; };
 		04B33F361BC7488D00DD8120 /* Info.plist in Copy Files */ = {isa = PBXBuildFile; fileRef = 04B33F301BC7417B00DD8120 /* Info.plist */; settings = {ASSET_TAGS = (); }; };
 		04CB86BA1BA89CE100E4F61E /* PKPayment+StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */; settings = {ASSET_TAGS = (); }; };
 		04CDB4D31A5F30A700B854EE /* Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4A91A5F30A700B854EE /* Stripe.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -865,8 +862,6 @@
 				04EBC7561B7533C300A0E6AE /* STPCardValidationState.h in Headers */,
 				04EBC75A1B7533C300A0E6AE /* STPCardValidator.h in Headers */,
 				049E84D91A605EF0000B66CD /* Stripe.h in Headers */,
-				04A58A491BC603BB004E7BC2 /* FABKitProtocol.h in Headers */,
-				04A58A4A1BC603BB004E7BC2 /* Fabric+FABKits.h in Headers */,
 				049E84DA1A605EF0000B66CD /* STPAPIClient+ApplePay.h in Headers */,
 				0433EB4B1BD06313003912B4 /* NSDictionary+Stripe.h in Headers */,
 				049E84DB1A605EF0000B66CD /* Stripe+ApplePay.h in Headers */,
@@ -884,7 +879,6 @@
 				049E84EC1A605EF0000B66CD /* StripeError.h in Headers */,
 				049E84DF1A605EF0000B66CD /* STPCheckoutDelegate.h in Headers */,
 				049E84E01A605EF0000B66CD /* STPCheckoutInternalUIWebViewController.h in Headers */,
-				04A58A4B1BC603BB004E7BC2 /* Fabric.h in Headers */,
 				04F3BB3E1BA89B1200DE235E /* PKPayment+Stripe.h in Headers */,
 				049E84E11A605EF0000B66CD /* STPCheckoutWebViewAdapter.h in Headers */,
 				049E84E21A605EF0000B66CD /* STPColorUtils.h in Headers */,
