@@ -35,7 +35,7 @@
 @property (nonatomic) NSUInteger expYear;
 
 /**
- *  The card's security code, found on the back. This will be nil for cards retrieved from the Stripe API.
+ *  The card's security code, found on the back.
  */
 @property (nonatomic, copy, nullable) NSString *cvc;
 
@@ -55,7 +55,7 @@
 @property (nonatomic, copy, nullable) NSString *addressCountry;
 
 /**
- *  This is only applicable when tokenizing debit cards to issue payouts to managed accounts. You should not set it otherwise. The card can then be used as a transfer destination for funds in this currency.
+ *  Three-letter ISO currency code representing the currency paid out to the bank account. This is only applicable when tokenizing debit cards to issue payouts to managed accounts. You should not set it otherwise. The card can then be used as a transfer destination for funds in this currency.
  */
 @property (nonatomic, copy, nullable) NSString *currency;
 

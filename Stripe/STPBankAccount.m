@@ -27,18 +27,6 @@
     [super setAccountNumber:accountNumber];
 }
 
-#pragma mark - Getters
-
-- (NSString *)last4 {
-    if (_last4) {
-        return _last4;
-    } else if (self.accountNumber && self.accountNumber.length >= 4) {
-        return [self.accountNumber substringFromIndex:(self.accountNumber.length - 4)];
-    } else {
-        return nil;
-    }
-}
-
 #pragma mark - Equality
 
 - (BOOL)isEqual:(STPBankAccount *)bankAccount {

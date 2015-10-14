@@ -30,7 +30,7 @@
 @property (nonatomic, copy, nullable) NSString *routingNumber;
 
 /**
- *  The country the bank account is in.
+ *  Two-letter ISO code representing the country the bank account is located in.
  */
 @property (nonatomic, copy, nullable) NSString *country;
 
