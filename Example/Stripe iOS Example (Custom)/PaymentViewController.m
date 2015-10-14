@@ -77,12 +77,7 @@
         return;
     }
     [self.activityIndicator startAnimating];
-    STPCard *card = [[STPCard alloc] init];
-    card.number = self.paymentTextField.cardNumber;
-    card.expMonth = self.paymentTextField.expirationMonth;
-    card.expYear = self.paymentTextField.expirationYear;
-    card.cvc = self.paymentTextField.cvc;
-    [[STPAPIClient sharedClient] createTokenWithCard:card
+    [[STPAPIClient sharedClient] createTokenWithCard:self.paymentTextField.card
                                           completion:^(STPToken *token, NSError *error) {
                                               [self.activityIndicator stopAnimating];
                                               if (error) {

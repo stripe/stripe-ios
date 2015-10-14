@@ -141,7 +141,7 @@
     } else if ([event isEqualToString:STPCheckoutEventTokenize]) {
         STPToken *token = nil;
         if (payload != nil && payload[@"token"] != nil) {
-            token = [[STPToken alloc] initWithAttributeDictionary:payload[@"token"]];
+            token = [STPToken decodedObjectFromAPIResponse:payload[@"token"]];
         }
         [self.checkoutDelegate checkoutController:self
                                    didCreateToken:token

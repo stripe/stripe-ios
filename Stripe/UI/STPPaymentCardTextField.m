@@ -384,10 +384,10 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     return self.viewModel.cvc;
 }
 
-- (STPCard *)card {
+- (STPCardParams *)card {
     if (!self.isValid) { return nil; }
     
-    STPCard *c = [[STPCard alloc] init];
+    STPCardParams *c = [[STPCardParams alloc] init];
     c.number = self.cardNumber;
     c.expMonth = self.expirationMonth;
     c.expYear = self.expirationYear;

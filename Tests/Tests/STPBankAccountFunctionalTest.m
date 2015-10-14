@@ -19,7 +19,7 @@
 @implementation STPBankAccountFunctionalTest
 
 - (void)testCreateAndRetreiveBankAccountToken {
-    STPBankAccount *bankAccount = [[STPBankAccount alloc] init];
+    STPBankAccountParams *bankAccount = [[STPBankAccountParams alloc] init];
     bankAccount.accountNumber = @"000123456789";
     bankAccount.routingNumber = @"110000000";
     bankAccount.country = @"US";
@@ -43,7 +43,7 @@
 }
 
 - (void)testInvalidKey {
-    STPBankAccount *bankAccount = [[STPBankAccount alloc] init];
+    STPBankAccountParams *bankAccount = [[STPBankAccountParams alloc] init];
     bankAccount.accountNumber = @"000123456789";
     bankAccount.routingNumber = @"110000000";
     bankAccount.country = @"US";

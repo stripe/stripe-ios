@@ -10,47 +10,21 @@
 #import "STPCard.h"
 #import "STPBankAccount.h"
 
+@interface STPToken()
+@property (nonatomic, nonnull) NSString *tokenId;
+@property (nonatomic) BOOL livemode;
+@property (nonatomic, nullable) STPCard *card;
+@property (nonatomic, nullable) STPBankAccount *bankAccount;
+@property (nonatomic, nullable) NSDate *created;
+@end
+
 @implementation STPToken
-
-- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary {
-    self = [super init];
-
-    if (self) {
-        _tokenId = attributeDictionary[@"id"] ?: @"";
-        _livemode = [attributeDictionary[@"livemode"] boolValue];
-        _created = [NSDate dateWithTimeIntervalSince1970:[attributeDictionary[@"created"] doubleValue]];
-
-        NSDictionary *cardDictionary = attributeDictionary[@"card"];
-        if (cardDictionary) {
-            _card = [[STPCard alloc] initWithAttributeDictionary:cardDictionary];
-        }
-
-        NSDictionary *bankAccountDictionary = attributeDictionary[@"bank_account"];
-        if (bankAccountDictionary) {
-            _bankAccount = [[STPBankAccount alloc] initWithAttributeDictionary:bankAccountDictionary];
-        }
-    }
-
-    return self;
-}
 
 - (NSString *)description {
     NSString *token = self.tokenId ?: @"Unknown token";
     NSString *livemode = self.livemode ? @"live mode" : @"test mode";
 
     return [NSString stringWithFormat:@"%@ (%@)", token, livemode];
-}
-
-- (void)postToURL:(NSURL *)url withParams:(NSMutableDictionary *)params completion:(STPCardServerResponseCallback)handler {
-    NSMutableString *body = [NSMutableString stringWithFormat:@"stripeToken=%@", self.tokenId];
-
-    [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) { [body appendFormat:@"&%@=%@", key, obj]; }];
-
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    request.HTTPMethod = @"POST";
-    request.HTTPBody = [body dataUsingEncoding:NSUTF8StringEncoding];
-
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:handler];
 }
 
 - (BOOL)isEqual:(id)object {
@@ -80,6 +54,33 @@
 
     return self.livemode == object.livemode && [self.tokenId isEqualToString:object.tokenId] && [self.created isEqualToDate:object.created] &&
            [self.card isEqual:object.card] && [self.tokenId isEqualToString:object.tokenId] && [self.created isEqualToDate:object.created];
+}
+
+#pragma mark STPAPIResponseDecodable
+
++ (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
+    STPToken *token = [self new];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [response enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
+        if (obj != [NSNull null]) {
+            dict[key] = obj;
+        }
+    }];
+    
+    token.tokenId = dict[@"id"] ?: @"";
+    token.livemode = [dict[@"livemode"] boolValue];
+    token.created = [NSDate dateWithTimeIntervalSince1970:[dict[@"created"] doubleValue]];
+    
+    NSDictionary *cardDictionary = dict[@"card"];
+    if (cardDictionary) {
+        token.card = [STPCard decodedObjectFromAPIResponse:cardDictionary];
+    }
+    
+    NSDictionary *bankAccountDictionary = dict[@"bank_account"];
+    if (bankAccountDictionary) {
+        token.bankAccount = [STPBankAccount decodedObjectFromAPIResponse:bankAccountDictionary];
+    }
+    return token;
 }
 
 @end

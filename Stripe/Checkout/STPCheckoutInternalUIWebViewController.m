@@ -19,6 +19,7 @@
 #import "StripeError.h"
 #import "STPToken.h"
 #import "STPColorUtils.h"
+#import "STPAPIResponseDecodable.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
@@ -156,7 +157,7 @@
     } else if ([event isEqualToString:STPCheckoutEventTokenize]) {
         STPToken *token = nil;
         if (payload != nil && payload[@"token"] != nil) {
-            token = [[STPToken alloc] initWithAttributeDictionary:payload[@"token"]];
+            token = [STPToken decodedObjectFromAPIResponse:payload[@"token"]];
         }
         [self.delegate checkoutController:self.checkoutController
                            didCreateToken:token

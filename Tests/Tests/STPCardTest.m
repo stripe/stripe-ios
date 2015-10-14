@@ -13,13 +13,13 @@
 #import "StripeError.h"
 
 @interface STPCardTest : XCTestCase
-@property (nonatomic) STPCard *card;
+@property (nonatomic) STPCardParams *card;
 @end
 
 @implementation STPCardTest
 
 - (void)setUp {
-    _card = [[STPCard alloc] init];
+    _card = [[STPCardParams alloc] init];
 }
 
 #pragma mark Helpers
@@ -33,13 +33,11 @@
     return [[self currentDateComponents] year];
 }
 
-#pragma mark -initWithAttributeDictionary: tests
 - (NSDictionary *)completeAttributeDictionary {
     return @{
-        @"number": @"4242424242424242",
+        @"id": @"1",
         @"exp_month": @"12",
         @"exp_year": @"2013",
-        @"cvc": @"123",
         @"name": @"Smerlock Smolmes",
         @"address_line1": @"221A Baker Street",
         @"address_city": @"New York",
@@ -55,12 +53,10 @@
 }
 
 - (void)testInitializingCardWithAttributeDictionary {
-    STPCard *cardWithAttributes = [[STPCard alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
+    STPCard *cardWithAttributes = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
 
-    XCTAssertEqualObjects([cardWithAttributes number], @"4242424242424242", @"number is set correctly");
     XCTAssertTrue([cardWithAttributes expMonth] == 12, @"expMonth is set correctly");
     XCTAssertTrue([cardWithAttributes expYear] == 2013, @"expYear is set correctly");
-    XCTAssertEqualObjects([cardWithAttributes cvc], @"123", @"CVC is set correctly");
     XCTAssertEqualObjects([cardWithAttributes name], @"Smerlock Smolmes", @"name is set correctly");
     XCTAssertEqualObjects([cardWithAttributes addressLine1], @"221A Baker Street", @"addressLine1 is set correctly");
     XCTAssertEqualObjects([cardWithAttributes addressCity], @"New York", @"addressCity is set correctly");
@@ -76,9 +72,9 @@
 
 - (void)testFormEncode {
     NSDictionary *attributes = [self completeAttributeDictionary];
-    STPCard *cardWithAttributes = [[STPCard alloc] initWithAttributeDictionary:attributes];
+    STPCard *cardWithAttributes = [STPCard decodedObjectFromAPIResponse:attributes];
 
-    NSData *encoded = [STPFormEncoder formEncodedDataForCard:cardWithAttributes];
+    NSData *encoded = [STPFormEncoder formEncodedDataForObject:cardWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
 
     NSArray *parts = [formData componentsSeparatedByString:@"&"];
@@ -129,54 +125,12 @@
     XCTAssertEqualObjects(nil, self.card.last4, @"last4 returns nil when number length is < 3");
 }
 
-#pragma mark -type tests
-- (void)testBrandReturnsCorrectlyForAmexCard {
-    self.card.number = @"3412123412341234";
-    XCTAssertEqual(STPCardBrandAmex, self.card.brand, @"Correct card brand returned for Amex card");
-}
-
-- (void)testBrandReturnsCorrectlyForDiscoverCard {
-    self.card.number = @"6452123412341234";
-    XCTAssertEqual(STPCardBrandDiscover, self.card.brand, @"Correct card brand returned for Discover card");
-}
-
-- (void)testBrandReturnsCorrectlyForJCBCard {
-    self.card.number = @"3512123412341234";
-    XCTAssertEqual(STPCardBrandJCB, self.card.brand, @"Correct card brand returned for JCB card");
-}
-
-- (void)testBrandReturnsCorrectlyForDinersClubCard {
-    self.card.number = @"3612123412341234";
-    XCTAssertEqual(STPCardBrandDinersClub, self.card.brand, @"Correct card brand returned for Diners Club card");
-}
-
-- (void)testBrandReturnsCorrectlyForVisaCard {
-    self.card.number = @"4123123412341234";
-    XCTAssertEqual(STPCardBrandVisa, self.card.brand, @"Correct card brand returned for Visa card");
-}
-
-- (void)testBrandReturnsCorrectlyForMasterCardCard {
-    self.card.number = @"5123123412341234";
-    XCTAssertEqual(STPCardBrandMasterCard, self.card.brand, @"Correct card brand returned for MasterCard card");
-}
-
-- (void)testTypeReturnsCorrectlyForMasterCardCard {
-    self.card.number = @"5123123412341234";
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-    XCTAssertEqualObjects(@"MasterCard", self.card.type, @"Correct card type returned for MasterCard card");
-#pragma clang diagnostic pop
-}
-
 - (void)testCardEquals {
-    STPCard *card1 = [[STPCard alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
-    STPCard *card2 = [[STPCard alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
+    STPCard *card1 = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPCard *card2 = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
 
     XCTAssertEqualObjects(card1, card1, @"card should equal itself");
     XCTAssertEqualObjects(card1, card2, @"cards with equal data should be equal");
-
-    card2.addressCity = @"My Fake City";
-    XCTAssertNotEqualObjects(card1, card2, @"cards should not match");
 }
 
 @end

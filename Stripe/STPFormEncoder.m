@@ -7,84 +7,20 @@
 //
 
 #import "STPFormEncoder.h"
-#import "STPBankAccount.h"
-#import "STPCard.h"
+#import "STPBankAccountParams.h"
+#import "STPCardParams.h"
+#import "STPFormEncodable.h"
 
 @implementation STPFormEncoder
 
-+ (NSData *)formEncodedDataForBankAccount:(STPBankAccount *)bankAccount {
-    NSCAssert(bankAccount != nil, @"Cannot create a token with a nil bank account.");
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
++ (nonnull NSData *)formEncodedDataForObject:(nonnull NSObject<STPFormEncodable> *)object {
     NSMutableArray *parts = [NSMutableArray array];
-    
-    if (bankAccount.accountNumber) {
-        params[@"account_number"] = bankAccount.accountNumber;
-    }
-    if (bankAccount.routingNumber) {
-        params[@"routing_number"] = bankAccount.routingNumber;
-    }
-    if (bankAccount.country) {
-        params[@"country"] = bankAccount.country;
-    }
-    if (bankAccount.currency) {
-        params[@"currency"] = bankAccount.currency;
-    }
-    
-    [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, __unused BOOL *stop) {
-        [parts addObject:[NSString stringWithFormat:@"bank_account[%@]=%@", key, [self.class stringByURLEncoding:val]]];
+    [[object propertyNamesToFormFieldNamesMapping] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull propertyName, NSString *  _Nonnull formFieldName, __unused BOOL * _Nonnull stop) {
+        NSString *formFieldValue = [[object valueForKey:propertyName] description];
+        if (formFieldValue) {
+            [parts addObject:[NSString stringWithFormat:@"%@[%@]=%@", [object rootObjectName], formFieldName, [self.class stringByURLEncoding:formFieldValue]]];
+        }
     }];
-    
-    return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
-}
-
-+ (NSData *)formEncodedDataForCard:(STPCard *)card {
-    NSCAssert(card != nil, @"Cannot create a token with a nil card.");
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    
-    if (card.number) {
-        params[@"number"] = card.number;
-    }
-    if (card.cvc) {
-        params[@"cvc"] = card.cvc;
-    }
-    if (card.name) {
-        params[@"name"] = card.name;
-    }
-    if (card.addressLine1) {
-        params[@"address_line1"] = card.addressLine1;
-    }
-    if (card.addressLine2) {
-        params[@"address_line2"] = card.addressLine2;
-    }
-    if (card.addressCity) {
-        params[@"address_city"] = card.addressCity;
-    }
-    if (card.addressState) {
-        params[@"address_state"] = card.addressState;
-    }
-    if (card.addressZip) {
-        params[@"address_zip"] = card.addressZip;
-    }
-    if (card.addressCountry) {
-        params[@"address_country"] = card.addressCountry;
-    }
-    if (card.expMonth) {
-        params[@"exp_month"] = @(card.expMonth).stringValue;
-    }
-    if (card.expYear) {
-        params[@"exp_year"] = @(card.expYear).stringValue;
-    }
-    if (card.currency) {
-        params[@"currency"] = card.currency;
-    }
-    
-    NSMutableArray *parts = [NSMutableArray array];
-    
-    [params enumerateKeysAndObjectsUsingBlock:^(id key, id val, __unused BOOL *stop) {
-        [parts addObject:[NSString stringWithFormat:@"card[%@]=%@", key, [self.class stringByURLEncoding:val]]];
-        
-    }];
-    
     return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
 }
 

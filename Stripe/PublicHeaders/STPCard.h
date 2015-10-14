@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 
 #import "STPCardBrand.h"
+#import "STPCardParams.h"
+#import "STPAPIResponseDecodable.h"
 
 /**
  *  The various funding sources for a payment card.
@@ -21,20 +23,19 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 };
 
 /**
- *  Representation of a user's credit card details. You can assemble these with information that your user enters and
- *  then create Stripe tokens with them using an STPAPIClient. @see https://stripe.com/docs/api#cards
+ *  Representation of a user's credit card details that have been tokenized with the Stripe API. @see https://stripe.com/docs/api#cards
  */
-@interface STPCard : NSObject
+@interface STPCard : STPCardParams<STPAPIResponseDecodable>
 
 /**
  *  The card's number. This will be nil for cards retrieved from the Stripe API.
  */
-@property (nonatomic, copy, nullable) NSString *number;
+
 
 /**
- *  The last 4 digits of the card. Unlike number, this will be present on cards retrieved from the Stripe API.
+ *  The last 4 digits of the card.
  */
-@property (nonatomic, readonly, nullable) NSString *last4;
+@property (nonatomic, readonly, nonnull) NSString *last4;
 
 /**
  *  For cards made with Apple Pay, this refers to the last 4 digits of the "Device Account Number" for the tokenized card. For regular cards, it will be nil.
@@ -50,11 +51,6 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
  *  The card's expiration year.
  */
 @property (nonatomic) NSUInteger expYear;
-
-/**
- *  The card's security code, found on the back. This will be nil for cards retrieved from the Stripe API.
- */
-@property (nonatomic, copy, nullable) NSString *cvc;
 
 /**
  *  The cardholder's name.
@@ -109,38 +105,21 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
  */
 @property (nonatomic, copy, nullable) NSString *currency;
 
-/**
- *  Validate each field of the card.
- *  @return whether or not that field is valid.
- *  @deprecated use STPCardValidator instead.
- */
-- (BOOL)validateNumber:(__nullable id * __nullable )ioValue
-                 error:(NSError * __nullable * __nullable )outError __attribute__((deprecated("Use STPCardValidator instead.")));
-- (BOOL)validateCvc:(__nullable id * __nullable )ioValue
-              error:(NSError * __nullable * __nullable )outError __attribute__((deprecated("Use STPCardValidator instead.")));
-- (BOOL)validateExpMonth:(__nullable  id * __nullable )ioValue
-                   error:(NSError * __nullable * __nullable )outError __attribute__((deprecated("Use STPCardValidator instead.")));
-- (BOOL)validateExpYear:(__nullable id * __nullable)ioValue
-                  error:(NSError * __nullable * __nullable )outError __attribute__((deprecated("Use STPCardValidator instead.")));
+#pragma mark - deprecated properties
 
-/**
- *  This validates a fully populated card to check for all errors, including ones that come about
- *  from the interaction of more than one property. It will also do all the validations on individual
- *  properties, so if you only want to call one method on your card to validate it after setting all the
- *  properties, call this one
- *
- *  @param outError a pointer to an NSError that, after calling this method, will be populated with an error if the card is not valid. See StripeError.h for
- possible values
- *
- *  @return whether or not the card is valid.
- *  @deprecated use STPCardValidator instead.
- */
-- (BOOL)validateCardReturningError:(NSError * __nullable * __nullable)outError __attribute__((deprecated("Use STPCardValidator instead.")));
+#define DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS __attribute__((deprecated("For collecting your users' credit card details, you should use an STPCardParams object instead of an STPCard.")))
 
-@end
+@property (nonatomic, copy, nullable) NSString *number DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
+@property (nonatomic, copy, nullable) NSString *cvc DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
+- (void)setExpMonth:(NSUInteger)expMonth DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
+- (void)setExpYear:(NSUInteger)expYear DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
+- (void)setName:(nullable NSString *)name DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
+- (void)setAddressLine1:(nullable NSString *)addressLine1 DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
+- (void)setAddressLine2:(nullable NSString *)addressLine2 DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
+- (void)setAddressCity:(nullable NSString *)addressCity DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
+- (void)setAddressState:(nullable NSString *)addressState DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
+- (void)setAddressZip:(nullable NSString *)addressZip DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
+- (void)setAddressCountry:(nullable NSString *)addressCountry DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
 
-// This method is used internally by Stripe to deserialize API responses and exposed here for convenience and testing purposes only. You should not use it in
-// your own code.
-@interface STPCard (PrivateMethods)
-- (nonnull instancetype)initWithAttributeDictionary:(nonnull NSDictionary *)attributeDictionary;
+
 @end
