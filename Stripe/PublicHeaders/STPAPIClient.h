@@ -55,7 +55,7 @@ typedef void (^STPCompletionBlock)(STPToken * __nullable token, NSError * __null
 @property (nonatomic, copy, nullable) NSString *publishableKey;
 
 /**
- *  The operation queue on which to run completion blocks passed to the api client. Cannot be nil.
+ *  The operation queue on which to run completion blocks passed to the api client. Defaults to [NSOperationQueue mainQueue].
  */
 @property (nonatomic, nonnull) NSOperationQueue *operationQueue;
 

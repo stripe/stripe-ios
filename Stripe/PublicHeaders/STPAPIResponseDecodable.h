@@ -10,6 +10,7 @@
 
 @protocol STPAPIResponseDecodable <NSObject>
 
++ (nonnull NSArray *)requiredFields;
 + (nullable instancetype)decodedObjectFromAPIResponse:(nonnull NSDictionary *)response;
 
 @end

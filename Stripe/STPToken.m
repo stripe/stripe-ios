@@ -58,6 +58,10 @@
 
 #pragma mark STPAPIResponseDecodable
 
++ (NSArray *)requiredFields {
+    return @[@"id", @"livemode", @"created"];
+}
+
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
     STPToken *token = [self new];
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
@@ -66,8 +70,13 @@
             dict[key] = obj;
         }
     }];
+    for (NSString *key in [self requiredFields]) {
+        if (![[dict allKeys] containsObject:key]) {
+            return nil;
+        }
+    }
     
-    token.tokenId = dict[@"id"] ?: @"";
+    token.tokenId = dict[@"id"];
     token.livemode = [dict[@"livemode"] boolValue];
     token.created = [NSDate dateWithTimeIntervalSince1970:[dict[@"created"] doubleValue]];
     

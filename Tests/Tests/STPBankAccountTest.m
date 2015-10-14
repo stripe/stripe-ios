@@ -29,8 +29,7 @@
         @"country": @"US",
         @"fingerprint": @"something",
         @"currency": @"usd",
-        @"validated": @(NO),
-        @"disabled": @(NO)
+        @"status": @"new",
     };
 }
 
@@ -43,8 +42,7 @@
     XCTAssertEqualObjects([bankAccountWithAttributes country], @"US", @"country is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes fingerprint], @"something", @"fingerprint is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes currency], @"usd", @"currency is set correctly");
-    XCTAssertEqual([bankAccountWithAttributes validated], NO, @"validated is set correctly");
-    XCTAssertEqual([bankAccountWithAttributes disabled], NO, @"disabled is set correctly");
+    XCTAssertEqual(bankAccountWithAttributes.status, STPBankAccountStatusNew);
 }
 
 - (void)testFormEncode {

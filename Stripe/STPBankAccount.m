@@ -14,8 +14,7 @@
 @property (nonatomic, readwrite) NSString *last4;
 @property (nonatomic, readwrite) NSString *bankName;
 @property (nonatomic, readwrite) NSString *fingerprint;
-@property (nonatomic, readwrite) BOOL validated;
-@property (nonatomic, readwrite) BOOL disabled;
+@property (nonatomic) STPBankAccountStatus status;
 
 @end
 
@@ -53,7 +52,19 @@
     return [self.bankAccountId isEqualToString:bankAccount.bankAccountId];
 }
 
+- (BOOL)validated {
+    return self.status == STPBankAccountStatusValidated;
+}
+
+- (BOOL)disabled {
+    return self.status == STPBankAccountStatusErrored;
+}
+
 #pragma mark STPAPIResponseDecodable
+
++ (NSArray *)requiredFields {
+    return @[@"id", @"last4", @"bank_name", @"country", @"currency", @"status"];
+}
 
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
     STPBankAccount *bankAccount = [self new];
@@ -63,6 +74,11 @@
             dict[key] = obj;
         }
     }];
+    for (NSString *key in [self requiredFields]) {
+        if (![[dict allKeys] containsObject:key]) {
+            return nil;
+        }
+    }
     
     bankAccount.bankAccountId = dict[@"id"];
     bankAccount.last4 = dict[@"last4"];
@@ -70,8 +86,16 @@
     bankAccount.country = dict[@"country"];
     bankAccount.fingerprint = dict[@"fingerprint"];
     bankAccount.currency = dict[@"currency"];
-    bankAccount.validated = [dict[@"validated"] boolValue];
-    bankAccount.disabled = [dict[@"disabled"] boolValue];
+    NSString *status = dict[@"status"];
+    if ([status isEqual: @"new"]) {
+        bankAccount.status = STPBankAccountStatusNew;
+    } else if ([status isEqual: @"validated"]) {
+        bankAccount.status = STPBankAccountStatusValidated;
+    } else if ([status isEqual: @"verified"]) {
+        bankAccount.status = STPBankAccountStatusVerified;
+    } else if ([status isEqual: @"errored"]) {
+        bankAccount.status = STPBankAccountStatusErrored;
+    }
     return bankAccount;
 }
 

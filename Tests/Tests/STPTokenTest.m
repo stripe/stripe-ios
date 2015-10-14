@@ -17,16 +17,17 @@
 @implementation STPTokenTest
 - (void)testCreatingTokenWithAttributeDictionarySetsAttributes {
     NSDictionary *cardDict = @{
-        @"expMonth": @"12",
-        @"expYear": @"2013",
+        @"id": @"card_123",
+        @"exp_month": @"12",
+        @"exp_year": @"2013",
         @"name": @"Smerlock Smolmes",
-        @"addressLine1": @"221A Baker Street",
-        @"addressCity": @"New York",
-        @"addressState": @"NY",
-        @"addressZip": @"12345",
-        @"addressCountry": @"USA",
+        @"address_line1": @"221A Baker Street",
+        @"address_city": @"New York",
+        @"address_state": @"NY",
+        @"address_zip": @"12345",
+        @"address_country": @"USA",
         @"last4": @"1234",
-        @"type": @"Smastersmard",
+        @"brand": @"Visa",
         @"fingerprint": @"Fingolfin",
         @"country": @"Japan"
     };

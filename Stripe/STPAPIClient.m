@@ -18,6 +18,7 @@
 #import "STPCard.h"
 #import "STPToken.h"
 #import "StripeError.h"
+#import "STPAPIResponseDecodable.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -43,6 +44,55 @@ static NSString *STPDefaultPublishableKey;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
 @end
 
+@interface STPAPIPostRequest<__covariant ResponseType:id<STPAPIResponseDecodable>> : NSObject
+
++ (void)startWithAPIClient:(STPAPIClient *)apiClient
+                  endpoint:(NSString *)endpoint
+                  postData:(NSData *)postData
+                serializer:(ResponseType)serializer
+                completion:(void (^)(ResponseType object, NSError *error))completion;
+
+@end
+
+@implementation STPAPIPostRequest
+
++ (void)startWithAPIClient:(STPAPIClient *)apiClient
+                  endpoint:(NSString *)endpoint
+                  postData:(NSData *)postData
+                serializer:(id<STPAPIResponseDecodable>)serializer
+                completion:(void (^)(id<STPAPIResponseDecodable>, NSError *))completion {
+    
+    NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    request.HTTPBody = postData;
+    
+    [[apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, __unused NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSDictionary *jsonDictionary = body ? [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL] : nil;
+        id<STPAPIResponseDecodable> responseObject = [[serializer class] decodedObjectFromAPIResponse:jsonDictionary];
+        NSError *returnedError = [STPError errorFromStripeResponse:jsonDictionary] ?: error;
+        if (!responseObject && !returnedError) {
+            NSDictionary *userInfo = @{
+                                       NSLocalizedDescriptionKey: STPUnexpectedError,
+                                       STPErrorMessageKey: @"The response from Stripe failed to get parsed into valid JSON."
+                                       };
+            returnedError = [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
+        }
+        if (returnedError) {
+            [apiClient.operationQueue addOperationWithBlock:^{
+                completion(nil, returnedError);
+            }];
+            return;
+        }
+        [apiClient.operationQueue addOperationWithBlock:^{
+            completion(responseObject, nil);
+        }];
+    }] resume];
+
+}
+
+@end
+
 @implementation STPAPIClient
 
 + (instancetype)sharedClient {
@@ -60,14 +110,14 @@ static NSString *STPDefaultPublishableKey;
     self = [super init];
     if (self) {
         [self.class validateKey:publishableKey];
-        _apiURL = [[[NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]] URLByAppendingPathComponent:apiVersion]
-            URLByAppendingPathComponent:tokenEndpoint];
+        _apiURL = [[NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]] URLByAppendingPathComponent:apiVersion];
         _publishableKey = [publishableKey copy];
         _operationQueue = [NSOperationQueue mainQueue];
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         NSString *auth = [@"Bearer " stringByAppendingString:self.publishableKey];
         config.HTTPAdditionalHeaders = @{
                                          @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
+                                         @"Stripe-Version": @"2015-10-12",
                                          @"Authorization": auth,
                                          };
         _urlSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:_operationQueue];
@@ -83,48 +133,11 @@ static NSString *STPDefaultPublishableKey;
 - (void)createTokenWithData:(NSData *)data completion:(STPCompletionBlock)completion {
     NSCAssert(data != nil, @"'data' is required to create a token");
     NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
-    
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.apiURL];
-    request.HTTPMethod = @"POST";
-    request.HTTPBody = data;
-    
-    [[self.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (error) {
-            // If this is an error that Stripe returned, let's handle it as a StripeDomain error
-            if (body) {
-                NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL];
-                if ([jsonDictionary valueForKey:@"error"] != nil) {
-                    [self.operationQueue addOperationWithBlock:^{
-                        completion(nil, [self.class errorFromStripeResponse:jsonDictionary]);
-                    }];
-                    return;
-                }
-            }
-            [self.operationQueue addOperationWithBlock:^{
-                completion(nil, error);
-            }];
-            return;
-        } else {
-            NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL];
-            if (!jsonDictionary) {
-                NSDictionary *userInfo = @{
-                                           NSLocalizedDescriptionKey: STPUnexpectedError,
-                                           STPErrorMessageKey: @"The response from Stripe failed to get parsed into valid JSON."
-                                           };
-                NSError *jsonError = [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
-                completion(nil, jsonError);
-            } else if ([(NSHTTPURLResponse *)response statusCode] == 200) {
-                [self.operationQueue addOperationWithBlock:^{
-                                     STPToken *token = [STPToken decodedObjectFromAPIResponse:jsonDictionary];
-                                     completion(token, nil);
-                }];
-            } else {
-                [self.operationQueue addOperationWithBlock:^{
-                    completion(nil, [self.class errorFromStripeResponse:jsonDictionary]);
-                }];
-            }
-        }
-    }] resume];
+    [STPAPIPostRequest<STPToken *> startWithAPIClient:self
+                                             endpoint:tokenEndpoint
+                                             postData:data
+                                           serializer:[STPToken new]
+                                           completion:completion];
 }
 
 #pragma mark - private helpers
@@ -146,62 +159,6 @@ static NSString *STPDefaultPublishableKey;
 #endif
 }
 #pragma clang diagnostic pop
-
-+ (NSError *)errorFromStripeResponse:(NSDictionary *)jsonDictionary {
-    NSDictionary *errorDictionary = jsonDictionary[@"error"];
-    NSString *type = errorDictionary[@"type"];
-    NSString *devMessage = errorDictionary[@"message"];
-    NSString *parameter = errorDictionary[@"param"];
-    NSInteger code = 0;
-
-    // There should always be a message and type for the error
-    if (devMessage == nil || type == nil) {
-        NSDictionary *userInfo = @{
-            NSLocalizedDescriptionKey: STPUnexpectedError,
-            STPErrorMessageKey: @"Could not interpret the error response that was returned from Stripe."
-        };
-        return [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
-    }
-
-    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-    userInfo[STPErrorMessageKey] = devMessage;
-
-    if (parameter) {
-        userInfo[STPErrorParameterKey] = [STPFormEncoder stringByReplacingSnakeCaseWithCamelCase:parameter];
-    }
-
-    if ([type isEqualToString:@"api_error"]) {
-        code = STPAPIError;
-        userInfo[NSLocalizedDescriptionKey] = STPUnexpectedError;
-    } else if ([type isEqualToString:@"invalid_request_error"]) {
-        code = STPInvalidRequestError;
-        userInfo[NSLocalizedDescriptionKey] = devMessage;
-    } else if ([type isEqualToString:@"card_error"]) {
-        code = STPCardError;
-        NSDictionary *errorCodes = @{
-            @"incorrect_number": @{@"code": STPIncorrectNumber, @"message": STPCardErrorInvalidNumberUserMessage},
-            @"invalid_number": @{@"code": STPInvalidNumber, @"message": STPCardErrorInvalidNumberUserMessage},
-            @"invalid_expiry_month": @{@"code": STPInvalidExpMonth, @"message": STPCardErrorInvalidExpMonthUserMessage},
-            @"invalid_expiry_year": @{@"code": STPInvalidExpYear, @"message": STPCardErrorInvalidExpYearUserMessage},
-            @"invalid_cvc": @{@"code": STPInvalidCVC, @"message": STPCardErrorInvalidCVCUserMessage},
-            @"expired_card": @{@"code": STPExpiredCard, @"message": STPCardErrorExpiredCardUserMessage},
-            @"incorrect_cvc": @{@"code": STPIncorrectCVC, @"message": STPCardErrorInvalidCVCUserMessage},
-            @"card_declined": @{@"code": STPCardDeclined, @"message": STPCardErrorDeclinedUserMessage},
-            @"processing_error": @{@"code": STPProcessingError, @"message": STPCardErrorProcessingErrorUserMessage},
-        };
-        NSDictionary *codeMapEntry = errorCodes[errorDictionary[@"code"]];
-
-        if (codeMapEntry) {
-            userInfo[STPCardErrorCodeKey] = codeMapEntry[@"code"];
-            userInfo[NSLocalizedDescriptionKey] = codeMapEntry[@"message"];
-        } else {
-            userInfo[STPCardErrorCodeKey] = errorDictionary[@"code"];
-            userInfo[NSLocalizedDescriptionKey] = devMessage;
-        }
-    }
-
-    return [[NSError alloc] initWithDomain:StripeDomain code:code userInfo:userInfo];
-}
 
 #pragma mark Utility methods -
 

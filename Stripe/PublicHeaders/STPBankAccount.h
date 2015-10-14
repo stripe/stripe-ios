@@ -10,6 +10,13 @@
 #import "STPBankAccountParams.h"
 #import "STPAPIResponseDecodable.h"
 
+typedef NS_ENUM(NSInteger, STPBankAccountStatus) {
+    STPBankAccountStatusNew,
+    STPBankAccountStatusValidated,
+    STPBankAccountStatusVerified,
+    STPBankAccountStatusErrored,
+};
+
 /**
  *  Representation of a user's bank account details that have been tokenized with the Stripe API. @see https://stripe.com/docs/api#cards
  */
@@ -23,7 +30,7 @@
 /**
  *  The routing number for the bank account. This should be the ACH routing number, not the wire routing number.
  */
-@property (nonatomic, copy, nullable) NSString *routingNumber;
+@property (nonatomic, copy, nonnull) NSString *routingNumber;
 
 /**
  *  Two-letter ISO code representing the country the bank account is located in.
@@ -38,7 +45,7 @@
 /**
  *  The Stripe ID for the bank account.
  */
-@property (nonatomic, readonly, nullable) NSString *bankAccountId;
+@property (nonatomic, readonly, nonnull) NSString *bankAccountId;
 
 /**
  *  The last 4 digits of the account number.
@@ -56,14 +63,21 @@
 @property (nonatomic, readonly, nullable) NSString *fingerprint;
 
 /**
- *  Whether or not the bank account has been validated via microdeposits or other means.
+ *  The validation status of the bank account. @see STPBankAccountStatus
  */
-@property (nonatomic, readonly) BOOL validated;
+@property (nonatomic, readonly) STPBankAccountStatus status;
+
+/**
+ *  Whether or not the bank account has been validated via microdeposits or other means.
+ *  @deprecated Use status == STPBankAccountStatusValidated instead.
+ */
+@property (nonatomic, readonly) BOOL validated __attribute__((deprecated("Use status == STPBankAccountStatusValidated instead.")));
 
 /**
  *  Whether or not the bank account is currently disabled.
+ *  @deprecated Use status == STPBankAccountStatusErrored instead.
  */
-@property (nonatomic, readonly) BOOL disabled;
+@property (nonatomic, readonly) BOOL disabled __attribute__((deprecated("Use status == STPBankAccountStatusErrored instead.")));
 
 #pragma mark - deprecated setters for STPBankAccountParams properties
 
