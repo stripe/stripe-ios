@@ -177,6 +177,15 @@
 		045A62C81B8E73AB000165CE /* stp_card_visa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0438EFA21B741C2800D506CC /* stp_card_visa@2x.png */; };
 		045A62C91B8E73AB000165CE /* stp_card_visa@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0438EFA31B741C2800D506CC /* stp_card_visa@3x.png */; };
 		045E7C091A5F41DE004751EF /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; };
+		049952CF1BCF13510088C703 /* STPAPIPostRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 049952CD1BCF13510088C703 /* STPAPIPostRequest.h */; settings = {ASSET_TAGS = (); }; };
+		049952D01BCF13510088C703 /* STPAPIPostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 049952CE1BCF13510088C703 /* STPAPIPostRequest.m */; settings = {ASSET_TAGS = (); }; };
+		049952D21BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */; settings = {ASSET_TAGS = (); }; };
+		049952D31BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */; settings = {ASSET_TAGS = (); }; };
+		049952D41BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */; settings = {ASSET_TAGS = (); }; };
+		049952D51BCF14920088C703 /* STPAPIPostRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 049952CD1BCF13510088C703 /* STPAPIPostRequest.h */; settings = {ASSET_TAGS = (); }; };
+		049952D61BCF14930088C703 /* STPAPIPostRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 049952CD1BCF13510088C703 /* STPAPIPostRequest.h */; settings = {ASSET_TAGS = (); }; };
+		049952D71BCF14980088C703 /* STPAPIPostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 049952CE1BCF13510088C703 /* STPAPIPostRequest.m */; settings = {ASSET_TAGS = (); }; };
+		049952D81BCF14990088C703 /* STPAPIPostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 049952CE1BCF13510088C703 /* STPAPIPostRequest.m */; settings = {ASSET_TAGS = (); }; };
 		049E84C21A605DE0000B66CD /* STPAPIClient+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4AB1A5F30A700B854EE /* STPAPIClient+ApplePay.m */; };
 		049E84C31A605DE0000B66CD /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4AD1A5F30A700B854EE /* Stripe+ApplePay.m */; };
 		049E84C51A605DE0000B66CD /* STPCheckoutOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB4B21A5F30A700B854EE /* STPCheckoutOptions.m */; };
@@ -405,6 +414,9 @@
 		0438EFA31B741C2800D506CC /* stp_card_visa@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_visa@3x.png"; sourceTree = "<group>"; };
 		045A62AA1B8E7259000165CE /* STPPaymentCardTextFieldTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentCardTextFieldTest.m; sourceTree = "<group>"; };
 		045E7C031A5F41DE004751EF /* StripeiOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "StripeiOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		049952CD1BCF13510088C703 /* STPAPIPostRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPAPIPostRequest.h; sourceTree = "<group>"; };
+		049952CE1BCF13510088C703 /* STPAPIPostRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAPIPostRequest.m; sourceTree = "<group>"; };
+		049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPAPIClient+Private.h"; sourceTree = "<group>"; };
 		049E84AB1A605D93000B66CD /* libStripe.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStripe.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B94BC71A47B78A00092C46 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKPayment+StripeTest.m"; sourceTree = "<group>"; };
@@ -640,6 +652,9 @@
 				0438EF251B74162700D506CC /* UI */,
 				04CDB4C21A5F30A700B854EE /* STPAPIClient.h */,
 				04CDB4C31A5F30A700B854EE /* STPAPIClient.m */,
+				049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */,
+				049952CD1BCF13510088C703 /* STPAPIPostRequest.h */,
+				049952CE1BCF13510088C703 /* STPAPIPostRequest.m */,
 				04CDB4C41A5F30A700B854EE /* STPFormEncoder.h */,
 				04CDB4C51A5F30A700B854EE /* STPFormEncoder.m */,
 				04CDE5C81BC20B1D00548833 /* STPBankAccountParams.h */,
@@ -810,6 +825,7 @@
 				049E84EB1A605EF0000B66CD /* STPToken.h in Headers */,
 				04E32AA01B7A9490009C9E35 /* STPPaymentCardTextField.h in Headers */,
 				0438EF491B74183100D506CC /* STPCardBrand.h in Headers */,
+				049952D61BCF14930088C703 /* STPAPIPostRequest.h in Headers */,
 				04F213331BCEAB61001D6F22 /* STPFormEncodable.h in Headers */,
 				049E84EC1A605EF0000B66CD /* StripeError.h in Headers */,
 				049E84DF1A605EF0000B66CD /* STPCheckoutDelegate.h in Headers */,
@@ -818,6 +834,7 @@
 				049E84E11A605EF0000B66CD /* STPCheckoutWebViewAdapter.h in Headers */,
 				049E84E21A605EF0000B66CD /* STPColorUtils.h in Headers */,
 				04CDE5CB1BC20B1D00548833 /* STPBankAccountParams.h in Headers */,
+				049952D41BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */,
 				0438EF3A1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h in Headers */,
 				04CDE5BE1BC1F21500548833 /* STPCardParams.h in Headers */,
 				04F213371BCECB1C001D6F22 /* STPAPIResponseDecodable.h in Headers */,
@@ -840,7 +857,9 @@
 				04CDB4E41A5F30A700B854EE /* STPCheckoutViewController.h in Headers */,
 				0438EF2C1B7416BB00D506CC /* STPFormTextField.h in Headers */,
 				04CDB50A1A5F30A700B854EE /* STPBankAccount.h in Headers */,
+				049952D21BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */,
 				04CDB5121A5F30A700B854EE /* STPToken.h in Headers */,
+				049952CF1BCF13510088C703 /* STPAPIPostRequest.h in Headers */,
 				04CDB4D81A5F30A700B854EE /* Stripe+ApplePay.h in Headers */,
 				0438EF471B74183100D506CC /* STPCardBrand.h in Headers */,
 				04CDB5161A5F30A700B854EE /* StripeError.h in Headers */,
@@ -878,9 +897,11 @@
 				04F213321BCEAB61001D6F22 /* STPFormEncodable.h in Headers */,
 				04D12C391A5F55D10010446E /* STPAPIClient.h in Headers */,
 				04D12C3C1A5F55D10010446E /* STPBankAccount.h in Headers */,
+				049952D31BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */,
 				04D12C3D1A5F55D10010446E /* STPCard.h in Headers */,
 				04D12C3E1A5F55D10010446E /* STPToken.h in Headers */,
 				04D12C3F1A5F55D10010446E /* StripeError.h in Headers */,
+				049952D51BCF14920088C703 /* STPAPIPostRequest.h in Headers */,
 				0438EFDB1B7524AA00D506CC /* STPCardBrand.h in Headers */,
 				04D12C321A5F55D10010446E /* STPCheckoutDelegate.h in Headers */,
 				04D12C331A5F55D10010446E /* STPCheckoutInternalUIWebViewController.h in Headers */,
@@ -1255,6 +1276,7 @@
 				04CDE5BA1BC1F1F100548833 /* STPCardParams.m in Sources */,
 				049E84D11A605DE0000B66CD /* STPToken.m in Sources */,
 				049E84D21A605DE0000B66CD /* StripeError.m in Sources */,
+				049952D81BCF14990088C703 /* STPAPIPostRequest.m in Sources */,
 				04CDE5C71BC20AF800548833 /* STPBankAccountParams.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1284,6 +1306,7 @@
 				04CDE5B81BC1F1F100548833 /* STPCardParams.m in Sources */,
 				04CDB4D61A5F30A700B854EE /* STPAPIClient+ApplePay.m in Sources */,
 				04CDB4E61A5F30A700B854EE /* STPCheckoutViewController.m in Sources */,
+				049952D01BCF13510088C703 /* STPAPIPostRequest.m in Sources */,
 				04CDE5C51BC20AF800548833 /* STPBankAccountParams.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1306,6 +1329,7 @@
 				04D12C281A5F55AD0010446E /* STPBankAccount.m in Sources */,
 				04D12C291A5F55AD0010446E /* STPCard.m in Sources */,
 				04D12C2A1A5F55AD0010446E /* STPToken.m in Sources */,
+				049952D71BCF14980088C703 /* STPAPIPostRequest.m in Sources */,
 				04D12C2B1A5F55AD0010446E /* StripeError.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
