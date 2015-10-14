@@ -18,7 +18,7 @@
 @implementation STPBankAccountTest
 
 - (void)setUp {
-    _bankAccount = [[STPBankAccountParams alloc] init];
+    _bankAccount = [[STPBankAccount alloc] init];
 }
 
 - (NSDictionary *)completeAttributeDictionary {
