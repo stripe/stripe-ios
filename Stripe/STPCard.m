@@ -36,6 +36,10 @@
     return self;
 }
 
+- (NSString *)last4 {
+    return _last4 ?: [super last4];
+}
+
 - (NSString *)type {
     switch (self.brand) {
     case STPCardBrandAmex:

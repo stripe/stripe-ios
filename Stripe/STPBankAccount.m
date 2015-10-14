@@ -27,6 +27,10 @@
     [super setAccountNumber:accountNumber];
 }
 
+- (NSString *)last4 {
+    return _last4 ?: [super last4];
+}
+
 #pragma mark - Equality
 
 - (BOOL)isEqual:(STPBankAccount *)bankAccount {
