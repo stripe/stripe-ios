@@ -234,7 +234,8 @@ static NSString *STPDefaultPublishableKey;
 @implementation STPAPIClient (BankAccounts)
 
 - (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount completion:(STPCompletionBlock)completion {
-    [self createTokenWithData:[STPFormEncoder formEncodedDataForBankAccountParams:bankAccount] completion:completion];
+    NSData *data = [STPFormEncoder formEncodedDataForObject:bankAccount];
+    [self createTokenWithData:data completion:completion];
 }
 
 @end
@@ -243,7 +244,8 @@ static NSString *STPDefaultPublishableKey;
 @implementation STPAPIClient (CreditCards)
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)completion {
-    [self createTokenWithData:[STPFormEncoder formEncodedDataForCardParams:card] completion:completion];
+    NSData *data = [STPFormEncoder formEncodedDataForObject:card];
+    [self createTokenWithData:data completion:completion];
 }
 
 @end

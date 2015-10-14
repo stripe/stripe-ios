@@ -9,12 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @class STPCardParams, STPBankAccountParams;
+@protocol STPFormEncodable;
 
 @interface STPFormEncoder : NSObject
 
-+ (nonnull NSData *)formEncodedDataForBankAccountParams:(nonnull STPBankAccountParams *)bankAccount;
-
-+ (nonnull NSData *)formEncodedDataForCardParams:(nonnull STPCardParams *)card;
++ (nonnull NSData *)formEncodedDataForObject:(nonnull NSObject<STPFormEncodable> *)object;
 
 + (nonnull NSString *)stringByURLEncoding:(nonnull NSString *)string;
 

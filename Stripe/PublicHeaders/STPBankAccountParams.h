@@ -7,12 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "STPFormEncodable.h"
 
 /**
  *  Representation of a user's bank account details. You can assemble these with information that your user enters and
  *  then create Stripe tokens with them using an STPAPIClient. @see https://stripe.com/docs/api#create_bank_account_token
  */
-@interface STPBankAccountParams : NSObject
+@interface STPBankAccountParams : NSObject<STPFormEncodable>
 
 /**
  *  The account number for the bank account. Currently must be a checking account.
