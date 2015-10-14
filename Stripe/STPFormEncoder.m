@@ -17,7 +17,9 @@
     NSMutableArray *parts = [NSMutableArray array];
     [[object propertyNamesToFormFieldNamesMapping] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull propertyName, NSString *  _Nonnull formFieldName, __unused BOOL * _Nonnull stop) {
         NSString *formFieldValue = [[object valueForKey:propertyName] description];
-        [parts addObject:[NSString stringWithFormat:@"%@[%@]=%@", [object rootObjectName], formFieldName, [self.class stringByURLEncoding:formFieldValue]]];
+        if (formFieldValue) {
+            [parts addObject:[NSString stringWithFormat:@"%@[%@]=%@", [object rootObjectName], formFieldName, [self.class stringByURLEncoding:formFieldValue]]];
+        }
     }];
     return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
 }

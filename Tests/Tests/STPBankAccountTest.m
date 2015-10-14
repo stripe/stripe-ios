@@ -18,7 +18,7 @@
 @implementation STPBankAccountTest
 
 - (void)setUp {
-    _bankAccount = [[STPBankAccount alloc] init];
+    _bankAccount = [[STPBankAccountParams alloc] init];
 }
 
 #pragma mark - initWithAttributeDictionary: Tests
@@ -53,7 +53,7 @@
     NSDictionary *attributes = [self completeAttributeDictionary];
     STPBankAccount *bankAccountWithAttributes = [[STPBankAccount alloc] initWithAttributeDictionary:attributes];
 
-    NSData *encoded = [STPFormEncoder formEncodedDataForBankAccountParams:bankAccountWithAttributes];
+    NSData *encoded = [STPFormEncoder formEncodedDataForObject:bankAccountWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
 
     NSArray *parts = [formData componentsSeparatedByString:@"&"];

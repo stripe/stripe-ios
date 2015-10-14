@@ -75,7 +75,7 @@
     NSDictionary *attributes = [self completeAttributeDictionary];
     STPCard *cardWithAttributes = [[STPCard alloc] initWithAttributeDictionary:attributes];
 
-    NSData *encoded = [STPFormEncoder formEncodedDataForCardParams:cardWithAttributes];
+    NSData *encoded = [STPFormEncoder formEncodedDataForObject:cardWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
 
     NSArray *parts = [formData componentsSeparatedByString:@"&"];
