@@ -89,13 +89,19 @@
             // strings)
             //"ignoredFileRegexes": null
         },
-        // Options for rule: Block-typed declaration without typedef
-        "NonTypedefBlockDeclaration": {
-            // Apply only to function/method arguments (Boolean)
-            //"onlyArguments": true
+        // Options for rule: Associated object on value-like type
+        "AssociatedObjectOnValueType": {
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null
+        },
+        // Options for rule: Block-typed declaration without typedef
+        "NonTypedefBlockDeclaration": {
+            // Apply only to function/method arguments (Boolean)
+            //"onlyArguments": true,
+            // Regexes for ignored file paths (Array of regular expression
+            // strings)
+            "ignoredFileRegexes": ["STPAPIPostRequest.*"]
         },
         // Options for rule: Build settings set in Xcode GUI
         "BuildSettingsSetInGUI": {
@@ -126,6 +132,12 @@
         },
         // Options for rule: Code refers to unknown resource
         "UnknownResourceCodeReference": {
+            // Regexes for ignored file paths (Array of regular expression
+            // strings)
+            //"ignoredFileRegexes": null
+        },
+        // Options for rule: Complete NSNotificationCenter detachment
+        "CompleteNotificationCenterDetachment": {
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null
@@ -226,6 +238,16 @@
         "ThreadUnsafeInstanceCaching": {
             // The thread-unsafe classes to warn about (Array of strings)
             "classNames": ["NSDateFormatter","NSMutableArray","NSMutableAttributedString","NSMutableCharacterSet","NSMutableData","NSMutableDictionary","NSMutableSet","NSMutableString","NSNumberFormatter"]
+            // Regexes for ignored file paths (Array of regular expression
+            // strings)
+            //"ignoredFileRegexes": null
+        },
+        // Options for rule: Hardcoded self class reference
+        "HardcodedSelfClass": {
+            // Warn only about allocations (Boolean)
+            //"warnOnlyAboutAlloc": false
+            // Check only factory methods (Boolean)
+            //"checkOnlyFactoryMethods": false
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null
@@ -495,6 +517,10 @@
             //"workspaceIgnored": false
             // Whether CocoaPods data should be ignored (Boolean)
             //"cocoaPodsIgnored": false
+            // Whether Carthage/Build should be ignored (Boolean)
+            //"carthageBuildIgnored": true
+            // Whether Carthage/Checkouts should be ignored (Boolean)
+            //"carthageCheckoutsIgnored": false
             // Whether user-specific AppCode data should be ignored (Boolean)
             //"appCodeUserDataIgnored": true
             // Regexes for ignored file paths (Array of regular expression
@@ -520,6 +546,9 @@
             // Whether the ‘wrap lines’ setting should be set or not ("wrap" /
             // "nowrap")
             //"wrapLines": null
+            // Whether the ‘class prefix’ project setting should have a value
+            // (Boolean)
+            //"expectClassPrefix": true
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null
