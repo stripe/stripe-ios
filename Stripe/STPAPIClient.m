@@ -108,7 +108,8 @@ static NSString *STPDefaultPublishableKey;
                                      NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
                                      completion(nil, error);
                                  } else if ([(NSHTTPURLResponse *)response statusCode] == 200) {
-                                     completion([[STPToken alloc] initWithAttributeDictionary:jsonDictionary], nil);
+                                     STPToken *token = [STPToken decodedObjectFromAPIResponse:jsonDictionary];
+                                     completion(token, nil);
                                  } else {
                                      completion(nil, [self.class errorFromStripeResponse:jsonDictionary]);
                                  }

@@ -10,6 +10,7 @@
 
 #import "STPCardBrand.h"
 #import "STPCardParams.h"
+#import "STPAPIResponseDecodable.h"
 
 /**
  *  The various funding sources for a payment card.
@@ -24,7 +25,7 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 /**
  *  Representation of a user's credit card details that have been tokenized with the Stripe API. @see https://stripe.com/docs/api#cards
  */
-@interface STPCard : STPCardParams
+@interface STPCard : STPCardParams<STPAPIResponseDecodable>
 
 /**
  *  The card's number. This will be nil for cards retrieved from the Stripe API.
@@ -121,10 +122,4 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 - (void)setAddressCountry:(nullable NSString *)addressCountry DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
 
 
-@end
-
-// This method is used internally by Stripe to deserialize API responses and exposed here for convenience and testing purposes only. You should not use it in
-// your own code.
-@interface STPCard (PrivateMethods)
-- (nonnull instancetype)initWithAttributeDictionary:(nonnull NSDictionary *)attributeDictionary;
 @end

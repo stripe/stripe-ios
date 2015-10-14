@@ -8,11 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "STPBankAccountParams.h"
+#import "STPAPIResponseDecodable.h"
 
 /**
  *  Representation of a user's bank account details that have been tokenized with the Stripe API. @see https://stripe.com/docs/api#cards
  */
-@interface STPBankAccount : STPBankAccountParams
+@interface STPBankAccount : STPBankAccountParams<STPAPIResponseDecodable>
 
 /**
  *  The last 4 digits of the bank account's account number.
@@ -69,12 +70,5 @@
 #define DEPRECATED_IN_FAVOR_OF_STPBANKACCOUNTPARAMS __attribute__((deprecated("For collecting your users' bank account details, you should use an STPBankAccountParams object instead of an STPBankAccount.")))
 
 - (void)setAccountNumber:(nullable NSString *)accountNumber DEPRECATED_IN_FAVOR_OF_STPBANKACCOUNTPARAMS;
-
-@end
-
-// This method is used internally by Stripe to deserialize API responses and exposed here for convenience and testing purposes only. You should not use it in your own code.
-@interface STPBankAccount (PrivateMethods)
-
-- (nonnull instancetype)initWithAttributeDictionary:(nonnull NSDictionary *)attributeDictionary;
 
 @end

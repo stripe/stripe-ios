@@ -32,7 +32,7 @@
     };
 
     NSDictionary *tokenDict = @{ @"id": @"id_for_token", @"object": @"token", @"livemode": @NO, @"created": @1353025450.0, @"used": @NO, @"card": cardDict };
-    STPToken *token = [[STPToken alloc] initWithAttributeDictionary:tokenDict];
+    STPToken *token = [STPToken decodedObjectFromAPIResponse:tokenDict];
     XCTAssertEqualObjects([token tokenId], @"id_for_token", @"Generated token has the correct id");
     XCTAssertEqual([token livemode], NO, @"Generated token has the correct livemode");
 

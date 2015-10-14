@@ -49,31 +49,26 @@
     return [self.bankAccountId isEqualToString:bankAccount.bankAccountId];
 }
 
-@end
+#pragma mark STPAPIResponseDecodable
 
-@implementation STPBankAccount (PrivateMethods)
-
-- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary {
-    self = [self init];
-    if (self) {
-        // sanitize NSNull
-        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-        [attributeDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
-            if (obj != [NSNull null]) {
-                dictionary[key] = obj;
-            }
-        }];
-
-        _bankAccountId = dictionary[@"id"];
-        _last4 = dictionary[@"last4"];
-        _bankName = dictionary[@"bank_name"];
-        [self setCountry:dictionary[@"country"]];
-        _fingerprint = dictionary[@"fingerprint"];
-        [self setCurrency:dictionary[@"currency"]];
-        _validated = [dictionary[@"validated"] boolValue];
-        _disabled = [dictionary[@"disabled"] boolValue];
-    }
-    return self;
++ (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
+    STPBankAccount *bankAccount = [STPBankAccount new];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [response enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
+        if (obj != [NSNull null]) {
+            dict[key] = obj;
+        }
+    }];
+    
+    bankAccount.bankAccountId = dict[@"id"];
+    bankAccount.last4 = dict[@"last4"];
+    bankAccount.bankName = dict[@"bank_name"];
+    bankAccount.country = dict[@"country"];
+    bankAccount.fingerprint = dict[@"fingerprint"];
+    bankAccount.currency = dict[@"currency"];
+    bankAccount.validated = [dict[@"validated"] boolValue];
+    bankAccount.disabled = [dict[@"disabled"] boolValue];
+    return bankAccount;
 }
 
 @end

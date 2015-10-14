@@ -75,70 +75,62 @@
     return [self.cardId isEqualToString:other.cardId];
 }
 
-@end
-
-
-@implementation STPCard(PrivateMethods)
-
-- (instancetype)initWithAttributeDictionary:(NSDictionary *)attributeDictionary {
-    self = [self init];
-    
+#pragma mark STPAPIResponseDecodable
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
++ (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
+    STPCard *card = [STPCard new];
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    
-    [attributeDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
+    [response enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
         if (obj != [NSNull null]) {
             dict[key] = obj;
         }
     }];
     
-    if (self) {
-        _cardId = dict[@"id"];
-        [super setName:dict[@"name"]];
-        _last4 = dict[@"last4"];
-        _dynamicLast4 = dict[@"dynamic_last4"];
-        NSString *brand = dict[@"brand"] ?: dict[@"type"];
-        if ([brand isEqualToString:@"Visa"]) {
-            _brand = STPCardBrandVisa;
-        } else if ([brand isEqualToString:@"American Express"]) {
-            _brand = STPCardBrandAmex;
-        } else if ([brand isEqualToString:@"MasterCard"]) {
-            _brand = STPCardBrandMasterCard;
-        } else if ([brand isEqualToString:@"Discover"]) {
-            _brand = STPCardBrandDiscover;
-        } else if ([brand isEqualToString:@"JCB"]) {
-            _brand = STPCardBrandJCB;
-        } else if ([brand isEqualToString:@"Diners Club"]) {
-            _brand = STPCardBrandDinersClub;
-        } else {
-            _brand = STPCardBrandUnknown;
-        }
-        NSString *funding = dict[@"funding"];
-        if ([funding.lowercaseString isEqualToString:@"credit"]) {
-            _funding = STPCardFundingTypeCredit;
-        } else if ([funding.lowercaseString isEqualToString:@"debit"]) {
-            _funding = STPCardFundingTypeDebit;
-        } else if ([funding.lowercaseString isEqualToString:@"prepaid"]) {
-            _funding = STPCardFundingTypePrepaid;
-        } else {
-            _funding = STPCardFundingTypeOther;
-        }
-        _fingerprint = dict[@"fingerprint"];
-        _country = dict[@"country"];
-        self.currency = dict[@"currency"];
-        // Support both camelCase and snake_case keys
-        [super setExpMonth:[(dict[@"exp_month"] ?: dict[@"expMonth"])intValue]];
-        [super setExpYear:[(dict[@"exp_year"] ?: dict[@"expYear"])intValue]];
-        [super setAddressLine1:dict[@"address_line1"] ?: dict[@"addressLine1"]];
-        [super setAddressLine2:dict[@"address_line2"] ?: dict[@"addressLine2"]];
-        [super setAddressCity:dict[@"address_city"] ?: dict[@"addressCity"]];
-        [super setAddressState:dict[@"address_state"] ?: dict[@"addressState"]];
-        [super setAddressZip:dict[@"address_zip"] ?: dict[@"addressZip"]];
-        [super setAddressCountry:dict[@"address_country"] ?: dict[@"addressCountry"]];
+    card.cardId = dict[@"id"];
+    card.name = dict[@"name"];
+    card.last4 = dict[@"last4"];
+    card.dynamicLast4 = dict[@"dynamic_last4"];
+    NSString *brand = dict[@"brand"] ?: dict[@"type"];
+    if ([brand isEqualToString:@"Visa"]) {
+        card.brand = STPCardBrandVisa;
+    } else if ([brand isEqualToString:@"American Express"]) {
+        card.brand = STPCardBrandAmex;
+    } else if ([brand isEqualToString:@"MasterCard"]) {
+        card.brand = STPCardBrandMasterCard;
+    } else if ([brand isEqualToString:@"Discover"]) {
+        card.brand = STPCardBrandDiscover;
+    } else if ([brand isEqualToString:@"JCB"]) {
+        card.brand = STPCardBrandJCB;
+    } else if ([brand isEqualToString:@"Diners Club"]) {
+        card.brand = STPCardBrandDinersClub;
+    } else {
+        card.brand = STPCardBrandUnknown;
     }
-    
-    return self;
+    NSString *funding = dict[@"funding"];
+    if ([funding.lowercaseString isEqualToString:@"credit"]) {
+        card.funding = STPCardFundingTypeCredit;
+    } else if ([funding.lowercaseString isEqualToString:@"debit"]) {
+        card.funding = STPCardFundingTypeDebit;
+    } else if ([funding.lowercaseString isEqualToString:@"prepaid"]) {
+        card.funding = STPCardFundingTypePrepaid;
+    } else {
+        card.funding = STPCardFundingTypeOther;
+    }
+    card.fingerprint = dict[@"fingerprint"];
+    card.country = dict[@"country"];
+    card.currency = dict[@"currency"];
+    // Support both camelCase and snake_case keys
+    card.expMonth = [(dict[@"exp_month"] ?: dict[@"expMonth"])intValue];
+    card.expYear = [(dict[@"exp_year"] ?: dict[@"expYear"])intValue];
+    card.addressLine1 = dict[@"address_line1"] ?: dict[@"addressLine1"];
+    card.addressLine2 = dict[@"address_line2"] ?: dict[@"addressLine2"];
+    card.addressCity = dict[@"address_city"] ?: dict[@"addressCity"];
+    card.addressState = dict[@"address_state"] ?: dict[@"addressState"];
+    card.addressZip = dict[@"address_zip"] ?: dict[@"addressZip"];
+    card.addressCountry = dict[@"address_country"] ?: dict[@"addressCountry"];
+    return card;
 }
+#pragma clang diagnostic pop
 
 @end
-
-

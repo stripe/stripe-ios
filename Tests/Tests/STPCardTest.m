@@ -54,7 +54,7 @@
 }
 
 - (void)testInitializingCardWithAttributeDictionary {
-    STPCard *cardWithAttributes = [[STPCard alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
+    STPCard *cardWithAttributes = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
 
     XCTAssertTrue([cardWithAttributes expMonth] == 12, @"expMonth is set correctly");
     XCTAssertTrue([cardWithAttributes expYear] == 2013, @"expYear is set correctly");
@@ -73,7 +73,7 @@
 
 - (void)testFormEncode {
     NSDictionary *attributes = [self completeAttributeDictionary];
-    STPCard *cardWithAttributes = [[STPCard alloc] initWithAttributeDictionary:attributes];
+    STPCard *cardWithAttributes = [STPCard decodedObjectFromAPIResponse:attributes];
 
     NSData *encoded = [STPFormEncoder formEncodedDataForObject:cardWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
@@ -127,8 +127,8 @@
 }
 
 - (void)testCardEquals {
-    STPCard *card1 = [[STPCard alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
-    STPCard *card2 = [[STPCard alloc] initWithAttributeDictionary:[self completeAttributeDictionary]];
+    STPCard *card1 = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPCard *card2 = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
 
     XCTAssertEqualObjects(card1, card1, @"card should equal itself");
     XCTAssertEqualObjects(card1, card2, @"cards with equal data should be equal");
