@@ -21,8 +21,6 @@
     _bankAccount = [[STPBankAccountParams alloc] init];
 }
 
-#pragma mark - initWithAttributeDictionary: Tests
-
 - (NSDictionary *)completeAttributeDictionary {
     return @{
         @"id": @"something",

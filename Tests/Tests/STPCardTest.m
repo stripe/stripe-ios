@@ -33,7 +33,6 @@
     return [[self currentDateComponents] year];
 }
 
-#pragma mark -initWithAttributeDictionary: tests
 - (NSDictionary *)completeAttributeDictionary {
     return @{
         @"id": @"1",
