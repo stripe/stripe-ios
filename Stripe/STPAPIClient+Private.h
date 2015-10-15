@@ -10,7 +10,9 @@
 
 @interface STPAPIClient ()<NSURLSessionDelegate>
 
-@property (nonatomic, readwrite) NSURL *apiURL;
-@property (nonatomic, readwrite) NSURLSession *urlSession;
+- (void)createTokenWithData:(nonnull NSData *)data completion:(nullable STPCompletionBlock)completion;
+
+@property (nonatomic, readwrite, nonnull) NSURL *apiURL;
+@property (nonatomic, readwrite, nonnull) NSURLSession *urlSession;
 
 @end

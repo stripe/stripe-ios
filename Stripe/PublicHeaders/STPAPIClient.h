@@ -89,13 +89,6 @@ typedef void (^STPCompletionBlock)(STPToken * __nullable token, NSError * __null
 
 @end
 
-// These methods are used internally and exposed here only for the sake of writing tests more easily. You should not use them in your own application.
-@interface STPAPIClient (PrivateMethods)
-
-- (void)createTokenWithData:(nonnull NSData *)data completion:(nullable STPCompletionBlock)completion;
-
-@end
-
 #pragma mark - Deprecated Methods
 // These methods are deprecated. You should instead use STPAPIClient to create tokens.
 // Example: [Stripe createTokenWithCard:card completion:completion];

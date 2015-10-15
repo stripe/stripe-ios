@@ -9,6 +9,7 @@
 @import XCTest;
 
 #import "STPAPIClient.h"
+#import "STPAPIClient+Private.h"
 #import "Stripe.h"
 
 NSString *const STPExamplePublishableKey = @"bad_key";
