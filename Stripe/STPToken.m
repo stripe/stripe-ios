@@ -9,6 +9,7 @@
 #import "STPToken.h"
 #import "STPCard.h"
 #import "STPBankAccount.h"
+#import "NSDictionary+Stripe.h"
 
 @interface STPToken()
 @property (nonatomic, nonnull) NSString *tokenId;
@@ -63,19 +64,12 @@
 }
 
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    STPToken *token = [self new];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [response enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
-        if (obj != [NSNull null]) {
-            dict[key] = obj;
-        }
-    }];
-    for (NSString *key in [self requiredFields]) {
-        if (![[dict allKeys] containsObject:key]) {
-            return nil;
-        }
+    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    if (!dict) {
+        return nil;
     }
     
+    STPToken *token = [self new];
     token.tokenId = dict[@"id"];
     token.livemode = [dict[@"livemode"] boolValue];
     token.created = [NSDate dateWithTimeIntervalSince1970:[dict[@"created"] doubleValue]];

@@ -7,6 +7,7 @@
 //
 
 #import "STPBankAccount.h"
+#import "NSDictionary+Stripe.h"
 
 @interface STPBankAccount ()
 
@@ -67,19 +68,12 @@
 }
 
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    STPBankAccount *bankAccount = [self new];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [response enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
-        if (obj != [NSNull null]) {
-            dict[key] = obj;
-        }
-    }];
-    for (NSString *key in [self requiredFields]) {
-        if (![[dict allKeys] containsObject:key]) {
-            return nil;
-        }
+    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    if (!dict) {
+        return nil;
     }
     
+    STPBankAccount *bankAccount = [self new];
     bankAccount.bankAccountId = dict[@"id"];
     bankAccount.last4 = dict[@"last4"];
     bankAccount.bankName = dict[@"bank_name"];

@@ -9,6 +9,7 @@
 #import "STPCard.h"
 #import "StripeError.h"
 #import "STPCardValidator.h"
+#import "NSDictionary+Stripe.h"
 
 @interface STPCard ()
 
@@ -87,19 +88,12 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    STPCard *card = [self new];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [response enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
-        if (obj != [NSNull null]) {
-            dict[key] = obj;
-        }
-    }];
-    for (NSString *key in [self requiredFields]) {
-        if (![[dict allKeys] containsObject:key]) {
-            return nil;
-        }
+    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    if (!dict) {
+        return nil;
     }
     
+    STPCard *card = [self new];
     card.cardId = dict[@"id"];
     card.name = dict[@"name"];
     card.last4 = dict[@"last4"];
