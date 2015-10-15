@@ -18,11 +18,11 @@
     }
 }
 
-- (NSString *)rootObjectName {
++ (NSString *)rootObjectName {
     return @"bank_account";
 }
 
-- (NSDictionary *)propertyNamesToFormFieldNamesMapping {
++ (NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
              @"accountNumber": @"account_number",
              @"routingNumber": @"routing_number",
