@@ -25,7 +25,7 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
 
 @implementation NSError(Stripe)
 
-+ (NSError *)errorFromStripeResponse:(NSDictionary *)jsonDictionary {
++ (NSError *)stp_errorFromStripeResponse:(NSDictionary *)jsonDictionary {
     NSDictionary *errorDictionary = jsonDictionary[@"error"];
     if (!errorDictionary) {
         return nil;

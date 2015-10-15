@@ -27,7 +27,7 @@
     [[apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, __unused NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSDictionary *jsonDictionary = body ? [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL] : nil;
         id<STPAPIResponseDecodable> responseObject = [[serializer class] decodedObjectFromAPIResponse:jsonDictionary];
-        NSError *returnedError = [NSError errorFromStripeResponse:jsonDictionary] ?: error;
+        NSError *returnedError = [NSError stp_errorFromStripeResponse:jsonDictionary] ?: error;
         if (!responseObject && !returnedError) {
             NSDictionary *userInfo = @{
                                        NSLocalizedDescriptionKey: STPUnexpectedError,

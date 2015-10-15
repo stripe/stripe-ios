@@ -66,6 +66,6 @@ FOUNDATION_EXPORT NSString * __nonnull const STPIncorrectCVC;
 
 @interface NSError(Stripe)
 
-+ (nullable NSError *)errorFromStripeResponse:(nullable NSDictionary *)jsonDictionary;
++ (nullable NSError *)stp_errorFromStripeResponse:(nullable NSDictionary *)jsonDictionary;
 
 @end
