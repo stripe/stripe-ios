@@ -23,9 +23,9 @@
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
-static NSString *const apiURLBase = @"api.stripe.com";
-static NSString *const apiVersion = @"v1";
+static NSString *const apiURLBase = @"api.stripe.com/v1";
 static NSString *const tokenEndpoint = @"tokens";
+static NSString *const stripeAPIVersion = @"2015-10-12";
 static NSString *STPDefaultPublishableKey;
 
 @implementation Stripe
@@ -62,14 +62,14 @@ static NSString *STPDefaultPublishableKey;
     self = [super init];
     if (self) {
         [self.class validateKey:publishableKey];
-        _apiURL = [[NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]] URLByAppendingPathComponent:apiVersion];
+        _apiURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]];
         _publishableKey = [publishableKey copy];
         _operationQueue = [NSOperationQueue mainQueue];
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         NSString *auth = [@"Bearer " stringByAppendingString:self.publishableKey];
         config.HTTPAdditionalHeaders = @{
                                          @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
-                                         @"Stripe-Version": @"2015-10-12",
+                                         @"Stripe-Version": stripeAPIVersion,
                                          @"Authorization": auth,
                                          };
         _urlSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:_operationQueue];

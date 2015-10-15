@@ -23,7 +23,7 @@ NSString *const STPCardDeclined = @"com.stripe.lib:CardDeclined";
 NSString *const STPProcessingError = @"com.stripe.lib:ProcessingError";
 NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
 
-@implementation STPError
+@implementation NSError(Stripe)
 
 + (NSError *)errorFromStripeResponse:(NSDictionary *)jsonDictionary {
     NSDictionary *errorDictionary = jsonDictionary[@"error"];

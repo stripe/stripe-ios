@@ -64,7 +64,7 @@ FOUNDATION_EXPORT NSString * __nonnull const STPIncorrectCVC;
 #define STPCardErrorProcessingErrorUserMessage                                                                                                                 \
     NSLocalizedString(@"There was an error processing your card -- try again in a few seconds", @"Error when there is a problem processing the credit card")
 
-@interface STPError : NSError
+@interface NSError(Stripe)
 
 + (nullable NSError *)errorFromStripeResponse:(nullable NSDictionary *)jsonDictionary;
 

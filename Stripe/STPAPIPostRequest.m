@@ -27,7 +27,7 @@
     [[apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, __unused NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSDictionary *jsonDictionary = body ? [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL] : nil;
         id<STPAPIResponseDecodable> responseObject = [[serializer class] decodedObjectFromAPIResponse:jsonDictionary];
-        NSError *returnedError = [STPError errorFromStripeResponse:jsonDictionary] ?: error;
+        NSError *returnedError = [NSError errorFromStripeResponse:jsonDictionary] ?: error;
         if (!responseObject && !returnedError) {
             NSDictionary *userInfo = @{
                                        NSLocalizedDescriptionKey: STPUnexpectedError,
@@ -35,6 +35,8 @@
                                        };
             returnedError = [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
         }
+        // We're using the api client's operation queue instead of relying on the url session's operation queue
+        // because the api client's queue is mutable and may have changed after initialization (not ideal)
         if (returnedError) {
             [apiClient.operationQueue addOperationWithBlock:^{
                 completion(nil, returnedError);
