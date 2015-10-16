@@ -8,18 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
-
 static NSString *const __nonnull STPSDKVersion = @"5.1.4";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPToken;
 
 /**
- *  A callback to be run with the response from the Stripe API.
+ *  A callback to be run with a token response from the Stripe API.
  *
  *  @param token The Stripe token from the response. Will be nil if an error occurs. @see STPToken
  *  @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
  */
-typedef void (^STPCompletionBlock)(STPToken * __nullable token, NSError * __nullable error);
+typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * __nullable error);
 
 /**
  A top-level class that imports the rest of the Stripe SDK. This class used to contain several methods to create Stripe tokens, but those are now deprecated in
@@ -71,7 +70,7 @@ typedef void (^STPCompletionBlock)(STPToken * __nullable token, NSError * __null
  *  @param bankAccount The user's bank account details. Cannot be nil. @see https://stripe.com/docs/api#create_bank_account_token
  *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
-- (void)createTokenWithBankAccount:(nonnull STPBankAccountParams *)bankAccount completion:(__nullable STPCompletionBlock)completion;
+- (void)createTokenWithBankAccount:(nonnull STPBankAccountParams *)bankAccount completion:(__nullable STPTokenCompletionBlock)completion;
 
 @end
 
@@ -85,11 +84,36 @@ typedef void (^STPCompletionBlock)(STPToken * __nullable token, NSError * __null
  *  @param card        The user's card details. Cannot be nil. @see https://stripe.com/docs/api#create_card_token
  *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
-- (void)createTokenWithCard:(nonnull STPCardParams *)card completion:(nullable STPCompletionBlock)completion;
+- (void)createTokenWithCard:(nonnull STPCardParams *)card completion:(nullable STPTokenCompletionBlock)completion;
+
+@end
+
+#pragma mark Connected Accounts
+
+@interface STPAPIClient (ConnectedAccounts)
+
+/**
+ *  Converts an STPCardParams object into a Stripe token using the Stripe API.
+ *
+ *  @param card        The user's card details. Cannot be nil. @see https://stripe.com/docs/api#create_card_token
+ *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
+ */
+- (void)createConnectedAccountWithParams:(nonnull STPConnectedAccountParams *)params
+                              completion:(nonnull STPAccountCompletionBlock)completion;
 
 @end
 
 #pragma mark - Deprecated Methods
+
+/**
+ *  A callback to be run with a token response from the Stripe API.
+ *
+ *  @param token The Stripe token from the response. Will be nil if an error occurs. @see STPToken
+ *  @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
+ *  @deprecated This has been renamed to STPTokenCompletionBlock.
+ */
+typedef void (^STPCompletionBlock)(STPToken * __nullable token, NSError * __nullable error) __attribute__((deprecated("STPCompletionBlock has been renamed to STPTokenCompletionBlock.")));
+
 // These methods are deprecated. You should instead use STPAPIClient to create tokens.
 // Example: [Stripe createTokenWithCard:card completion:completion];
 // becomes [[STPAPIClient sharedClient] createTokenWithCard:card completion:completion];

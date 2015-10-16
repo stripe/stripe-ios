@@ -82,7 +82,7 @@ static NSString *STPDefaultPublishableKey;
     _operationQueue = operationQueue;
 }
 
-- (void)createTokenWithData:(NSData *)data completion:(STPCompletionBlock)completion {
+- (void)createTokenWithData:(NSData *)data completion:(STPTokenCompletionBlock)completion {
     NSCAssert(data != nil, @"'data' is required to create a token");
     NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
     [STPAPIPostRequest<STPToken *> startWithAPIClient:self
@@ -149,7 +149,7 @@ static NSString *STPDefaultPublishableKey;
 #pragma mark - Bank Accounts
 @implementation STPAPIClient (BankAccounts)
 
-- (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount completion:(STPCompletionBlock)completion {
+- (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount completion:(STPTokenCompletionBlock)completion {
     NSData *data = [STPFormEncoder formEncodedDataForObject:bankAccount];
     [self createTokenWithData:data completion:completion];
 }
@@ -159,7 +159,7 @@ static NSString *STPDefaultPublishableKey;
 #pragma mark - Credit Cards
 @implementation STPAPIClient (CreditCards)
 
-- (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)completion {
+- (void)createTokenWithCard:(STPCard *)card completion:(STPTokenCompletionBlock)completion {
     NSData *data = [STPFormEncoder formEncodedDataForObject:card];
     [self createTokenWithData:data completion:completion];
 }
