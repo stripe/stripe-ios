@@ -88,21 +88,6 @@ typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * _
 
 @end
 
-#pragma mark Connected Accounts
-
-@interface STPAPIClient (ConnectedAccounts)
-
-/**
- *  Converts an STPCardParams object into a Stripe token using the Stripe API.
- *
- *  @param card        The user's card details. Cannot be nil. @see https://stripe.com/docs/api#create_card_token
- *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
- */
-- (void)createConnectedAccountWithParams:(nonnull STPConnectedAccountParams *)params
-                              completion:(nonnull STPAccountCompletionBlock)completion;
-
-@end
-
 #pragma mark - Deprecated Methods
 
 /**
