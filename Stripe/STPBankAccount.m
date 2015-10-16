@@ -7,6 +7,7 @@
 //
 
 #import "STPBankAccount.h"
+#import "NSDictionary+Stripe.h"
 
 @interface STPBankAccount ()
 
@@ -14,8 +15,7 @@
 @property (nonatomic, readwrite) NSString *last4;
 @property (nonatomic, readwrite) NSString *bankName;
 @property (nonatomic, readwrite) NSString *fingerprint;
-@property (nonatomic, readwrite) BOOL validated;
-@property (nonatomic, readwrite) BOOL disabled;
+@property (nonatomic) STPBankAccountStatus status;
 
 @end
 
@@ -53,25 +53,43 @@
     return [self.bankAccountId isEqualToString:bankAccount.bankAccountId];
 }
 
+- (BOOL)validated {
+    return self.status == STPBankAccountStatusValidated;
+}
+
+- (BOOL)disabled {
+    return self.status == STPBankAccountStatusErrored;
+}
+
 #pragma mark STPAPIResponseDecodable
 
++ (NSArray *)requiredFields {
+    return @[@"id", @"last4", @"bank_name", @"country", @"currency", @"status"];
+}
+
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    STPBankAccount *bankAccount = [self new];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [response enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
-        if (obj != [NSNull null]) {
-            dict[key] = obj;
-        }
-    }];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    if (!dict) {
+        return nil;
+    }
     
+    STPBankAccount *bankAccount = [self new];
     bankAccount.bankAccountId = dict[@"id"];
     bankAccount.last4 = dict[@"last4"];
     bankAccount.bankName = dict[@"bank_name"];
     bankAccount.country = dict[@"country"];
     bankAccount.fingerprint = dict[@"fingerprint"];
     bankAccount.currency = dict[@"currency"];
-    bankAccount.validated = [dict[@"validated"] boolValue];
-    bankAccount.disabled = [dict[@"disabled"] boolValue];
+    NSString *status = dict[@"status"];
+    if ([status isEqual: @"new"]) {
+        bankAccount.status = STPBankAccountStatusNew;
+    } else if ([status isEqual: @"validated"]) {
+        bankAccount.status = STPBankAccountStatusValidated;
+    } else if ([status isEqual: @"verified"]) {
+        bankAccount.status = STPBankAccountStatusVerified;
+    } else if ([status isEqual: @"errored"]) {
+        bankAccount.status = STPBankAccountStatusErrored;
+    }
     return bankAccount;
 }
 

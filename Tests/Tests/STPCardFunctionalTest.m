@@ -60,7 +60,7 @@
 
                          XCTAssertNotNil(error, @"error should not be nil");
                          XCTAssertEqual(error.code, 70);
-                         XCTAssertEqual(error.domain, StripeDomain);
+                         XCTAssertEqualObjects(error.domain, StripeDomain);
                          XCTAssertEqualObjects(error.userInfo[STPErrorParameterKey], @"number");
                          XCTAssertNil(token, @"token should not be nil: %@", token.description);
                      }];

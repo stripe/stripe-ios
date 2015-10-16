@@ -139,11 +139,11 @@
 
 #pragma mark - STPFormEncodable
 
-- (NSString *)rootObjectName {
++ (NSString *)rootObjectName {
     return @"card";
 }
 
-- (NSDictionary *)propertyNamesToFormFieldNamesMapping {
++ (NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
              @"number": @"number",
              @"cvc": @"cvc",

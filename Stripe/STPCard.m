@@ -9,6 +9,7 @@
 #import "STPCard.h"
 #import "StripeError.h"
 #import "STPCardValidator.h"
+#import "NSDictionary+Stripe.h"
 
 @interface STPCard ()
 
@@ -80,22 +81,24 @@
 }
 
 #pragma mark STPAPIResponseDecodable
++ (NSArray *)requiredFields {
+    return @[@"id", @"last4", @"brand", @"exp_month", @"exp_year"];
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    STPCard *card = [self new];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [response enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
-        if (obj != [NSNull null]) {
-            dict[key] = obj;
-        }
-    }];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    if (!dict) {
+        return nil;
+    }
     
+    STPCard *card = [self new];
     card.cardId = dict[@"id"];
     card.name = dict[@"name"];
     card.last4 = dict[@"last4"];
     card.dynamicLast4 = dict[@"dynamic_last4"];
-    NSString *brand = dict[@"brand"] ?: dict[@"type"];
+    NSString *brand = dict[@"brand"];
     if ([brand isEqualToString:@"Visa"]) {
         card.brand = STPCardBrandVisa;
     } else if ([brand isEqualToString:@"American Express"]) {
@@ -124,15 +127,14 @@
     card.fingerprint = dict[@"fingerprint"];
     card.country = dict[@"country"];
     card.currency = dict[@"currency"];
-    // Support both camelCase and snake_case keys
-    card.expMonth = [(dict[@"exp_month"] ?: dict[@"expMonth"])intValue];
-    card.expYear = [(dict[@"exp_year"] ?: dict[@"expYear"])intValue];
-    card.addressLine1 = dict[@"address_line1"] ?: dict[@"addressLine1"];
-    card.addressLine2 = dict[@"address_line2"] ?: dict[@"addressLine2"];
-    card.addressCity = dict[@"address_city"] ?: dict[@"addressCity"];
-    card.addressState = dict[@"address_state"] ?: dict[@"addressState"];
-    card.addressZip = dict[@"address_zip"] ?: dict[@"addressZip"];
-    card.addressCountry = dict[@"address_country"] ?: dict[@"addressCountry"];
+    card.expMonth = [dict[@"exp_month"] intValue];
+    card.expYear = [dict[@"exp_year"] intValue];
+    card.addressLine1 = dict[@"address_line1"];
+    card.addressLine2 = dict[@"address_line2"];
+    card.addressCity = dict[@"address_city"];
+    card.addressState = dict[@"address_state"];
+    card.addressZip = dict[@"address_zip"];
+    card.addressCountry = dict[@"address_country"];
     return card;
 }
 #pragma clang diagnostic pop

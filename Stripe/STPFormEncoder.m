@@ -15,10 +15,10 @@
 
 + (nonnull NSData *)formEncodedDataForObject:(nonnull NSObject<STPFormEncodable> *)object {
     NSMutableArray *parts = [NSMutableArray array];
-    [[object propertyNamesToFormFieldNamesMapping] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull propertyName, NSString *  _Nonnull formFieldName, __unused BOOL * _Nonnull stop) {
+    [[object.class propertyNamesToFormFieldNamesMapping] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull propertyName, NSString *  _Nonnull formFieldName, __unused BOOL * _Nonnull stop) {
         NSString *formFieldValue = [[object valueForKey:propertyName] description];
         if (formFieldValue) {
-            [parts addObject:[NSString stringWithFormat:@"%@[%@]=%@", [object rootObjectName], formFieldName, [self.class stringByURLEncoding:formFieldValue]]];
+            [parts addObject:[NSString stringWithFormat:@"%@[%@]=%@", [object.class rootObjectName], formFieldName, [self.class stringByURLEncoding:formFieldValue]]];
         }
     }];
     return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];

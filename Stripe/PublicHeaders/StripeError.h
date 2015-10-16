@@ -63,3 +63,9 @@ FOUNDATION_EXPORT NSString * __nonnull const STPIncorrectCVC;
     NSLocalizedString(@"There was an unexpected error -- try again in a few seconds", @"Unexpected error, such as a 500 from Stripe or a JSON parse error")
 #define STPCardErrorProcessingErrorUserMessage                                                                                                                 \
     NSLocalizedString(@"There was an error processing your card -- try again in a few seconds", @"Error when there is a problem processing the credit card")
+
+@interface NSError(Stripe)
+
++ (nullable NSError *)stp_errorFromStripeResponse:(nullable NSDictionary *)jsonDictionary;
+
+@end

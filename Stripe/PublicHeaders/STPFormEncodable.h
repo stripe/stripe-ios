@@ -10,7 +10,7 @@
 
 @protocol STPFormEncodable <NSObject>
 
-- (NSString *)rootObjectName;
-- (NSDictionary *)propertyNamesToFormFieldNamesMapping;
++ (NSString *)rootObjectName;
++ (NSDictionary *)propertyNamesToFormFieldNamesMapping;
 
 @end
