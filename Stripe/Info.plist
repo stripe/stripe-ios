@@ -18,5 +18,7 @@
 	<string>5.1.4</string>
 	<key>NSPrincipalClass</key>
 	<string></string>
+	<key>CFBundleExecutable</key>
+	<string>Stripe</string>
 </dict>
 </plist>
