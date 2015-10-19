@@ -31,3 +31,5 @@
 }
 
 @end
+
+void linkPKPaymentCategory(void){}

@@ -25,3 +25,5 @@
 + (nonnull NSData *)formEncodedDataForPayment:(nonnull PKPayment *)payment;
 
 @end
+
+void linkSTPAPIClientApplePayCategory(void);

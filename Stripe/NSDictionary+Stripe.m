@@ -26,3 +26,5 @@
 }
 
 @end
+
+void linkDictionaryCategory(void){}

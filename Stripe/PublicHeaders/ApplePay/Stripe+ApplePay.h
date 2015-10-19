@@ -62,3 +62,5 @@
 + (void)createTokenWithPayment:(nonnull PKPayment *)payment operationQueue:(nonnull NSOperationQueue *)queue completion:(nonnull STPCompletionBlock)handler __attribute__((deprecated));
 
 @end
+
+void linkStripeApplePayCategory(void);
