@@ -26,6 +26,10 @@
 #import "FABKitProtocol.h"
 #endif
 
+#ifdef STP_STATIC_LIBRARY_BUILD
+#import "STPCategoryLoader.h"
+#endif
+
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
 static NSString *const apiURLBase = @"api.stripe.com/v1";
@@ -55,6 +59,12 @@ static NSString *STPDefaultPublishableKey;
 @end
 
 @implementation STPAPIClient
+
+#ifdef STP_STATIC_LIBRARY_BUILD
++ (void)initialize {
+    [STPCategoryLoader loadCategories];
+}
+#endif
 
 + (instancetype)sharedClient {
     static id sharedClient;

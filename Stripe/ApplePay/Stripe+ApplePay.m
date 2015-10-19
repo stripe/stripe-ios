@@ -41,3 +41,5 @@
 }
 
 @end
+
+void linkStripeApplePayCategory(void){}

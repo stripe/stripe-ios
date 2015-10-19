@@ -16,3 +16,5 @@
 + (NSString *)stp_testTransactionIdentifier;
 
 @end
+
+void linkPKPaymentCategory(void);

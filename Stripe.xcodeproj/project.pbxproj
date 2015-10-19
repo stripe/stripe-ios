@@ -332,6 +332,8 @@
 		04F3BB3E1BA89B1200DE235E /* PKPayment+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04F3BB3B1BA89B1200DE235E /* PKPayment+Stripe.h */; settings = {ASSET_TAGS = (); }; };
 		04F3BB3F1BA89B1200DE235E /* PKPayment+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F3BB3C1BA89B1200DE235E /* PKPayment+Stripe.m */; settings = {ASSET_TAGS = (); }; };
 		04F3BB401BA89B1200DE235E /* PKPayment+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F3BB3C1BA89B1200DE235E /* PKPayment+Stripe.m */; settings = {ASSET_TAGS = (); }; };
+		04FCFA191BD59A8C00297732 /* STPCategoryLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 04FCFA171BD59A8C00297732 /* STPCategoryLoader.h */; settings = {ASSET_TAGS = (); }; };
+		04FCFA1A1BD59A8C00297732 /* STPCategoryLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FCFA181BD59A8C00297732 /* STPCategoryLoader.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -513,6 +515,8 @@
 		04F39F241AEF2AFE005B926E /* StripeOSXTests-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeOSXTests-Shared.xcconfig"; sourceTree = "<group>"; };
 		04F3BB3B1BA89B1200DE235E /* PKPayment+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PKPayment+Stripe.h"; sourceTree = "<group>"; };
 		04F3BB3C1BA89B1200DE235E /* PKPayment+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKPayment+Stripe.m"; sourceTree = "<group>"; };
+		04FCFA171BD59A8C00297732 /* STPCategoryLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCategoryLoader.h; sourceTree = "<group>"; };
+		04FCFA181BD59A8C00297732 /* STPCategoryLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCategoryLoader.m; sourceTree = "<group>"; };
 		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -715,6 +719,8 @@
 				04CDB4CF1A5F30A700B854EE /* StripeError.m */,
 				0433EB471BD06313003912B4 /* NSDictionary+Stripe.h */,
 				0433EB481BD06313003912B4 /* NSDictionary+Stripe.m */,
+				04FCFA171BD59A8C00297732 /* STPCategoryLoader.h */,
+				04FCFA181BD59A8C00297732 /* STPCategoryLoader.m */,
 			);
 			name = Stripe;
 			path = Tests/../Stripe;
@@ -872,6 +878,7 @@
 				049E84DF1A605EF0000B66CD /* STPCheckoutDelegate.h in Headers */,
 				049E84E01A605EF0000B66CD /* STPCheckoutInternalUIWebViewController.h in Headers */,
 				04F3BB3E1BA89B1200DE235E /* PKPayment+Stripe.h in Headers */,
+				04FCFA191BD59A8C00297732 /* STPCategoryLoader.h in Headers */,
 				049E84E11A605EF0000B66CD /* STPCheckoutWebViewAdapter.h in Headers */,
 				049E84E21A605EF0000B66CD /* STPColorUtils.h in Headers */,
 				04CDE5CB1BC20B1D00548833 /* STPBankAccountParams.h in Headers */,
@@ -1296,6 +1303,7 @@
 			files = (
 				0438EF451B74170D00D506CC /* STPCardValidator.m in Sources */,
 				0438EF311B7416BB00D506CC /* STPFormTextField.m in Sources */,
+				04FCFA1A1BD59A8C00297732 /* STPCategoryLoader.m in Sources */,
 				049E84C21A605DE0000B66CD /* STPAPIClient+ApplePay.m in Sources */,
 				049E84C31A605DE0000B66CD /* Stripe+ApplePay.m in Sources */,
 				049E84C51A605DE0000B66CD /* STPCheckoutOptions.m in Sources */,

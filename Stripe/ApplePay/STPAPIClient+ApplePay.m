@@ -91,3 +91,5 @@
 }
 
 @end
+
+void linkSTPAPIClientApplePayCategory(void){}

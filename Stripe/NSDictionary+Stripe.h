@@ -13,3 +13,5 @@
 - (nullable NSDictionary *)stp_dictionaryByRemovingNullsValidatingRequiredFields:(nonnull NSArray *)requiredFields;
 
 @end
+
+void linkDictionaryCategory(void);
