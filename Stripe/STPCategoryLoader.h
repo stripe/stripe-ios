@@ -6,12 +6,14 @@
 //  Copyright © 2015 Stripe, Inc. All rights reserved.
 //
 
+#ifdef STP_STATIC_LIBRARY_BUILD
+
 #import <Foundation/Foundation.h>
 
-#ifdef STP_STATIC_LIBRARY_BUILD
 @interface STPCategoryLoader : NSObject
 
 + (void)loadCategories;
 
 @end
+
 #endif
