@@ -62,7 +62,6 @@ static NSString *STPDefaultPublishableKey;
 
 #ifdef STP_STATIC_LIBRARY_BUILD
 + (void)initialize {
-    [super initialize];
     [STPCategoryLoader loadCategories];
 }
 #endif
