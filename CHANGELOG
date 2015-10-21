@@ -1,5 +1,6 @@
 == 6.0.0 2015-10-19
 * Splits logic in STPCard into 2 classes - STPCard and STPCardParams. STPCardParams is for making requests to the Stripe API, while STPCard represents the response (you'll almost certainly want just to replace any usage of STPCard in your app with STPCardParams). This also applies to STPBankAccount and the newly-created STPBankAccountParams.
+* Version 6.0.1 fixes a minor Cocoapods issue.
 
 == 5.1.0 2015-08-17
 * Adds STPPaymentCardTextField, a new version of github.com/stripe/PaymentKit featuring many bugfixes. It's useful if you need a pre-built credit card entry form.
