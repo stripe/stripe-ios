@@ -234,6 +234,14 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     self.cvcField.placeholder = _cvcPlaceholder;
 }
 
+- (void)setCursorColor:(UIColor *)cursorColor {
+    self.tintColor = cursorColor;
+}
+
+- (UIColor *)cursorColor {
+    return self.tintColor;
+}
+
 - (void)setBorderColor:(UIColor * __nullable)borderColor {
     self.layer.borderColor = [[borderColor copy] CGColor];
 }

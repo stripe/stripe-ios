@@ -36,6 +36,7 @@
     // Setup payment view
     STPPaymentCardTextField *paymentTextField = [[STPPaymentCardTextField alloc] init];
     paymentTextField.delegate = self;
+    paymentTextField.cursorColor = [UIColor purpleColor];
     self.paymentTextField = paymentTextField;
     [self.view addSubview:paymentTextField];
     
