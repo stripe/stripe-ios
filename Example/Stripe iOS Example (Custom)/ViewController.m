@@ -66,7 +66,11 @@
         paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:paymentRequest.shippingMethods.firstObject];
         PKPaymentAuthorizationViewController *auth = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
         auth.delegate = self;
-        [self presentViewController:auth animated:YES completion:nil];
+        if (auth) {
+            [self presentViewController:auth animated:YES completion:nil];
+        } else {
+            NSLog(@"Apple Pay returned a nil PKPaymentAuthorizationViewController - make sure you've configured Apple Pay correctly, as outlined at https://stripe.com/docs/mobile/apple-pay");
+        }
     }
 }
 
