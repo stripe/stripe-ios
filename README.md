@@ -22,6 +22,8 @@ There are 2 example apps included in the repository:
 - Stripe iOS Example (Simple) shows a minimal Swift integration with our iOS SDK using Apple Pay.
 - Stripe iOS Example (Custom) demonstrates 2 different ways of collecting your user's payment details: via Apple Pay, and STPPaymentCardTextField, a native credit card UI form component we provide. It, too, uses a small example backend to make charges.
 
+To build and run the example apps, open `Stripe.xcworkspace` and choose the appropriate scheme.
+
 ### Getting started with the Simple iOS Example App
 
 Note: all the example apps require Xcode 7.0 to build and run.
