@@ -128,6 +128,9 @@
  */
 - (void)clear;
 
+- (nullable UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
+- (nullable UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
+
 /**
  *  Whether or not the form currently contains a valid card number, expiration date, and CVC.
  *  @see STPCardValidator
