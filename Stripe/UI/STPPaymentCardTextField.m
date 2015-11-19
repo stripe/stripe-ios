@@ -82,7 +82,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     _viewModel = [STPPaymentCardTextFieldViewModel new];
     _sizingField = [self buildTextField];
     
-    UIImageView *brandImageView = [[UIImageView alloc] initWithImage:_viewModel.brandImage];
+    UIImageView *brandImageView = [[UIImageView alloc] initWithImage:[self brandImageForFieldType:STPCardFieldTypeNumber]];
     brandImageView.contentMode = UIViewContentModeCenter;
     brandImageView.backgroundColor = [UIColor clearColor];
     if ([brandImageView respondsToSelector:@selector(setTintColor:)]) {
@@ -589,8 +589,27 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     return NO;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
+- (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand {
+    return self.viewModel.cvcImage;
+}
+
+- (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand {
+    return self.viewModel.brandImage;
+}
+#pragma clang diagnostic pop
+
+- (UIImage *)brandImageForFieldType:(STPCardFieldType)fieldType {
+    if (fieldType == STPCardFieldTypeCVC) {
+        return [self cvcImageForCardBrand:self.viewModel.brand];
+    }
+
+    return [self brandImageForCardBrand:self.viewModel.brand];
+}
+
 - (void)updateImageForFieldType:(STPCardFieldType)fieldType {
-    UIImage *image = fieldType == STPCardFieldTypeCVC ? self.viewModel.cvcImage : self.viewModel.brandImage;
+    UIImage *image = [self brandImageForFieldType:fieldType];
     if (image != self.brandImageView.image) {
         self.brandImageView.image = image;
         

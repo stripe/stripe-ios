@@ -129,6 +129,20 @@
 - (void)clear;
 
 /**
+ *  Returns the cvc image used for a card brand.
+ *  @param cardBrand The brand of card entered.
+ *  @return The cvc image for used for a card brand.
+ */
+- (nullable UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
+
+/**
+ *  Returns the brand image used for a card brand.
+ *  @param cardBrand The brand of card entered.
+ *  @return The brand image for used for a card brand.
+ */
+- (nullable UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
+
+/**
  *  Whether or not the form currently contains a valid card number, expiration date, and CVC.
  *  @see STPCardValidator
  */
