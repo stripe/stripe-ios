@@ -4,8 +4,10 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>Stripe</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.stripe.stripe-ios</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
@@ -18,7 +20,5 @@
 	<string>6.0.1</string>
 	<key>NSPrincipalClass</key>
 	<string></string>
-	<key>CFBundleExecutable</key>
-	<string>Stripe</string>
 </dict>
 </plist>
