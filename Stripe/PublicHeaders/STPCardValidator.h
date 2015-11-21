@@ -85,7 +85,7 @@
  *  @param cvc   the CVC to validate
  *  @param brand the card brand (can be determined from the card's number using +brandForNumber)
  *
- *  @return Whether the CVC represents a valid CVC for that card brand. For example, would return STPCardValidationStateValid for @"123" and STPCardBrandVisa, STPCardValidationStateValid for @"1234" and STPCardBrandAmericanExpress, STPCardValidationStateIncomplete for @"123" and STPCardBrandAmericanExpress, and STPCardValidationStateInvalid for @"12345" and any brand.
+ *  @return Whether the CVC represents a valid CVC for that card brand. For example, would return STPCardValidationStateValid for @"123" and STPCardBrandVisa, STPCardValidationStateValid for @"1234" and STPCardBrandAmericanExpress, STPCardValidationStateIncomplete for @"12" and STPCardBrandVisa, and STPCardValidationStateInvalid for @"12345" and any brand.
  */
 + (STPCardValidationState)validationStateForCVC:(nonnull NSString *)cvc cardBrand:(STPCardBrand)brand;
 
