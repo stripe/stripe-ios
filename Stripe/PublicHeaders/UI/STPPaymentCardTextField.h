@@ -108,6 +108,11 @@
 @property(nonatomic, strong, nullable) UIView *inputAccessoryView;
 
 /**
+ *  The curent brand image displayed in the receiver.
+ */
+@property (nonatomic, readonly, nullable) UIImage *brandImage;
+
+/**
  *  Causes the text field to begin editing. Presents the keyboard.
  *
  *  @return Whether or not the text field successfully began editing.
@@ -141,6 +146,41 @@
  *  @return The brand image for used for a card brand.
  */
 - (nullable UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
+
+/**
+ *  Returns the rectangle in which the receiver draws its brand image.
+ *  @param bounds The bounding rectangle of the receiver.
+ *  @return the rectangle in which the receiver draws its brand image.
+ */
+- (CGRect)brandImageRectForBounds:(CGRect)bounds;
+
+/**
+ *  Returns the rectangle in which the receiver draws the text fields.
+ *  @param bounds The bounding rectangle of the receiver.
+ *  @return The rectangle in which the receiver draws the text fields.
+ */
+- (CGRect)fieldsRectForBounds:(CGRect)bounds;
+
+/**
+ *  Returns the rectangle in which the receiver draws its number field.
+ *  @param bounds The bounding rectangle of the receiver.
+ *  @return the rectangle in which the receiver draws its number field.
+ */
+- (CGRect)numberFieldRectForBounds:(CGRect)bounds;
+
+/**
+ *  Returns the rectangle in which the receiver draws its cvc field.
+ *  @param bounds The bounding rectangle of the receiver.
+ *  @return the rectangle in which the receiver draws its cvc field.
+ */
+- (CGRect)cvcFieldRectForBounds:(CGRect)bounds;
+
+/**
+ *  Returns the rectangle in which the receiver draws its expiration field.
+ *  @param bounds The bounding rectangle of the receiver.
+ *  @return the rectangle in which the receiver draws its expiration field.
+ */
+- (CGRect)expirationFieldRectForBounds:(CGRect)bounds;
 
 /**
  *  Whether or not the form currently contains a valid card number, expiration date, and CVC.
