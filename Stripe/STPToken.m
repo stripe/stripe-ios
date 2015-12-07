@@ -22,9 +22,12 @@
 @implementation STPToken
 
 - (NSString *)description {
+    return self.tokenId ?: @"Unknown token";
+}
+
+- (NSString *)debugDescription {
     NSString *token = self.tokenId ?: @"Unknown token";
     NSString *livemode = self.livemode ? @"live mode" : @"test mode";
-
     return [NSString stringWithFormat:@"%@ (%@)", token, livemode];
 }
 
