@@ -50,17 +50,17 @@
 /**
  *  The text color to be used when entering valid text. Default is [UIColor blackColor]. Set this property to nil to reset to the default.
  */
-@property(nonatomic, copy, null_resettable) IBInspectable UIColor *textColor UI_APPEARANCE_SELECTOR;
+@property(nonatomic, copy, null_resettable) UIColor *textColor UI_APPEARANCE_SELECTOR;
 
 /**
  *  The text color to be used when the user has entered invalid information, such as an invalid card number. Default is [UIColor redColor]. Set this property to nil to reset to the default.
  */
-@property(nonatomic, copy, null_resettable) IBInspectable UIColor *textErrorColor UI_APPEARANCE_SELECTOR IBInspectable;
+@property(nonatomic, copy, null_resettable) UIColor *textErrorColor UI_APPEARANCE_SELECTOR;
 
 /**
  *  The text placeholder color used in each child field. Default is [UIColor lightGreyColor]. Set this property to nil to reset to the default. On iOS 7 and above, this will also set the color of the card placeholder icon.
  */
-@property(nonatomic, copy, null_resettable) IBInspectable UIColor *placeholderColor UI_APPEARANCE_SELECTOR IBInspectable;
+@property(nonatomic, copy, null_resettable) UIColor *placeholderColor UI_APPEARANCE_SELECTOR;
 
 /**
  *  The placeholder for the card number field. Default is @"1234567812345678". If this is set to something that resembles a card number, it will automatically format it as such (in other words, you don't need to add spaces to this string).
@@ -85,22 +85,22 @@
 /**
  *  The border color for the field. Default is [UIColor lightGreyColor]. Can be nil (in which case no border will be drawn).
  */
-@property(nonatomic, copy, nullable) IBInspectable UIColor *borderColor UI_APPEARANCE_SELECTOR;
+@property(nonatomic, copy, nullable) UIColor *borderColor UI_APPEARANCE_SELECTOR;
 
 /**
  *  The width of the field's border. Default is 1.0.
  */
-@property(nonatomic, assign) IBInspectable CGFloat borderWidth UI_APPEARANCE_SELECTOR;
+@property(nonatomic, assign) CGFloat borderWidth UI_APPEARANCE_SELECTOR;
 
 /**
  *  The corner radius for the field's border. Default is 5.0.
  */
-@property(nonatomic, assign) IBInspectable CGFloat cornerRadius UI_APPEARANCE_SELECTOR;
+@property(nonatomic, assign) CGFloat cornerRadius UI_APPEARANCE_SELECTOR;
 
 /**
  *  The keyboard appearance for the field. Default is UIKeyboardAppearanceDefault.
  */
-@property(nonatomic, assign) IBInspectable UIKeyboardAppearance keyboardAppearance UI_APPEARANCE_SELECTOR;
+@property(nonatomic, assign) UIKeyboardAppearance keyboardAppearance UI_APPEARANCE_SELECTOR;
 
 /**
  *  This behaves identically to setting the inputAccessoryView for each child text field.
