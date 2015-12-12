@@ -562,6 +562,9 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
             break;
     }
     [self updateImageForFieldType:textField.tag];
+    if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidBeginEditing:)]) {
+        [self.delegate paymentCardTextFieldDidBeginEditing:self];
+    }
 }
 
 - (void)textFieldDidEndEditing:(__unused UITextField *)textField {

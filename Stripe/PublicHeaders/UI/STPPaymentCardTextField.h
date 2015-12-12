@@ -29,6 +29,11 @@
  */
 - (void)paymentCardTextFieldDidChange:(nonnull STPPaymentCardTextField *)textField;
 
+/**
+ Forwards the didBeginEditing delegate calls from the textField subviews.
+ */
+- (void)paymentCardTextFieldDidBeginEditing:(nonnull STPPaymentCardTextField *)textField;
+
 @end
 
 
