@@ -132,10 +132,6 @@
     return image;
 }
 
-- (UIImage *)brandImage {
-    return [self.class brandImageForCardBrand:self.brand];
-}
-
 - (UIImage *)cvcImage {
     NSString *imageName = self.brand == STPCardBrandAmex ? @"stp_card_cvc_amex" : @"stp_card_cvc";
     return [self.class safeImageNamed:imageName];

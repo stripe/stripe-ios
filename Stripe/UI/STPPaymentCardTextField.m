@@ -405,7 +405,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 
 - (CGSize)intrinsicContentSize {
     
-    CGSize imageSize = self.viewModel.brandImage.size;
+    CGSize imageSize = self.brandImage.size;
     
     self.sizingField.text = self.viewModel.defaultPlaceholder;
     CGFloat textHeight = [self.sizingField measureTextSize].height;
@@ -629,7 +629,7 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 }
 
 - (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand {
-    return self.viewModel.brandImage;
+    return [self.viewModel.class brandImageForCardBrand:cardBrand];
 }
 #pragma clang diagnostic pop
 
