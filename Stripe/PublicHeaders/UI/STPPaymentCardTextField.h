@@ -135,6 +135,7 @@
 
 /**
  *  Returns the cvc image used for a card brand.
+ *  Override this method in a subclass if you would like to provide custom images.
  *  @param cardBrand The brand of card entered.
  *  @return The cvc image for used for a card brand.
  */
@@ -142,6 +143,7 @@
 
 /**
  *  Returns the brand image used for a card brand.
+ *  Override this method in a subclass if you would like to provide custom images.
  *  @param cardBrand The brand of card entered.
  *  @return The brand image for used for a card brand.
  */
