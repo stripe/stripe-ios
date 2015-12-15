@@ -625,7 +625,7 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-parameter"
 - (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand {
-    return self.viewModel.cvcImage;
+    return [self.viewModel.class cvcImageForCardBrand:cardBrand];
 }
 
 - (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand {
