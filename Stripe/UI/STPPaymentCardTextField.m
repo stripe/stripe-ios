@@ -622,8 +622,6 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     }
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-parameter"
 - (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand {
     return [self.viewModel.class cvcImageForCardBrand:cardBrand];
 }
@@ -631,7 +629,6 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 - (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand {
     return [self.viewModel.class brandImageForCardBrand:cardBrand];
 }
-#pragma clang diagnostic pop
 
 - (UIImage *)brandImageForFieldType:(STPCardFieldType)fieldType {
     if (fieldType == STPCardFieldTypeCVC) {
