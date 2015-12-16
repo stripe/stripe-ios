@@ -622,20 +622,20 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     }
 }
 
-- (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand {
-    return [self.viewModel.class cvcImageForCardBrand:cardBrand];
++ (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand {
+    return [STPPaymentCardTextFieldViewModel cvcImageForCardBrand:cardBrand];
 }
 
-- (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand {
-    return [self.viewModel.class brandImageForCardBrand:cardBrand];
++ (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand {
+    return [STPPaymentCardTextFieldViewModel brandImageForCardBrand:cardBrand];
 }
 
 - (UIImage *)brandImageForFieldType:(STPCardFieldType)fieldType {
     if (fieldType == STPCardFieldTypeCVC) {
-        return [self cvcImageForCardBrand:self.viewModel.brand];
+        return [self.class cvcImageForCardBrand:self.viewModel.brand];
     }
 
-    return [self brandImageForCardBrand:self.viewModel.brand];
+    return [self.class brandImageForCardBrand:self.viewModel.brand];
 }
 
 - (void)updateImageForFieldType:(STPCardFieldType)fieldType {
