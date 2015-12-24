@@ -99,11 +99,11 @@
     }
 }
 
-- (UIImage *)brandImage {
++ (UIImage *)brandImageForCardBrand:(STPCardBrand)brand {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     NSString *imageName;
     BOOL templateSupported = [[UIImage new] respondsToSelector:@selector(imageWithRenderingMode:)];
-    switch (self.brand) {
+    switch (brand) {
         case STPCardBrandAmex:
             imageName = @"stp_card_amex";
             break;
@@ -126,14 +126,14 @@
             imageName = @"stp_card_visa";
     }
     UIImage *image = [self.class safeImageNamed:imageName];
-    if (self.brand == STPCardBrandUnknown && templateSupported) {
+    if (brand == STPCardBrandUnknown && templateSupported) {
         image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
     return image;
 }
 
-- (UIImage *)cvcImage {
-    NSString *imageName = self.brand == STPCardBrandAmex ? @"stp_card_cvc_amex" : @"stp_card_cvc";
++ (UIImage *)cvcImageForCardBrand:(STPCardBrand)brand {
+    NSString *imageName = brand == STPCardBrandAmex ? @"stp_card_cvc_amex" : @"stp_card_cvc";
     return [self.class safeImageNamed:imageName];
 }
 

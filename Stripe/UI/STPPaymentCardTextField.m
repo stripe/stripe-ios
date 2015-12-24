@@ -82,7 +82,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     _viewModel = [STPPaymentCardTextFieldViewModel new];
     _sizingField = [self buildTextField];
     
-    UIImageView *brandImageView = [[UIImageView alloc] initWithImage:[self brandImageForFieldType:STPCardFieldTypeNumber]];
+    UIImageView *brandImageView = [[UIImageView alloc] initWithImage:self.brandImage];
     brandImageView.contentMode = UIViewContentModeCenter;
     brandImageView.backgroundColor = [UIColor clearColor];
     if ([brandImageView respondsToSelector:@selector(setTintColor:)]) {
@@ -405,7 +405,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 
 - (CGSize)intrinsicContentSize {
     
-    CGSize imageSize = self.viewModel.brandImage.size;
+    CGSize imageSize = self.brandImage.size;
     
     self.sizingField.text = self.viewModel.defaultPlaceholder;
     CGFloat textHeight = [self.sizingField measureTextSize].height;
@@ -622,23 +622,20 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     }
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-parameter"
-- (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand {
-    return self.viewModel.cvcImage;
++ (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand {
+    return [STPPaymentCardTextFieldViewModel cvcImageForCardBrand:cardBrand];
 }
 
-- (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand {
-    return self.viewModel.brandImage;
++ (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand {
+    return [STPPaymentCardTextFieldViewModel brandImageForCardBrand:cardBrand];
 }
-#pragma clang diagnostic pop
 
 - (UIImage *)brandImageForFieldType:(STPCardFieldType)fieldType {
     if (fieldType == STPCardFieldTypeCVC) {
-        return [self cvcImageForCardBrand:self.viewModel.brand];
+        return [self.class cvcImageForCardBrand:self.viewModel.brand];
     }
 
-    return [self brandImageForCardBrand:self.viewModel.brand];
+    return [self.class brandImageForCardBrand:self.viewModel.brand];
 }
 
 - (void)updateImageForFieldType:(STPCardFieldType)fieldType {

@@ -135,17 +135,19 @@
 
 /**
  *  Returns the cvc image used for a card brand.
+ *  Override this method in a subclass if you would like to provide custom images.
  *  @param cardBrand The brand of card entered.
- *  @return The cvc image for used for a card brand.
+ *  @return The cvc image used for a card brand.
  */
-- (nullable UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
++ (nullable UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
 
 /**
  *  Returns the brand image used for a card brand.
+ *  Override this method in a subclass if you would like to provide custom images.
  *  @param cardBrand The brand of card entered.
- *  @return The brand image for used for a card brand.
+ *  @return The brand image used for a card brand.
  */
-- (nullable UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
++ (nullable UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
 
 /**
  *  Returns the rectangle in which the receiver draws its brand image.
