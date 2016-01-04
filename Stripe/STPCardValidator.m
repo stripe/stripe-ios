@@ -76,13 +76,10 @@
 
 + (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear
                                                    inMonth:(NSString *)expirationMonth {
-    
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth fromDate:[NSDate date]];
-    NSInteger currentYear = dateComponents.year % 100;
-    NSInteger currentMonth = dateComponents.month;
-    
-    return [self validationStateForExpirationYear:expirationYear inMonth:expirationMonth inCurrentYear:currentYear currentMonth:currentMonth];
+    return [self validationStateForExpirationYear:expirationYear
+                                          inMonth:expirationMonth
+                                    inCurrentYear:[self currentYear]
+                                     currentMonth:[self currentMonth]];
 }
 
 
@@ -131,6 +128,41 @@
             return STPCardValidationStateIncomplete;
         }
     }
+}
+
++ (STPCardValidationState)validationStateForCard:(nonnull STPCardParams *)card inCurrentYear:(NSInteger)currentYear currentMonth:(NSInteger)currentMonth {
+    STPCardValidationState numberValidation = [self validationStateForNumber:card.number validatingCardBrand:YES];
+    NSString *expMonthString = [NSString stringWithFormat:@"%02lu", (unsigned long)card.expMonth];
+    STPCardValidationState expMonthValidation = [self validationStateForExpirationMonth:expMonthString];
+    NSString *expYearString = [NSString stringWithFormat:@"%02lu", (unsigned long)card.expYear%100];
+    STPCardValidationState expYearValidation = [self validationStateForExpirationYear:expYearString
+                                                                              inMonth:expMonthString
+                                                                        inCurrentYear:currentYear
+                                                                         currentMonth:currentMonth];
+    STPCardBrand brand = [self brandForNumber:card.number];
+    STPCardValidationState cvcValidation = [self validationStateForCVC:card.cvc cardBrand:brand];
+
+    NSArray<NSNumber *> *states = @[@(numberValidation),
+                                    @(expMonthValidation),
+                                    @(expYearValidation),
+                                    @(cvcValidation)];
+    BOOL incomplete = NO;
+    for (NSNumber *boxedState in states) {
+        STPCardValidationState state = [boxedState integerValue];
+        if (state == STPCardValidationStateInvalid) {
+            return state;
+        }
+        else if (state == STPCardValidationStateIncomplete) {
+            incomplete = YES;
+        }
+    }
+    return incomplete ? STPCardValidationStateIncomplete : STPCardValidationStateValid;
+}
+
++ (STPCardValidationState)validationStateForCard:(STPCardParams *)card {
+    return [self validationStateForCard:card
+                          inCurrentYear:[self currentYear]
+                           currentMonth:[self currentMonth]];
 }
 
 + (NSUInteger)minCVCLength {
@@ -252,6 +284,16 @@
     return sum % 10 == 0;
 }
 
++ (NSInteger)currentYear {
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear fromDate:[NSDate date]];
+    return dateComponents.year % 100;
+}
 
++ (NSInteger)currentMonth {
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dateComponents = [calendar components:NSCalendarUnitMonth fromDate:[NSDate date]];
+    return dateComponents.month;
+}
 
 @end

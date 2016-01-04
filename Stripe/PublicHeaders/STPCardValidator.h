@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "STPCardParams.h"
 #import "STPCardBrand.h"
 #import "STPCardValidationState.h"
 
@@ -89,7 +90,17 @@
  */
 + (STPCardValidationState)validationStateForCVC:(nonnull NSString *)cvc cardBrand:(STPCardBrand)brand;
 
+/**
+ *  Validates the given card details.
+ *
+ *  @param params  the card details to validate.
+ * 
+ *  @return STPCardValidationStateValid if all fields are valid, STPCardValidationStateInvalid if any field is invalid, or STPCardValidationStateIncomplete if all fields are either incomplete or valid.
+ */
++ (STPCardValidationState)validationStateForCard:(nonnull STPCardParams *)card;
+
 // Exposed for testing only.
 + (STPCardValidationState)validationStateForExpirationYear:(nonnull NSString *)expirationYear inMonth:(nonnull NSString *)expirationMonth inCurrentYear:(NSInteger)currentYear currentMonth:(NSInteger)currentMonth;
++ (STPCardValidationState)validationStateForCard:(nonnull STPCardParams *)card inCurrentYear:(NSInteger)currentYear currentMonth:(NSInteger)currentMonth;
 
 @end
