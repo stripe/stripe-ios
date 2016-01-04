@@ -13,7 +13,7 @@
 		04E6FCC01B714933000C8759 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCBF1B714933000C8759 /* Images.xcassets */; };
 		04E6FCC31B714933000C8759 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCC11B714933000C8759 /* LaunchScreen.xib */; };
 		04E6FCCF1B714933000C8759 /* CocoapodsTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E6FCCE1B714933000C8759 /* CocoapodsTestTests.swift */; };
-		9F0064E2A2DB6EB40DBC6336 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C012B7D3F96E621477F0C65 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		9F0064E2A2DB6EB40DBC6336 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C012B7D3F96E621477F0C65 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

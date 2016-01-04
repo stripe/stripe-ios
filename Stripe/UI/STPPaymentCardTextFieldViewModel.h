@@ -34,7 +34,4 @@ typedef NS_ENUM(NSInteger, STPCardFieldType) {
 
 - (STPCardValidationState)validationStateForField:(STPCardFieldType)fieldType;
 
-+ (nullable UIImage *)brandImageForCardBrand:(STPCardBrand)brand;
-+ (nullable UIImage *)cvcImageForCardBrand:(STPCardBrand)brand;
-
 @end
