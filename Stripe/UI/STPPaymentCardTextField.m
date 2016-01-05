@@ -404,6 +404,55 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     return c;
 }
 
+- (void)setCard:(nonnull STPCardParams *)card {
+    if (card.number.length) {
+        [self setText:card.number inField:STPCardFieldTypeNumber];
+    }
+    BOOL expirationPresent = card.expMonth && card.expYear;
+    if (expirationPresent) {
+        NSString *text = [NSString stringWithFormat:@"%02lu%02lu",
+                          (unsigned long)card.expMonth,
+                          (unsigned long)card.expYear%100];
+        [self setText:text inField:STPCardFieldTypeExpiration];
+    }
+    if (card.cvc.length) {
+        [self setText:card.cvc inField:STPCardFieldTypeCVC];
+    }
+    if (expirationPresent || card.cvc.length || [self shouldShrinkNumberField]) {
+        [self setNumberFieldShrunk:YES animated:NO completion:nil];
+    }
+    // update the card image, falling back to the number field image if not editing
+    if ([self.expirationField isFirstResponder]) {
+        [self updateImageForFieldType:STPCardFieldTypeExpiration];
+    }
+    else if ([self.cvcField isFirstResponder]) {
+        [self updateImageForFieldType:STPCardFieldTypeCVC];
+    }
+    else {
+        [self updateImageForFieldType:STPCardFieldTypeNumber];
+    }
+}
+
+- (void)setText:(NSString *)text inField:(STPCardFieldType)field {
+    STPFormTextField *textField = nil;
+    switch (field) {
+        case STPCardFieldTypeNumber:
+            textField = self.numberField;
+            break;
+        case STPCardFieldTypeExpiration:
+            textField = self.expirationField;
+            break;
+        case STPCardFieldTypeCVC:
+            textField = self.cvcField;
+            break;
+    }
+    self.selectedField = (self.isFirstResponder) ? textField : nil;
+    id delegate = (id<UITextFieldDelegate>)self;
+    NSRange range = NSMakeRange(0, textField.text.length);
+    [delegate textField:textField shouldChangeCharactersInRange:range
+      replacementString:text];
+}
+
 - (CGSize)intrinsicContentSize {
     
     CGSize imageSize = self.brandImage.size;
