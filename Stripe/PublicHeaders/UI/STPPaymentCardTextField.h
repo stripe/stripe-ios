@@ -220,6 +220,11 @@
  */
 @property(nonatomic, readonly, nullable) STPCardParams *card;
 
+/**
+ *  Configures the field with the given card details.
+ */
+- (void)setCard:(nonnull STPCardParams *)card;
+
 @end
 
 #pragma mark - PaymentKit compatibility
