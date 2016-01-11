@@ -555,10 +555,21 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     switch ((STPCardFieldType)textField.tag) {
         case STPCardFieldTypeNumber:
             [self setNumberFieldShrunk:NO animated:YES completion:nil];
+            if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidBeginEditingNumber:)]) {
+                [self.delegate paymentCardTextFieldDidBeginEditingNumber:self];
+            }
             break;
-            
-        default:
+        case STPCardFieldTypeCVC:
             [self setNumberFieldShrunk:YES animated:YES completion:nil];
+            if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidBeginEditingCVC:)]) {
+                [self.delegate paymentCardTextFieldDidBeginEditingCVC:self];
+            }
+            break;
+        case STPCardFieldTypeExpiration:
+            [self setNumberFieldShrunk:YES animated:YES completion:nil];
+            if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidBeginEditingExpiration:)]) {
+                [self.delegate paymentCardTextFieldDidBeginEditingExpiration:self];
+            }
             break;
     }
     [self updateImageForFieldType:textField.tag];
