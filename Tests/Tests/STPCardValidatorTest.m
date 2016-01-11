@@ -214,5 +214,30 @@
     }
 }
 
+- (void)testCardValidation {
+    NSArray *tests = @[
+                       @[@"4242424242424242", @(12), @(15), @"123", @(STPCardValidationStateValid)],
+                       @[@"4242424242424242", @(12), @(15), @"x", @(STPCardValidationStateInvalid)],
+                       @[@"4242424242424242", @(12), @(15), @"1", @(STPCardValidationStateIncomplete)],
+                       @[@"4242424242424242", @(12), @(14), @"123", @(STPCardValidationStateInvalid)],
+                       @[@"4242424242424242", @(21), @(15), @"123", @(STPCardValidationStateInvalid)],
+                       @[@"42424242", @(12), @(15), @"123", @(STPCardValidationStateIncomplete)],
+                       @[@"378282246310005", @(12), @(15), @"1234", @(STPCardValidationStateValid)],
+                       @[@"378282246310005", @(12), @(15), @"123", @(STPCardValidationStateValid)],
+                       @[@"378282246310005", @(12), @(15), @"12345", @(STPCardValidationStateInvalid)],
+                       @[@"1234567812345678", @(12), @(15), @"12345", @(STPCardValidationStateInvalid)],
+                       ];
+    for (NSArray *test in tests) {
+        STPCardParams *card = [[STPCardParams alloc] init];
+        card.number = test[0];
+        card.expMonth = [test[1] integerValue];
+        card.expYear = [test[2] integerValue];
+        card.cvc = test[3];
+        STPCardValidationState state = [STPCardValidator validationStateForCard:card
+                                        inCurrentYear:15 currentMonth:8];
+        XCTAssertEqualObjects(@(state), test[4]);
+    }
+}
+
 
 @end
