@@ -13,6 +13,7 @@
 #import "STPPaymentCardTextFieldViewModel.h"
 #import "STPFormTextField.h"
 #import "STPCardValidator.h"
+#import "UIImage+Stripe.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -634,11 +635,11 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 }
 
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand {
-    return [STPPaymentCardTextFieldViewModel cvcImageForCardBrand:cardBrand];
+    return [UIImage stp_cvcImageForCardBrand:cardBrand];
 }
 
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand {
-    return [STPPaymentCardTextFieldViewModel brandImageForCardBrand:cardBrand];
+    return [UIImage stp_brandImageForCardBrand:cardBrand];
 }
 
 - (UIImage *)brandImageForFieldType:(STPCardFieldType)fieldType {

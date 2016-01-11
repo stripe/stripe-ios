@@ -8,6 +8,7 @@
 
 #import "STPPaymentCardTextFieldViewModel.h"
 #import "STPCardValidator.h"
+#import "UIImage+Stripe.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -97,51 +98,6 @@
         case STPCardFieldTypeCVC:
             return [STPCardValidator validationStateForCVC:self.cvc cardBrand:self.brand];
     }
-}
-
-+ (UIImage *)brandImageForCardBrand:(STPCardBrand)brand {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
-    NSString *imageName;
-    BOOL templateSupported = [[UIImage new] respondsToSelector:@selector(imageWithRenderingMode:)];
-    switch (brand) {
-        case STPCardBrandAmex:
-            imageName = @"stp_card_amex";
-            break;
-        case STPCardBrandDinersClub:
-            imageName = @"stp_card_diners";
-            break;
-        case STPCardBrandDiscover:
-            imageName = @"stp_card_discover";
-            break;
-        case STPCardBrandJCB:
-            imageName = @"stp_card_jcb";
-            break;
-        case STPCardBrandMasterCard:
-            imageName = @"stp_card_mastercard";
-            break;
-        case STPCardBrandUnknown:
-            imageName = templateSupported ? @"stp_card_placeholder_template" : @"stp_card_placeholder";
-            break;
-        case STPCardBrandVisa:
-            imageName = @"stp_card_visa";
-    }
-    UIImage *image = [self.class safeImageNamed:imageName];
-    if (brand == STPCardBrandUnknown && templateSupported) {
-        image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    }
-    return image;
-}
-
-+ (UIImage *)cvcImageForCardBrand:(STPCardBrand)brand {
-    NSString *imageName = brand == STPCardBrandAmex ? @"stp_card_cvc_amex" : @"stp_card_cvc";
-    return [self.class safeImageNamed:imageName];
-}
-
-+ (UIImage *)safeImageNamed:(NSString *)imageName {
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        return [UIImage imageNamed:imageName inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
-    }
-    return [UIImage imageNamed:imageName];
 }
 
 - (BOOL)isValid {
