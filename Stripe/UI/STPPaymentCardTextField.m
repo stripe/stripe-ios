@@ -405,9 +405,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 }
 
 - (void)setCard:(nonnull STPCardParams *)card {
-    if (card.number.length) {
-        [self setText:card.number inField:STPCardFieldTypeNumber];
-    }
+    [self setText:card.number inField:STPCardFieldTypeNumber];
     BOOL expirationPresent = card.expMonth && card.expYear;
     if (expirationPresent) {
         NSString *text = [NSString stringWithFormat:@"%02lu%02lu",
@@ -415,12 +413,17 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
                           (unsigned long)card.expYear%100];
         [self setText:text inField:STPCardFieldTypeExpiration];
     }
-    if (card.cvc.length) {
-        [self setText:card.cvc inField:STPCardFieldTypeCVC];
+    else {
+        [self setText:@"" inField:STPCardFieldTypeExpiration];
     }
-    if (expirationPresent || card.cvc.length || [self shouldShrinkNumberField]) {
-        [self setNumberFieldShrunk:YES animated:NO completion:nil];
+    [self setText:card.cvc inField:STPCardFieldTypeCVC];
+
+    if (![self isFirstResponder]) {
+        BOOL shrinkNumberField = ((expirationPresent || card.cvc.length) && !card.number.length) ||
+        [self shouldShrinkNumberField];
+        [self setNumberFieldShrunk:shrinkNumberField animated:NO completion:nil];
     }
+
     // update the card image, falling back to the number field image if not editing
     if ([self.expirationField isFirstResponder]) {
         [self updateImageForFieldType:STPCardFieldTypeExpiration];
@@ -434,6 +437,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 }
 
 - (void)setText:(NSString *)text inField:(STPCardFieldType)field {
+    NSString *nonNilText = text == nil ? @"" : text;
     STPFormTextField *textField = nil;
     switch (field) {
         case STPCardFieldTypeNumber:
@@ -450,7 +454,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     id delegate = (id<UITextFieldDelegate>)self;
     NSRange range = NSMakeRange(0, textField.text.length);
     [delegate textField:textField shouldChangeCharactersInRange:range
-      replacementString:text];
+      replacementString:nonNilText];
 }
 
 - (CGSize)intrinsicContentSize {

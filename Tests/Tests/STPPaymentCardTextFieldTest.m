@@ -140,6 +140,26 @@
     XCTAssertFalse(sut.isValid);
 }
 
+- (void)testSetCard_partialNumberAndExpiration {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPCardParams *card = [STPCardParams new];
+    NSString *number = @"42";
+    card.number = number;
+    card.expMonth = 10;
+    card.expYear = 99;
+    [sut setCard:card];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertNil(sut.selectedField);
+    XCTAssertFalse(sut.isValid);
+}
+
 - (void)testSetCard_numberAndCVC {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
     STPCardParams *card = [STPCardParams new];
@@ -200,6 +220,25 @@
     XCTAssertEqualObjects(sut.cvcField.text, cvc);
     XCTAssertNil(sut.selectedField);
     XCTAssertTrue(sut.isValid);
+}
+
+- (void)testSetCard_empty {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPCardParams *card = [STPCardParams new];
+    sut.numberField.text = @"4242424242424242";
+    sut.cvcField.text = @"123";
+    sut.expirationField.text = @"10/99";
+    [sut setCard:card];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
+
+    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertNil(sut.selectedField);
+    XCTAssertFalse(sut.isValid);
 }
 
 @end
