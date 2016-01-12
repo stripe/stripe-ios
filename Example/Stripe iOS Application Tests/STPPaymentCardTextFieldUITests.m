@@ -55,7 +55,48 @@
     XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
     XCTAssertEqualObjects(self.sut.cvcField.text, cvc);
     XCTAssertEqualObjects(self.sut.selectedField, self.sut.cvcField);
+    XCTAssertTrue([self.sut.cvcField isFirstResponder]);
     XCTAssertTrue(self.sut.isValid);
+}
+
+- (void)testSetCard_partialNumberAndExpiration_whileEditingExpiration {
+    XCTAssertTrue([self.sut.expirationField becomeFirstResponder]);
+    STPCardParams *card = [STPCardParams new];
+    NSString *number = @"42";
+    card.number = number;
+    card.expMonth = 10;
+    card.expYear = 99;
+    [self.sut setCard:card];
+    NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertTrue(self.sut.numberFieldShrunk);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(self.sut.numberField.text, number);
+    XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
+    XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(self.sut.selectedField, self.sut.cvcField);
+    XCTAssertTrue([self.sut.cvcField isFirstResponder]);
+    XCTAssertFalse(self.sut.isValid);
+}
+
+- (void)testSetCard_number_whileEditingCVC {
+    XCTAssertTrue([self.sut.cvcField becomeFirstResponder]);
+    STPCardParams *card = [STPCardParams new];
+    NSString *number = @"4242424242424242";
+    card.number = number;
+    [self.sut setCard:card];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertTrue(self.sut.numberFieldShrunk);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(self.sut.numberField.text, number);
+    XCTAssertEqual(self.sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(self.sut.selectedField, self.sut.expirationField);
+    XCTAssertTrue([self.sut.expirationField isFirstResponder]);
+    XCTAssertFalse(sut.isValid);
 }
 
 @end

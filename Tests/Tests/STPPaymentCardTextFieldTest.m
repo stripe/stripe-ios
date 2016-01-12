@@ -151,7 +151,7 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
 
-    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertTrue(sut.numberFieldShrunk);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");

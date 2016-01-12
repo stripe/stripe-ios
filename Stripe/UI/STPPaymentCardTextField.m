@@ -418,11 +418,8 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     }
     [self setText:card.cvc inField:STPCardFieldTypeCVC];
 
-    if (![self isFirstResponder]) {
-        BOOL shrinkNumberField = ((expirationPresent || card.cvc.length) && !card.number.length) ||
-        [self shouldShrinkNumberField];
-        [self setNumberFieldShrunk:shrinkNumberField animated:NO completion:nil];
-    }
+    BOOL shrinkNumberField = (expirationPresent || card.cvc.length) || [self shouldShrinkNumberField];
+    [self setNumberFieldShrunk:shrinkNumberField animated:NO completion:nil];
 
     // update the card image, falling back to the number field image if not editing
     if ([self.expirationField isFirstResponder]) {
