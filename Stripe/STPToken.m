@@ -92,4 +92,18 @@
     return token;
 }
 
+#pragma mark STPSource
+
+- (NSString *)label {
+    return [self.card label];
+}
+
+- (NSString *)stripeID {
+    return self.tokenId;
+}
+
+- (UIImage *)image {
+    return [self.card image];
+}
+
 @end

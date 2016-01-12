@@ -20,6 +20,12 @@
 #import "STPCheckoutOptions.h"
 #import "STPCheckoutViewController.h"
 
+#import "STPPaymentRequest.h"
+#import "STPLineItem.h"
+#import "STPPaymentAuthorizationViewController.h"
+#import "STPSourceProvider.h"
+#import "STPPaymentResult.h"
+
 #if TARGET_OS_IPHONE
 #import "Stripe+ApplePay.h"
 #import "STPAPIClient+ApplePay.h"
