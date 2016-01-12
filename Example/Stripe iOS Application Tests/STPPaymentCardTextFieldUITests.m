@@ -14,7 +14,6 @@
 @property(nonatomic, readwrite, weak)UITextField *numberField;
 @property(nonatomic, readwrite, weak)UITextField *expirationField;
 @property(nonatomic, readwrite, weak)UITextField *cvcField;
-@property(nonatomic, readwrite, weak)UITextField *selectedField;
 @property(nonatomic, assign)BOOL numberFieldShrunk;
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
@@ -54,7 +53,6 @@
     XCTAssertEqualObjects(self.sut.numberField.text, number);
     XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
     XCTAssertEqualObjects(self.sut.cvcField.text, cvc);
-    XCTAssertEqualObjects(self.sut.selectedField, self.sut.cvcField);
     XCTAssertTrue([self.sut.cvcField isFirstResponder]);
     XCTAssertTrue(self.sut.isValid);
 }
@@ -75,8 +73,7 @@
     XCTAssertEqualObjects(self.sut.numberField.text, number);
     XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
     XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
-    XCTAssertEqualObjects(self.sut.selectedField, self.sut.cvcField);
-    XCTAssertTrue([self.sut.cvcField isFirstResponder]);
+    XCTAssertTrue([self.sut.expirationField isFirstResponder]);
     XCTAssertFalse(self.sut.isValid);
 }
 
@@ -86,7 +83,7 @@
     NSString *number = @"4242424242424242";
     card.number = number;
     [self.sut setCard:card];
-    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
 
     XCTAssertTrue(self.sut.numberFieldShrunk);
@@ -94,9 +91,27 @@
     XCTAssertEqualObjects(self.sut.numberField.text, number);
     XCTAssertEqual(self.sut.expirationField.text.length, (NSUInteger)0);
     XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
-    XCTAssertEqualObjects(self.sut.selectedField, self.sut.expirationField);
     XCTAssertTrue([self.sut.expirationField isFirstResponder]);
-    XCTAssertFalse(sut.isValid);
+    XCTAssertFalse(self.sut.isValid);
+}
+
+- (void)testSetCard_empty_whileEditingNumber {
+    XCTAssertTrue([self.sut.numberField becomeFirstResponder]);
+    self.sut.numberField.text = @"4242424242424242";
+    self.sut.cvcField.text = @"123";
+    self.sut.expirationField.text = @"10/99";
+    STPCardParams *card = [STPCardParams new];
+    [self.sut setCard:card];
+    NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
+
+    XCTAssertFalse(self.sut.numberFieldShrunk);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqual(self.sut.numberField.text.length, (NSUInteger)0);
+    XCTAssertEqual(self.sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertTrue([self.sut.numberField isFirstResponder]);
+    XCTAssertFalse(self.sut.isValid);
 }
 
 @end

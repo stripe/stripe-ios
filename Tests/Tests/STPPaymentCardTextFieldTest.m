@@ -224,10 +224,10 @@
 
 - (void)testSetCard_empty {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
-    STPCardParams *card = [STPCardParams new];
     sut.numberField.text = @"4242424242424242";
     sut.cvcField.text = @"123";
     sut.expirationField.text = @"10/99";
+    STPCardParams *card = [STPCardParams new];
     [sut setCard:card];
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
