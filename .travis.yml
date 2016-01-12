@@ -15,6 +15,7 @@ script:
   - "./ci_scripts/check_fauxpas.sh"
   - "./ci_scripts/check_version.rb"
   - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeiOS Tests" -configuration Debug -sdk iphonesimulator | xcpretty -c
+  - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "Stripe iOS Application Tests" -configuration Debug -sdk iphonesimulator -destination "OS=9.0,name=iPhone 6" | xcpretty -c
   - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeOSX Tests" | xcpretty -c
   - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe iOS Example (Simple)" -sdk iphonesimulator | xcpretty -c
   - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe iOS Example (Custom)" -sdk iphonesimulator | xcpretty -c
