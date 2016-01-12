@@ -231,14 +231,11 @@
 @property(nonatomic, readonly, nullable) NSString *cvc;
 
 /**
- *  Convenience method to create a STPCard from the currently entered information. Will return nil if not valid.
+ *  Convenience property for creating an STPCard from the currently entered information
+ *  or programmatically setting the field's contents.
+ *  Nil if the current information is not a valid card.
  */
-@property(nonatomic, readonly, nullable) STPCardParams *card;
-
-/**
- *  Configures the field with the given card details.
- */
-- (void)setCard:(nonnull STPCardParams *)card;
+@property(nonatomic, readwrite, nullable) STPCardParams *card;
 
 @end
 
@@ -264,7 +261,7 @@ __attribute__((deprecated("This protocol is provided only for backwards-compatib
 __attribute__((deprecated("This class is provided only for backwards-compatibility with PaymentKit. You shouldn't use it - use STPPaymentCardTextField instead.")))
 @interface PTKView : STPPaymentCardTextField
 @property(nonatomic, weak, nullable)id<PTKViewDelegate>delegate;
-@property(nonatomic, readonly, nonnull) PTKCard *card;
+@property(nonatomic, readwrite, nonnull) PTKCard *card;
 @end
 
 #pragma clang diagnostic pop

@@ -404,7 +404,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     return c;
 }
 
-- (void)setCard:(nonnull STPCardParams *)card {
+- (void)setCard:(STPCardParams *)card {
     [self setText:card.number inField:STPCardFieldTypeNumber];
     BOOL expirationPresent = card.expMonth && card.expYear;
     if (expirationPresent) {
@@ -740,7 +740,7 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 
 @implementation PTKView
 
-@dynamic delegate;
+@dynamic delegate, card;
 
 - (void)setDelegate:(id<PTKViewDelegate> __nullable)delegate {
     self.internalDelegate = delegate;
