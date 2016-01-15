@@ -44,6 +44,11 @@
  */
 - (void)paymentCardTextFieldDidBeginEditingExpiration:(nonnull STPPaymentCardTextField *)textField;
 
+/**
+ *  Called when editing begins in the payment card field's zipcode field.
+ */
+- (void)paymentCardTextFieldDidBeginEditingZipcode:(nonnull STPPaymentCardTextField *)textField;
+
 @end
 
 
@@ -91,6 +96,12 @@
  *  The placeholder for the cvc field. Defaults to @"CVC".
  */
 @property(nonatomic, copy, nullable) NSString *cvcPlaceholder;
+
+
+/**
+ *  The placeholder for the zipcode field. Defaults to @"ZIP".
+ */
+@property(nonatomic, copy, nullable) NSString *zipcodePlaceholder;
 
 /**
  *  The cursor color for the field. This is a proxy for the view's tintColor property, exposed for clarity only (in other words, calling setCursorColor is identical to calling setTintColor).
@@ -229,6 +240,11 @@
  *  The current card CVC displayed by the field. May or may not be valid, unless isValid is true, in which case it is guaranteed to be valid.
  */
 @property(nonatomic, readonly, nullable) NSString *cvc;
+
+/**
+ *  The current zipcode displayed by the field.  May or may not be valid, unless isValid is true, in which case it is guaranteed to be valid.
+ */
+@property(nonatomic, readonly, nullable) NSString *zipcode;
 
 /**
  *  Convenience method to create a STPCard from the currently entered information. Will return nil if not valid.
