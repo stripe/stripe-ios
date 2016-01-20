@@ -431,7 +431,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     CGFloat placeholderWidth = [self widthForCardNumber:self.numberField.placeholder] - 4;
     CGFloat numberWidth = [self widthForCardNumber:self.viewModel.defaultPlaceholder] - 4;
     CGFloat numberFieldWidth = MAX(placeholderWidth, numberWidth);
-    CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 8;
+    CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 13;
     CGFloat numberFieldX = self.numberFieldShrunk ? STPPaymentCardTextFieldDefaultPadding - nonFragmentWidth : 8;
     return CGRectMake(numberFieldX, 0, numberFieldWidth, CGRectGetHeight(bounds));
 }
@@ -540,7 +540,7 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 - (CGFloat)widthForCardNumber:(NSString *)cardNumber {
     self.sizingField.formatsCardNumbers = YES;
     [self.sizingField setText:cardNumber];
-    return [self.sizingField measureTextSize].width + 15;
+    return [self.sizingField measureTextSize].width + 20;
 }
 
 #pragma mark STPPaymentTextFieldDelegate
