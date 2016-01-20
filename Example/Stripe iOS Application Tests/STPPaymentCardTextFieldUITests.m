@@ -44,7 +44,7 @@
     card.expMonth = 10;
     card.expYear = 99;
     card.cvc = cvc;
-    [self.sut setCard:card];
+    [self.sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField cvcImageForCardBrand:STPCardBrandVisa]);
 
@@ -64,11 +64,11 @@
     card.number = number;
     card.expMonth = 10;
     card.expYear = 99;
-    [self.sut setCard:card];
+    [self.sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
 
-    XCTAssertTrue(self.sut.numberFieldShrunk);
+    XCTAssertFalse(self.sut.numberFieldShrunk);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(self.sut.numberField.text, number);
     XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
@@ -82,7 +82,7 @@
     STPCardParams *card = [STPCardParams new];
     NSString *number = @"4242424242424242";
     card.number = number;
-    [self.sut setCard:card];
+    [self.sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
 
@@ -101,7 +101,7 @@
     self.sut.cvcField.text = @"123";
     self.sut.expirationField.text = @"10/99";
     STPCardParams *card = [STPCardParams new];
-    [self.sut setCard:card];
+    [self.sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
 
