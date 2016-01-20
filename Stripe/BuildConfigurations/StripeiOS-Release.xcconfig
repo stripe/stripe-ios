@@ -7,6 +7,4 @@
 
 #include "StripeiOS-Shared.xcconfig"
 
-//********************************************//
-//* Currently no build settings in this file *//
-//********************************************//
+ENABLE_NS_ASSERTIONS = YES
