@@ -227,6 +227,15 @@
 		049E84EA1A605EF0000B66CD /* STPCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CA1A5F30A700B854EE /* STPCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		049E84EB1A605EF0000B66CD /* STPToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CC1A5F30A700B854EE /* STPToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		049E84EC1A605EF0000B66CD /* StripeError.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4CE1A5F30A700B854EE /* StripeError.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04A4C3891C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A4C3851C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.h */; };
+		04A4C38A1C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A4C3851C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.h */; };
+		04A4C38B1C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3861C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.m */; };
+		04A4C38C1C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3861C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.m */; };
+		04A4C38D1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A4C3871C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h */; };
+		04A4C38E1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A4C3871C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h */; };
+		04A4C38F1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3881C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m */; };
+		04A4C3901C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3881C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m */; };
+		04A4C3921C4F263300B3B290 /* STPNSArrayStripeBoundSafeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3911C4F263300B3B290 /* STPNSArrayStripeBoundSafeTests.m */; };
 		04B33F361BC7488D00DD8120 /* Info.plist in Copy Files */ = {isa = PBXBuildFile; fileRef = 04B33F301BC7417B00DD8120 /* Info.plist */; };
 		04CB86BA1BA89CE100E4F61E /* PKPayment+StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */; };
 		04CDB4D31A5F30A700B854EE /* Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4A91A5F30A700B854EE /* Stripe.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -439,6 +448,11 @@
 		049952CE1BCF13510088C703 /* STPAPIPostRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAPIPostRequest.m; sourceTree = "<group>"; };
 		049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPAPIClient+Private.h"; sourceTree = "<group>"; };
 		049E84AB1A605D93000B66CD /* libStripe.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStripe.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		04A4C3851C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Stripe_BoundSafe.h"; sourceTree = "<group>"; };
+		04A4C3861C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Stripe_BoundSafe.m"; sourceTree = "<group>"; };
+		04A4C3871C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Stripe_ParentViewController.h"; sourceTree = "<group>"; };
+		04A4C3881C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Stripe_ParentViewController.m"; sourceTree = "<group>"; };
+		04A4C3911C4F263300B3B290 /* STPNSArrayStripeBoundSafeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPNSArrayStripeBoundSafeTests.m; sourceTree = "<group>"; };
 		04A58A461BC603BB004E7BC2 /* FABKitProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FABKitProtocol.h; sourceTree = "<group>"; };
 		04A58A471BC603BB004E7BC2 /* Fabric+FABKits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Fabric+FABKits.h"; sourceTree = "<group>"; };
 		04A58A481BC603BB004E7BC2 /* Fabric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fabric.h; sourceTree = "<group>"; };
@@ -730,6 +744,10 @@
 				0433EB481BD06313003912B4 /* NSDictionary+Stripe.m */,
 				04FCFA171BD59A8C00297732 /* STPCategoryLoader.h */,
 				04FCFA181BD59A8C00297732 /* STPCategoryLoader.m */,
+				04A4C3851C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.h */,
+				04A4C3861C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.m */,
+				04A4C3871C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h */,
+				04A4C3881C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m */,
 			);
 			name = Stripe;
 			path = Tests/../Stripe;
@@ -752,6 +770,8 @@
 				04CDB5271A5F3A9300B854EE /* STPTokenTest.m */,
 				04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */,
 				C178CD441C45607D00851C69 /* UIImage+StripeTest.m */,
+				04A4C3911C4F263300B3B290 /* STPNSArrayStripeBoundSafeTests.m */,
+				04CDB5611A5F3D2000B854EE /* Supporting Files */,
 			);
 			name = StripeTests;
 			path = Tests/Tests;
@@ -866,6 +886,7 @@
 				049E84DD1A605EF0000B66CD /* STPCheckoutOptions.h in Headers */,
 				0438EF2E1B7416BB00D506CC /* STPFormTextField.h in Headers */,
 				049E84DE1A605EF0000B66CD /* STPCheckoutViewController.h in Headers */,
+				04A4C38A1C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.h in Headers */,
 				049E84E61A605EF0000B66CD /* STPAPIClient.h in Headers */,
 				049E84E91A605EF0000B66CD /* STPBankAccount.h in Headers */,
 				049E84EA1A605EF0000B66CD /* STPCard.h in Headers */,
@@ -890,6 +911,7 @@
 				049E84E31A605EF0000B66CD /* STPIOSCheckoutWebViewAdapter.h in Headers */,
 				049E84E51A605EF0000B66CD /* STPStrictURLProtocol.h in Headers */,
 				049E84E71A605EF0000B66CD /* STPFormEncoder.h in Headers */,
+				04A4C38E1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -905,11 +927,13 @@
 				04CDB4E41A5F30A700B854EE /* STPCheckoutViewController.h in Headers */,
 				0438EF2C1B7416BB00D506CC /* STPFormTextField.h in Headers */,
 				04CDB50A1A5F30A700B854EE /* STPBankAccount.h in Headers */,
+				04A4C3891C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.h in Headers */,
 				049952D21BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */,
 				C1718D561C3B2E5B002A7CB3 /* UIImage+Stripe.h in Headers */,
 				04CDB5121A5F30A700B854EE /* STPToken.h in Headers */,
 				049952CF1BCF13510088C703 /* STPAPIPostRequest.h in Headers */,
 				04CDB4D81A5F30A700B854EE /* Stripe+ApplePay.h in Headers */,
+				04A4C38D1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h in Headers */,
 				0438EF471B74183100D506CC /* STPCardBrand.h in Headers */,
 				04CDB5161A5F30A700B854EE /* StripeError.h in Headers */,
 				04CDB4D41A5F30A700B854EE /* STPAPIClient+ApplePay.h in Headers */,
@@ -1279,6 +1303,7 @@
 				04415C5D1A6605B5001225ED /* STPIOSCheckoutWebViewAdapter.m in Sources */,
 				C178CD451C45607D00851C69 /* UIImage+StripeTest.m in Sources */,
 				0438EF4C1B741B0100D506CC /* STPCardValidatorTest.m in Sources */,
+				04A4C3921C4F263300B3B290 /* STPNSArrayStripeBoundSafeTests.m in Sources */,
 				04415C5F1A6605B5001225ED /* STPStrictURLProtocol.m in Sources */,
 				04415C611A6605B5001225ED /* STPFormEncoder.m in Sources */,
 				045A62AB1B8E7259000165CE /* STPPaymentCardTextFieldTest.m in Sources */,
@@ -1307,6 +1332,8 @@
 				0438EF451B74170D00D506CC /* STPCardValidator.m in Sources */,
 				0438EF311B7416BB00D506CC /* STPFormTextField.m in Sources */,
 				04FCFA1A1BD59A8C00297732 /* STPCategoryLoader.m in Sources */,
+				04A4C38C1C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.m in Sources */,
+				04A4C3901C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m in Sources */,
 				049E84C21A605DE0000B66CD /* STPAPIClient+ApplePay.m in Sources */,
 				049E84C31A605DE0000B66CD /* Stripe+ApplePay.m in Sources */,
 				049E84C51A605DE0000B66CD /* STPCheckoutOptions.m in Sources */,
@@ -1350,7 +1377,9 @@
 				04CDB5041A5F30A700B854EE /* STPFormEncoder.m in Sources */,
 				04CDB4F41A5F30A700B854EE /* STPIOSCheckoutWebViewAdapter.m in Sources */,
 				04CDB4DA1A5F30A700B854EE /* Stripe+ApplePay.m in Sources */,
+				04A4C38B1C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.m in Sources */,
 				04CDB4F01A5F30A700B854EE /* STPColorUtils.m in Sources */,
+				04A4C38F1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m in Sources */,
 				04CDB5141A5F30A700B854EE /* STPToken.m in Sources */,
 				04F3BB3F1BA89B1200DE235E /* PKPayment+Stripe.m in Sources */,
 				0433EB4C1BD06313003912B4 /* NSDictionary+Stripe.m in Sources */,
