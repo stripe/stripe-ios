@@ -231,11 +231,14 @@
 @property(nonatomic, readonly, nullable) NSString *cvc;
 
 /**
- *  Convenience property for creating an STPCard from the currently entered information
- *  or programmatically setting the field's contents.
- *  Nil if the current information is not a valid card.
+ *  Convenience property for creating an STPCardParams from the currently entered information
+ *  or programmatically setting the field's contents. For example, if you're using another library
+ *  to scan your user's credit card with a camera, you can assemble that data into an STPCardParams
+ *  object and set this property to that object to prefill the fields you've collected.
  */
-@property(nonatomic, readwrite, nullable) STPCardParams *card;
+@property(nonatomic, readwrite, nonnull) STPCardParams *cardParams;
+
+@property(nonatomic, readwrite, nullable) STPCardParams *card __attribute__((deprecated("This has been renamed to cardParams; use that instead.")));
 
 @end
 

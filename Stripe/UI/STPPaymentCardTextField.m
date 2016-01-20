@@ -337,6 +337,9 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 
 - (STPFormTextField *)nextField {
     if (self.selectedField == self.numberField) {
+        if ([self.viewModel validationStateForField:self.expirationField.tag] == STPCardValidationStateValid) {
+            return self.cvcField;
+        }
         return self.expirationField;
     } else if (self.selectedField == self.expirationField) {
         return self.cvcField;
@@ -393,9 +396,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     return self.viewModel.cvc;
 }
 
-- (STPCardParams *)card {
-    if (!self.isValid) { return nil; }
-    
+- (STPCardParams *)cardParams {
     STPCardParams *c = [[STPCardParams alloc] init];
     c.number = self.cardNumber;
     c.expMonth = self.expirationMonth;
@@ -404,23 +405,23 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     return c;
 }
 
-- (void)setCard:(STPCardParams *)card {
-    [self setText:card.number inField:STPCardFieldTypeNumber];
-    BOOL expirationPresent = card.expMonth && card.expYear;
+- (void)setCardParams:(STPCardParams *)cardParams {
+    [self setText:cardParams.number inField:STPCardFieldTypeNumber];
+    BOOL expirationPresent = cardParams.expMonth && cardParams.expYear;
     if (expirationPresent) {
         NSString *text = [NSString stringWithFormat:@"%02lu%02lu",
-                          (unsigned long)card.expMonth,
-                          (unsigned long)card.expYear%100];
+                          (unsigned long)cardParams.expMonth,
+                          (unsigned long)cardParams.expYear%100];
         [self setText:text inField:STPCardFieldTypeExpiration];
     }
     else {
         [self setText:@"" inField:STPCardFieldTypeExpiration];
     }
-    [self setText:card.cvc inField:STPCardFieldTypeCVC];
-
-    BOOL shrinkNumberField = (expirationPresent || card.cvc.length) || [self shouldShrinkNumberField];
+    [self setText:cardParams.cvc inField:STPCardFieldTypeCVC];
+    
+    BOOL shrinkNumberField = [self shouldShrinkNumberField];
     [self setNumberFieldShrunk:shrinkNumberField animated:NO completion:nil];
-
+    
     // update the card image, falling back to the number field image if not editing
     if ([self.expirationField isFirstResponder]) {
         [self updateImageForFieldType:STPCardFieldTypeExpiration];
@@ -431,6 +432,15 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     else {
         [self updateImageForFieldType:STPCardFieldTypeNumber];
     }
+}
+
+- (STPCardParams *)card {
+    if (!self.isValid) { return nil; }
+    return self.cardParams;
+}
+
+- (void)setCard:(STPCardParams *)card {
+    [self setCardParams:card];
 }
 
 - (void)setText:(NSString *)text inField:(STPCardFieldType)field {
