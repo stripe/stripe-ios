@@ -236,6 +236,7 @@
 		04A4C38F1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3881C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m */; };
 		04A4C3901C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3881C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m */; };
 		04A4C3921C4F263300B3B290 /* STPNSArrayStripeBoundSafeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3911C4F263300B3B290 /* STPNSArrayStripeBoundSafeTests.m */; };
+		04A4C3941C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3931C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m */; };
 		04B33F361BC7488D00DD8120 /* Info.plist in Copy Files */ = {isa = PBXBuildFile; fileRef = 04B33F301BC7417B00DD8120 /* Info.plist */; };
 		04CB86BA1BA89CE100E4F61E /* PKPayment+StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */; };
 		04CDB4D31A5F30A700B854EE /* Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4A91A5F30A700B854EE /* Stripe.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -453,6 +454,7 @@
 		04A4C3871C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Stripe_ParentViewController.h"; sourceTree = "<group>"; };
 		04A4C3881C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Stripe_ParentViewController.m"; sourceTree = "<group>"; };
 		04A4C3911C4F263300B3B290 /* STPNSArrayStripeBoundSafeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPNSArrayStripeBoundSafeTests.m; sourceTree = "<group>"; };
+		04A4C3931C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPUIVCStripeParentViewControllerTests.m; sourceTree = "<group>"; };
 		04A58A461BC603BB004E7BC2 /* FABKitProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FABKitProtocol.h; sourceTree = "<group>"; };
 		04A58A471BC603BB004E7BC2 /* Fabric+FABKits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Fabric+FABKits.h"; sourceTree = "<group>"; };
 		04A58A481BC603BB004E7BC2 /* Fabric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fabric.h; sourceTree = "<group>"; };
@@ -771,6 +773,7 @@
 				04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */,
 				C178CD441C45607D00851C69 /* UIImage+StripeTest.m */,
 				04A4C3911C4F263300B3B290 /* STPNSArrayStripeBoundSafeTests.m */,
+				04A4C3931C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m */,
 				04CDB5611A5F3D2000B854EE /* Supporting Files */,
 			);
 			name = StripeTests;
@@ -1294,6 +1297,7 @@
 				04415C571A6605B5001225ED /* Stripe+ApplePay.m in Sources */,
 				04415C591A6605B5001225ED /* STPCheckoutOptions.m in Sources */,
 				04415C5A1A6605B5001225ED /* STPCheckoutViewController.m in Sources */,
+				04A4C3941C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m in Sources */,
 				04415C5B1A6605B5001225ED /* STPCheckoutInternalUIWebViewController.m in Sources */,
 				0438EF3C1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m in Sources */,
 				0438EF441B74170D00D506CC /* STPCardValidator.m in Sources */,

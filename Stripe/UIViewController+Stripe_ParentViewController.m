@@ -11,18 +11,10 @@
 @implementation UIViewController (Stripe_ParentViewController)
 
 - (nullable UIViewController *)stp_parentViewControllerOfClass:(nonnull Class)klass {
-    if ([self isKindOfClass:klass]) {
-        return self;
+    if ([self.parentViewController isKindOfClass:klass]) {
+        return self.parentViewController;
     }
     return [self.parentViewController stp_parentViewControllerOfClass:klass];
-//    for (UIViewController *vc in self.parentViewController.childViewControllers)
-//    for vc in (self.parentViewController?.childViewControllers ?? []) {
-//        if let cards = vc as? STPCardsViewController {
-//            return cards
-//        }
-//    }
-//    return self.parentViewController?.cardsViewController ?? nil
-
 }
 
 @end
