@@ -1,3 +1,10 @@
+== 6.1.0 2016-01-21
+* Renamed card on STPPaymentCardTextField to cardParams.
+* You can now set an STPPaymentCardTextField's contents programmatically by setting cardParams to an STPCardParams object.
+* Added delegate methods for responding to didBeginEditing events in STPPaymentCardTextField.
+* Added a UIImage category for accessing our card icon images
+* Fixed deprecation warnings for deployment targets >= iOS 9.0
+
 == 6.0.0 2015-10-19
 * Splits logic in STPCard into 2 classes - STPCard and STPCardParams. STPCardParams is for making requests to the Stripe API, while STPCard represents the response (you'll almost certainly want just to replace any usage of STPCard in your app with STPCardParams). This also applies to STPBankAccount and the newly-created STPBankAccountParams.
 * Version 6.0.1 fixes a minor Cocoapods issue.
@@ -103,7 +110,7 @@
 
 === 1.0.2 2013-09-09
 
-* Add exceptions for null successHandler and errorHandler. 
+* Add exceptions for null successHandler and errorHandler.
 * Added the ability to POST the created token to a URL.
 * Made STPCard properties nonatomic.
 * Moved PaymentKit to be a submodule; added to Podfile as a dependency.
