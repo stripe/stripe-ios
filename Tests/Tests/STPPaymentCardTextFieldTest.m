@@ -75,7 +75,7 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
 
-    XCTAssertTrue(sut.numberFieldShrunk);
+    XCTAssertFalse(sut.numberFieldShrunk);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
@@ -93,7 +93,7 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
 
-    XCTAssertTrue(sut.numberFieldShrunk);
+    XCTAssertFalse(sut.numberFieldShrunk);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
     XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
@@ -151,7 +151,7 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
 
-    XCTAssertTrue(sut.numberFieldShrunk);
+    XCTAssertFalse(sut.numberFieldShrunk);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
@@ -191,7 +191,7 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
 
-    XCTAssertTrue(sut.numberFieldShrunk);
+    XCTAssertFalse(sut.numberFieldShrunk);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
