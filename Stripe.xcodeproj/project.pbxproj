@@ -488,7 +488,6 @@
 		04CDB5251A5F3A9300B854EE /* STPCardTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCardTest.m; sourceTree = "<group>"; };
 		04CDB5261A5F3A9300B854EE /* STPCertTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCertTest.m; sourceTree = "<group>"; };
 		04CDB5271A5F3A9300B854EE /* STPTokenTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTokenTest.m; sourceTree = "<group>"; };
-		04CDB5621A5F3D2000B854EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04CDE5B41BC1F1F100548833 /* STPCardParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCardParams.m; sourceTree = "<group>"; };
 		04CDE5BB1BC1F21500548833 /* STPCardParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCardParams.h; path = PublicHeaders/STPCardParams.h; sourceTree = "<group>"; };
 		04CDE5C11BC20AF800548833 /* STPBankAccountParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBankAccountParams.m; sourceTree = "<group>"; };
@@ -753,19 +752,9 @@
 				04CDB5271A5F3A9300B854EE /* STPTokenTest.m */,
 				04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */,
 				C178CD441C45607D00851C69 /* UIImage+StripeTest.m */,
-				04CDB5611A5F3D2000B854EE /* Supporting Files */,
 			);
 			name = StripeTests;
 			path = Tests/Tests;
-			sourceTree = "<group>";
-		};
-		04CDB5611A5F3D2000B854EE /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				04CDB5621A5F3D2000B854EE /* Info.plist */,
-			);
-			name = "Supporting Files";
-			path = ../../StripeOSXTests;
 			sourceTree = "<group>";
 		};
 		04F39F091AEF2AFE005B926E /* BuildConfigurations */ = {
