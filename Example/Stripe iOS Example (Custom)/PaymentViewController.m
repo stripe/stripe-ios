@@ -78,7 +78,7 @@
         return;
     }
     [self.activityIndicator startAnimating];
-    [[STPAPIClient sharedClient] createTokenWithCard:self.paymentTextField.card
+    [[STPAPIClient sharedClient] createTokenWithCard:self.paymentTextField.cardParams
                                           completion:^(STPToken *token, NSError *error) {
                                               [self.activityIndicator stopAnimating];
                                               if (error) {

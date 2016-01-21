@@ -337,6 +337,9 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 
 - (STPFormTextField *)nextField {
     if (self.selectedField == self.numberField) {
+        if ([self.viewModel validationStateForField:self.expirationField.tag] == STPCardValidationStateValid) {
+            return self.cvcField;
+        }
         return self.expirationField;
     } else if (self.selectedField == self.expirationField) {
         return self.cvcField;
@@ -393,15 +396,72 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     return self.viewModel.cvc;
 }
 
-- (STPCardParams *)card {
-    if (!self.isValid) { return nil; }
-    
+- (STPCardParams *)cardParams {
     STPCardParams *c = [[STPCardParams alloc] init];
     c.number = self.cardNumber;
     c.expMonth = self.expirationMonth;
     c.expYear = self.expirationYear;
     c.cvc = self.cvc;
     return c;
+}
+
+- (void)setCardParams:(STPCardParams *)cardParams {
+    [self setText:cardParams.number inField:STPCardFieldTypeNumber];
+    BOOL expirationPresent = cardParams.expMonth && cardParams.expYear;
+    if (expirationPresent) {
+        NSString *text = [NSString stringWithFormat:@"%02lu%02lu",
+                          (unsigned long)cardParams.expMonth,
+                          (unsigned long)cardParams.expYear%100];
+        [self setText:text inField:STPCardFieldTypeExpiration];
+    }
+    else {
+        [self setText:@"" inField:STPCardFieldTypeExpiration];
+    }
+    [self setText:cardParams.cvc inField:STPCardFieldTypeCVC];
+    
+    BOOL shrinkNumberField = [self shouldShrinkNumberField];
+    [self setNumberFieldShrunk:shrinkNumberField animated:NO completion:nil];
+    
+    // update the card image, falling back to the number field image if not editing
+    if ([self.expirationField isFirstResponder]) {
+        [self updateImageForFieldType:STPCardFieldTypeExpiration];
+    }
+    else if ([self.cvcField isFirstResponder]) {
+        [self updateImageForFieldType:STPCardFieldTypeCVC];
+    }
+    else {
+        [self updateImageForFieldType:STPCardFieldTypeNumber];
+    }
+}
+
+- (STPCardParams *)card {
+    if (!self.isValid) { return nil; }
+    return self.cardParams;
+}
+
+- (void)setCard:(STPCardParams *)card {
+    [self setCardParams:card];
+}
+
+- (void)setText:(NSString *)text inField:(STPCardFieldType)field {
+    NSString *nonNilText = text == nil ? @"" : text;
+    STPFormTextField *textField = nil;
+    switch (field) {
+        case STPCardFieldTypeNumber:
+            textField = self.numberField;
+            break;
+        case STPCardFieldTypeExpiration:
+            textField = self.expirationField;
+            break;
+        case STPCardFieldTypeCVC:
+            textField = self.cvcField;
+            break;
+    }
+    self.selectedField = (self.isFirstResponder) ? textField : nil;
+    id delegate = (id<UITextFieldDelegate>)self;
+    NSRange range = NSMakeRange(0, textField.text.length);
+    [delegate textField:textField shouldChangeCharactersInRange:range
+      replacementString:nonNilText];
 }
 
 - (CGSize)intrinsicContentSize {
@@ -687,7 +747,7 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 
 @implementation PTKView
 
-@dynamic delegate;
+@dynamic delegate, card;
 
 - (void)setDelegate:(id<PTKViewDelegate> __nullable)delegate {
     self.internalDelegate = delegate;
