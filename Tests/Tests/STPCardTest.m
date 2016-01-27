@@ -110,7 +110,7 @@
     }
 }
 
-#pragma mark -last4 tests
+#pragma mark - last4 tests
 - (void)testLast4ReturnsCardNumberLast4WhenNotSet {
     self.card.number = @"4242424242424242";
     XCTAssertEqualObjects(self.card.last4, @"4242", @"last4 correctly returns the last 4 digits of the card number");
@@ -131,6 +131,19 @@
 
     XCTAssertEqualObjects(card1, card1, @"card should equal itself");
     XCTAssertEqualObjects(card1, card2, @"cards with equal data should be equal");
+}
+
+#pragma mark - validation tests
+- (void)testValidateCardReturningError_january {
+    STPCardParams *params = [[STPCardParams alloc] init];
+    params.number = @"4242424242424242";
+    params.expMonth = 01;
+    params.expYear = 18;
+    params.cvc = @"123";
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    XCTAssert([params validateCardReturningError:nil]);
+#pragma clang diagnostic pop
 }
 
 @end

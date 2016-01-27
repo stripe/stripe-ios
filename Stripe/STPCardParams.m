@@ -74,8 +74,8 @@
 - (BOOL)validateCardReturningError:(NSError **)outError {
     // Order matters here
     NSString *numberRef = [self number];
-    NSString *expMonthRef = [NSString stringWithFormat:@"%lu", (unsigned long)[self expMonth]];
-    NSString *expYearRef = [NSString stringWithFormat:@"%lu", (unsigned long)[self expYear]];
+    NSString *expMonthRef = [NSString stringWithFormat:@"%02lu", (unsigned long)[self expMonth]];
+    NSString *expYearRef = [NSString stringWithFormat:@"%02lu", (unsigned long)[self expYear]];
     NSString *cvcRef = [self cvc];
     
     // Make sure expMonth, expYear, and number are set.  Validate CVC if it is provided
