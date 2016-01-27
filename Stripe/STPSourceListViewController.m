@@ -119,7 +119,7 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 
 - (void)saveCard:(__unused id)sender {
     __weak STPSourceListViewController *weakself = self;
-    [[STPAPIClient sharedClient] createTokenWithCard:self.paymentCardTextField.card completion:^(__unused STPToken * _Nullable token, __unused NSError * _Nullable error) {
+    [[STPAPIClient sharedClient] createTokenWithCard:self.paymentCardTextField.cardParams completion:^(__unused STPToken * _Nullable token, __unused NSError * _Nullable error) {
         [self.sourceProvider addSource:token completion:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> * _Nullable sources, __unused NSError * _Nullable addSourceError) {
             [weakself.tableView reloadData];
             [weakself.navigationController popViewControllerAnimated:YES];
