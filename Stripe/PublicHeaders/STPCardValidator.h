@@ -93,7 +93,7 @@
 /**
  *  Validates the given card details.
  *
- *  @param params  the card details to validate.
+ *  @param card the card details to validate.
  * 
  *  @return STPCardValidationStateValid if all fields are valid, STPCardValidationStateInvalid if any field is invalid, or STPCardValidationStateIncomplete if all fields are either incomplete or valid.
  */
