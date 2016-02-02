@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import <Stripe/Stripe.h>
+#import <Stripe/UIImage+Stripe.h>
 
 @interface ViewController ()
 
