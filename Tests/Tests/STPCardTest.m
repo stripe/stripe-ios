@@ -83,7 +83,7 @@
 - (void)testFormEncode {
     NSDictionary *attributes = [self completeAttributeDictionary];
     STPCard *cardWithAttributes = [STPCard decodedObjectFromAPIResponse:attributes];
-    cardWithAttributes.additionalAPIParameters = @{@"foo": @"bar"};
+    cardWithAttributes.additionalAPIParameters = @{@"foo": @"bar", @"nested": @{@"nested_key": @"nested_value"}};
 
     NSData *encoded = [STPFormEncoder formEncodedDataForObject:cardWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
@@ -103,10 +103,12 @@
                                                 @"card[address_country]",
                                                 @"card[currency]",
                                                 @"card[foo]",
+                                                @"card[nested][nested_key]",
                                                 nil];
 
     NSMutableArray *values = [[attributes allValues] mutableCopy];
     [values addObject:@"bar"];
+    [values addObject:@"nested_value"];
     NSMutableArray *encodedValues = [NSMutableArray array];
     for (NSString *value in values) {
         [encodedValues addObject:[STPFormEncoder stringByURLEncoding:value]];
@@ -115,8 +117,9 @@
     NSSet *expectedValues = [NSSet setWithArray:encodedValues];
     for (NSString *part in parts) {
         NSArray *subparts = [part componentsSeparatedByString:@"="];
-        NSString *key = subparts[0];
+        NSString *key = [subparts[0] stringByRemovingPercentEncoding];
         NSString *value = subparts[1];
+        
 
         XCTAssertTrue([expectedKeys containsObject:key], @"unexpected key %@", key);
         XCTAssertTrue([expectedValues containsObject:value], @"unexpected value %@", value);

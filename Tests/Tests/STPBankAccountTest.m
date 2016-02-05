@@ -89,7 +89,7 @@
 
     for (NSString *part in parts) {
         NSArray *subparts = [part componentsSeparatedByString:@"="];
-        NSString *key = subparts[0];
+        NSString *key = [subparts[0] stringByRemovingPercentEncoding];
         NSString *value = subparts[1];
 
         XCTAssertTrue([expectedKeys containsObject:key], @"unexpected key %@", key);
