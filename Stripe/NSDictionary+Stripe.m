@@ -25,12 +25,6 @@
     return [dict copy];
 }
 
-- (nonnull NSDictionary *)stp_dictionaryByRemovingKeys:(nonnull NSArray *)keys {
-    NSMutableDictionary *mutable = [self mutableCopy];
-    [mutable removeObjectsForKeys:keys];
-    return [mutable copy];
-}
-
 @end
 
 void linkDictionaryCategory(void){}

@@ -55,6 +55,8 @@
 - (void)testInitializingCardWithAttributeDictionary {
     NSMutableDictionary *apiResponse = [[self completeAttributeDictionary] mutableCopy];
     apiResponse[@"foo"] = @"bar";
+    apiResponse[@"nested"] = @{@"baz": @"bang"};
+    
     
     STPCard *cardWithAttributes = [STPCard decodedObjectFromAPIResponse:apiResponse];
     XCTAssertTrue([cardWithAttributes expMonth] == 12, @"expMonth is set correctly");
@@ -71,10 +73,11 @@
     XCTAssertEqualObjects([cardWithAttributes country], @"Japan", @"country is set correctly");
     XCTAssertEqualObjects([cardWithAttributes currency], @"usd", @"currency is set correctly");
     
-    NSDictionary *additionalAttributes = cardWithAttributes.additionalResponseFields;
-    XCTAssertEqual(additionalAttributes[@"foo"], @"bar");
-    XCTAssertNil(additionalAttributes[@"baz"]);
-    XCTAssertNil(additionalAttributes[@"last4"]);
+    NSDictionary *allResponseFields = cardWithAttributes.allResponseFields;
+    XCTAssertEqual(allResponseFields[@"foo"], @"bar");
+    XCTAssertEqual(allResponseFields[@"last4"], @"1234");
+    XCTAssertEqualObjects(allResponseFields[@"nested"], @{@"baz": @"bang"});
+    XCTAssertNil(allResponseFields[@"baz"]);
 }
 
 - (void)testFormEncode {

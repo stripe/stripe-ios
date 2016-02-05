@@ -46,10 +46,10 @@
     XCTAssertEqualObjects([bankAccountWithAttributes currency], @"usd", @"currency is set correctly");
     XCTAssertEqual(bankAccountWithAttributes.status, STPBankAccountStatusNew);
     
-    NSDictionary *additionalAttributes = bankAccountWithAttributes.additionalResponseFields;
-    XCTAssertEqual(additionalAttributes[@"foo"], @"bar");
-    XCTAssertNil(additionalAttributes[@"baz"]);
-    XCTAssertNil(additionalAttributes[@"last4"]);
+    NSDictionary *allResponseFields = bankAccountWithAttributes.allResponseFields;
+    XCTAssertEqual(allResponseFields[@"foo"], @"bar");
+    XCTAssertEqual(allResponseFields[@"last4"], @"6789");
+    XCTAssertNil(allResponseFields[@"baz"]);
 }
 
 - (void)testFormEncode {

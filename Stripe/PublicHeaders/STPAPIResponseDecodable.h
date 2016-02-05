@@ -21,8 +21,8 @@
 + (nullable instancetype)decodedObjectFromAPIResponse:(nonnull NSDictionary *)response;
 
 /**
- * Any extra fields from the API response that are not included in the `requiredFields` array. This can be useful for using beta features that haven't yet been made into properties in the SDK.
+ * The raw JSON response used to create the object. This can be useful for using beta features that haven't yet been made into properties in the SDK.
  */
-@property(nonatomic, readonly, nonnull)NSDictionary *additionalResponseFields;
+@property(nonatomic, readonly, nonnull, copy)NSDictionary *allResponseFields;
 
 @end

@@ -20,7 +20,7 @@
 @property (nonatomic, readwrite) STPCardFundingType funding;
 @property (nonatomic, readwrite) NSString *fingerprint;
 @property (nonatomic, readwrite) NSString *country;
-@property (nonatomic, nonnull) NSDictionary *additionalResponseFields;
+@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
 
@@ -137,7 +137,7 @@
     card.addressZip = dict[@"address_zip"];
     card.addressCountry = dict[@"address_country"];
     
-    card.additionalResponseFields = [dict stp_dictionaryByRemovingKeys:[self requiredFields]];
+    card.allResponseFields = dict;
     return card;
 }
 #pragma clang diagnostic pop

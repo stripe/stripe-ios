@@ -30,7 +30,7 @@
                                @"last4": @"1234",
                                @"brand": @"Visa",
                                @"fingerprint": @"Fingolfin",
-                               @"country": @"Japan"
+                               @"country": @"Japan",
                                };
     
     NSDictionary *tokenDict = @{ @"id": @"id_for_token", @"object": @"token", @"livemode": @NO, @"created": @1353025450.0, @"used": @NO, @"card": cardDict };
@@ -49,10 +49,10 @@
     NSMutableDictionary *tokenResponse = [[self buildTestTokenResponse] mutableCopy];
     tokenResponse[@"foo"] = @"bar";
     STPToken *token = [STPToken decodedObjectFromAPIResponse:tokenResponse];
-    NSDictionary *additionalResponseFields = token.additionalResponseFields;
-    XCTAssertEqualObjects(additionalResponseFields[@"foo"], @"bar");
-    XCTAssertNil(additionalResponseFields[@"baz"]);
-    XCTAssertNil(additionalResponseFields[@"livemode"]);
+    NSDictionary *allResponseFields = token.allResponseFields;
+    XCTAssertEqualObjects(allResponseFields[@"foo"], @"bar");
+    XCTAssertEqualObjects(allResponseFields[@"livemode"], @NO);
+    XCTAssertNil(allResponseFields[@"baz"]);
 }
 
 @end
