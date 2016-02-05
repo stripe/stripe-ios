@@ -120,8 +120,8 @@ NSString * STPPercentEscapedStringFromString(NSString *string) {
         return nil;
     }
     
-    self.field = field;
-    self.value = value;
+    _field = field;
+    _value = value;
     
     return self;
 }
@@ -156,8 +156,8 @@ NSArray * STPQueryStringPairsFromDictionary(NSDictionary *dictionary) {
 
 NSArray * STPQueryStringPairsFromKeyAndValue(NSString *key, id value) {
     NSMutableArray *mutableQueryStringComponents = [NSMutableArray array];
-    
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"description" ascending:YES selector:@selector(compare:)];
+    NSString *descriptionSelector = NSStringFromSelector(@selector(description));
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:descriptionSelector ascending:YES selector:@selector(compare:)];
     
     if ([value isKindOfClass:[NSDictionary class]]) {
         NSDictionary *dictionary = value;
