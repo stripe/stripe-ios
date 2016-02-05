@@ -52,51 +52,6 @@
     XCTAssertNil(allResponseFields[@"baz"]);
 }
 
-- (void)testFormEncode {
-    NSDictionary *attributes = [self completeAttributeDictionary];
-    STPBankAccount *bankAccountWithAttributes = [STPBankAccount decodedObjectFromAPIResponse:attributes];
-    bankAccountWithAttributes.additionalAPIParameters = @{@"foo": @"bar"};
-
-    NSData *encoded = [STPFormEncoder formEncodedDataForObject:bankAccountWithAttributes];
-    NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
-
-    NSArray *parts = [formData componentsSeparatedByString:@"&"];
-
-    NSArray *expectedKeys = @[
-                              @"bank_account[account_number]",
-                              @"bank_account[routing_number]",
-                              @"bank_account[country]",
-                              @"bank_account[currency]",
-                              @"bank_account[foo]",
-                              ];
-
-    NSMutableArray *values = [[attributes allValues] mutableCopy];
-    [values addObject:@"bar"];
-    NSMutableArray *encodedValues = [NSMutableArray array];
-    for (NSString *value in values) {
-        NSString *stringValue = nil;
-        if ([value isKindOfClass:[NSString class]]) {
-            stringValue = value;
-        } else if ([value isKindOfClass:[NSNumber class]]) {
-            stringValue = [((NSNumber *)value)stringValue];
-        }
-        if (stringValue) {
-            [encodedValues addObject:[STPFormEncoder stringByURLEncoding:stringValue]];
-        }
-    }
-
-    NSSet *expectedValues = [NSSet setWithArray:encodedValues];
-
-    for (NSString *part in parts) {
-        NSArray *subparts = [part componentsSeparatedByString:@"="];
-        NSString *key = [subparts[0] stringByRemovingPercentEncoding];
-        NSString *value = subparts[1];
-
-        XCTAssertTrue([expectedKeys containsObject:key], @"unexpected key %@", key);
-        XCTAssertTrue([expectedValues containsObject:value], @"unexpected value %@", value);
-    }
-}
-
 #pragma mark - Last4 Tests
 
 - (void)testLast4ReturnsAccountNumberLast4WhenNotSet {

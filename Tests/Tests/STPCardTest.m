@@ -80,52 +80,6 @@
     XCTAssertNil(allResponseFields[@"baz"]);
 }
 
-- (void)testFormEncode {
-    NSDictionary *attributes = [self completeAttributeDictionary];
-    STPCard *cardWithAttributes = [STPCard decodedObjectFromAPIResponse:attributes];
-    cardWithAttributes.additionalAPIParameters = @{@"foo": @"bar", @"nested": @{@"nested_key": @"nested_value"}};
-
-    NSData *encoded = [STPFormEncoder formEncodedDataForObject:cardWithAttributes];
-    NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
-
-    NSArray *parts = [formData componentsSeparatedByString:@"&"];
-
-    NSSet *expectedKeys = [NSSet setWithObjects:@"card[number]",
-                                                @"card[exp_month]",
-                                                @"card[exp_year]",
-                                                @"card[cvc]",
-                                                @"card[name]",
-                                                @"card[address_line1]",
-                                                @"card[address_line2]",
-                                                @"card[address_city]",
-                                                @"card[address_state]",
-                                                @"card[address_zip]",
-                                                @"card[address_country]",
-                                                @"card[currency]",
-                                                @"card[foo]",
-                                                @"card[nested][nested_key]",
-                                                nil];
-
-    NSMutableArray *values = [[attributes allValues] mutableCopy];
-    [values addObject:@"bar"];
-    [values addObject:@"nested_value"];
-    NSMutableArray *encodedValues = [NSMutableArray array];
-    for (NSString *value in values) {
-        [encodedValues addObject:[STPFormEncoder stringByURLEncoding:value]];
-    }
-
-    NSSet *expectedValues = [NSSet setWithArray:encodedValues];
-    for (NSString *part in parts) {
-        NSArray *subparts = [part componentsSeparatedByString:@"="];
-        NSString *key = [subparts[0] stringByRemovingPercentEncoding];
-        NSString *value = subparts[1];
-        
-
-        XCTAssertTrue([expectedKeys containsObject:key], @"unexpected key %@", key);
-        XCTAssertTrue([expectedValues containsObject:value], @"unexpected value %@", value);
-    }
-}
-
 #pragma mark - last4 tests
 - (void)testLast4ReturnsCardNumberLast4WhenNotSet {
     self.card.number = @"4242424242424242";
