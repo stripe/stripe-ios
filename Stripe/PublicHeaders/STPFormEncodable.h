@@ -30,6 +30,6 @@
     cardParams.additionalAPIParameters = @{@"test_field": @"example_value"};
     [[STPAPIClient sharedClient] createTokenWithCard:cardParams completion:...];
  */
-@property(nonatomic, readwrite, nonnull)NSDictionary *additionalAPIParameters;
+@property(nonatomic, readwrite, nonnull, copy)NSDictionary *additionalAPIParameters;
 
 @end
