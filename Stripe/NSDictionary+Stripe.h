@@ -11,6 +11,7 @@
 @interface NSDictionary (Stripe)
 
 - (nullable NSDictionary *)stp_dictionaryByRemovingNullsValidatingRequiredFields:(nonnull NSArray *)requiredFields;
+- (nonnull NSDictionary *)stp_dictionaryByRemovingKeys:(nonnull NSArray *)keys;
 
 @end
 

@@ -17,6 +17,7 @@
 @property (nonatomic, nullable) STPCard *card;
 @property (nonatomic, nullable) STPBankAccount *bankAccount;
 @property (nonatomic, nullable) NSDate *created;
+@property (nonatomic, nonnull) NSDictionary *additionalResponseFields;
 @end
 
 @implementation STPToken
@@ -86,6 +87,8 @@
     if (bankAccountDictionary) {
         token.bankAccount = [STPBankAccount decodedObjectFromAPIResponse:bankAccountDictionary];
     }
+    
+    token.additionalResponseFields = [dict stp_dictionaryByRemovingKeys:[self requiredFields]];
     return token;
 }
 

@@ -34,7 +34,9 @@
 }
 
 - (void)testInitializingBankAccountWithAttributeDictionary {
-    STPBankAccount *bankAccountWithAttributes = [STPBankAccount decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    NSMutableDictionary *apiResponse = [[self completeAttributeDictionary] mutableCopy];
+    apiResponse[@"foo"] = @"bar";
+    STPBankAccount *bankAccountWithAttributes = [STPBankAccount decodedObjectFromAPIResponse:apiResponse];
 
     XCTAssertEqualObjects([bankAccountWithAttributes bankAccountId], @"something", @"bankAccountId is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes last4], @"6789", @"last4 is set correctly");
@@ -43,6 +45,11 @@
     XCTAssertEqualObjects([bankAccountWithAttributes fingerprint], @"something", @"fingerprint is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes currency], @"usd", @"currency is set correctly");
     XCTAssertEqual(bankAccountWithAttributes.status, STPBankAccountStatusNew);
+    
+    NSDictionary *additionalAttributes = bankAccountWithAttributes.additionalResponseFields;
+    XCTAssertEqual(additionalAttributes[@"foo"], @"bar");
+    XCTAssertNil(additionalAttributes[@"baz"]);
+    XCTAssertNil(additionalAttributes[@"last4"]);
 }
 
 - (void)testFormEncode {
