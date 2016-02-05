@@ -24,7 +24,7 @@
     bankAccount.routingNumber = @"110000000";
     bankAccount.country = @"US";
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_5fhKkYDKKNr4Fp6q7Mq9CwJd"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Bank account creation"];
     [client createTokenWithBankAccount:bankAccount
