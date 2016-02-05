@@ -23,16 +23,6 @@
 }
 
 #pragma mark Helpers
-- (NSDateComponents *)currentDateComponents {
-    // FIXME This is a copy of the code that already exists in a private method in STPCard
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    return [gregorian components:NSCalendarUnitYear fromDate:[NSDate date]];
-}
-
-- (NSInteger)currentYear {
-    return [[self currentDateComponents] year];
-}
-
 - (NSDictionary *)completeAttributeDictionary {
     return @{
         @"id": @"1",
