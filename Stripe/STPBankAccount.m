@@ -16,6 +16,7 @@
 @property (nonatomic, readwrite) NSString *bankName;
 @property (nonatomic, readwrite) NSString *fingerprint;
 @property (nonatomic) STPBankAccountStatus status;
+@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
 
@@ -90,6 +91,8 @@
     } else if ([status isEqual: @"errored"]) {
         bankAccount.status = STPBankAccountStatusErrored;
     }
+    
+    bankAccount.allResponseFields = dict;
     return bankAccount;
 }
 

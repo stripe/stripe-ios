@@ -12,6 +12,16 @@
 
 @implementation STPCardParams
 
+@synthesize additionalAPIParameters = _additionalAPIParameters;
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _additionalAPIParameters = @{};
+    }
+    return self;
+}
+
 - (NSString *)last4 {
     if (self.number && self.number.length >= 4) {
         return [self.number substringFromIndex:(self.number.length - 4)];

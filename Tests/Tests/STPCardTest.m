@@ -43,8 +43,12 @@
 }
 
 - (void)testInitializingCardWithAttributeDictionary {
-    STPCard *cardWithAttributes = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
-
+    NSMutableDictionary *apiResponse = [[self completeAttributeDictionary] mutableCopy];
+    apiResponse[@"foo"] = @"bar";
+    apiResponse[@"nested"] = @{@"baz": @"bang"};
+    
+    
+    STPCard *cardWithAttributes = [STPCard decodedObjectFromAPIResponse:apiResponse];
     XCTAssertTrue([cardWithAttributes expMonth] == 12, @"expMonth is set correctly");
     XCTAssertTrue([cardWithAttributes expYear] == 2013, @"expYear is set correctly");
     XCTAssertEqualObjects([cardWithAttributes name], @"Smerlock Smolmes", @"name is set correctly");
@@ -58,46 +62,12 @@
     XCTAssertEqual([cardWithAttributes brand], STPCardBrandMasterCard, @"type is set correctly");
     XCTAssertEqualObjects([cardWithAttributes country], @"Japan", @"country is set correctly");
     XCTAssertEqualObjects([cardWithAttributes currency], @"usd", @"currency is set correctly");
-}
-
-- (void)testFormEncode {
-    NSDictionary *attributes = [self completeAttributeDictionary];
-    STPCard *cardWithAttributes = [STPCard decodedObjectFromAPIResponse:attributes];
-
-    NSData *encoded = [STPFormEncoder formEncodedDataForObject:cardWithAttributes];
-    NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
-
-    NSArray *parts = [formData componentsSeparatedByString:@"&"];
-
-    NSSet *expectedKeys = [NSSet setWithObjects:@"card[number]",
-                                                @"card[exp_month]",
-                                                @"card[exp_year]",
-                                                @"card[cvc]",
-                                                @"card[name]",
-                                                @"card[address_line1]",
-                                                @"card[address_line2]",
-                                                @"card[address_city]",
-                                                @"card[address_state]",
-                                                @"card[address_zip]",
-                                                @"card[address_country]",
-                                                @"card[currency]",
-                                                nil];
-
-    NSArray *values = [attributes allValues];
-    NSMutableArray *encodedValues = [NSMutableArray array];
-    for (NSString *value in values) {
-        [encodedValues addObject:[STPFormEncoder stringByURLEncoding:value]];
-    }
-
-    NSSet *expectedValues = [NSSet setWithArray:encodedValues];
-    for (NSString *part in parts) {
-        NSArray *subparts = [part componentsSeparatedByString:@"="];
-        NSString *key = subparts[0];
-        NSString *value = subparts[1];
-
-        XCTAssertTrue([expectedKeys containsObject:key], @"unexpected key %@", key);
-        XCTAssertTrue([expectedValues containsObject:value], @"unexpected value %@", value);
-    }
+    
+    NSDictionary *allResponseFields = cardWithAttributes.allResponseFields;
+    XCTAssertEqual(allResponseFields[@"foo"], @"bar");
+    XCTAssertEqual(allResponseFields[@"last4"], @"1234");
+    XCTAssertEqualObjects(allResponseFields[@"nested"], @{@"baz": @"bang"});
+    XCTAssertNil(allResponseFields[@"baz"]);
 }
 
 #pragma mark - last4 tests

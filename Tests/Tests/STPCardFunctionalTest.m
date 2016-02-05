@@ -22,8 +22,14 @@
     card.expMonth = 6;
     card.expYear = 2018;
     card.currency = @"usd";
+    card.addressLine1 = @"123 Fake Street";
+    card.addressLine2 = @"Apartment 4";
+    card.addressCity = @"New York";
+    card.addressState = @"NY";
+    card.addressCountry = @"USA";
+    card.addressZip = @"10002";
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_5fhKkYDKKNr4Fp6q7Mq9CwJd"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Card creation"];
 
@@ -50,7 +56,7 @@
     card.expMonth = 6;
     card.expYear = 2018;
 
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_5fhKkYDKKNr4Fp6q7Mq9CwJd"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Card creation"];
 
