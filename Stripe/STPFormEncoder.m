@@ -21,6 +21,11 @@
             [parts addObject:[NSString stringWithFormat:@"%@[%@]=%@", [object.class rootObjectName], formFieldName, [self.class stringByURLEncoding:formFieldValue]]];
         }
     }];
+    [object.additionalAPIParameters enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull additionalFieldName, id  _Nonnull additionalFieldValue, __unused BOOL * _Nonnull stop) {
+        if (additionalFieldValue) {
+            [parts addObject:[NSString stringWithFormat:@"%@[%@]=%@", [object.class rootObjectName], additionalFieldName, [self.class stringByURLEncoding:additionalFieldValue]]];
+        }
+    }];
     return [[parts componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
 }
 

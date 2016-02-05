@@ -80,6 +80,7 @@
 - (void)testFormEncode {
     NSDictionary *attributes = [self completeAttributeDictionary];
     STPCard *cardWithAttributes = [STPCard decodedObjectFromAPIResponse:attributes];
+    cardWithAttributes.additionalAPIParameters = @{@"foo": @"bar"};
 
     NSData *encoded = [STPFormEncoder formEncodedDataForObject:cardWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
@@ -98,9 +99,11 @@
                                                 @"card[address_zip]",
                                                 @"card[address_country]",
                                                 @"card[currency]",
+                                                @"card[foo]",
                                                 nil];
 
-    NSArray *values = [attributes allValues];
+    NSMutableArray *values = [[attributes allValues] mutableCopy];
+    [values addObject:@"bar"];
     NSMutableArray *encodedValues = [NSMutableArray array];
     for (NSString *value in values) {
         [encodedValues addObject:[STPFormEncoder stringByURLEncoding:value]];

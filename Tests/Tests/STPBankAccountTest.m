@@ -55,16 +55,23 @@
 - (void)testFormEncode {
     NSDictionary *attributes = [self completeAttributeDictionary];
     STPBankAccount *bankAccountWithAttributes = [STPBankAccount decodedObjectFromAPIResponse:attributes];
+    bankAccountWithAttributes.additionalAPIParameters = @{@"foo": @"bar"};
 
     NSData *encoded = [STPFormEncoder formEncodedDataForObject:bankAccountWithAttributes];
     NSString *formData = [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
 
     NSArray *parts = [formData componentsSeparatedByString:@"&"];
 
-    NSSet *expectedKeys =
-        [NSSet setWithObjects:@"bank_account[account_number]", @"bank_account[routing_number]", @"bank_account[country]", @"bank_account[currency]", nil];
+    NSArray *expectedKeys = @[
+                              @"bank_account[account_number]",
+                              @"bank_account[routing_number]",
+                              @"bank_account[country]",
+                              @"bank_account[currency]",
+                              @"bank_account[foo]",
+                              ];
 
-    NSArray *values = [attributes allValues];
+    NSMutableArray *values = [[attributes allValues] mutableCopy];
+    [values addObject:@"bar"];
     NSMutableArray *encodedValues = [NSMutableArray array];
     for (NSString *value in values) {
         NSString *stringValue = nil;
