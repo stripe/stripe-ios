@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, STPBackendChargeResult) {
+    STPBackendChargeResultSuccess,
+    STPBackendChargeResultFailure,
+};
+
+typedef void (^STPTokenSubmissionHandler)(STPBackendChargeResult status, NSError *error);
+
 @protocol STPBackendCharging <NSObject>
 
 - (void)createBackendChargeWithToken:(STPToken *)token completion:(STPTokenSubmissionHandler)completion;
