@@ -3,7 +3,8 @@ if [[ $CI && "$TRAVIS_SECURE_ENV_VARS" != "true" ]]; then
   exit 0
 fi
 
-brew update
+brew update; brew cleanup; brew cask cleanup
+brew uninstall --force brew-cask; brew update
 brew tap caskroom/cask
 brew cask install fauxpas
 $HOME/Applications/FauxPas.app/Contents/Resources/install-cli-tools
