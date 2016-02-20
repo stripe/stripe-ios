@@ -111,9 +111,6 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 }
 
 - (void)setText:(NSString *)text {
-    if ([text isEqualToString:self.text]) {
-        return;
-    }
     NSString *nonNilText = text ?: @"";
     NSAttributedString *attributed = [[NSAttributedString alloc] initWithString:nonNilText attributes:self.defaultTextAttributes];
     [self setAttributedText:attributed];

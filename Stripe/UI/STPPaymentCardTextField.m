@@ -438,10 +438,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
             break;
     }
     self.selectedField = (self.isFirstResponder) ? textField : nil;
-    id delegate = (id<UITextFieldDelegate>)self;
-    NSRange range = NSMakeRange(0, textField.text.length);
-    [delegate textField:textField shouldChangeCharactersInRange:range
-      replacementString:nonNilText];
+    textField.text = nonNilText;
 }
 
 - (CGSize)intrinsicContentSize {
