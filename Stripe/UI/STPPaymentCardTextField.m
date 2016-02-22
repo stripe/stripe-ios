@@ -32,7 +32,7 @@
 
 @property(nonatomic, readwrite, strong)STPPaymentCardTextFieldViewModel *viewModel;
 
-@property(nonatomic, readwrite, weak)UITextField *selectedField;
+@property(nonatomic, readonly, weak)UITextField *currentFirstResponderField;
 
 @property(nonatomic, assign)BOOL numberFieldShrunk;
 
@@ -295,18 +295,18 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 #pragma mark UIResponder & related methods
 
 - (BOOL)isFirstResponder {
-    return [self.selectedField isFirstResponder];
+    return [self.currentFirstResponderField isFirstResponder];
 }
 
 - (BOOL)canBecomeFirstResponder {
-    return [[self firstResponderField] canBecomeFirstResponder];
+    return [[self nextFirstResponderField] canBecomeFirstResponder];
 }
 
 - (BOOL)becomeFirstResponder {
-    return [[self firstResponderField] becomeFirstResponder];
+    return [[self nextFirstResponderField] becomeFirstResponder];
 }
 
-- (STPFormTextField *)firstResponderField {
+- (STPFormTextField *)nextFirstResponderField {
     if ([self.viewModel validationStateForField:STPCardFieldTypeNumber] != STPCardValidationStateValid) {
         return self.numberField;
     } else if ([self.viewModel validationStateForField:STPCardFieldTypeExpiration] != STPCardValidationStateValid) {
@@ -316,21 +316,30 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     }
 }
 
+- (STPFormTextField *)currentFirstResponderField {
+    for (STPFormTextField *textField in [self allFields]) {
+        if ([textField isFirstResponder]) {
+            return textField;
+        }
+    }
+    return nil;
+}
+
 - (BOOL)canResignFirstResponder {
-    return [self.selectedField canResignFirstResponder];
+    return [self.currentFirstResponderField canResignFirstResponder];
 }
 
 - (BOOL)resignFirstResponder {
     [super resignFirstResponder];
-    BOOL success = [self.selectedField resignFirstResponder];
+    BOOL success = [self.currentFirstResponderField resignFirstResponder];
     [self setNumberFieldShrunk:[self shouldShrinkNumberField] animated:YES completion:nil];
     return success;
 }
 
 - (STPFormTextField *)previousField {
-    if (self.selectedField == self.cvcField) {
+    if (self.currentFirstResponderField == self.cvcField) {
         return self.expirationField;
-    } else if (self.selectedField == self.expirationField) {
+    } else if (self.currentFirstResponderField == self.expirationField) {
         return self.numberField;
     }
     return nil;
@@ -401,6 +410,9 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     
     BOOL shrinkNumberField = [self shouldShrinkNumberField];
     [self setNumberFieldShrunk:shrinkNumberField animated:NO completion:nil];
+    if ([self isFirstResponder]) {
+        [[self nextFirstResponderField] becomeFirstResponder];
+    }
     
     // update the card image, falling back to the number field image if not editing
     if ([self.expirationField isFirstResponder]) {
@@ -437,7 +449,6 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
             textField = self.cvcField;
             break;
     }
-    self.selectedField = (self.isFirstResponder) ? textField : nil;
     textField.text = nonNilText;
 }
 
@@ -521,7 +532,17 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 }
 
 - (NSArray *)allFields {
-    return @[self.numberField, self.expirationField, self.cvcField];
+    NSMutableArray *mutable = [NSMutableArray array];
+    if (self.numberField) {
+        [mutable addObject:self.numberField];
+    }
+    if (self.expirationField) {
+        [mutable addObject:self.expirationField];
+    }
+    if (self.cvcField) {
+        [mutable addObject:self.cvcField];
+    }
+    return [mutable copy];
 }
 
 typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
@@ -628,7 +649,7 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
         case STPCardValidationStateIncomplete:
             break;
         case STPCardValidationStateValid: {
-            [[self firstResponderField] becomeFirstResponder];
+            [[self nextFirstResponderField] becomeFirstResponder];
             break;
         }
     }
@@ -637,7 +658,6 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    self.selectedField = (STPFormTextField *)textField;
     switch ((STPCardFieldType)textField.tag) {
         case STPCardFieldTypeNumber:
             [self setNumberFieldShrunk:NO animated:YES completion:nil];
@@ -661,13 +681,9 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     [self updateImageForFieldType:textField.tag];
 }
 
-- (void)textFieldDidEndEditing:(__unused UITextField *)textField {
-    self.selectedField = nil;
-}
-
 - (UIImage *)brandImage {
-    if (self.selectedField) {
-        return [self brandImageForFieldType:self.selectedField.tag];
+    if (self.currentFirstResponderField) {
+        return [self brandImageForFieldType:self.currentFirstResponderField.tag];
     } else {
         return [self brandImageForFieldType:STPCardFieldTypeNumber];
     }

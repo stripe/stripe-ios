@@ -73,7 +73,7 @@
     XCTAssertEqualObjects(self.sut.numberField.text, number);
     XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
     XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
-    XCTAssertTrue([self.sut.expirationField isFirstResponder]);
+    XCTAssertTrue([self.sut.numberField isFirstResponder]);
     XCTAssertFalse(self.sut.isValid);
 }
 
