@@ -18,7 +18,8 @@
 @property(nonatomic, readwrite, weak)STPFormTextField *numberField;
 @property(nonatomic, readwrite, weak)STPFormTextField *expirationField;
 @property(nonatomic, readwrite, weak)STPFormTextField *cvcField;
-@property(nonatomic, readwrite, weak)UITextField *selectedField;
+@property(nonatomic, readonly, weak)STPFormTextField *currentFirstResponderField;
+@property(nonatomic, readwrite, strong)STPPaymentCardTextFieldViewModel *viewModel;
 @property(nonatomic, assign)BOOL numberFieldShrunk;
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
@@ -63,7 +64,7 @@
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
     XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
-    XCTAssertNil(sut.selectedField);
+    XCTAssertNil(sut.currentFirstResponderField);
 }
 
 - (void)testSetCard_expiration {
@@ -80,7 +81,7 @@
     XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
     XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
-    XCTAssertNil(sut.selectedField);
+    XCTAssertNil(sut.currentFirstResponderField);
     XCTAssertFalse(sut.isValid);
 }
 
@@ -98,7 +99,7 @@
     XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
     XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
     XCTAssertEqualObjects(sut.cvcField.text, cvc);
-    XCTAssertNil(sut.selectedField);
+    XCTAssertNil(sut.currentFirstResponderField);
     XCTAssertFalse(sut.isValid);
 }
 
@@ -116,7 +117,7 @@
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
     XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
-    XCTAssertNil(sut.selectedField);
+    XCTAssertNil(sut.currentFirstResponderField);
     XCTAssertFalse(sut.isValid);
 }
 
@@ -136,7 +137,7 @@
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
     XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
-    XCTAssertNil(sut.selectedField);
+    XCTAssertNil(sut.currentFirstResponderField);
     XCTAssertFalse(sut.isValid);
 }
 
@@ -156,7 +157,7 @@
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
     XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
-    XCTAssertNil(sut.selectedField);
+    XCTAssertNil(sut.currentFirstResponderField);
     XCTAssertFalse(sut.isValid);
 }
 
@@ -176,7 +177,7 @@
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
     XCTAssertEqualObjects(sut.cvcField.text, cvc);
-    XCTAssertNil(sut.selectedField);
+    XCTAssertNil(sut.currentFirstResponderField);
     XCTAssertFalse(sut.isValid);
 }
 
@@ -196,7 +197,7 @@
     XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
     XCTAssertEqualObjects(sut.cvcField.text, cvc);
-    XCTAssertNil(sut.selectedField);
+    XCTAssertNil(sut.currentFirstResponderField);
     XCTAssertFalse(sut.isValid);
 }
 
@@ -218,7 +219,7 @@
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
     XCTAssertEqualObjects(sut.cvcField.text, cvc);
-    XCTAssertNil(sut.selectedField);
+    XCTAssertNil(sut.currentFirstResponderField);
     XCTAssertTrue(sut.isValid);
 }
 
@@ -237,8 +238,22 @@
     XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
     XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
     XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
-    XCTAssertNil(sut.selectedField);
+    XCTAssertNil(sut.currentFirstResponderField);
     XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSettingTextUpdatesViewModelText {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    sut.numberField.text = @"4242424242424242";
+    XCTAssertEqualObjects(sut.viewModel.cardNumber, sut.numberField.text);
+
+    sut.cvcField.text = @"123";
+    XCTAssertEqualObjects(sut.viewModel.cvc, sut.cvcField.text);
+
+    sut.expirationField.text = @"10/99";
+    XCTAssertEqualObjects(sut.viewModel.rawExpiration, sut.expirationField.text);
+    XCTAssertEqualObjects(sut.viewModel.expirationMonth, @"10");
+    XCTAssertEqualObjects(sut.viewModel.expirationYear, @"99");
 }
 
 @end

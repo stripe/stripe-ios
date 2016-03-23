@@ -8,15 +8,94 @@
 
 #import "STPFormTextField.h"
 #import "STPCardValidator.h"
-
+#import "STPPhoneNumberValidator.h"
 #import <Foundation/Foundation.h>
 #import "TargetConditionals.h"
+#import "NSString+Stripe.h"
+#import "STPDelegateProxy.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
+
+@interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate>
+@end
+
+@implementation STPTextFieldDelegateProxy
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    BOOL deleting = (range.location == textField.text.length - 1 && range.length == 1 && [string isEqualToString:@""]);
+    NSString *inputText;
+    if (deleting) {
+        NSString *sanitized = [STPCardValidator sanitizedNumericStringForString:textField.text];
+        inputText = [sanitized stp_safeSubstringToIndex:sanitized.length - 1];
+    } else {
+        NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        NSString *sanitized = [STPCardValidator sanitizedNumericStringForString:newString];
+        inputText = sanitized;
+    }
+    textField.text = inputText;
+    return NO;
+}
+
+@end
+
+typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString *inputText);
+
+@interface STPFormTextField()
+@property(nonatomic)STPTextFieldDelegateProxy *delegateProxy;
+@property(nonatomic, copy)STPFormTextTransformationBlock textFormattingBlock;
+@end
 
 @implementation STPFormTextField
 
 @synthesize placeholderColor = _placeholderColor;
+
++ (NSDictionary *)attributesForAttributedString:(NSAttributedString *)attributedString {
+    if (attributedString.length == 0) {
+        return @{};
+    }
+    return [attributedString attributesAtIndex:0 longestEffectiveRange:nil inRange:NSMakeRange(0, attributedString.length)];
+}
+
+- (void)setAutoFormattingBehavior:(STPFormTextFieldAutoFormattingBehavior)autoFormattingBehavior {
+    _autoFormattingBehavior = autoFormattingBehavior;
+    switch (autoFormattingBehavior) {
+        case STPFormTextFieldAutoFormattingBehaviorNone:
+            self.textFormattingBlock = nil;
+            break;
+        case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
+            self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
+                NSMutableAttributedString *attributedString = [inputString mutableCopy];
+                NSArray *cardSpacing;
+                STPCardBrand currentBrand = [STPCardValidator brandForNumber:attributedString.string];
+                if (currentBrand == STPCardBrandAmex) {
+                    cardSpacing = @[@3, @9];
+                } else {
+                    cardSpacing = @[@3, @7, @11];
+                }
+                for (NSUInteger i = 0; i < attributedString.length; i++) {
+                    if ([cardSpacing containsObject:@(i)]) {
+                        [attributedString addAttribute:NSKernAttributeName value:@(5)
+                                                 range:NSMakeRange(i, 1)];
+                    } else {
+                        [attributedString addAttribute:NSKernAttributeName value:@(0)
+                                                 range:NSMakeRange(i, 1)];
+                    }
+                }
+                return [attributedString copy];
+            };
+            break;
+        case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers: {
+            __weak id weakself = self;
+            self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
+                __strong id strongself = weakself;
+                NSString *phoneNumber = [STPPhoneNumberValidator formattedPhoneNumberForString:inputString.string];
+                NSDictionary *attributes = [[strongself class] attributesForAttributedString:inputString];
+                return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
+            };
+            break;
+        }
+    }
+}
 
 - (void)setFormDelegate:(id<STPFormTextFieldDelegate>)formDelegate {
     _formDelegate = formDelegate;
@@ -24,14 +103,9 @@
 }
 
 - (void)deleteBackward {
-    // This deliberately doesn't call super, because the superclass' implementation replaces text without calling delegate methods.
+    [super deleteBackward];
     if (self.text.length == 0) {
         [self.formDelegate formTextFieldDidBackspaceOnEmpty:self];
-        return;
-    }
-    NSRange range = NSMakeRange(self.text.length - 1, 1);
-    if ([self.delegate textField:self shouldChangeCharactersInRange:range replacementString:@""])  {
-        self.text = [self.text stringByReplacingCharactersInRange:range withString:@""];
     }
 }
 
@@ -40,58 +114,43 @@
 }
 
 - (void)setText:(NSString *)text {
-    NSAttributedString *attributed = [self attributedStringForString:text attributes:[self safeDefaultTextAttributes]];
+    NSString *nonNilText = text ?: @"";
+    NSAttributedString *attributed = [[NSAttributedString alloc] initWithString:nonNilText attributes:self.defaultTextAttributes];
     [self setAttributedText:attributed];
 }
 
+- (void)setAttributedText:(NSAttributedString *)attributedText {
+    NSAttributedString *modified = self.formDelegate ?
+        [self.formDelegate formTextField:self modifyIncomingTextChange:attributedText] :
+        attributedText;
+    NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(modified) : modified;
+    [super setAttributedText:transformed];
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.065;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionFade;
+    [self.layer addAnimation:transition forKey:nil];
+    [self sendActionsForControlEvents:UIControlEventEditingChanged];
+    [self.formDelegate formTextFieldTextDidChange:self];
+}
+
 - (void)setPlaceholder:(NSString *)placeholder {
-    NSMutableDictionary *attributes = [[self safeDefaultTextAttributes] mutableCopy];
+    NSString *nonNilPlaceholder = placeholder ?: @"";
+    NSAttributedString *attributedPlaceholder = [[NSAttributedString alloc] initWithString:nonNilPlaceholder attributes:[self placeholderTextAttributes]];
+    [self setAttributedPlaceholder:attributedPlaceholder];
+}
+
+- (void)setAttributedPlaceholder:(NSAttributedString *)attributedPlaceholder {
+    NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(attributedPlaceholder) : attributedPlaceholder;
+    [super setAttributedPlaceholder:transformed];
+}
+
+- (NSDictionary *)placeholderTextAttributes {
+    NSMutableDictionary *defaultAttributes = [[self defaultTextAttributes] mutableCopy];
     if (self.placeholderColor) {
-        attributes[NSForegroundColorAttributeName] = self.placeholderColor;
+        defaultAttributes[NSForegroundColorAttributeName] = self.placeholderColor;
     }
-    NSAttributedString *attributed = [self attributedStringForString:placeholder attributes:[attributes copy]];
-    [self setAttributedPlaceholder:attributed];
-}
-
-- (NSAttributedString *)attributedStringForString:(NSString *)string attributes:(NSDictionary *)attributes {
-    if (!string) {
-        return nil;
-    }
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string attributes:attributes];
-    if (self.formatsCardNumbers && [STPCardValidator stringIsNumeric:string]) {
-        NSArray *cardSpacing;
-        STPCardBrand currentBrand = [STPCardValidator brandForNumber:attributedString.string];
-        if (currentBrand == STPCardBrandAmex) {
-            cardSpacing = @[@3, @9];
-        } else {
-            cardSpacing = @[@3, @7, @11];
-        }
-        for (NSUInteger i = 0; i < attributedString.length; i++) {
-            if ([cardSpacing containsObject:@(i)]) {
-                [attributedString addAttribute:NSKernAttributeName value:@(5)
-                                         range:NSMakeRange(i, 1)];
-            } else {
-                [attributedString addAttribute:NSKernAttributeName value:@(0)
-                                         range:NSMakeRange(i, 1)];
-            }
-        }
-    }
-    return [attributedString copy];
-}
-
-- (NSDictionary *)safeDefaultTextAttributes {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
-    if ([self respondsToSelector:@selector(defaultTextAttributes)]) {
-        return [self defaultTextAttributes];
-    }
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-    if (self.textColor) {
-        attributes[NSForegroundColorAttributeName] = self.textColor;
-    }
-    if (self.font) {
-        attributes[NSFontAttributeName] = self.font;
-    }
-    return [attributes copy];
+    return [defaultAttributes copy];
 }
 
 - (void)setDefaultColor:(UIColor *)defaultColor {
@@ -143,6 +202,29 @@
 
 - (void)commandDeleteBackwards {
     self.text = @"";
+}
+
+- (UITextPosition *)closestPositionToPoint:(__unused CGPoint)point {
+    return [self positionFromPosition:self.beginningOfDocument offset:self.text.length];
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    return [super canPerformAction:action withSender:sender] && action == @selector(paste:);
+}
+
+- (void)paste:(__unused id)sender {
+    self.text = [UIPasteboard generalPasteboard].string;
+}
+
+- (void)setDelegate:(id <UITextFieldDelegate>)delegate {
+    STPTextFieldDelegateProxy *delegateProxy = [[STPTextFieldDelegateProxy alloc] init];
+    delegateProxy.delegate = delegate;
+    self.delegateProxy = delegateProxy;
+    [super setDelegate:delegateProxy];
+}
+
+- (id <UITextFieldDelegate>)delegate {
+    return self.delegateProxy;
 }
 
 @end

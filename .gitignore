@@ -21,7 +21,6 @@ Tests/installation_tests/carthage/Carthage/*
 profile
 DerivedData
 
-xcuserdata
+xcuserdata/
 
-project.xcworkspace
 
