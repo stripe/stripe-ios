@@ -117,12 +117,10 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText {
-    NSString *modified = self.formDelegate ?
-        [self.formDelegate formTextField:self modifyIncomingTextChange:attributedText.string] :
-        attributedText.string;
-    NSDictionary *attributes = [STPFormTextField attributesForAttributedString:attributedText];
-    NSAttributedString *modifiedWithAttributes = [[NSAttributedString alloc] initWithString:modified attributes:attributes];
-    NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(modifiedWithAttributes) : modifiedWithAttributes;
+    NSAttributedString *modified = self.formDelegate ?
+        [self.formDelegate formTextField:self modifyIncomingTextChange:attributedText] :
+        attributedText;
+    NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(modified) : modified;
     [super setAttributedText:transformed];
     CATransition *transition = [CATransition animation];
     transition.duration = 0.065;

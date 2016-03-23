@@ -602,7 +602,7 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     return [self.sizingField measureTextSize].width + 20;
 }
 
-#pragma mark STPPaymentTextFieldDelegate
+#pragma mark STPFormTextFieldDelegate
 
 - (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
     STPFormTextField *previous = [self previousField];
@@ -610,29 +610,29 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     [previous deleteBackward];
 }
 
-- (NSString *)formTextField:(STPFormTextField *)formTextField
-   modifyIncomingTextChange:(NSString *)input {
+- (NSAttributedString *)formTextField:(STPFormTextField *)formTextField
+   modifyIncomingTextChange:(NSAttributedString *)input {
     STPCardFieldType fieldType = formTextField.tag;
     switch (fieldType) {
         case STPCardFieldTypeNumber:
-            self.viewModel.cardNumber = input;
+            self.viewModel.cardNumber = input.string;
             break;
         case STPCardFieldTypeExpiration: {
-            self.viewModel.rawExpiration = input;
+            self.viewModel.rawExpiration = input.string;
             break;
         }
         case STPCardFieldTypeCVC:
-            self.viewModel.cvc = input;
+            self.viewModel.cvc = input.string;
             break;
     }
     
     switch (fieldType) {
         case STPCardFieldTypeNumber:
-            return self.viewModel.cardNumber;
+            return [[NSAttributedString alloc] initWithString:self.viewModel.cardNumber];
         case STPCardFieldTypeExpiration:
-            return self.viewModel.rawExpiration;
+            return [[NSAttributedString alloc] initWithString:self.viewModel.rawExpiration];
         case STPCardFieldTypeCVC:
-            return self.viewModel.cvc;
+            return [[NSAttributedString alloc] initWithString:self.viewModel.cvc];
     }
 }
 
