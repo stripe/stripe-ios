@@ -27,9 +27,9 @@ FOUNDATION_EXPORT NSString * STPQueryStringFromParameters(NSDictionary *paramete
 }
 
 + (nonnull NSData *)formEncodedDataForObject:(nonnull NSObject<STPFormEncodable> *)object {
-    NSDictionary *dict = @{
-                           [object.class rootObjectName]: [self keyPairDictionaryForObject:object]
-                           };
+    NSDictionary *keyPairs = [self keyPairDictionaryForObject:object];
+    NSString *rootObjectName = [object.class rootObjectName];
+    NSDictionary *dict = rootObjectName != nil ? @{ rootObjectName: keyPairs } : keyPairs;
     return [STPQueryStringFromParameters(dict) dataUsingEncoding:NSUTF8StringEncoding];
 }
 

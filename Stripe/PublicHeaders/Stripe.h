@@ -17,9 +17,6 @@
 #import "STPCardValidator.h"
 #import "STPToken.h"
 
-#import "STPCheckoutOptions.h"
-#import "STPCheckoutViewController.h"
-
 #import "STPPaymentRequest.h"
 #import "STPLineItem.h"
 #import "STPPaymentAuthorizationViewController.h"

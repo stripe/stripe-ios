@@ -32,7 +32,7 @@
 
 @property(nonatomic, readwrite, strong)STPPaymentCardTextFieldViewModel *viewModel;
 
-@property(nonatomic, readwrite, weak)UITextField *selectedField;
+@property(nonatomic, readonly, weak)UITextField *currentFirstResponderField;
 
 @property(nonatomic, assign)BOOL numberFieldShrunk;
 
@@ -82,6 +82,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     
     _viewModel = [STPPaymentCardTextFieldViewModel new];
     _sizingField = [self buildTextField];
+    _sizingField.formDelegate = nil;
     
     UIImageView *brandImageView = [[UIImageView alloc] initWithImage:self.brandImage];
     brandImageView.contentMode = UIViewContentModeCenter;
@@ -92,7 +93,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     self.brandImageView = brandImageView;
     
     STPFormTextField *numberField = [self buildTextField];
-    numberField.formatsCardNumbers = YES;
+    numberField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorCardNumbers;
     numberField.tag = STPCardFieldTypeNumber;
     self.numberField = numberField;
     self.numberPlaceholder = [self.viewModel defaultPlaceholder];
@@ -294,19 +295,18 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 #pragma mark UIResponder & related methods
 
 - (BOOL)isFirstResponder {
-    return [self.selectedField isFirstResponder];
+    return [self.currentFirstResponderField isFirstResponder];
 }
 
 - (BOOL)canBecomeFirstResponder {
-    return [[self firstResponderField] canBecomeFirstResponder];
+    return [[self nextFirstResponderField] canBecomeFirstResponder];
 }
 
 - (BOOL)becomeFirstResponder {
-    return [[self firstResponderField] becomeFirstResponder];
+    return [[self nextFirstResponderField] becomeFirstResponder];
 }
 
-- (STPFormTextField *)firstResponderField {
-
+- (STPFormTextField *)nextFirstResponderField {
     if ([self.viewModel validationStateForField:STPCardFieldTypeNumber] != STPCardValidationStateValid) {
         return self.numberField;
     } else if ([self.viewModel validationStateForField:STPCardFieldTypeExpiration] != STPCardValidationStateValid) {
@@ -316,41 +316,30 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     }
 }
 
-- (BOOL)canResignFirstResponder {
-    return [self.selectedField canResignFirstResponder];
-}
-
-- (BOOL)resignFirstResponder {
-    [super resignFirstResponder];
-    BOOL success = [self.selectedField resignFirstResponder];
-    [self setNumberFieldShrunk:[self shouldShrinkNumberField] animated:YES completion:nil];
-    return success;
-}
-
-- (BOOL)selectNextField {
-    return [[self nextField] becomeFirstResponder];
-}
-
-- (BOOL)selectPreviousField {
-    return [[self previousField] becomeFirstResponder];
-}
-
-- (STPFormTextField *)nextField {
-    if (self.selectedField == self.numberField) {
-        if ([self.viewModel validationStateForField:self.expirationField.tag] == STPCardValidationStateValid) {
-            return self.cvcField;
+- (STPFormTextField *)currentFirstResponderField {
+    for (STPFormTextField *textField in [self allFields]) {
+        if ([textField isFirstResponder]) {
+            return textField;
         }
-        return self.expirationField;
-    } else if (self.selectedField == self.expirationField) {
-        return self.cvcField;
     }
     return nil;
 }
 
+- (BOOL)canResignFirstResponder {
+    return [self.currentFirstResponderField canResignFirstResponder];
+}
+
+- (BOOL)resignFirstResponder {
+    [super resignFirstResponder];
+    BOOL success = [self.currentFirstResponderField resignFirstResponder];
+    [self setNumberFieldShrunk:[self shouldShrinkNumberField] animated:YES completion:nil];
+    return success;
+}
+
 - (STPFormTextField *)previousField {
-    if (self.selectedField == self.cvcField) {
+    if (self.currentFirstResponderField == self.cvcField) {
         return self.expirationField;
-    } else if (self.selectedField == self.expirationField) {
+    } else if (self.currentFirstResponderField == self.expirationField) {
         return self.numberField;
     }
     return nil;
@@ -421,6 +410,9 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     
     BOOL shrinkNumberField = [self shouldShrinkNumberField];
     [self setNumberFieldShrunk:shrinkNumberField animated:NO completion:nil];
+    if ([self isFirstResponder]) {
+        [[self nextFirstResponderField] becomeFirstResponder];
+    }
     
     // update the card image, falling back to the number field image if not editing
     if ([self.expirationField isFirstResponder]) {
@@ -444,7 +436,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 }
 
 - (void)setText:(NSString *)text inField:(STPCardFieldType)field {
-    NSString *nonNilText = text == nil ? @"" : text;
+    NSString *nonNilText = text ?: @"";
     STPFormTextField *textField = nil;
     switch (field) {
         case STPCardFieldTypeNumber:
@@ -457,11 +449,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
             textField = self.cvcField;
             break;
     }
-    self.selectedField = (self.isFirstResponder) ? textField : nil;
-    id delegate = (id<UITextFieldDelegate>)self;
-    NSRange range = NSMakeRange(0, textField.text.length);
-    [delegate textField:textField shouldChangeCharactersInRange:range
-      replacementString:nonNilText];
+    textField.text = nonNilText;
 }
 
 - (CGSize)intrinsicContentSize {
@@ -539,11 +527,22 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     textField.errorColor = self.textErrorColor;
     textField.placeholderColor = self.placeholderColor;
     textField.formDelegate = self;
+    textField.validText = true;
     return textField;
 }
 
 - (NSArray *)allFields {
-    return @[self.numberField, self.expirationField, self.cvcField];
+    NSMutableArray *mutable = [NSMutableArray array];
+    if (self.numberField) {
+        [mutable addObject:self.numberField];
+    }
+    if (self.expirationField) {
+        [mutable addObject:self.expirationField];
+    }
+    if (self.cvcField) {
+        [mutable addObject:self.cvcField];
+    }
+    return [mutable copy];
 }
 
 typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
@@ -587,7 +586,7 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 }
 
 - (CGFloat)widthForText:(NSString *)text {
-    self.sizingField.formatsCardNumbers = NO;
+    self.sizingField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
     [self.sizingField setText:text];
     return [self.sizingField measureTextSize].width + 8;
 }
@@ -598,12 +597,12 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 }
 
 - (CGFloat)widthForCardNumber:(NSString *)cardNumber {
-    self.sizingField.formatsCardNumbers = YES;
+    self.sizingField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorCardNumbers;
     [self.sizingField setText:cardNumber];
     return [self.sizingField measureTextSize].width + 20;
 }
 
-#pragma mark STPPaymentTextFieldDelegate
+#pragma mark STPFormTextFieldDelegate
 
 - (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
     STPFormTextField *previous = [self previousField];
@@ -611,8 +610,54 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     [previous deleteBackward];
 }
 
+- (NSAttributedString *)formTextField:(STPFormTextField *)formTextField
+   modifyIncomingTextChange:(NSAttributedString *)input {
+    STPCardFieldType fieldType = formTextField.tag;
+    switch (fieldType) {
+        case STPCardFieldTypeNumber:
+            self.viewModel.cardNumber = input.string;
+            break;
+        case STPCardFieldTypeExpiration: {
+            self.viewModel.rawExpiration = input.string;
+            break;
+        }
+        case STPCardFieldTypeCVC:
+            self.viewModel.cvc = input.string;
+            break;
+    }
+    
+    switch (fieldType) {
+        case STPCardFieldTypeNumber:
+            return [[NSAttributedString alloc] initWithString:self.viewModel.cardNumber];
+        case STPCardFieldTypeExpiration:
+            return [[NSAttributedString alloc] initWithString:self.viewModel.rawExpiration];
+        case STPCardFieldTypeCVC:
+            return [[NSAttributedString alloc] initWithString:self.viewModel.cvc];
+    }
+}
+
+- (void)formTextFieldTextDidChange:(STPFormTextField *)formTextField {
+    STPCardFieldType fieldType = formTextField.tag;
+    [self updateImageForFieldType:fieldType];
+    
+    STPCardValidationState state = [self.viewModel validationStateForField:fieldType];
+    formTextField.validText = YES;
+    switch (state) {
+        case STPCardValidationStateInvalid:
+            formTextField.validText = NO;
+            break;
+        case STPCardValidationStateIncomplete:
+            break;
+        case STPCardValidationStateValid: {
+            [[self nextFirstResponderField] becomeFirstResponder];
+            break;
+        }
+    }
+
+    [self onChange];
+}
+
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    self.selectedField = (STPFormTextField *)textField;
     switch ((STPCardFieldType)textField.tag) {
         case STPCardFieldTypeNumber:
             [self setNumberFieldShrunk:NO animated:YES completion:nil];
@@ -636,59 +681,9 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     [self updateImageForFieldType:textField.tag];
 }
 
-- (void)textFieldDidEndEditing:(__unused UITextField *)textField {
-    self.selectedField = nil;
-}
-
-- (BOOL)textField:(STPFormTextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-
-    BOOL deletingLastCharacter = (range.location == textField.text.length - 1 && range.length == 1 && [string isEqualToString:@""]);
-    if (deletingLastCharacter && [textField.text hasSuffix:@"/"] && range.location > 0) {
-        range.location -= 1;
-        range.length += 1;
-    }
-    
-    NSString *newText = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    STPCardFieldType fieldType = textField.tag;
-    switch (fieldType) {
-        case STPCardFieldTypeNumber:
-            self.viewModel.cardNumber = newText;
-            textField.text = self.viewModel.cardNumber;
-            break;
-        case STPCardFieldTypeExpiration: {
-            self.viewModel.rawExpiration = newText;
-            textField.text = self.viewModel.rawExpiration;
-            break;
-        }
-        case STPCardFieldTypeCVC:
-            self.viewModel.cvc = newText;
-            textField.text = self.viewModel.cvc;
-            break;
-    }
-    
-    [self updateImageForFieldType:fieldType];
-
-    STPCardValidationState state = [self.viewModel validationStateForField:fieldType];
-    textField.validText = YES;
-    switch (state) {
-        case STPCardValidationStateInvalid:
-            textField.validText = NO;
-            break;
-        case STPCardValidationStateIncomplete:
-            break;
-        case STPCardValidationStateValid: {
-            [self selectNextField];
-            break;
-        }
-    }
-    [self onChange];
-
-    return NO;
-}
-
 - (UIImage *)brandImage {
-    if (self.selectedField) {
-        return [self brandImageForFieldType:self.selectedField.tag];
+    if (self.currentFirstResponderField) {
+        return [self brandImageForFieldType:self.currentFirstResponderField.tag];
     } else {
         return [self brandImageForFieldType:STPCardFieldTypeNumber];
     }

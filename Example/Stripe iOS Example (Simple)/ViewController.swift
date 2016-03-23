@@ -9,6 +9,13 @@
 import UIKit
 import Stripe
 
+enum STPBackendChargeResult {
+    case Success, Failure
+}
+
+typealias STPTokenSubmissionHandler = (STPBackendChargeResult?, NSError?) -> Void
+
+
 class ViewController: UIViewController, STPPaymentAuthorizationViewControllerDelegate {
 
     // Replace these values with your application's keys
