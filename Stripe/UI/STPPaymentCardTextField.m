@@ -436,7 +436,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 }
 
 - (void)setText:(NSString *)text inField:(STPCardFieldType)field {
-    NSString *nonNilText = text == nil ? @"" : text;
+    NSString *nonNilText = text ?: @"";
     STPFormTextField *textField = nil;
     switch (field) {
         case STPCardFieldTypeNumber:
