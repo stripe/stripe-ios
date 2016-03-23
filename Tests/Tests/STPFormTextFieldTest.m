@@ -18,22 +18,45 @@
 - (void)testAutoFormattingBehavior_None {
     STPFormTextField *sut = [STPFormTextField new];
     sut.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
-    [sut setText:@"123456789"];
+    sut.text = @"123456789";
     XCTAssertEqualObjects(sut.text, @"123456789");
 }
 
 - (void)testAutoFormattingBehavior_PhoneNumbers {
     STPFormTextField *sut = [STPFormTextField new];
     sut.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
-    [sut setText:@"123456789"];
+    sut.text = @"123456789";
     XCTAssertEqualObjects(sut.text, @"(123) 456-789");
 }
 
 - (void)testAutoFormattingBehavior_CardNumbers {
     STPFormTextField *sut = [STPFormTextField new];
     sut.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorCardNumbers;
-    [sut setText:@"4242424242424242"];
+    sut.text = @"4242424242424242";
     XCTAssertEqualObjects(sut.text, @"4242424242424242");
+    NSRange range;
+    id value = [sut.attributedText attribute:NSKernAttributeName atIndex:0 effectiveRange:&range];
+    XCTAssertEqualObjects(value, @(0));
+    XCTAssertEqual(range.length, (NSUInteger)3);
+    value = [sut.attributedText attribute:NSKernAttributeName atIndex:3 effectiveRange:&range];
+    XCTAssertEqualObjects(value, @(5));
+    XCTAssertEqual(range.length, (NSUInteger)1);
+    value = [sut.attributedText attribute:NSKernAttributeName atIndex:4 effectiveRange:&range];
+    XCTAssertEqualObjects(value, @(0));
+    XCTAssertEqual(range.length, (NSUInteger)3);
+    value = [sut.attributedText attribute:NSKernAttributeName atIndex:7 effectiveRange:&range];
+    XCTAssertEqualObjects(value, @(5));
+    XCTAssertEqual(range.length, (NSUInteger)1);
+    value = [sut.attributedText attribute:NSKernAttributeName atIndex:8 effectiveRange:&range];
+    XCTAssertEqualObjects(value, @(0));
+    XCTAssertEqual(range.length, (NSUInteger)3);
+    value = [sut.attributedText attribute:NSKernAttributeName atIndex:11 effectiveRange:&range];
+    XCTAssertEqualObjects(value, @(5));
+    XCTAssertEqual(range.length, (NSUInteger)1);
+    value = [sut.attributedText attribute:NSKernAttributeName atIndex:12 effectiveRange:&range];
+    XCTAssertEqualObjects(value, @(0));
+    XCTAssertEqual(range.length, (NSUInteger)4);
+    XCTAssertEqual(sut.attributedText.length, (NSUInteger)16);
 }
 
 @end
