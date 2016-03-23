@@ -636,7 +636,7 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     }
 }
 
-- (void)formTextFieldTextDidChange:(__unused STPFormTextField *)formTextField {
+- (void)formTextFieldTextDidChange:(STPFormTextField *)formTextField {
     STPCardFieldType fieldType = formTextField.tag;
     [self updateImageForFieldType:fieldType];
     

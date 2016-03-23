@@ -84,13 +84,16 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                 return [attributedString copy];
             };
             break;
-        case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers:
+        case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers: {
+            __weak id weakself = self;
             self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
+                __strong id strongself = weakself;
                 NSString *phoneNumber = [STPPhoneNumberValidator formattedPhoneNumberForString:inputString.string];
-                NSDictionary *attributes = [STPFormTextField attributesForAttributedString:inputString];
+                NSDictionary *attributes = [[strongself class] attributesForAttributedString:inputString];
                 return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
             };
             break;
+        }
     }
 }
 
