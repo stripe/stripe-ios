@@ -18,7 +18,6 @@ typedef NS_ENUM(NSInteger, STPErrorCode) {
     STPInvalidRequestError = 50, // Your request had invalid parameters.
     STPAPIError = 60,            // General-purpose API error (should be rare).
     STPCardError = 70,           // Something was wrong with the given card (most common).
-    STPCheckoutError = 80,       // Stripe Checkout encountered an error.
 };
 
 #pragma mark userInfo keys

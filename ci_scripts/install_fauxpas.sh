@@ -3,9 +3,11 @@ if [[ $CI && "$TRAVIS_SECURE_ENV_VARS" != "true" ]]; then
   exit 0
 fi
 
-brew install caskroom/cask/brew-cask
+brew update; brew cleanup; brew cask cleanup
+brew uninstall --force brew-cask; brew update
+brew tap caskroom/cask
 brew cask install fauxpas
 $HOME/Applications/FauxPas.app/Contents/Resources/install-cli-tools
 fauxpas updatelicense "organization-seat" "Stripe, Inc" $FAUX_PAS_LICENSE
-# Enable beta xcode 7 support
-defaults write org.hasseg.fauxpas experimentalXcode7SupportEnabled -bool yes
+
+fauxpas # this will fail if fauxpas fails to install.

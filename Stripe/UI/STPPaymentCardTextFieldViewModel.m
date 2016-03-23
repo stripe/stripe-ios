@@ -8,25 +8,10 @@
 
 #import "STPPaymentCardTextFieldViewModel.h"
 #import "STPCardValidator.h"
+#import "UIImage+Stripe.h"
+#import "NSString+Stripe.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
-
-@interface NSString(StripeSubstring)
-- (NSString *)stp_safeSubstringToIndex:(NSUInteger)index;
-- (NSString *)stp_safeSubstringFromIndex:(NSUInteger)index;
-@end
-
-@implementation NSString(StripeSubstring)
-
-- (NSString *)stp_safeSubstringToIndex:(NSUInteger)index {
-    return [self substringToIndex:MIN(self.length, index)];
-}
-
-- (NSString *)stp_safeSubstringFromIndex:(NSUInteger)index {
-    return (index > self.length) ? @"" : [self substringFromIndex:index];
-}
-
-@end
 
 @implementation STPPaymentCardTextFieldViewModel
 

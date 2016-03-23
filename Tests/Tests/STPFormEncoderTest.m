@@ -37,6 +37,17 @@
 
 @end
 
+@interface STPTestNilRootObjectFormEncodableObject : STPTestFormEncodableObject
+@end
+
+@implementation STPTestNilRootObjectFormEncodableObject
+
++ (NSString *)rootObjectName {
+    return nil;
+}
+
+@end
+
 @interface STPFormEncoderTest : XCTestCase
 @end
 
@@ -107,6 +118,12 @@
     testObject1.testProperty = @"success";
     testObject1.testNestedObjectProperty = testObject2;
     XCTAssertEqualObjects([self encodeObject:testObject1], @"test_object[test_nested_property][test_property]=nested_object&test_object[test_property]=success");
+}
+
+- (void)testFormEncoding_nilRootObject {
+    STPTestNilRootObjectFormEncodableObject *testObject = [STPTestNilRootObjectFormEncodableObject new];
+    testObject.testProperty = @"success";
+    XCTAssertEqualObjects([self encodeObject:testObject], @"test_property=success");
 }
 
 @end

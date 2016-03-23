@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#define FAUXPAS_IGNORED_ON_LINE(...)
 
 static NSString *const __nonnull STPSDKVersion = @"6.2.0";
 
@@ -24,7 +25,7 @@ typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * _
  A top-level class that imports the rest of the Stripe SDK. This class used to contain several methods to create Stripe tokens, but those are now deprecated in
  favor of STPAPIClient.
  */
-@interface Stripe : NSObject
+@interface Stripe : NSObject FAUXPAS_IGNORED_ON_LINE(UnprefixedClass);
 
 /**
  *  Set your Stripe API key with this method. New instances of STPAPIClient will be initialized with this value. You should call this method as early as
