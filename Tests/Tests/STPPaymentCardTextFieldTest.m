@@ -19,6 +19,7 @@
 @property(nonatomic, readwrite, weak)STPFormTextField *expirationField;
 @property(nonatomic, readwrite, weak)STPFormTextField *cvcField;
 @property(nonatomic, readonly, weak)STPFormTextField *currentFirstResponderField;
+@property(nonatomic, readwrite, strong)STPPaymentCardTextFieldViewModel *viewModel;
 @property(nonatomic, assign)BOOL numberFieldShrunk;
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
@@ -239,6 +240,20 @@
     XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
     XCTAssertNil(sut.currentFirstResponderField);
     XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSettingTextUpdatesViewModelText {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    sut.numberField.text = @"4242424242424242";
+    XCTAssertEqualObjects(sut.viewModel.cardNumber, sut.numberField.text);
+
+    sut.cvcField.text = @"123";
+    XCTAssertEqualObjects(sut.viewModel.cvc, sut.cvcField.text);
+
+    sut.expirationField.text = @"10/99";
+    XCTAssertEqualObjects(sut.viewModel.rawExpiration, sut.expirationField.text);
+    XCTAssertEqualObjects(sut.viewModel.expirationMonth, @"10");
+    XCTAssertEqualObjects(sut.viewModel.expirationYear, @"99");
 }
 
 @end
