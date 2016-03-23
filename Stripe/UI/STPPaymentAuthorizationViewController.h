@@ -25,6 +25,5 @@
 - (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest;
 @property(nonatomic, readonly, nonnull) STPPaymentRequest *paymentRequest;
 @property(nonatomic, weak, nullable) id<STPPaymentAuthorizationViewControllerDelegate> delegate;
-@property(nonatomic, weak, null_resettable) id<STPSourceProvider> sourceProvider;
 
 @end

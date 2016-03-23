@@ -19,10 +19,10 @@
 
 @interface STPPaymentSummaryViewController : UIViewController
 
-- (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest;
+- (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest sourceProvider:(nonnull id<STPSourceProvider>) sourceProvider;
 @property(nonatomic, nonnull) STPPaymentRequest *paymentRequest;
+@property(nonatomic, nonnull, readonly) id<STPSourceProvider> sourceProvider;
 @property(nonatomic, weak, nullable) id<STPPaymentAuthorizationViewControllerDelegate> delegate;
 @property(nonatomic, weak, nullable) id<STPPaymentSummaryViewControllerDelegate> summaryDelegate;
-@property(nonatomic, null_resettable) id<STPSourceProvider> sourceProvider;
 
 @end

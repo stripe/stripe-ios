@@ -105,7 +105,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 - (void)deleteBackward {
     [super deleteBackward];
     if (self.text.length == 0) {
-        [self.formDelegate formTextFieldDidBackspaceOnEmpty:self];
+        if ([self.formDelegate respondsToSelector:@selector(formTextFieldDidBackspaceOnEmpty:)]) {
+            [self.formDelegate formTextFieldDidBackspaceOnEmpty:self];
+        }
     }
 }
 
@@ -120,7 +122,8 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText {
-    NSAttributedString *modified = self.formDelegate ?
+    BOOL shouldModify = self.formDelegate && [self.formDelegate respondsToSelector:@selector(formTextField:modifyIncomingTextChange:)];
+    NSAttributedString *modified = shouldModify ?
         [self.formDelegate formTextField:self modifyIncomingTextChange:attributedText] :
         attributedText;
     NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(modified) : modified;
@@ -131,7 +134,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     transition.type = kCATransitionFade;
     [self.layer addAnimation:transition forKey:nil];
     [self sendActionsForControlEvents:UIControlEventEditingChanged];
-    [self.formDelegate formTextFieldTextDidChange:self];
+    if ([self.formDelegate respondsToSelector:@selector(formTextFieldTextDidChange:)]) {
+        [self.formDelegate formTextFieldTextDidChange:self];
+    }
 }
 
 - (void)setPlaceholder:(NSString *)placeholder {

@@ -8,36 +8,35 @@
 
 #import "STPPaymentAuthorizationViewController.h"
 #import "STPPaymentRequest.h"
+#import "STPEmailEntryViewController.h"
 #import "STPPaymentSummaryViewController.h"
 #import "STPSourceListViewController.h"
+#import "UINavigationController+Stripe_Completion.h"
+#import "STPBasicSourceProvider.h"
 
-@interface STPPaymentAuthorizationViewController()<STPPaymentSummaryViewControllerDelegate>
+@interface STPPaymentAuthorizationViewController()<STPPaymentSummaryViewControllerDelegate, STPEmailEntryViewControllerDelegate>
 @property(nonatomic, weak) UINavigationController *navigationController;
-@property(nonatomic, weak) STPPaymentSummaryViewController *summaryViewController;
+@property(nonatomic, readwrite, nonnull) STPPaymentRequest *paymentRequest;
+@property(nonatomic) id<STPSourceProvider> sourceProvider;
 @end
 
 @implementation STPPaymentAuthorizationViewController
 
-- (instancetype)initWithPaymentRequest:(STPPaymentRequest *)paymentRequest {
-    STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:paymentRequest];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:summaryViewController];
+- (instancetype)initWithPaymentRequest:(__unused STPPaymentRequest *)paymentRequest {
+    STPEmailEntryViewController *emailViewController = [STPEmailEntryViewController new];
+
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:emailViewController];
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
+        _sourceProvider = [STPBasicSourceProvider new];
         _navigationController = navigationController;
-        summaryViewController.summaryDelegate = self;
-        _summaryViewController = summaryViewController;
+//        summaryViewController.summaryDelegate = self;
+//        _summaryViewController = summaryViewController;
+        emailViewController.delegate = self;
         [self addChildViewController:_navigationController];
         [_navigationController didMoveToParentViewController:self];
     }
     return self;
-}
-
-- (void)setDelegate:(id<STPPaymentAuthorizationViewControllerDelegate>)delegate {
-    self.summaryViewController.delegate = delegate;
-}
-
-- (id<STPPaymentAuthorizationViewControllerDelegate>)delegate {
-    return self.summaryViewController.delegate;
 }
 
 - (void)viewDidLoad {
@@ -55,16 +54,11 @@
     [self.navigationController pushViewController:destination animated:YES];
 }
 
-- (STPPaymentRequest *)paymentRequest {
-    return self.summaryViewController.paymentRequest;
-}
-
-- (void)setSourceProvider:(id<STPSourceProvider>)sourceProvider {
-    self.summaryViewController.sourceProvider = sourceProvider;
-}
-
-- (id<STPSourceProvider>)sourceProvider {
-    return self.summaryViewController.sourceProvider;
+- (void)paymentEmailViewController:(__unused STPEmailEntryViewController *)emailViewController didEnterEmailAddress:(__unused NSString *)emailAddress completion:(STPErrorBlock)completion {
+    STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:self.paymentRequest sourceProvider:self.sourceProvider];
+    [self.navigationController stp_pushViewController:summaryViewController animated:YES completion:^{
+        completion(nil);
+    }];
 }
 
 @end

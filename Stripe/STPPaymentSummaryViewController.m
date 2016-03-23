@@ -31,26 +31,20 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 
 @property(nonatomic, weak) UITableView *tableView;
 @property(nonatomic) NSArray<STPLineItem *> *lineItems;
+@property(nonatomic, nonnull) id<STPSourceProvider> sourceProvider;
 
 @end
 
 @implementation STPPaymentSummaryViewController
 
-- (instancetype)initWithPaymentRequest:(STPPaymentRequest *)paymentRequest {
+- (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest sourceProvider:(nonnull id<STPSourceProvider>) sourceProvider {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _paymentRequest = paymentRequest;
+        _sourceProvider = sourceProvider;
         _lineItems = paymentRequest.lineItems;
-        self.sourceProvider = nil;
     }
     return self;
-}
-
-- (id<STPSourceProvider>)sourceProvider {
-    if (!_sourceProvider) {
-        _sourceProvider = [[STPBasicSourceProvider alloc] init];
-    }
-    return _sourceProvider;
 }
 
 - (void)viewDidLoad {
