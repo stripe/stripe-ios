@@ -38,11 +38,11 @@
 
 @end
 
-typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString *inputText);
+typedef NSAttributedString * (^STPFormTextTransformationBlock)(NSAttributedString *inputText);
 
-@interface STPFormTextField()
-@property(nonatomic)STPTextFieldDelegateProxy *delegateProxy;
-@property(nonatomic, copy)STPFormTextTransformationBlock textFormattingBlock;
+@interface STPFormTextField ()
+@property (nonatomic) STPTextFieldDelegateProxy *delegateProxy;
+@property (nonatomic, copy) STPFormTextTransformationBlock textFormattingBlock;
 @end
 
 @implementation STPFormTextField
@@ -59,41 +59,39 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 - (void)setAutoFormattingBehavior:(STPFormTextFieldAutoFormattingBehavior)autoFormattingBehavior {
     _autoFormattingBehavior = autoFormattingBehavior;
     switch (autoFormattingBehavior) {
-        case STPFormTextFieldAutoFormattingBehaviorNone:
-            self.textFormattingBlock = nil;
-            break;
-        case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
-            self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
-                NSMutableAttributedString *attributedString = [inputString mutableCopy];
-                NSArray *cardSpacing;
-                STPCardBrand currentBrand = [STPCardValidator brandForNumber:attributedString.string];
-                if (currentBrand == STPCardBrandAmex) {
-                    cardSpacing = @[@3, @9];
+    case STPFormTextFieldAutoFormattingBehaviorNone:
+        self.textFormattingBlock = nil;
+        break;
+    case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
+        self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
+            NSMutableAttributedString *attributedString = [inputString mutableCopy];
+            NSArray *cardSpacing;
+            STPCardBrand currentBrand = [STPCardValidator brandForNumber:attributedString.string];
+            if (currentBrand == STPCardBrandAmex) {
+                cardSpacing = @[@3, @9];
+            } else {
+                cardSpacing = @[@3, @7, @11];
+            }
+            for (NSUInteger i = 0; i < attributedString.length; i++) {
+                if ([cardSpacing containsObject:@(i)]) {
+                    [attributedString addAttribute:NSKernAttributeName value:@(5) range:NSMakeRange(i, 1)];
                 } else {
-                    cardSpacing = @[@3, @7, @11];
+                    [attributedString addAttribute:NSKernAttributeName value:@(0) range:NSMakeRange(i, 1)];
                 }
-                for (NSUInteger i = 0; i < attributedString.length; i++) {
-                    if ([cardSpacing containsObject:@(i)]) {
-                        [attributedString addAttribute:NSKernAttributeName value:@(5)
-                                                 range:NSMakeRange(i, 1)];
-                    } else {
-                        [attributedString addAttribute:NSKernAttributeName value:@(0)
-                                                 range:NSMakeRange(i, 1)];
-                    }
-                }
-                return [attributedString copy];
-            };
-            break;
-        case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers: {
-            __weak id weakself = self;
-            self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
-                __strong id strongself = weakself;
-                NSString *phoneNumber = [STPPhoneNumberValidator formattedPhoneNumberForString:inputString.string];
-                NSDictionary *attributes = [[strongself class] attributesForAttributedString:inputString];
-                return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
-            };
-            break;
-        }
+            }
+            return [attributedString copy];
+        };
+        break;
+    case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers: {
+        __weak id weakself = self;
+        self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
+            __strong id strongself = weakself;
+            NSString *phoneNumber = [STPPhoneNumberValidator formattedPhoneNumberForString:inputString.string];
+            NSDictionary *attributes = [[strongself class] attributesForAttributedString:inputString];
+            return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
+        };
+        break;
+    }
     }
 }
 
@@ -120,9 +118,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText {
-    NSAttributedString *modified = self.formDelegate ?
-        [self.formDelegate formTextField:self modifyIncomingTextChange:attributedText] :
-        attributedText;
+    NSAttributedString *modified = self.formDelegate ? [self.formDelegate formTextField:self modifyIncomingTextChange:attributedText] : attributedText;
     NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(modified) : modified;
     [super setAttributedText:transformed];
     CATransition *transition = [CATransition animation];
@@ -170,7 +166,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 
 - (void)setPlaceholderColor:(UIColor *)placeholderColor {
     _placeholderColor = placeholderColor;
-    [self setPlaceholder:self.placeholder]; //explicitly rebuild attributed placeholder
+    [self setPlaceholder:self.placeholder]; // explicitly rebuild attributed placeholder
 }
 
 - (void)updateColor {
@@ -182,15 +178,15 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     if (UIDevice.currentDevice.systemVersion.integerValue != 8) {
         return [self textRectForBounds:bounds];
     }
-    
+
     CGFloat const scale = UIScreen.mainScreen.scale;
     CGFloat const preferred = self.attributedText.size.height;
     CGFloat const delta = (CGFloat)ceil(preferred) - preferred;
     CGFloat const adjustment = (CGFloat)floor(delta * scale) / scale;
-    
+
     CGRect const textRect = [self textRectForBounds:bounds];
     CGRect const editingRect = CGRectOffset(textRect, 0.0, adjustment);
-    
+
     return editingRect;
 }
 
@@ -216,14 +212,14 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     self.text = [UIPasteboard generalPasteboard].string;
 }
 
-- (void)setDelegate:(id <UITextFieldDelegate>)delegate {
+- (void)setDelegate:(id<UITextFieldDelegate>)delegate {
     STPTextFieldDelegateProxy *delegateProxy = [[STPTextFieldDelegateProxy alloc] init];
     delegateProxy.delegate = delegate;
     self.delegateProxy = delegateProxy;
     [super setDelegate:delegateProxy];
 }
 
-- (id <UITextFieldDelegate>)delegate {
+- (id<UITextFieldDelegate>)delegate {
     return self.delegateProxy;
 }
 

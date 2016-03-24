@@ -29,14 +29,14 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"Bank account creation"];
     [client createTokenWithBankAccount:bankAccount
                             completion:^(STPToken *token, NSError *error) {
-                                [expectation fulfill];
-                                XCTAssertNil(error, @"error should be nil %@", error.localizedDescription);
-                                XCTAssertNotNil(token, @"token should not be nil");
+                              [expectation fulfill];
+                              XCTAssertNil(error, @"error should be nil %@", error.localizedDescription);
+                              XCTAssertNotNil(token, @"token should not be nil");
 
-                                XCTAssertNotNil(token.tokenId);
-                                XCTAssertNotNil(token.bankAccount.bankAccountId);
-                                XCTAssertEqualObjects(@"STRIPE TEST BANK", token.bankAccount.bankName);
-                                XCTAssertEqualObjects(@"6789", token.bankAccount.last4);
+                              XCTAssertNotNil(token.tokenId);
+                              XCTAssertNotNil(token.bankAccount.bankAccountId);
+                              XCTAssertEqualObjects(@"STRIPE TEST BANK", token.bankAccount.bankName);
+                              XCTAssertEqualObjects(@"6789", token.bankAccount.last4);
                             }];
 
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
@@ -54,10 +54,10 @@
 
     [client createTokenWithBankAccount:bankAccount
                             completion:^(STPToken *token, NSError *error) {
-                                [expectation fulfill];
-                                XCTAssertNil(token, @"token should be nil");
-                                XCTAssertNotNil(error, @"error should not be nil");
-                                XCTAssert([error.localizedDescription rangeOfString:@"asdf"].location != NSNotFound, @"error should contain last 4 of key");
+                              [expectation fulfill];
+                              XCTAssertNil(token, @"token should be nil");
+                              XCTAssertNotNil(error, @"error should not be nil");
+                              XCTAssert([error.localizedDescription rangeOfString:@"asdf"].location != NSNotFound, @"error should contain last 4 of key");
                             }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }

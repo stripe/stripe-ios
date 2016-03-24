@@ -19,16 +19,11 @@
 + (NSString *)formattedPhoneNumberForString:(NSString *)string {
     NSString *sanitized = [STPCardValidator sanitizedNumericStringForString:string];
     if (sanitized.length >= 6) {
-        return [NSString stringWithFormat:@"(%@) %@-%@",
-                [sanitized stp_safeSubstringToIndex:3],
-                [[sanitized stp_safeSubstringToIndex:6] stp_safeSubstringFromIndex:3],
-                [[sanitized stp_safeSubstringToIndex:10] stp_safeSubstringFromIndex:6]
-                ];
+        return [NSString stringWithFormat:@"(%@) %@-%@", [sanitized stp_safeSubstringToIndex:3],
+                                          [[sanitized stp_safeSubstringToIndex:6] stp_safeSubstringFromIndex:3],
+                                          [[sanitized stp_safeSubstringToIndex:10] stp_safeSubstringFromIndex:6]];
     } else if (sanitized.length >= 3) {
-        return [NSString stringWithFormat:@"(%@) %@",
-                [sanitized stp_safeSubstringToIndex:3],
-                [sanitized stp_safeSubstringFromIndex:3]
-                ];
+        return [NSString stringWithFormat:@"(%@) %@", [sanitized stp_safeSubstringToIndex:3], [sanitized stp_safeSubstringFromIndex:3]];
     }
     return sanitized;
 }

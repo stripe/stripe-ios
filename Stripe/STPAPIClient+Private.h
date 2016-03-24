@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface STPAPIClient ()<NSURLSessionDelegate>
+@interface STPAPIClient () <NSURLSessionDelegate>
 
 - (void)createTokenWithData:(nonnull NSData *)data completion:(nullable STPTokenCompletionBlock)completion;
 

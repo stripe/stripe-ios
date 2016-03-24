@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "STPDelegateProxy.h"
 
-@protocol TestDelegate <NSObject>
+@protocol TestDelegate<NSObject>
 @optional
 - (NSString *)delegateMethod1;
 - (NSString *)delegateMethod2;

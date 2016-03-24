@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface STPDelegateProxy<__covariant DelegateType:NSObject<NSObject> *> : NSObject
+@interface STPDelegateProxy < __covariant DelegateType : NSObject<NSObject>
+* > : NSObject
 
-@property(nonatomic, weak)DelegateType delegate;
+      @property(nonatomic, weak) DelegateType delegate;
 - (instancetype)init;
 
 @end

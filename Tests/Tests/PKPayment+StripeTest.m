@@ -17,8 +17,7 @@
 
 @implementation PKPayment_StripeTest
 
-- (void)testIsSimulated
-{
+- (void)testIsSimulated {
     if (![PKPayment class]) {
         return;
     }
@@ -34,8 +33,7 @@
     XCTAssertTrue([payment stp_isSimulated]);
 }
 
-- (void)testTestTransactionIdentifier
-{
+- (void)testTestTransactionIdentifier {
     if (![PKPayment class]) {
         return;
     }

@@ -56,7 +56,8 @@
 @property (nonatomic, copy, nullable) NSString *addressCountry;
 
 /**
- *  Three-letter ISO currency code representing the currency paid out to the bank account. This is only applicable when tokenizing debit cards to issue payouts to managed accounts. You should not set it otherwise. The card can then be used as a transfer destination for funds in this currency.
+ *  Three-letter ISO currency code representing the currency paid out to the bank account. This is only applicable when tokenizing debit cards to issue payouts
+ * to managed accounts. You should not set it otherwise. The card can then be used as a transfer destination for funds in this currency.
  */
 @property (nonatomic, copy, nullable) NSString *currency;
 
@@ -65,14 +66,14 @@
  *  @return whether or not that field is valid.
  *  @deprecated use STPCardValidator instead.
  */
-- (BOOL)validateNumber:(__nullable id * __nullable )ioValue
-                 error:(NSError * __nullable * __nullable )outError __attribute__((deprecated("Use STPCardValidator instead.")));
-- (BOOL)validateCvc:(__nullable id * __nullable )ioValue
-              error:(NSError * __nullable * __nullable )outError __attribute__((deprecated("Use STPCardValidator instead.")));
-- (BOOL)validateExpMonth:(__nullable  id * __nullable )ioValue
-                   error:(NSError * __nullable * __nullable )outError __attribute__((deprecated("Use STPCardValidator instead.")));
-- (BOOL)validateExpYear:(__nullable id * __nullable)ioValue
-                  error:(NSError * __nullable * __nullable )outError __attribute__((deprecated("Use STPCardValidator instead.")));
+- (BOOL)validateNumber:(__nullable id *__nullable)ioValue
+                 error:(NSError *__nullable *__nullable)outError __attribute__((deprecated("Use STPCardValidator instead.")));
+- (BOOL)validateCvc:(__nullable id *__nullable)ioValue
+              error:(NSError *__nullable *__nullable)outError __attribute__((deprecated("Use STPCardValidator instead.")));
+- (BOOL)validateExpMonth:(__nullable id *__nullable)ioValue
+                   error:(NSError *__nullable *__nullable)outError __attribute__((deprecated("Use STPCardValidator instead.")));
+- (BOOL)validateExpYear:(__nullable id *__nullable)ioValue
+                  error:(NSError *__nullable *__nullable)outError __attribute__((deprecated("Use STPCardValidator instead.")));
 
 /**
  *  This validates a fully populated card to check for all errors, including ones that come about
@@ -86,6 +87,6 @@
  *  @return whether or not the card is valid.
  *  @deprecated use STPCardValidator instead.
  */
-- (BOOL)validateCardReturningError:(NSError * __nullable * __nullable)outError __attribute__((deprecated("Use STPCardValidator instead.")));
+- (BOOL)validateCardReturningError:(NSError *__nullable *__nullable)outError __attribute__((deprecated("Use STPCardValidator instead.")));
 
 @end

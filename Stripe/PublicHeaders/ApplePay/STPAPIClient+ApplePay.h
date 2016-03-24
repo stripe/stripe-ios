@@ -10,7 +10,6 @@
 
 #import "STPAPIClient.h"
 
-
 @interface STPAPIClient (ApplePay)
 
 /**

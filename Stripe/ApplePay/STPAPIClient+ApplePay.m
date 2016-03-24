@@ -29,13 +29,13 @@
 
     if (payment.billingAddress) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
-        
-        NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(payment.billingAddress, kABPersonFirstNameProperty);
-        NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(payment.billingAddress, kABPersonLastNameProperty);
+
+        NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue(payment.billingAddress, kABPersonFirstNameProperty);
+        NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue(payment.billingAddress, kABPersonLastNameProperty);
         if (firstName.length && lastName.length) {
             params[@"name"] = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
         }
-        
+
         ABMultiValueRef addressValues = ABRecordCopyValue(payment.billingAddress, kABPersonAddressProperty);
         if (addressValues != NULL) {
             if (ABMultiValueGetCount(addressValues) > 0) {
@@ -62,8 +62,8 @@
                 }
                 CFRelease(dict);
                 [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, __unused BOOL *stop) {
-                    NSString *param = [NSString stringWithFormat:@"&card[%@]=%@", key, [obj stringByAddingPercentEncodingWithAllowedCharacters:set]];
-                    payloadString = [payloadString stringByAppendingString:param];
+                  NSString *param = [NSString stringWithFormat:@"&card[%@]=%@", key, [obj stringByAddingPercentEncodingWithAllowedCharacters:set]];
+                  payloadString = [payloadString stringByAppendingString:param];
                 }];
             }
             CFRelease(addressValues);
@@ -79,7 +79,7 @@
         NSString *param = [NSString stringWithFormat:@"&pk_token_payment_network=%@", payment.token.paymentNetwork];
         payloadString = [payloadString stringByAppendingString:param];
     }
-    
+
     if (payment.token.transactionIdentifier) {
         NSString *transactionIdentifier = payment.token.transactionIdentifier;
         if ([payment stp_isSimulated]) {
@@ -95,4 +95,4 @@
 
 @end
 
-void linkSTPAPIClientApplePayCategory(void){}
+void linkSTPAPIClientApplePayCategory(void) {}

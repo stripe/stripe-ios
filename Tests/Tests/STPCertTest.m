@@ -28,11 +28,11 @@ NSString *const STPExamplePublishableKey = @"bad_key";
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPExamplePublishableKey];
     [client createTokenWithData:[NSData new]
                      completion:^(STPToken *token, NSError *error) {
-                         [expectation fulfill];
-                         // Note that this API request *will* fail, but it will return error
-                         // messages from the server and not be blocked by local cert checks
-                         XCTAssertNil(token, @"Expected no token");
-                         XCTAssertNotNil(error, @"Expected error");
+                       [expectation fulfill];
+                       // Note that this API request *will* fail, but it will return error
+                       // messages from the server and not be blocked by local cert checks
+                       XCTAssertNil(token, @"Expected no token");
+                       XCTAssertNotNil(error, @"Expected error");
                      }];
     [self waitForExpectationsWithTimeout:10.0f handler:nil];
 }
@@ -40,18 +40,17 @@ NSString *const STPExamplePublishableKey = @"bad_key";
 - (void)testExpired {
     [self createTokenWithBaseURL:[NSURL URLWithString:@"https://testssl-expire.disig.sk/index.en.html"]
                       completion:^(STPToken *token, NSError *error) {
-                          XCTAssertNil(token, @"Token should be nil.");
-                          XCTAssertEqualObjects(error.domain, @"NSURLErrorDomain", @"Error should be NSURLErrorDomain");
-                          XCTAssertNotNil(error.userInfo[@"NSURLErrorFailingURLPeerTrustErrorKey"],
-                                          @"There should be a secTustRef for Foundation HTTPS errors");
+                        XCTAssertNil(token, @"Token should be nil.");
+                        XCTAssertEqualObjects(error.domain, @"NSURLErrorDomain", @"Error should be NSURLErrorDomain");
+                        XCTAssertNotNil(error.userInfo[@"NSURLErrorFailingURLPeerTrustErrorKey"], @"There should be a secTustRef for Foundation HTTPS errors");
                       }];
 }
 
 - (void)testMismatched {
     [self createTokenWithBaseURL:[NSURL URLWithString:@"https://mismatched.stripe.com"]
                       completion:^(STPToken *token, NSError *error) {
-                          XCTAssertNil(token, @"Token should be nil.");
-                          XCTAssertEqualObjects(error.domain, @"NSURLErrorDomain", @"Error should be NSURLErrorDomain");
+                        XCTAssertNil(token, @"Token should be nil.");
+                        XCTAssertEqualObjects(error.domain, @"NSURLErrorDomain", @"Error should be NSURLErrorDomain");
                       }];
 }
 
@@ -62,8 +61,8 @@ NSString *const STPExamplePublishableKey = @"bad_key";
     client.apiURL = baseURL;
     [client createTokenWithData:[NSData new]
                      completion:^(STPToken *token, NSError *error) {
-                         [expectation fulfill];
-                         completion(token, error);
+                       [expectation fulfill];
+                       completion(token, error);
                      }];
 
     [self waitForExpectationsWithTimeout:10.0f handler:nil];

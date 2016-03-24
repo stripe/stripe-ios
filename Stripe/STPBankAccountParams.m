@@ -34,11 +34,11 @@
 
 + (NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
-             @"accountNumber": @"account_number",
-             @"routingNumber": @"routing_number",
-             @"country": @"country",
-             @"currency": @"currency",
-             };
+        @"accountNumber": @"account_number",
+        @"routingNumber": @"routing_number",
+        @"country": @"country",
+        @"currency": @"currency",
+    };
 }
 
 @end

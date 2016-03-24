@@ -50,9 +50,9 @@ static NSString *STPDefaultPublishableKey;
 @end
 
 #if __has_include("Fabric.h")
-@interface STPAPIClient ()<NSURLSessionDelegate, FABKit>
+@interface STPAPIClient () <NSURLSessionDelegate, FABKit>
 #else
-@interface STPAPIClient()<NSURLSessionDelegate>
+@interface STPAPIClient () <NSURLSessionDelegate>
 #endif
 @property (nonatomic, readwrite) NSURL *apiURL;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
@@ -69,7 +69,10 @@ static NSString *STPDefaultPublishableKey;
 + (instancetype)sharedClient {
     static id sharedClient;
     static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{ sharedClient = [[self alloc] init]; });
+    dispatch_once(&onceToken,
+                  ^{
+                    sharedClient = [[self alloc] init];
+                  });
     return sharedClient;
 }
 
@@ -87,10 +90,10 @@ static NSString *STPDefaultPublishableKey;
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         NSString *auth = [@"Bearer " stringByAppendingString:self.publishableKey];
         config.HTTPAdditionalHeaders = @{
-                                         @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
-                                         @"Stripe-Version": stripeAPIVersion,
-                                         @"Authorization": auth,
-                                         };
+            @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
+            @"Stripe-Version": stripeAPIVersion,
+            @"Authorization": auth,
+        };
         _urlSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:_operationQueue];
     }
     return self;
@@ -104,11 +107,7 @@ static NSString *STPDefaultPublishableKey;
 - (void)createTokenWithData:(NSData *)data completion:(STPTokenCompletionBlock)completion {
     NSCAssert(data != nil, @"'data' is required to create a token");
     NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
-    [STPAPIPostRequest<STPToken *> startWithAPIClient:self
-                                             endpoint:tokenEndpoint
-                                             postData:data
-                                           serializer:[STPToken new]
-                                           completion:completion];
+    [STPAPIPostRequest<STPToken *> startWithAPIClient:self endpoint:tokenEndpoint postData:data serializer:[STPToken new] completion:completion];
 }
 
 #pragma mark - private helpers
@@ -238,7 +237,7 @@ static NSString *STPDefaultPublishableKey;
                         completion:(STPCompletionBlock)handler {
     NSCAssert(bankAccount != nil, @"'bankAccount' is required to create a token");
     NSCAssert(handler != nil, @"'handler' is required to use the token that is created");
-    
+
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
     client.operationQueue = queue;
     [client createTokenWithBankAccount:bankAccount completion:handler];

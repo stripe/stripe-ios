@@ -35,16 +35,16 @@
 
     [client createTokenWithCard:card
                      completion:^(STPToken *token, NSError *error) {
-                         [expectation fulfill];
+                       [expectation fulfill];
 
-                         XCTAssertNil(error, @"error should be nil %@", error.localizedDescription);
-                         XCTAssertNotNil(token, @"token should not be nil");
+                       XCTAssertNil(error, @"error should be nil %@", error.localizedDescription);
+                       XCTAssertNotNil(token, @"token should not be nil");
 
-                         XCTAssertNotNil(token.tokenId);
-                         XCTAssertEqual(6U, token.card.expMonth);
-                         XCTAssertEqual(2018U, token.card.expYear);
-                         XCTAssertEqualObjects(@"4242", token.card.last4);
-                         XCTAssertEqualObjects(@"usd", token.card.currency);
+                       XCTAssertNotNil(token.tokenId);
+                       XCTAssertEqual(6U, token.card.expMonth);
+                       XCTAssertEqual(2018U, token.card.expYear);
+                       XCTAssertEqualObjects(@"4242", token.card.last4);
+                       XCTAssertEqualObjects(@"usd", token.card.currency);
                      }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
@@ -62,13 +62,13 @@
 
     [client createTokenWithCard:card
                      completion:^(STPToken *token, NSError *error) {
-                         [expectation fulfill];
+                       [expectation fulfill];
 
-                         XCTAssertNotNil(error, @"error should not be nil");
-                         XCTAssertEqual(error.code, 70);
-                         XCTAssertEqualObjects(error.domain, StripeDomain);
-                         XCTAssertEqualObjects(error.userInfo[STPErrorParameterKey], @"number");
-                         XCTAssertNil(token, @"token should not be nil: %@", token.description);
+                       XCTAssertNotNil(error, @"error should not be nil");
+                       XCTAssertEqual(error.code, 70);
+                       XCTAssertEqualObjects(error.domain, StripeDomain);
+                       XCTAssertEqualObjects(error.userInfo[STPErrorParameterKey], @"number");
+                       XCTAssertNil(token, @"token should not be nil: %@", token.description);
                      }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
@@ -85,10 +85,10 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"Card failure"];
     [client createTokenWithCard:card
                      completion:^(STPToken *token, NSError *error) {
-                         [expectation fulfill];
-                         XCTAssertNil(token, @"token should be nil");
-                         XCTAssertNotNil(error, @"error should not be nil");
-                         XCTAssert([error.localizedDescription rangeOfString:@"asdf"].location != NSNotFound, @"error should contain last 4 of key");
+                       [expectation fulfill];
+                       XCTAssertNil(token, @"token should be nil");
+                       XCTAssertNotNil(error, @"error should not be nil");
+                       XCTAssert([error.localizedDescription rangeOfString:@"asdf"].location != NSNotFound, @"error should contain last 4 of key");
                      }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }

@@ -81,7 +81,9 @@ typedef NS_ENUM(NSInteger, STPBankAccountStatus) {
 
 #pragma mark - deprecated setters for STPBankAccountParams properties
 
-#define DEPRECATED_IN_FAVOR_OF_STPBANKACCOUNTPARAMS __attribute__((deprecated("For collecting your users' bank account details, you should use an STPBankAccountParams object instead of an STPBankAccount.")))
+#define DEPRECATED_IN_FAVOR_OF_STPBANKACCOUNTPARAMS                                                                                                            \
+    __attribute__((deprecated("For collecting your users' bank account details, you should use an STPBankAccountParams object instead of an "                  \
+                              "STPBankAccount.")))
 
 - (void)setAccountNumber:(nullable NSString *)accountNumber DEPRECATED_IN_FAVOR_OF_STPBANKACCOUNTPARAMS;
 
