@@ -13,11 +13,13 @@
 #import "STPPaymentSummaryViewController.h"
 #import "STPSourceListViewController.h"
 #import "UINavigationController+Stripe_Completion.h"
+#import "STPSourceProvider.h"
 #import "STPBasicSourceProvider.h"
 #import "STPAPIClient.h"
 #import "STPToken.h"
+#import "STPPaymentResult.h"
 
-@interface STPPaymentAuthorizationViewController()<STPPaymentSummaryViewControllerDelegate, STPEmailEntryViewControllerDelegate, STPPaymentCardEntryViewControllerDelegate>
+@interface STPPaymentAuthorizationViewController()<STPEmailEntryViewControllerDelegate, STPPaymentCardEntryViewControllerDelegate, STPPaymentSummaryViewControllerDelegate>
 @property(nonatomic, weak) UINavigationController *navigationController;
 @property(nonatomic, readwrite, nonnull) STPPaymentRequest *paymentRequest;
 @property(nonatomic, readwrite, nonnull) STPAPIClient *apiClient;
@@ -56,18 +58,17 @@
     self.navigationController.view.frame = self.view.bounds;
 }
 
-- (void)paymentSummaryViewControllerDidEditPaymentMethod:(__unused STPPaymentSummaryViewController *)summaryViewController {
-    STPSourceListViewController *destination = [[STPSourceListViewController alloc] initWithSourceProvider:self.sourceProvider apiClient:self.apiClient];
-    [self.navigationController pushViewController:destination animated:YES];
-}
+#pragma mark - STPEmailEntryViewControllerDelegate
 
-- (void)paymentEmailViewController:(__unused STPEmailEntryViewController *)emailViewController didEnterEmailAddress:(__unused NSString *)emailAddress completion:(STPErrorBlock)completion {
+- (void)emailEntryViewController:(__unused STPEmailEntryViewController *)emailViewController didEnterEmailAddress:(__unused NSString *)emailAddress completion:(STPErrorBlock)completion {
     STPPaymentCardEntryViewController *paymentCardViewController = [STPPaymentCardEntryViewController new];
     paymentCardViewController.delegate = self;
     [self.navigationController stp_pushViewController:paymentCardViewController animated:YES completion:^{
         completion(nil);
     }];
 }
+
+#pragma mark - STPPaymentCardEntryViewControllerDelegate
 
 - (void)paymentCardEntryViewController:(__unused STPPaymentCardEntryViewController *)emailViewController didEnterCardParams:(STPCardParams *)cardParams completion:(STPErrorBlock)completion {
     
@@ -85,11 +86,28 @@
                 return;
             }
             STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:weakself.paymentRequest sourceProvider:weakself.sourceProvider];
+            summaryViewController.delegate = self;
             [weakself.navigationController stp_pushViewController:summaryViewController animated:YES completion:^{
                 completion(nil);
             }];
         }];
     }];
+}
+
+#pragma mark - STPPaymentSummaryViewControllerDelegate
+
+- (void)paymentSummaryViewControllerDidEditPaymentMethod:(__unused STPPaymentSummaryViewController *)summaryViewController {
+    STPSourceListViewController *destination = [[STPSourceListViewController alloc] initWithSourceProvider:self.sourceProvider apiClient:self.apiClient];
+    [self.navigationController pushViewController:destination animated:YES];
+}
+
+- (void)paymentSummaryViewControllerDidCancel:(__unused STPPaymentSummaryViewController *)summaryViewController {
+    [self.delegate paymentAuthorizationViewControllerDidCancel:self];
+}
+
+- (void)paymentSummaryViewControllerDidPressBuy:(__unused STPPaymentSummaryViewController *)summaryViewController {
+    STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:self.sourceProvider.selectedSource customer:nil];
+    [self.delegate paymentAuthorizationViewController:self didCreatePaymentResult:result];
 }
 
 @end

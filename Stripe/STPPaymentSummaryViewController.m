@@ -58,13 +58,6 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
     [self.view addSubview:tableView];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(pay:)];
-    [self.sourceProvider retrieveSources:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
-        if (error) {
-            [self handleError:error];
-            return;
-        }
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -73,12 +66,11 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 }
 
 - (void)cancel:(__unused id)sender {
-    [self.delegate paymentAuthorizationViewControllerDidCancel:[self authVC]];
+    [self.delegate paymentSummaryViewControllerDidCancel:self];
 }
 
 - (void)pay:(__unused id)sender {
-    STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:self.sourceProvider.selectedSource customer:nil];
-    [self.delegate paymentAuthorizationViewController:[self authVC] didCreateCheckoutResult:result];
+    [self.delegate paymentSummaryViewControllerDidPressBuy:self];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
@@ -138,16 +130,8 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 0) {
-        [self.summaryDelegate paymentSummaryViewControllerDidEditPaymentMethod:self];
+        [self.delegate paymentSummaryViewControllerDidEditPaymentMethod:self];
     }
-}
-
-- (STPPaymentAuthorizationViewController *)authVC {
-    return (STPPaymentAuthorizationViewController *)[self stp_parentViewControllerOfClass:[STPPaymentAuthorizationViewController class]];
-}
-
-- (void)handleError:(NSError *)error {
-    [self.delegate paymentAuthorizationViewController:[self authVC] didFailWithError:error];
 }
 
 @end

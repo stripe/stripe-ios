@@ -6,10 +6,10 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentEmailView.h"
+#import "STPEmailEntryView.h"
 #import "STPEmailAddressValidator.h"
 
-@interface STPPaymentEmailView()<UITextFieldDelegate>
+@interface STPEmailEntryView()<UITextFieldDelegate>
 
 @property(nonatomic, weak) UITextField *textField;
 @property(nonatomic, weak) UIActivityIndicatorView *activityIndicator;
@@ -17,7 +17,7 @@
 
 @end
 
-@implementation STPPaymentEmailView
+@implementation STPEmailEntryView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -58,7 +58,7 @@
 
 - (void)nextPressed:(__unused id)sender {
     [self.activityIndicator startAnimating];
-    [self.delegate paymentEmailView:self didEnterEmailAddress:self.textField.text completion:^(NSError *error) {
+    [self.delegate emailEntryView:self didEnterEmailAddress:self.textField.text completion:^(NSError *error) {
         if (error) {
             NSLog(@"%@", error);
             [self.activityIndicator stopAnimating];

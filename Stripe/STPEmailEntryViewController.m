@@ -7,17 +7,17 @@
 //
 
 #import "STPEmailEntryViewController.h"
-#import "STPPaymentEmailView.h"
+#import "STPEmailEntryView.h"
 
-@interface STPEmailEntryViewController ()<STPPaymentEmailViewDelegate>
-@property(nonatomic, readwrite)STPPaymentEmailView *view;
+@interface STPEmailEntryViewController ()<STPEmailEntryViewDelegate>
+@property(nonatomic, readwrite)STPEmailEntryView *view;
 @end
 
 @implementation STPEmailEntryViewController
 @dynamic view;
 
 - (void)loadView {
-    self.view = [STPPaymentEmailView new];
+    self.view = [STPEmailEntryView new];
     self.view.delegate = self;
 }
 
@@ -26,10 +26,10 @@
     [self.view becomeFirstResponder];
 }
 
-- (void)paymentEmailView:(__unused STPPaymentEmailView *)emailView
+- (void)emailEntryView:(__unused STPEmailEntryView *)emailView
     didEnterEmailAddress:(NSString *)emailAddress
               completion:(STPErrorBlock)completion {
-    [self.delegate paymentEmailViewController:self didEnterEmailAddress:emailAddress completion:completion];
+    [self.delegate emailEntryViewController:self didEnterEmailAddress:emailAddress completion:completion];
 }
 
 @end

@@ -9,11 +9,14 @@
 #import <UIKit/UIKit.h>
 
 @class STPPaymentRequest, STPPaymentSummaryViewController;
-@protocol STPPaymentAuthorizationViewControllerDelegate, STPSourceProvider;
+@protocol STPSourceProvider;
 
 @protocol STPPaymentSummaryViewControllerDelegate <NSObject>
 
 - (void)paymentSummaryViewControllerDidEditPaymentMethod:(nonnull STPPaymentSummaryViewController *)summaryViewController;
+- (void)paymentSummaryViewControllerDidCancel:(nonnull STPPaymentSummaryViewController *)summaryViewController;
+- (void)paymentSummaryViewControllerDidPressBuy:(nonnull STPPaymentSummaryViewController *)summaryViewController;
+
 
 @end
 
@@ -22,7 +25,6 @@
 - (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest sourceProvider:(nonnull id<STPSourceProvider>) sourceProvider;
 @property(nonatomic, nonnull) STPPaymentRequest *paymentRequest;
 @property(nonatomic, nonnull, readonly) id<STPSourceProvider> sourceProvider;
-@property(nonatomic, weak, nullable) id<STPPaymentAuthorizationViewControllerDelegate> delegate;
-@property(nonatomic, weak, nullable) id<STPPaymentSummaryViewControllerDelegate> summaryDelegate;
+@property(nonatomic, weak, nullable) id<STPPaymentSummaryViewControllerDelegate> delegate;
 
 @end

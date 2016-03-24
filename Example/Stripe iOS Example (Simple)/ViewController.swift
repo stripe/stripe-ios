@@ -50,7 +50,7 @@ class ViewController: UIViewController, STPPaymentAuthorizationViewControllerDel
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func paymentAuthorizationViewController(paymentAuthorizationViewController: STPPaymentAuthorizationViewController, didCreateCheckoutResult result: STPPaymentResult) {
+    func paymentAuthorizationViewController(paymentAuthorizationViewController: STPPaymentAuthorizationViewController, didCreatePaymentResult result: STPPaymentResult) {
         dismissViewControllerAnimated(true, completion: nil)
     }
 

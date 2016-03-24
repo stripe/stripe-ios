@@ -13,7 +13,7 @@
 
 @protocol STPEmailEntryViewControllerDelegate
 
-- (void)paymentEmailViewController:(STPEmailEntryViewController *)emailViewController didEnterEmailAddress:(NSString *)emailAddress completion:(STPErrorBlock)completion;
+- (void)emailEntryViewController:(STPEmailEntryViewController *)emailViewController didEnterEmailAddress:(NSString *)emailAddress completion:(STPErrorBlock)completion;
 
 @end
 
