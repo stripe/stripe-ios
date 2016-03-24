@@ -37,7 +37,7 @@ class ViewController: UIViewController, STPPaymentAuthorizationViewControllerDel
         paymentRequest.lineItems = [
             STPLineItem(label: "food", amount: NSDecimalNumber(string: "10.00"))
         ]
-        let paymentAuth = STPPaymentAuthorizationViewController(paymentRequest: paymentRequest)
+        let paymentAuth = STPPaymentAuthorizationViewController(paymentRequest: paymentRequest, apiClient: STPAPIClient.sharedClient())
         paymentAuth.delegate = self
         self.presentViewController(paymentAuth, animated: true, completion: nil)
     }

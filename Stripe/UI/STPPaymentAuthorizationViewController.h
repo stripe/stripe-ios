@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class STPPaymentRequest, STPPaymentResult, STPPaymentAuthorizationViewController;
+@class STPPaymentRequest, STPAPIClient, STPPaymentResult, STPPaymentAuthorizationViewController;
 
 @protocol STPSourceProvider;
 
@@ -22,7 +22,7 @@
 
 @interface STPPaymentAuthorizationViewController : UIViewController
 
-- (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest;
+- (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest apiClient:(nonnull STPAPIClient *)apiClient;
 @property(nonatomic, readonly, nonnull) STPPaymentRequest *paymentRequest;
 @property(nonatomic, weak, nullable) id<STPPaymentAuthorizationViewControllerDelegate> delegate;
 

@@ -9,29 +9,36 @@
 #import "STPPaymentAuthorizationViewController.h"
 #import "STPPaymentRequest.h"
 #import "STPEmailEntryViewController.h"
+#import "STPPaymentCardEntryViewController.h"
 #import "STPPaymentSummaryViewController.h"
 #import "STPSourceListViewController.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "STPBasicSourceProvider.h"
+#import "STPAPIClient.h"
+#import "STPToken.h"
 
-@interface STPPaymentAuthorizationViewController()<STPPaymentSummaryViewControllerDelegate, STPEmailEntryViewControllerDelegate>
+@interface STPPaymentAuthorizationViewController()<STPPaymentSummaryViewControllerDelegate, STPEmailEntryViewControllerDelegate, STPPaymentCardEntryViewControllerDelegate>
 @property(nonatomic, weak) UINavigationController *navigationController;
 @property(nonatomic, readwrite, nonnull) STPPaymentRequest *paymentRequest;
+@property(nonatomic, readwrite, nonnull) STPAPIClient *apiClient;
 @property(nonatomic) id<STPSourceProvider> sourceProvider;
 @end
 
 @implementation STPPaymentAuthorizationViewController
 
-- (instancetype)initWithPaymentRequest:(__unused STPPaymentRequest *)paymentRequest {
+- (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest
+                                     apiClient:(nonnull STPAPIClient *)apiClient {
     STPEmailEntryViewController *emailViewController = [STPEmailEntryViewController new];
-
+    
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:emailViewController];
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
+        _apiClient = apiClient;
+        _paymentRequest = paymentRequest;
         _sourceProvider = [STPBasicSourceProvider new];
         _navigationController = navigationController;
-//        summaryViewController.summaryDelegate = self;
-//        _summaryViewController = summaryViewController;
+        //        summaryViewController.summaryDelegate = self;
+        //        _summaryViewController = summaryViewController;
         emailViewController.delegate = self;
         [self addChildViewController:_navigationController];
         [_navigationController didMoveToParentViewController:self];
@@ -50,14 +57,38 @@
 }
 
 - (void)paymentSummaryViewControllerDidEditPaymentMethod:(__unused STPPaymentSummaryViewController *)summaryViewController {
-    STPSourceListViewController *destination = [[STPSourceListViewController alloc] initWithSourceProvider:self.sourceProvider];
+    STPSourceListViewController *destination = [[STPSourceListViewController alloc] initWithSourceProvider:self.sourceProvider apiClient:self.apiClient];
     [self.navigationController pushViewController:destination animated:YES];
 }
 
 - (void)paymentEmailViewController:(__unused STPEmailEntryViewController *)emailViewController didEnterEmailAddress:(__unused NSString *)emailAddress completion:(STPErrorBlock)completion {
-    STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:self.paymentRequest sourceProvider:self.sourceProvider];
-    [self.navigationController stp_pushViewController:summaryViewController animated:YES completion:^{
+    STPPaymentCardEntryViewController *paymentCardViewController = [STPPaymentCardEntryViewController new];
+    paymentCardViewController.delegate = self;
+    [self.navigationController stp_pushViewController:paymentCardViewController animated:YES completion:^{
         completion(nil);
+    }];
+}
+
+- (void)paymentCardEntryViewController:(__unused STPPaymentCardEntryViewController *)emailViewController didEnterCardParams:(STPCardParams *)cardParams completion:(STPErrorBlock)completion {
+    
+    __weak typeof(self) weakself = self;
+    
+    [self.apiClient createTokenWithCard:cardParams completion:^(STPToken *token, NSError *error) {
+        if (error) {
+            completion(error);
+            return;
+        }
+        
+        [weakself.sourceProvider addSource:token completion:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> *sources, NSError *sourceError) {
+            if (sourceError) {
+                completion(error);
+                return;
+            }
+            STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:weakself.paymentRequest sourceProvider:weakself.sourceProvider];
+            [weakself.navigationController stp_pushViewController:summaryViewController animated:YES completion:^{
+                completion(nil);
+            }];
+        }];
     }];
 }
 

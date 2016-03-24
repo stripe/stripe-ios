@@ -8,11 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@class STPAPIClient;
+
 @protocol STPSourceProvider;
 
 @interface STPSourceListViewController : UIViewController
 
-- (nonnull instancetype)initWithSourceProvider:(nonnull id<STPSourceProvider>)sourceProvider;
+- (nonnull instancetype)initWithSourceProvider:(nonnull id<STPSourceProvider>)sourceProvider
+                                     apiClient:(nonnull STPAPIClient *)apiClient;
 @property(nonatomic, readonly, nonnull)id<STPSourceProvider> sourceProvider;
+@property(nonatomic, readonly, nonnull)STPAPIClient *apiClient;
 
 @end

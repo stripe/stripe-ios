@@ -22,6 +22,7 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 @interface STPSourceListViewController()<UITableViewDataSource, UITableViewDelegate, STPPaymentCardTextFieldDelegate>
 
 @property(nonatomic)id<STPSourceProvider> sourceProvider;
+@property(nonatomic, nonnull)STPAPIClient *apiClient;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIBarButtonItem *addButton;
 @property(nonatomic)BOOL loading;
@@ -35,9 +36,11 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 
 @implementation STPSourceListViewController
 
-- (nonnull instancetype)initWithSourceProvider:(nonnull id<STPSourceProvider>)sourceProvider {
+- (nonnull instancetype)initWithSourceProvider:(nonnull id<STPSourceProvider>)sourceProvider
+                                     apiClient:(nonnull STPAPIClient *)apiClient {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
+        _apiClient = apiClient;
         _sourceProvider = sourceProvider;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardChanged:) name:UIKeyboardWillChangeFrameNotification object:nil];
     }
