@@ -10,12 +10,12 @@
 #import "STPAPIResponseDecodable.h"
 @class STPAPIClient;
 
-@interface STPAPIPostRequest<__covariant ResponseType:id<STPAPIResponseDecodable>> : NSObject
+@interface STPAPIPostRequest < __covariant ResponseType : id<STPAPIResponseDecodable>
+> : NSObject
 
-+ (void)startWithAPIClient:(STPAPIClient *)apiClient
-                  endpoint:(NSString *)endpoint
-                  postData:(NSData *)postData
-                serializer:(ResponseType)serializer
-                completion:(void (^)(ResponseType object, NSError *error))completion;
+    +
+    (void)startWithAPIClient : (STPAPIClient *)apiClient endpoint
+                               : (NSString *)endpoint postData : (NSData *)postData serializer : (ResponseType)serializer completion
+                                                                                                 : (void (^)(ResponseType object, NSError *error))completion;
 
 @end

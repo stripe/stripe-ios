@@ -51,26 +51,26 @@
     NSString *imageName;
     BOOL templateSupported = [[UIImage new] respondsToSelector:@selector(imageWithRenderingMode:)];
     switch (brand) {
-        case STPCardBrandAmex:
-            imageName = @"stp_card_amex";
-            break;
-        case STPCardBrandDinersClub:
-            imageName = @"stp_card_diners";
-            break;
-        case STPCardBrandDiscover:
-            imageName = @"stp_card_discover";
-            break;
-        case STPCardBrandJCB:
-            imageName = @"stp_card_jcb";
-            break;
-        case STPCardBrandMasterCard:
-            imageName = @"stp_card_mastercard";
-            break;
-        case STPCardBrandUnknown:
-            imageName = templateSupported ? @"stp_card_placeholder_template" : @"stp_card_placeholder";
-            break;
-        case STPCardBrandVisa:
-            imageName = @"stp_card_visa";
+    case STPCardBrandAmex:
+        imageName = @"stp_card_amex";
+        break;
+    case STPCardBrandDinersClub:
+        imageName = @"stp_card_diners";
+        break;
+    case STPCardBrandDiscover:
+        imageName = @"stp_card_discover";
+        break;
+    case STPCardBrandJCB:
+        imageName = @"stp_card_jcb";
+        break;
+    case STPCardBrandMasterCard:
+        imageName = @"stp_card_mastercard";
+        break;
+    case STPCardBrandUnknown:
+        imageName = templateSupported ? @"stp_card_placeholder_template" : @"stp_card_placeholder";
+        break;
+    case STPCardBrandVisa:
+        imageName = @"stp_card_visa";
     }
     UIImage *image = [UIImage stp_safeImageNamed:imageName];
     if (brand == STPCardBrandUnknown && templateSupported) {
@@ -93,4 +93,4 @@
 
 @end
 
-void linkUIImageCategory(void){}
+void linkUIImageCategory(void) {}

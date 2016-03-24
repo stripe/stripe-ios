@@ -31,7 +31,6 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
  *  The card's number. This will be nil for cards retrieved from the Stripe API.
  */
 
-
 /**
  *  The last 4 digits of the card.
  */
@@ -91,9 +90,12 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 
 /**
  *  A proxy for the card's number, this uniquely identifies the credit card and can be used to compare different cards.
- *  @deprecated This field will no longer be present in responses when using your publishable key. If you want to access the value of this field, you can look it up on your backend using your secret key.
+ *  @deprecated This field will no longer be present in responses when using your publishable key. If you want to access the value of this field, you can look
+ * it up on your backend using your secret key.
  */
-@property (nonatomic, readonly, nullable) NSString *fingerprint __attribute__((deprecated("This field will no longer be present in responses when using your publishable key. If you want to access the value of this field, you can look it up on your backend using your secret key.")));
+@property (nonatomic, readonly, nullable) NSString *fingerprint
+    __attribute__((deprecated("This field will no longer be present in responses when using your publishable key. If you want to access the value of this "
+                              "field, you can look it up on your backend using your secret key.")));
 
 /**
  *  Two-letter ISO code representing the issuing country of the card.
@@ -101,13 +103,15 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 @property (nonatomic, readonly, nullable) NSString *country;
 
 /**
- *  This is only applicable when tokenizing debit cards to issue payouts to managed accounts. You should not set it otherwise. The card can then be used as a transfer destination for funds in this currency.
+ *  This is only applicable when tokenizing debit cards to issue payouts to managed accounts. You should not set it otherwise. The card can then be used as a
+ * transfer destination for funds in this currency.
  */
 @property (nonatomic, copy, nullable) NSString *currency;
 
 #pragma mark - deprecated properties
 
-#define DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS __attribute__((deprecated("For collecting your users' credit card details, you should use an STPCardParams object instead of an STPCard.")))
+#define DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS                                                                                                                   \
+    __attribute__((deprecated("For collecting your users' credit card details, you should use an STPCardParams object instead of an STPCard.")))
 
 @property (nonatomic, copy, nullable) NSString *number DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
 @property (nonatomic, copy, nullable) NSString *cvc DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
@@ -120,6 +124,5 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 - (void)setAddressState:(nullable NSString *)addressState DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
 - (void)setAddressZip:(nullable NSString *)addressZip DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
 - (void)setAddressCountry:(nullable NSString *)addressCountry DEPRECATED_IN_FAVOR_OF_STPCARDPARAMS;
-
 
 @end

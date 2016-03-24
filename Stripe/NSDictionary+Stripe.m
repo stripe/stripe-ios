@@ -13,9 +13,9 @@
 - (nullable NSDictionary *)stp_dictionaryByRemovingNullsValidatingRequiredFields:(nonnull NSArray *)requiredFields {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
-        if (obj != [NSNull null]) {
-            dict[key] = obj;
-        }
+      if (obj != [NSNull null]) {
+          dict[key] = obj;
+      }
     }];
     for (NSString *key in requiredFields) {
         if (![[dict allKeys] containsObject:key]) {
@@ -27,4 +27,4 @@
 
 @end
 
-void linkDictionaryCategory(void){}
+void linkDictionaryCategory(void) {}

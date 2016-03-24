@@ -11,7 +11,7 @@
 #import "STPBankAccount.h"
 #import "NSDictionary+Stripe.h"
 
-@interface STPToken()
+@interface STPToken ()
 @property (nonatomic, nonnull) NSString *tokenId;
 @property (nonatomic) BOOL livemode;
 @property (nonatomic, nullable) STPCard *card;
@@ -72,22 +72,22 @@
     if (!dict) {
         return nil;
     }
-    
+
     STPToken *token = [self new];
     token.tokenId = dict[@"id"];
     token.livemode = [dict[@"livemode"] boolValue];
     token.created = [NSDate dateWithTimeIntervalSince1970:[dict[@"created"] doubleValue]];
-    
+
     NSDictionary *cardDictionary = dict[@"card"];
     if (cardDictionary) {
         token.card = [STPCard decodedObjectFromAPIResponse:cardDictionary];
     }
-    
+
     NSDictionary *bankAccountDictionary = dict[@"bank_account"];
     if (bankAccountDictionary) {
         token.bankAccount = [STPBankAccount decodedObjectFromAPIResponse:bankAccountDictionary];
     }
-    
+
     token.allResponseFields = dict;
     return token;
 }

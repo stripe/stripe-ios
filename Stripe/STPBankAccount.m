@@ -50,7 +50,7 @@
     if (!bankAccount || ![bankAccount isKindOfClass:self.class]) {
         return NO;
     }
-    
+
     return [self.bankAccountId isEqualToString:bankAccount.bankAccountId];
 }
 
@@ -73,7 +73,7 @@
     if (!dict) {
         return nil;
     }
-    
+
     STPBankAccount *bankAccount = [self new];
     bankAccount.bankAccountId = dict[@"id"];
     bankAccount.last4 = dict[@"last4"];
@@ -82,16 +82,16 @@
     bankAccount.fingerprint = dict[@"fingerprint"];
     bankAccount.currency = dict[@"currency"];
     NSString *status = dict[@"status"];
-    if ([status isEqual: @"new"]) {
+    if ([status isEqual:@"new"]) {
         bankAccount.status = STPBankAccountStatusNew;
-    } else if ([status isEqual: @"validated"]) {
+    } else if ([status isEqual:@"validated"]) {
         bankAccount.status = STPBankAccountStatusValidated;
-    } else if ([status isEqual: @"verified"]) {
+    } else if ([status isEqual:@"verified"]) {
         bankAccount.status = STPBankAccountStatusVerified;
-    } else if ([status isEqual: @"errored"]) {
+    } else if ([status isEqual:@"errored"]) {
         bankAccount.status = STPBankAccountStatusErrored;
     }
-    
+
     bankAccount.allResponseFields = dict;
     return bankAccount;
 }

@@ -34,7 +34,7 @@
     if (self.expirationMonth && ![self.expirationMonth isEqualToString:@""]) {
         [array addObject:self.expirationMonth];
     }
-    
+
     if ([STPCardValidator validationStateForExpirationMonth:self.expirationMonth] == STPCardValidationStateValid) {
         [array addObject:self.expirationYear];
     }
@@ -64,23 +64,23 @@
 
 - (STPCardValidationState)validationStateForField:(STPCardFieldType)fieldType {
     switch (fieldType) {
-        case STPCardFieldTypeNumber:
-            return [STPCardValidator validationStateForNumber:self.cardNumber validatingCardBrand:YES];
-            break;
-        case STPCardFieldTypeExpiration: {
-            STPCardValidationState monthState = [STPCardValidator validationStateForExpirationMonth:self.expirationMonth];
-            STPCardValidationState yearState = [STPCardValidator validationStateForExpirationYear:self.expirationYear inMonth:self.expirationMonth];
-            if (monthState == STPCardValidationStateValid && yearState == STPCardValidationStateValid) {
-                return STPCardValidationStateValid;
-            } else if (monthState == STPCardValidationStateInvalid || yearState == STPCardValidationStateInvalid) {
-                return STPCardValidationStateInvalid;
-            } else {
-                return STPCardValidationStateIncomplete;
-            }
-            break;
+    case STPCardFieldTypeNumber:
+        return [STPCardValidator validationStateForNumber:self.cardNumber validatingCardBrand:YES];
+        break;
+    case STPCardFieldTypeExpiration: {
+        STPCardValidationState monthState = [STPCardValidator validationStateForExpirationMonth:self.expirationMonth];
+        STPCardValidationState yearState = [STPCardValidator validationStateForExpirationYear:self.expirationYear inMonth:self.expirationMonth];
+        if (monthState == STPCardValidationStateValid && yearState == STPCardValidationStateValid) {
+            return STPCardValidationStateValid;
+        } else if (monthState == STPCardValidationStateInvalid || yearState == STPCardValidationStateInvalid) {
+            return STPCardValidationStateInvalid;
+        } else {
+            return STPCardValidationStateIncomplete;
         }
-        case STPCardFieldTypeCVC:
-            return [STPCardValidator validationStateForCVC:self.cvc cardBrand:self.brand];
+        break;
+    }
+    case STPCardFieldTypeCVC:
+        return [STPCardValidator validationStateForCVC:self.cvc cardBrand:self.brand];
     }
 }
 
@@ -97,11 +97,9 @@
 - (NSString *)numberWithoutLastDigits {
     NSUInteger length = [STPCardValidator fragmentLengthForCardBrand:[STPCardValidator brandForNumber:self.cardNumber]];
     NSUInteger toIndex = self.cardNumber.length - length;
-    
-    return (toIndex < self.cardNumber.length) ?
-        [self.cardNumber substringToIndex:toIndex] :
-        [self.defaultPlaceholder stp_safeSubstringToIndex:[self defaultPlaceholder].length - length];
 
+    return (toIndex < self.cardNumber.length) ? [self.cardNumber substringToIndex:toIndex] :
+                                                [self.defaultPlaceholder stp_safeSubstringToIndex:[self defaultPlaceholder].length - length];
 }
 
 @end

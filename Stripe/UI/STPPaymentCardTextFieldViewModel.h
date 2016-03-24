@@ -20,12 +20,12 @@ typedef NS_ENUM(NSInteger, STPCardFieldType) {
 
 @interface STPPaymentCardTextFieldViewModel : NSObject
 
-@property(nonatomic, readwrite, copy, nullable)NSString *cardNumber;
-@property(nonatomic, readwrite, copy, nullable)NSString *rawExpiration;
-@property(nonatomic, readonly, nullable)NSString *expirationMonth;
-@property(nonatomic, readonly, nullable)NSString *expirationYear;
-@property(nonatomic, readwrite, copy, nullable)NSString *cvc;
-@property(nonatomic, readonly) STPCardBrand brand;
+@property (nonatomic, readwrite, copy, nullable) NSString *cardNumber;
+@property (nonatomic, readwrite, copy, nullable) NSString *rawExpiration;
+@property (nonatomic, readonly, nullable) NSString *expirationMonth;
+@property (nonatomic, readonly, nullable) NSString *expirationYear;
+@property (nonatomic, readwrite, copy, nullable) NSString *cvc;
+@property (nonatomic, readonly) STPCardBrand brand;
 
 - (nonnull NSString *)defaultPlaceholder;
 - (nullable NSString *)numberWithoutLastDigits;

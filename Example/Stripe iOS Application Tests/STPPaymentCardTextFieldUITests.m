@@ -10,11 +10,11 @@
 #import <Stripe/Stripe.h>
 
 @interface STPPaymentCardTextField (Testing)
-@property(nonatomic, readwrite, weak)UIImageView *brandImageView;
-@property(nonatomic, readwrite, weak)UITextField *numberField;
-@property(nonatomic, readwrite, weak)UITextField *expirationField;
-@property(nonatomic, readwrite, weak)UITextField *cvcField;
-@property(nonatomic, assign)BOOL numberFieldShrunk;
+@property (nonatomic, readwrite, weak) UIImageView *brandImageView;
+@property (nonatomic, readwrite, weak) UITextField *numberField;
+@property (nonatomic, readwrite, weak) UITextField *expirationField;
+@property (nonatomic, readwrite, weak) UITextField *cvcField;
+@property (nonatomic, assign) BOOL numberFieldShrunk;
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
 @end

@@ -17,14 +17,14 @@
 
 - (void)setUp {
     self.cardBrands = @[
-                        @(STPCardBrandAmex),
-                        @(STPCardBrandDinersClub),
-                        @(STPCardBrandDiscover),
-                        @(STPCardBrandJCB),
-                        @(STPCardBrandMasterCard),
-                        @(STPCardBrandUnknown),
-                        @(STPCardBrandVisa),
-                        ];
+        @(STPCardBrandAmex),
+        @(STPCardBrandDinersClub),
+        @(STPCardBrandDiscover),
+        @(STPCardBrandJCB),
+        @(STPCardBrandMasterCard),
+        @(STPCardBrandUnknown),
+        @(STPCardBrandVisa),
+    ];
 }
 
 - (void)testCardIconMethods {

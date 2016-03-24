@@ -77,7 +77,7 @@
     if (!other || ![other isKindOfClass:self.class]) {
         return NO;
     }
-    
+
     return [self.cardId isEqualToString:other.cardId];
 }
 
@@ -93,7 +93,7 @@
     if (!dict) {
         return nil;
     }
-    
+
     STPCard *card = [self new];
     card.cardId = dict[@"id"];
     card.name = dict[@"name"];
@@ -136,7 +136,7 @@
     card.addressState = dict[@"address_state"];
     card.addressZip = dict[@"address_zip"];
     card.addressCountry = dict[@"address_country"];
-    
+
     card.allResponseFields = dict;
     return card;
 }

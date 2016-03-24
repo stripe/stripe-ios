@@ -27,91 +27,82 @@
 }
 
 + (STPCardValidationState)validationStateForExpirationMonth:(NSString *)expirationMonth {
-
     NSString *sanitizedExpiration = [self stringByRemovingSpacesFromString:expirationMonth];
-    
+
     if (![self stringIsNumeric:sanitizedExpiration]) {
         return STPCardValidationStateInvalid;
     }
-    
+
     switch (sanitizedExpiration.length) {
-        case 0:
-            return STPCardValidationStateIncomplete;
-        case 1:
-            return ([sanitizedExpiration isEqualToString:@"0"] || [sanitizedExpiration isEqualToString:@"1"]) ? STPCardValidationStateIncomplete : STPCardValidationStateValid;
-        case 2:
-            return (0 < sanitizedExpiration.integerValue && sanitizedExpiration.integerValue <= 12) ? STPCardValidationStateValid : STPCardValidationStateInvalid;
-        default:
-            return STPCardValidationStateInvalid;
+    case 0:
+        return STPCardValidationStateIncomplete;
+    case 1:
+        return ([sanitizedExpiration isEqualToString:@"0"] || [sanitizedExpiration isEqualToString:@"1"]) ? STPCardValidationStateIncomplete :
+                                                                                                            STPCardValidationStateValid;
+    case 2:
+        return (0 < sanitizedExpiration.integerValue && sanitizedExpiration.integerValue <= 12) ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+    default:
+        return STPCardValidationStateInvalid;
     }
 }
 
-+ (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear inMonth:(NSString *)expirationMonth inCurrentYear:(NSInteger)currentYear currentMonth:(NSInteger)currentMonth {
-    
++ (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear
+                                                   inMonth:(NSString *)expirationMonth
+                                             inCurrentYear:(NSInteger)currentYear
+                                              currentMonth:(NSInteger)currentMonth {
     NSInteger moddedYear = currentYear % 100;
-    
+
     if (![self stringIsNumeric:expirationMonth] || ![self stringIsNumeric:expirationYear]) {
         return STPCardValidationStateInvalid;
     }
-    
+
     NSString *sanitizedMonth = [self sanitizedNumericStringForString:expirationMonth];
     NSString *sanitizedYear = [self sanitizedNumericStringForString:expirationYear];
-    
+
     switch (sanitizedYear.length) {
-        case 0:
-        case 1:
-            return STPCardValidationStateIncomplete;
-        case 2: {
-            if (sanitizedYear.integerValue == moddedYear) {
-                return sanitizedMonth.integerValue >= currentMonth ? STPCardValidationStateValid : STPCardValidationStateInvalid;
-            } else {
-                return sanitizedYear.integerValue > moddedYear ? STPCardValidationStateValid : STPCardValidationStateInvalid;
-            }
+    case 0:
+    case 1:
+        return STPCardValidationStateIncomplete;
+    case 2: {
+        if (sanitizedYear.integerValue == moddedYear) {
+            return sanitizedMonth.integerValue >= currentMonth ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+        } else {
+            return sanitizedYear.integerValue > moddedYear ? STPCardValidationStateValid : STPCardValidationStateInvalid;
         }
-        default:
-            return STPCardValidationStateInvalid;
+    }
+    default:
+        return STPCardValidationStateInvalid;
     }
 }
 
-
-+ (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear
-                                                   inMonth:(NSString *)expirationMonth {
-    return [self validationStateForExpirationYear:expirationYear
-                                          inMonth:expirationMonth
-                                    inCurrentYear:[self currentYear]
-                                     currentMonth:[self currentMonth]];
++ (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear inMonth:(NSString *)expirationMonth {
+    return [self validationStateForExpirationYear:expirationYear inMonth:expirationMonth inCurrentYear:[self currentYear] currentMonth:[self currentMonth]];
 }
 
-
 + (STPCardValidationState)validationStateForCVC:(NSString *)cvc cardBrand:(STPCardBrand)brand {
-    
     if (![self stringIsNumeric:cvc]) {
         return STPCardValidationStateInvalid;
     }
-    
+
     NSString *sanitizedCvc = [self sanitizedNumericStringForString:cvc];
-    
+
     NSUInteger minLength = [self minCVCLength];
     NSUInteger maxLength = [self maxCVCLengthForCardBrand:brand];
     if (sanitizedCvc.length < minLength) {
         return STPCardValidationStateIncomplete;
-    }
-    else if (sanitizedCvc.length > maxLength) {
+    } else if (sanitizedCvc.length > maxLength) {
         return STPCardValidationStateInvalid;
-    }
-    else {
+    } else {
         return STPCardValidationStateValid;
     }
 }
 
-+ (STPCardValidationState)validationStateForNumber:(nonnull NSString *)cardNumber
-                               validatingCardBrand:(BOOL)validatingCardBrand {
-    
++ (STPCardValidationState)validationStateForNumber:(nonnull NSString *)cardNumber validatingCardBrand:(BOOL)validatingCardBrand {
     NSString *sanitizedNumber = [self stringByRemovingSpacesFromString:cardNumber];
     if (![self stringIsNumeric:sanitizedNumber]) {
         return STPCardValidationStateInvalid;
     }
-    
+
     NSArray *brands = [self possibleBrandsForNumber:sanitizedNumber];
     if (brands.count == 0 && validatingCardBrand) {
         return STPCardValidationStateInvalid;
@@ -134,25 +125,19 @@
     STPCardValidationState numberValidation = [self validationStateForNumber:card.number validatingCardBrand:YES];
     NSString *expMonthString = [NSString stringWithFormat:@"%02lu", (unsigned long)card.expMonth];
     STPCardValidationState expMonthValidation = [self validationStateForExpirationMonth:expMonthString];
-    NSString *expYearString = [NSString stringWithFormat:@"%02lu", (unsigned long)card.expYear%100];
-    STPCardValidationState expYearValidation = [self validationStateForExpirationYear:expYearString
-                                                                              inMonth:expMonthString
-                                                                        inCurrentYear:currentYear
-                                                                         currentMonth:currentMonth];
+    NSString *expYearString = [NSString stringWithFormat:@"%02lu", (unsigned long)card.expYear % 100];
+    STPCardValidationState expYearValidation =
+        [self validationStateForExpirationYear:expYearString inMonth:expMonthString inCurrentYear:currentYear currentMonth:currentMonth];
     STPCardBrand brand = [self brandForNumber:card.number];
     STPCardValidationState cvcValidation = [self validationStateForCVC:card.cvc cardBrand:brand];
 
-    NSArray<NSNumber *> *states = @[@(numberValidation),
-                                    @(expMonthValidation),
-                                    @(expYearValidation),
-                                    @(cvcValidation)];
+    NSArray<NSNumber *> *states = @[@(numberValidation), @(expMonthValidation), @(expYearValidation), @(cvcValidation)];
     BOOL incomplete = NO;
     for (NSNumber *boxedState in states) {
         STPCardValidationState state = [boxedState integerValue];
         if (state == STPCardValidationStateInvalid) {
             return state;
-        }
-        else if (state == STPCardValidationStateIncomplete) {
+        } else if (state == STPCardValidationStateIncomplete) {
             incomplete = YES;
         }
     }
@@ -160,9 +145,7 @@
 }
 
 + (STPCardValidationState)validationStateForCard:(STPCardParams *)card {
-    return [self validationStateForCard:card
-                          inCurrentYear:[self currentYear]
-                           currentMonth:[self currentMonth]];
+    return [self validationStateForCard:card inCurrentYear:[self currentYear] currentMonth:[self currentMonth]];
 }
 
 + (NSUInteger)minCVCLength {
@@ -171,11 +154,11 @@
 
 + (NSUInteger)maxCVCLengthForCardBrand:(STPCardBrand)brand {
     switch (brand) {
-        case STPCardBrandAmex:
-        case STPCardBrandUnknown:
-            return 4;
-        default:
-            return 3;
+    case STPCardBrandAmex:
+    case STPCardBrandUnknown:
+        return 4;
+    default:
+        return 3;
     }
 }
 
@@ -200,35 +183,28 @@
 }
 
 + (NSArray *)allValidBrands {
-    return @[
-             @(STPCardBrandAmex),
-             @(STPCardBrandDinersClub),
-             @(STPCardBrandDiscover),
-             @(STPCardBrandJCB),
-             @(STPCardBrandMasterCard),
-             @(STPCardBrandVisa),
-         ];
+    return @[@(STPCardBrandAmex), @(STPCardBrandDinersClub), @(STPCardBrandDiscover), @(STPCardBrandJCB), @(STPCardBrandMasterCard), @(STPCardBrandVisa), ];
 }
 
 + (NSInteger)lengthForCardBrand:(STPCardBrand)brand {
     switch (brand) {
-        case STPCardBrandAmex:
-            return 15;
-        case STPCardBrandDinersClub:
-            return 14;
-        default:
-            return 16;
+    case STPCardBrandAmex:
+        return 15;
+    case STPCardBrandDinersClub:
+        return 14;
+    default:
+        return 16;
     }
 }
 
 + (NSInteger)fragmentLengthForCardBrand:(STPCardBrand)brand {
     switch (brand) {
-        case STPCardBrandAmex:
-            return 5;
-        case STPCardBrandDinersClub:
-            return 2;
-        default:
-            return 4;
+    case STPCardBrandAmex:
+        return 5;
+    case STPCardBrandDinersClub:
+        return 2;
+    default:
+        return 4;
     }
 }
 
@@ -248,20 +224,20 @@
 
 + (NSArray *)validBeginningDigits:(STPCardBrand)brand {
     switch (brand) {
-        case STPCardBrandAmex:
-            return @[@"34", @"37"];
-        case STPCardBrandDinersClub:
-            return @[@"30", @"36", @"38", @"39"];
-        case STPCardBrandDiscover:
-            return @[@"6011", @"622", @"64", @"65"];
-        case STPCardBrandJCB:
-            return @[@"35"];
-        case STPCardBrandMasterCard:
-            return @[@"50", @"51", @"52", @"53", @"54", @"55", @"56", @"57", @"58", @"59"];
-        case STPCardBrandVisa:
-            return @[@"40", @"41", @"42", @"43", @"44", @"45", @"46", @"47", @"48", @"49"];
-        case STPCardBrandUnknown:
-            return @[];
+    case STPCardBrandAmex:
+        return @[@"34", @"37"];
+    case STPCardBrandDinersClub:
+        return @[@"30", @"36", @"38", @"39"];
+    case STPCardBrandDiscover:
+        return @[@"6011", @"622", @"64", @"65"];
+    case STPCardBrandJCB:
+        return @[@"35"];
+    case STPCardBrandMasterCard:
+        return @[@"50", @"51", @"52", @"53", @"54", @"55", @"56", @"57", @"58", @"59"];
+    case STPCardBrandVisa:
+        return @[@"40", @"41", @"42", @"43", @"44", @"45", @"46", @"47", @"48", @"49"];
+    case STPCardBrandUnknown:
+        return @[];
     }
 }
 
@@ -269,18 +245,20 @@
     BOOL odd = true;
     int sum = 0;
     NSMutableArray *digits = [NSMutableArray arrayWithCapacity:number.length];
-    
+
     for (int i = 0; i < (NSInteger)number.length; i++) {
         [digits addObject:[number substringWithRange:NSMakeRange(i, 1)]];
     }
-    
+
     for (NSString *digitStr in [digits reverseObjectEnumerator]) {
         int digit = [digitStr intValue];
-        if ((odd = !odd)) digit *= 2;
-        if (digit > 9) digit -= 9;
+        if ((odd = !odd))
+            digit *= 2;
+        if (digit > 9)
+            digit -= 9;
         sum += digit;
     }
-    
+
     return sum % 10 == 0;
 }
 

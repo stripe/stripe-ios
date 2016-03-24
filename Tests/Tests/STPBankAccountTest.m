@@ -45,7 +45,7 @@
     XCTAssertEqualObjects([bankAccountWithAttributes fingerprint], @"something", @"fingerprint is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes currency], @"usd", @"currency is set correctly");
     XCTAssertEqual(bankAccountWithAttributes.status, STPBankAccountStatusNew);
-    
+
     NSDictionary *allResponseFields = bankAccountWithAttributes.allResponseFields;
     XCTAssertEqual(allResponseFields[@"foo"], @"bar");
     XCTAssertEqual(allResponseFields[@"last4"], @"6789");

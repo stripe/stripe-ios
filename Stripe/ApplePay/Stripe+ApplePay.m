@@ -42,4 +42,4 @@
 
 @end
 
-void linkStripeApplePayCategory(void){}
+void linkStripeApplePayCategory(void) {}

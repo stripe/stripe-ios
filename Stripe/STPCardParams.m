@@ -35,7 +35,7 @@
         return [self.class handleValidationErrorForParameter:@"number" error:outError];
     }
     NSString *ioValueString = (NSString *)*ioValue;
-    
+
     if ([STPCardValidator validationStateForNumber:ioValueString validatingCardBrand:NO] != STPCardValidationStateValid) {
         return [self.class handleValidationErrorForParameter:@"number" error:outError];
     }
@@ -47,9 +47,9 @@
         return [self.class handleValidationErrorForParameter:@"number" error:outError];
     }
     NSString *ioValueString = (NSString *)*ioValue;
-    
+
     STPCardBrand brand = [STPCardValidator brandForNumber:self.number];
-    
+
     if ([STPCardValidator validationStateForCVC:ioValueString cardBrand:brand] != STPCardValidationStateValid) {
         return [self.class handleValidationErrorForParameter:@"cvc" error:outError];
     }
@@ -61,7 +61,7 @@
         return [self.class handleValidationErrorForParameter:@"expMonth" error:outError];
     }
     NSString *ioValueString = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    
+
     if ([STPCardValidator validationStateForExpirationMonth:ioValueString] != STPCardValidationStateValid) {
         return [self.class handleValidationErrorForParameter:@"expMonth" error:outError];
     }
@@ -73,7 +73,7 @@
         return [self.class handleValidationErrorForParameter:@"expYear" error:outError];
     }
     NSString *ioValueString = [(NSString *)*ioValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    
+
     NSString *monthString = [@(self.expMonth) stringValue];
     if ([STPCardValidator validationStateForExpirationYear:ioValueString inMonth:monthString] != STPCardValidationStateValid) {
         return [self.class handleValidationErrorForParameter:@"expYear" error:outError];
@@ -87,10 +87,10 @@
     NSString *expMonthRef = [NSString stringWithFormat:@"%02lu", (unsigned long)[self expMonth]];
     NSString *expYearRef = [NSString stringWithFormat:@"%02lu", (unsigned long)[self expYear]];
     NSString *cvcRef = [self cvc];
-    
+
     // Make sure expMonth, expYear, and number are set.  Validate CVC if it is provided
     return [self validateNumber:&numberRef error:outError] && [self validateExpYear:&expYearRef error:outError] &&
-    [self validateExpMonth:&expMonthRef error:outError] && (cvcRef == nil || [self validateCvc:&cvcRef error:outError]);
+           [self validateExpMonth:&expMonthRef error:outError] && (cvcRef == nil || [self validateCvc:&cvcRef error:outError]);
 }
 
 #pragma mark Private Helpers
@@ -106,7 +106,7 @@
                                            parameter:parameter
                                        cardErrorCode:STPInvalidCVC
                                      devErrorMessage:@"Card CVC must be numeric, 3 digits for Visa, Discover, MasterCard, JCB, and Discover cards, and 3 or 4 "
-                         @"digits for American Express cards."];
+                                     @"digits for American Express cards."];
         } else if ([parameter isEqualToString:@"expMonth"]) {
             *outError = [self createErrorWithMessage:STPCardErrorInvalidExpMonthUserMessage
                                            parameter:parameter
@@ -124,10 +124,10 @@
             *outError = [[NSError alloc] initWithDomain:StripeDomain
                                                    code:STPAPIError
                                                userInfo:@{
-                                                          NSLocalizedDescriptionKey: STPUnexpectedError,
-                                                          STPErrorMessageKey: @"There was an error within the Stripe client library when trying to generate the "
-                                                          @"proper validation error. Contact support@stripe.com if you see this."
-                                                          }];
+                                                   NSLocalizedDescriptionKey: STPUnexpectedError,
+                                                   STPErrorMessageKey: @"There was an error within the Stripe client library when trying to generate the "
+                                                   @"proper validation error. Contact support@stripe.com if you see this."
+                                               }];
         }
     }
     return NO;
@@ -140,11 +140,11 @@
     return [[NSError alloc] initWithDomain:StripeDomain
                                       code:STPCardError
                                   userInfo:@{
-                                             NSLocalizedDescriptionKey: userMessage,
-                                             STPErrorParameterKey: parameter,
-                                             STPCardErrorCodeKey: cardErrorCode,
-                                             STPErrorMessageKey: devMessage
-                                             }];
+                                      NSLocalizedDescriptionKey: userMessage,
+                                      STPErrorParameterKey: parameter,
+                                      STPCardErrorCodeKey: cardErrorCode,
+                                      STPErrorMessageKey: devMessage
+                                  }];
 }
 
 #pragma mark - STPFormEncodable
@@ -155,19 +155,19 @@
 
 + (NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
-             @"number": @"number",
-             @"cvc": @"cvc",
-             @"name": @"name",
-             @"addressLine1": @"address_line1",
-             @"addressLine2": @"address_line2",
-             @"addressCity": @"address_city",
-             @"addressState": @"address_state",
-             @"addressZip": @"address_zip",
-             @"addressCountry": @"address_country",
-             @"expMonth": @"exp_month",
-             @"expYear": @"exp_year",
-             @"currency": @"currency",
-             };
+        @"number": @"number",
+        @"cvc": @"cvc",
+        @"name": @"name",
+        @"addressLine1": @"address_line1",
+        @"addressLine2": @"address_line2",
+        @"addressCity": @"address_city",
+        @"addressState": @"address_state",
+        @"addressZip": @"address_zip",
+        @"addressCountry": @"address_country",
+        @"expMonth": @"exp_month",
+        @"expYear": @"exp_year",
+        @"currency": @"currency",
+    };
 }
 
 @end

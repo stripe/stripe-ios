@@ -15,9 +15,7 @@
 
 + (NSString *)stp_testTransactionIdentifier {
     NSString *uuid = [[NSUUID UUID] UUIDString];
-    uuid = [uuid stringByReplacingOccurrencesOfString:@"~" withString:@""
-                                              options:0
-                                                range:NSMakeRange(0, uuid.length)];
+    uuid = [uuid stringByReplacingOccurrencesOfString:@"~" withString:@"" options:0 range:NSMakeRange(0, uuid.length)];
 
     // Simulated cards don't have enough info yet. For now, use a fake Visa number
     NSString *number = @"4242424242424242";
@@ -32,4 +30,4 @@
 
 @end
 
-void linkPKPaymentCategory(void){}
+void linkPKPaymentCategory(void) {}
