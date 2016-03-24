@@ -22,7 +22,5 @@
 
 
 @interface STPPaymentCardEntryViewController : UIViewController
-
-@property(nonatomic, weak) id<STPPaymentCardEntryViewControllerDelegate> delegate;
-
+- (instancetype)initWithDelegate:(id<STPPaymentCardEntryViewControllerDelegate>)delegate;
 @end

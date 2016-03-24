@@ -30,18 +30,14 @@
 
 - (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest
                                      apiClient:(nonnull STPAPIClient *)apiClient {
-    STPEmailEntryViewController *emailViewController = [STPEmailEntryViewController new];
-    
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:emailViewController];
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _apiClient = apiClient;
         _paymentRequest = paymentRequest;
         _sourceProvider = [STPBasicSourceProvider new];
+        STPEmailEntryViewController *emailViewController = [[STPEmailEntryViewController alloc] initWithDelegate:self];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:emailViewController];
         _navigationController = navigationController;
-        //        summaryViewController.summaryDelegate = self;
-        //        _summaryViewController = summaryViewController;
-        emailViewController.delegate = self;
         [self addChildViewController:_navigationController];
         [_navigationController didMoveToParentViewController:self];
     }
@@ -61,8 +57,7 @@
 #pragma mark - STPEmailEntryViewControllerDelegate
 
 - (void)emailEntryViewController:(__unused STPEmailEntryViewController *)emailViewController didEnterEmailAddress:(__unused NSString *)emailAddress completion:(STPErrorBlock)completion {
-    STPPaymentCardEntryViewController *paymentCardViewController = [STPPaymentCardEntryViewController new];
-    paymentCardViewController.delegate = self;
+    STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithDelegate:self];
     [self.navigationController stp_pushViewController:paymentCardViewController animated:YES completion:^{
         completion(nil);
     }];
@@ -85,8 +80,7 @@
                 completion(error);
                 return;
             }
-            STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:weakself.paymentRequest sourceProvider:weakself.sourceProvider];
-            summaryViewController.delegate = self;
+            STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:weakself.paymentRequest sourceProvider:weakself.sourceProvider delegate:self];
             [weakself.navigationController stp_pushViewController:summaryViewController animated:YES completion:^{
                 completion(nil);
             }];

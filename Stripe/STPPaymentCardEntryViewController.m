@@ -10,15 +10,24 @@
 #import "STPPaymentCardEntryView.h"
 
 @interface STPPaymentCardEntryViewController ()<STPPaymentCardEntryViewDelegate>
+@property(nonatomic, weak) id<STPPaymentCardEntryViewControllerDelegate> delegate;
 @property(nonatomic) STPPaymentCardEntryView *view;
 @end
 
 @implementation STPPaymentCardEntryViewController
 @dynamic view;
 
+- (instancetype)initWithDelegate:(id<STPPaymentCardEntryViewControllerDelegate>)delegate {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        _delegate = delegate;
+    }
+    return self;
+}
+
+
 - (void)loadView {
-    self.view = [STPPaymentCardEntryView new];
-    self.view.delegate = self;
+    self.view = [[STPPaymentCardEntryView alloc] initWithDelegate:self];
 }
 
 -(void)viewDidAppear:(BOOL)animated {

@@ -20,5 +20,5 @@
 @end
 
 @interface STPEmailEntryView : UIView
-@property(nonatomic, weak) id<STPEmailEntryViewDelegate> delegate;
+- (instancetype)initWithDelegate:(id<STPEmailEntryViewDelegate>)delegate;
 @end

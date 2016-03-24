@@ -11,6 +11,7 @@
 
 @interface STPEmailEntryView()<UITextFieldDelegate>
 
+@property(nonatomic, weak) id<STPEmailEntryViewDelegate> delegate;
 @property(nonatomic, weak) UITextField *textField;
 @property(nonatomic, weak) UIActivityIndicatorView *activityIndicator;
 @property(nonatomic, weak) UIButton *nextButton;
@@ -19,9 +20,10 @@
 
 @implementation STPEmailEntryView
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+- (instancetype)initWithDelegate:(id<STPEmailEntryViewDelegate>)delegate {
+    self = [super initWithFrame:CGRectZero];
     if (self) {
+        _delegate = delegate;
         self.backgroundColor = [UIColor whiteColor];
         UITextField *textField = [[UITextField alloc] init];
         textField.autocapitalizationType = UITextAutocapitalizationTypeNone;

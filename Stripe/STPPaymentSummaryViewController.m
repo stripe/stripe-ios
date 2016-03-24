@@ -29,6 +29,7 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 
 @interface STPPaymentSummaryViewController()<UITableViewDataSource, UITableViewDelegate>
 
+@property(nonatomic, weak, nullable) id<STPPaymentSummaryViewControllerDelegate> delegate;
 @property(nonatomic, weak) UITableView *tableView;
 @property(nonatomic) NSArray<STPLineItem *> *lineItems;
 @property(nonatomic, nonnull) id<STPSourceProvider> sourceProvider;
@@ -37,9 +38,12 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 
 @implementation STPPaymentSummaryViewController
 
-- (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest sourceProvider:(nonnull id<STPSourceProvider>) sourceProvider {
+- (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest
+                                sourceProvider:(nonnull id<STPSourceProvider>) sourceProvider
+                                      delegate:(nonnull id<STPPaymentSummaryViewControllerDelegate>)delegate {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
+        _delegate = delegate;
         _paymentRequest = paymentRequest;
         _sourceProvider = sourceProvider;
         _lineItems = paymentRequest.lineItems;

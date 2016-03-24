@@ -11,6 +11,7 @@
 
 @interface STPPaymentCardEntryView()<STPPaymentCardTextFieldDelegate>
 
+@property(nonatomic, weak) id<STPPaymentCardEntryViewDelegate> delegate;
 @property(nonatomic, weak)STPPaymentCardTextField *textField;
 @property(nonatomic, weak)UIActivityIndicatorView *activityIndicator;
 @property(nonatomic, weak)UIButton *nextButton;
@@ -19,9 +20,10 @@
 
 @implementation STPPaymentCardEntryView
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+- (instancetype)initWithDelegate:(id<STPPaymentCardEntryViewDelegate>)delegate {
+    self = [super initWithFrame:CGRectZero];
     if (self) {
+        _delegate = delegate;
         self.backgroundColor = [UIColor whiteColor];
         STPPaymentCardTextField *textField = [STPPaymentCardTextField new];
         _textField = textField;

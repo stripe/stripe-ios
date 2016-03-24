@@ -18,5 +18,5 @@
 @end
 
 @interface STPEmailEntryViewController : UIViewController
-@property(nonatomic, weak)id<STPEmailEntryViewControllerDelegate> delegate;
+- (instancetype)initWithDelegate:(id<STPEmailEntryViewControllerDelegate>)delegate;
 @end

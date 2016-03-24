@@ -10,15 +10,23 @@
 #import "STPEmailEntryView.h"
 
 @interface STPEmailEntryViewController ()<STPEmailEntryViewDelegate>
+@property(nonatomic, weak)id<STPEmailEntryViewControllerDelegate> delegate;
 @property(nonatomic, readwrite)STPEmailEntryView *view;
 @end
 
 @implementation STPEmailEntryViewController
 @dynamic view;
 
+- (instancetype)initWithDelegate:(id<STPEmailEntryViewControllerDelegate>)delegate {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        _delegate = delegate;
+    }
+    return self;
+}
+
 - (void)loadView {
-    self.view = [STPEmailEntryView new];
-    self.view.delegate = self;
+    self.view = [[STPEmailEntryView alloc] initWithDelegate:self];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
