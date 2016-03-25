@@ -59,6 +59,10 @@
 }
 
 - (void)nextPressed:(__unused id)sender {
+    [self next];
+}
+
+- (void)next {
     [self.activityIndicator startAnimating];
     [self.delegate emailEntryView:self didEnterEmailAddress:self.textField.text completion:^(NSError *error) {
         if (error) {
@@ -71,6 +75,14 @@
 
 - (void)textFieldDidChange {
     self.nextButton.enabled = [STPEmailAddressValidator stringIsValidEmailAddress:self.textField.text];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    BOOL isValid = [STPEmailAddressValidator stringIsValidEmailAddress:textField.text];
+    if (isValid) {
+        [self next];
+    }
+    return isValid;
 }
 
 - (BOOL)canBecomeFirstResponder {
