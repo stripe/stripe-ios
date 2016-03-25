@@ -22,5 +22,7 @@
 
 
 @interface STPPaymentCardEntryViewController : UIViewController
+
 - (instancetype)initWithDelegate:(id<STPPaymentCardEntryViewControllerDelegate>)delegate;
+
 @end

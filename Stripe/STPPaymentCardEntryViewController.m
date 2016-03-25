@@ -7,11 +7,13 @@
 //
 
 #import "STPPaymentCardEntryViewController.h"
-#import "STPPaymentCardEntryView.h"
+#import "STPPaymentCardTextField.h"
 
-@interface STPPaymentCardEntryViewController ()<STPPaymentCardEntryViewDelegate>
+@interface STPPaymentCardEntryViewController ()<STPPaymentCardTextFieldDelegate>
 @property(nonatomic, weak) id<STPPaymentCardEntryViewControllerDelegate> delegate;
-@property(nonatomic) STPPaymentCardEntryView *view;
+@property(nonatomic, weak)STPPaymentCardTextField *textField;
+@property(nonatomic, weak)UIActivityIndicatorView *activityIndicator;
+@property(nonatomic, weak)UIButton *nextButton;
 @end
 
 @implementation STPPaymentCardEntryViewController
@@ -21,24 +23,71 @@
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _delegate = delegate;
+        self.view.backgroundColor = [UIColor whiteColor];
+        STPPaymentCardTextField *textField = [[STPPaymentCardTextField alloc] initWithFrame:CGRectZero];
+        _textField = textField;
+        _textField.delegate = self;
+        [self.view addSubview:textField];
+        
+        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _activityIndicator = activityIndicator;
+        [self.view addSubview:activityIndicator];
+        
+        UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        nextButton.enabled = NO;
+        [nextButton setTitle:NSLocalizedString(@"Next", nil) forState:UIControlStateNormal];
+        [nextButton addTarget:self action:@selector(nextPressed:) forControlEvents:UIControlEventTouchUpInside];
+        _nextButton = nextButton;
+        [self.view addSubview:nextButton];
     }
     return self;
 }
 
 
-- (void)loadView {
-    self.view = [[STPPaymentCardEntryView alloc] initWithDelegate:self];
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    _activityIndicator.center = self.view.center;
+    _textField.frame = CGRectMake(0, 0, self.view.bounds.size.width - 40, 44);
+    _textField.center = CGPointMake(self.view.center.x, CGRectGetMinY(_activityIndicator.frame) - 50);
+    [_nextButton sizeToFit];
+    _nextButton.center = CGPointMake(self.view.center.x, CGRectGetMaxY(_activityIndicator.frame) + 50);
 }
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.view becomeFirstResponder];
+    [self.textField becomeFirstResponder];
 }
 
-- (void)paymentCardEntryView:(__unused STPPaymentCardEntryView *)emailView didEnterCardParams:(STPCardParams *)params completion:(STPErrorBlock)completion {
-    [self.delegate paymentCardEntryViewController:self
-                               didEnterCardParams:params
-                                       completion:completion];
+
+- (void)nextPressed:(__unused id)sender {
+    [self.activityIndicator startAnimating];
+    [self.delegate paymentCardEntryViewController:self didEnterCardParams:self.textField.cardParams completion:^(NSError *error) {
+        if (error) {
+            NSLog(@"%@", error);
+            [self.activityIndicator stopAnimating];
+            return;
+        }
+    }];
+}
+
+- (void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
+    self.nextButton.enabled = textField.isValid;
+}
+
+- (BOOL)canBecomeFirstResponder {
+    return [self.textField canBecomeFirstResponder];
+}
+
+- (BOOL)becomeFirstResponder {
+    return [self.textField becomeFirstResponder];
+}
+
+- (BOOL)canResignFirstResponder {
+    return [self.textField canResignFirstResponder];
+}
+
+- (BOOL)resignFirstResponder {
+    return [self.textField resignFirstResponder];
 }
 
 @end
