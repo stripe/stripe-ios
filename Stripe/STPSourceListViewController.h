@@ -14,7 +14,6 @@
 
 @protocol STPSourceListViewControllerDelegate <NSObject>
 
-- (void)sourceListViewControllerDidPressAdd:(nonnull STPSourceListViewController *)viewController;
 - (void)sourceListViewController:(nonnull STPSourceListViewController *)viewController didSelectSource:(nonnull id<STPSource>)source;
 
 @end

@@ -53,21 +53,17 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
     return self;
 }
 
-- (void)loadView {
-    UIView *view = [UIView new];
-    view.backgroundColor = [UIColor whiteColor];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     tableView.dataSource = self;
     tableView.delegate = self;
     [tableView registerClass:[STPPaymentMethodCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
     [tableView registerClass:[STPLineItemCell class] forCellReuseIdentifier:STPLineItemCellReuseIdentifier];
     _tableView = tableView;
-    [view addSubview:tableView];
-    self.view = view;
-}
+    [self.view addSubview:tableView];
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                   target:self action:@selector(cancel:)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone

@@ -30,9 +30,9 @@
     return self;
 }
 
-- (void)loadView {
-    UIView *view = [UIView new];
-    view.backgroundColor = [UIColor whiteColor];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
     UITextField *textField = [[UITextField alloc] initWithFrame:CGRectZero];
     textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -41,19 +41,18 @@
     textField.delegate = self;
     [textField addTarget:self action:@selector(textFieldDidChange) forControlEvents:UIControlEventEditingChanged];
     _textField = textField;
-    [view addSubview:textField];
+    [self.view addSubview:textField];
 
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     _activityIndicator = activityIndicator;
-    [view addSubview:activityIndicator];
+    [self.view addSubview:activityIndicator];
 
     UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeSystem];
     nextButton.enabled = NO;
     [nextButton setTitle:NSLocalizedString(@"Next", nil) forState:UIControlStateNormal];
     [nextButton addTarget:self action:@selector(nextPressed:) forControlEvents:UIControlEventTouchUpInside];
     _nextButton = nextButton;
-    [view addSubview:nextButton];
-    self.view = view;
+    [self.view addSubview:nextButton];
 }
 
 - (void)viewDidLayoutSubviews {

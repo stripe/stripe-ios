@@ -19,7 +19,7 @@
 #import "STPToken.h"
 #import "STPPaymentResult.h"
 
-@interface STPPaymentAuthorizationViewController()<STPEmailEntryViewControllerDelegate, STPPaymentCardEntryViewControllerDelegate, STPPaymentSummaryViewControllerDelegate>
+@interface STPPaymentAuthorizationViewController()<STPEmailEntryViewControllerDelegate, STPPaymentCardEntryViewControllerDelegate, STPPaymentSummaryViewControllerDelegate, STPSourceListViewControllerDelegate>
 @property(nonatomic, weak) UINavigationController *navigationController;
 @property(nonatomic, readwrite, nonnull) STPPaymentRequest *paymentRequest;
 @property(nonatomic, readwrite, nonnull) STPAPIClient *apiClient;
@@ -56,7 +56,7 @@
 
 #pragma mark - STPEmailEntryViewControllerDelegate
 
-- (void)emailEntryViewController:(__unused STPEmailEntryViewController *)emailViewController didEnterEmailAddress:(__unused NSString *)emailAddress completion:(STPErrorBlock)completion {
+- (void)emailEntryViewController:(__unused STPEmailEntryViewController *)viewController didEnterEmailAddress:(__unused NSString *)emailAddress completion:(STPErrorBlock)completion {
     STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithDelegate:self];
     [self.navigationController stp_pushViewController:paymentCardViewController animated:YES completion:^{
         completion(nil);
@@ -65,18 +65,20 @@
 
 #pragma mark - STPPaymentCardEntryViewControllerDelegate
 
-- (void)paymentCardEntryViewController:(__unused STPPaymentCardEntryViewController *)emailViewController didEnterCardParams:(STPCardParams *)cardParams completion:(STPErrorBlock)completion {
+- (void)paymentCardEntryViewController:(__unused STPPaymentCardEntryViewController *)viewController didEnterCardParams:(STPCardParams *)cardParams completion:(STPErrorBlock)completion {
     
     __weak typeof(self) weakself = self;
     
     [self.apiClient createTokenWithCard:cardParams completion:^(STPToken *token, NSError *error) {
         if (error) {
+            NSLog(@"TODO");
             completion(error);
             return;
         }
         
         [weakself.sourceProvider addSource:token completion:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> *sources, NSError *sourceError) {
             if (sourceError) {
+                NSLog(@"TODO");
                 completion(error);
                 return;
             }
@@ -90,8 +92,10 @@
 
 #pragma mark - STPPaymentSummaryViewControllerDelegate
 
-- (void)paymentSummaryViewControllerDidEditPaymentMethod:(__unused STPPaymentSummaryViewController *)summaryViewController {
-    STPSourceListViewController *destination = [[STPSourceListViewController alloc] initWithSourceProvider:self.sourceProvider apiClient:self.apiClient];
+- (void)paymentSummaryViewControllerDidEditPaymentMethod:(__unused STPPaymentSummaryViewController *)viewController {
+    STPSourceListViewController *destination = [[STPSourceListViewController alloc] initWithSourceProvider:self.sourceProvider
+                                                                                                 apiClient:self.apiClient
+                                                                                                  delegate:self];
     [self.navigationController pushViewController:destination animated:YES];
 }
 
@@ -99,9 +103,21 @@
     [self.delegate paymentAuthorizationViewControllerDidCancel:self];
 }
 
-- (void)paymentSummaryViewControllerDidPressBuy:(__unused STPPaymentSummaryViewController *)summaryViewController {
+- (void)paymentSummaryViewControllerDidPressBuy:(__unused STPPaymentSummaryViewController *)viewController {
     STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:self.sourceProvider.selectedSource customer:nil];
     [self.delegate paymentAuthorizationViewController:self didCreatePaymentResult:result];
+}
+
+#pragma mark - STPSourceListViewControllerDelegate
+
+- (void)sourceListViewController:(__unused STPSourceListViewController *)viewController didSelectSource:(id<STPSource>)source {
+    [self.sourceProvider selectSource:source completion:^(__unused id<STPSource>  _Nullable selectedSource, __unused NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"TODO");
+            return;
+        }
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
 }
 
 @end
