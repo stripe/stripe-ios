@@ -8,14 +8,22 @@
 
 #import <UIKit/UIKit.h>
 
-@class STPAPIClient;
+@class STPAPIClient, STPSourceListViewController;
 
-@protocol STPSourceProvider;
+@protocol STPSourceProvider, STPSource;
+
+@protocol STPSourceListViewControllerDelegate <NSObject>
+
+- (void)sourceListViewControllerDidPressAdd:(nonnull STPSourceListViewController *)viewController;
+- (void)sourceListViewController:(nonnull STPSourceListViewController *)viewController didSelectSource:(nonnull id<STPSource>)source;
+
+@end
 
 @interface STPSourceListViewController : UIViewController
 
 - (nonnull instancetype)initWithSourceProvider:(nonnull id<STPSourceProvider>)sourceProvider
-                                     apiClient:(nonnull STPAPIClient *)apiClient;
+                                     apiClient:(nonnull STPAPIClient *)apiClient
+                                      delegate:(nonnull id<STPSourceListViewControllerDelegate>)delegate;
 @property(nonatomic, readonly, nonnull)id<STPSourceProvider> sourceProvider;
 @property(nonatomic, readonly, nonnull)STPAPIClient *apiClient;
 

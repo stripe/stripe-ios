@@ -34,8 +34,6 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 @property(nonatomic) NSArray<STPLineItem *> *lineItems;
 @property(nonatomic, nonnull) STPPaymentRequest *paymentRequest;
 @property(nonatomic, nonnull, readonly) id<STPSourceProvider> sourceProvider;
-@property(nonatomic, nonnull) UIBarButtonItem *cancelButton;
-@property(nonatomic, nonnull) UIBarButtonItem *payButton;
 
 @end
 
@@ -51,27 +49,29 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
         _paymentRequest = paymentRequest;
         _sourceProvider = sourceProvider;
         _lineItems = paymentRequest.lineItems;
-        _cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                      target:self action:@selector(cancel:)];
-        _payButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                   target:self action:@selector(pay:)];
-        UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        tableView.dataSource = self;
-        tableView.delegate = self;
-        [tableView registerClass:[STPPaymentMethodCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
-        [tableView registerClass:[STPLineItemCell class] forCellReuseIdentifier:STPLineItemCellReuseIdentifier];
-        _tableView = tableView;
-        self.view.backgroundColor = [UIColor whiteColor];
-        [self.view addSubview:tableView];
-
     }
     return self;
 }
 
+- (void)loadView {
+    UIView *view = [UIView new];
+    view.backgroundColor = [UIColor whiteColor];
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    tableView.dataSource = self;
+    tableView.delegate = self;
+    [tableView registerClass:[STPPaymentMethodCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
+    [tableView registerClass:[STPLineItemCell class] forCellReuseIdentifier:STPLineItemCellReuseIdentifier];
+    _tableView = tableView;
+    [view addSubview:tableView];
+    self.view = view;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.leftBarButtonItem = self.cancelButton;
-    self.navigationItem.rightBarButtonItem = self.payButton;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                  target:self action:@selector(cancel:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                               target:self action:@selector(pay:)];
 }
 
 - (void)viewDidLayoutSubviews {
