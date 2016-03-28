@@ -14,7 +14,7 @@
 
 @protocol STPPaymentCardEntryViewControllerDelegate
 
-- (void)paymentCardEntryViewController:(STPPaymentCardEntryViewController *)emailViewController
+- (void)paymentCardEntryViewController:(STPPaymentCardEntryViewController *)paymentCardViewController
                     didEnterCardParams:(STPCardParams *)cardParams
                             completion:(STPErrorBlock)completion;
 

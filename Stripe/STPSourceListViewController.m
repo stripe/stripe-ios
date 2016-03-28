@@ -18,10 +18,9 @@
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 
-@interface STPSourceListViewController()<UITableViewDataSource, UITableViewDelegate, STPPaymentCardEntryViewControllerDelegate>
+@interface STPSourceListViewController()<UITableViewDataSource, UITableViewDelegate>
 @property(nonatomic, weak)id<STPSourceListViewControllerDelegate> delegate;
 @property(nonatomic)id<STPSourceProvider> sourceProvider;
-@property(nonatomic, nonnull)STPAPIClient *apiClient;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIBarButtonItem *addButton;
 @property(nonatomic)BOOL loading;
@@ -31,11 +30,9 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 @implementation STPSourceListViewController
 
 - (nonnull instancetype)initWithSourceProvider:(nonnull id<STPSourceProvider>)sourceProvider
-                                     apiClient:(nonnull STPAPIClient *)apiClient
                                       delegate:(nonnull id<STPSourceListViewControllerDelegate>)delegate {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        _apiClient = apiClient;
         _sourceProvider = sourceProvider;
         _delegate = delegate;
     }
@@ -73,14 +70,17 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
     self.tableView.frame = self.view.bounds;
 }
 
+- (void)reload {
+    [self.tableView reloadData];
+}
+
 - (void)setLoading:(BOOL)loading {
     _loading = loading;
     self.addButton.enabled = !loading;
 }
 
 - (void)addSource:(__unused id)sender {
-    STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithDelegate:self];
-    [self.navigationController stp_pushViewController:paymentCardViewController animated:YES completion:nil];
+    [self.delegate sourceListViewControllerDidTapAddButton:self];
 }
 
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(__unused NSInteger)section {
@@ -99,29 +99,6 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     id<STPSource> source = [self.sourceProvider.sources stp_boundSafeObjectAtIndex:indexPath.row];
     [self.delegate sourceListViewController:self didSelectSource:source];
-}
-
-#pragma mark - STPPaymentCardEntryViewControllerDelegate
-
-- (void)paymentCardEntryViewController:(__unused STPPaymentCardEntryViewController *)viewController didEnterCardParams:(STPCardParams *)cardParams completion:(STPErrorBlock)completion {
-    __weak STPSourceListViewController *weakself = self;
-    [[STPAPIClient sharedClient] createTokenWithCard:cardParams completion:^(__unused STPToken * _Nullable token, __unused NSError * _Nullable error) {
-        if (error) {
-            NSLog(@"TODO");
-            completion(error);
-            return;
-        }
-
-        [self.sourceProvider addSource:token completion:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> * _Nullable sources, __unused NSError * _Nullable addSourceError) {
-            if (error) {
-                NSLog(@"TODO");
-                completion(error);
-                return;
-            }
-            [weakself.tableView reloadData];
-            [weakself.navigationController popViewControllerAnimated:YES];
-        }];
-    }];
 }
 
 @end

@@ -23,6 +23,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		040389D81CA9AABB002C9960 /* STPSourceListCoordinator.h in Headers */ = {isa = PBXBuildFile; fileRef = 040389D61CA9AABB002C9960 /* STPSourceListCoordinator.h */; };
+		040389D91CA9AABB002C9960 /* STPSourceListCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 040389D71CA9AABB002C9960 /* STPSourceListCoordinator.m */; };
 		041906241CA344D90024181D /* STPEmailEntryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 041906221CA344D90024181D /* STPEmailEntryViewController.h */; };
 		041906251CA344D90024181D /* STPEmailEntryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 041906221CA344D90024181D /* STPEmailEntryViewController.h */; };
 		042CA1B61B7BD84100AF0DA6 /* stp_card_placeholder_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 042CA1B31B7BD84100AF0DA6 /* stp_card_placeholder_template.png */; };
@@ -418,6 +420,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		040389D61CA9AABB002C9960 /* STPSourceListCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPSourceListCoordinator.h; sourceTree = "<group>"; };
+		040389D71CA9AABB002C9960 /* STPSourceListCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceListCoordinator.m; sourceTree = "<group>"; };
 		041906221CA344D90024181D /* STPEmailEntryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPEmailEntryViewController.h; sourceTree = "<group>"; };
 		042CA1B31B7BD84100AF0DA6 /* stp_card_placeholder_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_card_placeholder_template.png; sourceTree = "<group>"; };
 		042CA1B41B7BD84100AF0DA6 /* stp_card_placeholder_template@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_placeholder_template@2x.png"; sourceTree = "<group>"; };
@@ -654,6 +658,8 @@
 				0439B98C1C455760005A1ED5 /* STPSourceCell.m */,
 				0439B9411C44F9AC005A1ED5 /* STPPaymentRequest.h */,
 				0439B9421C44F9AC005A1ED5 /* STPPaymentRequest.m */,
+				040389D61CA9AABB002C9960 /* STPSourceListCoordinator.h */,
+				040389D71CA9AABB002C9960 /* STPSourceListCoordinator.m */,
 				0439B9471C44FAF9005A1ED5 /* STPLineItem.h */,
 				0439B9481C44FAF9005A1ED5 /* STPLineItem.m */,
 				0439B9611C450970005A1ED5 /* STPLineItemCell.h */,
@@ -1001,6 +1007,7 @@
 				0439B9491C44FAF9005A1ED5 /* STPLineItem.h in Headers */,
 				0439B9631C450970005A1ED5 /* STPLineItemCell.h in Headers */,
 				04695AD91C77F9EF00E08063 /* STPDelegateProxy.h in Headers */,
+				040389D81CA9AABB002C9960 /* STPSourceListCoordinator.h in Headers */,
 				0433EB491BD06313003912B4 /* NSDictionary+Stripe.h in Headers */,
 				04CDB50E1A5F30A700B854EE /* STPCard.h in Headers */,
 				0438EF2C1B7416BB00D506CC /* STPFormTextField.h in Headers */,
@@ -1171,6 +1178,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = STP;
+				LastSwiftUpdateCheck = 0730;
 				LastTestingUpgradeCheck = 0510;
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Stripe, Inc";
@@ -1456,6 +1464,7 @@
 				04CDB5101A5F30A700B854EE /* STPCard.m in Sources */,
 				04CDB5001A5F30A700B854EE /* STPAPIClient.m in Sources */,
 				04CDB50C1A5F30A700B854EE /* STPBankAccount.m in Sources */,
+				040389D91CA9AABB002C9960 /* STPSourceListCoordinator.m in Sources */,
 				04F416271CA3639500486FB5 /* STPPaymentCardEntryViewController.m in Sources */,
 				04CDB5181A5F30A700B854EE /* StripeError.m in Sources */,
 				C1718D571C3B2E5B002A7CB3 /* UIImage+Stripe.m in Sources */,
@@ -1591,7 +1600,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DEFINES_MODULE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -1599,6 +1612,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F111AEF2AFE005B926E /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				DEFINES_MODULE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-ios";
 			};
 			name = Release;

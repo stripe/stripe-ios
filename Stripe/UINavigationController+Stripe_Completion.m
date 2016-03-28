@@ -19,4 +19,12 @@
     [CATransaction commit];
 }
 
+- (void)stp_popViewControllerAnimated:(BOOL)animated
+                           completion:(STPVoidBlock)completion {
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:completion];
+    [self popViewControllerAnimated:animated];
+    [CATransaction commit];
+}
+
 @end

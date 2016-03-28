@@ -18,12 +18,14 @@
 #import "STPAPIClient.h"
 #import "STPToken.h"
 #import "STPPaymentResult.h"
+#import "STPSourceListCoordinator.h"
 
-@interface STPPaymentAuthorizationViewController()<STPEmailEntryViewControllerDelegate, STPPaymentCardEntryViewControllerDelegate, STPPaymentSummaryViewControllerDelegate, STPSourceListViewControllerDelegate>
+@interface STPPaymentAuthorizationViewController()<STPEmailEntryViewControllerDelegate, STPPaymentCardEntryViewControllerDelegate, STPPaymentSummaryViewControllerDelegate, STPSourceListCoordinatorDelegate>
 @property(nonatomic, weak) UINavigationController *navigationController;
 @property(nonatomic, readwrite, nonnull) STPPaymentRequest *paymentRequest;
 @property(nonatomic, readwrite, nonnull) STPAPIClient *apiClient;
 @property(nonatomic) id<STPSourceProvider> sourceProvider;
+@property(nonatomic) NSMutableArray *childCoordinators;
 @end
 
 @implementation STPPaymentAuthorizationViewController
@@ -40,6 +42,7 @@
         _navigationController = navigationController;
         [self addChildViewController:_navigationController];
         [_navigationController didMoveToParentViewController:self];
+        _childCoordinators = [@[] mutableCopy];
     }
     return self;
 }
@@ -93,10 +96,9 @@
 #pragma mark - STPPaymentSummaryViewControllerDelegate
 
 - (void)paymentSummaryViewControllerDidEditPaymentMethod:(__unused STPPaymentSummaryViewController *)viewController {
-    STPSourceListViewController *destination = [[STPSourceListViewController alloc] initWithSourceProvider:self.sourceProvider
-                                                                                                 apiClient:self.apiClient
-                                                                                                  delegate:self];
-    [self.navigationController pushViewController:destination animated:YES];
+    STPSourceListCoordinator *coordinator = [[STPSourceListCoordinator alloc] initWithNavigationController:_navigationController apiClient:_apiClient sourceProvider:_sourceProvider delegate:self];
+    [self.childCoordinators addObject:coordinator];
+    [coordinator showSourceList];
 }
 
 - (void)paymentSummaryViewControllerDidCancel:(__unused STPPaymentSummaryViewController *)summaryViewController {
@@ -108,16 +110,10 @@
     [self.delegate paymentAuthorizationViewController:self didCreatePaymentResult:result];
 }
 
-#pragma mark - STPSourceListViewControllerDelegate
+#pragma mark - STPSourceListCoordinatorDelegate
 
-- (void)sourceListViewController:(__unused STPSourceListViewController *)viewController didSelectSource:(id<STPSource>)source {
-    [self.sourceProvider selectSource:source completion:^(__unused id<STPSource>  _Nullable selectedSource, __unused NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
-        if (error) {
-            NSLog(@"TODO");
-            return;
-        }
-        [self.navigationController popViewControllerAnimated:YES];
-    }];
+- (void)sourceListCoordinatorDidFinish:(STPSourceListCoordinator *)coordinator {
+    [self.childCoordinators removeObject:coordinator];
 }
 
 @end
