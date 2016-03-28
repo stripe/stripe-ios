@@ -13,7 +13,6 @@
 @property(nonatomic, weak) id<STPPaymentCardEntryViewControllerDelegate> delegate;
 @property(nonatomic, weak)STPPaymentCardTextField *textField;
 @property(nonatomic, weak)UIActivityIndicatorView *activityIndicator;
-@property(nonatomic, weak)UIButton *nextButton;
 @end
 
 @implementation STPPaymentCardEntryViewController
@@ -31,6 +30,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelPressed:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(nextPressed:)];
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    self.navigationItem.title = NSLocalizedString(@"Card", nil);
+    
+    
     STPPaymentCardTextField *textField = [[STPPaymentCardTextField alloc] initWithFrame:CGRectZero];
     _textField = textField;
     _textField.delegate = self;
@@ -39,13 +45,6 @@
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     _activityIndicator = activityIndicator;
     [self.view addSubview:activityIndicator];
-
-    UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    nextButton.enabled = NO;
-    [nextButton setTitle:NSLocalizedString(@"Next", nil) forState:UIControlStateNormal];
-    [nextButton addTarget:self action:@selector(nextPressed:) forControlEvents:UIControlEventTouchUpInside];
-    _nextButton = nextButton;
-    [self.view addSubview:nextButton];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -53,8 +52,6 @@
     _activityIndicator.center = self.view.center;
     _textField.frame = CGRectMake(0, 0, self.view.bounds.size.width - 40, 44);
     _textField.center = CGPointMake(self.view.center.x, CGRectGetMinY(_activityIndicator.frame) - 50);
-    [_nextButton sizeToFit];
-    _nextButton.center = CGPointMake(self.view.center.x, CGRectGetMaxY(_activityIndicator.frame) + 50);
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -62,6 +59,9 @@
     [self.textField becomeFirstResponder];
 }
 
+- (void)cancelPressed:(__unused id)sender {
+    [self.delegate paymentCardEntryViewControllerDidCancel:self];
+}
 
 - (void)nextPressed:(__unused id)sender {
     [self.activityIndicator startAnimating];
@@ -75,7 +75,7 @@
 }
 
 - (void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
-    self.nextButton.enabled = textField.isValid;
+    self.navigationItem.rightBarButtonItem.enabled = textField.isValid;
 }
 
 - (BOOL)canBecomeFirstResponder {

@@ -49,6 +49,8 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
     [tableView registerClass:[STPSourceCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
     self.tableView = tableView;
     [self.view addSubview:tableView];
+    
+    // TODO: wire up back button item here
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addSource:)];
     self.addButton = addButton;

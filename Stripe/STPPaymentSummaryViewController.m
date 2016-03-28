@@ -66,8 +66,9 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                   target:self action:@selector(cancel:)];
+    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                               target:self action:@selector(pay:)];
+                                                                                          target:self action:@selector(pay:)];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -85,7 +86,9 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 }
 
 - (void)pay:(__unused id)sender {
-    [self.delegate paymentSummaryViewControllerDidPressBuy:self];
+    [self.delegate paymentSummaryViewController:self didPressBuyCompletion:^(__unused NSError * _Nullable error) {
+        // TODO update UI based on result
+    }];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {

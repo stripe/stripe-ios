@@ -14,6 +14,7 @@
 @protocol STPEmailEntryViewControllerDelegate
 
 - (void)emailEntryViewController:(STPEmailEntryViewController *)emailViewController didEnterEmailAddress:(NSString *)emailAddress completion:(STPErrorBlock)completion;
+- (void)emailEntryViewControllerDidCancel:(STPEmailEntryViewController *)emailViewController;
 
 @end
 

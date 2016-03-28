@@ -29,6 +29,8 @@
 		040389DD1CA9B4DB002C9960 /* STPInitialPaymentDetailsCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 040389DB1CA9B4DB002C9960 /* STPInitialPaymentDetailsCoordinator.m */; };
 		040389E01CA9B501002C9960 /* STPBaseCoordinator.h in Headers */ = {isa = PBXBuildFile; fileRef = 040389DE1CA9B501002C9960 /* STPBaseCoordinator.h */; };
 		040389E11CA9B501002C9960 /* STPBaseCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 040389DF1CA9B501002C9960 /* STPBaseCoordinator.m */; };
+		040389E41CA9BC58002C9960 /* STPPaymentAuthorizationCoordinator.h in Headers */ = {isa = PBXBuildFile; fileRef = 040389E21CA9BC58002C9960 /* STPPaymentAuthorizationCoordinator.h */; };
+		040389E51CA9BC58002C9960 /* STPPaymentAuthorizationCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 040389E31CA9BC58002C9960 /* STPPaymentAuthorizationCoordinator.m */; };
 		041906241CA344D90024181D /* STPEmailEntryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 041906221CA344D90024181D /* STPEmailEntryViewController.h */; };
 		041906251CA344D90024181D /* STPEmailEntryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 041906221CA344D90024181D /* STPEmailEntryViewController.h */; };
 		042CA1B61B7BD84100AF0DA6 /* stp_card_placeholder_template.png in Resources */ = {isa = PBXBuildFile; fileRef = 042CA1B31B7BD84100AF0DA6 /* stp_card_placeholder_template.png */; };
@@ -430,6 +432,8 @@
 		040389DB1CA9B4DB002C9960 /* STPInitialPaymentDetailsCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPInitialPaymentDetailsCoordinator.m; sourceTree = "<group>"; };
 		040389DE1CA9B501002C9960 /* STPBaseCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBaseCoordinator.h; sourceTree = "<group>"; };
 		040389DF1CA9B501002C9960 /* STPBaseCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBaseCoordinator.m; sourceTree = "<group>"; };
+		040389E21CA9BC58002C9960 /* STPPaymentAuthorizationCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPPaymentAuthorizationCoordinator.h; sourceTree = "<group>"; };
+		040389E31CA9BC58002C9960 /* STPPaymentAuthorizationCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentAuthorizationCoordinator.m; sourceTree = "<group>"; };
 		041906221CA344D90024181D /* STPEmailEntryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPEmailEntryViewController.h; sourceTree = "<group>"; };
 		042CA1B31B7BD84100AF0DA6 /* stp_card_placeholder_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_card_placeholder_template.png; sourceTree = "<group>"; };
 		042CA1B41B7BD84100AF0DA6 /* stp_card_placeholder_template@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_placeholder_template@2x.png"; sourceTree = "<group>"; };
@@ -654,24 +658,26 @@
 			children = (
 				0439B93B1C44F54E005A1ED5 /* STPPaymentAuthorizationViewController.h */,
 				0439B93C1C44F54E005A1ED5 /* STPPaymentAuthorizationViewController.m */,
+				040389DE1CA9B501002C9960 /* STPBaseCoordinator.h */,
+				040389DF1CA9B501002C9960 /* STPBaseCoordinator.m */,
+				040389E21CA9BC58002C9960 /* STPPaymentAuthorizationCoordinator.h */,
+				040389E31CA9BC58002C9960 /* STPPaymentAuthorizationCoordinator.m */,
+				040389DA1CA9B4DB002C9960 /* STPInitialPaymentDetailsCoordinator.h */,
+				040389DB1CA9B4DB002C9960 /* STPInitialPaymentDetailsCoordinator.m */,
+				040389D61CA9AABB002C9960 /* STPSourceListCoordinator.h */,
+				040389D71CA9AABB002C9960 /* STPSourceListCoordinator.m */,
 				041906221CA344D90024181D /* STPEmailEntryViewController.h */,
 				04604F4F1CA3633000D8DDE0 /* STPEmailEntryViewController.m */,
 				04F416241CA3639500486FB5 /* STPPaymentCardEntryViewController.h */,
 				04F416251CA3639500486FB5 /* STPPaymentCardEntryViewController.m */,
 				0439B94D1C44FFB1005A1ED5 /* STPPaymentSummaryViewController.h */,
 				0439B94E1C44FFB1005A1ED5 /* STPPaymentSummaryViewController.m */,
-				040389DA1CA9B4DB002C9960 /* STPInitialPaymentDetailsCoordinator.h */,
-				040389DB1CA9B4DB002C9960 /* STPInitialPaymentDetailsCoordinator.m */,
 				0439B9851C454F97005A1ED5 /* STPSourceListViewController.h */,
 				0439B9861C454F97005A1ED5 /* STPSourceListViewController.m */,
 				0439B98B1C455760005A1ED5 /* STPSourceCell.h */,
 				0439B98C1C455760005A1ED5 /* STPSourceCell.m */,
 				0439B9411C44F9AC005A1ED5 /* STPPaymentRequest.h */,
 				0439B9421C44F9AC005A1ED5 /* STPPaymentRequest.m */,
-				040389DE1CA9B501002C9960 /* STPBaseCoordinator.h */,
-				040389DF1CA9B501002C9960 /* STPBaseCoordinator.m */,
-				040389D61CA9AABB002C9960 /* STPSourceListCoordinator.h */,
-				040389D71CA9AABB002C9960 /* STPSourceListCoordinator.m */,
 				0439B9471C44FAF9005A1ED5 /* STPLineItem.h */,
 				0439B9481C44FAF9005A1ED5 /* STPLineItem.m */,
 				0439B9611C450970005A1ED5 /* STPLineItemCell.h */,
@@ -1059,6 +1065,7 @@
 				0439B98D1C455760005A1ED5 /* STPSourceCell.h in Headers */,
 				04A4C3971C4F2C8600B3B290 /* NSString+Stripe_CardBrands.h in Headers */,
 				0451CC441C49AE1C003B2CA6 /* STPPaymentResult.h in Headers */,
+				040389E41CA9BC58002C9960 /* STPPaymentAuthorizationCoordinator.h in Headers */,
 				040389E01CA9B501002C9960 /* STPBaseCoordinator.h in Headers */,
 				04CDB4FE1A5F30A700B854EE /* STPAPIClient.h in Headers */,
 			);
@@ -1473,6 +1480,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0438EF431B74170D00D506CC /* STPCardValidator.m in Sources */,
+				040389E51CA9BC58002C9960 /* STPPaymentAuthorizationCoordinator.m in Sources */,
 				0438EF2F1B7416BB00D506CC /* STPFormTextField.m in Sources */,
 				04604F501CA3633000D8DDE0 /* STPEmailEntryViewController.m in Sources */,
 				04CDB5101A5F30A700B854EE /* STPCard.m in Sources */,

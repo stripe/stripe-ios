@@ -29,6 +29,10 @@
 
 #pragma mark STPPaymentCardEntryViewControllerDelegate
 
+- (void)paymentCardEntryViewControllerDidCancel:(__unused STPPaymentCardEntryViewController *)paymentCardViewController {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 - (void)paymentCardEntryViewController:(__unused STPPaymentCardEntryViewController *)viewController
                     didEnterCardParams:(STPCardParams *)cardParams
                             completion:(STPErrorBlock)completion {

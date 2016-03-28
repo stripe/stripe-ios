@@ -35,7 +35,15 @@
     }];
 }
 
+- (void)emailEntryViewControllerDidCancel:(__unused STPEmailEntryViewController *)emailViewController {
+    [self.delegate coordinatorDidCancel:self];
+}
+
 #pragma mark - STPPaymentCardEntryViewControllerDelegate
+
+- (void)paymentCardEntryViewControllerDidCancel:(__unused STPPaymentCardEntryViewController *)paymentCardViewController {
+    [self.delegate coordinatorDidCancel:self];
+}
 
 - (void)paymentCardEntryViewController:(__unused STPPaymentCardEntryViewController *)viewController didEnterCardParams:(STPCardParams *)cardParams completion:(STPErrorBlock)completion {
     
@@ -54,11 +62,7 @@
                 completion(error);
                 return;
             }
-            [self.delegate coordinatorDidFinish:self];
-//            STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:weakself.paymentRequest sourceProvider:weakself.sourceProvider delegate:self];
-//            [weakself.navigationController stp_pushViewController:summaryViewController animated:YES completion:^{
-//                completion(nil);
-//            }];
+            [self.delegate coordinator:self willFinishWithCompletion:nil];
         }];
     }];
 }

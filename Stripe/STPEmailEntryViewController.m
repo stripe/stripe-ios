@@ -14,7 +14,6 @@
 @property(nonatomic, weak)id<STPEmailEntryViewControllerDelegate> delegate;
 @property(nonatomic, weak) UITextField *textField;
 @property(nonatomic, weak) UIActivityIndicatorView *activityIndicator;
-@property(nonatomic, weak) UIButton *nextButton;
 
 @end
 
@@ -33,6 +32,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelPressed:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(nextPressed:)];
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    self.navigationItem.title = NSLocalizedString(@"Email", nil);
     UITextField *textField = [[UITextField alloc] initWithFrame:CGRectZero];
     textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -46,13 +49,6 @@
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     _activityIndicator = activityIndicator;
     [self.view addSubview:activityIndicator];
-
-    UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    nextButton.enabled = NO;
-    [nextButton setTitle:NSLocalizedString(@"Next", nil) forState:UIControlStateNormal];
-    [nextButton addTarget:self action:@selector(nextPressed:) forControlEvents:UIControlEventTouchUpInside];
-    _nextButton = nextButton;
-    [self.view addSubview:nextButton];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -60,13 +56,15 @@
     _activityIndicator.center = self.view.center;
     _textField.frame = CGRectMake(0, 0, self.view.bounds.size.width - 40, 44);
     _textField.center = CGPointMake(self.view.center.x, CGRectGetMinY(_activityIndicator.frame) - 50);
-    [_nextButton sizeToFit];
-    _nextButton.center = CGPointMake(self.view.center.x, CGRectGetMaxY(_activityIndicator.frame) + 50);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.textField becomeFirstResponder];
+}
+
+- (void)cancelPressed:(__unused id)sender {
+    [self.delegate emailEntryViewControllerDidCancel:self];
 }
 
 - (void)nextPressed:(__unused id)sender {
@@ -85,7 +83,7 @@
 }
 
 - (void)textFieldDidChange {
-    self.nextButton.enabled = [STPEmailAddressValidator stringIsValidEmailAddress:self.textField.text];
+    self.navigationItem.rightBarButtonItem.enabled = [STPEmailAddressValidator stringIsValidEmailAddress:self.textField.text];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {

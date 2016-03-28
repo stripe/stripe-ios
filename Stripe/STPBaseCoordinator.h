@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "STPBlocks.h"
 
 @class STPBaseCoordinator, STPAPIClient;
 @protocol STPSourceProvider;
 
 @protocol STPCoordinatorDelegate
-- (void)coordinatorDidFinish:(STPBaseCoordinator *)coordinator;
+- (void)coordinatorDidCancel:(STPBaseCoordinator *)coordinator;
+- (void)coordinator:(STPBaseCoordinator *)coordinator willFinishWithCompletion:(STPErrorBlock)completion;
 @end
 
 @interface STPBaseCoordinator : NSObject
@@ -27,6 +29,8 @@
                               sourceProvider:(id<STPSourceProvider>)sourceProvider
                                     delegate:(id<STPCoordinatorDelegate>)delegate;
 
+- (void)addChildCoordinator:(STPBaseCoordinator *)coordinator;
+- (void)removeChildCoordinator:(STPBaseCoordinator *)coordinator;
 - (void)begin;
 
 @end

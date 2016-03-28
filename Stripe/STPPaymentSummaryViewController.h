@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "STPBlocks.h"
 
 @class STPPaymentRequest, STPPaymentSummaryViewController;
 @protocol STPSourceProvider;
@@ -15,7 +16,7 @@
 
 - (void)paymentSummaryViewControllerDidEditPaymentMethod:(nonnull STPPaymentSummaryViewController *)summaryViewController;
 - (void)paymentSummaryViewControllerDidCancel:(nonnull STPPaymentSummaryViewController *)summaryViewController;
-- (void)paymentSummaryViewControllerDidPressBuy:(nonnull STPPaymentSummaryViewController *)summaryViewController;
+- (void)paymentSummaryViewController:(nonnull STPPaymentSummaryViewController *)summaryViewController didPressBuyCompletion:(nonnull STPErrorBlock)completion;
 
 @end
 

@@ -10,6 +10,7 @@
 
 @interface STPBaseCoordinator()
 @property(nonatomic, weak)id<STPCoordinatorDelegate>delegate;
+@property(nonatomic) NSMutableArray<STPBaseCoordinator *> *childCoordinators;
 @end
 
 @implementation STPBaseCoordinator
@@ -24,6 +25,7 @@
         _apiClient = apiClient;
         _sourceProvider = sourceProvider;
         _delegate = delegate;
+        _childCoordinators = [@[] mutableCopy];
     }
     return self;
 }
@@ -31,6 +33,14 @@
 
 - (void)begin {
     // override me
+}
+
+- (void)addChildCoordinator:(STPBaseCoordinator *)coordinator {
+    [self.childCoordinators addObject:coordinator];
+}
+
+- (void)removeChildCoordinator:(STPBaseCoordinator *)coordinator {
+    [self.childCoordinators removeObject:coordinator];
 }
 
 @end

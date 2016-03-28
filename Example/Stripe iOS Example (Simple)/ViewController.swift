@@ -50,6 +50,12 @@ class ViewController: UIViewController, STPPaymentAuthorizationViewControllerDel
         dismissViewControllerAnimated(true, completion: nil)
     }
     
+    func paymentAuthorizationViewController(paymentAuthorizationViewController: STPPaymentAuthorizationViewController, didCreatePaymentResult result: STPPaymentResult, completion: STPErrorBlock) {
+        dismissViewControllerAnimated(true, completion: {
+            completion(nil)
+        })
+    }
+    
     func paymentAuthorizationViewController(paymentAuthorizationViewController: STPPaymentAuthorizationViewController, didCreatePaymentResult result: STPPaymentResult) {
         dismissViewControllerAnimated(true, completion: nil)
     }
