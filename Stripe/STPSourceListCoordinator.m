@@ -15,33 +15,16 @@
 #import "UINavigationController+Stripe_Completion.h"
 
 @interface STPSourceListCoordinator()<STPPaymentCardEntryViewControllerDelegate, STPSourceListViewControllerDelegate>
-
-@property(nonatomic)UINavigationController *navigationController;
-@property(nonatomic)STPSourceListViewController *sourceListViewController;
-@property(nonatomic)STPAPIClient *apiClient;
-@property(nonatomic)id<STPSourceProvider> sourceProvider;
-
+@property(nonatomic, weak) STPSourceListViewController *sourceListViewController;
 @end
 
 @implementation STPSourceListCoordinator
 
-- (instancetype)initWithNavigationController:(UINavigationController *)navigationController
-                                   apiClient:(STPAPIClient *)apiClient
-                              sourceProvider:(id<STPSourceProvider>)sourceProvider
-                                    delegate:(id<STPCoordinatorDelegate>)delegate {
-    self = [super initWithDelegate:delegate];
-    if (self) {
-        _navigationController = navigationController;
-        _apiClient = apiClient;
-        _sourceProvider = sourceProvider;
-        _sourceListViewController = [[STPSourceListViewController alloc] initWithSourceProvider:_sourceProvider delegate:self];
-    }
-    return self;
-}
-
 - (void)begin {
     [super begin];
-    [self.navigationController pushViewController:self.sourceListViewController animated:YES];
+    STPSourceListViewController *sourceListViewController = [[STPSourceListViewController alloc] initWithSourceProvider:self.sourceProvider delegate:self];
+    self.sourceListViewController = sourceListViewController;
+    [self.navigationController pushViewController:sourceListViewController animated:YES];
 }
 
 #pragma mark STPPaymentCardEntryViewControllerDelegate

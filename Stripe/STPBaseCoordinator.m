@@ -14,13 +14,20 @@
 
 @implementation STPBaseCoordinator
 
-- (instancetype)initWithDelegate:(id<STPCoordinatorDelegate>)delegate {
+- (instancetype)initWithNavigationController:(UINavigationController *)navigationController
+                                   apiClient:(STPAPIClient *)apiClient
+                              sourceProvider:(id<STPSourceProvider>)sourceProvider
+                                    delegate:(id<STPCoordinatorDelegate>)delegate {
     self = [super init];
     if (self) {
+        _navigationController = navigationController;
+        _apiClient = apiClient;
+        _sourceProvider = sourceProvider;
         _delegate = delegate;
     }
     return self;
 }
+
 
 - (void)begin {
     // override me

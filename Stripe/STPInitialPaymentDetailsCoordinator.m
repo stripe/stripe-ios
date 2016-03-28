@@ -16,26 +16,9 @@
 
 @interface STPInitialPaymentDetailsCoordinator()<STPEmailEntryViewControllerDelegate, STPPaymentCardEntryViewControllerDelegate>
 
-@property(nonatomic)UINavigationController *navigationController;
-@property(nonatomic)STPAPIClient *apiClient;
-@property(nonatomic)id<STPSourceProvider> sourceProvider;
-
 @end
 
 @implementation STPInitialPaymentDetailsCoordinator
-
-- (instancetype)initWithNavigationController:(UINavigationController *)navigationController
-                                   apiClient:(STPAPIClient *)apiClient
-                              sourceProvider:(id<STPSourceProvider>)sourceProvider
-                                    delegate:(id<STPCoordinatorDelegate>)delegate {
-    self = [super initWithDelegate:delegate];
-    if (self) {
-        _apiClient = apiClient;
-        _sourceProvider = sourceProvider;
-        _navigationController = navigationController;
-    }
-    return self;
-}
 
 - (void)begin {
     [super begin];

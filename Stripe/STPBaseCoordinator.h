@@ -6,9 +6,10 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@class STPBaseCoordinator;
+@class STPBaseCoordinator, STPAPIClient;
+@protocol STPSourceProvider;
 
 @protocol STPCoordinatorDelegate
 - (void)coordinatorDidFinish:(STPBaseCoordinator *)coordinator;
@@ -17,8 +18,15 @@
 @interface STPBaseCoordinator : NSObject
 
 @property(nonatomic, weak, readonly)id<STPCoordinatorDelegate>delegate;
+@property(nonatomic, readonly)UINavigationController *navigationController;
+@property(nonatomic, readonly)STPAPIClient *apiClient;
+@property(nonatomic, readonly)id<STPSourceProvider> sourceProvider;
 
-- (instancetype)initWithDelegate:(id<STPCoordinatorDelegate>)delegate;
+- (instancetype)initWithNavigationController:(UINavigationController *)navigationController
+                                   apiClient:(STPAPIClient *)apiClient
+                              sourceProvider:(id<STPSourceProvider>)sourceProvider
+                                    delegate:(id<STPCoordinatorDelegate>)delegate;
+
 - (void)begin;
 
 @end

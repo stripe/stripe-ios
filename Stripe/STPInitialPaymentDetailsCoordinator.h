@@ -9,14 +9,5 @@
 #import <UIKit/UIKit.h>
 #import "STPBaseCoordinator.h"
 
-@class STPAPIClient;
-@protocol STPSourceProvider;
-
 @interface STPInitialPaymentDetailsCoordinator : STPBaseCoordinator
-
-- (instancetype)initWithNavigationController:(UINavigationController *)navigationController
-                                   apiClient:(STPAPIClient *)apiClient
-                              sourceProvider:(id<STPSourceProvider>)sourceProvider
-                                    delegate:(id<STPCoordinatorDelegate>)delegate;
-
 @end
