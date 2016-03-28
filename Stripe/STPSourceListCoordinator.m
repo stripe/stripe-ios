@@ -20,7 +20,6 @@
 @property(nonatomic)STPSourceListViewController *sourceListViewController;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)id<STPSourceProvider> sourceProvider;
-@property(nonatomic, weak)id<STPSourceListCoordinatorDelegate> delegate;
 
 @end
 
@@ -29,19 +28,19 @@
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
                                    apiClient:(STPAPIClient *)apiClient
                               sourceProvider:(id<STPSourceProvider>)sourceProvider
-                                    delegate:(id<STPSourceListCoordinatorDelegate>)delegate {
-    self = [super init];
+                                    delegate:(id<STPCoordinatorDelegate>)delegate {
+    self = [super initWithDelegate:delegate];
     if (self) {
         _navigationController = navigationController;
         _apiClient = apiClient;
         _sourceProvider = sourceProvider;
         _sourceListViewController = [[STPSourceListViewController alloc] initWithSourceProvider:_sourceProvider delegate:self];
-        _delegate = delegate;
     }
     return self;
 }
 
-- (void)showSourceList {
+- (void)begin {
+    [super begin];
     [self.navigationController pushViewController:self.sourceListViewController animated:YES];
 }
 

@@ -1,5 +1,5 @@
 //
-//  STPSourceListCoordinator.h
+//  STPInitialPaymentDetailsCoordinator.h
 //  Stripe
 //
 //  Created by Jack Flintermann on 3/28/16.
@@ -9,14 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "STPBaseCoordinator.h"
 
-@class STPAPIClient, STPSourceListCoordinator;
+@class STPAPIClient;
 @protocol STPSourceProvider;
 
-@interface STPSourceListCoordinator : STPBaseCoordinator
-
-@property(nonatomic, readonly)UINavigationController *navigationController;
-@property(nonatomic, readonly)STPAPIClient *apiClient;
-@property(nonatomic, readonly)id<STPSourceProvider> sourceProvider;
+@interface STPInitialPaymentDetailsCoordinator : STPBaseCoordinator
 
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
                                    apiClient:(STPAPIClient *)apiClient

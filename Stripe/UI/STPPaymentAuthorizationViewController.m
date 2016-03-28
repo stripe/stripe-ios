@@ -20,12 +20,12 @@
 #import "STPPaymentResult.h"
 #import "STPSourceListCoordinator.h"
 
-@interface STPPaymentAuthorizationViewController()<STPEmailEntryViewControllerDelegate, STPPaymentCardEntryViewControllerDelegate, STPPaymentSummaryViewControllerDelegate, STPSourceListCoordinatorDelegate>
+@interface STPPaymentAuthorizationViewController()<STPPaymentSummaryViewControllerDelegate, STPCoordinatorDelegate>
 @property(nonatomic, weak) UINavigationController *navigationController;
 @property(nonatomic, readwrite, nonnull) STPPaymentRequest *paymentRequest;
 @property(nonatomic, readwrite, nonnull) STPAPIClient *apiClient;
 @property(nonatomic) id<STPSourceProvider> sourceProvider;
-@property(nonatomic) NSMutableArray *childCoordinators;
+@property(nonatomic) NSMutableArray<STPBaseCoordinator *> *childCoordinators;
 @end
 
 @implementation STPPaymentAuthorizationViewController
@@ -37,8 +37,7 @@
         _apiClient = apiClient;
         _paymentRequest = paymentRequest;
         _sourceProvider = [STPBasicSourceProvider new];
-        STPEmailEntryViewController *emailViewController = [[STPEmailEntryViewController alloc] initWithDelegate:self];
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:emailViewController];
+        UINavigationController *navigationController = [[UINavigationController alloc] init];
         _navigationController = navigationController;
         [self addChildViewController:_navigationController];
         [_navigationController didMoveToParentViewController:self];
@@ -57,48 +56,12 @@
     self.navigationController.view.frame = self.view.bounds;
 }
 
-#pragma mark - STPEmailEntryViewControllerDelegate
-
-- (void)emailEntryViewController:(__unused STPEmailEntryViewController *)viewController didEnterEmailAddress:(__unused NSString *)emailAddress completion:(STPErrorBlock)completion {
-    STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithDelegate:self];
-    [self.navigationController stp_pushViewController:paymentCardViewController animated:YES completion:^{
-        completion(nil);
-    }];
-}
-
-#pragma mark - STPPaymentCardEntryViewControllerDelegate
-
-- (void)paymentCardEntryViewController:(__unused STPPaymentCardEntryViewController *)viewController didEnterCardParams:(STPCardParams *)cardParams completion:(STPErrorBlock)completion {
-    
-    __weak typeof(self) weakself = self;
-    
-    [self.apiClient createTokenWithCard:cardParams completion:^(STPToken *token, NSError *error) {
-        if (error) {
-            NSLog(@"TODO");
-            completion(error);
-            return;
-        }
-        
-        [weakself.sourceProvider addSource:token completion:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> *sources, NSError *sourceError) {
-            if (sourceError) {
-                NSLog(@"TODO");
-                completion(error);
-                return;
-            }
-            STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:weakself.paymentRequest sourceProvider:weakself.sourceProvider delegate:self];
-            [weakself.navigationController stp_pushViewController:summaryViewController animated:YES completion:^{
-                completion(nil);
-            }];
-        }];
-    }];
-}
-
 #pragma mark - STPPaymentSummaryViewControllerDelegate
 
 - (void)paymentSummaryViewControllerDidEditPaymentMethod:(__unused STPPaymentSummaryViewController *)viewController {
     STPSourceListCoordinator *coordinator = [[STPSourceListCoordinator alloc] initWithNavigationController:_navigationController apiClient:_apiClient sourceProvider:_sourceProvider delegate:self];
     [self.childCoordinators addObject:coordinator];
-    [coordinator showSourceList];
+    [coordinator begin];
 }
 
 - (void)paymentSummaryViewControllerDidCancel:(__unused STPPaymentSummaryViewController *)summaryViewController {
@@ -112,7 +75,7 @@
 
 #pragma mark - STPSourceListCoordinatorDelegate
 
-- (void)sourceListCoordinatorDidFinish:(STPSourceListCoordinator *)coordinator {
+- (void)coordinatorDidFinish:(STPBaseCoordinator *)coordinator {
     [self.childCoordinators removeObject:coordinator];
 }
 
