@@ -14,9 +14,10 @@
 		04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; };
 		04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C11745DF1C456D6D0029936F /* STPPaymentCardTextFieldIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C11745DE1C456D6D0029936F /* STPPaymentCardTextFieldIntegrationTests.m */; };
+		C126553E1CAA25E1006F7265 /* MockSTPPaymentAuthVCDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C126553D1CAA25E1006F7265 /* MockSTPPaymentAuthVCDelegate.swift */; };
 		C17928B21CA9FF6F00C3A401 /* STPPaymentAuthorizationViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17928B11CA9FF6F00C3A401 /* STPPaymentAuthorizationViewControllerTests.swift */; };
 		C17928B41CAA000D00C3A401 /* MockSTPAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17928B31CAA000D00C3A401 /* MockSTPAPIClient.swift */; };
-		C17928B61CAA00C900C3A401 /* MockSourceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17928B51CAA00C900C3A401 /* MockSourceProvider.swift */; };
+		C17928B61CAA00C900C3A401 /* MockSTPSourceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17928B51CAA00C900C3A401 /* MockSTPSourceProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,9 +57,10 @@
 		C11745D71C456C730029936F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C11745DD1C456D6D0029936F /* Stripe iOS Application Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stripe iOS Application Tests-Bridging-Header.h"; sourceTree = "<group>"; };
 		C11745DE1C456D6D0029936F /* STPPaymentCardTextFieldIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentCardTextFieldIntegrationTests.m; sourceTree = "<group>"; };
+		C126553D1CAA25E1006F7265 /* MockSTPPaymentAuthVCDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockSTPPaymentAuthVCDelegate.swift; sourceTree = "<group>"; };
 		C17928B11CA9FF6F00C3A401 /* STPPaymentAuthorizationViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentAuthorizationViewControllerTests.swift; sourceTree = "<group>"; };
 		C17928B31CAA000D00C3A401 /* MockSTPAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockSTPAPIClient.swift; sourceTree = "<group>"; };
-		C17928B51CAA00C900C3A401 /* MockSourceProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockSourceProvider.swift; sourceTree = "<group>"; };
+		C17928B51CAA00C900C3A401 /* MockSTPSourceProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockSTPSourceProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,7 +127,8 @@
 			children = (
 				C11745DE1C456D6D0029936F /* STPPaymentCardTextFieldIntegrationTests.m */,
 				C17928B31CAA000D00C3A401 /* MockSTPAPIClient.swift */,
-				C17928B51CAA00C900C3A401 /* MockSourceProvider.swift */,
+				C17928B51CAA00C900C3A401 /* MockSTPSourceProvider.swift */,
+				C126553D1CAA25E1006F7265 /* MockSTPPaymentAuthVCDelegate.swift */,
 				C17928B11CA9FF6F00C3A401 /* STPPaymentAuthorizationViewControllerTests.swift */,
 				C11745D71C456C730029936F /* Info.plist */,
 				C11745DD1C456D6D0029936F /* Stripe iOS Application Tests-Bridging-Header.h */,
@@ -252,7 +255,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C17928B41CAA000D00C3A401 /* MockSTPAPIClient.swift in Sources */,
-				C17928B61CAA00C900C3A401 /* MockSourceProvider.swift in Sources */,
+				C126553E1CAA25E1006F7265 /* MockSTPPaymentAuthVCDelegate.swift in Sources */,
+				C17928B61CAA00C900C3A401 /* MockSTPSourceProvider.swift in Sources */,
 				C11745DF1C456D6D0029936F /* STPPaymentCardTextFieldIntegrationTests.m in Sources */,
 				C17928B21CA9FF6F00C3A401 /* STPPaymentAuthorizationViewControllerTests.swift in Sources */,
 			);
@@ -368,6 +372,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -393,6 +398,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

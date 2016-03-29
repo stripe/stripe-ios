@@ -26,10 +26,12 @@ class STPPaymentAuthorizationViewControllerTests: XCTestCase {
         let sut = STPPaymentAuthorizationViewController(paymentRequest: paymentRequest,
                                                          apiClient: apiClient)
         self.sut = sut
+
         let vc = UIViewController()
-        let window = UIWindow()
-        window.rootViewController = vc
-        vc.presentViewController(sut, animated: false, completion: nil)
+        UIApplication.sharedApplication().keyWindow!.rootViewController = vc
+        XCTAssertNotNil(vc.view)
+        vc.presentViewController(sut, animated: true, completion: nil)
+        XCTAssertNotNil(sut.view)
     }
     
     override func tearDown() {
@@ -40,9 +42,23 @@ class STPPaymentAuthorizationViewControllerTests: XCTestCase {
     }
 
     func testFirstVCIsEmailVC() {
-        let topVC = self.sut!.navigationController!.topViewController as! STPEmailEntryViewController
+        let vc = self.sut!.navigationController!.topViewController
+        XCTAssertTrue(vc is STPEmailEntryViewController)
+    }
 
-//        XCTAssertTrue(topVC is STPEmailEntryViewController)
+    func testCancelingEmailEntryTellsDelegate() {
+        let nc = self.sut!.navigationController!
+        let vc = nc.topViewController as! STPEmailEntryViewController
+        let exp = self.expectationWithDescription("cancel")
+        let delegate = MockSTPPaymentAuthVCDelegate()
+        sut?.delegate = delegate
+        delegate.onDidCancel = {
+            exp.fulfill()
+        }
+        XCTAssertNotNil(vc.view)
+        let cancelButton = vc.navigationItem.leftBarButtonItem!
+        cancelButton.target!.performSelector(cancelButton.action, withObject: cancelButton)
+        self.waitForExpectationsWithTimeout(1, handler: nil)
     }
 
 }

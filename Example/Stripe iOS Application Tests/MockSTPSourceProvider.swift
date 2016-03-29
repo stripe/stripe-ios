@@ -8,13 +8,13 @@
 
 import Stripe
 
-class MockSourceProvider: NSObject, STPSourceProvider {
+class MockSTPSourceProvider: NSObject, STPSourceProvider {
 
     var selectedSource: STPSource?
     var sources: [STPSource]? = []
-    var didCallRetrieveSources: (() -> ())?
-    var didCallAddSource: (STPSource -> ())?
-    var didCallSelectSource: (STPSource -> ())?
+    var onRetrieveSources: (() -> ())?
+    var onAddSource: (STPSource -> ())?
+    var onSelectSource: (STPSource -> ())?
 
     /// If set, the appropriate functions will complete with these errors
     var retrieveSourcesError: NSError?
@@ -22,7 +22,7 @@ class MockSourceProvider: NSObject, STPSourceProvider {
     var selectSourceError: NSError?
 
     func retrieveSources(completion: STPSourceCompletionBlock) {
-        didCallRetrieveSources?()
+        onRetrieveSources?()
         if let e = retrieveSourcesError {
             completion(nil, nil, e)
         }
@@ -32,7 +32,7 @@ class MockSourceProvider: NSObject, STPSourceProvider {
     }
 
     func addSource(source: STPSource, completion: STPSourceCompletionBlock) {
-        didCallAddSource?(source)
+        onAddSource?(source)
         if let e = addSourceError {
             completion(nil, nil, e)
         }
@@ -43,7 +43,7 @@ class MockSourceProvider: NSObject, STPSourceProvider {
     }
 
     func selectSource(source: STPSource, completion: STPSourceCompletionBlock) {
-        didCallSelectSource?(source)
+        onSelectSource?(source)
         if let e = selectSourceError {
             completion(nil, nil, e)
         }
