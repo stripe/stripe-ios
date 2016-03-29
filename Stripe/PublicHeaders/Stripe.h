@@ -23,6 +23,9 @@
 #import "STPPaymentAuthorizationViewController.h"
 #import "STPSourceProvider.h"
 #import "STPPaymentResult.h"
+#import "STPEmailEntryViewController.h"
+#import "STPPaymentCardEntryViewController.h"
+#import "STPPaymentSummaryViewController.h"
 #import "STPSourceListViewController.h"
 
 #if TARGET_OS_IPHONE
