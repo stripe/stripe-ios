@@ -11,14 +11,13 @@
 
 @protocol STPSource;
 
-typedef void (^STPSourceRetrieveCompletionBlock)(id<STPSource> __nullable selectedSource, NSArray<id<STPSource>>* __nullable sources, NSError * __nullable error);
-typedef void (^STPSourceCreateCompletionBlock)(id<STPSource> __nullable selectedSource, NSArray<id<STPSource>>* __nullable sources, NSError * __nullable error);
+typedef void (^STPSourceCompletionBlock)(id<STPSource> __nullable selectedSource, NSArray<id<STPSource>>* __nullable sources, NSError * __nullable error);
 
 @protocol STPSourceProvider
 
-- (void)retrieveSources:(nonnull STPSourceRetrieveCompletionBlock)completion;
-- (void)addSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCreateCompletionBlock)completion;
-- (void)selectSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCreateCompletionBlock)completion;
+- (void)retrieveSources:(nonnull STPSourceCompletionBlock)completion;
+- (void)addSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCompletionBlock)completion;
+- (void)selectSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCompletionBlock)completion;
 @property(nonatomic, nullable, readonly)NSArray<id<STPSource>>* sources;
 @property(nonatomic, nullable, readonly)id<STPSource> selectedSource;
 

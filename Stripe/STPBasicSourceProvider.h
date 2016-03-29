@@ -11,10 +11,10 @@
 
 @interface STPBasicSourceProvider : NSObject<STPSourceProvider>
 
-typedef void (^STPRetrieveSourcesBlock)(__nonnull STPSourceRetrieveCompletionBlock completion);
+typedef void (^STPRetrieveSourcesBlock)(__nonnull STPSourceCompletionBlock completion);
 
 - (nonnull instancetype)initWithRetrieveSourcesBlock:(nonnull STPRetrieveSourcesBlock)retrieveSourcesBlock;
-- (void)addSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCreateCompletionBlock)completion;
+- (void)addSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCompletionBlock)completion;
 @property(nonatomic, nullable, readonly)NSArray<id<STPSource>>* sources;
 @property(nonatomic, nullable, readonly)id<STPSource> selectedSource;
 
