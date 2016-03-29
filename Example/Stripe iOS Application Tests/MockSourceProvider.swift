@@ -40,11 +40,12 @@ class MockSourceProvider: NSObject, STPSourceProvider {
     }
 
     func selectSource(source: STPSource, completion: STPSourceCreateCompletionBlock) {
-        if let e = addSourceError {
+        // TODO: check if sources contains source, throw error
+        if let e = selectSourceError {
             completion(nil, nil, e)
         }
         else {
-            sources?.append(source)
+            selectedSource = source
             completion(selectedSource, sources, nil)
         }
     }

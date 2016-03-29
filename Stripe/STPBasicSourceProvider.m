@@ -17,7 +17,7 @@
 @implementation STPBasicSourceProvider
 
 - (instancetype)init {
-    return [self initWithRetrieveSourcesBlock:^(STPSourceRetrieveCompletionBlock  _Nonnull completion) {
+    return [self initWithRetrieveSourcesBlock:^(STPSourceCompletionBlock  _Nonnull completion) {
         completion(self.selectedSource, self.sources, nil);
     }];
 }
@@ -31,7 +31,7 @@
     return self;
 }
 
-- (void)retrieveSources:(STPSourceRetrieveCompletionBlock)completion {
+- (void)retrieveSources:(STPSourceCompletionBlock)completion {
     __weak STPBasicSourceProvider *weakself = self;
     self.retrieveSourcesBlock(^(id<STPSource> _Nullable selectedSource, NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
         if (error) {
@@ -44,12 +44,12 @@
     });
 }
 
-- (void)addSource:(id<STPSource>)source completion:(STPSourceCreateCompletionBlock)completion {
+- (void)addSource:(id<STPSource>)source completion:(STPSourceCompletionBlock)completion {
     self.sources = [self.sources arrayByAddingObject:source];
     [self selectSource:source completion:completion];
 }
 
-- (void)selectSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCreateCompletionBlock)completion {
+- (void)selectSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCompletionBlock)completion {
     self.selectedSource = source;
     completion(source, self.sources, nil);
 }
