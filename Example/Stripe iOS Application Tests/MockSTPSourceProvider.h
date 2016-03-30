@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <Stripe/STPSourceProvider.h>
 
-@interface MockSTPSourceProvider : NSObject
+@interface MockSTPSourceProvider : NSObject <STPSourceProvider>
 
 @property(nonatomic, nullable)NSArray<id<STPSource>>* sources;
 @property(nonatomic, nullable)id<STPSource> selectedSource;

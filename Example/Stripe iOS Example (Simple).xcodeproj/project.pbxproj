@@ -18,6 +18,8 @@
 		C19D20A71CAB3BCC00B86C79 /* MockSTPAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D20A61CAB3BCC00B86C79 /* MockSTPAPIClient.m */; };
 		C19D20AA1CAB3C1A00B86C79 /* MockSTPPAVCDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D20A91CAB3C1A00B86C79 /* MockSTPPAVCDelegate.m */; };
 		C19D20AD1CAB3DC900B86C79 /* MockSTPSourceProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D20AC1CAB3DC900B86C79 /* MockSTPSourceProvider.m */; };
+		C19D20AF1CAB444300B86C79 /* STPInitialPaymentDetailsCoordinatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D20AE1CAB444300B86C79 /* STPInitialPaymentDetailsCoordinatorTests.m */; };
+		C19D20B61CAB457E00B86C79 /* MockSTPCoordinatorDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D20B51CAB457E00B86C79 /* MockSTPCoordinatorDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,9 @@
 		C19D20A91CAB3C1A00B86C79 /* MockSTPPAVCDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPPAVCDelegate.m; sourceTree = "<group>"; };
 		C19D20AB1CAB3DC900B86C79 /* MockSTPSourceProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPSourceProvider.h; sourceTree = "<group>"; };
 		C19D20AC1CAB3DC900B86C79 /* MockSTPSourceProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPSourceProvider.m; sourceTree = "<group>"; };
+		C19D20AE1CAB444300B86C79 /* STPInitialPaymentDetailsCoordinatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPInitialPaymentDetailsCoordinatorTests.m; sourceTree = "<group>"; };
+		C19D20B41CAB457E00B86C79 /* MockSTPCoordinatorDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPCoordinatorDelegate.h; sourceTree = "<group>"; };
+		C19D20B51CAB457E00B86C79 /* MockSTPCoordinatorDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPCoordinatorDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,7 +139,10 @@
 				C19D20A91CAB3C1A00B86C79 /* MockSTPPAVCDelegate.m */,
 				C19D20AB1CAB3DC900B86C79 /* MockSTPSourceProvider.h */,
 				C19D20AC1CAB3DC900B86C79 /* MockSTPSourceProvider.m */,
+				C19D20B41CAB457E00B86C79 /* MockSTPCoordinatorDelegate.h */,
+				C19D20B51CAB457E00B86C79 /* MockSTPCoordinatorDelegate.m */,
 				C19D20A31CAB3A4700B86C79 /* STPPaymentAuthorizationViewControllerTests.m */,
+				C19D20AE1CAB444300B86C79 /* STPInitialPaymentDetailsCoordinatorTests.m */,
 				C11745D71C456C730029936F /* Info.plist */,
 			);
 			path = "Stripe iOS Application Tests";
@@ -263,6 +271,8 @@
 				C19D20AA1CAB3C1A00B86C79 /* MockSTPPAVCDelegate.m in Sources */,
 				C11745DF1C456D6D0029936F /* STPPaymentCardTextFieldIntegrationTests.m in Sources */,
 				C19D20AD1CAB3DC900B86C79 /* MockSTPSourceProvider.m in Sources */,
+				C19D20AF1CAB444300B86C79 /* STPInitialPaymentDetailsCoordinatorTests.m in Sources */,
+				C19D20B61CAB457E00B86C79 /* MockSTPCoordinatorDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

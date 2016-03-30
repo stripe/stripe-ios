@@ -28,6 +28,9 @@
 #import "STPPaymentSummaryViewController.h"
 #import "STPSourceListViewController.h"
 
+#import "STPBaseCoordinator.h"
+#import "STPInitialPaymentDetailsCoordinator.h"
+
 #if TARGET_OS_IPHONE
 #import "Stripe+ApplePay.h"
 #import "STPAPIClient+ApplePay.h"
