@@ -43,6 +43,7 @@
 
 - (void)paymentCardEntryViewControllerDidCancel:(__unused STPPaymentCardEntryViewController *)paymentCardViewController {
     [self.delegate coordinatorDidCancel:self];
+
 }
 
 - (void)paymentCardEntryViewController:(__unused STPPaymentCardEntryViewController *)viewController didEnterCardParams:(STPCardParams *)cardParams completion:(STPErrorBlock)completion {
@@ -59,10 +60,11 @@
         [weakself.sourceProvider addSource:token completion:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> *sources, NSError *sourceError) {
             if (sourceError) {
                 NSLog(@"TODO");
-                completion(error);
+                completion(sourceError);
                 return;
             }
             [self.delegate coordinator:self willFinishWithCompletion:nil];
+            completion(nil);
         }];
     }];
 }

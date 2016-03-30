@@ -11,7 +11,9 @@
 @implementation MockSTPAPIClient
 
 - (void)createTokenWithCard:(STPCardParams *)card completion:(STPTokenCompletionBlock)completion {
-
+    if (self.createTokenWithCardBlock) {
+        self.createTokenWithCardBlock(card, completion);
+    }
 }
 
 @end

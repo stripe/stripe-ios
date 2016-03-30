@@ -10,4 +10,6 @@
 
 @interface MockSTPAPIClient : STPAPIClient
 
+@property (nonatomic, copy, nullable) void(^createTokenWithCardBlock)(STPCardParams * __nonnull, STPTokenCompletionBlock __nonnull);
+
 @end
