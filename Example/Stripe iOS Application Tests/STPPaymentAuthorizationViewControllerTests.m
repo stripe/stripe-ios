@@ -65,18 +65,10 @@
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
-- (void)testNextOnEmailEntryShowsPaymentCardEntry {
-    UIViewController *vc = self.sut.navigationController.topViewController;
-    XCTAssertNotNil(vc.view);
-
-    UIBarButtonItem *nextButton = vc.navigationItem.rightBarButtonItem;
-    [nextButton.target performSelector:nextButton.action withObject:nextButton];
-
-    UIViewController *paymentVC = self.sut.navigationController.topViewController;
-    // this assert fails because the navigation transition is animated
-    // still fails if you add a sleep – not totally sure why
-//    XCTAssertTrue([paymentVC isKindOfClass:[STPPaymentCardEntryViewController class]]);
-}
+// TODO: I'm not sure what our strategy should be for testing this VC.
+// We don't have callbacks for navigation controller transitions, which we would
+// need for async testing. Perhaps we should add a delegate method
+// that gets called when a transition to a new VC completes.
 
 #pragma clang diagnostic pop
 

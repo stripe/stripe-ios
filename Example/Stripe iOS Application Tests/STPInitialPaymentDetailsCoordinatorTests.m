@@ -62,7 +62,7 @@
     XCTAssertTrue([topVC isKindOfClass:[STPEmailEntryViewController class]]);
 }
 
-- (void)testCancelEmailEntryTellsDelegate {
+- (void)testCancelEmailEntry {
     XCTestExpectation *exp = [self expectationWithDescription:@"cancel"];
     self.delegate.onDidCancel = ^(){ [exp fulfill]; };
 
@@ -80,7 +80,7 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
-- (void)testCancelPaymentCardEntryTellsDelegate {
+- (void)testCancelCardEntry {
     XCTestExpectation *exp = [self expectationWithDescription:@"cancel"];
     self.delegate.onDidCancel = ^(){ [exp fulfill]; };
 
@@ -88,7 +88,7 @@
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
-- (void)testEnteringCardParams_success {
+- (void)testEnterCard_success {
     self.apiClient.createTokenWithCardBlock = ^(STPCardParams *card, STPTokenCompletionBlock completion) {
         STPToken *token = [STPToken new];
         completion(token, nil);
@@ -110,7 +110,7 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
-- (void)testEnteringCardParams_apiClientError {
+- (void)testEnterCard_apiClientError {
     NSError *expectedError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
     self.apiClient.createTokenWithCardBlock = ^(STPCardParams *card, STPTokenCompletionBlock completion) {
         completion(nil, expectedError);
@@ -131,7 +131,7 @@
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
-- (void)testEnteringCardParams_sourceProviderError {
+- (void)testEnterCard_sourceProviderError {
     NSError *expectedError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
     self.sourceProvider.addSourceError = expectedError;
     __weak id weakSelf = self;
