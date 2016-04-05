@@ -21,6 +21,7 @@
 #import "STPPaymentRequest.h"
 #import "STPLineItem.h"
 #import "STPPaymentAuthorizationViewController.h"
+#import "STPSource.h"
 #import "STPSourceProvider.h"
 #import "STPPaymentResult.h"
 #import "STPEmailEntryViewController.h"
