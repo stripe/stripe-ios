@@ -28,7 +28,6 @@
 #import "STPPaymentCardEntryViewController.h"
 #import "STPPaymentSummaryViewController.h"
 #import "STPSourceListViewController.h"
-
 #import "STPBaseCoordinator.h"
 #import "STPInitialPaymentDetailsCoordinator.h"
 

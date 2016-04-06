@@ -536,6 +536,7 @@
 		04A58A461BC603BB004E7BC2 /* FABKitProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FABKitProtocol.h; sourceTree = "<group>"; };
 		04A58A471BC603BB004E7BC2 /* Fabric+FABKits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Fabric+FABKits.h"; sourceTree = "<group>"; };
 		04A58A481BC603BB004E7BC2 /* Fabric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fabric.h; sourceTree = "<group>"; };
+		04A850C91CB4BD7D00B3AD68 /* module_osx.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module_osx.modulemap; sourceTree = "<group>"; };
 		04B33F301BC7417B00DD8120 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04B94BC71A47B78A00092C46 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKPayment+StripeTest.m"; sourceTree = "<group>"; };
@@ -775,7 +776,6 @@
 		04B33F2F1BC7414C00DD8120 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				04A4883B1CA3568800506E53 /* STPBlocks.h */,
 				04B33F301BC7417B00DD8120 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -804,6 +804,7 @@
 				04CDB4B01A5F30A700B854EE /* ApplePay */,
 				0438EF251B74162700D506CC /* UI */,
 				04B33F2F1BC7414C00DD8120 /* Supporting Files */,
+				04A4883B1CA3568800506E53 /* STPBlocks.h */,
 				04CDB4C21A5F30A700B854EE /* STPAPIClient.h */,
 				04CDB4C31A5F30A700B854EE /* STPAPIClient.m */,
 				049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */,
@@ -849,6 +850,7 @@
 				04A4C3881C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m */,
 				04A488401CA3580700506E53 /* UINavigationController+Stripe_Completion.h */,
 				04A488411CA3580700506E53 /* UINavigationController+Stripe_Completion.m */,
+				04A850C91CB4BD7D00B3AD68 /* module_osx.modulemap */,
 			);
 			name = Stripe;
 			path = Tests/../Stripe;
