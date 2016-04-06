@@ -17,7 +17,7 @@ typedef NS_ENUM(NSInteger, STPFormTextFieldAutoFormattingBehavior) {
 };
 
 @protocol STPFormTextFieldDelegate <UITextFieldDelegate>
-
+@optional
 - (void)formTextFieldDidBackspaceOnEmpty:(nonnull STPFormTextField *)formTextField;
 - (nonnull NSAttributedString *)formTextField:(nonnull STPFormTextField *)formTextField
            modifyIncomingTextChange:(nonnull NSAttributedString *)input;

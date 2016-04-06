@@ -13,7 +13,13 @@
 		042CA4221A685E8D00D778E7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CA41C1A685E8D00D778E7 /* ViewController.swift */; };
 		04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; };
 		04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C11745DF1C456D6D0029936F /* STPPaymentCardTextFieldUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = C11745DE1C456D6D0029936F /* STPPaymentCardTextFieldUITests.m */; };
+		C11745DF1C456D6D0029936F /* STPPaymentCardTextFieldIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C11745DE1C456D6D0029936F /* STPPaymentCardTextFieldIntegrationTests.m */; };
+		C19D20A41CAB3A4700B86C79 /* STPPaymentAuthorizationViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D20A31CAB3A4700B86C79 /* STPPaymentAuthorizationViewControllerTests.m */; };
+		C19D20A71CAB3BCC00B86C79 /* MockSTPAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D20A61CAB3BCC00B86C79 /* MockSTPAPIClient.m */; };
+		C19D20AA1CAB3C1A00B86C79 /* MockSTPPAVCDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D20A91CAB3C1A00B86C79 /* MockSTPPAVCDelegate.m */; };
+		C19D20AD1CAB3DC900B86C79 /* MockSTPSourceProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D20AC1CAB3DC900B86C79 /* MockSTPSourceProvider.m */; };
+		C19D20AF1CAB444300B86C79 /* STPInitialPaymentDetailsCoordinatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D20AE1CAB444300B86C79 /* STPInitialPaymentDetailsCoordinatorTests.m */; };
+		C19D20B61CAB457E00B86C79 /* MockSTPCoordinatorDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D20B51CAB457E00B86C79 /* MockSTPCoordinatorDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,8 +57,17 @@
 		04D076191A69C14700094431 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C11745D31C456C730029936F /* Stripe iOS Application Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stripe iOS Application Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C11745D71C456C730029936F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C11745DD1C456D6D0029936F /* Stripe iOS Application Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Stripe iOS Application Tests-Bridging-Header.h"; sourceTree = "<group>"; };
-		C11745DE1C456D6D0029936F /* STPPaymentCardTextFieldUITests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentCardTextFieldUITests.m; sourceTree = "<group>"; };
+		C11745DE1C456D6D0029936F /* STPPaymentCardTextFieldIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentCardTextFieldIntegrationTests.m; sourceTree = "<group>"; };
+		C19D20A31CAB3A4700B86C79 /* STPPaymentAuthorizationViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentAuthorizationViewControllerTests.m; sourceTree = "<group>"; };
+		C19D20A51CAB3BCC00B86C79 /* MockSTPAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPAPIClient.h; sourceTree = "<group>"; };
+		C19D20A61CAB3BCC00B86C79 /* MockSTPAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPAPIClient.m; sourceTree = "<group>"; };
+		C19D20A81CAB3C1A00B86C79 /* MockSTPPAVCDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPPAVCDelegate.h; sourceTree = "<group>"; };
+		C19D20A91CAB3C1A00B86C79 /* MockSTPPAVCDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPPAVCDelegate.m; sourceTree = "<group>"; };
+		C19D20AB1CAB3DC900B86C79 /* MockSTPSourceProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPSourceProvider.h; sourceTree = "<group>"; };
+		C19D20AC1CAB3DC900B86C79 /* MockSTPSourceProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPSourceProvider.m; sourceTree = "<group>"; };
+		C19D20AE1CAB444300B86C79 /* STPInitialPaymentDetailsCoordinatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPInitialPaymentDetailsCoordinatorTests.m; sourceTree = "<group>"; };
+		C19D20B41CAB457E00B86C79 /* MockSTPCoordinatorDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPCoordinatorDelegate.h; sourceTree = "<group>"; };
+		C19D20B51CAB457E00B86C79 /* MockSTPCoordinatorDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPCoordinatorDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,9 +132,18 @@
 		C11745D41C456C730029936F /* Stripe iOS Application Tests */ = {
 			isa = PBXGroup;
 			children = (
-				C11745DE1C456D6D0029936F /* STPPaymentCardTextFieldUITests.m */,
+				C11745DE1C456D6D0029936F /* STPPaymentCardTextFieldIntegrationTests.m */,
+				C19D20A51CAB3BCC00B86C79 /* MockSTPAPIClient.h */,
+				C19D20A61CAB3BCC00B86C79 /* MockSTPAPIClient.m */,
+				C19D20A81CAB3C1A00B86C79 /* MockSTPPAVCDelegate.h */,
+				C19D20A91CAB3C1A00B86C79 /* MockSTPPAVCDelegate.m */,
+				C19D20AB1CAB3DC900B86C79 /* MockSTPSourceProvider.h */,
+				C19D20AC1CAB3DC900B86C79 /* MockSTPSourceProvider.m */,
+				C19D20B41CAB457E00B86C79 /* MockSTPCoordinatorDelegate.h */,
+				C19D20B51CAB457E00B86C79 /* MockSTPCoordinatorDelegate.m */,
+				C19D20A31CAB3A4700B86C79 /* STPPaymentAuthorizationViewControllerTests.m */,
+				C19D20AE1CAB444300B86C79 /* STPInitialPaymentDetailsCoordinatorTests.m */,
 				C11745D71C456C730029936F /* Info.plist */,
-				C11745DD1C456D6D0029936F /* Stripe iOS Application Tests-Bridging-Header.h */,
 			);
 			path = "Stripe iOS Application Tests";
 			sourceTree = "<group>";
@@ -242,7 +266,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C11745DF1C456D6D0029936F /* STPPaymentCardTextFieldUITests.m in Sources */,
+				C19D20A41CAB3A4700B86C79 /* STPPaymentAuthorizationViewControllerTests.m in Sources */,
+				C19D20A71CAB3BCC00B86C79 /* MockSTPAPIClient.m in Sources */,
+				C19D20AA1CAB3C1A00B86C79 /* MockSTPPAVCDelegate.m in Sources */,
+				C11745DF1C456D6D0029936F /* STPPaymentCardTextFieldIntegrationTests.m in Sources */,
+				C19D20AD1CAB3DC900B86C79 /* MockSTPSourceProvider.m in Sources */,
+				C19D20AF1CAB444300B86C79 /* STPInitialPaymentDetailsCoordinatorTests.m in Sources */,
+				C19D20B61CAB457E00B86C79 /* MockSTPCoordinatorDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +386,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -381,6 +412,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -461,6 +493,7 @@
 				C11745DB1C456C730029936F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

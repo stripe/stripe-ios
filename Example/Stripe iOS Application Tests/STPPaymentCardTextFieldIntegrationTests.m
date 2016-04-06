@@ -35,6 +35,13 @@
     window.rootViewController = self.viewController;
 }
 
+- (void)tearDown {
+    self.viewController = nil;
+    self.sut = nil;
+    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    window.rootViewController = nil;
+}
+
 - (void)testSetCard_allFields_whileEditingNumber {
     XCTAssertTrue([self.sut.numberField becomeFirstResponder]);
     STPCardParams *card = [STPCardParams new];
