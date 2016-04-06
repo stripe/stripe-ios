@@ -18,6 +18,11 @@
 #import "STPToken.h"
 #import "STPBlocks.h"
 
+#if TARGET_OS_IPHONE
+#import "Stripe+ApplePay.h"
+#import "STPAPIClient+ApplePay.h"
+#import "STPPaymentCardTextField.h"
+
 #import "STPPaymentRequest.h"
 #import "STPLineItem.h"
 #import "STPPaymentAuthorizationViewController.h"
@@ -30,9 +35,4 @@
 #import "STPSourceListViewController.h"
 #import "STPBaseCoordinator.h"
 #import "STPInitialPaymentDetailsCoordinator.h"
-
-#if TARGET_OS_IPHONE
-#import "Stripe+ApplePay.h"
-#import "STPAPIClient+ApplePay.h"
-#import "STPPaymentCardTextField.h"
 #endif

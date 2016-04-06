@@ -154,7 +154,7 @@
     return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
 }
 
-- (UIImage *)image {
+- (STPImageType *)image {
     return nil; // TODO
 }
 
