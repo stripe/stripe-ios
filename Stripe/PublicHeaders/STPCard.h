@@ -11,6 +11,7 @@
 #import "STPCardBrand.h"
 #import "STPCardParams.h"
 #import "STPAPIResponseDecodable.h"
+#import "STPSource.h"
 
 /**
  *  The various funding sources for a payment card.
@@ -25,7 +26,7 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 /**
  *  Representation of a user's credit card details that have been tokenized with the Stripe API. @see https://stripe.com/docs/api#cards
  */
-@interface STPCard : STPCardParams<STPAPIResponseDecodable>
+@interface STPCard : STPCardParams<STPAPIResponseDecodable, STPSource>
 
 /**
  *  The card's number. This will be nil for cards retrieved from the Stripe API.

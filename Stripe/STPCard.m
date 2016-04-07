@@ -10,6 +10,7 @@
 #import "StripeError.h"
 #import "STPCardValidator.h"
 #import "NSDictionary+Stripe.h"
+#import "NSString+Stripe_CardBrands.h"
 
 @interface STPCard ()
 
@@ -141,5 +142,20 @@
     return card;
 }
 #pragma clang diagnostic pop
+
+#pragma mark - STPSource
+
+- (NSString *)stripeID {
+    return self.cardId;
+}
+
+- (NSString *)label {
+    NSString *brand = [NSString stringWithCardBrand:self.brand];
+    return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
+}
+
+- (STPImageType *)image {
+    return nil; // TODO
+}
 
 @end

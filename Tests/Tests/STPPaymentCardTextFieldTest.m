@@ -256,4 +256,98 @@
     XCTAssertEqualObjects(sut.viewModel.expirationYear, @"99");
 }
 
+#pragma mark - UI Tests
+
+- (void)testSetCard_allFields_whileEditingNumber {
+    UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    STPPaymentCardTextField *sut = [[STPPaymentCardTextField alloc] initWithFrame:window.bounds];
+    [window addSubview:sut];
+    XCTAssertTrue([sut.numberField becomeFirstResponder]);
+    STPCardParams *card = [STPCardParams new];
+    NSString *number = @"4242424242424242";
+    NSString *cvc = @"123";
+    card.number = number;
+    card.expMonth = 10;
+    card.expYear = 99;
+    card.cvc = cvc;
+    [sut setCardParams:card];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField cvcImageForCardBrand:STPCardBrandVisa]);
+    
+    XCTAssertTrue(sut.numberFieldShrunk);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqualObjects(sut.cvcField.text, cvc);
+    XCTAssertTrue([sut.cvcField isFirstResponder]);
+    XCTAssertTrue(sut.isValid);
+}
+
+- (void)testSetCard_partialNumberAndExpiration_whileEditingExpiration {
+    UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    STPPaymentCardTextField *sut = [[STPPaymentCardTextField alloc] initWithFrame:window.bounds];
+    [window addSubview:sut];
+    XCTAssertTrue([sut.expirationField becomeFirstResponder]);
+    STPCardParams *card = [STPCardParams new];
+    NSString *number = @"42";
+    card.number = number;
+    card.expMonth = 10;
+    card.expYear = 99;
+    [sut setCardParams:card];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+    
+    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertTrue([sut.numberField isFirstResponder]);
+    XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSetCard_number_whileEditingCVC {
+    UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    STPPaymentCardTextField *sut = [[STPPaymentCardTextField alloc] initWithFrame:window.bounds];
+    [window addSubview:sut];
+    XCTAssertTrue([sut.cvcField becomeFirstResponder]);
+    STPCardParams *card = [STPCardParams new];
+    NSString *number = @"4242424242424242";
+    card.number = number;
+    [sut setCardParams:card];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
+    
+    XCTAssertTrue(sut.numberFieldShrunk);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertTrue([sut.expirationField isFirstResponder]);
+    XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSetCard_empty_whileEditingNumber {
+    UIWindow *window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    STPPaymentCardTextField *sut = [[STPPaymentCardTextField alloc] initWithFrame:window.bounds];
+    [window addSubview:sut];
+    XCTAssertTrue([sut.numberField becomeFirstResponder]);
+    sut.numberField.text = @"4242424242424242";
+    sut.cvcField.text = @"123";
+    sut.expirationField.text = @"10/99";
+    STPCardParams *card = [STPCardParams new];
+    [sut setCardParams:card];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
+    
+    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertTrue([sut.numberField isFirstResponder]);
+    XCTAssertFalse(sut.isValid);
+}
+
+
 @end
