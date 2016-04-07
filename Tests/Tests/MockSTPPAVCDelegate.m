@@ -29,4 +29,10 @@
     }
 }
 
+- (void)paymentAuthorizationViewControllerDidSucceed:(__unused STPPaymentAuthorizationViewController *)paymentAuthorizationViewController {
+    if (self.onDidSucceed) {
+        self.onDidSucceed();
+    }
+}
+
 @end

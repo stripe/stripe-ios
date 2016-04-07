@@ -35,7 +35,7 @@
 - (void)setUp {
     [super setUp];
     self.navigationController = [MockUINavigationController new];
-    self.apiClient = [[MockSTPAPIClient alloc] initWithPublishableKey:@"foo"];
+    self.apiClient = [MockSTPAPIClient new];
     self.sourceProvider = [MockSTPSourceProvider new];
     self.delegate = [MockSTPCoordinatorDelegate new];
     self.sut = [[STPInitialPaymentDetailsCoordinator alloc] initWithNavigationController:self.navigationController
@@ -93,10 +93,6 @@
 }
 
 - (void)testEnterCard_success {
-    self.apiClient.createTokenWithCardBlock = ^(__unused STPCardParams *card, STPTokenCompletionBlock completion) {
-        STPToken *token = [STPToken new];
-        completion(token, nil);
-    };
     XCTestExpectation *willFinishExp = [self expectationWithDescription:@"finish"];
     XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
     __weak id weakSelf = self;
@@ -114,10 +110,8 @@
 }
 
 - (void)testEnterCard_apiClientError {
-    NSError *expectedError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
-    self.apiClient.createTokenWithCardBlock = ^(__unused STPCardParams *card, STPTokenCompletionBlock completion) {
-        completion(nil, expectedError);
-    };
+    NSError *expectedError = [NSError new];
+    self.apiClient.error = expectedError;
     __weak id weakSelf = self;
     self.delegate.onWillFinishWithCompletion = ^(__unused STPErrorBlock completion) {
         _XCTPrimitiveFail(weakSelf, "should not be called");
@@ -125,8 +119,8 @@
 
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
     [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(__unused NSError * _Nullable emailError) {
-        [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(NSError * _Nullable error) {
-            XCTAssertEqualObjects(error, expectedError);
+        [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(NSError * error) {
+            _XCTPrimitiveAssertEqualObjects(weakSelf, expectedError, @"", error, @"");
             [exp fulfill];
         }];
     }];
@@ -137,10 +131,6 @@
     NSError *expectedError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
     self.sourceProvider.addSourceError = expectedError;
     __weak id weakSelf = self;
-    self.apiClient.createTokenWithCardBlock = ^(__unused STPCardParams *card, STPTokenCompletionBlock completion) {
-        STPToken *token = [STPToken new];
-        completion(token, nil);
-    };
     self.delegate.onWillFinishWithCompletion = ^(__unused STPErrorBlock completion) {
         _XCTPrimitiveFail(weakSelf, "should not be called");
     };

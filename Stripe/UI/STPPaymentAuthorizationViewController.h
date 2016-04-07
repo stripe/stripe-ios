@@ -18,6 +18,7 @@
 - (void)paymentAuthorizationViewControllerDidCancel:(nonnull STPPaymentAuthorizationViewController *)paymentAuthorizationViewController;
 - (void)paymentAuthorizationViewController:(nonnull STPPaymentAuthorizationViewController *)paymentAuthorizationViewController didFailWithError:(nonnull NSError *)error;
 - (void)paymentAuthorizationViewController:(nonnull STPPaymentAuthorizationViewController *)paymentAuthorizationViewController didCreatePaymentResult:(nonnull STPPaymentResult *)result completion:(nonnull STPErrorBlock)completion;
+- (void)paymentAuthorizationViewControllerDidSucceed:(nonnull STPPaymentAuthorizationViewController *)paymentAuthorizationViewController;
 
 @end
 
