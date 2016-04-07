@@ -6,18 +6,19 @@
 //  Copyright © 2016 Stripe. All rights reserved.
 //
 
+
 #import "MockSTPCoordinatorDelegate.h"
-#import <Stripe/Stripe.h>
+#import "STPBaseCoordinator.h"
 
 @implementation MockSTPCoordinatorDelegate
 
-- (void)coordinatorDidCancel:(STPBaseCoordinator *)coordinator {
+- (void)coordinatorDidCancel:(__unused STPBaseCoordinator *)coordinator {
     if (self.onDidCancel) {
         self.onDidCancel();
     }
 }
 
-- (void)coordinator:(STPBaseCoordinator *)coordinator willFinishWithCompletion:(STPErrorBlock)completion {
+- (void)coordinator:(__unused STPBaseCoordinator *)coordinator willFinishWithCompletion:(STPErrorBlock)completion {
     if (self.onWillFinishWithCompletion) {
         self.onWillFinishWithCompletion(completion);
     }

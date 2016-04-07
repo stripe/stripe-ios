@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <Stripe/Stripe.h>
+#import "STPEmailEntryViewController.h"
 #import "MockSTPAPIClient.h"
 #import "MockSTPPAVCDelegate.h"
 
