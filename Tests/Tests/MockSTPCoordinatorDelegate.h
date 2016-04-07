@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Stripe/Stripe.h>
+#import "STPBaseCoordinator.h"
 
 @interface MockSTPCoordinatorDelegate : NSObject <STPCoordinatorDelegate>
 
