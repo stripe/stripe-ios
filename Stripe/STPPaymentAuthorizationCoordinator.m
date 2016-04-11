@@ -45,12 +45,14 @@
 }
 
 - (void)coordinator:(__unused STPBaseCoordinator *)coordinator willFinishWithCompletion:(STPErrorBlock)completion {
-    STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:self.paymentRequest sourceProvider:self.sourceProvider delegate:self];
-    [self.navigationController stp_pushViewController:summaryViewController animated:YES completion:^{
-        if (completion) {
-            completion(nil);
-        }
-    }];
+    if ([coordinator isKindOfClass:[STPInitialPaymentDetailsCoordinator class]]) {
+        STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:self.paymentRequest sourceProvider:self.sourceProvider delegate:self];
+        [self.navigationController stp_pushViewController:summaryViewController animated:YES completion:^{
+            if (completion) {
+                completion(nil);
+            }
+        }];
+    }
 }
 
 #pragma mark - STPPaymentSummaryViewControllerDelegate
@@ -67,9 +69,6 @@
 
 - (void)paymentSummaryViewController:(__unused STPPaymentSummaryViewController *)summaryViewController didPressBuyCompletion:(STPErrorBlock)completion {
     [self.delegate coordinator:self willFinishWithCompletion:completion];
-}
-
-- (void)paymentSummaryViewControllerDidPressBuy:(__unused STPPaymentSummaryViewController *)viewController {
 }
 
 @end

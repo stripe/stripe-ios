@@ -395,6 +395,7 @@
 		C1FCBA5F1CBC261E009727D3 /* MockSTPPAVCDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850E71CB71D9900B3AD68 /* MockSTPPAVCDelegate.m */; };
 		C1FCBA601CBC261E009727D3 /* MockSTPSourceProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A850E81CB71D9900B3AD68 /* MockSTPSourceProvider.h */; };
 		C1FCBA611CBC261E009727D3 /* MockSTPSourceProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850E91CB71D9900B3AD68 /* MockSTPSourceProvider.m */; };
+		C1FCBA631CBC42A4009727D3 /* STPPaymentAuthorizationCoordinatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C1FCBA621CBC42A4009727D3 /* STPPaymentAuthorizationCoordinatorTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -637,6 +638,7 @@
 		C1FCBA501CBC23ED009727D3 /* STPSourceListCoordinatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceListCoordinatorTests.m; sourceTree = "<group>"; };
 		C1FCBA521CBC25D6009727D3 /* MockUINavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockUINavigationController.h; sourceTree = "<group>"; };
 		C1FCBA531CBC25D6009727D3 /* MockUINavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockUINavigationController.m; sourceTree = "<group>"; };
+		C1FCBA621CBC42A4009727D3 /* STPPaymentAuthorizationCoordinatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentAuthorizationCoordinatorTests.m; sourceTree = "<group>"; };
 		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -918,6 +920,7 @@
 				C1FCBA531CBC25D6009727D3 /* MockUINavigationController.m */,
 				04A850F21CB71DEA00B3AD68 /* STPInitialPaymentDetailsCoordinatorTests.m */,
 				C1FCBA501CBC23ED009727D3 /* STPSourceListCoordinatorTests.m */,
+				C1FCBA621CBC42A4009727D3 /* STPPaymentAuthorizationCoordinatorTests.m */,
 				04A850F31CB71DEA00B3AD68 /* STPPaymentAuthorizationViewControllerTests.m */,
 			);
 			name = StripeTests;
@@ -1465,6 +1468,7 @@
 				0438EF441B74170D00D506CC /* STPCardValidator.m in Sources */,
 				C1EEDCCA1CA2186300A54582 /* STPPhoneNumberValidatorTest.m in Sources */,
 				C1FCBA551CBC25D6009727D3 /* MockUINavigationController.m in Sources */,
+				C1FCBA631CBC42A4009727D3 /* STPPaymentAuthorizationCoordinatorTests.m in Sources */,
 				04CB86BA1BA89CE100E4F61E /* PKPayment+StripeTest.m in Sources */,
 				C1FCBA5B1CBC2612009727D3 /* MockSTPAPIClient.m in Sources */,
 				0438EF301B7416BB00D506CC /* STPFormTextField.m in Sources */,
