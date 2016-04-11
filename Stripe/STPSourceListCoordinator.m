@@ -45,13 +45,14 @@
         }
         
         [self.sourceProvider addSource:token completion:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> * _Nullable sources, __unused NSError * _Nullable addSourceError) {
-            if (error) {
+            if (addSourceError) {
                 NSLog(@"TODO");
-                completion(error);
+                completion(addSourceError);
                 return;
             }
             [weakself.sourceListViewController reload];
             [weakself.navigationController popViewControllerAnimated:true];
+            completion(nil);
         }];
     }];
 }

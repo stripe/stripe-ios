@@ -285,14 +285,6 @@
 		04A4C3981C4F2C8600B3B290 /* NSString+Stripe_CardBrands.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A4C3951C4F2C8600B3B290 /* NSString+Stripe_CardBrands.h */; };
 		04A4C3991C4F2C8600B3B290 /* NSString+Stripe_CardBrands.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3961C4F2C8600B3B290 /* NSString+Stripe_CardBrands.m */; };
 		04A4C39A1C4F2C8600B3B290 /* NSString+Stripe_CardBrands.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3961C4F2C8600B3B290 /* NSString+Stripe_CardBrands.m */; };
-		04A850EA1CB71D9900B3AD68 /* MockSTPAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A850E21CB71D9900B3AD68 /* MockSTPAPIClient.h */; };
-		04A850EB1CB71D9900B3AD68 /* MockSTPAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850E31CB71D9900B3AD68 /* MockSTPAPIClient.m */; };
-		04A850EC1CB71D9900B3AD68 /* MockSTPCoordinatorDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A850E41CB71D9900B3AD68 /* MockSTPCoordinatorDelegate.h */; };
-		04A850ED1CB71D9900B3AD68 /* MockSTPCoordinatorDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850E51CB71D9900B3AD68 /* MockSTPCoordinatorDelegate.m */; };
-		04A850EE1CB71D9900B3AD68 /* MockSTPPAVCDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A850E61CB71D9900B3AD68 /* MockSTPPAVCDelegate.h */; };
-		04A850EF1CB71D9900B3AD68 /* MockSTPPAVCDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850E71CB71D9900B3AD68 /* MockSTPPAVCDelegate.m */; };
-		04A850F01CB71D9900B3AD68 /* MockSTPSourceProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A850E81CB71D9900B3AD68 /* MockSTPSourceProvider.h */; };
-		04A850F11CB71D9900B3AD68 /* MockSTPSourceProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850E91CB71D9900B3AD68 /* MockSTPSourceProvider.m */; };
 		04A850F61CB71DFD00B3AD68 /* STPPaymentAuthorizationViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850F31CB71DEA00B3AD68 /* STPPaymentAuthorizationViewControllerTests.m */; };
 		04A850F71CB71E0400B3AD68 /* STPInitialPaymentDetailsCoordinatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850F21CB71DEA00B3AD68 /* STPInitialPaymentDetailsCoordinatorTests.m */; };
 		04B33F361BC7488D00DD8120 /* Info.plist in Copy Files */ = {isa = PBXBuildFile; fileRef = 04B33F301BC7417B00DD8120 /* Info.plist */; };
@@ -392,6 +384,17 @@
 		C1EEDCC61CA2126000A54582 /* STPDelegateProxyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1EEDCC51CA2126000A54582 /* STPDelegateProxyTest.m */; };
 		C1EEDCC81CA2172700A54582 /* NSString+StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1EEDCC71CA2172700A54582 /* NSString+StripeTest.m */; };
 		C1EEDCCA1CA2186300A54582 /* STPPhoneNumberValidatorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1EEDCC91CA2186300A54582 /* STPPhoneNumberValidatorTest.m */; };
+		C1FCBA511CBC23ED009727D3 /* STPSourceListCoordinatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C1FCBA501CBC23ED009727D3 /* STPSourceListCoordinatorTests.m */; };
+		C1FCBA541CBC25D6009727D3 /* MockUINavigationController.h in Headers */ = {isa = PBXBuildFile; fileRef = C1FCBA521CBC25D6009727D3 /* MockUINavigationController.h */; };
+		C1FCBA551CBC25D6009727D3 /* MockUINavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1FCBA531CBC25D6009727D3 /* MockUINavigationController.m */; };
+		C1FCBA5A1CBC2612009727D3 /* MockSTPAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A850E21CB71D9900B3AD68 /* MockSTPAPIClient.h */; };
+		C1FCBA5B1CBC2612009727D3 /* MockSTPAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850E31CB71D9900B3AD68 /* MockSTPAPIClient.m */; };
+		C1FCBA5C1CBC2616009727D3 /* MockSTPCoordinatorDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A850E41CB71D9900B3AD68 /* MockSTPCoordinatorDelegate.h */; };
+		C1FCBA5D1CBC2616009727D3 /* MockSTPCoordinatorDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850E51CB71D9900B3AD68 /* MockSTPCoordinatorDelegate.m */; };
+		C1FCBA5E1CBC261E009727D3 /* MockSTPPAVCDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A850E61CB71D9900B3AD68 /* MockSTPPAVCDelegate.h */; };
+		C1FCBA5F1CBC261E009727D3 /* MockSTPPAVCDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850E71CB71D9900B3AD68 /* MockSTPPAVCDelegate.m */; };
+		C1FCBA601CBC261E009727D3 /* MockSTPSourceProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A850E81CB71D9900B3AD68 /* MockSTPSourceProvider.h */; };
+		C1FCBA611CBC261E009727D3 /* MockSTPSourceProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850E91CB71D9900B3AD68 /* MockSTPSourceProvider.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -631,6 +634,9 @@
 		C1EEDCC51CA2126000A54582 /* STPDelegateProxyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPDelegateProxyTest.m; sourceTree = "<group>"; };
 		C1EEDCC71CA2172700A54582 /* NSString+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+StripeTest.m"; sourceTree = "<group>"; };
 		C1EEDCC91CA2186300A54582 /* STPPhoneNumberValidatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPhoneNumberValidatorTest.m; sourceTree = "<group>"; };
+		C1FCBA501CBC23ED009727D3 /* STPSourceListCoordinatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceListCoordinatorTests.m; sourceTree = "<group>"; };
+		C1FCBA521CBC25D6009727D3 /* MockUINavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockUINavigationController.h; sourceTree = "<group>"; };
+		C1FCBA531CBC25D6009727D3 /* MockUINavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockUINavigationController.m; sourceTree = "<group>"; };
 		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -908,7 +914,10 @@
 				04A850E71CB71D9900B3AD68 /* MockSTPPAVCDelegate.m */,
 				04A850E81CB71D9900B3AD68 /* MockSTPSourceProvider.h */,
 				04A850E91CB71D9900B3AD68 /* MockSTPSourceProvider.m */,
+				C1FCBA521CBC25D6009727D3 /* MockUINavigationController.h */,
+				C1FCBA531CBC25D6009727D3 /* MockUINavigationController.m */,
 				04A850F21CB71DEA00B3AD68 /* STPInitialPaymentDetailsCoordinatorTests.m */,
+				C1FCBA501CBC23ED009727D3 /* STPSourceListCoordinatorTests.m */,
 				04A850F31CB71DEA00B3AD68 /* STPPaymentAuthorizationViewControllerTests.m */,
 			);
 			name = StripeTests;
@@ -983,7 +992,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				04EBC7541B7533C300A0E6AE /* STPCardValidationState.h in Headers */,
+				C1FCBA5E1CBC261E009727D3 /* MockSTPPAVCDelegate.h in Headers */,
+				C1FCBA601CBC261E009727D3 /* MockSTPSourceProvider.h in Headers */,
 				04EBC7581B7533C300A0E6AE /* STPCardValidator.h in Headers */,
+				C1FCBA5A1CBC2612009727D3 /* MockSTPAPIClient.h in Headers */,
 				04415C721A6605D9001225ED /* Stripe.h in Headers */,
 				04415C731A6605D9001225ED /* STPAPIClient+ApplePay.h in Headers */,
 				04415C741A6605D9001225ED /* Stripe+ApplePay.h in Headers */,
@@ -994,6 +1006,8 @@
 				04415C831A6605D9001225ED /* STPCard.h in Headers */,
 				0438EF481B74183100D506CC /* STPCardBrand.h in Headers */,
 				04415C841A6605D9001225ED /* STPToken.h in Headers */,
+				C1FCBA541CBC25D6009727D3 /* MockUINavigationController.h in Headers */,
+				C1FCBA5C1CBC2616009727D3 /* MockSTPCoordinatorDelegate.h in Headers */,
 				04E32A9E1B7A9490009C9E35 /* STPPaymentCardTextField.h in Headers */,
 				04415C851A6605D9001225ED /* StripeError.h in Headers */,
 				04CDE5CC1BC20B2600548833 /* STPBankAccountParams.h in Headers */,
@@ -1065,7 +1079,6 @@
 				0439B9431C44F9AC005A1ED5 /* STPPaymentRequest.h in Headers */,
 				0439B93D1C44F54E005A1ED5 /* STPPaymentAuthorizationViewController.h in Headers */,
 				0439B9491C44FAF9005A1ED5 /* STPLineItem.h in Headers */,
-				04A850EA1CB71D9900B3AD68 /* MockSTPAPIClient.h in Headers */,
 				0439B9631C450970005A1ED5 /* STPLineItemCell.h in Headers */,
 				04695AD91C77F9EF00E08063 /* STPDelegateProxy.h in Headers */,
 				040389D81CA9AABB002C9960 /* STPSourceListCoordinator.h in Headers */,
@@ -1090,11 +1103,9 @@
 				041906241CA344D90024181D /* STPEmailEntryViewController.h in Headers */,
 				04F213311BCEAB61001D6F22 /* STPFormEncodable.h in Headers */,
 				0439B9811C45236B005A1ED5 /* STPPaymentMethodCell.h in Headers */,
-				04A850EE1CB71D9900B3AD68 /* MockSTPPAVCDelegate.h in Headers */,
 				04CDB5021A5F30A700B854EE /* STPFormEncoder.h in Headers */,
 				04F3BB3D1BA89B1200DE235E /* PKPayment+Stripe.h in Headers */,
 				04695ADB1C77F9EF00E08063 /* STPPhoneNumberValidator.h in Headers */,
-				04A850F01CB71D9900B3AD68 /* MockSTPSourceProvider.h in Headers */,
 				04CDE5C91BC20B1D00548833 /* STPBankAccountParams.h in Headers */,
 				0439B94F1C44FFB1005A1ED5 /* STPPaymentSummaryViewController.h in Headers */,
 				04F416261CA3639500486FB5 /* STPPaymentCardEntryViewController.h in Headers */,
@@ -1102,7 +1113,6 @@
 				0438EF381B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h in Headers */,
 				04CDE5BC1BC1F21500548833 /* STPCardParams.h in Headers */,
 				04F213351BCECB1C001D6F22 /* STPAPIResponseDecodable.h in Headers */,
-				04A850EC1CB71D9900B3AD68 /* MockSTPCoordinatorDelegate.h in Headers */,
 				04695AD31C77F9DB00E08063 /* NSString+Stripe.h in Headers */,
 				0439B9681C451521005A1ED5 /* STPSourceProvider.h in Headers */,
 				04CDB4D31A5F30A700B854EE /* Stripe.h in Headers */,
@@ -1447,16 +1457,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				04415C561A6605B5001225ED /* STPAPIClient+ApplePay.m in Sources */,
+				C1FCBA5D1CBC2616009727D3 /* MockSTPCoordinatorDelegate.m in Sources */,
 				04415C571A6605B5001225ED /* Stripe+ApplePay.m in Sources */,
 				04A4C3941C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m in Sources */,
 				0438EF3C1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m in Sources */,
 				04A488361CA34DC600506E53 /* STPEmailAddressValidatorTest.m in Sources */,
 				0438EF441B74170D00D506CC /* STPCardValidator.m in Sources */,
 				C1EEDCCA1CA2186300A54582 /* STPPhoneNumberValidatorTest.m in Sources */,
+				C1FCBA551CBC25D6009727D3 /* MockUINavigationController.m in Sources */,
 				04CB86BA1BA89CE100E4F61E /* PKPayment+StripeTest.m in Sources */,
+				C1FCBA5B1CBC2612009727D3 /* MockSTPAPIClient.m in Sources */,
 				0438EF301B7416BB00D506CC /* STPFormTextField.m in Sources */,
 				C16F66AB1CA21BAC006A21B5 /* STPFormTextFieldTest.m in Sources */,
+				C1FCBA5F1CBC261E009727D3 /* MockSTPPAVCDelegate.m in Sources */,
 				C178CD451C45607D00851C69 /* UIImage+StripeTest.m in Sources */,
+				C1FCBA611CBC261E009727D3 /* MockSTPSourceProvider.m in Sources */,
 				0438EF4C1B741B0100D506CC /* STPCardValidatorTest.m in Sources */,
 				04A4C3921C4F263300B3B290 /* STPNSArrayStripeBoundSafeTests.m in Sources */,
 				04415C611A6605B5001225ED /* STPFormEncoder.m in Sources */,
@@ -1472,6 +1487,7 @@
 				04415C681A6605B5001225ED /* STPFormEncoderTest.m in Sources */,
 				0438EF361B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */,
 				C1EEDCC81CA2172700A54582 /* NSString+StripeTest.m in Sources */,
+				C1FCBA511CBC23ED009727D3 /* STPSourceListCoordinatorTests.m in Sources */,
 				04415C6A1A6605B5001225ED /* STPApplePayTest.m in Sources */,
 				04415C6B1A6605B5001225ED /* STPBankAccountFunctionalTest.m in Sources */,
 				04415C6C1A6605B5001225ED /* STPBankAccountTest.m in Sources */,
@@ -1540,8 +1556,6 @@
 				04CDB50C1A5F30A700B854EE /* STPBankAccount.m in Sources */,
 				040389D91CA9AABB002C9960 /* STPSourceListCoordinator.m in Sources */,
 				04F416271CA3639500486FB5 /* STPPaymentCardEntryViewController.m in Sources */,
-				04A850F11CB71D9900B3AD68 /* MockSTPSourceProvider.m in Sources */,
-				04A850EB1CB71D9900B3AD68 /* MockSTPAPIClient.m in Sources */,
 				04CDB5181A5F30A700B854EE /* StripeError.m in Sources */,
 				C1718D571C3B2E5B002A7CB3 /* UIImage+Stripe.m in Sources */,
 				0439B9831C45236B005A1ED5 /* STPPaymentMethodCell.m in Sources */,
@@ -1563,12 +1577,10 @@
 				04695ADA1C77F9EF00E08063 /* STPDelegateProxy.m in Sources */,
 				0438EF3B1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m in Sources */,
 				04CDE5B81BC1F1F100548833 /* STPCardParams.m in Sources */,
-				04A850EF1CB71D9900B3AD68 /* MockSTPPAVCDelegate.m in Sources */,
 				0451CC461C49AE1C003B2CA6 /* STPPaymentResult.m in Sources */,
 				0439B98F1C455760005A1ED5 /* STPSourceCell.m in Sources */,
 				04CDB4D61A5F30A700B854EE /* STPAPIClient+ApplePay.m in Sources */,
 				0439B94B1C44FAF9005A1ED5 /* STPLineItem.m in Sources */,
-				04A850ED1CB71D9900B3AD68 /* MockSTPCoordinatorDelegate.m in Sources */,
 				040389DD1CA9B4DB002C9960 /* STPInitialPaymentDetailsCoordinator.m in Sources */,
 				0439B9891C454F97005A1ED5 /* STPSourceListViewController.m in Sources */,
 				04A488441CA3580700506E53 /* UINavigationController+Stripe_Completion.m in Sources */,

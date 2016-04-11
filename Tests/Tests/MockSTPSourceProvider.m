@@ -11,6 +11,14 @@
 
 @implementation MockSTPSourceProvider
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _sources = @[];
+    }
+    return self;
+}
+
 - (void)retrieveSources:(STPSourceCompletionBlock)completion {
     if (self.retrieveSourcesError) {
         completion(nil, nil, self.retrieveSourcesError);

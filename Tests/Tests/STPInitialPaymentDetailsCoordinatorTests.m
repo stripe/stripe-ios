@@ -11,6 +11,7 @@
 #import "MockSTPAPIClient.h"
 #import "MockSTPSourceProvider.h"
 #import "MockSTPCoordinatorDelegate.h"
+#import "MockUINavigationController.h"
 #import "STPEmailEntryViewController.h"
 #import "STPPaymentCardEntryViewController.h"
 #import "STPInitialPaymentDetailsCoordinator.h"
@@ -21,7 +22,7 @@
 @interface STPInitialPaymentDetailsCoordinatorTests : XCTestCase
 
 @property (nonatomic, strong) STPInitialPaymentDetailsCoordinator *sut;
-@property (nonatomic, strong) UINavigationController *navigationController;
+@property (nonatomic, strong) MockUINavigationController *navigationController;
 @property (nonatomic, strong) MockSTPAPIClient *apiClient;
 @property (nonatomic, strong) MockSTPSourceProvider *sourceProvider;
 @property (nonatomic, strong) MockSTPCoordinatorDelegate *delegate;
@@ -33,7 +34,7 @@
 
 - (void)setUp {
     [super setUp];
-    self.navigationController = [UINavigationController new];
+    self.navigationController = [MockUINavigationController new];
     self.apiClient = [[MockSTPAPIClient alloc] initWithPublishableKey:@"foo"];
     self.sourceProvider = [MockSTPSourceProvider new];
     self.delegate = [MockSTPCoordinatorDelegate new];
