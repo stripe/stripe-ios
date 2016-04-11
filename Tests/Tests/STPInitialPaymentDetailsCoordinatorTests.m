@@ -11,6 +11,9 @@
 #import "MockSTPAPIClient.h"
 #import "MockSTPSourceProvider.h"
 #import "MockSTPCoordinatorDelegate.h"
+#import "STPEmailEntryViewController.h"
+#import "STPPaymentCardEntryViewController.h"
+#import "STPInitialPaymentDetailsCoordinator.h"
 
 @interface STPInitialPaymentDetailsCoordinator()<STPEmailEntryViewControllerDelegate, STPPaymentCardEntryViewControllerDelegate>
 @end
@@ -72,7 +75,7 @@
 
 - (void)testEnterEmailPushesPaymentCardVC {
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
-    [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(NSError * _Nullable error) {
+    [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(__unused NSError * _Nullable error) {
         UIViewController *topVC = self.sut.navigationController.topViewController;
         XCTAssertTrue([topVC isKindOfClass:[STPPaymentCardEntryViewController class]]);
         [exp fulfill];
@@ -89,7 +92,7 @@
 }
 
 - (void)testEnterCard_success {
-    self.apiClient.createTokenWithCardBlock = ^(STPCardParams *card, STPTokenCompletionBlock completion) {
+    self.apiClient.createTokenWithCardBlock = ^(__unused STPCardParams *card, STPTokenCompletionBlock completion) {
         STPToken *token = [STPToken new];
         completion(token, nil);
     };
@@ -97,13 +100,12 @@
     XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
     __weak id weakSelf = self;
     self.delegate.onWillFinishWithCompletion = ^(STPErrorBlock completion) {
-        id self = weakSelf;
-        XCTAssertNil(completion);
+        _XCTPrimitiveAssertNil(weakSelf, completion, @"completion should be nil");
         [willFinishExp fulfill];
     };
 
-    [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(NSError * _Nullable error) {
-        [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(NSError * _Nullable error) {
+    [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(__unused NSError * _Nullable error) {
+        [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(__unused NSError * _Nullable paramsError) {
             [completionExp fulfill];
         }];
      }];
@@ -112,17 +114,16 @@
 
 - (void)testEnterCard_apiClientError {
     NSError *expectedError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
-    self.apiClient.createTokenWithCardBlock = ^(STPCardParams *card, STPTokenCompletionBlock completion) {
+    self.apiClient.createTokenWithCardBlock = ^(__unused STPCardParams *card, STPTokenCompletionBlock completion) {
         completion(nil, expectedError);
     };
     __weak id weakSelf = self;
-    self.delegate.onWillFinishWithCompletion = ^(STPErrorBlock completion) {
-        id self = weakSelf;
-        XCTFail("should not be called");
+    self.delegate.onWillFinishWithCompletion = ^(__unused STPErrorBlock completion) {
+        _XCTPrimitiveFail(weakSelf, "should not be called");
     };
 
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
-    [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(NSError * _Nullable error) {
+    [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(__unused NSError * _Nullable emailError) {
         [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(NSError * _Nullable error) {
             XCTAssertEqualObjects(error, expectedError);
             [exp fulfill];
@@ -135,17 +136,16 @@
     NSError *expectedError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
     self.sourceProvider.addSourceError = expectedError;
     __weak id weakSelf = self;
-    self.apiClient.createTokenWithCardBlock = ^(STPCardParams *card, STPTokenCompletionBlock completion) {
+    self.apiClient.createTokenWithCardBlock = ^(__unused STPCardParams *card, STPTokenCompletionBlock completion) {
         STPToken *token = [STPToken new];
         completion(token, nil);
     };
-    self.delegate.onWillFinishWithCompletion = ^(STPErrorBlock completion) {
-        id self = weakSelf;
-        XCTFail("should not be called");
+    self.delegate.onWillFinishWithCompletion = ^(__unused STPErrorBlock completion) {
+        _XCTPrimitiveFail(weakSelf, "should not be called");
     };
 
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
-    [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(NSError * _Nullable error) {
+    [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(__unused NSError * _Nullable emailError) {
         [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(NSError * _Nullable error) {
             XCTAssertEqualObjects(error, expectedError);
             [exp fulfill];
