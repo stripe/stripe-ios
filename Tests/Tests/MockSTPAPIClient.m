@@ -10,9 +10,32 @@
 
 @implementation MockSTPAPIClient
 
-- (void)createTokenWithCard:(STPCardParams *)card completion:(STPTokenCompletionBlock)completion {
-    if (self.createTokenWithCardBlock) {
-        self.createTokenWithCardBlock(card, completion);
+- (instancetype)init {
+    return [super initWithPublishableKey:@"mock"];
+}
+
++ (nonnull instancetype)mockWithToken:(STPToken *)token {
+    MockSTPAPIClient *client = [[self alloc] init];
+    client.token = token;
+    return client;
+}
+
++ (nonnull instancetype)mockWithError:(NSError *)error {
+    MockSTPAPIClient *client = [[self alloc] init];
+    client.error = error;
+    return client;
+}
+
+- (void)createTokenWithData:(__unused NSData *)data completion:(STPTokenCompletionBlock)completion {
+    if (self.error) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            completion(nil, self.error);
+        });
+    }
+    else {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            completion(self.token ?: [STPToken new], nil);
+        });
     }
 }
 

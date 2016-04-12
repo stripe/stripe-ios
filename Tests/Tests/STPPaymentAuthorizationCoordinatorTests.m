@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <Stripe/Stripe.h>
+#import "STPPaymentRequest.h"
 #import "MockSTPAPIClient.h"
 #import "MockSTPSourceProvider.h"
 #import "MockSTPCoordinatorDelegate.h"
@@ -53,7 +53,8 @@
     self.apiClient = [[MockSTPAPIClient alloc] initWithPublishableKey:@"foo"];
     self.sourceProvider = [MockSTPSourceProvider new];
     self.delegate = [MockSTPCoordinatorDelegate new];
-    self.paymentRequest = [[STPPaymentRequest alloc] initWithAppleMerchantId:@"foo"];
+    self.paymentRequest = [[STPPaymentRequest alloc] init];
+    self.paymentRequest.appleMerchantId = @"foo";
     self.sut = [[STPPaymentAuthorizationCoordinator alloc] initWithNavigationController:self.navigationController
                                                                paymentRequest:self.paymentRequest
                                                                     apiClient:self.apiClient

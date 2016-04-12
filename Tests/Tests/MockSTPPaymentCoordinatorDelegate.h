@@ -1,16 +1,17 @@
 //
-//  MockSTPPAVCDelegate.h
-//  Stripe iOS Example (Simple)
+//  MockSTPPaymentCoordinatorDelegate.h
+//  Stripe
 //
-//  Created by Ben Guo on 3/29/16.
-//  Copyright © 2016 Stripe. All rights reserved.
+//  Created by Jack Flintermann on 4/11/16.
+//  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import <Stripe/Stripe.h>
+#import "STPPaymentCoordinator.h"
 
-@interface MockSTPPAVCDelegate : NSObject <STPPaymentAuthorizationViewControllerDelegate>
+@interface MockSTPPaymentCoordinatorDelegate : NSObject<STPPaymentCoordinatorDelegate>
 
+@property (nonatomic) BOOL ignoresUnexpectedCallbacks;
 @property (nonatomic, copy, nullable) void(^onDidCancel)();
 @property (nonatomic, copy, nullable) void(^onDidFailWithError)(NSError * __nonnull);
 @property (nonatomic, copy, nullable) void(^onDidSucceed)();

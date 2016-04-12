@@ -27,7 +27,8 @@
     [super setUp];
     self.merchantID = @"apple_merchant_id";
     self.publishableKey = @"publishable_key";
-    self.paymentRequest = [[STPPaymentRequest alloc] initWithAppleMerchantId:self.merchantID];
+    self.paymentRequest = [STPPaymentRequest new];
+    self.paymentRequest.appleMerchantId = self.merchantID;
     self.apiClient = [[MockSTPAPIClient alloc] initWithPublishableKey:self.publishableKey];
     self.sut = [[STPPaymentAuthorizationViewController alloc] initWithPaymentRequest:self.paymentRequest
                                                                            apiClient:self.apiClient];

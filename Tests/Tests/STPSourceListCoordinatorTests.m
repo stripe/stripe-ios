@@ -36,7 +36,7 @@
 - (void)setUp {
     [super setUp];
     self.navigationController = [MockUINavigationController new];
-    self.apiClient = [[MockSTPAPIClient alloc] initWithPublishableKey:@"foo"];
+    self.apiClient = [MockSTPAPIClient new];
     self.sourceProvider = [MockSTPSourceProvider new];
     self.delegate = [MockSTPCoordinatorDelegate new];
     self.sut = [[STPSourceListCoordinator alloc] initWithNavigationController:self.navigationController
@@ -104,10 +104,6 @@
     XCTestExpectation *popExp = [self expectationWithDescription:@"pop"];
     XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
     XCTAssertTrue(self.sourceProvider.sources.count == 0);
-    self.apiClient.createTokenWithCardBlock = ^(__unused STPCardParams *card, STPTokenCompletionBlock completion) {
-        STPToken *token = [STPToken new];
-        completion(token, nil);
-    };
     __weak typeof(self) weakSelf = self;
     self.navigationController.onPushViewController = ^(__unused UIViewController *vc, __unused BOOL animated) {
         [weakSelf.sut paymentCardEntryViewController:nil didEnterCardParams:weakSelf.card completion:^(NSError * _Nullable error) {
@@ -126,14 +122,12 @@
 
 - (void)testEnterCard_apiClientError {
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
-    NSError *expectedError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
-    self.apiClient.createTokenWithCardBlock = ^(__unused STPCardParams *card, STPTokenCompletionBlock completion) {
-        completion(nil, expectedError);
-    };
+    NSError *expectedError = [NSError new];
+    self.apiClient.error = expectedError;
     __weak typeof(self) weakSelf = self;
     self.navigationController.onPushViewController = ^(__unused UIViewController *vc, __unused BOOL animated) {
-        [weakSelf.sut paymentCardEntryViewController:nil didEnterCardParams:weakSelf.card completion:^(NSError * _Nullable error) {
-            _XCTPrimitiveAssertEqualObjects(weakSelf, error, @"", expectedError, @"");
+        [weakSelf.sut paymentCardEntryViewController:nil didEnterCardParams:weakSelf.card completion:^(NSError *error) {
+            _XCTPrimitiveAssertEqualObjects(weakSelf, expectedError, @"", error, @"");
             [exp fulfill];
         }];
     };
@@ -149,10 +143,6 @@
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
     NSError *expectedError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
     self.sourceProvider.addSourceError = expectedError;
-    self.apiClient.createTokenWithCardBlock = ^(__unused STPCardParams *card, STPTokenCompletionBlock completion) {
-        STPToken *token = [STPToken new];
-        completion(token, nil);
-    };
     __weak typeof(self) weakSelf = self;
     self.navigationController.onPushViewController = ^(__unused UIViewController *vc, __unused BOOL animated) {
         [weakSelf.sut paymentCardEntryViewController:nil didEnterCardParams:weakSelf.card completion:^(NSError * _Nullable error) {

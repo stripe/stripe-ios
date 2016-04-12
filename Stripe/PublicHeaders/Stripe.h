@@ -23,6 +23,7 @@
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentCardTextField.h"
 
+#import "STPPaymentCoordinator.h"
 #import "STPPaymentRequest.h"
 #import "STPLineItem.h"
 #import "STPPaymentAuthorizationViewController.h"

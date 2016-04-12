@@ -16,7 +16,7 @@ enum STPBackendChargeResult {
 typealias STPTokenSubmissionHandler = (STPBackendChargeResult?, NSError?) -> Void
 
 
-class ViewController: UIViewController, STPPaymentAuthorizationViewControllerDelegate {
+class ViewController: UIViewController, STPPaymentCoordinatorDelegate {
 
     // Replace these values with your application's keys
     
@@ -29,37 +29,34 @@ class ViewController: UIViewController, STPPaymentAuthorizationViewControllerDel
     // To set this up, see https://stripe.com/docs/mobile/apple-pay
     let appleMerchantId = ""
     
-    let shirtPrice : UInt = 1000 // this is in cents
-    
     @IBAction func beginPayment(sender: AnyObject) {
         Stripe.setDefaultPublishableKey("pk_test_4TDXAGLdZFGNbXYGajQlcstU")
-        let paymentRequest = STPPaymentRequest(appleMerchantId: "woo")
+        let paymentRequest = STPPaymentRequest()
+        paymentRequest.appleMerchantId = "something"
         paymentRequest.lineItems = [
-            STPLineItem(label: "food", amount: NSDecimalNumber(string: "10.00"))
+            STPLineItem(label: "Very Stylish Hat", amount: NSDecimalNumber(string: "10.00"))
         ]
-        let paymentAuth = STPPaymentAuthorizationViewController(paymentRequest: paymentRequest, apiClient: STPAPIClient.sharedClient())
-        paymentAuth.delegate = self
-        self.presentViewController(paymentAuth, animated: true, completion: nil)
+        let paymentCoordinator = STPPaymentCoordinator(paymentRequest: paymentRequest, apiClient: STPAPIClient.sharedClient(), delegate: self)
+        self.presentViewController(paymentCoordinator.paymentViewController, animated: true, completion: nil)
     }
     
-    func paymentAuthorizationViewControllerDidCancel(paymentAuthorizationViewController: STPPaymentAuthorizationViewController) {
+    func paymentCoordinatorDidCancel(coordinator: STPPaymentCoordinator!) {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func paymentAuthorizationViewController(paymentAuthorizationViewController: STPPaymentAuthorizationViewController, didFailWithError error: NSError) {
+    func paymentCoordinator(coordinator: STPPaymentCoordinator!, didFailWithError error: NSError!) {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func paymentAuthorizationViewController(paymentAuthorizationViewController: STPPaymentAuthorizationViewController, didCreatePaymentResult result: STPPaymentResult, completion: STPErrorBlock) {
-        dismissViewControllerAnimated(true, completion: {
-            completion(nil)
-        })
+    func paymentCoordinator(coordinator: STPPaymentCoordinator!, didCreatePaymentResult result: STPPaymentResult!, completion: STPErrorBlock!) {
+        print(result)
+        completion(nil)
     }
     
-    func paymentAuthorizationViewController(paymentAuthorizationViewController: STPPaymentAuthorizationViewController, didCreatePaymentResult result: STPPaymentResult) {
+    func paymentCoordinatorDidSucceed(coordinator: STPPaymentCoordinator!) {
         dismissViewControllerAnimated(true, completion: nil)
     }
-
+    
 //    func paymentAuthorizationViewController(controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {
 //        let apiClient = STPAPIClient(publishableKey: stripePublishableKey)
 //        apiClient.createTokenWithPayment(payment, completion: { (token, error) -> Void in

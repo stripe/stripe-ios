@@ -10,6 +10,10 @@
 
 @interface MockSTPAPIClient : STPAPIClient
 
-@property (nonatomic, copy, nullable) void(^createTokenWithCardBlock)(STPCardParams * __nonnull, STPTokenCompletionBlock __nonnull);
+@property(nonatomic, nullable)NSError *error;
+@property(nonatomic, nullable)STPToken *token;
+
++ (nonnull instancetype)mockWithToken:(nonnull STPToken *)token;
++ (nonnull instancetype)mockWithError:(nonnull NSError *)error;
 
 @end

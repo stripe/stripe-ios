@@ -7,14 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <PassKit/PassKit.h>
 
 @class STPLineItem;
 
 @interface STPPaymentRequest : NSObject
 
-- (instancetype)initWithAppleMerchantId:(NSString *)appleMerchantId;
+@property(nonatomic, nonnull) NSString *merchantName;
+@property(nonatomic, nullable) NSString *appleMerchantId;
+@property(nonatomic, nonnull) NSArray<STPLineItem *> *lineItems;
 
-@property(nonatomic, readonly) NSString *appleMerchantId;
-@property(nonatomic) NSArray<STPLineItem *> *lineItems;
+- (nullable PKPaymentRequest *)asPKPayment;
 
 @end
