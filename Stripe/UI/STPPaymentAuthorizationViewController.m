@@ -62,7 +62,7 @@
 }
 
 - (void)coordinator:(__unused STPBaseCoordinator *)coordinator willFinishWithCompletion:(STPErrorBlock)completion {
-    STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:self.sourceProvider.selectedSource customer:nil];
+    STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:self.sourceProvider.selectedSource customer:nil shippingAddress:nil];
     [self.delegate paymentAuthorizationViewController:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
         completion(error);
         if (error) {

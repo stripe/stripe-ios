@@ -7,6 +7,7 @@
 //
 
 #import "STPAddress.h"
+#import "STPCardValidator.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 
@@ -20,8 +21,11 @@
         NSString *first = firstName ?: @"";
         NSString *last = lastName ?: @"";
         _name = [@[first, last] componentsJoinedByString:@" "];
-        _email = (__bridge_transfer NSString*)ABRecordCopyValue(record, kABPersonEmailProperty);
-        _phone = (__bridge_transfer NSString*)ABRecordCopyValue(record, kABPersonPhoneProperty);
+        ABMultiValueRef emailValues = ABRecordCopyValue(record, kABPersonEmailProperty);
+        _email = (__bridge NSString *)(ABMultiValueCopyValueAtIndex(emailValues, 0));
+        ABMultiValueRef phoneValues = ABRecordCopyValue(record, kABPersonPhoneProperty);
+        NSString *phone = (__bridge NSString *)(ABMultiValueCopyValueAtIndex(phoneValues, 0));
+        _phone = [STPCardValidator sanitizedNumericStringForString:phone];
 
         ABMultiValueRef addressValues = ABRecordCopyValue(record, kABPersonAddressProperty);
         if (addressValues != NULL) {

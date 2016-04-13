@@ -10,10 +10,11 @@
 #import "STPAPIClient.h"
 #import "STPSourceProvider.h"
 #import "STPPaymentCardEntryViewController.h"
+#import "STPShippingEntryViewController.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "STPToken.h"
 
-@interface STPInitialPaymentDetailsCoordinator()<STPPaymentCardEntryViewControllerDelegate>
+@interface STPInitialPaymentDetailsCoordinator()<STPPaymentCardEntryViewControllerDelegate, STPShippingEntryViewControllerDelegate>
 
 @end
 
@@ -48,10 +49,28 @@
                 completion(sourceError);
                 return;
             }
-            [self.delegate coordinator:self willFinishWithCompletion:nil];
-            completion(nil);
+            // TODO: pass in prefilled address & required fields
+            STPShippingEntryViewController *shippingViewController = [[STPShippingEntryViewController alloc] initWithAddress:nil delegate:self requiredAddressFields:PKAddressFieldName|PKAddressFieldPhone];
+            [self.navigationController stp_pushViewController:shippingViewController animated:YES completion:^{
+                completion(nil);
+            }];
+
         }];
     }];
+}
+
+#pragma mark - STPShippingEntryViewControllerDelegate
+
+- (void)shippingEntryViewControllerDidCancel:(__unused STPShippingEntryViewController *)paymentCardViewController {
+    [self.delegate coordinatorDidCancel:self];
+}
+
+- (void)shippingEntryViewController:(__unused STPShippingEntryViewController *)paymentCardViewController
+            didEnterShippingAddress:(__unused STPAddress *)address
+                         completion:(STPErrorBlock)completion {
+    // TODO: do stuff
+    [self.delegate coordinator:self willFinishWithCompletion:nil];
+    completion(nil);
 }
 
 @end

@@ -110,7 +110,13 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
             completion(PKPaymentAuthorizationStatusFailure);
             return;
         }
-        STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token customer:nil];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        STPAddress *address = [[STPAddress alloc] initWithABRecord:payment.shippingAddress];
+#pragma clang diagnostic pop
+        STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token
+                                                                   customer:nil
+                                                            shippingAddress:address];
         [self.delegate paymentCoordinator:self didCreatePaymentResult:result completion:^(NSError * _Nullable applicationError) {
             if (applicationError != nil) {
                 self.lastApplePayError = applicationError;
@@ -122,5 +128,6 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
         }];
     }];
 }
+
 
 @end
