@@ -32,7 +32,7 @@ class ViewController: UIViewController, STPPaymentCoordinatorDelegate {
     @IBAction func beginPayment(sender: AnyObject) {
         Stripe.setDefaultPublishableKey("pk_test_4TDXAGLdZFGNbXYGajQlcstU")
         let paymentRequest = PKPaymentRequest()
-        paymentRequest.lineItems = [
+        paymentRequest.paymentSummaryItems = [
             PKPaymentSummaryItem(label: "Very Stylish Hat", amount: NSDecimalNumber(string: "10.00"))
         ]
         let paymentCoordinator = STPPaymentCoordinator(paymentRequest: paymentRequest, apiClient: STPAPIClient.sharedClient(), delegate: self)
