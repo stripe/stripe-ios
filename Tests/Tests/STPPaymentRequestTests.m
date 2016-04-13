@@ -7,8 +7,8 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <PassKit/PassKit.h>
 #import "STPPaymentRequest.h"
-#import "STPLineItem.h"
 
 @interface STPPaymentRequestTests : XCTestCase
 
@@ -24,10 +24,10 @@
     paymentRequest.lineItems = @[];
     XCTAssertNil([paymentRequest asPKPayment]);
     
-    paymentRequest.lineItems = @[[[STPLineItem alloc] initWithLabel:@"Test" amount:[NSDecimalNumber zero]]];
+    paymentRequest.lineItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"Test" amount:[NSDecimalNumber zero]]];
     XCTAssertNil([paymentRequest asPKPayment]);
     
-    paymentRequest.lineItems = @[[[STPLineItem alloc] initWithLabel:@"Test" amount:[NSDecimalNumber one]]];
+    paymentRequest.lineItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"Test" amount:[NSDecimalNumber one]]];
     paymentRequest.merchantName = @"Test Merchant";
     PKPaymentRequest *pkPaymentRequest = [paymentRequest asPKPayment];
     XCTAssertNotNil(pkPaymentRequest);

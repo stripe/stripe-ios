@@ -34,7 +34,7 @@ class ViewController: UIViewController, STPPaymentCoordinatorDelegate {
         let paymentRequest = STPPaymentRequest()
         paymentRequest.appleMerchantId = "something"
         paymentRequest.lineItems = [
-            STPLineItem(label: "Very Stylish Hat", amount: NSDecimalNumber(string: "10.00"))
+            PKPaymentSummaryItem(label: "Very Stylish Hat", amount: NSDecimalNumber(string: "10.00"))
         ]
         let paymentCoordinator = STPPaymentCoordinator(paymentRequest: paymentRequest, apiClient: STPAPIClient.sharedClient(), delegate: self)
         self.presentViewController(paymentCoordinator.paymentViewController, animated: true, completion: nil)

@@ -9,13 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
 
-@class STPLineItem;
-
 @interface STPPaymentRequest : NSObject
 
 @property(nonatomic, nonnull) NSString *merchantName;
 @property(nonatomic, nullable) NSString *appleMerchantId;
-@property(nonatomic, nonnull) NSArray<STPLineItem *> *lineItems;
+@property(nonatomic, nonnull) NSArray<PKPaymentSummaryItem *> *lineItems;
 
 - (nullable PKPaymentRequest *)asPKPayment;
 

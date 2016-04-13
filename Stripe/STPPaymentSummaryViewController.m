@@ -6,12 +6,12 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+#import <PassKit/PassKit.h>
 #import "STPPaymentSummaryViewController.h"
 #import "STPPaymentAuthorizationViewController.h"
 #import "STPPaymentRequest.h"
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "NSArray+Stripe_BoundSafe.h"
-#import "STPLineItem.h"
 #import "STPLineItemCell.h"
 #import "STPSource.h"
 #import "STPBasicSourceProvider.h"
@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 
 @property(nonatomic, weak, nullable) id<STPPaymentSummaryViewControllerDelegate> delegate;
 @property(nonatomic, weak) UITableView *tableView;
-@property(nonatomic) NSArray<STPLineItem *> *lineItems;
+@property(nonatomic) NSArray<PKPaymentSummaryItem *> *lineItems;
 @property(nonatomic, nonnull) STPPaymentRequest *paymentRequest;
 @property(nonatomic, nonnull, readonly) id<STPSourceProvider> sourceProvider;
 
@@ -134,7 +134,7 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
         }
         case STPPaymentSummaryViewControllerSectionLineItems: {
             cell = [tableView dequeueReusableCellWithIdentifier:STPLineItemCellReuseIdentifier forIndexPath:indexPath];
-            STPLineItem *lineItem = self.lineItems[indexPath.row];
+            PKPaymentSummaryItem *lineItem = self.lineItems[indexPath.row];
             cell.textLabel.text = lineItem.label;
             cell.detailTextLabel.text = lineItem.amount.stringValue;
             break;
