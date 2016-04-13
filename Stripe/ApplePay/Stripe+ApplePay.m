@@ -17,7 +17,9 @@
     if (paymentRequest.merchantIdentifier == nil) {
         return NO;
     }
-
+    if ([[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] <= 0) {
+        return NO;
+    }
     if (![PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:paymentRequest.supportedNetworks]) {
         return NO;
     }
