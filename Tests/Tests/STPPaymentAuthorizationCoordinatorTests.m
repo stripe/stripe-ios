@@ -12,9 +12,9 @@
 #import "MockSTPSourceProvider.h"
 #import "MockSTPCoordinatorDelegate.h"
 #import "MockUINavigationController.h"
-#import "STPEmailEntryViewController.h"
 #import "STPSourceListViewController.h"
 #import "STPPaymentSummaryViewController.h"
+#import "STPPaymentCardEntryViewController.h"
 #import "STPPaymentAuthorizationCoordinator.h"
 #import "STPInitialPaymentDetailsCoordinator.h"
 
@@ -72,10 +72,10 @@
     self.paymentRequest = nil;
 }
 
-- (void)testBeginShowsEmailEntryVC {
+- (void)testBeginShowsPaymentCardEntryVC {
     [self.sut begin];
     UIViewController *topVC = self.sut.navigationController.topViewController;
-    XCTAssertTrue([topVC isKindOfClass:[STPEmailEntryViewController class]]);
+    XCTAssertTrue([topVC isKindOfClass:[STPPaymentCardEntryViewController class]]);
     STPBaseCoordinator *initialCoordinator = [self.sut.childCoordinators firstObject];
     XCTAssertTrue([initialCoordinator isKindOfClass:[STPInitialPaymentDetailsCoordinator class]]);
 }
