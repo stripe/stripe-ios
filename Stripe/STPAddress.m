@@ -43,7 +43,7 @@
                 if (zip) {
                     _postalCode = zip;
                 }
-                NSString *country = CFDictionaryGetValue(dict, kABPersonAddressCountryKey);
+                NSString *country = CFDictionaryGetValue(dict, kABPersonAddressCountryCodeKey);
                 if (country) {
                     _country = country;
                 }
