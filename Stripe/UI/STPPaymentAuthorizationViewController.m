@@ -6,8 +6,8 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+#import <PassKit/PassKit.h>
 #import "STPPaymentAuthorizationViewController.h"
-#import "STPPaymentRequest.h"
 #import "STPPaymentSummaryViewController.h"
 #import "STPSourceProvider.h"
 #import "STPBasicSourceProvider.h"
@@ -20,7 +20,7 @@
 
 @interface STPPaymentAuthorizationViewController()<STPCoordinatorDelegate>
 @property(nonatomic, weak) UINavigationController *navigationController;
-@property(nonatomic, readwrite, nonnull) STPPaymentRequest *paymentRequest;
+@property(nonatomic, readwrite, nonnull) PKPaymentRequest *paymentRequest;
 @property(nonatomic, readwrite, nonnull) STPAPIClient *apiClient;
 @property(nonatomic) id<STPSourceProvider> sourceProvider;
 @property(nonatomic) STPPaymentAuthorizationCoordinator *coordinator;
@@ -28,7 +28,7 @@
 
 @implementation STPPaymentAuthorizationViewController
 
-- (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest
+- (nonnull instancetype)initWithPaymentRequest:(nonnull PKPaymentRequest *)paymentRequest
                                      apiClient:(nonnull STPAPIClient *)apiClient {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {

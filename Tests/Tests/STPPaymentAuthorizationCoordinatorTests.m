@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "STPPaymentRequest.h"
+#import <PassKit/PassKit.h>
 #import "MockSTPAPIClient.h"
 #import "MockSTPSourceProvider.h"
 #import "MockSTPCoordinatorDelegate.h"
@@ -23,7 +23,7 @@
 @end
 
 @interface STPPaymentSummaryViewController()
-@property(nonatomic, nonnull) STPPaymentRequest *paymentRequest;
+@property(nonatomic, nonnull) PKPaymentRequest *paymentRequest;
 @property(nonatomic, nonnull, readonly) id<STPSourceProvider> sourceProvider;
 @end
 
@@ -41,7 +41,7 @@
 @property (nonatomic, strong) MockSTPAPIClient *apiClient;
 @property (nonatomic, strong) MockSTPSourceProvider *sourceProvider;
 @property (nonatomic, strong) MockSTPCoordinatorDelegate *delegate;
-@property (nonatomic, strong) STPPaymentRequest *paymentRequest;
+@property (nonatomic, strong) PKPaymentRequest *paymentRequest;
 
 @end
 
@@ -53,8 +53,8 @@
     self.apiClient = [[MockSTPAPIClient alloc] initWithPublishableKey:@"foo"];
     self.sourceProvider = [MockSTPSourceProvider new];
     self.delegate = [MockSTPCoordinatorDelegate new];
-    self.paymentRequest = [[STPPaymentRequest alloc] init];
-    self.paymentRequest.appleMerchantId = @"foo";
+    self.paymentRequest = [[PKPaymentRequest alloc] init];
+    self.paymentRequest.merchantIdentifier = @"foo";
     self.sut = [[STPPaymentAuthorizationCoordinator alloc] initWithNavigationController:self.navigationController
                                                                paymentRequest:self.paymentRequest
                                                                     apiClient:self.apiClient

@@ -15,7 +15,7 @@
 @interface STPPaymentAuthorizationViewControllerTests: XCTestCase
 @property (nonatomic, strong) NSString *merchantID;
 @property (nonatomic, strong) NSString *publishableKey;
-@property (nonatomic, strong) STPPaymentRequest *paymentRequest;
+@property (nonatomic, strong) PKPaymentRequest *paymentRequest;
 @property (nonatomic, strong) MockSTPAPIClient *apiClient;
 @property (nonatomic, strong) STPPaymentAuthorizationViewController *sut;
 @property (nonatomic, strong) MockSTPPAVCDelegate *delegate;
@@ -27,8 +27,8 @@
     [super setUp];
     self.merchantID = @"apple_merchant_id";
     self.publishableKey = @"publishable_key";
-    self.paymentRequest = [STPPaymentRequest new];
-    self.paymentRequest.appleMerchantId = self.merchantID;
+    self.paymentRequest = [PKPaymentRequest new];
+    self.paymentRequest.merchantIdentifier = self.merchantID;
     self.apiClient = [[MockSTPAPIClient alloc] initWithPublishableKey:self.publishableKey];
     self.sut = [[STPPaymentAuthorizationViewController alloc] initWithPaymentRequest:self.paymentRequest
                                                                            apiClient:self.apiClient];

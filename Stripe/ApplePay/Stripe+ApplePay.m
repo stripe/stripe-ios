@@ -14,7 +14,14 @@
     if (paymentRequest == nil) {
         return NO;
     }
-    return [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:paymentRequest.supportedNetworks];
+    if (paymentRequest.merchantIdentifier == nil) {
+        return NO;
+    }
+
+    if (![PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:paymentRequest.supportedNetworks]) {
+        return NO;
+    }
+    return YES;
 }
 
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier {

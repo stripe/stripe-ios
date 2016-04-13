@@ -24,7 +24,6 @@
 #import "STPPaymentCardTextField.h"
 
 #import "STPPaymentCoordinator.h"
-#import "STPPaymentRequest.h"
 #import "STPPaymentAuthorizationViewController.h"
 #import "STPSource.h"
 #import "STPSourceProvider.h"

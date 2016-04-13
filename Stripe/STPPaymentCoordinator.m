@@ -11,12 +11,11 @@
 #import "Stripe+ApplePay.h"
 #import "STPPaymentCoordinator.h"
 #import "STPAPIClient.h"
-#import "STPPaymentRequest.h"
 #import "STPPaymentAuthorizationViewController.h"
 
 @interface STPPaymentCoordinator()<STPPaymentAuthorizationViewControllerDelegate, PKPaymentAuthorizationViewControllerDelegate>
 @property(nonatomic)UIViewController *paymentViewController;
-@property(nonatomic)STPPaymentRequest *paymentRequest;
+@property(nonatomic)PKPaymentRequest *paymentRequest;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic, weak)id<STPPaymentCoordinatorDelegate> delegate;
 @property(nonatomic)NSError *lastApplePayError;
@@ -27,7 +26,7 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
 
 @implementation STPPaymentCoordinator
 
-- (instancetype)initWithPaymentRequest:(STPPaymentRequest *)paymentRequest
+- (instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest
                              apiClient:(STPAPIClient *)apiClient
                               delegate:(id<STPPaymentCoordinatorDelegate>)delegate {
     NSCAssert(paymentRequest != nil, @"You must provide a paymentRequest to STPPaymentCoordinator");
@@ -38,9 +37,8 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
         _paymentRequest = paymentRequest;
         _apiClient = apiClient;
         _delegate = delegate;
-        PKPaymentRequest *pkPaymentRequest = [paymentRequest asPKPayment];
-        if ([Stripe canSubmitPaymentRequest:pkPaymentRequest]) {
-            PKPaymentAuthorizationViewController *paymentViewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:pkPaymentRequest];
+        if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
+            PKPaymentAuthorizationViewController *paymentViewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
             paymentViewController.delegate = self;
             _paymentViewController = paymentViewController;
         } else {

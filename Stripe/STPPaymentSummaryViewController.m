@@ -9,7 +9,6 @@
 #import <PassKit/PassKit.h>
 #import "STPPaymentSummaryViewController.h"
 #import "STPPaymentAuthorizationViewController.h"
-#import "STPPaymentRequest.h"
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "NSArray+Stripe_BoundSafe.h"
 #import "STPLineItemCell.h"
@@ -32,7 +31,7 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 @property(nonatomic, weak, nullable) id<STPPaymentSummaryViewControllerDelegate> delegate;
 @property(nonatomic, weak) UITableView *tableView;
 @property(nonatomic) NSArray<PKPaymentSummaryItem *> *lineItems;
-@property(nonatomic, nonnull) STPPaymentRequest *paymentRequest;
+@property(nonatomic, nonnull) PKPaymentRequest *paymentRequest;
 @property(nonatomic, nonnull, readonly) id<STPSourceProvider> sourceProvider;
 
 @end
@@ -40,7 +39,7 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 @implementation STPPaymentSummaryViewController
 @dynamic view;
 
-- (nonnull instancetype)initWithPaymentRequest:(nonnull STPPaymentRequest *)paymentRequest
+- (nonnull instancetype)initWithPaymentRequest:(nonnull PKPaymentRequest *)paymentRequest
                                 sourceProvider:(nonnull id<STPSourceProvider>) sourceProvider
                                       delegate:(nonnull id<STPPaymentSummaryViewControllerDelegate>)delegate {
     self = [super initWithNibName:nil bundle:nil];
@@ -48,7 +47,7 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
         _delegate = delegate;
         _paymentRequest = paymentRequest;
         _sourceProvider = sourceProvider;
-        _lineItems = paymentRequest.lineItems;
+        _lineItems = paymentRequest.paymentSummaryItems;
     }
     return self;
 }

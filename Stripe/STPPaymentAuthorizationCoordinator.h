@@ -7,12 +7,12 @@
 //
 
 #import "STPBaseCoordinator.h"
-#import "STPPaymentRequest.h"
+#import <PassKit/PassKit.h>
 
 @interface STPPaymentAuthorizationCoordinator : STPBaseCoordinator
 
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
-                              paymentRequest:(STPPaymentRequest *)paymentRequest
+                              paymentRequest:(PKPaymentRequest *)paymentRequest
                                    apiClient:(STPAPIClient *)apiClient
                               sourceProvider:(id<STPSourceProvider>)sourceProvider
                                     delegate:(id<STPCoordinatorDelegate>)delegate;

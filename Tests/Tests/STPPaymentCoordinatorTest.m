@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 #import <PassKit/PassKit.h>
-#import "STPPaymentRequest.h"
 #import "STPPaymentCoordinator.h"
 #import "STPPaymentAuthorizationViewController.h"
 #import "STPAPIClient.h"
@@ -23,8 +22,8 @@
 
 - (instancetype)initWithDelegate:(id<STPPaymentCoordinatorDelegate>)delegate
                     deallocBlock:(STPVoidBlock)deallocBlock {
-    STPPaymentRequest *paymentRequest = [[STPPaymentRequest alloc] init];
-    paymentRequest.lineItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"Test" amount:[NSDecimalNumber one]]];
+    PKPaymentRequest *paymentRequest = [[PKPaymentRequest alloc] init];
+    paymentRequest.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"Test" amount:[NSDecimalNumber one]]];
     STPAPIClient *apiClient = [MockSTPAPIClient new];
     self = [super initWithPaymentRequest:paymentRequest
                                apiClient:apiClient
@@ -44,7 +43,7 @@
 @end
 
 @interface STPPaymentCoordinatorTest : XCTestCase
-@property(nonatomic)STPPaymentRequest *paymentRequest;
+@property(nonatomic)PKPaymentRequest *paymentRequest;
 @property(nonatomic)id<STPPaymentCoordinatorDelegate> retainedDelegate;
 @end
 
@@ -56,8 +55,8 @@
 - (void)setUp {
     [super setUp];
     [Stripe setDefaultPublishableKey:@"test"];
-    STPPaymentRequest *paymentRequest = [[STPPaymentRequest alloc] init];
-    paymentRequest.lineItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"Test" amount:[NSDecimalNumber one]]];
+    PKPaymentRequest *paymentRequest = [[PKPaymentRequest alloc] init];
+    paymentRequest.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"Test" amount:[NSDecimalNumber one]]];
     self.paymentRequest = paymentRequest;
 }
 
@@ -146,7 +145,6 @@
     delegate.onDidCancel = ^{
         [expectation fulfill];
     };
-    self.paymentRequest.appleMerchantId = nil;
     STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiClient:[STPAPIClient sharedClient] delegate:delegate];
     [coordinator paymentAuthorizationViewControllerDidCancel:[STPPaymentAuthorizationViewController new]];
     [self waitForExpectationsWithTimeout:0.01 handler:nil];

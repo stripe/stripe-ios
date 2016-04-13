@@ -14,13 +14,13 @@
 #import "UINavigationController+Stripe_Completion.h"
 
 @interface STPPaymentAuthorizationCoordinator()<STPCoordinatorDelegate, STPPaymentSummaryViewControllerDelegate>
-@property(nonatomic)STPPaymentRequest *paymentRequest;
+@property(nonatomic)PKPaymentRequest *paymentRequest;
 @end
 
 @implementation STPPaymentAuthorizationCoordinator
 
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
-                              paymentRequest:(STPPaymentRequest *)paymentRequest
+                              paymentRequest:(PKPaymentRequest *)paymentRequest
                                    apiClient:(STPAPIClient *)apiClient
                               sourceProvider:(id<STPSourceProvider>)sourceProvider
                                     delegate:(id<STPCoordinatorDelegate>)delegate {

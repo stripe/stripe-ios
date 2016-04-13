@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "STPBlocks.h"
 
-@class STPPaymentCoordinator, STPAPIClient, STPPaymentRequest, STPPaymentResult;
+@class STPPaymentCoordinator, STPAPIClient, STPPaymentResult;
 
 @protocol STPPaymentCoordinatorDelegate
 
@@ -30,7 +30,7 @@
 
 @interface STPPaymentCoordinator : NSObject
 
-- (instancetype)initWithPaymentRequest:(STPPaymentRequest *)paymentRequest
+- (instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest
                              apiClient:(STPAPIClient *)apiClient
                               delegate:(id<STPPaymentCoordinatorDelegate>)delegate;
 
