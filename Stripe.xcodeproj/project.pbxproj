@@ -283,7 +283,6 @@
 		04A850DD1CB5BF9D00B3AD68 /* STPPaymentCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850D91CB5BF9D00B3AD68 /* STPPaymentCoordinator.m */; };
 		04A850E11CB703D700B3AD68 /* STPPaymentCoordinatorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850E01CB703D700B3AD68 /* STPPaymentCoordinatorTest.m */; };
 		04A850EA1CB71D9900B3AD68 /* MockSTPAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A850E21CB71D9900B3AD68 /* MockSTPAPIClient.h */; };
-		04A850F61CB71DFD00B3AD68 /* STPPaymentAuthorizationViewControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850F31CB71DEA00B3AD68 /* STPPaymentAuthorizationViewControllerTests.m */; };
 		04A850F71CB71E0400B3AD68 /* STPInitialPaymentDetailsCoordinatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850F21CB71DEA00B3AD68 /* STPInitialPaymentDetailsCoordinatorTests.m */; };
 		04A850FA1CBC283F00B3AD68 /* MockSTPPaymentCoordinatorDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A850F81CBC283F00B3AD68 /* MockSTPPaymentCoordinatorDelegate.h */; };
 		04A850FB1CBC283F00B3AD68 /* MockSTPPaymentCoordinatorDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A850F91CBC283F00B3AD68 /* MockSTPPaymentCoordinatorDelegate.m */; };
@@ -559,7 +558,6 @@
 		04A850E81CB71D9900B3AD68 /* MockSTPSourceProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPSourceProvider.h; sourceTree = "<group>"; };
 		04A850E91CB71D9900B3AD68 /* MockSTPSourceProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPSourceProvider.m; sourceTree = "<group>"; };
 		04A850F21CB71DEA00B3AD68 /* STPInitialPaymentDetailsCoordinatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPInitialPaymentDetailsCoordinatorTests.m; sourceTree = "<group>"; };
-		04A850F31CB71DEA00B3AD68 /* STPPaymentAuthorizationViewControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentAuthorizationViewControllerTests.m; sourceTree = "<group>"; };
 		04A850F81CBC283F00B3AD68 /* MockSTPPaymentCoordinatorDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPPaymentCoordinatorDelegate.h; sourceTree = "<group>"; };
 		04A850F91CBC283F00B3AD68 /* MockSTPPaymentCoordinatorDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPPaymentCoordinatorDelegate.m; sourceTree = "<group>"; };
 		04B33F301BC7417B00DD8120 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -920,7 +918,6 @@
 				04A850F21CB71DEA00B3AD68 /* STPInitialPaymentDetailsCoordinatorTests.m */,
 				C1FCBA501CBC23ED009727D3 /* STPSourceListCoordinatorTests.m */,
 				C1FCBA621CBC42A4009727D3 /* STPPaymentAuthorizationCoordinatorTests.m */,
-				04A850F31CB71DEA00B3AD68 /* STPPaymentAuthorizationViewControllerTests.m */,
 				04A850E01CB703D700B3AD68 /* STPPaymentCoordinatorTest.m */,
 				04A850F81CBC283F00B3AD68 /* MockSTPPaymentCoordinatorDelegate.h */,
 				04A850F91CBC283F00B3AD68 /* MockSTPPaymentCoordinatorDelegate.m */,
@@ -1502,7 +1499,6 @@
 				04415C6D1A6605B5001225ED /* STPCardFunctionalTest.m in Sources */,
 				04415C6E1A6605B5001225ED /* STPCardTest.m in Sources */,
 				04415C6F1A6605B5001225ED /* STPCertTest.m in Sources */,
-				04A850F61CB71DFD00B3AD68 /* STPPaymentAuthorizationViewControllerTests.m in Sources */,
 				04415C701A6605B5001225ED /* STPTokenTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,12 +9,11 @@
 #import "STPInitialPaymentDetailsCoordinator.h"
 #import "STPAPIClient.h"
 #import "STPSourceProvider.h"
-#import "STPEmailEntryViewController.h"
 #import "STPPaymentCardEntryViewController.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "STPToken.h"
 
-@interface STPInitialPaymentDetailsCoordinator()<STPEmailEntryViewControllerDelegate, STPPaymentCardEntryViewControllerDelegate>
+@interface STPInitialPaymentDetailsCoordinator()<STPPaymentCardEntryViewControllerDelegate>
 
 @end
 
@@ -22,28 +21,14 @@
 
 - (void)begin {
     [super begin];
-    STPEmailEntryViewController *emailViewController = [[STPEmailEntryViewController alloc] initWithDelegate:self];
-    self.navigationController.viewControllers = @[emailViewController];
-}
-
-#pragma mark - STPEmailEntryViewControllerDelegate
-
-- (void)emailEntryViewController:(__unused STPEmailEntryViewController *)viewController didEnterEmailAddress:(__unused NSString *)emailAddress completion:(STPErrorBlock)completion {
     STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithDelegate:self];
-    [self.navigationController stp_pushViewController:paymentCardViewController animated:YES completion:^{
-        completion(nil);
-    }];
-}
-
-- (void)emailEntryViewControllerDidCancel:(__unused STPEmailEntryViewController *)emailViewController {
-    [self.delegate coordinatorDidCancel:self];
+    self.navigationController.viewControllers = @[paymentCardViewController];
 }
 
 #pragma mark - STPPaymentCardEntryViewControllerDelegate
 
 - (void)paymentCardEntryViewControllerDidCancel:(__unused STPPaymentCardEntryViewController *)paymentCardViewController {
     [self.delegate coordinatorDidCancel:self];
-
 }
 
 - (void)paymentCardEntryViewController:(__unused STPPaymentCardEntryViewController *)viewController didEnterCardParams:(STPCardParams *)cardParams completion:(STPErrorBlock)completion {
@@ -68,7 +53,5 @@
         }];
     }];
 }
-
-
 
 @end

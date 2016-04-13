@@ -12,11 +12,10 @@
 #import "MockSTPSourceProvider.h"
 #import "MockSTPCoordinatorDelegate.h"
 #import "MockUINavigationController.h"
-#import "STPEmailEntryViewController.h"
 #import "STPPaymentCardEntryViewController.h"
 #import "STPInitialPaymentDetailsCoordinator.h"
 
-@interface STPInitialPaymentDetailsCoordinator()<STPEmailEntryViewControllerDelegate, STPPaymentCardEntryViewControllerDelegate>
+@interface STPInitialPaymentDetailsCoordinator()<STPPaymentCardEntryViewControllerDelegate>
 @end
 
 @interface STPInitialPaymentDetailsCoordinatorTests : XCTestCase
@@ -60,34 +59,17 @@
     self.card = nil;
 }
 
-- (void)testBeginShowsEmailEntryVC {
+- (void)testBeginShowsPaymentCardVC {
     [self.sut begin];
     UIViewController *topVC = self.sut.navigationController.topViewController;
-    XCTAssertTrue([topVC isKindOfClass:[STPEmailEntryViewController class]]);
-}
-
-- (void)testCancelEmailEntry {
-    XCTestExpectation *exp = [self expectationWithDescription:@"cancel"];
-    self.delegate.onDidCancel = ^(){ [exp fulfill]; };
-
-    [self.sut emailEntryViewControllerDidCancel:nil];
-    [self waitForExpectationsWithTimeout:1 handler:nil];
-}
-
-- (void)testEnterEmailPushesPaymentCardVC {
-    XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
-    [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(__unused NSError * _Nullable error) {
-        UIViewController *topVC = self.sut.navigationController.topViewController;
-        XCTAssertTrue([topVC isKindOfClass:[STPPaymentCardEntryViewController class]]);
-        [exp fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:2 handler:nil];
+    XCTAssertTrue([topVC isKindOfClass:[STPPaymentCardEntryViewController class]]);
 }
 
 - (void)testCancelCardEntry {
     XCTestExpectation *exp = [self expectationWithDescription:@"cancel"];
     self.delegate.onDidCancel = ^(){ [exp fulfill]; };
 
+    [self.sut begin];
     [self.sut paymentCardEntryViewControllerDidCancel:nil];
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
@@ -101,11 +83,10 @@
         [willFinishExp fulfill];
     };
 
-    [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(__unused NSError * _Nullable error) {
-        [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(__unused NSError * _Nullable paramsError) {
-            [completionExp fulfill];
-        }];
-     }];
+    [self.sut begin];
+    [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(__unused NSError * _Nullable paramsError) {
+        [completionExp fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
@@ -118,11 +99,10 @@
     };
 
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
-    [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(__unused NSError * _Nullable emailError) {
-        [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(NSError * error) {
-            _XCTPrimitiveAssertEqualObjects(weakSelf, expectedError, @"", error, @"");
-            [exp fulfill];
-        }];
+    [self.sut begin];
+    [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(NSError * error) {
+        _XCTPrimitiveAssertEqualObjects(weakSelf, expectedError, @"", error, @"");
+        [exp fulfill];
     }];
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
@@ -136,11 +116,10 @@
     };
 
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
-    [self.sut emailEntryViewController:nil didEnterEmailAddress:@"bg@stripe.com" completion:^(__unused NSError * _Nullable emailError) {
-        [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(NSError * _Nullable error) {
-            XCTAssertEqualObjects(error, expectedError);
-            [exp fulfill];
-        }];
+    [self.sut begin];
+    [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(NSError * _Nullable error) {
+        XCTAssertEqualObjects(error, expectedError);
+        [exp fulfill];
     }];
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
