@@ -34,7 +34,7 @@
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.appleMerchantId];
     NSMutableArray *paymentSummaryItems = [@[] mutableCopy];
     NSDecimalNumber *totalAmount = [NSDecimalNumber decimalNumberWithString:@"0"];
-    for (STPLineItem *lineItem in self.lineItems) {
+    for (PKPaymentSummaryItem *lineItem in self.lineItems) {
         PKPaymentSummaryItem *summaryItem = [PKPaymentSummaryItem summaryItemWithLabel:lineItem.label amount:lineItem.amount];
         [paymentSummaryItems addObject:summaryItem];
         totalAmount = [totalAmount decimalNumberByAdding:lineItem.amount];

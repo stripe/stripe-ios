@@ -10,7 +10,6 @@
 #import <PassKit/PassKit.h>
 #import "STPPaymentRequest.h"
 #import "STPPaymentCoordinator.h"
-#import "STPLineItem.h"
 #import "STPPaymentAuthorizationViewController.h"
 #import "STPAPIClient.h"
 #import "MockSTPPaymentCoordinatorDelegate.h"
@@ -25,7 +24,7 @@
 - (instancetype)initWithDelegate:(id<STPPaymentCoordinatorDelegate>)delegate
                     deallocBlock:(STPVoidBlock)deallocBlock {
     STPPaymentRequest *paymentRequest = [[STPPaymentRequest alloc] init];
-    paymentRequest.lineItems = @[[[STPLineItem alloc] initWithLabel:@"Test" amount:[NSDecimalNumber one]]];
+    paymentRequest.lineItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"Test" amount:[NSDecimalNumber one]]];
     STPAPIClient *apiClient = [MockSTPAPIClient new];
     self = [super initWithPaymentRequest:paymentRequest
                                apiClient:apiClient
@@ -58,7 +57,7 @@
     [super setUp];
     [Stripe setDefaultPublishableKey:@"test"];
     STPPaymentRequest *paymentRequest = [[STPPaymentRequest alloc] init];
-    paymentRequest.lineItems = @[[[STPLineItem alloc] initWithLabel:@"Test" amount:[NSDecimalNumber one]]];
+    paymentRequest.lineItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"Test" amount:[NSDecimalNumber one]]];
     self.paymentRequest = paymentRequest;
 }
 
