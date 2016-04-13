@@ -17,6 +17,7 @@
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
 @interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate>
+@property(nonatomic, assign)STPFormTextFieldAutoFormattingBehavior autoformattingBehavior;
 @end
 
 @implementation STPTextFieldDelegateProxy
@@ -25,15 +26,25 @@
     BOOL deleting = (range.location == textField.text.length - 1 && range.length == 1 && [string isEqualToString:@""]);
     NSString *inputText;
     if (deleting) {
-        NSString *sanitized = [STPCardValidator sanitizedNumericStringForString:textField.text];
+        NSString *sanitized = [self unformattedStringForString:textField.text];
         inputText = [sanitized stp_safeSubstringToIndex:sanitized.length - 1];
     } else {
         NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
-        NSString *sanitized = [STPCardValidator sanitizedNumericStringForString:newString];
+        NSString *sanitized = [self unformattedStringForString:newString];
         inputText = sanitized;
     }
     textField.text = inputText;
     return NO;
+}
+
+- (NSString *)unformattedStringForString:(NSString *)string {
+    switch (self.autoformattingBehavior) {
+        case STPFormTextFieldAutoFormattingBehaviorNone:
+            return string;
+        case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
+        case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers:
+            return [STPCardValidator sanitizedNumericStringForString:string];
+    }
 }
 
 @end
@@ -67,6 +78,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 
 - (void)setAutoFormattingBehavior:(STPFormTextFieldAutoFormattingBehavior)autoFormattingBehavior {
     _autoFormattingBehavior = autoFormattingBehavior;
+    self.delegateProxy.autoformattingBehavior = autoFormattingBehavior;
     switch (autoFormattingBehavior) {
         case STPFormTextFieldAutoFormattingBehaviorNone:
             self.textFormattingBlock = nil;
@@ -232,6 +244,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 
 - (void)setDelegate:(id <UITextFieldDelegate>)delegate {
     STPTextFieldDelegateProxy *delegateProxy = [[STPTextFieldDelegateProxy alloc] init];
+    delegateProxy.autoformattingBehavior = self.autoFormattingBehavior;
     delegateProxy.delegate = delegate;
     self.delegateProxy = delegateProxy;
     [super setDelegate:delegateProxy];
