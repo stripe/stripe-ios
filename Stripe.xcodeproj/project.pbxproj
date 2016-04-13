@@ -367,6 +367,8 @@
 		04F416271CA3639500486FB5 /* STPPaymentCardEntryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F416251CA3639500486FB5 /* STPPaymentCardEntryViewController.m */; };
 		04FCFA191BD59A8C00297732 /* STPCategoryLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 04FCFA171BD59A8C00297732 /* STPCategoryLoader.h */; };
 		04FCFA1A1BD59A8C00297732 /* STPCategoryLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FCFA181BD59A8C00297732 /* STPCategoryLoader.m */; };
+		C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; };
+		C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = C1080F481CBECF7B007B2D89 /* STPAddress.m */; };
 		C12655391CAA238E006F7265 /* STPPaymentCardEntryViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 04F416241CA3639500486FB5 /* STPPaymentCardEntryViewController.h */; };
 		C126553A1CAA2392006F7265 /* STPPaymentCardEntryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F416251CA3639500486FB5 /* STPPaymentCardEntryViewController.m */; };
 		C126553C1CAA2398006F7265 /* STPEmailEntryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04604F4F1CA3633000D8DDE0 /* STPEmailEntryViewController.m */; };
@@ -627,6 +629,8 @@
 		04FCFA181BD59A8C00297732 /* STPCategoryLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCategoryLoader.m; sourceTree = "<group>"; };
 		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		C1080F471CBECF7B007B2D89 /* STPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPAddress.h; sourceTree = "<group>"; };
+		C1080F481CBECF7B007B2D89 /* STPAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddress.m; sourceTree = "<group>"; };
 		C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFormTextFieldTest.m; sourceTree = "<group>"; };
 		C1718D541C3B2E5B002A7CB3 /* UIImage+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Stripe.h"; path = "PublicHeaders/UI/UIImage+Stripe.h"; sourceTree = "<group>"; };
 		C1718D551C3B2E5B002A7CB3 /* UIImage+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Stripe.m"; path = "UI/UIImage+Stripe.m"; sourceTree = "<group>"; };
@@ -723,6 +727,8 @@
 				0451CC431C49AE1C003B2CA6 /* STPPaymentResult.m */,
 				04A850D81CB5BF9D00B3AD68 /* STPPaymentCoordinator.h */,
 				04A850D91CB5BF9D00B3AD68 /* STPPaymentCoordinator.m */,
+				C1080F471CBECF7B007B2D89 /* STPAddress.h */,
+				C1080F481CBECF7B007B2D89 /* STPAddress.m */,
 			);
 			name = Ulysses;
 			sourceTree = "<group>";
@@ -1086,6 +1092,7 @@
 				040389D81CA9AABB002C9960 /* STPSourceListCoordinator.h in Headers */,
 				0433EB491BD06313003912B4 /* NSDictionary+Stripe.h in Headers */,
 				04CDB50E1A5F30A700B854EE /* STPCard.h in Headers */,
+				C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */,
 				0438EF2C1B7416BB00D506CC /* STPFormTextField.h in Headers */,
 				0439B9751C451BE6005A1ED5 /* STPBasicSourceProvider.h in Headers */,
 				04CDB50A1A5F30A700B854EE /* STPBankAccount.h in Headers */,
@@ -1552,6 +1559,7 @@
 			files = (
 				0438EF431B74170D00D506CC /* STPCardValidator.m in Sources */,
 				040389E51CA9BC58002C9960 /* STPPaymentAuthorizationCoordinator.m in Sources */,
+				C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */,
 				0438EF2F1B7416BB00D506CC /* STPFormTextField.m in Sources */,
 				04604F501CA3633000D8DDE0 /* STPEmailEntryViewController.m in Sources */,
 				04CDB5101A5F30A700B854EE /* STPCard.m in Sources */,
