@@ -27,6 +27,6 @@ typedef NS_ENUM(NSInteger, STPAddressFieldViewModelType) {
 @property (nonatomic, strong, readonly) NSString *placeholder;
 @property (nonatomic, assign, readonly) STPAddressFieldViewModelType type;
 @property (nonatomic, strong) NSString *contents;
-@property (nonatomic, assign) BOOL isValid;
+@property (nonatomic, readonly) BOOL isValid;
 
 @end

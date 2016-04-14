@@ -7,6 +7,9 @@
 //
 
 #import "STPAddressFieldViewModel.h"
+#import "STPPhoneNumberValidator.h"
+#import "STPEmailAddressValidator.h"
+#import "STPPostalCodeValidator.h"
 
 @interface STPAddressFieldViewModel()
 
@@ -27,13 +30,28 @@
     viewModel.placeholder = placeholder;
     viewModel.contents = contents;
     viewModel.type = type;
-    viewModel.isValid = NO;
     return viewModel;
 }
 
-- (void)setContents:(NSString *)contents {
-    _contents = contents;
-    self.isValid = [contents length] > 0;
+- (BOOL)isValid {
+    switch (self.type) {
+        case STPAddressFieldViewModelTypeText:
+            return [self.contents length] > 0;
+            break;
+        case STPAddressFieldViewModelTypePhoneNumber:
+            return [STPPhoneNumberValidator stringIsValidPhoneNumber:self.contents];
+            break;
+        case STPAddressFieldViewModelTypeEmail:
+            return [STPEmailAddressValidator stringIsValidEmailAddress:self.contents];
+            break;
+        case STPAddressFieldViewModelTypeCountry:
+            // TODO: country validation
+            return [self.contents length] > 0;
+            break;
+        case STPAddressFieldViewModelTypeZip:
+            return [STPPostalCodeValidator stringIsValidPostalCode:self.contents];
+            break;
+    }
 }
 
 @end

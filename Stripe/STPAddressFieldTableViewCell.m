@@ -34,10 +34,30 @@
 
 - (void)configureWithViewModel:(STPAddressFieldViewModel *)viewModel delegate:(id<STPAddressFieldTableViewCellDelegate>)delegate {
     self.viewModel = viewModel;
+    self.delegate = delegate;
     self.formField.formTextField.placeholder = viewModel.placeholder;
     self.formField.formTextField.text = viewModel.contents;
     self.formField.captionLabel.text = viewModel.label;
-    self.delegate = delegate;
+    switch (viewModel.type) {
+        case STPAddressFieldViewModelTypeText:
+            self.formField.formTextField.keyboardType = UIKeyboardTypeDefault;
+            break;
+        case STPAddressFieldViewModelTypePhoneNumber:
+            self.formField.formTextField.keyboardType = UIKeyboardTypePhonePad;
+            self.formField.formTextField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
+            break;
+        case STPAddressFieldViewModelTypeEmail:
+            self.formField.formTextField.keyboardType = UIKeyboardTypeEmailAddress;
+            break;
+        case STPAddressFieldViewModelTypeCountry:
+            // TODO: country picker
+            self.formField.formTextField.keyboardType = UIKeyboardTypeDefault;
+            self.formField.formTextField.inputView = [[UIPickerView alloc] init];
+            break;
+        case STPAddressFieldViewModelTypeZip:
+            self.formField.formTextField.keyboardType = UIKeyboardTypeNumberPad;
+            break;
+    }
 }
 
 - (void)layoutSubviews {
