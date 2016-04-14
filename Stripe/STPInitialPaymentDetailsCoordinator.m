@@ -22,8 +22,9 @@
 
 - (void)begin {
     [super begin];
-    STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithDelegate:self];
-    self.navigationController.viewControllers = @[paymentCardViewController];
+    STPShippingEntryViewController *shippingEntryViewController = [[STPShippingEntryViewController alloc] initWithAddress:nil delegate:self requiredAddressFields:PKAddressFieldAll];
+//    STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithDelegate:self];
+    self.navigationController.viewControllers = @[shippingEntryViewController];
 }
 
 #pragma mark - STPPaymentCardEntryViewControllerDelegate

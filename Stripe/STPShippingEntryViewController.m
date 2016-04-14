@@ -163,9 +163,18 @@ static NSString *const STPAddressFieldTableViewCellReuseIdentifier = @"STPAddres
 - (void)addressFieldTableViewCellDidUpdateText:(__unused STPAddressFieldTableViewCell *)cell {
     BOOL isValid = YES;
     for (STPAddressFieldViewModel *viewModel in self.keyToFieldViewModel.allValues) {
-        isValid = isValid && viewModel.isValid;
+        if (!viewModel.isValid) {
+            isValid = NO;
+            break;
+        }
     }
     self.navigationItem.rightBarButtonItem.enabled = isValid;
+}
+
+- (void)addressFieldTableViewCellDidReturn:(STPAddressFieldTableViewCell *)cell {
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    NSIndexPath *newPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
+    [[self.tableView cellForRowAtIndexPath:newPath] becomeFirstResponder];
 }
 
 @end

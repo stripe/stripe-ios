@@ -13,6 +13,7 @@
 @protocol STPAddressFieldTableViewCellDelegate <NSObject>
 
 - (void)addressFieldTableViewCellDidUpdateText:(STPAddressFieldTableViewCell *)cell;
+- (void)addressFieldTableViewCellDidReturn:(STPAddressFieldTableViewCell *)cell;
 
 @end
 
