@@ -10,4 +10,6 @@
 #import "STPBaseCoordinator.h"
 
 @interface STPSourceListCoordinator : STPBaseCoordinator
+
+
 @end

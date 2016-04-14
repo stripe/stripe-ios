@@ -15,10 +15,22 @@
 #import "STPToken.h"
 
 @interface STPInitialPaymentDetailsCoordinator()<STPPaymentCardEntryViewControllerDelegate, STPShippingEntryViewControllerDelegate>
-
+@property(nonatomic)PKPaymentRequest *paymentRequest;
 @end
 
 @implementation STPInitialPaymentDetailsCoordinator
+
+- (instancetype)initWithNavigationController:(UINavigationController *)navigationController
+                              paymentRequest:(PKPaymentRequest *)paymentRequest
+                                   apiClient:(STPAPIClient *)apiClient
+                              sourceProvider:(id<STPSourceProvider>)sourceProvider
+                                    delegate:(id<STPCoordinatorDelegate>)delegate {
+    self = [super initWithNavigationController:navigationController apiClient:apiClient sourceProvider:sourceProvider delegate:delegate];
+    if (self) {
+        _paymentRequest = paymentRequest;
+    }
+    return self;
+}
 
 - (void)begin {
     [super begin];
@@ -50,12 +62,15 @@
                 completion(sourceError);
                 return;
             }
-            // TODO: pass in prefilled address & required fields
-            STPShippingEntryViewController *shippingViewController = [[STPShippingEntryViewController alloc] initWithAddress:nil delegate:self requiredAddressFields:PKAddressFieldName|PKAddressFieldPhone];
-            [self.navigationController stp_pushViewController:shippingViewController animated:YES completion:^{
-                completion(nil);
-            }];
-
+            if (self.paymentRequest.requiredShippingAddressFields == PKAddressFieldNone) {
+                [self.delegate coordinator:self willFinishWithCompletion:completion];
+            } else {
+                // TODO: pass in prefilled address
+                STPShippingEntryViewController *shippingViewController = [[STPShippingEntryViewController alloc] initWithAddress:nil delegate:self requiredAddressFields:self.paymentRequest.requiredShippingAddressFields];
+                [self.navigationController stp_pushViewController:shippingViewController animated:YES completion:^{
+                    completion(nil);
+                }];
+            }
         }];
     }];
 }

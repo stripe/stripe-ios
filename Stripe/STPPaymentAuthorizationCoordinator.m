@@ -24,16 +24,20 @@
                                    apiClient:(STPAPIClient *)apiClient
                               sourceProvider:(id<STPSourceProvider>)sourceProvider
                                     delegate:(id<STPCoordinatorDelegate>)delegate {
-    self = [super initWithNavigationController:navigationController apiClient:apiClient sourceProvider:sourceProvider delegate:delegate];
+    self = [super init];
     if (self) {
+        _navigationController = navigationController;
         _paymentRequest = paymentRequest;
+        _apiClient = apiClient;
+        _sourceProvider = sourceProvider;
+        _delegate = delegate;
     }
     return self;
 }
 
 - (void)begin {
     [super begin];
-    STPInitialPaymentDetailsCoordinator *coordinator = [[STPInitialPaymentDetailsCoordinator alloc] initWithNavigationController:self.navigationController apiClient:self.apiClient sourceProvider:self.sourceProvider delegate:self];
+    STPInitialPaymentDetailsCoordinator *coordinator = [[STPInitialPaymentDetailsCoordinator alloc] initWithNavigationController:self.navigationController paymentRequest:self.paymentRequest apiClient:self.apiClient sourceProvider:self.sourceProvider delegate:self];
     [self addChildCoordinator:coordinator];
     [coordinator begin];
 }
