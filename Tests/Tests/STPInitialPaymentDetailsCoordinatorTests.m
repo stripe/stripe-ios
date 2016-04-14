@@ -13,6 +13,7 @@
 #import "MockSTPCoordinatorDelegate.h"
 #import "MockUINavigationController.h"
 #import "STPPaymentCardEntryViewController.h"
+#import "STPShippingEntryViewController.h"
 #import "STPInitialPaymentDetailsCoordinator.h"
 
 @interface STPInitialPaymentDetailsCoordinator()<STPPaymentCardEntryViewControllerDelegate>
@@ -74,13 +75,13 @@
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
-- (void)testEnterCard_success {
-    XCTestExpectation *willFinishExp = [self expectationWithDescription:@"finish"];
+- (void)testEnterCard_success_pushesShippingVC {
+    XCTestExpectation *pushExp = [self expectationWithDescription:@"finish"];
     XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
-    __weak id weakSelf = self;
-    self.delegate.onWillFinishWithCompletion = ^(STPErrorBlock completion) {
-        _XCTPrimitiveAssertNil(weakSelf, completion, @"completion should be nil");
-        [willFinishExp fulfill];
+    __weak typeof(self) weakSelf = self;
+    self.navigationController.onPushViewController = ^(UIViewController *vc, __unused BOOL animated) {
+        _XCTPrimitiveAssertTrue(weakSelf, [vc isKindOfClass:[STPShippingEntryViewController class]], @"");
+        [pushExp fulfill];
     };
 
     [self.sut begin];
