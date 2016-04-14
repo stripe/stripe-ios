@@ -6,21 +6,27 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+#import <PassKit/PassKit.h>
 #import "STPPaymentAuthorizationCoordinator.h"
 #import "STPInitialPaymentDetailsCoordinator.h"
 #import "STPPaymentSummaryViewController.h"
 #import "STPSourceListCoordinator.h"
 #import "STPBlocks.h"
 #import "UINavigationController+Stripe_Completion.h"
+#import "STPAddress.h"
 
 @interface STPPaymentAuthorizationCoordinator()<STPCoordinatorDelegate, STPPaymentSummaryViewControllerDelegate>
 @property(nonatomic)PKPaymentRequest *paymentRequest;
+@property(nonatomic)STPAddress *shippingAddress;
+@property(nonatomic)PKAddressField requiredAddressFields;
 @end
 
 @implementation STPPaymentAuthorizationCoordinator
 
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
                               paymentRequest:(PKPaymentRequest *)paymentRequest
+                             shippingAddress:(STPAddress *)shippingAddress
+                       requiredAddressFields:(PKAddressField)requiredAddressFields
                                    apiClient:(STPAPIClient *)apiClient
                               sourceProvider:(id<STPSourceProvider>)sourceProvider
                                     delegate:(id<STPCoordinatorDelegate>)delegate {
@@ -30,6 +36,8 @@
         _paymentRequest = paymentRequest;
         _apiClient = apiClient;
         _sourceProvider = sourceProvider;
+        _shippingAddress = shippingAddress;
+        _requiredAddressFields = requiredAddressFields;
         _delegate = delegate;
     }
     return self;
