@@ -28,7 +28,6 @@ static NSString *const STPAddressFieldTableViewCellReuseIdentifier = @"STPAddres
 
 @property (nonatomic, weak) id<STPShippingEntryViewControllerDelegate> delegate;
 @property (nonatomic, weak) UITableView *tableView;
-@property (nonatomic, strong) STPAddress *address;
 @property (nonatomic, assign) PKAddressField requiredAddressFields;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, STPAddressFieldViewModel *> *keyToFieldViewModel;
 @property (nonnull, strong) NSArray *fieldViewModelKeys;
@@ -44,40 +43,39 @@ static NSString *const STPAddressFieldTableViewCellReuseIdentifier = @"STPAddres
     NSCAssert(requiredAddressFields != PKAddressFieldNone, @"must have some fields");
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        _address = address;
         _delegate = delegate;
         _requiredAddressFields = requiredAddressFields;
         NSMutableArray *fieldViewModelKeys = [NSMutableArray new];
         NSMutableDictionary *keyToFieldViewModel = [NSMutableDictionary new];
         if (requiredAddressFields & PKAddressFieldName) {
-            STPAddressFieldViewModel *viewModel = [STPAddressFieldViewModel viewModelWithLabel:@"Name" placeholder:@"John Appleseed" contents:self.address.name type:STPAddressFieldViewModelTypeText];
+            STPAddressFieldViewModel *viewModel = [STPAddressFieldViewModel viewModelWithLabel:@"Name" placeholder:@"John Appleseed" contents:address.name type:STPAddressFieldViewModelTypeText];
             keyToFieldViewModel[STPShippingAddressFieldName] = viewModel;
             [fieldViewModelKeys addObject:STPShippingAddressFieldName];
         }
         if (requiredAddressFields & PKAddressFieldEmail) {
-            STPAddressFieldViewModel *viewModel = [STPAddressFieldViewModel viewModelWithLabel:@"Email" placeholder:@"name@example.com" contents:self.address.email type:STPAddressFieldViewModelTypeEmail];
+            STPAddressFieldViewModel *viewModel = [STPAddressFieldViewModel viewModelWithLabel:@"Email" placeholder:@"name@example.com" contents:address.email type:STPAddressFieldViewModelTypeEmail];
             keyToFieldViewModel[STPShippingAddressFieldEmail] = viewModel;
             [fieldViewModelKeys addObject:STPShippingAddressFieldEmail];
         }
         if (requiredAddressFields & PKAddressFieldPhone) {
-            STPAddressFieldViewModel *viewModel = [STPAddressFieldViewModel viewModelWithLabel:@"Phone" placeholder:@"(888) 555-1212" contents:self.address.phone type:STPAddressFieldViewModelTypePhoneNumber];
+            STPAddressFieldViewModel *viewModel = [STPAddressFieldViewModel viewModelWithLabel:@"Phone" placeholder:@"(888) 555-1212" contents:address.phone type:STPAddressFieldViewModelTypePhoneNumber];
             keyToFieldViewModel[STPShippingAddressFieldPhoneNumber] = viewModel;
             [fieldViewModelKeys addObject:STPShippingAddressFieldPhoneNumber];
         }
         if (requiredAddressFields & PKAddressFieldPostalAddress) {
-            STPAddressFieldViewModel *street = [STPAddressFieldViewModel viewModelWithLabel:@"Street" placeholder:@"123 Address St, Apt. 4" contents:self.address.street type:STPAddressFieldViewModelTypeText];
+            STPAddressFieldViewModel *street = [STPAddressFieldViewModel viewModelWithLabel:@"Street" placeholder:@"123 Address St, Apt. 4" contents:address.street type:STPAddressFieldViewModelTypeText];
             keyToFieldViewModel[STPShippingAddressFieldStreet] = street;
             [fieldViewModelKeys addObject:STPShippingAddressFieldStreet];
-            STPAddressFieldViewModel *city = [STPAddressFieldViewModel viewModelWithLabel:@"City" placeholder:@"San Francisco" contents:self.address.city type:STPAddressFieldViewModelTypeText];
+            STPAddressFieldViewModel *city = [STPAddressFieldViewModel viewModelWithLabel:@"City" placeholder:@"San Francisco" contents:address.city type:STPAddressFieldViewModelTypeText];
             keyToFieldViewModel[STPShippingAddressFieldCity] = city;
             [fieldViewModelKeys addObject:STPShippingAddressFieldCity];
-            STPAddressFieldViewModel *state = [STPAddressFieldViewModel viewModelWithLabel:@"State" placeholder:@"CA" contents:self.address.state type:STPAddressFieldViewModelTypeText];
+            STPAddressFieldViewModel *state = [STPAddressFieldViewModel viewModelWithLabel:@"State" placeholder:@"CA" contents:address.state type:STPAddressFieldViewModelTypeText];
             keyToFieldViewModel[STPShippingAddressFieldState] = state;
             [fieldViewModelKeys addObject:STPShippingAddressFieldState];
-            STPAddressFieldViewModel *zip = [STPAddressFieldViewModel viewModelWithLabel:@"ZIP Code" placeholder:@"12345" contents:self.address.postalCode type:STPAddressFieldViewModelTypeZip];
+            STPAddressFieldViewModel *zip = [STPAddressFieldViewModel viewModelWithLabel:@"ZIP Code" placeholder:@"12345" contents:address.postalCode type:STPAddressFieldViewModelTypeZip];
             keyToFieldViewModel[STPShippingAddressFieldPostalCode] = zip;
             [fieldViewModelKeys addObject:STPShippingAddressFieldPostalCode];
-            STPAddressFieldViewModel *country = [STPAddressFieldViewModel viewModelWithLabel:@"Country" placeholder:@"United States" contents:self.address.country type:STPAddressFieldViewModelTypeCountry];
+            STPAddressFieldViewModel *country = [STPAddressFieldViewModel viewModelWithLabel:@"Country" placeholder:@"United States" contents:address.country type:STPAddressFieldViewModelTypeCountry];
             keyToFieldViewModel[STPShippingAddressFieldCountry] = country;
             [fieldViewModelKeys addObject:STPShippingAddressFieldCountry];
         }
@@ -119,13 +117,27 @@ static NSString *const STPAddressFieldTableViewCellReuseIdentifier = @"STPAddres
 }
 
 - (void)done:(__unused id)sender {
-    // TODO: generate shipping address
-    [self.delegate shippingEntryViewController:self didEnterShippingAddress:self.address completion:^(NSError * _Nullable error) {
+    [self.delegate shippingEntryViewController:self
+                       didEnterShippingAddress:[self currentAddress]
+                                    completion:^(NSError * _Nullable error) {
         if (error) {
             // TODO: handle error
             return;
         }
     }];
+}
+
+- (STPAddress *)currentAddress {
+    STPAddress *address = [STPAddress new];
+    address.name = self.keyToFieldViewModel[STPShippingAddressFieldName].contents;
+    address.email = self.keyToFieldViewModel[STPShippingAddressFieldEmail].contents;
+    address.phone = self.keyToFieldViewModel[STPShippingAddressFieldPhoneNumber].contents;
+    address.street = self.keyToFieldViewModel[STPShippingAddressFieldStreet].contents;
+    address.city = self.keyToFieldViewModel[STPShippingAddressFieldCity].contents;
+    address.state = self.keyToFieldViewModel[STPShippingAddressFieldState].contents;
+    address.postalCode = self.keyToFieldViewModel[STPShippingAddressFieldPostalCode].contents;
+    address.country = self.keyToFieldViewModel[STPShippingAddressFieldCountry].contents;
+    return address;
 }
 
 #pragma mark - UITableView

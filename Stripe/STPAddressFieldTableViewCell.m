@@ -15,6 +15,7 @@
 
 @property (nonatomic, weak) STPLabeledFormField *formField;
 @property (nonatomic, weak) id<STPAddressFieldTableViewCellDelegate> delegate;
+@property (nonatomic, weak) STPAddressFieldViewModel *viewModel;
 
 @end
 

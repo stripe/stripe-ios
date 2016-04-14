@@ -18,8 +18,6 @@
 
 @interface STPAddressFieldTableViewCell : UITableViewCell
 
-@property (nonatomic, weak) STPAddressFieldViewModel *viewModel;
-
 - (void)configureWithViewModel:(STPAddressFieldViewModel *)viewModel delegate:(id <STPAddressFieldTableViewCellDelegate>)delegate;
 
 @end
