@@ -20,8 +20,14 @@
     ABRecordRef record = ABPersonCreate();
     ABRecordSetValue(record, kABPersonFirstNameProperty, CFSTR("John"), nil);
     ABRecordSetValue(record, kABPersonLastNameProperty, CFSTR("Doe"), nil);
-    ABRecordSetValue(record, kABPersonPhoneProperty, CFSTR("555-555-5555"), nil);
-    ABRecordSetValue(record, kABPersonEmailProperty, CFSTR("foo@example.com"), nil);
+    ABMutableMultiValueRef phonesRef = ABMultiValueCreateMutable(kABMultiStringPropertyType);
+    ABMultiValueAddValueAndLabel(phonesRef, @"888-555-1212", kABPersonPhoneMainLabel, NULL);
+    ABMultiValueAddValueAndLabel(phonesRef, @"555-555-5555", kABPersonPhoneMobileLabel, NULL);
+    ABRecordSetValue(record, kABPersonPhoneProperty, phonesRef, nil);
+    ABMutableMultiValueRef emailsRef = ABMultiValueCreateMutable(kABMultiStringPropertyType);
+    ABMultiValueAddValueAndLabel(emailsRef, @"foo@example.com", kABHomeLabel, NULL);
+    ABMultiValueAddValueAndLabel(emailsRef, @"bar@example.com", kABWorkLabel, NULL);
+    ABRecordSetValue(record, kABPersonEmailProperty, emailsRef, nil);
     ABMutableMultiValueRef addressRef = ABMultiValueCreateMutable(kABMultiDictionaryPropertyType);
     NSDictionary *addressDict = @{
                                   (NSString *)kABPersonAddressStreetKey: @"55 John St",
@@ -35,7 +41,7 @@
 
     STPAddress *address = [[STPAddress alloc] initWithABRecord:record];
     XCTAssertEqualObjects(@"John Doe", address.name);
-    XCTAssertEqualObjects(@"555-555-5555", address.phone);
+    XCTAssertEqualObjects(@"8885551212", address.phone);
     XCTAssertEqualObjects(@"foo@example.com", address.email);
     XCTAssertEqualObjects(@"55 John St", address.street);
     XCTAssertEqualObjects(@"New York", address.city);

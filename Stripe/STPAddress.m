@@ -8,10 +8,11 @@
 
 #import "STPAddress.h"
 #import "STPCardValidator.h"
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 
 @implementation STPAddress
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 
 - (instancetype)initWithABRecord:(ABRecordRef)record {
     self = [super init];
@@ -59,6 +60,7 @@
     return self;
 }
 
+#pragma clang diagnostic pop
+
 @end
 
-#pragma clang diagnostic pop
