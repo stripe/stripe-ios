@@ -12,8 +12,6 @@
 
 @interface STPInitialPaymentDetailsCoordinator : STPBaseCoordinator
 
-
-
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
                               paymentRequest:(PKPaymentRequest *)paymentRequest
                                    apiClient:(STPAPIClient *)apiClient

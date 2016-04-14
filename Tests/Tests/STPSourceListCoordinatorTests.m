@@ -18,6 +18,7 @@
 
 @interface STPSourceListCoordinator()<STPPaymentCardEntryViewControllerDelegate, STPSourceListViewControllerDelegate>
 @property(nonatomic, weak) STPSourceListViewController *sourceListViewController;
+@property(nonatomic, readonly)UINavigationController *navigationController;
 @end
 
 @interface STPSourceListCoordinatorTests : XCTestCase

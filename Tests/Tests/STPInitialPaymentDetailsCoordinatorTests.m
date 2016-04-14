@@ -17,6 +17,7 @@
 #import "STPInitialPaymentDetailsCoordinator.h"
 
 @interface STPInitialPaymentDetailsCoordinator()<STPPaymentCardEntryViewControllerDelegate>
+@property(nonatomic, readonly)UINavigationController *navigationController;
 @end
 
 @interface STPInitialPaymentDetailsCoordinatorTests : XCTestCase
@@ -27,6 +28,7 @@
 @property (nonatomic, strong) MockSTPSourceProvider *sourceProvider;
 @property (nonatomic, strong) MockSTPCoordinatorDelegate *delegate;
 @property (nonatomic, strong) STPCardParams *card;
+@property (nonatomic, strong) PKPaymentRequest *paymentRequest;
 
 @end
 
@@ -38,7 +40,9 @@
     self.apiClient = [MockSTPAPIClient new];
     self.sourceProvider = [MockSTPSourceProvider new];
     self.delegate = [MockSTPCoordinatorDelegate new];
+    self.paymentRequest = [[PKPaymentRequest alloc] init];
     self.sut = [[STPInitialPaymentDetailsCoordinator alloc] initWithNavigationController:self.navigationController
+                                                                          paymentRequest:self.paymentRequest
                                                                                apiClient:self.apiClient
                                                                           sourceProvider:self.sourceProvider
                                                                                 delegate:self.delegate];

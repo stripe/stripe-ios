@@ -13,12 +13,8 @@
 
 @interface STPPaymentAuthorizationCoordinator : STPBaseCoordinator
 
-
-
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
                               paymentRequest:(PKPaymentRequest *)paymentRequest
-                             shippingAddress:(STPAddress *)shippingAddress
-                       requiredAddressFields:(PKAddressField)requiredAddressFields
                                    apiClient:(STPAPIClient *)apiClient
                               sourceProvider:(id<STPSourceProvider>)sourceProvider
                                     delegate:(id<STPCoordinatorDelegate>)delegate;

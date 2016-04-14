@@ -32,6 +32,7 @@
 @end
 
 @interface STPPaymentAuthorizationCoordinator()<STPCoordinatorDelegate, STPPaymentSummaryViewControllerDelegate>
+@property(nonatomic, readonly)UINavigationController *navigationController;
 @end
 
 @interface STPPaymentAuthorizationCoordinatorTests : XCTestCase

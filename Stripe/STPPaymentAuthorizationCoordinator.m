@@ -18,8 +18,6 @@
 @interface STPPaymentAuthorizationCoordinator()<STPCoordinatorDelegate, STPPaymentSummaryViewControllerDelegate>
 
 @property(nonatomic)PKPaymentRequest *paymentRequest;
-@property(nonatomic)STPAddress *shippingAddress;
-@property(nonatomic)PKAddressField requiredAddressFields;
 @property(nonatomic, weak, readonly)id<STPCoordinatorDelegate>delegate;
 @property(nonatomic, readonly)UINavigationController *navigationController;
 @property(nonatomic, readonly)STPAPIClient *apiClient;
@@ -31,8 +29,6 @@
 
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
                               paymentRequest:(PKPaymentRequest *)paymentRequest
-                             shippingAddress:(STPAddress *)shippingAddress
-                       requiredAddressFields:(PKAddressField)requiredAddressFields
                                    apiClient:(STPAPIClient *)apiClient
                               sourceProvider:(id<STPSourceProvider>)sourceProvider
                                     delegate:(id<STPCoordinatorDelegate>)delegate {
@@ -42,8 +38,6 @@
         _paymentRequest = paymentRequest;
         _apiClient = apiClient;
         _sourceProvider = sourceProvider;
-        _shippingAddress = shippingAddress;
-        _requiredAddressFields = requiredAddressFields;
         _delegate = delegate;
     }
     return self;
