@@ -18,6 +18,7 @@
 @property (nonatomic, weak) STPAddressFieldViewModel *viewModel;
 @property (nonatomic) UIToolbar *inputAccessoryToolbar;
 @property (nonatomic) UIPickerView *countryPickerView;
+@property (nonatomic, strong) NSArray *countryCodes;
 
 @end
 
@@ -37,7 +38,8 @@
         UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStyleDone target:self action:@selector(nextTapped:)];
         toolbar.items = @[flexibleItem, nextItem];
         _inputAccessoryToolbar = toolbar;
-        
+
+        _countryCodes = [@[@""] arrayByAddingObjectsFromArray:[NSLocale ISOCountryCodes]];
         UIPickerView *pickerView = [UIPickerView new];
         pickerView.dataSource = self;
         pickerView.delegate = self;
@@ -65,11 +67,18 @@
         case STPAddressFieldViewModelTypeEmail:
             self.formField.formTextField.keyboardType = UIKeyboardTypeEmailAddress;
             break;
-        case STPAddressFieldViewModelTypeCountry:
-            // TODO: country picker
+        case STPAddressFieldViewModelTypeCountry: {
             self.formField.formTextField.keyboardType = UIKeyboardTypeDefault;
             self.formField.formTextField.inputView = self.countryPickerView;
+            NSString *countryCode = [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode];
+            NSInteger index = [self.countryCodes indexOfObject:self.viewModel.contents];
+            if (index == NSNotFound) {
+                index = [self.countryCodes indexOfObject:countryCode];
+            }
+            [self.countryPickerView selectRow:index inComponent:0 animated:NO];
+            [self pickerView:self.countryPickerView didSelectRow:index inComponent:0];
             break;
+        }
         case STPAddressFieldViewModelTypeZip:
             self.formField.formTextField.keyboardType = UIKeyboardTypeNumberPad;
             self.formField.formTextField.inputAccessoryView = self.inputAccessoryToolbar;
@@ -109,12 +118,12 @@
 #pragma mark - UIPickerViewDataSource
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    self.viewModel.contents = [NSLocale ISOCountryCodes][row];
+    self.viewModel.contents = self.countryCodes[row];
     self.formField.formTextField.text = [self pickerView:pickerView titleForRow:row forComponent:component];
 }
 
 - (NSString *)pickerView:(__unused UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(__unused NSInteger)component {
-    NSString *countryCode = [NSLocale ISOCountryCodes][row];
+    NSString *countryCode = self.countryCodes[row];
     NSString *identifier = [NSLocale localeIdentifierFromComponents:[NSDictionary dictionaryWithObject:countryCode forKey: NSLocaleCountryCode]];
     return [[NSLocale currentLocale] displayNameForKey:NSLocaleIdentifier value:identifier];
 }
@@ -124,7 +133,7 @@
 }
 
 - (NSInteger)pickerView:(__unused UIPickerView *)pickerView numberOfRowsInComponent:(__unused NSInteger)component {
-    return [NSLocale ISOCountryCodes].count;
+    return self.countryCodes.count;
 }
 
 @end
