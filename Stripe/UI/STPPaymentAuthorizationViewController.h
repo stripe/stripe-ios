@@ -24,7 +24,10 @@
 
 @interface STPPaymentAuthorizationViewController : UIViewController
 
-- (nonnull instancetype)initWithPaymentRequest:(nonnull PKPaymentRequest *)paymentRequest apiClient:(nonnull STPAPIClient *)apiClient;
+- (nonnull instancetype)initWithPaymentRequest:(nonnull PKPaymentRequest *)paymentRequest
+                                     apiClient:(nonnull STPAPIClient *)apiClient
+                                sourceProvider:(nullable id<STPSourceProvider>)sourceProvider;
+;
 @property(nonatomic, readonly, nonnull) PKPaymentRequest *paymentRequest;
 @property(nonatomic, weak, nullable) id<STPPaymentAuthorizationViewControllerDelegate> delegate;
 

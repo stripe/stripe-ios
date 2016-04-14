@@ -29,12 +29,13 @@
 @implementation STPPaymentAuthorizationViewController
 
 - (nonnull instancetype)initWithPaymentRequest:(nonnull PKPaymentRequest *)paymentRequest
-                                     apiClient:(nonnull STPAPIClient *)apiClient {
+                                     apiClient:(nonnull STPAPIClient *)apiClient
+                                sourceProvider:(nullable id<STPSourceProvider>)sourceProvider {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _apiClient = apiClient;
         _paymentRequest = paymentRequest;
-        _sourceProvider = [STPBasicSourceProvider new];
+        _sourceProvider = sourceProvider ?: [STPBasicSourceProvider new];
         UINavigationController *navigationController = [[UINavigationController alloc] init];
         _navigationController = navigationController;
         [self addChildViewController:_navigationController];

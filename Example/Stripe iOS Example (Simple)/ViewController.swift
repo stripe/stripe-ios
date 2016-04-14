@@ -16,7 +16,6 @@ enum STPBackendChargeResult {
 
 typealias STPTokenSubmissionHandler = (STPBackendChargeResult?, NSError?) -> Void
 
-
 class ViewController: UIViewController, STPPaymentCoordinatorDelegate {
 
     // Replace these values with your application's keys
@@ -37,7 +36,7 @@ class ViewController: UIViewController, STPPaymentCoordinatorDelegate {
             PKPaymentSummaryItem(label: "Very Stylish Hat", amount: NSDecimalNumber(string: "10.00"))
         ]
         paymentRequest.requiredShippingAddressFields = [.All];
-        let paymentCoordinator = STPPaymentCoordinator(paymentRequest: paymentRequest, apiClient: STPAPIClient.sharedClient(), delegate: self)
+        let paymentCoordinator = STPPaymentCoordinator(paymentRequest: paymentRequest, sourceProvider:nil, apiClient: STPAPIClient.sharedClient(), delegate: self)
         self.presentViewController(paymentCoordinator.paymentViewController, animated: true, completion: nil)
     }
     
