@@ -46,7 +46,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view addSubview:self.navigationController.view];
-    self.coordinator = [[STPPaymentAuthorizationCoordinator alloc] initWithNavigationController:self.navigationController paymentRequest:self.paymentRequest apiClient:self.apiClient sourceProvider:self.sourceProvider delegate:self];
+    self.coordinator = [[STPPaymentAuthorizationCoordinator alloc] initWithNavigationController:self.navigationController
+                                                                                 paymentRequest:self.paymentRequest
+                                                                                shippingAddress:nil
+                                                                          requiredAddressFields:PKAddressFieldNone
+                                                                                      apiClient:self.apiClient
+                                                                                 sourceProvider:self.sourceProvider
+                                                                                       delegate:self];
     [self.coordinator begin];
 }
 
