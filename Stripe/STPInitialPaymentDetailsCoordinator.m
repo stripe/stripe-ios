@@ -44,9 +44,8 @@
 
 - (void)begin {
     [super begin];
-    STPShippingEntryViewController *shippingEntryViewController = [[STPShippingEntryViewController alloc] initWithAddress:nil delegate:self requiredAddressFields:PKAddressFieldAll];
-//    STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithDelegate:self];
-    self.navigationController.viewControllers = @[shippingEntryViewController];
+    STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithDelegate:self];
+    self.navigationController.viewControllers = @[paymentCardViewController];
 }
 
 #pragma mark - STPPaymentCardEntryViewControllerDelegate
@@ -74,9 +73,11 @@
             }
             if (self.paymentRequest.requiredShippingAddressFields == PKAddressFieldNone) {
                 [self.delegate coordinator:self willFinishWithCompletion:completion];
+                completion(nil);
             } else {
-                // TODO: pass in prefilled address
-                STPShippingEntryViewController *shippingViewController = [[STPShippingEntryViewController alloc] initWithAddress:nil delegate:self requiredAddressFields:self.paymentRequest.requiredShippingAddressFields];
+                STPShippingEntryViewController *shippingViewController = [[STPShippingEntryViewController alloc] initWithAddress:nil
+                                                                                                                        delegate:self
+                                                                                                           requiredAddressFields:self.paymentRequest.requiredShippingAddressFields];
                 [self.navigationController stp_pushViewController:shippingViewController animated:YES completion:^{
                     completion(nil);
                 }];

@@ -60,6 +60,7 @@
     self.apiClient = nil;
     self.sourceProvider = nil;
     self.delegate = nil;
+    self.paymentRequest = nil;
     self.sut = nil;
     self.card = nil;
 }
@@ -79,13 +80,33 @@
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
-- (void)testEnterCard_success_pushesShippingVC {
+- (void)testEnterCard_success_pushesShippingVC_withRequiredAddressFields {
     XCTestExpectation *pushExp = [self expectationWithDescription:@"finish"];
     XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
+    self.paymentRequest.requiredShippingAddressFields = PKAddressFieldAll;
     __weak typeof(self) weakSelf = self;
     self.navigationController.onPushViewController = ^(UIViewController *vc, __unused BOOL animated) {
         _XCTPrimitiveAssertTrue(weakSelf, [vc isKindOfClass:[STPShippingEntryViewController class]], @"");
         [pushExp fulfill];
+    };
+
+    [self.sut begin];
+    [self.sut paymentCardEntryViewController:nil didEnterCardParams:self.card completion:^(__unused NSError * _Nullable paramsError) {
+        [completionExp fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testEnterCard_success_completes_withNoRequiredAddressFields {
+    XCTestExpectation *finishExp = [self expectationWithDescription:@"willFinish"];
+    XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
+    self.paymentRequest.requiredShippingAddressFields = PKAddressFieldNone;
+    __weak typeof(self) weakSelf = self;
+    self.delegate.onWillFinishWithCompletion = ^(__unused STPErrorBlock completion) {
+        [finishExp fulfill];
+    };
+    self.navigationController.onPushViewController = ^(__unused UIViewController *vc, __unused BOOL animated) {
+        _XCTPrimitiveFail(weakSelf, "should not be called");
     };
 
     [self.sut begin];
