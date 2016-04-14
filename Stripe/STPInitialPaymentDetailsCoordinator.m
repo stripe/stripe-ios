@@ -15,7 +15,13 @@
 #import "STPToken.h"
 
 @interface STPInitialPaymentDetailsCoordinator()<STPPaymentCardEntryViewControllerDelegate, STPShippingEntryViewControllerDelegate>
+
 @property(nonatomic)PKPaymentRequest *paymentRequest;
+@property(nonatomic, weak, readonly)id<STPCoordinatorDelegate>delegate;
+@property(nonatomic, readonly)UINavigationController *navigationController;
+@property(nonatomic, readonly)STPAPIClient *apiClient;
+@property(nonatomic, readonly)id<STPSourceProvider> sourceProvider;
+
 @end
 
 @implementation STPInitialPaymentDetailsCoordinator
@@ -25,8 +31,12 @@
                                    apiClient:(STPAPIClient *)apiClient
                               sourceProvider:(id<STPSourceProvider>)sourceProvider
                                     delegate:(id<STPCoordinatorDelegate>)delegate {
-    self = [super initWithNavigationController:navigationController apiClient:apiClient sourceProvider:sourceProvider delegate:delegate];
+    self = [super init];
     if (self) {
+        _navigationController = navigationController;
+        _apiClient = apiClient;
+        _sourceProvider = sourceProvider;
+        _delegate = delegate;
         _paymentRequest = paymentRequest;
     }
     return self;

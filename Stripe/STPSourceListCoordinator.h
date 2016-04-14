@@ -11,5 +11,9 @@
 
 @interface STPSourceListCoordinator : STPBaseCoordinator
 
+- (instancetype)initWithNavigationController:(UINavigationController *)navigationController
+                                   apiClient:(STPAPIClient *)apiClient
+                              sourceProvider:(id<STPSourceProvider>)sourceProvider
+                                    delegate:(id<STPCoordinatorDelegate>)delegate;
 
 @end

@@ -16,9 +16,15 @@
 #import "STPAddress.h"
 
 @interface STPPaymentAuthorizationCoordinator()<STPCoordinatorDelegate, STPPaymentSummaryViewControllerDelegate>
+
 @property(nonatomic)PKPaymentRequest *paymentRequest;
 @property(nonatomic)STPAddress *shippingAddress;
 @property(nonatomic)PKAddressField requiredAddressFields;
+@property(nonatomic, weak, readonly)id<STPCoordinatorDelegate>delegate;
+@property(nonatomic, readonly)UINavigationController *navigationController;
+@property(nonatomic, readonly)STPAPIClient *apiClient;
+@property(nonatomic, readonly)id<STPSourceProvider> sourceProvider;
+
 @end
 
 @implementation STPPaymentAuthorizationCoordinator

@@ -15,10 +15,30 @@
 #import "UINavigationController+Stripe_Completion.h"
 
 @interface STPSourceListCoordinator()<STPPaymentCardEntryViewControllerDelegate, STPSourceListViewControllerDelegate>
+
 @property(nonatomic, weak) STPSourceListViewController *sourceListViewController;
+@property(nonatomic, weak, readonly)id<STPCoordinatorDelegate>delegate;
+@property(nonatomic, readonly)UINavigationController *navigationController;
+@property(nonatomic, readonly)STPAPIClient *apiClient;
+@property(nonatomic, readonly)id<STPSourceProvider> sourceProvider;
+
 @end
 
 @implementation STPSourceListCoordinator
+
+- (instancetype)initWithNavigationController:(UINavigationController *)navigationController
+                                   apiClient:(STPAPIClient *)apiClient
+                              sourceProvider:(id<STPSourceProvider>)sourceProvider
+                                    delegate:(id<STPCoordinatorDelegate>)delegate {
+    self = [super init];
+    if (self) {
+        _navigationController = navigationController;
+        _apiClient = apiClient;
+        _sourceProvider = sourceProvider;
+        _delegate = delegate;
+    }
+    return self;
+}
 
 - (void)begin {
     [super begin];
