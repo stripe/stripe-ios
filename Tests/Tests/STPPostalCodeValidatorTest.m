@@ -15,20 +15,20 @@
 
 @implementation STPPostalCodeValidatorTest
 
-- (void)testValidPhoneNumbers {
+- (void)testValidPostalCodes {
     NSArray *numbers = @[
-                          @"888-555-1212",
-                          @"8885551212",
-                          @"(888) 555-1212",
+                          @"10002",
+                          @"10002-1234",
+                          @"21218",
                           ];
     for (NSString *number in numbers) {
         XCTAssertTrue([STPPostalCodeValidator stringIsValidPostalCode:number]);
     }
 }
 
-- (void)testInvalidPhoneNumbers {
+- (void)testInvalidPostalCodes {
      NSArray *numbers = @[
-                          @"888-555-121",
+                          @"888-555-12",
                           @"123",
                           @"foo",
                           ];
