@@ -39,7 +39,10 @@
         toolbar.items = @[flexibleItem, nextItem];
         _inputAccessoryToolbar = toolbar;
 
-        _countryCodes = [@[@""] arrayByAddingObjectsFromArray:[NSLocale ISOCountryCodes]];
+        NSString *countryCode = [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode];
+        NSMutableArray *otherCountryCodes = [[NSLocale ISOCountryCodes] mutableCopy];
+        [otherCountryCodes removeObject:countryCode];
+        _countryCodes = [@[@"", countryCode] arrayByAddingObjectsFromArray:otherCountryCodes];
         UIPickerView *pickerView = [UIPickerView new];
         pickerView.dataSource = self;
         pickerView.delegate = self;
@@ -70,13 +73,14 @@
         case STPAddressFieldViewModelTypeCountry: {
             self.formField.formTextField.keyboardType = UIKeyboardTypeDefault;
             self.formField.formTextField.inputView = self.countryPickerView;
-            NSString *countryCode = [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode];
             NSInteger index = [self.countryCodes indexOfObject:self.viewModel.contents];
             if (index == NSNotFound) {
-                index = [self.countryCodes indexOfObject:countryCode];
+                self.viewModel.contents = @"";
+                self.formField.formTextField.text = @"";
             }
-            [self.countryPickerView selectRow:index inComponent:0 animated:NO];
-            [self pickerView:self.countryPickerView didSelectRow:index inComponent:0];
+            else {
+                [self.countryPickerView selectRow:index inComponent:0 animated:NO];
+            }
             break;
         }
         case STPAddressFieldViewModelTypeZip:
@@ -113,9 +117,7 @@
     return NO;
 }
 
-#pragma mark - UIPickerViewDelegate
-
-#pragma mark - UIPickerViewDataSource
+#pragma mark - UIPickerView
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     self.viewModel.contents = self.countryCodes[row];
