@@ -81,6 +81,7 @@
         }
     } else {
         [self.delegate coordinator:self willFinishWithCompletion:completion];
+        completion(nil);
     }
 }
 

@@ -28,8 +28,8 @@
 
 - (void)testInvalidPostalCodes {
      NSArray *numbers = @[
-                          @"888-555-12",
-                          @"123",
+                          @"",
+                          @"$$$$$",
                           @"foo",
                           ];
     for (NSString *number in numbers) {
