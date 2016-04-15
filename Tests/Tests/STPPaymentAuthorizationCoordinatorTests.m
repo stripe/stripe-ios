@@ -243,7 +243,7 @@
     originalShipping.name = @"foo";
     self.apiAdapter.shippingAddress = originalShipping;
     NSError *expectedError = [NSError errorWithDomain:@"foo" code:0 userInfo:nil];
-    self.apiAdapter.updateCustomerShippingError = expectedError;
+    self.apiAdapter.updateCustomerShippingAddressError = expectedError;
     self.paymentRequest.requiredShippingAddressFields = PKAddressFieldPhone;
     XCTestExpectation *pushExp = [self expectationWithDescription:@"push"];
     XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
