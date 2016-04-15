@@ -15,6 +15,7 @@
 @protocol STPPaymentSummaryViewControllerDelegate <NSObject>
 
 - (void)paymentSummaryViewControllerDidEditPaymentMethod:(nonnull STPPaymentSummaryViewController *)summaryViewController;
+- (void)paymentSummaryViewControllerDidEditShipping:(nonnull STPPaymentSummaryViewController *)summaryViewController;
 - (void)paymentSummaryViewControllerDidCancel:(nonnull STPPaymentSummaryViewController *)summaryViewController;
 - (void)paymentSummaryViewController:(nonnull STPPaymentSummaryViewController *)summaryViewController didPressBuyCompletion:(nonnull STPErrorBlock)completion;
 

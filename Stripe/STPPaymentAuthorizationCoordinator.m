@@ -11,11 +11,13 @@
 #import "STPInitialPaymentDetailsCoordinator.h"
 #import "STPPaymentSummaryViewController.h"
 #import "STPSourceListCoordinator.h"
+#import "STPShippingEntryViewController.h"
 #import "STPBlocks.h"
 #import "UINavigationController+Stripe_Completion.h"
+#import "STPBackendAPIAdapter.h"
 #import "STPAddress.h"
 
-@interface STPPaymentAuthorizationCoordinator()<STPCoordinatorDelegate, STPPaymentSummaryViewControllerDelegate>
+@interface STPPaymentAuthorizationCoordinator()<STPCoordinatorDelegate, STPPaymentSummaryViewControllerDelegate, STPShippingEntryViewControllerDelegate>
 
 @property(nonatomic)PKPaymentRequest *paymentRequest;
 @property(nonatomic, weak, readonly)id<STPCoordinatorDelegate>delegate;
@@ -75,12 +77,35 @@
     [coordinator begin];
 }
 
+- (void)paymentSummaryViewControllerDidEditShipping:(__unused STPPaymentSummaryViewController *)summaryViewController {
+    STPShippingEntryViewController *shippingViewController = [[STPShippingEntryViewController alloc] initWithAddress:[self.apiAdapter shippingAddress] delegate:self requiredAddressFields:self.paymentRequest.requiredShippingAddressFields];
+    [self.navigationController stp_pushViewController:shippingViewController animated:YES completion:nil];
+}
+
 - (void)paymentSummaryViewControllerDidCancel:(__unused STPPaymentSummaryViewController *)summaryViewController {
     [self.delegate coordinatorDidCancel:self];
 }
 
 - (void)paymentSummaryViewController:(__unused STPPaymentSummaryViewController *)summaryViewController didPressBuyCompletion:(STPErrorBlock)completion {
     [self.delegate coordinator:self willFinishWithCompletion:completion];
+}
+
+#pragma mark - STPShippingEntryViewControllerDelegate
+
+- (void)shippingEntryViewController:(__unused STPShippingEntryViewController *)paymentCardViewController didEnterShippingAddress:(STPAddress *)address completion:(STPErrorBlock)completion {
+    [self.apiAdapter updateCustomerShippingAddress:address completion:^(__unused STPAddress *retrievedAddress, NSError *error) {
+        if (error) {
+            // TODO handle error
+            completion(error);
+            return;
+        }
+        [self.navigationController popViewControllerAnimated:YES];
+        completion(nil);
+    }];
+}
+
+- (void)shippingEntryViewControllerDidCancel:(__unused STPShippingEntryViewController *)paymentCardViewController {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

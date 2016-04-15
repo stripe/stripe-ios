@@ -150,8 +150,15 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 0) {
-        [self.delegate paymentSummaryViewControllerDidEditPaymentMethod:self];
+    switch (indexPath.section) {
+        case STPPaymentSummaryViewControllerSectionPaymentMethod: {
+            [self.delegate paymentSummaryViewControllerDidEditPaymentMethod:self];
+            break;
+        }
+        case STPPaymentSummaryViewControllerSectionShippingAddress: {
+            [self.delegate paymentSummaryViewControllerDidEditShipping:self];
+            break;
+        }
     }
 }
 

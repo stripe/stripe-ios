@@ -12,7 +12,18 @@
 @implementation STPShippingAddressCell
 
 - (void)configureWithAddress:(STPAddress *)address {
-    self.textLabel.text = address.line1;
+    NSArray *components = @[
+                            address.name ?: @"",
+                            address.line1 ?: @"",
+                            address.line2 ?: @"",
+                            address.city ?: @"",
+                            address.state ?: @"",
+                            address.postalCode ?: @"",
+                            address.country ?: @"",
+                            address.phone ?: @"",
+                            address.email ?: @"",
+                            ];
+    self.textLabel.text = [[components componentsJoinedByString:@" "] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 }
 
 @end
