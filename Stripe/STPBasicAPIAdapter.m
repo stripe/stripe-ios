@@ -16,6 +16,12 @@
 
 @implementation STPBasicAPIAdapter
 
+- (void)afterDelay:(void(^)())block {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        block();
+    });
+}
+
 - (instancetype)init {
     return [self initWithRetrieveSourcesBlock:^(STPSourceCompletionBlock  _Nonnull completion) {
         completion(self.selectedSource, self.sources, nil);
@@ -32,16 +38,18 @@
 }
 
 - (void)retrieveSources:(STPSourceCompletionBlock)completion {
-    __weak STPBasicAPIAdapter *weakself = self;
-    self.retrieveSourcesBlock(^(id<STPSource> _Nullable selectedSource, NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
-        if (error) {
-            completion(nil, nil, error);
-            return;
-        }
-        weakself.selectedSource = selectedSource;
-        weakself.sources = sources;
-        completion(selectedSource, sources, error);
-    });
+    [self afterDelay:^{
+        __weak STPBasicAPIAdapter *weakself = self;
+        self.retrieveSourcesBlock(^(id<STPSource> _Nullable selectedSource, NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
+            if (error) {
+                completion(nil, nil, error);
+                return;
+            }
+            weakself.selectedSource = selectedSource;
+            weakself.sources = sources;
+            completion(selectedSource, sources, error);
+        });
+    }];
 }
 
 - (void)addSource:(id<STPSource>)source completion:(STPSourceCompletionBlock)completion {
@@ -56,12 +64,16 @@
 
 - (void)updateCustomerShippingAddress:(nonnull STPAddress *)shippingAddress
                            completion:(nonnull STPAddressCompletionBlock)completion {
-    self.shippingAddress = shippingAddress;
-    completion(shippingAddress, nil);
+    [self afterDelay:^{
+        self.shippingAddress = shippingAddress;
+        completion(shippingAddress, nil);
+    }];
 }
 
 - (void)retrieveCustomerShippingAddress:(nonnull STPAddressCompletionBlock)completion {
-    completion(self.shippingAddress, nil);
+    [self afterDelay:^{
+        completion(self.shippingAddress, nil);
+    }];
 }
 
 @end

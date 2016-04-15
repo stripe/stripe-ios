@@ -32,6 +32,7 @@ static NSString *const STPAddressFieldTableViewCellReuseIdentifier = @"STPAddres
 @property (nonatomic, assign) PKAddressField requiredAddressFields;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, STPAddressFieldViewModel *> *keyToFieldViewModel;
 @property (nonnull, strong) NSArray *fieldViewModelKeys;
+@property (nonatomic, weak) UIActivityIndicatorView *activityIndicator;
 
 @end
 
@@ -106,6 +107,10 @@ static NSString *const STPAddressFieldTableViewCellReuseIdentifier = @"STPAddres
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                           target:self action:@selector(done:)];
+
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _activityIndicator = activityIndicator;
+    self.navigationItem.titleView = activityIndicator;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -125,9 +130,11 @@ static NSString *const STPAddressFieldTableViewCellReuseIdentifier = @"STPAddres
 }
 
 - (void)done:(__unused id)sender {
+    [self.activityIndicator startAnimating];
     [self.delegate shippingEntryViewController:self
                        didEnterShippingAddress:[self currentAddress]
                                     completion:^(NSError * _Nullable error) {
+        [self.activityIndicator stopAnimating];
         if (error) {
             // TODO: handle error
             return;
