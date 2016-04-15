@@ -32,7 +32,7 @@
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
                               paymentRequest:(PKPaymentRequest *)paymentRequest
                                    apiClient:(STPAPIClient *)apiClient
-                              apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
+                                  apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                                     delegate:(id<STPCoordinatorDelegate>)delegate {
     self = [super init];
     if (self) {
