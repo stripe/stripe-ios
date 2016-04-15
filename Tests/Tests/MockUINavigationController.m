@@ -22,7 +22,7 @@
     };
     [CATransaction begin];
     [CATransaction setCompletionBlock:completionBlock];
-    [super pushViewController:viewController animated:animated];
+    [super pushViewController:viewController animated:NO];
     [CATransaction commit];
 }
 
@@ -34,7 +34,7 @@
     };
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
-    [super pushViewController:viewController animated:animated];
+    [super pushViewController:viewController animated:NO];
     [CATransaction commit];
 }
 
@@ -50,7 +50,7 @@
     };
     [CATransaction begin];
     [CATransaction setCompletionBlock:completionBlock];
-    [super popViewControllerAnimated:animated];
+    [super popViewControllerAnimated:NO];
     [CATransaction commit];
 }
 
@@ -62,7 +62,7 @@
     };
     [CATransaction begin];
     [CATransaction setCompletionBlock:completion];
-    UIViewController *vc = [super popViewControllerAnimated:animated];
+    UIViewController *vc = [super popViewControllerAnimated:NO];
     [CATransaction commit];
     return vc;
 }

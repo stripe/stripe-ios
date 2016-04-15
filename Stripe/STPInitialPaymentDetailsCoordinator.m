@@ -47,9 +47,15 @@
     [super begin];
     STPInitialLoadingViewController *loadingViewController = [[STPInitialLoadingViewController alloc] init];
     self.navigationController.viewControllers = @[loadingViewController];
-    [self.apiAdapter retrieveSources:^(id<STPSource> selectedSource, __unused NSArray<id<STPSource>> *sources, __unused NSError *error) {
+    [self.apiAdapter retrieveSources:^(id<STPSource> selectedSource, __unused NSArray<id<STPSource>> *sources, NSError *error) {
+        if (error) {
+            // TODO: handle error
+            return;
+        }
         if (selectedSource) {
-            [self showShippingIfNecessaryCompletion:nil];
+            [self showShippingIfNecessaryCompletion:^(__unused NSError *showShippingError) {
+                // noop
+            }];
         } else {
             STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithDelegate:self];
             BOOL animated = loadingViewController.isViewLoaded && loadingViewController.view.window;
@@ -66,7 +72,9 @@
                     STPShippingEntryViewController *shippingViewController = [[STPShippingEntryViewController alloc] initWithAddress:address delegate:self requiredAddressFields:self.paymentRequest.requiredShippingAddressFields];
                     BOOL animated = self.navigationController.isViewLoaded && self.navigationController.view.window;
                     [self.navigationController stp_pushViewController:shippingViewController animated:animated completion:^{
-                        completion(nil);
+                        if (completion) {
+                            completion(nil);
+                        }
                     }];
                 } else {
                     [self.delegate coordinator:self willFinishWithCompletion:completion];
@@ -76,12 +84,13 @@
             STPShippingEntryViewController *shippingViewController = [[STPShippingEntryViewController alloc] initWithAddress:nil delegate:self requiredAddressFields:self.paymentRequest.requiredShippingAddressFields];
             BOOL animated = self.navigationController.isViewLoaded && self.navigationController.view.window;
             [self.navigationController stp_pushViewController:shippingViewController animated:animated completion:^{
-                completion(nil);
+                if (completion) {
+                    completion(nil);
+                }
             }];
         }
     } else {
         [self.delegate coordinator:self willFinishWithCompletion:completion];
-        completion(nil);
     }
 }
 
@@ -98,14 +107,18 @@
     [self.apiClient createTokenWithCard:cardParams completion:^(STPToken *token, NSError *error) {
         if (error) {
             NSLog(@"TODO");
-            completion(error);
+            if (completion) {
+                completion(error);
+            }
             return;
         }
         
         [weakself.apiAdapter addSource:token completion:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> *sources, NSError *sourceError) {
             if (sourceError) {
                 NSLog(@"TODO");
-                completion(sourceError);
+                if (completion) {
+                    completion(sourceError);
+                }
                 return;
             }
             [self showShippingIfNecessaryCompletion:completion];
@@ -126,9 +139,12 @@
         [self.apiAdapter updateCustomerShippingAddress:address completion:^(__unused STPAddress *retrievedAddress, NSError *error) {
             if (error) {
                 // TODO handle error
-            } else {
-                [self.delegate coordinator:self willFinishWithCompletion:completion];
+                if (completion) {
+                    completion(error);
+                }
+                return;
             }
+            [self.delegate coordinator:self willFinishWithCompletion:completion];
         }];
     } else {
         [self.delegate coordinator:self willFinishWithCompletion:completion];

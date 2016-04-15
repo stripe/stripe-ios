@@ -60,19 +60,25 @@
     [self.apiClient createTokenWithCard:cardParams completion:^(__unused STPToken * _Nullable token, __unused NSError * _Nullable error) {
         if (error) {
             NSLog(@"TODO");
-            completion(error);
+            if (completion) {
+                completion(error);
+            }
             return;
         }
         
         [self.apiAdapter addSource:token completion:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> * _Nullable sources, __unused NSError * _Nullable addSourceError) {
             if (addSourceError) {
                 NSLog(@"TODO");
-                completion(addSourceError);
+                if (completion) {
+                    completion(addSourceError);
+                }
                 return;
             }
             [weakself.sourceListViewController reload];
             [weakself.navigationController popViewControllerAnimated:true];
-            completion(nil);
+            if (completion) {
+                completion(nil);
+            }
         }];
     }];
 }

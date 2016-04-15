@@ -100,11 +100,15 @@
     [self.apiAdapter updateCustomerShippingAddress:address completion:^(__unused STPAddress *retrievedAddress, NSError *error) {
         if (error) {
             // TODO handle error
-            completion(error);
+            if (completion) {
+                completion(error);
+            }
             return;
         }
         [self.navigationController popViewControllerAnimated:YES];
-        completion(nil);
+        if (completion) {
+            completion(nil);
+        }
     }];
 }
 
