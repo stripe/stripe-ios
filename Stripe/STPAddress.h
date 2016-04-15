@@ -10,11 +10,13 @@
 
 #import <Foundation/Foundation.h>
 #import <AddressBook/AddressBook.h>
+#import <PassKit/PassKit.h>
 
 @interface STPAddress : NSObject
 
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *street;
+@property (nonatomic, strong) NSString *line1;
+@property (nonatomic, strong) NSString *line2;
 @property (nonatomic, strong) NSString *city;
 @property (nonatomic, strong) NSString *state;
 @property (nonatomic, strong) NSString *postalCode;
@@ -23,6 +25,7 @@
 @property (nonatomic, strong) NSString *email;
 
 - (instancetype)initWithABRecord:(ABRecordRef)record;
+- (BOOL)containsRequiredFields:(PKAddressField)requiredFields;
 
 @end
 

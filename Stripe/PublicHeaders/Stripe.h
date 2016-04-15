@@ -27,6 +27,6 @@
 #import "STPPaymentCoordinator.h"
 #import "STPPaymentAuthorizationViewController.h"
 #import "STPSource.h"
-#import "STPSourceProvider.h"
+#import "STPBackendAPIAdapter.h"
 #import "STPPaymentResult.h"
 #endif

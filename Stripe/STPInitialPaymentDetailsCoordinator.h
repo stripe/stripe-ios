@@ -15,7 +15,7 @@
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
                               paymentRequest:(PKPaymentRequest *)paymentRequest
                                    apiClient:(STPAPIClient *)apiClient
-                              sourceProvider:(id<STPSourceProvider>)sourceProvider
+                              apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                                     delegate:(id<STPCoordinatorDelegate>)delegate;
 
 @end

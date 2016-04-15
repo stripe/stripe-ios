@@ -27,7 +27,7 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
 @implementation STPPaymentCoordinator
 
 - (instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest
-                        sourceProvider:(id<STPSourceProvider>)sourceProvider
+                        apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                              apiClient:(STPAPIClient *)apiClient
                               delegate:(id<STPPaymentCoordinatorDelegate>)delegate {
     NSCAssert(paymentRequest != nil, @"You must provide a paymentRequest to STPPaymentCoordinator");
@@ -43,7 +43,7 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
             paymentViewController.delegate = self;
             _paymentViewController = paymentViewController;
         } else {
-            STPPaymentAuthorizationViewController *paymentViewController = [[STPPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest apiClient:apiClient sourceProvider:sourceProvider];
+            STPPaymentAuthorizationViewController *paymentViewController = [[STPPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest apiClient:apiClient apiAdapter:apiAdapter];
             paymentViewController.delegate = self;
             _paymentViewController = paymentViewController;
         }

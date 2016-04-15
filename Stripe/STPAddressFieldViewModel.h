@@ -10,6 +10,7 @@
 
 typedef NS_ENUM(NSInteger, STPAddressFieldViewModelType) {
     STPAddressFieldViewModelTypeText,
+    STPAddressFieldViewModelTypeOptionalText,
     STPAddressFieldViewModelTypePhoneNumber,
     STPAddressFieldViewModelTypeEmail,
     STPAddressFieldViewModelTypeZip,
@@ -27,6 +28,7 @@ typedef NS_ENUM(NSInteger, STPAddressFieldViewModelType) {
 @property (nonatomic, strong, readonly) NSString *placeholder;
 @property (nonatomic, assign, readonly) STPAddressFieldViewModelType type;
 @property (nonatomic, strong) NSString *contents;
+@property (nonatomic, readwrite) BOOL lastInList;
 @property (nonatomic, readonly) BOOL isValid;
 
 @end

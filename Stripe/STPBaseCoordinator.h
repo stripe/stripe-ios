@@ -10,7 +10,7 @@
 #import "STPBlocks.h"
 
 @class STPBaseCoordinator, STPAPIClient;
-@protocol STPSourceProvider;
+@protocol STPBackendAPIAdapter;
 
 @protocol STPCoordinatorDelegate
 - (void)coordinatorDidCancel:(STPBaseCoordinator *)coordinator;

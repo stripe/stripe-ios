@@ -13,7 +13,7 @@
 
 + (BOOL)stringIsValidPostalCode:(nullable NSString *)string {
     NSUInteger length = [STPCardValidator sanitizedNumericStringForString:string].length;
-    return length == 5 || length == 9;
+    return length != 0;
 }
 
 @end

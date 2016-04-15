@@ -13,11 +13,13 @@
 #import "NSArray+Stripe_BoundSafe.h"
 #import "STPLineItemCell.h"
 #import "STPSource.h"
-#import "STPBasicSourceProvider.h"
+#import "STPBasicAPIAdapter.h"
 #import "STPPaymentMethodCell.h"
+#import "STPShippingAddressCell.h"
 #import "STPPaymentResult.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
+static NSString *const STPShippingAddressCellReuseIdentifier = @"STPShippingAddressCellReuseIdentifier";
 static NSString *const STPLineItemCellReuseIdentifier = @"STPLineItemCellReuseIdentifier";
 
 typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
@@ -32,7 +34,7 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 @property(nonatomic, weak) UITableView *tableView;
 @property(nonatomic) NSArray<PKPaymentSummaryItem *> *lineItems;
 @property(nonatomic, nonnull) PKPaymentRequest *paymentRequest;
-@property(nonatomic, nonnull, readonly) id<STPSourceProvider> sourceProvider;
+@property(nonatomic, nonnull, readonly) id<STPBackendAPIAdapter> apiAdapter;
 
 @end
 
@@ -40,13 +42,13 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
 @dynamic view;
 
 - (nonnull instancetype)initWithPaymentRequest:(nonnull PKPaymentRequest *)paymentRequest
-                                sourceProvider:(nonnull id<STPSourceProvider>) sourceProvider
+                                apiAdapter:(nonnull id<STPBackendAPIAdapter>) apiAdapter
                                       delegate:(nonnull id<STPPaymentSummaryViewControllerDelegate>)delegate {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _delegate = delegate;
         _paymentRequest = paymentRequest;
-        _sourceProvider = sourceProvider;
+        _apiAdapter = apiAdapter;
         _lineItems = paymentRequest.paymentSummaryItems;
     }
     return self;
@@ -59,6 +61,7 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
     tableView.dataSource = self;
     tableView.delegate = self;
     [tableView registerClass:[STPPaymentMethodCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
+    [tableView registerClass:[STPShippingAddressCell class] forCellReuseIdentifier:STPShippingAddressCellReuseIdentifier];
     [tableView registerClass:[STPLineItemCell class] forCellReuseIdentifier:STPLineItemCellReuseIdentifier];
     _tableView = tableView;
     [self.view addSubview:tableView];
@@ -98,6 +101,8 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
     switch (section) {
         case STPPaymentSummaryViewControllerSectionPaymentMethod:
             return 1;
+        case STPPaymentSummaryViewControllerSectionShippingAddress:
+            return 1;
         case STPPaymentSummaryViewControllerSectionLineItems:
             return self.lineItems.count;
         default:
@@ -123,23 +128,22 @@ typedef NS_ENUM(NSInteger, STPPaymentSummaryViewControllerSection) {
     switch (indexPath.section) {
         case STPPaymentSummaryViewControllerSectionPaymentMethod: {
             cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier];
-            id<STPSource> source = self.sourceProvider.selectedSource;
-            if (source) {
-                cell.textLabel.text = source.label;
-            } else {
-                cell.textLabel.text = @"No selected payment method";
-            }
+            id<STPSource> source = self.apiAdapter.selectedSource;
+            [(STPPaymentMethodCell *)cell configureWithSource:source];
+            break;
+        }
+        case STPPaymentSummaryViewControllerSectionShippingAddress: {
+            cell = [tableView dequeueReusableCellWithIdentifier:STPShippingAddressCellReuseIdentifier forIndexPath:indexPath];
+            STPAddress *address = self.apiAdapter.shippingAddress;
+            [(STPShippingAddressCell *)cell configureWithAddress:address];
             break;
         }
         case STPPaymentSummaryViewControllerSectionLineItems: {
             cell = [tableView dequeueReusableCellWithIdentifier:STPLineItemCellReuseIdentifier forIndexPath:indexPath];
-            PKPaymentSummaryItem *lineItem = self.lineItems[indexPath.row];
-            cell.textLabel.text = lineItem.label;
-            cell.detailTextLabel.text = lineItem.amount.stringValue;
+            PKPaymentSummaryItem *paymentSummaryItem = self.lineItems[indexPath.row];
+            [(STPLineItemCell *)cell configureWithPaymentSummaryItem:paymentSummaryItem];
             break;
         }
-        default:
-            break;
     }
     return cell;
 }

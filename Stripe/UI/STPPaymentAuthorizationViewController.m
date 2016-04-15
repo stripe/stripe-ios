@@ -9,8 +9,8 @@
 #import <PassKit/PassKit.h>
 #import "STPPaymentAuthorizationViewController.h"
 #import "STPPaymentSummaryViewController.h"
-#import "STPSourceProvider.h"
-#import "STPBasicSourceProvider.h"
+#import "STPBackendAPIAdapter.h"
+#import "STPBasicAPIAdapter.h"
 #import "STPAPIClient.h"
 #import "STPToken.h"
 #import "STPPaymentResult.h"
@@ -22,7 +22,7 @@
 @property(nonatomic, weak) UINavigationController *navigationController;
 @property(nonatomic, readwrite, nonnull) PKPaymentRequest *paymentRequest;
 @property(nonatomic, readwrite, nonnull) STPAPIClient *apiClient;
-@property(nonatomic) id<STPSourceProvider> sourceProvider;
+@property(nonatomic) id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic) STPPaymentAuthorizationCoordinator *coordinator;
 @end
 
@@ -30,12 +30,13 @@
 
 - (nonnull instancetype)initWithPaymentRequest:(nonnull PKPaymentRequest *)paymentRequest
                                      apiClient:(nonnull STPAPIClient *)apiClient
-                                sourceProvider:(nullable id<STPSourceProvider>)sourceProvider {
+                                apiAdapter:(nullable id<STPBackendAPIAdapter>)apiAdapter {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _apiClient = apiClient;
         _paymentRequest = paymentRequest;
-        _sourceProvider = sourceProvider ?: [STPBasicSourceProvider new];
+        STPBasicAPIAdapter *adapter = [STPBasicAPIAdapter new];
+        _apiAdapter = apiAdapter ?: adapter;
         UINavigationController *navigationController = [[UINavigationController alloc] init];
         _navigationController = navigationController;
         [self addChildViewController:_navigationController];
@@ -50,7 +51,7 @@
     self.coordinator = [[STPPaymentAuthorizationCoordinator alloc] initWithNavigationController:self.navigationController
                                                                                  paymentRequest:self.paymentRequest
                                                                                       apiClient:self.apiClient
-                                                                                 sourceProvider:self.sourceProvider
+                                                                                 apiAdapter:self.apiAdapter
                                                                                        delegate:self];
     [self.coordinator begin];
 }
@@ -67,7 +68,7 @@
 }
 
 - (void)coordinator:(__unused STPBaseCoordinator *)coordinator willFinishWithCompletion:(STPErrorBlock)completion {
-    STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:self.sourceProvider.selectedSource customer:nil shippingAddress:nil];
+    STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:self.apiAdapter.selectedSource customer:nil shippingAddress:nil];
     [self.delegate paymentAuthorizationViewController:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
         completion(error);
         if (error) {

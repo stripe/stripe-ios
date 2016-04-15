@@ -7,7 +7,7 @@
 //
 
 #import "STPSourceListViewController.h"
-#import "STPSourceProvider.h"
+#import "STPBackendAPIAdapter.h"
 #import "STPSourceCell.h"
 #import "STPAPIClient.h"
 #import "STPToken.h"
@@ -20,7 +20,7 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 
 @interface STPSourceListViewController()<UITableViewDataSource, UITableViewDelegate>
 @property(nonatomic, weak)id<STPSourceListViewControllerDelegate> delegate;
-@property(nonatomic)id<STPSourceProvider> sourceProvider;
+@property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIBarButtonItem *addButton;
 @property(nonatomic)BOOL loading;
@@ -29,11 +29,11 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 
 @implementation STPSourceListViewController
 
-- (nonnull instancetype)initWithSourceProvider:(nonnull id<STPSourceProvider>)sourceProvider
+- (nonnull instancetype)initWithapiAdapter:(nonnull id<STPBackendAPIAdapter>)apiAdapter
                                       delegate:(nonnull id<STPSourceListViewControllerDelegate>)delegate {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        _sourceProvider = sourceProvider;
+        _apiAdapter = apiAdapter;
         _delegate = delegate;
     }
     return self;
@@ -57,7 +57,7 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
     self.navigationItem.rightBarButtonItem = addButton;
 
     self.loading = YES;
-    [self.sourceProvider retrieveSources:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> * _Nullable sources, __unused NSError * _Nullable error) {
+    [self.apiAdapter retrieveSources:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> * _Nullable sources, __unused NSError * _Nullable error) {
         self.loading = NO;
         if (error) {
             NSAssert(NO, @"TODO");
@@ -86,20 +86,20 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 }
 
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(__unused NSInteger)section {
-    return self.sourceProvider.sources.count;
+    return self.apiAdapter.sources.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     STPSourceCell *cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier forIndexPath:indexPath];
-    id<STPSource> source = self.sourceProvider.sources[indexPath.row];
-    BOOL selected = source == self.sourceProvider.selectedSource;
+    id<STPSource> source = self.apiAdapter.sources[indexPath.row];
+    BOOL selected = source == self.apiAdapter.selectedSource;
     [cell configureWithSource:source selected:selected];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    id<STPSource> source = [self.sourceProvider.sources stp_boundSafeObjectAtIndex:indexPath.row];
+    id<STPSource> source = [self.apiAdapter.sources stp_boundSafeObjectAtIndex:indexPath.row];
     [self.delegate sourceListViewController:self didSelectSource:source];
 }
 

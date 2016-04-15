@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 #import <PassKit/PassKit.h>
 #import "MockSTPAPIClient.h"
-#import "MockSTPSourceProvider.h"
+#import "MockSTPBackendAPIAdapter.h"
 #import "MockSTPCoordinatorDelegate.h"
 #import "MockUINavigationController.h"
 #import "STPSourceListViewController.h"
@@ -24,11 +24,11 @@
 
 @interface STPPaymentSummaryViewController()
 @property(nonatomic, nonnull) PKPaymentRequest *paymentRequest;
-@property(nonatomic, nonnull, readonly) id<STPSourceProvider> sourceProvider;
+@property(nonatomic, nonnull, readonly) id<STPBackendAPIAdapter> apiAdapter;
 @end
 
 @interface STPSourceListViewController()
-@property(nonatomic) id<STPSourceProvider> sourceProvider;
+@property(nonatomic) id<STPBackendAPIAdapter> apiAdapter;
 @end
 
 @interface STPPaymentAuthorizationCoordinator()<STPCoordinatorDelegate, STPPaymentSummaryViewControllerDelegate>
@@ -40,7 +40,7 @@
 @property (nonatomic, strong) STPPaymentAuthorizationCoordinator *sut;
 @property (nonatomic, strong) MockUINavigationController *navigationController;
 @property (nonatomic, strong) MockSTPAPIClient *apiClient;
-@property (nonatomic, strong) MockSTPSourceProvider *sourceProvider;
+@property (nonatomic, strong) MockSTPBackendAPIAdapter *apiAdapter;
 @property (nonatomic, strong) MockSTPCoordinatorDelegate *delegate;
 @property (nonatomic, strong) PKPaymentRequest *paymentRequest;
 
@@ -52,14 +52,14 @@
     [super setUp];
     self.navigationController = [MockUINavigationController new];
     self.apiClient = [[MockSTPAPIClient alloc] initWithPublishableKey:@"foo"];
-    self.sourceProvider = [MockSTPSourceProvider new];
+    self.apiAdapter = [MockSTPBackendAPIAdapter new];
     self.delegate = [MockSTPCoordinatorDelegate new];
     self.paymentRequest = [[PKPaymentRequest alloc] init];
     self.paymentRequest.merchantIdentifier = @"foo";
     self.sut = [[STPPaymentAuthorizationCoordinator alloc] initWithNavigationController:self.navigationController
                                                                paymentRequest:self.paymentRequest
                                                                     apiClient:self.apiClient
-                                                               sourceProvider:self.sourceProvider
+                                                               apiAdapter:self.apiAdapter
                                                                      delegate:self.delegate];
 }
 
@@ -67,7 +67,7 @@
     [super tearDown];
     self.navigationController = nil;
     self.apiClient = nil;
-    self.sourceProvider = nil;
+    self.apiAdapter = nil;
     self.delegate = nil;
     self.sut = nil;
     self.paymentRequest = nil;
@@ -99,7 +99,7 @@
         _XCTPrimitiveAssertTrue(weakSelf, [vc isKindOfClass:[STPPaymentSummaryViewController class]], @"");
         STPPaymentSummaryViewController *summaryVC = (STPPaymentSummaryViewController *)vc;
         _XCTPrimitiveAssertEqualObjects(weakSelf, summaryVC.paymentRequest, @"", weakSelf.paymentRequest, @"");
-        _XCTPrimitiveAssertEqualObjects(weakSelf, summaryVC.sourceProvider, @"", weakSelf.sourceProvider, @"");
+        _XCTPrimitiveAssertEqualObjects(weakSelf, summaryVC.apiAdapter, @"", weakSelf.apiAdapter, @"");
         _XCTPrimitiveAssertTrue(weakSelf, animated, @"");
         [pushExp fulfill];
     };
@@ -128,7 +128,7 @@
         }
         _XCTPrimitiveAssertTrue(weakSelf, [vc isKindOfClass:[STPSourceListViewController class]], @"");
         STPSourceListViewController *sourceListVC = (STPSourceListViewController *)vc;
-        _XCTPrimitiveAssertEqualObjects(weakSelf, sourceListVC.sourceProvider, @"", weakSelf.sourceProvider, @"");
+        _XCTPrimitiveAssertEqualObjects(weakSelf, sourceListVC.apiAdapter, @"", weakSelf.apiAdapter, @"");
         _XCTPrimitiveAssertTrue(weakSelf, animated, @"");
         [pushExp fulfill];
     };

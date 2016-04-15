@@ -34,7 +34,7 @@
                 CFDictionaryRef dict = ABMultiValueCopyValueAtIndex(addressValues, 0);
                 NSString *street = CFDictionaryGetValue(dict, kABPersonAddressStreetKey);
                 if (street) {
-                    _street = street;
+                    _line1 = street;
                 }
                 NSString *city = CFDictionaryGetValue(dict, kABPersonAddressCityKey);
                 if (city) {
@@ -58,6 +58,31 @@
         }
     }
     return self;
+}
+
+- (BOOL)containsRequiredFields:(PKAddressField)requiredFields {
+    BOOL containsFields = YES;
+    if (requiredFields & PKAddressFieldPostalAddress) {
+        containsFields = containsFields && [self hasValidPostalAddress];
+    }
+    if (requiredFields & PKAddressFieldPhone) {
+        containsFields = containsFields && (self.phone != nil);
+    }
+    if (requiredFields & PKAddressFieldEmail) {
+        containsFields = containsFields && (self.email != nil);
+    }
+    if (requiredFields & PKAddressFieldName) {
+        containsFields = containsFields && (self.name != nil);
+    }
+    return containsFields;
+}
+
+- (BOOL)hasValidPostalAddress {
+    return self.line1 != nil &&
+    self.city != nil &&
+    self.state != nil &&
+    self.postalCode != nil &&
+    self.country != nil;
 }
 
 #pragma clang diagnostic pop

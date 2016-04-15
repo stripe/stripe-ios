@@ -11,7 +11,7 @@
 
 @class STPAPIClient, STPPaymentResult, STPPaymentAuthorizationViewController;
 
-@protocol STPSourceProvider;
+@protocol STPBackendAPIAdapter;
 
 @protocol STPPaymentAuthorizationViewControllerDelegate <NSObject>
 
@@ -26,7 +26,7 @@
 
 - (nonnull instancetype)initWithPaymentRequest:(nonnull PKPaymentRequest *)paymentRequest
                                      apiClient:(nonnull STPAPIClient *)apiClient
-                                sourceProvider:(nullable id<STPSourceProvider>)sourceProvider;
+                                apiAdapter:(nullable id<STPBackendAPIAdapter>)apiAdapter;
 ;
 @property(nonatomic, readonly, nonnull) PKPaymentRequest *paymentRequest;
 @property(nonatomic, weak, nullable) id<STPPaymentAuthorizationViewControllerDelegate> delegate;

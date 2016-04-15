@@ -10,7 +10,7 @@
 #import "STPBlocks.h"
 
 @class STPPaymentSummaryViewController;
-@protocol STPSourceProvider;
+@protocol STPBackendAPIAdapter;
 
 @protocol STPPaymentSummaryViewControllerDelegate <NSObject>
 
@@ -23,7 +23,7 @@
 @interface STPPaymentSummaryViewController : UIViewController
 
 - (nonnull instancetype)initWithPaymentRequest:(nonnull PKPaymentRequest *)paymentRequest
-                                sourceProvider:(nonnull id<STPSourceProvider>) sourceProvider
+                                apiAdapter:(nonnull id<STPBackendAPIAdapter>) apiAdapter
                                       delegate:(nonnull id<STPPaymentSummaryViewControllerDelegate>)delegate;
 
 

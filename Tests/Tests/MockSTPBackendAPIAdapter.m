@@ -1,15 +1,15 @@
 //
-//  MockSTPSourceProvider.m
+//  MockSTPBackendAPIAdapter.m
 //  Stripe iOS Example (Simple)
 //
 //  Created by Ben Guo on 3/29/16.
 //  Copyright © 2016 Stripe. All rights reserved.
 //
 
-#import "MockSTPSourceProvider.h"
+#import "MockSTPBackendAPIAdapter.h"
 #import <Stripe/Stripe.h>
 
-@implementation MockSTPSourceProvider
+@implementation MockSTPBackendAPIAdapter
 
 - (instancetype)init {
     self = [super init];

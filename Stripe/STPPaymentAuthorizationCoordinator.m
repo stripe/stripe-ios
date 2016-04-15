@@ -21,7 +21,7 @@
 @property(nonatomic, weak, readonly)id<STPCoordinatorDelegate>delegate;
 @property(nonatomic, readonly)UINavigationController *navigationController;
 @property(nonatomic, readonly)STPAPIClient *apiClient;
-@property(nonatomic, readonly)id<STPSourceProvider> sourceProvider;
+@property(nonatomic, readonly)id<STPBackendAPIAdapter> apiAdapter;
 
 @end
 
@@ -30,14 +30,14 @@
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
                               paymentRequest:(PKPaymentRequest *)paymentRequest
                                    apiClient:(STPAPIClient *)apiClient
-                              sourceProvider:(id<STPSourceProvider>)sourceProvider
+                              apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                                     delegate:(id<STPCoordinatorDelegate>)delegate {
     self = [super init];
     if (self) {
         _navigationController = navigationController;
         _paymentRequest = paymentRequest;
         _apiClient = apiClient;
-        _sourceProvider = sourceProvider;
+        _apiAdapter = apiAdapter;
         _delegate = delegate;
     }
     return self;
@@ -45,7 +45,7 @@
 
 - (void)begin {
     [super begin];
-    STPInitialPaymentDetailsCoordinator *coordinator = [[STPInitialPaymentDetailsCoordinator alloc] initWithNavigationController:self.navigationController paymentRequest:self.paymentRequest apiClient:self.apiClient sourceProvider:self.sourceProvider delegate:self];
+    STPInitialPaymentDetailsCoordinator *coordinator = [[STPInitialPaymentDetailsCoordinator alloc] initWithNavigationController:self.navigationController paymentRequest:self.paymentRequest apiClient:self.apiClient apiAdapter:self.apiAdapter delegate:self];
     [self addChildCoordinator:coordinator];
     [coordinator begin];
 }
@@ -58,7 +58,7 @@
 
 - (void)coordinator:(__unused STPBaseCoordinator *)coordinator willFinishWithCompletion:(STPErrorBlock)completion {
     if ([coordinator isKindOfClass:[STPInitialPaymentDetailsCoordinator class]]) {
-        STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:self.paymentRequest sourceProvider:self.sourceProvider delegate:self];
+        STPPaymentSummaryViewController *summaryViewController = [[STPPaymentSummaryViewController alloc] initWithPaymentRequest:self.paymentRequest apiAdapter:self.apiAdapter delegate:self];
         [self.navigationController stp_pushViewController:summaryViewController animated:YES completion:^{
             if (completion) {
                 completion(nil);
@@ -70,7 +70,7 @@
 #pragma mark - STPPaymentSummaryViewControllerDelegate
 
 - (void)paymentSummaryViewControllerDidEditPaymentMethod:(__unused STPPaymentSummaryViewController *)viewController {
-    STPSourceListCoordinator *coordinator = [[STPSourceListCoordinator alloc] initWithNavigationController:self.navigationController apiClient:self.apiClient sourceProvider:self.sourceProvider delegate:self];
+    STPSourceListCoordinator *coordinator = [[STPSourceListCoordinator alloc] initWithNavigationController:self.navigationController apiClient:self.apiClient apiAdapter:self.apiAdapter delegate:self];
     [self addChildCoordinator:coordinator];
     [coordinator begin];
 }

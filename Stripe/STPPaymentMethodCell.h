@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol STPSource;
+
 @interface STPPaymentMethodCell : UITableViewCell
+
+- (void)configureWithSource:(id<STPSource>)source;
 
 @end

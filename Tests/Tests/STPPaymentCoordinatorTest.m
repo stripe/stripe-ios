@@ -26,6 +26,7 @@
     paymentRequest.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"Test" amount:[NSDecimalNumber one]]];
     STPAPIClient *apiClient = [MockSTPAPIClient new];
     self = [super initWithPaymentRequest:paymentRequest
+                              apiAdapter:nil
                                apiClient:apiClient
                                 delegate:delegate];
     if (self) {
@@ -62,7 +63,7 @@
 
 - (void)testCreatesPaymentViewController {
     MockSTPPaymentCoordinatorDelegate *delegate = [MockSTPPaymentCoordinatorDelegate new];
-    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiClient:[STPAPIClient sharedClient] delegate:delegate];
+    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiAdapter:nil apiClient:[STPAPIClient sharedClient] delegate:delegate];
     XCTAssert([coordinator.paymentViewController isKindOfClass:[STPPaymentAuthorizationViewController class]]);
 }
 
@@ -98,7 +99,7 @@
     delegate.onDidCancel = ^{
         [expectation fulfill];
     };
-    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiClient:[STPAPIClient sharedClient] delegate:delegate];
+    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiAdapter:nil apiClient:[STPAPIClient sharedClient] delegate:delegate];
     [coordinator paymentAuthorizationViewControllerDidFinish:[PKPaymentAuthorizationViewController new]];
     [self waitForExpectationsWithTimeout:0.01 handler:nil];
 }
@@ -112,7 +113,7 @@
         _XCTPrimitiveAssertEqualObjects(weakSelf, error, @"", expectedError, @"");
         [expectation fulfill];
     };
-    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiClient:[MockSTPAPIClient mockWithError:expectedError] delegate:delegate];
+    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiAdapter:nil apiClient:[MockSTPAPIClient mockWithError:expectedError] delegate:delegate];
     [coordinator paymentAuthorizationViewController:[PKPaymentAuthorizationViewController new] didAuthorizePayment:[PKPayment new] completion:^(__unused PKPaymentAuthorizationStatus status) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [coordinator paymentAuthorizationViewControllerDidFinish:[PKPaymentAuthorizationViewController new]];
@@ -130,7 +131,7 @@
     delegate.onDidSucceed = ^{
         [expectation fulfill];
     };
-    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiClient:[MockSTPAPIClient new] delegate:delegate];
+    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiAdapter:nil apiClient:[MockSTPAPIClient new] delegate:delegate];
     [coordinator paymentAuthorizationViewController:[PKPaymentAuthorizationViewController new] didAuthorizePayment:[PKPayment new] completion:^(__unused PKPaymentAuthorizationStatus status) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [coordinator paymentAuthorizationViewControllerDidFinish:[PKPaymentAuthorizationViewController new]];
@@ -145,7 +146,7 @@
     delegate.onDidCancel = ^{
         [expectation fulfill];
     };
-    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiClient:[STPAPIClient sharedClient] delegate:delegate];
+    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiAdapter:nil apiClient:[STPAPIClient sharedClient] delegate:delegate];
     [coordinator paymentAuthorizationViewControllerDidCancel:[STPPaymentAuthorizationViewController new]];
     [self waitForExpectationsWithTimeout:0.01 handler:nil];
 }
@@ -156,7 +157,7 @@
     delegate.onDidFailWithError = ^(__unused NSError *error){
         [expectation fulfill];
     };
-    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiClient:[MockSTPAPIClient new] delegate:delegate];
+    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiAdapter:nil apiClient:[MockSTPAPIClient new] delegate:delegate];
     [coordinator paymentAuthorizationViewController:[STPPaymentAuthorizationViewController new] didFailWithError:[NSError new]];
     [self waitForExpectationsWithTimeout:0.01 handler:nil];
 }
@@ -167,7 +168,7 @@
     delegate.onDidSucceed = ^ {
         [expectation fulfill];
     };
-    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiClient:[MockSTPAPIClient new] delegate:delegate];
+    STPPaymentCoordinator *coordinator = [[STPPaymentCoordinator alloc] initWithPaymentRequest:self.paymentRequest apiAdapter:nil apiClient:[MockSTPAPIClient new] delegate:delegate];
     [coordinator paymentAuthorizationViewControllerDidSucceed:[STPPaymentAuthorizationViewController new]];
     [self waitForExpectationsWithTimeout:0.01 handler:nil];
 }

@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <PassKit/PassKit.h>
 
 @interface STPLineItemCell : UITableViewCell
+
+- (void)configureWithPaymentSummaryItem:(PKPaymentSummaryItem *)summaryItem;
 
 @end

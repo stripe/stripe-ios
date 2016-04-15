@@ -65,9 +65,11 @@
 
 - (void)nextPressed:(__unused id)sender {
     [self.activityIndicator startAnimating];
+    [self.textField resignFirstResponder];
     [self.delegate paymentCardEntryViewController:self didEnterCardParams:self.textField.cardParams completion:^(NSError *error) {
         if (error) {
             NSLog(@"%@", error);
+            [self.textField becomeFirstResponder];
             [self.activityIndicator stopAnimating];
             return;
         }

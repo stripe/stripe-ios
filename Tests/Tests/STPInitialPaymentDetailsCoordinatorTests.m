@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 #import <Stripe/Stripe.h>
 #import "MockSTPAPIClient.h"
-#import "MockSTPSourceProvider.h"
+#import "MockSTPBackendAPIAdapter.h"
 #import "MockSTPCoordinatorDelegate.h"
 #import "MockUINavigationController.h"
 #import "STPPaymentCardEntryViewController.h"
@@ -25,7 +25,7 @@
 @property (nonatomic, strong) STPInitialPaymentDetailsCoordinator *sut;
 @property (nonatomic, strong) MockUINavigationController *navigationController;
 @property (nonatomic, strong) MockSTPAPIClient *apiClient;
-@property (nonatomic, strong) MockSTPSourceProvider *sourceProvider;
+@property (nonatomic, strong) MockSTPBackendAPIAdapter *apiAdapter;
 @property (nonatomic, strong) MockSTPCoordinatorDelegate *delegate;
 @property (nonatomic, strong) STPCardParams *card;
 @property (nonatomic, strong) PKPaymentRequest *paymentRequest;
@@ -38,13 +38,13 @@
     [super setUp];
     self.navigationController = [MockUINavigationController new];
     self.apiClient = [MockSTPAPIClient new];
-    self.sourceProvider = [MockSTPSourceProvider new];
+    self.apiAdapter = [MockSTPBackendAPIAdapter new];
     self.delegate = [MockSTPCoordinatorDelegate new];
     self.paymentRequest = [[PKPaymentRequest alloc] init];
     self.sut = [[STPInitialPaymentDetailsCoordinator alloc] initWithNavigationController:self.navigationController
                                                                           paymentRequest:self.paymentRequest
                                                                                apiClient:self.apiClient
-                                                                          sourceProvider:self.sourceProvider
+                                                                          apiAdapter:self.apiAdapter
                                                                                 delegate:self.delegate];
     STPCardParams *card = [[STPCardParams alloc] init];
     card.number = @"4242 4242 4242 4242";
@@ -58,7 +58,7 @@
     [super tearDown];
     self.navigationController = nil;
     self.apiClient = nil;
-    self.sourceProvider = nil;
+    self.apiAdapter = nil;
     self.delegate = nil;
     self.paymentRequest = nil;
     self.sut = nil;
@@ -133,9 +133,9 @@
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
-- (void)testEnterCard_sourceProviderError {
+- (void)testEnterCard_apiAdapterError {
     NSError *expectedError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
-    self.sourceProvider.addSourceError = expectedError;
+    self.apiAdapter.addSourceError = expectedError;
     __weak id weakSelf = self;
     self.delegate.onWillFinishWithCompletion = ^(__unused STPErrorBlock completion) {
         _XCTPrimitiveFail(weakSelf, "should not be called");

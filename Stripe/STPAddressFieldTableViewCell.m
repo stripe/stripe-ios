@@ -60,12 +60,15 @@
     self.formField.formTextField.inputAccessoryView = nil;
     switch (viewModel.type) {
         case STPAddressFieldViewModelTypeText:
+        case STPAddressFieldViewModelTypeOptionalText:
             self.formField.formTextField.keyboardType = UIKeyboardTypeDefault;
             break;
         case STPAddressFieldViewModelTypePhoneNumber:
             self.formField.formTextField.keyboardType = UIKeyboardTypePhonePad;
             self.formField.formTextField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
-            self.formField.formTextField.inputAccessoryView = self.inputAccessoryToolbar;
+            if (!self.viewModel.lastInList) {
+                self.formField.formTextField.inputAccessoryView = self.inputAccessoryToolbar;
+            }
             break;
         case STPAddressFieldViewModelTypeEmail:
             self.formField.formTextField.keyboardType = UIKeyboardTypeEmailAddress;
@@ -85,7 +88,9 @@
         }
         case STPAddressFieldViewModelTypeZip:
             self.formField.formTextField.keyboardType = UIKeyboardTypeNumberPad;
-            self.formField.formTextField.inputAccessoryView = self.inputAccessoryToolbar;
+            if (!self.viewModel.lastInList) {
+                self.formField.formTextField.inputAccessoryView = self.inputAccessoryToolbar;
+            }
             break;
     }
 }

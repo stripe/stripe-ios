@@ -14,4 +14,9 @@
     return [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
 }
 
+- (void)configureWithPaymentSummaryItem:(PKPaymentSummaryItem *)summaryItem {
+    self.textLabel.text = summaryItem.label;
+    self.detailTextLabel.text = summaryItem.amount.stringValue;
+}
+
 @end

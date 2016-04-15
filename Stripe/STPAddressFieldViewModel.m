@@ -38,6 +38,9 @@
         case STPAddressFieldViewModelTypeText:
             return [self.contents length] > 0;
             break;
+        case STPAddressFieldViewModelTypeOptionalText:
+            return YES;
+            break;
         case STPAddressFieldViewModelTypePhoneNumber:
             return [STPPhoneNumberValidator stringIsValidPhoneNumber:self.contents];
             break;

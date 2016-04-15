@@ -13,7 +13,7 @@
 
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
                                    apiClient:(STPAPIClient *)apiClient
-                              sourceProvider:(id<STPSourceProvider>)sourceProvider
+                              apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                                     delegate:(id<STPCoordinatorDelegate>)delegate;
 
 @end

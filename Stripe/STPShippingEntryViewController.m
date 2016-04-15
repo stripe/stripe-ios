@@ -16,7 +16,8 @@
 static NSString *STPShippingAddressFieldName = @"name";
 static NSString *STPShippingAddressFieldEmail = @"email";
 static NSString *STPShippingAddressFieldPhoneNumber = @"phone";
-static NSString *STPShippingAddressFieldStreet = @"street";
+static NSString *STPShippingAddressFieldLine1 = @"line1";
+static NSString *STPShippingAddressFieldLine2 = @"line2";
 static NSString *STPShippingAddressFieldCity = @"city";
 static NSString *STPShippingAddressFieldState = @"state";
 static NSString *STPShippingAddressFieldPostalCode = @"postalCode";
@@ -63,9 +64,12 @@ static NSString *const STPAddressFieldTableViewCellReuseIdentifier = @"STPAddres
             [fieldViewModelKeys addObject:STPShippingAddressFieldPhoneNumber];
         }
         if (requiredAddressFields & PKAddressFieldPostalAddress) {
-            STPAddressFieldViewModel *street = [STPAddressFieldViewModel viewModelWithLabel:@"Street" placeholder:@"123 Address St, Apt. 4" contents:address.street type:STPAddressFieldViewModelTypeText];
-            keyToFieldViewModel[STPShippingAddressFieldStreet] = street;
-            [fieldViewModelKeys addObject:STPShippingAddressFieldStreet];
+            STPAddressFieldViewModel *line1 = [STPAddressFieldViewModel viewModelWithLabel:@"Street" placeholder:@"123 Address St" contents:address.line1 type:STPAddressFieldViewModelTypeText];
+            keyToFieldViewModel[STPShippingAddressFieldLine1] = line1;
+            [fieldViewModelKeys addObject:STPShippingAddressFieldLine1];
+            STPAddressFieldViewModel *line2 = [STPAddressFieldViewModel viewModelWithLabel:@"Cont'd" placeholder:@"Apartment?" contents:address.line2 type:STPAddressFieldViewModelTypeOptionalText];
+            keyToFieldViewModel[STPShippingAddressFieldLine2] = line2;
+            [fieldViewModelKeys addObject:STPShippingAddressFieldLine2];
             STPAddressFieldViewModel *city = [STPAddressFieldViewModel viewModelWithLabel:@"City" placeholder:@"San Francisco" contents:address.city type:STPAddressFieldViewModelTypeText];
             keyToFieldViewModel[STPShippingAddressFieldCity] = city;
             [fieldViewModelKeys addObject:STPShippingAddressFieldCity];
@@ -79,6 +83,8 @@ static NSString *const STPAddressFieldTableViewCellReuseIdentifier = @"STPAddres
             keyToFieldViewModel[STPShippingAddressFieldCountry] = country;
             [fieldViewModelKeys addObject:STPShippingAddressFieldCountry];
         }
+        STPAddressFieldViewModel *lastViewModel = keyToFieldViewModel[fieldViewModelKeys.lastObject];
+        lastViewModel.lastInList = YES;
         _fieldViewModelKeys = fieldViewModelKeys;
         _keyToFieldViewModel = keyToFieldViewModel;
     }
@@ -105,6 +111,8 @@ static NSString *const STPAddressFieldTableViewCellReuseIdentifier = @"STPAddres
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.tableView reloadData];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [[self.tableView cellForRowAtIndexPath:indexPath] becomeFirstResponder];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -132,7 +140,8 @@ static NSString *const STPAddressFieldTableViewCellReuseIdentifier = @"STPAddres
     address.name = self.keyToFieldViewModel[STPShippingAddressFieldName].contents;
     address.email = self.keyToFieldViewModel[STPShippingAddressFieldEmail].contents;
     address.phone = self.keyToFieldViewModel[STPShippingAddressFieldPhoneNumber].contents;
-    address.street = self.keyToFieldViewModel[STPShippingAddressFieldStreet].contents;
+    address.line1 = self.keyToFieldViewModel[STPShippingAddressFieldLine1].contents;
+    address.line2 = self.keyToFieldViewModel[STPShippingAddressFieldLine2].contents;
     address.city = self.keyToFieldViewModel[STPShippingAddressFieldCity].contents;
     address.state = self.keyToFieldViewModel[STPShippingAddressFieldState].contents;
     address.postalCode = self.keyToFieldViewModel[STPShippingAddressFieldPostalCode].contents;

@@ -1,20 +1,20 @@
 //
-//  STPBasicSourceProvider.m
+//  STPBasicapiAdapter.m
 //  Stripe
 //
 //  Created by Jack Flintermann on 1/12/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPBasicSourceProvider.h"
+#import "STPBasicAPIAdapter.h"
 
-@interface STPBasicSourceProvider()
+@interface STPBasicAPIAdapter()
 @property(nonatomic, copy)STPRetrieveSourcesBlock retrieveSourcesBlock;
 @property(nonatomic, nullable)NSArray<id<STPSource>>* sources;
 @property(nonatomic, nullable)id<STPSource> selectedSource;
 @end
 
-@implementation STPBasicSourceProvider
+@implementation STPBasicAPIAdapter
 
 - (instancetype)init {
     return [self initWithRetrieveSourcesBlock:^(STPSourceCompletionBlock  _Nonnull completion) {
@@ -32,7 +32,7 @@
 }
 
 - (void)retrieveSources:(STPSourceCompletionBlock)completion {
-    __weak STPBasicSourceProvider *weakself = self;
+    __weak STPBasicAPIAdapter *weakself = self;
     self.retrieveSourcesBlock(^(id<STPSource> _Nullable selectedSource, NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
         if (error) {
             completion(nil, nil, error);
@@ -52,6 +52,16 @@
 - (void)selectSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCompletionBlock)completion {
     self.selectedSource = source;
     completion(source, self.sources, nil);
+}
+
+- (void)updateCustomerShippingAddress:(nonnull STPAddress *)shippingAddress
+                           completion:(nonnull STPAddressCompletionBlock)completion {
+    self.shippingAddress = shippingAddress;
+    completion(shippingAddress, nil);
+}
+
+- (void)retrieveCustomerShippingAddress:(nonnull STPAddressCompletionBlock)completion {
+    completion(self.shippingAddress, nil);
 }
 
 @end

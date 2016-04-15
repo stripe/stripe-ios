@@ -12,7 +12,7 @@
 
 @class STPPaymentCoordinator, STPAPIClient, STPPaymentResult;
 
-@protocol STPSourceProvider;
+@protocol STPBackendAPIAdapter;
 
 @protocol STPPaymentCoordinatorDelegate
 
@@ -33,7 +33,7 @@
 @interface STPPaymentCoordinator : NSObject
 
 - (instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest
-                        sourceProvider:(id<STPSourceProvider>)sourceProvider
+                        apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                              apiClient:(STPAPIClient *)apiClient
                               delegate:(id<STPPaymentCoordinatorDelegate>)delegate;
 

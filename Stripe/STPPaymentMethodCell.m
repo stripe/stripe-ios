@@ -7,7 +7,16 @@
 //
 
 #import "STPPaymentMethodCell.h"
+#import "STPSource.h"
 
 @implementation STPPaymentMethodCell
+
+- (void)configureWithSource:(id<STPSource>)source {
+    if (source) {
+        self.textLabel.text = source.label;
+    } else {
+        self.textLabel.text = @"No selected payment method";
+    }
+}
 
 @end
