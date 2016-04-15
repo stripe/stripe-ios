@@ -9,10 +9,6 @@
 #import "MockUINavigationController.h"
 #import "STPBlocks.h"
 
-@interface MockUINavigationController ()
-
-@end
-
 @implementation MockUINavigationController
 
 - (void)stp_pushViewController:(UIViewController *)viewController animated:(BOOL)animated completion:(STPVoidBlock)completion {

@@ -48,4 +48,14 @@
     }
 }
 
+- (void)updateCustomerShippingAddress:(STPAddress *)shippingAddress completion:(STPAddressCompletionBlock)completion {
+    if (self.updateCustomerShippingError) {
+        completion(nil, self.updateCustomerShippingError);
+    }
+    else {
+        self.shippingAddress = shippingAddress;
+        completion(self.shippingAddress, nil);
+    }
+}
+
 @end

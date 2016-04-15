@@ -78,7 +78,11 @@
 }
 
 - (void)paymentSummaryViewControllerDidEditShipping:(__unused STPPaymentSummaryViewController *)summaryViewController {
-    STPShippingEntryViewController *shippingViewController = [[STPShippingEntryViewController alloc] initWithAddress:[self.apiAdapter shippingAddress] delegate:self requiredAddressFields:self.paymentRequest.requiredShippingAddressFields];
+    STPAddress *shippingAddress = nil;
+    if ([self.apiAdapter respondsToSelector:@selector(shippingAddress)]) {
+        shippingAddress = [self.apiAdapter shippingAddress];
+    }
+    STPShippingEntryViewController *shippingViewController = [[STPShippingEntryViewController alloc] initWithAddress:shippingAddress delegate:self requiredAddressFields:self.paymentRequest.requiredShippingAddressFields];
     [self.navigationController stp_pushViewController:shippingViewController animated:YES completion:nil];
 }
 

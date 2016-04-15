@@ -13,10 +13,12 @@
 
 @property(nonatomic, nullable)NSArray<id<STPSource>>* sources;
 @property(nonatomic, nullable)id<STPSource> selectedSource;
+@property(nonatomic, nullable)STPAddress *shippingAddress;
 
 /// If set, the appropriate functions will complete with these errors
 @property(nonatomic, nullable)NSError *retrieveSourcesError;
 @property(nonatomic, nullable)NSError *addSourceError;
 @property(nonatomic, nullable)NSError *selectSourceError;
+@property(nonatomic, nullable)NSError *updateCustomerShippingError;
 
 @end

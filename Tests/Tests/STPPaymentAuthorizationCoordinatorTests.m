@@ -15,6 +15,7 @@
 #import "STPSourceListViewController.h"
 #import "STPPaymentSummaryViewController.h"
 #import "STPPaymentCardEntryViewController.h"
+#import "STPShippingEntryViewController.h"
 #import "STPPaymentAuthorizationCoordinator.h"
 #import "STPInitialPaymentDetailsCoordinator.h"
 
@@ -31,8 +32,9 @@
 @property(nonatomic) id<STPBackendAPIAdapter> apiAdapter;
 @end
 
-@interface STPPaymentAuthorizationCoordinator()<STPCoordinatorDelegate, STPPaymentSummaryViewControllerDelegate>
+@interface STPPaymentAuthorizationCoordinator()<STPCoordinatorDelegate, STPPaymentSummaryViewControllerDelegate, STPShippingEntryViewControllerDelegate>
 @property(nonatomic, readonly)UINavigationController *navigationController;
+@property(nonatomic, readonly)id<STPBackendAPIAdapter> apiAdapter;
 @end
 
 @interface STPPaymentAuthorizationCoordinatorTests : XCTestCase
@@ -113,9 +115,8 @@
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
-- (void)testEditPresentsSourceListVC {
+- (void)testEditPaymentMethodPresentsSourceListVC {
     XCTestExpectation *pushExp = [self expectationWithDescription:@"push"];
-    XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
     __weak typeof(self) weakSelf = self;
     __block BOOL isSecondCall = false;
     self.navigationController.onPushViewController = ^(UIViewController *vc, BOOL animated) {
@@ -135,16 +136,151 @@
 
     [self.sut begin];
     STPBaseCoordinator *initialCoordinator = [self.sut.childCoordinators firstObject];
-    [self.sut coordinator:initialCoordinator willFinishWithCompletion:^(__unused NSError * _Nullable error) {
-        [completionExp fulfill];
-    }];
+    [self.sut coordinator:initialCoordinator willFinishWithCompletion:nil];
+    [self waitForExpectationsWithTimeout:1 handler:nil];
+}
+
+- (void)testEditShippingPresentsShippingVC {
+    self.paymentRequest.requiredShippingAddressFields = PKAddressFieldPhone;
+    XCTestExpectation *pushExp = [self expectationWithDescription:@"push"];
+    __weak typeof(self) weakSelf = self;
+    __block BOOL isSecondCall = false;
+    self.navigationController.onPushViewController = ^(UIViewController *vc, BOOL animated) {
+        if (!isSecondCall) {
+            _XCTPrimitiveAssertTrue(weakSelf, [vc isKindOfClass:[STPPaymentSummaryViewController class]], @"");
+            STPPaymentSummaryViewController *summaryVC = (STPPaymentSummaryViewController *)vc;
+            [weakSelf.sut paymentSummaryViewControllerDidEditShipping:summaryVC];
+            isSecondCall = true;
+            return;
+        }
+        _XCTPrimitiveAssertTrue(weakSelf, [vc isKindOfClass:[STPShippingEntryViewController class]], @"");
+        _XCTPrimitiveAssertTrue(weakSelf, animated, @"");
+        [pushExp fulfill];
+    };
+
+    [self.sut begin];
+    STPBaseCoordinator *initialCoordinator = [self.sut.childCoordinators firstObject];
+    [self.sut coordinator:initialCoordinator willFinishWithCompletion:nil];
+    [self waitForExpectationsWithTimeout:1 handler:nil];
+}
+
+- (void)testCancelShippingPopsShippingVC {
+    STPAddress *originalShipping = [STPAddress new];
+    originalShipping.name = @"foo";
+    self.apiAdapter.shippingAddress = originalShipping;
+    self.paymentRequest.requiredShippingAddressFields = PKAddressFieldPhone;
+    XCTestExpectation *pushExp = [self expectationWithDescription:@"push"];
+    XCTestExpectation *popExp = [self expectationWithDescription:@"pop"];
+    __weak typeof(self) weakSelf = self;
+    __block BOOL isSecondCall = false;
+    self.navigationController.onPushViewController = ^(UIViewController *vc, BOOL animated) {
+        if (!isSecondCall) {
+            _XCTPrimitiveAssertTrue(weakSelf, [vc isKindOfClass:[STPPaymentSummaryViewController class]], @"");
+            STPPaymentSummaryViewController *summaryVC = (STPPaymentSummaryViewController *)vc;
+            [weakSelf.sut paymentSummaryViewControllerDidEditShipping:summaryVC];
+            isSecondCall = true;
+            return;
+        }
+        _XCTPrimitiveAssertTrue(weakSelf, [vc isKindOfClass:[STPShippingEntryViewController class]], @"");
+        _XCTPrimitiveAssertTrue(weakSelf, animated, @"");
+        [weakSelf.sut shippingEntryViewControllerDidCancel:(STPShippingEntryViewController *)vc];
+        [pushExp fulfill];
+    };
+    self.navigationController.onPopViewController = ^(BOOL animated) {
+        _XCTPrimitiveAssertTrue(weakSelf, animated, @"");
+        _XCTPrimitiveAssertEqual(weakSelf, weakSelf.sut.apiAdapter.shippingAddress.name, @"", @"foo", @"");
+        [popExp fulfill];
+    };
+
+    [self.sut begin];
+    STPBaseCoordinator *initialCoordinator = [self.sut.childCoordinators firstObject];
+    [self.sut coordinator:initialCoordinator willFinishWithCompletion:nil];
+    [self waitForExpectationsWithTimeout:1 handler:nil];
+}
+
+- (void)testEnterShipping_success {
+    STPAddress *originalShipping = [STPAddress new];
+    originalShipping.name = @"foo";
+    self.apiAdapter.shippingAddress = originalShipping;
+    self.paymentRequest.requiredShippingAddressFields = PKAddressFieldPhone;
+    XCTestExpectation *pushExp = [self expectationWithDescription:@"push"];
+    XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
+    XCTestExpectation *popExp = [self expectationWithDescription:@"pop"];
+    __weak typeof(self) weakSelf = self;
+    __block BOOL isSecondCall = false;
+    self.navigationController.onPushViewController = ^(UIViewController *vc, BOOL animated) {
+        if (!isSecondCall) {
+            _XCTPrimitiveAssertTrue(weakSelf, [vc isKindOfClass:[STPPaymentSummaryViewController class]], @"");
+            STPPaymentSummaryViewController *summaryVC = (STPPaymentSummaryViewController *)vc;
+            [weakSelf.sut paymentSummaryViewControllerDidEditShipping:summaryVC];
+            isSecondCall = true;
+            return;
+        }
+        _XCTPrimitiveAssertTrue(weakSelf, [vc isKindOfClass:[STPShippingEntryViewController class]], @"");
+        _XCTPrimitiveAssertTrue(weakSelf, animated, @"");
+        STPAddress *newShipping = [STPAddress new];
+        newShipping.name = @"bar";
+        [weakSelf.sut shippingEntryViewController:(STPShippingEntryViewController *)vc didEnterShippingAddress:newShipping completion:^(NSError * error) {
+            _XCTPrimitiveAssertNil(weakSelf, error, @"");
+            [completionExp fulfill];
+        }];
+        [pushExp fulfill];
+    };
+    self.navigationController.onPopViewController = ^(BOOL animated) {
+        _XCTPrimitiveAssertTrue(weakSelf, animated, @"");
+        _XCTPrimitiveAssertEqual(weakSelf, weakSelf.sut.apiAdapter.shippingAddress.name, @"", @"bar", @"");
+        [popExp fulfill];
+    };
+
+    [self.sut begin];
+    STPBaseCoordinator *initialCoordinator = [self.sut.childCoordinators firstObject];
+    [self.sut coordinator:initialCoordinator willFinishWithCompletion:nil];
+    [self waitForExpectationsWithTimeout:1 handler:nil];
+}
+
+- (void)testEnterShipping_error {
+    STPAddress *originalShipping = [STPAddress new];
+    originalShipping.name = @"foo";
+    self.apiAdapter.shippingAddress = originalShipping;
+    NSError *expectedError = [NSError errorWithDomain:@"foo" code:0 userInfo:nil];
+    self.apiAdapter.updateCustomerShippingError = expectedError;
+    self.paymentRequest.requiredShippingAddressFields = PKAddressFieldPhone;
+    XCTestExpectation *pushExp = [self expectationWithDescription:@"push"];
+    XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
+    __weak typeof(self) weakSelf = self;
+    __block BOOL isSecondCall = false;
+    self.navigationController.onPushViewController = ^(UIViewController *vc, BOOL animated) {
+        if (!isSecondCall) {
+            _XCTPrimitiveAssertTrue(weakSelf, [vc isKindOfClass:[STPPaymentSummaryViewController class]], @"");
+            STPPaymentSummaryViewController *summaryVC = (STPPaymentSummaryViewController *)vc;
+            [weakSelf.sut paymentSummaryViewControllerDidEditShipping:summaryVC];
+            isSecondCall = true;
+            return;
+        }
+        _XCTPrimitiveAssertTrue(weakSelf, [vc isKindOfClass:[STPShippingEntryViewController class]], @"");
+        _XCTPrimitiveAssertTrue(weakSelf, animated, @"");
+        STPAddress *newShipping = [STPAddress new];
+        newShipping.name = @"bar";
+        [weakSelf.sut shippingEntryViewController:(STPShippingEntryViewController *)vc didEnterShippingAddress:newShipping completion:^(NSError * error) {
+            _XCTPrimitiveAssertEqualObjects(weakSelf, error, @"", expectedError, @"");
+            _XCTPrimitiveAssertEqual(weakSelf, weakSelf.sut.apiAdapter.shippingAddress.name, @"", @"foo", @"");
+            [completionExp fulfill];
+        }];
+        [pushExp fulfill];
+    };
+    self.navigationController.onPopViewController = ^(__unused BOOL animated) {
+        _XCTPrimitiveFail(weakSelf, @"should not be called");
+    };
+
+    [self.sut begin];
+    STPBaseCoordinator *initialCoordinator = [self.sut.childCoordinators firstObject];
+    [self.sut coordinator:initialCoordinator willFinishWithCompletion:nil];
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
 - (void)testCancelSummaryVC {
     XCTestExpectation *pushExp = [self expectationWithDescription:@"push"];
     XCTestExpectation *cancelExp = [self expectationWithDescription:@"cancel"];
-    XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
     self.delegate.onDidCancel = ^(){ [cancelExp fulfill]; };
     __weak typeof(self) weakSelf = self;
     self.navigationController.onPushViewController = ^(UIViewController *vc, __unused BOOL animated) {
@@ -156,16 +292,13 @@
 
     [self.sut begin];
     STPBaseCoordinator *initialCoordinator = [self.sut.childCoordinators firstObject];
-    [self.sut coordinator:initialCoordinator willFinishWithCompletion:^(__unused NSError * _Nullable error) {
-        [completionExp fulfill];
-    }];
+    [self.sut coordinator:initialCoordinator willFinishWithCompletion:nil];
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
 - (void)testBuy_success {
     XCTestExpectation *pushExp = [self expectationWithDescription:@"push"];
     XCTestExpectation *willFinishExp = [self expectationWithDescription:@"willFinish"];
-    XCTestExpectation *initialCompletionExp = [self expectationWithDescription:@"initial completion"];
     XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
     self.delegate.onWillFinishWithCompletion = ^(STPErrorBlock completion){
         [willFinishExp fulfill];
@@ -184,16 +317,13 @@
 
     [self.sut begin];
     STPBaseCoordinator *initialCoordinator = [self.sut.childCoordinators firstObject];
-    [self.sut coordinator:initialCoordinator willFinishWithCompletion:^(__unused NSError * _Nullable error) {
-        [initialCompletionExp fulfill];
-    }];
+    [self.sut coordinator:initialCoordinator willFinishWithCompletion:nil];
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
 - (void)testBuy_error {
     XCTestExpectation *pushExp = [self expectationWithDescription:@"push"];
     XCTestExpectation *willFinishExp = [self expectationWithDescription:@"willFinish"];
-    XCTestExpectation *initialCompletionExp = [self expectationWithDescription:@"initial completion"];
     XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
     NSError *expectedError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
     self.delegate.onWillFinishWithCompletion = ^(STPErrorBlock completion){
@@ -213,9 +343,7 @@
 
     [self.sut begin];
     STPBaseCoordinator *initialCoordinator = [self.sut.childCoordinators firstObject];
-    [self.sut coordinator:initialCoordinator willFinishWithCompletion:^(__unused NSError * _Nullable error) {
-        [initialCompletionExp fulfill];
-    }];
+    [self.sut coordinator:initialCoordinator willFinishWithCompletion:nil];
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
