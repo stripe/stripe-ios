@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Stripe/STPBackendAPIAdapter.h>
+#import <Stripe/Stripe.h>
 
 @interface MockSTPBackendAPIAdapter : NSObject <STPBackendAPIAdapter>
 
@@ -19,6 +19,8 @@
 @property(nonatomic, nullable)NSError *retrieveSourcesError;
 @property(nonatomic, nullable)NSError *addSourceError;
 @property(nonatomic, nullable)NSError *selectSourceError;
-@property(nonatomic, nullable)NSError *updateCustomerShippingError;
+@property(nonatomic, nullable)NSError *updateCustomerShippingAddressError;
+
+@property (nonatomic, copy, nullable) void(^onRetrieveCustomerShippingAddress)();
 
 @end

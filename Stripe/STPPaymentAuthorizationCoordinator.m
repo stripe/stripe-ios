@@ -32,7 +32,7 @@
 - (instancetype)initWithNavigationController:(UINavigationController *)navigationController
                               paymentRequest:(PKPaymentRequest *)paymentRequest
                                    apiClient:(STPAPIClient *)apiClient
-                              apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
+                                  apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                                     delegate:(id<STPCoordinatorDelegate>)delegate {
     self = [super init];
     if (self) {
@@ -100,11 +100,15 @@
     [self.apiAdapter updateCustomerShippingAddress:address completion:^(__unused STPAddress *retrievedAddress, NSError *error) {
         if (error) {
             // TODO handle error
-            completion(error);
+            if (completion) {
+                completion(error);
+            }
             return;
         }
         [self.navigationController popViewControllerAnimated:YES];
-        completion(nil);
+        if (completion) {
+            completion(nil);
+        }
     }];
 }
 

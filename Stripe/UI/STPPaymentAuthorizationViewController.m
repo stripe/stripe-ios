@@ -70,7 +70,9 @@
 - (void)coordinator:(__unused STPBaseCoordinator *)coordinator willFinishWithCompletion:(STPErrorBlock)completion {
     STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:self.apiAdapter.selectedSource customer:nil shippingAddress:nil];
     [self.delegate paymentAuthorizationViewController:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
-        completion(error);
+        if (completion) {
+            completion(error);
+        }
         if (error) {
             [self.delegate paymentAuthorizationViewController:self didFailWithError:error];
         } else {

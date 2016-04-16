@@ -49,13 +49,20 @@
 }
 
 - (void)updateCustomerShippingAddress:(STPAddress *)shippingAddress completion:(STPAddressCompletionBlock)completion {
-    if (self.updateCustomerShippingError) {
-        completion(nil, self.updateCustomerShippingError);
+    if (self.updateCustomerShippingAddressError) {
+        completion(nil, self.updateCustomerShippingAddressError);
     }
     else {
         self.shippingAddress = shippingAddress;
         completion(self.shippingAddress, nil);
     }
+}
+
+- (void)retrieveCustomerShippingAddress:(STPAddressCompletionBlock)completion {
+    if (self.onRetrieveCustomerShippingAddress) {
+        self.onRetrieveCustomerShippingAddress();
+    }
+    completion(self.shippingAddress, nil);
 }
 
 @end
