@@ -12,6 +12,7 @@
 #import "STPAddressFieldViewModel.h"
 #import "NSArray+Stripe_BoundSafe.h"
 #import "STPAddressFieldTableViewCell.h"
+#import "UIViewController+Stripe_KeyboardAvoiding.h"
 
 static NSString *STPShippingAddressFieldName = @"name";
 static NSString *STPShippingAddressFieldEmail = @"email";
@@ -111,6 +112,7 @@ static NSString *const STPAddressFieldTableViewCellReuseIdentifier = @"STPAddres
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     _activityIndicator = activityIndicator;
     self.navigationItem.titleView = activityIndicator;
+    [self stp_beginAvoidingKeyboardWithScrollView:tableView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
