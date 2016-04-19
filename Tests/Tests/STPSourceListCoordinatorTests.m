@@ -13,11 +13,11 @@
 #import "MockSTPCoordinatorDelegate.h"
 #import "MockUINavigationController.h"
 #import "STPSourceListCoordinator.h"
-#import "STPSourceListViewController.h"
+#import "STPPaymentMethodsViewController.h"
 #import "STPPaymentCardEntryViewController.h"
 
 @interface STPSourceListCoordinator()<STPPaymentCardEntryViewControllerDelegate, STPSourceListViewControllerDelegate>
-@property(nonatomic, weak) STPSourceListViewController *sourceListViewController;
+@property(nonatomic, weak) STPPaymentMethodsViewController *sourceListViewController;
 @property(nonatomic, readonly)UINavigationController *navigationController;
 @end
 
@@ -65,7 +65,7 @@
 - (void)testBeginShowsSourceListVC {
     [self.sut begin];
     UIViewController *topVC = self.sut.navigationController.topViewController;
-    XCTAssertTrue([topVC isKindOfClass:[STPSourceListViewController class]]);
+    XCTAssertTrue([topVC isKindOfClass:[STPPaymentMethodsViewController class]]);
 }
 
 - (void)testAddButtonPushesPaymentCardVC {
@@ -169,7 +169,7 @@
     __weak typeof(self) weakSelf = self;
     self.navigationController.onPopViewController = ^(BOOL animated) {
         UIViewController *topVC = weakSelf.sut.navigationController.topViewController;
-        _XCTPrimitiveAssertTrue(weakSelf, [topVC isKindOfClass:[STPSourceListViewController class]], @"");
+        _XCTPrimitiveAssertTrue(weakSelf, [topVC isKindOfClass:[STPPaymentMethodsViewController class]], @"");
         _XCTPrimitiveAssertTrue(weakSelf, animated, @"");
         _XCTPrimitiveAssertEqualObjects(weakSelf, weakSelf.apiAdapter.selectedSource, @"", token2, @"");
         [popExp fulfill];

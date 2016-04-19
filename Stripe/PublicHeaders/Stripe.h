@@ -28,4 +28,8 @@
 #import "STPSource.h"
 #import "STPBackendAPIAdapter.h"
 #import "STPPaymentResult.h"
+#import "STPPaymentRequest.h"
+#import "STPPaymentMethod.h"
+#import "STPApplePayPaymentMethod.h"
+#import "STPCardPaymentMethod.h"
 #endif

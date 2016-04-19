@@ -7,7 +7,7 @@
 //
 
 #import "STPSourceListCoordinator.h"
-#import "STPSourceListViewController.h"
+#import "STPPaymentMethodsViewController.h"
 #import "STPPaymentCardEntryViewController.h"
 #import "STPAPIClient.h"
 #import "STPBackendAPIAdapter.h"
@@ -16,7 +16,7 @@
 
 @interface STPSourceListCoordinator()<STPPaymentCardEntryViewControllerDelegate, STPSourceListViewControllerDelegate>
 
-@property(nonatomic, weak) STPSourceListViewController *sourceListViewController;
+@property(nonatomic, weak) STPPaymentMethodsViewController *sourceListViewController;
 @property(nonatomic, weak, readonly)id<STPCoordinatorDelegate>delegate;
 @property(nonatomic, readonly)UINavigationController *navigationController;
 @property(nonatomic, readonly)STPAPIClient *apiClient;
@@ -42,7 +42,7 @@
 
 - (void)begin {
     [super begin];
-    STPSourceListViewController *sourceListViewController = [[STPSourceListViewController alloc] initWithapiAdapter:self.apiAdapter delegate:self];
+    STPPaymentMethodsViewController *sourceListViewController = [[STPPaymentMethodsViewController alloc] initWithapiAdapter:self.apiAdapter delegate:self];
     self.sourceListViewController = sourceListViewController;
     [self.navigationController pushViewController:sourceListViewController animated:YES];
 }
@@ -86,12 +86,12 @@
 
 #pragma mark STPSourceListViewControllerDelegate
 
-- (void)sourceListViewControllerDidTapAddButton:(__unused STPSourceListViewController *)viewController {
+- (void)sourceListViewControllerDidTapAddButton:(__unused STPPaymentMethodsViewController *)viewController {
     STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithDelegate:self];
     [self.navigationController stp_pushViewController:paymentCardViewController animated:YES completion:nil];
 }
 
-- (void)sourceListViewController:(__unused STPSourceListViewController *)viewController
+- (void)sourceListViewController:(__unused STPPaymentMethodsViewController *)viewController
                  didSelectSource:(id<STPSource>)source {
     [self.apiAdapter selectSource:source completion:^(__unused id<STPSource>  _Nullable selectedSource, __unused NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
         if (error) {

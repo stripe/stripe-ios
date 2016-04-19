@@ -11,98 +11,55 @@
 #import "Stripe+ApplePay.h"
 #import "STPPaymentCoordinator.h"
 #import "STPAPIClient.h"
-
-@interface STPPaymentCoordinator()<PKPaymentAuthorizationViewControllerDelegate>
-@property(nonatomic)UIViewController *paymentViewController;
-@property(nonatomic)PKPaymentRequest *paymentRequest;
-@property(nonatomic)STPAPIClient *apiClient;
-@property(nonatomic, weak)id<STPPaymentCoordinatorDelegate> delegate;
-@property(nonatomic)NSError *lastApplePayError;
-@property(nonatomic)BOOL applePaySucceeded;
-@end
+#import "STPPaymentRequest.h"
+#import "STPPaymentMethod.h"
+#import "STPCardPaymentMethod.h"
+#import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 
 static char kSTPPaymentCoordinatorAssociatedObjectKey;
 
 @implementation STPPaymentCoordinator
 
-- (instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest
-                        apiAdapter:(__unused id<STPBackendAPIAdapter>)apiAdapter
-                             apiClient:(STPAPIClient *)apiClient
-                              delegate:(id<STPPaymentCoordinatorDelegate>)delegate {
-    NSCAssert(paymentRequest != nil, @"You must provide a paymentRequest to STPPaymentCoordinator");
-    NSCAssert(apiClient != nil, @"You must provide an apiClient to STPPaymentCoordinator");
-    NSCAssert(delegate != nil, @"You must provide a delegate to STPPaymentCoordinator");
-    self = [super init];
-    if (self) {
-        _paymentRequest = paymentRequest;
-        _apiClient = apiClient;
-        _delegate = delegate;
-        if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
-            PKPaymentAuthorizationViewController *paymentViewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
-            paymentViewController.delegate = self;
-            _paymentViewController = paymentViewController;
-        } else {
-            // TODO
-        }
-        [self artificiallyRetain];
-    }
-    return self;
-}
-
-- (void)artificiallyRetain {
-    if (self.delegate) {
-        objc_setAssociatedObject(self.delegate, &kSTPPaymentCoordinatorAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-}
-
-- (void)artificiallyRelease {
-    if (self.delegate) {
-        objc_setAssociatedObject(self.delegate, &kSTPPaymentCoordinatorAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-}
-
-#pragma mark - PKPaymentAuthorizationViewControllerDelegate
-
-- (void)paymentAuthorizationViewControllerDidFinish:(__unused PKPaymentAuthorizationViewController *)controller {
-    if (self.lastApplePayError) {
-        [self.delegate paymentCoordinator:self didFailWithError:self.lastApplePayError];
-    } else if (self.applePaySucceeded) {
-        [self.delegate paymentCoordinatorDidSucceed:self];
-    } else {
-        [self.delegate paymentCoordinatorDidCancel:self];
-    }
-    self.lastApplePayError = nil;
-    self.applePaySucceeded = NO;
-    [self artificiallyRelease];
-}
-
-- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
-                       didAuthorizePayment:(PKPayment *)payment
-                                completion:(void (^)(PKPaymentAuthorizationStatus))completion {
-    [self.apiClient createTokenWithPayment:payment completion:^(STPToken * _Nullable token, NSError * _Nullable error) {
-        if (error != nil) {
-            self.lastApplePayError = error;
-            completion(PKPaymentAuthorizationStatusFailure);
-            return;
-        }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-        STPAddress *address = [[STPAddress alloc] initWithABRecord:payment.shippingAddress];
-#pragma clang diagnostic pop
-        STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token
-                                                                   customer:nil
-                                                            shippingAddress:address];
-        [self.delegate paymentCoordinator:self didCreatePaymentResult:result completion:^(NSError * _Nullable applicationError) {
-            if (applicationError != nil) {
-                self.lastApplePayError = applicationError;
-                completion(PKPaymentAuthorizationStatusFailure);
+- (void)performPaymentRequest:(STPPaymentRequest *)request
+                    apiClient:(STPAPIClient *)apiClient
+                   apiAdapter:(__unused id<STPBackendAPIAdapter>)apiAdapter
+           fromViewController:(UIViewController *)fromViewController
+                sourceHandler:(STPSourceHandlerBlock)sourceHandler
+                   completion:(STPPaymentCompletionBlock)completion {
+    [self artificiallyRetain:fromViewController];
+    if (request.paymentMethod.type == STPPaymentMethodTypeCard) {
+        STPCardPaymentMethod *cardPaymentMethod = (STPCardPaymentMethod *)request.paymentMethod;
+        sourceHandler(request.paymentMethod.type, cardPaymentMethod.source, ^(NSError *error) {
+            if (error) {
+                completion(STPPaymentStatusError, error);
+                [self artificiallyRelease:fromViewController];
                 return;
             }
-            self.applePaySucceeded = YES;
-            completion(PKPaymentAuthorizationStatusSuccess);
+            completion(STPPaymentStatusSuccess, nil);
+            [self artificiallyRelease:fromViewController];
+        });
+    }
+    if (request.paymentMethod.type == STPPaymentMethodTypeApplePay) {
+        PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:request.appleMerchantIdentifier];
+        PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:@"" amount:request.decimalAmount];
+        paymentRequest.paymentSummaryItems = @[totalItem];
+        PKPaymentAuthorizationViewController *paymentAuthViewController = [PKPaymentAuthorizationViewController stp_controllerWithPaymentRequest:paymentRequest publishableKey:apiClient.publishableKey onTokenCreation:sourceHandler
+         onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
+             [fromViewController dismissViewControllerAnimated:YES completion:^{
+                 completion(status, error);
+                 [self artificiallyRelease:fromViewController];
+             }];
         }];
-    }];
+        [fromViewController presentViewController:paymentAuthViewController animated:YES completion:nil];
+    }
 }
 
+- (void)artificiallyRetain:(NSObject *)host {
+    objc_setAssociatedObject(host, &kSTPPaymentCoordinatorAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)artificiallyRelease:(NSObject *)host {
+    objc_setAssociatedObject(host, &kSTPPaymentCoordinatorAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 @end

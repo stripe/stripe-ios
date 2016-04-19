@@ -16,7 +16,7 @@ enum STPBackendChargeResult {
 
 typealias STPTokenSubmissionHandler = (STPBackendChargeResult?, NSError?) -> Void
 
-class ViewController: UIViewController, STPPaymentCoordinatorDelegate {
+class ViewController: UIViewController {
 
     // Replace these values with your application's keys
     
@@ -31,21 +31,29 @@ class ViewController: UIViewController, STPPaymentCoordinatorDelegate {
     
     @IBAction func beginPayment(sender: AnyObject) {
         Stripe.setDefaultPublishableKey("pk_test_4TDXAGLdZFGNbXYGajQlcstU")
-        let paymentRequest = PKPaymentRequest()
-        paymentRequest.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "Very Stylish Hat", amount: NSDecimalNumber(string: "10.00"))
+        let tokenDict = [
+            "id":"foo",
+            "livemode":true,
+            "created":123,
         ]
-        paymentRequest.requiredShippingAddressFields = [.PostalAddress];
+        let source = STPToken.decodedObjectFromAPIResponse(tokenDict)!
+//        let paymentMethod = STPCardPaymentMethod(source: source)
+        let paymentMethod = STPApplePayPaymentMethod()
+        let paymentRequest = STPPaymentRequest(appleMerchantIdentifier: "foo", paymentMethod: paymentMethod, amount: 1000, currency: "usd")
         let apiAdapter = BackendAPIAdapter()
-        let address = STPAddress()
-        address.country = "CA"
-        apiAdapter.shippingAddress = address
-        let paymentCoordinator = STPPaymentCoordinator(paymentRequest: paymentRequest,
-                                                       apiAdapter:apiAdapter,
-                                                       apiClient: STPAPIClient.sharedClient(),
-                                                       delegate: self)
-        self.presentViewController(paymentCoordinator.paymentViewController, animated: true, completion: nil)
-    }
+        let paymentCoordinator = STPPaymentCoordinator()
+        let apiClient = STPAPIClient.sharedClient()
+        paymentCoordinator.performPaymentRequest(paymentRequest,
+                                                 apiClient: apiClient,
+                                                 apiAdapter: apiAdapter,
+                                                 fromViewController: self, sourceHandler: { (type, source, completion) in
+                                                    completion(nil)
+            }) { (status, error) in
+                print("\(status) \(error)")
+
+
+        }
+        }
     
     func paymentCoordinatorDidCancel(coordinator: STPPaymentCoordinator!) {
         dismissViewControllerAnimated(true, completion: nil)

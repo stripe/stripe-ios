@@ -6,7 +6,7 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPSourceListViewController.h"
+#import "STPPaymentMethodsViewController.h"
 #import "STPBackendAPIAdapter.h"
 #import "STPSourceCell.h"
 #import "STPAPIClient.h"
@@ -18,8 +18,8 @@
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 
-@interface STPSourceListViewController()<UITableViewDataSource, UITableViewDelegate>
-@property(nonatomic, weak)id<STPSourceListViewControllerDelegate> delegate;
+@interface STPPaymentMethodsViewController()<UITableViewDataSource, UITableViewDelegate>
+@property(nonatomic, weak)id<STPPaymentMethodsViewControllerDelegate> delegate;
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIBarButtonItem *addButton;
@@ -27,10 +27,11 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 
 @end
 
-@implementation STPSourceListViewController
+@implementation STPPaymentMethodsViewController
 
-- (nonnull instancetype)initWithapiAdapter:(nonnull id<STPBackendAPIAdapter>)apiAdapter
-                                      delegate:(nonnull id<STPSourceListViewControllerDelegate>)delegate {
+- (nonnull instancetype)initWithSupportedPaymentMethods:(__unused STPPaymentMethodType)supportedPaymentMethods
+                                             apiAdapter:(nonnull id<STPBackendAPIAdapter>)apiAdapter
+                                               delegate:(nonnull id<STPPaymentMethodsViewControllerDelegate>)delegate {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _apiAdapter = apiAdapter;
@@ -82,7 +83,7 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 }
 
 - (void)addSource:(__unused id)sender {
-    [self.delegate sourceListViewControllerDidTapAddButton:self];
+
 }
 
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(__unused NSInteger)section {
@@ -100,7 +101,7 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     id<STPSource> source = [self.apiAdapter.sources stp_boundSafeObjectAtIndex:indexPath.row];
-    [self.delegate sourceListViewController:self didSelectSource:source];
+    
 }
 
 @end

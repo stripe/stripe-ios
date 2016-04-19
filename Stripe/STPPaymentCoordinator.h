@@ -10,33 +10,16 @@
 #import <UIKit/UIKit.h>
 #import "STPBlocks.h"
 
-@class STPPaymentCoordinator, STPAPIClient, STPPaymentResult;
-
+@class STPAPIClient, STPPaymentRequest;
 @protocol STPBackendAPIAdapter;
-
-@protocol STPPaymentCoordinatorDelegate
-
-- (void)paymentCoordinator:(STPPaymentCoordinator *)coordinator
-    didCreatePaymentResult:(STPPaymentResult *)result
-                completion:(STPErrorBlock)completion;
-
-- (void)paymentCoordinator:(STPPaymentCoordinator *)coordinator
-          didFailWithError:(NSError *)error;
-
-- (void)paymentCoordinatorDidCancel:(STPPaymentCoordinator *)coordinator;
-
-- (void)paymentCoordinatorDidSucceed:(STPPaymentCoordinator *)coordinator;
-
-
-@end
 
 @interface STPPaymentCoordinator : NSObject
 
-- (instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest
-                        apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                             apiClient:(STPAPIClient *)apiClient
-                              delegate:(id<STPPaymentCoordinatorDelegate>)delegate;
-
-@property(nonatomic, readonly)UIViewController *paymentViewController;
+- (void)performPaymentRequest:(STPPaymentRequest *)request
+                    apiClient:(STPAPIClient *)apiClient
+                   apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
+           fromViewController:(UIViewController *)fromViewController
+                sourceHandler:(STPSourceHandlerBlock)sourceHandler
+                   completion:(STPPaymentCompletionBlock)completion;
 
 @end
