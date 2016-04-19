@@ -10,12 +10,16 @@
 #import "STPSource.h"
 
 @protocol STPSource;
+@class STPAddress;
 
 @interface STPPaymentResult : NSObject
 
 @property(nonatomic, readonly, nonnull) id<STPSource> source;
 @property(nonatomic, readonly, nullable) NSString *customer;
+@property(nonatomic, readonly, nullable) STPAddress *shippingAddress;
 
-- (nonnull instancetype)initWithSource:(nonnull id<STPSource>)source customer:(nullable NSString *)customer;
+- (nonnull instancetype)initWithSource:(nonnull id<STPSource>)source
+                              customer:(nullable NSString *)customer
+                       shippingAddress:(nullable STPAddress *)shippingAddress;
 
 @end

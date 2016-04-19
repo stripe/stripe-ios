@@ -18,7 +18,8 @@
     NSArray *validEmails = @[
                              @"test@test.com",
                              @"test+thing@test.com.nz",
-                             @"a@b.c"
+                             @"a@b.c",
+                             @"A@b.c",
                              ];
     for (NSString *email in validEmails) {
         XCTAssert([STPEmailAddressValidator stringIsValidEmailAddress:email]);

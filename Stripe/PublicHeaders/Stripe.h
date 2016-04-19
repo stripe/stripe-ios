@@ -22,10 +22,10 @@
 #import "Stripe+ApplePay.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentCardTextField.h"
+#import "STPAddress.h"
 
 #import "STPPaymentCoordinator.h"
-#import "STPPaymentAuthorizationViewController.h"
 #import "STPSource.h"
-#import "STPSourceProvider.h"
+#import "STPBackendAPIAdapter.h"
 #import "STPPaymentResult.h"
 #endif

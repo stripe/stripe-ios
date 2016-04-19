@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PassKit
 import Stripe
 
 enum STPBackendChargeResult {
@@ -14,7 +15,6 @@ enum STPBackendChargeResult {
 }
 
 typealias STPTokenSubmissionHandler = (STPBackendChargeResult?, NSError?) -> Void
-
 
 class ViewController: UIViewController, STPPaymentCoordinatorDelegate {
 
@@ -35,7 +35,15 @@ class ViewController: UIViewController, STPPaymentCoordinatorDelegate {
         paymentRequest.paymentSummaryItems = [
             PKPaymentSummaryItem(label: "Very Stylish Hat", amount: NSDecimalNumber(string: "10.00"))
         ]
-        let paymentCoordinator = STPPaymentCoordinator(paymentRequest: paymentRequest, apiClient: STPAPIClient.sharedClient(), delegate: self)
+        paymentRequest.requiredShippingAddressFields = [.PostalAddress];
+        let apiAdapter = BackendAPIAdapter()
+        let address = STPAddress()
+        address.country = "CA"
+        apiAdapter.shippingAddress = address
+        let paymentCoordinator = STPPaymentCoordinator(paymentRequest: paymentRequest,
+                                                       apiAdapter:apiAdapter,
+                                                       apiClient: STPAPIClient.sharedClient(),
+                                                       delegate: self)
         self.presentViewController(paymentCoordinator.paymentViewController, animated: true, completion: nil)
     }
     

@@ -1,15 +1,15 @@
 //
-//  MockSTPSourceProvider.m
+//  MockSTPBackendAPIAdapter.m
 //  Stripe iOS Example (Simple)
 //
 //  Created by Ben Guo on 3/29/16.
 //  Copyright © 2016 Stripe. All rights reserved.
 //
 
-#import "MockSTPSourceProvider.h"
+#import "MockSTPBackendAPIAdapter.h"
 #import <Stripe/Stripe.h>
 
-@implementation MockSTPSourceProvider
+@implementation MockSTPBackendAPIAdapter
 
 - (instancetype)init {
     self = [super init];
@@ -46,6 +46,23 @@
         self.selectedSource = source;
         completion(self.selectedSource, self.sources, nil);
     }
+}
+
+- (void)updateCustomerShippingAddress:(STPAddress *)shippingAddress completion:(STPAddressCompletionBlock)completion {
+    if (self.updateCustomerShippingAddressError) {
+        completion(nil, self.updateCustomerShippingAddressError);
+    }
+    else {
+        self.shippingAddress = shippingAddress;
+        completion(self.shippingAddress, nil);
+    }
+}
+
+- (void)retrieveCustomerShippingAddress:(STPAddressCompletionBlock)completion {
+    if (self.onRetrieveCustomerShippingAddress) {
+        self.onRetrieveCustomerShippingAddress();
+    }
+    completion(self.shippingAddress, nil);
 }
 
 @end

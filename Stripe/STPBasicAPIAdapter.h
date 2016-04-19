@@ -1,5 +1,5 @@
 //
-//  STPBasicSourceProvider.h
+//  STPBasicapiAdapter.h
 //  Stripe
 //
 //  Created by Jack Flintermann on 1/12/16.
@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STPSourceProvider.h"
+#import "STPBackendAPIAdapter.h"
 
-@interface STPBasicSourceProvider : NSObject<STPSourceProvider>
+@interface STPBasicAPIAdapter : NSObject<STPBackendAPIAdapter>
 
 typedef void (^STPRetrieveSourcesBlock)(__nonnull STPSourceCompletionBlock completion);
 
@@ -17,5 +17,6 @@ typedef void (^STPRetrieveSourcesBlock)(__nonnull STPSourceCompletionBlock compl
 - (void)addSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCompletionBlock)completion;
 @property(nonatomic, nullable, readonly)NSArray<id<STPSource>>* sources;
 @property(nonatomic, nullable, readonly)id<STPSource> selectedSource;
+@property(nonatomic, nullable)STPAddress *shippingAddress;
 
 @end

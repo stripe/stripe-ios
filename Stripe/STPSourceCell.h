@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "STPSourceProvider.h"
+#import "STPBackendAPIAdapter.h"
 
 @interface STPSourceCell : UITableViewCell
 

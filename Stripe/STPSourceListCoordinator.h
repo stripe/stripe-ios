@@ -10,4 +10,10 @@
 #import "STPBaseCoordinator.h"
 
 @interface STPSourceListCoordinator : STPBaseCoordinator
+
+- (instancetype)initWithNavigationController:(UINavigationController *)navigationController
+                                   apiClient:(STPAPIClient *)apiClient
+                              apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
+                                    delegate:(id<STPCoordinatorDelegate>)delegate;
+
 @end

@@ -9,22 +9,14 @@
 #import "STPBaseCoordinator.h"
 
 @interface STPBaseCoordinator()
-@property(nonatomic, weak)id<STPCoordinatorDelegate>delegate;
 @property(nonatomic) NSMutableArray<STPBaseCoordinator *> *childCoordinators;
 @end
 
 @implementation STPBaseCoordinator
 
-- (instancetype)initWithNavigationController:(UINavigationController *)navigationController
-                                   apiClient:(STPAPIClient *)apiClient
-                              sourceProvider:(id<STPSourceProvider>)sourceProvider
-                                    delegate:(id<STPCoordinatorDelegate>)delegate {
+- (instancetype)init {
     self = [super init];
     if (self) {
-        _navigationController = navigationController;
-        _apiClient = apiClient;
-        _sourceProvider = sourceProvider;
-        _delegate = delegate;
         _childCoordinators = [@[] mutableCopy];
     }
     return self;

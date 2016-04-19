@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 #import <Stripe/Stripe.h>
 #import "MockSTPAPIClient.h"
-#import "MockSTPSourceProvider.h"
+#import "MockSTPBackendAPIAdapter.h"
 #import "MockSTPCoordinatorDelegate.h"
 #import "MockUINavigationController.h"
 #import "STPSourceListCoordinator.h"
@@ -18,6 +18,7 @@
 
 @interface STPSourceListCoordinator()<STPPaymentCardEntryViewControllerDelegate, STPSourceListViewControllerDelegate>
 @property(nonatomic, weak) STPSourceListViewController *sourceListViewController;
+@property(nonatomic, readonly)UINavigationController *navigationController;
 @end
 
 @interface STPSourceListCoordinatorTests : XCTestCase
@@ -25,7 +26,7 @@
 @property (nonatomic, strong) STPSourceListCoordinator *sut;
 @property (nonatomic, strong) MockUINavigationController *navigationController;
 @property (nonatomic, strong) MockSTPAPIClient *apiClient;
-@property (nonatomic, strong) MockSTPSourceProvider *sourceProvider;
+@property (nonatomic, strong) MockSTPBackendAPIAdapter *apiAdapter;
 @property (nonatomic, strong) MockSTPCoordinatorDelegate *delegate;
 @property (nonatomic, strong) STPCardParams *card;
 
@@ -37,11 +38,11 @@
     [super setUp];
     self.navigationController = [MockUINavigationController new];
     self.apiClient = [MockSTPAPIClient new];
-    self.sourceProvider = [MockSTPSourceProvider new];
+    self.apiAdapter = [MockSTPBackendAPIAdapter new];
     self.delegate = [MockSTPCoordinatorDelegate new];
     self.sut = [[STPSourceListCoordinator alloc] initWithNavigationController:self.navigationController
                                                                     apiClient:self.apiClient
-                                                               sourceProvider:self.sourceProvider
+                                                               apiAdapter:self.apiAdapter
                                                                      delegate:self.delegate];
     STPCardParams *card = [[STPCardParams alloc] init];
     card.number = @"4242 4242 4242 4242";
@@ -55,7 +56,7 @@
     [super tearDown];
     self.navigationController = nil;
     self.apiClient = nil;
-    self.sourceProvider = nil;
+    self.apiAdapter = nil;
     self.delegate = nil;
     self.sut = nil;
     self.card = nil;
@@ -103,7 +104,7 @@
 - (void)testEnterCard_success {
     XCTestExpectation *popExp = [self expectationWithDescription:@"pop"];
     XCTestExpectation *completionExp = [self expectationWithDescription:@"completion"];
-    XCTAssertTrue(self.sourceProvider.sources.count == 0);
+    XCTAssertTrue(self.apiAdapter.sources.count == 0);
     __weak typeof(self) weakSelf = self;
     self.navigationController.onPushViewController = ^(__unused UIViewController *vc, __unused BOOL animated) {
         [weakSelf.sut paymentCardEntryViewController:nil didEnterCardParams:weakSelf.card completion:^(NSError * _Nullable error) {
@@ -112,7 +113,7 @@
         }];
     };
     self.navigationController.onPopViewController = ^(__unused BOOL animated) {
-        _XCTPrimitiveAssertTrue(weakSelf, weakSelf.sourceProvider.sources.count == 1, @"");
+        _XCTPrimitiveAssertTrue(weakSelf, weakSelf.apiAdapter.sources.count == 1, @"");
         [popExp fulfill];
     };
 
@@ -139,10 +140,10 @@
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
-- (void)testEnterCard_sourceProviderError {
+- (void)testEnterCard_apiAdapterError {
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
     NSError *expectedError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
-    self.sourceProvider.addSourceError = expectedError;
+    self.apiAdapter.addSourceError = expectedError;
     __weak typeof(self) weakSelf = self;
     self.navigationController.onPushViewController = ^(__unused UIViewController *vc, __unused BOOL animated) {
         [weakSelf.sut paymentCardEntryViewController:nil didEnterCardParams:weakSelf.card completion:^(NSError * _Nullable error) {
@@ -161,8 +162,8 @@
 - (void)testSelectCard_success {
     STPToken *token1 = [STPToken new];
     STPToken *token2 = [STPToken new];
-    self.sourceProvider.sources = @[token1, token2];
-    self.sourceProvider.selectedSource = token1;
+    self.apiAdapter.sources = @[token1, token2];
+    self.apiAdapter.selectedSource = token1;
 
     XCTestExpectation *popExp = [self expectationWithDescription:@"pop"];
     __weak typeof(self) weakSelf = self;
@@ -170,7 +171,7 @@
         UIViewController *topVC = weakSelf.sut.navigationController.topViewController;
         _XCTPrimitiveAssertTrue(weakSelf, [topVC isKindOfClass:[STPSourceListViewController class]], @"");
         _XCTPrimitiveAssertTrue(weakSelf, animated, @"");
-        _XCTPrimitiveAssertEqualObjects(weakSelf, weakSelf.sourceProvider.selectedSource, @"", token2, @"");
+        _XCTPrimitiveAssertEqualObjects(weakSelf, weakSelf.apiAdapter.selectedSource, @"", token2, @"");
         [popExp fulfill];
     };
 
@@ -182,9 +183,9 @@
 - (void)testSelectCard_error {
     STPToken *token1 = [STPToken new];
     STPToken *token2 = [STPToken new];
-    self.sourceProvider.sources = @[token1, token2];
-    self.sourceProvider.selectedSource = token1;
-    self.sourceProvider.selectSourceError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
+    self.apiAdapter.sources = @[token1, token2];
+    self.apiAdapter.selectedSource = token1;
+    self.apiAdapter.selectSourceError = [[NSError alloc] initWithDomain:@"foo" code:123 userInfo:@{}];
     __weak typeof(self) weakSelf = self;
     self.navigationController.onPopViewController = ^(__unused BOOL animated) {
         _XCTPrimitiveFail(weakSelf, "should not be called");
@@ -192,7 +193,7 @@
 
     [self.sut begin];
     [self.sut sourceListViewController:self.sut.sourceListViewController didSelectSource:token2];
-    XCTAssertEqualObjects(self.sourceProvider.selectedSource, token1);
+    XCTAssertEqualObjects(self.apiAdapter.selectedSource, token1);
 }
 
 @end

@@ -11,9 +11,8 @@
 #import "Stripe+ApplePay.h"
 #import "STPPaymentCoordinator.h"
 #import "STPAPIClient.h"
-#import "STPPaymentAuthorizationViewController.h"
 
-@interface STPPaymentCoordinator()<STPPaymentAuthorizationViewControllerDelegate, PKPaymentAuthorizationViewControllerDelegate>
+@interface STPPaymentCoordinator()<PKPaymentAuthorizationViewControllerDelegate>
 @property(nonatomic)UIViewController *paymentViewController;
 @property(nonatomic)PKPaymentRequest *paymentRequest;
 @property(nonatomic)STPAPIClient *apiClient;
@@ -27,6 +26,7 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
 @implementation STPPaymentCoordinator
 
 - (instancetype)initWithPaymentRequest:(PKPaymentRequest *)paymentRequest
+                        apiAdapter:(__unused id<STPBackendAPIAdapter>)apiAdapter
                              apiClient:(STPAPIClient *)apiClient
                               delegate:(id<STPPaymentCoordinatorDelegate>)delegate {
     NSCAssert(paymentRequest != nil, @"You must provide a paymentRequest to STPPaymentCoordinator");
@@ -42,9 +42,7 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
             paymentViewController.delegate = self;
             _paymentViewController = paymentViewController;
         } else {
-            STPPaymentAuthorizationViewController *paymentViewController = [[STPPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest apiClient:apiClient];
-            paymentViewController.delegate = self;
-            _paymentViewController = paymentViewController;
+            // TODO
         }
         [self artificiallyRetain];
     }
@@ -61,29 +59,6 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
     if (self.delegate) {
         objc_setAssociatedObject(self.delegate, &kSTPPaymentCoordinatorAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-}
-
-#pragma mark - STPPaymentAuthorizationViewControllerDelegate
-
-- (void)paymentAuthorizationViewController:(__unused STPPaymentAuthorizationViewController *)paymentAuthorizationViewController
-                    didCreatePaymentResult:(STPPaymentResult *)result
-                                completion:(STPErrorBlock)completion {
-    [self.delegate paymentCoordinator:self didCreatePaymentResult:result completion:completion];
-}
-
-- (void)paymentAuthorizationViewController:(__unused STPPaymentAuthorizationViewController *)paymentAuthorizationViewController didFailWithError:(NSError *)error {
-    [self.delegate paymentCoordinator:self didFailWithError:error];
-    [self artificiallyRelease];
-}
-
-- (void)paymentAuthorizationViewControllerDidCancel:(__unused STPPaymentAuthorizationViewController *)paymentAuthorizationViewController {
-    [self.delegate paymentCoordinatorDidCancel:self];
-    [self artificiallyRelease];
-}
-
-- (void)paymentAuthorizationViewControllerDidSucceed:(__unused STPPaymentAuthorizationViewController *)paymentAuthorizationViewController {
-    [self.delegate paymentCoordinatorDidSucceed:self];
-    [self artificiallyRelease];
 }
 
 #pragma mark - PKPaymentAuthorizationViewControllerDelegate
@@ -110,7 +85,13 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
             completion(PKPaymentAuthorizationStatusFailure);
             return;
         }
-        STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token customer:nil];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        STPAddress *address = [[STPAddress alloc] initWithABRecord:payment.shippingAddress];
+#pragma clang diagnostic pop
+        STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token
+                                                                   customer:nil
+                                                            shippingAddress:address];
         [self.delegate paymentCoordinator:self didCreatePaymentResult:result completion:^(NSError * _Nullable applicationError) {
             if (applicationError != nil) {
                 self.lastApplePayError = applicationError;
@@ -122,5 +103,6 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
         }];
     }];
 }
+
 
 @end

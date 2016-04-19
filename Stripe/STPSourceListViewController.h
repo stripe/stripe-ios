@@ -10,7 +10,7 @@
 
 @class STPAPIClient, STPSourceListViewController;
 
-@protocol STPSourceProvider, STPSource;
+@protocol STPBackendAPIAdapter, STPSource;
 
 @protocol STPSourceListViewControllerDelegate <NSObject>
 
@@ -22,9 +22,9 @@
 
 @interface STPSourceListViewController : UIViewController
 
-- (nonnull instancetype)initWithSourceProvider:(nonnull id<STPSourceProvider>)sourceProvider
+- (nonnull instancetype)initWithapiAdapter:(nonnull id<STPBackendAPIAdapter>)apiAdapter
                                       delegate:(nonnull id<STPSourceListViewControllerDelegate>)delegate;
-@property(nonatomic, readonly, nonnull)id<STPSourceProvider> sourceProvider;
+@property(nonatomic, readonly, nonnull)id<STPBackendAPIAdapter> apiAdapter;
 
 - (void)reload;
 
