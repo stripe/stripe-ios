@@ -19,5 +19,8 @@
     return @"Apple Pay";
 }
 
+- (BOOL)isEqual:(id)object {
+    return [object isKindOfClass:[STPApplePayPaymentMethod class]];
+}
 
 @end

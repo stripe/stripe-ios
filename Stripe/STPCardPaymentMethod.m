@@ -33,4 +33,8 @@
     return self.source.label;
 }
 
+- (BOOL)isEqual:(id)object {
+    return [object isKindOfClass:[STPCardPaymentMethod class]] && [((STPCardPaymentMethod *)object).source isEqual:self.source];
+}
+
 @end

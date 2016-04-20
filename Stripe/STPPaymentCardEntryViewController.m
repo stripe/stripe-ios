@@ -71,7 +71,7 @@
     CGSize cardImageSize = CGSizeMake(176, 111);
     self.cardImageView.frame = CGRectMake(0, 0, cardImageSize.width, cardImageSize.height);
     CGFloat navBarMaxY = CGRectGetMaxY(self.navigationController.navigationBar.frame);
-    self.cardImageView.center = CGPointMake(self.view.center.x, navBarMaxY + cardImageSize.height/2.0 + 27);
+    self.cardImageView.center = CGPointMake(self.view.center.x, navBarMaxY + cardImageSize.height/2.0f + 27);
     self.textField.frame = CGRectMake(-1, CGRectGetMaxY(self.cardImageView.frame) + 41,
                                       self.view.bounds.size.width + 2, 44);
     self.activityIndicator.center = CGPointMake(self.view.center.x, CGRectGetMaxY(self.textField.frame) + 44);

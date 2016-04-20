@@ -100,8 +100,10 @@
 }
 
 - (void)setSelectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod {
-    _selectedPaymentMethod = selectedPaymentMethod;
-    [self.delegate paymentContext:self selectedPaymentMethodDidChange:selectedPaymentMethod];
+    if (![_selectedPaymentMethod isEqual:selectedPaymentMethod]) {
+        _selectedPaymentMethod = selectedPaymentMethod;
+        [self.delegate paymentContext:self selectedPaymentMethodDidChange:selectedPaymentMethod];
+    }
 }
 
 - (void)requestPaymentFromViewController:(UIViewController *)fromViewController
