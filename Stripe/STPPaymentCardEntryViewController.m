@@ -56,7 +56,7 @@
     STPPaymentCardTextField *textField = [[STPPaymentCardTextField alloc] initWithFrame:CGRectZero];
     textField.backgroundColor = [UIColor whiteColor];
     textField.cornerRadius = 0;
-    textField.borderColor = [UIColor colorWithWhite:0.9 alpha:1];
+    textField.borderColor = [UIColor colorWithWhite:0.9f alpha:1];
     textField.delegate = self;
     self.textField = textField;
     [self.view addSubview:textField];
