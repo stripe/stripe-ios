@@ -12,7 +12,7 @@
 
 @interface STPPaymentCardEntryViewController ()<STPPaymentCardTextFieldDelegate>
 @property(nonatomic)STPAPIClient *apiClient;
-@property(nonatomic)STPPaymentCardEntryBlock completion;
+@property(nonatomic, copy)STPPaymentCardEntryBlock completion;
 @property(nonatomic, weak)STPPaymentCardTextField *textField;
 @property(nonatomic, weak)UIActivityIndicatorView *activityIndicator;
 @end
