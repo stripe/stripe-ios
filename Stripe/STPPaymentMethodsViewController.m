@@ -16,7 +16,6 @@
 #import "UINavigationController+Stripe_Completion.h"
 #import "STPPaymentCardEntryViewController.h"
 #import "STPCardPaymentMethod.h"
-#import "STPPaymentMethodStore.h"
 #import "STPPaymentContext.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
