@@ -25,10 +25,6 @@
     return self;
 }
 
-- (STPPaymentMethodType)type {
-    return STPPaymentMethodTypeCard;
-}
-
 - (UIImage *)image {
     return self.source.image;
 }

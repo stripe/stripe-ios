@@ -16,7 +16,6 @@ typedef NS_OPTIONS(NSUInteger, STPPaymentMethodType) {
 
 @protocol STPPaymentMethod <NSObject>
 
-@property (nonatomic, readonly) STPPaymentMethodType type;
 @property (nonatomic, readonly) UIImage *image;
 @property (nonatomic, readonly) NSString *label;
 

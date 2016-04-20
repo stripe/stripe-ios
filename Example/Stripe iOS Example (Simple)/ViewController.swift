@@ -36,24 +36,23 @@ class ViewController: UIViewController {
             "livemode":true,
             "created":123,
         ]
-        let source = STPToken.decodedObjectFromAPIResponse(tokenDict)!
+//        let source = STPToken.decodedObjectFromAPIResponse(tokenDict)!
 //        let paymentMethod = STPCardPaymentMethod(source: source)
-        let paymentMethod = STPApplePayPaymentMethod()
-        let paymentRequest = STPPaymentRequest(appleMerchantIdentifier: "foo", paymentMethod: paymentMethod, amount: 1000, currency: "usd")
+//        let paymentMethod = STPApplePayPaymentMethod()
+        let paymentMethod = STPAutomaticPaymentMethod()
+        let paymentRequest = STPPaymentRequest(merchantName: "bar", appleMerchantIdentifier: "foo", paymentMethod: paymentMethod, amount: 1000, currency: "usd")
         let apiAdapter = BackendAPIAdapter()
-        let paymentCoordinator = STPPaymentCoordinator()
         let apiClient = STPAPIClient.sharedClient()
+        let paymentCoordinator = STPPaymentCoordinator(supportedPaymentMethods: .All, apiClient: apiClient, apiAdapter: apiAdapter)
         paymentCoordinator.performPaymentRequest(paymentRequest,
-                                                 apiClient: apiClient,
-                                                 apiAdapter: apiAdapter,
                                                  fromViewController: self, sourceHandler: { (type, source, completion) in
                                                     completion(nil)
-            }) { (status, error) in
-                print("\(status) \(error)")
+        }) { (status, error) in
+            print("\(status) \(error)")
 
 
         }
-        }
+    }
     
     func paymentCoordinatorDidCancel(coordinator: STPPaymentCoordinator!) {
         dismissViewControllerAnimated(true, completion: nil)

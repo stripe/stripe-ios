@@ -12,13 +12,15 @@
 
 @interface STPPaymentRequest : NSObject
 
+@property (nonatomic, readonly) NSString *merchantName;
 @property (nonatomic, readonly) NSString *appleMerchantIdentifier;
 @property (nonatomic, readonly) id<STPPaymentMethod> paymentMethod;
 @property (nonatomic, readonly) NSUInteger amount;
 @property (nonatomic, readonly) NSString *currency;
 @property (nonatomic, readonly) NSDecimalNumber *decimalAmount;
 
-- (instancetype)initWithAppleMerchantIdentifier:(NSString *)appleMerchantIdentifier
+- (instancetype)initWithMerchantName:(NSString *)merchantName
+             appleMerchantIdentifier:(NSString *)appleMerchantIdentifier
                              paymentMethod:(id<STPPaymentMethod>)paymentMethod
                                amount:(NSUInteger)amount
                              currency:(NSString *)currency;

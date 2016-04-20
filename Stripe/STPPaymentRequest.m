@@ -17,12 +17,14 @@
 
 @implementation STPPaymentRequest
 
-- (instancetype)initWithAppleMerchantIdentifier:(NSString *)appleMerchantIdentifier
+- (instancetype)initWithMerchantName:(NSString *)merchantName
+             appleMerchantIdentifier:(NSString *)appleMerchantIdentifier
                              paymentMethod:(id<STPPaymentMethod>)paymentMethod
                                amount:(NSUInteger)amount
-                                       currency:(NSString *)currency {
+                            currency:(NSString *)currency {
     self = [super init];
     if (self) {
+        _merchantName = merchantName;
         _appleMerchantIdentifier = appleMerchantIdentifier;
         _paymentMethod = paymentMethod;
         _amount = amount;

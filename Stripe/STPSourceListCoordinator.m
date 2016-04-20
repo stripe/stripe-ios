@@ -14,7 +14,7 @@
 #import "STPToken.h"
 #import "UINavigationController+Stripe_Completion.h"
 
-@interface STPSourceListCoordinator()<STPPaymentCardEntryViewControllerDelegate, STPSourceListViewControllerDelegate>
+@interface STPSourceListCoordinator()<STPPaymentCardEntryViewControllerDelegate>
 
 @property(nonatomic, weak) STPPaymentMethodsViewController *sourceListViewController;
 @property(nonatomic, weak, readonly)id<STPCoordinatorDelegate>delegate;
@@ -42,9 +42,9 @@
 
 - (void)begin {
     [super begin];
-    STPPaymentMethodsViewController *sourceListViewController = [[STPPaymentMethodsViewController alloc] initWithapiAdapter:self.apiAdapter delegate:self];
-    self.sourceListViewController = sourceListViewController;
-    [self.navigationController pushViewController:sourceListViewController animated:YES];
+//    STPPaymentMethodsViewController *sourceListViewController = [[STPPaymentMethodsViewController alloc] initWithapiAdapter:self.apiAdapter delegate:self];
+//    self.sourceListViewController = sourceListViewController;
+//    [self.navigationController pushViewController:sourceListViewController animated:YES];
 }
 
 #pragma mark STPPaymentCardEntryViewControllerDelegate
@@ -74,7 +74,7 @@
                 }
                 return;
             }
-            [weakself.sourceListViewController reload];
+//            [weakself.sourceListViewController reload];
             [weakself.navigationController popViewControllerAnimated:true];
             if (completion) {
                 completion(nil);

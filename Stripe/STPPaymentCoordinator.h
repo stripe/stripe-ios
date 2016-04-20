@@ -15,9 +15,11 @@
 
 @interface STPPaymentCoordinator : NSObject
 
+- (instancetype)initWithSupportedPaymentMethods:(STPPaymentMethodType)supportedPaymentMethods
+                                      apiClient:(STPAPIClient *)apiClient
+                                     apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter;
+
 - (void)performPaymentRequest:(STPPaymentRequest *)request
-                    apiClient:(STPAPIClient *)apiClient
-                   apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
            fromViewController:(UIViewController *)fromViewController
                 sourceHandler:(STPSourceHandlerBlock)sourceHandler
                    completion:(STPPaymentCompletionBlock)completion;

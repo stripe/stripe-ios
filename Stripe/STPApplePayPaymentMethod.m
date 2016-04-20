@@ -10,10 +10,6 @@
 
 @implementation STPApplePayPaymentMethod
 
-- (STPPaymentMethodType)type {
-    return STPPaymentMethodTypeApplePay;
-}
-
 - (UIImage *)image {
     // TODO
     return [UIImage new];

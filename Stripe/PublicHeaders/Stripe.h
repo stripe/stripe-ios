@@ -32,4 +32,5 @@
 #import "STPPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
 #import "STPCardPaymentMethod.h"
+#import "STPAutomaticPaymentMethod.h"
 #endif

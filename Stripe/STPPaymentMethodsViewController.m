@@ -8,19 +8,21 @@
 
 #import "STPPaymentMethodsViewController.h"
 #import "STPBackendAPIAdapter.h"
-#import "STPSourceCell.h"
+#import "STPPaymentMethodCell.h"
 #import "STPAPIClient.h"
 #import "STPToken.h"
 #import "STPCard.h"
 #import "NSArray+Stripe_BoundSafe.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "STPPaymentCardEntryViewController.h"
+#import "STPCardPaymentMethod.h"
+#import "STPPaymentMethodsStore.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 
 @interface STPPaymentMethodsViewController()<UITableViewDataSource, UITableViewDelegate>
 @property(nonatomic, weak)id<STPPaymentMethodsViewControllerDelegate> delegate;
-@property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
+@property(nonatomic) STPPaymentMethodsStore *paymentMethodsStore;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIBarButtonItem *addButton;
 @property(nonatomic)BOOL loading;
@@ -29,12 +31,11 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 
 @implementation STPPaymentMethodsViewController
 
-- (nonnull instancetype)initWithSupportedPaymentMethods:(__unused STPPaymentMethodType)supportedPaymentMethods
-                                             apiAdapter:(nonnull id<STPBackendAPIAdapter>)apiAdapter
-                                               delegate:(nonnull id<STPPaymentMethodsViewControllerDelegate>)delegate {
+- (nonnull instancetype)initWithPaymentMethodsStore:(nonnull STPPaymentMethodsStore *)paymentMethodsStore
+                                           delegate:(nonnull id<STPPaymentMethodsViewControllerDelegate>)delegate {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        _apiAdapter = apiAdapter;
+        _paymentMethodsStore = paymentMethodsStore;
         _delegate = delegate;
     }
     return self;
@@ -47,7 +48,7 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     tableView.dataSource = self;
     tableView.delegate = self;
-    [tableView registerClass:[STPSourceCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
+    [tableView registerClass:[STPPaymentMethodCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
     self.tableView = tableView;
     [self.view addSubview:tableView];
     
@@ -58,7 +59,7 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
     self.navigationItem.rightBarButtonItem = addButton;
 
     self.loading = YES;
-    [self.apiAdapter retrieveSources:^(__unused id<STPSource> selectedSource, __unused NSArray<id<STPSource>> * _Nullable sources, __unused NSError * _Nullable error) {
+    [self.paymentMethodsStore loadSources:^(NSError * error) {
         self.loading = NO;
         if (error) {
             NSAssert(NO, @"TODO");
@@ -87,21 +88,21 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 }
 
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(__unused NSInteger)section {
-    return self.apiAdapter.sources.count;
+    return self.paymentMethodsStore.paymentMethods.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    STPSourceCell *cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier forIndexPath:indexPath];
-    id<STPSource> source = self.apiAdapter.sources[indexPath.row];
-    BOOL selected = source == self.apiAdapter.selectedSource;
-    [cell configureWithSource:source selected:selected];
+    STPPaymentMethodCell *cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier forIndexPath:indexPath];
+    id<STPPaymentMethod> paymentMethod = self.paymentMethodsStore.paymentMethods[indexPath.row];
+    BOOL selected = paymentMethod == self.paymentMethodsStore.selectedPaymentMethod;
+    [cell configureWithPaymentMethod:paymentMethod selected:selected];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    id<STPSource> source = [self.apiAdapter.sources stp_boundSafeObjectAtIndex:indexPath.row];
-    
+    id<STPPaymentMethod> paymentMethod = [self.paymentMethodsStore.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
+    [self.delegate paymentMethodsViewController:self didFinishWithPaymentMethod:paymentMethod];
 }
 
 @end

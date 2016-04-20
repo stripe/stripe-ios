@@ -11,6 +11,4 @@
 
 @interface STPApplePayPaymentMethod : NSObject <STPPaymentMethod>
 
-
-
 @end

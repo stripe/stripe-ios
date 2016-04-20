@@ -9,23 +9,20 @@
 #import <UIKit/UIKit.h>
 #import "STPPaymentMethod.h"
 
-@class STPAPIClient, STPPaymentMethodsViewController;
+@class STPAPIClient, STPPaymentMethodsViewController, STPPaymentMethodsStore;
 
 @protocol STPBackendAPIAdapter, STPSource, STPPaymentMethod;
 
 @protocol STPPaymentMethodsViewControllerDelegate <NSObject>
 
-- (void)sourceListViewController:(nonnull STPPaymentMethodsViewController *)viewController
-      didFinishWithPaymentMethod:(nullable id<STPPaymentMethod>)paymentMethod;
+- (void)paymentMethodsViewController:(nonnull STPPaymentMethodsViewController *)viewController
+          didFinishWithPaymentMethod:(nullable id<STPPaymentMethod>)paymentMethod;
 
 @end
 
 @interface STPPaymentMethodsViewController : UIViewController
 
-@property(nonatomic, readonly, nonnull)id<STPBackendAPIAdapter> apiAdapter;
-
-- (nonnull instancetype)initWithSupportedPaymentMethods:(STPPaymentMethodType)supportedPaymentMethods
-                                             apiAdapter:(nonnull id<STPBackendAPIAdapter>)apiAdapter
-                                               delegate:(nonnull id<STPPaymentMethodsViewControllerDelegate>)delegate;
+- (nonnull instancetype)initWithPaymentMethodsStore:(nonnull STPPaymentMethodsStore *)paymentMethodsStore
+                                           delegate:(nonnull id<STPPaymentMethodsViewControllerDelegate>)delegate;
 
 @end

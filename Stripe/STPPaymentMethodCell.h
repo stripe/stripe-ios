@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "STPBackendAPIAdapter.h"
 
-@interface STPSourceCell : UITableViewCell
+@protocol STPPaymentMethod;
 
-- (void)configureWithSource:(id<STPSource>)source selected:(BOOL)selected;
+@interface STPPaymentMethodCell : UITableViewCell
+
+- (void)configureWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod selected:(BOOL)selected;
 
 @end
