@@ -9,12 +9,16 @@
 #import "STPPaymentCardEntryViewController.h"
 #import "STPPaymentCardTextField.h"
 #import "STPToken.h"
+#import "UIFont+Stripe.h"
+#import "UIColor+Stripe.h"
+#import "UIImage+Stripe.h"
 
 @interface STPPaymentCardEntryViewController ()<STPPaymentCardTextFieldDelegate>
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic, copy)STPPaymentCardEntryBlock completion;
 @property(nonatomic, weak)STPPaymentCardTextField *textField;
 @property(nonatomic, weak)UIActivityIndicatorView *activityIndicator;
+@property(nonatomic, weak)UIImageView *cardImageView;
 @end
 
 @implementation STPPaymentCardEntryViewController
@@ -33,17 +37,28 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
-    
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelPressed:)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(nextPressed:)];
+    self.view.backgroundColor = [UIColor stp_backgroundColor];
+
+    NSDictionary *titleTextAttributes = @{NSFontAttributeName:[UIFont stp_navigationBarFont]};
+    UIBarButtonItem *leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelPressed:)];
+    [leftBarButtonItem setTitleTextAttributes:titleTextAttributes forState:UIControlStateNormal];
+    self.navigationItem.leftBarButtonItem = leftBarButtonItem;
+    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(nextPressed:)];
+    [rightBarButtonItem setTitleTextAttributes:titleTextAttributes forState:UIControlStateNormal];
+    self.navigationItem.rightBarButtonItem = rightBarButtonItem;
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.navigationItem.title = NSLocalizedString(@"Card", nil);
-    
+
+    UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[UIImage stp_largeCardFrontImage]];
+    self.cardImageView = cardImageView;
+    [self.view addSubview:cardImageView];
     
     STPPaymentCardTextField *textField = [[STPPaymentCardTextField alloc] initWithFrame:CGRectZero];
-    _textField = textField;
-    _textField.delegate = self;
+    textField.backgroundColor = [UIColor whiteColor];
+    textField.cornerRadius = 0;
+    textField.borderColor = [UIColor colorWithWhite:0.9 alpha:1];
+    textField.delegate = self;
+    self.textField = textField;
     [self.view addSubview:textField];
 
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -53,9 +68,9 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    _activityIndicator.center = self.view.center;
-    _textField.frame = CGRectMake(0, 0, self.view.bounds.size.width - 40, 44);
-    _textField.center = CGPointMake(self.view.center.x, CGRectGetMinY(_activityIndicator.frame) - 50);
+    self.activityIndicator.center = self.view.center;
+    self.textField.frame = CGRectMake(0, 0, self.view.bounds.size.width + 2, 44);
+    self.textField.center = CGPointMake(self.view.center.x, CGRectGetMinY(_activityIndicator.frame) - 50);
 }
 
 -(void)viewDidAppear:(BOOL)animated {

@@ -17,6 +17,8 @@
 #import "STPApplePayPaymentMethod.h"
 #import "STPPaymentCardEntryViewController.h"
 #import "STPPromise.h"
+#import "UIFont+Stripe.h"
+#import "UIColor+Stripe.h"
 
 @interface STPPaymentMethodTuple : NSObject
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
@@ -124,6 +126,13 @@
                 }];
             }];
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentCardViewController];
+            NSDictionary *titleTextAttributes = @{NSFontAttributeName:[UIFont stp_navigationBarFont]};
+            [navigationController.navigationBar setTitleTextAttributes:titleTextAttributes];
+            [navigationController.navigationBar setBackgroundImage:[UIImage new]
+                                                    forBarPosition:UIBarPositionAny
+                                                        barMetrics:UIBarMetricsDefault];
+            [[UINavigationBar appearance] setShadowImage:[UIImage new]];
+            [navigationController.navigationBar setBarTintColor:[UIColor stp_backgroundColor]];
             [fromViewController presentViewController:navigationController animated:YES completion:nil];
         }
         else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {

@@ -91,6 +91,14 @@
     return [UIImage imageNamed:imageName];
 }
 
++ (nonnull UIImage *)stp_largeCardFrontImage {
+    return [UIImage stp_safeImageNamed:@"stp_card_form_front"];
+}
+
++ (nonnull UIImage *)stp_largeCardBackImage {
+    return [UIImage stp_safeImageNamed:@"stp_card_form_back"];
+}
+
 @end
 
 void linkUIImageCategory(void){}

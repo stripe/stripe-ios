@@ -23,6 +23,9 @@
 + (nullable UIImage *)stp_cvcImageForCardBrand:(STPCardBrand)brand;
 + (nullable UIImage *)stp_safeImageNamed:(nonnull NSString *)imageName;
 
++ (nonnull UIImage *)stp_largeCardFrontImage;
++ (nonnull UIImage *)stp_largeCardBackImage;
+
 @end
 
 void linkUIImageCategory(void);
