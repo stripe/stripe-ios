@@ -8,7 +8,7 @@
 
 #import <PassKit/PassKit.h>
 #import "STPAPIClient.h"
-#import "STPBlocks.h"
+#import "STPPaymentContext.h"
 
 @interface PKPaymentAuthorizationViewController (Stripe_Blocks)
 

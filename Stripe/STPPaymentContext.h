@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPPaymentContext, STPAPIClient;
 @protocol STPBackendAPIAdapter, STPPaymentMethod;
 
+typedef void (^STPSourceHandlerBlock)(STPPaymentMethodType paymentMethod, id<STPSource> __nonnull source, STPErrorBlock __nonnull completion);
+typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __nullable error);
+
 @protocol STPPaymentContextDelegate <NSObject>
 
 - (void)paymentContextDidBeginLoading:(STPPaymentContext *)paymentContext;
