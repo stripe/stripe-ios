@@ -14,11 +14,11 @@
 static char kSTPBlockBasedApplePayDelegateAssociatedObjectKey;
 
 @interface STPBlockBasedApplePayDelegate : NSObject <PKPaymentAuthorizationViewControllerDelegate>
-@property (nonatomic, readwrite) STPAPIClient *apiClient;
-@property (nonatomic, readwrite) STPSourceHandlerBlock onTokenCreation;
-@property (nonatomic, readwrite) STPPaymentCompletionBlock onFinish;
-@property (nonatomic, readwrite) NSError *lastError;
-@property (nonatomic, readwrite) BOOL didSucceed;
+@property (nonatomic) STPAPIClient *apiClient;
+@property (nonatomic, copy) STPSourceHandlerBlock onTokenCreation;
+@property (nonatomic, copy) STPPaymentCompletionBlock onFinish;
+@property (nonatomic) NSError *lastError;
+@property (nonatomic) BOOL didSucceed;
 @end
 
 

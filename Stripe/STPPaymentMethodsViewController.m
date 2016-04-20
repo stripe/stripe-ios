@@ -23,7 +23,7 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 
 @interface STPPaymentMethodsViewController()<UITableViewDataSource, UITableViewDelegate>
 @property(nonatomic)STPPaymentContext *paymentContext;
-@property(nonatomic)STPPaymentMethodSelectionBlock completion;
+@property(nonatomic, copy)STPPaymentMethodSelectionBlock completion;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIBarButtonItem *addButton;
 @property(nonatomic)BOOL loading;
