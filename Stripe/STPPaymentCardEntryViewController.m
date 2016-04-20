@@ -8,9 +8,11 @@
 
 #import "STPPaymentCardEntryViewController.h"
 #import "STPPaymentCardTextField.h"
+#import "STPToken.h"
 
 @interface STPPaymentCardEntryViewController ()<STPPaymentCardTextFieldDelegate>
-@property(nonatomic, weak) id<STPPaymentCardEntryViewControllerDelegate> delegate;
+@property(nonatomic)STPAPIClient *apiClient;
+@property(nonatomic)STPPaymentCardEntryBlock completion;
 @property(nonatomic, weak)STPPaymentCardTextField *textField;
 @property(nonatomic, weak)UIActivityIndicatorView *activityIndicator;
 @end
@@ -18,10 +20,12 @@
 @implementation STPPaymentCardEntryViewController
 @dynamic view;
 
-- (instancetype)initWithDelegate:(id<STPPaymentCardEntryViewControllerDelegate>)delegate {
+- (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
+                       completion:(STPPaymentCardEntryBlock)completion {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        _delegate = delegate;
+        _apiClient = apiClient;
+        _completion = completion;
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
     return self;
@@ -60,18 +64,26 @@
 }
 
 - (void)cancelPressed:(__unused id)sender {
-    [self.delegate paymentCardEntryViewControllerDidCancel:self];
+    if (self.completion) {
+        self.completion(nil);
+        self.completion = nil;
+    }
 }
 
 - (void)nextPressed:(__unused id)sender {
     [self.activityIndicator startAnimating];
     [self.textField resignFirstResponder];
-    [self.delegate paymentCardEntryViewController:self didEnterCardParams:self.textField.cardParams completion:^(NSError *error) {
-        [self.activityIndicator stopAnimating];
+    [self.apiClient createTokenWithCard:self.textField.cardParams completion:^(STPToken *token, NSError *error) {
         if (error) {
+            [self.activityIndicator stopAnimating];
             NSLog(@"%@", error);
             [self.textField becomeFirstResponder];
-            return;
+            // TODO handle error, probably by showing a UIAlertController
+        } else {
+            if (self.completion) {
+                self.completion(token);
+                self.completion = nil;
+            }
         }
     }];
 }

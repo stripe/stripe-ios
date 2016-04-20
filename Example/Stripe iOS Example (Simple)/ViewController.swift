@@ -38,37 +38,20 @@ class ViewController: UIViewController {
         ]
 //        let source = STPToken.decodedObjectFromAPIResponse(tokenDict)!
 //        let paymentMethod = STPCardPaymentMethod(source: source)
-//        let paymentMethod = STPApplePayPaymentMethod()
-        let paymentMethod = STPAutomaticPaymentMethod()
-        let paymentRequest = STPPaymentRequest(merchantName: "bar", appleMerchantIdentifier: "foo", paymentMethod: paymentMethod, amount: 1000, currency: "usd")
         let apiAdapter = BackendAPIAdapter()
         let apiClient = STPAPIClient.sharedClient()
-        let paymentCoordinator = STPPaymentCoordinator(supportedPaymentMethods: .All, apiClient: apiClient, apiAdapter: apiAdapter)
-        paymentCoordinator.performPaymentRequest(paymentRequest,
-                                                 fromViewController: self, sourceHandler: { (type, source, completion) in
-                                                    completion(nil)
-        }) { (status, error) in
-            print("\(status) \(error)")
-
-
-        }
-    }
-    
-    func paymentCoordinatorDidCancel(coordinator: STPPaymentCoordinator!) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func paymentCoordinator(coordinator: STPPaymentCoordinator!, didFailWithError error: NSError!) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func paymentCoordinator(coordinator: STPPaymentCoordinator!, didCreatePaymentResult result: STPPaymentResult!, completion: STPErrorBlock!) {
-        print(result)
-        completion(nil)
-    }
-    
-    func paymentCoordinatorDidSucceed(coordinator: STPPaymentCoordinator!) {
-        dismissViewControllerAnimated(true, completion: nil)
+        let paymentContext = STPPaymentContext(APIAdapter: apiAdapter, supportedPaymentMethods: .Card)
+        paymentContext.appleMerchantIdentifier = "merchant.com.stripe.shop"
+        paymentContext.paymentAmount = 1000
+        paymentContext.apiClient = apiClient
+        paymentContext.requestPaymentFromViewController(
+            self,
+            sourceHandler: { (_, _, completion) in
+                completion(nil)
+            }, completion: { (status, error) in
+                    print("\(status) \(error)")
+            }
+        )
     }
     
 //    func paymentAuthorizationViewController(controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {

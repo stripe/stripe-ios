@@ -24,13 +24,11 @@
 #import "STPPaymentCardTextField.h"
 #import "STPAddress.h"
 
-#import "STPPaymentCoordinator.h"
+#import "STPPaymentContext.h"
 #import "STPSource.h"
 #import "STPBackendAPIAdapter.h"
 #import "STPPaymentResult.h"
-#import "STPPaymentRequest.h"
 #import "STPPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
 #import "STPCardPaymentMethod.h"
-#import "STPAutomaticPaymentMethod.h"
 #endif

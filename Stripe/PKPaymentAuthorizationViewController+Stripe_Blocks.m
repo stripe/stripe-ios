@@ -64,11 +64,11 @@ static char kSTPBlockBasedApplePayDelegateAssociatedObjectKey;
 @implementation PKPaymentAuthorizationViewController (Stripe_Blocks)
 
 + (instancetype)stp_controllerWithPaymentRequest:(PKPaymentRequest *)paymentRequest
-                              publishableKey:(NSString *)publishableKey
+                                       apiClient:(STPAPIClient *)apiClient
                              onTokenCreation:(STPSourceHandlerBlock)onTokenCreation
                                     onFinish:(STPPaymentCompletionBlock)onFinish {
     STPBlockBasedApplePayDelegate *delegate = [STPBlockBasedApplePayDelegate new];
-    delegate.apiClient = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
+    delegate.apiClient = apiClient;
     delegate.onTokenCreation = onTokenCreation;
     delegate.onFinish = onFinish;
     PKPaymentAuthorizationViewController *viewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];

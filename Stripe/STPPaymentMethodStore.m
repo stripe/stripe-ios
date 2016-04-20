@@ -6,24 +6,27 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentMethodsStore.h"
+#import "STPPaymentMethodStore.h"
 #import "STPBackendAPIAdapter.h"
 #import "STPCardPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
 
-@interface STPPaymentMethodsStore ()
+@interface STPPaymentMethodStore ()
 
-@property (nonatomic, readwrite) STPPaymentMethodType supportedPaymentMethods;
-@property (nonatomic, readwrite) id<STPBackendAPIAdapter> apiAdapter;
+@property(nonatomic, readwrite) STPPaymentMethodType supportedPaymentMethods;
+@property(nonatomic, readwrite) id<STPBackendAPIAdapter> apiAdapter;
+@property(nonatomic, readwrite) STPAPIClient *apiClient;
 
 @end
 
-@implementation STPPaymentMethodsStore
+@implementation STPPaymentMethodStore
 
 - (instancetype)initWithSupportedPaymentMethods:(STPPaymentMethodType)supportedPaymentMethods
+                                      apiClient:(STPAPIClient *)apiClient
                                      apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
     self = [super init];
     if (self) {
+        _apiClient = apiClient;
         _supportedPaymentMethods = supportedPaymentMethods;
         NSMutableArray *paymentMethods = [NSMutableArray new];
         if (supportedPaymentMethods & STPPaymentMethodTypeApplePay) {
@@ -37,9 +40,6 @@
 }
 
 - (void)loadSources:(STPErrorBlock)completion {
-    // 1. load remote sources
-    // 2. load local settings (saved apple pay preference)
-
     [self.apiAdapter retrieveSources:^(id<STPSource> selectedSource, NSArray<id<STPSource>> * sources, NSError * error) {
         if (error) {
             completion(error);

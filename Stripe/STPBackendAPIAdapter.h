@@ -20,7 +20,5 @@ typedef void (^STPAddressCompletionBlock)(STPAddress * __nullable address, NSErr
 - (void)retrieveSources:(nonnull STPSourceCompletionBlock)completion;
 - (void)addSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCompletionBlock)completion;
 - (void)selectSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCompletionBlock)completion;
-@property(nonatomic, nullable, readonly)NSArray<id<STPSource>>* sources;
-@property(nonatomic, nullable, readonly)id<STPSource> selectedSource;
 
 @end

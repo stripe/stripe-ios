@@ -9,21 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "STPBlocks.h"
 #import "STPCardParams.h"
+#import "STPAPIClient.h"
 
-@class STPPaymentCardEntryViewController;
+NS_ASSUME_NONNULL_BEGIN
 
-@protocol STPPaymentCardEntryViewControllerDelegate
-
-- (void)paymentCardEntryViewControllerDidCancel:(STPPaymentCardEntryViewController *)paymentCardViewController;
-- (void)paymentCardEntryViewController:(STPPaymentCardEntryViewController *)paymentCardViewController
-                    didEnterCardParams:(STPCardParams *)cardParams
-                            completion:(STPErrorBlock)completion;
-
-@end
-
+typedef void (^STPPaymentCardEntryBlock)(id<STPSource> __nullable source);
 
 @interface STPPaymentCardEntryViewController : UIViewController
 
-- (instancetype)initWithDelegate:(id<STPPaymentCardEntryViewControllerDelegate>)delegate;
+- (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
+                       completion:(STPPaymentCardEntryBlock)completion;
 
 @end
+
+NS_ASSUME_NONNULL_END

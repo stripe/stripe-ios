@@ -9,22 +9,25 @@
 #import <Foundation/Foundation.h>
 #import "STPPaymentMethod.h"
 #import "STPBlocks.h"
+#import "STPAPIClient.h"
 
 @protocol STPBackendAPIAdapter;
-@class STPPaymentMethodsStore;
+@class STPPaymentMethodStore;
 
-@protocol STPPaymentMethodsStoreDelegate <NSObject>
+@protocol STPPaymentMethodStoreDelegate <NSObject>
 
-- (void)paymentMethodsStoreDidUpdate:(STPPaymentMethodsStore *)store;
+- (void)paymentMethodStoreDidUpdate:(STPPaymentMethodStore *)store;
 
 @end
 
-@interface STPPaymentMethodsStore : NSObject
+@interface STPPaymentMethodStore : NSObject
 
+@property(nonatomic, readonly)STPAPIClient *apiClient;
 @property(nonatomic, readwrite)id<STPPaymentMethod>selectedPaymentMethod;
 @property(nonatomic, readwrite)NSArray<id<STPPaymentMethod>>* paymentMethods;
 
 - (instancetype)initWithSupportedPaymentMethods:(STPPaymentMethodType)supportedPaymentMethods
+                                      apiClient:(STPAPIClient *)apiClient
                                      apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter;
 - (void)loadSources:(STPErrorBlock)completion;
 

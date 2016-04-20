@@ -13,9 +13,9 @@
 @interface PKPaymentAuthorizationViewController (Stripe_Blocks)
 
 + (instancetype)stp_controllerWithPaymentRequest:(PKPaymentRequest *)paymentRequest
-                              publishableKey:(NSString *)publishableKey
-                             onTokenCreation:(STPSourceHandlerBlock)onTokenCreation
-                                    onFinish:(STPPaymentCompletionBlock)onFinish;
+                                       apiClient:(STPAPIClient *)apiClient
+                                 onTokenCreation:(STPSourceHandlerBlock)onTokenCreation
+                                        onFinish:(STPPaymentCompletionBlock)onFinish;
 
 
 @end
