@@ -47,9 +47,9 @@
 + (STPCardBrand)brandForNumber:(nonnull NSString *)cardNumber;
 
 /**
- *  The number length for cards associated with a card brand. For example, Visa card numbers contain 16 characters, while American Express cards contain 15 characters.
+ *  The possible number lengths for cards associated with a card brand. For example, Discover card numbers contain 16 characters, while American Express cards contain 15 characters.
  */
-+ (NSInteger)lengthForCardBrand:(STPCardBrand)brand;
++ (nonnull NSArray<NSNumber *>*)lengthsForCardBrand:(STPCardBrand)brand;
 
 /**
  *  The length of the final grouping of digits to use when formatting a card number for display. For example, Visa cards display their final 4 numbers, e.g. "4242", while American Express cards display their final 5 digits, e.g. "10005".
