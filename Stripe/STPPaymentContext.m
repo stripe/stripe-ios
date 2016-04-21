@@ -200,14 +200,21 @@
         }
         else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {
             STPCardPaymentMethod *cardPaymentMethod = (STPCardPaymentMethod *)weakSelf.selectedPaymentMethod;
-            sourceHandler(STPPaymentMethodTypeCard, cardPaymentMethod.card, ^(NSError *error) {
-                if (error) {
-                    completion(STPPaymentStatusError, error);
-                } else {
-                    completion(STPPaymentStatusSuccess, nil);
+            [self.apiAdapter selectCard:cardPaymentMethod.card completion:^(STPCard *selectedCard, __unused NSArray<STPCard *> *cards, NSError *cardError) {
+                if (cardError) {
+                    completion(STPPaymentStatusError, cardError);
+                    [weakSelf artificiallyRelease:fromViewController];
+                    return;
                 }
-                [weakSelf artificiallyRelease:fromViewController];
-            });
+                sourceHandler(STPPaymentMethodTypeCard, selectedCard, ^(NSError *error) {
+                    if (error) {
+                        completion(STPPaymentStatusError, error);
+                    } else {
+                        completion(STPPaymentStatusSuccess, nil);
+                    }
+                    [weakSelf artificiallyRelease:fromViewController];
+                });
+            }];
         }
         else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
