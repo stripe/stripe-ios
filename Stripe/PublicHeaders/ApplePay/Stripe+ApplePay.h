@@ -23,7 +23,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
  *mini 3 or later, as well as whether or not they have stored any cards in Apple Pay on their device.
  *
  *  @param paymentRequest The return value of this method depends on the supportedNetworks property of this payment request, which by default should be
- *@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa].
+ *@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover].
  *
  *  @return whether or not the user is currently able to pay with Apple Pay.
  */
