@@ -78,7 +78,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self resetSelectedCell];
+    [self.tableView reloadData];
     NSDictionary *titleTextAttributes = @{NSFontAttributeName:[UIFont stp_navigationBarFont]};
     self.navigationController.navigationBar.titleTextAttributes = titleTextAttributes;
 }
@@ -89,22 +89,6 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     CGFloat baseInset = CGRectGetMaxY(self.navigationController.navigationBar.frame);
     self.tableView.contentInset = UIEdgeInsetsMake(baseInset + self.tableView.sectionHeaderHeight, 0, 0, 0);
     self.tableView.scrollIndicatorInsets = self.tableView.contentInset;
-}
-
-- (void)resetSelectedCell {
-    for (id<STPPaymentMethod> paymentMethod in self.paymentContext.paymentMethods) {
-        NSInteger row = [self.paymentContext.paymentMethods indexOfObject:paymentMethod];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:STPPaymentMethodCardListSection];
-        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        if ([paymentMethod isEqual:self.paymentContext.selectedPaymentMethod]) {
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-            cell.textLabel.textColor = [UIColor stp_linkBlueColor];
-        }
-        else {
-            cell.accessoryType = UITableViewCellAccessoryNone;
-            cell.textLabel.textColor = [UIColor stp_darkTextColor];
-        }
-    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
@@ -126,6 +110,14 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         id<STPPaymentMethod> paymentMethod = self.paymentContext.paymentMethods[indexPath.row];
         cell.textLabel.text = paymentMethod.label;
         cell.imageView.image = paymentMethod.image;
+        if ([paymentMethod isEqual:self.paymentContext.selectedPaymentMethod]) {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            cell.textLabel.textColor = [UIColor stp_linkBlueColor];
+        }
+        else {
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.textLabel.textColor = [UIColor stp_darkTextColor];
+        }
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
         cell.textLabel.textColor = [UIColor stp_linkBlueColor];
         cell.imageView.image = [UIImage stp_addIcon];
@@ -135,11 +127,18 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(__unused UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == STPPaymentMethodCardListSection) {
         id<STPPaymentMethod> paymentMethod = [self.paymentContext.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
-        [self selectPaymentMethod:paymentMethod];
+        
+        NSInteger currentIndex = [self.paymentContext.paymentMethods indexOfObject:self.paymentContext.selectedPaymentMethod];
+        NSInteger newIndex = [self.paymentContext.paymentMethods indexOfObject:paymentMethod];
+        NSIndexPath *oldIndexPath = [NSIndexPath indexPathForRow:currentIndex inSection:STPPaymentMethodCardListSection];
+        NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:STPPaymentMethodCardListSection];
+        [self.tableView reloadRowsAtIndexPaths:@[oldIndexPath, newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        [self.paymentContext selectPaymentMethod:paymentMethod];
         [self finishWithPaymentMethod:paymentMethod];
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
         __weak typeof(self) weakself = self;
@@ -151,7 +150,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
                     if (error) {
                         tokenCompletion(error);
                     } else {
-                        [weakself selectPaymentMethod:paymentMethod];
+                        [weakself.paymentContext selectPaymentMethod:paymentMethod];
                         [weakself.tableView reloadData];
                         if (useNavigationTransition) {
                             [weakself.navigationController stp_popViewControllerAnimated:YES completion:^{
@@ -184,11 +183,6 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
             [self presentViewController:paymentCardViewController animated:YES completion:nil];
         }
     }
-}
-
-- (void)selectPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
-    [self.paymentContext selectPaymentMethod:paymentMethod];
-    [self resetSelectedCell];
 }
 
 - (void)finishWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
