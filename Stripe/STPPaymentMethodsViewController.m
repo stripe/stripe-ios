@@ -16,10 +16,12 @@
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "STPPaymentCardEntryViewController.h"
 #import "STPCardPaymentMethod.h"
+#import "STPApplePayPaymentMethod.h"
 #import "STPPaymentContext.h"
 #import "UIColor+Stripe.h"
 #import "UIFont+Stripe.h"
 #import "UIImage+Stripe.h"
+#import "NSString+Stripe_CardBrands.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 static NSInteger STPPaymentMethodCardListSection = 0;
@@ -108,16 +110,10 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier forIndexPath:indexPath];
     if (indexPath.section == STPPaymentMethodCardListSection) {
         id<STPPaymentMethod> paymentMethod = self.paymentContext.paymentMethods[indexPath.row];
-        cell.textLabel.text = paymentMethod.label;
         cell.imageView.image = paymentMethod.image;
-        if ([paymentMethod isEqual:self.paymentContext.selectedPaymentMethod]) {
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-            cell.textLabel.textColor = [UIColor stp_linkBlueColor];
-        }
-        else {
-            cell.accessoryType = UITableViewCellAccessoryNone;
-            cell.textLabel.textColor = [UIColor stp_darkTextColor];
-        }
+        BOOL selected = [paymentMethod isEqual:self.paymentContext.selectedPaymentMethod];
+        cell.textLabel.attributedText = [self buildAttributedStringForPaymentMethod:paymentMethod selected:selected];
+        cell.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
         cell.textLabel.textColor = [UIColor stp_linkBlueColor];
         cell.imageView.image = [UIImage stp_addIcon];
@@ -125,6 +121,30 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     }
     cell.textLabel.font = [UIFont systemFontOfSize:17];
     return cell;
+}
+
+- (NSAttributedString *)buildAttributedStringForPaymentMethod:(id<STPPaymentMethod>)paymentMethod
+                                                     selected:(BOOL)selected {
+    if ([paymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {
+        return [self buildAttributedStringForCard:((STPCardPaymentMethod *)paymentMethod).card selected:selected];
+    } else if ([paymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
+        NSString *label = NSLocalizedString(@"Apple Pay", nil);
+        UIColor *primaryColor = selected ? [UIColor stp_linkBlueColor] : [UIColor stp_darkTextColor];
+        return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
+    }
+    return nil;
+}
+
+- (NSAttributedString *)buildAttributedStringForCard:(STPCard *)card selected:(BOOL)selected {
+    NSString *template = NSLocalizedString(@"%@ Ending In %@", @"{card brand} ending in {last4}");
+    NSString *brandString = [NSString stringWithCardBrand:card.brand];
+    NSString *label = [NSString stringWithFormat:template, brandString, card.last4];
+    UIColor *primaryColor = selected ? [UIColor stp_linkBlueColor] : [UIColor stp_darkTextColor];
+    UIColor *secondaryColor = [primaryColor colorWithAlphaComponent:0.6f];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: secondaryColor}];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:primaryColor range:[label rangeOfString:brandString]];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:primaryColor range:[label rangeOfString:card.last4]];
+    return [attributedString copy];
 }
 
 - (void)tableView:(__unused UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
