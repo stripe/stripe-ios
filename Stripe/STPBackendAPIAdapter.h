@@ -10,15 +10,15 @@
 #import <UIKit/UIKit.h>
 #import "STPAddress.h"
 
-@protocol STPSource;
+@class STPCard, STPToken;
 
-typedef void (^STPSourceCompletionBlock)(id<STPSource> __nullable selectedSource, NSArray<id<STPSource>>* __nullable sources, NSError * __nullable error);
+typedef void (^STPCardCompletionBlock)(STPCard * __nullable selectedCard, NSArray<STPCard *>* __nullable cards, NSError * __nullable error);
 typedef void (^STPAddressCompletionBlock)(STPAddress * __nullable address, NSError * __nullable error);
 
 @protocol STPBackendAPIAdapter<NSObject>
 
-- (void)retrieveSources:(nonnull STPSourceCompletionBlock)completion;
-- (void)addSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCompletionBlock)completion;
-- (void)selectSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCompletionBlock)completion;
+- (void)retrieveCards:(nonnull STPCardCompletionBlock)completion;
+- (void)addToken:(nonnull STPToken *)token completion:(nonnull STPCardCompletionBlock)completion;
+- (void)selectCard:(nonnull STPCard *)card completion:(nonnull STPCardCompletionBlock)completion;
 
 @end

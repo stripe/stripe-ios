@@ -18,4 +18,8 @@
     return [UIColor colorWithRed:0 green:122.0f/255.0f blue:1 alpha:1];
 }
 
++ (UIColor *)stp_darkTextColor {
+    return [UIColor colorWithRed:43.0f/255.0f green:43.0f/255.0f blue:45.0f/255.0f alpha:1];
+}
+
 @end

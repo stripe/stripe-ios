@@ -7,34 +7,34 @@
 //
 
 #import "STPCardPaymentMethod.h"
-#import "STPSource.h"
+#import "STPCard.h"
 
 @interface STPCardPaymentMethod ()
 
-@property (nonatomic, readwrite) id<STPSource> source;
+@property (nonatomic, readwrite) STPCard *card;
 
 @end
 
 @implementation STPCardPaymentMethod
 
-- (instancetype)initWithSource:(id<STPSource>)source {
+- (instancetype)initWithCard:(STPCard *)card {
     self = [super init];
     if (self) {
-        _source = source;
+        _card = card;
     }
     return self;
 }
 
 - (UIImage *)image {
-    return self.source.image;
+    return self.card.image;
 }
 
 - (NSString *)label {
-    return self.source.label;
+    return self.card.label;
 }
 
 - (BOOL)isEqual:(id)object {
-    return [object isKindOfClass:[STPCardPaymentMethod class]] && [((STPCardPaymentMethod *)object).source isEqual:self.source];
+    return [object isKindOfClass:[STPCardPaymentMethod class]] && [((STPCardPaymentMethod *)object).card isEqual:self.card];
 }
 
 @end

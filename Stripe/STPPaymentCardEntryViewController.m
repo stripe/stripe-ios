@@ -84,27 +84,37 @@
 
 - (void)cancelPressed:(__unused id)sender {
     if (self.completion) {
-        self.completion(nil);
-        self.completion = nil;
+        self.completion(nil, ^(NSError *error) {
+            if (error) {
+                [self handleError:error];
+            }
+        });
     }
 }
 
 - (void)nextPressed:(__unused id)sender {
     [self.activityIndicator startAnimating];
     [self.textField resignFirstResponder];
-    [self.apiClient createTokenWithCard:self.textField.cardParams completion:^(STPToken *token, NSError *error) {
-        if (error) {
-            [self.activityIndicator stopAnimating];
-            NSLog(@"%@", error);
-            [self.textField becomeFirstResponder];
-            // TODO handle error, probably by showing a UIAlertController
+    [self.apiClient createTokenWithCard:self.textField.cardParams completion:^(STPToken *token, NSError *tokenError) {
+        if (tokenError) {
+            [self handleError:tokenError];
         } else {
             if (self.completion) {
-                self.completion(token);
-                self.completion = nil;
+                self.completion(token, ^(NSError *error) {
+                    if (error) {
+                        [self handleError:error];
+                    }
+                });
             }
         }
     }];
+}
+
+- (void)handleError:(NSError *)error {
+    [self.activityIndicator stopAnimating];
+    NSLog(@"%@", error);
+    [self.textField becomeFirstResponder];
+    // TODO handle error, probably by showing a UIAlertController
 }
 
 - (void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {

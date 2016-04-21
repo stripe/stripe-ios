@@ -20,12 +20,12 @@
 #import "UIFont+Stripe.h"
 #import "UIColor+Stripe.h"
 
-@interface STPPaymentMethodTuple : NSObject
-@property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
-@property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
+@interface STPCardTuple : NSObject
+@property(nonatomic)STPCard *selectedCard;
+@property(nonatomic)NSArray<STPCard *> *cards;
 @end
 
-@implementation STPPaymentMethodTuple
+@implementation STPCardTuple
 @end
 
 @interface STPPaymentContext()
@@ -33,7 +33,7 @@
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic)STPPaymentMethodType supportedPaymentMethods;
 @property(nonatomic, readwrite, getter=isLoading)BOOL loading;
-@property(nonatomic)STPPromise<STPPaymentMethodTuple *> *initialLoadingPromise;
+@property(nonatomic)STPPromise<STPCardTuple *> *initialLoadingPromise;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 
@@ -49,15 +49,13 @@
         _paymentCurrency = @"USD";
         _merchantName = [NSBundle stp_applicationName];
         __weak typeof(self) weakSelf = self;
-        _initialLoadingPromise = [[STPPromise<STPPaymentMethodTuple *> new] onSuccess:^(STPPaymentMethodTuple *tuple) {
-            weakSelf.selectedPaymentMethod = tuple.selectedPaymentMethod;
-            NSMutableArray *paymentMethods = [tuple.paymentMethods mutableCopy];
-            if ([self applePaySupported]) {
-                STPApplePayPaymentMethod *method = [STPApplePayPaymentMethod new];
-                [paymentMethods addObject:method];
-                weakSelf.selectedPaymentMethod = weakSelf.selectedPaymentMethod ?: method;
+        _initialLoadingPromise = [[STPPromise<STPCardTuple *> new] onSuccess:^(STPCardTuple *tuple) {
+            weakSelf.paymentMethods = [weakSelf parsePaymentMethods:tuple.cards];
+            if (tuple.selectedCard) {
+                weakSelf.selectedPaymentMethod = [[STPCardPaymentMethod alloc] initWithCard:tuple.selectedCard];
+            } else if ([self applePaySupported]) {
+                weakSelf.selectedPaymentMethod = [STPApplePayPaymentMethod new];
             }
-            weakSelf.paymentMethods = paymentMethods;
         }];
     }
     return self;
@@ -68,30 +66,50 @@
         return;
     }
     self.loading = YES;
-    [self.apiAdapter retrieveSources:^(id<STPSource> selectedSource, NSArray<id<STPSource>> *sources, NSError *error) {
+    [self.apiAdapter retrieveCards:^(STPCard * _Nullable selectedCard, NSArray<STPCard *> * _Nullable cards, NSError * _Nullable error) {
         self.loading = NO;
         if (error) {
             // TODO surface this error somewhere.
             [self.initialLoadingPromise fail:error];
             return;
         }
-        STPPaymentMethodTuple *tuple = [STPPaymentMethodTuple new];
-        NSMutableArray *paymentMethods = [NSMutableArray array];
-        for (id<STPSource> source in sources) {
-            [paymentMethods addObject:[[STPCardPaymentMethod alloc] initWithSource:source]];
-        }
-        tuple.paymentMethods = paymentMethods;
-        if (selectedSource) {
-            tuple.selectedPaymentMethod = [[STPCardPaymentMethod alloc] initWithSource:selectedSource];
-        }
+        STPCardTuple *tuple = [STPCardTuple new];
+        tuple.cards = cards;
+        tuple.selectedCard = selectedCard;
         [self.initialLoadingPromise succeed:tuple];
     }];
 }
 
+- (NSArray<id<STPPaymentMethod>> *)parsePaymentMethods:(NSArray<STPCard *> *)cards {
+    NSMutableArray *paymentMethods = [NSMutableArray array];
+    for (STPCard *card in cards) {
+        [paymentMethods addObject:[[STPCardPaymentMethod alloc] initWithCard:card]];
+    }
+    if ([self applePaySupported]) {
+        [paymentMethods addObject:[STPApplePayPaymentMethod new]];
+    }
+    return paymentMethods;
+}
+
 - (void)onSuccess:(STPVoidBlock)completion {
     [self performInitialLoad];
-    [self.initialLoadingPromise onSuccess:^(__unused STPPaymentMethodTuple *value) {
+    [self.initialLoadingPromise onSuccess:^(__unused STPCardTuple *value) {
         completion();
+    }];
+}
+
+- (void)addToken:(STPToken *)token completion:(STPAddTokenBlock)completion {
+    __weak typeof(self) weakSelf = self;
+    [self.apiAdapter addToken:token completion:^(STPCard * _Nullable selectedCard, NSArray<STPCard *> * _Nullable cards, NSError * _Nullable error) {
+        if (error) {
+            completion(nil, error);
+            return;
+        }
+        weakSelf.paymentMethods = [weakSelf parsePaymentMethods:cards];
+        if (selectedCard) {
+            [weakSelf selectPaymentMethod:[[STPCardPaymentMethod alloc] initWithCard:selectedCard]];
+        }
+        completion(weakSelf.selectedPaymentMethod, nil);
     }];
 }
 
@@ -125,8 +143,8 @@
             return NSOrderedDescending;
         }
         if ([obj1 isKindOfClass:cardKlass] && [obj2 isKindOfClass:cardKlass]) {
-            return [[((STPCardPaymentMethod *)obj1).source label]
-                    compare:[((STPCardPaymentMethod *)obj2).source label]];
+            return [[((STPCardPaymentMethod *)obj1).card label]
+                    compare:[((STPCardPaymentMethod *)obj2).card label]];
         }
         return NSOrderedSame;
     }];
@@ -145,20 +163,30 @@
     [self artificiallyRetain:fromViewController];
     [self performInitialLoad];
     __weak typeof(self) weakSelf = self;
-    [self.initialLoadingPromise onSuccess:^(__unused STPPaymentMethodTuple *tuple) {
+    [self.initialLoadingPromise onSuccess:^(__unused STPCardTuple *tuple) {
         if (!weakSelf) {
             return;
         }
         if (!weakSelf.selectedPaymentMethod) {
-            STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithAPIClient:weakSelf.apiClient completion:^(id<STPSource> source) {
-                [fromViewController dismissViewControllerAnimated:YES completion:^{
-                    if (source) {
-                        weakSelf.selectedPaymentMethod = [[STPCardPaymentMethod alloc] initWithSource:source];
-                        [weakSelf requestPaymentFromViewController:fromViewController sourceHandler:sourceHandler completion:completion];
-                    } else {
+            STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithAPIClient:weakSelf.apiClient completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
+                if (token) {
+                    [weakSelf addToken:token completion:^(id<STPPaymentMethod>  _Nullable paymentMethod, NSError * _Nullable error) {
+                        if (error) {
+                            tokenCompletion(error);
+                        } else {
+                            [weakSelf selectPaymentMethod:paymentMethod];
+                            [fromViewController dismissViewControllerAnimated:YES completion:^{
+                                tokenCompletion(nil);
+                                [weakSelf requestPaymentFromViewController:fromViewController sourceHandler:sourceHandler completion:completion];
+                            }];
+                        }
+                    }];
+                } else {
+                    [fromViewController dismissViewControllerAnimated:YES completion:^{
+                        tokenCompletion(nil);
                         completion(STPPaymentStatusUserCancellation, nil);
-                    }
-                }];
+                    }];
+                }
             }];
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentCardViewController];
             NSDictionary *titleTextAttributes = @{NSFontAttributeName:[UIFont stp_navigationBarFont]};
@@ -172,7 +200,7 @@
         }
         else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {
             STPCardPaymentMethod *cardPaymentMethod = (STPCardPaymentMethod *)weakSelf.selectedPaymentMethod;
-            sourceHandler(STPPaymentMethodTypeCard, cardPaymentMethod.source, ^(NSError *error) {
+            sourceHandler(STPPaymentMethodTypeCard, cardPaymentMethod.card, ^(NSError *error) {
                 if (error) {
                     completion(STPPaymentStatusError, error);
                 } else {

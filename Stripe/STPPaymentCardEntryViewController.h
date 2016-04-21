@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^STPPaymentCardEntryBlock)(id<STPSource> __nullable source);
+typedef void (^STPPaymentCardEntryBlock)(STPToken * __nullable token, STPErrorBlock tokenCompletion);
 
 @interface STPPaymentCardEntryViewController : UIViewController
 

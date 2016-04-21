@@ -11,13 +11,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol STPSource;
+@class STPCard;
 
 @interface STPCardPaymentMethod : NSObject <STPPaymentMethod>
 
-@property (nonatomic, readonly) id<STPSource> source;
+@property (nonatomic, readonly) STPCard *card;
 
-- (instancetype)initWithSource:(id<STPSource>)source;
+- (instancetype)initWithCard:(STPCard *)card;
 
 @end
 

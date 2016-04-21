@@ -20,7 +20,7 @@ typedef void (^STPPaymentMethodSelectionBlock)(id<STPPaymentMethod> __nullable s
 
 @property(nonatomic, readonly)STPPaymentContext *paymentContext;
 
-- (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext;
+- (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext onSelection:(STPPaymentMethodSelectionBlock)onSelection;
 
 @end
 

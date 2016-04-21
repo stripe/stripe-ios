@@ -47,13 +47,19 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 @property(nonatomic)NSString *appleMerchantIdentifier;
 
 - (void)performInitialLoad;
-- (void)onSuccess:(STPVoidBlock)completion;
-- (void)selectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
 - (void)requestPaymentFromViewController:(UIViewController *)fromViewController
                            sourceHandler:(STPSourceHandlerBlock)sourceHandler
                               completion:(STPPaymentCompletionBlock)completion;
 
 
+@end
+
+typedef void (^STPAddTokenBlock)(id<STPPaymentMethod> __nullable paymentMethod, NSError * __nullable error);
+
+@interface STPPaymentContext(Internal)
+- (void)onSuccess:(STPVoidBlock)completion;
+- (void)addToken:(STPToken *)token completion:(STPAddTokenBlock)completion;
+- (void)selectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
 @end
 
 NS_ASSUME_NONNULL_END

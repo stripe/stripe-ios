@@ -10,22 +10,22 @@ import Foundation
 import Stripe
 
 class BackendAPIAdapter: NSObject, STPBackendAPIAdapter {
-    @objc var sources: [STPSource]? = []
-    @objc var selectedSource: STPSource?
+    @objc var cards: [STPCard]? = []
+    @objc var selectedCard: STPCard?
     @objc var shippingAddress: STPAddress?
-
-    @objc func retrieveSources(completion: STPSourceCompletionBlock) {
-        completion(self.selectedSource, self.sources, nil)
+    
+    @objc func retrieveCards(completion: STPCardCompletionBlock) {
+        completion(self.selectedCard, self.cards, nil)
     }
 
-    @objc func addSource(source: STPSource, completion: STPSourceCompletionBlock) {
-        self.sources?.append(source)
-        self.selectSource(source, completion: completion)
+    @objc func selectCard(card: STPCard, completion: STPCardCompletionBlock) {
+        self.selectedCard = card
+        completion(card, self.cards, nil)
     }
-
-    @objc func selectSource(source: STPSource, completion: STPSourceCompletionBlock) {
-        self.selectedSource = source
-        completion(source, self.sources, nil)
+    
+    @objc func addToken(token: STPToken, completion: STPCardCompletionBlock) {
+        self.cards?.append(token.card!)
+        self.selectCard(token.card!, completion: completion)
     }
 
     @objc func retrieveCustomerShippingAddress(completion: STPAddressCompletionBlock) {

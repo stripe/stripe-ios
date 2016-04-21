@@ -12,5 +12,6 @@
 
 + (UIColor *)stp_backgroundGreyColor;
 + (UIColor *)stp_linkBlueColor;
++ (UIColor *)stp_darkTextColor;
 
 @end
