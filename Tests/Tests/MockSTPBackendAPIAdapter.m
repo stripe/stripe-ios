@@ -14,37 +14,34 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _sources = @[];
+        _cards = @[];
     }
     return self;
 }
 
-- (void)retrieveSources:(STPSourceCompletionBlock)completion {
-    if (self.retrieveSourcesError) {
-        completion(nil, nil, self.retrieveSourcesError);
-    }
-    else {
-        completion(self.selectedSource, self.sources, nil);
-    }
-}
-
-- (void)addSource:(id<STPSource>)source completion:(STPSourceCompletionBlock)completion {
-    if (self.addSourceError) {
-        completion(nil, nil, self.addSourceError);
-    }
-    else {
-        self.sources = [self.sources arrayByAddingObject:source];
-        completion(self.selectedSource, self.sources, nil);
+- (void)retrieveCards:(STPCardCompletionBlock)completion {
+    if (self.retrieveCardsError) {
+        completion(nil, nil, self.retrieveCardsError);
+    } else {
+        completion(self.selectedCard, self.cards, nil);
     }
 }
 
-- (void)selectSource:(nonnull id<STPSource>)source completion:(nonnull STPSourceCompletionBlock)completion {
-    if (self.selectSourceError) {
-        completion(nil, nil, self.selectSourceError);
+- (void)addToken:(STPToken *)token completion:(STPCardCompletionBlock)completion {
+    if (self.addTokenError) {
+        completion(nil, nil, self.addTokenError);
+    } else {
+        self.cards = [self.cards arrayByAddingObject:token.card];
+        completion(self.selectedCard, self.cards, nil);
     }
-    else {
-        self.selectedSource = source;
-        completion(self.selectedSource, self.sources, nil);
+}
+
+- (void)selectCard:(STPCard *)card completion:(STPCardCompletionBlock)completion {
+    if (self.selectCardError) {
+        completion(nil, nil, self.selectCardError);
+    } else {
+        self.selectedCard = card;
+        completion(self.selectedCard, self.cards, nil);
     }
 }
 
