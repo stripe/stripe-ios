@@ -9,23 +9,28 @@
 #import <UIKit/UIKit.h>
 #import "STPCardBrand.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIImage (Stripe)
 
-+ (nonnull UIImage *)stp_amexCardImage;
-+ (nonnull UIImage *)stp_dinersClubCardImage;
-+ (nonnull UIImage *)stp_discoverCardImage;
-+ (nonnull UIImage *)stp_jcbCardImage;
-+ (nonnull UIImage *)stp_masterCardCardImage;
-+ (nonnull UIImage *)stp_visaCardImage;
-+ (nonnull UIImage *)stp_unknownCardCardImage;
++ (UIImage *)stp_applePayCardImage;
++ (UIImage *)stp_amexCardImage;
++ (UIImage *)stp_dinersClubCardImage;
++ (UIImage *)stp_discoverCardImage;
++ (UIImage *)stp_jcbCardImage;
++ (UIImage *)stp_masterCardCardImage;
++ (UIImage *)stp_visaCardImage;
++ (UIImage *)stp_unknownCardCardImage;
 
-+ (nullable UIImage *)stp_brandImageForCardBrand:(STPCardBrand)brand;
-+ (nullable UIImage *)stp_cvcImageForCardBrand:(STPCardBrand)brand;
-+ (nullable UIImage *)stp_safeImageNamed:(nonnull NSString *)imageName;
++ (UIImage *)stp_brandImageForCardBrand:(STPCardBrand)brand;
++ (UIImage *)stp_cvcImageForCardBrand:(STPCardBrand)brand;
 
-+ (nonnull UIImage *)stp_largeCardFrontImage;
-+ (nonnull UIImage *)stp_largeCardBackImage;
++ (UIImage *)stp_addIcon;
++ (UIImage *)stp_largeCardFrontImage;
++ (UIImage *)stp_largeCardBackImage;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 void linkUIImageCategory(void);

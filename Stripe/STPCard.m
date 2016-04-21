@@ -11,6 +11,7 @@
 #import "STPCardValidator.h"
 #import "NSDictionary+Stripe.h"
 #import "NSString+Stripe_CardBrands.h"
+#import "UIImage+Stripe.h"
 
 @interface STPCard ()
 
@@ -100,18 +101,18 @@
     card.name = dict[@"name"];
     card.last4 = dict[@"last4"];
     card.dynamicLast4 = dict[@"dynamic_last4"];
-    NSString *brand = dict[@"brand"];
-    if ([brand isEqualToString:@"Visa"]) {
+    NSString *brand = [dict[@"brand"] lowercaseString];
+    if ([brand isEqualToString:@"visa"]) {
         card.brand = STPCardBrandVisa;
-    } else if ([brand isEqualToString:@"American Express"]) {
+    } else if ([brand isEqualToString:@"american express"]) {
         card.brand = STPCardBrandAmex;
-    } else if ([brand isEqualToString:@"MasterCard"]) {
+    } else if ([brand isEqualToString:@"mastercard"]) {
         card.brand = STPCardBrandMasterCard;
-    } else if ([brand isEqualToString:@"Discover"]) {
+    } else if ([brand isEqualToString:@"discover"]) {
         card.brand = STPCardBrandDiscover;
-    } else if ([brand isEqualToString:@"JCB"]) {
+    } else if ([brand isEqualToString:@"jcb"]) {
         card.brand = STPCardBrandJCB;
-    } else if ([brand isEqualToString:@"Diners Club"]) {
+    } else if ([brand isEqualToString:@"diners club"]) {
         card.brand = STPCardBrandDinersClub;
     } else {
         card.brand = STPCardBrandUnknown;
@@ -155,7 +156,7 @@
 }
 
 - (STPImageType *)image {
-    return nil; // TODO
+    return [UIImage stp_brandImageForCardBrand:self.brand];
 }
 
 @end

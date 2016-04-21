@@ -38,8 +38,8 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 
 @property(nonatomic, weak, nullable)id<STPPaymentContextDelegate> delegate;
 @property(nonatomic, readonly, getter=isLoading)BOOL loading;
-@property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
-@property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
+@property(nonatomic, readonly)id<STPPaymentMethod> selectedPaymentMethod;
+@property(nonatomic, readonly)NSArray<id<STPPaymentMethod>> *paymentMethods;
 
 @property(nonatomic)NSInteger paymentAmount;
 @property(nonatomic)NSString *paymentCurrency;
@@ -47,6 +47,8 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 @property(nonatomic)NSString *appleMerchantIdentifier;
 
 - (void)performInitialLoad;
+- (void)onSuccess:(STPVoidBlock)completion;
+- (void)selectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
 - (void)requestPaymentFromViewController:(UIViewController *)fromViewController
                            sourceHandler:(STPSourceHandlerBlock)sourceHandler
                               completion:(STPPaymentCompletionBlock)completion;

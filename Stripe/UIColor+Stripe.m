@@ -10,8 +10,12 @@
 
 @implementation UIColor (Stripe)
 
-+ (UIColor *)stp_backgroundColor {
-    return [UIColor colorWithRed:0.95 green:0.95 blue:0.96 alpha:1.00];
++ (UIColor *)stp_backgroundGreyColor {
+    return [UIColor colorWithRed:0.95f green:0.95f blue:0.96f alpha:1];
+}
+
++ (UIColor *)stp_linkBlueColor {
+    return [UIColor colorWithRed:0 green:122.0f/255.0f blue:1 alpha:1];
 }
 
 @end

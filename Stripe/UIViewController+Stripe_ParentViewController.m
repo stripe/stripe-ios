@@ -17,4 +17,8 @@
     return [self.parentViewController stp_parentViewControllerOfClass:klass];
 }
 
+- (BOOL)stp_isTopNavigationController {
+    return self.navigationController.topViewController == self;
+}
+
 @end

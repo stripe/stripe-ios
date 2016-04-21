@@ -35,23 +35,33 @@ class ViewController: UIViewController {
             "id":"foo",
             "livemode":true,
             "created":123,
+            "card": [
+                "id": "abc_123",
+                "last4": "4242",
+                "brand": "visa",
+                "exp_month": 11,
+                "exp_year": 17
+            ]
         ]
-//        let source = STPToken.decodedObjectFromAPIResponse(tokenDict)!
-//        let paymentMethod = STPCardPaymentMethod(source: source)
+        let source = STPToken.decodedObjectFromAPIResponse(tokenDict)!
         let apiAdapter = BackendAPIAdapter()
+        apiAdapter.addSource(source) { (_, _, _) in
+        }
         let apiClient = STPAPIClient.sharedClient()
-        let paymentContext = STPPaymentContext(APIAdapter: apiAdapter, supportedPaymentMethods: .Card)
+        let paymentContext = STPPaymentContext(APIAdapter: apiAdapter, supportedPaymentMethods: .All)
         paymentContext.appleMerchantIdentifier = "merchant.com.stripe.shop"
         paymentContext.paymentAmount = 1000
         paymentContext.apiClient = apiClient
-        paymentContext.requestPaymentFromViewController(
-            self,
-            sourceHandler: { (_, _, completion) in
-                completion(nil)
-            }, completion: { (status, error) in
-                    print("\(status) \(error)")
-            }
-        )
+        let sourceList = STPPaymentMethodsViewController(paymentContext: paymentContext)
+        self.navigationController?.pushViewController(sourceList, animated: true)
+//        paymentContext.requestPaymentFromViewController(
+//            self,
+//            sourceHandler: { (_, _, completion) in
+//                completion(nil)
+//            }, completion: { (status, error) in
+//                    print("\(status) \(error)")
+//            }
+//        )
     }
     
 //    func paymentAuthorizationViewController(controller: PKPaymentAuthorizationViewController, didAuthorizePayment payment: PKPayment, completion: ((PKPaymentAuthorizationStatus) -> Void)) {

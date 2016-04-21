@@ -18,6 +18,22 @@
 
 @implementation UIImage (Stripe)
 
++ (UIImage *)stp_addIcon {
+    return [UIImage stp_safeImageNamed:@"stp_icon_add"];
+}
+
++ (nonnull UIImage *)stp_largeCardFrontImage {
+    return [UIImage stp_safeImageNamed:@"stp_card_form_front"];
+}
+
++ (nonnull UIImage *)stp_largeCardBackImage {
+    return [UIImage stp_safeImageNamed:@"stp_card_form_back"];
+}
+
++ (UIImage *)stp_applePayCardImage {
+    return [UIImage stp_safeImageNamed:@"stp_card_applepay"];
+}
+
 + (UIImage *)stp_amexCardImage {
     return [UIImage stp_brandImageForCardBrand:STPCardBrandAmex];
 }
@@ -89,14 +105,6 @@
         return [UIImage imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
     }
     return [UIImage imageNamed:imageName];
-}
-
-+ (nonnull UIImage *)stp_largeCardFrontImage {
-    return [UIImage stp_safeImageNamed:@"stp_card_form_front"];
-}
-
-+ (nonnull UIImage *)stp_largeCardBackImage {
-    return [UIImage stp_safeImageNamed:@"stp_card_form_back"];
 }
 
 @end

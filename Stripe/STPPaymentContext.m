@@ -34,6 +34,8 @@
 @property(nonatomic)STPPaymentMethodType supportedPaymentMethods;
 @property(nonatomic, readwrite, getter=isLoading)BOOL loading;
 @property(nonatomic)STPPromise<STPPaymentMethodTuple *> *initialLoadingPromise;
+@property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
+@property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 
 @end
 
@@ -86,6 +88,20 @@
     }];
 }
 
+- (void)onSuccess:(STPVoidBlock)completion {
+    [self performInitialLoad];
+    [self.initialLoadingPromise onSuccess:^(__unused STPPaymentMethodTuple *value) {
+        completion();
+    }];
+}
+
+- (void)selectPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
+    self.selectedPaymentMethod = paymentMethod;
+    if (![self.paymentMethods containsObject:paymentMethod]) {
+        self.paymentMethods = [self.paymentMethods arrayByAddingObject:paymentMethod];
+    }
+}
+
 - (void)setLoading:(BOOL)loading {
     if (loading == _loading) {
         return;
@@ -97,6 +113,23 @@
     else {
         [self.delegate paymentContextDidEndLoading:self];
     }
+}
+
+- (void)setPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods {
+    _paymentMethods = [paymentMethods sortedArrayUsingComparator:^NSComparisonResult(id<STPPaymentMethod> obj1, id<STPPaymentMethod> obj2) {
+        Class applePayKlass = [STPApplePayPaymentMethod class];
+        Class cardKlass = [STPCardPaymentMethod class];
+        if ([obj1 isKindOfClass:applePayKlass]) {
+            return NSOrderedAscending;
+        } else if ([obj2 isKindOfClass:applePayKlass]) {
+            return NSOrderedDescending;
+        }
+        if ([obj1 isKindOfClass:cardKlass] && [obj2 isKindOfClass:cardKlass]) {
+            return [[((STPCardPaymentMethod *)obj1).source label]
+                    compare:[((STPCardPaymentMethod *)obj2).source label]];
+        }
+        return NSOrderedSame;
+    }];
 }
 
 - (void)setSelectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod {
@@ -134,7 +167,7 @@
                                                     forBarPosition:UIBarPositionAny
                                                         barMetrics:UIBarMetricsDefault];
             [[UINavigationBar appearance] setShadowImage:[UIImage new]];
-            [navigationController.navigationBar setBarTintColor:[UIColor stp_backgroundColor]];
+            [navigationController.navigationBar setBarTintColor:[UIColor stp_backgroundGreyColor]];
             [fromViewController presentViewController:navigationController animated:YES completion:nil];
         }
         else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {

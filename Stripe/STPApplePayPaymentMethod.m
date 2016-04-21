@@ -7,16 +7,16 @@
 //
 
 #import "STPApplePayPaymentMethod.h"
+#import "UIImage+Stripe.h"
 
 @implementation STPApplePayPaymentMethod
 
 - (UIImage *)image {
-    // TODO
-    return [UIImage new];
+    return [UIImage stp_applePayCardImage];
 }
 
 - (NSString *)label {
-    return @"Apple Pay";
+    return NSLocalizedString(@"Apple Pay", nil);
 }
 
 - (BOOL)isEqual:(id)object {

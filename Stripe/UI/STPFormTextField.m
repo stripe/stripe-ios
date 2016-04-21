@@ -43,6 +43,7 @@
             return string;
         case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
         case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers:
+        case STPFormTextFieldAutoFormattingBehaviorExpiration:
             return [STPCardValidator sanitizedNumericStringForString:string];
     }
 }
@@ -81,6 +82,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     self.delegateProxy.autoformattingBehavior = autoFormattingBehavior;
     switch (autoFormattingBehavior) {
         case STPFormTextFieldAutoFormattingBehaviorNone:
+        case STPFormTextFieldAutoFormattingBehaviorExpiration:
             self.textFormattingBlock = nil;
             break;
         case STPFormTextFieldAutoFormattingBehaviorCardNumbers:

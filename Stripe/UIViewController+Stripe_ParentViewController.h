@@ -11,5 +11,6 @@
 @interface UIViewController (Stripe_ParentViewController)
 
 - (nullable UIViewController *)stp_parentViewControllerOfClass:(nonnull Class)klass;
+- (BOOL)stp_isTopNavigationController;
 
 @end

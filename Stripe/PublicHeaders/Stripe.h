@@ -24,6 +24,7 @@
 #import "STPPaymentCardTextField.h"
 #import "STPAddress.h"
 
+#import "STPPaymentMethodsViewController.h"
 #import "STPPaymentContext.h"
 #import "STPSource.h"
 #import "STPBackendAPIAdapter.h"

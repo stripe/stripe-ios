@@ -9,12 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "STPPaymentMethod.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol STPSource;
 
 @interface STPCardPaymentMethod : NSObject <STPPaymentMethod>
 
-@property (nonnull, nonatomic, readonly) id<STPSource> source;
+@property (nonatomic, readonly) id<STPSource> source;
 
-- (nonnull instancetype)initWithSource:(nonnull id<STPSource>)source;
+- (instancetype)initWithSource:(id<STPSource>)source;
 
 @end
+
+NS_ASSUME_NONNULL_END

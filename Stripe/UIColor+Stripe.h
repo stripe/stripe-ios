@@ -10,6 +10,7 @@
 
 @interface UIColor (Stripe)
 
-+ (UIColor *)stp_backgroundColor;
++ (UIColor *)stp_backgroundGreyColor;
++ (UIColor *)stp_linkBlueColor;
 
 @end

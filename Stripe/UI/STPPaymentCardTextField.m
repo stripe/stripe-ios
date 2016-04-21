@@ -99,6 +99,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     self.numberPlaceholder = [self.viewModel defaultPlaceholder];
 
     STPFormTextField *expirationField = [self buildTextField];
+    expirationField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorExpiration;
     expirationField.tag = STPCardFieldTypeExpiration;
     expirationField.alpha = 0;
     self.expirationField = expirationField;
