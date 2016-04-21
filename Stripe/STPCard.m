@@ -11,7 +11,10 @@
 #import "STPCardValidator.h"
 #import "NSDictionary+Stripe.h"
 #import "NSString+Stripe_CardBrands.h"
+
+#if TARGET_OS_IPHONE
 #import "UIImage+Stripe.h"
+#endif
 
 @interface STPCard ()
 
@@ -156,7 +159,11 @@
 }
 
 - (STPImageType *)image {
+#if TARGET_OS_IPHONE
     return [UIImage stp_brandImageForCardBrand:self.brand];
+#else
+    return nil;
+#endif
 }
 
 @end
