@@ -30,6 +30,8 @@
     }
 }
 
+#if TARGET_OS_IPHONE
+
 - (STPAddress *)address {
     STPAddress *address = [STPAddress new];
     address.name = self.name;
@@ -51,6 +53,8 @@
     self.addressZip = address.postalCode;
     self.addressCountry = address.country;
 }
+
+#endif
 
 - (BOOL)validateNumber:(id *)ioValue error:(NSError **)outError {
     if (*ioValue == nil) {
