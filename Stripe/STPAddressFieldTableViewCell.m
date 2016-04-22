@@ -8,17 +8,18 @@
 
 #import "STPAddressFieldTableViewCell.h"
 #import "STPAddressFieldViewModel.h"
-#import "STPLabeledFormField.h"
 #import "STPFormTextField.h"
+#import "UIColor+Stripe.h"
 
 @interface STPAddressFieldTableViewCell() <STPFormTextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
-@property (nonatomic, weak) STPLabeledFormField *formField;
-@property (nonatomic, weak) id<STPAddressFieldTableViewCellDelegate> delegate;
-@property (nonatomic, weak) STPAddressFieldViewModel *viewModel;
-@property (nonatomic) UIToolbar *inputAccessoryToolbar;
-@property (nonatomic) UIPickerView *countryPickerView;
-@property (nonatomic, strong) NSArray *countryCodes;
+@property(nonatomic, weak) UILabel *captionLabel;
+@property(nonatomic, weak) STPFormTextField *textField;
+@property(nonatomic, weak) id<STPAddressFieldTableViewCellDelegate> delegate;
+@property(nonatomic, weak) STPAddressFieldViewModel *viewModel;
+@property(nonatomic) UIToolbar *inputAccessoryToolbar;
+@property(nonatomic) UIPickerView *countryPickerView;
+@property(nonatomic, strong) NSArray *countryCodes;
 
 @end
 
@@ -27,11 +28,18 @@
 - (instancetype)initWithStyle:(__unused UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self) {
-        STPLabeledFormField *formField = [[STPLabeledFormField alloc] init];
-        formField.formTextField.formDelegate = self;
-        formField.formTextField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
-        _formField = formField;
-        [self addSubview:formField];
+        UILabel *captionLabel = [UILabel new];
+        captionLabel.textColor = [UIColor stp_fieldLabelGreyColor];
+        _captionLabel = captionLabel;
+        [self addSubview:captionLabel];
+        
+        STPFormTextField *textField = [[STPFormTextField alloc] init];
+        textField.formDelegate = self;
+        textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
+        textField.placeholderColor = [UIColor stp_fieldPlaceholderGreyColor];
+        textField.textColor = [UIColor stp_darkTextColor];
+        _textField = textField;
+        [self addSubview:textField];
         
         UIToolbar *toolbar = [UIToolbar new];
         UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -54,32 +62,32 @@
 - (void)configureWithViewModel:(STPAddressFieldViewModel *)viewModel delegate:(id<STPAddressFieldTableViewCellDelegate>)delegate {
     self.viewModel = viewModel;
     self.delegate = delegate;
-    self.formField.formTextField.placeholder = viewModel.placeholder;
-    self.formField.formTextField.text = viewModel.contents;
-    self.formField.captionLabel.text = viewModel.label;
-    self.formField.formTextField.inputAccessoryView = nil;
+    self.textField.placeholder = viewModel.placeholder;
+    self.textField.text = viewModel.contents;
+    self.captionLabel.text = viewModel.label;
+    self.textField.inputAccessoryView = nil;
     switch (viewModel.type) {
         case STPAddressFieldViewModelTypeText:
         case STPAddressFieldViewModelTypeOptionalText:
-            self.formField.formTextField.keyboardType = UIKeyboardTypeDefault;
+            self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
         case STPAddressFieldViewModelTypePhoneNumber:
-            self.formField.formTextField.keyboardType = UIKeyboardTypePhonePad;
-            self.formField.formTextField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
+            self.textField.keyboardType = UIKeyboardTypePhonePad;
+            self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
             if (!self.viewModel.lastInList) {
-                self.formField.formTextField.inputAccessoryView = self.inputAccessoryToolbar;
+                self.textField.inputAccessoryView = self.inputAccessoryToolbar;
             }
             break;
         case STPAddressFieldViewModelTypeEmail:
-            self.formField.formTextField.keyboardType = UIKeyboardTypeEmailAddress;
+            self.textField.keyboardType = UIKeyboardTypeEmailAddress;
             break;
         case STPAddressFieldViewModelTypeCountry: {
-            self.formField.formTextField.keyboardType = UIKeyboardTypeDefault;
-            self.formField.formTextField.inputView = self.countryPickerView;
+            self.textField.keyboardType = UIKeyboardTypeDefault;
+            self.textField.inputView = self.countryPickerView;
             NSInteger index = [self.countryCodes indexOfObject:self.viewModel.contents];
             if (index == NSNotFound) {
                 self.viewModel.contents = @"";
-                self.formField.formTextField.text = @"";
+                self.textField.text = @"";
             }
             else {
                 [self.countryPickerView selectRow:index inComponent:0 animated:NO];
@@ -87,9 +95,9 @@
             break;
         }
         case STPAddressFieldViewModelTypeZip:
-            self.formField.formTextField.keyboardType = UIKeyboardTypeNumberPad;
+            self.textField.keyboardType = UIKeyboardTypeNumberPad;
             if (!self.viewModel.lastInList) {
-                self.formField.formTextField.inputAccessoryView = self.inputAccessoryToolbar;
+                self.textField.inputAccessoryView = self.inputAccessoryToolbar;
             }
             break;
     }
@@ -97,12 +105,14 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.formField.frame = self.bounds;
+    self.captionLabel.frame = CGRectMake(15, 0, 80, self.bounds.size.height);
+    CGFloat textFieldX = CGRectGetMaxX(self.captionLabel.frame) + 10;
+    self.textField.frame = CGRectMake(textFieldX, 0, self.bounds.size.width - textFieldX, self.bounds.size.height);
     self.inputAccessoryToolbar.frame = CGRectMake(0, 0, self.bounds.size.width, 44);
 }
 
 - (BOOL)becomeFirstResponder {
-    return [self.formField.formTextField becomeFirstResponder];
+    return [self.textField becomeFirstResponder];
 }
 
 - (void)nextTapped:(__unused id)sender {
@@ -126,7 +136,7 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     self.viewModel.contents = self.countryCodes[row];
-    self.formField.formTextField.text = [self pickerView:pickerView titleForRow:row forComponent:component];
+    self.textField.text = [self pickerView:pickerView titleForRow:row forComponent:component];
 }
 
 - (NSString *)pickerView:(__unused UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(__unused NSInteger)component {

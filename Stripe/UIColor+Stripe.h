@@ -13,5 +13,7 @@
 + (UIColor *)stp_backgroundGreyColor;
 + (UIColor *)stp_linkBlueColor;
 + (UIColor *)stp_darkTextColor;
++ (UIColor *)stp_fieldLabelGreyColor;
++ (UIColor *)stp_fieldPlaceholderGreyColor;
 
 @end

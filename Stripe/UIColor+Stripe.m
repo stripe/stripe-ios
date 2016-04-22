@@ -22,4 +22,12 @@
     return [UIColor colorWithRed:43.0f/255.0f green:43.0f/255.0f blue:45.0f/255.0f alpha:1];
 }
 
++ (UIColor *)stp_fieldLabelGreyColor {
+    return [UIColor colorWithRed:142.0f/255.0f green:142.0f/255.0f blue:147.0f/255.0f alpha:1];
+}
+
++ (UIColor *)stp_fieldPlaceholderGreyColor {
+    return [UIColor colorWithRed:194.0f/255.0f green:194.0f/255.0f blue:201.0f/255.0f alpha:1];
+}
+
 @end

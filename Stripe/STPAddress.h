@@ -12,6 +12,12 @@
 #import <AddressBook/AddressBook.h>
 #import <PassKit/PassKit.h>
 
+typedef NS_ENUM(NSUInteger, STPBillingAddressField) {
+    STPBillingAddressFieldNone,
+    STPBillingAddressFieldZip,
+    STPBillingAddressFieldFull,
+};
+
 @interface STPAddress : NSObject
 
 @property (nonatomic, strong) NSString *name;

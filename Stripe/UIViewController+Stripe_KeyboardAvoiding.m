@@ -15,6 +15,7 @@
 @property(weak, nonatomic) UIScrollView *scrollView;
 @property(nonatomic) CGPoint originalContentOffset;
 @property(nonatomic) CGFloat currentScroll;
+@property(nonatomic) UITapGestureRecognizer *tapGestureRecognizer;
 @end
 
 @implementation STPKeyboardDetectingViewController
@@ -24,6 +25,7 @@
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidChangeFrame:) name:UIKeyboardDidChangeFrameNotification object:nil];
+        self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped)];
     }
     return self;
 }
@@ -37,6 +39,16 @@
     view.backgroundColor = [UIColor clearColor];
     view.autoresizingMask = UIViewAutoresizingNone;
     self.view = view;
+}
+
+- (void)tapped {
+    [self.scrollView endEditing:YES];
+}
+
+- (void)setScrollView:(UIScrollView *)scrollView {
+    [_scrollView removeGestureRecognizer:self.tapGestureRecognizer];
+    _scrollView = scrollView;
+    [_scrollView addGestureRecognizer:self.tapGestureRecognizer];
 }
 
 - (void)keyboardWillChangeFrame:(NSNotification *)notification {
