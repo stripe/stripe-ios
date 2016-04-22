@@ -72,7 +72,11 @@ class ViewController: UIViewController {
             sourceHandler: { (_, _, completion) in
                 completion(nil)
             }, completion: { (status, error) in
-                    print("\(status) \(error)")
+                switch status {
+                case .Error: print(error)
+                case .Success: print("success")
+                case .UserCancellation: print("cancelled")
+                }
             }
         )
     }
