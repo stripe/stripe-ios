@@ -18,13 +18,13 @@
                   postData:(NSData *)postData
                 serializer:(id<STPAPIResponseDecodable>)serializer
                 completion:(STPAPIPostResponseBlock)completion {
-    
+
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     request.HTTPBody = postData;
     
-    [[apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, __unused NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    [[apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSDictionary *jsonDictionary = body ? [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL] : nil;
         id<STPAPIResponseDecodable> responseObject = [[serializer class] decodedObjectFromAPIResponse:jsonDictionary];
         NSError *returnedError = [NSError stp_errorFromStripeResponse:jsonDictionary] ?: error;
@@ -39,12 +39,12 @@
         // because the api client's queue is mutable and may have changed after initialization (not ideal)
         if (returnedError) {
             [apiClient.operationQueue addOperationWithBlock:^{
-                completion(nil, returnedError);
+                completion(nil, response, returnedError);
             }];
             return;
         }
         [apiClient.operationQueue addOperationWithBlock:^{
-            completion(responseObject, nil);
+            completion(responseObject, response, nil);
         }];
     }] resume];
     

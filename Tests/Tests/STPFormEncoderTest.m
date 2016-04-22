@@ -126,4 +126,15 @@
     XCTAssertEqualObjects([self encodeObject:testObject], @"test_property=success");
 }
 
+- (void)testQueryStringFromParameters {
+    NSDictionary *params = @{
+                             @"foo": @"bar",
+                             @"baz": @{
+                                     @"qux": @1
+                                     }
+                             };
+    NSString *result = [STPFormEncoder queryStringFromParameters:params];
+    XCTAssertEqualObjects(result, @"baz%5Bqux%5D=1&foo=bar");
+}
+
 @end

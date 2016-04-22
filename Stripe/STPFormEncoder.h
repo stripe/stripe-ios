@@ -19,4 +19,6 @@
 
 + (nonnull NSString *)stringByReplacingSnakeCaseWithCamelCase:(nonnull NSString *)input;
 
++ (nonnull NSString *)queryStringFromParameters:(nonnull NSDictionary *)parameters;
+
 @end
