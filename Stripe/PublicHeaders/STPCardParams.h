@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "STPFormEncodable.h"
+#import "STPAddress.h"
 
 /**
  *  Representation of a user's credit card details. You can assemble these with information that your user enters and
@@ -48,6 +49,8 @@
 /**
  *  The cardholder's address.
  */
+@property(nonatomic, copy, nonnull) STPAddress *address;
+
 @property (nonatomic, copy, nullable) NSString *addressLine1;
 @property (nonatomic, copy, nullable) NSString *addressLine2;
 @property (nonatomic, copy, nullable) NSString *addressCity;

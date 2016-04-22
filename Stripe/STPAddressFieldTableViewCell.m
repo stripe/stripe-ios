@@ -7,27 +7,33 @@
 //
 
 #import "STPAddressFieldTableViewCell.h"
-#import "STPAddressFieldViewModel.h"
 #import "STPFormTextField.h"
 #import "UIColor+Stripe.h"
+#import "STPPostalCodeValidator.h"
+#import "STPPhoneNumberValidator.h"
+#import "STPEmailAddressValidator.h"
 
 @interface STPAddressFieldTableViewCell() <STPFormTextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property(nonatomic, weak) UILabel *captionLabel;
 @property(nonatomic, weak) STPFormTextField *textField;
-@property(nonatomic, weak) id<STPAddressFieldTableViewCellDelegate> delegate;
-@property(nonatomic, weak) STPAddressFieldViewModel *viewModel;
 @property(nonatomic) UIToolbar *inputAccessoryToolbar;
 @property(nonatomic) UIPickerView *countryPickerView;
 @property(nonatomic, strong) NSArray *countryCodes;
+@property(nonatomic, weak)id<STPAddressFieldTableViewCellDelegate>delegate;
 
 @end
 
 @implementation STPAddressFieldTableViewCell
 
-- (instancetype)initWithStyle:(__unused UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+- (instancetype)initWithType:(STPAddressFieldType)type
+                    contents:(NSString *)contents
+                  lastInList:(BOOL)lastInList
+                    delegate:(id<STPAddressFieldTableViewCellDelegate>)delegate {
+    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     if (self) {
+        _delegate = delegate;
+        
         UILabel *captionLabel = [UILabel new];
         captionLabel.textColor = [UIColor stp_fieldLabelGreyColor];
         _captionLabel = captionLabel;
@@ -38,6 +44,7 @@
         textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
         textField.placeholderColor = [UIColor stp_fieldPlaceholderGreyColor];
         textField.textColor = [UIColor stp_darkTextColor];
+        textField.errorColor = [UIColor redColor]; // TODO make better
         _textField = textField;
         [self addSubview:textField];
         
@@ -46,7 +53,7 @@
         UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStyleDone target:self action:@selector(nextTapped:)];
         toolbar.items = @[flexibleItem, nextItem];
         _inputAccessoryToolbar = toolbar;
-
+        
         NSString *countryCode = [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode];
         NSMutableArray *otherCountryCodes = [[NSLocale ISOCountryCodes] mutableCopy];
         [otherCountryCodes removeObject:countryCode];
@@ -55,52 +62,71 @@
         pickerView.dataSource = self;
         pickerView.delegate = self;
         _countryPickerView = pickerView;
+        
+        self.type = type;
+        self.textField.text = contents;
+        switch (type) {
+            case STPAddressFieldTypeName:
+                self.captionLabel.text = NSLocalizedString(@"Name", nil);
+                self.textField.placeholder = NSLocalizedString(@"John Appleseed", nil);
+                self.textField.keyboardType = UIKeyboardTypeDefault;
+                break;
+            case STPAddressFieldTypeLine1:
+                self.captionLabel.text = NSLocalizedString(@"Address", nil);
+                self.textField.placeholder = NSLocalizedString(@"123 Address St", nil);
+                self.textField.keyboardType = UIKeyboardTypeDefault;
+                break;
+            case STPAddressFieldTypeLine2:
+                self.captionLabel.text = NSLocalizedString(@"Apt.", nil);
+                self.textField.placeholder = NSLocalizedString(@"#23", nil);
+                self.textField.keyboardType = UIKeyboardTypeDefault;
+                break;
+            case STPAddressFieldTypeCity:
+                self.captionLabel.text = NSLocalizedString(@"City", nil);
+                self.textField.placeholder = NSLocalizedString(@"California", nil);
+                self.textField.keyboardType = UIKeyboardTypeDefault;
+                break;
+            case STPAddressFieldTypeState:
+                self.captionLabel.text = NSLocalizedString(@"State", nil);
+                self.textField.placeholder = NSLocalizedString(@"CA", nil);
+                self.textField.keyboardType = UIKeyboardTypeDefault;
+                break;
+            case STPAddressFieldTypeZip:
+                self.captionLabel.text = NSLocalizedString(@"ZIP Code", nil);
+                self.textField.placeholder = NSLocalizedString(@"12345", nil);
+                self.textField.keyboardType = UIKeyboardTypeNumberPad;
+                if (!lastInList) {
+                    self.textField.inputAccessoryView = self.inputAccessoryToolbar;
+                }
+                break;
+            case STPAddressFieldTypeCountry:
+                self.captionLabel.text = NSLocalizedString(@"Country", nil);
+                self.textField.placeholder = nil;
+                self.textField.keyboardType = UIKeyboardTypeDefault;
+                self.textField.keyboardType = UIKeyboardTypeDefault;
+                self.textField.inputView = self.countryPickerView;
+                NSInteger index = [self.countryCodes indexOfObject:self.contents];
+                if (index == NSNotFound) {
+                    self.textField.text = @"";
+                }
+                else {
+                    [self.countryPickerView selectRow:index inComponent:0 animated:NO];
+                }
+                break;
+            case STPAddressFieldTypePhone:
+                self.textField.keyboardType = UIKeyboardTypePhonePad;
+                self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
+                if (!lastInList) {
+                    self.textField.inputAccessoryView = self.inputAccessoryToolbar;
+                }
+                break;
+            case STPAddressFieldTypeEmail:
+                self.textField.keyboardType = UIKeyboardTypeEmailAddress;
+                break;
+                
+        }
     }
     return self;
-}
-
-- (void)configureWithViewModel:(STPAddressFieldViewModel *)viewModel delegate:(id<STPAddressFieldTableViewCellDelegate>)delegate {
-    self.viewModel = viewModel;
-    self.delegate = delegate;
-    self.textField.placeholder = viewModel.placeholder;
-    self.textField.text = viewModel.contents;
-    self.captionLabel.text = viewModel.label;
-    self.textField.inputAccessoryView = nil;
-    switch (viewModel.type) {
-        case STPAddressFieldViewModelTypeText:
-        case STPAddressFieldViewModelTypeOptionalText:
-            self.textField.keyboardType = UIKeyboardTypeDefault;
-            break;
-        case STPAddressFieldViewModelTypePhoneNumber:
-            self.textField.keyboardType = UIKeyboardTypePhonePad;
-            self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
-            if (!self.viewModel.lastInList) {
-                self.textField.inputAccessoryView = self.inputAccessoryToolbar;
-            }
-            break;
-        case STPAddressFieldViewModelTypeEmail:
-            self.textField.keyboardType = UIKeyboardTypeEmailAddress;
-            break;
-        case STPAddressFieldViewModelTypeCountry: {
-            self.textField.keyboardType = UIKeyboardTypeDefault;
-            self.textField.inputView = self.countryPickerView;
-            NSInteger index = [self.countryCodes indexOfObject:self.viewModel.contents];
-            if (index == NSNotFound) {
-                self.viewModel.contents = @"";
-                self.textField.text = @"";
-            }
-            else {
-                [self.countryPickerView selectRow:index inComponent:0 animated:NO];
-            }
-            break;
-        }
-        case STPAddressFieldViewModelTypeZip:
-            self.textField.keyboardType = UIKeyboardTypeNumberPad;
-            if (!self.viewModel.lastInList) {
-                self.textField.inputAccessoryView = self.inputAccessoryToolbar;
-            }
-            break;
-    }
 }
 
 - (void)layoutSubviews {
@@ -122,8 +148,9 @@
 #pragma mark - STPFormTextFieldDelegate
 
 - (void)formTextFieldTextDidChange:(STPFormTextField *)textField {
-    self.viewModel.contents = textField.text;
-    textField.validText = self.viewModel.isValid;
+    if (self.type != STPAddressFieldTypeCountry) {
+        self.contents = textField.text;
+    }
     [self.delegate addressFieldTableViewCellDidUpdateText:self];
 }
 
@@ -132,10 +159,38 @@
     return NO;
 }
 
+- (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
+    [self.delegate addressFieldTableViewCellDidBackspaceOnEmpty:self];
+}
+
+- (void)setContents:(NSString *)contents {
+    _contents = contents;
+    self.textField.validText = [self validContents];
+}
+
+- (BOOL)validContents {
+    switch (self.type) {
+        case STPAddressFieldTypeName:
+        case STPAddressFieldTypeLine1:
+        case STPAddressFieldTypeCity:
+        case STPAddressFieldTypeState:
+        case STPAddressFieldTypeCountry:
+            return self.contents.length > 0;
+        case STPAddressFieldTypeLine2:
+            return YES;
+        case STPAddressFieldTypeZip:
+            return [STPPostalCodeValidator stringIsValidPostalCode:self.contents];
+        case STPAddressFieldTypeEmail:
+            return [STPEmailAddressValidator stringIsValidEmailAddress:self.contents];
+        case STPAddressFieldTypePhone:
+            return [STPPhoneNumberValidator stringIsValidPhoneNumber:self.contents];
+    }
+}
+
 #pragma mark - UIPickerView
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    self.viewModel.contents = self.countryCodes[row];
+    self.contents = self.countryCodes[row];
     self.textField.text = [self pickerView:pickerView titleForRow:row forComponent:component];
 }
 

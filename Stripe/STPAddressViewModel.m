@@ -7,54 +7,114 @@
 //
 
 #import "STPAddressViewModel.h"
-#import "STPAddressFieldViewModel.h"
+#import "NSArray+Stripe_BoundSafe.h"
 
-@interface STPAddressViewModel()
+@interface STPAddressViewModel()<STPAddressFieldTableViewCellDelegate>
 
-@property(nonatomic)STPBillingAddressField requiredBillingAddressFields;
+@property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
 @property(nonatomic)NSArray<STPAddressFieldTableViewCell *> *addressCells;
 
 @end
 
 @implementation STPAddressViewModel
 
-- (instancetype)initWithRequiredBillingFields:(STPBillingAddressField)requiredBillingAddressFields {
+- (instancetype)initWithRequiredBillingFields:(STPBillingAddressFields)requiredBillingAddressFields {
     self = [super init];
     if (self) {
         _requiredBillingAddressFields = requiredBillingAddressFields;
-        NSArray *viewModels;
         switch (requiredBillingAddressFields) {
-            case STPBillingAddressFieldNone:
-                viewModels = @[];
+            case STPBillingAddressFieldsNone:
+                _addressCells = @[];
                 break;
-            case STPBillingAddressFieldZip:
-                viewModels = @[[STPAddressFieldViewModel viewModelWithLabel:@"ZIP Code" placeholder:@"12345" contents:@"" type:STPAddressFieldViewModelTypeZip]];
+            case STPBillingAddressFieldsZip:
+                _addressCells = @[
+                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:YES delegate:self]
+                                  ];
                 break;
-            case STPBillingAddressFieldFull:
-                viewModels = @[
-                               [STPAddressFieldViewModel viewModelWithLabel:@"Street" placeholder:@"123 Address St" contents:@"" type:STPAddressFieldViewModelTypeText],
-                               [STPAddressFieldViewModel viewModelWithLabel:@"Cont'd" placeholder:@"Apartment?" contents:@"" type:STPAddressFieldViewModelTypeOptionalText],
-                               [STPAddressFieldViewModel viewModelWithLabel:@"City" placeholder:@"San Francisco" contents:@"" type:STPAddressFieldViewModelTypeText],
-                               [STPAddressFieldViewModel viewModelWithLabel:@"State" placeholder:@"CA" contents:@"" type:STPAddressFieldViewModelTypeText],
-                               [STPAddressFieldViewModel viewModelWithLabel:@"ZIP Code" placeholder:@"12345" contents:@"" type:STPAddressFieldViewModelTypeZip],
-                               [STPAddressFieldViewModel viewModelWithLabel:@"Country" placeholder:@"United States" contents:@"" type:STPAddressFieldViewModelTypeCountry]
-                            ];
+            case STPBillingAddressFieldsFull:
+                _addressCells = @[
+                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeName contents:@"" lastInList:NO delegate:self],
+                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine1 contents:@"" lastInList:NO delegate:self],
+                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine2 contents:@"" lastInList:NO delegate:self],
+                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCity contents:@"" lastInList:NO delegate:self],
+                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeState contents:@"" lastInList:NO delegate:self],
+                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:NO delegate:self],
+                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCountry contents:@"" lastInList:YES delegate:self],
+                                  ];
                 break;
         }
-        [viewModels.lastObject setLastInList:YES];
-        NSMutableArray *cells = [NSMutableArray array];
-        for (STPAddressFieldViewModel *viewModel in viewModels) {
-            STPAddressFieldTableViewCell *cell = [[STPAddressFieldTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-            [cell configureWithViewModel:viewModel delegate:nil];
-            [cells addObject:cell];
-        }
-        _addressCells = cells;
     }
     return self;
 }
 
 - (STPAddressFieldTableViewCell *)cellAtIndex:(NSInteger)index {
     return self.addressCells[index];
+}
+
+- (void)addressFieldTableViewCellDidReturn:(__unused STPAddressFieldTableViewCell *)cell {
+    [[self cellAfterCell:cell] becomeFirstResponder];
+}
+
+- (void)addressFieldTableViewCellDidBackspaceOnEmpty:(STPAddressFieldTableViewCell *)cell {
+    if ([self.addressCells indexOfObject:cell] == 0) {
+        [self.previousField becomeFirstResponder];
+    } else {
+        [[self cellBeforeCell:cell] becomeFirstResponder];
+    }
+}
+
+- (void)addressFieldTableViewCellDidUpdateText:(__unused STPAddressFieldTableViewCell *)cell {
+    [self.delegate addressViewModelDidChange:self];
+}
+
+- (BOOL)isValid {
+    return [self.address containsRequiredFields:self.requiredBillingAddressFields];
+}
+
+- (STPAddress *)address {
+    STPAddress *address = [STPAddress new];
+    for (STPAddressFieldTableViewCell *cell in self.addressCells) {
+        switch (cell.type) {
+            case STPAddressFieldTypeName:
+                address.name = cell.contents;
+                break;
+            case STPAddressFieldTypeLine1:
+                address.line1 = cell.contents;
+                break;
+            case STPAddressFieldTypeLine2:
+                address.line2 = cell.contents;
+                break;
+            case STPAddressFieldTypeCity:
+                address.city = cell.contents;
+                break;
+            case STPAddressFieldTypeState:
+                address.state = cell.contents;
+                break;
+            case STPAddressFieldTypeZip:
+                address.postalCode = cell.contents;
+                break;
+            case STPAddressFieldTypeCountry:
+                address.country = cell.contents;
+                break;
+            case STPAddressFieldTypeEmail:
+                address.email = cell.contents;
+                break;
+            case STPAddressFieldTypePhone:
+                address.phone = cell.contents;
+                break;
+        }
+    }
+    return address;
+}
+
+- (STPAddressFieldTableViewCell *)cellBeforeCell:(STPAddressFieldTableViewCell *)cell {
+    NSInteger index = [self.addressCells indexOfObject:cell];
+    return [self.addressCells stp_boundSafeObjectAtIndex:index - 1];
+}
+
+- (STPAddressFieldTableViewCell *)cellAfterCell:(STPAddressFieldTableViewCell *)cell {
+    NSInteger index = [self.addressCells indexOfObject:cell];
+    return [self.addressCells stp_boundSafeObjectAtIndex:index + 1];
 }
 
 @end

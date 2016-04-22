@@ -18,8 +18,8 @@ typedef void (^STPPaymentCardEntryBlock)(STPToken * __nullable token, STPErrorBl
 
 @interface STPPaymentCardEntryViewController : UIViewController
 
-@property(nonatomic)STPBillingAddressField requiredBillingAddressFields;
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
+     requiredBillingAddressFields:(STPBillingAddressFields)requiredBillingAddressFields
                        completion:(STPPaymentCardEntryBlock)completion;
 
 @end

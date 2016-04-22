@@ -60,29 +60,28 @@
     return self;
 }
 
-- (BOOL)containsRequiredFields:(PKAddressField)requiredFields {
+- (BOOL)containsRequiredFields:(STPBillingAddressFields)requiredFields {
     BOOL containsFields = YES;
-    if (requiredFields & PKAddressFieldPostalAddress) {
-        containsFields = containsFields && [self hasValidPostalAddress];
-    }
-    if (requiredFields & PKAddressFieldPhone) {
-        containsFields = containsFields && (self.phone != nil);
-    }
-    if (requiredFields & PKAddressFieldEmail) {
-        containsFields = containsFields && (self.email != nil);
-    }
-    if (requiredFields & PKAddressFieldName) {
-        containsFields = containsFields && (self.name != nil);
+    switch (requiredFields) {
+        case STPBillingAddressFieldsNone:
+            return YES;
+        case STPBillingAddressFieldsZip:
+            return self.postalCode.length > 0;
+        case STPBillingAddressFieldsFull:
+            return [self hasValidPostalAddress];
+            
+        default:
+            break;
     }
     return containsFields;
 }
 
 - (BOOL)hasValidPostalAddress {
-    return self.line1 != nil &&
-    self.city != nil &&
-    self.state != nil &&
-    self.postalCode != nil &&
-    self.country != nil;
+    return self.line1.length > 0 &&
+    self.city.length > 0 &&
+    self.state.length > 0 &&
+    self.postalCode.length > 0 &&
+    self.country.length > 0;
 }
 
 #pragma clang diagnostic pop

@@ -157,7 +157,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         __weak typeof(self) weakself = self;
         BOOL useNavigationTransition = [self stp_isTopNavigationController];
         STPPaymentCardEntryViewController *paymentCardViewController;
-        paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithAPIClient:self.paymentContext.apiClient completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
+        paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithAPIClient:self.paymentContext.apiClient requiredBillingAddressFields:self.paymentContext.requiredBillingAddressFields completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
             if (token) {
                 [self.paymentContext addToken:token completion:^(id<STPPaymentMethod> paymentMethod, NSError *error) {
                     if (error) {

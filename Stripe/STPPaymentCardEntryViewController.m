@@ -14,18 +14,21 @@
 #import "UIImage+Stripe.h"
 #import "STPAddressFieldTableViewCell.h"
 #import "STPAddressViewModel.h"
+#import "NSArray+Stripe_BoundSafe.h"
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
+#import "UIToolbar+Stripe_InputAccessory.h"
 
-@interface STPPaymentCardEntryViewController ()<STPPaymentCardTextFieldDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface STPPaymentCardEntryViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource>
 @property(nonatomic)STPAPIClient *apiClient;
+@property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic)UIBarButtonItem *doneItem;
 @property(nonatomic)UITableViewCell *cardNumberCell;
-@property(nonatomic)NSArray<UITableViewCell *> *addressCells;
 @property(nonatomic, copy)STPPaymentCardEntryBlock completion;
 @property(nonatomic, weak)STPPaymentCardTextField *textField;
 @property(nonatomic)BOOL loading;
 @property(nonatomic)STPAddressViewModel *addressViewModel;
+@property(nonatomic)UIToolbar *inputAccessoryToolbar;
 @end
 
 static NSString *const STPPaymentCardCellReuseIdentifier = @"STPPaymentCardCellReuseIdentifier";
@@ -35,12 +38,15 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
 @implementation STPPaymentCardEntryViewController
 
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
+     requiredBillingAddressFields:(STPBillingAddressFields)requiredBillingAddressFields
                        completion:(STPPaymentCardEntryBlock)completion {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _apiClient = apiClient;
         _completion = completion;
-        _requiredBillingAddressFields = STPBillingAddressFieldFull;
+        _requiredBillingAddressFields = requiredBillingAddressFields;
+        _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:requiredBillingAddressFields];
+        self.addressViewModel.delegate = self;
     }
     return self;
 }
@@ -73,6 +79,7 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
     UITableViewCell *cardNumberCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     STPPaymentCardTextField *textField = [[STPPaymentCardTextField alloc] init];
     textField.backgroundColor = [UIColor whiteColor];
+    textField.placeholderColor = [UIColor stp_fieldPlaceholderGreyColor];
     textField.cornerRadius = 0;
     textField.borderColor = [UIColor colorWithWhite:0.9f alpha:1];
     textField.delegate = self;
@@ -80,19 +87,19 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
     self.textField = textField;
     self.cardNumberCell = cardNumberCell;
     
-    // TODO remove
-    self.requiredBillingAddressFields = STPBillingAddressFieldFull;
+    self.addressViewModel.previousField = textField;
+    
+    self.inputAccessoryToolbar = [UIToolbar stp_inputAccessoryToolbarWithTarget:self action:@selector(paymentFieldNextTapped)];
+    [self.inputAccessoryToolbar stp_setEnabled:NO];
+    if (self.requiredBillingAddressFields != STPBillingAddressFieldsNone) {
+        textField.inputAccessoryView = self.inputAccessoryToolbar;
+    }
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     self.tableView.frame = self.view.bounds;
     self.textField.frame = self.cardNumberCell.bounds;
-}
-
-- (void)setRequiredBillingAddressFields:(STPBillingAddressField)requiredBillingAddressFields {
-    _requiredBillingAddressFields = requiredBillingAddressFields;
-    self.addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:requiredBillingAddressFields];
 }
 
 - (void)setLoading:(BOOL)loading {
@@ -129,10 +136,6 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
     [self.view endEditing:YES];
 }
 
-- (void)dealloc {
-    
-}
-
 - (void)cancelPressed:(__unused id)sender {
     if (self.completion) {
         self.completion(nil, ^(NSError *error) {
@@ -145,8 +148,10 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
 
 - (void)nextPressed:(__unused id)sender {
     self.loading = YES;
+    STPCardParams *cardParams = self.textField.cardParams;
+    cardParams.address = self.addressViewModel.address;
     [self.textField resignFirstResponder];
-    [self.apiClient createTokenWithCard:self.textField.cardParams completion:^(STPToken *token, NSError *tokenError) {
+    [self.apiClient createTokenWithCard:cardParams completion:^(STPToken *token, NSError *tokenError) {
         if (tokenError) {
             [self handleError:tokenError];
         } else {
@@ -168,18 +173,35 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
     // TODO handle error, probably by showing a UIAlertController
 }
 
+- (void)updateDoneButton {
+    self.navigationItem.rightBarButtonItem.enabled = self.textField.isValid && self.addressViewModel.isValid;
+}
+
+#pragma mark - STPPaymentCardTextField
+
 - (void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
-    self.navigationItem.rightBarButtonItem.enabled = textField.isValid;
+    [self.inputAccessoryToolbar stp_setEnabled:textField.isValid];
+    [self updateDoneButton];
+}
+
+- (void)paymentFieldNextTapped {
+    [[self.addressViewModel.addressCells stp_boundSafeObjectAtIndex:0] becomeFirstResponder];
+}
+
+#pragma mark - STPAddressViewModelDelegate
+
+- (void)addressViewModelDidChange:(__unused STPAddressViewModel *)addressViewModel {
+    [self updateDoneButton];
 }
 
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
     switch (self.requiredBillingAddressFields) {
-        case STPBillingAddressFieldNone:
+        case STPBillingAddressFieldsNone:
             return 1;
-        case STPBillingAddressFieldZip:
-        case STPBillingAddressFieldFull:
+        case STPBillingAddressFieldsZip:
+        case STPBillingAddressFieldsFull:
             return self.addressViewModel.addressCells.count == 0 ? 1 : 2;
     }
 }

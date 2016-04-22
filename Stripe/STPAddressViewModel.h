@@ -10,10 +10,23 @@
 #import "STPAddress.h"
 #import "STPAddressFieldTableViewCell.h"
 
+@class STPAddressViewModel;
+
+@protocol STPAddressViewModelDelegate <NSObject>
+
+- (void)addressViewModelDidChange:(STPAddressViewModel *)addressViewModel;
+
+@end
+
 @interface STPAddressViewModel : NSObject
 
-@property(nonatomic, readonly)NSArray<STPAddressFieldTableViewCell *> *addressCells;
-- (instancetype)initWithRequiredBillingFields:(STPBillingAddressField)requiredBillingAddressFields;
+@property(nonatomic, readonly) NSArray<STPAddressFieldTableViewCell *> *addressCells;
+@property(nonatomic, weak) id<STPAddressViewModelDelegate>delegate;
+@property(nonatomic) UIResponder *previousField;
+@property(nonatomic, readonly)STPAddress *address;
+@property(nonatomic, readonly)BOOL isValid;
+
+- (instancetype)initWithRequiredBillingFields:(STPBillingAddressFields)requiredBillingAddressFields;
 - (STPAddressFieldTableViewCell *)cellAtIndex:(NSInteger)index;
 
 @end

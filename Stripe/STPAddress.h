@@ -10,12 +10,11 @@
 
 #import <Foundation/Foundation.h>
 #import <AddressBook/AddressBook.h>
-#import <PassKit/PassKit.h>
 
-typedef NS_ENUM(NSUInteger, STPBillingAddressField) {
-    STPBillingAddressFieldNone,
-    STPBillingAddressFieldZip,
-    STPBillingAddressFieldFull,
+typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
+    STPBillingAddressFieldsNone,
+    STPBillingAddressFieldsZip,
+    STPBillingAddressFieldsFull,
 };
 
 @interface STPAddress : NSObject
@@ -31,7 +30,7 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressField) {
 @property (nonatomic, strong) NSString *email;
 
 - (instancetype)initWithABRecord:(ABRecordRef)record;
-- (BOOL)containsRequiredFields:(PKAddressField)requiredFields;
+- (BOOL)containsRequiredFields:(STPBillingAddressFields)requiredFields;
 
 @end
 

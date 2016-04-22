@@ -41,6 +41,7 @@ class ViewController: UIViewController {
         paymentContext.appleMerchantIdentifier = "merchant.com.stripe.shop"
         paymentContext.paymentAmount = 1000
         paymentContext.apiClient = apiClient
+        paymentContext.requiredBillingAddressFields = .Full
         self.paymentContext = paymentContext
         super.init(coder: aDecoder)
     }
@@ -60,7 +61,7 @@ class ViewController: UIViewController {
     
     @IBAction func beginPayment(sender: AnyObject) {
         let sourceList = STPPaymentMethodsViewController(paymentContext: paymentContext) { paymentMethod in
-            self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+            self.navigationController?.popViewControllerAnimated(true)
         }
         self.navigationController?.pushViewController(sourceList, animated: true)
 //        paymentContext.requestPaymentFromViewController(

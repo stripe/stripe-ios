@@ -14,6 +14,7 @@
 @interface STPKeyboardDetectingViewController : UIViewController
 @property(weak, nonatomic) UIScrollView *scrollView;
 @property(nonatomic) CGPoint originalContentOffset;
+@property(nonatomic) UIEdgeInsets originalContentInset;
 @property(nonatomic) CGFloat currentScroll;
 @property(nonatomic) UITapGestureRecognizer *tapGestureRecognizer;
 @end
@@ -24,7 +25,6 @@
     self = [super init];
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidChangeFrame:) name:UIKeyboardDidChangeFrameNotification object:nil];
         self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped)];
     }
     return self;
@@ -41,14 +41,19 @@
     self.view = view;
 }
 
-- (void)tapped {
-    [self.scrollView endEditing:YES];
-}
-
 - (void)setScrollView:(UIScrollView *)scrollView {
     [_scrollView removeGestureRecognizer:self.tapGestureRecognizer];
     _scrollView = scrollView;
     [_scrollView addGestureRecognizer:self.tapGestureRecognizer];
+}
+
+- (void)endEditing {
+    [self.scrollView endEditing:YES];
+    [self.scrollView setContentOffset:self.originalContentOffset animated:YES];
+}
+
+- (void)tapped {
+    [self endEditing];
 }
 
 - (void)keyboardWillChangeFrame:(NSNotification *)notification {
@@ -58,49 +63,58 @@
     CGRect oldFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
     if (!CGRectIntersectsRect(self.view.window.frame, oldFrame)) {
         self.originalContentOffset = self.scrollView.contentOffset;
+        self.originalContentInset = self.scrollView.contentInset;
     }
     
-    CGPoint newOffset = [self offsetForKeyboardNotification:notification];
     // As of iOS 8, this all takes place inside the necessary animation block
     // https://twitter.com/SmileyKeith/status/684100833823174656
-    [self updateOffsetIfNecessary:newOffset];
+    CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGFloat keyboardHeight = CGRectGetMaxY(self.scrollView.frame) - CGRectGetMinY(keyboardFrame);
+    [self updateInsetIfNecessary:keyboardHeight];
 }
 
-// This is a hack that shouldn't get called very often. When changing the first responder in rapid
-// succession (like tabbing through a form), UIKeyboardWillChangeFrameNotification is not always fired.
-// This catches cases where this occurs after-the-fact, and cleans things up by scrolling
-// to the correct position.
-- (void)keyboardDidChangeFrame:(NSNotification *)notification {
-    CGPoint offset = [self offsetForKeyboardNotification:notification];
-    [UIView animateWithDuration:0.1 animations:^{
-        [self updateOffsetIfNecessary:offset];
+- (void)updateInsetIfNecessary:(CGFloat)keyboardHeight {
+    UIEdgeInsets insets;
+    UIEdgeInsets scrollInsets;
+    if (fabs(keyboardHeight) < FLT_EPSILON) {
+        insets = self.originalContentInset;
+        scrollInsets = insets;
+    } else {
+        insets = UIEdgeInsetsMake(
+                                  self.originalContentInset.top + 30,
+                                  self.originalContentInset.left,
+                                  self.originalContentInset.bottom + keyboardHeight + 20,
+                                  self.originalContentInset.right
+                                  );
+        scrollInsets = UIEdgeInsetsMake(
+                                        self.originalContentInset.top,
+                                        self.originalContentInset.left,
+                                        self.originalContentInset.bottom + keyboardHeight,
+                                        self.originalContentInset.right
+                                        );
+    }
+    if (!UIEdgeInsetsEqualToEdgeInsets(self.scrollView.contentInset, insets)) {
+        self.scrollView.contentInset = insets;
+        self.scrollView.scrollIndicatorInsets = scrollInsets;
+    }
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [self.scrollView endEditing:YES];
+    [coordinator animateAlongsideTransition:nil completion:^(__unused id<UIViewControllerTransitionCoordinatorContext> context) {
+        [self.scrollView setContentOffset:self.originalContentOffset animated:YES];
     }];
 }
 
-- (void)updateOffsetIfNecessary:(CGPoint)offset {
-    if (!CGPointEqualToPoint(self.scrollView.contentOffset, offset)) {
-        self.scrollView.contentOffset = offset;
-        self.currentScroll = offset.y - self.originalContentOffset.y;
-    }
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self endEditing];
 }
+#pragma clang diagnostic pop
 
-- (CGPoint)offsetForKeyboardNotification:(NSNotification *)notification {
-    CGFloat padding = 15;
-    CGRect newFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    CGRect keyboardRectInScrollViewFrame = [self.scrollView convertRect:newFrame fromView:nil];
-    CGFloat minKeyboardY = CGRectGetMinY(keyboardRectInScrollViewFrame);
-    
-    UIView *currentFirstResponder = [self.scrollView stp_findFirstResponder];
-    CGRect responderRectInScrollViewFrame = [currentFirstResponder convertRect:currentFirstResponder.bounds toView:self.scrollView];
-    // It's necessary to track and add the currentScroll here because the scroll view won't properly
-    // convert the rect of the first responder when its contentOffset != 0.
-    CGFloat maxViewY = CGRectGetMaxY(responderRectInScrollViewFrame) + padding + self.currentScroll;
-    
-    CGFloat offsetAmount = MIN(minKeyboardY - maxViewY, 0);
-    CGPoint newOffset = self.originalContentOffset;
-    newOffset.y -= offsetAmount;
-    return newOffset;
-}
 
 @end
 
