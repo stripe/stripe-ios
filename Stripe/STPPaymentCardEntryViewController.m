@@ -107,8 +107,16 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
         return;
     }
     _loading = loading;
+    NSArray *cells = self.addressViewModel.addressCells;
+    for (UITableViewCell *cell in [cells arrayByAddingObject:self.cardNumberCell]) {
+        cell.userInteractionEnabled = !loading;
+        [UIView animateWithDuration:0.1f animations:^{
+            cell.alpha = loading ? 0.7f : 1.0f;
+        }];
+    }
     self.navigationItem.leftBarButtonItem.enabled = !loading;
     if (loading) {
+        [self.tableView endEditing:YES];
         UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         [activityIndicator startAnimating];
         UIBarButtonItem *loadingItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicator];
