@@ -168,7 +168,7 @@
             return;
         }
         if (!weakSelf.selectedPaymentMethod) {
-            STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithAPIClient:weakSelf.apiClient completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
+            STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithAPIClient:weakSelf.apiClient requiredBillingAddressFields:self.requiredBillingAddressFields completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
                 if (token) {
                     [weakSelf addToken:token completion:^(id<STPPaymentMethod>  _Nullable paymentMethod, NSError * _Nullable error) {
                         if (error) {
@@ -248,6 +248,7 @@
     PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:self.merchantName
                                                                           amount:amount];
     paymentRequest.paymentSummaryItems = @[totalItem];
+    paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.requiredBillingAddressFields];
     return paymentRequest;
 }
 

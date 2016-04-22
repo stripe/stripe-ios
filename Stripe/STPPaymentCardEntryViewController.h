@@ -10,6 +10,7 @@
 #import "STPBlocks.h"
 #import "STPCardParams.h"
 #import "STPAPIClient.h"
+#import "STPAddress.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,6 +19,7 @@ typedef void (^STPPaymentCardEntryBlock)(STPToken * __nullable token, STPErrorBl
 @interface STPPaymentCardEntryViewController : UIViewController
 
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
+     requiredBillingAddressFields:(STPBillingAddressFields)requiredBillingAddressFields
                        completion:(STPPaymentCardEntryBlock)completion;
 
 @end

@@ -8,17 +8,36 @@
 
 #import <UIKit/UIKit.h>
 
-@class STPAddressFieldViewModel, STPFormTextField, STPAddressFieldTableViewCell;
+typedef NS_ENUM(NSInteger, STPAddressFieldType) {
+    STPAddressFieldTypeName,
+    STPAddressFieldTypeLine1,
+    STPAddressFieldTypeLine2,
+    STPAddressFieldTypeCity,
+    STPAddressFieldTypeState,
+    STPAddressFieldTypeZip,
+    STPAddressFieldTypeCountry,
+    STPAddressFieldTypeEmail,
+    STPAddressFieldTypePhone,
+};
+
+@class STPFormTextField, STPAddressFieldTableViewCell;
 
 @protocol STPAddressFieldTableViewCellDelegate <NSObject>
 
 - (void)addressFieldTableViewCellDidUpdateText:(STPAddressFieldTableViewCell *)cell;
 - (void)addressFieldTableViewCellDidReturn:(STPAddressFieldTableViewCell *)cell;
+- (void)addressFieldTableViewCellDidBackspaceOnEmpty:(STPAddressFieldTableViewCell *)cell;
 
 @end
 
 @interface STPAddressFieldTableViewCell : UITableViewCell
 
-- (void)configureWithViewModel:(STPAddressFieldViewModel *)viewModel delegate:(id <STPAddressFieldTableViewCellDelegate>)delegate;
+- (instancetype)initWithType:(STPAddressFieldType)type
+                    contents:(NSString *)contents
+                  lastInList:(BOOL)lastInList
+                    delegate:(id<STPAddressFieldTableViewCellDelegate>)delegate;
+
+@property(nonatomic)STPAddressFieldType type;
+@property (nonatomic, strong) NSString *contents;
 
 @end

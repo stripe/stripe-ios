@@ -10,6 +10,7 @@
 #import <Foundation/Foundation.h>
 #import "STPPaymentMethod.h"
 #import "STPBlocks.h"
+#import "STPAddress.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,6 +36,7 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic, readonly)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic, readonly)STPPaymentMethodType supportedPaymentMethods;
+@property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
 
 @property(nonatomic, weak, nullable)id<STPPaymentContextDelegate> delegate;
 @property(nonatomic, readonly, getter=isLoading)BOOL loading;

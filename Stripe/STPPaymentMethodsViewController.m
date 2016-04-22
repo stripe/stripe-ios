@@ -108,6 +108,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier forIndexPath:indexPath];
+    cell.textLabel.font = [UIFont systemFontOfSize:17];
     if (indexPath.section == STPPaymentMethodCardListSection) {
         id<STPPaymentMethod> paymentMethod = self.paymentContext.paymentMethods[indexPath.row];
         cell.imageView.image = paymentMethod.image;
@@ -119,7 +120,6 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         cell.imageView.image = [UIImage stp_addIcon];
         cell.textLabel.text = NSLocalizedString(@"Add New Card...", nil);
     }
-    cell.textLabel.font = [UIFont systemFontOfSize:17];
     return cell;
 }
 
@@ -148,23 +148,16 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 }
 
 - (void)tableView:(__unused UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == STPPaymentMethodCardListSection) {
         id<STPPaymentMethod> paymentMethod = [self.paymentContext.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
-        
-        NSInteger currentIndex = [self.paymentContext.paymentMethods indexOfObject:self.paymentContext.selectedPaymentMethod];
-        NSInteger newIndex = [self.paymentContext.paymentMethods indexOfObject:paymentMethod];
-        NSIndexPath *oldIndexPath = [NSIndexPath indexPathForRow:currentIndex inSection:STPPaymentMethodCardListSection];
-        NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:newIndex inSection:STPPaymentMethodCardListSection];
-        [self.tableView reloadRowsAtIndexPaths:@[oldIndexPath, newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-        
         [self.paymentContext selectPaymentMethod:paymentMethod];
+        [tableView reloadSections:[NSIndexSet indexSetWithIndex:STPPaymentMethodCardListSection] withRowAnimation:UITableViewRowAnimationFade];
         [self finishWithPaymentMethod:paymentMethod];
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
         __weak typeof(self) weakself = self;
         BOOL useNavigationTransition = [self stp_isTopNavigationController];
         STPPaymentCardEntryViewController *paymentCardViewController;
-        paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithAPIClient:self.paymentContext.apiClient completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
+        paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithAPIClient:self.paymentContext.apiClient requiredBillingAddressFields:self.paymentContext.requiredBillingAddressFields completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
             if (token) {
                 [self.paymentContext addToken:token completion:^(id<STPPaymentMethod> paymentMethod, NSError *error) {
                     if (error) {
@@ -203,6 +196,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
             [self presentViewController:paymentCardViewController animated:YES completion:nil];
         }
     }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)finishWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
