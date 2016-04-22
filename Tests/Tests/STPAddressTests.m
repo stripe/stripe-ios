@@ -52,6 +52,8 @@
 
 - (void)testContainsRequiredFields {
     STPAddress *address = [STPAddress new];
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsNone]);
+    
     address.line1 = @"55 John St";
     address.city = @"New York";
     address.state = @"NY";
@@ -61,19 +63,12 @@
     address.email = @"foo@example.com";
     address.name = @"John Doe";
 
-    XCTAssertTrue([address containsRequiredFields:PKAddressFieldAll]);
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
     address.country = nil;
-    XCTAssertFalse([address containsRequiredFields:PKAddressFieldPostalAddress]);
-    XCTAssertTrue([address containsRequiredFields:PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone]);
-    address.name = nil;
-    XCTAssertFalse([address containsRequiredFields:PKAddressFieldName]);
-    XCTAssertTrue([address containsRequiredFields:PKAddressFieldEmail|PKAddressFieldPhone]);
-    address.email = nil;
-    XCTAssertFalse([address containsRequiredFields:PKAddressFieldEmail]);
-    XCTAssertTrue([address containsRequiredFields:PKAddressFieldPhone]);
-    address.phone = nil;
-    XCTAssertFalse([address containsRequiredFields:PKAddressFieldPhone]);
-    XCTAssertTrue([address containsRequiredFields:PKAddressFieldNone]);
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    address.postalCode = nil;
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsZip]);
 }
 
 @end
