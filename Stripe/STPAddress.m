@@ -87,6 +87,7 @@
 }
 
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     switch (billingAddressFields) {
         case STPBillingAddressFieldsNone:
             return PKAddressFieldNone;

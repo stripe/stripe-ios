@@ -10,6 +10,9 @@
 #import <AddressBook/AddressBook.h>
 #pragma clang diagnostic pop
 
+#define FAUXPAS_IGNORED_IN_METHOD(...)
+#define FAUXPAS_IGNORED_ON_LINE(...)
+
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
 
@@ -38,6 +41,6 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 
 - (BOOL)containsRequiredFields:(STPBillingAddressFields)requiredFields;
 
-+ (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields;
++ (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
 
 @end
