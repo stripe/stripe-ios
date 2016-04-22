@@ -7,9 +7,11 @@
 //
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
+#import <AddressBook/AddressBook.h>
+#pragma clang diagnostic pop
 
 #import <Foundation/Foundation.h>
-#import <AddressBook/AddressBook.h>
+#import <PassKit/PassKit.h>
 
 typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
     STPBillingAddressFieldsNone,
@@ -29,9 +31,13 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 @property (nonatomic, strong) NSString *phone;
 @property (nonatomic, strong) NSString *email;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 - (instancetype)initWithABRecord:(ABRecordRef)record;
+#pragma clang diagnostic pop
+
 - (BOOL)containsRequiredFields:(STPBillingAddressFields)requiredFields;
 
-@end
++ (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields;
 
-#pragma clang diagnostic pop
+@end

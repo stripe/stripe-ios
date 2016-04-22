@@ -248,6 +248,7 @@
     PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:self.merchantName
                                                                           amount:amount];
     paymentRequest.paymentSummaryItems = @[totalItem];
+    paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.requiredBillingAddressFields];
     return paymentRequest;
 }
 

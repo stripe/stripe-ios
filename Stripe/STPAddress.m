@@ -60,6 +60,8 @@
     return self;
 }
 
+#pragma clang diagnostic pop
+
 - (BOOL)containsRequiredFields:(STPBillingAddressFields)requiredFields {
     BOOL containsFields = YES;
     switch (requiredFields) {
@@ -84,7 +86,15 @@
     self.country.length > 0;
 }
 
-#pragma clang diagnostic pop
++ (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields {
+    switch (billingAddressFields) {
+        case STPBillingAddressFieldsNone:
+            return PKAddressFieldNone;
+        case STPBillingAddressFieldsZip:
+        case STPBillingAddressFieldsFull:
+            return PKAddressFieldPostalAddress;
+    }
+}
 
 @end
 
