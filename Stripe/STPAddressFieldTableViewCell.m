@@ -83,7 +83,7 @@
                 break;
             case STPAddressFieldTypeCity:
                 self.captionLabel.text = NSLocalizedString(@"City", nil);
-                self.textField.placeholder = NSLocalizedString(@"California", nil);
+                self.textField.placeholder = NSLocalizedString(@"San Francisco", nil);
                 self.textField.keyboardType = UIKeyboardTypeDefault;
                 break;
             case STPAddressFieldTypeState:
