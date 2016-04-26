@@ -595,11 +595,6 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     return [self.sizingField measureTextSize].width + 8;
 }
 
-- (CGFloat)widthForTextWithLength:(NSUInteger)length {
-    NSString *text = [@"" stringByPaddingToLength:length withString:@"M" startingAtIndex:0];
-    return [self widthForText:text];
-}
-
 - (CGFloat)widthForCardNumber:(NSString *)cardNumber {
     self.sizingField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorCardNumbers;
     [self.sizingField setText:cardNumber];

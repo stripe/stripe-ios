@@ -123,7 +123,7 @@
         NSUInteger length = sanitizedNumber.length;
         if (length > maxLength) {
             return STPCardValidationStateInvalid;
-        } else if ([lengths containsObject:[NSNumber numberWithInteger:length]]) {
+        } else if ([lengths containsObject:@(length)]) {
             BOOL isValidLuhn = [self stringIsValidLuhn:sanitizedNumber];
             if (length == maxLength) {
                 return isValidLuhn ? STPCardValidationStateValid : STPCardValidationStateInvalid;

@@ -17,7 +17,7 @@
                   endpoint:(NSString *)endpoint
                   postData:(NSData *)postData
                 serializer:(id<STPAPIResponseDecodable>)serializer
-                completion:(void (^)(id<STPAPIResponseDecodable>, NSError *))completion {
+                completion:(STPAPIPostResponseBlock)completion {
     
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
