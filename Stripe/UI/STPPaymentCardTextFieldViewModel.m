@@ -18,7 +18,7 @@
 - (void)setCardNumber:(NSString *)cardNumber {
     NSString *sanitizedNumber = [STPCardValidator sanitizedNumericStringForString:cardNumber];
     STPCardBrand brand = [STPCardValidator brandForNumber:sanitizedNumber];
-    NSInteger maxLength = [STPCardValidator lengthForCardBrand:brand];
+    NSInteger maxLength = [[[STPCardValidator lengthsForCardBrand:brand] lastObject] integerValue];
     _cardNumber = [sanitizedNumber stp_safeSubstringToIndex:maxLength];
 }
 
