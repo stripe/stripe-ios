@@ -11,6 +11,8 @@
 #import "Stripe.h"
 #import "STPAPIClient+ApplePay.h"
 
+#define FAUXPAS_IGNORED_IN_FILE(...)
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 @class Stripe;
 
@@ -48,7 +50,8 @@
  *  @param handler Code to run when the token has been returned (along with any errors encountered).
  *  @deprecated use [[STPAPIClient sharedClient] createTokenWithPayment:completion:] instead.
  */
-+ (void)createTokenWithPayment:(nonnull PKPayment *)payment completion:(nonnull STPCompletionBlock)handler __attribute__((deprecated));
++ (void)createTokenWithPayment:(nonnull PKPayment *)payment
+                    completion:(nonnull STPCompletionBlock)handler __attribute__((deprecated));
 
 /**
  *  Securely convert your user's Apple Pay payment information into a Stripe token, which you can then safely store on your server and use to charge the user.
@@ -59,7 +62,9 @@
  *  @param handler Code to run when the token has been returned (along with any errors encountered).
  *  @deprecated use [[STPAPIClient sharedClient] createTokenWithPayment:completion:] instead.
  */
-+ (void)createTokenWithPayment:(nonnull PKPayment *)payment operationQueue:(nonnull NSOperationQueue *)queue completion:(nonnull STPCompletionBlock)handler __attribute__((deprecated));
++ (void)createTokenWithPayment:(nonnull PKPayment *)payment
+                operationQueue:(nonnull NSOperationQueue *)queue
+                    completion:(nonnull STPCompletionBlock)handler __attribute__((deprecated));
 
 @end
 

@@ -85,6 +85,7 @@
 }
 
 + (UIImage *)stp_safeImageNamed:(NSString *)imageName {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
         return [UIImage imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
     }

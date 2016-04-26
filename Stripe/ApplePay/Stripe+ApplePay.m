@@ -8,6 +8,8 @@
 #import "Stripe+ApplePay.h"
 #import "STPAPIClient.h"
 
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
+
 @implementation Stripe (ApplePay)
 
 + (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest {
@@ -30,11 +32,16 @@
     return paymentRequest;
 }
 
-+ (void)createTokenWithPayment:(PKPayment *)payment completion:(STPCompletionBlock)handler {
-    [self createTokenWithPayment:payment operationQueue:[NSOperationQueue mainQueue] completion:handler];
++ (void)createTokenWithPayment:(PKPayment *)payment
+                    completion:(STPCompletionBlock)handler {
+    [self createTokenWithPayment:payment
+                  operationQueue:[NSOperationQueue mainQueue]
+                      completion:handler];
 }
 
-+ (void)createTokenWithPayment:(PKPayment *)payment operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler {
++ (void)createTokenWithPayment:(PKPayment *)payment
+                operationQueue:(NSOperationQueue *)queue
+                    completion:(STPCompletionBlock)handler {
     STPAPIClient *client = [[STPAPIClient alloc] init];
     client.operationQueue = queue;
     [client createTokenWithPayment:payment completion:handler];
