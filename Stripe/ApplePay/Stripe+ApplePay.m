@@ -26,10 +26,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
     PKPaymentRequest *paymentRequest = [PKPaymentRequest new];
     [paymentRequest setMerchantIdentifier:merchantIdentifier];
     NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wtautological-pointer-compare"
-    if (&PKPaymentNetworkDiscover != NULL) {
-#pragma clang diagnostic pop
+    if ((&PKPaymentNetworkDiscover) != NULL) {
         supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
     }
     [paymentRequest setSupportedNetworks:supportedNetworks];
