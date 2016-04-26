@@ -367,6 +367,10 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     return [self.viewModel isValid];
 }
 
+- (BOOL)valid {
+    return self.isValid;
+}
+
 #pragma mark readonly variables
 
 - (NSString *)cardNumber {

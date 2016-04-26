@@ -203,7 +203,8 @@
  *  Whether or not the form currently contains a valid card number, expiration date, and CVC.
  *  @see STPCardValidator
  */
-@property(nonatomic, readonly, getter=isValid)BOOL valid;
+@property(nonatomic, readonly)BOOL isValid;
+@property(nonatomic, readonly)BOOL valid; // for backwards-compatibility
 
 /**
  *  Enable/disable selecting or editing the field. Useful when submitting card details to Stripe.
