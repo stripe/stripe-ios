@@ -34,7 +34,7 @@ static BOOL STPShouldCollectAnalytics = YES;
 #if TARGET_OS_SIMULATOR
     return NO;
 #else
-    return NSClassFromString(@"XCTest") == nil && [Stripe shouldCollectAnalytics];
+    return NSClassFromString(@"XCTest") == nil && STPAnalyticsClient;
 #endif
 }
 
