@@ -38,6 +38,13 @@ typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * _
 
 /// The current default publishable key.
 + (nullable NSString *)defaultPublishableKey;
+
+/**
+ *  By default, Stripe collects some basic information about SDK usage.
+ *  You can call this method to turn off analytics collection.
+ */
++ (void)disableAnalytics;
+
 @end
 
 /// A client for making connections to the Stripe API.

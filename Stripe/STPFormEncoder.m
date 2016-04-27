@@ -62,6 +62,10 @@ FOUNDATION_EXPORT NSString * STPQueryStringFromParameters(NSDictionary *paramete
     return STPPercentEscapedStringFromString(string);
 }
 
++ (NSString *)queryStringFromParameters:(NSDictionary *)parameters {
+    return STPQueryStringFromParameters(parameters);
+}
+
 @end
 
 

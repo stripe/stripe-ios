@@ -16,7 +16,9 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 @implementation STPAPIClient (ApplePay)
 
 - (void)createTokenWithPayment:(PKPayment *)payment completion:(STPTokenCompletionBlock)completion {
-    [self createTokenWithData:[self.class formEncodedDataForPayment:payment] completion:completion];
+    [self createTokenWithData:[self.class formEncodedDataForPayment:payment]
+                    tokenType:STPTokenTypeApplePay
+                   completion:completion];
 }
 
 #pragma clang diagnostic push
