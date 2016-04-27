@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "STPFormEncodable.h"
 
+typedef NS_ENUM(NSInteger, STPBankAccountHolderType) {
+    STPBankAccountHolderTypeIndividual,
+    STPBankAccountHolderTypeCompany,
+};
+
 /**
  *  Representation of a user's bank account details. You can assemble these with information that your user enters and
  *  then create Stripe tokens with them using an STPAPIClient. @see https://stripe.com/docs/api#create_bank_account_token
@@ -39,5 +44,15 @@
  *  The default currency for the bank account.
  */
 @property (nonatomic, copy, nullable) NSString *currency;
+
+/**
+ *  The name of the person or business that owns the bank account.
+ */
+@property(nonatomic, copy, nullable) NSString *accountHolderName;
+
+/**
+ *  The type of entity that holds the account. Defaults to STPBankAccountHolderTypeIndividual.
+ */
+@property(nonatomic) STPBankAccountHolderType accountHolderType;
 
 @end
