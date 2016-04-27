@@ -229,6 +229,11 @@
     }
 }
 
++ (NSInteger)lengthForCardBrand:(STPCardBrand)brand {
+    return [[[self lengthsForCardBrand:brand] lastObject] integerValue];
+}
+
+
 + (NSInteger)fragmentLengthForCardBrand:(STPCardBrand)brand {
     switch (brand) {
         case STPCardBrandAmex:
