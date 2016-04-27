@@ -27,7 +27,7 @@ NSString *const STPExamplePublishableKey = @"bad_key";
     XCTestExpectation *expectation = [self expectationWithDescription:@"Token creation"];
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPExamplePublishableKey];
     [client createTokenWithData:[NSData new]
-                      tokenType:nil
+                      tokenType:STPTokenTypeCard
                      completion:^(STPToken *token, NSError *error) {
                          [expectation fulfill];
                          // Note that this API request *will* fail, but it will return error
@@ -62,7 +62,7 @@ NSString *const STPExamplePublishableKey = @"bad_key";
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPExamplePublishableKey];
     client.apiURL = baseURL;
     [client createTokenWithData:[NSData new]
-                      tokenType:nil
+                      tokenType:STPTokenTypeCard
                      completion:^(STPToken *token, NSError *error) {
                          [expectation fulfill];
                          completion(token, error);

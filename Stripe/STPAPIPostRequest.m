@@ -25,19 +25,18 @@
     request.HTTPBody = postData;
     
     [[apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-            completion(nil, nil, [NSError stp_genericFailedToParseResponseError]);
-            return;
-        }
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSDictionary *jsonDictionary = body ? [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL] : nil;
         id<STPAPIResponseDecodable> responseObject = [[serializer class] decodedObjectFromAPIResponse:jsonDictionary];
         NSError *returnedError = [NSError stp_errorFromStripeResponse:jsonDictionary] ?: error;
-        if (!responseObject && !returnedError) {
+        if ((!responseObject || ![response isKindOfClass:[NSHTTPURLResponse class]]) && !returnedError) {
             returnedError = [NSError stp_genericFailedToParseResponseError];
         }
         // We're using the api client's operation queue instead of relying on the url session's operation queue
         // because the api client's queue is mutable and may have changed after initialization (not ideal)
+        NSHTTPURLResponse *httpResponse;
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            httpResponse = (NSHTTPURLResponse *)response;
+        }
         if (returnedError) {
             [apiClient.operationQueue addOperationWithBlock:^{
                 completion(nil, httpResponse, returnedError);

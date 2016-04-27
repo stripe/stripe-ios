@@ -21,7 +21,8 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
  *  @param payment     The user's encrypted payment information as returned from a PKPaymentAuthorizationViewController. Cannot be nil.
  *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
-- (void)createTokenWithPayment:(nonnull PKPayment *)payment completion:(nonnull STPTokenCompletionBlock)completion;
+- (void)createTokenWithPayment:(nonnull PKPayment *)payment
+                    completion:(nonnull STPTokenCompletionBlock)completion;
 
 @end
 

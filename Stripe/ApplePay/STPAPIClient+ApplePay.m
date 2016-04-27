@@ -17,7 +17,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 - (void)createTokenWithPayment:(PKPayment *)payment completion:(STPTokenCompletionBlock)completion {
     [self createTokenWithData:[self.class formEncodedDataForPayment:payment]
-                    tokenType:@"apple_pay"
+                    tokenType:STPTokenTypeApplePay
                    completion:completion];
 }
 

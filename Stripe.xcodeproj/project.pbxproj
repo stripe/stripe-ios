@@ -356,7 +356,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0401C6E61BA8E3C300CE8A6D /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Stripe/module.modulemap; sourceTree = SOURCE_ROOT; };
+		0401C6E61BA8E3C300CE8A6D /* module_osx.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = module_osx.modulemap; path = Stripe/module_osx.modulemap; sourceTree = SOURCE_ROOT; };
 		042CA1B31B7BD84100AF0DA6 /* stp_card_placeholder_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_card_placeholder_template.png; sourceTree = "<group>"; };
 		042CA1B41B7BD84100AF0DA6 /* stp_card_placeholder_template@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_placeholder_template@2x.png"; sourceTree = "<group>"; };
 		042CA1B51B7BD84100AF0DA6 /* stp_card_placeholder_template@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_placeholder_template@3x.png"; sourceTree = "<group>"; };
@@ -718,7 +718,7 @@
 		04F39F091AEF2AFE005B926E /* BuildConfigurations */ = {
 			isa = PBXGroup;
 			children = (
-				0401C6E61BA8E3C300CE8A6D /* module.modulemap */,
+				0401C6E61BA8E3C300CE8A6D /* module_osx.modulemap */,
 				04F39F0C1AEF2AFE005B926E /* Project-Shared.xcconfig */,
 				04F39F0A1AEF2AFE005B926E /* Project-Debug.xcconfig */,
 				04F39F0B1AEF2AFE005B926E /* Project-Release.xcconfig */,

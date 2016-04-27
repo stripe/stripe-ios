@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "STPAnalyticsClient.h"
 
 @interface STPAPIClient ()<NSURLSessionDelegate>
 
 - (void)createTokenWithData:(nonnull NSData *)data
-                  tokenType:(nullable NSString *)tokenType
+                  tokenType:(STPTokenType)tokenType
                  completion:(nullable STPTokenCompletionBlock)completion;
 
 @property (nonatomic, readwrite, nonnull) NSURL *apiURL;
