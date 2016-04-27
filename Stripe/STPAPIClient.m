@@ -20,6 +20,7 @@
 #import "StripeError.h"
 #import "STPAPIResponseDecodable.h"
 #import "STPAPIPostRequest.h"
+#import "STPAnalyticsClient.h"
 
 #if __has_include("Fabric.h")
 #import "Fabric+FABKits.h"
@@ -47,6 +48,10 @@ static NSString *STPDefaultPublishableKey;
     return STPDefaultPublishableKey;
 }
 
++ (void)disableAnalytics {
+    [STPAnalyticsClient disableAnalytics];
+}
+
 @end
 
 #if __has_include("Fabric.h")
@@ -56,6 +61,7 @@ static NSString *STPDefaultPublishableKey;
 #endif
 @property (nonatomic, readwrite) NSURL *apiURL;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
+@property (nonatomic, readwrite) STPAnalyticsClient *analyticsClient;
 @end
 
 @implementation STPAPIClient
@@ -92,6 +98,7 @@ static NSString *STPDefaultPublishableKey;
                                          @"Authorization": auth,
                                          };
         _urlSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:_operationQueue];
+        _analyticsClient = [[STPAnalyticsClient alloc] init];
     }
     return self;
 }
@@ -101,14 +108,26 @@ static NSString *STPDefaultPublishableKey;
     _operationQueue = operationQueue;
 }
 
-- (void)createTokenWithData:(NSData *)data completion:(STPTokenCompletionBlock)completion {
+- (void)createTokenWithData:(NSData *)data
+                  tokenType:(STPTokenType)tokenType
+                 completion:(STPTokenCompletionBlock)completion {
     NSCAssert(data != nil, @"'data' is required to create a token");
     NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
+    NSDate *start = [NSDate date];
+    NSString *publishableKey = self.publishableKey;
     [STPAPIPostRequest<STPToken *> startWithAPIClient:self
                                              endpoint:tokenEndpoint
                                              postData:data
                                            serializer:[STPToken new]
-                                           completion:completion];
+                                           completion:^(STPToken *object, NSHTTPURLResponse *response, NSError *error) {
+                                               NSDate *end = [NSDate date];
+                                               [self.analyticsClient logRUMWithTokenType:tokenType
+                                                                          publishableKey:publishableKey
+                                                                                response:response
+                                                                                   start:start
+                                                                                     end:end];
+                                               completion(object, error);
+                                           }];
 }
 
 #pragma mark - private helpers
@@ -124,8 +143,7 @@ static NSString *STPDefaultPublishableKey;
 #ifndef DEBUG
     if ([publishableKey.lowercaseString hasPrefix:@"pk_test"]) {
         FAUXPAS_IGNORED_IN_METHOD(NSLogUsed);
-        NSLog(@"⚠️ Warning! You're building your app in a non-debug configuration, but appear to be using your Stripe test key. Make sure not to submit to "
-              @"the App Store with your test keys!⚠️");
+        NSLog(@"ℹ️ You're using your Stripe testmode key. Make sure to use your livemode key when submitting to the App Store!");
     }
 #endif
 }
@@ -200,7 +218,7 @@ static NSString *STPDefaultPublishableKey;
 
 - (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount completion:(STPTokenCompletionBlock)completion {
     NSData *data = [STPFormEncoder formEncodedDataForObject:bankAccount];
-    [self createTokenWithData:data completion:completion];
+    [self createTokenWithData:data tokenType:STPTokenTypeBankAccount completion:completion];
 }
 
 @end
@@ -210,7 +228,7 @@ static NSString *STPDefaultPublishableKey;
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPTokenCompletionBlock)completion {
     NSData *data = [STPFormEncoder formEncodedDataForObject:card];
-    [self createTokenWithData:data completion:completion];
+    [self createTokenWithData:data tokenType:STPTokenTypeCard completion:completion];
 }
 
 @end

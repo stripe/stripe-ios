@@ -368,6 +368,10 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     return [self.viewModel isValid];
 }
 
+- (BOOL)valid {
+    return self.isValid;
+}
+
 #pragma mark readonly variables
 
 - (NSString *)cardNumber {
@@ -590,11 +594,6 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     self.sizingField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
     [self.sizingField setText:text];
     return [self.sizingField measureTextSize].width + 8;
-}
-
-- (CGFloat)widthForTextWithLength:(NSUInteger)length {
-    NSString *text = [@"" stringByPaddingToLength:length withString:@"M" startingAtIndex:0];
-    return [self widthForText:text];
 }
 
 - (CGFloat)widthForCardNumber:(NSString *)cardNumber {

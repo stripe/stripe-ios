@@ -11,10 +11,14 @@
 #import "PKPayment+Stripe.h"
 #import "STPAPIClient+Private.h"
 
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
+
 @implementation STPAPIClient (ApplePay)
 
 - (void)createTokenWithPayment:(PKPayment *)payment completion:(STPTokenCompletionBlock)completion {
-    [self createTokenWithData:[self.class formEncodedDataForPayment:payment] completion:completion];
+    [self createTokenWithData:[self.class formEncodedDataForPayment:payment]
+                    tokenType:STPTokenTypeApplePay
+                   completion:completion];
 }
 
 #pragma clang diagnostic push
@@ -27,16 +31,17 @@
         [[[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding] stringByAddingPercentEncodingWithAllowedCharacters:set];
     __block NSString *payloadString = [@"pk_token=" stringByAppendingString:paymentString];
 
-    if (payment.billingAddress) {
+    ABRecordRef billingAddress = payment.billingAddress;
+    if (billingAddress) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         
-        NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(payment.billingAddress, kABPersonFirstNameProperty);
-        NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(payment.billingAddress, kABPersonLastNameProperty);
+        NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(billingAddress, kABPersonFirstNameProperty);
+        NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(billingAddress, kABPersonLastNameProperty);
         if (firstName.length && lastName.length) {
             params[@"name"] = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
         }
         
-        ABMultiValueRef addressValues = ABRecordCopyValue(payment.billingAddress, kABPersonAddressProperty);
+        ABMultiValueRef addressValues = ABRecordCopyValue(billingAddress, kABPersonAddressProperty);
         if (addressValues != NULL) {
             if (ABMultiValueGetCount(addressValues) > 0) {
                 CFDictionaryRef dict = ABMultiValueCopyValueAtIndex(addressValues, 0);
@@ -70,18 +75,20 @@
         }
     }
 
-    if (payment.token.paymentInstrumentName) {
-        NSString *param = [NSString stringWithFormat:@"&pk_token_instrument_name=%@", payment.token.paymentInstrumentName];
+    NSString *paymentInstrumentName = payment.token.paymentInstrumentName;
+    if (paymentInstrumentName) {
+        NSString *param = [NSString stringWithFormat:@"&pk_token_instrument_name=%@", paymentInstrumentName];
         payloadString = [payloadString stringByAppendingString:param];
     }
 
-    if (payment.token.paymentNetwork) {
-        NSString *param = [NSString stringWithFormat:@"&pk_token_payment_network=%@", payment.token.paymentNetwork];
+    NSString *paymentNetwork = payment.token.paymentNetwork;
+    if (paymentNetwork) {
+        NSString *param = [NSString stringWithFormat:@"&pk_token_payment_network=%@", paymentNetwork];
         payloadString = [payloadString stringByAppendingString:param];
     }
     
-    if (payment.token.transactionIdentifier) {
-        NSString *transactionIdentifier = payment.token.transactionIdentifier;
+    NSString *transactionIdentifier = payment.token.transactionIdentifier;
+    if (transactionIdentifier) {
         if ([payment stp_isSimulated]) {
             transactionIdentifier = [PKPayment stp_testTransactionIdentifier];
         }

@@ -22,7 +22,7 @@
 
 @implementation STPBankAccount
 
-@synthesize routingNumber, country, currency;
+@synthesize routingNumber, country, currency, accountHolderName, accountHolderType;
 
 - (void)setAccountNumber:(NSString *)accountNumber {
     [super setAccountNumber:accountNumber];
@@ -65,7 +65,14 @@
 #pragma mark STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {
-    return @[@"id", @"last4", @"bank_name", @"country", @"currency", @"status"];
+    return @[
+             @"id",
+             @"last4",
+             @"bank_name",
+             @"country",
+             @"currency",
+             @"status",
+             ];
 }
 
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
@@ -81,6 +88,13 @@
     bankAccount.country = dict[@"country"];
     bankAccount.fingerprint = dict[@"fingerprint"];
     bankAccount.currency = dict[@"currency"];
+    bankAccount.accountHolderName = dict[@"account_holder_name"];
+    NSString *accountHolderType = dict[@"account_holder_type"];
+    if ([accountHolderType isEqualToString:@"individual"]) {
+        bankAccount.accountHolderType = STPBankAccountHolderTypeIndividual;
+    } else if ([accountHolderType isEqualToString:@"company"]) {
+        bankAccount.accountHolderType = STPBankAccountHolderTypeCompany;
+    }
     NSString *status = dict[@"status"];
     if ([status isEqual: @"new"]) {
         bankAccount.status = STPBankAccountStatusNew;

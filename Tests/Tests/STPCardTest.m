@@ -85,6 +85,18 @@
     XCTAssertEqualObjects(nil, self.card.last4, @"last4 returns nil when number length is < 3");
 }
 
+- (void)testFormattedExpiration {
+    STPCardParams *params = [STPCardParams new];
+    params.expMonth = 1;
+    XCTAssertEqualObjects(params.formattedExpMonth, @"1");
+    
+    params.expYear = 2015;
+    XCTAssertEqualObjects(params.formattedExpYear, @"15");
+    
+    params.expYear = 16;
+    XCTAssertEqualObjects(params.formattedExpYear, @"16");
+}
+
 - (void)testCardEquals {
     STPCard *card1 = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
     STPCard *card2 = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];

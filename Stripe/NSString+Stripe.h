@@ -15,3 +15,5 @@
 - (NSString *)stp_reversedString;
 
 @end
+
+void linkStringCategory(void);

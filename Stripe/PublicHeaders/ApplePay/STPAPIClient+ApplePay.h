@@ -10,6 +10,8 @@
 
 #import "STPAPIClient.h"
 
+#define FAUXPAS_IGNORED_IN_FILE(...)
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 @interface STPAPIClient (ApplePay)
 
@@ -19,10 +21,8 @@
  *  @param payment     The user's encrypted payment information as returned from a PKPaymentAuthorizationViewController. Cannot be nil.
  *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
-- (void)createTokenWithPayment:(nonnull PKPayment *)payment completion:(nonnull STPTokenCompletionBlock)completion;
-
-// Form-encodes a PKPayment object for POSTing to the Stripe API. This method is used internally by STPAPIClient; you should not use it in your own code.
-+ (nonnull NSData *)formEncodedDataForPayment:(nonnull PKPayment *)payment;
+- (void)createTokenWithPayment:(nonnull PKPayment *)payment
+                    completion:(nonnull STPTokenCompletionBlock)completion;
 
 @end
 

@@ -8,6 +8,10 @@
 
 #import "STPBankAccountParams.h"
 
+@interface STPBankAccountParams()
+@property(nonatomic, readonly)NSString *accountHolderTypeString;
+@end
+
 @implementation STPBankAccountParams
 
 @synthesize additionalAPIParameters = _additionalAPIParameters;
@@ -16,6 +20,7 @@
     self = [super init];
     if (self) {
         _additionalAPIParameters = @{};
+        _accountHolderType = STPBankAccountHolderTypeIndividual;
     }
     return self;
 }
@@ -25,6 +30,15 @@
         return [self.accountNumber substringFromIndex:(self.accountNumber.length - 4)];
     } else {
         return nil;
+    }
+}
+
+- (NSString *)accountHolderTypeString {
+    switch (self.accountHolderType) {
+        case STPBankAccountHolderTypeCompany:
+            return @"company";
+        case STPBankAccountHolderTypeIndividual:
+            return @"individual";
     }
 }
 
@@ -38,6 +52,8 @@
              @"routingNumber": @"routing_number",
              @"country": @"country",
              @"currency": @"currency",
+             @"accountHolderName": @"account_holder_name",
+             @"accountHolderTypeString": @"account_holder_type",
              };
 }
 

@@ -12,6 +12,8 @@
 #import "STPCardBrand.h"
 #import "STPCardValidationState.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  This class contains static methods to validate card numbers, expiration dates, and CVCs. For a list of test card numbers to use with this code, see https://stripe.com/docs/testing
  */
@@ -20,12 +22,12 @@
 /**
  *  Returns a copy of the passed string with all non-numeric characters removed.
  */
-+ (nonnull NSString *)sanitizedNumericStringForString:(nonnull NSString *)string;
++ (NSString *)sanitizedNumericStringForString:(NSString *)string;
 
 /**
  *  Whether or not the target string contains only numeric characters.
  */
-+ (BOOL)stringIsNumeric:(nonnull NSString *)string;
++ (BOOL)stringIsNumeric:(NSString *)string;
 
 /**
  *  Validates a card number, passed as a string. This will return STPCardValidationStateInvalid for numbers that are too short or long, contain invalid characters, do not pass Luhn validation, or (optionally) do not match a number format issued by a major card brand.
@@ -35,7 +37,8 @@
  *
  *  @return STPCardValidationStateValid if the number is valid, STPCardValidationStateInvalid if the number is invalid, or STPCardValidationStateIncomplete if the number is a substring of a valid card (e.g. @"4242").
  */
-+ (STPCardValidationState)validationStateForNumber:(nonnull NSString *)cardNumber validatingCardBrand:(BOOL)validatingCardBrand;
++ (STPCardValidationState)validationStateForNumber:(NSString *)cardNumber
+                               validatingCardBrand:(BOOL)validatingCardBrand;
 
 /**
  *  The card brand for a card number or substring thereof.
@@ -44,12 +47,13 @@
  *
  *  @return The brand for that card number. The example parameters would return STPCardBrandVisa, STPCardBrandMasterCard, and STPCardBrandUnknown, respectively.
  */
-+ (STPCardBrand)brandForNumber:(nonnull NSString *)cardNumber;
++ (STPCardBrand)brandForNumber:(NSString *)cardNumber;
 
 /**
- *  The number length for cards associated with a card brand. For example, Visa card numbers contain 16 characters, while American Express cards contain 15 characters.
+ *  The possible number lengths for cards associated with a card brand. For example, Discover card numbers contain 16 characters, while American Express cards contain 15 characters.
  */
-+ (NSInteger)lengthForCardBrand:(STPCardBrand)brand;
++ (NSArray<NSNumber *>*)lengthsForCardBrand:(STPCardBrand)brand;
++ (NSInteger)lengthForCardBrand:(STPCardBrand)brand __attribute__((deprecated("Card brands may have multiple lengths - use lengthsForCardBrand instead.")));
 
 /**
  *  The length of the final grouping of digits to use when formatting a card number for display. For example, Visa cards display their final 4 numbers, e.g. "4242", while American Express cards display their final 5 digits, e.g. "10005".
@@ -63,7 +67,7 @@
  *
  *  @return STPCardValidationStateValid if the month is valid, STPCardValidationStateInvalid if the month is invalid, or STPCardValidationStateIncomplete if the month is a substring of a valid month (e.g. @"0" or @"1").
  */
-+ (STPCardValidationState)validationStateForExpirationMonth:(nonnull NSString *)expirationMonth;
++ (STPCardValidationState)validationStateForExpirationMonth:(NSString *)expirationMonth;
 
 /**
  *  Validates an expiration year, passed as a string representing the final 2 digits of the year. This considers the period between the current year until 2099 as valid times. An example valid value would be "16" (assuming the current year, as determined by [NSDate date], is 2015). Will return STPCardValidationStateInvalid for a month/year combination that is earlier than the current date (i.e. @"15" and @"04" in October 2015. Example invalid values are "00", "a", and "13". Any 1-digit string will return STPCardValidationStateIncomplete.
@@ -73,7 +77,8 @@
  *
  *  @return STPCardValidationStateValid if the year is valid, STPCardValidationStateInvalid if the year is invalid, or STPCardValidationStateIncomplete if the year is a substring of a valid year (e.g. @"1" or @"2").
  */
-+ (STPCardValidationState)validationStateForExpirationYear:(nonnull NSString *)expirationYear inMonth:(nonnull NSString *)expirationMonth;
++ (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear
+                                                   inMonth:(NSString *)expirationMonth;
 
 /**
  *  The max CVC length for a card brand (for context, American Express CVCs are 4 digits, while all others are 3).
@@ -88,7 +93,7 @@
  *
  *  @return Whether the CVC represents a valid CVC for that card brand. For example, would return STPCardValidationStateValid for @"123" and STPCardBrandVisa, STPCardValidationStateValid for @"1234" and STPCardBrandAmericanExpress, STPCardValidationStateIncomplete for @"12" and STPCardBrandVisa, and STPCardValidationStateInvalid for @"12345" and any brand.
  */
-+ (STPCardValidationState)validationStateForCVC:(nonnull NSString *)cvc cardBrand:(STPCardBrand)brand;
++ (STPCardValidationState)validationStateForCVC:(NSString *)cvc cardBrand:(STPCardBrand)brand;
 
 /**
  *  Validates the given card details.
@@ -97,10 +102,17 @@
  * 
  *  @return STPCardValidationStateValid if all fields are valid, STPCardValidationStateInvalid if any field is invalid, or STPCardValidationStateIncomplete if all fields are either incomplete or valid.
  */
-+ (STPCardValidationState)validationStateForCard:(nonnull STPCardParams *)card;
++ (STPCardValidationState)validationStateForCard:(STPCardParams *)card;
 
 // Exposed for testing only.
-+ (STPCardValidationState)validationStateForExpirationYear:(nonnull NSString *)expirationYear inMonth:(nonnull NSString *)expirationMonth inCurrentYear:(NSInteger)currentYear currentMonth:(NSInteger)currentMonth;
-+ (STPCardValidationState)validationStateForCard:(nonnull STPCardParams *)card inCurrentYear:(NSInteger)currentYear currentMonth:(NSInteger)currentMonth;
++ (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear
+                                                   inMonth:(NSString *)expirationMonth
+                                             inCurrentYear:(NSInteger)currentYear
+                                              currentMonth:(NSInteger)currentMonth;
++ (STPCardValidationState)validationStateForCard:(STPCardParams *)card
+                                   inCurrentYear:(NSInteger)currentYear
+                                    currentMonth:(NSInteger)currentMonth;
 
 @end
+
+NS_ASSUME_NONNULL_END

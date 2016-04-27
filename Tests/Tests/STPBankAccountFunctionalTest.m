@@ -23,6 +23,8 @@
     bankAccount.accountNumber = @"000123456789";
     bankAccount.routingNumber = @"110000000";
     bankAccount.country = @"US";
+    bankAccount.accountHolderName = @"Jimmy bob";
+    bankAccount.accountHolderType = STPBankAccountHolderTypeCompany;
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
 
@@ -37,6 +39,8 @@
                                 XCTAssertNotNil(token.bankAccount.bankAccountId);
                                 XCTAssertEqualObjects(@"STRIPE TEST BANK", token.bankAccount.bankName);
                                 XCTAssertEqualObjects(@"6789", token.bankAccount.last4);
+                                XCTAssertEqualObjects(@"Jimmy bob", token.bankAccount.accountHolderName);
+                                XCTAssertEqual(token.bankAccount.accountHolderType, STPBankAccountHolderTypeCompany);
                             }];
 
     [self waitForExpectationsWithTimeout:5.0f handler:nil];

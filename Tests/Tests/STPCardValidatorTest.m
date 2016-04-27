@@ -20,6 +20,7 @@
 + (NSArray *)cardData {
     return @[
              @[@(STPCardBrandVisa), @"4242424242424242", @(STPCardValidationStateValid)],
+             @[@(STPCardBrandVisa), @"4242424242422", @(STPCardValidationStateValid)],
              @[@(STPCardBrandVisa), @"4012888888881881", @(STPCardValidationStateValid)],
              @[@(STPCardBrandVisa), @"4000056655665556", @(STPCardValidationStateValid)],
              @[@(STPCardBrandMasterCard), @"5555555555554444", @(STPCardValidationStateValid)],
@@ -97,6 +98,7 @@
     XCTAssertEqual(STPCardValidationStateIncomplete, [STPCardValidator validationStateForNumber:@"1" validatingCardBrand:NO]);
     XCTAssertEqual(STPCardValidationStateValid, [STPCardValidator validationStateForNumber:@"0000000000000000" validatingCardBrand:NO]);
     XCTAssertEqual(STPCardValidationStateValid, [STPCardValidator validationStateForNumber:@"9999999999999995" validatingCardBrand:NO]);
+    XCTAssertEqual(STPCardValidationStateIncomplete, [STPCardValidator validationStateForNumber:@"4242424242424" validatingCardBrand:YES]);
 }
 
 - (void)testBrand {
@@ -105,18 +107,18 @@
     }
 }
 
-- (void)testBrandNumberLength {
+- (void)testLengthsForCardBrand {
     NSArray *tests = @[
-                       @[@(STPCardBrandVisa), @16],
-                       @[@(STPCardBrandMasterCard), @16],
-                       @[@(STPCardBrandAmex), @15],
-                       @[@(STPCardBrandDiscover), @16],
-                       @[@(STPCardBrandDinersClub), @14],
-                       @[@(STPCardBrandJCB), @16],
-                       @[@(STPCardBrandUnknown), @16],
+                       @[@(STPCardBrandVisa), @[@13, @16]],
+                       @[@(STPCardBrandMasterCard), @[@16]],
+                       @[@(STPCardBrandAmex), @[@15]],
+                       @[@(STPCardBrandDiscover), @[@16]],
+                       @[@(STPCardBrandDinersClub), @[@14]],
+                       @[@(STPCardBrandJCB), @[@16]],
+                       @[@(STPCardBrandUnknown), @[@16]],
                        ];
     for (NSArray *test in tests) {
-        XCTAssertEqualObjects(@([STPCardValidator lengthForCardBrand:[test[0] integerValue]]), test[1]);
+        XCTAssertEqualObjects([STPCardValidator lengthsForCardBrand:[test[0] integerValue]], test[1]);
     }
 }
 

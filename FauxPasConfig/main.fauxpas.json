@@ -1,11 +1,11 @@
 // Generated from the Faux Pas GUI
 {
     // Xcode target to check (String)
-    "target": "StripeiOS",
+    "target": "StripeiOSStatic",
     // Xcode build configuration to check (String)
     "buildConfig": "Release",
     // Rules to apply (Array of strings)
-    //"rules": [],
+    "rules": ["APIAvailability","BuildSettingsSetInGUI","DefaultInExhaustiveSwitch","IBOutletsInPublicInterface","ImplicitAtomicProperty","InstanceMethodWritesToStaticVariable","MacroLiteral","MallocCast","MallocWithoutSizeof","NonTypedefBlockDeclaration","ReservedIdentifierNaming","StrongInsteadOfRetain","ThrowingObjCException","UnusedMethod","UnusedResource","UnusedTranslation","UsedVariableMarkedUnused","XIBUnknownClassReference"],
     // Rules to apply only (Array of strings)
     //"onlyRules": [],
     // Rule tags to apply (Array of strings)
@@ -781,7 +781,7 @@
         // target
         "APIAvailability": {
             // Avoid false positives (Boolean)
-            //"avoidFalsePositives": true
+            "avoidFalsePositives": false
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null

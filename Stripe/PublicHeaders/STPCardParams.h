@@ -32,11 +32,13 @@
  *  The card's expiration month.
  */
 @property (nonatomic) NSUInteger expMonth;
+@property (nonatomic, nullable, readonly) NSString *formattedExpMonth;
 
 /**
  *  The card's expiration year.
  */
 @property (nonatomic) NSUInteger expYear;
+@property (nonatomic, nullable, readonly) NSString *formattedExpYear;
 
 /**
  *  The card's security code, found on the back.
