@@ -10,30 +10,32 @@
 #import "STPFormEncoder.h"
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPAPIClient.h"
+#import "TargetConditionals.h"
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 #endif
 
-@interface Stripe (Internal_Analytics)
-+ (BOOL)shouldCollectAnalytics;
-@end
-
-@interface STPAPIClient (Internal_Analytics)
-+ (NSString *)stripeUserAgentDetails;
-@end
+static BOOL STPShouldCollectAnalytics = YES;
 
 @interface STPAnalyticsClient()
 
 @property (nonatomic, readwrite) NSURLSession *urlSession;
-@property (nonatomic, readwrite) NSURL *baseURL;
 
 @end
 
 @implementation STPAnalyticsClient
 
++ (void)disableAnalytics {
+    STPShouldCollectAnalytics = NO;
+}
+
 + (BOOL)shouldCollectAnalytics {
+#if TARGET_OS_SIMULATOR
+    return NO;
+#else
     return NSClassFromString(@"XCTest") == nil && [Stripe shouldCollectAnalytics];
+#endif
 }
 
 + (NSNumber *)timestampWithDate:(NSDate *)date {
@@ -45,29 +47,38 @@
     if (self) {
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         _urlSession = [NSURLSession sessionWithConfiguration:config];
-        _baseURL = [NSURL URLWithString:@"https://q.stripe.com"];
     }
     return self;
 }
 
-- (void)logRUMWithTokenType:(NSString *)tokenType
-                   response:(NSURLResponse *)response
+- (void)logRUMWithTokenType:(STPTokenType)tokenType
+             publishableKey:(NSString *)publishableKey
+                   response:(NSHTTPURLResponse *)response
                       start:(NSDate *)startTime
                         end:(NSDate *)endTime {
     if (![[self class] shouldCollectAnalytics]) {
         return;
     }
-    if (![response isKindOfClass:[NSHTTPURLResponse class]]) {
-        return;
+    NSString *tokenTypeString;
+    switch (tokenType) {
+        case STPTokenTypeCard:
+            tokenTypeString = @"card";
+            break;
+        case STPTokenTypeApplePay:
+            tokenTypeString = @"apple_pay";
+            break;
+        case STPTokenTypeBankAccount:
+            tokenTypeString = @"bank_account";
+            break;
     }
-    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     NSNumber *start = [[self class] timestampWithDate:startTime];
     NSNumber *end = [[self class] timestampWithDate:endTime];
     NSMutableDictionary *payload = [@{
                                       @"event": @"rum.stripeios",
-                                      @"tokenType": tokenType ?: @"unknown",
-                                      @"url": httpResponse.URL.absoluteString ?: @"unknown",
-                                      @"status": @(httpResponse.statusCode),
+                                      @"tokenType": tokenTypeString,
+                                      @"url": response.URL.absoluteString ?: @"unknown",
+                                      @"status": @(response.statusCode),
+                                      @"publishable_key": publishableKey ?: @"unknown",
                                       @"start": start,
                                       @"end": end,
                                       @"bindings_version": STPSDKVersion,
@@ -84,7 +95,8 @@
         payload[@"device_type"] = deviceType;
     }
 #endif
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.baseURL];
+    NSURL *url = [NSURL URLWithString:@"https://q.stripe.com"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request stp_addParametersToURL:payload];
     NSURLSessionDataTask *task = [self.urlSession dataTaskWithRequest:request];
     [task resume];

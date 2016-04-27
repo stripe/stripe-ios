@@ -8,10 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSUInteger, STPTokenType) {
+    STPTokenTypeCard,
+    STPTokenTypeBankAccount,
+    STPTokenTypeApplePay,
+};
+
 @interface STPAnalyticsClient : NSObject
 
-- (void)logRUMWithTokenType:(NSString *)tokenType
-                   response:(NSURLResponse *)response
++ (void)disableAnalytics;
+
+- (void)logRUMWithTokenType:(STPTokenType)tokenType
+             publishableKey:(NSString *)publishableKey
+                   response:(NSHTTPURLResponse *)response
                       start:(NSDate *)startTime
                         end:(NSDate *)endTime;
 

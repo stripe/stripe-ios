@@ -84,4 +84,12 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
     return [[NSError alloc] initWithDomain:StripeDomain code:code userInfo:userInfo];
 }
 
++ (nonnull NSError *)stp_genericFailedToParseResponseError {
+    NSDictionary *userInfo = @{
+                               NSLocalizedDescriptionKey: STPUnexpectedError,
+                               STPErrorMessageKey: @"The response from Stripe failed to get parsed into valid JSON."
+                               };
+    return [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
+}
+
 @end

@@ -37,7 +37,6 @@ static NSString *const apiURLBase = @"api.stripe.com/v1";
 static NSString *const tokenEndpoint = @"tokens";
 static NSString *const stripeAPIVersion = @"2015-10-12";
 static NSString *STPDefaultPublishableKey;
-static BOOL STPShouldCollectAnalytics = YES;
 
 @implementation Stripe
 
@@ -50,11 +49,7 @@ static BOOL STPShouldCollectAnalytics = YES;
 }
 
 + (void)disableAnalytics {
-    STPShouldCollectAnalytics = NO;
-}
-
-+ (BOOL)shouldCollectAnalytics {
-    return STPShouldCollectAnalytics;
+    [STPAnalyticsClient disableAnalytics];
 }
 
 @end
@@ -114,23 +109,23 @@ static BOOL STPShouldCollectAnalytics = YES;
 }
 
 - (void)createTokenWithData:(NSData *)data
-                  tokenType:(NSString *)tokenType
+                  tokenType:(STPTokenType)tokenType
                  completion:(STPTokenCompletionBlock)completion {
     NSCAssert(data != nil, @"'data' is required to create a token");
     NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
     NSDate *start = [NSDate date];
+    NSString *publishableKey = self.publishableKey;
     [STPAPIPostRequest<STPToken *> startWithAPIClient:self
                                              endpoint:tokenEndpoint
                                              postData:data
                                            serializer:[STPToken new]
-                                           completion:^(STPToken *object, NSURLResponse *response, NSError *error) {
-                                               if (!error) {
-                                                   NSDate *end = [NSDate date];
-                                                   [self.analyticsClient logRUMWithTokenType:tokenType
-                                                                                    response:response
-                                                                                       start:start
-                                                                                         end:end];
-                                               }
+                                           completion:^(STPToken *object, NSHTTPURLResponse *response, NSError *error) {
+                                               NSDate *end = [NSDate date];
+                                               [self.analyticsClient logRUMWithTokenType:tokenType
+                                                                          publishableKey:publishableKey
+                                                                                response:response
+                                                                                   start:start
+                                                                                     end:end];
                                                completion(object, error);
                                            }];
 }
@@ -223,7 +218,7 @@ static BOOL STPShouldCollectAnalytics = YES;
 
 - (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount completion:(STPTokenCompletionBlock)completion {
     NSData *data = [STPFormEncoder formEncodedDataForObject:bankAccount];
-    [self createTokenWithData:data tokenType:@"bank_account" completion:completion];
+    [self createTokenWithData:data tokenType:STPTokenTypeBankAccount completion:completion];
 }
 
 @end
@@ -233,7 +228,7 @@ static BOOL STPShouldCollectAnalytics = YES;
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPTokenCompletionBlock)completion {
     NSData *data = [STPFormEncoder formEncodedDataForObject:card];
-    [self createTokenWithData:data tokenType:@"card" completion:completion];
+    [self createTokenWithData:data tokenType:STPTokenTypeCard completion:completion];
 }
 
 @end

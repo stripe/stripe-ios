@@ -18,3 +18,5 @@
 }
 
 @end
+
+void linkURLRequestCategory(void){}

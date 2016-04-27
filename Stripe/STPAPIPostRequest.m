@@ -25,26 +25,27 @@
     request.HTTPBody = postData;
     
     [[apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            completion(nil, nil, [NSError stp_genericFailedToParseResponseError]);
+            return;
+        }
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSDictionary *jsonDictionary = body ? [NSJSONSerialization JSONObjectWithData:body options:0 error:NULL] : nil;
         id<STPAPIResponseDecodable> responseObject = [[serializer class] decodedObjectFromAPIResponse:jsonDictionary];
         NSError *returnedError = [NSError stp_errorFromStripeResponse:jsonDictionary] ?: error;
         if (!responseObject && !returnedError) {
-            NSDictionary *userInfo = @{
-                                       NSLocalizedDescriptionKey: STPUnexpectedError,
-                                       STPErrorMessageKey: @"The response from Stripe failed to get parsed into valid JSON."
-                                       };
-            returnedError = [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
+            returnedError = [NSError stp_genericFailedToParseResponseError];
         }
         // We're using the api client's operation queue instead of relying on the url session's operation queue
         // because the api client's queue is mutable and may have changed after initialization (not ideal)
         if (returnedError) {
             [apiClient.operationQueue addOperationWithBlock:^{
-                completion(nil, response, returnedError);
+                completion(nil, httpResponse, returnedError);
             }];
             return;
         }
         [apiClient.operationQueue addOperationWithBlock:^{
-            completion(responseObject, response, nil);
+            completion(responseObject, httpResponse, nil);
         }];
     }] resume];
     

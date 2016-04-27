@@ -13,3 +13,5 @@
 - (void)stp_addParametersToURL:(NSDictionary *)parameters;
 
 @end
+
+void linkURLRequestCategory(void);

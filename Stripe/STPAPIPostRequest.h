@@ -12,7 +12,7 @@
 
 @interface STPAPIPostRequest<__covariant ResponseType:id<STPAPIResponseDecodable>> : NSObject
 
-typedef void(^STPAPIPostResponseBlock)(ResponseType object, NSURLResponse *response, NSError *error);
+typedef void(^STPAPIPostResponseBlock)(ResponseType object, NSHTTPURLResponse *response, NSError *error);
 
 + (void)startWithAPIClient:(STPAPIClient *)apiClient
                   endpoint:(NSString *)endpoint
