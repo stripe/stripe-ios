@@ -32,25 +32,6 @@
 
 @implementation STPAnalyticsClient
 
-+ (NSString *)stripeUserAgentDetails {
-    NSMutableDictionary *details = [@{
-        @"bindings_version": STPSDKVersion,
-    } mutableCopy];
-#if TARGET_OS_IPHONE
-    NSString *version = [UIDevice currentDevice].systemVersion;
-    if (version) {
-        details[@"os_version"] = version;
-    }
-    struct utsname systemInfo;
-    uname(&systemInfo);
-    NSString *deviceType = @(systemInfo.machine);
-    if (deviceType) {
-        details[@"type"] = deviceType;
-    }
-#endif
-    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[details copy] options:0 error:NULL] encoding:NSUTF8StringEncoding];
-}
-
 + (BOOL)shouldCollectAnalytics {
     return NSClassFromString(@"XCTest") == nil && [Stripe shouldCollectAnalytics];
 }
@@ -63,9 +44,6 @@
     self = [super init];
     if (self) {
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-        config.HTTPAdditionalHeaders = @{
-                                         @"X-Stripe-User-Agent": [[self class] stripeUserAgentDetails]
-                                         };
         _urlSession = [NSURLSession sessionWithConfiguration:config];
         _baseURL = [NSURL URLWithString:@"https://q.stripe.com"];
     }
@@ -85,14 +63,27 @@
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     NSNumber *start = [[self class] timestampWithDate:startTime];
     NSNumber *end = [[self class] timestampWithDate:endTime];
-    NSDictionary *payload = @{
-                              @"event": @"rum.stripeios",
-                              @"tokenType": tokenType ?: @"unknown",
-                              @"url": httpResponse.URL.absoluteString ?: @"unknown",
-                              @"status": @(httpResponse.statusCode),
-                              @"start": start,
-                              @"end": end,
-                              };
+    NSMutableDictionary *payload = [@{
+                                      @"event": @"rum.stripeios",
+                                      @"tokenType": tokenType ?: @"unknown",
+                                      @"url": httpResponse.URL.absoluteString ?: @"unknown",
+                                      @"status": @(httpResponse.statusCode),
+                                      @"start": start,
+                                      @"end": end,
+                                      @"bindings_version": STPSDKVersion,
+                                      } mutableCopy];
+#if TARGET_OS_IPHONE
+    NSString *version = [UIDevice currentDevice].systemVersion;
+    if (version) {
+        payload[@"os_version"] = version;
+    }
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    NSString *deviceType = @(systemInfo.machine);
+    if (deviceType) {
+        payload[@"device_type"] = deviceType;
+    }
+#endif
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.baseURL];
     [request stp_addParametersToURL:payload];
     NSURLSessionDataTask *task = [self.urlSession dataTaskWithRequest:request];
