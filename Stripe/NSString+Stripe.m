@@ -29,3 +29,5 @@
 }
 
 @end
+
+void linkStringCategory(void){}

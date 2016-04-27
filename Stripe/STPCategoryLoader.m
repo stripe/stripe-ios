@@ -14,6 +14,7 @@
 #import "Stripe+ApplePay.h"
 #import "STPAPIClient+ApplePay.h"
 #import "UIImage+Stripe.h"
+#import "NSString+Stripe.h"
 
 @implementation STPCategoryLoader
 
@@ -23,6 +24,7 @@
     linkStripeApplePayCategory();
     linkSTPAPIClientApplePayCategory();
     linkUIImageCategory();
+    linkStringCategory();
 }
 
 @end
