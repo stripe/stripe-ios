@@ -33,9 +33,11 @@ static BOOL STPShouldCollectAnalytics = YES;
 + (BOOL)shouldCollectAnalytics {
 #if TARGET_OS_SIMULATOR
     return NO;
-#else
-    return NSClassFromString(@"XCTest") == nil && STPAnalyticsClient;
 #endif
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunreachable-code"
+    return NSClassFromString(@"XCTest") == nil && STPShouldCollectAnalytics;
+#pragma clang diagnostic pop
 }
 
 + (NSNumber *)timestampWithDate:(NSDate *)date {
