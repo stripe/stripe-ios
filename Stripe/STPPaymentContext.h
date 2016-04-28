@@ -52,6 +52,7 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 - (void)didAppear;
 - (void)presentPaymentMethodsViewControllerOnViewController:(UIViewController *)viewController;
 - (void)pushPaymentMethodsViewControllerOntoNavigationController:(UINavigationController *)navigationController;
+- (BOOL)isReadyForPayment;
 - (void)requestPaymentFromViewController:(UIViewController *)fromViewController
                            sourceHandler:(STPSourceHandlerBlock)sourceHandler
                               completion:(STPPaymentCompletionBlock)completion;

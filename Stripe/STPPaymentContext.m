@@ -195,6 +195,10 @@
     }
 }
 
+- (BOOL)isReadyForPayment {
+    return self.selectedPaymentMethod != nil;
+}
+
 - (void)requestPaymentFromViewController:(UIViewController *)fromViewController
                            sourceHandler:(STPSourceHandlerBlock)sourceHandler
                               completion:(STPPaymentCompletionBlock)completion {
@@ -206,35 +210,14 @@
             return;
         }
         if (!weakSelf.selectedPaymentMethod) {
-            STPPaymentCardEntryViewController *paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithAPIClient:weakSelf.apiClient requiredBillingAddressFields:self.requiredBillingAddressFields completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
-                if (token) {
-                    [weakSelf addToken:token completion:^(id<STPPaymentMethod>  _Nullable paymentMethod, NSError * _Nullable error) {
-                        if (error) {
-                            tokenCompletion(error);
-                        } else {
-                            [weakSelf selectPaymentMethod:paymentMethod];
-                            [fromViewController dismissViewControllerAnimated:YES completion:^{
-                                tokenCompletion(nil);
-                                [weakSelf requestPaymentFromViewController:fromViewController sourceHandler:sourceHandler completion:completion];
-                            }];
-                        }
-                    }];
-                } else {
-                    [fromViewController dismissViewControllerAnimated:YES completion:^{
-                        tokenCompletion(nil);
-                        completion(STPPaymentStatusUserCancellation, nil);
-                    }];
-                }
-            }];
-            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentCardViewController];
-            NSDictionary *titleTextAttributes = @{NSFontAttributeName:[UIFont stp_navigationBarFont]};
-            [navigationController.navigationBar setTitleTextAttributes:titleTextAttributes];
-            [navigationController.navigationBar setBackgroundImage:[UIImage new]
-                                                    forBarPosition:UIBarPositionAny
-                                                        barMetrics:UIBarMetricsDefault];
-            [[UINavigationBar appearance] setShadowImage:[UIImage new]];
-            [navigationController.navigationBar setBarTintColor:[UIColor stp_backgroundGreyColor]];
-            [fromViewController presentViewController:navigationController animated:YES completion:nil];
+            NSDictionary *userInfo = @{
+                                       NSLocalizedDescriptionKey: NSLocalizedString(@"No payment method was selected.", nil),
+                                       NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"Please select a payment method and try again.", nil),
+                                       };
+            NSError *error = [NSError errorWithDomain:StripeDomain
+                                                 code:STPInvalidRequestError
+                                             userInfo:userInfo];
+            completion(STPPaymentStatusError, error);
         }
         else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {
             STPCardPaymentMethod *cardPaymentMethod = (STPCardPaymentMethod *)weakSelf.selectedPaymentMethod;
