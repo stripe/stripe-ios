@@ -11,16 +11,24 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^STPPaymentMethodSelectionBlock)(id<STPPaymentMethod> __nullable selectedPaymentMethod);
-
 @protocol STPPaymentMethod;
-@class STPPaymentContext;
+@class STPPaymentContext, STPPaymentMethodsViewController;
+
+@protocol STPPaymentMethodsViewControllerDelegate <NSObject>
+
+- (void)paymentMethodsViewController:(STPPaymentMethodsViewController *)paymentMethodsViewController
+              didSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
+- (void)paymentMethodsViewControllerDidCancel:(STPPaymentMethodsViewController *)paymentMethodsViewController;
+
+@end
 
 @interface STPPaymentMethodsViewController : UIViewController
 
 @property(nonatomic, readonly)STPPaymentContext *paymentContext;
 
-- (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext onSelection:(STPPaymentMethodSelectionBlock)onSelection;
+- (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext
+                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
+@property(nonatomic, weak, nullable, readonly)id<STPPaymentMethodsViewControllerDelegate>delegate;
 
 @end
 

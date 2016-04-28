@@ -36,12 +36,17 @@ class ViewController: UIViewController {
         let apiAdapter = BackendAPIAdapter()
         apiAdapter.addToken(token, completion: { (_, _, _) in
         })
+        
         let apiClient = STPAPIClient.sharedClient()
+        
         let paymentContext = STPPaymentContext(APIAdapter: apiAdapter, supportedPaymentMethods: .All)
+        
         paymentContext.appleMerchantIdentifier = "merchant.com.stripe.shop"
         paymentContext.paymentAmount = 1000
         paymentContext.apiClient = apiClient
-        paymentContext.requiredBillingAddressFields = .Full
+        
+        paymentContext.requiredBillingAddressFields = .None
+        
         self.paymentContext = paymentContext
         super.init(coder: aDecoder)
     }
@@ -60,12 +65,10 @@ class ViewController: UIViewController {
     let paymentContext: STPPaymentContext
     
     @IBAction func enterCardDetails(sender: AnyObject) {
-        let sourceList = STPPaymentMethodsViewController(paymentContext: paymentContext) { paymentMethod in
-            self.navigationController?.popViewControllerAnimated(true)
-        }
-        self.navigationController?.pushViewController(sourceList, animated: true)
+        self.paymentContext.presentPaymentMethodsViewControllerOnViewController(self)
+        self.paymentContext.pushPaymentMethodsViewControllerOntoNavigationController(self.navigationController!)
     }
-    
+        
     @IBAction func beginPayment(sender: AnyObject) {
         paymentContext.requestPaymentFromViewController(
             self,

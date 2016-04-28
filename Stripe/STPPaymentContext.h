@@ -23,7 +23,7 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 @protocol STPPaymentContextDelegate <NSObject>
 
 - (void)paymentContextDidBeginLoading:(STPPaymentContext *)paymentContext;
-- (void)paymentContext:(STPPaymentContext *)paymentContext selectedPaymentMethodDidChange:(id<STPPaymentMethod>)paymentMethod;
+- (void)paymentContextDidChange:(STPPaymentContext *)paymentContext;
 - (void)paymentContextDidEndLoading:(STPPaymentContext *)paymentContext;
 
 @end
@@ -49,6 +49,8 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 @property(nonatomic)NSString *appleMerchantIdentifier;
 
 - (void)performInitialLoad;
+- (void)presentPaymentMethodsViewControllerOnViewController:(UIViewController *)viewController;
+- (void)pushPaymentMethodsViewControllerOntoNavigationController:(UINavigationController *)navigationController;
 - (void)requestPaymentFromViewController:(UIViewController *)fromViewController
                            sourceHandler:(STPSourceHandlerBlock)sourceHandler
                               completion:(STPPaymentCompletionBlock)completion;

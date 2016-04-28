@@ -61,8 +61,6 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
     [self.view addSubview:tableView];
     self.tableView = tableView;
     [self stp_beginAvoidingKeyboardWithScrollView:tableView];
-
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelPressed:)];
     
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(nextPressed:)];
     self.doneItem = doneItem;
@@ -114,6 +112,7 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
             cell.alpha = loading ? 0.7f : 1.0f;
         }];
     }
+    [self.navigationItem setHidesBackButton:loading animated:YES];
     self.navigationItem.leftBarButtonItem.enabled = !loading;
     if (loading) {
         [self.tableView endEditing:YES];
@@ -142,16 +141,6 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.view endEditing:YES];
-}
-
-- (void)cancelPressed:(__unused id)sender {
-    if (self.completion) {
-        self.completion(nil, ^(NSError *error) {
-            if (error) {
-                [self handleError:error];
-            }
-        });
-    }
 }
 
 - (void)nextPressed:(__unused id)sender {

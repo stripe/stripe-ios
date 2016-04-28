@@ -81,7 +81,7 @@
         scrollInsets = insets;
     } else {
         insets = UIEdgeInsetsMake(
-                                  self.originalContentInset.top + 30,
+                                  self.originalContentInset.top,
                                   self.originalContentInset.left,
                                   self.originalContentInset.bottom + keyboardHeight + 20,
                                   self.originalContentInset.right

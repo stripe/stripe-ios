@@ -12,6 +12,7 @@
 #import "NSDecimalNumber+Stripe_Currency.h"
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "NSBundle+Stripe_AppName.h"
+#import "UIViewController+Stripe_ParentViewController.h"
 #import "STPPaymentContext.h"
 #import "STPCardPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
@@ -28,7 +29,7 @@
 @implementation STPCardTuple
 @end
 
-@interface STPPaymentContext()
+@interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate>
 
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic)STPPaymentMethodType supportedPaymentMethods;
@@ -153,7 +154,39 @@
 - (void)setSelectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod {
     if (![_selectedPaymentMethod isEqual:selectedPaymentMethod]) {
         _selectedPaymentMethod = selectedPaymentMethod;
-        [self.delegate paymentContext:self selectedPaymentMethodDidChange:selectedPaymentMethod];
+        [self.delegate paymentContextDidChange:self];
+    }
+}
+
+- (void)presentPaymentMethodsViewControllerOnViewController:(UIViewController *)viewController {
+    STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self delegate:self];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
+    [viewController presentViewController:navigationController animated:YES completion:nil];
+}
+
+- (void)pushPaymentMethodsViewControllerOntoNavigationController:(UINavigationController *)navigationController {
+    STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self delegate:self];
+    [navigationController pushViewController:paymentMethodsViewController animated:YES];
+}
+
+- (void)paymentMethodsViewController:(STPPaymentMethodsViewController *)paymentMethodsViewController
+              didSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
+    self.selectedPaymentMethod = paymentMethod;
+    [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController];
+}
+
+- (void)paymentMethodsViewControllerDidCancel:(STPPaymentMethodsViewController *)paymentMethodsViewController {
+    [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController];
+}
+
+- (void)appropriatelyDismissPaymentMethodsViewController:(STPPaymentMethodsViewController *)viewController {
+    if ([viewController stp_isRootViewControllerOfNavigationController]) {
+        // if we're the root of the navigation controller, we've been presented modally.
+        [viewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        // otherwise, we've been pushed onto the stack.
+        UIViewController *previousViewController = [viewController stp_previousViewControllerInNavigation];
+        [viewController.navigationController popToViewController:previousViewController animated:YES];
     }
 }
 

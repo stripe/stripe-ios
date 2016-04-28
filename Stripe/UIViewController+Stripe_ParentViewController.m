@@ -21,4 +21,16 @@
     return self.navigationController.topViewController == self;
 }
 
+- (BOOL)stp_isRootViewControllerOfNavigationController {
+    return self.navigationController.viewControllers.firstObject == self;
+}
+
+- (nullable UIViewController *)stp_previousViewControllerInNavigation {
+    NSInteger index = [self.navigationController.viewControllers indexOfObject:self];
+    if (index == NSNotFound || index <= 0) {
+        return nil;
+    }
+    return self.navigationController.viewControllers[index - 1];
+}
+
 @end
