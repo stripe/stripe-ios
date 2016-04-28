@@ -31,6 +31,8 @@
 @property(nonatomic)UIToolbar *inputAccessoryToolbar;
 @end
 
+#define FAUXPAS_IGNORED_IN_METHOD(...)
+
 static NSString *const STPPaymentCardCellReuseIdentifier = @"STPPaymentCardCellReuseIdentifier";
 static NSInteger STPPaymentCardNumberSection = 0;
 static NSInteger STPPaymentCardBillingAddressSection = 1;
@@ -164,10 +166,17 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
 }
 
 - (void)handleError:(NSError *)error {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     self.loading = NO;
     NSLog(@"%@", error);
     [self.textField becomeFirstResponder];
-    // TODO handle error, probably by showing a UIAlertController
+    if ([UIAlertController class]) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:error.localizedDescription message:error.localizedFailureReason preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil]];
+        [self presentViewController:alertController animated:YES completion:nil];
+    } else {
+        [[[UIAlertView alloc] initWithTitle:error.localizedDescription message:error.localizedFailureReason delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles: nil] show];
+    }
 }
 
 - (void)updateDoneButton {

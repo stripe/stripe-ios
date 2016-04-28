@@ -50,16 +50,22 @@
         _paymentCurrency = @"USD";
         _merchantName = [NSBundle stp_applicationName];
         __weak typeof(self) weakSelf = self;
-        _initialLoadingPromise = [[STPPromise<STPCardTuple *> new] onSuccess:^(STPCardTuple *tuple) {
+        _initialLoadingPromise = [[[STPPromise<STPCardTuple *> new] onSuccess:^(STPCardTuple *tuple) {
             weakSelf.paymentMethods = [weakSelf parsePaymentMethods:tuple.cards];
             if (tuple.selectedCard) {
                 weakSelf.selectedPaymentMethod = [[STPCardPaymentMethod alloc] initWithCard:tuple.selectedCard];
             } else if ([self applePaySupported]) {
                 weakSelf.selectedPaymentMethod = [STPApplePayPaymentMethod new];
             }
+        }] onFailure:^(NSError * _Nonnull error) {
+            [weakSelf.delegate paymentContext:weakSelf didFailToLoadWithError:error];
         }];
     }
     return self;
+}
+
+- (void)didAppear {
+    [self performInitialLoad];
 }
 
 - (void)performInitialLoad {
@@ -70,7 +76,6 @@
     [self.apiAdapter retrieveCards:^(STPCard * _Nullable selectedCard, NSArray<STPCard *> * _Nullable cards, NSError * _Nullable error) {
         self.loading = NO;
         if (error) {
-            // TODO surface this error somewhere.
             [self.initialLoadingPromise fail:error];
             return;
         }
