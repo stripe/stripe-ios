@@ -12,7 +12,6 @@ import Stripe
 class MyAPIClient: NSObject, STPBackendAPIAdapter {
     @objc var cards: [STPCard]? = []
     @objc var selectedCard: STPCard?
-    @objc var shippingAddress: STPAddress?
 
     let baseURL: NSURL
     let customerID: String
