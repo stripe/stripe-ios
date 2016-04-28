@@ -32,6 +32,7 @@
 @interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate>
 
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
+@property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)STPPaymentMethodType supportedPaymentMethods;
 @property(nonatomic, readwrite, getter=isLoading)BOOL loading;
 @property(nonatomic)STPPromise<STPCardTuple *> *initialLoadingPromise;
@@ -42,10 +43,19 @@
 
 @implementation STPPaymentContext
 
-- (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter supportedPaymentMethods:(STPPaymentMethodType)supportedPaymentMethods {
+- (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
+    return [self initWithAPIAdapter:apiAdapter
+                          apiClient:[STPAPIClient sharedClient]
+            supportedPaymentMethods:STPPaymentMethodTypeAll];
+}
+
+- (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter
+                         apiClient:(STPAPIClient *)apiClient
+           supportedPaymentMethods:(STPPaymentMethodType)supportedPaymentMethods {
     self = [super init];
     if (self) {
         _apiAdapter = apiAdapter;
+        _apiClient = apiClient;
         _supportedPaymentMethods = supportedPaymentMethods;
         _paymentCurrency = @"USD";
         _merchantName = [NSBundle stp_applicationName];

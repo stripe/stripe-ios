@@ -39,7 +39,11 @@ class ViewController: UIViewController {
         
         let apiClient = STPAPIClient.sharedClient()
         
-        let paymentContext = STPPaymentContext(APIAdapter: apiAdapter, supportedPaymentMethods: .All)
+        let paymentContext = STPPaymentContext(
+            APIAdapter: apiAdapter,
+            apiClient: STPAPIClient.sharedClient(),
+            supportedPaymentMethods: .All
+        )
         
         paymentContext.appleMerchantIdentifier = "merchant.com.stripe.shop"
         paymentContext.paymentAmount = 1000

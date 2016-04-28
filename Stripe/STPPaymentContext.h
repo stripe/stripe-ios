@@ -31,23 +31,26 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 
 @interface STPPaymentContext : NSObject
 
+- (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter;
+
 - (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter
+                         apiClient:(STPAPIClient *)apiClient
            supportedPaymentMethods:(STPPaymentMethodType)supportedPaymentMethods;
 
-@property(nonatomic)STPAPIClient *apiClient;
+@property(nonatomic, readonly)STPAPIClient *apiClient;
 @property(nonatomic, readonly)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic, readonly)STPPaymentMethodType supportedPaymentMethods;
 @property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
 
 @property(nonatomic, weak, nullable)id<STPPaymentContextDelegate> delegate;
 @property(nonatomic, readonly, getter=isLoading)BOOL loading;
-@property(nonatomic, readonly)id<STPPaymentMethod> selectedPaymentMethod;
-@property(nonatomic, readonly)NSArray<id<STPPaymentMethod>> *paymentMethods;
+@property(nonatomic, readonly, nullable)id<STPPaymentMethod> selectedPaymentMethod;
+@property(nonatomic, readonly, nullable)NSArray<id<STPPaymentMethod>> *paymentMethods;
 
 @property(nonatomic)NSInteger paymentAmount;
-@property(nonatomic)NSString *paymentCurrency;
-@property(nonatomic)NSString *merchantName;
-@property(nonatomic)NSString *appleMerchantIdentifier;
+@property(nonatomic, nullable)NSString *paymentCurrency;
+@property(nonatomic, nullable)NSString *merchantName;
+@property(nonatomic, nullable)NSString *appleMerchantIdentifier;
 
 - (void)didAppear;
 - (void)presentPaymentMethodsViewControllerOnViewController:(UIViewController *)viewController;
