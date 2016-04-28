@@ -385,6 +385,14 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
     return [self.viewModel.expirationYear integerValue];
 }
 
+- (NSString *)formattedExpirationMonth {
+    return self.viewModel.expirationMonth;
+}
+
+- (NSString *)formattedExpirationYear {
+    return self.viewModel.expirationYear;
+}
+
 - (NSString *)cvc {
     return self.viewModel.cvc;
 }
