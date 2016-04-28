@@ -70,7 +70,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     
     self.navigationItem.title = NSLocalizedString(@"Choose Payment", nil);
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
-    [self.paymentContext performInitialLoad];
+    [self.paymentContext didAppear];
     [self.paymentContext onSuccess:^{
         [UIView animateWithDuration:0.2 animations:^{
             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 1)];
