@@ -3,7 +3,10 @@ if [[ $CI && "$TRAVIS_SECURE_ENV_VARS" != "true" ]]; then
   exit 0
 fi
 
-brew cask install fauxpas
+brew update; brew cleanup; brew cask cleanup
+brew uninstall --force brew-cask; brew update
+brew tap caskroom/cask
+
 $HOME/Applications/FauxPas.app/Contents/Resources/install-cli-tools
 fauxpas updatelicense "organization-seat" "Stripe, Inc" $FAUX_PAS_LICENSE
 
