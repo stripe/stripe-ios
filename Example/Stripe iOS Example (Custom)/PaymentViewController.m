@@ -37,7 +37,6 @@
     STPPaymentCardTextField *paymentTextField = [[STPPaymentCardTextField alloc] init];
     paymentTextField.delegate = self;
     paymentTextField.cursorColor = [UIColor purpleColor];
-    paymentTextField.numberPlaceholder = @"card number wooo!!";
     self.paymentTextField = paymentTextField;
     [self.view addSubview:paymentTextField];
     
