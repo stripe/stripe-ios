@@ -31,6 +31,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 @property(nonatomic)STPPaymentContext *paymentContext;
 @property(nonatomic, weak, nullable)id<STPPaymentMethodsViewControllerDelegate>delegate;
 
+@property(nonatomic, weak)UIActivityIndicatorView *activityIndicator;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic)BOOL loading;
 
@@ -52,8 +53,13 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor stp_backgroundGreyColor];
     
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [activityIndicator startAnimating];
+    [self.view addSubview:activityIndicator];
+    self.activityIndicator = activityIndicator;
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    tableView.alpha = 0;
     tableView.dataSource = self;
     tableView.delegate = self;
     [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
@@ -71,10 +77,14 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.navigationItem.title = NSLocalizedString(@"Choose Payment", nil);
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     [self.paymentContext didAppear];
+    __weak typeof(self) weakself = self;
     [self.paymentContext onSuccess:^{
         [UIView animateWithDuration:0.2 animations:^{
             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 1)];
-            [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+            [weakself.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+            weakself.tableView.alpha = 1;
+        } completion:^(__unused BOOL finished) {
+            [weakself.activityIndicator stopAnimating];
         }];
     }];
     self.loading = YES;
@@ -95,6 +105,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     self.tableView.frame = self.view.bounds;
+    self.activityIndicator.center = self.view.center;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
@@ -191,12 +202,15 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     [self.delegate paymentMethodsViewController:self didSelectPaymentMethod:paymentMethod];
 }
 
-- (CGFloat)tableView:(__unused UITableView *)tableView heightForFooterInSection:(__unused NSInteger)section {
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
+        return 0.01f;
+    }
     return 27.0f;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(__unused NSInteger)section {
-    return tableView.sectionHeaderHeight;
+- (CGFloat)tableView:(__unused UITableView *)tableView heightForHeaderInSection:(__unused NSInteger)section {
+    return 0.01f;
 }
 
 @end

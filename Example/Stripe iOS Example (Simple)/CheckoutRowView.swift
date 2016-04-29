@@ -70,6 +70,7 @@ class CheckoutRowView: UIView {
         self.addSubview(self.titleLabel)
         self.detailLabel.text = detail
         self.detailLabel.backgroundColor = UIColor.clearColor()
+        self.detailLabel.textColor = UIColor.lightGrayColor()
         self.detailLabel.textAlignment = .Right;
         self.addSubview(self.detailLabel)
         self.addSubview(self.activityIndicator)

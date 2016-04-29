@@ -9,14 +9,31 @@
 import UIKit
 import Stripe
 
-class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPPaymentMethodsViewControllerDelegate {
+class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
+    // 1) To get started with this demo, first head to https://dashboard.stripe.com/account/apikeys
+    // and copy your "Test Publishable Key" (it looks like pk_test_abcdef) into the line below.
     let stripePublishableKey = "<#stripePublishableKey#>"
-    let appleMerchantID = "<#appleMerchantID#>"
-    let backendBaseURL = "<#backendBaseURL#>"
-    let customerID = "<#customerID#>"
+    
+    // 2a) Next, optionally, to have this demo save your user's payment details, head to
+    // https://github.com/stripe/example-ios-backend , click "Deploy to Heroku", and follow
+    // the instructions (don't worry, it's free). Replace nil on the line below with your
+    // Heroku URL (it looks like https://blazing-sunrise-1234.herokuapp.com ).
+    let backendBaseURL: String? = nil
+    
+    // 2b) If you're saving your user's payment details, head to https://dashboard.stripe.com/test/customers ,
+    // click "New", and create a customer (you can leave the fields blank). Replace nil on the line below
+    // with the newly-created customer ID (it looks like cus_abcdef).
+    let customerID: String? = nil
+    
+    // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/mobile/apple-pay
+    // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
+    let appleMerchantID: String? = nil
+    
+    // These values will be shown to the user when they purchase with Apple Pay.
     let merchantName = "Emoji Apparel"
-    let paymentAmount = 1000
+    let paymentAmount = 1000 // this amount is in cents.
+    let paymentCurrency = "usd"
 
     let myAPIClient: MyAPIClient
     let paymentContext: STPPaymentContext
@@ -31,7 +48,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPPa
         let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient)
         paymentContext.appleMerchantIdentifier = self.appleMerchantID
         paymentContext.paymentAmount = self.paymentAmount
-        paymentContext.paymentCurrency = "usd"
+        paymentContext.paymentCurrency = self.paymentCurrency
         paymentContext.merchantName = self.merchantName
         paymentContext.requiredBillingAddressFields = .Zip
         self.paymentContext = paymentContext
@@ -105,16 +122,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPPa
         self.myAPIClient.completeCharge(source, amount: self.paymentAmount, completion: completion)
     }
 
-    // MARK: STPPaymentMethodsViewControllerDelegate
-
-    func paymentMethodsViewController(paymentMethodsViewController: STPPaymentMethodsViewController, didSelectPaymentMethod paymentMethod: STPPaymentMethod) {
-        self.navigationController?.popViewControllerAnimated(true)
-    }
-
-    func paymentMethodsViewControllerDidCancel(paymentMethodsViewController: STPPaymentMethodsViewController) {
-        self.navigationController?.popViewControllerAnimated(true)
-    }
-
     // MARK: STPPaymentContextDelegate
 
     func paymentContextDidChange(paymentContext: STPPaymentContext) {
@@ -123,7 +130,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPPa
             self.checkoutView.paymentRow.detail = paymentMethod.label
         }
         else {
-            self.checkoutView.paymentRow.detail = "Add card"
+            self.checkoutView.paymentRow.detail = "Select Payment"
         }
     }
 
@@ -136,6 +143,14 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPPa
     }
 
     func paymentContext(paymentContext: STPPaymentContext, didFailToLoadWithError error: NSError) {
+        let alertController = UIAlertController(
+            title: "Error Retrieving Cards",
+            message: error.localizedDescription,
+            preferredStyle: .Alert
+        )
+        let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        alertController.addAction(action)
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
 
     func checkConstants() -> Bool {

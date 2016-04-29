@@ -10,26 +10,26 @@ import Foundation
 import Stripe
 
 class MyAPIClient: NSObject, STPBackendAPIAdapter {
-    @objc var cards: [STPCard]? = []
-    @objc var selectedCard: STPCard?
 
-    let baseURL: NSURL
-    let customerID: String
+    let baseURLString: String?
+    let customerID: String?
     let session: NSURLSession
+    
+    var inMemoryCards: [STPCard] = []
 
-    init(baseURL: String, customerID: String) {
+    init(baseURL: String?, customerID: String?) {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = 5
         self.session = NSURLSession(configuration: configuration)
-        self.baseURL = NSURL(string: baseURL) ?? NSURL(string: "http://example.com")!
+        self.baseURLString = baseURL
         self.customerID = customerID
         super.init()
     }
 
     func decodeData(data: NSData?) -> (selectedCard: STPCard?, cards: [STPCard]?)? {
         guard let json = data?.JSON else { return nil }
-        if let cardsJSON = json["cards"] as? [[String: AnyObject]],
-            selectedCardJSON = json["selected_card"] as? [String: AnyObject] {
+        if let cardsJSON = json["cards"] as? [[String: AnyObject]] {
+            let selectedCardJSON = json["selected_card"] as? [String: AnyObject]
             let selectedCard = STPCard.decodedObjectFromAPIResponse(selectedCardJSON)
             let cards = cardsJSON.flatMap { STPCard.decodedObjectFromAPIResponse($0) }
             return (selectedCard, cards)
@@ -42,16 +42,20 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
             where httpResponse.statusCode != 200 {
             return error ?? NSError.networkingError(httpResponse.statusCode)
         }
-        return nil
+        return error
     }
 
     func completeCharge(source: STPSource, amount: Int, completion: STPErrorBlock) {
+        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
+            completion(nil)
+            return
+        }
         let path = "charge"
-        let url = self.baseURL.URLByAppendingPathComponent(path)
+        let url = baseURL.URLByAppendingPathComponent(path)
         let params: [String: AnyObject] = [
-            "stripe_token": source.stripeID,
+            "source": source.stripeID,
             "amount": amount,
-            "customer": self.customerID
+            "customer": customerID
         ]
         let request = NSURLRequest.request(url, method: .POST, params: params)
         let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in
@@ -67,20 +71,22 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     }
     
     @objc func retrieveCards(completion: STPCardCompletionBlock) {
-        let path = "cards"
-        let url = self.baseURL.URLByAppendingPathComponent(path)
-        let params = [ "customer": self.customerID ]
+        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
+            completion(self.inMemoryCards.last, self.inMemoryCards, nil)
+            return
+        }
+        let path = "/customers/\(customerID)/cards"
+        let url = baseURL.URLByAppendingPathComponent(path)
+        let params = [ "customer": customerID ]
         let request = NSURLRequest.request(url, method: .GET, params: params)
         let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in
             dispatch_async(dispatch_get_main_queue()) {
                 if let error = self.decodeResponse(urlResponse, error: error) {
-                    completion(self.selectedCard, self.cards, error)
+                    completion(nil, [], error)
                     return
                 }
                 if let (selectedCard, cards) = self.decodeData(data) {
-                    self.selectedCard = selectedCard
-                    self.cards = cards
-                    completion(self.selectedCard, self.cards, nil)
+                    completion(selectedCard, cards, nil)
                 }
             }
         }
@@ -88,23 +94,25 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     }
 
     @objc func selectCard(card: STPCard, completion: STPCardCompletionBlock) {
+        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
+            completion(card, self.inMemoryCards, nil)
+            return
+        }
         let path = "select_source"
-        let url = self.baseURL.URLByAppendingPathComponent(path)
+        let url = baseURL.URLByAppendingPathComponent(path)
         let params = [
-            "customer": self.customerID,
+            "customer": customerID,
             "source": card.stripeID,
         ]
         let request = NSURLRequest.request(url, method: .POST, params: params)
         let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in
             dispatch_async(dispatch_get_main_queue()) {
                 if let error = self.decodeResponse(urlResponse, error: error) {
-                    completion(self.selectedCard, self.cards, error)
+                    completion(nil, [], error)
                     return
                 }
                 if let (selectedCard, cards) = self.decodeData(data) {
-                    self.selectedCard = selectedCard
-                    self.cards = cards
-                    completion(self.selectedCard, self.cards, nil)
+                    completion(selectedCard, cards, nil)
                 }
             }
         }
@@ -112,23 +120,30 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     }
     
     @objc func addToken(token: STPToken, completion: STPCardCompletionBlock) {
-        let path = "add_token"
-        let url = self.baseURL.URLByAppendingPathComponent(path)
+        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
+            if let card = token.card {
+                self.inMemoryCards.append(card)
+                completion(card, self.inMemoryCards, nil)
+            } else {
+                completion(nil, [], nil)
+            }
+            return
+        }
+        let path = "/customers/\(customerID)/sources"
+        let url = baseURL.URLByAppendingPathComponent(path)
         let params = [
-            "customer": self.customerID,
-            "stripe_token": token.stripeID,
+            "customer": customerID,
+            "source": token.stripeID,
             ]
         let request = NSURLRequest.request(url, method: .POST, params: params)
         let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in
             dispatch_async(dispatch_get_main_queue()) {
                 if let error = self.decodeResponse(urlResponse, error: error) {
-                    completion(self.selectedCard, self.cards, error)
+                    completion(nil, [], error)
                     return
                 }
                 if let (selectedCard, cards) = self.decodeData(data) {
-                    self.selectedCard = selectedCard
-                    self.cards = cards
-                    completion(self.selectedCard, self.cards, nil)
+                    completion(selectedCard, cards, nil)
                 }
             }
         }

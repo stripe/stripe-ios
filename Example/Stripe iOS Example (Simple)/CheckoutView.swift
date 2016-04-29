@@ -33,7 +33,7 @@ class CheckoutView: UIView {
                 }, completion: nil)
         }
     }
-    let paymentRow = CheckoutRowView(title: "Payment", detail: "Add card")
+    let paymentRow = CheckoutRowView(title: "Payment", detail: "Select Payment")
     let totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false)
     let buyButton = BuyButton(enabled: false)
 
