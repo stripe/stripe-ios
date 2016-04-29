@@ -57,6 +57,10 @@
     XCTAssertEqualObjects(value, @(0));
     XCTAssertEqual(range.length, (NSUInteger)4);
     XCTAssertEqual(sut.attributedText.length, (NSUInteger)16);
+    
+    sut.placeholder = @"enteracardnumber";
+    value = [sut.attributedPlaceholder attribute:NSKernAttributeName atIndex:3 effectiveRange:&range];
+    XCTAssertNil(value);
 }
 
 @end
