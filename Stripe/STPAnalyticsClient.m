@@ -11,10 +11,8 @@
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPAPIClient.h"
 #import "TargetConditionals.h"
-#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
-#endif
 
 static BOOL STPShouldCollectAnalytics = YES;
 
@@ -85,7 +83,6 @@ static BOOL STPShouldCollectAnalytics = YES;
                                       @"end": end,
                                       @"bindings_version": STPSDKVersion,
                                       } mutableCopy];
-#if TARGET_OS_IPHONE
     NSString *version = [UIDevice currentDevice].systemVersion;
     if (version) {
         payload[@"os_version"] = version;
@@ -96,7 +93,6 @@ static BOOL STPShouldCollectAnalytics = YES;
     if (deviceType) {
         payload[@"device_type"] = deviceType;
     }
-#endif
     NSURL *url = [NSURL URLWithString:@"https://q.stripe.com"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request stp_addParametersToURL:payload];
