@@ -18,7 +18,7 @@
 /**
  * Parses an response from the Stripe API (in JSON format; represented as an NSDictionary) into an instance of the class. Returns nil if the object could not be decoded (i.e. if one of its `requiredFields` is nil).
  */
-+ (nullable instancetype)decodedObjectFromAPIResponse:(nonnull NSDictionary *)response;
++ (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response;
 
 /**
  * The raw JSON response used to create the object. This can be useful for using beta features that haven't yet been made into properties in the SDK.

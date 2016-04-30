@@ -131,7 +131,7 @@
 
 - (void)selectPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
     self.selectedPaymentMethod = paymentMethod;
-    if (![self.paymentMethods containsObject:paymentMethod]) {
+    if (paymentMethod && ![self.paymentMethods containsObject:paymentMethod]) {
         self.paymentMethods = [self.paymentMethods arrayByAddingObject:paymentMethod];
     }
 }
