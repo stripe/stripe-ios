@@ -1,12 +1,11 @@
 language: objective-c
-osx_image: xcode7
+osx_image: xcode7.3
 
 env:
   global:
     secure: gZMOaHQIeG7nplBCuH7EKf9o6Ez2rtoSskrv3nOTziSxFfZq322MrxvkidDpEN7AKWYQm27FO+tCzgq0slXb578lQ9P5ySDwEdExKtk/jMtKsBsf3cr4dzSMiqV5D5TbsH2jE9HQlpYUoJeoMBicR2XsTmd7wiu2jAzNBFqGfiY=
 
 before_install:
-  - brew install carthage
   - gem update cocoapods --no-ri --no-rdoc
   - gem install xcpretty --no-ri --no-rdoc
   - ./ci_scripts/install_fauxpas.sh
@@ -15,10 +14,11 @@ script:
   - "./ci_scripts/check_fauxpas.sh"
   - "./ci_scripts/check_version.rb"
   - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeiOS Tests" -configuration Debug -sdk iphonesimulator | xcpretty -c
+  - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "Stripe iOS Application Tests" -configuration Debug -sdk iphonesimulator -destination "OS=9.3,name=iPhone 6" | xcpretty -c
   - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeOSX Tests" | xcpretty -c
   - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe iOS Example (Simple)" -sdk iphonesimulator | xcpretty -c
   - set -o pipefail && xcodebuild build -workspace Stripe.xcworkspace -scheme "Stripe iOS Example (Custom)" -sdk iphonesimulator | xcpretty -c
   # - "./Tests/installation_tests/cocoapods/with_frameworks/test.sh"
   # - "./Tests/installation_tests/cocoapods/without_frameworks/test.sh"
   - "./Tests/installation_tests/manual_installation/test.sh"
-  # - "./Tests/installation_tests/carthage/test.sh"
+  - "./Tests/installation_tests/carthage/test.sh"

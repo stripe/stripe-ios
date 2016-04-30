@@ -1,3 +1,10 @@
+== 7.0.1 2016-04-29
+* Added Discover support for Apple Pay
+* Add the now-required `accountHolderName` and `accountHolderType` properties to STPBankAccountParams
+* We now record performance metrics for the /v1/tokens API - to disable this behavior, call [Stripe disableAnalytics].
+* You can now demo the SDK more easily by running `pod try stripe`.
+* This release also removes the deprecated Checkout functionality from the SDK.
+
 == 6.2.0 2016-02-05
 * Added an `additionalAPIParameters` field to STPCardParams and STPBankAccountParams for sending additional values to the API - useful for beta features. Similarly, added an `allResponseFields` property to STPToken, STPCard, and STPBankAccount for accessing fields in the response that are not yet refelected in those classes' @properties.
 

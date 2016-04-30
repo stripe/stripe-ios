@@ -87,6 +87,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
             break;
         case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
             self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
+                if (![STPCardValidator stringIsNumeric:inputString.string]) {
+                    return [inputString copy];
+                }
                 NSMutableAttributedString *attributedString = [inputString mutableCopy];
                 NSArray *cardSpacing;
                 STPCardBrand currentBrand = [STPCardValidator brandForNumber:attributedString.string];
@@ -110,6 +113,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
         case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers: {
             __weak id weakself = self;
             self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
+                if (![STPCardValidator stringIsNumeric:inputString.string]) {
+                    return [inputString copy];
+                }
                 __strong id strongself = weakself;
                 NSString *phoneNumber = [STPPhoneNumberValidator formattedPhoneNumberForString:inputString.string];
                 NSDictionary *attributes = [[strongself class] attributesForAttributedString:inputString];

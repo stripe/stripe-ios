@@ -56,21 +56,6 @@
 
 #endif
 
-- (NSString *)formattedExpMonth {
-    if (self.expMonth <= 0 || self.expMonth > 12) {
-        return nil;
-    }
-    return [@(self.expMonth) description];
-}
-
-- (NSString *)formattedExpYear {
-    NSInteger lastTwo = self.expYear % 1000;
-    if (lastTwo <= 0) {
-        return nil;
-    }
-    return [@(lastTwo) description];
-}
-
 - (BOOL)validateNumber:(id *)ioValue error:(NSError **)outError {
     if (*ioValue == nil) {
         return [self.class handleValidationErrorForParameter:@"number" error:outError];
