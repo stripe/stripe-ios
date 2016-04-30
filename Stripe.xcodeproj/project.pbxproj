@@ -140,6 +140,11 @@
 		04633B0E1CD44F6C009D4FB5 /* STPCategoryLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 04633B0A1CD44F6C009D4FB5 /* STPCategoryLoader.m */; };
 		04633B0F1CD44F6C009D4FB5 /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04633B0B1CD44F6C009D4FB5 /* Stripe+ApplePay.m */; };
 		04633B111CD44F78009D4FB5 /* Stripe+ApplePay.h in Headers */ = {isa = PBXBuildFile; fileRef = 04633B101CD44F78009D4FB5 /* Stripe+ApplePay.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04633B121CD4520C009D4FB5 /* Stripe+ApplePay.h in Headers */ = {isa = PBXBuildFile; fileRef = 04633B101CD44F78009D4FB5 /* Stripe+ApplePay.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04633B131CD45211009D4FB5 /* Stripe+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04633B0B1CD44F6C009D4FB5 /* Stripe+ApplePay.m */; };
+		04633B141CD45215009D4FB5 /* PKPayment+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04633B091CD44F6C009D4FB5 /* PKPayment+Stripe.m */; };
+		04633B151CD4521F009D4FB5 /* STPAPIClient+ApplePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 04633B041CD44F1C009D4FB5 /* STPAPIClient+ApplePay.m */; };
+		04633B161CD45222009D4FB5 /* STPAPIClient+ApplePay.h in Headers */ = {isa = PBXBuildFile; fileRef = 04633B061CD44F47009D4FB5 /* STPAPIClient+ApplePay.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04695AD31C77F9DB00E08063 /* NSString+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04695AD11C77F9DB00E08063 /* NSString+Stripe.h */; };
 		04695AD41C77F9DB00E08063 /* NSString+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04695AD21C77F9DB00E08063 /* NSString+Stripe.m */; };
 		04695AD91C77F9EF00E08063 /* STPDelegateProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 04695AD51C77F9EF00E08063 /* STPDelegateProxy.h */; };
@@ -687,6 +692,7 @@
 				C124A1711CCA968B007D42EE /* STPAnalyticsClient.h in Headers */,
 				049E84D91A605EF0000B66CD /* Stripe.h in Headers */,
 				0433EB4B1BD06313003912B4 /* NSDictionary+Stripe.h in Headers */,
+				04633B161CD45222009D4FB5 /* STPAPIClient+ApplePay.h in Headers */,
 				0438EF2E1B7416BB00D506CC /* STPFormTextField.h in Headers */,
 				049E84E61A605EF0000B66CD /* STPAPIClient.h in Headers */,
 				049E84E91A605EF0000B66CD /* STPBankAccount.h in Headers */,
@@ -703,6 +709,7 @@
 				04633AFD1CD129AF009D4FB5 /* STPPhoneNumberValidator.h in Headers */,
 				04633AFE1CD129B4009D4FB5 /* STPDelegateProxy.h in Headers */,
 				04FCFA191BD59A8C00297732 /* STPCategoryLoader.h in Headers */,
+				04633B121CD4520C009D4FB5 /* Stripe+ApplePay.h in Headers */,
 				04CDE5CB1BC20B1D00548833 /* STPBankAccountParams.h in Headers */,
 				049952D41BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */,
 				0438EF3A1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h in Headers */,
@@ -1000,6 +1007,7 @@
 			files = (
 				0438EF451B74170D00D506CC /* STPCardValidator.m in Sources */,
 				0438EF311B7416BB00D506CC /* STPFormTextField.m in Sources */,
+				04633B141CD45215009D4FB5 /* PKPayment+Stripe.m in Sources */,
 				04633AFF1CD129C0009D4FB5 /* NSString+Stripe.m in Sources */,
 				04633B021CD129D0009D4FB5 /* STPDelegateProxy.m in Sources */,
 				C124A17F1CCAA0C2007D42EE /* NSMutableURLRequest+Stripe.m in Sources */,
@@ -1011,11 +1019,13 @@
 				04633B011CD129CB009D4FB5 /* STPPhoneNumberValidator.m in Sources */,
 				049E84CF1A605DE0000B66CD /* STPBankAccount.m in Sources */,
 				049E84D01A605DE0000B66CD /* STPCard.m in Sources */,
+				04633B151CD4521F009D4FB5 /* STPAPIClient+ApplePay.m in Sources */,
 				0433EB4E1BD06313003912B4 /* NSDictionary+Stripe.m in Sources */,
 				0438EF3D1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m in Sources */,
 				04CDE5BA1BC1F1F100548833 /* STPCardParams.m in Sources */,
 				049E84D11A605DE0000B66CD /* STPToken.m in Sources */,
 				049E84D21A605DE0000B66CD /* StripeError.m in Sources */,
+				04633B131CD45211009D4FB5 /* Stripe+ApplePay.m in Sources */,
 				049952D81BCF14990088C703 /* STPAPIPostRequest.m in Sources */,
 				04CDE5C71BC20AF800548833 /* STPBankAccountParams.m in Sources */,
 			);
