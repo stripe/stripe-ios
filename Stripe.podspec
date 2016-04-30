@@ -14,8 +14,8 @@ Pod::Spec.new do |s|
   s.default_subspecs               = 'Core'
 
   s.subspec 'Core' do |ss|
-    ss.public_header_files         = 'Stripe/PublicHeaders/*.h', 'Stripe/PublicHeaders/ApplePay/*.h', 'Stripe/PublicHeaders/UI/*.h'
-    ss.source_files                = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}', 'Stripe/PublicHeaders/ApplePay/*.h', 'Stripe/ApplePay/*.{h,m}', 'Stripe/PublicHeaders/UI/*.h', 'Stripe/UI/*.{h,m}', 'Stripe/Fabric/*'
+    ss.public_header_files         = 'Stripe/PublicHeaders/*.h'
+    ss.source_files                = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}', 'Stripe/**/*.{h,m}'
     ss.resources                   = 'Stripe/Resources/**/*'
   end
 
