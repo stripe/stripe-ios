@@ -18,7 +18,6 @@
 #import "STPToken.h"
 #import "STPBlocks.h"
 
-#if TARGET_OS_IPHONE
 #import "Stripe+ApplePay.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentCardTextField.h"
@@ -33,4 +32,3 @@
 #import "STPPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
 #import "STPCardPaymentMethod.h"
-#endif
