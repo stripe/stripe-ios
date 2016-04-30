@@ -283,11 +283,11 @@
 		0433EB471BD06313003912B4 /* NSDictionary+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Stripe.h"; sourceTree = "<group>"; };
 		0433EB481BD06313003912B4 /* NSDictionary+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Stripe.m"; sourceTree = "<group>"; };
 		04365D2C1A4CF86C00A3E1D4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		0438EF261B7416BB00D506CC /* STPFormTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPFormTextField.h; path = UI/STPFormTextField.h; sourceTree = "<group>"; };
-		0438EF271B7416BB00D506CC /* STPFormTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = STPFormTextField.m; path = UI/STPFormTextField.m; sourceTree = "<group>"; };
-		0438EF291B7416BB00D506CC /* STPPaymentCardTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = STPPaymentCardTextField.m; path = UI/STPPaymentCardTextField.m; sourceTree = "<group>"; };
-		0438EF2A1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentCardTextFieldViewModel.h; path = UI/STPPaymentCardTextFieldViewModel.h; sourceTree = "<group>"; };
-		0438EF2B1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = STPPaymentCardTextFieldViewModel.m; path = UI/STPPaymentCardTextFieldViewModel.m; sourceTree = "<group>"; };
+		0438EF261B7416BB00D506CC /* STPFormTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPFormTextField.h; sourceTree = "<group>"; };
+		0438EF271B7416BB00D506CC /* STPFormTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFormTextField.m; sourceTree = "<group>"; };
+		0438EF291B7416BB00D506CC /* STPPaymentCardTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentCardTextField.m; sourceTree = "<group>"; };
+		0438EF2A1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPPaymentCardTextFieldViewModel.h; sourceTree = "<group>"; };
+		0438EF2B1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentCardTextFieldViewModel.m; sourceTree = "<group>"; };
 		0438EF3F1B74170D00D506CC /* STPCardValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCardValidator.m; sourceTree = "<group>"; };
 		0438EF461B74183100D506CC /* STPCardBrand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCardBrand.h; path = PublicHeaders/STPCardBrand.h; sourceTree = "<group>"; };
 		0438EF4A1B741B0100D506CC /* STPCardValidatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCardValidatorTest.m; sourceTree = "<group>"; };
@@ -340,9 +340,9 @@
 		04CDB4421A5F2E1800B854EE /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		04CDB4A91A5F30A700B854EE /* Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Stripe.h; path = PublicHeaders/Stripe.h; sourceTree = "<group>"; };
 		04CDB4AA1A5F30A700B854EE /* STPAPIClient+ApplePay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "STPAPIClient+ApplePay.h"; path = "../PublicHeaders/STPAPIClient+ApplePay.h"; sourceTree = "<group>"; };
-		04CDB4AB1A5F30A700B854EE /* STPAPIClient+ApplePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STPAPIClient+ApplePay.m"; sourceTree = "<group>"; };
+		04CDB4AB1A5F30A700B854EE /* STPAPIClient+ApplePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "STPAPIClient+ApplePay.m"; path = "../STPAPIClient+ApplePay.m"; sourceTree = "<group>"; };
 		04CDB4AC1A5F30A700B854EE /* Stripe+ApplePay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Stripe+ApplePay.h"; path = "../PublicHeaders/Stripe+ApplePay.h"; sourceTree = "<group>"; };
-		04CDB4AD1A5F30A700B854EE /* Stripe+ApplePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Stripe+ApplePay.m"; sourceTree = "<group>"; };
+		04CDB4AD1A5F30A700B854EE /* Stripe+ApplePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Stripe+ApplePay.m"; path = "../Stripe+ApplePay.m"; sourceTree = "<group>"; };
 		04CDB4C21A5F30A700B854EE /* STPAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = STPAPIClient.h; path = PublicHeaders/STPAPIClient.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		04CDB4C31A5F30A700B854EE /* STPAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAPIClient.m; sourceTree = "<group>"; };
 		04CDB4C41A5F30A700B854EE /* STPFormEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPFormEncoder.h; sourceTree = "<group>"; };
@@ -385,8 +385,8 @@
 		04F39F121AEF2AFE005B926E /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		04F39F151AEF2AFE005B926E /* StripeiOSStatic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StripeiOSStatic.xcconfig; sourceTree = "<group>"; };
 		04F39F181AEF2AFE005B926E /* StripeiOSStaticFramework.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StripeiOSStaticFramework.xcconfig; sourceTree = "<group>"; };
-		04F3BB3B1BA89B1200DE235E /* PKPayment+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PKPayment+Stripe.h"; sourceTree = "<group>"; };
-		04F3BB3C1BA89B1200DE235E /* PKPayment+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKPayment+Stripe.m"; sourceTree = "<group>"; };
+		04F3BB3B1BA89B1200DE235E /* PKPayment+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "PKPayment+Stripe.h"; path = "../PKPayment+Stripe.h"; sourceTree = "<group>"; };
+		04F3BB3C1BA89B1200DE235E /* PKPayment+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "PKPayment+Stripe.m"; path = "../PKPayment+Stripe.m"; sourceTree = "<group>"; };
 		04FCFA171BD59A8C00297732 /* STPCategoryLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCategoryLoader.h; sourceTree = "<group>"; };
 		04FCFA181BD59A8C00297732 /* STPCategoryLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCategoryLoader.m; sourceTree = "<group>"; };
 		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -399,7 +399,7 @@
 		C124A1841CCAB750007D42EE /* STPAnalyticsClientTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAnalyticsClientTest.m; sourceTree = "<group>"; };
 		C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFormTextFieldTest.m; sourceTree = "<group>"; };
 		C1718D541C3B2E5B002A7CB3 /* UIImage+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Stripe.h"; path = "PublicHeaders/UIImage+Stripe.h"; sourceTree = "<group>"; };
-		C1718D551C3B2E5B002A7CB3 /* UIImage+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Stripe.m"; path = "UI/UIImage+Stripe.m"; sourceTree = "<group>"; };
+		C1718D551C3B2E5B002A7CB3 /* UIImage+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Stripe.m"; sourceTree = "<group>"; };
 		C178CD441C45607D00851C69 /* UIImage+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+StripeTest.m"; sourceTree = "<group>"; };
 		C1EEDCC51CA2126000A54582 /* STPDelegateProxyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPDelegateProxyTest.m; sourceTree = "<group>"; };
 		C1EEDCC71CA2172700A54582 /* NSString+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+StripeTest.m"; sourceTree = "<group>"; };

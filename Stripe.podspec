@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |ss|
     ss.public_header_files         = 'Stripe/PublicHeaders/*.h'
-    ss.source_files                = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}', 'Stripe/**/*.{h,m}'
+    ss.source_files                = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}'
     ss.resources                   = 'Stripe/Resources/**/*'
   end
 
