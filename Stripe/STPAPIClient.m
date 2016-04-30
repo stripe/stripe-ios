@@ -7,10 +7,8 @@
 //
 
 #import "TargetConditionals.h"
-#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
-#endif
 
 #import "STPAPIClient.h"
 #import "STPFormEncoder.h"
@@ -156,7 +154,6 @@ static NSString *STPDefaultPublishableKey;
         @"lang": @"objective-c",
         @"bindings_version": STPSDKVersion,
     } mutableCopy];
-#if TARGET_OS_IPHONE
     NSString *version = [UIDevice currentDevice].systemVersion;
     if (version) {
         details[@"os_version"] = version;
@@ -177,7 +174,6 @@ static NSString *STPDefaultPublishableKey;
             details[@"vendor_identifier"] = vendorIdentifier;
         }
     }
-#endif
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[details copy] options:0 error:NULL] encoding:NSUTF8StringEncoding];
 }
 

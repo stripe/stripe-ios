@@ -16,9 +16,7 @@
 #import "STPCardValidationState.h"
 #import "STPCardValidator.h"
 #import "STPToken.h"
-
-#if TARGET_OS_IPHONE
 #import "Stripe+ApplePay.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentCardTextField.h"
-#endif
+
