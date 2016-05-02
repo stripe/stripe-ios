@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Stripe  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+
+
+    <a title="Stripe  Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="index.html">
+          Stripe Docs
+        </a>
+        
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/stripe/stripe-ios">
+            <img class="header-icon" src="img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="index.html">Stripe Reference</a>
+      <img class="carat" src="img/carat.png" />
+      Stripe  Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPAPIClient.html">STPAPIClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPBankAccount.html">STPBankAccount</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPBankAccountParams.html">STPBankAccountParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPCard.html">STPCard</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPCardParams.html">STPCardParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPCardValidator.html">STPCardValidator</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPToken.html">STPToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Stripe.html">Stripe</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Constants.html">Constants</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Constants.html#/c:@StripeDomain">StripeDomain</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums.html#/c:@E@STPCardBrand">STPCardBrand</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums.html#/c:@E@STPCardFundingType">STPCardFundingType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums.html#/c:@E@STPCardValidationState">STPCardValidationState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/STPFormEncodable.html">STPFormEncodable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/STPPaymentCardTextFieldDelegate.html">STPPaymentCardTextFieldDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Type Definitions.html">Type Definitions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPAPIClient.h@T@STPCompletionBlock">STPCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPAPIClient.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            
+            <a href='#stripe-ios-sdk' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h1 id='stripe-ios-sdk'>Stripe iOS SDK</h1>
+
+<p><a href="https://travis-ci.org/stripe/stripe-ios"><img src="https://img.shields.io/travis/stripe/stripe-ios/master.svg?style=flat" alt="Travis"></a>
+<a href="http://cocoapods.org/?q=author%3Astripe%20name%3Astripe"><img src="https://img.shields.io/cocoapods/v/Stripe.svg?style=flat" alt="CocoaPods"></a>
+<a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible"></a>
+<a href="https://github.com/stripe/stripe-ios/blob/master/LICENSE"><img src="https://img.shields.io/cocoapods/l/Stripe.svg?style=flat" alt="CocoaPods"></a>
+<a href="https://github.com/stripe/stripe-ios#"><img src="https://img.shields.io/cocoapods/p/Stripe.svg?style=flat" alt="CocoaPods"></a></p>
+
+<p>The Stripe iOS SDK make it easy to collect your users&rsquo; credit card details inside your iOS app. By creating <a href="https://stripe.com/docs/api#tokens">tokens</a>, Stripe handles the bulk of PCI compliance by preventing sensitive card data from hitting your server (for more, see <a href="https://support.stripe.com/questions/do-i-need-to-be-pci-compliant-what-do-i-have-to-do">our article about PCI compliance</a>).</p>
+
+<p>We also offer <a href="https://stripe.com/apple-pay">seamless integration</a> with <a href="https://www.apple.com/apple-pay/">Apple Pay</a> that will allow you to securely collect payments from your customers in a way that prevents them from having to re-enter their credit card information.</p>
+<a href='#requirements' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='requirements'>Requirements</h2>
+
+<p>Our SDK is compatible with iOS apps supporting iOS 7.0 and above. It requires Xcode 7.0+ to build the source.</p>
+<a href='#integration' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='integration'>Integration</h2>
+
+<p>We&rsquo;ve written a <a href="https://stripe.com/docs/mobile/ios">guide</a> that explains everything from installation, to creating payment tokens, to Apple Pay integration and more.</p>
+<a href='#example-apps' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='example-apps'>Example apps</h2>
+
+<p>There are 2 example apps included in the repository:
+- Stripe iOS Example (Simple) shows a minimal Swift integration with our iOS SDK using Apple Pay.
+- Stripe iOS Example (Custom) demonstrates 2 different ways of collecting your user&rsquo;s payment details: via Apple Pay, and STPPaymentCardTextField, a native credit card UI form component we provide. It, too, uses a small example backend to make charges.</p>
+
+<p>To build and run the example apps, open <code>Stripe.xcworkspace</code> and choose the appropriate scheme.</p>
+<a href='#getting-started-with-the-simple-ios-example-app' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='getting-started-with-the-simple-ios-example-app'>Getting started with the Simple iOS Example App</h3>
+
+<p>Note: all the example apps require Xcode 7.0 to build and run.</p>
+
+<p>Before you can run the app, you need to provide it with your Stripe publishable key.</p>
+
+<ol>
+<li>If you haven&rsquo;t already, sign up for a <a href="https://dashboard.stripe.com/register">Stripe account</a> (it takes seconds). Then go to <a href="https://dashboard.stripe.com/account/apikeys">https://dashboard.stripe.com/account/apikeys</a>.</li>
+<li>Replace the <code>stripePublishableKey</code> constant in ViewController.swift (for the Simple app) or Constants.m (for the Custom app) with your Test Publishable Key.</li>
+<li>Head to <a href="https://github.com/stripe/example-ios-backend">https://github.com/stripe/example-ios-backend</a> and click <q>Deploy to Heroku</q> (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under &lsquo;Env&rsquo;. Click <q>Deploy for Free</q>.</li>
+<li>Replace the <code>backendChargeURLString</code> variable in the example iOS app with the app URL Heroku provides you with (e.g. <q>https://my-example-app.herokuapp.com</q>)</li>
+</ol>
+
+<p>After this is done, you can make test payments through the app (use credit card number 4242 4242 4242 4242, along with any cvc and any future expiration date) and then view them in your Stripe Dashboard!</p>
+<a href='#running-the-tests' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='running-the-tests'>Running the tests</h2>
+
+<ol>
+<li>Open Stripe.xcworkspace</li>
+<li>Choose the <q>iOS Tests</q> or <q>OS X Tests</q> scheme</li>
+<li>Run Product -&gt; Test</li>
+</ol>
+<a href='#migrating-from-older-versions' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='migrating-from-older-versions'>Migrating from older versions</h2>
+
+<p>See <code>MIGRATING.md</code></p>
+
+          </div>
+        </section>
+
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2016 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2016-05-02)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.6.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>
