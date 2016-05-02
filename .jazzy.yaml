@@ -1,0 +1,12 @@
+objc: true
+clean: true
+author: Stripe
+author_url: https://stripe.com
+github_url: https://github.com/stripe/stripe-ios
+github_file_prefix: https://github.com/stripe/stripe-ios/tree/master
+umbrella_header: Stripe/PublicHeaders/Stripe.h
+framework_root: .
+module: Stripe
+skip_undocumented: true
+hide_documentation_coverage: true
+theme: fullwidth

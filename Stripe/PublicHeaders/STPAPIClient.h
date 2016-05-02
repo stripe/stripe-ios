@@ -70,6 +70,9 @@ typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * _
 
 #pragma mark Bank Accounts
 
+/**
+ *  STPAPIClient extensions to create Stripe tokens from bank accounts.
+ */
 @interface STPAPIClient (BankAccounts)
 
 /**
@@ -84,6 +87,9 @@ typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * _
 
 #pragma mark Credit Cards
 
+/**
+ *  STPAPIClient extensions to create Stripe tokens from credit or debit cards.
+ */
 @interface STPAPIClient (CreditCards)
 
 /**
