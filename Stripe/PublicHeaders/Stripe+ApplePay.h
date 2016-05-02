@@ -16,6 +16,9 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 @class Stripe;
 
+/**
+ *  Convenience methods for working with Apple Pay.
+ */
 @interface Stripe (ApplePay)
 
 /**

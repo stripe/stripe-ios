@@ -13,6 +13,9 @@
 #define FAUXPAS_IGNORED_IN_FILE(...)
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
+/**
+ *  STPAPIClient extensions to create Stripe tokens from Apple Pay PKPayment objects.
+ */
 @interface STPAPIClient (ApplePay)
 
 /**
