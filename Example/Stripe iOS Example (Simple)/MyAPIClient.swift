@@ -14,8 +14,6 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     let baseURLString: String?
     let customerID: String?
     let session: NSURLSession
-    
-    var inMemoryCards: [STPCard] = []
 
     init(baseURL: String?, customerID: String?) {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
@@ -91,7 +89,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
             return
         }
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
-            completion(self.inMemoryCards.last, self.inMemoryCards, nil)
+            completion(nil, [], nil)
             return
         }
         let path = "/customers/\(customerID)/cards"
@@ -117,7 +115,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
             completion(nil)
             return
         }
-        let path = "select_source"
+        let path = "/customers/\(customerID)/select_source"
         let url = baseURL.URLByAppendingPathComponent(path)
         let params = [
             "customer": customerID,
@@ -138,9 +136,6 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     
     @objc func addToken(token: STPToken, completion: STPErrorBlock) {
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
-            if let card = token.card {
-                self.inMemoryCards.append(card)
-            }
             completion(nil)
             return
         }
@@ -151,6 +146,26 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
             "source": token.stripeID,
             ]
         let request = NSURLRequest.request(url, method: .POST, params: params)
+        let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in
+            dispatch_async(dispatch_get_main_queue()) {
+                if let error = self.decodeResponse(urlResponse, error: error) {
+                    completion(error)
+                    return
+                }
+                completion(nil)
+            }
+        }
+        task.resume()
+    }
+    
+    func deleteCard(card: STPCard, completion: STPErrorBlock) {
+        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
+            completion(nil)
+            return
+        }
+        let path = "/customers/\(customerID)/cards/\(card)"
+        let url = baseURL.URLByAppendingPathComponent(path)
+        let request = NSURLRequest.request(url, method: .DELETE, params: [:])
         let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in
             dispatch_async(dispatch_get_main_queue()) {
                 if let error = self.decodeResponse(urlResponse, error: error) {

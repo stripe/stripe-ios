@@ -205,6 +205,7 @@ typedef void (^STPAddTokenBlock)(id<STPPaymentMethod> __nullable paymentMethod, 
 - (void)onSuccess:(STPVoidBlock)completion;
 - (void)addToken:(STPToken *)token completion:(STPAddTokenBlock)completion;
 - (void)selectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
+- (void)deletePaymentMethod:(id<STPPaymentMethod>)paymentMethod;
 @end
 
 NS_ASSUME_NONNULL_END

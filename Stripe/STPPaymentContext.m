@@ -120,6 +120,18 @@
     }];
 }
 
+- (void)addToken:(STPToken *)token completion:(STPAddTokenBlock)completion {
+    __weak typeof(self) weakSelf = self;
+    [self.apiAdapter addToken:token completion:^(NSError * _Nullable error) {
+        if (error) {
+            completion(nil, error);
+            return;
+        }
+        [weakSelf selectPaymentMethod:[[STPCardPaymentMethod alloc] initWithCard:token.card]];
+        completion(weakSelf.selectedPaymentMethod, nil);
+    }];
+}
+
 - (void)selectPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
     self.selectedPaymentMethod = paymentMethod;
     if (paymentMethod && [paymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {
@@ -129,6 +141,20 @@
     }
     if (paymentMethod && ![self.paymentMethods containsObject:paymentMethod]) {
         self.paymentMethods = [self.paymentMethods arrayByAddingObject:paymentMethod];
+    }
+}
+
+- (void)deletePaymentMethod:(id<STPPaymentMethod>)paymentMethod {
+    if ([paymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {
+        STPCard *card = ((STPCardPaymentMethod *)paymentMethod).card;
+        [self.apiAdapter deleteCard:card completion:^(__unused NSError *error) {
+        }];
+    }
+    NSMutableArray *array = [self.paymentMethods mutableCopy];
+    [array removeObject:paymentMethod];
+    self.paymentMethods = [array copy];
+    if ([paymentMethod isEqual:self.selectedPaymentMethod]) {
+        self.selectedPaymentMethod = [self.paymentMethods firstObject];
     }
 }
 

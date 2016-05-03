@@ -45,6 +45,17 @@
     }
 }
 
+- (void)deleteCard:(STPCard *)card completion:(STPErrorBlock)completion {
+    if (self.deleteCardError) {
+        completion(self.deleteCardError);
+    } else {
+        NSMutableArray *array = [self.cards mutableCopy];
+        [array removeObject:card];
+        self.cards = [array copy];
+        completion(nil);
+    }
+}
+
 - (void)updateCustomerShippingAddress:(STPAddress *)shippingAddress completion:(STPAddressCompletionBlock)completion {
     if (self.updateCustomerShippingAddressError) {
         completion(nil, self.updateCustomerShippingAddressError);
