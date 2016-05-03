@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class STPPaymentContext, STPAPIClient;
+@class STPPaymentContext, STPAPIClient, STPTheme;
 @protocol STPBackendAPIAdapter, STPPaymentMethod;
 
 /**
@@ -118,6 +118,8 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
  *  This delegate will be notified when the payment context's contents change. @see STPPaymentContextDelegate
  */
 @property(nonatomic, weak, nullable)id<STPPaymentContextDelegate> delegate;
+
+@property(nonatomic)STPTheme *theme;
 
 /**
  *  Whether or not the payment context is currently loading information from the network.

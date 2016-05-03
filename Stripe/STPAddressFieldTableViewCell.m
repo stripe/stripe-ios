@@ -8,7 +8,6 @@
 
 #import "STPAddressFieldTableViewCell.h"
 #import "STPFormTextField.h"
-#import "UIColor+Stripe.h"
 #import "STPPostalCodeValidator.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPEmailAddressValidator.h"
@@ -33,18 +32,15 @@
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     if (self) {
         _delegate = delegate;
+        _theme = [STPTheme new];
         
         UILabel *captionLabel = [UILabel new];
-        captionLabel.textColor = [UIColor stp_fieldLabelGreyColor];
         _captionLabel = captionLabel;
         [self addSubview:captionLabel];
         
         STPFormTextField *textField = [[STPFormTextField alloc] init];
         textField.formDelegate = self;
         textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
-        textField.placeholderColor = [UIColor stp_fieldPlaceholderGreyColor];
-        textField.textColor = [UIColor stp_darkTextColor];
-        textField.errorColor = [UIColor redColor]; // TODO make better
         _textField = textField;
         [self addSubview:textField];
         
@@ -125,8 +121,23 @@
                 break;
                 
         }
+        [self updateAppearance];
     }
     return self;
+}
+
+- (void)setTheme:(STPTheme *)theme {
+    _theme = theme;
+    [self updateAppearance];
+}
+
+- (void)updateAppearance {
+    self.captionLabel.font = self.theme.font;
+    self.captionLabel.textColor = self.theme.secondaryTextColor;
+    self.textField.placeholderColor = self.theme.tertiaryTextColor;
+    self.textField.defaultColor = self.theme.primaryTextColor;
+    self.textField.errorColor = [UIColor redColor]; // TODO make better
+    self.textField.font = self.theme.font;
 }
 
 - (void)layoutSubviews {

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "STPPaymentMethod.h"
+#import "STPTheme.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -44,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, readonly)STPPaymentContext *paymentContext;
 @property(nonatomic, weak, nullable, readonly)id<STPPaymentMethodsViewControllerDelegate>delegate;
+@property(nonatomic)STPTheme *theme;
 
 /**
  *  Creates a new payment methods view controller.

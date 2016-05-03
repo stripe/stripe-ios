@@ -40,6 +40,13 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     let checkoutView = CheckoutView()
     
     init(product: String, price: Int) {
+//        STPTheme.setDefaultPrimaryBackgroundColor(UIColor(red: 41.0/255.0, green: 58.0/255.0, blue: 80.0/255.0, alpha: 1))
+//        STPTheme.setDefaultSecondaryBackgroundColor(UIColor(red: 57.0/255.0, green: 74.0/255.0, blue: 97.0/255.0, alpha: 1))
+//        STPTheme.setDefaultPrimaryTextColor(UIColor.whiteColor())
+//        STPTheme.setDefaultSecondaryTextColor(UIColor(red: 152.0/255.0, green: 164.0/255.0, blue: 180.0/255.0, alpha: 1))
+//        STPTheme.setDefaultAccentColor(UIColor(red: 250.0/255.0, green: 203.0/255.0, blue: 0, alpha: 1))
+//        let font = UIFont(name: "AmericanTypewriter", size: 17)!
+//        STPTheme.setDefaultFont(font)
         self.checkoutView.product = product
         Stripe.setDefaultPublishableKey(self.stripePublishableKey)
         self.myAPIClient = MyAPIClient(baseURL: self.backendBaseURL,
@@ -49,7 +56,8 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         paymentContext.paymentAmount = self.paymentAmount
         paymentContext.paymentCurrency = self.paymentCurrency
         paymentContext.companyName = self.companyName
-        paymentContext.requiredBillingAddressFields = .Zip
+        paymentContext.requiredBillingAddressFields = .Full
+        
         self.paymentContext = paymentContext
         super.init(nibName: nil, bundle: nil)
         self.paymentContext.delegate = self
@@ -71,9 +79,10 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.checkoutView.buyButton.addTarget(self, action: #selector(didTapBuy), forControlEvents: .TouchUpInside)
         self.checkoutView.totalRow.detail = "$10.00"
         self.checkoutView.paymentRow.onTap = { _ in
-            if let navController = self.navigationController {
-                self.paymentContext.pushPaymentMethodsViewControllerOntoNavigationController(navController)
-            }
+            self.paymentContext.presentPaymentMethodsViewControllerOnViewController(self)
+//            if let navController = self.navigationController {
+//                self.paymentContext.pushPaymentMethodsViewControllerOntoNavigationController(navController)
+//            }
         }
     }
     

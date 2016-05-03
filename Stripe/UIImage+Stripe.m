@@ -19,15 +19,15 @@
 @implementation UIImage (Stripe)
 
 + (UIImage *)stp_addIcon {
-    return [UIImage stp_safeImageNamed:@"stp_icon_add"];
+    return [UIImage stp_safeImageNamed:@"stp_icon_add" templateifAvailable:YES];
 }
 
 + (nonnull UIImage *)stp_largeCardFrontImage {
-    return [UIImage stp_safeImageNamed:@"stp_card_form_front"];
+    return [UIImage stp_safeImageNamed:@"stp_card_form_front" templateifAvailable:YES];
 }
 
 + (nonnull UIImage *)stp_largeCardBackImage {
-    return [UIImage stp_safeImageNamed:@"stp_card_form_back"];
+    return [UIImage stp_safeImageNamed:@"stp_card_form_back" templateifAvailable:YES];
 }
 
 + (UIImage *)stp_applePayCardImage {
@@ -100,12 +100,23 @@
     return [UIImage stp_safeImageNamed:imageName];
 }
 
-+ (UIImage *)stp_safeImageNamed:(NSString *)imageName {
++ (UIImage *)stp_safeImageNamed:(NSString *)imageName
+            templateifAvailable:(BOOL)templateIfAvailable {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
+    BOOL templateSupported = [[UIImage new] respondsToSelector:@selector(imageWithRenderingMode:)];
+    UIImage *image;
     if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        return [UIImage imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
+        image = [UIImage imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
     }
-    return [UIImage imageNamed:imageName];
+    image = [UIImage imageNamed:imageName];
+    if (templateSupported && templateIfAvailable) {
+        image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    }
+    return image;
+}
+
++ (UIImage *)stp_safeImageNamed:(NSString *)imageName {
+    return [self stp_safeImageNamed:imageName templateifAvailable:NO];
 }
 
 @end

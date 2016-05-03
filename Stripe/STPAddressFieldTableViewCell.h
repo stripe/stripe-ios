@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "STPTheme.h"
 
 typedef NS_ENUM(NSInteger, STPAddressFieldType) {
     STPAddressFieldTypeName,
@@ -38,6 +39,7 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
                     delegate:(id<STPAddressFieldTableViewCellDelegate>)delegate;
 
 @property(nonatomic)STPAddressFieldType type;
-@property (nonatomic, copy) NSString *contents;
+@property(nonatomic, copy) NSString *contents;
+@property(nonatomic)STPTheme *theme;
 
 @end

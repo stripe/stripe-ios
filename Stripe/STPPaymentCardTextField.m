@@ -689,6 +689,26 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     [self updateImageForFieldType:textField.tag];
 }
 
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    switch ((STPCardFieldType)textField.tag) {
+        case STPCardFieldTypeNumber:
+            if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidEndEditingNumber:)]) {
+                [self.delegate paymentCardTextFieldDidEndEditingNumber:self];
+            }
+            break;
+        case STPCardFieldTypeCVC:
+            if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidEndEditingCVC:)]) {
+                [self.delegate paymentCardTextFieldDidEndEditingCVC:self];
+            }
+            break;
+        case STPCardFieldTypeExpiration:
+            if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidEndEditingExpiration:)]) {
+                [self.delegate paymentCardTextFieldDidEndEditingExpiration:self];
+            }
+            break;
+    }
+}
+
 - (UIImage *)brandImage {
     if (self.currentFirstResponderField) {
         return [self brandImageForFieldType:self.currentFirstResponderField.tag];

@@ -11,6 +11,7 @@
 #import "STPCardParams.h"
 #import "STPAPIClient.h"
 #import "STPAddress.h"
+#import "STPTheme.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,6 +39,8 @@ typedef void (^STPPaymentCardEntryBlock)(STPToken * __nullable token, STPErrorBl
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
      requiredBillingAddressFields:(STPBillingAddressFields)requiredBillingAddressFields
                        completion:(STPPaymentCardEntryBlock)completion;
+
+@property(nonatomic)STPTheme *theme;
 
 @end
 

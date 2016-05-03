@@ -16,10 +16,13 @@
 #import "STPPaymentContext.h"
 #import "STPCardPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
-#import "STPPaymentCardEntryViewController.h"
 #import "STPPromise.h"
-#import "UIFont+Stripe.h"
-#import "UIColor+Stripe.h"
+
+@interface STPDummyNavigationBar : UINavigationBar
+@end
+
+@implementation STPDummyNavigationBar
+@end
 
 @interface STPCardTuple : NSObject
 @property(nonatomic)STPCard *selectedCard;
@@ -56,6 +59,7 @@
         _apiAdapter = apiAdapter;
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
         _supportedPaymentMethods = supportedPaymentMethods;
+        _theme = [STPTheme new];
         _paymentCurrency = @"USD";
         _companyName = [NSBundle stp_applicationName];
         _didAppearPromise = [STPPromise new];
@@ -197,12 +201,28 @@
 
 - (void)presentPaymentMethodsViewControllerOnViewController:(UIViewController *)viewController {
     STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self delegate:self];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
+    paymentMethodsViewController.theme = self.theme;
+    NSDictionary *barItemAttributes = @{
+                                        NSFontAttributeName: self.theme.font,
+                                        };
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    [[UIBarButtonItem appearanceWhenContainedIn:[STPDummyNavigationBar class], nil] setTitleTextAttributes:barItemAttributes forState:UIControlStateNormal];
+#pragma clang diagnostic pop
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithNavigationBarClass:[STPDummyNavigationBar class] toolbarClass:nil];
+    navigationController.viewControllers = @[paymentMethodsViewController];
+    navigationController.navigationBar.tintColor = self.theme.accentColor;
+    navigationController.navigationBar.barTintColor = self.theme.secondaryBackgroundColor;
+    navigationController.navigationBar.titleTextAttributes = @{
+                                                               NSForegroundColorAttributeName: self.theme.primaryTextColor,
+                                                               NSFontAttributeName: self.theme.font,
+                                                               };
     [viewController presentViewController:navigationController animated:YES completion:nil];
 }
 
 - (void)pushPaymentMethodsViewControllerOntoNavigationController:(UINavigationController *)navigationController {
     STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self delegate:self];
+    paymentMethodsViewController.theme = self.theme;
     [navigationController pushViewController:paymentMethodsViewController animated:YES];
 }
 

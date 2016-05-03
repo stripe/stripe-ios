@@ -18,8 +18,6 @@
 #import "STPCardPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
 #import "STPPaymentContext.h"
-#import "UIColor+Stripe.h"
-#import "UIFont+Stripe.h"
 #import "UIImage+Stripe.h"
 #import "NSString+Stripe_CardBrands.h"
 
@@ -33,6 +31,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 @property(nonatomic, weak)UIActivityIndicatorView *activityIndicator;
 @property(nonatomic, weak)UITableView *tableView;
+@property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)BOOL loading;
 
 @end
@@ -45,13 +44,14 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     if (self) {
         _paymentContext = paymentContext;
         _delegate = delegate;
+        _theme = [STPTheme new];
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor stp_backgroundGreyColor];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [activityIndicator startAnimating];
@@ -66,13 +66,13 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
     tableView.sectionHeaderHeight = 30;
     tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
-    tableView.tintColor = [UIColor stp_linkBlueColor];
     self.tableView = tableView;
     [self.view addSubview:tableView];
     
     UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[UIImage stp_largeCardFrontImage]];
     cardImageView.contentMode = UIViewContentModeCenter;
     cardImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, cardImageView.bounds.size.height + (57 * 2));
+    self.cardImageView = cardImageView;
     self.tableView.tableHeaderView = cardImageView;
     
     self.navigationItem.title = NSLocalizedString(@"Choose Payment", nil);
@@ -88,14 +88,13 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         }];
     }];
     self.loading = YES;
+    [self updateAppearance];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView reloadData];
     [self.paymentContext willAppear];
-    NSDictionary *titleTextAttributes = @{NSFontAttributeName:[UIFont stp_navigationBarFont]};
-    self.navigationController.navigationBar.titleTextAttributes = titleTextAttributes;
     if ([self stp_isTopNavigationController]) {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     } else {
@@ -107,6 +106,27 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     [super viewDidLayoutSubviews];
     self.tableView.frame = self.view.bounds;
     self.activityIndicator.center = self.view.center;
+    if (self.navigationController.navigationBar.translucent) {
+        CGFloat insetTop = CGRectGetMaxY(self.navigationController.navigationBar.frame);
+        self.tableView.contentInset = UIEdgeInsetsMake(insetTop, 0, 0, 0);
+        self.tableView.scrollIndicatorInsets = self.tableView.contentInset;
+    } else {
+        self.tableView.contentInset = UIEdgeInsetsZero;
+        self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
+    }
+}
+
+- (void)setTheme:(STPTheme *)theme {
+    _theme = theme;
+    [self updateAppearance];
+}
+
+- (void)updateAppearance {
+    self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
+    self.view.backgroundColor = self.theme.primaryBackgroundColor;
+    self.tableView.tintColor = self.theme.accentColor;
+    self.cardImageView.tintColor = self.theme.accentColor;
+    self.tableView.separatorColor = self.theme.primaryBackgroundColor;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
@@ -128,7 +148,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier forIndexPath:indexPath];
-    cell.textLabel.font = [UIFont systemFontOfSize:17];
+    cell.textLabel.font = self.theme.font;
+    cell.backgroundColor = self.theme.secondaryBackgroundColor;
     if (indexPath.section == STPPaymentMethodCardListSection) {
         id<STPPaymentMethod> paymentMethod = [self.paymentContext.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
         cell.imageView.image = paymentMethod.image;
@@ -136,7 +157,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         cell.textLabel.attributedText = [self buildAttributedStringForPaymentMethod:paymentMethod selected:selected];
         cell.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
-        cell.textLabel.textColor = [UIColor stp_linkBlueColor];
+        cell.textLabel.textColor = [self.theme accentColor];
         cell.imageView.image = [UIImage stp_addIcon];
         cell.textLabel.text = NSLocalizedString(@"Add New Card...", nil);
     }
@@ -149,7 +170,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         return [self buildAttributedStringForCard:((STPCardPaymentMethod *)paymentMethod).card selected:selected];
     } else if ([paymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
         NSString *label = NSLocalizedString(@"Apple Pay", nil);
-        UIColor *primaryColor = selected ? [UIColor stp_linkBlueColor] : [UIColor stp_darkTextColor];
+        UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryTextColor;
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
     }
     return nil;
@@ -159,7 +180,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     NSString *template = NSLocalizedString(@"%@ Ending In %@", @"{card brand} ending in {last4}");
     NSString *brandString = [NSString stp_stringWithCardBrand:card.brand];
     NSString *label = [NSString stringWithFormat:template, brandString, card.last4];
-    UIColor *primaryColor = selected ? [UIColor stp_linkBlueColor] : [UIColor stp_darkTextColor];
+    UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryTextColor;
     UIColor *secondaryColor = [primaryColor colorWithAlphaComponent:0.6f];
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: secondaryColor}];
     [attributedString addAttribute:NSForegroundColorAttributeName value:primaryColor range:[label rangeOfString:brandString]];
@@ -193,6 +214,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
                 }];
             }
         }];
+        paymentCardViewController.theme = self.theme;
         [self.navigationController pushViewController:paymentCardViewController animated:YES];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

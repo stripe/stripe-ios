@@ -9,8 +9,6 @@
 #import "STPPaymentCardEntryViewController.h"
 #import "STPPaymentCardTextField.h"
 #import "STPToken.h"
-#import "UIFont+Stripe.h"
-#import "UIColor+Stripe.h"
 #import "UIImage+Stripe.h"
 #import "STPAddressFieldTableViewCell.h"
 #import "STPAddressViewModel.h"
@@ -22,11 +20,13 @@
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
 @property(nonatomic, weak)UITableView *tableView;
+@property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)UIBarButtonItem *doneItem;
 @property(nonatomic)UITableViewCell *cardNumberCell;
 @property(nonatomic, copy)STPPaymentCardEntryBlock completion;
 @property(nonatomic, weak)STPPaymentCardTextField *textField;
 @property(nonatomic)BOOL loading;
+@property(nonatomic)UIActivityIndicatorView *activityIndicator;
 @property(nonatomic)STPAddressViewModel *addressViewModel;
 @property(nonatomic)UIToolbar *inputAccessoryToolbar;
 @end
@@ -48,6 +48,7 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
         _completion = completion;
         _requiredBillingAddressFields = requiredBillingAddressFields;
         _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:requiredBillingAddressFields];
+        _theme = [STPTheme new];
         self.addressViewModel.delegate = self;
     }
     return self;
@@ -56,7 +57,6 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
 - (void)viewDidLoad {
     [super viewDidLoad];
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-    tableView.backgroundColor = [UIColor stp_backgroundGreyColor];
     tableView.sectionHeaderHeight = 30;
     tableView.dataSource = self;
     tableView.delegate = self;
@@ -74,14 +74,11 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
     UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[UIImage stp_largeCardFrontImage]];
     cardImageView.contentMode = UIViewContentModeCenter;
     cardImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, cardImageView.bounds.size.height + (57 * 2));
+    self.cardImageView = cardImageView;
     self.tableView.tableHeaderView = cardImageView;
     
     UITableViewCell *cardNumberCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     STPPaymentCardTextField *textField = [[STPPaymentCardTextField alloc] init];
-    textField.backgroundColor = [UIColor whiteColor];
-    textField.placeholderColor = [UIColor stp_fieldPlaceholderGreyColor];
-    textField.cornerRadius = 0;
-    textField.borderColor = [UIColor colorWithWhite:0.9f alpha:1];
     textField.delegate = self;
     [cardNumberCell addSubview:textField];
     self.textField = textField;
@@ -89,11 +86,32 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
     
     self.addressViewModel.previousField = textField;
     
+    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    
     self.inputAccessoryToolbar = [UIToolbar stp_inputAccessoryToolbarWithTarget:self action:@selector(paymentFieldNextTapped)];
     [self.inputAccessoryToolbar stp_setEnabled:NO];
     if (self.requiredBillingAddressFields != STPBillingAddressFieldsNone) {
         textField.inputAccessoryView = self.inputAccessoryToolbar;
     }
+    [self updateAppearance];
+}
+
+- (void)setTheme:(STPTheme *)theme {
+    _theme = theme;
+    [self updateAppearance];
+}
+
+- (void)updateAppearance {
+    self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
+    self.tableView.separatorColor = self.theme.primaryBackgroundColor;
+    self.textField.backgroundColor = self.theme.secondaryBackgroundColor;
+    self.textField.placeholderColor = self.theme.tertiaryTextColor;
+    self.textField.borderColor = [UIColor clearColor];
+    self.textField.textColor = self.theme.primaryTextColor;
+    self.textField.font = self.theme.font;
+    self.cardImageView.tintColor = self.theme.accentColor;
+    self.activityIndicator.color = self.theme.accentColor;
+    [self.tableView reloadData];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -118,21 +136,12 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
     self.navigationItem.leftBarButtonItem.enabled = !loading;
     if (loading) {
         [self.tableView endEditing:YES];
-        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        [activityIndicator startAnimating];
-        UIBarButtonItem *loadingItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicator];
+        [self.activityIndicator startAnimating];
+        UIBarButtonItem *loadingItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
         [self.navigationItem setRightBarButtonItem:loadingItem animated:YES];
     } else {
         [self.navigationItem setRightBarButtonItem:self.doneItem animated:YES];
     }
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    NSDictionary *titleTextAttributes = @{NSFontAttributeName:[UIFont stp_navigationBarFont]};
-    self.navigationController.navigationBar.titleTextAttributes = titleTextAttributes;
-    [self.navigationItem.leftBarButtonItem setTitleTextAttributes:titleTextAttributes forState:UIControlStateNormal];
-    [self.navigationItem.rightBarButtonItem setTitleTextAttributes:titleTextAttributes forState:UIControlStateNormal];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -193,6 +202,24 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
     [[self.addressViewModel.addressCells stp_boundSafeObjectAtIndex:0] becomeFirstResponder];
 }
 
+- (void)paymentCardTextFieldDidBeginEditingCVC:(__unused STPPaymentCardTextField *)textField {
+    [UIView transitionWithView:self.cardImageView
+                      duration:0.25
+                       options:UIViewAnimationOptionTransitionFlipFromRight
+                    animations:^{
+                        self.cardImageView.image = [UIImage stp_largeCardBackImage];
+                    } completion:nil];
+}
+
+- (void)paymentCardTextFieldDidEndEditingCVC:(__unused STPPaymentCardTextField *)textField {
+    [UIView transitionWithView:self.cardImageView
+                      duration:0.25
+                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                    animations:^{
+                        self.cardImageView.image = [UIImage stp_largeCardFrontImage];
+                    } completion:nil];
+}
+
 #pragma mark - STPAddressViewModelDelegate
 
 - (void)addressViewModelDidChange:(__unused STPAddressViewModel *)addressViewModel {
@@ -222,12 +249,16 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
 
 - (UITableViewCell *)tableView:(__unused UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell;
     if (indexPath.section == STPPaymentCardNumberSection) {
-        return self.cardNumberCell;
+        cell = self.cardNumberCell;
     } else if (indexPath.section == STPPaymentCardBillingAddressSection) {
-        return self.addressViewModel.addressCells[indexPath.row];
+        STPAddressFieldTableViewCell *addressCell = [self.addressViewModel.addressCells stp_boundSafeObjectAtIndex:indexPath.row];
+        addressCell.theme = self.theme;
+        cell = addressCell;
     }
-    return nil;
+    cell.backgroundColor = self.theme.secondaryBackgroundColor;
+    return cell;
 }
 
 - (CGFloat)tableView:(__unused UITableView *)tableView heightForFooterInSection:(__unused NSInteger)section {
@@ -240,11 +271,11 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
 
 - (UIView *)tableView:(__unused UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UILabel *label = [UILabel new];
-    label.font = [UIFont systemFontOfSize:15];
+    label.font = self.theme.smallFont;
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     style.firstLineHeadIndent = 15;
     NSDictionary *attributes = @{NSParagraphStyleAttributeName: style};
-    label.textColor = [UIColor stp_fieldLabelGreyColor];
+    label.textColor = self.theme.secondaryTextColor;
     if (section == STPPaymentCardNumberSection) {
         label.attributedText = [[NSAttributedString alloc] initWithString:@"Card" attributes:attributes];
         return label;
