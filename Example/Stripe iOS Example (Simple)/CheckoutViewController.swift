@@ -32,7 +32,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     
     // These values will be shown to the user when they purchase with Apple Pay.
     let companyName = "Emoji Apparel"
-    let paymentAmount = 1000 // this amount is in cents.
     let paymentCurrency = "usd"
 
     let myAPIClient: MyAPIClient
@@ -46,14 +45,13 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
                                        customerID: self.customerID)
         let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient)
         paymentContext.appleMerchantIdentifier = self.appleMerchantID
-        paymentContext.paymentAmount = self.paymentAmount
+        paymentContext.paymentAmount = price
         paymentContext.paymentCurrency = self.paymentCurrency
         paymentContext.companyName = self.companyName
         paymentContext.requiredBillingAddressFields = .Zip
         self.paymentContext = paymentContext
         super.init(nibName: nil, bundle: nil)
         self.paymentContext.delegate = self
-        self.paymentContext.paymentAmount = price
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -69,7 +67,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.navigationController?.navigationBar.translucent = false
         self.navigationItem.title = "Emoji Apparel"
         self.checkoutView.buyButton.addTarget(self, action: #selector(didTapBuy), forControlEvents: .TouchUpInside)
-        self.checkoutView.totalRow.detail = "$10.00"
+        self.checkoutView.totalRow.detail = "$\(self.paymentContext.paymentAmount/100).00"
         self.checkoutView.paymentRow.onTap = { _ in
             if let navController = self.navigationController {
                 self.paymentContext.pushPaymentMethodsViewControllerOntoNavigationController(navController)
@@ -117,7 +115,8 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     }
 
     func createBackendCharge(source: STPSource, completion: STPErrorBlock) {
-        self.myAPIClient.completeCharge(source, amount: self.paymentAmount, completion: completion)
+        self.myAPIClient.completeCharge(source, amount: self.paymentContext.paymentAmount,
+                                        completion: completion)
     }
 
     // MARK: STPPaymentContextDelegate
