@@ -30,11 +30,23 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         guard let json = data?.JSON else { return nil }
         if let cardsJSON = json["cards"] as? [[String: AnyObject]] {
             let selectedCardJSON = json["selected_card"] as? [String: AnyObject]
-            let selectedCard = STPCard.decodedObjectFromAPIResponse(selectedCardJSON)
-            let cards = cardsJSON.flatMap { STPCard.decodedObjectFromAPIResponse($0) }
+            let selectedCard = decodeCard(selectedCardJSON)
+            let cards = cardsJSON.flatMap(decodeCard)
             return (selectedCard, cards)
         }
         return nil
+    }
+    
+    func decodeCard(json: [String: AnyObject]?) -> STPCard? {
+        guard let json = json,
+            cardID = json["id"] as? String,
+            brand = json["brand"] as? String,
+            last4 = json["last4"] as? String,
+            expMonth = json["exp_month"] as? UInt,
+            expYear = json["exp_year"] as? UInt,
+            funding = json["funding"] as? String
+            else { return nil }
+        return STPCard(ID: cardID, brand: STPCard.brandFromString(brand), last4: last4, expMonth: expMonth, expYear: expYear, funding: STPCard.fundingFromString(funding))
     }
 
     func decodeResponse(response: NSURLResponse?, error: NSError?) -> NSError? {
@@ -71,6 +83,13 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     }
     
     @objc func retrieveCards(completion: STPCardCompletionBlock) {
+        guard let key = Stripe.defaultPublishableKey() where !key.containsString("#") else {
+            let error = NSError(domain: StripeDomain, code: 50, userInfo: [
+                NSLocalizedDescriptionKey: "Please set stripePublishableKey to your account's test publishable key in CheckoutViewController.swift"
+            ])
+            completion(nil, nil, error)
+            return
+        }
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
             completion(self.inMemoryCards.last, self.inMemoryCards, nil)
             return

@@ -36,6 +36,7 @@
 @property(nonatomic)STPPaymentMethodType supportedPaymentMethods;
 @property(nonatomic, readwrite, getter=isLoading)BOOL loading;
 @property(nonatomic)STPPromise<STPCardTuple *> *initialLoadingPromise;
+@property(nonatomic)STPPromise<id> *didAppearPromise;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 
@@ -44,38 +45,43 @@
 @implementation STPPaymentContext
 
 - (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
-    return [self initWithAPIAdapter:apiAdapter
-                          apiClient:[STPAPIClient sharedClient]
-            supportedPaymentMethods:STPPaymentMethodTypeAll];
+    return [self initWithAPIAdapter:apiAdapter publishableKey:[Stripe defaultPublishableKey] supportedPaymentMethods:STPPaymentMethodTypeAll];
 }
 
 - (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                         apiClient:(STPAPIClient *)apiClient
+                    publishableKey:(NSString *)publishableKey
            supportedPaymentMethods:(STPPaymentMethodType)supportedPaymentMethods {
     self = [super init];
     if (self) {
         _apiAdapter = apiAdapter;
-        _apiClient = apiClient;
+        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
         _supportedPaymentMethods = supportedPaymentMethods;
         _paymentCurrency = @"USD";
-        _merchantName = [NSBundle stp_applicationName];
-        __weak typeof(self) weakSelf = self;
+        _companyName = [NSBundle stp_applicationName];
+        _didAppearPromise = [STPPromise new];
+        __weak typeof(self) weakself = self;
         _initialLoadingPromise = [[[STPPromise<STPCardTuple *> new] onSuccess:^(STPCardTuple *tuple) {
-            weakSelf.paymentMethods = [weakSelf parsePaymentMethods:tuple.cards];
+            weakself.paymentMethods = [weakself parsePaymentMethods:tuple.cards];
             if (tuple.selectedCard) {
-                weakSelf.selectedPaymentMethod = [[STPCardPaymentMethod alloc] initWithCard:tuple.selectedCard];
+                weakself.selectedPaymentMethod = [[STPCardPaymentMethod alloc] initWithCard:tuple.selectedCard];
             } else if ([self applePaySupported]) {
-                weakSelf.selectedPaymentMethod = [STPApplePayPaymentMethod new];
+                weakself.selectedPaymentMethod = [STPApplePayPaymentMethod new];
             }
         }] onFailure:^(NSError * _Nonnull error) {
-            [weakSelf.delegate paymentContext:weakSelf didFailToLoadWithError:error];
+            [weakself.didAppearPromise onSuccess:^(__unused id value) {
+                [weakself.delegate paymentContext:weakself didFailToLoadWithError:error];
+            }];
         }];
     }
     return self;
 }
 
-- (void)didAppear {
+- (void)willAppear {
     [self performInitialLoad];
+}
+
+- (void)didAppear {
+    [self.didAppearPromise succeed:[NSObject new]];
 }
 
 - (void)performInitialLoad {
@@ -276,7 +282,7 @@
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.appleMerchantIdentifier];
     NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:self.paymentAmount
                                                                   currency:self.paymentCurrency];
-    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:self.merchantName
+    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:self.companyName
                                                                           amount:amount];
     paymentRequest.paymentSummaryItems = @[totalItem];
     paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.requiredBillingAddressFields];

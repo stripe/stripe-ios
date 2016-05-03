@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		042CA41D1A685E8D00D778E7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042CA4141A685E8D00D778E7 /* AppDelegate.swift */; };
 		042CA4201A685E8D00D778E7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 042CA4191A685E8D00D778E7 /* Images.xcassets */; };
+		04BC29A01CD81D3900318357 /* BrowseProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */; };
 		04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; };
 		04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C124A18B1CCACAA1007D42EE /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */; };
@@ -38,6 +39,7 @@
 		042CA4191A685E8D00D778E7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		042CA41A1A685E8D00D778E7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04823F781A6849200098400B /* Stripe iOS Example (Simple).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example (Simple).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowseProductsViewController.swift; sourceTree = "<group>"; };
 		04D075D91A69B82B00094431 /* Stripe iOS Example (Simple).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Stripe iOS Example (Simple).entitlements"; sourceTree = "<group>"; };
 		04D076191A69C14700094431 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutViewController.swift; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 				C188F2A51CC1A338003A524B /* MyAPIClient.swift */,
 				C1B83CBE1CCE6FEE00F0790B /* CheckoutView.swift */,
 				C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */,
+				04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */,
 				C1C154331CD296CB0036AA63 /* Networking.swift */,
 				C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */,
 				C1B83CBC1CCE6C0700F0790B /* Buttons.swift */,
@@ -182,6 +185,7 @@
 			files = (
 				C1C154341CD296CB0036AA63 /* Networking.swift in Sources */,
 				C124A18B1CCACAA1007D42EE /* CheckoutViewController.swift in Sources */,
+				04BC29A01CD81D3900318357 /* BrowseProductsViewController.swift in Sources */,
 				C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */,
 				C1B83CBF1CCE6FEE00F0790B /* CheckoutView.swift in Sources */,
 				C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */,

@@ -31,29 +31,29 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     let appleMerchantID: String? = nil
     
     // These values will be shown to the user when they purchase with Apple Pay.
-    let merchantName = "Emoji Apparel"
+    let companyName = "Emoji Apparel"
     let paymentAmount = 1000 // this amount is in cents.
     let paymentCurrency = "usd"
 
     let myAPIClient: MyAPIClient
     let paymentContext: STPPaymentContext
-    let products = ["👕", "👖", "👗", "👞", "👟", "👠", "👡", "👢",
-                    "👒", "👙", "💄", "🎩", "👛", "👜", "🕶", "👚"]
     let checkoutView = CheckoutView()
-
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    
+    init(product: String, price: Int) {
+        self.checkoutView.product = product
         Stripe.setDefaultPublishableKey(self.stripePublishableKey)
         self.myAPIClient = MyAPIClient(baseURL: self.backendBaseURL,
-                                     customerID: self.customerID)
+                                       customerID: self.customerID)
         let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient)
         paymentContext.appleMerchantIdentifier = self.appleMerchantID
         paymentContext.paymentAmount = self.paymentAmount
         paymentContext.paymentCurrency = self.paymentCurrency
-        paymentContext.merchantName = self.merchantName
+        paymentContext.companyName = self.companyName
         paymentContext.requiredBillingAddressFields = .Zip
         self.paymentContext = paymentContext
         super.init(nibName: nil, bundle: nil)
         self.paymentContext.delegate = self
+        self.paymentContext.paymentAmount = price
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -66,30 +66,28 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let index = Int(arc4random_uniform(UInt32(self.products.count)))
-        self.checkoutView.product = self.products[index]
         self.navigationController?.navigationBar.translucent = false
         self.navigationItem.title = "Emoji Apparel"
         self.checkoutView.buyButton.addTarget(self, action: #selector(didTapBuy), forControlEvents: .TouchUpInside)
         self.checkoutView.totalRow.detail = "$10.00"
         self.checkoutView.paymentRow.onTap = { _ in
-            guard self.checkConstants() else { return }
-
             if let navController = self.navigationController {
                 self.paymentContext.pushPaymentMethodsViewControllerOntoNavigationController(navController)
             }
         }
     }
-
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.paymentContext.willAppear()
+    }
+    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        guard self.checkConstants() else { return }
-
         self.paymentContext.didAppear()
     }
 
     func didTapBuy() {
-        guard self.checkConstants() else { return }
 
         self.checkoutView.paymentInProgress = true
         self.paymentContext.requestPaymentFromViewController(
@@ -144,27 +142,15 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     func paymentContext(paymentContext: STPPaymentContext, didFailToLoadWithError error: NSError) {
         let alertController = UIAlertController(
-            title: "Error Retrieving Cards",
+            title: "Error",
             message: error.localizedDescription,
             preferredStyle: .Alert
         )
-        let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        let action = UIAlertAction(title: "OK", style: .Default, handler: { action in
+            self.navigationController?.popViewControllerAnimated(true)
+        })
         alertController.addAction(action)
         self.presentViewController(alertController, animated: true, completion: nil)
-    }
-
-    func checkConstants() -> Bool {
-        if self.stripePublishableKey.containsString("#")
-            || self.stripePublishableKey.utf16.count == 0 {
-            let alertController = UIAlertController(title: "No Stripe Publishable Key",
-                                                    message: "Please set stripePublishableKey to your account's test publishable key in CheckoutViewController.swift",
-                                                    preferredStyle: .Alert)
-            let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
-            alertController.addAction(action)
-            self.presentViewController(alertController, animated: true, completion: nil)
-            return false
-        }
-        return true
     }
 
 }

@@ -33,6 +33,57 @@
 
 @dynamic number, cvc, expMonth, expYear, currency, name, addressLine1, addressLine2, addressCity, addressState, addressZip, addressCountry;
 
++ (nonnull instancetype)cardWithID:(nonnull NSString *)stripeID
+                             brand:(STPCardBrand)brand
+                             last4:(nonnull NSString *)last4
+                          expMonth:(NSUInteger)expMonth
+                           expYear:(NSUInteger)expYear
+                           funding:(STPCardFundingType)funding {
+    STPCard *card = [self new];
+    card.cardId = stripeID;
+    card.brand = brand;
+    card.last4 = last4;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    card.expMonth = expMonth;
+    card.expYear = expYear;
+#pragma clang diagnostic pop
+    card.funding = funding;
+    return card;
+}
+
++ (STPCardBrand)brandFromString:(nonnull NSString *)string {
+    NSString *brand = [string lowercaseString];
+    if ([brand isEqualToString:@"visa"]) {
+        return STPCardBrandVisa;
+    } else if ([brand isEqualToString:@"american express"]) {
+        return STPCardBrandAmex;
+    } else if ([brand isEqualToString:@"mastercard"]) {
+        return STPCardBrandMasterCard;
+    } else if ([brand isEqualToString:@"discover"]) {
+        return STPCardBrandDiscover;
+    } else if ([brand isEqualToString:@"jcb"]) {
+        return STPCardBrandJCB;
+    } else if ([brand isEqualToString:@"diners club"]) {
+        return STPCardBrandDinersClub;
+    } else {
+        return STPCardBrandUnknown;
+    }
+}
+
++ (STPCardFundingType)fundingFromString:(nonnull NSString *)string {
+    NSString *funding = [string lowercaseString];
+    if ([funding isEqualToString:@"credit"]) {
+        return STPCardFundingTypeCredit;
+    } else if ([funding isEqualToString:@"debit"]) {
+        return STPCardFundingTypeDebit;
+    } else if ([funding isEqualToString:@"prepaid"]) {
+        return STPCardFundingTypePrepaid;
+    } else {
+        return STPCardFundingTypeOther;
+    }
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -105,31 +156,9 @@
     card.last4 = dict[@"last4"];
     card.dynamicLast4 = dict[@"dynamic_last4"];
     NSString *brand = [dict[@"brand"] lowercaseString];
-    if ([brand isEqualToString:@"visa"]) {
-        card.brand = STPCardBrandVisa;
-    } else if ([brand isEqualToString:@"american express"]) {
-        card.brand = STPCardBrandAmex;
-    } else if ([brand isEqualToString:@"mastercard"]) {
-        card.brand = STPCardBrandMasterCard;
-    } else if ([brand isEqualToString:@"discover"]) {
-        card.brand = STPCardBrandDiscover;
-    } else if ([brand isEqualToString:@"jcb"]) {
-        card.brand = STPCardBrandJCB;
-    } else if ([brand isEqualToString:@"diners club"]) {
-        card.brand = STPCardBrandDinersClub;
-    } else {
-        card.brand = STPCardBrandUnknown;
-    }
+    card.brand = [STPCard brandFromString:brand];
     NSString *funding = dict[@"funding"];
-    if ([funding.lowercaseString isEqualToString:@"credit"]) {
-        card.funding = STPCardFundingTypeCredit;
-    } else if ([funding.lowercaseString isEqualToString:@"debit"]) {
-        card.funding = STPCardFundingTypeDebit;
-    } else if ([funding.lowercaseString isEqualToString:@"prepaid"]) {
-        card.funding = STPCardFundingTypePrepaid;
-    } else {
-        card.funding = STPCardFundingTypeOther;
-    }
+    card.funding = [STPCard fundingFromString:funding];
     card.fingerprint = dict[@"fingerprint"];
     card.country = dict[@"country"];
     card.currency = dict[@"currency"];

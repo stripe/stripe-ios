@@ -29,9 +29,41 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 @interface STPCard : STPCardParams<STPAPIResponseDecodable, STPSource>
 
 /**
- *  The card's number. This will be nil for cards retrieved from the Stripe API.
+ *  A factory method to build an STPCard from a Stripe API response.
+ *
+ *  @param cardID   The Stripe ID of the card, e.g. card_185iQx4JYtv6MPZKfcuXwkOx
+ *  @param brand    The brand of the card (e.g. "Visa". To obtain this enum value from a string, use [STPCardBrand brandFromString:string];
+ *  @param last4    The last 4 digits of the card, e.g. 4242
+ *  @param expMonth The card's expiration month, 1-indexed (i.e. 1 = January)
+ *  @param expYear  The card's expiration year
+ *  @param funding  The card's funding type (credit, debit, or prepaid). To obtain this enum value from a string, use [STPCardBrand fundingFromString:string].
+ *
+ *  @return an STPCard instance populated with the provided values.
  */
++ (nonnull instancetype)cardWithID:(nonnull NSString *)cardID
+                             brand:(STPCardBrand)brand
+                             last4:(nonnull NSString *)last4
+                          expMonth:(NSUInteger)expMonth
+                           expYear:(NSUInteger)expYear
+                           funding:(STPCardFundingType)funding;
 
+/**
+ *  This parses a string representing a card's brand into the appropriate STPCardBrand enum value, i.e. [STPCard brandFromString:@"American Express"] == STPCardBrandAmex
+ *
+ *  @param string a string representing the card's brand as returned from the Stripe API
+ *
+ *  @return an enum value mapped to that string. If the string is unrecognized, returns STPCardBrandUnknown.
+ */
++ (STPCardBrand)brandFromString:(nonnull NSString *)string;
+
+/**
+ *  This parses a string representing a card's funding type into the appropriate STPCardFundingType enum value, i.e. [STPCard fundingFromString:@"prepaid"] == STPCardFundingTypePrepaid.
+ *
+ *  @param string a string representing the card's funding type as returned from the Stripe API
+ *
+ *  @return an enum value mapped to that string. If the string is unrecognized, returns STPCardFundingTypeOther.
+ */
++ (STPCardFundingType)fundingFromString:(nonnull NSString *)string;
 
 /**
  *  The last 4 digits of the card.
@@ -44,7 +76,7 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 @property (nonatomic, readonly, nullable) NSString *dynamicLast4;
 
 /**
- *  The card's expiration month.
+ *  The card's expiration month. 1-indexed (i.e. 1 == January)
  */
 @property (nonatomic) NSUInteger expMonth;
 

@@ -13,8 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class STPCard;
 
+/**
+ *  This represents a payment method backed by a specific card, as opposed to for example Apple Pay.
+ */
 @interface STPCardPaymentMethod : NSObject <STPPaymentMethod>
 
+/**
+ *  The underlying card the user has selected.
+ */
 @property (nonatomic, readonly) STPCard *card;
 
 - (instancetype)initWithCard:(STPCard *)card;

@@ -17,12 +17,10 @@
 #import "STPCardValidator.h"
 #import "STPToken.h"
 #import "STPBlocks.h"
-
 #import "Stripe+ApplePay.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentCardTextField.h"
 #import "STPAddress.h"
-
 #import "STPPaymentCardEntryViewController.h"
 #import "STPPaymentMethodsViewController.h"
 #import "STPPaymentContext.h"

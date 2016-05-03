@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        let rootVC = CheckoutViewController()
+        let rootVC = BrowseProductsViewController()
         let navigationController = UINavigationController(rootViewController: rootVC)
         let window = UIWindow()
         window.rootViewController = navigationController;

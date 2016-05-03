@@ -76,7 +76,6 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     
     self.navigationItem.title = NSLocalizedString(@"Choose Payment", nil);
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
-    [self.paymentContext didAppear];
     __weak typeof(self) weakself = self;
     [self.paymentContext onSuccess:^{
         [UIView animateWithDuration:0.2 animations:^{
@@ -93,6 +92,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView reloadData];
+    [self.paymentContext willAppear];
     NSDictionary *titleTextAttributes = @{NSFontAttributeName:[UIFont stp_navigationBarFont]};
     self.navigationController.navigationBar.titleTextAttributes = titleTextAttributes;
     if ([self stp_isTopNavigationController]) {
