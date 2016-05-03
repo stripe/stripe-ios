@@ -37,9 +37,11 @@
         return;
     }
     self.value = value;
-    for (STPPromiseValueBlock valueBlock in self.successCallbacks) {
-        valueBlock(value);
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (STPPromiseValueBlock valueBlock in self.successCallbacks) {
+            valueBlock(value);
+        }
+    });
 }
 
 - (void)fail:(NSError *)error {
@@ -47,14 +49,18 @@
         return;
     }
     self.error = error;
-    for (STPPromiseErrorBlock errorBlock in self.errorCallbacks) {
-        errorBlock(error);
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (STPPromiseErrorBlock errorBlock in self.errorCallbacks) {
+            errorBlock(error);
+        }
+    });
 }
 
 - (instancetype)onSuccess:(STPPromiseValueBlock)callback {
     if (self.value) {
-        callback(self.value);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            callback(self.value);
+        });
     } else {
         self.successCallbacks = [self.successCallbacks arrayByAddingObject:callback];
     }
@@ -63,7 +69,9 @@
 
 - (instancetype)onFailure:(STPPromiseErrorBlock)callback {
     if (self.error) {
-        callback(self.error);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            callback(self.error);
+        });
     } else {
         self.errorCallbacks = [self.errorCallbacks arrayByAddingObject:callback];
     }
