@@ -38,6 +38,6 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
                     delegate:(id<STPAddressFieldTableViewCellDelegate>)delegate;
 
 @property(nonatomic)STPAddressFieldType type;
-@property (nonatomic, strong) NSString *contents;
+@property (nonatomic, copy) NSString *contents;
 
 @end

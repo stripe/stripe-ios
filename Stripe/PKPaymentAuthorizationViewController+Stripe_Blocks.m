@@ -21,10 +21,11 @@ static char kSTPBlockBasedApplePayDelegateAssociatedObjectKey;
 @property (nonatomic) BOOL didSucceed;
 @end
 
+typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStatus status);
 
 @implementation STPBlockBasedApplePayDelegate
 
-- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didAuthorizePayment:(PKPayment *)payment completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didAuthorizePayment:(PKPayment *)payment completion:(STPPaymentAuthorizationStatusCallback)completion {
     [self.apiClient createTokenWithPayment:payment completion:^(STPToken * _Nullable token, NSError * _Nullable error) {
         if (error) {
             self.lastError = error;

@@ -23,4 +23,8 @@
     return [object isKindOfClass:[STPApplePayPaymentMethod class]];
 }
 
+- (NSUInteger)hash {
+    return [NSStringFromClass(self.class) hash];
+}
+
 @end

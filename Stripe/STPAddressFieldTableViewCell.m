@@ -63,7 +63,7 @@
         pickerView.delegate = self;
         _countryPickerView = pickerView;
         
-        self.type = type;
+        _type = type;
         self.textField.text = contents;
         switch (type) {
             case STPAddressFieldTypeName:
@@ -196,7 +196,7 @@
 
 - (NSString *)pickerView:(__unused UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(__unused NSInteger)component {
     NSString *countryCode = self.countryCodes[row];
-    NSString *identifier = [NSLocale localeIdentifierFromComponents:[NSDictionary dictionaryWithObject:countryCode forKey: NSLocaleCountryCode]];
+    NSString *identifier = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: countryCode}];
     return [[NSLocale currentLocale] displayNameForKey:NSLocaleIdentifier value:identifier];
 }
 

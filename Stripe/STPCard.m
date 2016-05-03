@@ -33,26 +33,28 @@
 
 @dynamic number, cvc, expMonth, expYear, currency, name, addressLine1, addressLine2, addressCity, addressState, addressZip, addressCountry;
 
-+ (nonnull instancetype)cardWithID:(nonnull NSString *)stripeID
-                             brand:(STPCardBrand)brand
-                             last4:(nonnull NSString *)last4
-                          expMonth:(NSUInteger)expMonth
-                           expYear:(NSUInteger)expYear
-                           funding:(STPCardFundingType)funding {
-    STPCard *card = [self new];
-    card.cardId = stripeID;
-    card.brand = brand;
-    card.last4 = last4;
+- (instancetype)initWithID:(NSString *)stripeID
+                     brand:(STPCardBrand)brand
+                     last4:(NSString *)last4
+                  expMonth:(NSUInteger)expMonth
+                   expYear:(NSUInteger)expYear
+                   funding:(STPCardFundingType)funding {
+    self = [super init];
+    if (self) {
+        _cardId = stripeID;
+        _brand = brand;
+        _last4 = last4;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-    card.expMonth = expMonth;
-    card.expYear = expYear;
+        self.expMonth = expMonth;
+        self.expYear = expYear;
 #pragma clang diagnostic pop
-    card.funding = funding;
-    return card;
+        _funding = funding;
+    }
+    return self;
 }
 
-+ (STPCardBrand)brandFromString:(nonnull NSString *)string {
++ (STPCardBrand)brandFromString:(NSString *)string {
     NSString *brand = [string lowercaseString];
     if ([brand isEqualToString:@"visa"]) {
         return STPCardBrandVisa;
@@ -71,7 +73,7 @@
     }
 }
 
-+ (STPCardFundingType)fundingFromString:(nonnull NSString *)string {
++ (STPCardFundingType)fundingFromString:(NSString *)string {
     NSString *funding = [string lowercaseString];
     if ([funding isEqualToString:@"credit"]) {
         return STPCardFundingTypeCredit;
@@ -156,9 +158,9 @@
     card.last4 = dict[@"last4"];
     card.dynamicLast4 = dict[@"dynamic_last4"];
     NSString *brand = [dict[@"brand"] lowercaseString];
-    card.brand = [STPCard brandFromString:brand];
+    card.brand = [self.class brandFromString:brand];
     NSString *funding = dict[@"funding"];
-    card.funding = [STPCard fundingFromString:funding];
+    card.funding = [self.class fundingFromString:funding];
     card.fingerprint = dict[@"fingerprint"];
     card.country = dict[@"country"];
     card.currency = dict[@"currency"];
@@ -183,7 +185,7 @@
 }
 
 - (NSString *)label {
-    NSString *brand = [NSString stringWithCardBrand:self.brand];
+    NSString *brand = [NSString stp_stringWithCardBrand:self.brand];
     return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
 }
 

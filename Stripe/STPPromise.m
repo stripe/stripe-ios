@@ -22,8 +22,8 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _successCallbacks = [NSArray array];
-        _errorCallbacks = [NSArray array];
+        _successCallbacks = @[];
+        _errorCallbacks = @[];
     }
     return self;
 }

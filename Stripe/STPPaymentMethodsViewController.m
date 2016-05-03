@@ -117,7 +117,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     [self.delegate paymentMethodsViewControllerDidCancel:self];
 }
 
-- (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(__unused NSInteger)section {
+- (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == STPPaymentMethodCardListSection) {
         return self.paymentContext.paymentMethods.count;
     } else if (section == STPPaymentMethodAddCardSection) {
@@ -157,7 +157,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 - (NSAttributedString *)buildAttributedStringForCard:(STPCard *)card selected:(BOOL)selected {
     NSString *template = NSLocalizedString(@"%@ Ending In %@", @"{card brand} ending in {last4}");
-    NSString *brandString = [NSString stringWithCardBrand:card.brand];
+    NSString *brandString = [NSString stp_stringWithCardBrand:card.brand];
     NSString *label = [NSString stringWithFormat:template, brandString, card.last4];
     UIColor *primaryColor = selected ? [UIColor stp_linkBlueColor] : [UIColor stp_darkTextColor];
     UIColor *secondaryColor = [primaryColor colorWithAlphaComponent:0.6f];
@@ -167,7 +167,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     return [attributedString copy];
 }
 
-- (void)tableView:(__unused UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == STPPaymentMethodCardListSection) {
         id<STPPaymentMethod> paymentMethod = [self.paymentContext.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
         [self.paymentContext selectPaymentMethod:paymentMethod];

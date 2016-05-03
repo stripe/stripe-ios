@@ -142,17 +142,17 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 /**
  *  The three-letter currency code for the currency of the payment (i.e. USD, GBP, JPY, etc). Defaults to USD.
  */
-@property(nonatomic)NSString *paymentCurrency;
+@property(nonatomic, copy)NSString *paymentCurrency;
 
 /**
  *  The name of your company, for displaying to the user during the payment flow. For example, when using Apple Pay, the payment sheet's final line item will read "PAY {companyName}". This defaults to the name of your iOS application.
  */
-@property(nonatomic)NSString *companyName;
+@property(nonatomic, copy)NSString *companyName;
 
 /**
  *  The Apple Merchant Identifier to use during Apple Pay transactions. To create one of these, see our guide at https://stripe.com/docs/mobile/applepay . You must set this to a valid identifier in order to automatically enable Apple Pay.
  */
-@property(nonatomic, nullable)NSString *appleMerchantIdentifier;
+@property(nonatomic, nullable, copy)NSString *appleMerchantIdentifier;
 
 /**
  *  You must call this method on your payment context when the view controller it's powering is about to appear. This tells the payment context to begin fetching the data it needs. A good time to call this is in the -viewWillAppear: method of that view controller.

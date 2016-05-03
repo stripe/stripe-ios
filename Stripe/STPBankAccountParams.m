@@ -7,6 +7,7 @@
 //
 
 #import "STPBankAccountParams.h"
+#define FAUXPAS_IGNORED_ON_LINE(...)
 
 @interface STPBankAccountParams()
 @property(nonatomic, readonly)NSString *accountHolderTypeString;
@@ -33,7 +34,7 @@
     }
 }
 
-- (NSString *)accountHolderTypeString {
+- (NSString *)accountHolderTypeString { FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
     switch (self.accountHolderType) {
         case STPBankAccountHolderTypeCompany:
             return @"company";

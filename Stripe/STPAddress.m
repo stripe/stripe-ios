@@ -71,9 +71,6 @@
             return self.postalCode.length > 0;
         case STPBillingAddressFieldsFull:
             return [self hasValidPostalAddress];
-            
-        default:
-            break;
     }
     return containsFields;
 }

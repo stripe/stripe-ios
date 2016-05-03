@@ -37,4 +37,8 @@
     return [object isKindOfClass:[STPCardPaymentMethod class]] && [((STPCardPaymentMethod *)object).card isEqual:self.card];
 }
 
+- (NSUInteger)hash {
+    return [self.card hash];
+}
+
 @end

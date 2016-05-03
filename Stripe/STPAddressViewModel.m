@@ -51,7 +51,7 @@
     return self.addressCells[index];
 }
 
-- (void)addressFieldTableViewCellDidReturn:(__unused STPAddressFieldTableViewCell *)cell {
+- (void)addressFieldTableViewCellDidReturn:(STPAddressFieldTableViewCell *)cell {
     [[self cellAfterCell:cell] becomeFirstResponder];
 }
 

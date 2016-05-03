@@ -14,7 +14,7 @@
     if (index + 1 > self.count) {
         return nil;
     }
-    return [self objectAtIndex:index];
+    return self[index];
 }
 
 @end

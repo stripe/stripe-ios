@@ -168,7 +168,6 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
 - (void)handleError:(NSError *)error {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     self.loading = NO;
-    NSLog(@"%@", error);
     [self.textField becomeFirstResponder];
     if ([UIAlertController class]) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:error.localizedDescription message:error.localizedFailureReason preferredStyle:UIAlertControllerStyleAlert];
