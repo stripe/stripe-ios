@@ -27,21 +27,21 @@
     }
 }
 
-- (void)addToken:(STPToken *)token completion:(STPCardCompletionBlock)completion {
+- (void)addToken:(STPToken *)token completion:(STPErrorBlock)completion {
     if (self.addTokenError) {
-        completion(nil, nil, self.addTokenError);
+        completion(self.addTokenError);
     } else {
         self.cards = [self.cards arrayByAddingObject:token.card];
-        completion(self.selectedCard, self.cards, nil);
+        completion(nil);
     }
 }
 
-- (void)selectCard:(STPCard *)card completion:(STPCardCompletionBlock)completion {
+- (void)selectCard:(STPCard *)card completion:(STPErrorBlock)completion {
     if (self.selectCardError) {
-        completion(nil, nil, self.selectCardError);
+        completion(self.selectCardError);
     } else {
         self.selectedCard = card;
-        completion(self.selectedCard, self.cards, nil);
+        completion(nil);
     }
 }
 

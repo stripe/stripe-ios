@@ -112,9 +112,9 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         task.resume()
     }
 
-    @objc func selectCard(card: STPCard, completion: STPCardCompletionBlock) {
+    @objc func selectCard(card: STPCard, completion: STPErrorBlock) {
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
-            completion(card, self.inMemoryCards, nil)
+            completion(nil)
             return
         }
         let path = "select_source"
@@ -127,25 +127,21 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in
             dispatch_async(dispatch_get_main_queue()) {
                 if let error = self.decodeResponse(urlResponse, error: error) {
-                    completion(nil, [], error)
+                    completion(error)
                     return
                 }
-                if let (selectedCard, cards) = self.decodeData(data) {
-                    completion(selectedCard, cards, nil)
-                }
+                completion(nil)
             }
         }
         task.resume()
     }
     
-    @objc func addToken(token: STPToken, completion: STPCardCompletionBlock) {
+    @objc func addToken(token: STPToken, completion: STPErrorBlock) {
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
             if let card = token.card {
                 self.inMemoryCards.append(card)
-                completion(card, self.inMemoryCards, nil)
-            } else {
-                completion(nil, [], nil)
             }
+            completion(nil)
             return
         }
         let path = "/customers/\(customerID)/sources"
@@ -158,12 +154,10 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in
             dispatch_async(dispatch_get_main_queue()) {
                 if let error = self.decodeResponse(urlResponse, error: error) {
-                    completion(nil, [], error)
+                    completion(error)
                     return
                 }
-                if let (selectedCard, cards) = self.decodeData(data) {
-                    completion(selectedCard, cards, nil)
-                }
+                completion(nil)
             }
         }
         task.resume()

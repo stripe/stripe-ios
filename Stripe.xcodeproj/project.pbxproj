@@ -249,6 +249,7 @@
 		04A4C39A1C4F2C8600B3B290 /* NSString+Stripe_CardBrands.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C3961C4F2C8600B3B290 /* NSString+Stripe_CardBrands.m */; };
 		04A850EA1CB71D9900B3AD68 /* MockSTPAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 04A850E21CB71D9900B3AD68 /* MockSTPAPIClient.h */; };
 		04B33F361BC7488D00DD8120 /* Info.plist in Copy Files */ = {isa = PBXBuildFile; fileRef = 04B33F301BC7417B00DD8120 /* Info.plist */; };
+		04BC29A11CD8412000318357 /* STPPaymentContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 049A3F881CC73C7100F57DE7 /* STPPaymentContext.m */; };
 		04CB86BA1BA89CE100E4F61E /* PKPayment+StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */; };
 		04CDB4D31A5F30A700B854EE /* Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4A91A5F30A700B854EE /* Stripe.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04CDB4FE1A5F30A700B854EE /* STPAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDB4C21A5F30A700B854EE /* STPAPIClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1430,6 +1431,7 @@
 				049E84D21A605DE0000B66CD /* StripeError.m in Sources */,
 				04633B131CD45211009D4FB5 /* Stripe+ApplePay.m in Sources */,
 				049952D81BCF14990088C703 /* STPAPIPostRequest.m in Sources */,
+				04BC29A11CD8412000318357 /* STPPaymentContext.m in Sources */,
 				04CDE5C71BC20AF800548833 /* STPBankAccountParams.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
