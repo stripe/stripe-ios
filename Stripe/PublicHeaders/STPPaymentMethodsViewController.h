@@ -45,6 +45,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, readonly)STPPaymentContext *paymentContext;
 @property(nonatomic, weak, nullable, readonly)id<STPPaymentMethodsViewControllerDelegate>delegate;
+
+/**
+ *  This theme will control the visual appearance of the view controller's view. @see STPTheme
+ */
 @property(nonatomic)STPTheme *theme;
 
 /**

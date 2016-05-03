@@ -119,6 +119,9 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
  */
 @property(nonatomic, weak, nullable)id<STPPaymentContextDelegate> delegate;
 
+/**
+ *  This theme will inform the visual appearance of any UI created by the payment context. @see STPTheme
+ */
 @property(nonatomic)STPTheme *theme;
 
 /**

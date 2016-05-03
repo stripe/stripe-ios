@@ -40,6 +40,9 @@ typedef void (^STPPaymentCardEntryBlock)(STPToken * __nullable token, STPErrorBl
      requiredBillingAddressFields:(STPBillingAddressFields)requiredBillingAddressFields
                        completion:(STPPaymentCardEntryBlock)completion;
 
+/**
+ *  This theme will control the visual appearance of the view controller's view. @see STPTheme
+ */
 @property(nonatomic)STPTheme *theme;
 
 @end

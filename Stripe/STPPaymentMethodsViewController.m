@@ -44,7 +44,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     if (self) {
         _paymentContext = paymentContext;
         _delegate = delegate;
-        _theme = [STPTheme new];
+        _theme = paymentContext.theme;
     }
     return self;
 }
