@@ -114,11 +114,11 @@ static UIFont  *STPThemeDefaultFont;
 }
 
 - (UIColor *)tertiaryTextColor {
-    return [self.secondaryTextColor colorWithAlphaComponent:0.8];
+    return [self.secondaryTextColor colorWithAlphaComponent:0.8f];
 }
 
 - (UIFont *)smallFont {
-    CGFloat pointSize = round(self.font.pointSize * 5.0f/6.0f);
+    CGFloat pointSize = (CGFloat)round(self.font.pointSize * 5.0f/6.0f);
     return [self.font fontWithSize:pointSize];
 }
 
