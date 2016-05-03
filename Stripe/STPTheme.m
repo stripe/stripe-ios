@@ -29,7 +29,6 @@ static UIFont  *STPThemeDefaultFont;
 @implementation STPTheme
 
 + (void)initialize {
-    [super initialize];
     STPThemeDefaultPrimaryBackgroundColor = [UIColor colorWithRed:242.0f/255.0f green:242.0f/255.0f blue:245.0f/255.0f alpha:1];
     STPThemeDefaultSecondaryBackgroundColor = [UIColor whiteColor];
     STPThemeDefaultPrimaryTextColor = [UIColor colorWithRed:43.0f/255.0f green:43.0f/255.0f blue:45.0f/255.0f alpha:1];
