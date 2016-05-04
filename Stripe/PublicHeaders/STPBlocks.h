@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "STPSource.h"
 
+@class STPToken;
+
 /**
  *  An enum representing the status of a payment requested from the user.
  */
@@ -38,3 +40,11 @@ typedef void (^STPVoidBlock)();
  *  @param error The error that occurred, if any.
  */
 typedef void (^STPErrorBlock)(NSError * __nullable error);
+
+/**
+ *  A callback to be run with a token response from the Stripe API.
+ *
+ *  @param token The Stripe token from the response. Will be nil if an error occurs. @see STPToken
+ *  @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
+ */
+typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * __nullable error);

@@ -37,11 +37,11 @@
         return;
     }
     self.value = value;
-    dispatch_async(dispatch_get_main_queue(), ^{
+//    dispatch_async(dispatch_get_main_queue(), ^{
         for (STPPromiseValueBlock valueBlock in self.successCallbacks) {
             valueBlock(value);
         }
-    });
+//    });
 }
 
 - (void)fail:(NSError *)error {
@@ -49,11 +49,11 @@
         return;
     }
     self.error = error;
-    dispatch_async(dispatch_get_main_queue(), ^{
+//    dispatch_async(dispatch_get_main_queue(), ^{ TODO reenable
         for (STPPromiseErrorBlock errorBlock in self.errorCallbacks) {
             errorBlock(error);
         }
-    });
+//    });
 }
 
 - (instancetype)onSuccess:(STPPromiseValueBlock)callback {
@@ -76,6 +76,43 @@
         self.errorCallbacks = [self.errorCallbacks arrayByAddingObject:callback];
     }
     return self;
+}
+
+- (STPPromise *)flatMap:(STPPromiseFlatMapBlock)callback {
+    STPPromise<id>* wrapper = [STPPromise<id> new];
+    [[self onSuccess:^(id value) {
+        STPPromise *internal = callback(value);
+        [[internal onSuccess:^(id internalValue) {
+            [wrapper succeed:internalValue];
+        }] onFailure:^(NSError *internalError) {
+            [wrapper fail:internalError];
+        }];
+    }] onFailure:^(NSError *error) {
+        [wrapper fail:error];
+    }];
+    return wrapper;
+}
+
+@end
+
+@implementation STPVoidPromise
+
+- (void)succeed {
+    [self succeed:[NSNull null]];
+}
+
+- (instancetype)voidOnSuccess:(STPVoidBlock)callback {
+    return [super onSuccess:^(__unused id value) {
+        if (callback) {
+            callback();
+        }
+    }];
+}
+
+- (STPPromise<id> *)voidFlatMap:(STPVoidPromiseFlatMapBlock)block {
+    return [super flatMap:^STPPromise *(__unused id value) {
+        return block();
+    }];
 }
 
 @end

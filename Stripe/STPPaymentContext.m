@@ -18,6 +18,8 @@
 #import "STPApplePayPaymentMethod.h"
 #import "STPPromise.h"
 
+#import "STPCheckoutAPIClient.h"
+
 @interface STPDummyNavigationBar : UINavigationBar
 @end
 
@@ -42,6 +44,7 @@
 @property(nonatomic)STPPromise<id> *didAppearPromise;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
+@property(nonatomic)STPCheckoutAPIClient *checkoutAPIClient;
 
 @end
 
@@ -76,6 +79,13 @@
                 [weakself.delegate paymentContext:weakself didFailToLoadWithError:error];
             }];
         }];
+        _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:publishableKey];
+        [_checkoutAPIClient sendSMSToAccountWithEmail:@"jack+test@stripe.com" completion:^(__unused STPCheckoutAPIVerification *verification, __unused NSError *error) {
+            
+        }];
+//        [_checkoutAPIClient getVerificationForEmail:@"jack+test@stripe.com" completion:^(__unused STPCheckoutAPIVerification *verification, __unused NSError *error) {
+//            
+//        }];
     }
     return self;
 }

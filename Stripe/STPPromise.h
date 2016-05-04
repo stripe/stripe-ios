@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "STPBlocks.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^STPPromiseErrorBlock)(NSError *error);
 typedef void (^STPPromiseValueBlock)(T value);
+typedef STPPromise* _Nonnull (^STPVoidPromiseFlatMapBlock)();
+typedef STPPromise* _Nonnull (^STPPromiseFlatMapBlock)(T value);
 
 @property(atomic, readonly)BOOL completed;
 @property(atomic, readonly)T value;
@@ -22,8 +25,18 @@ typedef void (^STPPromiseValueBlock)(T value);
 - (void)succeed:(T)value;
 - (void)fail:(NSError *)error;
 
-- (instancetype)onSuccess:(void (^)(T value))callback;
-- (instancetype)onFailure:(void (^)(NSError *error))callback;
+- (instancetype)onSuccess:(STPPromiseValueBlock)callback;
+- (instancetype)onFailure:(STPPromiseErrorBlock)callback;
+
+- (STPPromise<id> *)flatMap:(STPPromiseFlatMapBlock)callback;
+
+@end
+
+@interface STPVoidPromise : STPPromise
+
+- (void)succeed;
+- (instancetype)voidOnSuccess:(STPVoidBlock)block;
+- (STPPromise<id> *)voidFlatMap:(STPVoidPromiseFlatMapBlock)block;
 
 @end
 
