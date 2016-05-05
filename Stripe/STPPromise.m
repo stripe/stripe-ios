@@ -93,6 +93,16 @@
     return wrapper;
 }
 
+- (STPVoidPromise *)asVoid {
+    STPVoidPromise *voidPromise = [STPVoidPromise new];
+    [[self onSuccess:^(__unused id value) {
+        [voidPromise succeed];
+    }] onFailure:^(NSError * _Nonnull error) {
+        [voidPromise fail:error];
+    }];
+    return voidPromise;
+}
+
 @end
 
 @implementation STPVoidPromise
@@ -113,6 +123,10 @@
     return [super flatMap:^STPPromise *(__unused id value) {
         return block();
     }];
+}
+
+- (STPVoidPromise *)asVoid {
+    return self;
 }
 
 @end

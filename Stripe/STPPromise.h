@@ -11,11 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class STPVoidPromise;
+
 @interface STPPromise<T>: NSObject
 
 typedef void (^STPPromiseErrorBlock)(NSError *error);
 typedef void (^STPPromiseValueBlock)(T value);
-typedef STPPromise* _Nonnull (^STPVoidPromiseFlatMapBlock)();
 typedef STPPromise* _Nonnull (^STPPromiseFlatMapBlock)(T value);
 
 @property(atomic, readonly)BOOL completed;
@@ -29,8 +30,11 @@ typedef STPPromise* _Nonnull (^STPPromiseFlatMapBlock)(T value);
 - (instancetype)onFailure:(STPPromiseErrorBlock)callback;
 
 - (STPPromise<id> *)flatMap:(STPPromiseFlatMapBlock)callback;
+- (STPVoidPromise *)asVoid;
 
 @end
+
+typedef STPPromise* _Nonnull (^STPVoidPromiseFlatMapBlock)();
 
 @interface STPVoidPromise : STPPromise
 

@@ -7,13 +7,11 @@
 //
 
 #import "STPCheckoutAPIClient.h"
-#import "STPPromise.h"
 #import "STPCheckoutBootstrapResponse.h"
 #import "NSMutableURLRequest+Stripe.h"
 
 @interface STPCheckoutAPIClient()
 @property(nonatomic, copy)NSString *publishableKey;
-@property(nonatomic)STPVoidPromise *bootstrapPromise;
 @property(nonatomic)NSURLSession *accountSession;
 @end
 
@@ -39,7 +37,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
                 [weakself.bootstrapPromise fail:error];
             } else {
                 STPCheckoutBootstrapResponse *bootstrap = [STPCheckoutBootstrapResponse bootstrapResponseWithData:data URLResponse:response];
-                if (bootstrap) {
+                if (bootstrap && !bootstrap.accountsDisabled) {
                     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
                     configuration.HTTPAdditionalHeaders = @{
                                                             @"X-Rack-Session": bootstrap.sessionID,

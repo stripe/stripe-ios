@@ -11,6 +11,7 @@
 #import "STPCheckoutAccount.h"
 #import "STPCheckoutAccountLookup.h"
 #import "STPBlocks.h"
+#import "STPPromise.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,6 +20,8 @@ typedef void (^STPCheckoutLookupBlock)(STPCheckoutAccountLookup * __nullable loo
 typedef void (^STPCheckoutAccountBlock)(STPCheckoutAccount * __nullable account, NSError * __nullable error);
 
 @interface STPCheckoutAPIClient : NSObject
+
+@property(nonatomic)STPVoidPromise *bootstrapPromise;
 
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey;
 

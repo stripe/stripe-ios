@@ -15,6 +15,7 @@
 #import "NSArray+Stripe_BoundSafe.h"
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
 #import "UIToolbar+Stripe_InputAccessory.h"
+#import "STPCheckoutAPIClient.h"
 
 @interface STPPaymentCardEntryViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource>
 @property(nonatomic)STPAPIClient *apiClient;
@@ -29,6 +30,7 @@
 @property(nonatomic)UIActivityIndicatorView *activityIndicator;
 @property(nonatomic)STPAddressViewModel *addressViewModel;
 @property(nonatomic)UIToolbar *inputAccessoryToolbar;
+@property(nonatomic)STPCheckoutAPIClient *checkoutAPIClient;
 @end
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
@@ -49,7 +51,8 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
         _requiredBillingAddressFields = requiredBillingAddressFields;
         _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:requiredBillingAddressFields];
         _theme = [STPTheme new];
-        self.addressViewModel.delegate = self;
+        _addressViewModel.delegate = self;
+        _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:apiClient.publishableKey];
     }
     return self;
 }
