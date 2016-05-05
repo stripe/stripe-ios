@@ -1,12 +1,12 @@
 //
-//  STPPaymentCardEntryViewController.m
+//  STPAddCardViewController.m
 //  Stripe
 //
 //  Created by Jack Flintermann on 3/23/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentCardEntryViewController.h"
+#import "STPAddCardViewController.h"
 #import "STPPaymentCardTextField.h"
 #import "STPToken.h"
 #import "UIImage+Stripe.h"
@@ -16,14 +16,14 @@
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
 #import "UIToolbar+Stripe_InputAccessory.h"
 
-@interface STPPaymentCardEntryViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource>
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)UIBarButtonItem *doneItem;
 @property(nonatomic)UITableViewCell *cardNumberCell;
-@property(nonatomic, copy)STPPaymentCardEntryBlock completion;
+@property(nonatomic, copy)STPAddCardCompletionBlock completion;
 @property(nonatomic, weak)STPPaymentCardTextField *textField;
 @property(nonatomic)BOOL loading;
 @property(nonatomic)UIActivityIndicatorView *activityIndicator;
@@ -37,14 +37,14 @@ static NSString *const STPPaymentCardCellReuseIdentifier = @"STPPaymentCardCellR
 static NSInteger STPPaymentCardNumberSection = 0;
 static NSInteger STPPaymentCardBillingAddressSection = 1;
 
-@implementation STPPaymentCardEntryViewController
+@implementation STPAddCardViewController
 
-- (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
-     requiredBillingAddressFields:(STPBillingAddressFields)requiredBillingAddressFields
-                       completion:(STPPaymentCardEntryBlock)completion {
+- (instancetype)initWithPublishableKey:(NSString *)publishableKey
+          requiredBillingAddressFields:(STPBillingAddressFields)requiredBillingAddressFields
+                            completion:(STPAddCardCompletionBlock)completion {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        _apiClient = apiClient;
+        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
         _completion = completion;
         _requiredBillingAddressFields = requiredBillingAddressFields;
         _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:requiredBillingAddressFields];
