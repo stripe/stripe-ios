@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPPaymentContext, STPPaymentMethodsViewController;
 
 /**
- *  An STPPaymentMethodsViewControllerDelegate responds when a user selects a payment method from (or cancels) an STPPaymentMethodsViewController. In both of these instances, you should dismiss the view controller (either by popping it off the navigation stack, or dismissing it). If you are popping it off of a UINavigationController stack, be aware that it may have already pushed additional view controllers (such as an STPPaymentCardEntryViewController) onto the stack, so don't call -popViewControllerAnimated: on your UINavigationController. Instead, call -popToViewController: on your navigation controller, with the view controller that was behind the STPPaymentMethodsViewController as the first argument.
+ *  An STPPaymentMethodsViewControllerDelegate responds when a user selects a payment method from (or cancels) an STPPaymentMethodsViewController. In both of these instances, you should dismiss the view controller (either by popping it off the navigation stack, or dismissing it). If you are popping it off of a UINavigationController stack, be aware that it may have already pushed additional view controllers (such as an STPAddCardViewController) onto the stack, so don't call -popViewControllerAnimated: on your UINavigationController. Instead, call -popToViewController: on your navigation controller, with the view controller that was behind the STPPaymentMethodsViewController as the first argument.
  */
 @protocol STPPaymentMethodsViewControllerDelegate <NSObject>
 

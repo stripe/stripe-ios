@@ -14,7 +14,7 @@
 #import "NSArray+Stripe_BoundSafe.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "UIViewController+Stripe_ParentViewController.h"
-#import "STPPaymentCardEntryViewController.h"
+#import "STPAddCardViewController.h"
 #import "STPCardPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
 #import "STPPaymentContext.h"
@@ -196,8 +196,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         [self finishWithPaymentMethod:paymentMethod];
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
         __weak typeof(self) weakself = self;
-        STPPaymentCardEntryViewController *paymentCardViewController;
-        paymentCardViewController = [[STPPaymentCardEntryViewController alloc] initWithAPIClient:self.paymentContext.apiClient requiredBillingAddressFields:self.paymentContext.requiredBillingAddressFields completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
+        STPAddCardViewController *paymentCardViewController;
+        paymentCardViewController = [[STPAddCardViewController alloc] initWithPublishableKey:self.paymentContext.publishableKey requiredBillingAddressFields:self.paymentContext.requiredBillingAddressFields completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
             if (token && token.card) {
                 [self.paymentContext addToken:token completion:^(id<STPPaymentMethod> paymentMethod, NSError *error) {
                     if (error) {

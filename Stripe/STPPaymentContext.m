@@ -38,6 +38,7 @@
 
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic)STPAPIClient *apiClient;
+@property(nonatomic, copy)NSString *publishableKey;
 @property(nonatomic)STPPaymentMethodType supportedPaymentMethods;
 @property(nonatomic, readwrite, getter=isLoading)BOOL loading;
 @property(nonatomic)STPPromise<STPCardTuple *> *initialLoadingPromise;
@@ -61,6 +62,7 @@
     if (self) {
         _apiAdapter = apiAdapter;
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
+        _publishableKey = publishableKey;
         _supportedPaymentMethods = supportedPaymentMethods;
         _theme = [STPTheme new];
         _paymentCurrency = @"USD";

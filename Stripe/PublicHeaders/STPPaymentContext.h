@@ -95,9 +95,9 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
            supportedPaymentMethods:(STPPaymentMethodType)supportedPaymentMethods;
 
 /**
- *  The API client used by the payment context to create tokens.
+ *  The publishable key that will be used by the payment context.
  */
-@property(nonatomic, readonly)STPAPIClient *apiClient;
+@property(nonatomic, readonly, copy)NSString *publishableKey;
 
 /**
  *  The API adapter that will be used to talk to your backend API.
