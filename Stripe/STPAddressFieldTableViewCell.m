@@ -11,6 +11,7 @@
 #import "STPPostalCodeValidator.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPEmailAddressValidator.h"
+#import "STPCardValidator.h"
 
 @interface STPAddressFieldTableViewCell() <STPFormTextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
@@ -117,6 +118,10 @@
                 }
                 break;
             case STPAddressFieldTypeEmail:
+                self.captionLabel.text = NSLocalizedString(@"Email", nil);
+                self.textField.placeholder = NSLocalizedString(@"you@email.com", @"email field placeholder");
+                self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
                 self.textField.keyboardType = UIKeyboardTypeEmailAddress;
                 break;
                 
@@ -170,13 +175,21 @@
     return NO;
 }
 
+- (void)textFieldDidEndEditing:(STPFormTextField *)textField {
+    textField.validText = [self validContents];
+}
+
 - (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
     [self.delegate addressFieldTableViewCellDidBackspaceOnEmpty:self];
 }
 
 - (void)setContents:(NSString *)contents {
     _contents = contents;
-    self.textField.validText = [self validContents];
+    if ([self.textField isFirstResponder]) {
+        self.textField.validText = [self potentiallyValidContents];
+    } else {
+        self.textField.validText = [self validContents];
+    }
 }
 
 - (BOOL)validContents {
@@ -195,6 +208,24 @@
             return [STPEmailAddressValidator stringIsValidEmailAddress:self.contents];
         case STPAddressFieldTypePhone:
             return [STPPhoneNumberValidator stringIsValidPhoneNumber:self.contents];
+    }
+}
+
+- (BOOL)potentiallyValidContents {
+    switch (self.type) {
+        case STPAddressFieldTypeName:
+        case STPAddressFieldTypeLine1:
+        case STPAddressFieldTypeCity:
+        case STPAddressFieldTypeState:
+        case STPAddressFieldTypeCountry:
+        case STPAddressFieldTypeLine2:
+            return YES;
+        case STPAddressFieldTypeZip:
+            return [STPCardValidator stringIsNumeric:self.contents];
+        case STPAddressFieldTypeEmail:
+            return [STPEmailAddressValidator stringIsValidPartialEmailAddress:self.contents];
+        case STPAddressFieldTypePhone:
+            return [STPPhoneNumberValidator stringIsValidPartialPhoneNumber:self.contents];
     }
 }
 

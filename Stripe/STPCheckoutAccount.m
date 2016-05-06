@@ -12,6 +12,8 @@
 
 @property(nonatomic, nonnull)NSString *email;
 @property(nonatomic, nonnull)NSString *phone;
+@property(nonatomic, nonnull)NSString *csrfToken;
+@property(nonatomic, nonnull)NSString *sessionID;
 @property(nonatomic, nonnull)STPCard *card;
 
 @end
@@ -32,7 +34,7 @@
         return nil;
     }
     NSDictionary *accountHash = object[@"account"];
-    if ([accountHash isKindOfClass:[NSDictionary class]]) {
+    if (![accountHash isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
     NSString *email = accountHash[@"email"];
@@ -41,6 +43,14 @@
     }
     NSString *phone = accountHash[@"phone"];
     if (![phone isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    NSString *csrfToken = object[@"securityToken"];
+    if (![csrfToken isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    NSString *sessionID = object[@"sessionID"];
+    if (![sessionID isKindOfClass:[NSString class]]) {
         return nil;
     }
     NSDictionary *cardHash = accountHash[@"card"];
@@ -67,6 +77,8 @@
     STPCheckoutAccount *account = [self new];
     account.email = email;
     account.phone = phone;
+    account.csrfToken = csrfToken;
+    account.sessionID = sessionID;
     account.card = [[STPCard alloc] initWithID:@"" brand:[STPCard brandFromString:brandString] last4:last4 expMonth:expMonthNumber.unsignedIntegerValue expYear:expYearNumber.unsignedIntegerValue funding:STPCardFundingTypeOther];
     return account;
 }

@@ -81,13 +81,6 @@
                 [weakself.delegate paymentContext:weakself didFailToLoadWithError:error];
             }];
         }];
-        _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:publishableKey];
-        [_checkoutAPIClient sendSMSToAccountWithEmail:@"jack+test@stripe.com" completion:^(__unused STPCheckoutAPIVerification *verification, __unused NSError *error) {
-            
-        }];
-//        [_checkoutAPIClient getVerificationForEmail:@"jack+test@stripe.com" completion:^(__unused STPCheckoutAPIVerification *verification, __unused NSError *error) {
-//            
-//        }];
     }
     return self;
 }

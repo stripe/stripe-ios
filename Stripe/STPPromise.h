@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^STPPromiseErrorBlock)(NSError *error);
 typedef void (^STPPromiseValueBlock)(T value);
+typedef void (^STPPromiseCompletionBlock)(__nullable T value,  NSError * _Nullable error);
 typedef STPPromise* _Nonnull (^STPPromiseFlatMapBlock)(T value);
 
 @property(atomic, readonly)BOOL completed;
@@ -28,6 +29,7 @@ typedef STPPromise* _Nonnull (^STPPromiseFlatMapBlock)(T value);
 
 - (instancetype)onSuccess:(STPPromiseValueBlock)callback;
 - (instancetype)onFailure:(STPPromiseErrorBlock)callback;
+- (instancetype)onCompletion:(STPPromiseCompletionBlock)callback;
 
 - (STPPromise<id> *)flatMap:(STPPromiseFlatMapBlock)callback;
 - (STPVoidPromise *)asVoid;

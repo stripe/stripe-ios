@@ -37,11 +37,11 @@
         return;
     }
     self.value = value;
-//    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         for (STPPromiseValueBlock valueBlock in self.successCallbacks) {
             valueBlock(value);
         }
-//    });
+    });
 }
 
 - (void)fail:(NSError *)error {
@@ -49,11 +49,11 @@
         return;
     }
     self.error = error;
-//    dispatch_async(dispatch_get_main_queue(), ^{ TODO reenable
+    dispatch_async(dispatch_get_main_queue(), ^{
         for (STPPromiseErrorBlock errorBlock in self.errorCallbacks) {
             errorBlock(error);
         }
-//    });
+    });
 }
 
 - (instancetype)onSuccess:(STPPromiseValueBlock)callback {
@@ -76,6 +76,14 @@
         self.errorCallbacks = [self.errorCallbacks arrayByAddingObject:callback];
     }
     return self;
+}
+
+- (instancetype)onCompletion:(STPPromiseCompletionBlock)callback {
+    return [[self onSuccess:^(id  _Nonnull value) {
+        callback(value, nil);
+    }] onFailure:^(NSError * _Nonnull error) {
+        callback(nil, error);
+    }];
 }
 
 - (STPPromise *)flatMap:(STPPromiseFlatMapBlock)callback {

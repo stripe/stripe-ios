@@ -12,30 +12,25 @@
 #import "STPCheckoutAccountLookup.h"
 #import "STPBlocks.h"
 #import "STPPromise.h"
+#import "STPToken.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-typedef void (^STPCheckoutVerificationBlock)(STPCheckoutAPIVerification * __nullable verification, NSError * __nullable error);
-typedef void (^STPCheckoutLookupBlock)(STPCheckoutAccountLookup * __nullable lookup, NSError * __nullable error);
-typedef void (^STPCheckoutAccountBlock)(STPCheckoutAccount * __nullable account, NSError * __nullable error);
 
 @interface STPCheckoutAPIClient : NSObject
 
 @property(nonatomic)STPVoidPromise *bootstrapPromise;
+@property(nonatomic, readonly)BOOL readyForLookups;
 
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey;
 
-- (void)lookupEmail:(NSString *)email
-         completion:(STPCheckoutLookupBlock)completion;
+- (STPPromise<STPCheckoutAccountLookup *> *)lookupEmail:(NSString *)email;
 
-- (void)sendSMSToAccountWithEmail:(NSString *)email
-                       completion:(STPCheckoutVerificationBlock)completion;
+- (STPPromise<STPCheckoutAPIVerification *> *)sendSMSToAccountWithEmail:(NSString *)email;
 
-- (void)submitSMSCode:(NSString *)code
-      forVerification:(STPCheckoutAPIVerification *)verification
-           completion:(STPCheckoutAccountBlock)completion;
-//
-//- (void)createTokenCompletion:(STPTokenCompletionBlock)completion;
+- (STPPromise<STPCheckoutAccount *> *)submitSMSCode:(NSString *)code
+                                    forVerification:(STPCheckoutAPIVerification *)verification;
+
+- (STPPromise *)createTokenWithAccount:(STPCheckoutAccount *)account;
 
 @end
 

@@ -16,6 +16,8 @@
 
 @property(nonatomic, nonnull, readonly)NSString *email;
 @property(nonatomic, nonnull, readonly)NSString *phone;
+@property(nonatomic, nonnull, readonly)NSString *csrfToken;
+@property(nonatomic, nonnull, readonly)NSString *sessionID;
 @property(nonatomic, nonnull, readonly)STPCard *card;
 
 @end

@@ -12,6 +12,10 @@
 
 @implementation STPPhoneNumberValidator
 
++ (BOOL)stringIsValidPartialPhoneNumber:(NSString *)string {
+    return [STPCardValidator sanitizedNumericStringForString:string].length <= 10;
+}
+
 + (BOOL)stringIsValidPhoneNumber:(NSString *)string {
     return [STPCardValidator sanitizedNumericStringForString:string].length == 10;
 }

@@ -10,6 +10,10 @@
 
 @implementation STPEmailAddressValidator
 
++ (BOOL)stringIsValidPartialEmailAddress:(nullable NSString *)string {
+    return [[string mutableCopy] replaceOccurrencesOfString:@"@" withString:@"" options:NSLiteralSearch range:NSMakeRange(0, string.length)] <= 1;
+}
+
 + (BOOL)stringIsValidEmailAddress:(NSString *)string {
     if (!string) {
         return NO;

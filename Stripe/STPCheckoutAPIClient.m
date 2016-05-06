@@ -9,13 +9,14 @@
 #import "STPCheckoutAPIClient.h"
 #import "STPCheckoutBootstrapResponse.h"
 #import "NSMutableURLRequest+Stripe.h"
+#import "STPFormEncoder.h"
 
 @interface STPCheckoutAPIClient()
 @property(nonatomic, copy)NSString *publishableKey;
 @property(nonatomic)NSURLSession *accountSession;
 @end
 
-static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
+static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
 
 @implementation STPCheckoutAPIClient
 
@@ -55,10 +56,13 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
     return self;
 }
 
-- (void)lookupEmail:(NSString *)email
-         completion:(STPCheckoutLookupBlock)completion {
+- (BOOL)readyForLookups {
+    return self.bootstrapPromise.completed && !self.bootstrapPromise.error;
+}
+
+- (STPPromise *)lookupEmail:(NSString *)email {
     __weak typeof(self) weakself = self;
-    [[[self.bootstrapPromise voidFlatMap:^STPPromise*() {
+    return [self.bootstrapPromise voidFlatMap:^STPPromise*() {
         STPPromise<STPCheckoutAccountLookup *> *lookupPromise = [STPPromise<STPCheckoutAccountLookup *> new];
         if (!weakself) {
             [lookupPromise fail:[NSError new]]; // TODO better error
@@ -83,17 +87,12 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
             }
         }] resume];
         return lookupPromise;
-    }] onFailure:^(NSError * _Nonnull error) {
-        completion(nil, error);
-    }] onSuccess:^(STPCheckoutAccountLookup *lookup) {
-        completion(lookup, nil);
     }];
 }
 
-- (void)sendSMSToAccountWithEmail:(NSString *)email
-                       completion:(STPCheckoutVerificationBlock)completion {
+- (STPPromise *)sendSMSToAccountWithEmail:(NSString *)email {
     __weak typeof(self) weakself = self;
-    [[[self.bootstrapPromise voidFlatMap:^STPPromise *{
+    return [self.bootstrapPromise voidFlatMap:^STPPromise *{
         STPPromise *smsPromise = [STPPromise new];
         if (!weakself) {
             [smsPromise fail:[NSError new]]; // TODO better error
@@ -121,18 +120,13 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
             }
         }] resume];
         return smsPromise;
-    }] onSuccess:^(__unused STPCheckoutAPIVerification *verification) {
-        completion(verification, nil);
-    }] onFailure:^(NSError *error) {
-        completion(nil, error);
     }];
 }
 
-- (void)submitSMSCode:(NSString *)code
-      forVerification:(STPCheckoutAPIVerification *)verification
-           completion:(STPCheckoutAccountBlock)completion {
+- (STPPromise *)submitSMSCode:(NSString *)code
+              forVerification:(STPCheckoutAPIVerification *)verification {
     __weak typeof(self) weakself = self;
-    [[[self.bootstrapPromise voidFlatMap:^STPPromise *{
+    return [self.bootstrapPromise voidFlatMap:^STPPromise *{
         STPPromise<STPCheckoutAccount*> *accountPromise = [STPPromise<STPCheckoutAccount *> new];
         if (!weakself) {
             [accountPromise fail:[NSError new]]; // TODO better error
@@ -142,12 +136,17 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
         NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:pathComponent];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         request.HTTPMethod = @"PUT";
-        NSDictionary *payload = @{
-                                  @"key": weakself.publishableKey,
-                                  @"code": code,
-                                  @"locale": @"en",
-                                  };
-        [request stp_addParametersToURL:payload];
+
+        NSDictionary *formPayload = @{
+                                      @"code": code,
+                                      @"key": weakself.publishableKey,
+                                      @"locale": @"en",
+                                      };
+        
+        NSData *formData = [[STPFormEncoder queryStringFromParameters:formPayload] dataUsingEncoding:NSUTF8StringEncoding];
+        request.HTTPBody = formData;
+        [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)formData.length] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
         [[weakself.accountSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error) {
                 [accountPromise fail:error];
@@ -160,11 +159,53 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
             }
         }] resume];
         return accountPromise;
-    }] onSuccess:^(STPCheckoutAccount *value) {
-        completion(value, nil);
-    }] onFailure:^(NSError *error) {
-        completion(nil, error);
     }];
+}
+
+- (STPPromise *)createTokenWithAccount:(STPCheckoutAccount *)account {
+    __weak typeof(self) weakself = self;
+    return [self.bootstrapPromise voidFlatMap:^STPPromise *{
+        STPPromise<STPToken *> *tokenPromise = [STPPromise new];
+        if (!weakself) {
+            [tokenPromise fail:[NSError new]]; // TODO better error
+            return tokenPromise;
+        }
+        NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:@"account/tokens"];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        request.HTTPMethod = @"POST";
+        NSDictionary *payload = @{
+                                  @"key": weakself.publishableKey,
+                                  };
+        [request stp_addParametersToURL:payload];
+        [request setValue:account.sessionID forHTTPHeaderField:@"X-Rack-Session"];
+        [request setValue:account.sessionID forHTTPHeaderField:@"Stripe-Checkout-Test-Session"];
+        [request setValue:account.csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
+        [[weakself.accountSession dataTaskWithRequest:request completionHandler:^(__unused NSData *data, __unused NSURLResponse *response, NSError *error) {
+            if (error) {
+                [tokenPromise fail:error];
+                return;
+            }
+            STPToken *token = [self parseTokenFromResponse:response data:data];
+            if (token) {
+                [tokenPromise succeed:token];
+            } else {
+                [tokenPromise fail:[NSError new]];
+            }
+        }] resume];
+        return tokenPromise;
+    }];
+}
+
+- (nullable STPToken *)parseTokenFromResponse:(NSURLResponse *)response
+                                         data:(NSData *)data {
+    if (![response isKindOfClass:[NSHTTPURLResponse class]]) {
+        return nil;
+    }
+    if (((NSHTTPURLResponse *)response).statusCode != 200) {
+        return nil;
+    }
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    return [STPToken decodedObjectFromAPIResponse:json[@"token"]];
 }
 
 @end

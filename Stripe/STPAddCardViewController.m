@@ -16,13 +16,15 @@
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
 #import "UIToolbar+Stripe_InputAccessory.h"
 #import "STPCheckoutAPIClient.h"
+#import "STPEmailAddressValidator.h"
 
-@interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource>
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)UIBarButtonItem *doneItem;
+@property(nonatomic)STPAddressFieldTableViewCell *emailCell;
 @property(nonatomic)UITableViewCell *cardNumberCell;
 @property(nonatomic, copy)STPAddCardCompletionBlock completion;
 @property(nonatomic, weak)STPPaymentCardTextField *textField;
@@ -36,8 +38,9 @@
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
 static NSString *const STPPaymentCardCellReuseIdentifier = @"STPPaymentCardCellReuseIdentifier";
-static NSInteger STPPaymentCardNumberSection = 0;
-static NSInteger STPPaymentCardBillingAddressSection = 1;
+static NSInteger STPPaymentCardEmailSection = 0;
+static NSInteger STPPaymentCardNumberSection = 1;
+static NSInteger STPPaymentCardBillingAddressSection = 2;
 
 @implementation STPAddCardViewController
 
@@ -52,7 +55,7 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
         _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:requiredBillingAddressFields];
         _theme = [STPTheme new];
         _addressViewModel.delegate = self;
-        _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:apiClient.publishableKey];
+        _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:publishableKey];
     }
     return self;
 }
@@ -80,6 +83,8 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
     self.cardImageView = cardImageView;
     self.tableView.tableHeaderView = cardImageView;
     
+    self.emailCell = [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeEmail contents:nil lastInList:NO delegate:self];
+    
     UITableViewCell *cardNumberCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     STPPaymentCardTextField *textField = [[STPPaymentCardTextField alloc] init];
     textField.delegate = self;
@@ -97,6 +102,13 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
         textField.inputAccessoryView = self.inputAccessoryToolbar;
     }
     [self updateAppearance];
+    self.tableView.alpha = 0;
+    [self.checkoutAPIClient.bootstrapPromise onCompletion:^(__unused id value, __unused NSError *error) {
+        [tableView reloadData];
+        [UIView animateWithDuration:0.2 animations:^{
+            tableView.alpha = 1;
+        }];
+    }];
 }
 
 - (void)setTheme:(STPTheme *)theme {
@@ -105,6 +117,7 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
 }
 
 - (void)updateAppearance {
+    self.view.backgroundColor = self.theme.primaryBackgroundColor;
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
     self.tableView.separatorColor = self.theme.primaryBackgroundColor;
     self.textField.backgroundColor = self.theme.secondaryBackgroundColor;
@@ -114,6 +127,7 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
     self.textField.font = self.theme.font;
     self.cardImageView.tintColor = self.theme.accentColor;
     self.activityIndicator.color = self.theme.accentColor;
+    self.emailCell.theme = self.theme;
     [self.tableView reloadData];
 }
 
@@ -229,20 +243,52 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
     [self updateDoneButton];
 }
 
-#pragma mark - UITableView
+- (void)addressFieldTableViewCellDidReturn:(__unused STPAddressFieldTableViewCell *)cell {
+    
+}
 
-- (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
-    switch (self.requiredBillingAddressFields) {
-        case STPBillingAddressFieldsNone:
-            return 1;
-        case STPBillingAddressFieldsZip:
-        case STPBillingAddressFieldsFull:
-            return self.addressViewModel.addressCells.count == 0 ? 1 : 2;
+- (void)addressFieldTableViewCellDidUpdateText:(STPAddressFieldTableViewCell *)cell {
+    if (cell == self.emailCell) {
+        NSString *contents = cell.contents;
+        if ([STPEmailAddressValidator stringIsValidEmailAddress:contents]) {
+            [[[self.checkoutAPIClient lookupEmail:contents] flatMap:^STPPromise *(STPCheckoutAccountLookup *lookup) {
+                return [self.checkoutAPIClient sendSMSToAccountWithEmail:lookup.email];
+            }] onSuccess:^(STPCheckoutAPIVerification *verification) {
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Enter teh code" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                __block UITextField *alertTextField;
+                [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                    alertTextField = textField;
+                }];
+                [alertController addAction:[UIAlertAction actionWithTitle:@"Send" style:UIAlertActionStyleDefault handler:^(__unused UIAlertAction * _Nonnull action) {
+                    [[[self.checkoutAPIClient submitSMSCode:alertTextField.text forVerification:verification] flatMap:^STPPromise * _Nonnull(STPCheckoutAccount * _Nonnull account) {
+                        return [self.checkoutAPIClient createTokenWithAccount:account];
+                    }] onSuccess:^(__unused STPToken *value) {
+                        
+                    }];
+                }]];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self presentViewController:alertController animated:YES completion:nil];
+                });
+            }];
+        }
     }
 }
 
+- (void)addressFieldTableViewCellDidBackspaceOnEmpty:(__unused STPAddressFieldTableViewCell *)cell {
+    
+}
+
+#pragma mark - UITableView
+
+- (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
+    return 3;
+}
+
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == STPPaymentCardNumberSection) {
+    if (section == STPPaymentCardEmailSection) {
+        return self.checkoutAPIClient.readyForLookups ? 1 : 0;
+    }
+    else if (section == STPPaymentCardNumberSection) {
         return 1;
     } else if (section == STPPaymentCardBillingAddressSection) {
         return self.addressViewModel.addressCells.count;
@@ -253,7 +299,10 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
 - (UITableViewCell *)tableView:(__unused UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell;
-    if (indexPath.section == STPPaymentCardNumberSection) {
+    if (indexPath.section == STPPaymentCardEmailSection) {
+        return self.emailCell;
+    }
+    else if (indexPath.section == STPPaymentCardNumberSection) {
         cell = self.cardNumberCell;
     } else if (indexPath.section == STPPaymentCardBillingAddressSection) {
         STPAddressFieldTableViewCell *addressCell = [self.addressViewModel.addressCells stp_boundSafeObjectAtIndex:indexPath.row];
@@ -273,6 +322,9 @@ static NSInteger STPPaymentCardBillingAddressSection = 1;
 }
 
 - (UIView *)tableView:(__unused UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (section == STPPaymentCardEmailSection) {
+        return nil;
+    }
     UILabel *label = [UILabel new];
     label.font = self.theme.smallFont;
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];

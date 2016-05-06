@@ -31,7 +31,7 @@
         return nil;
     }
     NSDictionary *account = object[@"account"];
-    if ([account isKindOfClass:[NSDictionary class]]) {
+    if (![account isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
     NSString *email = account[@"email"];

@@ -10,6 +10,7 @@
 
 @interface STPPhoneNumberValidator : NSObject
 
++ (BOOL)stringIsValidPartialPhoneNumber:(nonnull NSString *)string;
 + (BOOL)stringIsValidPhoneNumber:(nonnull NSString *)string;
 
 + (nonnull NSString *)formattedPhoneNumberForString:(nonnull NSString *)string;
