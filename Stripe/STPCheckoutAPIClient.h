@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPCheckoutAPIClient : NSObject
 
+@property(nonatomic, copy)NSString *merchantName;
 @property(nonatomic)STPVoidPromise *bootstrapPromise;
 @property(nonatomic, readonly)BOOL readyForLookups;
 
@@ -30,7 +31,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (STPPromise<STPCheckoutAccount *> *)submitSMSCode:(NSString *)code
                                     forVerification:(STPCheckoutAPIVerification *)verification;
 
-- (STPPromise *)createTokenWithAccount:(STPCheckoutAccount *)account;
+- (STPPromise<STPToken *> *)createTokenWithAccount:(STPCheckoutAccount *)account;
+
+- (STPPromise<STPCheckoutAccount *> *)createAccountWithCardParams:(STPCardParams *)cardParams
+                                                            email:(NSString *)email
+                                                            phone:(NSString *)phone;
 
 @end
 

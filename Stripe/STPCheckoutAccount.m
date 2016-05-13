@@ -26,7 +26,7 @@
         return nil;
     }
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-    if (httpResponse.statusCode != 200) {
+    if (httpResponse.statusCode != 200 && httpResponse.statusCode != 201) {
         return nil;
     }
     NSDictionary *object = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];

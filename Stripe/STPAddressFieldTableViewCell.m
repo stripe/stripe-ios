@@ -111,6 +111,7 @@
                 }
                 break;
             case STPAddressFieldTypePhone:
+                self.captionLabel.text = NSLocalizedString(@"Phone", nil);
                 self.textField.keyboardType = UIKeyboardTypePhonePad;
                 self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
                 if (!lastInList) {
@@ -141,7 +142,7 @@
     self.captionLabel.textColor = self.theme.secondaryTextColor;
     self.textField.placeholderColor = self.theme.tertiaryTextColor;
     self.textField.defaultColor = self.theme.primaryTextColor;
-    self.textField.errorColor = [UIColor redColor]; // TODO make better
+    self.textField.errorColor = self.theme.errorColor;
     self.textField.font = self.theme.font;
 }
 
@@ -158,7 +159,9 @@
 }
 
 - (void)nextTapped:(__unused id)sender {
-    [self.delegate addressFieldTableViewCellDidReturn:self];
+    if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCellDidReturn:)]) {
+        [self.delegate addressFieldTableViewCellDidReturn:self];
+    }
 }
 
 #pragma mark - STPFormTextFieldDelegate
@@ -171,7 +174,9 @@
 }
 
 - (BOOL)textFieldShouldReturn:(__unused UITextField *)textField {
-    [self.delegate addressFieldTableViewCellDidReturn:self];
+    if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCellDidReturn:)]) {
+        [self.delegate addressFieldTableViewCellDidReturn:self];
+    }
     return NO;
 }
 
@@ -181,6 +186,14 @@
 
 - (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
     [self.delegate addressFieldTableViewCellDidBackspaceOnEmpty:self];
+}
+
+- (void)setCaption:(NSString *)caption {
+    self.captionLabel.text = caption;
+}
+
+- (NSString *)caption {
+    return self.captionLabel.text;
 }
 
 - (void)setContents:(NSString *)contents {

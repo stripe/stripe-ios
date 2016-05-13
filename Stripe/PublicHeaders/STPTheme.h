@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIColor *)defaultSecondaryTextColor;
 
 /**
- *  The globally-default accent color.
+ *  Set the globally-default accent color. If you're using this API, do so as early as possible in the life of your application (such as your app delegate).
  */
 + (void)setDefaultAccentColor:(UIColor *)accentColor;
 
@@ -61,6 +61,16 @@ NS_ASSUME_NONNULL_BEGIN
  *  The globally-default accent color. Defaults to [UIColor colorWithRed:0 green:122.0f/255.0f blue:1 alpha:1].
  */
 + (UIColor *)defaultAccentColor;
+
+/**
+ *  Set the globally-default error color. If you're using this API, do so as early as possible in the life of your application (such as your app delegate).
+ */
++ (void)setDefaultErrorColor:(UIColor *)errorColor;
+
+/**
+ *  The globally-default error color. Defaults to [UIColor colorWithRed:1 green:72.0f/255.0f blue:68.0f/255.0f alpha:1].
+ */
++ (UIColor *)defaultErrorColor;
 
 /**
  *  Set the globally-default font. If you're using this API, do so as early as possible in the life of your application (such as your app delegate).
@@ -81,6 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
                               primaryTextColor:(nullable UIColor *)primaryTextColor
                             secondaryTextColor:(nullable UIColor *)secondaryTextColor
                                    accentColor:(nullable UIColor *)accentColor
+                                    errorColor:(nullable UIColor *)errorColor
                                           font:(nullable UIFont *)font;
 
 /**
@@ -114,6 +125,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly)UIColor *accentColor;
 
 /**
+ *  The error color of this theme - it will be used for rendering any error messages or views.
+ */
+@property(nonatomic, readonly)UIColor *errorColor;
+
+/**
  *  The font to be used for all views using this theme. Make sure to select an appropriate size.
  */
 @property(nonatomic, readonly)UIFont  *font;
@@ -122,6 +138,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  This font is automatically derived from the font, with a slightly lower point size, and will be used for supplementary labels.
  */
 @property(nonatomic, readonly)UIFont  *smallFont;
+
+/**
+ *  This font is automatically derived from the font, with a larger point size, and will be used for large labels such as SMS code entry.
+ */
+@property(nonatomic, readonly)UIFont  *largeFont;
 
 @end
 

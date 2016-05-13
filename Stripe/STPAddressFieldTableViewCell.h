@@ -26,8 +26,10 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
 @protocol STPAddressFieldTableViewCellDelegate <NSObject>
 
 - (void)addressFieldTableViewCellDidUpdateText:(STPAddressFieldTableViewCell *)cell;
-- (void)addressFieldTableViewCellDidReturn:(STPAddressFieldTableViewCell *)cell;
 - (void)addressFieldTableViewCellDidBackspaceOnEmpty:(STPAddressFieldTableViewCell *)cell;
+
+@optional
+- (void)addressFieldTableViewCellDidReturn:(STPAddressFieldTableViewCell *)cell;
 
 @end
 
@@ -39,6 +41,7 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
                     delegate:(id<STPAddressFieldTableViewCellDelegate>)delegate;
 
 @property(nonatomic)STPAddressFieldType type;
+@property(nonatomic, copy) NSString *caption;
 @property(nonatomic, copy) NSString *contents;
 @property(nonatomic)STPTheme *theme;
 

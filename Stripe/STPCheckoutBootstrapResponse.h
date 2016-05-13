@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class STPAPIClient;
+
 @interface STPCheckoutBootstrapResponse : NSObject
 
 + (nullable instancetype)bootstrapResponseWithData:(nullable NSData *)data
@@ -17,5 +19,6 @@
 @property(nonatomic, readonly)BOOL accountsDisabled;
 @property(nonatomic, readonly, nonnull)NSString *sessionID;
 @property(nonatomic, readonly, nonnull)NSString *csrfToken;
+@property(nonatomic, readonly, nonnull)STPAPIClient *tokenClient;
 
 @end

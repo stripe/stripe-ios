@@ -101,6 +101,15 @@ static NSString *STPDefaultPublishableKey;
     return self;
 }
 
+- (instancetype)initWithPublishableKey:(NSString *)publishableKey
+                               baseURL:(NSString *)baseURL {
+    self = [self initWithPublishableKey:publishableKey];
+    if (self) {
+        _apiURL = [NSURL URLWithString:baseURL];
+    }
+    return self;
+}
+
 - (void)setOperationQueue:(NSOperationQueue *)operationQueue {
     NSCAssert(operationQueue, @"Operation queue cannot be nil.");
     _operationQueue = operationQueue;

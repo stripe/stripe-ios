@@ -15,6 +15,7 @@
 @property(nonatomic)UIColor *primaryTextColor;
 @property(nonatomic)UIColor *secondaryTextColor;
 @property(nonatomic)UIColor *accentColor;
+@property(nonatomic)UIColor *errorColor;
 @property(nonatomic)UIFont  *font;
 
 @end
@@ -24,6 +25,7 @@ static UIColor *STPThemeDefaultSecondaryBackgroundColor;
 static UIColor *STPThemeDefaultPrimaryTextColor;
 static UIColor *STPThemeDefaultSecondaryTextColor;
 static UIColor *STPThemeDefaultAccentColor;
+static UIColor *STPThemeDefaultErrorColor;
 static UIFont  *STPThemeDefaultFont;
 
 @implementation STPTheme
@@ -34,6 +36,7 @@ static UIFont  *STPThemeDefaultFont;
     STPThemeDefaultPrimaryTextColor = [UIColor colorWithRed:43.0f/255.0f green:43.0f/255.0f blue:45.0f/255.0f alpha:1];
     STPThemeDefaultSecondaryTextColor = [UIColor colorWithRed:142.0f/255.0f green:142.0f/255.0f blue:147.0f/255.0f alpha:1];
     STPThemeDefaultAccentColor = [UIColor colorWithRed:0 green:122.0f/255.0f blue:1 alpha:1];
+    STPThemeDefaultErrorColor = [UIColor colorWithRed:1 green:72.0f/255.0f blue:68.0f/255.0f alpha:1];
     STPThemeDefaultFont = [UIFont systemFontOfSize:17];
 }
 
@@ -77,6 +80,14 @@ static UIFont  *STPThemeDefaultFont;
     return STPThemeDefaultAccentColor;
 }
 
++ (void)setDefaultErrorColor:(UIColor *)errorColor {
+    STPThemeDefaultErrorColor = errorColor;
+}
+
++ (UIColor *)defaultErrorColor {
+    return STPThemeDefaultErrorColor;
+}
+
 + (void)setDefaultFont:(UIFont *)font {
     STPThemeDefaultFont = font;
 }
@@ -91,6 +102,7 @@ static UIFont  *STPThemeDefaultFont;
                               primaryTextColor:(nullable UIColor *)primaryTextColor
                             secondaryTextColor:(nullable UIColor *)secondaryTextColor
                                    accentColor:(nullable UIColor *)accentColor
+                                    errorColor:(nullable UIColor *)errorColor
                                           font:(nullable UIFont *)font {
     self = [super init];
     if (self) {
@@ -99,6 +111,7 @@ static UIFont  *STPThemeDefaultFont;
         _primaryTextColor = primaryTextColor ?: [self.class defaultPrimaryTextColor];
         _secondaryTextColor = secondaryTextColor ?: [self.class defaultSecondaryTextColor];
         _accentColor = accentColor ?: [self.class defaultAccentColor];
+        _errorColor = errorColor ?: [self.class defaultErrorColor];
         _font = font ?: [self.class defaultFont];
     }
     return self;
@@ -110,6 +123,7 @@ static UIFont  *STPThemeDefaultFont;
                                primaryTextColor:nil
                              secondaryTextColor:nil
                                     accentColor:nil
+                                     errorColor:nil
                                            font:nil];
 }
 
@@ -119,6 +133,11 @@ static UIFont  *STPThemeDefaultFont;
 
 - (UIFont *)smallFont {
     CGFloat pointSize = (CGFloat)round(self.font.pointSize * 5.0f/6.0f);
+    return [self.font fontWithSize:pointSize];
+}
+
+- (UIFont *)largeFont {
+    CGFloat pointSize = (CGFloat)round(self.font.pointSize * 2.0f);
     return [self.font fontWithSize:pointSize];
 }
 

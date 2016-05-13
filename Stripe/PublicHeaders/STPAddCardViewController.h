@@ -45,6 +45,8 @@ typedef void (^STPAddCardCompletionBlock)(STPToken * __nullable token, STPErrorB
  */
 @property(nonatomic)STPTheme *theme;
 
+@property(nonatomic)BOOL smsAutofillDisabled;
+
 @end
 
 NS_ASSUME_NONNULL_END

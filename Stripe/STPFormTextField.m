@@ -57,6 +57,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 @property(nonatomic, copy)STPFormTextTransformationBlock textFormattingBlock;
 // This property only exists to disable keyboard loading in Travis CI due to a crash that occurs while trying to load the keyboard. Don't use it outside of tests.
 @property(nonatomic)BOOL skipsReloadingInputViews;
+@property(nonatomic, copy)NSAttributedString *internalAttributedString;
 @end
 
 @implementation STPFormTextField
@@ -156,6 +157,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
         [self.formDelegate formTextField:self modifyIncomingTextChange:attributedText] :
         attributedText;
     NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(modified) : modified;
+    self.internalAttributedString = transformed;
     [super setAttributedText:transformed];
     CATransition *transition = [CATransition animation];
     transition.duration = 0.065;

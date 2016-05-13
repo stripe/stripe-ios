@@ -8,11 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STPPhoneNumberValidator : NSObject
 
-+ (BOOL)stringIsValidPartialPhoneNumber:(nonnull NSString *)string;
-+ (BOOL)stringIsValidPhoneNumber:(nonnull NSString *)string;
++ (BOOL)stringIsValidPartialPhoneNumber:(NSString *)string;
++ (BOOL)stringIsValidPhoneNumber:(NSString *)string;
 
-+ (nonnull NSString *)formattedPhoneNumberForString:(nonnull NSString *)string;
++ (NSString *)formattedPhoneNumberForString:(NSString *)string;
 
 @end
+
+NS_ASSUME_NONNULL_END

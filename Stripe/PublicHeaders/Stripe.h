@@ -30,3 +30,4 @@
 #import "STPPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
 #import "STPCardPaymentMethod.h"
+#import "STPPaymentActivityIndicatorView.h"

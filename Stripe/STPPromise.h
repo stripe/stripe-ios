@@ -24,6 +24,9 @@ typedef STPPromise* _Nonnull (^STPPromiseFlatMapBlock)(T value);
 @property(atomic, readonly)T value;
 @property(atomic, readonly)NSError *error;
 
++ (instancetype)promiseWithError:(NSError *)error;
++ (instancetype)promiseWithValue:(T)value;
+
 - (void)succeed:(T)value;
 - (void)fail:(NSError *)error;
 

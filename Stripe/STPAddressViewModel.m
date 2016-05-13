@@ -71,9 +71,44 @@
     return [self.address containsRequiredFields:self.requiredBillingAddressFields];
 }
 
+- (void)setAddress:(STPAddress *)address {
+    for (STPAddressFieldTableViewCell *cell in self.addressCells) {
+        switch (cell.type) {
+            case STPAddressFieldTypeName:
+                cell.contents = address.name;
+                break;
+            case STPAddressFieldTypeLine1:
+                cell.contents = address.line1;
+                break;
+            case STPAddressFieldTypeLine2:
+                cell.contents = address.line2;
+                break;
+            case STPAddressFieldTypeCity:
+                cell.contents = address.city;
+                break;
+            case STPAddressFieldTypeState:
+                cell.contents = address.state;
+                break;
+            case STPAddressFieldTypeZip:
+                cell.contents = address.postalCode;
+                break;
+            case STPAddressFieldTypeCountry:
+                cell.contents = address.country;
+                break;
+            case STPAddressFieldTypeEmail:
+                cell.contents = address.email;
+                break;
+            case STPAddressFieldTypePhone:
+                cell.contents = address.phone;
+                break;
+        }
+    }
+}
+
 - (STPAddress *)address {
     STPAddress *address = [STPAddress new];
     for (STPAddressFieldTableViewCell *cell in self.addressCells) {
+        
         switch (cell.type) {
             case STPAddressFieldTypeName:
                 address.name = cell.contents;

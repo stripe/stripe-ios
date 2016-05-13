@@ -19,6 +19,18 @@
 
 @implementation STPPromise
 
++ (instancetype)promiseWithError:(NSError *)error {
+    STPPromise *promise = [STPPromise new];
+    [promise fail:error];
+    return promise;
+}
+
++ (instancetype)promiseWithValue:(id)value {
+    STPPromise *promise = [STPPromise new];
+    [promise succeed:value];
+    return promise;
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {

@@ -10,13 +10,18 @@
 #import "STPCheckoutBootstrapResponse.h"
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPFormEncoder.h"
+#import "STPAPIClient.h"
+#import "STPCardValidator.h"
+#import "NSBundle+Stripe_AppName.h"
+#import "StripeError.h"
 
 @interface STPCheckoutAPIClient()
 @property(nonatomic, copy)NSString *publishableKey;
 @property(nonatomic)NSURLSession *accountSession;
+@property(nonatomic)STPAPIClient *tokenClient;
 @end
 
-static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
+static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api"; // TODO
 
 @implementation STPCheckoutAPIClient
 
@@ -24,6 +29,7 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
     self = [super init];
     if (self) {
         _publishableKey = publishableKey;
+        _merchantName = [NSBundle stp_applicationName];
         _bootstrapPromise = [STPVoidPromise new];
         NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
         NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:@"bootstrap"];
@@ -34,8 +40,9 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
         __weak typeof(self) weakself = self;
         [request stp_addParametersToURL:payload];
         [[urlSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse * response, NSError *error) {
+            __strong typeof(weakself) strongself = weakself;
             if (error) {
-                [weakself.bootstrapPromise fail:error];
+                [strongself.bootstrapPromise fail:error];
             } else {
                 STPCheckoutBootstrapResponse *bootstrap = [STPCheckoutBootstrapResponse bootstrapResponseWithData:data URLResponse:response];
                 if (bootstrap && !bootstrap.accountsDisabled) {
@@ -45,10 +52,11 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
                                                             @"Stripe-Checkout-Test-Session": bootstrap.sessionID,
                                                             @"X-CSRF-Token": bootstrap.csrfToken,
                                                             };
-                    weakself.accountSession = [NSURLSession sessionWithConfiguration:configuration];
-                    [weakself.bootstrapPromise succeed];
+                    strongself.accountSession = [NSURLSession sessionWithConfiguration:configuration];
+                    strongself.tokenClient = bootstrap.tokenClient;
+                    [strongself.bootstrapPromise succeed];
                 } else {
-                    [weakself.bootstrapPromise fail:[NSError new]]; // TODO better error
+                    [strongself.bootstrapPromise fail:[strongself.class genericRememberMeErrorWithResponseData:data message:@"Bootstrap failed."]];
                 }
             }
         }] resume];
@@ -63,11 +71,11 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
 - (STPPromise *)lookupEmail:(NSString *)email {
     __weak typeof(self) weakself = self;
     return [self.bootstrapPromise voidFlatMap:^STPPromise*() {
-        STPPromise<STPCheckoutAccountLookup *> *lookupPromise = [STPPromise<STPCheckoutAccountLookup *> new];
-        if (!weakself) {
-            [lookupPromise fail:[NSError new]]; // TODO better error
-            return lookupPromise;
+        __strong typeof(weakself) strongself = weakself;
+        if (!strongself) {
+            return [STPPromise promiseWithError:[STPCheckoutAPIClient cancellationError]];
         }
+        STPPromise<STPCheckoutAccountLookup *> *lookupPromise = [STPPromise<STPCheckoutAccountLookup *> new];
         NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:@"account/lookup"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         NSDictionary *payload = @{
@@ -75,15 +83,12 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
                                   @"email": email,
                                   };
         [request stp_addParametersToURL:payload];
-        [[weakself.accountSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (error) {
-                [lookupPromise fail:[NSError new]]; // TODO better error
-            }
+        [[strongself.accountSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             STPCheckoutAccountLookup *lookup = [STPCheckoutAccountLookup lookupWithData:data URLResponse:response];
             if (lookup) {
                 [lookupPromise succeed:lookup];
             } else {
-                [lookupPromise fail:[NSError new]]; // TODO better error
+                [lookupPromise fail:error ?: [strongself.class genericRememberMeErrorWithResponseData:data message:@"Failed to parse account lookup response"]];
             }
         }] resume];
         return lookupPromise;
@@ -93,10 +98,10 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
 - (STPPromise *)sendSMSToAccountWithEmail:(NSString *)email {
     __weak typeof(self) weakself = self;
     return [self.bootstrapPromise voidFlatMap:^STPPromise *{
+        __strong typeof(weakself) strongself = weakself;
         STPPromise *smsPromise = [STPPromise new];
-        if (!weakself) {
-            [smsPromise fail:[NSError new]]; // TODO better error
-            return smsPromise;
+        if (!strongself) {
+            return [STPPromise promiseWithError:[STPCheckoutAPIClient cancellationError]];
         }
         NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:@"account/verifications"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -104,19 +109,19 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
         NSDictionary *payload = @{
                                   @"key": weakself.publishableKey,
                                   @"email": email,
-                                  @"merchant_name": @"Test",
                                   @"locale": @"en",
                                   };
+        NSDictionary *formPayload = @{
+                                      @"merchant_name": self.merchantName,
+                                      };
         [request stp_addParametersToURL:payload];
+        [request stp_setFormPayload:formPayload];
         [[weakself.accountSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (error) {
-                [smsPromise fail:error];
-            }
             STPCheckoutAPIVerification *verification = [STPCheckoutAPIVerification verificationWithData:data URLResponse:response];
             if (verification) {
                 [smsPromise succeed:verification];
             } else {
-                [smsPromise fail:[NSError new]]; // TODO better error
+                [smsPromise fail:error ?: [strongself.class genericRememberMeErrorWithResponseData:data message:@"Failed to parse SMS verification"]];
             }
         }] resume];
         return smsPromise;
@@ -127,10 +132,10 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
               forVerification:(STPCheckoutAPIVerification *)verification {
     __weak typeof(self) weakself = self;
     return [self.bootstrapPromise voidFlatMap:^STPPromise *{
+        __strong typeof(weakself) strongself = weakself;
         STPPromise<STPCheckoutAccount*> *accountPromise = [STPPromise<STPCheckoutAccount *> new];
-        if (!weakself) {
-            [accountPromise fail:[NSError new]]; // TODO better error
-            return accountPromise;
+        if (!strongself) {
+            return [STPPromise promiseWithError:[STPCheckoutAPIClient cancellationError]];
         }
         NSString *pathComponent = [@"account/verifications" stringByAppendingPathComponent:verification.verificationID];
         NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:pathComponent];
@@ -142,20 +147,13 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
                                       @"key": weakself.publishableKey,
                                       @"locale": @"en",
                                       };
-        
-        NSData *formData = [[STPFormEncoder queryStringFromParameters:formPayload] dataUsingEncoding:NSUTF8StringEncoding];
-        request.HTTPBody = formData;
-        [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)formData.length] forHTTPHeaderField:@"Content-Length"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request stp_setFormPayload:formPayload];
         [[weakself.accountSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (error) {
-                [accountPromise fail:error];
-            }
             STPCheckoutAccount *account = [STPCheckoutAccount accountWithData:data URLResponse:response];
             if (account) {
                 [accountPromise succeed:account];
             } else {
-                [accountPromise fail:[NSError new]]; // TODO better error
+                [accountPromise fail:error ?: [strongself.class genericRememberMeErrorWithResponseData:data message:@"Failed to parse checkout account response"]];
             }
         }] resume];
         return accountPromise;
@@ -165,10 +163,10 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
 - (STPPromise *)createTokenWithAccount:(STPCheckoutAccount *)account {
     __weak typeof(self) weakself = self;
     return [self.bootstrapPromise voidFlatMap:^STPPromise *{
+        __strong typeof(weakself) strongself = weakself;
         STPPromise<STPToken *> *tokenPromise = [STPPromise new];
-        if (!weakself) {
-            [tokenPromise fail:[NSError new]]; // TODO better error
-            return tokenPromise;
+        if (!strongself) {
+            return [STPPromise promiseWithError:[STPCheckoutAPIClient cancellationError]];
         }
         NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:@"account/tokens"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -181,18 +179,65 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
         [request setValue:account.sessionID forHTTPHeaderField:@"Stripe-Checkout-Test-Session"];
         [request setValue:account.csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
         [[weakself.accountSession dataTaskWithRequest:request completionHandler:^(__unused NSData *data, __unused NSURLResponse *response, NSError *error) {
-            if (error) {
-                [tokenPromise fail:error];
-                return;
-            }
             STPToken *token = [self parseTokenFromResponse:response data:data];
             if (token) {
                 [tokenPromise succeed:token];
             } else {
-                [tokenPromise fail:[NSError new]];
+                [tokenPromise fail:error ?: [strongself.class genericRememberMeErrorWithResponseData:data message:@"Failed to parse token from checkout response"]];
             }
         }] resume];
         return tokenPromise;
+    }];
+}
+
+- (STPPromise *)createAccountWithCardParams:(STPCardParams *)cardParams
+                                      email:(NSString *)email
+                                      phone:(NSString *)phone {
+    __weak typeof(self) weakself = self;
+    return [[self.bootstrapPromise voidFlatMap:^STPPromise * _Nonnull{
+        STPPromise *tokenPromise = [STPPromise new];
+        [self.tokenClient createTokenWithCard:cardParams completion:^(STPToken *token, NSError *error) {
+            if (error) {
+                [tokenPromise fail:error];
+            } else {
+                [tokenPromise succeed:token];
+            }
+        }];
+        return tokenPromise;
+    }] flatMap:^STPPromise *(STPToken *token) {
+        __strong typeof(self) strongself = weakself;
+        if (!strongself) {
+            return [STPPromise promiseWithError:[STPCheckoutAPIClient cancellationError]];
+        }
+        STPPromise<STPCheckoutAccount*> *accountPromise = [STPPromise<STPCheckoutAccount *> new];
+        NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:@"account"];
+        NSString *internationalizedPhone = [STPCardValidator sanitizedNumericStringForString:phone];
+        if (![internationalizedPhone hasPrefix:@"1"]) {
+            internationalizedPhone = [@"1" stringByAppendingString:internationalizedPhone];
+        }
+        if (![internationalizedPhone hasPrefix:@"+"]) {
+            internationalizedPhone = [@"+" stringByAppendingString:internationalizedPhone];
+        }
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        request.HTTPMethod = @"POST";
+        
+        NSDictionary *formPayload = @{
+                                      @"token": token.tokenId,
+                                      @"key": weakself.publishableKey,
+                                      @"phone": internationalizedPhone,
+                                      @"email": email,
+                                      @"merchant_name": self.merchantName,
+                                      };
+        [request stp_setFormPayload:formPayload];
+        [[weakself.accountSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            STPCheckoutAccount *account = [STPCheckoutAccount accountWithData:data URLResponse:response];
+            if (account) {
+                [accountPromise succeed:account];
+            } else {
+                [accountPromise fail:error ?: [strongself.class genericRememberMeErrorWithResponseData:data message:@"Failed to parse account response"]];
+            }
+        }] resume];
+        return accountPromise;
     }];
 }
 
@@ -206,6 +251,29 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api";
     }
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     return [STPToken decodedObjectFromAPIResponse:json[@"token"]];
+}
+
++ (NSError *)cancellationError {
+    return [NSError errorWithDomain:StripeDomain code:STPCancellationError userInfo:@{
+      NSLocalizedDescriptionKey: NSLocalizedString(@"The operation was cancelled", nil)
+                                                                                    }];
+}
+
++ (NSError *)genericRememberMeErrorWithResponseData:(NSData *)responseData
+                                            message:(NSString *)message {
+    NSInteger code = STPAPIError;
+    NSDictionary *json;
+    id object = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:nil];
+    if ([object isKindOfClass:[NSDictionary class]]) {
+        json = object;
+        if ([json[@"reason"] isEqualToString:@"too_many_attempts"]) {
+            code = STPCheckoutTooManyAttemptsError;
+        }
+    }
+    
+    return [NSError errorWithDomain:StripeDomain code:code userInfo:@{
+    NSLocalizedDescriptionKey: [NSLocalizedString(@"Something went wrong with remember me: ", nil) stringByAppendingString:message]
+    }];
 }
 
 @end

@@ -18,6 +18,7 @@
 #import "STPCardPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
 #import "STPPaymentContext.h"
+#import "STPPaymentActivityIndicatorView.h"
 #import "UIImage+Stripe.h"
 #import "NSString+Stripe_CardBrands.h"
 
@@ -29,7 +30,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 @property(nonatomic)STPPaymentContext *paymentContext;
 @property(nonatomic, weak, nullable)id<STPPaymentMethodsViewControllerDelegate>delegate;
 
-@property(nonatomic, weak)UIActivityIndicatorView *activityIndicator;
+@property(nonatomic, weak)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)BOOL loading;
@@ -53,8 +54,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [activityIndicator startAnimating];
+    STPPaymentActivityIndicatorView *activityIndicator = [STPPaymentActivityIndicatorView new];
+    activityIndicator.animating = YES;
     [self.view addSubview:activityIndicator];
     self.activityIndicator = activityIndicator;
     
@@ -84,7 +85,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
             [weakself.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
             weakself.tableView.alpha = 1;
         } completion:^(__unused BOOL finished) {
-            [weakself.activityIndicator stopAnimating];
+            weakself.activityIndicator.animating = NO;
         }];
     }];
     self.loading = YES;
@@ -215,6 +216,11 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
             }
         }];
         paymentCardViewController.theme = self.theme;
+        NSArray *cardPaymentMethods = [self.paymentContext.paymentMethods filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id<STPPaymentMethod> paymentMethod, __unused NSDictionary<NSString *,id> * _Nullable bindings) {
+            return [paymentMethod isKindOfClass:[STPCardPaymentMethod class]];
+        }]];
+        // Disable SMS autofill if we already have a card on file
+        paymentCardViewController.smsAutofillDisabled = cardPaymentMethods.count > 0;
         [self.navigationController pushViewController:paymentCardViewController animated:YES];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

@@ -7,6 +7,9 @@
 //
 
 #import "STPCheckoutBootstrapResponse.h"
+#import "STPAPIClient.h"
+#import "STPAPIClient+Private.h"
+
 
 @interface STPCheckoutBootstrapResponse()
 
@@ -14,6 +17,7 @@
 @property(nonatomic)BOOL accountsDisabled;
 @property(nonatomic, nonnull)NSString *sessionID;
 @property(nonatomic, nonnull)NSString *csrfToken;
+@property(nonatomic, nonnull)STPAPIClient *tokenClient;
 
 @end
 
@@ -32,6 +36,11 @@
     if (![object isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
+    NSString *checkoutPublishableKey = object[@"checkoutPublishableKey"];
+    if (![checkoutPublishableKey isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    
     NSString *sessionID = object[@"sessionID"];
     if (![sessionID isKindOfClass:[NSString class]]) {
         return nil;
@@ -44,6 +53,10 @@
     if (![accountsDisabled isKindOfClass:[NSNumber class]]) {
         return nil;
     }
+    NSString *apiURL = object[@"apiEndpoint"];
+    if (![apiURL isKindOfClass:[NSString class]]) {
+        return nil;
+    }
     NSNumber *liveMode = object[@"livemode"];
     if (![liveMode isKindOfClass:[NSNumber class]]) {
         return nil;
@@ -53,6 +66,8 @@
     bootstrap.sessionID = sessionID;
     bootstrap.liveMode = [liveMode boolValue];
     bootstrap.csrfToken = csrfToken;
+    bootstrap.tokenClient = [[STPAPIClient alloc] initWithPublishableKey:checkoutPublishableKey
+                                                                 baseURL:apiURL];
     return bootstrap;
 }
 
