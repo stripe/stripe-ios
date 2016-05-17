@@ -102,10 +102,10 @@
 - (void)updateAppearance {
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
     self.topLabel.font = self.theme.smallFont;
-    self.topLabel.textColor = self.theme.secondaryTextColor;
+    self.topLabel.textColor = self.theme.secondaryForegroundColor;
     self.codeField.theme = self.theme;
     self.bottomLabel.font = self.theme.smallFont;
-    self.bottomLabel.textColor = self.theme.secondaryTextColor;
+    self.bottomLabel.textColor = self.theme.secondaryForegroundColor;
     self.cancelButton.titleLabel.font = self.theme.smallFont;
     self.cancelButton.titleLabel.textColor = self.theme.accentColor;
     self.errorLabel.font = self.theme.smallFont;

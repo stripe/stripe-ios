@@ -46,7 +46,7 @@
 @synthesize placeholderColor = _placeholderColor;
 @dynamic enabled;
 
-CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
+CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 
 #if CGFLOAT_IS_DOUBLE
 #define stp_roundCGFloat(x) round(x)
@@ -480,7 +480,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 10;
 }
 
 - (CGRect)brandImageRectForBounds:(CGRect)bounds {
-    return CGRectMake(STPPaymentCardTextFieldDefaultPadding, 2, self.brandImageView.image.size.width, bounds.size.height - 2);
+    return CGRectMake(STPPaymentCardTextFieldDefaultPadding, 0, self.brandImageView.image.size.width, bounds.size.height - 1);
 }
 
 - (CGRect)fieldsRectForBounds:(CGRect)bounds {

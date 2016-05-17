@@ -23,6 +23,7 @@
 #import "STPSMSCodeViewController.h"
 #import "STPObscuredCardView.h"
 #import "STPPaymentActivityIndicatorView.h"
+#import "UITableViewCell+Stripe_Borders.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPObscuredCardViewDelegate>
 @property(nonatomic)STPAPIClient *apiClient;
@@ -116,7 +117,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     [self.rememberMeCell configureWithLabel:NSLocalizedString(@"Autofill my card in other apps", nil) delegate:self];
     
     self.rememberMePhoneCell = [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypePhone contents:nil lastInList:YES delegate:self];
-    self.rememberMePhoneCell.caption = NSLocalizedString(@"iPhone", nil);
+    self.rememberMePhoneCell.caption = NSLocalizedString(@"Phone", nil);
     
     self.addressViewModel.previousField = textField;
     
@@ -142,12 +143,12 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 - (void)updateAppearance {
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
-    self.tableView.separatorColor = self.theme.primaryBackgroundColor;
+    self.tableView.separatorColor = self.theme.separatorColor;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
     self.textField.backgroundColor = self.theme.secondaryBackgroundColor;
-    self.textField.placeholderColor = self.theme.tertiaryTextColor;
+    self.textField.placeholderColor = self.theme.tertiaryForegroundColor;
     self.textField.borderColor = [UIColor clearColor];
-    self.textField.textColor = self.theme.primaryTextColor;
+    self.textField.textColor = self.theme.primaryForegroundColor;
     self.textField.font = self.theme.font;
     self.obscuredCardView.theme = self.theme;
     self.cardImageView.tintColor = self.theme.accentColor;
@@ -366,9 +367,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
                                                 inSection:STPPaymentCardRememberMeSection];
     [self.tableView beginUpdates];
     if (on) {
-        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
     } else {
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
     [self.tableView endUpdates];
     if (on) {
@@ -424,6 +425,14 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    BOOL topRow = (indexPath.row == 0);
+    BOOL bottomRow = ([self tableView:tableView numberOfRowsInSection:indexPath.section] - 1 == indexPath.row);
+    [cell stp_setBorderColor:self.theme.tertiaryBackgroundColor];
+    [cell stp_setTopBorderHidden:!topRow];
+    [cell stp_setBottomBorderHidden:!bottomRow];
+}
+
 - (CGFloat)tableView:(__unused UITableView *)tableView heightForFooterInSection:(__unused NSInteger)section {
     if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
         return 0.01f;
@@ -439,24 +448,25 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (UIView *)tableView:(__unused UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (section == STPPaymentCardEmailSection) {
-        return nil;
-    }
-    if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
-        return nil;
-    }
-    UILabel *label = [UILabel new];
-    label.font = self.theme.smallFont;
-    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-    style.firstLineHeadIndent = 15;
-    NSDictionary *attributes = @{NSParagraphStyleAttributeName: style};
-    label.textColor = self.theme.secondaryTextColor;
-    if (section == STPPaymentCardNumberSection) {
-        label.attributedText = [[NSAttributedString alloc] initWithString:@"Card" attributes:attributes];
-        return label;
-    } else if (section == STPPaymentCardBillingAddressSection) {
-        label.attributedText = [[NSAttributedString alloc] initWithString:@"Billing Address" attributes:attributes];
-        return label;
+	if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
+		return nil;
+	}
+    if (section == STPPaymentCardEmailSection || section == STPPaymentCardRememberMeSection) {
+        return [UIView new];
+    } else {
+        UILabel *label = [UILabel new];
+        label.font = self.theme.smallFont;
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.firstLineHeadIndent = 15;
+        NSDictionary *attributes = @{NSParagraphStyleAttributeName: style};
+        label.textColor = self.theme.secondaryForegroundColor;
+        if (section == STPPaymentCardNumberSection) {
+            label.attributedText = [[NSAttributedString alloc] initWithString:@"Card" attributes:attributes];
+            return label;
+        } else if (section == STPPaymentCardBillingAddressSection) {
+            label.attributedText = [[NSAttributedString alloc] initWithString:@"Billing Address" attributes:attributes];
+            return label;
+        }
     }
     return nil;
 }

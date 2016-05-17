@@ -112,6 +112,7 @@
                 break;
             case STPAddressFieldTypePhone:
                 self.captionLabel.text = NSLocalizedString(@"Phone", nil);
+				self.textField.placeholder = NSLocalizedString(@"(555) 123-1234", nil);
                 self.textField.keyboardType = UIKeyboardTypePhonePad;
                 self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
                 if (!lastInList) {
@@ -138,10 +139,11 @@
 }
 
 - (void)updateAppearance {
+	self.backgroundColor = self.theme.secondaryBackgroundColor;
     self.captionLabel.font = self.theme.font;
-    self.captionLabel.textColor = self.theme.secondaryTextColor;
-    self.textField.placeholderColor = self.theme.tertiaryTextColor;
-    self.textField.defaultColor = self.theme.primaryTextColor;
+    self.captionLabel.textColor = self.theme.secondaryForegroundColor;
+    self.textField.placeholderColor = self.theme.tertiaryForegroundColor;
+    self.textField.defaultColor = self.theme.primaryForegroundColor;
     self.textField.errorColor = self.theme.errorColor;
     self.textField.font = self.theme.font;
 }

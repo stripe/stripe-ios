@@ -157,8 +157,8 @@
         for (UIView *containerView in @[self.leftContainerView, self.rightContainerView]) {
             CABasicAnimation *colorAnimation = [CABasicAnimation animationWithKeyPath:@"borderColor"];
             colorAnimation.fromValue = (id)containerView.layer.borderColor;
-            colorAnimation.toValue = (id)self.theme.secondaryTextColor.CGColor;
-            containerView.layer.borderColor = self.theme.secondaryTextColor.CGColor;
+            colorAnimation.toValue = (id)self.theme.secondaryForegroundColor.CGColor;
+            containerView.layer.borderColor = self.theme.secondaryForegroundColor.CGColor;
             colorAnimation.duration = 0.1f;
             colorAnimation.timingFunction = [CATransaction animationTimingFunction];
             [containerView.layer addAnimation:colorAnimation forKey:nil];
@@ -186,16 +186,16 @@
     for (UIView *containerView in @[self.leftContainerView, self.rightContainerView]) {
         containerView.layer.cornerRadius = 6;
         containerView.layer.borderWidth = 0.5f;
-        containerView.layer.borderColor = self.theme.secondaryTextColor.CGColor;
+        containerView.layer.borderColor = self.theme.secondaryForegroundColor.CGColor;
         containerView.backgroundColor = self.theme.secondaryBackgroundColor;
     }
-    self.centerLabel.textColor = self.theme.secondaryTextColor;
+    self.centerLabel.textColor = self.theme.secondaryForegroundColor;
     self.centerLabel.font = self.theme.largeFont;
     for (UIView *separator in self.separators) {
-        separator.backgroundColor = self.theme.tertiaryTextColor;
+        separator.backgroundColor = self.theme.tertiaryForegroundColor;
     }
     for (UITextField *textField in self.textFields) {
-        textField.textColor = self.theme.primaryTextColor;
+        textField.textColor = self.theme.primaryForegroundColor;
         textField.tintColor = self.theme.accentColor;
         textField.font = self.theme.largeFont;
     }

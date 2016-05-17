@@ -219,8 +219,8 @@
     navigationController.navigationBar.tintColor = self.theme.accentColor;
     navigationController.navigationBar.barTintColor = self.theme.secondaryBackgroundColor;
     navigationController.navigationBar.titleTextAttributes = @{
-                                                               NSForegroundColorAttributeName: self.theme.primaryTextColor,
-                                                               NSFontAttributeName: self.theme.font,
+                                                               NSForegroundColorAttributeName: self.theme.primaryForegroundColor,
+                                                               NSFontAttributeName: self.theme.mediumFont,
                                                                };
     [viewController presentViewController:navigationController animated:YES completion:nil];
 }

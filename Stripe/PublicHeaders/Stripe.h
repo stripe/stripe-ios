@@ -31,3 +31,5 @@
 #import "STPApplePayPaymentMethod.h"
 #import "STPCardPaymentMethod.h"
 #import "STPPaymentActivityIndicatorView.h"
+#import "STPTheme.h"
+#import "UINavigationBar+Stripe_Theme.h"

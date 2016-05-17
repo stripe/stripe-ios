@@ -21,6 +21,7 @@
 #import "STPPaymentActivityIndicatorView.h"
 #import "UIImage+Stripe.h"
 #import "NSString+Stripe_CardBrands.h"
+#import "UITableViewCell+Stripe_Borders.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 static NSInteger STPPaymentMethodCardListSection = 0;
@@ -127,7 +128,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
     self.tableView.tintColor = self.theme.accentColor;
     self.cardImageView.tintColor = self.theme.accentColor;
-    self.tableView.separatorColor = self.theme.primaryBackgroundColor;
+    self.tableView.separatorColor = self.theme.separatorColor;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
@@ -171,7 +172,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         return [self buildAttributedStringForCard:((STPCardPaymentMethod *)paymentMethod).card selected:selected];
     } else if ([paymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
         NSString *label = NSLocalizedString(@"Apple Pay", nil);
-        UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryTextColor;
+        UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
     }
     return nil;
@@ -181,7 +182,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     NSString *template = NSLocalizedString(@"%@ Ending In %@", @"{card brand} ending in {last4}");
     NSString *brandString = [NSString stp_stringWithCardBrand:card.brand];
     NSString *label = [NSString stringWithFormat:template, brandString, card.last4];
-    UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryTextColor;
+    UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
     UIColor *secondaryColor = [primaryColor colorWithAlphaComponent:0.6f];
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: secondaryColor}];
     [attributedString addAttribute:NSForegroundColorAttributeName value:primaryColor range:[label rangeOfString:brandString]];
@@ -246,6 +247,14 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
             [self.tableView reloadRowsAtIndexPaths:@[selectedIndexPath] withRowAnimation:UITableViewRowAnimationFade];
         }
     }
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    BOOL topRow = (indexPath.row == 0);
+    BOOL bottomRow = ([self tableView:tableView numberOfRowsInSection:indexPath.section] - 1 == indexPath.row);
+    [cell stp_setBorderColor:self.theme.tertiaryBackgroundColor];
+    [cell stp_setTopBorderHidden:!topRow];
+    [cell stp_setBottomBorderHidden:!bottomRow];
 }
 
 - (void)finishWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod {

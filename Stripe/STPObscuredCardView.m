@@ -67,11 +67,11 @@
     self.backgroundColor = self.theme.secondaryBackgroundColor;
     self.last4Field.backgroundColor = [UIColor clearColor];
     self.last4Field.font = self.theme.font;
-    self.last4Field.textColor = self.theme.primaryTextColor;
+    self.last4Field.textColor = self.theme.primaryForegroundColor;
     
     self.expField.backgroundColor = [UIColor clearColor];
     self.expField.font = self.theme.font;
-    self.expField.textColor = self.theme.primaryTextColor;
+    self.expField.textColor = self.theme.primaryForegroundColor;
 }
 
 - (void)configureWithCard:(STPCard *)card {

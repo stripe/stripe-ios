@@ -12,107 +12,65 @@
 
 @property(nonatomic)UIColor *primaryBackgroundColor;
 @property(nonatomic)UIColor *secondaryBackgroundColor;
-@property(nonatomic)UIColor *primaryTextColor;
-@property(nonatomic)UIColor *secondaryTextColor;
+@property(nonatomic)UIColor *primaryForegroundColor;
+@property(nonatomic)UIColor *secondaryForegroundColor;
 @property(nonatomic)UIColor *accentColor;
 @property(nonatomic)UIColor *errorColor;
 @property(nonatomic)UIFont  *font;
+@property(nonatomic)UIFont  *mediumFont;
 
 @end
 
+static STPTheme *STPThemeDefaultTheme;
 static UIColor *STPThemeDefaultPrimaryBackgroundColor;
 static UIColor *STPThemeDefaultSecondaryBackgroundColor;
-static UIColor *STPThemeDefaultPrimaryTextColor;
-static UIColor *STPThemeDefaultSecondaryTextColor;
+static UIColor *STPThemeDefaultPrimaryForegroundColor;
+static UIColor *STPThemeDefaultSecondaryForegroundColor;
 static UIColor *STPThemeDefaultAccentColor;
 static UIColor *STPThemeDefaultErrorColor;
 static UIFont  *STPThemeDefaultFont;
+static UIFont  *STPThemeDefaultMediumFont;
 
 @implementation STPTheme
 
 + (void)initialize {
     STPThemeDefaultPrimaryBackgroundColor = [UIColor colorWithRed:242.0f/255.0f green:242.0f/255.0f blue:245.0f/255.0f alpha:1];
     STPThemeDefaultSecondaryBackgroundColor = [UIColor whiteColor];
-    STPThemeDefaultPrimaryTextColor = [UIColor colorWithRed:43.0f/255.0f green:43.0f/255.0f blue:45.0f/255.0f alpha:1];
-    STPThemeDefaultSecondaryTextColor = [UIColor colorWithRed:142.0f/255.0f green:142.0f/255.0f blue:147.0f/255.0f alpha:1];
+    STPThemeDefaultPrimaryForegroundColor = [UIColor colorWithRed:43.0f/255.0f green:43.0f/255.0f blue:45.0f/255.0f alpha:1];
+    STPThemeDefaultSecondaryForegroundColor = [UIColor colorWithRed:142.0f/255.0f green:142.0f/255.0f blue:147.0f/255.0f alpha:1];
     STPThemeDefaultAccentColor = [UIColor colorWithRed:0 green:122.0f/255.0f blue:1 alpha:1];
     STPThemeDefaultErrorColor = [UIColor colorWithRed:1 green:72.0f/255.0f blue:68.0f/255.0f alpha:1];
     STPThemeDefaultFont = [UIFont systemFontOfSize:17];
+    STPThemeDefaultMediumFont = [UIFont systemFontOfSize:17.0f weight:0.2f] ?: [UIFont boldSystemFontOfSize:17];
+    STPThemeDefaultTheme = [STPTheme new];
 }
 
-+ (void)setDefaultPrimaryBackgroundColor:(UIColor *)primaryBackgroundColor {
-    STPThemeDefaultPrimaryBackgroundColor = primaryBackgroundColor;
++ (void)setDefaultTheme:(STPTheme *)theme {
+    STPThemeDefaultTheme = theme;
 }
 
-+ (UIColor *)defaultPrimaryBackgroundColor {
-    return STPThemeDefaultPrimaryBackgroundColor;
++ (STPTheme *)defaultTheme {
+    return STPThemeDefaultTheme;
 }
-
-+ (void)setDefaultSecondaryBackgroundColor:(UIColor *)secondaryBackgroundColor {
-    STPThemeDefaultSecondaryBackgroundColor = secondaryBackgroundColor;
-}
-
-+ (UIColor *)defaultSecondaryBackgroundColor {
-    return STPThemeDefaultSecondaryBackgroundColor;
-}
-
-+ (void)setDefaultPrimaryTextColor:(UIColor *)primaryTextColor {
-    STPThemeDefaultPrimaryTextColor = primaryTextColor;
-}
-
-+ (UIColor *)defaultPrimaryTextColor {
-    return STPThemeDefaultPrimaryTextColor;
-}
-
-+ (void)setDefaultSecondaryTextColor:(UIColor *)secondaryTextColor {
-    STPThemeDefaultSecondaryTextColor = secondaryTextColor;
-}
-
-+ (UIColor *)defaultSecondaryTextColor {
-    return STPThemeDefaultSecondaryTextColor;
-}
-
-+ (void)setDefaultAccentColor:(UIColor *)accentColor {
-    STPThemeDefaultAccentColor = accentColor;
-}
-
-+ (UIColor *)defaultAccentColor {
-    return STPThemeDefaultAccentColor;
-}
-
-+ (void)setDefaultErrorColor:(UIColor *)errorColor {
-    STPThemeDefaultErrorColor = errorColor;
-}
-
-+ (UIColor *)defaultErrorColor {
-    return STPThemeDefaultErrorColor;
-}
-
-+ (void)setDefaultFont:(UIFont *)font {
-    STPThemeDefaultFont = font;
-}
-
-+ (UIFont *)defaultFont {
-    return STPThemeDefaultFont;
-}
-
 
 - (instancetype)initWithPrimaryBackgroundColor:(nullable UIColor *)primaryBackgroundColor
                       secondaryBackgroundColor:(nullable UIColor *)secondaryBackgroundColor
-                              primaryTextColor:(nullable UIColor *)primaryTextColor
-                            secondaryTextColor:(nullable UIColor *)secondaryTextColor
+                        primaryForegroundColor:(nullable UIColor *)primaryForegroundColor
+                      secondaryForegroundColor:(nullable UIColor *)secondaryForegroundColor
                                    accentColor:(nullable UIColor *)accentColor
                                     errorColor:(nullable UIColor *)errorColor
-                                          font:(nullable UIFont *)font {
+                                          font:(nullable UIFont *)font
+                                    mediumFont:(nullable UIFont *)mediumFont {
     self = [super init];
     if (self) {
-        _primaryBackgroundColor = primaryBackgroundColor ?: [self.class defaultPrimaryBackgroundColor];
-        _secondaryBackgroundColor = secondaryBackgroundColor ?: [self.class defaultSecondaryBackgroundColor];
-        _primaryTextColor = primaryTextColor ?: [self.class defaultPrimaryTextColor];
-        _secondaryTextColor = secondaryTextColor ?: [self.class defaultSecondaryTextColor];
-        _accentColor = accentColor ?: [self.class defaultAccentColor];
-        _errorColor = errorColor ?: [self.class defaultErrorColor];
-        _font = font ?: [self.class defaultFont];
+        _primaryBackgroundColor = primaryBackgroundColor ?: STPThemeDefaultPrimaryBackgroundColor;
+        _secondaryBackgroundColor = secondaryBackgroundColor ?: STPThemeDefaultSecondaryBackgroundColor;
+        _primaryForegroundColor = primaryForegroundColor ?: STPThemeDefaultPrimaryForegroundColor;
+        _secondaryForegroundColor = secondaryForegroundColor ?: STPThemeDefaultSecondaryForegroundColor;
+        _accentColor = accentColor ?: STPThemeDefaultAccentColor;
+        _errorColor = errorColor ?: STPThemeDefaultErrorColor;
+        _font = font ?: STPThemeDefaultFont;
+        _mediumFont = mediumFont ?: STPThemeDefaultMediumFont;
     }
     return self;
 }
@@ -120,25 +78,42 @@ static UIFont  *STPThemeDefaultFont;
 - (instancetype)init {
     return [self initWithPrimaryBackgroundColor:nil
                        secondaryBackgroundColor:nil
-                               primaryTextColor:nil
-                             secondaryTextColor:nil
+                         primaryForegroundColor:nil
+                       secondaryForegroundColor:nil
                                     accentColor:nil
                                      errorColor:nil
-                                           font:nil];
+                                           font:nil
+                                     mediumFont:nil];
 }
 
-- (UIColor *)tertiaryTextColor {
-    return [self.secondaryTextColor colorWithAlphaComponent:0.8f];
+- (UIColor *)tertiaryBackgroundColor {
+	CGFloat hue;
+	CGFloat saturation;
+	CGFloat brightness;
+	CGFloat alpha;
+	[self.primaryBackgroundColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+    return [UIColor colorWithHue:hue saturation:saturation brightness:(brightness - 0.09f) alpha:alpha];
+}
+
+- (UIColor *)tertiaryForegroundColor {
+    return [self.primaryForegroundColor colorWithAlphaComponent:0.25f];
+}
+
+- (UIColor *)separatorColor {
+    CGFloat hue;
+    CGFloat saturation;
+    CGFloat brightness;
+    CGFloat alpha;
+    [self.primaryBackgroundColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+    return [UIColor colorWithHue:hue saturation:saturation brightness:(brightness - 0.03f) alpha:alpha];
 }
 
 - (UIFont *)smallFont {
-    CGFloat pointSize = (CGFloat)round(self.font.pointSize * 5.0f/6.0f);
-    return [self.font fontWithSize:pointSize];
+    return [self.font fontWithSize:self.font.pointSize - 2];
 }
 
 - (UIFont *)largeFont {
-    CGFloat pointSize = (CGFloat)round(self.font.pointSize * 2.0f);
-    return [self.font fontWithSize:pointSize];
+    return [self.font fontWithSize:self.font.pointSize + 15];
 }
 
 @end

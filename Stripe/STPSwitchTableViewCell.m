@@ -7,6 +7,7 @@
 //
 
 #import "STPSwitchTableViewCell.h"
+#import "STPColorUtils.h"
 
 @interface STPSwitchTableViewCell()
 
@@ -22,6 +23,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         UISwitch *switchView = [[UISwitch alloc] init];
+		switchView.layer.cornerRadius = CGRectGetHeight(switchView.frame) / 2.0f;
         [self addSubview:switchView];
         [switchView addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
         _switchView = switchView;
@@ -47,11 +49,19 @@
 }
 
 - (void)updateAppearance {
-    self.switchView.tintColor = self.theme.primaryBackgroundColor;
+    UIColor *thumbTintColor = [STPColorUtils brighterColor:self.theme.primaryForegroundColor
+                                                    color2:self.theme.secondaryBackgroundColor];
+    // Thumb tint color changes the shadow's tint as well, so we only want to set it when the switch is off-white anyway.
+    if (![thumbTintColor isEqual:[UIColor whiteColor]]) {
+        self.switchView.thumbTintColor = thumbTintColor;
+    }
+    
+	self.switchView.tintColor = self.theme.tertiaryBackgroundColor;
+	self.switchView.backgroundColor = self.theme.tertiaryBackgroundColor;
     self.switchView.onTintColor = self.theme.accentColor;
     self.captionLabel.font = self.theme.font;
     self.backgroundColor = self.theme.secondaryBackgroundColor;
-    self.captionLabel.textColor = self.theme.secondaryTextColor;
+	self.captionLabel.textColor = self.theme.primaryForegroundColor;
 }
 
 - (void)configureWithLabel:(NSString *)label
