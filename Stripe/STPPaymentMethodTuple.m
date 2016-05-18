@@ -19,8 +19,16 @@
 
 @implementation STPPaymentMethodTuple
 
-- (instancetype)initWithCardTuple:(STPCardTuple *)cardTuple
-                  applePayEnabled:(BOOL)applePayEnabled {
++ (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods
+                  selectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod {
+    STPPaymentMethodTuple *tuple = [STPPaymentMethodTuple new];
+    tuple.paymentMethods = paymentMethods;
+    tuple.selectedPaymentMethod = selectedPaymentMethod;
+    return tuple;
+}
+
++ (instancetype)tupleWithCardTuple:(STPCardTuple *)cardTuple
+                   applePayEnabled:(BOOL)applePayEnabled {
     NSMutableArray *paymentMethods = [NSMutableArray array];
     for (STPCard *card in cardTuple.cards) {
         [paymentMethods addObject:[[STPCardPaymentMethod alloc] initWithCard:card]];
@@ -28,14 +36,13 @@
     if (applePayEnabled) {
         [paymentMethods addObject:[STPApplePayPaymentMethod new]];
     }
-    STPPaymentMethodTuple *tuple = [STPPaymentMethodTuple new];
-    tuple.paymentMethods = paymentMethods;
+    id<STPPaymentMethod> paymentMethod;
     if (cardTuple.selectedCard) {
-        tuple.selectedPaymentMethod = [[STPCardPaymentMethod alloc] initWithCard:cardTuple.selectedCard];
+        paymentMethod = [[STPCardPaymentMethod alloc] initWithCard:cardTuple.selectedCard];
     } else if (applePayEnabled) {
-        tuple.selectedPaymentMethod = [STPApplePayPaymentMethod new];
+        paymentMethod = [STPApplePayPaymentMethod new];
     }
-    return tuple;
+    return [self tupleWithPaymentMethods:paymentMethods selectedPaymentMethod:paymentMethod];
 }
 
 @end

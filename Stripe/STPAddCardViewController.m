@@ -174,22 +174,26 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         return;
     }
     _loading = loading;
+    [self.navigationItem setHidesBackButton:loading animated:YES];
+    self.navigationItem.leftBarButtonItem.enabled = !loading;
+    self.activityIndicator.animating = loading;
+    if (loading) {
+        if ([self.textField isFirstResponder]) {
+            [self.textField resignFirstResponder];
+        } else {
+            [self.tableView endEditing:YES];
+        }
+        UIBarButtonItem *loadingItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
+        [self.navigationItem setRightBarButtonItem:loadingItem animated:YES];
+    } else {
+        [self.navigationItem setRightBarButtonItem:self.doneItem animated:YES];
+    }
     NSArray *cells = self.addressViewModel.addressCells;
     for (UITableViewCell *cell in [cells arrayByAddingObjectsFromArray:@[self.emailCell, self.cardNumberCell, self.rememberMeCell, self.rememberMePhoneCell]] ) {
         cell.userInteractionEnabled = !loading;
         [UIView animateWithDuration:0.1f animations:^{
             cell.alpha = loading ? 0.7f : 1.0f;
         }];
-    }
-    [self.navigationItem setHidesBackButton:loading animated:YES];
-    self.navigationItem.leftBarButtonItem.enabled = !loading;
-    self.activityIndicator.animating = loading;
-    if (loading) {
-        [self.tableView endEditing:YES];
-        UIBarButtonItem *loadingItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
-        [self.navigationItem setRightBarButtonItem:loadingItem animated:YES];
-    } else {
-        [self.navigationItem setRightBarButtonItem:self.doneItem animated:YES];
     }
 }
 
@@ -209,7 +213,6 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.loading = YES;
     STPCardParams *cardParams = self.textField.cardParams;
     cardParams.address = self.addressViewModel.address;
-    [self.view endEditing:NO];
     if (self.checkoutAccountCard) {
         __weak typeof(self) weakself = self;
         [[[self.checkoutAPIClient createTokenWithAccount:self.checkoutAccount] onSuccess:^(STPToken *token) {

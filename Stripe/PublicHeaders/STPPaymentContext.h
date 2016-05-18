@@ -202,15 +202,4 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 
 @end
 
-// These are internal methods and are subject to change - don't call them in your application's code.
-
-typedef void (^STPAddTokenBlock)(id<STPPaymentMethod> __nullable paymentMethod, NSError * __nullable error);
-
-@interface STPPaymentContext(Internal)
-- (void)onSuccess:(STPVoidBlock)completion;
-- (void)addToken:(STPToken *)token completion:(STPAddTokenBlock)completion;
-- (void)selectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
-- (void)deletePaymentMethod:(id<STPPaymentMethod>)paymentMethod;
-@end
-
 NS_ASSUME_NONNULL_END

@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPaymentContext (Private)
 
-@property(nonatomic, readonly)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
+@property(nonatomic, readonly)STPPromise<STPPaymentMethodTuple *> *currentValuePromise;
 
 @end
 

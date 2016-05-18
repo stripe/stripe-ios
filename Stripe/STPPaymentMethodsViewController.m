@@ -18,6 +18,7 @@
 #import "STPCardPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
 #import "STPPaymentContext.h"
+#import "STPPaymentMethodTuple.h"
 #import "STPPaymentActivityIndicatorView.h"
 #import "UIImage+Stripe.h"
 #import "NSString+Stripe_CardBrands.h"
@@ -47,7 +48,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext {
     STPAPIClient *apiClient = [[STPAPIClient alloc] initWithPublishableKey:paymentContext.publishableKey];
-    self = [self initWithAPIClient:apiClient APIAdapter:paymentContext.apiAdapter loadingPromise:paymentContext.loadingPromise];
+    self = [self initWithAPIClient:apiClient APIAdapter:paymentContext.apiAdapter loadingPromise:paymentContext.currentValuePromise];
     self.theme = paymentContext.theme;
     return self;
 }
@@ -184,9 +185,13 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     NSString *label = [NSString stringWithFormat:template, brandString, card.last4];
     UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
     UIColor *secondaryColor = [primaryColor colorWithAlphaComponent:0.6f];
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: secondaryColor}];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:label attributes:@{
+                                                                                                                       NSForegroundColorAttributeName: secondaryColor,
+                                                                                                                       NSFontAttributeName: self.theme.font}];
     [attributedString addAttribute:NSForegroundColorAttributeName value:primaryColor range:[label rangeOfString:brandString]];
     [attributedString addAttribute:NSForegroundColorAttributeName value:primaryColor range:[label rangeOfString:card.last4]];
+    [attributedString addAttribute:NSFontAttributeName value:self.theme.mediumFont range:[label rangeOfString:brandString]];
+    [attributedString addAttribute:NSFontAttributeName value:self.theme.mediumFont range:[label rangeOfString:card.last4]];
     return [attributedString copy];
 }
 
@@ -285,6 +290,11 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         _apiClient = apiClient;
         _apiAdapter = apiAdapter;
         _loadingPromise = loadingPromise;
+        __weak typeof(self) weakself = self;
+        [loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
+            weakself.paymentMethods = tuple.paymentMethods;
+            weakself.selectedPaymentMethod = tuple.selectedPaymentMethod;
+        }];
     }
     return self;
 }

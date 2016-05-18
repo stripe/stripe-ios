@@ -334,6 +334,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     [super resignFirstResponder];
     BOOL success = [self.currentFirstResponderField resignFirstResponder];
     [self setNumberFieldShrunk:[self shouldShrinkNumberField] animated:YES completion:nil];
+    [self updateImageForFieldType:STPCardFieldTypeNumber];
     return success;
 }
 

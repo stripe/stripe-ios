@@ -95,54 +95,16 @@
             return;
         }
         STPCardTuple *tuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
-        STPPaymentMethodTuple *paymentTuple = [[STPPaymentMethodTuple alloc] initWithCardTuple:tuple applePayEnabled:[self applePaySupported]];
+        STPPaymentMethodTuple *paymentTuple = [STPPaymentMethodTuple tupleWithCardTuple:tuple applePayEnabled:[self applePaySupported]];
         [self.loadingPromise succeed:paymentTuple];
     }];
 }
 
-- (void)onSuccess:(STPVoidBlock)completion {
-    [self performInitialLoad];
-    [self.loadingPromise onSuccess:^(__unused STPPaymentMethodTuple *value) {
-        completion();
+- (STPPromise<STPPaymentMethodTuple *> *)currentValuePromise {
+    __weak typeof(self) weakself = self;
+    return (STPPromise<STPPaymentMethodTuple *> *)[self.loadingPromise map:^id _Nonnull(__unused STPPaymentMethodTuple *value) {
+        return [STPPaymentMethodTuple tupleWithPaymentMethods:weakself.paymentMethods selectedPaymentMethod:weakself.selectedPaymentMethod];
     }];
-}
-
-- (void)addToken:(STPToken *)token completion:(STPAddTokenBlock)completion {
-    __weak typeof(self) weakSelf = self;
-    [self.apiAdapter addToken:token completion:^(NSError * _Nullable error) {
-        if (error) {
-            completion(nil, error);
-            return;
-        }
-        [weakSelf selectPaymentMethod:[[STPCardPaymentMethod alloc] initWithCard:token.card]];
-        completion(weakSelf.selectedPaymentMethod, nil);
-    }];
-}
-
-- (void)selectPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
-    self.selectedPaymentMethod = paymentMethod;
-    if (paymentMethod && [paymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {
-        STPCardPaymentMethod *cardPaymentMethod = (STPCardPaymentMethod *)paymentMethod;
-        [self.apiAdapter selectCard:cardPaymentMethod.card completion:^(__unused NSError *error) {
-        }];
-    }
-    if (paymentMethod && ![self.paymentMethods containsObject:paymentMethod]) {
-        self.paymentMethods = [self.paymentMethods arrayByAddingObject:paymentMethod];
-    }
-}
-
-- (void)deletePaymentMethod:(id<STPPaymentMethod>)paymentMethod {
-    if ([paymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {
-        STPCard *card = ((STPCardPaymentMethod *)paymentMethod).card;
-        [self.apiAdapter deleteCard:card completion:^(__unused NSError *error) {
-        }];
-    }
-    NSMutableArray *array = [self.paymentMethods mutableCopy];
-    [array removeObject:paymentMethod];
-    self.paymentMethods = [array copy];
-    if ([paymentMethod isEqual:self.selectedPaymentMethod]) {
-        self.selectedPaymentMethod = [self.paymentMethods firstObject];
-    }
 }
 
 - (void)setLoading:(BOOL)loading {
@@ -176,6 +138,9 @@
 }
 
 - (void)setSelectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod {
+    if (selectedPaymentMethod && ![self.paymentMethods containsObject:selectedPaymentMethod]) {
+        self.paymentMethods = [self.paymentMethods arrayByAddingObject:selectedPaymentMethod];
+    }
     if (![_selectedPaymentMethod isEqual:selectedPaymentMethod]) {
         _selectedPaymentMethod = selectedPaymentMethod;
         [self.delegate paymentContextDidChange:self];
