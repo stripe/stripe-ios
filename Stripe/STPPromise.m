@@ -98,6 +98,17 @@
     }];
 }
 
+- (STPPromise<id> *)map:(STPPromiseMapBlock)callback {
+    STPPromise<id>* wrapper = [STPPromise<id> new];
+    [[self onSuccess:^(id value) {
+        [wrapper succeed:callback(value)];
+    }] onFailure:^(NSError *error) {
+        [wrapper fail:error];
+    }];
+    return wrapper;
+}
+
+
 - (STPPromise *)flatMap:(STPPromiseFlatMapBlock)callback {
     STPPromise<id>* wrapper = [STPPromise<id> new];
     [[self onSuccess:^(id value) {

@@ -362,7 +362,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     
 }
 
-- (void)switchTableViewCell:(__unused STPSwitchTableViewCell *)cell didToggleSwitch:(BOOL)on {
+- (void)switchTableViewCell:(STPSwitchTableViewCell *)cell didToggleSwitch:(BOOL)on {
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1
                                                 inSection:STPPaymentCardRememberMeSection];
     [self.tableView beginUpdates];
@@ -372,6 +372,11 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
     [self.tableView endUpdates];
+    
+    // This updates the section borders so they're not drawn in both cells.
+    NSIndexPath *switchIndexPath = [self.tableView indexPathForCell:cell];
+    [self tableView:self.tableView willDisplayCell:cell forRowAtIndexPath:switchIndexPath];
+    
     if (on) {
         [self.rememberMePhoneCell becomeFirstResponder];
     }

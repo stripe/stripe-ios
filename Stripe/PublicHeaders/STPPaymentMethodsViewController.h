@@ -43,8 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface STPPaymentMethodsViewController : UIViewController
 
-@property(nonatomic, readonly)STPPaymentContext *paymentContext;
-@property(nonatomic, weak, nullable, readonly)id<STPPaymentMethodsViewControllerDelegate>delegate;
+@property(nonatomic, weak, nullable)id<STPPaymentMethodsViewControllerDelegate>delegate;
 
 /**
  *  This theme will control the visual appearance of the view controller's view. @see STPTheme
@@ -55,12 +54,10 @@ NS_ASSUME_NONNULL_BEGIN
  *  Creates a new payment methods view controller.
  *
  *  @param paymentContext A payment context to power the view controller's view. The paymentContext will in turn use its backend API adapter to fetch the information it needs from your application.
- *  @param delegate       A delegate that will be notified when the user selects a payment method or cancels their selection. @see STPPaymentMethodsViewControllerDelegate
  *
  *  @return an initialized view controller.
  */
-- (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext
-                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
+- (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext;
 
 @end
 

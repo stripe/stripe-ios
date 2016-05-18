@@ -17,21 +17,15 @@
 #import "STPCardPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
 #import "STPPromise.h"
-
-#import "STPCheckoutAPIClient.h"
+#import "STPCardTuple.h"
+#import "STPPaymentMethodTuple.h"
+#import "STPCheckoutAPIClient.h" // TODO
+#import "STPPaymentContext+Private.h"
 
 @interface STPDummyNavigationBar : UINavigationBar
 @end
 
 @implementation STPDummyNavigationBar
-@end
-
-@interface STPCardTuple : NSObject
-@property(nonatomic)STPCard *selectedCard;
-@property(nonatomic)NSArray<STPCard *> *cards;
-@end
-
-@implementation STPCardTuple
 @end
 
 @interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate>
@@ -41,7 +35,7 @@
 @property(nonatomic, copy)NSString *publishableKey;
 @property(nonatomic)STPPaymentMethodType supportedPaymentMethods;
 @property(nonatomic, readwrite, getter=isLoading)BOOL loading;
-@property(nonatomic)STPPromise<STPCardTuple *> *initialLoadingPromise;
+@property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
 @property(nonatomic)STPPromise<id> *didAppearPromise;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
@@ -69,13 +63,9 @@
         _companyName = [NSBundle stp_applicationName];
         _didAppearPromise = [STPPromise new];
         __weak typeof(self) weakself = self;
-        _initialLoadingPromise = [[[STPPromise<STPCardTuple *> new] onSuccess:^(STPCardTuple *tuple) {
-            weakself.paymentMethods = [weakself parsePaymentMethods:tuple.cards];
-            if (tuple.selectedCard) {
-                weakself.selectedPaymentMethod = [[STPCardPaymentMethod alloc] initWithCard:tuple.selectedCard];
-            } else if ([self applePaySupported]) {
-                weakself.selectedPaymentMethod = [STPApplePayPaymentMethod new];
-            }
+        _loadingPromise = [[[STPPromise<STPPaymentMethodTuple *> new] onSuccess:^(STPPaymentMethodTuple *tuple) {
+            weakself.paymentMethods = tuple.paymentMethods;
+            weakself.selectedPaymentMethod = tuple.selectedPaymentMethod;
         }] onFailure:^(NSError * _Nonnull error) {
             [weakself.didAppearPromise onSuccess:^(__unused id value) {
                 [weakself.delegate paymentContext:weakself didFailToLoadWithError:error];
@@ -94,37 +84,25 @@
 }
 
 - (void)performInitialLoad {
-    if (self.loading || self.initialLoadingPromise.completed) {
+    if (self.loading || self.loadingPromise.completed) {
         return;
     }
     self.loading = YES;
     [self.apiAdapter retrieveCards:^(STPCard * _Nullable selectedCard, NSArray<STPCard *> * _Nullable cards, NSError * _Nullable error) {
         self.loading = NO;
         if (error) {
-            [self.initialLoadingPromise fail:error];
+            [self.loadingPromise fail:error];
             return;
         }
-        STPCardTuple *tuple = [STPCardTuple new];
-        tuple.cards = cards;
-        tuple.selectedCard = selectedCard;
-        [self.initialLoadingPromise succeed:tuple];
+        STPCardTuple *tuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
+        STPPaymentMethodTuple *paymentTuple = [[STPPaymentMethodTuple alloc] initWithCardTuple:tuple applePayEnabled:[self applePaySupported]];
+        [self.loadingPromise succeed:paymentTuple];
     }];
-}
-
-- (NSArray<id<STPPaymentMethod>> *)parsePaymentMethods:(NSArray<STPCard *> *)cards {
-    NSMutableArray *paymentMethods = [NSMutableArray array];
-    for (STPCard *card in cards) {
-        [paymentMethods addObject:[[STPCardPaymentMethod alloc] initWithCard:card]];
-    }
-    if ([self applePaySupported]) {
-        [paymentMethods addObject:[STPApplePayPaymentMethod new]];
-    }
-    return paymentMethods;
 }
 
 - (void)onSuccess:(STPVoidBlock)completion {
     [self performInitialLoad];
-    [self.initialLoadingPromise onSuccess:^(__unused STPCardTuple *value) {
+    [self.loadingPromise onSuccess:^(__unused STPPaymentMethodTuple *value) {
         completion();
     }];
 }
@@ -205,7 +183,8 @@
 }
 
 - (void)presentPaymentMethodsViewControllerOnViewController:(UIViewController *)viewController {
-    STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self delegate:self];
+    STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
+    paymentMethodsViewController.delegate = self;
     paymentMethodsViewController.theme = self.theme;
     NSDictionary *barItemAttributes = @{
                                         NSFontAttributeName: self.theme.font,
@@ -226,7 +205,8 @@
 }
 
 - (void)pushPaymentMethodsViewControllerOntoNavigationController:(UINavigationController *)navigationController {
-    STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self delegate:self];
+    STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
+    paymentMethodsViewController.delegate = self;
     paymentMethodsViewController.theme = self.theme;
     [navigationController pushViewController:paymentMethodsViewController animated:YES];
 }
@@ -262,7 +242,7 @@
     [self artificiallyRetain:fromViewController];
     [self performInitialLoad];
     __weak typeof(self) weakSelf = self;
-    [self.initialLoadingPromise onSuccess:^(__unused STPCardTuple *tuple) {
+    [self.loadingPromise onSuccess:^(__unused STPPaymentMethodTuple *tuple) {
         if (!weakSelf) {
             return;
         }
