@@ -70,7 +70,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.checkoutView.buyButton.addTarget(self, action: #selector(didTapBuy), forControlEvents: .TouchUpInside)
         self.checkoutView.totalRow.detail = "$\(self.paymentContext.paymentAmount/100).00"
         self.checkoutView.paymentRow.onTap = { _ in
-            self.paymentContext.presentPaymentMethodsViewControllerOnViewController(self)
+            self.paymentContext.pushPaymentMethodsViewControllerOntoNavigationController(self.navigationController!)
         }
     }
     

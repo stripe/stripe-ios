@@ -160,12 +160,7 @@
 #pragma clang diagnostic pop
     UINavigationController *navigationController = [[UINavigationController alloc] initWithNavigationBarClass:[STPDummyNavigationBar class] toolbarClass:nil];
     navigationController.viewControllers = @[paymentMethodsViewController];
-    navigationController.navigationBar.tintColor = self.theme.accentColor;
-    navigationController.navigationBar.barTintColor = self.theme.secondaryBackgroundColor;
-    navigationController.navigationBar.titleTextAttributes = @{
-                                                               NSForegroundColorAttributeName: self.theme.primaryForegroundColor,
-                                                               NSFontAttributeName: self.theme.mediumFont,
-                                                               };
+    [navigationController.navigationBar stp_setTheme:self.theme];
     [viewController presentViewController:navigationController animated:YES completion:nil];
 }
 

@@ -25,6 +25,7 @@
 #import "UITableViewCell+Stripe_Borders.h"
 #import "STPPaymentMethodsViewController+Private.h"
 #import "STPPaymentContext+Private.h"
+#import "UIBarButtonItem+Stripe.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 static NSInteger STPPaymentMethodCardListSection = 0;
@@ -38,6 +39,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic, weak)STPPaymentActivityIndicatorView *activityIndicator;
+@property(nonatomic)UIBarButtonItem *backItem;
+@property(nonatomic)UIBarButtonItem *cancelItem;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)BOOL loading;
@@ -80,7 +83,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.tableView.tableHeaderView = cardImageView;
     
     self.navigationItem.title = NSLocalizedString(@"Choose Payment", nil);
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+    self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     __weak typeof(self) weakself = self;
     [self.loadingPromise onSuccess:^(__unused STPPaymentMethodTuple *value) {
         [UIView animateWithDuration:0.2 animations:^{
@@ -98,11 +102,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView reloadData];
-    if ([self stp_isTopNavigationController]) {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
-    } else {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
-    }
+    self.navigationItem.leftBarButtonItem = [self stp_isRootViewControllerOfNavigationController] ? self.cancelItem : self.backItem;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -125,11 +125,14 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 }
 
 - (void)updateAppearance {
+    [self.backItem stp_setTheme:self.theme];
+    [self.cancelItem stp_setTheme:self.theme];
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
     self.tableView.tintColor = self.theme.accentColor;
     self.cardImageView.tintColor = self.theme.accentColor;
-    self.tableView.separatorColor = self.theme.separatorColor;
+    self.tableView.separatorColor = self.theme.quaternaryBackgroundColor;
+    [self.navigationItem.backBarButtonItem stp_setTheme:self.theme];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {

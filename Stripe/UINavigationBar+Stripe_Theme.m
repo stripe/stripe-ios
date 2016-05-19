@@ -9,11 +9,61 @@
 #import "UINavigationBar+Stripe_Theme.h"
 #import "STPTheme.h"
 
+static NSInteger const STPNavigationBarHairlineViewTag = 787473;
+
 @implementation UINavigationBar (Stripe_Theme)
 
 - (void)stp_setTheme:(STPTheme *)theme {
+    [self stp_hairlineImageView].hidden = YES;
+    [self stp_artificialHairlineView].backgroundColor = theme.quaternaryBackgroundColor;
     self.barTintColor = theme.secondaryBackgroundColor;
     self.tintColor = theme.accentColor;
+    self.titleTextAttributes = @{
+                                 NSFontAttributeName: theme.mediumFont,
+                                 NSForegroundColorAttributeName: theme.primaryForegroundColor,
+                                 };
 }
+
+- (UIView *)stp_artificialHairlineView {
+    UIView *view = [self viewWithTag:STPNavigationBarHairlineViewTag];
+    if (!view) {
+        view = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.bounds), CGRectGetWidth(self.bounds), 0.5f)];
+        view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+        view.tag = STPNavigationBarHairlineViewTag;
+        [self addSubview:view];
+    }
+    return view;
+}
+
++ (UIImage *)stp_imageWithColor:(UIColor *)color minimumSize:(CGSize)size {
+    CGRect rect = CGRectMake(0, 0, size.width, size.height);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return [img resizableImageWithCapInsets:UIEdgeInsetsMake(size.height / 2, size.width / 2, size.height / 2, size.width / 2)];
+}
+
+- (UIImageView *)stp_hairlineImageView {
+    return [self stp_hairlineImageView:self];
+}
+
+- (UIImageView *)stp_hairlineImageView:(UIView *)view {
+    if ([view isKindOfClass:UIImageView.class] && view.bounds.size.height <= 1.0) {
+        return (UIImageView *)view;
+    }
+    for (UIView *subview in view.subviews) {
+        UIImageView *imageView = [self stp_hairlineImageView:subview];
+        if (imageView) {
+            return imageView;
+        }
+    }
+    return nil;
+}
+
 
 @end

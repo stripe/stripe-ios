@@ -26,8 +26,12 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage *)stp_cvcImageForCardBrand:(STPCardBrand)brand;
 
 + (UIImage *)stp_addIcon;
++ (UIImage *)stp_leftChevronIcon;
++ (UIImage *)stp_smallRightChevronIcon;
 + (UIImage *)stp_largeCardFrontImage;
 + (UIImage *)stp_largeCardBackImage;
+
+- (UIImage *)stp_paddedImageWithInsets:(UIEdgeInsets)insets;
 
 @end
 

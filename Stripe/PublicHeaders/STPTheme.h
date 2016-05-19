@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, readonly)UIColor *tertiaryBackgroundColor;
 
-@property(nonatomic, readonly)UIColor *separatorColor;
+@property(nonatomic, readonly)UIColor *quaternaryBackgroundColor;
 
 /**
  *  The primary foreground color of this theme. This will be used as the text color for any important labels in a view with this theme (such as the text color for a text field that the user needs to fill out).

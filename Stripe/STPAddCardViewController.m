@@ -24,6 +24,8 @@
 #import "STPObscuredCardView.h"
 #import "STPPaymentActivityIndicatorView.h"
 #import "UITableViewCell+Stripe_Borders.h"
+#import "STPRememberMeTermsView.h"
+#import "UIBarButtonItem+Stripe.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPObscuredCardViewDelegate>
 @property(nonatomic)STPAPIClient *apiClient;
@@ -46,6 +48,7 @@
 @property(nonatomic)STPCheckoutAccount *checkoutAccount;
 @property(nonatomic)STPCard *checkoutAccountCard;
 @property(nonatomic)BOOL lookupSucceeded;
+@property(nonatomic)STPRememberMeTermsView *rememberMeTermsView;
 @end
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
@@ -119,6 +122,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.rememberMePhoneCell = [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypePhone contents:nil lastInList:YES delegate:self];
     self.rememberMePhoneCell.caption = NSLocalizedString(@"Phone", nil);
     
+    self.rememberMeTermsView = [STPRememberMeTermsView new];
+    self.rememberMeTermsView.textView.alpha = 0;
+    
     self.addressViewModel.previousField = textField;
     
     self.activityIndicator = [[STPPaymentActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20.0f, 20.0f)];
@@ -142,8 +148,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 - (void)updateAppearance {
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
+    [self.doneItem stp_setTheme:self.theme];
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
-    self.tableView.separatorColor = self.theme.separatorColor;
+    self.tableView.separatorColor = self.theme.quaternaryBackgroundColor;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
     self.textField.backgroundColor = self.theme.secondaryBackgroundColor;
     self.textField.placeholderColor = self.theme.tertiaryForegroundColor;
@@ -159,6 +166,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     }
     self.rememberMeCell.theme = self.theme;
     self.rememberMePhoneCell.theme = self.theme;
+    self.rememberMeTermsView.theme = self.theme;
     [self.tableView reloadData];
 }
 
@@ -362,7 +370,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (void)addressFieldTableViewCellDidBackspaceOnEmpty:(__unused STPAddressFieldTableViewCell *)cell {
-    
+    // TODO?
 }
 
 - (void)switchTableViewCell:(STPSwitchTableViewCell *)cell didToggleSwitch:(BOOL)on {
@@ -375,6 +383,10 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
     [self.tableView endUpdates];
+    
+    [UIView animateWithDuration:0.1 animations:^{
+        self.rememberMeTermsView.textView.alpha = on ? 1.0f : 0.0f;
+    }];
     
     // This updates the section borders so they're not drawn in both cells.
     NSIndexPath *switchIndexPath = [self.tableView indexPathForCell:cell];
@@ -444,6 +456,8 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 - (CGFloat)tableView:(__unused UITableView *)tableView heightForFooterInSection:(__unused NSInteger)section {
     if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
         return 0.01f;
+    } else if (section == STPPaymentCardRememberMeSection) {
+        return 140.0f;
     }
     return 27.0f;
 }
@@ -477,6 +491,13 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         }
     }
     return nil;
+}
+
+- (UIView *)tableView:(__unused UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    if (section != STPPaymentCardRememberMeSection) {
+        return [UIView new];
+    }
+    return self.rememberMeTermsView;
 }
 
 @end

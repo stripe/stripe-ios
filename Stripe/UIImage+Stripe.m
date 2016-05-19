@@ -22,6 +22,14 @@
     return [UIImage stp_safeImageNamed:@"stp_icon_add" templateifAvailable:YES];
 }
 
++ (UIImage *)stp_leftChevronIcon {
+    return [UIImage stp_safeImageNamed:@"stp_icon_chevron_left" templateifAvailable:YES];
+}
+
++ (UIImage *)stp_smallRightChevronIcon {
+    return [UIImage stp_safeImageNamed:@"stp_icon_chevron_right_small" templateifAvailable:YES];
+}
+
 + (nonnull UIImage *)stp_largeCardFrontImage {
     return [UIImage stp_safeImageNamed:@"stp_card_form_front" templateifAvailable:YES];
 }
@@ -117,6 +125,21 @@
 
 + (UIImage *)stp_safeImageNamed:(NSString *)imageName {
     return [self stp_safeImageNamed:imageName templateifAvailable:NO];
+}
+
+- (UIImage *)stp_paddedImageWithInsets:(UIEdgeInsets)insets {
+    CGSize size = CGSizeMake(self.size.width + insets.left + insets.right,
+                             self.size.height + insets.top + insets.bottom);
+    UIGraphicsBeginImageContextWithOptions(size, NO, self.scale);
+    CGPoint origin = CGPointMake(insets.left, insets.top);
+    [self drawAtPoint:origin];
+    UIImage *imageWithInsets = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    BOOL templateSupported = [self respondsToSelector:@selector(imageWithRenderingMode:)];
+    if (templateSupported) {
+        imageWithInsets = [imageWithInsets imageWithRenderingMode:self.renderingMode];
+    }
+    return imageWithInsets;
 }
 
 @end

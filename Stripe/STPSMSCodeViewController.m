@@ -15,6 +15,7 @@
 #import "STPPaymentActivityIndicatorView.h"
 #import "StripeError.h"
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
+#import "UIBarButtonItem+Stripe.h"
 
 @interface STPSMSCodeViewController()<STPSMSCodeTextFieldDelegate>
 
@@ -100,6 +101,8 @@
 }
 
 - (void)updateAppearance {
+    [self.navigationItem.leftBarButtonItem stp_setTheme:self.theme];
+    [self.navigationItem.rightBarButtonItem stp_setTheme:self.theme];
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
     self.topLabel.font = self.theme.smallFont;
     self.topLabel.textColor = self.theme.secondaryForegroundColor;

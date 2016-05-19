@@ -21,7 +21,6 @@
 
 @end
 
-static STPTheme *STPThemeDefaultTheme;
 static UIColor *STPThemeDefaultPrimaryBackgroundColor;
 static UIColor *STPThemeDefaultSecondaryBackgroundColor;
 static UIColor *STPThemeDefaultPrimaryForegroundColor;
@@ -42,15 +41,28 @@ static UIFont  *STPThemeDefaultMediumFont;
     STPThemeDefaultErrorColor = [UIColor colorWithRed:1 green:72.0f/255.0f blue:68.0f/255.0f alpha:1];
     STPThemeDefaultFont = [UIFont systemFontOfSize:17];
     STPThemeDefaultMediumFont = [UIFont systemFontOfSize:17.0f weight:0.2f] ?: [UIFont boldSystemFontOfSize:17];
-    STPThemeDefaultTheme = [STPTheme new];
 }
 
 + (void)setDefaultTheme:(STPTheme *)theme {
-    STPThemeDefaultTheme = theme;
+    STPThemeDefaultPrimaryBackgroundColor = theme.primaryBackgroundColor;
+    STPThemeDefaultSecondaryBackgroundColor = theme.secondaryBackgroundColor;
+    STPThemeDefaultPrimaryForegroundColor = theme.primaryForegroundColor;
+    STPThemeDefaultSecondaryForegroundColor = theme.secondaryForegroundColor;
+    STPThemeDefaultAccentColor = theme.accentColor;
+    STPThemeDefaultErrorColor = theme.errorColor;
+    STPThemeDefaultFont = theme.font;
+    STPThemeDefaultMediumFont = theme.mediumFont;
 }
 
 + (STPTheme *)defaultTheme {
-    return STPThemeDefaultTheme;
+    return [[STPTheme alloc] initWithPrimaryBackgroundColor:STPThemeDefaultPrimaryBackgroundColor
+                                   secondaryBackgroundColor:STPThemeDefaultSecondaryBackgroundColor
+                                     primaryForegroundColor:STPThemeDefaultPrimaryForegroundColor
+                                   secondaryForegroundColor:STPThemeDefaultSecondaryForegroundColor
+                                                accentColor:STPThemeDefaultAccentColor
+                                                 errorColor:STPThemeDefaultErrorColor
+                                                       font:STPThemeDefaultFont
+                                                 mediumFont:STPThemeDefaultMediumFont];
 }
 
 - (instancetype)initWithPrimaryBackgroundColor:(nullable UIColor *)primaryBackgroundColor
@@ -99,7 +111,7 @@ static UIFont  *STPThemeDefaultMediumFont;
     return [self.primaryForegroundColor colorWithAlphaComponent:0.25f];
 }
 
-- (UIColor *)separatorColor {
+- (UIColor *)quaternaryBackgroundColor {
     CGFloat hue;
     CGFloat saturation;
     CGFloat brightness;
