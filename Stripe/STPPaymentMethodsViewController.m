@@ -86,7 +86,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     __weak typeof(self) weakself = self;
-    [self.loadingPromise onSuccess:^(__unused STPPaymentMethodTuple *value) {
+    [self.loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
+        weakself.cardImageView.image = [tuple.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]] ? [UIImage stp_largeCardApplePayImage] : [UIImage stp_largeCardFrontImage];
         [UIView animateWithDuration:0.2 animations:^{
             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 1)];
             [weakself.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];

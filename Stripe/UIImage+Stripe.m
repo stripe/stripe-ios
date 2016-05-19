@@ -38,6 +38,10 @@
     return [UIImage stp_safeImageNamed:@"stp_card_form_back" templateifAvailable:YES];
 }
 
++ (UIImage *)stp_largeCardApplePayImage {
+    return [UIImage stp_safeImageNamed:@"stp_card_form_applepay" templateifAvailable:YES];
+}
+
 + (UIImage *)stp_applePayCardImage {
     return [UIImage stp_safeImageNamed:@"stp_card_applepay"];
 }
