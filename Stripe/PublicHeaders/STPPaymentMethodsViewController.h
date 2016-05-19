@@ -46,11 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak, nullable)id<STPPaymentMethodsViewControllerDelegate>delegate;
 
 /**
- *  This theme will control the visual appearance of the view controller's view. @see STPTheme
- */
-@property(nonatomic)STPTheme *theme;
-
-/**
  *  Creates a new payment methods view controller.
  *
  *  @param paymentContext A payment context to power the view controller's view. The paymentContext will in turn use its backend API adapter to fetch the information it needs from your application.

@@ -128,4 +128,15 @@ static UIFont  *STPThemeDefaultMediumFont;
     return [self.font fontWithSize:self.font.pointSize + 15];
 }
 
+- (id)copyWithZone:(__unused NSZone *)zone {
+    return [[STPTheme alloc] initWithPrimaryBackgroundColor:self.primaryBackgroundColor
+                                   secondaryBackgroundColor:self.secondaryBackgroundColor
+                                     primaryForegroundColor:self.primaryForegroundColor
+                                   secondaryForegroundColor:self.secondaryForegroundColor
+                                                accentColor:self.accentColor
+                                                 errorColor:self.errorColor
+                                                       font:self.font
+                                                 mediumFont:self.mediumFont];
+}
+
 @end

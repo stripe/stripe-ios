@@ -11,6 +11,7 @@
 #import "STPPaymentMethod.h"
 #import "STPBlocks.h"
 #import "STPAddress.h"
+#import "STPPaymentConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -76,53 +77,17 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
  */
 @interface STPPaymentContext : NSObject
 
-/**
- *  This is a shortcut for calling -initWithAPIAdapter:apiAdapter publishableKey:[Stripe defaultPublishableKey] supportedPaymentMethods:STPPaymentMethodTypeAll.
- */
-- (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter;
-
-/**
- *  Initializes a new payment context.
- *
- *  @param apiAdapter              The API adapter that will be used to talk to your backend API.
- *  @param publishableKey          The publishable key the payment context will use to tokenize your user's payment details. @see STPAPIClient.h
- *  @param supportedPaymentMethods An enum value representing which payment methods you will accept from your user. Unless you have a very specific reason not to, you should set this to STPPaymentMethodTypeAll.
- *
- *  @return a new payment context.
- */
 - (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                    publishableKey:(NSString *)publishableKey
-           supportedPaymentMethods:(STPPaymentMethodType)supportedPaymentMethods;
+                     configuration:(STPPaymentConfiguration *)configuration;
 
-/**
- *  The publishable key that will be used by the payment context.
- */
-@property(nonatomic, readonly, copy)NSString *publishableKey;
-
-/**
- *  The API adapter that will be used to talk to your backend API.
- */
 @property(nonatomic, readonly)id<STPBackendAPIAdapter> apiAdapter;
 
-/**
- *  An enum value representing which payment methods you will accept from your user. Unless you have a very specific reason not to, you should set this to STPPaymentMethodTypeAll.
- */
-@property(nonatomic, readonly)STPPaymentMethodType supportedPaymentMethods;
-
-/**
- *  The billing address fields the user must fill out in order for the form to validate. These fields will all be present on the returned token from Stripe. See https://stripe.com/docs/api#create_card_token for more information.
- */
-@property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
+@property(nonatomic, readonly)STPPaymentConfiguration *configuration;
 
 /**
  *  This delegate will be notified when the payment context's contents change. @see STPPaymentContextDelegate
  */
 @property(nonatomic, weak, nullable)id<STPPaymentContextDelegate> delegate;
-
-/**
- *  This theme will inform the visual appearance of any UI created by the payment context. @see STPTheme
- */
-@property(nonatomic)STPTheme *theme;
 
 /**
  *  Whether or not the payment context is currently loading information from the network.
@@ -148,16 +113,6 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
  *  The three-letter currency code for the currency of the payment (i.e. USD, GBP, JPY, etc). Defaults to USD.
  */
 @property(nonatomic, copy)NSString *paymentCurrency;
-
-/**
- *  The name of your company, for displaying to the user during the payment flow. For example, when using Apple Pay, the payment sheet's final line item will read "PAY {companyName}". This defaults to the name of your iOS application.
- */
-@property(nonatomic, copy)NSString *companyName;
-
-/**
- *  The Apple Merchant Identifier to use during Apple Pay transactions. To create one of these, see our guide at https://stripe.com/docs/mobile/applepay . You must set this to a valid identifier in order to automatically enable Apple Pay.
- */
-@property(nonatomic, nullable, copy)NSString *appleMerchantIdentifier;
 
 /**
  *  You must call this method on your payment context when the view controller it's powering is about to appear. This tells the payment context to begin fetching the data it needs. A good time to call this is in the -viewWillAppear: method of that view controller.

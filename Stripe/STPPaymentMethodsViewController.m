@@ -33,8 +33,9 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 @interface STPPaymentMethodsViewController()<UITableViewDataSource, UITableViewDelegate>
 
-@property(nonatomic, weak)id<STPBackendAPIAdapter> apiAdapter;
-@property(nonatomic, weak)STPAPIClient *apiClient;
+@property(nonatomic)STPPaymentConfiguration *configuration;
+@property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
+@property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic, weak)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
@@ -50,10 +51,9 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 @implementation STPPaymentMethodsViewController
 
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext {
-    STPAPIClient *apiClient = [[STPAPIClient alloc] initWithPublishableKey:paymentContext.publishableKey];
-    self = [self initWithAPIClient:apiClient APIAdapter:paymentContext.apiAdapter loadingPromise:paymentContext.currentValuePromise];
-    self.theme = paymentContext.theme;
-    return self;
+    return [self initWithConfiguration:paymentContext.configuration
+                            apiAdapter:paymentContext.apiAdapter
+                        loadingPromise:paymentContext.currentValuePromise];
 }
 
 - (void)viewDidLoad {
@@ -119,20 +119,15 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     }
 }
 
-- (void)setTheme:(STPTheme *)theme {
-    _theme = theme;
-    [self updateAppearance];
-}
-
 - (void)updateAppearance {
-    [self.backItem stp_setTheme:self.theme];
-    [self.cancelItem stp_setTheme:self.theme];
-    self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
-    self.view.backgroundColor = self.theme.primaryBackgroundColor;
-    self.tableView.tintColor = self.theme.accentColor;
-    self.cardImageView.tintColor = self.theme.accentColor;
-    self.tableView.separatorColor = self.theme.quaternaryBackgroundColor;
-    [self.navigationItem.backBarButtonItem stp_setTheme:self.theme];
+    [self.backItem stp_setTheme:self.configuration.theme];
+    [self.cancelItem stp_setTheme:self.configuration.theme];
+    self.tableView.backgroundColor = self.configuration.theme.primaryBackgroundColor;
+    self.view.backgroundColor = self.configuration.theme.primaryBackgroundColor;
+    self.tableView.tintColor = self.configuration.theme.accentColor;
+    self.cardImageView.tintColor = self.configuration.theme.accentColor;
+    self.tableView.separatorColor = self.configuration.theme.quaternaryBackgroundColor;
+    [self.navigationItem.backBarButtonItem stp_setTheme:self.configuration.theme];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
@@ -154,8 +149,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier forIndexPath:indexPath];
-    cell.textLabel.font = self.theme.font;
-    cell.backgroundColor = self.theme.secondaryBackgroundColor;
+    cell.textLabel.font = self.configuration.theme.font;
+    cell.backgroundColor = self.configuration.theme.secondaryBackgroundColor;
     if (indexPath.section == STPPaymentMethodCardListSection) {
         id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
         cell.imageView.image = paymentMethod.image;
@@ -163,7 +158,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         cell.textLabel.attributedText = [self buildAttributedStringForPaymentMethod:paymentMethod selected:selected];
         cell.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
-        cell.textLabel.textColor = [self.theme accentColor];
+        cell.textLabel.textColor = [self.configuration.theme accentColor];
         cell.imageView.image = [UIImage stp_addIcon];
         cell.textLabel.text = NSLocalizedString(@"Add New Card...", nil);
     }
@@ -176,7 +171,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         return [self buildAttributedStringForCard:((STPCardPaymentMethod *)paymentMethod).card selected:selected];
     } else if ([paymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
         NSString *label = NSLocalizedString(@"Apple Pay", nil);
-        UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
+        UIColor *primaryColor = selected ? self.configuration.theme.accentColor : self.configuration.theme.primaryForegroundColor;
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
     }
     return nil;
@@ -186,15 +181,15 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     NSString *template = NSLocalizedString(@"%@ Ending In %@", @"{card brand} ending in {last4}");
     NSString *brandString = [NSString stp_stringWithCardBrand:card.brand];
     NSString *label = [NSString stringWithFormat:template, brandString, card.last4];
-    UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
+    UIColor *primaryColor = selected ? self.configuration.theme.accentColor : self.configuration.theme.primaryForegroundColor;
     UIColor *secondaryColor = [primaryColor colorWithAlphaComponent:0.6f];
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:label attributes:@{
                                                                                                                        NSForegroundColorAttributeName: secondaryColor,
-                                                                                                                       NSFontAttributeName: self.theme.font}];
+                                                                                                                       NSFontAttributeName: self.configuration.theme.font}];
     [attributedString addAttribute:NSForegroundColorAttributeName value:primaryColor range:[label rangeOfString:brandString]];
     [attributedString addAttribute:NSForegroundColorAttributeName value:primaryColor range:[label rangeOfString:card.last4]];
-    [attributedString addAttribute:NSFontAttributeName value:self.theme.mediumFont range:[label rangeOfString:brandString]];
-    [attributedString addAttribute:NSFontAttributeName value:self.theme.mediumFont range:[label rangeOfString:card.last4]];
+    [attributedString addAttribute:NSFontAttributeName value:self.configuration.theme.mediumFont range:[label rangeOfString:brandString]];
+    [attributedString addAttribute:NSFontAttributeName value:self.configuration.theme.mediumFont range:[label rangeOfString:card.last4]];
     return [attributedString copy];
 }
 
@@ -205,9 +200,14 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         [self finishWithPaymentMethod:paymentMethod];
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
         __weak typeof(self) weakself = self;
-        STPAddCardViewController *paymentCardViewController;
-        // TODO
-        paymentCardViewController = [[STPAddCardViewController alloc] initWithPublishableKey:self.apiClient.publishableKey requiredBillingAddressFields:STPBillingAddressFieldsNone completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
+        STPPaymentConfiguration *config = [self.configuration copy];
+        NSArray *cardPaymentMethods = [self.paymentMethods filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id<STPPaymentMethod> paymentMethod, __unused NSDictionary<NSString *,id> * _Nullable bindings) {
+            return [paymentMethod isKindOfClass:[STPCardPaymentMethod class]];
+        }]];
+        // Disable SMS autofill if we already have a card on file
+        config.smsAutofillDisabled = (config.smsAutofillDisabled || cardPaymentMethods.count > 0);
+        
+        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
             if (token && token.card) {
                 [self.apiAdapter addToken:token completion:^(NSError * _Nullable error) {
                     if (error) {
@@ -225,12 +225,6 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
                 }];
             }
         }];
-        paymentCardViewController.theme = self.theme;
-        NSArray *cardPaymentMethods = [self.paymentMethods filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id<STPPaymentMethod> paymentMethod, __unused NSDictionary<NSString *,id> * _Nullable bindings) {
-            return [paymentMethod isKindOfClass:[STPCardPaymentMethod class]];
-        }]];
-        // Disable SMS autofill if we already have a card on file
-        paymentCardViewController.smsAutofillDisabled = cardPaymentMethods.count > 0;
         [self.navigationController pushViewController:paymentCardViewController animated:YES];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -261,7 +255,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     BOOL topRow = (indexPath.row == 0);
     BOOL bottomRow = ([self tableView:tableView numberOfRowsInSection:indexPath.section] - 1 == indexPath.row);
-    [cell stp_setBorderColor:self.theme.tertiaryBackgroundColor];
+    [cell stp_setBorderColor:self.configuration.theme.tertiaryBackgroundColor];
     [cell stp_setTopBorderHidden:!topRow];
     [cell stp_setBottomBorderHidden:!bottomRow];
 }
@@ -285,12 +279,13 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 @implementation STPPaymentMethodsViewController (Private)
 
-- (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
-                       APIAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                   loadingPromise:(STPPromise<STPPaymentMethodTuple *> *)loadingPromise {
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
+                           apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
+                       loadingPromise:(STPPromise<STPPaymentMethodTuple *> *)loadingPromise {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        _apiClient = apiClient;
+        _configuration = configuration;
+        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _apiAdapter = apiAdapter;
         _loadingPromise = loadingPromise;
         __weak typeof(self) weakself = self;

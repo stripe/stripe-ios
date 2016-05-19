@@ -12,6 +12,7 @@
 #import "STPAPIClient.h"
 #import "STPAddress.h"
 #import "STPTheme.h"
+#import "STPPaymentConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -36,16 +37,8 @@ typedef void (^STPAddCardCompletionBlock)(STPToken * __nullable token, STPErrorB
  *
  *  @return a view controller that you can either embed in a UINavigationController and present modally, or push onto an existing UINavigationController stack.
  */
-- (instancetype)initWithPublishableKey:(NSString *)publishableKey
-          requiredBillingAddressFields:(STPBillingAddressFields)requiredBillingAddressFields
-                            completion:(STPAddCardCompletionBlock)completion;
-
-/**
- *  This theme will control the visual appearance of the view controller's view. @see STPTheme
- */
-@property(nonatomic)STPTheme *theme;
-
-@property(nonatomic)BOOL smsAutofillDisabled;
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
+                           completion:(STPAddCardCompletionBlock)completion;
 
 @end
 

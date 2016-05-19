@@ -43,12 +43,14 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         Stripe.setDefaultPublishableKey(self.stripePublishableKey)
         self.myAPIClient = MyAPIClient(baseURL: self.backendBaseURL,
                                        customerID: self.customerID)
-        let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient)
-        paymentContext.appleMerchantIdentifier = self.appleMerchantID
+        let config = STPPaymentConfiguration()
+        config.appleMerchantIdentifier = self.appleMerchantID
+        config.companyName = self.companyName
+        config.requiredBillingAddressFields = .None
+        let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient, configuration: config)
+        
         paymentContext.paymentAmount = price
         paymentContext.paymentCurrency = self.paymentCurrency
-        paymentContext.companyName = self.companyName
-        paymentContext.requiredBillingAddressFields = .None
         
         self.paymentContext = paymentContext
         super.init(nibName: nil, bundle: nil)

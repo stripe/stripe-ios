@@ -22,45 +22,29 @@
 #import "STPCheckoutAPIClient.h" // TODO
 #import "STPPaymentContext+Private.h"
 
-@interface STPDummyNavigationBar : UINavigationBar
-@end
-
-@implementation STPDummyNavigationBar
-@end
-
 @interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate>
 
+@property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic)STPAPIClient *apiClient;
-@property(nonatomic, copy)NSString *publishableKey;
-@property(nonatomic)STPPaymentMethodType supportedPaymentMethods;
 @property(nonatomic, readwrite, getter=isLoading)BOOL loading;
 @property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
 @property(nonatomic)STPPromise<id> *didAppearPromise;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
-@property(nonatomic)STPCheckoutAPIClient *checkoutAPIClient;
 
 @end
 
 @implementation STPPaymentContext
 
-- (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
-    return [self initWithAPIAdapter:apiAdapter publishableKey:[Stripe defaultPublishableKey] supportedPaymentMethods:STPPaymentMethodTypeAll];
-}
-
 - (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                    publishableKey:(NSString *)publishableKey
-           supportedPaymentMethods:(STPPaymentMethodType)supportedPaymentMethods {
+                     configuration:(STPPaymentConfiguration *)configuration {
     self = [super init];
     if (self) {
+        _configuration = configuration;
         _apiAdapter = apiAdapter;
-        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
-        _publishableKey = publishableKey;
-        _supportedPaymentMethods = supportedPaymentMethods;
-        _theme = [STPTheme new];
+        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _paymentCurrency = @"USD";
-        _companyName = [NSBundle stp_applicationName];
         _didAppearPromise = [STPPromise new];
         __weak typeof(self) weakself = self;
         _loadingPromise = [[[STPPromise<STPPaymentMethodTuple *> new] onSuccess:^(STPPaymentMethodTuple *tuple) {
@@ -150,24 +134,14 @@
 - (void)presentPaymentMethodsViewControllerOnViewController:(UIViewController *)viewController {
     STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
     paymentMethodsViewController.delegate = self;
-    paymentMethodsViewController.theme = self.theme;
-    NSDictionary *barItemAttributes = @{
-                                        NSFontAttributeName: self.theme.font,
-                                        };
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-    [[UIBarButtonItem appearanceWhenContainedIn:[STPDummyNavigationBar class], nil] setTitleTextAttributes:barItemAttributes forState:UIControlStateNormal];
-#pragma clang diagnostic pop
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithNavigationBarClass:[STPDummyNavigationBar class] toolbarClass:nil];
-    navigationController.viewControllers = @[paymentMethodsViewController];
-    [navigationController.navigationBar stp_setTheme:self.theme];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
+    [navigationController.navigationBar stp_setTheme:self.configuration.theme];
     [viewController presentViewController:navigationController animated:YES completion:nil];
 }
 
 - (void)pushPaymentMethodsViewControllerOntoNavigationController:(UINavigationController *)navigationController {
     STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
     paymentMethodsViewController.delegate = self;
-    paymentMethodsViewController.theme = self.theme;
     [navigationController pushViewController:paymentMethodsViewController animated:YES];
 }
 
@@ -245,21 +219,21 @@
 }
 
 - (BOOL)applePaySupported {
-    return (self.supportedPaymentMethods & STPPaymentMethodTypeApplePay) &&
+    return (self.configuration.supportedPaymentMethods & STPPaymentMethodTypeApplePay) &&
         [Stripe canSubmitPaymentRequest:[self buildPaymentRequest]];
 }
 
 - (PKPaymentRequest *)buildPaymentRequest {
-    if (!self.appleMerchantIdentifier || !self.paymentAmount) {
+    if (!self.configuration.appleMerchantIdentifier || !self.paymentAmount) {
         return nil;
     }
-    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.appleMerchantIdentifier];
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.configuration.appleMerchantIdentifier];
     NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:self.paymentAmount
                                                                   currency:self.paymentCurrency];
-    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:self.companyName
+    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:self.configuration.companyName
                                                                           amount:amount];
     paymentRequest.paymentSummaryItems = @[totalItem];
-    paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.requiredBillingAddressFields];
+    paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
     return paymentRequest;
 }
 

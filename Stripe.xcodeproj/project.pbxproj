@@ -178,6 +178,10 @@
 		046FE9A11CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.h in Headers */ = {isa = PBXBuildFile; fileRef = 046FE99F1CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		046FE9A21CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 046FE9A01CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.m */; };
 		046FE9A31CE5608000DA6A7B /* STPPaymentActivityIndicatorView.h in Headers */ = {isa = PBXBuildFile; fileRef = 046FE99F1CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		049880FC1CED5A2300EA4FFD /* STPPaymentConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 049880FA1CED5A2300EA4FFD /* STPPaymentConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		049880FD1CED5A2300EA4FFD /* STPPaymentConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 049880FA1CED5A2300EA4FFD /* STPPaymentConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		049880FE1CED5A2300EA4FFD /* STPPaymentConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 049880FB1CED5A2300EA4FFD /* STPPaymentConfiguration.m */; };
+		049880FF1CED5A2300EA4FFD /* STPPaymentConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 049880FB1CED5A2300EA4FFD /* STPPaymentConfiguration.m */; };
 		049952CF1BCF13510088C703 /* STPAPIPostRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 049952CD1BCF13510088C703 /* STPAPIPostRequest.h */; };
 		049952D01BCF13510088C703 /* STPAPIPostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 049952CE1BCF13510088C703 /* STPAPIPostRequest.m */; };
 		049952D21BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */; };
@@ -506,6 +510,8 @@
 		046FE99C1CE5435600DA6A7B /* STPDummyCheckoutClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPDummyCheckoutClient.m; sourceTree = "<group>"; };
 		046FE99F1CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentActivityIndicatorView.h; path = PublicHeaders/STPPaymentActivityIndicatorView.h; sourceTree = "<group>"; };
 		046FE9A01CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentActivityIndicatorView.m; sourceTree = "<group>"; };
+		049880FA1CED5A2300EA4FFD /* STPPaymentConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentConfiguration.h; path = PublicHeaders/STPPaymentConfiguration.h; sourceTree = "<group>"; };
+		049880FB1CED5A2300EA4FFD /* STPPaymentConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentConfiguration.m; sourceTree = "<group>"; };
 		049952CD1BCF13510088C703 /* STPAPIPostRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPAPIPostRequest.h; sourceTree = "<group>"; };
 		049952CE1BCF13510088C703 /* STPAPIPostRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAPIPostRequest.m; sourceTree = "<group>"; };
 		049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPAPIClient+Private.h"; sourceTree = "<group>"; };
@@ -734,6 +740,8 @@
 				0426B9751CEBD001006AC8DD /* UINavigationBar+Stripe_Theme.m */,
 				04E39F681CED48D500AF3B96 /* UIBarButtonItem+Stripe.h */,
 				04E39F691CED48D500AF3B96 /* UIBarButtonItem+Stripe.m */,
+				049880FA1CED5A2300EA4FFD /* STPPaymentConfiguration.h */,
+				049880FB1CED5A2300EA4FFD /* STPPaymentConfiguration.m */,
 				0426B96C1CEADC98006AC8DD /* STPColorUtils.h */,
 				0426B96D1CEADC98006AC8DD /* STPColorUtils.m */,
 				0439B9851C454F97005A1ED5 /* STPPaymentMethodsViewController.h */,
@@ -1138,6 +1146,7 @@
 				046FE9A31CE5608000DA6A7B /* STPPaymentActivityIndicatorView.h in Headers */,
 				C1718D581C3B2E60002A7CB3 /* UIImage+Stripe.h in Headers */,
 				04A4883E1CA3568800506E53 /* STPBlocks.h in Headers */,
+				049880FD1CED5A2300EA4FFD /* STPPaymentConfiguration.h in Headers */,
 				049A3F9B1CC7DBCC00F57DE7 /* STPPaymentContext.h in Headers */,
 				04F3BB3E1BA89B1200DE235E /* PKPayment+Stripe.h in Headers */,
 				04633AFD1CD129AF009D4FB5 /* STPPhoneNumberValidator.h in Headers */,
@@ -1217,6 +1226,7 @@
 				049A3F891CC73C7100F57DE7 /* STPPaymentContext.h in Headers */,
 				04E39F541CECF7A100AF3B96 /* STPPaymentMethodTuple.h in Headers */,
 				04F416261CA3639500486FB5 /* STPAddCardViewController.h in Headers */,
+				049880FC1CED5A2300EA4FFD /* STPPaymentConfiguration.h in Headers */,
 				049A3FAE1CC9AA9900F57DE7 /* STPAddressViewModel.h in Headers */,
 				0426B96E1CEADC98006AC8DD /* STPColorUtils.h in Headers */,
 				0451CC491C49AF0D003B2CA6 /* STPSource.h in Headers */,
@@ -1542,6 +1552,7 @@
 				0438EF371B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */,
 				049E84CC1A605DE0000B66CD /* STPAPIClient.m in Sources */,
 				049E84CD1A605DE0000B66CD /* STPFormEncoder.m in Sources */,
+				049880FF1CED5A2300EA4FFD /* STPPaymentConfiguration.m in Sources */,
 				04633B011CD129CB009D4FB5 /* STPPhoneNumberValidator.m in Sources */,
 				04A488451CA3580700506E53 /* UINavigationController+Stripe_Completion.m in Sources */,
 				049E84CF1A605DE0000B66CD /* STPBankAccount.m in Sources */,
@@ -1598,6 +1609,7 @@
 				04CDB5041A5F30A700B854EE /* STPFormEncoder.m in Sources */,
 				0426B96F1CEADC98006AC8DD /* STPColorUtils.m in Sources */,
 				04E39F531CECF7A100AF3B96 /* STPCardTuple.m in Sources */,
+				049880FE1CED5A2300EA4FFD /* STPPaymentConfiguration.m in Sources */,
 				046FE9A21CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.m in Sources */,
 				C118108E1CC6B07B0022FB55 /* STPCardPaymentMethod.m in Sources */,
 				C124A1721CCA968B007D42EE /* STPAnalyticsClient.m in Sources */,

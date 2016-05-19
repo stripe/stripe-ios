@@ -28,8 +28,8 @@
 #import "UIBarButtonItem+Stripe.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPObscuredCardViewDelegate>
+@property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)STPAPIClient *apiClient;
-@property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)UIBarButtonItem *doneItem;
@@ -61,18 +61,16 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 @implementation STPAddCardViewController
 
-- (instancetype)initWithPublishableKey:(NSString *)publishableKey
-          requiredBillingAddressFields:(STPBillingAddressFields)requiredBillingAddressFields
-                            completion:(STPAddCardCompletionBlock)completion {
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
+                           completion:(STPAddCardCompletionBlock)completion {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
+        _configuration = configuration;
+        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _completion = completion;
-        _requiredBillingAddressFields = requiredBillingAddressFields;
-        _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:requiredBillingAddressFields];
-        _theme = [STPTheme new];
+        _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
         _addressViewModel.delegate = self;
-        _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:publishableKey];
+        _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
     }
     return self;
 }
@@ -93,7 +91,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.navigationItem.title = NSLocalizedString(@"Add Card", nil);
-
+    
     UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[UIImage stp_largeCardFrontImage]];
     cardImageView.contentMode = UIViewContentModeCenter;
     cardImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, cardImageView.bounds.size.height + (57 * 2));
@@ -131,7 +129,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     
     self.inputAccessoryToolbar = [UIToolbar stp_inputAccessoryToolbarWithTarget:self action:@selector(paymentFieldNextTapped)];
     [self.inputAccessoryToolbar stp_setEnabled:NO];
-    if (self.requiredBillingAddressFields != STPBillingAddressFieldsNone) {
+    if (self.configuration.requiredBillingAddressFields != STPBillingAddressFieldsNone) {
         textField.inputAccessoryView = self.inputAccessoryToolbar;
     }
     [self updateAppearance];
@@ -141,33 +139,27 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     }];
 }
 
-- (void)setTheme:(STPTheme *)theme {
-    _theme = theme;
-    [self updateAppearance];
-}
-
 - (void)updateAppearance {
-    self.view.backgroundColor = self.theme.primaryBackgroundColor;
-    [self.doneItem stp_setTheme:self.theme];
-    self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
-    self.tableView.separatorColor = self.theme.quaternaryBackgroundColor;
+    self.view.backgroundColor = self.configuration.theme.primaryBackgroundColor;
+    [self.doneItem stp_setTheme:self.configuration.theme];
+    self.tableView.backgroundColor = self.configuration.theme.primaryBackgroundColor;
+    self.tableView.separatorColor = self.configuration.theme.quaternaryBackgroundColor;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
-    self.textField.backgroundColor = self.theme.secondaryBackgroundColor;
-    self.textField.placeholderColor = self.theme.tertiaryForegroundColor;
+    self.textField.backgroundColor = self.configuration.theme.secondaryBackgroundColor;
+    self.textField.placeholderColor = self.configuration.theme.tertiaryForegroundColor;
     self.textField.borderColor = [UIColor clearColor];
-    self.textField.textColor = self.theme.primaryForegroundColor;
-    self.textField.font = self.theme.font;
-    self.obscuredCardView.theme = self.theme;
-    self.cardImageView.tintColor = self.theme.accentColor;
-    self.activityIndicator.tintColor = self.theme.accentColor;
-    self.emailCell.theme = self.theme;
+    self.textField.textColor = self.configuration.theme.primaryForegroundColor;
+    self.textField.font = self.configuration.theme.font;
+    self.obscuredCardView.theme = self.configuration.theme;
+    self.cardImageView.tintColor = self.configuration.theme.accentColor;
+    self.activityIndicator.tintColor = self.configuration.theme.accentColor;
+    self.emailCell.theme = self.configuration.theme;
     for (STPAddressFieldTableViewCell *cell in self.addressViewModel.addressCells) {
-        cell.theme = self.theme;
+        cell.theme = self.configuration.theme;
     }
-    self.rememberMeCell.theme = self.theme;
-    self.rememberMePhoneCell.theme = self.theme;
-    self.rememberMeTermsView.theme = self.theme;
-    [self.tableView reloadData];
+    self.rememberMeCell.theme = self.configuration.theme;
+    self.rememberMePhoneCell.theme = self.configuration.theme;
+    self.rememberMeTermsView.theme = self.configuration.theme;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -360,7 +352,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
                 return [self.checkoutAPIClient sendSMSToAccountWithEmail:lookup.email];
             }] onSuccess:^(STPCheckoutAPIVerification *verification) {
                 STPSMSCodeViewController *codeViewController = [[STPSMSCodeViewController alloc] initWithCheckoutAPIClient:self.checkoutAPIClient verification:verification];
-                codeViewController.theme = self.theme;
+                codeViewController.theme = self.configuration.theme;
                 codeViewController.delegate = self;
                 UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:codeViewController];
                 [self presentViewController:nav animated:YES completion:nil];
@@ -405,7 +397,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == STPPaymentCardEmailSection) {
-        if (self.smsAutofillDisabled) {
+        if (self.configuration.smsAutofillDisabled) {
             return 0;
         }
         return 1;
@@ -415,7 +407,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     } else if (section == STPPaymentCardBillingAddressSection) {
         return self.addressViewModel.addressCells.count;
     } else if (section == STPPaymentCardRememberMeSection) {
-        if (!self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.smsAutofillDisabled) {
+        if (!self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.configuration.smsAutofillDisabled) {
             return 0;
         }
         return self.rememberMeCell.on ? 2 : 1;
@@ -441,14 +433,14 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         }
         
     }
-    cell.backgroundColor = self.theme.secondaryBackgroundColor;
+    cell.backgroundColor = self.configuration.theme.secondaryBackgroundColor;
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     BOOL topRow = (indexPath.row == 0);
     BOOL bottomRow = ([self tableView:tableView numberOfRowsInSection:indexPath.section] - 1 == indexPath.row);
-    [cell stp_setBorderColor:self.theme.tertiaryBackgroundColor];
+    [cell stp_setBorderColor:self.configuration.theme.tertiaryBackgroundColor];
     [cell stp_setTopBorderHidden:!topRow];
     [cell stp_setBottomBorderHidden:!bottomRow];
 }
@@ -470,18 +462,18 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (UIView *)tableView:(__unused UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-	if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
-		return nil;
-	}
+    if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
+        return nil;
+    }
     if (section == STPPaymentCardEmailSection || section == STPPaymentCardRememberMeSection) {
         return [UIView new];
     } else {
         UILabel *label = [UILabel new];
-        label.font = self.theme.smallFont;
+        label.font = self.configuration.theme.smallFont;
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         style.firstLineHeadIndent = 15;
         NSDictionary *attributes = @{NSParagraphStyleAttributeName: style};
-        label.textColor = self.theme.secondaryForegroundColor;
+        label.textColor = self.configuration.theme.secondaryForegroundColor;
         if (section == STPPaymentCardNumberSection) {
             label.attributedText = [[NSAttributedString alloc] initWithString:@"Card" attributes:attributes];
             return label;
