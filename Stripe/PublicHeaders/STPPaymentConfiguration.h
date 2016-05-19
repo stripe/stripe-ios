@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic)BOOL smsAutofillDisabled;
 
+@property(nonatomic, nullable, copy)NSString *prefilledUserEmail;
+
 @end
 
 NS_ASSUME_NONNULL_END

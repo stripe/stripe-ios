@@ -10,6 +10,7 @@
 #import "STPTheme.h"
 #import "NSArray+Stripe_BoundSafe.h"
 #import "NSString+Stripe.h"
+#import "STPCardValidator.h"
 
 @class STPCodeInternalTextField;
 
@@ -186,13 +187,13 @@
     for (UIView *containerView in @[self.leftContainerView, self.rightContainerView]) {
         containerView.layer.cornerRadius = 6;
         containerView.layer.borderWidth = 0.5f;
-        containerView.layer.borderColor = self.theme.secondaryForegroundColor.CGColor;
+        containerView.layer.borderColor = self.theme.tertiaryBackgroundColor.CGColor;
         containerView.backgroundColor = self.theme.secondaryBackgroundColor;
     }
     self.centerLabel.textColor = self.theme.secondaryForegroundColor;
     self.centerLabel.font = self.theme.largeFont;
     for (UIView *separator in self.separators) {
-        separator.backgroundColor = self.theme.tertiaryForegroundColor;
+        separator.backgroundColor = self.theme.quaternaryBackgroundColor;
     }
     for (UITextField *textField in self.textFields) {
         textField.textColor = self.theme.primaryForegroundColor;
@@ -202,6 +203,9 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if (![STPCardValidator stringIsNumeric:string]) {
+        return NO;
+    }
     NSString *destination = [[textField.text stringByReplacingCharactersInRange:range withString:string] stp_safeSubstringToIndex:1];
     textField.text = destination;
     UITextField *nextField = [self fieldAfter:textField];

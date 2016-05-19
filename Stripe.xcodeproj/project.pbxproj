@@ -185,6 +185,10 @@
 		049881031CED75AE00EA4FFD /* stp_card_form_applepay.png in Resources */ = {isa = PBXBuildFile; fileRef = 049881001CED75AE00EA4FFD /* stp_card_form_applepay.png */; };
 		049881041CED75AE00EA4FFD /* stp_card_form_applepay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 049881011CED75AE00EA4FFD /* stp_card_form_applepay@2x.png */; };
 		049881051CED75AE00EA4FFD /* stp_card_form_applepay@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 049881021CED75AE00EA4FFD /* stp_card_form_applepay@3x.png */; };
+		049881081CEE695700EA4FFD /* UIViewController+Stripe_Alerts.h in Headers */ = {isa = PBXBuildFile; fileRef = 049881061CEE695700EA4FFD /* UIViewController+Stripe_Alerts.h */; };
+		049881091CEE695700EA4FFD /* UIViewController+Stripe_Alerts.h in Headers */ = {isa = PBXBuildFile; fileRef = 049881061CEE695700EA4FFD /* UIViewController+Stripe_Alerts.h */; };
+		0498810A1CEE695700EA4FFD /* UIViewController+Stripe_Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = 049881071CEE695700EA4FFD /* UIViewController+Stripe_Alerts.m */; };
+		0498810B1CEE695700EA4FFD /* UIViewController+Stripe_Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = 049881071CEE695700EA4FFD /* UIViewController+Stripe_Alerts.m */; };
 		049952CF1BCF13510088C703 /* STPAPIPostRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 049952CD1BCF13510088C703 /* STPAPIPostRequest.h */; };
 		049952D01BCF13510088C703 /* STPAPIPostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 049952CE1BCF13510088C703 /* STPAPIPostRequest.m */; };
 		049952D21BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */; };
@@ -518,6 +522,8 @@
 		049881001CED75AE00EA4FFD /* stp_card_form_applepay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_card_form_applepay.png; sourceTree = "<group>"; };
 		049881011CED75AE00EA4FFD /* stp_card_form_applepay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_form_applepay@2x.png"; sourceTree = "<group>"; };
 		049881021CED75AE00EA4FFD /* stp_card_form_applepay@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_form_applepay@3x.png"; sourceTree = "<group>"; };
+		049881061CEE695700EA4FFD /* UIViewController+Stripe_Alerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Stripe_Alerts.h"; sourceTree = "<group>"; };
+		049881071CEE695700EA4FFD /* UIViewController+Stripe_Alerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Stripe_Alerts.m"; sourceTree = "<group>"; };
 		049952CD1BCF13510088C703 /* STPAPIPostRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPAPIPostRequest.h; sourceTree = "<group>"; };
 		049952CE1BCF13510088C703 /* STPAPIPostRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAPIPostRequest.m; sourceTree = "<group>"; };
 		049952D11BCF13DD0088C703 /* STPAPIClient+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPAPIClient+Private.h"; sourceTree = "<group>"; };
@@ -782,6 +788,8 @@
 				049A3FB11CC9FEFC00F57DE7 /* UIToolbar+Stripe_InputAccessory.m */,
 				0426B9701CEAE3EB006AC8DD /* UITableViewCell+Stripe_Borders.h */,
 				0426B9711CEAE3EB006AC8DD /* UITableViewCell+Stripe_Borders.m */,
+				049881061CEE695700EA4FFD /* UIViewController+Stripe_Alerts.h */,
+				049881071CEE695700EA4FFD /* UIViewController+Stripe_Alerts.m */,
 				04BC29A71CD9A83600318357 /* STPCheckoutAPIClient.h */,
 				04BC29A81CD9A83600318357 /* STPCheckoutAPIClient.m */,
 				04BC29AB1CD9A88600318357 /* STPCheckoutAPIVerification.h */,
@@ -1143,6 +1151,7 @@
 				0451CC4B1C49AF0D003B2CA6 /* STPSource.h in Headers */,
 				049E84EB1A605EF0000B66CD /* STPToken.h in Headers */,
 				C124A17D1CCAA0C2007D42EE /* NSMutableURLRequest+Stripe.h in Headers */,
+				049881091CEE695700EA4FFD /* UIViewController+Stripe_Alerts.h in Headers */,
 				04E32AA01B7A9490009C9E35 /* STPPaymentCardTextField.h in Headers */,
 				0438EF491B74183100D506CC /* STPCardBrand.h in Headers */,
 				049A3FA91CC96B3B00F57DE7 /* STPBackendAPIAdapter.h in Headers */,
@@ -1209,6 +1218,7 @@
 				049A3F911CC740FF00F57DE7 /* NSDecimalNumber+Stripe_Currency.h in Headers */,
 				04633B071CD44F47009D4FB5 /* STPAPIClient+ApplePay.h in Headers */,
 				04BC29BD1CDD535700318357 /* STPSwitchTableViewCell.h in Headers */,
+				049881081CEE695700EA4FFD /* UIViewController+Stripe_Alerts.h in Headers */,
 				C1718D561C3B2E5B002A7CB3 /* UIImage+Stripe.h in Headers */,
 				04CDB5121A5F30A700B854EE /* STPToken.h in Headers */,
 				049952CF1BCF13510088C703 /* STPAPIPostRequest.h in Headers */,
@@ -1546,6 +1556,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0438EF451B74170D00D506CC /* STPCardValidator.m in Sources */,
+				0498810B1CEE695700EA4FFD /* UIViewController+Stripe_Alerts.m in Sources */,
 				0438EF311B7416BB00D506CC /* STPFormTextField.m in Sources */,
 				04633B171CD45437009D4FB5 /* STPCategoryLoader.m in Sources */,
 				04633B141CD45215009D4FB5 /* PKPayment+Stripe.m in Sources */,
@@ -1590,6 +1601,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0498810A1CEE695700EA4FFD /* UIViewController+Stripe_Alerts.m in Sources */,
 				0438EF431B74170D00D506CC /* STPCardValidator.m in Sources */,
 				04BC29AE1CD9A88600318357 /* STPCheckoutAPIVerification.m in Sources */,
 				0426B9781CEBD001006AC8DD /* UINavigationBar+Stripe_Theme.m in Sources */,

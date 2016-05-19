@@ -32,7 +32,8 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api"; 
         _merchantName = [NSBundle stp_applicationName];
         _bootstrapPromise = [STPVoidPromise new];
         NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-        NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:@"bootstrap"];
+        NSURL *baseURL = [NSURL URLWithString:CheckoutBaseURLString];
+        NSURL *url = [baseURL URLByAppendingPathComponent:@"bootstrap"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         NSDictionary *payload = @{
                                   @"key": _publishableKey
@@ -47,11 +48,15 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api"; 
                 STPCheckoutBootstrapResponse *bootstrap = [STPCheckoutBootstrapResponse bootstrapResponseWithData:data URLResponse:response];
                 if (bootstrap && !bootstrap.accountsDisabled) {
                     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-                    configuration.HTTPAdditionalHeaders = @{
-                                                            @"X-Rack-Session": bootstrap.sessionID,
-                                                            @"Stripe-Checkout-Test-Session": bootstrap.sessionID,
+                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                    NSArray<NSHTTPCookie *> *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:httpResponse.allHeaderFields forURL:baseURL];
+                    NSMutableDictionary *cookieHeaders = [[NSHTTPCookie requestHeaderFieldsWithCookies:cookies] mutableCopy];
+                    [cookieHeaders addEntriesFromDictionary:@{
+                                                            @"X-Stripe-Client": @"iossdk",
+                                                            @"X-Stripe-Client-Version": STPSDKVersion,
                                                             @"X-CSRF-Token": bootstrap.csrfToken,
-                                                            };
+                                                            }];
+                    configuration.HTTPAdditionalHeaders = cookieHeaders;
                     strongself.accountSession = [NSURLSession sessionWithConfiguration:configuration];
                     strongself.tokenClient = bootstrap.tokenClient;
                     [strongself.bootstrapPromise succeed];
@@ -65,7 +70,10 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api"; 
 }
 
 - (BOOL)readyForLookups {
-    return self.bootstrapPromise.completed && !self.bootstrapPromise.error;
+    if (self.bootstrapPromise.completed) {
+        return !self.bootstrapPromise.error;
+    }
+    return NO;
 }
 
 - (STPPromise *)lookupEmail:(NSString *)email {
@@ -261,7 +269,7 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api"; 
 
 + (NSError *)genericRememberMeErrorWithResponseData:(NSData *)responseData
                                             message:(NSString *)message {
-    NSInteger code = STPAPIError;
+    NSInteger code = STPCheckoutUnknownError;
     NSDictionary *json;
     id object = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:nil];
     if ([object isKindOfClass:[NSDictionary class]]) {

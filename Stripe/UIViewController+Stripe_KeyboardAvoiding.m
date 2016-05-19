@@ -76,7 +76,7 @@
 - (void)updateInsetIfNecessary:(CGFloat)keyboardHeight {
     UIEdgeInsets insets;
     UIEdgeInsets scrollInsets;
-    if (fabs(keyboardHeight) < FLT_EPSILON) {
+    if (keyboardHeight < FLT_EPSILON) {
         insets = self.originalContentInset;
         scrollInsets = insets;
     } else {

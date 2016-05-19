@@ -26,6 +26,10 @@
 #import "UITableViewCell+Stripe_Borders.h"
 #import "STPRememberMeTermsView.h"
 #import "UIBarButtonItem+Stripe.h"
+#import "STPEmailAddressValidator.h"
+#import "UINavigationBar+Stripe_Theme.h"
+#import "UIViewController+Stripe_Alerts.h"
+#import "StripeError.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPObscuredCardViewDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
@@ -49,9 +53,8 @@
 @property(nonatomic)STPCard *checkoutAccountCard;
 @property(nonatomic)BOOL lookupSucceeded;
 @property(nonatomic)STPRememberMeTermsView *rememberMeTermsView;
+@property(nonatomic)STPVoidPromise *didAppearPromise;
 @end
-
-#define FAUXPAS_IGNORED_IN_METHOD(...)
 
 static NSString *const STPPaymentCardCellReuseIdentifier = @"STPPaymentCardCellReuseIdentifier";
 static NSInteger STPPaymentCardEmailSection = 0;
@@ -71,6 +74,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
         _addressViewModel.delegate = self;
         _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
+        _didAppearPromise = [STPVoidPromise new];
     }
     return self;
 }
@@ -79,8 +83,6 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     [super viewDidLoad];
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     tableView.sectionHeaderHeight = 30;
-    tableView.dataSource = self;
-    tableView.delegate = self;
     [self.view addSubview:tableView];
     self.tableView = tableView;
     [self stp_beginAvoidingKeyboardWithScrollView:tableView];
@@ -99,6 +101,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.tableView.tableHeaderView = cardImageView;
     
     self.emailCell = [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeEmail contents:nil lastInList:NO delegate:self];
+    if ([STPEmailAddressValidator stringIsValidEmailAddress:self.configuration.prefilledUserEmail]) {
+        self.emailCell.contents = self.configuration.prefilledUserEmail;
+    }
     
     UITableViewCell *cardNumberCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     self.cardNumberCell = cardNumberCell;
@@ -116,6 +121,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     
     self.rememberMeCell = [[STPSwitchTableViewCell alloc] init];
     [self.rememberMeCell configureWithLabel:NSLocalizedString(@"Autofill my card in other apps", nil) delegate:self];
+    self.rememberMeCell.alpha = 0;
     
     self.rememberMePhoneCell = [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypePhone contents:nil lastInList:YES delegate:self];
     self.rememberMePhoneCell.caption = NSLocalizedString(@"Phone", nil);
@@ -132,16 +138,19 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     if (self.configuration.requiredBillingAddressFields != STPBillingAddressFieldsNone) {
         textField.inputAccessoryView = self.inputAccessoryToolbar;
     }
+    tableView.dataSource = self;
+    tableView.delegate = self;
     [self updateAppearance];
+    __weak typeof(self) weakself = self;
     [self.checkoutAPIClient.bootstrapPromise onCompletion:^(__unused id value, __unused NSError *error) {
-        NSIndexSet *sections = [NSIndexSet indexSetWithIndex:STPPaymentCardRememberMeSection];
-        [tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationFade];
+        [weakself reloadRememberMeCellAnimated:YES];
     }];
 }
 
 - (void)updateAppearance {
     self.view.backgroundColor = self.configuration.theme.primaryBackgroundColor;
     [self.doneItem stp_setTheme:self.configuration.theme];
+    self.tableView.allowsSelection = NO;
     self.tableView.backgroundColor = self.configuration.theme.primaryBackgroundColor;
     self.tableView.separatorColor = self.configuration.theme.quaternaryBackgroundColor;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
@@ -197,9 +206,17 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
+
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (!self.checkoutAccount) {
+    if (!self.didAppearPromise.completed) {
+        [self.didAppearPromise succeed];
+    }
+    if (!self.checkoutAccount && !self.emailCell.contents) {
         [self.emailCell becomeFirstResponder];
     }
 }
@@ -235,7 +252,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
                 NSString *phone = self.rememberMePhoneCell.contents;
                 NSString *email = self.emailCell.contents;
                 if ([STPEmailAddressValidator stringIsValidEmailAddress:email] && [STPPhoneNumberValidator stringIsValidPartialPhoneNumber:phone] && self.rememberMeCell.on) {
-                    [[self.checkoutAPIClient createAccountWithCardParams:cardParams email:email phone:phone] onSuccess:^(__unused STPCheckoutAccount *value) {
+                    [[[self.checkoutAPIClient createAccountWithCardParams:cardParams email:email phone:phone] onSuccess:^(__unused STPCheckoutAccount *value) {
+                        // TODO remove
+                    }] onFailure:^(__unused NSError *error) {
                         
                     }];
                 }
@@ -252,15 +271,26 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (void)handleError:(NSError *)error {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     self.loading = NO;
-    [self.textField becomeFirstResponder];
-    if ([UIAlertController class]) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:error.localizedDescription message:error.localizedFailureReason preferredStyle:UIAlertControllerStyleAlert];
-        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:nil]];
-        [self presentViewController:alertController animated:YES completion:nil];
+    if ([error stp_isUnknownCheckoutError]) {
+        // TODO log error
+        STPObscuredCardView *obscuredView = self.obscuredCardView;
+        NSArray *tuples = @[
+                            [STPAlertTuple tupleWithTitle:NSLocalizedString(@"Enter card details manually", nil) style:STPAlertStyleDefault action:^{
+                                [obscuredView clear];
+                            }],
+                            ];
+        [self stp_showAlertWithTitle:NSLocalizedString(@"There was an error submitting your autofilled card details.", nil)
+                             message:nil
+                              tuples:tuples];
     } else {
-        [[[UIAlertView alloc] initWithTitle:error.localizedDescription message:error.localizedFailureReason delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles: nil] show];
+        [self.textField becomeFirstResponder];
+        NSArray *tuples = @[
+                            [STPAlertTuple tupleWithTitle:NSLocalizedString(@"OK", nil) style:STPAlertStyleCancel action:nil],
+                            ];
+        [self stp_showAlertWithTitle:error.localizedDescription
+                             message:error.localizedFailureReason
+                              tuples:tuples];
     }
 }
 
@@ -284,8 +314,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 - (void)smsCodeViewController:(__unused STPSMSCodeViewController *)smsCodeViewController didAuthenticateAccount:(STPCheckoutAccount *)account {
     self.checkoutAccount = account;
     self.checkoutAccountCard = account.card;
-    NSIndexSet *sections = [NSIndexSet indexSetWithIndex:STPPaymentCardRememberMeSection];
-    [self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationNone];
+    [self reloadRememberMeCellAnimated:NO];
     [self.textField clear];
     self.obscuredCardView.hidden = NO;
     [self.obscuredCardView configureWithCard:account.card];
@@ -342,22 +371,29 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 - (void)addressFieldTableViewCellDidUpdateText:(STPAddressFieldTableViewCell *)cell {
     if (cell == self.emailCell) {
-        NSString *contents = cell.contents;
-        if (self.checkoutAccount) {
-            return;
-        }
-        if ([STPEmailAddressValidator stringIsValidEmailAddress:contents] && !self.lookupSucceeded) {
-            [[[self.checkoutAPIClient lookupEmail:contents] flatMap:^STPPromise *(STPCheckoutAccountLookup *lookup) {
-                self.lookupSucceeded = YES;
-                return [self.checkoutAPIClient sendSMSToAccountWithEmail:lookup.email];
-            }] onSuccess:^(STPCheckoutAPIVerification *verification) {
-                STPSMSCodeViewController *codeViewController = [[STPSMSCodeViewController alloc] initWithCheckoutAPIClient:self.checkoutAPIClient verification:verification];
-                codeViewController.theme = self.configuration.theme;
-                codeViewController.delegate = self;
-                UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:codeViewController];
-                [self presentViewController:nav animated:YES completion:nil];
-            }];
-        }
+        [self lookupAndSendSMS:cell.contents];
+    }
+}
+
+- (void)lookupAndSendSMS:(NSString *)email {
+    if (self.checkoutAccount) {
+        return;
+    }
+    __weak typeof(self) weakself = self;
+    if ([STPEmailAddressValidator stringIsValidEmailAddress:email] && !self.lookupSucceeded) {
+        [[[self.didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
+            return [weakself.checkoutAPIClient lookupEmail:email];
+        }] flatMap:^STPPromise * _Nonnull(STPCheckoutAccountLookup *lookup) {
+            weakself.lookupSucceeded = YES;
+            return [weakself.checkoutAPIClient sendSMSToAccountWithEmail:lookup.email];
+        }] onSuccess:^(STPCheckoutAPIVerification *verification) {
+            STPSMSCodeViewController *codeViewController = [[STPSMSCodeViewController alloc] initWithCheckoutAPIClient:self.checkoutAPIClient verification:verification];
+            codeViewController.theme = self.configuration.theme;
+            codeViewController.delegate = self;
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:codeViewController];
+            [nav.navigationBar stp_setTheme:self.configuration.theme];
+            [weakself presentViewController:nav animated:YES completion:nil];
+        }];
     }
 }
 
@@ -391,6 +427,13 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 #pragma mark - UITableView
 
+- (void)reloadRememberMeCellAnimated:(BOOL)animated {
+    [UIView animateWithDuration:(0.2f * animated) animations:^{
+        BOOL disabled = !self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.configuration.smsAutofillDisabled;
+        self.rememberMeCell.alpha = disabled ? 0 : 1;
+    }];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
     return 4;
 }
@@ -407,9 +450,6 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     } else if (section == STPPaymentCardBillingAddressSection) {
         return self.addressViewModel.addressCells.count;
     } else if (section == STPPaymentCardRememberMeSection) {
-        if (!self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.configuration.smsAutofillDisabled) {
-            return 0;
-        }
         return self.rememberMeCell.on ? 2 : 1;
     }
     return 0;
@@ -446,26 +486,25 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (CGFloat)tableView:(__unused UITableView *)tableView heightForFooterInSection:(__unused NSInteger)section {
-    if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
-        return 0.01f;
-    } else if (section == STPPaymentCardRememberMeSection) {
+    if (section == STPPaymentCardRememberMeSection) {
         return 140.0f;
+    } else if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
+        return 0.01f;
     }
     return 27.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(__unused NSInteger)section {
-    if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
-        return 0.01f;
+    if (section == STPPaymentCardRememberMeSection || [self tableView:tableView numberOfRowsInSection:section] != 0) {
+        return tableView.sectionHeaderHeight;
     }
-    return tableView.sectionHeaderHeight;
+    return 0.01f;
 }
 
 - (UIView *)tableView:(__unused UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
-        return nil;
-    }
     if (section == STPPaymentCardEmailSection || section == STPPaymentCardRememberMeSection) {
+        return [UIView new];
+    } else if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
         return [UIView new];
     } else {
         UILabel *label = [UILabel new];

@@ -47,6 +47,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.appleMerchantIdentifier = self.appleMerchantID
         config.companyName = self.companyName
         config.requiredBillingAddressFields = .None
+        config.prefilledUserEmail = "supsupsup@sup.sup"
         let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient, configuration: config)
         
         paymentContext.paymentAmount = price

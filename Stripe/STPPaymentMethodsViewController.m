@@ -85,6 +85,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.navigationItem.title = NSLocalizedString(@"Choose Payment", nil);
     self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     __weak typeof(self) weakself = self;
     [self.loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
         weakself.cardImageView.image = [tuple.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]] ? [UIImage stp_largeCardApplePayImage] : [UIImage stp_largeCardFrontImage];
@@ -121,6 +122,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 }
 
 - (void)updateAppearance {
+    [self.navigationItem.backBarButtonItem stp_setTheme:self.configuration.theme];
     [self.backItem stp_setTheme:self.configuration.theme];
     [self.cancelItem stp_setTheme:self.configuration.theme];
     self.tableView.backgroundColor = self.configuration.theme.primaryBackgroundColor;
@@ -128,7 +130,6 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.tableView.tintColor = self.configuration.theme.accentColor;
     self.cardImageView.tintColor = self.configuration.theme.accentColor;
     self.tableView.separatorColor = self.configuration.theme.quaternaryBackgroundColor;
-    [self.navigationItem.backBarButtonItem stp_setTheme:self.configuration.theme];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {

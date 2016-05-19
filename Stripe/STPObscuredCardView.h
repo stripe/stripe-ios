@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic)STPTheme *theme;
 @property(nonatomic, weak)id<STPObscuredCardViewDelegate>delegate;
 - (void)configureWithCard:(STPCard *)card;
+- (void)clear;
 
 @end
 

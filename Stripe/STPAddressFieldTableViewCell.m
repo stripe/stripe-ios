@@ -170,7 +170,12 @@
 
 - (void)formTextFieldTextDidChange:(STPFormTextField *)textField {
     if (self.type != STPAddressFieldTypeCountry) {
-        self.contents = textField.text;
+        _contents = textField.text;
+        if ([textField isFirstResponder]) {
+            textField.validText = [self potentiallyValidContents];
+        } else {
+            textField.validText = [self validContents];
+        }
     }
     [self.delegate addressFieldTableViewCellDidUpdateText:self];
 }
@@ -200,6 +205,7 @@
 
 - (void)setContents:(NSString *)contents {
     _contents = contents;
+    self.textField.text = contents;
     if ([self.textField isFirstResponder]) {
         self.textField.validText = [self potentiallyValidContents];
     } else {

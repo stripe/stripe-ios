@@ -39,8 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, readonly)UIColor *secondaryBackgroundColor;
 
+// i.e. section border color
 @property(nonatomic, readonly)UIColor *tertiaryBackgroundColor;
 
+// i.e. separator color
 @property(nonatomic, readonly)UIColor *quaternaryBackgroundColor;
 
 /**

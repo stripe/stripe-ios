@@ -85,11 +85,15 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     BOOL deleting = (range.location == textField.text.length - 1 && range.length == 1 && [string isEqualToString:@""]);
     if (deleting) {
-        self.last4Field.text = @"";
-        self.expField.text = @"";
-        [self.delegate obscuredCardViewDidClear:self];
+        [self clear];
     }
     return NO;
+}
+
+- (void)clear {
+    self.last4Field.text = @"";
+    self.expField.text = @"";
+    [self.delegate obscuredCardViewDidClear:self];
 }
 
 @end

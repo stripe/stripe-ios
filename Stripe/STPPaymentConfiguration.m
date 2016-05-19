@@ -34,6 +34,7 @@
     copy.companyName = self.companyName;
     copy.appleMerchantIdentifier = self.appleMerchantIdentifier;
     copy.smsAutofillDisabled = self.smsAutofillDisabled;
+    copy.prefilledUserEmail = self.prefilledUserEmail;
     return copy;
 }
 

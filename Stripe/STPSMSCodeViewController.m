@@ -50,6 +50,7 @@
     [super viewDidLoad];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel)];
+    self.navigationItem.title = NSLocalizedString(@"Verification Code", nil);
     
     UIScrollView *scrollView = [UIScrollView new];
     scrollView.scrollEnabled = NO;
@@ -167,7 +168,9 @@
             self.cancelButton.alpha = 1.0f;
             self.errorLabel.alpha = 0;
         } completion:^(__unused BOOL finished) {
-            [self.delegate smsCodeViewControllerDidCancel:self];
+            if (tooManyTries) {
+                [self.delegate smsCodeViewControllerDidCancel:self];
+            }
         }];
     }];
 }

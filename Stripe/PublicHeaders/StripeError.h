@@ -19,6 +19,7 @@ typedef NS_ENUM(NSInteger, STPErrorCode) {
     STPAPIError = 60,            // General-purpose API error (should be rare).
     STPCardError = 70,           // Something was wrong with the given card (most common).
     STPCancellationError = 80,   // The operation was cancelled.
+    STPCheckoutUnknownError = 5000,   // Checkout failed
     STPCheckoutTooManyAttemptsError = 5001,   // Too many incorrect code attempts
 };
 
@@ -69,5 +70,6 @@ FOUNDATION_EXPORT NSString * __nonnull const STPIncorrectCVC;
 
 + (nullable NSError *)stp_errorFromStripeResponse:(nullable NSDictionary *)jsonDictionary;
 + (nonnull NSError *)stp_genericFailedToParseResponseError;
+- (BOOL)stp_isUnknownCheckoutError;
 
 @end

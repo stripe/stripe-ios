@@ -647,7 +647,9 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 
 - (void)formTextFieldTextDidChange:(STPFormTextField *)formTextField {
     STPCardFieldType fieldType = formTextField.tag;
-    [self updateImageForFieldType:fieldType];
+    if (fieldType == STPCardFieldTypeNumber) {
+        [self updateImageForFieldType:fieldType];
+    }
     
     STPCardValidationState state = [self.viewModel validationStateForField:fieldType];
     formTextField.validText = YES;
@@ -688,6 +690,11 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
             break;
     }
     [self updateImageForFieldType:textField.tag];
+}
+
+- (BOOL)textFieldShouldEndEditing:(__unused UITextField *)textField {
+    [self updateImageForFieldType:STPCardFieldTypeNumber];
+    return YES;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
