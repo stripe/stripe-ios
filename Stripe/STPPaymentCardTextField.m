@@ -472,7 +472,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     
     self.sizingField.text = self.viewModel.defaultPlaceholder;
     CGFloat textHeight = [self.sizingField measureTextSize].height;
-    CGFloat imageHeight = imageSize.height + (STPPaymentCardTextFieldDefaultPadding * 2);
+    CGFloat imageHeight = imageSize.height + (STPPaymentCardTextFieldDefaultPadding);
     CGFloat height = stp_roundCGFloat((MAX(MAX(imageHeight, textHeight), 44)));
     
     CGFloat width = stp_roundCGFloat([self widthForCardNumber:self.viewModel.defaultPlaceholder] + imageSize.width + (STPPaymentCardTextFieldDefaultPadding * 3));
