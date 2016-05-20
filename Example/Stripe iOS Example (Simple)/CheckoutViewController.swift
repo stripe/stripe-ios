@@ -23,7 +23,8 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     
     // 2b) If you're saving your user's payment details, head to https://dashboard.stripe.com/test/customers ,
     // click "New", and create a customer (you can leave the fields blank). Replace nil on the line below
-    // with the newly-created customer ID (it looks like cus_abcdef).
+    // with the newly-created customer ID (it looks like cus_abcdef). In a real application, you would create
+    // this customer on your backend when your user signs up for your service.
     let customerID: String? = nil
     
     // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/mobile/apple-pay
@@ -47,7 +48,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.appleMerchantIdentifier = self.appleMerchantID
         config.companyName = self.companyName
         config.requiredBillingAddressFields = .Zip
-        config.prefilledUserEmail = "supsupsup@sup.suu"
         let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient, configuration: config)
         
         paymentContext.paymentAmount = price
@@ -56,6 +56,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.paymentContext = paymentContext
         super.init(nibName: nil, bundle: nil)
         self.paymentContext.delegate = self
+        paymentContext.hostViewController = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -72,27 +73,14 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.navigationItem.title = "Emoji Apparel"
         self.checkoutView.buyButton.addTarget(self, action: #selector(didTapBuy), forControlEvents: .TouchUpInside)
         self.checkoutView.totalRow.detail = "$\(self.paymentContext.paymentAmount/100).00"
-        self.checkoutView.paymentRow.onTap = { _ in
-            self.paymentContext.pushPaymentMethodsViewControllerOntoNavigationController(self.navigationController!)
+        self.checkoutView.paymentRow.onTap = { [weak self] _ in
+            self?.paymentContext.pushPaymentMethodsViewController()
         }
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        self.paymentContext.willAppear()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        self.paymentContext.didAppear()
     }
 
     func didTapBuy() {
-
         self.checkoutView.paymentInProgress = true
-        self.paymentContext.requestPaymentFromViewController(
-            self,
-            sourceHandler: { (paymentMethod, source, completion) in
+        self.paymentContext.requestPaymentWithSourceHandler({ (paymentMethod, source, completion) in
                 self.createBackendCharge(source, completion: completion)
             }, completion: { (status, error) in
                 self.checkoutView.paymentInProgress = false

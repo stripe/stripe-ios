@@ -20,6 +20,7 @@
 #import "STPCardTuple.h"
 #import "STPPaymentMethodTuple.h"
 #import "STPPaymentContext+Private.h"
+#import "UIViewController+Stripe_Promises.h"
 
 @interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate>
 
@@ -28,7 +29,7 @@
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic, readwrite, getter=isLoading)BOOL loading;
 @property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
-@property(nonatomic)STPPromise<id> *didAppearPromise;
+@property(nonatomic)STPVoidPromise *didAppearPromise;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 
@@ -42,9 +43,10 @@
     if (self) {
         _configuration = configuration;
         _apiAdapter = apiAdapter;
+        _didAppearPromise = [STPVoidPromise new];
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _paymentCurrency = @"USD";
-        _didAppearPromise = [STPPromise new];
+        self.loading = YES;
         __weak typeof(self) weakself = self;
         _loadingPromise = [[[STPPromise<STPPaymentMethodTuple *> new] onSuccess:^(STPPaymentMethodTuple *tuple) {
             weakself.paymentMethods = tuple.paymentMethods;
@@ -54,33 +56,28 @@
                 [weakself.delegate paymentContext:weakself didFailToLoadWithError:error];
             }];
         }];
+        [self.apiAdapter retrieveCards:^(STPCard * _Nullable selectedCard, NSArray<STPCard *> * _Nullable cards, NSError * _Nullable error) {
+            if (!weakself) {
+                return;
+            }
+            weakself.loading = NO;
+            if (error) {
+                [weakself.loadingPromise fail:error];
+                return;
+            }
+            STPCardTuple *tuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
+            STPPaymentMethodTuple *paymentTuple = [STPPaymentMethodTuple tupleWithCardTuple:tuple applePayEnabled:weakself.configuration.applePayEnabled];
+            [weakself.loadingPromise succeed:paymentTuple];
+        }];
     }
     return self;
 }
 
-- (void)willAppear {
-    [self performInitialLoad];
-}
-
-- (void)didAppear {
-    [self.didAppearPromise succeed:[NSObject new]];
-}
-
-- (void)performInitialLoad {
-    if (self.loading || self.loadingPromise.completed) {
-        return;
-    }
-    self.loading = YES;
-    [self.apiAdapter retrieveCards:^(STPCard * _Nullable selectedCard, NSArray<STPCard *> * _Nullable cards, NSError * _Nullable error) {
-        self.loading = NO;
-        if (error) {
-            [self.loadingPromise fail:error];
-            return;
-        }
-        STPCardTuple *tuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
-        STPPaymentMethodTuple *paymentTuple = [STPPaymentMethodTuple tupleWithCardTuple:tuple applePayEnabled:[self applePaySupported]];
-        [self.loadingPromise succeed:paymentTuple];
-    }];
+- (void)setHostViewController:(UIViewController *)hostViewController {
+    NSCAssert(_hostViewController == nil, @"You cannot change the hostViewController on an STPPaymentContext after it's already been set.");
+    _hostViewController = hostViewController;
+    [self artificiallyRetain:hostViewController];
+    [self.didAppearPromise voidCompleteWith:hostViewController.stp_didAppearPromise];
 }
 
 - (STPPromise<STPPaymentMethodTuple *> *)currentValuePromise {
@@ -130,16 +127,31 @@
     }
 }
 
-- (void)presentPaymentMethodsViewControllerOnViewController:(UIViewController *)viewController {
-    STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
-    [navigationController.navigationBar stp_setTheme:self.configuration.theme];
-    [viewController presentViewController:navigationController animated:YES completion:nil];
+- (void)presentPaymentMethodsViewController {
+    NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushPaymentMethodsViewController on it. Next time, set the hostViewController property first!");
+    __weak typeof(self)weakself = self;
+    [self.didAppearPromise voidOnSuccess:^{
+        STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:weakself];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
+        [navigationController.navigationBar stp_setTheme:weakself.configuration.theme];
+        [weakself.hostViewController presentViewController:navigationController animated:YES completion:nil];
+    }];
 }
 
-- (void)pushPaymentMethodsViewControllerOntoNavigationController:(UINavigationController *)navigationController {
-    STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
-    [navigationController pushViewController:paymentMethodsViewController animated:YES];
+- (void)pushPaymentMethodsViewController {
+    NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushPaymentMethodsViewController on it. Next time, set the hostViewController property first!");
+    UINavigationController *navigationController;
+    if ([self.hostViewController isKindOfClass:[UINavigationController class]]) {
+        navigationController = (UINavigationController *)self.hostViewController;
+    } else {
+        navigationController = self.hostViewController.navigationController;
+    }
+    NSCAssert(self.hostViewController != nil, @"The payment context's hostViewController is not a navigation controller, or is not contained in one. Either make sure it is inside a navigation controller before calling pushPaymentMethodsViewController, or call presentPaymentMethodsViewController instead.");
+    __weak typeof(self) weakself = self;
+    [weakself.didAppearPromise voidOnSuccess:^{
+        STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:weakself];
+        [navigationController pushViewController:paymentMethodsViewController animated:YES];
+    }];
 }
 
 - (void)paymentMethodsViewController:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController
@@ -166,13 +178,12 @@
     return self.selectedPaymentMethod != nil;
 }
 
-- (void)requestPaymentFromViewController:(UIViewController *)fromViewController
-                           sourceHandler:(STPSourceHandlerBlock)sourceHandler
-                              completion:(STPPaymentCompletionBlock)completion {
-    [self artificiallyRetain:fromViewController];
-    [self performInitialLoad];
+- (void)requestPaymentWithSourceHandler:(STPSourceHandlerBlock)sourceHandler
+                             completion:(STPPaymentCompletionBlock)completion {
     __weak typeof(self) weakSelf = self;
-    [self.loadingPromise onSuccess:^(__unused STPPaymentMethodTuple *tuple) {
+    [[self.didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
+        return weakSelf.loadingPromise;
+    }] onSuccess:^(__unused STPPaymentMethodTuple *tuple) {
         if (!weakSelf) {
             return;
         }
@@ -194,7 +205,6 @@
                 } else {
                     completion(STPPaymentStatusSuccess, nil);
                 }
-                [weakSelf artificiallyRelease:fromViewController];
             });
         }
         else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
@@ -202,21 +212,15 @@
             PKPaymentAuthorizationViewController *paymentAuthViewController = [PKPaymentAuthorizationViewController stp_controllerWithPaymentRequest:paymentRequest apiClient:weakSelf.apiClient
                                                                                                                                      onTokenCreation:sourceHandler
                                                                                                                                             onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
-                                                                                                                                                [fromViewController dismissViewControllerAnimated:YES completion:^{
+                                                                                                                                                [weakSelf.hostViewController dismissViewControllerAnimated:YES completion:^{
                                                                                                                                                     completion(status, error);
-                                                                                                                                                    [weakSelf artificiallyRelease:fromViewController];
                                                                                                                                                 }];
                                                                                                                                             }];
-            [fromViewController presentViewController:paymentAuthViewController
-                                             animated:YES
-                                           completion:nil];
+            [weakSelf.hostViewController presentViewController:paymentAuthViewController
+                                                      animated:YES
+                                                    completion:nil];
         }
     }];
-}
-
-- (BOOL)applePaySupported {
-    return (self.configuration.supportedPaymentMethods & STPPaymentMethodTypeApplePay) &&
-        [Stripe canSubmitPaymentRequest:[self buildPaymentRequest]];
 }
 
 - (PKPaymentRequest *)buildPaymentRequest {
@@ -238,10 +242,5 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
 - (void)artificiallyRetain:(NSObject *)host {
     objc_setAssociatedObject(host, &kSTPPaymentCoordinatorAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
-- (void)artificiallyRelease:(NSObject *)host {
-    objc_setAssociatedObject(host, &kSTPPaymentCoordinatorAssociatedObjectKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 
 @end

@@ -84,6 +84,8 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 
 @property(nonatomic, readonly)STPPaymentConfiguration *configuration;
 
+@property(nonatomic, weak)UIViewController *hostViewController;
+
 /**
  *  This delegate will be notified when the payment context's contents change. @see STPPaymentContextDelegate
  */
@@ -115,28 +117,14 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 @property(nonatomic, copy)NSString *paymentCurrency;
 
 /**
- *  You must call this method on your payment context when the view controller it's powering is about to appear. This tells the payment context to begin fetching the data it needs. A good time to call this is in the -viewWillAppear: method of that view controller.
+ *  This creates, configures, and appropriately presents an STPPaymentMethodsViewController on top of the payment context's hostViewController. It'll be dismissed automatically when the user is done selecting their payment method.
  */
-- (void)willAppear;
+- (void)presentPaymentMethodsViewController;
 
 /**
- *  You must call this method on your payment context when the view controller it's powering has finished appearing. A good time to call this is in the -viewDidAppear: method of that view controller.
+ *  This creates, configures, and appropriately pushes an STPPaymentMethodsViewController onto the navigation stack of the context's hostViewController. It'll be popped automatically when the user is done selecting their payment method.
  */
-- (void)didAppear;
-
-/**
- *  This creates, configures, and appropriately presents an STPPaymentMethodsViewController on top of the view controller that you specify. It'll be dismissed automatically when the user is done selecting their payment method.
- *
- *  @param viewController the view controller on which to present the STPPaymentMethodsViewController
- */
-- (void)presentPaymentMethodsViewControllerOnViewController:(UIViewController *)viewController;
-
-/**
- *  This creates, configures, and appropriately pushes an STPPaymentMethodsViewController onto the navigation stack of the view controller that you specify. It'll be popped automatically when the user is done selecting their payment method.
- *
- *  @param navigationController the view controller on which to present the STPPaymentMethodsViewController
- */
-- (void)pushPaymentMethodsViewControllerOntoNavigationController:(UINavigationController *)navigationController;
+- (void)pushPaymentMethodsViewController;
 
 /**
  *  Whether or not the payment context contains all of the information it needs to complete a payment. For example, you can use the result of this method to enable/disable the "buy" button on a checkout page.
@@ -144,15 +132,13 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 - (BOOL)isReadyForPayment;
 
 /**
- *  Attempts to finalize the payment. This may need to present some supplemental UI to the user. For instance, if they've selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. You should create a charge with the provided source in the `sourceHandler` block, and update your UI in the `completion` block. For an example of this, see CheckoutViewController.swift in our example app.
+ *  Attempts to finalize the payment. This may need to present some supplemental UI to the user, in which case it will be presented on the payment context's hostViewController. For instance, if they've selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. You should create a charge with the provided source in the `sourceHandler` block, and update your UI in the `completion` block. For an example of this, see CheckoutViewController.swift in our example app.
  *
- *  @param fromViewController The view controller that is onscreen when this method is invoked. The payment context may call `presentViewController` on this view controller to show any required additional UI.
  *  @param sourceHandler      This block will yield you the `source` the user has selected, along with the type of payment method they've chosen. You should go to your backend API with this `source` and make a charge to complete the payment, and once that's done call `sourceCompletion` with any error that occurred (or none, if the charge succeeded).
  *  @param completion         This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the `status` of the payment and behave appropriately. For example: if it's STPPaymentStatusSuccess, show the user a receipt. If it's STPPaymentStatusError, inform the user of the error. If it's STPPaymentStatusUserCanceled, do nothing.
  */
-- (void)requestPaymentFromViewController:(UIViewController *)fromViewController
-                           sourceHandler:(STPSourceHandlerBlock)sourceHandler
-                              completion:(STPPaymentCompletionBlock)completion;
+- (void)requestPaymentWithSourceHandler:(STPSourceHandlerBlock)sourceHandler
+                             completion:(STPPaymentCompletionBlock)completion;
 
 
 @end

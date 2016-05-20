@@ -26,6 +26,7 @@
 #import "STPPaymentMethodsViewController+Private.h"
 #import "STPPaymentContext+Private.h"
 #import "UIBarButtonItem+Stripe.h"
+#import "UIViewController+Stripe_Promises.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 static NSInteger STPPaymentMethodCardListSection = 0;
@@ -37,7 +38,6 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
-@property(nonatomic)STPVoidPromise *didAppearPromise;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic, weak)STPPaymentActivityIndicatorView *activityIndicator;
@@ -283,6 +283,11 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 }
 
 - (void)finishWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
+    if ([paymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {
+        STPCardPaymentMethod *cardPaymentMethod = (STPCardPaymentMethod *)paymentMethod;
+        [self.apiAdapter selectCard:cardPaymentMethod.card completion:^(__unused NSError *error) {
+        }];
+    }
     [self.delegate paymentMethodsViewController:self didSelectPaymentMethod:paymentMethod];
     [self.delegate paymentMethodsViewControllerDidFinish:self];
 }
@@ -312,14 +317,13 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _apiAdapter = apiAdapter;
         _loadingPromise = loadingPromise;
-        _didAppearPromise = [STPVoidPromise new];
         _delegate = delegate;
         __weak typeof(self) weakself = self;
         [loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
             weakself.paymentMethods = tuple.paymentMethods;
             weakself.selectedPaymentMethod = tuple.selectedPaymentMethod;
         }];
-        [[_didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
+        [[self.stp_didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
             return loadingPromise;
         }] onSuccess:^(STPPaymentMethodTuple *tuple) {
             if (tuple.selectedPaymentMethod) {

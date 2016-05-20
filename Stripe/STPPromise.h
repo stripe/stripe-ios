@@ -31,6 +31,8 @@ typedef STPPromise* _Nonnull (^STPPromiseFlatMapBlock)(T value);
 - (void)succeed:(T)value;
 - (void)fail:(NSError *)error;
 
+- (void)completeWith:(STPPromise<T> *)promise;
+
 - (instancetype)onSuccess:(STPPromiseValueBlock)callback;
 - (instancetype)onFailure:(STPPromiseErrorBlock)callback;
 - (instancetype)onCompletion:(STPPromiseCompletionBlock)callback;
@@ -46,6 +48,7 @@ typedef STPPromise* _Nonnull (^STPVoidPromiseFlatMapBlock)();
 @interface STPVoidPromise : STPPromise
 
 - (void)succeed;
+- (void)voidCompleteWith:(STPVoidPromise *)promise;
 - (instancetype)voidOnSuccess:(STPVoidBlock)block;
 - (STPPromise<id> *)voidFlatMap:(STPVoidPromiseFlatMapBlock)block;
 

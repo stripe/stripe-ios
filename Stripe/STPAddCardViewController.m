@@ -31,6 +31,7 @@
 #import "UINavigationBar+Stripe_Theme.h"
 #import "UIViewController+Stripe_Alerts.h"
 #import "StripeError.h"
+#import "UIViewController+Stripe_Promises.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPObscuredCardViewDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
@@ -55,7 +56,6 @@
 @property(nonatomic)STPCard *checkoutAccountCard;
 @property(nonatomic)BOOL lookupSucceeded;
 @property(nonatomic)STPRememberMeTermsView *rememberMeTermsView;
-@property(nonatomic)STPVoidPromise *didAppearPromise;
 @end
 
 static NSString *const STPPaymentCardCellReuseIdentifier = @"STPPaymentCardCellReuseIdentifier";
@@ -76,7 +76,6 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
         _addressViewModel.delegate = self;
         _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
-        _didAppearPromise = [STPVoidPromise new];
     }
     return self;
 }
@@ -232,10 +231,6 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         weakself.tableView.contentInset = insets;
         weakself.tableView.scrollIndicatorInsets = insets;
     }];
-    
-    if (!self.didAppearPromise.completed) {
-        [self.didAppearPromise succeed];
-    }
     if (!self.checkoutAccount && !self.emailCell.contents) {
         [self.emailCell becomeFirstResponder];
     }
@@ -403,7 +398,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     __weak typeof(self) weakself = self;
     if ([STPEmailAddressValidator stringIsValidEmailAddress:email] && !self.lookupSucceeded) {
         [self.emailCell.activityIndicator setAnimating:YES animated:YES];
-        [[[[self.didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
+        [[[[self.stp_didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
             return [weakself.checkoutAPIClient lookupEmail:email];
         }] flatMap:^STPPromise * _Nonnull(STPCheckoutAccountLookup *lookup) {
             weakself.lookupSucceeded = YES;

@@ -72,6 +72,15 @@
     });
 }
 
+- (void)completeWith:(STPPromise *)promise {
+    __weak typeof(self) weakself = self;
+    [[promise onSuccess:^(id value) {
+        [weakself succeed:value];
+    }] onFailure:^(NSError * _Nonnull error) {
+        [weakself fail:error];
+    }];
+}
+
 - (instancetype)onSuccess:(STPPromiseValueBlock)callback {
     if (self.value) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -144,6 +153,15 @@
 
 - (void)succeed {
     [self succeed:[NSNull null]];
+}
+
+- (void)voidCompleteWith:(STPVoidPromise *)promise {
+    __weak typeof(self)weakself = self;
+    [[promise voidOnSuccess:^{
+        [weakself succeed];
+    }] onFailure:^(NSError *error) {
+        [weakself fail:error];
+    }];
 }
 
 - (instancetype)voidOnSuccess:(STPVoidBlock)callback {
