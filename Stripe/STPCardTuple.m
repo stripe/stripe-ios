@@ -10,7 +10,7 @@
 
 @interface STPCardTuple()
 
-@property(nonatomic)STPCard *selectedCard;
+@property(nonatomic, nullable)STPCard *selectedCard;
 @property(nonatomic)NSArray<STPCard *> *cards;
 
 @end
@@ -21,7 +21,7 @@
                                 cards:(NSArray<STPCard *>*)cards {
     STPCardTuple *tuple = [STPCardTuple new];
     tuple.selectedCard = selectedCard;
-    tuple.cards = cards;
+    tuple.cards = cards ?: @[];
     return tuple;
 }
 

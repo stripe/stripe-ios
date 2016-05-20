@@ -19,7 +19,6 @@
 #import "STPPromise.h"
 #import "STPCardTuple.h"
 #import "STPPaymentMethodTuple.h"
-#import "STPCheckoutAPIClient.h" // TODO
 #import "STPPaymentContext+Private.h"
 
 @interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate>
@@ -133,7 +132,6 @@
 
 - (void)presentPaymentMethodsViewControllerOnViewController:(UIViewController *)viewController {
     STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
-    paymentMethodsViewController.delegate = self;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
     [navigationController.navigationBar stp_setTheme:self.configuration.theme];
     [viewController presentViewController:navigationController animated:YES completion:nil];
@@ -141,17 +139,15 @@
 
 - (void)pushPaymentMethodsViewControllerOntoNavigationController:(UINavigationController *)navigationController {
     STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
-    paymentMethodsViewController.delegate = self;
     [navigationController pushViewController:paymentMethodsViewController animated:YES];
 }
 
-- (void)paymentMethodsViewController:(STPPaymentMethodsViewController *)paymentMethodsViewController
+- (void)paymentMethodsViewController:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController
               didSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
     self.selectedPaymentMethod = paymentMethod;
-    [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController];
 }
 
-- (void)paymentMethodsViewControllerDidCancel:(STPPaymentMethodsViewController *)paymentMethodsViewController {
+- (void)paymentMethodsViewControllerDidFinish:(STPPaymentMethodsViewController *)paymentMethodsViewController {
     [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController];
 }
 

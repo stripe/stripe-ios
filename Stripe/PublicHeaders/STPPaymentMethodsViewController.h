@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "STPPaymentMethod.h"
 #import "STPTheme.h"
+#import "STPBackendAPIAdapter.h"
+#import "STPPaymentConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,11 +32,11 @@ NS_ASSUME_NONNULL_BEGIN
               didSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
 
 /**
- *  This is called when the user taps "cancel".
+ *  This is called when the user taps "cancel". It's also called after the user directly selects or adds a payment method, so it will often be called immediately after calling paymentMethodsViewController:didSelectPaymentMethod:
  *
- *  @param paymentMethodsViewController the view controller that has been cancelled
+ *  @param paymentMethodsViewController the view controller that has finished
  */
-- (void)paymentMethodsViewControllerDidCancel:(STPPaymentMethodsViewController *)paymentMethodsViewController;
+- (void)paymentMethodsViewControllerDidFinish:(STPPaymentMethodsViewController *)paymentMethodsViewController;
 
 @end
 
@@ -43,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface STPPaymentMethodsViewController : UIViewController
 
-@property(nonatomic, weak, nullable)id<STPPaymentMethodsViewControllerDelegate>delegate;
+@property(nonatomic, weak, readonly)id<STPPaymentMethodsViewControllerDelegate>delegate;
 
 /**
  *  Creates a new payment methods view controller.
@@ -53,6 +55,10 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return an initialized view controller.
  */
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext;
+
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
+                           apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
+                             delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
 
 @end
 

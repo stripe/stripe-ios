@@ -49,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, nullable, copy)NSString *prefilledUserEmail;
 
+@property(nonatomic, readonly)BOOL applePayEnabled;
+
 @end
 
 NS_ASSUME_NONNULL_END

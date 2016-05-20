@@ -145,9 +145,10 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    __weak typeof(self) weakself = self;
     [self stp_beginObservingKeyboardWithBlock:^(CGRect keyboardFrame) {
-        CGFloat base = CGRectGetMaxY(self.navigationController.navigationBar.frame);
-        CGRect codeFrame = self.codeField.frame;
+        CGFloat base = CGRectGetMaxY(weakself.navigationController.navigationBar.frame);
+        CGRect codeFrame = weakself.codeField.frame;
         codeFrame.origin.y += base;
         codeFrame.origin.y += 10.0f;
         CGFloat offset = CGRectIntersection(codeFrame, keyboardFrame).size.height;
@@ -157,8 +158,8 @@
         } else {
             destination = CGPointMake(0, -base);
         }
-        if (!CGPointEqualToPoint(self.scrollView.contentOffset, destination)) {
-            self.scrollView.contentOffset = destination;
+        if (!CGPointEqualToPoint(weakself.scrollView.contentOffset, destination)) {
+            weakself.scrollView.contentOffset = destination;
         }
     }];
     [self.codeField becomeFirstResponder];
@@ -168,28 +169,33 @@
          didEnterCode:(NSString *)code {
     __weak typeof(self) weakself = self;
     self.loading = YES;
+    [self.codeField resignFirstResponder];
     STPCheckoutAPIClient *client = self.checkoutAPIClient;
     [[[client submitSMSCode:code forVerification:self.verification] onSuccess:^(STPCheckoutAccount *account) {
-        [weakself.delegate smsCodeViewController:self didAuthenticateAccount:account];
+        [weakself.delegate smsCodeViewController:weakself didAuthenticateAccount:account];
     }] onFailure:^(NSError *error) {
-        self.loading = NO;
+        if (!weakself) {
+            return;
+        }
+        weakself.loading = NO;
         BOOL tooManyTries = error.code == STPCheckoutTooManyAttemptsError;
         if (tooManyTries) {
-            self.errorLabel.text = NSLocalizedString(@"Too many incorrect attempts", nil);
+            weakself.errorLabel.text = NSLocalizedString(@"Too many incorrect attempts", nil);
         }
         [codeField shakeAndClear];
         [UIView animateWithDuration:0.2f animations:^{
-            self.bottomLabel.alpha = 0;
-            self.cancelButton.alpha = 0;
-            self.errorLabel.alpha = 1.0f;
+            weakself.bottomLabel.alpha = 0;
+            weakself.cancelButton.alpha = 0;
+            weakself.errorLabel.alpha = 1.0f;
         }];
         [UIView animateWithDuration:0.2f delay:0.3f options:0 animations:^{
-            self.bottomLabel.alpha = 1.0f;
-            self.cancelButton.alpha = 1.0f;
-            self.errorLabel.alpha = 0;
+            weakself.bottomLabel.alpha = 1.0f;
+            weakself.cancelButton.alpha = 1.0f;
+            weakself.errorLabel.alpha = 0;
         } completion:^(__unused BOOL finished) {
+            [weakself.codeField becomeFirstResponder];
             if (tooManyTries) {
-                [self.delegate smsCodeViewControllerDidCancel:self];
+                [weakself.delegate smsCodeViewControllerDidCancel:weakself];
             }
         }];
     }];
@@ -206,6 +212,7 @@
 }
 
 - (void)cancel {
+    [self.codeField resignFirstResponder];
     [self.delegate smsCodeViewControllerDidCancel:self];
 }
 

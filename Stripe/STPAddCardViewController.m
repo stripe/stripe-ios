@@ -85,7 +85,6 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     tableView.sectionHeaderHeight = 30;
     [self.view addSubview:tableView];
     self.tableView = tableView;
-    [self stp_beginAvoidingKeyboardWithScrollView:tableView];
     
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(nextPressed:)];
     self.doneItem = doneItem;
@@ -120,7 +119,6 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.obscuredCardView = obscuredCardView;
     
     self.rememberMeCell = [[STPSwitchTableViewCell alloc] init];
-    self.rememberMeCell.accessibilityIdentifier = @"rememberMeCell";
     [self.rememberMeCell configureWithLabel:NSLocalizedString(@"Autofill my card in other apps", nil) delegate:self];
     
     self.rememberMePhoneCell = [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypePhone contents:nil lastInList:YES delegate:self];
@@ -217,6 +215,17 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    __weak typeof(self) weakself = self;
+    [self stp_beginObservingKeyboardWithBlock:^(CGRect keyboardFrame) {
+//        CGFloat base = CGRectGetMaxY(self.navigationController.navigationBar.frame);
+        UIEdgeInsets insets = weakself.tableView.contentInset;
+        CGRect bottomIntersection = CGRectIntersection(weakself.tableView.frame, keyboardFrame);
+        insets.bottom = bottomIntersection.size.height;
+        weakself.tableView.contentInset = insets;
+        weakself.tableView.scrollIndicatorInsets = insets;
+        // TODO: scroll to editing field
+    }];
+    
     if (!self.didAppearPromise.completed) {
         [self.didAppearPromise succeed];
     }

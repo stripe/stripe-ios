@@ -14,10 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPCardTuple : NSObject
 
-+ (instancetype)tupleWithSelectedCard:(STPCard *)selectedCard
-                                cards:(NSArray<STPCard *>*)cards;
++ (instancetype)tupleWithSelectedCard:(nullable STPCard *)selectedCard
+                                cards:(nullable NSArray<STPCard *>*)cards;
 
-@property(nonatomic, readonly)STPCard *selectedCard;
+@property(nonatomic, readonly, nullable)STPCard *selectedCard;
 @property(nonatomic, readonly)NSArray<STPCard *> *cards;
 
 @end

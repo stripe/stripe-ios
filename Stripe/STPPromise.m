@@ -53,6 +53,8 @@
         for (STPPromiseValueBlock valueBlock in self.successCallbacks) {
             valueBlock(value);
         }
+        self.successCallbacks = nil;
+        self.errorCallbacks = nil;
     });
 }
 
@@ -65,6 +67,8 @@
         for (STPPromiseErrorBlock errorBlock in self.errorCallbacks) {
             errorBlock(error);
         }
+        self.successCallbacks = nil;
+        self.errorCallbacks = nil;
     });
 }
 

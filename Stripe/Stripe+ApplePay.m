@@ -13,6 +13,9 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 @implementation Stripe (ApplePay)
 
 + (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest {
+    if (![self deviceSupportsApplePay]) {
+        return NO;
+    }
     if (paymentRequest == nil) {
         return NO;
     }
@@ -22,10 +25,14 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
     if ([[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] <= 0) {
         return NO;
     }
-    if (![PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:paymentRequest.supportedNetworks]) {
+    return YES;
+}
+
++ (BOOL)deviceSupportsApplePay {
+    if (![PKPaymentAuthorizationViewController class]) {
         return NO;
     }
-    return YES;
+    return [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa]];
 }
 
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier {

@@ -38,4 +38,10 @@
     return copy;
 }
 
+- (BOOL)applePayEnabled {
+    return self.appleMerchantIdentifier &&
+    (self.supportedPaymentMethods & STPPaymentMethodTypeApplePay) &&
+    [Stripe deviceSupportsApplePay];
+}
+
 @end
