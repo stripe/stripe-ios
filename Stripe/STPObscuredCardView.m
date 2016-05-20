@@ -104,7 +104,7 @@
     UIImage *image = [UIImage stp_brandImageForCardBrand:card.brand];
     self.brandImageView.image = image;
     self.last4Field.text = card.last4;
-    self.expField.text = [NSString stringWithFormat:@"%lu/%lu", card.expMonth, card.expYear % 100];
+    self.expField.text = [NSString stringWithFormat:@"%lu/%lu", (unsigned long)card.expMonth, (unsigned long)(card.expYear % 100)];
     if (card.brand == STPCardBrandAmex) {
         self.cvcField.text = @"XXXX";
     } else {
