@@ -57,7 +57,6 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 @property(nonatomic, copy)STPFormTextTransformationBlock textFormattingBlock;
 // This property only exists to disable keyboard loading in Travis CI due to a crash that occurs while trying to load the keyboard. Don't use it outside of tests.
 @property(nonatomic)BOOL skipsReloadingInputViews;
-@property(nonatomic, copy)NSAttributedString *internalAttributedString;
 @end
 
 @implementation STPFormTextField
@@ -152,12 +151,12 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText {
+    NSAttributedString *oldValue = [self attributedText];
     BOOL shouldModify = self.formDelegate && [self.formDelegate respondsToSelector:@selector(formTextField:modifyIncomingTextChange:)];
     NSAttributedString *modified = shouldModify ?
         [self.formDelegate formTextField:self modifyIncomingTextChange:attributedText] :
         attributedText;
     NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(modified) : modified;
-    self.internalAttributedString = transformed;
     [super setAttributedText:transformed];
     CATransition *transition = [CATransition animation];
     transition.duration = 0.065;
@@ -166,7 +165,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     [self.layer addAnimation:transition forKey:nil];
     [self sendActionsForControlEvents:UIControlEventEditingChanged];
     if ([self.formDelegate respondsToSelector:@selector(formTextFieldTextDidChange:)]) {
-        [self.formDelegate formTextFieldTextDidChange:self];
+        if (![transformed isEqualToAttributedString:oldValue]) {
+            [self.formDelegate formTextFieldTextDidChange:self];
+        }
     }
 }
 

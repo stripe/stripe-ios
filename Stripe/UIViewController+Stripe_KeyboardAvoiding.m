@@ -75,8 +75,17 @@
     [self updateInsetIfNecessary:keyboardHeight];
     if (self.keyboardFrameBlock) {
         if (!CGRectEqualToRect(self.lastKeyboardFrame, keyboardFrame)) {
-            self.lastKeyboardFrame = keyboardFrame;
-            self.keyboardFrameBlock(keyboardFrame);
+            // we're iOS 8 or later
+            if ([[NSProcessInfo processInfo] respondsToSelector:@selector(operatingSystemVersion)]) {
+                NSTimeInterval duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+                [UIView animateWithDuration:duration animations:^{
+                    self.lastKeyboardFrame = keyboardFrame;
+                    self.keyboardFrameBlock(keyboardFrame);
+                }];
+            } else {
+                self.lastKeyboardFrame = keyboardFrame;
+                self.keyboardFrameBlock(keyboardFrame);
+            }
         }
     }
 }

@@ -74,14 +74,15 @@
                 self.alpha = 1.0f;
             }];
         }
+        CALayer *currentLayer = [self.layer presentationLayer];
+        CGFloat currentRotation = (CGFloat)[[currentLayer valueForKeyPath:@"transform.rotation.z"] floatValue];
         CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-        animation.fromValue = @0;
-        animation.toValue = @(2*M_PI);
+        animation.fromValue = @(currentRotation);
+        animation.toValue = @(currentRotation + 2*M_PI);
         animation.duration = 1.0f;
         animation.repeatCount = HUGE_VAL;
         [self.layer addAnimation:animation forKey:@"rotation"];
     } else {
-        [self.layer removeAllAnimations];
         if (self.hidesWhenStopped) {
             [UIView animateWithDuration:(0.2f * animated) animations:^{
                 self.alpha = 0.0f;

@@ -24,6 +24,7 @@
 #import "STPObscuredCardView.h"
 #import "STPPaymentActivityIndicatorView.h"
 #import "UITableViewCell+Stripe_Borders.h"
+#import "STPRememberMeEmailCell.h"
 #import "STPRememberMeTermsView.h"
 #import "UIBarButtonItem+Stripe.h"
 #import "STPEmailAddressValidator.h"
@@ -37,7 +38,7 @@
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)UIBarButtonItem *doneItem;
-@property(nonatomic)STPAddressFieldTableViewCell *emailCell;
+@property(nonatomic)STPRememberMeEmailCell *emailCell;
 @property(nonatomic)STPSwitchTableViewCell *rememberMeCell;
 @property(nonatomic)STPAddressFieldTableViewCell *rememberMePhoneCell;
 @property(nonatomic)UITableViewCell *cardNumberCell;
@@ -46,6 +47,7 @@
 @property(nonatomic, weak)STPObscuredCardView *obscuredCardView;
 @property(nonatomic)BOOL loading;
 @property(nonatomic)STPPaymentActivityIndicatorView *activityIndicator;
+@property(nonatomic, weak)STPPaymentActivityIndicatorView *lookupActivityIndicator;
 @property(nonatomic)STPAddressViewModel *addressViewModel;
 @property(nonatomic)UIToolbar *inputAccessoryToolbar;
 @property(nonatomic)STPCheckoutAPIClient *checkoutAPIClient;
@@ -98,11 +100,11 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     cardImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, cardImageView.bounds.size.height + (57 * 2));
     self.cardImageView = cardImageView;
     self.tableView.tableHeaderView = cardImageView;
-    
-    self.emailCell = [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeEmail contents:nil lastInList:NO delegate:self];
+    self.emailCell = [[STPRememberMeEmailCell alloc] initWithDelegate:self];
     if ([STPEmailAddressValidator stringIsValidEmailAddress:self.configuration.prefilledUserEmail]) {
         self.emailCell.contents = self.configuration.prefilledUserEmail;
     }
+    
     
     UITableViewCell *cardNumberCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     self.cardNumberCell = cardNumberCell;
@@ -139,10 +141,17 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     tableView.dataSource = self;
     tableView.delegate = self;
     [self updateAppearance];
+    
+    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)]];
+    
     __weak typeof(self) weakself = self;
     [self.checkoutAPIClient.bootstrapPromise onCompletion:^(__unused id value, __unused NSError *error) {
         [weakself reloadRememberMeCellAnimated:YES];
     }];
+}
+
+- (void)endEditing {
+    [self.view endEditing:NO];
 }
 
 - (void)updateAppearance {
@@ -217,13 +226,11 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     [super viewDidAppear:animated];
     __weak typeof(self) weakself = self;
     [self stp_beginObservingKeyboardWithBlock:^(CGRect keyboardFrame) {
-//        CGFloat base = CGRectGetMaxY(self.navigationController.navigationBar.frame);
         UIEdgeInsets insets = weakself.tableView.contentInset;
-        CGRect bottomIntersection = CGRectIntersection(weakself.tableView.frame, keyboardFrame);
+        CGRect bottomIntersection = CGRectIntersection(weakself.view.frame, keyboardFrame);
         insets.bottom = bottomIntersection.size.height;
         weakself.tableView.contentInset = insets;
         weakself.tableView.scrollIndicatorInsets = insets;
-        // TODO: scroll to editing field
     }];
     
     if (!self.didAppearPromise.completed) {
@@ -395,7 +402,8 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     }
     __weak typeof(self) weakself = self;
     if ([STPEmailAddressValidator stringIsValidEmailAddress:email] && !self.lookupSucceeded) {
-        [[[self.didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
+        [self.emailCell.activityIndicator setAnimating:YES animated:YES];
+        [[[[self.didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
             return [weakself.checkoutAPIClient lookupEmail:email];
         }] flatMap:^STPPromise * _Nonnull(STPCheckoutAccountLookup *lookup) {
             weakself.lookupSucceeded = YES;
@@ -407,6 +415,13 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
             UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:codeViewController];
             [nav.navigationBar stp_setTheme:self.configuration.theme];
             [weakself presentViewController:nav animated:YES completion:nil];
+        }] onCompletion:^(__unused id value, NSError *error) {
+            if (![error stp_isURLSessionCancellationError]) {
+                [weakself.emailCell.activityIndicator setAnimating:NO animated:YES];
+            }
+            if ([weakself.emailCell.contents isEqualToString:weakself.configuration.prefilledUserEmail] && ![self.textField isFirstResponder]) {
+                [self.textField becomeFirstResponder];
+            }
         }];
     }
 }

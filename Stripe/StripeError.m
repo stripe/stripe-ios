@@ -96,4 +96,8 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
     return self.code == STPCheckoutUnknownError;
 }
 
+- (BOOL)stp_isURLSessionCancellationError {
+    return [self.domain isEqualToString:NSURLErrorDomain] && self.code == NSURLErrorCancelled;
+}
+
 @end

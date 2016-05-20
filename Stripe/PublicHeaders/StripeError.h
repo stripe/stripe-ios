@@ -71,5 +71,6 @@ FOUNDATION_EXPORT NSString * __nonnull const STPIncorrectCVC;
 + (nullable NSError *)stp_errorFromStripeResponse:(nullable NSDictionary *)jsonDictionary;
 + (nonnull NSError *)stp_genericFailedToParseResponseError;
 - (BOOL)stp_isUnknownCheckoutError;
+- (BOOL)stp_isURLSessionCancellationError;
 
 @end

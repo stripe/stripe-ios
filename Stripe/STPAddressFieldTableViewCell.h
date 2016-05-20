@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "STPTheme.h"
+#import "STPFormTextField.h"
 
 typedef NS_ENUM(NSInteger, STPAddressFieldType) {
     STPAddressFieldTypeName,
@@ -42,6 +43,7 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
 
 @property(nonatomic)STPAddressFieldType type;
 @property(nonatomic, copy) NSString *caption;
+@property(nonatomic, weak, readonly) STPFormTextField *textField;
 @property(nonatomic, copy) NSString *contents;
 @property(nonatomic)STPTheme *theme;
 

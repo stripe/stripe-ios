@@ -146,6 +146,10 @@
 		045A62C71B8E73AB000165CE /* stp_card_visa.png in Resources */ = {isa = PBXBuildFile; fileRef = 0438EFA11B741C2800D506CC /* stp_card_visa.png */; };
 		045A62C81B8E73AB000165CE /* stp_card_visa@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0438EFA21B741C2800D506CC /* stp_card_visa@2x.png */; };
 		045A62C91B8E73AB000165CE /* stp_card_visa@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0438EFA31B741C2800D506CC /* stp_card_visa@3x.png */; };
+		045D71071CEED3AA00F6CD65 /* STPRememberMeEmailCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 045D71051CEED3AA00F6CD65 /* STPRememberMeEmailCell.h */; };
+		045D71081CEED3AA00F6CD65 /* STPRememberMeEmailCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 045D71051CEED3AA00F6CD65 /* STPRememberMeEmailCell.h */; };
+		045D71091CEED3AA00F6CD65 /* STPRememberMeEmailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 045D71061CEED3AA00F6CD65 /* STPRememberMeEmailCell.m */; };
+		045D710A1CEED3AA00F6CD65 /* STPRememberMeEmailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 045D71061CEED3AA00F6CD65 /* STPRememberMeEmailCell.m */; };
 		045E7C091A5F41DE004751EF /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; };
 		04633AFB1CD1299B009D4FB5 /* NSString+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04695AD11C77F9DB00E08063 /* NSString+Stripe.h */; };
 		04633AFD1CD129AF009D4FB5 /* STPPhoneNumberValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 04695AD71C77F9EF00E08063 /* STPPhoneNumberValidator.h */; };
@@ -498,6 +502,8 @@
 		0451CC431C49AE1C003B2CA6 /* STPPaymentResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentResult.m; sourceTree = "<group>"; };
 		0451CC481C49AF0D003B2CA6 /* STPSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPSource.h; sourceTree = "<group>"; };
 		045A62AA1B8E7259000165CE /* STPPaymentCardTextFieldTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentCardTextFieldTest.m; sourceTree = "<group>"; };
+		045D71051CEED3AA00F6CD65 /* STPRememberMeEmailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPRememberMeEmailCell.h; sourceTree = "<group>"; };
+		045D71061CEED3AA00F6CD65 /* STPRememberMeEmailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPRememberMeEmailCell.m; sourceTree = "<group>"; };
 		045E7C031A5F41DE004751EF /* StripeiOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "StripeiOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04633B041CD44F1C009D4FB5 /* STPAPIClient+ApplePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STPAPIClient+ApplePay.m"; sourceTree = "<group>"; };
 		04633B061CD44F47009D4FB5 /* STPAPIClient+ApplePay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "STPAPIClient+ApplePay.h"; path = "PublicHeaders/STPAPIClient+ApplePay.h"; sourceTree = "<group>"; };
@@ -761,6 +767,8 @@
 				04E39F561CECF9A800AF3B96 /* STPPaymentMethodsViewController+Private.h */,
 				04F416241CA3639500486FB5 /* STPAddCardViewController.h */,
 				04F416251CA3639500486FB5 /* STPAddCardViewController.m */,
+				045D71051CEED3AA00F6CD65 /* STPRememberMeEmailCell.h */,
+				045D71061CEED3AA00F6CD65 /* STPRememberMeEmailCell.m */,
 				04E39F5E1CED2C3900AF3B96 /* STPRememberMeTermsView.h */,
 				04E39F5F1CED2C3900AF3B96 /* STPRememberMeTermsView.m */,
 				046FE99B1CE5435600DA6A7B /* STPDummyCheckoutClient.h */,
@@ -887,6 +895,13 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		045D710B1CEEDC2100F6CD65 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Vendor;
+			sourceTree = "<group>";
+		};
 		049A3F821CC60C2900F57DE7 /* Shipping */ = {
 			isa = PBXGroup;
 			children = (
@@ -939,6 +954,7 @@
 				04CDB4B01A5F30A700B854EE /* ApplePay */,
 				0438EF251B74162700D506CC /* UI */,
 				04B33F2F1BC7414C00DD8120 /* Supporting Files */,
+				045D710B1CEEDC2100F6CD65 /* Vendor */,
 				04A4883B1CA3568800506E53 /* STPBlocks.h */,
 				04CDB4C21A5F30A700B854EE /* STPAPIClient.h */,
 				04CDB4C31A5F30A700B854EE /* STPAPIClient.m */,
@@ -1180,6 +1196,7 @@
 				04CDE5BE1BC1F21500548833 /* STPCardParams.h in Headers */,
 				04F213371BCECB1C001D6F22 /* STPAPIResponseDecodable.h in Headers */,
 				049E84E71A605EF0000B66CD /* STPFormEncoder.h in Headers */,
+				045D71081CEED3AA00F6CD65 /* STPRememberMeEmailCell.h in Headers */,
 				04A4C38E1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1231,6 +1248,7 @@
 				C11810951CC6C4700022FB55 /* PKPaymentAuthorizationViewController+Stripe_Blocks.h in Headers */,
 				04CDB5161A5F30A700B854EE /* StripeError.h in Headers */,
 				049A3F991CC76A2400F57DE7 /* NSBundle+Stripe_AppName.h in Headers */,
+				045D71071CEED3AA00F6CD65 /* STPRememberMeEmailCell.h in Headers */,
 				04E32A9D1B7A9490009C9E35 /* STPPaymentCardTextField.h in Headers */,
 				04F213311BCEAB61001D6F22 /* STPFormEncodable.h in Headers */,
 				04CDB5021A5F30A700B854EE /* STPFormEncoder.h in Headers */,
@@ -1590,6 +1608,7 @@
 				049E84D11A605DE0000B66CD /* STPToken.m in Sources */,
 				049E84D21A605DE0000B66CD /* StripeError.m in Sources */,
 				04633B131CD45211009D4FB5 /* Stripe+ApplePay.m in Sources */,
+				045D710A1CEED3AA00F6CD65 /* STPRememberMeEmailCell.m in Sources */,
 				049952D81BCF14990088C703 /* STPAPIPostRequest.m in Sources */,
 				0426B9791CEBD001006AC8DD /* UINavigationBar+Stripe_Theme.m in Sources */,
 				04BC29A11CD8412000318357 /* STPPaymentContext.m in Sources */,
@@ -1630,6 +1649,7 @@
 				04BC29CB1CE40F7500318357 /* STPObscuredCardView.m in Sources */,
 				04A4C3991C4F2C8600B3B290 /* NSString+Stripe_CardBrands.m in Sources */,
 				0438EF351B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */,
+				045D71091CEED3AA00F6CD65 /* STPRememberMeEmailCell.m in Sources */,
 				04CDB5041A5F30A700B854EE /* STPFormEncoder.m in Sources */,
 				0426B96F1CEADC98006AC8DD /* STPColorUtils.m in Sources */,
 				04E39F531CECF7A100AF3B96 /* STPCardTuple.m in Sources */,

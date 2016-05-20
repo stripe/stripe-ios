@@ -18,6 +18,7 @@
 @interface STPCheckoutAPIClient()
 @property(nonatomic, copy)NSString *publishableKey;
 @property(nonatomic)NSURLSession *accountSession;
+@property(nonatomic)NSURLSessionTask *lookupTask;
 @property(nonatomic)STPAPIClient *tokenClient;
 @end
 
@@ -91,14 +92,16 @@ static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api"; 
                                   @"email": email,
                                   };
         [request stp_addParametersToURL:payload];
-        [[strongself.accountSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        [self.lookupTask cancel];
+        self.lookupTask = [strongself.accountSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             STPCheckoutAccountLookup *lookup = [STPCheckoutAccountLookup lookupWithData:data URLResponse:response];
             if (lookup) {
                 [lookupPromise succeed:lookup];
             } else {
                 [lookupPromise fail:error ?: [strongself.class genericRememberMeErrorWithResponseData:data message:@"Failed to parse account lookup response"]];
             }
-        }] resume];
+        }];
+        [self.lookupTask resume];
         return lookupPromise;
     }];
 }
