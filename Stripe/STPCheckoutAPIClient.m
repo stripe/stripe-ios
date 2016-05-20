@@ -22,7 +22,7 @@
 @property(nonatomic)STPAPIClient *tokenClient;
 @end
 
-static NSString *CheckoutBaseURLString = @"https://qa-checkout.stripe.com/api"; // TODO
+static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
 
 @implementation STPCheckoutAPIClient
 

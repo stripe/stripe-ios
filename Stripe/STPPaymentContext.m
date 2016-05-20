@@ -51,6 +51,7 @@
         _loadingPromise = [[[STPPromise<STPPaymentMethodTuple *> new] onSuccess:^(STPPaymentMethodTuple *tuple) {
             weakself.paymentMethods = tuple.paymentMethods;
             weakself.selectedPaymentMethod = tuple.selectedPaymentMethod;
+            [weakself.delegate paymentContextDidFinishLoading:weakself];
         }] onFailure:^(NSError * _Nonnull error) {
             [weakself.didAppearPromise onSuccess:^(__unused id value) {
                 [weakself.delegate paymentContext:weakself didFailToLoadWithError:error];
@@ -60,7 +61,6 @@
             if (!weakself) {
                 return;
             }
-            [weakself.delegate paymentContextDidFinishLoading:weakself];
             if (error) {
                 [weakself.loadingPromise fail:error];
                 return;

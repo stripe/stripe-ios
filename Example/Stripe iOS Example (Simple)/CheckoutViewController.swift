@@ -73,6 +73,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.navigationItem.title = "Emoji Apparel"
         self.checkoutView.buyButton.addTarget(self, action: #selector(didTapBuy), forControlEvents: .TouchUpInside)
         self.checkoutView.totalRow.detail = "$\(self.paymentContext.paymentAmount/100).00"
+        self.checkoutView.paymentRow.loading = true
         self.checkoutView.paymentRow.onTap = { [weak self] _ in
             self?.paymentContext.pushPaymentMethodsViewController()
         }
@@ -121,11 +122,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         }
     }
 
-    func paymentContextDidBeginLoading(paymentContext: STPPaymentContext) {
-        self.checkoutView.paymentRow.loading = true
-    }
-
-    func paymentContextDidEndLoading(paymentContext: STPPaymentContext) {
+    func paymentContextDidFinishLoading(paymentContext: STPPaymentContext) {
         self.checkoutView.paymentRow.loading = false
     }
 
