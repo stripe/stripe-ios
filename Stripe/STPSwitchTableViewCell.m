@@ -24,12 +24,12 @@
     if (self) {
         UISwitch *switchView = [[UISwitch alloc] init];
 		switchView.layer.cornerRadius = CGRectGetHeight(switchView.frame) / 2.0f;
-        [self addSubview:switchView];
+        [self.contentView addSubview:switchView];
         [switchView addTarget:self action:@selector(switchToggled:) forControlEvents:UIControlEventValueChanged];
         _switchView = switchView;
         
         UILabel *captionLabel = [[UILabel alloc] init];
-        [self addSubview:captionLabel];
+        [self.contentView addSubview:captionLabel];
         _captionLabel = captionLabel;
         _theme = [STPTheme new];
         [self updateAppearance];
@@ -55,12 +55,12 @@
     if (![thumbTintColor isEqual:[UIColor whiteColor]]) {
         self.switchView.thumbTintColor = thumbTintColor;
     }
-    
+    self.backgroundColor = [UIColor clearColor];
 	self.switchView.tintColor = self.theme.tertiaryBackgroundColor;
 	self.switchView.backgroundColor = self.theme.tertiaryBackgroundColor;
     self.switchView.onTintColor = self.theme.accentColor;
     self.captionLabel.font = self.theme.font;
-    self.backgroundColor = self.theme.secondaryBackgroundColor;
+    self.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
 	self.captionLabel.textColor = self.theme.primaryForegroundColor;
 }
 

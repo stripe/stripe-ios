@@ -120,8 +120,8 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.obscuredCardView = obscuredCardView;
     
     self.rememberMeCell = [[STPSwitchTableViewCell alloc] init];
+    self.rememberMeCell.accessibilityIdentifier = @"rememberMeCell";
     [self.rememberMeCell configureWithLabel:NSLocalizedString(@"Autofill my card in other apps", nil) delegate:self];
-    self.rememberMeCell.alpha = 0;
     
     self.rememberMePhoneCell = [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypePhone contents:nil lastInList:YES delegate:self];
     self.rememberMePhoneCell.caption = NSLocalizedString(@"Phone", nil);
@@ -154,11 +154,14 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.tableView.backgroundColor = self.configuration.theme.primaryBackgroundColor;
     self.tableView.separatorColor = self.configuration.theme.quaternaryBackgroundColor;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
-    self.textField.backgroundColor = self.configuration.theme.secondaryBackgroundColor;
+    
+    self.cardNumberCell.backgroundColor = self.configuration.theme.secondaryBackgroundColor;
+    self.textField.backgroundColor = [UIColor clearColor];
     self.textField.placeholderColor = self.configuration.theme.tertiaryForegroundColor;
     self.textField.borderColor = [UIColor clearColor];
     self.textField.textColor = self.configuration.theme.primaryForegroundColor;
     self.textField.font = self.configuration.theme.font;
+    
     self.obscuredCardView.theme = self.configuration.theme;
     self.cardImageView.tintColor = self.configuration.theme.accentColor;
     self.activityIndicator.tintColor = self.configuration.theme.accentColor;
@@ -208,6 +211,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self reloadRememberMeCellAnimated:NO];
     [self.tableView reloadData];
 }
 
@@ -304,6 +308,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (void)smsCodeViewControllerDidCancel:(__unused STPSMSCodeViewController *)smsCodeViewController {
+    [self reloadRememberMeCellAnimated:NO];
     [self dismissViewControllerAnimated:YES completion:^{
         if (!self.textField.isValid) {
             [self.textField becomeFirstResponder];
@@ -428,9 +433,11 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 #pragma mark - UITableView
 
 - (void)reloadRememberMeCellAnimated:(BOOL)animated {
+    BOOL disabled = !self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.configuration.smsAutofillDisabled || self.lookupSucceeded;
     [UIView animateWithDuration:(0.2f * animated) animations:^{
-        BOOL disabled = !self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.configuration.smsAutofillDisabled;
-        self.rememberMeCell.alpha = disabled ? 0 : 1;
+        self.rememberMeCell.stp_contentAlpha = disabled ? 0 : 1;
+    } completion:^(__unused BOOL finished) {
+        [self tableView:self.tableView willDisplayCell:self.rememberMeCell forRowAtIndexPath:[self.tableView indexPathForCell:self.rememberMeCell]];
     }];
 }
 
@@ -473,7 +480,8 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         }
         
     }
-    cell.backgroundColor = self.configuration.theme.secondaryBackgroundColor;
+    cell.backgroundColor = [UIColor clearColor];
+    cell.contentView.backgroundColor = self.configuration.theme.secondaryBackgroundColor;
     return cell;
 }
 

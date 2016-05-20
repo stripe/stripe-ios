@@ -14,8 +14,8 @@
 #import "STPTheme.h"
 #import "STPPaymentActivityIndicatorView.h"
 #import "StripeError.h"
-#import "UIViewController+Stripe_KeyboardAvoiding.h"
 #import "UIBarButtonItem+Stripe.h"
+#import "UIViewController+Stripe_KeyboardAvoiding.h"
 
 @interface STPSMSCodeViewController()<STPSMSCodeTextFieldDelegate>
 
@@ -44,6 +44,10 @@
         _theme = [STPTheme new];
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidLoad {
@@ -90,9 +94,8 @@
     self.errorLabel = errorLabel;
     
     STPPaymentActivityIndicatorView *activityIndicator = [STPPaymentActivityIndicatorView new];
-    [self.view addSubview:activityIndicator];
+    [self.scrollView addSubview:activityIndicator];
     _activityIndicator = activityIndicator;
-    
     [self updateAppearance];
 }
 
@@ -138,21 +141,38 @@
     
     CGFloat activityIndicatorWidth = 30.0f;
     self.activityIndicator.frame = CGRectMake((self.view.bounds.size.width - activityIndicatorWidth) / 2, CGRectGetMaxY(self.cancelButton.frame) + 20, activityIndicatorWidth, activityIndicatorWidth);
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [self stp_beginObservingKeyboardWithBlock:^(CGRect keyboardFrame) {
+        CGFloat base = CGRectGetMaxY(self.navigationController.navigationBar.frame);
+        CGRect codeFrame = self.codeField.frame;
+        codeFrame.origin.y += base;
+        codeFrame.origin.y += 10.0f;
+        CGFloat offset = CGRectIntersection(codeFrame, keyboardFrame).size.height;
+        CGPoint destination;
+        if (offset > 0) {
+            destination = CGPointMake(0, -(base - offset));
+        } else {
+            destination = CGPointMake(0, -base);
+        }
+        if (!CGPointEqualToPoint(self.scrollView.contentOffset, destination)) {
+            self.scrollView.contentOffset = destination;
+        }
+    }];
     [self.codeField becomeFirstResponder];
 }
 
 - (void)codeTextField:(STPSMSCodeTextField *)codeField
          didEnterCode:(NSString *)code {
     __weak typeof(self) weakself = self;
+    self.loading = YES;
     STPCheckoutAPIClient *client = self.checkoutAPIClient;
     [[[client submitSMSCode:code forVerification:self.verification] onSuccess:^(STPCheckoutAccount *account) {
         [weakself.delegate smsCodeViewController:self didAuthenticateAccount:account];
     }] onFailure:^(NSError *error) {
+        self.loading = NO;
         BOOL tooManyTries = error.code == STPCheckoutTooManyAttemptsError;
         if (tooManyTries) {
             self.errorLabel.text = NSLocalizedString(@"Too many incorrect attempts", nil);

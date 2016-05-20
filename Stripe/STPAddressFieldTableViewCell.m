@@ -37,13 +37,13 @@
         
         UILabel *captionLabel = [UILabel new];
         _captionLabel = captionLabel;
-        [self addSubview:captionLabel];
+        [self.contentView addSubview:captionLabel];
         
         STPFormTextField *textField = [[STPFormTextField alloc] init];
         textField.formDelegate = self;
         textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
         _textField = textField;
-        [self addSubview:textField];
+        [self.contentView addSubview:textField];
         
         UIToolbar *toolbar = [UIToolbar new];
         UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -139,7 +139,8 @@
 }
 
 - (void)updateAppearance {
-	self.backgroundColor = self.theme.secondaryBackgroundColor;
+    self.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
+    self.backgroundColor = [UIColor clearColor];
     self.captionLabel.font = self.theme.font;
     self.captionLabel.textColor = self.theme.secondaryForegroundColor;
     self.textField.placeholderColor = self.theme.tertiaryForegroundColor;

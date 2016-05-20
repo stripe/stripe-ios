@@ -71,6 +71,7 @@
             for (NSInteger i=0; i < 3; i++) {
                 STPCodeInternalTextField *textField = [STPCodeInternalTextField new];
                 textField.delegate = self;
+                textField.keyboardType = UIKeyboardTypeNumberPad;
                 textField.internalDelegate = self;
                 textField.textAlignment = NSTextAlignmentCenter;
                 [textFields addObject:textField];
@@ -86,6 +87,7 @@
         UIView *coveringView = [UIView new];
         [self addSubview:coveringView];
         _coveringView = coveringView;
+        
         [self updateAppearance];
     }
     return self;
@@ -113,6 +115,7 @@
 }
 
 - (BOOL)becomeFirstResponder {
+    
     return [[self.textFields firstObject] becomeFirstResponder];
 }
 

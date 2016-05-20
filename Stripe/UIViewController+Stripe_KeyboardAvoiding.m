@@ -12,20 +12,37 @@
 // This is a private class that is only a UIViewController subclass by virtue of the fact
 // that that makes it easier to attach to another UIViewController as a child.
 @interface STPKeyboardDetectingViewController : UIViewController
+
+- (instancetype)initWithScrollView:(UIScrollView *)scrollView;
+
 @property(weak, nonatomic) UIScrollView *scrollView;
 @property(nonatomic) CGPoint originalContentOffset;
 @property(nonatomic) UIEdgeInsets originalContentInset;
 @property(nonatomic) CGFloat currentScroll;
 @property(nonatomic) UITapGestureRecognizer *tapGestureRecognizer;
+@property(nonatomic, assign)CGRect lastKeyboardFrame;
+@property(nonatomic, copy)STPKeyboardFrameBlock keyboardFrameBlock;
 @end
 
 @implementation STPKeyboardDetectingViewController
 
-- (instancetype)init {
-    self = [super init];
+- (instancetype)initWithKeyboardFrameBlock:(STPKeyboardFrameBlock)block {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
+        _keyboardFrameBlock = block;
+    }
+    return self;
+}
+
+- (instancetype)initWithScrollView:(UIScrollView *)scrollView {
+    self = [super initWithNibName:nil bundle:nil];
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
         _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped)];
+        _scrollView = scrollView;
+        [_scrollView addGestureRecognizer:_tapGestureRecognizer];
+        _originalContentInset = scrollView.contentInset;
     }
     return self;
 }
@@ -41,12 +58,6 @@
     self.view = view;
 }
 
-- (void)setScrollView:(UIScrollView *)scrollView {
-    [_scrollView removeGestureRecognizer:self.tapGestureRecognizer];
-    _scrollView = scrollView;
-    [_scrollView addGestureRecognizer:self.tapGestureRecognizer];
-}
-
 - (void)endEditing {
     [self.scrollView endEditing:YES];
     [self.scrollView setContentOffset:self.originalContentOffset animated:YES];
@@ -57,28 +68,23 @@
 }
 
 - (void)keyboardWillChangeFrame:(NSNotification *)notification {
-    // The following is effectively detecting if the keyboard is about to appear.
-    // If that's the case, we'll assume the scrollView has its contentOffset set
-    // to the correct value by this point in time (i.e. if it's inside a UINavController).
-    CGRect oldFrame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-    if (!CGRectIntersectsRect(self.view.window.frame, oldFrame)) {
-        self.originalContentOffset = self.scrollView.contentOffset;
-        self.originalContentInset = self.scrollView.contentInset;
-    }
-    
     // As of iOS 8, this all takes place inside the necessary animation block
     // https://twitter.com/SmileyKeith/status/684100833823174656
     CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     CGFloat keyboardHeight = CGRectGetMaxY(self.scrollView.frame) - CGRectGetMinY(keyboardFrame);
     [self updateInsetIfNecessary:keyboardHeight];
+    if (self.keyboardFrameBlock) {
+        if (!CGRectEqualToRect(self.lastKeyboardFrame, keyboardFrame)) {
+            self.lastKeyboardFrame = keyboardFrame;
+            self.keyboardFrameBlock(keyboardFrame);
+        }
+    }
 }
 
 - (void)updateInsetIfNecessary:(CGFloat)keyboardHeight {
     UIEdgeInsets insets;
-    UIEdgeInsets scrollInsets;
     if (keyboardHeight < FLT_EPSILON) {
         insets = self.originalContentInset;
-        scrollInsets = insets;
     } else {
         insets = UIEdgeInsetsMake(
                                   self.originalContentInset.top,
@@ -86,16 +92,10 @@
                                   self.originalContentInset.bottom + keyboardHeight + 20,
                                   self.originalContentInset.right
                                   );
-        scrollInsets = UIEdgeInsetsMake(
-                                        self.originalContentInset.top,
-                                        self.originalContentInset.left,
-                                        self.originalContentInset.bottom + keyboardHeight,
-                                        self.originalContentInset.right
-                                        );
     }
     if (!UIEdgeInsetsEqualToEdgeInsets(self.scrollView.contentInset, insets)) {
         self.scrollView.contentInset = insets;
-        self.scrollView.scrollIndicatorInsets = scrollInsets;
+        self.scrollView.scrollIndicatorInsets = insets;
     }
 }
 
@@ -121,8 +121,33 @@
 @implementation UIViewController (Stripe_KeyboardAvoiding)
 
 - (void)stp_beginAvoidingKeyboardWithScrollView:(UIScrollView *)scrollView {
+    STPKeyboardDetectingViewController *existing = [self stp_keyboardDetectingViewController];
+    if (existing) {
+        [existing removeFromParentViewController];
+        [existing.view removeFromSuperview];
+        [existing didMoveToParentViewController:nil];
+    }
     STPKeyboardDetectingViewController *keyboardAvoiding = [STPKeyboardDetectingViewController new];
     keyboardAvoiding.scrollView = scrollView;
+    [self addChildViewController:keyboardAvoiding];
+    [self.view addSubview:keyboardAvoiding.view];
+    [keyboardAvoiding didMoveToParentViewController:self];
+}
+
+- (STPKeyboardDetectingViewController *)stp_keyboardDetectingViewController {
+    return [[self.childViewControllers filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(UIViewController *viewController, __unused NSDictionary *bindings) {
+        return [viewController isKindOfClass:[STPKeyboardDetectingViewController class]];
+    }]] firstObject];
+}
+
+- (void)stp_beginObservingKeyboardWithBlock:(STPKeyboardFrameBlock)block {
+    STPKeyboardDetectingViewController *existing = [self stp_keyboardDetectingViewController];
+    if (existing) {
+        [existing removeFromParentViewController];
+        [existing.view removeFromSuperview];
+        [existing didMoveToParentViewController:nil];
+    }
+    STPKeyboardDetectingViewController *keyboardAvoiding = [[STPKeyboardDetectingViewController alloc] initWithKeyboardFrameBlock:block];
     [self addChildViewController:keyboardAvoiding];
     [self.view addSubview:keyboardAvoiding.view];
     [keyboardAvoiding didMoveToParentViewController:self];

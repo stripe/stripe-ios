@@ -14,6 +14,7 @@
 @property(nonatomic, weak) UIImageView *brandImageView;
 @property(nonatomic, weak) UITextField *last4Field;
 @property(nonatomic, weak) UITextField *expField;
+@property(nonatomic, weak) UITextField *cvcField;
 
 @end
 
@@ -30,13 +31,22 @@
         
         UITextField *last4Field = [UITextField new];
         last4Field.delegate = self;
+        last4Field.keyboardType = UIKeyboardTypeNumberPad;
         [self addSubview:last4Field];
         _last4Field = last4Field;
         
         UITextField *expField = [UITextField new];
         expField.delegate = self;
+        expField.keyboardType = UIKeyboardTypeNumberPad;
         [self addSubview:expField];
         _expField = expField;
+        
+        UITextField *cvcField = [UITextField new];
+        cvcField.delegate = self;
+        cvcField.keyboardType = UIKeyboardTypeNumberPad;
+        cvcField.secureTextEntry = YES;
+        [self addSubview:cvcField];
+        _cvcField = cvcField;
         
         _theme = [STPTheme new];
         [self updateAppearance];
@@ -51,11 +61,23 @@
     [self.last4Field sizeToFit];
     self.last4Field.frame = CGRectMake(CGRectGetMaxX(self.brandImageView.frame) + 8, 0, self.last4Field.frame.size.width + 20, self.bounds.size.height);
     
+    [self.cvcField sizeToFit];
+    CGRect cvcFrame = self.cvcField.frame;
+    cvcFrame.size.width += 20;
+    cvcFrame.origin.y = 0;
+    cvcFrame.origin.x = CGRectGetMaxX(self.bounds) - cvcFrame.size.width;
+    cvcFrame.size.height = CGRectGetHeight(self.bounds);
+    self.cvcField.frame = cvcFrame;
+    
     [self.expField sizeToFit];
     CGRect expFrame = self.expField.frame;
     expFrame.size.width += 20;
     self.expField.frame = expFrame;
-    self.expField.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+    self.expField.center = CGPointMake(
+                                       (CGRectGetMinX(cvcFrame) + CGRectGetMaxX(self.last4Field.frame)) / 2,
+                                       self.bounds.size.height / 2
+                                       );
+    
 }
 
 - (void)setTheme:(STPTheme *)theme {
@@ -72,6 +94,10 @@
     self.expField.backgroundColor = [UIColor clearColor];
     self.expField.font = self.theme.font;
     self.expField.textColor = self.theme.primaryForegroundColor;
+    
+    self.cvcField.backgroundColor = [UIColor clearColor];
+    self.cvcField.font = self.theme.font;
+    self.cvcField.textColor = self.theme.primaryForegroundColor;
 }
 
 - (void)configureWithCard:(STPCard *)card {
@@ -79,6 +105,11 @@
     self.brandImageView.image = image;
     self.last4Field.text = card.last4;
     self.expField.text = [NSString stringWithFormat:@"%lu/%lu", card.expMonth, card.expYear % 100];
+    if (card.brand == STPCardBrandAmex) {
+        self.cvcField.text = @"XXXX";
+    } else {
+        self.cvcField.text = @"XXX";
+    }
     [self setNeedsLayout];
 }
 
