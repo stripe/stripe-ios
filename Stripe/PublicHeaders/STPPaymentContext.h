@@ -37,19 +37,12 @@ typedef void (^STPSourceHandlerBlock)(STPPaymentMethodType paymentMethod, id<STP
 typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __nullable error);
 
 /**
- *  Implement STPPaymentContextDelegate to get notified when a payment context's contents change. In practice, if your app has a "checkout page view controller", that is a good candidate to implement this protocol.
+ *  Implement STPPaymentContextDelegate to get notified when a payment context's contents change. In practice, if your app has a "checkout screen view controller", that is a good candidate to implement this protocol.
  */
 @protocol STPPaymentContextDelegate <NSObject>
 
 /**
- *  Called when the payment context begins loading. You could tell a UIActivityIndicatorView to start animating when this is called.
- *
- *  @param paymentContext the payment context that began loading.
- */
-- (void)paymentContextDidBeginLoading:(STPPaymentContext *)paymentContext;
-
-/**
- *  Called when the payment context encounters an error when fetching its initial set of data. If you're showing the user a checkout page, you could dismiss the checkout page when this is called and present the error to the user. To make it harder to get your UI into an inconsistent state, this won't be called until you've called -didAppear on the payment context.
+ *  Called when the payment context encounters an error when fetching its initial set of data. If you're showing the user a checkout page, you should dismiss the checkout page when this is called and present the error to the user. To make it harder to get your UI into an inconsistent state, this won't be called until the context's hostViewController has finished appearing.
  *
  *  @param paymentContext the payment context that encountered the error
  *  @param error          the error that was encountered
@@ -61,7 +54,7 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
  *
  *  @param paymentContext the payment context that finished loading.
  */
-- (void)paymentContextDidEndLoading:(STPPaymentContext *)paymentContext;
+- (void)paymentContextDidFinishLoading:(STPPaymentContext *)paymentContext;
 
 /**
  *  This is called every time the contents of the payment context change. When this is called, you should update your app's UI to reflect the current state of the payment context. For example, if you have a checkout page with a "selected payment method" row, you should update its payment method with `paymentContext.selectedPaymentMethod.label`. If that checkout page has a "buy" button, you should enable/disable it depending on the result of [paymentContext isReadyForPayment].

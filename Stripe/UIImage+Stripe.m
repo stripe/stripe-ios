@@ -19,65 +19,65 @@
 @implementation UIImage (Stripe)
 
 + (UIImage *)stp_addIcon {
-    return [UIImage stp_safeImageNamed:@"stp_icon_add" templateifAvailable:YES];
+    return [self.class stp_safeImageNamed:@"stp_icon_add" templateifAvailable:YES];
 }
 
 + (UIImage *)stp_leftChevronIcon {
-    return [UIImage stp_safeImageNamed:@"stp_icon_chevron_left" templateifAvailable:YES];
+    return [self.class stp_safeImageNamed:@"stp_icon_chevron_left" templateifAvailable:YES];
 }
 
 + (UIImage *)stp_smallRightChevronIcon {
-    return [UIImage stp_safeImageNamed:@"stp_icon_chevron_right_small" templateifAvailable:YES];
+    return [self.class stp_safeImageNamed:@"stp_icon_chevron_right_small" templateifAvailable:YES];
 }
 
 + (nonnull UIImage *)stp_largeCardFrontImage {
-    return [UIImage stp_safeImageNamed:@"stp_card_form_front" templateifAvailable:YES];
+    return [self.class stp_safeImageNamed:@"stp_card_form_front" templateifAvailable:YES];
 }
 
 + (nonnull UIImage *)stp_largeCardBackImage {
-    return [UIImage stp_safeImageNamed:@"stp_card_form_back" templateifAvailable:YES];
+    return [self.class stp_safeImageNamed:@"stp_card_form_back" templateifAvailable:YES];
 }
 
 + (UIImage *)stp_largeCardApplePayImage {
-    return [UIImage stp_safeImageNamed:@"stp_card_form_applepay" templateifAvailable:YES];
+    return [self.class stp_safeImageNamed:@"stp_card_form_applepay" templateifAvailable:YES];
 }
 
 + (UIImage *)stp_applePayCardImage {
-    return [UIImage stp_safeImageNamed:@"stp_card_applepay"];
+    return [self.class stp_safeImageNamed:@"stp_card_applepay"];
 }
 
 + (UIImage *)stp_amexCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandAmex];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandAmex];
 }
 
 + (UIImage *)stp_dinersClubCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandDinersClub];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandDinersClub];
 }
 
 + (UIImage *)stp_discoverCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandDiscover];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandDiscover];
 }
 
 + (UIImage *)stp_jcbCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandJCB];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandJCB];
 }
 
 + (UIImage *)stp_masterCardCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandMasterCard];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandMasterCard];
 }
 
 + (UIImage *)stp_visaCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandVisa];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandVisa];
 }
 
 + (UIImage *)stp_unknownCardCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandUnknown];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandUnknown];
 }
 
 + (UIImage *)stp_brandImageForCardBrand:(STPCardBrand)brand {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     NSString *imageName;
-    BOOL templateSupported = [[UIImage new] respondsToSelector:@selector(imageWithRenderingMode:)];
+    BOOL templateSupported = [[self.class new] respondsToSelector:@selector(imageWithRenderingMode:)];
     switch (brand) {
         case STPCardBrandAmex:
             imageName = @"stp_card_amex";
@@ -100,7 +100,7 @@
         case STPCardBrandVisa:
             imageName = @"stp_card_visa";
     }
-    UIImage *image = [UIImage stp_safeImageNamed:imageName];
+    UIImage *image = [self.class stp_safeImageNamed:imageName];
     if (brand == STPCardBrandUnknown && templateSupported) {
         image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
@@ -109,18 +109,18 @@
 
 + (UIImage *)stp_cvcImageForCardBrand:(STPCardBrand)brand {
     NSString *imageName = brand == STPCardBrandAmex ? @"stp_card_cvc_amex" : @"stp_card_cvc";
-    return [UIImage stp_safeImageNamed:imageName];
+    return [self.class stp_safeImageNamed:imageName];
 }
 
 + (UIImage *)stp_safeImageNamed:(NSString *)imageName
             templateifAvailable:(BOOL)templateIfAvailable {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
-    BOOL templateSupported = [[UIImage new] respondsToSelector:@selector(imageWithRenderingMode:)];
+    BOOL templateSupported = [[self.class new] respondsToSelector:@selector(imageWithRenderingMode:)];
     UIImage *image;
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        image = [UIImage imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
+    if ([[self.class class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
+        image = [self.class imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
     }
-    image = [UIImage imageNamed:imageName];
+    image = [self.class imageNamed:imageName];
     if (templateSupported && templateIfAvailable) {
         image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }

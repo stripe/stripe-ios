@@ -512,7 +512,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     [cell stp_setBottomBorderHidden:!bottomRow];
 }
 
-- (CGFloat)tableView:(__unused UITableView *)tableView heightForFooterInSection:(__unused NSInteger)section {
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     if (section == STPPaymentCardRememberMeSection) {
         return 140.0f;
     } else if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
@@ -521,14 +521,14 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     return 27.0f;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(__unused NSInteger)section {
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (section == STPPaymentCardRememberMeSection || [self tableView:tableView numberOfRowsInSection:section] != 0) {
         return tableView.sectionHeaderHeight;
     }
     return 0.01f;
 }
 
-- (UIView *)tableView:(__unused UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (section == STPPaymentCardEmailSection || section == STPPaymentCardRememberMeSection) {
         return [UIView new];
     } else if ([self tableView:tableView numberOfRowsInSection:section] == 0) {

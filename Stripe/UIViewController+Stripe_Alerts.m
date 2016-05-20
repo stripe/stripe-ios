@@ -11,6 +11,7 @@
 #import <objc/runtime.h>
 
 #define FAUXPAS_IGNORED_IN_FILE(...)
+#define FAUXPAS_IGNORED_ON_LINE(...)
 
 FAUXPAS_IGNORED_IN_FILE(APIAvailability);
 
@@ -25,18 +26,19 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability);
 
 @implementation STPAlertViewBlockDelegate
 
-- (void)alertView:(__unused UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     STPAlertTuple *tuple = [self.tuples stp_boundSafeObjectAtIndex:buttonIndex];
     if (tuple.action) {
         tuple.action();
     }
+    alertView.delegate = nil;
 }
 
 @end
 
 @interface UIAlertView(Stripe_Blocks)
 
-@property(nonatomic)STPAlertViewBlockDelegate *stp_blockDelegate;
+@property(nonatomic)STPAlertViewBlockDelegate *stp_blockDelegate FAUXPAS_IGNORED_ON_LINE(StrongDelegate);
 
 @end
 
@@ -56,7 +58,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability);
 
 @implementation UIViewController (Stripe_Alerts)
 
-- (UIAlertActionStyle)actionStyleFromStripeStyle:(STPAlertStyle)style {
+- (UIAlertActionStyle)stp_actionStyleFromStripeStyle:(STPAlertStyle)style {
     switch (style) {
         case STPAlertStyleCancel:
             return UIAlertActionStyleCancel;
@@ -75,7 +77,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability);
                                                                             message:message
                                                                      preferredStyle:UIAlertControllerStyleAlert];
         for (STPAlertTuple *tuple in tuples) {
-            [controller addAction:[UIAlertAction actionWithTitle:tuple.title style:[self actionStyleFromStripeStyle:tuple.style] handler:^(__unused UIAlertAction *alertAction) {
+            [controller addAction:[UIAlertAction actionWithTitle:tuple.title style:[self stp_actionStyleFromStripeStyle:tuple.style] handler:^(__unused UIAlertAction *alertAction) {
                 if (tuple.action) {
                     tuple.action();
                 }
@@ -110,7 +112,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability);
 + (instancetype)tupleWithTitle:(NSString *)title
                          style:(STPAlertStyle)style
                         action:(STPVoidBlock)action {
-    STPAlertTuple *tuple = [STPAlertTuple new];
+    STPAlertTuple *tuple = [self.class new];
     tuple.title = title;
     tuple.style = style;
     tuple.action = action;

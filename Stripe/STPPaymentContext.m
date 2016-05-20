@@ -22,12 +22,13 @@
 #import "STPPaymentContext+Private.h"
 #import "UIViewController+Stripe_Promises.h"
 
+#define FAUXPAS_IGNORED_IN_METHOD(...)
+
 @interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic)STPAPIClient *apiClient;
-@property(nonatomic, readwrite, getter=isLoading)BOOL loading;
 @property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
 @property(nonatomic)STPVoidPromise *didAppearPromise;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
@@ -46,7 +47,6 @@
         _didAppearPromise = [STPVoidPromise new];
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _paymentCurrency = @"USD";
-        self.loading = YES;
         __weak typeof(self) weakself = self;
         _loadingPromise = [[[STPPromise<STPPaymentMethodTuple *> new] onSuccess:^(STPPaymentMethodTuple *tuple) {
             weakself.paymentMethods = tuple.paymentMethods;
@@ -60,7 +60,7 @@
             if (!weakself) {
                 return;
             }
-            weakself.loading = NO;
+            [weakself.delegate paymentContextDidFinishLoading:weakself];
             if (error) {
                 [weakself.loadingPromise fail:error];
                 return;
@@ -85,19 +85,6 @@
     return (STPPromise<STPPaymentMethodTuple *> *)[self.loadingPromise map:^id _Nonnull(__unused STPPaymentMethodTuple *value) {
         return [STPPaymentMethodTuple tupleWithPaymentMethods:weakself.paymentMethods selectedPaymentMethod:weakself.selectedPaymentMethod];
     }];
-}
-
-- (void)setLoading:(BOOL)loading {
-    if (loading == _loading) {
-        return;
-    }
-    _loading = loading;
-    if (loading) {
-        [self.delegate paymentContextDidBeginLoading:self];
-    }
-    else {
-        [self.delegate paymentContextDidEndLoading:self];
-    }
 }
 
 - (void)setPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods {
@@ -180,6 +167,7 @@
 
 - (void)requestPaymentWithSourceHandler:(STPSourceHandlerBlock)sourceHandler
                              completion:(STPPaymentCompletionBlock)completion {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     __weak typeof(self) weakSelf = self;
     [[self.didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
         return weakSelf.loadingPromise;
@@ -224,6 +212,7 @@
 }
 
 - (PKPaymentRequest *)buildPaymentRequest {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     if (!self.configuration.appleMerchantIdentifier || !self.paymentAmount) {
         return nil;
     }

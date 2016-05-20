@@ -35,19 +35,6 @@ static NSInteger const STPNavigationBarHairlineViewTag = 787473;
     return view;
 }
 
-+ (UIImage *)stp_imageWithColor:(UIColor *)color minimumSize:(CGSize)size {
-    CGRect rect = CGRectMake(0, 0, size.width, size.height);
-    UIGraphicsBeginImageContext(rect.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, rect);
-    
-    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return [img resizableImageWithCapInsets:UIEdgeInsetsMake(size.height / 2, size.width / 2, size.height / 2, size.width / 2)];
-}
-
 - (UIImageView *)stp_hairlineImageView {
     return [self stp_hairlineImageView:self];
 }

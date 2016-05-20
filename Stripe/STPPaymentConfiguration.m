@@ -26,7 +26,7 @@
 }
 
 - (id)copyWithZone:(__unused NSZone *)zone {
-    STPPaymentConfiguration *copy = [STPPaymentConfiguration new];
+    STPPaymentConfiguration *copy = [self.class new];
     copy.publishableKey = self.publishableKey;
     copy.theme = self.theme;
     copy.supportedPaymentMethods = self.supportedPaymentMethods;
