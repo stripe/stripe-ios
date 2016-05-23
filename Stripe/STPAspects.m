@@ -240,6 +240,9 @@ static BOOL stp_aspect_isMsgForwardIMP(IMP impl) {
     ;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-variable"
+
 static IMP stp_aspect_getMsgForwardIMP(NSObject *self, SEL selector) {
     IMP msgForwardIMP = _objc_msgForward;
 #if !defined(__arm64__)
@@ -266,6 +269,8 @@ static IMP stp_aspect_getMsgForwardIMP(NSObject *self, SEL selector) {
 #endif
     return msgForwardIMP;
 }
+
+#pragma clang diagnostic pop
 
 static void stp_aspect_prepareClassAndHookSelector(NSObject *self, SEL selector, NSError **error) {
     NSCParameterAssert(selector);
