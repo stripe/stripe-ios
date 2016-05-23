@@ -240,10 +240,7 @@ static BOOL stp_aspect_isMsgForwardIMP(IMP impl) {
     ;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-parameter"
-
-static IMP stp_aspect_getMsgForwardIMP(NSObject *self, SEL selector) {
+static IMP stp_aspect_getMsgForwardIMP(__unused NSObject *self, __unused SEL selector) {
     IMP msgForwardIMP = _objc_msgForward;
 #if !defined(__arm64__)
     // As an ugly internal runtime implementation detail in the 32bit runtime, we need to determine of the method we hook returns a struct or anything larger than id.
@@ -269,8 +266,6 @@ static IMP stp_aspect_getMsgForwardIMP(NSObject *self, SEL selector) {
 #endif
     return msgForwardIMP;
 }
-
-#pragma clang diagnostic pop
 
 static void stp_aspect_prepareClassAndHookSelector(NSObject *self, SEL selector, NSError **error) {
     NSCParameterAssert(selector);
