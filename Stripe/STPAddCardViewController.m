@@ -267,11 +267,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
                 NSString *phone = self.rememberMePhoneCell.contents;
                 NSString *email = self.emailCell.contents;
                 if ([STPEmailAddressValidator stringIsValidEmailAddress:email] && [STPPhoneNumberValidator stringIsValidPartialPhoneNumber:phone] && self.rememberMeCell.on) {
-                    [[[self.checkoutAPIClient createAccountWithCardParams:cardParams email:email phone:phone] onSuccess:^(__unused STPCheckoutAccount *value) {
-                        // TODO remove
-                    }] onFailure:^(__unused NSError *error) {
-                        
-                    }];
+                    [self.checkoutAPIClient createAccountWithCardParams:cardParams email:email phone:phone];
                 }
                 if (self.completion) {
                     self.completion(token, ^(NSError *error) {
@@ -288,7 +284,6 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 - (void)handleError:(NSError *)error {
     self.loading = NO;
     if ([error stp_isUnknownCheckoutError]) {
-        // TODO log error
         STPObscuredCardView *obscuredView = self.obscuredCardView;
         NSArray *tuples = @[
                             [STPAlertTuple tupleWithTitle:NSLocalizedString(@"Enter card details manually", nil) style:STPAlertStyleDefault action:^{
