@@ -241,7 +241,7 @@ static BOOL stp_aspect_isMsgForwardIMP(IMP impl) {
 }
 
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-variable"
+#pragma clang diagnostic ignored "-Wunused-parameter"
 
 static IMP stp_aspect_getMsgForwardIMP(NSObject *self, SEL selector) {
     IMP msgForwardIMP = _objc_msgForward;
