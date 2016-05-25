@@ -229,7 +229,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         // Disable SMS autofill if we already have a card on file
         config.smsAutofillDisabled = (config.smsAutofillDisabled || cardPaymentMethods.count > 0);
         
-        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
+        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
             if (token && token.card) {
                 [self.apiAdapter addToken:token completion:^(NSError * _Nullable error) {
                     if (error) {
