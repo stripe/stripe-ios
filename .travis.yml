@@ -9,8 +9,10 @@ before_install:
   - gem update cocoapods --no-ri --no-rdoc
   - gem install xcpretty --no-ri --no-rdoc
   - ./ci_scripts/install_fauxpas.sh
+  - SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (9.3) \[.*\]" | grep -o "\[.*\]" | sed "s/^\[\(.*\)\]$/\1/")
 
 script:
+  - open -a "simulator" --args -CurrentDeviceUDID $SIMULATOR_ID
   - "./ci_scripts/check_fauxpas.sh"
   - "./ci_scripts/check_version.rb"
   - set -o pipefail && xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeiOS Tests" -configuration Debug -sdk iphonesimulator | xcpretty -c
