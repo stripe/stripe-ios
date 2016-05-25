@@ -11,21 +11,7 @@ Pod::Spec.new do |s|
   s.requires_arc                   = true
   s.platform                       = :ios
   s.ios.deployment_target          = '7.0'
-  s.default_subspecs               = 'Core'
-
-  s.subspec 'Core' do |ss|
-    ss.public_header_files         = 'Stripe/PublicHeaders/*.h'
-    ss.source_files                = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}'
-    ss.resources                   = 'Stripe/Resources/**/*'
-  end
-
-  s.subspec 'Checkout' do |ss|
-    # This has been merged with the core subspec and is now empty; it's still around to avoid breaking legacy Podfiles.
-    ss.dependency 'Stripe/Core'
-  end
-
-  s.subspec 'ApplePay' do |ss|
-    # This has been merged with the core subspec and is now empty; it's still around to avoid breaking legacy Podfiles.
-    ss.dependency 'Stripe/Core'
-  end
+  s.public_header_files            = 'Stripe/PublicHeaders/*.h'
+  s.source_files                   = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}'
+  s.resources                      = 'Stripe/Resources/**/*'
 end
