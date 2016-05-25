@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #define FAUXPAS_IGNORED_ON_LINE(...)
 
-static NSString *const __nonnull STPSDKVersion = @"7.0.1";
+static NSString *const __nonnull STPSDKVersion = @"7.0.2";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPToken;
 

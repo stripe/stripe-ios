@@ -1,3 +1,6 @@
+== 7.0.2 2016-05-24
+* Fixed an issue with validating certain Visa cards.
+
 == 7.0.1 2016-04-29
 * Added Discover support for Apple Pay
 * Add the now-required `accountHolderName` and `accountHolderType` properties to STPBankAccountParams
