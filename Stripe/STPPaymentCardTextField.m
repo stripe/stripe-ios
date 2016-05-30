@@ -493,7 +493,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     CGFloat placeholderWidth = [self widthForCardNumber:self.numberField.placeholder] - 4;
     CGFloat numberWidth = [self widthForCardNumber:self.viewModel.defaultPlaceholder] - 4;
     CGFloat numberFieldWidth = MAX(placeholderWidth, numberWidth);
-    CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 13;
+    CGFloat nonFragmentWidth = [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]] - 12;
     CGFloat numberFieldX = self.numberFieldShrunk ? STPPaymentCardTextFieldDefaultPadding - nonFragmentWidth : 8;
     return CGRectMake(numberFieldX, 0, numberFieldWidth, CGRectGetHeight(bounds));
 }
