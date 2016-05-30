@@ -17,6 +17,7 @@
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
 @interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate>
+@property(nonatomic, assign)STPFormTextFieldAutoFormattingBehavior autoformattingBehavior;
 @end
 
 @implementation STPTextFieldDelegateProxy
@@ -25,15 +26,26 @@
     BOOL deleting = (range.location == textField.text.length - 1 && range.length == 1 && [string isEqualToString:@""]);
     NSString *inputText;
     if (deleting) {
-        NSString *sanitized = [STPCardValidator sanitizedNumericStringForString:textField.text];
+        NSString *sanitized = [self unformattedStringForString:textField.text];
         inputText = [sanitized stp_safeSubstringToIndex:sanitized.length - 1];
     } else {
         NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
-        NSString *sanitized = [STPCardValidator sanitizedNumericStringForString:newString];
+        NSString *sanitized = [self unformattedStringForString:newString];
         inputText = sanitized;
     }
     textField.text = inputText;
     return NO;
+}
+
+- (NSString *)unformattedStringForString:(NSString *)string {
+    switch (self.autoformattingBehavior) {
+        case STPFormTextFieldAutoFormattingBehaviorNone:
+            return string;
+        case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
+        case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers:
+        case STPFormTextFieldAutoFormattingBehaviorExpiration:
+            return [STPCardValidator sanitizedNumericStringForString:string];
+    }
 }
 
 @end
@@ -43,11 +55,20 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 @interface STPFormTextField()
 @property(nonatomic)STPTextFieldDelegateProxy *delegateProxy;
 @property(nonatomic, copy)STPFormTextTransformationBlock textFormattingBlock;
+// This property only exists to disable keyboard loading in Travis CI due to a crash that occurs while trying to load the keyboard. Don't use it outside of tests.
+@property(nonatomic)BOOL skipsReloadingInputViews;
 @end
 
 @implementation STPFormTextField
 
 @synthesize placeholderColor = _placeholderColor;
+
+- (void)reloadInputViews {
+    if (self.skipsReloadingInputViews) {
+        return;
+    }
+    [super reloadInputViews];
+}
 
 + (NSDictionary *)attributesForAttributedString:(NSAttributedString *)attributedString {
     if (attributedString.length == 0) {
@@ -58,8 +79,10 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 
 - (void)setAutoFormattingBehavior:(STPFormTextFieldAutoFormattingBehavior)autoFormattingBehavior {
     _autoFormattingBehavior = autoFormattingBehavior;
+    self.delegateProxy.autoformattingBehavior = autoFormattingBehavior;
     switch (autoFormattingBehavior) {
         case STPFormTextFieldAutoFormattingBehaviorNone:
+        case STPFormTextFieldAutoFormattingBehaviorExpiration:
             self.textFormattingBlock = nil;
             break;
         case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
@@ -111,7 +134,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 - (void)deleteBackward {
     [super deleteBackward];
     if (self.text.length == 0) {
-        [self.formDelegate formTextFieldDidBackspaceOnEmpty:self];
+        if ([self.formDelegate respondsToSelector:@selector(formTextFieldDidBackspaceOnEmpty:)]) {
+            [self.formDelegate formTextFieldDidBackspaceOnEmpty:self];
+        }
     }
 }
 
@@ -126,7 +151,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText {
-    NSAttributedString *modified = self.formDelegate ?
+    NSAttributedString *oldValue = [self attributedText];
+    BOOL shouldModify = self.formDelegate && [self.formDelegate respondsToSelector:@selector(formTextField:modifyIncomingTextChange:)];
+    NSAttributedString *modified = shouldModify ?
         [self.formDelegate formTextField:self modifyIncomingTextChange:attributedText] :
         attributedText;
     NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(modified) : modified;
@@ -137,7 +164,11 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     transition.type = kCATransitionFade;
     [self.layer addAnimation:transition forKey:nil];
     [self sendActionsForControlEvents:UIControlEventEditingChanged];
-    [self.formDelegate formTextFieldTextDidChange:self];
+    if ([self.formDelegate respondsToSelector:@selector(formTextFieldTextDidChange:)]) {
+        if (![transformed isEqualToAttributedString:oldValue]) {
+            [self.formDelegate formTextFieldTextDidChange:self];
+        }
+    }
 }
 
 - (void)setPlaceholder:(NSString *)placeholder {
@@ -224,6 +255,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 
 - (void)setDelegate:(id <UITextFieldDelegate>)delegate {
     STPTextFieldDelegateProxy *delegateProxy = [[STPTextFieldDelegateProxy alloc] init];
+    delegateProxy.autoformattingBehavior = self.autoFormattingBehavior;
     delegateProxy.delegate = delegate;
     self.delegateProxy = delegateProxy;
     [super setDelegate:delegateProxy];

@@ -14,10 +14,11 @@ typedef NS_ENUM(NSInteger, STPFormTextFieldAutoFormattingBehavior) {
     STPFormTextFieldAutoFormattingBehaviorNone,
     STPFormTextFieldAutoFormattingBehaviorPhoneNumbers,
     STPFormTextFieldAutoFormattingBehaviorCardNumbers,
+    STPFormTextFieldAutoFormattingBehaviorExpiration,
 };
 
 @protocol STPFormTextFieldDelegate <UITextFieldDelegate>
-
+@optional
 - (void)formTextFieldDidBackspaceOnEmpty:(nonnull STPFormTextField *)formTextField;
 - (nonnull NSAttributedString *)formTextField:(nonnull STPFormTextField *)formTextField
            modifyIncomingTextChange:(nonnull NSAttributedString *)input;
