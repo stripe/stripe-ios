@@ -42,6 +42,8 @@
         STPFormTextField *textField = [[STPFormTextField alloc] init];
         textField.formDelegate = self;
         textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
+        textField.selectionEnabled = YES;
+        textField.preservesContentsOnPaste = YES;
         _textField = textField;
         [self.contentView addSubview:textField];
         
@@ -92,6 +94,8 @@
                 self.captionLabel.text = NSLocalizedString(@"ZIP Code", nil);
                 self.textField.placeholder = NSLocalizedString(@"12345", nil);
                 self.textField.keyboardType = UIKeyboardTypeNumberPad;
+                self.textField.preservesContentsOnPaste = NO;
+                self.textField.selectionEnabled = NO;
                 if (!lastInList) {
                     self.textField.inputAccessoryView = self.inputAccessoryToolbar;
                 }
@@ -115,6 +119,8 @@
 				self.textField.placeholder = NSLocalizedString(@"(555) 123-1234", nil);
                 self.textField.keyboardType = UIKeyboardTypePhonePad;
                 self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
+                self.textField.preservesContentsOnPaste = NO;
+                self.textField.selectionEnabled = NO;
                 if (!lastInList) {
                     self.textField.inputAccessoryView = self.inputAccessoryToolbar;
                 }

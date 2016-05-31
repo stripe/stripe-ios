@@ -33,7 +33,24 @@
         NSString *sanitized = [self unformattedStringForString:newString];
         inputText = sanitized;
     }
+    
+    UITextPosition *beginning = textField.beginningOfDocument;
+    UITextPosition *start = [textField positionFromPosition:beginning offset:range.location];
+    UITextPosition *end = [textField positionFromPosition:start offset:range.length];
+    UITextRange *textRange = [textField textRangeFromPosition:start toPosition:end];
+    
+    // this will be the new cursor location after insert/paste/typing
+    NSInteger cursorOffset = [textField offsetFromPosition:beginning toPosition:start] + string.length;
+    
+    // now apply the text changes that were typed or pasted in to the text field
+    [textField replaceRange:textRange withText:string];
+    
     textField.text = inputText;
+    
+    UITextPosition *newCursorPosition = [textField positionFromPosition:textField.beginningOfDocument offset:cursorOffset];
+    UITextRange *newSelectedRange = [textField textRangeFromPosition:newCursorPosition toPosition:newCursorPosition];
+    [textField setSelectedTextRange:newSelectedRange];
+    
     return NO;
 }
 
@@ -241,7 +258,10 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     self.text = @"";
 }
 
-- (UITextPosition *)closestPositionToPoint:(__unused CGPoint)point {
+- (UITextPosition *)closestPositionToPoint:(CGPoint)point {
+    if (self.selectionEnabled) {
+        return [super closestPositionToPoint:point];
+    }
     return [self positionFromPosition:self.beginningOfDocument offset:self.text.length];
 }
 
@@ -250,7 +270,11 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 }
 
 - (void)paste:(__unused id)sender {
-    self.text = [UIPasteboard generalPasteboard].string;
+    if (self.preservesContentsOnPaste) {
+        [super paste:sender];
+    } else {
+        self.text = [UIPasteboard generalPasteboard].string;
+    }
 }
 
 - (void)setDelegate:(id <UITextFieldDelegate>)delegate {
