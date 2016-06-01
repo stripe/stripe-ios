@@ -183,11 +183,6 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
         attributedText;
     NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(modified) : modified;
     [super setAttributedText:transformed];
-    CATransition *transition = [CATransition animation];
-    transition.duration = 0.065;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionFade;
-    [self.layer addAnimation:transition forKey:nil];
     [self sendActionsForControlEvents:UIControlEventEditingChanged];
     if ([self.formDelegate respondsToSelector:@selector(formTextFieldTextDidChange:)]) {
         if (![transformed isEqualToAttributedString:oldValue]) {
