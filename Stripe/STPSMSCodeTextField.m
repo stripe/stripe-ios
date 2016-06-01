@@ -84,7 +84,10 @@
         }
         self.textFields = [textFields copy];
         self.separators = [separators copy];
+        
         UIView *coveringView = [UIView new];
+        UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(becomeFirstResponder)];
+        [coveringView addGestureRecognizer:gestureRecognizer];
         [self addSubview:coveringView];
         _coveringView = coveringView;
         
@@ -115,8 +118,17 @@
 }
 
 - (BOOL)becomeFirstResponder {
-    
-    return [[self.textFields firstObject] becomeFirstResponder];
+    UITextField *emptyField;
+    for (UITextField *textField in self.textFields) {
+        if (textField.text.length == 0) {
+            emptyField = textField;
+            break;
+        }
+    }
+    if (!emptyField) {
+        emptyField = self.textFields.lastObject;
+    }
+    return [emptyField becomeFirstResponder];
 }
 
 - (BOOL)resignFirstResponder {
