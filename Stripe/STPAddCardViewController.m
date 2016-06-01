@@ -32,6 +32,7 @@
 #import "UIViewController+Stripe_Alerts.h"
 #import "StripeError.h"
 #import "UIViewController+Stripe_Promises.h"
+#import "UIView+Stripe_FirstResponder.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPObscuredCardViewDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
@@ -230,6 +231,17 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         insets.bottom = bottomIntersection.size.height;
         weakself.tableView.contentInset = insets;
         weakself.tableView.scrollIndicatorInsets = insets;
+        if (bottomIntersection.size.height > 0) {
+            // the keyboard is visible
+            UIView *responder = [weakself.view stp_findFirstResponder];
+            CGRect responderFrame = [responder convertRect:responder.bounds toView:self.tableView];
+            CGPoint offset = self.tableView.contentOffset;
+            
+            CGFloat topOfScreenOffset = CGRectGetMinY(responderFrame);
+            CGFloat topOfKeyboardOffset = CGRectGetMinY(responderFrame) - CGRectGetMinY(keyboardFrame);
+            offset.y = (topOfScreenOffset + topOfKeyboardOffset) / 2;
+            self.tableView.contentOffset = offset;
+        }
     }];
     if (!self.checkoutAccount && !self.emailCell.contents) {
         [self.emailCell becomeFirstResponder];

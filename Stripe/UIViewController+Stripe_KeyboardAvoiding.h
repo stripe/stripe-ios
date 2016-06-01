@@ -12,7 +12,6 @@ typedef void(^STPKeyboardFrameBlock)(CGRect keyboardFrame);
 
 @interface UIViewController (Stripe_KeyboardAvoiding)
 
-- (void)stp_beginAvoidingKeyboardWithScrollView:(UIScrollView *)scrollView;
 - (void)stp_beginObservingKeyboardWithBlock:(STPKeyboardFrameBlock)block;
 
 @end
