@@ -159,7 +159,7 @@
     [super layoutSubviews];
     self.captionLabel.frame = CGRectMake(15, 0, 80, self.bounds.size.height);
     CGFloat textFieldX = CGRectGetMaxX(self.captionLabel.frame) + 10;
-    self.textField.frame = CGRectMake(textFieldX, 0, self.bounds.size.width - textFieldX, self.bounds.size.height);
+    self.textField.frame = CGRectMake(textFieldX, 1, self.bounds.size.width - textFieldX, self.bounds.size.height - 1);
     self.inputAccessoryToolbar.frame = CGRectMake(0, 0, self.bounds.size.width, 44);
 }
 
