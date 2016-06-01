@@ -637,11 +637,14 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     
     switch (fieldType) {
         case STPCardFieldTypeNumber:
-            return [[NSAttributedString alloc] initWithString:self.viewModel.cardNumber];
+            return [[NSAttributedString alloc] initWithString:self.viewModel.cardNumber
+                                                   attributes:self.numberField.defaultTextAttributes];
         case STPCardFieldTypeExpiration:
-            return [[NSAttributedString alloc] initWithString:self.viewModel.rawExpiration];
+            return [[NSAttributedString alloc] initWithString:self.viewModel.rawExpiration
+                                                   attributes:self.expirationField.defaultTextAttributes];
         case STPCardFieldTypeCVC:
-            return [[NSAttributedString alloc] initWithString:self.viewModel.cvc];
+            return [[NSAttributedString alloc] initWithString:self.viewModel.cvc
+                                                   attributes:self.cvcField.defaultTextAttributes];
     }
 }
 
