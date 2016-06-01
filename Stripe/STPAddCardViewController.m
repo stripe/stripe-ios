@@ -310,7 +310,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (void)updateDoneButton {
-    self.navigationItem.rightBarButtonItem.enabled = (self.textField.isValid || self.checkoutAccountCard) && self.addressViewModel.isValid;
+    self.navigationItem.rightBarButtonItem.enabled = (self.textField.isValid || self.checkoutAccountCard) && self.addressViewModel.isValid && [STPEmailAddressValidator stringIsValidEmailAddress:self.emailCell.contents];
 }
 
 - (void)smsCodeViewControllerDidCancel:(__unused STPSMSCodeViewController *)smsCodeViewController {
@@ -383,6 +383,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 - (void)addressFieldTableViewCellDidUpdateText:(STPAddressFieldTableViewCell *)cell {
     if (cell == self.emailCell) {
         [self lookupAndSendSMS:cell.contents];
+        [self updateDoneButton];
     }
 }
 
