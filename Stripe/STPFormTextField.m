@@ -18,6 +18,7 @@
 
 @interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate>
 @property(nonatomic, assign)STPFormTextFieldAutoFormattingBehavior autoformattingBehavior;
+@property(nonatomic, assign)BOOL selectionEnabled;
 @end
 
 @implementation STPTextFieldDelegateProxy
@@ -36,20 +37,22 @@
     
     UITextPosition *beginning = textField.beginningOfDocument;
     UITextPosition *start = [textField positionFromPosition:beginning offset:range.location];
-    UITextPosition *end = [textField positionFromPosition:start offset:range.length];
-    UITextRange *textRange = [textField textRangeFromPosition:start toPosition:end];
     
-    // this will be the new cursor location after insert/paste/typing
-    NSInteger cursorOffset = [textField offsetFromPosition:beginning toPosition:start] + string.length;
-    
-    // now apply the text changes that were typed or pasted in to the text field
-    [textField replaceRange:textRange withText:string];
+    if ([textField.text isEqualToString:inputText]) {
+        return NO;
+    }
     
     textField.text = inputText;
     
-    UITextPosition *newCursorPosition = [textField positionFromPosition:textField.beginningOfDocument offset:cursorOffset];
-    UITextRange *newSelectedRange = [textField textRangeFromPosition:newCursorPosition toPosition:newCursorPosition];
-    [textField setSelectedTextRange:newSelectedRange];
+    if (self.autoformattingBehavior == STPFormTextFieldAutoFormattingBehaviorNone && self.selectionEnabled) {
+        
+        // this will be the new cursor location after insert/paste/typing
+        NSInteger cursorOffset = [textField offsetFromPosition:beginning toPosition:start] + string.length;
+        
+        UITextPosition *newCursorPosition = [textField positionFromPosition:textField.beginningOfDocument offset:cursorOffset];
+        UITextRange *newSelectedRange = [textField textRangeFromPosition:newCursorPosition toPosition:newCursorPosition];
+        [textField setSelectedTextRange:newSelectedRange];
+    }
     
     return NO;
 }
@@ -92,6 +95,11 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
         return @{};
     }
     return [attributedString attributesAtIndex:0 longestEffectiveRange:nil inRange:NSMakeRange(0, attributedString.length)];
+}
+
+- (void)setSelectionEnabled:(BOOL)selectionEnabled {
+    _selectionEnabled = selectionEnabled;
+    self.delegateProxy.selectionEnabled = selectionEnabled;
 }
 
 - (void)setAutoFormattingBehavior:(STPFormTextFieldAutoFormattingBehavior)autoFormattingBehavior {
@@ -280,6 +288,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 - (void)setDelegate:(id <UITextFieldDelegate>)delegate {
     STPTextFieldDelegateProxy *delegateProxy = [[STPTextFieldDelegateProxy alloc] init];
     delegateProxy.autoformattingBehavior = self.autoFormattingBehavior;
+    delegateProxy.selectionEnabled = self.selectionEnabled;
     delegateProxy.delegate = delegate;
     self.delegateProxy = delegateProxy;
     [super setDelegate:delegateProxy];
