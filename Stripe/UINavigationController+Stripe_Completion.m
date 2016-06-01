@@ -27,4 +27,15 @@
     [CATransaction commit];
 }
 
+- (void)stp_popToViewController:(UIViewController *)viewController
+                       animated:(BOOL)animated
+                     completion:(STPVoidBlock)completion {
+    [CATransaction begin];
+    if (completion) {
+        [CATransaction setCompletionBlock:completion];
+    }
+    [self popToViewController:viewController animated:animated];
+    [CATransaction commit];
+}
+
 @end

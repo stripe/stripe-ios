@@ -21,6 +21,8 @@
 #import "STPPaymentMethodTuple.h"
 #import "STPPaymentContext+Private.h"
 #import "UIViewController+Stripe_Promises.h"
+#import "UIViewController+Stripe_Alerts.h"
+#import "UINavigationController+Stripe_Completion.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -147,17 +149,30 @@
 }
 
 - (void)paymentMethodsViewControllerDidFinish:(STPPaymentMethodsViewController *)paymentMethodsViewController {
-    [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController];
+    [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController completion:nil];
 }
 
-- (void)appropriatelyDismissPaymentMethodsViewController:(STPPaymentMethodsViewController *)viewController {
+- (void)paymentMethodsViewController:(STPPaymentMethodsViewController *)paymentMethodsViewController
+              didFailToLoadWithError:(__unused NSError *)error {
+    [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController completion:^{
+        STPAlertTuple *tuple = [STPAlertTuple tupleWithTitle:NSLocalizedString(@"OK", nil)
+                                                       style:STPAlertStyleDefault
+                                                      action:nil];
+        [self.hostViewController stp_showAlertWithTitle:NSLocalizedString(@"Error loading payment methods", nil)
+                                                message:NSLocalizedString(@"Please try again", nil)
+                                                 tuples:@[tuple]];
+    }];
+}
+
+- (void)appropriatelyDismissPaymentMethodsViewController:(STPPaymentMethodsViewController *)viewController
+                                              completion:(STPVoidBlock)completion {
     if ([viewController stp_isRootViewControllerOfNavigationController]) {
         // if we're the root of the navigation controller, we've been presented modally.
-        [viewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+        [viewController.presentingViewController dismissViewControllerAnimated:YES completion:completion];
     } else {
         // otherwise, we've been pushed onto the stack.
         UIViewController *previousViewController = [viewController stp_previousViewControllerInNavigation];
-        [viewController.navigationController popToViewController:previousViewController animated:YES];
+        [viewController.navigationController stp_popToViewController:previousViewController animated:YES completion:completion];
     }
 }
 

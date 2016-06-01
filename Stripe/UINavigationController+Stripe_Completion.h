@@ -18,4 +18,8 @@
 - (void)stp_popViewControllerAnimated:(BOOL)animated
                            completion:(STPVoidBlock)completion;
 
+- (void)stp_popToViewController:(UIViewController *)viewController
+                       animated:(BOOL)animated
+                     completion:(STPVoidBlock)completion;
+
 @end

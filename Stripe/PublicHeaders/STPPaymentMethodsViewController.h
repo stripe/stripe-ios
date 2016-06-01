@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol STPPaymentMethodsViewControllerDelegate <NSObject>
 
 /**
- *  This is called when the user either makes a selection, or adds a new card. Before this is done, the view controller will update the selected payment method on its payment context.
+ *  This is called when the user either makes a selection, or adds a new card. This will be triggered after the view controller loads with the user's current selection (if they have one) and then subsequently when they change their choice.
  *
  *  @param paymentMethodsViewController the view controller in question
  *  @param paymentMethod                the selected payment method
@@ -31,8 +31,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)paymentMethodsViewController:(STPPaymentMethodsViewController *)paymentMethodsViewController
               didSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
 
+
 /**
- *  This is called when the user taps "cancel". It's also called after the user directly selects or adds a payment method, so it will often be called immediately after calling paymentMethodsViewController:didSelectPaymentMethod:
+ *  This is called when the view controller encounters an error fetching the user's payment methods from its API adapter. You should dismiss the view controller when this is called.
+ *
+ *  @param paymentMethodsViewController the view controller in question
+ *  @param paymentMethod                the selected payment method
+ */
+- (void)paymentMethodsViewController:(STPPaymentMethodsViewController *)paymentMethodsViewController
+              didFailToLoadWithError:(NSError *)error;
+
+/**
+ *  This is called when the user taps "cancel". It's also called after the user directly selects or adds a payment method, so it will often be called immediately after calling paymentMethodsViewController:didSelectPaymentMethod:. You should dismiss the view controller when this is called.
  *
  *  @param paymentMethodsViewController the view controller that has finished
  */

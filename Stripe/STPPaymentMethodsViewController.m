@@ -323,13 +323,15 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
             weakself.paymentMethods = tuple.paymentMethods;
             weakself.selectedPaymentMethod = tuple.selectedPaymentMethod;
         }];
-        [[self.stp_didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
+        [[[self.stp_didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
             return loadingPromise;
         }] onSuccess:^(STPPaymentMethodTuple *tuple) {
             if (tuple.selectedPaymentMethod) {
                 [weakself.delegate paymentMethodsViewController:weakself
                                          didSelectPaymentMethod:tuple.selectedPaymentMethod];
             }
+        }] onFailure:^(NSError *error) {
+            [weakself.delegate paymentMethodsViewController:weakself didFailToLoadWithError:error];
         }];
     }
     return self;
