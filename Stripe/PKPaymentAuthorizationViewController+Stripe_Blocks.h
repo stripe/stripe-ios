@@ -13,11 +13,13 @@
 #define FAUXPAS_IGNORED_IN_FILE(...)
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
+typedef void(^STPApplePayTokenHandlerBlock)(STPToken *token, STPErrorBlock completion);
+
 @interface PKPaymentAuthorizationViewController (Stripe_Blocks)
 
 + (instancetype)stp_controllerWithPaymentRequest:(PKPaymentRequest *)paymentRequest
                                        apiClient:(STPAPIClient *)apiClient
-                                 onTokenCreation:(STPSourceHandlerBlock)onTokenCreation
+                                 onTokenCreation:(STPApplePayTokenHandlerBlock)onTokenCreation
                                         onFinish:(STPPaymentCompletionBlock)onFinish;
 
 

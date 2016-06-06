@@ -7,18 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#if TARGET_OS_IPHONE
-#define STPImageType UIImage
 #import <UIKit/UIKit.h>
-#else
-#import <AppKit/AppKit.h>
-#define STPImageType NSImage
-#endif
 
 @protocol STPSource <NSObject>
 
 @property(nonatomic, readonly, copy, nonnull)NSString *stripeID;
 @property(nonatomic, readonly, copy, nonnull)NSString *label;
-@property(nonatomic, readonly, nullable)STPImageType *image;
+@property(nonatomic, readonly, nullable)UIImage *image;
 
 @end

@@ -14,7 +14,6 @@
 #import "NSBundle+Stripe_AppName.h"
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "STPPaymentContext.h"
-#import "STPCardPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
 #import "STPPromise.h"
 #import "STPCardTuple.h"
@@ -59,7 +58,7 @@
                 [weakself.delegate paymentContext:weakself didFailToLoadWithError:error];
             }];
         }];
-        [self.apiAdapter retrieveCards:^(STPCard * _Nullable selectedCard, NSArray<STPCard *> * _Nullable cards, NSError * _Nullable error) {
+        [self.apiAdapter retrieveCustomerCards:^(STPCard * _Nullable selectedCard, NSArray<STPCard *> * _Nullable cards, NSError * _Nullable error) {
             if (!weakself) {
                 return;
             }
@@ -92,15 +91,15 @@
 - (void)setPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods {
     _paymentMethods = [paymentMethods sortedArrayUsingComparator:^NSComparisonResult(id<STPPaymentMethod> obj1, id<STPPaymentMethod> obj2) {
         Class applePayKlass = [STPApplePayPaymentMethod class];
-        Class cardKlass = [STPCardPaymentMethod class];
+        Class cardKlass = [STPCard class];
         if ([obj1 isKindOfClass:applePayKlass]) {
             return NSOrderedAscending;
         } else if ([obj2 isKindOfClass:applePayKlass]) {
             return NSOrderedDescending;
         }
         if ([obj1 isKindOfClass:cardKlass] && [obj2 isKindOfClass:cardKlass]) {
-            return [[((STPCardPaymentMethod *)obj1).card label]
-                    compare:[((STPCardPaymentMethod *)obj2).card label]];
+            return [[((STPCard *)obj1) label]
+                    compare:[((STPCard *)obj2) label]];
         }
         return NSOrderedSame;
     }];
@@ -180,7 +179,7 @@
     return self.selectedPaymentMethod != nil;
 }
 
-- (void)requestPaymentWithSourceHandler:(STPSourceHandlerBlock)sourceHandler
+- (void)requestPaymentWithResultHandler:(STPPaymentResultHandlerBlock)resultHandler
                              completion:(STPPaymentCompletionBlock)completion {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     __weak typeof(self) weakSelf = self;
@@ -200,9 +199,9 @@
                                              userInfo:userInfo];
             completion(STPPaymentStatusError, error);
         }
-        else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {
-            STPCardPaymentMethod *cardPaymentMethod = (STPCardPaymentMethod *)weakSelf.selectedPaymentMethod;
-            sourceHandler(STPPaymentMethodTypeCard, cardPaymentMethod.card, ^(NSError *error) {
+        else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPCard class]]) {
+            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(STPCard *)weakSelf.selectedPaymentMethod];
+            resultHandler(result, ^(NSError *error) {
                 if (error) {
                     completion(STPPaymentStatusError, error);
                 } else {
@@ -212,8 +211,24 @@
         }
         else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
+            STPApplePayTokenHandlerBlock applePayTokenHandler = ^(STPToken *token, STPErrorBlock tokenCompletion) {
+                [weakSelf.apiAdapter attachSourceToCustomer:token.card completion:^(NSError *tokenError) {
+                    if (tokenError) {
+                        tokenCompletion(tokenError);
+                    } else {
+                        STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token.card];
+                        resultHandler(result, ^(NSError *error) {
+                            if (error) {
+                                completion(STPPaymentStatusError, error);
+                            } else {
+                                completion(STPPaymentStatusSuccess, nil);
+                            }
+                        });
+                    }
+                }];
+            };
             PKPaymentAuthorizationViewController *paymentAuthViewController = [PKPaymentAuthorizationViewController stp_controllerWithPaymentRequest:paymentRequest apiClient:weakSelf.apiClient
-                                                                                                                                     onTokenCreation:sourceHandler
+                                                                                                                                     onTokenCreation:applePayTokenHandler
                                                                                                                                             onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
                                                                                                                                                 [weakSelf.hostViewController dismissViewControllerAnimated:YES completion:^{
                                                                                                                                                     completion(status, error);

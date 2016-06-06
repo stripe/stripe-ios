@@ -189,12 +189,8 @@
     return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
 }
 
-- (STPImageType *)image {
-#if TARGET_OS_IPHONE
+- (UIImage *)image {
     return [UIImage stp_brandImageForCardBrand:self.brand];
-#else
-    return nil;
-#endif
 }
 
 @end

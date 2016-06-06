@@ -102,7 +102,7 @@
     return self.tokenId;
 }
 
-- (STPImageType *)image {
+- (UIImage *)image {
     return [self.card image];
 }
 

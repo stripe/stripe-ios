@@ -55,7 +55,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         return error
     }
 
-    func completeCharge(source: STPSource, amount: Int, completion: STPErrorBlock) {
+    func completeCharge(result: STPPaymentResult, amount: Int, completion: STPErrorBlock) {
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
             completion(nil)
             return
@@ -63,7 +63,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         let path = "charge"
         let url = baseURL.URLByAppendingPathComponent(path)
         let params: [String: AnyObject] = [
-            "source": source.stripeID,
+            "source": result.source.stripeID,
             "amount": amount,
             "customer": customerID
         ]
@@ -80,7 +80,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         task.resume()
     }
     
-    @objc func retrieveCards(completion: STPCardCompletionBlock) {
+    @objc func retrieveCustomerCards(completion: STPCardCompletionBlock) {
         guard let key = Stripe.defaultPublishableKey() where !key.containsString("#") else {
             let error = NSError(domain: StripeDomain, code: 50, userInfo: [
                 NSLocalizedDescriptionKey: "Please set stripePublishableKey to your account's test publishable key in CheckoutViewController.swift"
@@ -109,8 +109,8 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         }
         task.resume()
     }
-
-    @objc func selectCard(card: STPCard, completion: STPErrorBlock) {
+    
+    @objc func selectDefaultCustomerSource(source: STPSource, completion: STPErrorBlock) {
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
             completion(nil)
             return
@@ -119,7 +119,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         let url = baseURL.URLByAppendingPathComponent(path)
         let params = [
             "customer": customerID,
-            "source": card.stripeID,
+            "source": source.stripeID,
         ]
         let request = NSURLRequest.request(url, method: .POST, params: params)
         let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in
@@ -134,7 +134,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         task.resume()
     }
     
-    @objc func addToken(token: STPToken, completion: STPErrorBlock) {
+    @objc func attachSourceToCustomer(source: STPSource, completion: STPErrorBlock) {
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
             completion(nil)
             return
@@ -143,7 +143,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         let url = baseURL.URLByAppendingPathComponent(path)
         let params = [
             "customer": customerID,
-            "source": token.stripeID,
+            "source": source.stripeID,
             ]
         let request = NSURLRequest.request(url, method: .POST, params: params)
         let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in

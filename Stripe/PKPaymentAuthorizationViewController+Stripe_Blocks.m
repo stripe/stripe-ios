@@ -15,7 +15,7 @@ static char kSTPBlockBasedApplePayDelegateAssociatedObjectKey;
 
 @interface STPBlockBasedApplePayDelegate : NSObject <PKPaymentAuthorizationViewControllerDelegate>
 @property (nonatomic) STPAPIClient *apiClient;
-@property (nonatomic, copy) STPSourceHandlerBlock onTokenCreation;
+@property (nonatomic, copy) STPApplePayTokenHandlerBlock onTokenCreation;
 @property (nonatomic, copy) STPPaymentCompletionBlock onFinish;
 @property (nonatomic) NSError *lastError;
 @property (nonatomic) BOOL didSucceed;
@@ -32,7 +32,7 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
             completion(PKPaymentAuthorizationStatusFailure);
             return;
         }
-        self.onTokenCreation(STPPaymentMethodTypeApplePay, token, ^(NSError *tokenCreationError){
+        self.onTokenCreation(token, ^(NSError *tokenCreationError){
             if (tokenCreationError) {
                 self.lastError = tokenCreationError;
                 completion(PKPaymentAuthorizationStatusFailure);
@@ -66,7 +66,7 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
 
 + (instancetype)stp_controllerWithPaymentRequest:(PKPaymentRequest *)paymentRequest
                                        apiClient:(STPAPIClient *)apiClient
-                             onTokenCreation:(STPSourceHandlerBlock)onTokenCreation
+                             onTokenCreation:(STPApplePayTokenHandlerBlock)onTokenCreation
                                     onFinish:(STPPaymentCompletionBlock)onFinish {
     STPBlockBasedApplePayDelegate *delegate = [STPBlockBasedApplePayDelegate new];
     delegate.apiClient = apiClient;

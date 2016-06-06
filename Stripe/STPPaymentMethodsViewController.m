@@ -15,7 +15,6 @@
 #import "UINavigationController+Stripe_Completion.h"
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "STPAddCardViewController.h"
-#import "STPCardPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
 #import "STPPaymentContext.h"
 #import "STPPaymentMethodTuple.h"
@@ -63,7 +62,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
     STPPromise<STPPaymentMethodTuple *> *promise = [STPPromise new];
-    [apiAdapter retrieveCards:^(STPCard * _Nullable selectedCard, NSArray<STPCard *> * _Nullable cards, NSError * _Nullable error) {
+    [apiAdapter retrieveCustomerCards:^(STPCard * _Nullable selectedCard, NSArray<STPCard *> * _Nullable cards, NSError * _Nullable error) {
         if (error) {
             [promise fail:error];
         } else {
@@ -189,8 +188,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 - (NSAttributedString *)buildAttributedStringForPaymentMethod:(id<STPPaymentMethod>)paymentMethod
                                                      selected:(BOOL)selected {
-    if ([paymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {
-        return [self buildAttributedStringForCard:((STPCardPaymentMethod *)paymentMethod).card selected:selected];
+    if ([paymentMethod isKindOfClass:[STPCard class]]) {
+        return [self buildAttributedStringForCard:(STPCard *)paymentMethod selected:selected];
     } else if ([paymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
         NSString *label = NSLocalizedString(@"Apple Pay", nil);
         UIColor *primaryColor = selected ? self.configuration.theme.accentColor : self.configuration.theme.primaryForegroundColor;
@@ -224,20 +223,19 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         __weak typeof(self) weakself = self;
         STPPaymentConfiguration *config = [self.configuration copy];
         NSArray *cardPaymentMethods = [self.paymentMethods filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id<STPPaymentMethod> paymentMethod, __unused NSDictionary<NSString *,id> * _Nullable bindings) {
-            return [paymentMethod isKindOfClass:[STPCardPaymentMethod class]];
+            return [paymentMethod isKindOfClass:[STPCard class]];
         }]];
         // Disable SMS autofill if we already have a card on file
         config.smsAutofillDisabled = (config.smsAutofillDisabled || cardPaymentMethods.count > 0);
         
         STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
             if (token && token.card) {
-                [self.apiAdapter addToken:token completion:^(NSError * _Nullable error) {
+                [self.apiAdapter attachSourceToCustomer:token.card completion:^(NSError * _Nullable error) {
                     if (error) {
                         tokenCompletion(error);
                     } else {
-                        STPCardPaymentMethod *paymentMethod = [[STPCardPaymentMethod alloc] initWithCard:token.card];
                         [weakself.tableView reloadData];
-                        [weakself finishWithPaymentMethod:paymentMethod];
+                        [weakself finishWithPaymentMethod:token.card];
                         tokenCompletion(nil);
                     }
                 }];
@@ -283,9 +281,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 }
 
 - (void)finishWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
-    if ([paymentMethod isKindOfClass:[STPCardPaymentMethod class]]) {
-        STPCardPaymentMethod *cardPaymentMethod = (STPCardPaymentMethod *)paymentMethod;
-        [self.apiAdapter selectCard:cardPaymentMethod.card completion:^(__unused NSError *error) {
+    if ([paymentMethod isKindOfClass:[STPCard class]]) {
+        [self.apiAdapter selectDefaultCustomerSource:(STPCard *)paymentMethod completion:^(__unused NSError *error) {
         }];
     }
     [self.delegate paymentMethodsViewController:self didSelectPaymentMethod:paymentMethod];

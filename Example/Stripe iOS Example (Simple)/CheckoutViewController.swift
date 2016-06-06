@@ -81,32 +81,31 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     func didTapBuy() {
         self.checkoutView.paymentInProgress = true
-        self.paymentContext.requestPaymentWithSourceHandler({ (paymentMethod, source, completion) in
-                self.createBackendCharge(source, completion: completion)
-            }, completion: { (status, error) in
-                self.checkoutView.paymentInProgress = false
-                let title: String
-                let message: String
-                switch status {
-                case .Error:
-                    title = "Error"
-                    message = error?.localizedDescription ?? ""
-                case .Success:
-                    title = "Success"
-                    message = "You bought a \(self.checkoutView.product)!"
-                case .UserCancellation:
-                    return
-                }
-                let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-                let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
-                alertController.addAction(action)
-                self.presentViewController(alertController, animated: true, completion: nil)
+        self.paymentContext.requestPaymentWithResultHandler({ result, completion in
+            self.createBackendCharge(result, completion: completion)
+        }, completion: { (status, error) in
+            self.checkoutView.paymentInProgress = false
+            let title: String
+            let message: String
+            switch status {
+            case .Error:
+                title = "Error"
+                message = error?.localizedDescription ?? ""
+            case .Success:
+                title = "Success"
+                message = "You bought a \(self.checkoutView.product)!"
+            case .UserCancellation:
+                return
             }
-        )
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+            let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            alertController.addAction(action)
+            self.presentViewController(alertController, animated: true, completion: nil)
+        })
     }
 
-    func createBackendCharge(source: STPSource, completion: STPErrorBlock) {
-        self.myAPIClient.completeCharge(source, amount: self.paymentContext.paymentAmount,
+    func createBackendCharge(result: STPPaymentResult, completion: STPErrorBlock) {
+        self.myAPIClient.completeCharge(result, amount: self.paymentContext.paymentAmount,
                                         completion: completion)
     }
 

@@ -12,6 +12,7 @@
 #import "STPBlocks.h"
 #import "STPAddress.h"
 #import "STPPaymentConfiguration.h"
+#import "STPPaymentResult.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,13 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol STPBackendAPIAdapter, STPPaymentMethod;
 
 /**
- *  This is invoked by an STPPaymentContext when it's done obtaining a valid `source` with which to complete a payment. Inside this block, you should make a call to your backend API to make a charge with that source, and invoke the sourceCompletion block when that is done.
+ *  This is invoked by an STPPaymentContext when it's made sure that your current Customer has a valid source attached to it. Inside this block, you should make a call to your backend API to make a charge with that Customer + source, and invoke the sourceCompletion block when that is done.
  *
- *  @param paymentMethod    the type of payment method that the user selected.
- *  @param source           the source that the user selected - this might be a card that is already attached to a customer (e.g. "card_abc123") or an Apple Pay token (e.g. "tok_def456") but either way you can pass this value directly into the Charge Create API: https://stripe.com/docs/api#create_charge
- *  @param sourceCompletion call this block when you're done creating a charge on your backend. If it succeeded, call sourceCompletion(nil). If it failed with an errorm call sourceCompletion(error).
+ *  @param result    Metadata associated with the payment
+ *  @param completion call this block when you're done creating a charge (or subscription, etc) on your backend. If it succeeded, call completion(nil). If it failed with an error, call completion(error).
  */
-typedef void (^STPSourceHandlerBlock)(STPPaymentMethodType paymentMethod, id<STPSource> __nonnull source, STPErrorBlock __nonnull sourceCompletion);
+typedef void (^STPPaymentResultHandlerBlock)(STPPaymentResult *result, STPErrorBlock __nonnull completion);
 
 /**
  *  This is invoked by an STPPaymentContext when a payment is completed.
@@ -127,10 +127,10 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 /**
  *  Attempts to finalize the payment. This may need to present some supplemental UI to the user, in which case it will be presented on the payment context's hostViewController. For instance, if they've selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. You should create a charge with the provided source in the `sourceHandler` block, and update your UI in the `completion` block. For an example of this, see CheckoutViewController.swift in our example app.
  *
- *  @param sourceHandler      This block will yield you the `source` the user has selected, along with the type of payment method they've chosen. You should go to your backend API with this `source` and make a charge to complete the payment, and once that's done call `sourceCompletion` with any error that occurred (or none, if the charge succeeded).
+ *  @param block      This block will be called when your Customer is guaranteed to have a valid source attached to them, and will yield you an `STPPaymentResult` that tells you more about the type of payment method they've chosen. You should go to your backend API with this payment result and make a charge to complete the payment, and once that's done call `sourceCompletion` with any error that occurred (or none, if the charge succeeded).
  *  @param completion         This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the `status` of the payment and behave appropriately. For example: if it's STPPaymentStatusSuccess, show the user a receipt. If it's STPPaymentStatusError, inform the user of the error. If it's STPPaymentStatusUserCanceled, do nothing.
  */
-- (void)requestPaymentWithSourceHandler:(STPSourceHandlerBlock)sourceHandler
+- (void)requestPaymentWithResultHandler:(STPPaymentResultHandlerBlock)resultHandler
                              completion:(STPPaymentCompletionBlock)completion;
 
 

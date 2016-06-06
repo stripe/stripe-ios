@@ -7,8 +7,8 @@
 //
 
 #import "STPPaymentMethodTuple.h"
-#import "STPCardPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
+#import "STPCard.h"
 
 @interface STPPaymentMethodTuple()
 
@@ -31,14 +31,14 @@
                    applePayEnabled:(BOOL)applePayEnabled {
     NSMutableArray *paymentMethods = [NSMutableArray array];
     for (STPCard *card in cardTuple.cards) {
-        [paymentMethods addObject:[[STPCardPaymentMethod alloc] initWithCard:card]];
+        [paymentMethods addObject:card];
     }
     if (applePayEnabled) {
         [paymentMethods addObject:[STPApplePayPaymentMethod new]];
     }
     id<STPPaymentMethod> paymentMethod;
     if (cardTuple.selectedCard) {
-        paymentMethod = [[STPCardPaymentMethod alloc] initWithCard:cardTuple.selectedCard];
+        paymentMethod = cardTuple.selectedCard;
     } else if (applePayEnabled) {
         paymentMethod = [STPApplePayPaymentMethod new];
     }

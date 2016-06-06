@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "STPAPIResponseDecodable.h"
-#import "STPSource.h"
 
 @class STPCard;
 @class STPBankAccount;
@@ -16,7 +15,7 @@
 /**
  *  A token returned from submitting payment details to the Stripe API. You should not have to instantiate one of these directly.
  */
-@interface STPToken : NSObject<STPAPIResponseDecodable, STPSource>
+@interface STPToken : NSObject<STPAPIResponseDecodable>
 
 /**
  *  You cannot directly instantiate an STPToken. You should only use one that has been returned from an STPAPIClient callback.

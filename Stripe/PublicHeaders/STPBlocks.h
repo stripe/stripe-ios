@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STPSource.h"
 
 @class STPToken;
 

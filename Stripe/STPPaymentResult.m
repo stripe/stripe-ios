@@ -10,23 +10,15 @@
 #import "STPAddress.h"
 
 @interface STPPaymentResult()
-
-@property(nonatomic, nonnull) id<STPSource> source;
-@property(nonatomic, nullable) NSString *customer;
-@property(nonatomic, nullable) STPAddress *shippingAddress;
-
 @end
 
 @implementation STPPaymentResult
 
-- (nonnull instancetype)initWithSource:(nonnull id<STPSource>)source customer:(nullable NSString *)customer shippingAddress:(nullable STPAddress *)shippingAddress {
+- (nonnull instancetype)initWithSource:(id<STPSource>)source {
     self = [super init];
     if (self) {
         _source = source;
-        _customer = customer;
-        _shippingAddress = shippingAddress;
     }
     return self;
 }
-
 @end
