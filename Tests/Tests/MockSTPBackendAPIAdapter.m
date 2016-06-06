@@ -19,7 +19,7 @@
     return self;
 }
 
-- (void)retrieveCards:(STPCardCompletionBlock)completion {
+- (void)retrieveCustomerCards:(STPCardCompletionBlock)completion {
     if (self.retrieveCardsError) {
         completion(nil, nil, self.retrieveCardsError);
     } else {
@@ -27,20 +27,20 @@
     }
 }
 
-- (void)addToken:(STPToken *)token completion:(STPErrorBlock)completion {
+- (void)attachSourceToCustomer:(id<STPSource>)source completion:(STPErrorBlock)completion {
     if (self.addTokenError) {
         completion(self.addTokenError);
     } else {
-        self.cards = [self.cards arrayByAddingObject:token.card];
+        self.cards = [self.cards arrayByAddingObject:(STPCard *)source];
         completion(nil);
     }
 }
 
-- (void)selectCard:(STPCard *)card completion:(STPErrorBlock)completion {
+- (void)selectDefaultCustomerSource:(id<STPSource>)source completion:(STPErrorBlock)completion {
     if (self.selectCardError) {
         completion(self.selectCardError);
     } else {
-        self.selectedCard = card;
+        self.selectedCard = (STPCard *)source;
         completion(nil);
     }
 }

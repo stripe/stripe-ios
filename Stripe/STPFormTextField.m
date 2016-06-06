@@ -272,7 +272,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     return [super canPerformAction:action withSender:sender] && action == @selector(paste:);
 }
 
-- (void)paste:(__unused id)sender {
+- (void)paste:(id)sender {
     if (self.preservesContentsOnPaste) {
         [super paste:sender];
     } else {
