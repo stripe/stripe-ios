@@ -116,9 +116,14 @@
                 break;
             case STPAddressFieldTypePhone:
                 self.captionLabel.text = NSLocalizedString(@"Phone", nil);
-				self.textField.placeholder = NSLocalizedString(@"(555) 123-1234", nil);
                 self.textField.keyboardType = UIKeyboardTypePhonePad;
-                self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
+                if ([[[NSLocale autoupdatingCurrentLocale] localeIdentifier] isEqualToString:@"en_US"]) {
+                    self.textField.placeholder = NSLocalizedString(@"(555) 123-1234", nil);
+                    self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
+                } else {
+                    self.textField.placeholder = nil;
+                    self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
+                }
                 self.textField.preservesContentsOnPaste = NO;
                 self.textField.selectionEnabled = NO;
                 if (!lastInList) {
