@@ -250,6 +250,28 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+//- (BOOL)tableView:(__unused UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if (indexPath.section == STPPaymentMethodCardListSection) {
+//        id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
+//        return [paymentMethod isKindOfClass:[STPCardPaymentMethod class]];
+//    }
+//    return NO;
+//}
+
+//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+//    if (editingStyle == UITableViewCellEditingStyleDelete) {
+//        id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
+//        BOOL wasSelected = [paymentMethod isEqual:self.selectedPaymentMethod];
+//        [self.paymentContext deletePaymentMethod:paymentMethod];
+//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+//        NSInteger index = [self.paymentContext.paymentMethods indexOfObject:self.paymentContext.selectedPaymentMethod];
+//        if (wasSelected && index != NSNotFound) {
+//            NSIndexPath *selectedIndexPath = [NSIndexPath indexPathForRow:index inSection:STPPaymentMethodCardListSection];
+//            [self.tableView reloadRowsAtIndexPaths:@[selectedIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+//        }
+//    }
+//}
+
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     BOOL topRow = (indexPath.row == 0);
     BOOL bottomRow = ([self tableView:tableView numberOfRowsInSection:indexPath.section] - 1 == indexPath.row);

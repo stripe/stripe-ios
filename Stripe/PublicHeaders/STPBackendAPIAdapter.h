@@ -56,6 +56,14 @@ typedef void (^STPAddressCompletionBlock)(STPAddress * __nullable address, NSErr
  */
 - (void)selectDefaultCustomerSource:(id<STPSource>)source completion:(STPErrorBlock)completion;
 
+/**
+ *  Delete a card from a customer's list of sources. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Delete Card method as described at https://stripe.com/docs/api#delete_card on your customer (for an example Ruby implementation of this API, see https://github.com/stripe/example-ios-backend/blob/master/web.rb#L99 ). If this API call succeeds, call completion(nil). Otherwise, call completion(error) with the error that occurred.
+ *
+ *  @param card       The card to delete from the customer
+ *  @param completion call this callback when you're done deleting the card from the customer on your backend. For example, completion(nil) (if your call succeeds) or completion(error) if an error is returned.
+ */
+- (void)deleteCard:(STPCard *)card completion:(STPErrorBlock)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

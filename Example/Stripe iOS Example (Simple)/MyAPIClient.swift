@@ -157,5 +157,25 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         }
         task.resume()
     }
+    
+    func deleteCard(card: STPCard, completion: STPErrorBlock) {
+        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
+            completion(nil)
+            return
+        }
+        let path = "/customers/\(customerID)/cards/\(card)"
+        let url = baseURL.URLByAppendingPathComponent(path)
+        let request = NSURLRequest.request(url, method: .DELETE, params: [:])
+        let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in
+            dispatch_async(dispatch_get_main_queue()) {
+                if let error = self.decodeResponse(urlResponse, error: error) {
+                    completion(error)
+                    return
+                }
+                completion(nil)
+            }
+        }
+        task.resume()
+    }
 
 }
