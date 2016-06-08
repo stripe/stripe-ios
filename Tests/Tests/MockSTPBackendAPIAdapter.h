@@ -19,7 +19,6 @@
 @property(nonatomic, nullable)NSError *retrieveCardsError;
 @property(nonatomic, nullable)NSError *addTokenError;
 @property(nonatomic, nullable)NSError *selectCardError;
-@property(nonatomic, nullable)NSError *deleteCardError;
 @property(nonatomic, nullable)NSError *updateCustomerShippingAddressError;
 
 @property (nonatomic, copy, nullable) void(^onRetrieveCustomerShippingAddress)();
