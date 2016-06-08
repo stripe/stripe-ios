@@ -22,8 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  This is invoked by an STPPaymentContext when it's made sure that your current Customer has a valid source attached to it. Inside this block, you should make a call to your backend API to make a charge with that Customer + source, and invoke the resultCompletion block when that is done.
  *
- *  @param result    Metadata associated with the payment
- *  @param completion call this block when you're done creating a charge (or subscription, etc) on your backend. If it succeeded, call completion(nil). If it failed with an error, call completion(error).
+ *  @param result    Information associated with the payment that you can pass to your server. @see STPPaymentResult.h
+ *  @param resultCompletion Call this block when you're done creating a charge (or subscription, etc) on your backend. If it succeeded, call resultCompletion(nil). If it failed with an error, call resultCompletion(error).
  */
 typedef void (^STPPaymentResultHandlerBlock)(STPPaymentResult *result, STPErrorBlock __nonnull resultCompletion);
 
@@ -32,7 +32,7 @@ typedef void (^STPPaymentResultHandlerBlock)(STPPaymentResult *result, STPErrorB
  *
  *  @param status the status of the payment - STPPaymentStatusSuccess if it succeeded, STPPaymentStatusError if it failed with an error (in which case the `error` parameter will be non-nil), STPPaymentStatusUserCanceled if the user canceled the payment.
  *  @param error  an error that occurred when finishing the payment, if any.
- *  @see the documentation for requestPaymentFromViewController in STPPaymentContext
+ *  @see the documentation for requestPaymentWithResultHandler:completion: in STPPaymentContext
  */
 typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __nullable error);
 
@@ -66,17 +66,38 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 @end
 
 /**
- An STPPaymentContext keeps track of all of the state around a payment. It will manage fetching a user's saved payment methods, tracking any information they select, and prompting them for required additional information before completing their purchase. It can be used to power your application's "payment confirmation" page with just a few lines of code. It requires an "API Adapter" to communicate with your backend API to retrieve and modify a customer's payment methods - see STPBackendAPIAdapter.h for how to implement this. You can also see CheckoutViewController.swift in our example app to see STPPaymentContext in action.
+ An STPPaymentContext keeps track of all of the state around a payment. It will manage fetching a user's saved payment methods, tracking any information they select, and prompting them for required additional information before completing their purchase. It can be used to power your application's "payment confirmation" page with just a few lines of code.
+ 
+ STPPaymentContext also provides a unified interface to multiple payment methods - for example, you can write a single integration to accept both credit card payments and Apple Pay.
+ 
+ STPPaymentContext requires an "API Adapter" to communicate with your backend API to retrieve and modify a customer's payment methods - see STPBackendAPIAdapter.h for how to implement this. You can also see CheckoutViewController.swift in our example app to see STPPaymentContext in action.
  */
 @interface STPPaymentContext : NSObject
 
+/**
+ *  Initializes a new Payment Context with the provided API adapter and configuration. After this class is initialized, you should also make sure to set its delegate and hostViewController properties.
+ *
+ *  @param apiAdapter    The API adapter the payment context will use to fetch and modify its contents. You need to make a class conforming to this protocol that talks to your server. @see STPBackendAPIAdapter.h
+ *  @param configuration The configuration for the payment context to use internally. @see STPPaymentConfiguration.h
+ *
+ *  @return the newly-instantiated payment context
+ */
 - (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                      configuration:(STPPaymentConfiguration *)configuration;
 
+/**
+ *  The API adapter the payment context will use to fetch and modify its contents. You need to make a class conforming to this protocol that talks to your server. @see STPBackendAPIAdapter.h
+ */
 @property(nonatomic, readonly)id<STPBackendAPIAdapter> apiAdapter;
 
+/**
+ *  The configuration for the payment context to use internally. @see STPPaymentConfiguration.h
+ */
 @property(nonatomic, readonly)STPPaymentConfiguration *configuration;
 
+/**
+ *  The view controller that any additional UI will be presented on. If you have a "checkout view controller" in your app, that should be used as the host view controller.
+ */
 @property(nonatomic, weak)UIViewController *hostViewController;
 
 /**
@@ -127,7 +148,7 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 /**
  *  Attempts to finalize the payment. This may need to present some supplemental UI to the user, in which case it will be presented on the payment context's hostViewController. For instance, if they've selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. You should create a charge with the provided source in the `resultHandler` block, and update your UI in the `completion` block. For an example of this, see CheckoutViewController.swift in our example app.
  *
- *  @param block      This block will be called when your Customer is guaranteed to have a valid source attached to them, and will yield you an `STPPaymentResult` that tells you more about the type of payment method they've chosen. You should go to your backend API with this payment result and make a charge to complete the payment, and once that's done call `resultCompletion` block with any error that occurred (or none, if the charge succeeded).
+ *  @param block      This block will yield you an `STPPaymentResult` that tells you more about the type of payment method your user has chosen. You should go to your backend API with this payment result and make a charge to complete the payment, passing paymentResult.source.stripeID as the `source` parameter to the create charge method and your customer's ID as the `customer` parameter (see stripe.com/docs/api#charge_create for more info). Once that's done call `resultCompletion` block with any error that occurred (or none, if the charge succeeded).
  *  @param completion         This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the `status` of the payment and behave appropriately. For example: if it's STPPaymentStatusSuccess, show the user a receipt. If it's STPPaymentStatusError, inform the user of the error. If it's STPPaymentStatusUserCanceled, do nothing.
  */
 - (void)requestPaymentWithResultHandler:(STPPaymentResultHandlerBlock)resultHandler

@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol STPPaymentMethodsViewControllerDelegate <NSObject>
 
 /**
- *  This is called when the user either makes a selection, or adds a new card. This will be triggered after the view controller loads with the user's current selection (if they have one) and then subsequently when they change their choice.
+ *  This is called when the user either makes a selection, or adds a new card. This will be triggered after the view controller loads with the user's current selection (if they have one) and then subsequently when they change their choice. You should use this callback to update any necessary UI in your app that displays the user's currently selected payment method. You should *not* dismiss the view controller at this point, instead do this in paymentMethodsViewControllerDidFinish:. STPPaymentMethodsViewController will also call the necessary methods on your API adapter, so you don't need to call them directly during this method.
  *
  *  @param paymentMethodsViewController the view controller in question
  *  @param paymentMethod                the selected payment method
@@ -66,6 +66,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext;
 
+/**
+ *  Initializes a new payment methods view controller without using a payment context.
+ *
+ *  @param configuration The configuration to use to determine what types of payment method to offer your user. @see STPPaymentConfiguration.h
+ *  @param apiAdapter    The API adapter to use to retrieve a customer's stored payment methods and save new ones. @see STPBackendAPIAdapter.h
+ *  @param delegate      A delegate that will be notified when the payment methods view controller's selection changes.
+ *
+ */
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
