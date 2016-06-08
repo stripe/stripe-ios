@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef void (^STPCardCompletionBlock)(STPCard * __nullable selectedCard, NSArray<STPCard *>* __nullable cards, NSError * __nullable error);
 
+typedef void (^STPAddressCompletionBlock)(STPAddress * __nullable address, NSError * __nullable error);
+
 /**
  *  You should make your application's API client conform to this interface in order to use it with an STPPaymentContext. It provides a "bridge" from the prebuilt UI we expose (such as STPPaymentMethodsViewController) to your backend to fetch the information it needs to power those views. To see examples of implementing these APIs, see MyAPIClient.swift in our example project and https://github.com/stripe/example-ios-backend .
  */
