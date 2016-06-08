@@ -20,12 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol STPBackendAPIAdapter, STPPaymentMethod;
 
 /**
- *  This is invoked by an STPPaymentContext when it's made sure that your current Customer has a valid source attached to it. Inside this block, you should make a call to your backend API to make a charge with that Customer + source, and invoke the sourceCompletion block when that is done.
+ *  This is invoked by an STPPaymentContext when it's made sure that your current Customer has a valid source attached to it. Inside this block, you should make a call to your backend API to make a charge with that Customer + source, and invoke the resultCompletion block when that is done.
  *
  *  @param result    Metadata associated with the payment
  *  @param completion call this block when you're done creating a charge (or subscription, etc) on your backend. If it succeeded, call completion(nil). If it failed with an error, call completion(error).
  */
-typedef void (^STPPaymentResultHandlerBlock)(STPPaymentResult *result, STPErrorBlock __nonnull completion);
+typedef void (^STPPaymentResultHandlerBlock)(STPPaymentResult *result, STPErrorBlock __nonnull resultCompletion);
 
 /**
  *  This is invoked by an STPPaymentContext when a payment is completed.
@@ -125,9 +125,9 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 - (BOOL)isReadyForPayment;
 
 /**
- *  Attempts to finalize the payment. This may need to present some supplemental UI to the user, in which case it will be presented on the payment context's hostViewController. For instance, if they've selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. You should create a charge with the provided source in the `sourceHandler` block, and update your UI in the `completion` block. For an example of this, see CheckoutViewController.swift in our example app.
+ *  Attempts to finalize the payment. This may need to present some supplemental UI to the user, in which case it will be presented on the payment context's hostViewController. For instance, if they've selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. You should create a charge with the provided source in the `resultHandler` block, and update your UI in the `completion` block. For an example of this, see CheckoutViewController.swift in our example app.
  *
- *  @param block      This block will be called when your Customer is guaranteed to have a valid source attached to them, and will yield you an `STPPaymentResult` that tells you more about the type of payment method they've chosen. You should go to your backend API with this payment result and make a charge to complete the payment, and once that's done call `sourceCompletion` with any error that occurred (or none, if the charge succeeded).
+ *  @param block      This block will be called when your Customer is guaranteed to have a valid source attached to them, and will yield you an `STPPaymentResult` that tells you more about the type of payment method they've chosen. You should go to your backend API with this payment result and make a charge to complete the payment, and once that's done call `resultCompletion` block with any error that occurred (or none, if the charge succeeded).
  *  @param completion         This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the `status` of the payment and behave appropriately. For example: if it's STPPaymentStatusSuccess, show the user a receipt. If it's STPPaymentStatusError, inform the user of the error. If it's STPPaymentStatusUserCanceled, do nothing.
  */
 - (void)requestPaymentWithResultHandler:(STPPaymentResultHandlerBlock)resultHandler

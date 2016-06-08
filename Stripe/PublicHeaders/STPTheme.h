@@ -12,8 +12,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPTheme : NSObject<NSCopying>
 
+/**
+ *  Set the default theme for all Stripe UI to use. You should call this as early in your application's lifecycle as possible, ideally in your app delegate.
+ *
+ *  @param theme the theme to use as a default for newly-instantiated Stripe view controllers.
+ */
 + (void)setDefaultTheme:(STPTheme *)theme;
 
+/**
+ *  The default theme used by all Stripe UI.
+ */
 + (STPTheme *)defaultTheme;
 
 /**
@@ -39,10 +47,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, readonly)UIColor *secondaryBackgroundColor;
 
-// i.e. section border color
+/**
+ *  This color is automatically derived by reducing the alpha of the primaryBackground color and is used as a section border color in table view cells.
+ */
 @property(nonatomic, readonly)UIColor *tertiaryBackgroundColor;
 
-// i.e. separator color
+/**
+ *  This color is automatically derived by reducing the brightness of the primaryBackground color and is used as a separator color in table view cells.
+ */
 @property(nonatomic, readonly)UIColor *quaternaryBackgroundColor;
 
 /**
@@ -56,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly)UIColor *secondaryForegroundColor;
 
 /**
- *  This color is automatically derived from the secondaryColor with a lower alpha component, used for disabled text.
+ *  This color is automatically derived from the secondaryForegroundColor with a lower alpha component, used for disabled text.
  */
 @property(nonatomic, readonly)UIColor *tertiaryForegroundColor;
 

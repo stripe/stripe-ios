@@ -41,15 +41,15 @@ typedef void (^STPAddressCompletionBlock)(STPAddress * __nullable address, NSErr
 - (void)retrieveCustomerCards:(STPCardCompletionBlock)completion;
 
 /**
- *  Adds a card token to a customer. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Create Card method on that customer as described at https://stripe.com/docs/api#create_card (for an example Ruby implementation of this API, see https://github.com/stripe/example-ios-backend/blob/master/web.rb#L60 ). If this API call succeeds, call completion(nil). Otherwise, call completion(error) with the error that occurred.
+ *  Adds a payment source to a customer. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Update Customer method on that customer as described at https://stripe.com/docs/api#update_customer (for an example Ruby implementation of this API, see https://github.com/stripe/example-ios-backend/blob/master/web.rb#L60 ). If this API call succeeds, call completion(nil). Otherwise, call completion(error) with the error that occurred.
  *
- *  @param token      the Stripe token representing the user's newly-added credit card.
+ *  @param source     a valid payment source, such as a card token.
  *  @param completion call this callback when you're done adding the token to the customer on your backend. For example, completion(nil) (if your call succeeds) or completion(error) if an error is returned.
  */
 - (void)attachSourceToCustomer:(id<STPSource>)source completion:(STPErrorBlock)completion;
 
 /**
- *  Change a customer's default_source to be the provided card. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Customer Update method as described at https://stripe.com/docs/api#update_customer , specifying default_source to be the provided card (for an example Ruby implementation of this API, see https://github.com/stripe/example-ios-backend/blob/master/web.rb#L82 ). If this API call succeeds, call completion(nil). Otherwise, call completion(error) with the error that occurred.
+ *  Change a customer's default_source to be the provided card. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Customer Update method as described at https://stripe.com/docs/api#update_customer , specifying default_source to be the value of source.stripeID (for an example Ruby implementation of this API, see https://github.com/stripe/example-ios-backend/blob/master/web.rb#L82 ). If this API call succeeds, call completion(nil). Otherwise, call completion(error) with the error that occurred.
  *
  *  @param card       The newly-selected default source for the user.
  *  @param completion call this callback when you're done selecting the new default source for the customer on your backend. For example, completion(nil) (if your call succeeds) or completion(error) if an error is returned.

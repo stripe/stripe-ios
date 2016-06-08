@@ -9,8 +9,16 @@
 #import <UIKit/UIKit.h>
 @class STPTheme;
 
+/**
+ *  This allows quickly setting the appearance of a UINavigationBar to match your application. This is useful if you're presenting an STPAddCardViewController or STPPaymentMethodsViewController inside a UINavigationController.
+ */
 @interface UINavigationBar (Stripe_Theme)
 
+/**
+ *  Sets the navigation bar's appearance to the desired theme. This will affect the bar's tintColor and barTintColor properties, as well as the color of the single-pixel line at the bottom of the navbar.
+ *
+ *  @param theme the theme to use to style the navigation bar. @see STPTheme.h
+ */
 - (void)stp_setTheme:(STPTheme *)theme;
 
 @end

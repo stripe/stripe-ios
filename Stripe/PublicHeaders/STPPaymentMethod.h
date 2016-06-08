@@ -27,7 +27,7 @@ typedef NS_OPTIONS(NSUInteger, STPPaymentMethodType) {
 };
 
 /**
- *  This protocol represents a payment method that a user can select and use to pay. Currently the only classes that conform to it are STPCardPaymentMethod (which represents that the user wants to pay with a specific card) and STPApplePayPaymentMethod (which represents that the user wants to pay with Apple Pay).
+ *  This protocol represents a payment method that a user can select and use to pay. Currently the only classes that conform to it are STPCard (which represents that the user wants to pay with a specific card) and STPApplePayPaymentMethod (which represents that the user wants to pay with Apple Pay).
  */
 @protocol STPPaymentMethod <NSObject>
 
