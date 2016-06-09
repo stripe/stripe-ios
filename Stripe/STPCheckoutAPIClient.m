@@ -223,7 +223,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
         STPPromise<STPCheckoutAccount*> *accountPromise = [STPPromise<STPCheckoutAccount *> new];
         NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:@"account"];
         NSString *internationalizedPhone = [STPCardValidator sanitizedNumericStringForString:phone];
-        if (![internationalizedPhone hasPrefix:@"1"]) {
+        if  ([[[NSLocale autoupdatingCurrentLocale] localeIdentifier] isEqualToString:@"en_US"] && ![internationalizedPhone hasPrefix:@"1"]) {
             internationalizedPhone = [@"1" stringByAppendingString:internationalizedPhone];
         }
         if (![internationalizedPhone hasPrefix:@"+"]) {
