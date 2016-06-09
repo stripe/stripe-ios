@@ -27,12 +27,11 @@
 #import "UIBarButtonItem+Stripe.h"
 #import "UIViewController+Stripe_Promises.h"
 #import "STPPaymentConfiguration+Private.h"
+#import "STPPaymentMethodsInternalViewController.h"
+#import "STPAddCardViewController.h"
+#import "UIViewController+Stripe_NavigationItemProxy.h"
 
-static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
-static NSInteger STPPaymentMethodCardListSection = 0;
-static NSInteger STPPaymentMethodAddCardSection = 1;
-
-@interface STPPaymentMethodsViewController()<UITableViewDataSource, UITableViewDelegate>
+@interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
@@ -41,10 +40,9 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic, weak)STPPaymentActivityIndicatorView *activityIndicator;
+@property(nonatomic, weak)UIViewController *internalViewController;
 @property(nonatomic)UIBarButtonItem *backItem;
 @property(nonatomic)UIBarButtonItem *cancelItem;
-@property(nonatomic, weak)UITableView *tableView;
-@property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)BOOL loading;
 
 @end
@@ -89,29 +87,11 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.automaticallyAdjustsScrollViewInsets = NO;
     
     STPPaymentActivityIndicatorView *activityIndicator = [STPPaymentActivityIndicatorView new];
     activityIndicator.animating = YES;
     [self.view addSubview:activityIndicator];
     self.activityIndicator = activityIndicator;
-    
-    UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    tableView.allowsMultipleSelectionDuringEditing = NO;
-    tableView.alpha = 0;
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
-    tableView.sectionHeaderHeight = 30;
-    tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
-    self.tableView = tableView;
-    [self.view addSubview:tableView];
-    
-    UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[UIImage stp_largeCardFrontImage]];
-    cardImageView.contentMode = UIViewContentModeCenter;
-    cardImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, cardImageView.bounds.size.height + (57 * 2));
-    self.cardImageView = cardImageView;
-    self.tableView.tableHeaderView = cardImageView;
     
     self.navigationItem.title = NSLocalizedString(@"Choose Payment", nil);
     self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
@@ -119,14 +99,29 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     __weak typeof(self) weakself = self;
     [self.loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
-        weakself.cardImageView.image = [tuple.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]] ? [UIImage stp_largeCardApplePayImage] : [UIImage stp_largeCardFrontImage];
+        UIViewController *internal;
+        if (tuple.paymentMethods.count > 0) {
+            internal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:weakself.configuration paymentMethodTuple:tuple delegate:weakself];
+        } else {
+            internal = [[STPAddCardViewController alloc] initWithConfiguration:weakself.configuration completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
+                [weakself internalViewControllerDidCreateToken:token completion:tokenCompletion];
+            }];
+        }
+        internal.stp_navigationItemProxy = self.navigationItem;
+        [weakself addChildViewController:internal];
+        internal.view.alpha = 0;
+        [weakself.view insertSubview:internal.view belowSubview:weakself.activityIndicator];
+        [weakself.view addSubview:internal.view];
+        internal.view.frame = weakself.view.bounds;
+        [internal didMoveToParentViewController:weakself];
         [UIView animateWithDuration:0.2 animations:^{
-            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 1)];
-            [weakself.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-            weakself.tableView.alpha = 1;
+            weakself.activityIndicator.alpha = 0;
+            internal.view.alpha = 1;
+            self.navigationItem.title = internal.stp_navigationItemProxy.title;
         } completion:^(__unused BOOL finished) {
             weakself.activityIndicator.animating = NO;
         }];
+        [self.navigationItem setRightBarButtonItem:internal.stp_navigationItemProxy.rightBarButtonItem animated:YES];
     }];
     self.loading = YES;
     [self updateAppearance];
@@ -134,140 +129,24 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.tableView reloadData];
     self.navigationItem.leftBarButtonItem = [self stp_isRootViewControllerOfNavigationController] ? self.cancelItem : self.backItem;
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.tableView.frame = self.view.bounds;
     self.activityIndicator.center = self.view.center;
-    if (self.navigationController.navigationBar.translucent) {
-        CGFloat insetTop = CGRectGetMaxY(self.navigationController.navigationBar.frame);
-        self.tableView.contentInset = UIEdgeInsetsMake(insetTop, 0, 0, 0);
-        self.tableView.scrollIndicatorInsets = self.tableView.contentInset;
-    } else {
-        self.tableView.contentInset = UIEdgeInsetsZero;
-        self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
-    }
+    self.internalViewController.view.frame = self.view.bounds;
 }
 
 - (void)updateAppearance {
     [self.navigationItem.backBarButtonItem stp_setTheme:self.configuration.theme];
     [self.backItem stp_setTheme:self.configuration.theme];
     [self.cancelItem stp_setTheme:self.configuration.theme];
-    self.tableView.backgroundColor = self.configuration.theme.primaryBackgroundColor;
     self.view.backgroundColor = self.configuration.theme.primaryBackgroundColor;
-    self.tableView.tintColor = self.configuration.theme.accentColor;
-    self.cardImageView.tintColor = self.configuration.theme.accentColor;
-    self.tableView.separatorColor = self.configuration.theme.quaternaryBackgroundColor;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
-    return 2;
 }
 
 - (void)cancel:(__unused id)sender {
     [self.delegate paymentMethodsViewControllerDidFinish:self];
-}
-
-- (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == STPPaymentMethodCardListSection) {
-        return self.paymentMethods.count;
-    } else if (section == STPPaymentMethodAddCardSection) {
-        return 1;
-    }
-    return 0;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier forIndexPath:indexPath];
-    cell.textLabel.font = self.configuration.theme.font;
-    cell.backgroundColor = self.configuration.theme.secondaryBackgroundColor;
-    if (indexPath.section == STPPaymentMethodCardListSection) {
-        id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
-        cell.imageView.image = paymentMethod.image;
-        BOOL selected = [paymentMethod isEqual:self.selectedPaymentMethod];
-        cell.textLabel.attributedText = [self buildAttributedStringForPaymentMethod:paymentMethod selected:selected];
-        cell.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-    } else if (indexPath.section == STPPaymentMethodAddCardSection) {
-        cell.textLabel.textColor = [self.configuration.theme accentColor];
-        cell.imageView.image = [UIImage stp_addIcon];
-        cell.textLabel.text = NSLocalizedString(@"Add New Card...", nil);
-    }
-    return cell;
-}
-
-- (NSAttributedString *)buildAttributedStringForPaymentMethod:(id<STPPaymentMethod>)paymentMethod
-                                                     selected:(BOOL)selected {
-    if ([paymentMethod isKindOfClass:[STPCard class]]) {
-        return [self buildAttributedStringForCard:(STPCard *)paymentMethod selected:selected];
-    } else if ([paymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
-        NSString *label = NSLocalizedString(@"Apple Pay", nil);
-        UIColor *primaryColor = selected ? self.configuration.theme.accentColor : self.configuration.theme.primaryForegroundColor;
-        return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
-    }
-    return nil;
-}
-
-- (NSAttributedString *)buildAttributedStringForCard:(STPCard *)card selected:(BOOL)selected {
-    NSString *template = NSLocalizedString(@"%@ Ending In %@", @"{card brand} ending in {last4}");
-    NSString *brandString = [NSString stp_stringWithCardBrand:card.brand];
-    NSString *label = [NSString stringWithFormat:template, brandString, card.last4];
-    UIColor *primaryColor = selected ? self.configuration.theme.accentColor : self.configuration.theme.primaryForegroundColor;
-    UIColor *secondaryColor = [primaryColor colorWithAlphaComponent:0.6f];
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:label attributes:@{
-                                                                                                                       NSForegroundColorAttributeName: secondaryColor,
-                                                                                                                       NSFontAttributeName: self.configuration.theme.font}];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:primaryColor range:[label rangeOfString:brandString]];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:primaryColor range:[label rangeOfString:card.last4]];
-    [attributedString addAttribute:NSFontAttributeName value:self.configuration.theme.mediumFont range:[label rangeOfString:brandString]];
-    [attributedString addAttribute:NSFontAttributeName value:self.configuration.theme.mediumFont range:[label rangeOfString:card.last4]];
-    return [attributedString copy];
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == STPPaymentMethodCardListSection) {
-        id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
-        [tableView reloadSections:[NSIndexSet indexSetWithIndex:STPPaymentMethodCardListSection] withRowAnimation:UITableViewRowAnimationFade];
-        [self finishWithPaymentMethod:paymentMethod];
-    } else if (indexPath.section == STPPaymentMethodAddCardSection) {
-        __weak typeof(self) weakself = self;
-        STPPaymentConfiguration *config = [self.configuration copy];
-        NSArray *cardPaymentMethods = [self.paymentMethods filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id<STPPaymentMethod> paymentMethod, __unused NSDictionary<NSString *,id> * _Nullable bindings) {
-            return [paymentMethod isKindOfClass:[STPCard class]];
-        }]];
-        // Disable SMS autofill if we already have a card on file
-        config.smsAutofillDisabled = (config.smsAutofillDisabled || cardPaymentMethods.count > 0);
-        
-        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
-            if (token && token.card) {
-                [self.apiAdapter attachSourceToCustomer:token.card completion:^(NSError * _Nullable error) {
-                    if (error) {
-                        tokenCompletion(error);
-                    } else {
-                        [weakself.tableView reloadData];
-                        [weakself finishWithPaymentMethod:token.card];
-                        tokenCompletion(nil);
-                    }
-                }];
-            } else {
-                [self.navigationController stp_popViewControllerAnimated:YES completion:^{
-                    tokenCompletion(nil);
-                }];
-            }
-        }];
-        [self.navigationController pushViewController:paymentCardViewController animated:YES];
-    }
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    BOOL topRow = (indexPath.row == 0);
-    BOOL bottomRow = ([self tableView:tableView numberOfRowsInSection:indexPath.section] - 1 == indexPath.row);
-    [cell stp_setBorderColor:self.configuration.theme.tertiaryBackgroundColor];
-    [cell stp_setTopBorderHidden:!topRow];
-    [cell stp_setBottomBorderHidden:!bottomRow];
 }
 
 - (void)finishWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
@@ -279,15 +158,17 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     [self.delegate paymentMethodsViewControllerDidFinish:self];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
-        return 0.01f;
-    }
-    return 27.0f;
+- (void)internalViewControllerDidSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
+    [self finishWithPaymentMethod:paymentMethod];
 }
 
-- (CGFloat)tableView:(__unused UITableView *)tableView heightForHeaderInSection:(__unused NSInteger)section {
-    return 0.01f;
+- (void)internalViewControllerDidCreateToken:(STPToken *)token completion:(STPErrorBlock)completion {
+    [self.apiAdapter attachSourceToCustomer:token completion:^(NSError * _Nullable error) {
+        completion(error);
+        if (!error) {
+            [self finishWithPaymentMethod:token.card];
+        }
+    }];
 }
 
 @end

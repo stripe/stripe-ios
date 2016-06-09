@@ -34,6 +34,7 @@
 #import "StripeError.h"
 #import "UIViewController+Stripe_Promises.h"
 #import "UIView+Stripe_FirstResponder.h"
+#import "UIViewController+Stripe_NavigationItemProxy.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPObscuredCardViewDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
@@ -96,10 +97,10 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(nextPressed:)];
     self.doneItem = doneItem;
-    self.navigationItem.rightBarButtonItem = doneItem;
+    self.stp_navigationItemProxy.rightBarButtonItem = doneItem;
     
-    self.navigationItem.rightBarButtonItem.enabled = NO;
-    self.navigationItem.title = NSLocalizedString(@"Add Card", nil);
+    self.stp_navigationItemProxy.rightBarButtonItem.enabled = NO;
+    self.stp_navigationItemProxy.title = NSLocalizedString(@"Add Card", nil);
     
     UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[UIImage stp_largeCardFrontImage]];
     cardImageView.contentMode = UIViewContentModeCenter;
@@ -199,8 +200,8 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         return;
     }
     _loading = loading;
-    [self.navigationItem setHidesBackButton:loading animated:YES];
-    self.navigationItem.leftBarButtonItem.enabled = !loading;
+    [self.stp_navigationItemProxy setHidesBackButton:loading animated:YES];
+    self.stp_navigationItemProxy.leftBarButtonItem.enabled = !loading;
     self.activityIndicator.animating = loading;
     if (loading) {
         if ([self.textField isFirstResponder]) {
@@ -209,9 +210,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
             [self.tableView endEditing:YES];
         }
         UIBarButtonItem *loadingItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
-        [self.navigationItem setRightBarButtonItem:loadingItem animated:YES];
+        [self.stp_navigationItemProxy setRightBarButtonItem:loadingItem animated:YES];
     } else {
-        [self.navigationItem setRightBarButtonItem:self.doneItem animated:YES];
+        [self.stp_navigationItemProxy setRightBarButtonItem:self.doneItem animated:YES];
     }
     NSArray *cells = self.addressViewModel.addressCells;
     for (UITableViewCell *cell in [cells arrayByAddingObjectsFromArray:@[self.emailCell, self.cardNumberCell, self.rememberMeCell, self.rememberMePhoneCell]] ) {
@@ -225,7 +226,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self reloadRememberMeCellAnimated:NO];
-    self.navigationItem.leftBarButtonItem = [self stp_isRootViewControllerOfNavigationController] ? self.cancelItem : self.backItem;
+    self.stp_navigationItemProxy.leftBarButtonItem = [self stp_isRootViewControllerOfNavigationController] ? self.cancelItem : self.backItem;
     [self.tableView reloadData];
 }
 
@@ -250,8 +251,10 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
             self.tableView.contentOffset = offset;
         }
     }];
-    if (!self.checkoutAccount && !self.emailCell.contents) {
+    if (!self.checkoutAccount && !self.emailCell.contents && !self.configuration.smsAutofillDisabled) {
         [self.emailCell becomeFirstResponder];
+    } else if (self.textField.cardNumber.length == 0) {
+        [self.textField becomeFirstResponder];
     }
 }
 
@@ -335,7 +338,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (void)updateDoneButton {
-    self.navigationItem.rightBarButtonItem.enabled = (self.textField.isValid || self.checkoutAccountCard) && self.addressViewModel.isValid && [STPEmailAddressValidator stringIsValidEmailAddress:self.emailCell.contents];
+    self.stp_navigationItemProxy.rightBarButtonItem.enabled = (self.textField.isValid || self.checkoutAccountCard) &&
+    self.addressViewModel.isValid &&
+    (self.configuration.smsAutofillDisabled || [STPEmailAddressValidator stringIsValidEmailAddress:self.emailCell.contents]);
 }
 
 - (void)smsCodeViewControllerDidCancel:(__unused STPSMSCodeViewController *)smsCodeViewController {
