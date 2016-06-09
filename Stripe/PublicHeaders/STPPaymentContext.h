@@ -20,24 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol STPBackendAPIAdapter, STPPaymentMethod;
 
 /**
- *  This is invoked by an STPPaymentContext when it's made sure that your current Customer has a valid source attached to it. Inside this block, you should make a call to your backend API to make a charge with that Customer + source, and invoke the resultCompletion block when that is done.
- *
- *  @param result    Information associated with the payment that you can pass to your server. @see STPPaymentResult.h
- *  @param resultCompletion Call this block when you're done creating a charge (or subscription, etc) on your backend. If it succeeded, call resultCompletion(nil). If it failed with an error, call resultCompletion(error).
- */
-typedef void (^STPPaymentResultHandlerBlock)(STPPaymentResult *result, STPErrorBlock __nonnull resultCompletion);
-
-/**
- *  This is invoked by an STPPaymentContext when a payment is completed.
- *
- *  @param status the status of the payment - STPPaymentStatusSuccess if it succeeded, STPPaymentStatusError if it failed with an error (in which case the `error` parameter will be non-nil), STPPaymentStatusUserCanceled if the user canceled the payment.
- *  @param error  an error that occurred when finishing the payment, if any.
- *  @see the documentation for requestPaymentWithResultHandler:completion: in STPPaymentContext
- */
-typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __nullable error);
-
-/**
- *  Implement STPPaymentContextDelegate to get notified when a payment context's contents change. In practice, if your app has a "checkout screen view controller", that is a good candidate to implement this protocol.
+ *  Implement STPPaymentContextDelegate to get notified when a payment context changes, finishes, encounters errors, etc. In practice, if your app has a "checkout screen view controller", that is a good candidate to implement this protocol.
  */
 @protocol STPPaymentContextDelegate <NSObject>
 
@@ -62,6 +45,28 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
  *  @param paymentContext the payment context that changed
  */
 - (void)paymentContextDidChange:(STPPaymentContext *)paymentContext;
+
+/**
+ *  Inside this method, you should make a call to your backend API to make a charge with that Customer + source, and invoke the resultCompletion block when that is done.
+ *
+ *  @param paymentContext The context that succeeded
+ *  @param paymentResult  Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and make a charge to complete the payment, passing paymentResult.source.stripeID as the `source` parameter to the create charge method and your customer's ID as the `customer` parameter (see stripe.com/docs/api#charge_create for more info). Once that's done call the `completion` block with any error that occurred (or none, if the charge succeeded). @see STPPaymentResult.h
+ *  @param completion     Call this block when you're done creating a charge (or subscription, etc) on your backend. If it succeeded, call completion(nil). If it failed with an error, call completion(error).
+ */
+- (void)paymentContext:(STPPaymentContext *)paymentContext
+didCreatePaymentResult:(STPPaymentResult *)paymentResult
+            completion:(STPErrorBlock)completion;
+
+/**
+ *  This is invoked by an STPPaymentContext when it is finished. This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the returned `status` and behave appropriately. For example: if it's STPPaymentStatusSuccess, show the user a receipt. If it's STPPaymentStatusError, inform the user of the error. If it's STPPaymentStatusUserCanceled, do nothing.
+ *
+ *  @param paymentContext The payment context that finished
+ *  @param status         The status of the payment - STPPaymentStatusSuccess if it succeeded, STPPaymentStatusError if it failed with an error (in which case the `error` parameter will be non-nil), STPPaymentStatusUserCanceled if the user canceled the payment.
+ *  @param error          An error that occurred, if any.
+ */
+- (void)paymentContext:(STPPaymentContext *)paymentContext
+   didFinishWithStatus:(STPPaymentStatus)status
+                 error:(nullable NSError *)error;
 
 @end
 
@@ -146,13 +151,9 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError * __n
 - (BOOL)isReadyForPayment;
 
 /**
- *  Attempts to finalize the payment. This may need to present some supplemental UI to the user, in which case it will be presented on the payment context's hostViewController. For instance, if they've selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. You should create a charge with the provided source in the `resultHandler` block, and update your UI in the `completion` block. For an example of this, see CheckoutViewController.swift in our example app.
- *
- *  @param block      This block will yield you an `STPPaymentResult` that tells you more about the type of payment method your user has chosen. You should go to your backend API with this payment result and make a charge to complete the payment, passing paymentResult.source.stripeID as the `source` parameter to the create charge method and your customer's ID as the `customer` parameter (see stripe.com/docs/api#charge_create for more info). Once that's done call `resultCompletion` block with any error that occurred (or none, if the charge succeeded).
- *  @param completion         This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the `status` of the payment and behave appropriately. For example: if it's STPPaymentStatusSuccess, show the user a receipt. If it's STPPaymentStatusError, inform the user of the error. If it's STPPaymentStatusUserCanceled, do nothing.
+ *  Requests payment from the user. This may need to present some supplemental UI to the user, in which case it will be presented on the payment context's hostViewController. For instance, if they've selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. After this is called, the paymentContext:didCreatePaymentResult:completion: and paymentContext:didFinishWithStatus:error: methods will be called on the context's delegate.
  */
-- (void)requestPaymentWithResultHandler:(STPPaymentResultHandlerBlock)resultHandler
-                             completion:(STPPaymentCompletionBlock)completion;
+- (void)requestPayment;
 
 
 @end

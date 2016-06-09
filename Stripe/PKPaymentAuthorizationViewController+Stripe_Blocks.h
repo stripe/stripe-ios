@@ -14,6 +14,7 @@
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 typedef void(^STPApplePayTokenHandlerBlock)(STPToken *token, STPErrorBlock completion);
+typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError *error);
 
 @interface PKPaymentAuthorizationViewController (Stripe_Blocks)
 

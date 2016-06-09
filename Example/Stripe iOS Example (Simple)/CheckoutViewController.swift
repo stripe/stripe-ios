@@ -81,32 +81,32 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     func didTapBuy() {
         self.checkoutView.paymentInProgress = true
-        self.paymentContext.requestPaymentWithResultHandler({ result, completion in
-            self.createBackendCharge(result, completion: completion)
-        }, completion: { (status, error) in
-            self.checkoutView.paymentInProgress = false
-            let title: String
-            let message: String
-            switch status {
-            case .Error:
-                title = "Error"
-                message = error?.localizedDescription ?? ""
-            case .Success:
-                title = "Success"
-                message = "You bought a \(self.checkoutView.product)!"
-            case .UserCancellation:
-                return
-            }
-            let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-            let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
-            alertController.addAction(action)
-            self.presentViewController(alertController, animated: true, completion: nil)
-        })
+        self.paymentContext.requestPayment()
     }
-
-    func createBackendCharge(result: STPPaymentResult, completion: STPErrorBlock) {
-        self.myAPIClient.completeCharge(result, amount: self.paymentContext.paymentAmount,
+    
+    func paymentContext(paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: STPErrorBlock) {
+        self.myAPIClient.completeCharge(paymentResult, amount: self.paymentContext.paymentAmount,
                                         completion: completion)
+    }
+    
+    func paymentContext(paymentContext: STPPaymentContext, didFinishWithStatus status: STPPaymentStatus, error: NSError?) {
+        self.checkoutView.paymentInProgress = false
+        let title: String
+        let message: String
+        switch status {
+        case .Error:
+            title = "Error"
+            message = error?.localizedDescription ?? ""
+        case .Success:
+            title = "Success"
+            message = "You bought a \(self.checkoutView.product)!"
+        case .UserCancellation:
+            return
+        }
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        alertController.addAction(action)
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
 
     // MARK: STPPaymentContextDelegate
