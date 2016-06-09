@@ -14,6 +14,7 @@
 #import "STPAddressViewModel.h"
 #import "NSArray+Stripe_BoundSafe.h"
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
+#import "UIViewController+Stripe_ParentViewController.h"
 #import "UIToolbar+Stripe_InputAccessory.h"
 #import "STPCheckoutAPIClient.h"
 #import "STPCheckoutAccount.h"
@@ -40,6 +41,8 @@
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)UIBarButtonItem *doneItem;
+@property(nonatomic)UIBarButtonItem *backItem;
+@property(nonatomic)UIBarButtonItem *cancelItem;
 @property(nonatomic)STPRememberMeEmailCell *emailCell;
 @property(nonatomic)STPSwitchTableViewCell *rememberMeCell;
 @property(nonatomic)STPAddressFieldTableViewCell *rememberMePhoneCell;
@@ -87,6 +90,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     tableView.sectionHeaderHeight = 30;
     [self.view addSubview:tableView];
     self.tableView = tableView;
+    
+    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+    self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(nextPressed:)];
     self.doneItem = doneItem;
@@ -219,6 +225,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self reloadRememberMeCellAnimated:NO];
+    self.navigationItem.leftBarButtonItem = [self stp_isRootViewControllerOfNavigationController] ? self.cancelItem : self.backItem;
     [self.tableView reloadData];
 }
 
@@ -251,6 +258,12 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.view endEditing:YES];
+}
+
+- (void)cancel:(__unused id)sender {
+    if (self.completion) {
+        self.completion(nil, ^(__unused NSError *error) {});
+    }
 }
 
 - (void)nextPressed:(__unused id)sender {

@@ -200,14 +200,29 @@
             return;
         }
         if (!weakSelf.selectedPaymentMethod) {
-            NSDictionary *userInfo = @{
-                                       NSLocalizedDescriptionKey: NSLocalizedString(@"No payment method was selected.", nil),
-                                       NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"Please select a payment method and try again.", nil),
-                                       };
-            NSError *error = [NSError errorWithDomain:StripeDomain
-                                                 code:STPInvalidRequestError
-                                             userInfo:userInfo];
-            [weakSelf.delegate paymentContext:weakSelf didFinishWithStatus:STPPaymentStatusError error:error];
+            STPAddCardViewController *addCardViewController;
+            addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
+                if (token) {
+                    [weakSelf.apiAdapter attachSourceToCustomer:token completion:^(NSError *error) {
+                        if (error) {
+                            tokenCompletion(error);
+                        } else {
+                            [weakSelf.hostViewController dismissViewControllerAnimated:YES completion:^{
+                                tokenCompletion(nil);
+                                weakSelf.selectedPaymentMethod = token.card;
+                                [weakSelf requestPayment];
+                            }];
+                        }
+                    }];
+                } else {
+                    [weakSelf.hostViewController dismissViewControllerAnimated:YES completion:^{
+                        [weakSelf.delegate paymentContext:weakSelf didFinishWithStatus:STPPaymentStatusUserCancellation error:nil];
+                    }];
+                }
+            }];
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addCardViewController];
+            [navigationController.navigationBar stp_setTheme:weakSelf.configuration.theme];
+            [weakSelf.hostViewController presentViewController:navigationController animated:YES completion:nil];
         }
         else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPCard class]]) {
             STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(STPCard *)weakSelf.selectedPaymentMethod];

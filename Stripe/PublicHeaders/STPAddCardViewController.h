@@ -33,7 +33,7 @@ typedef void (^STPAddCardCompletionBlock)(STPToken * __nullable token, STPErrorB
  *
  *  @param publishableKey Your Stripe publishable key. If you've called [Stripe setDefaultPublishableKey:] in your app delegate, you can just use [Stripe defaultPublishableKey] here.
  *  @param configuration The configuration the view controller will use. This can be used to set the required billing address fields, among other things. @see STPPaymentConfiguration.h
- *  @param completion                   A block that will be called when the user has successfully submitted their information, or pressed cancel. If they submit their information, the token parameter will be a valid STPToken object. If they cancel, it will be nil. When this is called, the user will see a spinner on the form. This gives your application time to send the token to your backend and add it to a customer or complete a charge. When you're done, call the `tokenCompletion` parameter with whether or not your call succeeded.
+ *  @param completion                   A block that will be called when the user has successfully submitted their information, or pressed cancel. If they submit their information, the token parameter will be a valid STPToken object. If they cancel, it will be nil. When this is called, the user will see a spinner on the form. This gives your application time to send the token to your backend and add it to a customer or complete a charge. When you're done, call the `tokenCompletion` parameter with whether or not your call succeeded, and then dismiss the form if it succeeded.
  *
  *  @return a view controller that you can either embed in a UINavigationController and present modally, or push onto an existing UINavigationController stack.
  */
