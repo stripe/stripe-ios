@@ -102,7 +102,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
                     completion(nil, [], error)
                     return
                 } else if let customer = deserializer.customer {
-                    completion(customer.defaultSource.stripeID, customer.sources, nil)
+                    completion(customer.defaultSource?.stripeID, customer.sources, nil)
                 }
             }
         }

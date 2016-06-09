@@ -33,18 +33,28 @@
 - (instancetype)initWithData:(nullable NSData *)data
                  urlResponse:(nullable __unused NSURLResponse *)urlResponse
                        error:(nullable NSError *)error {
+    if (error) {
+        return [self initWithError:error];
+    }
+    NSError *jsonError;
+    id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+    if (jsonError) {
+        return [self initWithError:jsonError];
+    }
+    return [self initWithJSONResponse:json];
+}
+
+- (instancetype)initWithError:(NSError *)error {
     self = [super init];
     if (self) {
-        if (error) {
-            _error = error;
-            return self;
-        }
-        NSError *jsonError;
-        id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-        if (jsonError) {
-            _error = jsonError;
-            return self;
-        }
+        _error = error;
+    }
+    return self;
+}
+
+- (instancetype)initWithJSONResponse:(id)json {
+    self = [super init];
+    if (self) {
         if (![json isKindOfClass:[NSDictionary class]] || ![json[@"id"] isKindOfClass:[NSString class]]) {
             _error = [NSError stp_genericFailedToParseResponseError];
             return self;
@@ -70,8 +80,6 @@
                 }
             }
         }
-        customer.sources = sources;
-        _customer = customer;
     }
     return self;
 }

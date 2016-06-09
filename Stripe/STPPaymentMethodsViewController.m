@@ -26,6 +26,7 @@
 #import "STPPaymentContext+Private.h"
 #import "UIBarButtonItem+Stripe.h"
 #import "UIViewController+Stripe_Promises.h"
+#import "STPPaymentConfiguration+Private.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 static NSInteger STPPaymentMethodCardListSection = 0;

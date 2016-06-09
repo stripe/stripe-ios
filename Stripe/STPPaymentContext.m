@@ -22,6 +22,7 @@
 #import "UIViewController+Stripe_Promises.h"
 #import "UIViewController+Stripe_Alerts.h"
 #import "UINavigationController+Stripe_Completion.h"
+#import "STPPaymentConfiguration+Private.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 

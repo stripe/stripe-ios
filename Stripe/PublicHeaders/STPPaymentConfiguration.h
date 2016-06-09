@@ -45,11 +45,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, nullable, copy)NSString *appleMerchantIdentifier;
 
+/**
+ *  Set this to disable SMS autofill. The user won't receive an SMS code even if they have their payment information stored with Stripe, and won't be prompted to save it if they don't.
+ */
 @property(nonatomic)BOOL smsAutofillDisabled;
 
+/**
+ *  If you already know your user's email address, set this property and it'll automatically be filled out where applicable.
+ */
 @property(nonatomic, nullable, copy)NSString *prefilledUserEmail;
-
-@property(nonatomic, readonly)BOOL applePayEnabled;
 
 @end
 
