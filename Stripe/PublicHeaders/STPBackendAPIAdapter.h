@@ -17,13 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPCard, STPToken;
 
 /**
- *  Call this block after you're done fetching a customer on your server, returning their cards and selected card to your iOS application, and parsing them into STPCard objects. For more information, see the `retrieveSources` documentation.
+ *  Call this block after you're done fetching a customer on your server, returning their sources and selected source to your iOS application, and parsing them into STPCard objects. For more information, see the `retrieveSources` documentation.
  *
- *  @param selectedCard the user's currently selected card
- *  @param cards        the user's list of available cards
+ *  @param selectedSourceID the Stripe ID of the customer's default_source (ex. @"card_abcdef")
+ *  @param cards        the user's list of available sources
  *  @param error        any error that occurred while communicating with your server
  */
-typedef void (^STPCardCompletionBlock)(STPCard * __nullable selectedCard, NSArray<STPCard *>* __nullable cards, NSError * __nullable error);
+typedef void (^STPSourceCompletionBlock)(NSString * __nullable defaultSourceID, NSArray<id<STPSource>>* __nullable sources, NSError * __nullable error);
 
 /**
  *  You should make your application's API client conform to this interface in order to use it with an STPPaymentContext. It provides a "bridge" from the prebuilt UI we expose (such as STPPaymentMethodsViewController) to your backend to fetch the information it needs to power those views. To see examples of implementing these APIs, see MyAPIClient.swift in our example project and https://github.com/stripe/example-ios-backend .
@@ -36,7 +36,7 @@ typedef void (^STPCardCompletionBlock)(STPCard * __nullable selectedCard, NSArra
  *  @see STPCard
  *  @param completion call this callback when you're done fetching and parsing the above information from your backend. For example, completion(selectedCard, cards, nil) (if your call succeeds) or completion(nil, nil, error) if an error is returned.
  */
-- (void)retrieveCustomerCards:(STPCardCompletionBlock)completion;
+- (void)retrieveCustomerSources:(STPSourceCompletionBlock)completion;
 
 /**
  *  Adds a payment source to a customer. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Update Customer method on that customer as described at https://stripe.com/docs/api#update_customer (for an example Ruby implementation of this API, see https://github.com/stripe/example-ios-backend/blob/master/web.rb#L60 ). If this API call succeeds, call completion(nil). Otherwise, call completion(error) with the error that occurred.

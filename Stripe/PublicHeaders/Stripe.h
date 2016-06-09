@@ -20,6 +20,7 @@
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentCardTextField.h"
 #import "STPSource.h"
+#import "STPCustomer.h"
 #import "STPBlocks.h"
 #import "STPAddress.h"
 #import "STPAddCardViewController.h"

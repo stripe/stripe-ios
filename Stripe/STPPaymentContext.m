@@ -58,13 +58,24 @@
                 [weakself.delegate paymentContext:weakself didFailToLoadWithError:error];
             }];
         }];
-        [self.apiAdapter retrieveCustomerCards:^(STPCard * _Nullable selectedCard, NSArray<STPCard *> * _Nullable cards, NSError * _Nullable error) {
+        [self.apiAdapter retrieveCustomerSources:^(NSString * _Nullable defaultSourceID, NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
             if (!weakself) {
                 return;
             }
             if (error) {
                 [weakself.loadingPromise fail:error];
                 return;
+            }
+            STPCard *selectedCard;
+            NSMutableArray<STPCard *> *cards = [NSMutableArray array];
+            for (id<STPSource> source in sources) {
+                if ([source isKindOfClass:[STPCard class]]) {
+                    STPCard *card = (STPCard *)source;
+                    [cards addObject:card];
+                    if ([card.stripeID isEqualToString:defaultSourceID]) {
+                        selectedCard = card;
+                    }
+                }
             }
             STPCardTuple *tuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
             STPPaymentMethodTuple *paymentTuple = [STPPaymentMethodTuple tupleWithCardTuple:tuple applePayEnabled:weakself.configuration.applePayEnabled];
