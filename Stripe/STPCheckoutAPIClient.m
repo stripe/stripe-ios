@@ -9,7 +9,6 @@
 #import "STPCheckoutAPIClient.h"
 #import "STPCheckoutBootstrapResponse.h"
 #import "NSMutableURLRequest+Stripe.h"
-#import "STPFormEncoder.h"
 #import "STPAPIClient.h"
 #import "STPCardValidator.h"
 #import "NSBundle+Stripe_AppName.h"

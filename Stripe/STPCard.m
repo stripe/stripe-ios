@@ -7,8 +7,6 @@
 //
 
 #import "STPCard.h"
-#import "StripeError.h"
-#import "STPCardValidator.h"
 #import "NSDictionary+Stripe.h"
 #import "NSString+Stripe_CardBrands.h"
 

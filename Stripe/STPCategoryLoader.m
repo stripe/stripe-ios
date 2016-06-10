@@ -12,7 +12,6 @@
 #import "PKPayment+Stripe.h"
 #import "NSDictionary+Stripe.h"
 #import "Stripe+ApplePay.h"
-#import "STPAPIClient+ApplePay.h"
 #import "UIImage+Stripe.h"
 #import "NSString+Stripe.h"
 #import "NSMutableURLRequest+Stripe.h"

@@ -7,7 +7,6 @@
 //
 
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
-#import "UIView+Stripe_FirstResponder.h"
 
 // This is a private class that is only a UIViewController subclass by virtue of the fact
 // that that makes it easier to attach to another UIViewController as a child.

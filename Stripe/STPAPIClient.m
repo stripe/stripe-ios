@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
-#import "TargetConditionals.h"
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
@@ -15,8 +14,6 @@
 #import "STPBankAccount.h"
 #import "STPCard.h"
 #import "STPToken.h"
-#import "StripeError.h"
-#import "STPAPIResponseDecodable.h"
 #import "STPAPIPostRequest.h"
 #import "STPAnalyticsClient.h"
 

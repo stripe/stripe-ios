@@ -7,10 +7,8 @@
 //
 
 #import "STPAnalyticsClient.h"
-#import "STPFormEncoder.h"
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPAPIClient.h"
-#import "TargetConditionals.h"
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 

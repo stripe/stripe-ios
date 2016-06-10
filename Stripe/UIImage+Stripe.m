@@ -117,10 +117,10 @@
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     BOOL templateSupported = [[self.class new] respondsToSelector:@selector(imageWithRenderingMode:)];
     UIImage *image;
+    image = [self.class imageNamed:imageName];
     if ([[self.class class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
         image = [self.class imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
     }
-    image = [self.class imageNamed:imageName];
     if (templateSupported && templateIfAvailable) {
         image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }

@@ -9,8 +9,6 @@
 #import "STPFormTextField.h"
 #import "STPCardValidator.h"
 #import "STPPhoneNumberValidator.h"
-#import <Foundation/Foundation.h>
-#import "TargetConditionals.h"
 #import "NSString+Stripe.h"
 #import "STPDelegateProxy.h"
 

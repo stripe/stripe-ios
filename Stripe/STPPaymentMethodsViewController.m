@@ -7,28 +7,20 @@
 //
 
 #import "STPPaymentMethodsViewController.h"
-#import "STPBackendAPIAdapter.h"
 #import "STPAPIClient.h"
 #import "STPToken.h"
 #import "STPCard.h"
-#import "NSArray+Stripe_BoundSafe.h"
-#import "UINavigationController+Stripe_Completion.h"
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "STPAddCardViewController.h"
-#import "STPApplePayPaymentMethod.h"
 #import "STPPaymentContext.h"
 #import "STPPaymentMethodTuple.h"
 #import "STPPaymentActivityIndicatorView.h"
-#import "UIImage+Stripe.h"
-#import "NSString+Stripe_CardBrands.h"
-#import "UITableViewCell+Stripe_Borders.h"
 #import "STPPaymentMethodsViewController+Private.h"
 #import "STPPaymentContext+Private.h"
 #import "UIBarButtonItem+Stripe.h"
 #import "UIViewController+Stripe_Promises.h"
 #import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentMethodsInternalViewController.h"
-#import "STPAddCardViewController.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 
 @interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate>

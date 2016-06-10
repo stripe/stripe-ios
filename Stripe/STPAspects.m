@@ -478,7 +478,7 @@ static void __STP_ASPECTS_ARE_BEING_CALLED__(__unsafe_unretained NSObject *self,
 	SEL aliasSelector = stp_aspect_aliasForSelector(invocation.selector);
     invocation.selector = aliasSelector;
     STPAspectsContainer *objectContainer = objc_getAssociatedObject(self, aliasSelector);
-    STPAspectsContainer *classContainer = aspect_getContainerForClass(object_getClass(self), aliasSelector);
+    STPAspectsContainer *classContainer = stp_aspect_getContainerForClass(object_getClass(self), aliasSelector);
     STPAspectInfo *info = [[STPAspectInfo alloc] initWithInstance:self invocation:invocation];
     NSArray *aspectsToRemove = nil;
 
@@ -536,7 +536,7 @@ static STPAspectsContainer *stp_aspect_getContainerForObject(NSObject *self, SEL
     return aspectContainer;
 }
 
-static STPAspectsContainer *aspect_getContainerForClass(Class klass, SEL selector) {
+static STPAspectsContainer *stp_aspect_getContainerForClass(Class klass, SEL selector) {
     NSCParameterAssert(klass);
     STPAspectsContainer *classContainer = nil;
     do {

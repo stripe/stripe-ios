@@ -132,6 +132,7 @@
 }
 
 - (BOOL)resignFirstResponder {
+    [super resignFirstResponder];
     for (UITextField *textField in self.textFields) {
         if ([textField isFirstResponder]) {
             return [textField resignFirstResponder];

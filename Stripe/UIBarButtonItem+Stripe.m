@@ -10,9 +10,6 @@
 #import "UIImage+Stripe.h"
 #import "STPTheme.h"
 
-@interface STPBarButtonItemBackView : UIView
-@end
-
 @implementation UIBarButtonItem (Stripe)
 
 + (instancetype)stp_backButtonItemWithTitle:(NSString *)title

@@ -7,7 +7,6 @@
 //
 
 #import "STPAddressFieldTableViewCell.h"
-#import "STPFormTextField.h"
 #import "STPPostalCodeValidator.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPEmailAddressValidator.h"

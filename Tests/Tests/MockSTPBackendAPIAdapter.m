@@ -19,11 +19,11 @@
     return self;
 }
 
-- (void)retrieveCustomerCards:(STPCardCompletionBlock)completion {
+- (void)retrieveCustomerSources:(STPSourceCompletionBlock)completion {
     if (self.retrieveCardsError) {
         completion(nil, nil, self.retrieveCardsError);
     } else {
-        completion(self.selectedCard, self.cards, nil);
+        completion(self.selectedCard.stripeID, self.cards, nil);
     }
 }
 

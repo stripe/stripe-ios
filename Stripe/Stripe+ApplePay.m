@@ -6,7 +6,6 @@
 //
 
 #import "Stripe+ApplePay.h"
-#import "STPAPIClient.h"
 
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
@@ -22,17 +21,11 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
     if (paymentRequest.merchantIdentifier == nil) {
         return NO;
     }
-    if ([[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] <= 0) {
-        return NO;
-    }
-    return YES;
+    return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] > 0;
 }
 
 + (BOOL)deviceSupportsApplePay {
-    if (![PKPaymentAuthorizationViewController class]) {
-        return NO;
-    }
-    return [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa]];
+    return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa]];
 }
 
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier {

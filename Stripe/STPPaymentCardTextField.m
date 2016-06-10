@@ -9,10 +9,8 @@
 #import <UIKit/UIKit.h>
 
 #import "Stripe.h"
-#import "STPPaymentCardTextField.h"
 #import "STPPaymentCardTextFieldViewModel.h"
 #import "STPFormTextField.h"
-#import "STPCardValidator.h"
 #import "UIImage+Stripe.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)

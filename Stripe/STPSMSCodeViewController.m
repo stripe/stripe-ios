@@ -9,8 +9,6 @@
 #import "STPSMSCodeViewController.h"
 #import "STPSMSCodeTextField.h"
 #import "STPCheckoutAPIClient.h"
-#import "STPCheckoutAPIVerification.h"
-#import "STPPromise.h"
 #import "STPTheme.h"
 #import "STPPaymentActivityIndicatorView.h"
 #import "StripeError.h"

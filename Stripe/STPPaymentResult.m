@@ -7,7 +7,6 @@
 //
 
 #import "STPPaymentResult.h"
-#import "STPAddress.h"
 
 @interface STPPaymentResult()
 @end

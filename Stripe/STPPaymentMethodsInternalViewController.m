@@ -8,11 +8,9 @@
 
 #import "STPPaymentMethodsInternalViewController.h"
 #import "UIImage+Stripe.h"
-#import "STPApplePayPaymentMethod.h"
 #import "NSArray+Stripe_BoundSafe.h"
 #import "NSString+Stripe_CardBrands.h"
 #import "UITableViewCell+Stripe_Borders.h"
-#import "STPPaymentMethod.h"
 #import "UINavigationController+Stripe_Completion.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
