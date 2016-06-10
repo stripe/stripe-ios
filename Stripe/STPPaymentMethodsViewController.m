@@ -85,7 +85,7 @@
     [self.view addSubview:activityIndicator];
     self.activityIndicator = activityIndicator;
     
-    self.navigationItem.title = NSLocalizedString(@"Choose Payment", nil);
+    self.navigationItem.title = NSLocalizedString(@"Payment Details", nil);
     self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -109,7 +109,6 @@
         [UIView animateWithDuration:0.2 animations:^{
             weakself.activityIndicator.alpha = 0;
             internal.view.alpha = 1;
-            self.navigationItem.title = internal.stp_navigationItemProxy.title;
         } completion:^(__unused BOOL finished) {
             weakself.activityIndicator.animating = NO;
         }];

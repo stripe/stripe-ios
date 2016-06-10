@@ -79,6 +79,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
         _addressViewModel.delegate = self;
         _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
+        self.title = NSLocalizedString(@"Add Card", nil);
     }
     return self;
 }
@@ -98,7 +99,6 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.stp_navigationItemProxy.rightBarButtonItem = doneItem;
     
     self.stp_navigationItemProxy.rightBarButtonItem.enabled = NO;
-    self.stp_navigationItemProxy.title = NSLocalizedString(@"Add Card", nil);
     
     UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[UIImage stp_largeCardFrontImage]];
     cardImageView.contentMode = UIViewContentModeCenter;
