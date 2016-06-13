@@ -112,17 +112,13 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     // MARK: STPPaymentContextDelegate
 
     func paymentContextDidChange(paymentContext: STPPaymentContext) {
-        self.checkoutView.buyButton.enabled = paymentContext.isReadyForPayment()
+        self.checkoutView.paymentRow.loading = paymentContext.loading
         if let paymentMethod = paymentContext.selectedPaymentMethod {
             self.checkoutView.paymentRow.detail = paymentMethod.label
         }
         else {
             self.checkoutView.paymentRow.detail = "Select Payment"
         }
-    }
-
-    func paymentContextDidFinishLoading(paymentContext: STPPaymentContext) {
-        self.checkoutView.paymentRow.loading = false
     }
 
     func paymentContext(paymentContext: STPPaymentContext, didFailToLoadWithError error: NSError) {

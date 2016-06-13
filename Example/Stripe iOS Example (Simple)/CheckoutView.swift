@@ -35,7 +35,7 @@ class CheckoutView: UIView {
     }
     let paymentRow = CheckoutRowView(title: "Payment", detail: "Select Payment")
     let totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false)
-    let buyButton = BuyButton(enabled: false)
+    let buyButton = BuyButton(enabled: true)
 
     private let rowHeight: CGFloat = 44
     private let productImage = UILabel()

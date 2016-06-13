@@ -33,13 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)paymentContext:(STPPaymentContext *)paymentContext didFailToLoadWithError:(NSError *)error;
 
 /**
- *  Called when the payment context is done loading. You could tell a UIActivityIndicatorView to stop animating when this is called.
- *
- *  @param paymentContext the payment context that finished loading.
- */
-- (void)paymentContextDidFinishLoading:(STPPaymentContext *)paymentContext;
-
-/**
  *  This is called every time the contents of the payment context change. When this is called, you should update your app's UI to reflect the current state of the payment context. For example, if you have a checkout page with a "selected payment method" row, you should update its payment method with `paymentContext.selectedPaymentMethod.label`. If that checkout page has a "buy" button, you should enable/disable it depending on the result of [paymentContext isReadyForPayment].
  *
  *  @param paymentContext the payment context that changed

@@ -9,16 +9,6 @@
 #import "STPTheme.h"
 
 @interface STPTheme()
-
-@property(nonatomic)UIColor *primaryBackgroundColor;
-@property(nonatomic)UIColor *secondaryBackgroundColor;
-@property(nonatomic)UIColor *primaryForegroundColor;
-@property(nonatomic)UIColor *secondaryForegroundColor;
-@property(nonatomic)UIColor *accentColor;
-@property(nonatomic)UIColor *errorColor;
-@property(nonatomic)UIFont  *font;
-@property(nonatomic)UIFont  *mediumFont;
-
 @end
 
 static UIColor *STPThemeDefaultPrimaryBackgroundColor;
