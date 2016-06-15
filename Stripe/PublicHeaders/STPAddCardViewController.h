@@ -12,6 +12,7 @@
 #import "STPAPIClient.h"
 #import "STPAddress.h"
 #import "STPTheme.h"
+#import "STPUserInformation.h"
 #import "STPPaymentConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -37,8 +38,15 @@ typedef void (^STPAddCardCompletionBlock)(STPToken * __nullable token, STPErrorB
  *
  *  @return a view controller that you can either embed in a UINavigationController and present modally, or push onto an existing UINavigationController stack.
  */
+// TODO rewrite comments
+
+- (instancetype)initWithCompletion:(STPAddCardCompletionBlock)completion;
+
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
+                                theme:(nullable STPTheme *)theme
                            completion:(STPAddCardCompletionBlock)completion;
+
+@property(nonatomic)STPUserInformation *prefilledInformation;
 
 @end
 

@@ -13,15 +13,24 @@
 @implementation STPPhoneNumberValidator
 
 + (BOOL)stringIsValidPartialPhoneNumber:(NSString *)string {
+    if (![self isUSLocale]) {
+        return YES;
+    }
     return [STPCardValidator sanitizedNumericStringForString:string].length <= 10;
 }
 
 + (BOOL)stringIsValidPhoneNumber:(NSString *)string {
+    if (![self isUSLocale]) {
+        return YES;
+    }
     return [STPCardValidator sanitizedNumericStringForString:string].length == 10;
 }
 
 + (NSString *)formattedPhoneNumberForString:(NSString *)string {
     NSString *sanitized = [STPCardValidator sanitizedNumericStringForString:string];
+    if (![self isUSLocale]) {
+        return sanitized;
+    }
     if (sanitized.length >= 6) {
         return [NSString stringWithFormat:@"(%@) %@-%@",
                 [sanitized stp_safeSubstringToIndex:3],
@@ -35,6 +44,10 @@
                 ];
     }
     return sanitized;
+}
+
++ (BOOL)isUSLocale {
+    return [[[NSLocale autoupdatingCurrentLocale] localeIdentifier] isEqualToString:@"en_US"];
 }
 
 @end

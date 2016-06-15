@@ -29,7 +29,7 @@
 
 - (void)stp_setTheme:(STPTheme *)theme {
     [self setTitleTextAttributes:@{
-                                   NSFontAttributeName: self.style == UIBarButtonItemStylePlain ? theme.font : theme.mediumFont,
+                                   NSFontAttributeName: self.style == UIBarButtonItemStylePlain ? theme.font : theme.emphasisFont,
                                    }
                         forState:UIControlStateNormal];
 }

@@ -15,20 +15,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPaymentConfiguration : NSObject<NSCopying>
 
++ (instancetype)sharedConfiguration;
+
 /**
  *  The publishable key that will be used by the payment context.
  */
 @property(nonatomic, copy)NSString *publishableKey;
 
 /**
- *  This theme will inform the visual appearance of any UI created by the payment context. @see STPTheme
+ *  An enum value representing which payment methods you will accept from your user in addition to credit cards. Unless you have a very specific reason not to, you should leave this at the default, STPPaymentMethodTypeAll.
  */
-@property(nonatomic, copy)STPTheme *theme;
-
-/**
- *  An enum value representing which payment methods you will accept from your user. Unless you have a very specific reason not to, you should leave this at the default, STPPaymentMethodTypeAll.
- */
-@property(nonatomic)STPPaymentMethodType supportedPaymentMethods;
+@property(nonatomic)STPPaymentMethodType additionalPaymentMethods;
 
 /**
  *  The billing address fields the user must fill out in order for the form to validate. These fields will all be present on the returned token from Stripe. See https://stripe.com/docs/api#create_card_token for more information.
@@ -49,11 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  Set this to disable SMS autofill. The user won't receive an SMS code even if they have their payment information stored with Stripe, and won't be prompted to save it if they don't.
  */
 @property(nonatomic)BOOL smsAutofillDisabled;
-
-/**
- *  If you already know your user's email address, set this property and it'll automatically be filled out where applicable.
- */
-@property(nonatomic, nullable, copy)NSString *prefilledUserEmail;
 
 @end
 

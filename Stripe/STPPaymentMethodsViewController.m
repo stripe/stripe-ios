@@ -22,10 +22,12 @@
 #import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentMethodsInternalViewController.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
+#import "STPTheme.h"
 
 @interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
+@property(nonatomic) STPTheme *theme;
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
@@ -45,11 +47,12 @@
     return [self initWithConfiguration:paymentContext.configuration
                             apiAdapter:paymentContext.apiAdapter
                         loadingPromise:paymentContext.currentValuePromise
+                                 theme:paymentContext.theme
                               delegate:paymentContext];
 }
 
-
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
+                                theme:(STPTheme *)theme
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
     STPPromise<STPPaymentMethodTuple *> *promise = [STPPromise new];
@@ -74,7 +77,11 @@
             [promise succeed:tuple];
         }
     }];
-    return [self initWithConfiguration:configuration apiAdapter:apiAdapter loadingPromise:promise delegate:delegate];
+    return [self initWithConfiguration:configuration
+                            apiAdapter:apiAdapter
+                        loadingPromise:promise
+                                 theme:theme
+                              delegate:delegate];
 }
 
 - (void)viewDidLoad {
@@ -93,11 +100,17 @@
     [self.loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
         UIViewController *internal;
         if (tuple.paymentMethods.count > 0) {
-            internal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:weakself.configuration paymentMethodTuple:tuple delegate:weakself];
+            internal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:weakself.configuration
+                                                                                        theme:weakself.theme prefilledInformation:weakself.prefilledInformation
+                                                                           paymentMethodTuple:tuple
+                                                                                     delegate:weakself];
         } else {
-            internal = [[STPAddCardViewController alloc] initWithConfiguration:weakself.configuration completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
+            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:weakself.configuration theme:weakself.theme completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
                 [weakself internalViewControllerDidCreateToken:token completion:tokenCompletion];
             }];
+            addCardViewController.prefilledInformation = self.prefilledInformation;
+            internal = addCardViewController;
+            
         }
         internal.stp_navigationItemProxy = self.navigationItem;
         [weakself addChildViewController:internal];
@@ -130,10 +143,10 @@
 }
 
 - (void)updateAppearance {
-    [self.navigationItem.backBarButtonItem stp_setTheme:self.configuration.theme];
-    [self.backItem stp_setTheme:self.configuration.theme];
-    [self.cancelItem stp_setTheme:self.configuration.theme];
-    self.view.backgroundColor = self.configuration.theme.primaryBackgroundColor;
+    [self.navigationItem.backBarButtonItem stp_setTheme:self.theme];
+    [self.backItem stp_setTheme:self.theme];
+    [self.cancelItem stp_setTheme:self.theme];
+    self.view.backgroundColor = self.theme.primaryBackgroundColor;
 }
 
 - (void)cancel:(__unused id)sender {
@@ -169,10 +182,12 @@
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                        loadingPromise:(STPPromise<STPPaymentMethodTuple *> *)loadingPromise
+                                theme:(STPTheme *)theme
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _configuration = configuration;
+        _theme = theme;
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _apiAdapter = apiAdapter;
         _loadingPromise = loadingPromise;

@@ -18,6 +18,7 @@
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                        loadingPromise:(STPPromise<STPPaymentMethodTuple *> *)loadingPromise
+                                theme:(STPTheme *)theme
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
 
 @end

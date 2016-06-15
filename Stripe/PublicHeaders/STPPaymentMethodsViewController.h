@@ -11,6 +11,7 @@
 #import "STPTheme.h"
 #import "STPBackendAPIAdapter.h"
 #import "STPPaymentConfiguration.h"
+#import "STPUserInformation.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -75,8 +76,13 @@ NS_ASSUME_NONNULL_BEGIN
  *
  */
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
+                                theme:(STPTheme *)theme
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
+/**
+*  If you've already collected some information from your user, you can set it here and it'll be automatically filled out when possible/appropriate in any UI that the payment context creates.
+*/
+@property(nonatomic)STPUserInformation *prefilledInformation;
 
 @end
 

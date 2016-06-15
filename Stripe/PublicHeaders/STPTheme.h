@@ -13,13 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPTheme : NSObject<NSCopying>
 
 /**
- *  Set the default theme for all Stripe UI to use. You should call this as early in your application's lifecycle as possible, ideally in your app delegate.
- *
- *  @param theme the theme to use as a default for newly-instantiated Stripe view controllers.
- */
-+ (void)setDefaultTheme:(STPTheme *)theme;
-
-/**
  *  The default theme used by all Stripe UI.
  */
 + (STPTheme *)defaultTheme;
@@ -72,12 +65,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The font to be used for all views using this theme. Make sure to select an appropriate size.
  */
-@property(nonatomic, copy)UIFont  *font;
+@property(nonatomic, copy, null_resettable)UIFont  *font;
 
 /**
  *  The medium-weight font to be used for all bold text in views using this theme. Make sure to select an appropriate size.
  */
-@property(nonatomic, copy)UIFont  *mediumFont;
+@property(nonatomic, copy, null_resettable)UIFont  *emphasisFont;
 
 /**
  *  This font is automatically derived from the font, with a slightly lower point size, and will be used for supplementary labels.

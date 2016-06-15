@@ -26,6 +26,7 @@
 @interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
+@property(nonatomic)STPTheme *theme;
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
@@ -37,12 +38,20 @@
 
 @implementation STPPaymentContext
 
+- (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
+    return [self initWithAPIAdapter:apiAdapter
+                      configuration:[STPPaymentConfiguration sharedConfiguration]
+                              theme:[STPTheme defaultTheme]];
+}
+
 - (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                     configuration:(STPPaymentConfiguration *)configuration {
+                     configuration:(STPPaymentConfiguration *)configuration
+                             theme:(STPTheme *)theme {
     self = [super init];
     if (self) {
         _configuration = configuration;
         _apiAdapter = apiAdapter;
+        _theme = theme;
         _didAppearPromise = [STPVoidPromise new];
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _paymentCurrency = @"USD";
@@ -81,6 +90,7 @@
     }
     return self;
 }
+
 
 - (void)setHostViewController:(UIViewController *)hostViewController {
     NSCAssert(_hostViewController == nil, @"You cannot change the hostViewController on an STPPaymentContext after it's already been set.");
@@ -128,8 +138,9 @@
     __weak typeof(self)weakself = self;
     [self.didAppearPromise voidOnSuccess:^{
         STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:weakself];
+        paymentMethodsViewController.prefilledInformation = weakself.prefilledInformation;
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
-        [navigationController.navigationBar stp_setTheme:weakself.configuration.theme];
+        [navigationController.navigationBar stp_setTheme:weakself.theme];
         [weakself.hostViewController presentViewController:navigationController animated:YES completion:nil];
     }];
 }
@@ -144,8 +155,9 @@
     }
     NSCAssert(self.hostViewController != nil, @"The payment context's hostViewController is not a navigation controller, or is not contained in one. Either make sure it is inside a navigation controller before calling pushPaymentMethodsViewController, or call presentPaymentMethodsViewController instead.");
     __weak typeof(self) weakself = self;
-    [weakself.didAppearPromise voidOnSuccess:^{
+    [self.didAppearPromise voidOnSuccess:^{
         STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:weakself];
+        paymentMethodsViewController.prefilledInformation = weakself.prefilledInformation;
         [navigationController pushViewController:paymentMethodsViewController animated:YES];
     }];
 }
@@ -197,8 +209,7 @@
             return;
         }
         if (!weakSelf.selectedPaymentMethod) {
-            STPAddCardViewController *addCardViewController;
-            addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration completion:^(STPToken *token, STPErrorBlock tokenCompletion) {
+            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
                 if (token) {
                     [weakSelf.apiAdapter attachSourceToCustomer:token completion:^(NSError *error) {
                         if (error) {
@@ -217,8 +228,9 @@
                     }];
                 }
             }];
+            addCardViewController.prefilledInformation = self.prefilledInformation;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addCardViewController];
-            [navigationController.navigationBar stp_setTheme:weakSelf.configuration.theme];
+            [navigationController.navigationBar stp_setTheme:weakSelf.theme];
             [weakSelf.hostViewController presentViewController:navigationController animated:YES completion:nil];
         }
         else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPCard class]]) {

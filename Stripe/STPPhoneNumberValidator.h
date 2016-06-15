@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPhoneNumberValidator : NSObject
 
++ (BOOL)isUSLocale;
 + (BOOL)stringIsValidPartialPhoneNumber:(NSString *)string;
 + (BOOL)stringIsValidPhoneNumber:(NSString *)string;
 

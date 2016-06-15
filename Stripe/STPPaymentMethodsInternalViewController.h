@@ -22,6 +22,8 @@
 @interface STPPaymentMethodsInternalViewController : UIViewController
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
+                                theme:(STPTheme *)theme
+                 prefilledInformation:(STPUserInformation *)prefilledInformation
                    paymentMethodTuple:(STPPaymentMethodTuple *)tuple
                              delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate;
 

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 /**
- *  This represents all of the payment methods available to your user when configuring an STPPaymentContext.
+ *  This represents all of the payment methods available to your user (in addition to card payments, which are always enabled) when configuring an STPPaymentContext.
  */
 typedef NS_OPTIONS(NSUInteger, STPPaymentMethodType) {
     /**
@@ -17,13 +17,9 @@ typedef NS_OPTIONS(NSUInteger, STPPaymentMethodType) {
      */
     STPPaymentMethodTypeApplePay = 1 << 0,
     /**
-     *  The user is allowed to pay with a card.
-     */
-    STPPaymentMethodTypeCard = 1 << 1,
-    /**
      *  The user can use any available payment method to pay.
      */
-    STPPaymentMethodTypeAll = STPPaymentMethodTypeApplePay | STPPaymentMethodTypeCard
+    STPPaymentMethodTypeAll = STPPaymentMethodTypeApplePay
 };
 
 /**

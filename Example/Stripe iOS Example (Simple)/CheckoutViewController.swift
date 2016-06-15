@@ -41,14 +41,23 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     
     init(product: String, price: Int) {
         self.checkoutView.product = product
-        Stripe.setDefaultPublishableKey(self.stripePublishableKey)
         self.myAPIClient = MyAPIClient(baseURL: self.backendBaseURL,
                                        customerID: self.customerID)
-        let config = STPPaymentConfiguration()
+        
+        // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
+        let config = STPPaymentConfiguration.sharedConfiguration()
+        config.publishableKey = self.stripePublishableKey
         config.appleMerchantIdentifier = self.appleMerchantID
         config.companyName = self.companyName
         config.requiredBillingAddressFields = .Zip
-        let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient, configuration: config)
+        
+        let theme = STPTheme.defaultTheme()
+        theme.accentColor = UIColor.greenColor()
+        
+        let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient)
+        let userInformation = STPUserInformation()
+        userInformation.phone = "020 7946 0718"
+        paymentContext.prefilledInformation = userInformation
         
         paymentContext.paymentAmount = price
         paymentContext.paymentCurrency = self.paymentCurrency

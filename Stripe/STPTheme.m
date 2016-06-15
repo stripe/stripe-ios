@@ -33,26 +33,20 @@ static UIFont  *STPThemeDefaultMediumFont;
     STPThemeDefaultMediumFont = [UIFont systemFontOfSize:17.0f weight:0.2f] ?: [UIFont boldSystemFontOfSize:17];
 }
 
-+ (void)setDefaultTheme:(STPTheme *)theme {
-    STPThemeDefaultPrimaryBackgroundColor = theme.primaryBackgroundColor;
-    STPThemeDefaultSecondaryBackgroundColor = theme.secondaryBackgroundColor;
-    STPThemeDefaultPrimaryForegroundColor = theme.primaryForegroundColor;
-    STPThemeDefaultSecondaryForegroundColor = theme.secondaryForegroundColor;
-    STPThemeDefaultAccentColor = theme.accentColor;
-    STPThemeDefaultErrorColor = theme.errorColor;
-    STPThemeDefaultFont = theme.font;
-    STPThemeDefaultMediumFont = theme.mediumFont;
-}
-
 + (STPTheme *)defaultTheme {
-    return [[STPTheme alloc] initWithPrimaryBackgroundColor:STPThemeDefaultPrimaryBackgroundColor
-                                   secondaryBackgroundColor:STPThemeDefaultSecondaryBackgroundColor
-                                     primaryForegroundColor:STPThemeDefaultPrimaryForegroundColor
-                                   secondaryForegroundColor:STPThemeDefaultSecondaryForegroundColor
-                                                accentColor:STPThemeDefaultAccentColor
-                                                 errorColor:STPThemeDefaultErrorColor
-                                                       font:STPThemeDefaultFont
-                                                 mediumFont:STPThemeDefaultMediumFont];
+    static STPTheme  *STPThemeDefaultTheme;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        STPThemeDefaultTheme = [[STPTheme alloc] initWithPrimaryBackgroundColor:STPThemeDefaultPrimaryBackgroundColor
+                                                       secondaryBackgroundColor:STPThemeDefaultSecondaryBackgroundColor
+                                                         primaryForegroundColor:STPThemeDefaultPrimaryForegroundColor
+                                                       secondaryForegroundColor:STPThemeDefaultSecondaryForegroundColor
+                                                                    accentColor:STPThemeDefaultAccentColor
+                                                                     errorColor:STPThemeDefaultErrorColor
+                                                                           font:STPThemeDefaultFont
+                                                                   emphasisFont:STPThemeDefaultMediumFont];
+    });
+    return STPThemeDefaultTheme;
 }
 
 - (instancetype)initWithPrimaryBackgroundColor:(nullable UIColor *)primaryBackgroundColor
@@ -62,7 +56,7 @@ static UIFont  *STPThemeDefaultMediumFont;
                                    accentColor:(nullable UIColor *)accentColor
                                     errorColor:(nullable UIColor *)errorColor
                                           font:(nullable UIFont *)font
-                                    mediumFont:(nullable UIFont *)mediumFont {
+                                  emphasisFont:(nullable UIFont *)emphasisFont {
     self = [super init];
     if (self) {
         _primaryBackgroundColor = primaryBackgroundColor ?: STPThemeDefaultPrimaryBackgroundColor;
@@ -72,7 +66,7 @@ static UIFont  *STPThemeDefaultMediumFont;
         _accentColor = accentColor ?: STPThemeDefaultAccentColor;
         _errorColor = errorColor ?: STPThemeDefaultErrorColor;
         _font = font ?: STPThemeDefaultFont;
-        _mediumFont = mediumFont ?: STPThemeDefaultMediumFont;
+        _emphasisFont = emphasisFont ?: STPThemeDefaultMediumFont;
     }
     return self;
 }
@@ -85,7 +79,7 @@ static UIFont  *STPThemeDefaultMediumFont;
                                     accentColor:nil
                                      errorColor:nil
                                            font:nil
-                                     mediumFont:nil];
+                                   emphasisFont:nil];
 }
 
 - (UIColor *)tertiaryBackgroundColor {
@@ -110,6 +104,14 @@ static UIFont  *STPThemeDefaultMediumFont;
     return [UIColor colorWithHue:hue saturation:saturation brightness:(brightness - 0.03f) alpha:alpha];
 }
 
+- (UIFont *)font {
+    return _font ?: STPThemeDefaultFont;
+}
+
+- (UIFont *)emphasisFont {
+    return _emphasisFont ?: STPThemeDefaultMediumFont;
+}
+
 - (UIFont *)smallFont {
     return [self.font fontWithSize:self.font.pointSize - 2];
 }
@@ -126,7 +128,7 @@ static UIFont  *STPThemeDefaultMediumFont;
                                                 accentColor:self.accentColor
                                                  errorColor:self.errorColor
                                                        font:self.font
-                                                 mediumFont:self.mediumFont];
+                                               emphasisFont:self.emphasisFont];
 }
 
 @end

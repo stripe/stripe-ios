@@ -16,6 +16,7 @@
 #import "STPToken.h"
 #import "STPAPIPostRequest.h"
 #import "STPAnalyticsClient.h"
+#import "STPPaymentConfiguration.h"
 
 #if __has_include("Fabric.h")
 #import "Fabric+FABKits.h"
@@ -37,10 +38,11 @@ static NSString *STPDefaultPublishableKey;
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
     STPDefaultPublishableKey = publishableKey;
+    [STPPaymentConfiguration sharedConfiguration].publishableKey = publishableKey;
 }
 
 + (NSString *)defaultPublishableKey {
-    return STPDefaultPublishableKey;
+    return [STPPaymentConfiguration sharedConfiguration].publishableKey;
 }
 
 + (void)disableAnalytics {

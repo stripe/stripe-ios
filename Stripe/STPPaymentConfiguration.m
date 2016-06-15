@@ -12,12 +12,19 @@
 
 @implementation STPPaymentConfiguration
 
++ (instancetype)sharedConfiguration {
+    static STPPaymentConfiguration *sharedConfiguration;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedConfiguration = [STPPaymentConfiguration new];
+    });
+    return sharedConfiguration;
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _publishableKey = [Stripe defaultPublishableKey];
-        _theme = [STPTheme new];
-        _supportedPaymentMethods = STPPaymentMethodTypeAll;
+        _additionalPaymentMethods = STPPaymentMethodTypeAll;
         _requiredBillingAddressFields = STPBillingAddressFieldsNone;
         _companyName = [NSBundle stp_applicationName];
         _smsAutofillDisabled = NO;
@@ -28,13 +35,11 @@
 - (id)copyWithZone:(__unused NSZone *)zone {
     STPPaymentConfiguration *copy = [self.class new];
     copy.publishableKey = self.publishableKey;
-    copy.theme = self.theme;
-    copy.supportedPaymentMethods = self.supportedPaymentMethods;
+    copy.additionalPaymentMethods = self.additionalPaymentMethods;
     copy.requiredBillingAddressFields = self.requiredBillingAddressFields;
     copy.companyName = self.companyName;
     copy.appleMerchantIdentifier = self.appleMerchantIdentifier;
     copy.smsAutofillDisabled = self.smsAutofillDisabled;
-    copy.prefilledUserEmail = self.prefilledUserEmail;
     return copy;
 }
 

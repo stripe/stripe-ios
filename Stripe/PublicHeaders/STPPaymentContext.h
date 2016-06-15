@@ -13,6 +13,7 @@
 #import "STPAddress.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentResult.h"
+#import "STPUserInformation.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -80,8 +81,12 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
  *
  *  @return the newly-instantiated payment context
  */
+// TODO update comment
+- (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter;
+
 - (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                     configuration:(STPPaymentConfiguration *)configuration;
+                     configuration:(STPPaymentConfiguration *)configuration
+                             theme:(STPTheme *)theme;
 
 /**
  *  The API adapter the payment context will use to fetch and modify its contents. You need to make a class conforming to this protocol that talks to your server. @see STPBackendAPIAdapter.h
@@ -92,6 +97,16 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
  *  The configuration for the payment context to use internally. @see STPPaymentConfiguration.h
  */
 @property(nonatomic, readonly)STPPaymentConfiguration *configuration;
+
+/**
+ *  The visual appearance that will be used by any views that the context generates. @see STPTheme.h
+ */
+@property(nonatomic, readonly)STPTheme *theme;
+
+/**
+ *  If you've already collected some information from your user, you can set it here and it'll be automatically filled out when possible/appropriate in any UI that the payment context creates.
+ */
+@property(nonatomic)STPUserInformation *prefilledInformation;
 
 /**
  *  The view controller that any additional UI will be presented on. If you have a "checkout view controller" in your app, that should be used as the host view controller.

@@ -20,6 +20,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 @interface STPPaymentMethodsInternalViewController()<UITableViewDataSource, UITableViewDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
+@property(nonatomic)STPTheme *theme;
+@property(nonatomic)STPUserInformation *prefilledInformation;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic, weak)id<STPPaymentMethodsInternalViewControllerDelegate> delegate;
@@ -31,11 +33,15 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 @implementation STPPaymentMethodsInternalViewController
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
+                                theme:(STPTheme *)theme
+                 prefilledInformation:(STPUserInformation *)prefilledInformation
                    paymentMethodTuple:(STPPaymentMethodTuple *)tuple
                              delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _configuration = configuration;
+        _theme = theme;
+        _prefilledInformation = prefilledInformation;
         _paymentMethods = tuple.paymentMethods;
         _selectedPaymentMethod = tuple.selectedPaymentMethod;
         _delegate = delegate;
@@ -66,10 +72,10 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     
     self.cardImageView.image = [self.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]] ? [UIImage stp_largeCardApplePayImage] : [UIImage stp_largeCardFrontImage];
     
-    self.tableView.backgroundColor = self.configuration.theme.primaryBackgroundColor;
-    self.tableView.tintColor = self.configuration.theme.accentColor;
-    self.cardImageView.tintColor = self.configuration.theme.accentColor;
-    self.tableView.separatorColor = self.configuration.theme.quaternaryBackgroundColor;
+    self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
+    self.tableView.tintColor = self.theme.accentColor;
+    self.cardImageView.tintColor = self.theme.accentColor;
+    self.tableView.separatorColor = self.theme.quaternaryBackgroundColor;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -105,8 +111,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier forIndexPath:indexPath];
-    cell.textLabel.font = self.configuration.theme.font;
-    cell.backgroundColor = self.configuration.theme.secondaryBackgroundColor;
+    cell.textLabel.font = self.theme.font;
+    cell.backgroundColor = self.theme.secondaryBackgroundColor;
     if (indexPath.section == STPPaymentMethodCardListSection) {
         id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
         cell.imageView.image = paymentMethod.image;
@@ -114,7 +120,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         cell.textLabel.attributedText = [self buildAttributedStringForPaymentMethod:paymentMethod selected:selected];
         cell.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
-        cell.textLabel.textColor = [self.configuration.theme accentColor];
+        cell.textLabel.textColor = [self.theme accentColor];
         cell.imageView.image = [UIImage stp_addIcon];
         cell.textLabel.text = NSLocalizedString(@"Add New Card...", nil);
     }
@@ -127,7 +133,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         return [self buildAttributedStringForCard:(STPCard *)paymentMethod selected:selected];
     } else if ([paymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
         NSString *label = NSLocalizedString(@"Apple Pay", nil);
-        UIColor *primaryColor = selected ? self.configuration.theme.accentColor : self.configuration.theme.primaryForegroundColor;
+        UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
     }
     return nil;
@@ -137,15 +143,15 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     NSString *template = NSLocalizedString(@"%@ Ending In %@", @"{card brand} ending in {last4}");
     NSString *brandString = [NSString stp_stringWithCardBrand:card.brand];
     NSString *label = [NSString stringWithFormat:template, brandString, card.last4];
-    UIColor *primaryColor = selected ? self.configuration.theme.accentColor : self.configuration.theme.primaryForegroundColor;
+    UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
     UIColor *secondaryColor = [primaryColor colorWithAlphaComponent:0.6f];
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:label attributes:@{
                                                                                                                        NSForegroundColorAttributeName: secondaryColor,
-                                                                                                                       NSFontAttributeName: self.configuration.theme.font}];
+                                                                                                                       NSFontAttributeName: self.theme.font}];
     [attributedString addAttribute:NSForegroundColorAttributeName value:primaryColor range:[label rangeOfString:brandString]];
     [attributedString addAttribute:NSForegroundColorAttributeName value:primaryColor range:[label rangeOfString:card.last4]];
-    [attributedString addAttribute:NSFontAttributeName value:self.configuration.theme.mediumFont range:[label rangeOfString:brandString]];
-    [attributedString addAttribute:NSFontAttributeName value:self.configuration.theme.mediumFont range:[label rangeOfString:card.last4]];
+    [attributedString addAttribute:NSFontAttributeName value:self.theme.emphasisFont range:[label rangeOfString:brandString]];
+    [attributedString addAttribute:NSFontAttributeName value:self.theme.emphasisFont range:[label rangeOfString:card.last4]];
     return [attributedString copy];
 }
 
@@ -163,7 +169,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         // Disable SMS autofill if we already have a card on file
         config.smsAutofillDisabled = (config.smsAutofillDisabled || cardPaymentMethods.count > 0);
         
-        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
+        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config theme:self.theme completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
             if (token && token.card) {
                 [self.delegate internalViewControllerDidCreateToken:token completion:tokenCompletion];
             } else {
@@ -172,6 +178,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
                 }];
             }
         }];
+        paymentCardViewController.prefilledInformation = self.prefilledInformation;
         [self.navigationController pushViewController:paymentCardViewController animated:YES];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -180,7 +187,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     BOOL topRow = (indexPath.row == 0);
     BOOL bottomRow = ([self tableView:tableView numberOfRowsInSection:indexPath.section] - 1 == indexPath.row);
-    [cell stp_setBorderColor:self.configuration.theme.tertiaryBackgroundColor];
+    [cell stp_setBorderColor:self.theme.tertiaryBackgroundColor];
     [cell stp_setTopBorderHidden:!topRow];
     [cell stp_setBottomBorderHidden:!bottomRow];
 }

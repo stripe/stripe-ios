@@ -19,7 +19,7 @@ static NSInteger const STPNavigationBarHairlineViewTag = 787473;
     self.barTintColor = theme.secondaryBackgroundColor;
     self.tintColor = theme.accentColor;
     self.titleTextAttributes = @{
-                                 NSFontAttributeName: theme.mediumFont,
+                                 NSFontAttributeName: theme.emphasisFont,
                                  NSForegroundColorAttributeName: theme.primaryForegroundColor,
                                  };
 }
