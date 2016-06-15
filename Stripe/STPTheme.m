@@ -37,49 +37,32 @@ static UIFont  *STPThemeDefaultMediumFont;
     static STPTheme  *STPThemeDefaultTheme;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        STPThemeDefaultTheme = [[STPTheme alloc] initWithPrimaryBackgroundColor:STPThemeDefaultPrimaryBackgroundColor
-                                                       secondaryBackgroundColor:STPThemeDefaultSecondaryBackgroundColor
-                                                         primaryForegroundColor:STPThemeDefaultPrimaryForegroundColor
-                                                       secondaryForegroundColor:STPThemeDefaultSecondaryForegroundColor
-                                                                    accentColor:STPThemeDefaultAccentColor
-                                                                     errorColor:STPThemeDefaultErrorColor
-                                                                           font:STPThemeDefaultFont
-                                                                   emphasisFont:STPThemeDefaultMediumFont];
+        STPThemeDefaultTheme = [STPTheme new];
     });
     return STPThemeDefaultTheme;
 }
 
-- (instancetype)initWithPrimaryBackgroundColor:(nullable UIColor *)primaryBackgroundColor
-                      secondaryBackgroundColor:(nullable UIColor *)secondaryBackgroundColor
-                        primaryForegroundColor:(nullable UIColor *)primaryForegroundColor
-                      secondaryForegroundColor:(nullable UIColor *)secondaryForegroundColor
-                                   accentColor:(nullable UIColor *)accentColor
-                                    errorColor:(nullable UIColor *)errorColor
-                                          font:(nullable UIFont *)font
-                                  emphasisFont:(nullable UIFont *)emphasisFont {
+- (instancetype)init {
     self = [super init];
     if (self) {
-        _primaryBackgroundColor = primaryBackgroundColor ?: STPThemeDefaultPrimaryBackgroundColor;
-        _secondaryBackgroundColor = secondaryBackgroundColor ?: STPThemeDefaultSecondaryBackgroundColor;
-        _primaryForegroundColor = primaryForegroundColor ?: STPThemeDefaultPrimaryForegroundColor;
-        _secondaryForegroundColor = secondaryForegroundColor ?: STPThemeDefaultSecondaryForegroundColor;
-        _accentColor = accentColor ?: STPThemeDefaultAccentColor;
-        _errorColor = errorColor ?: STPThemeDefaultErrorColor;
-        _font = font ?: STPThemeDefaultFont;
-        _emphasisFont = emphasisFont ?: STPThemeDefaultMediumFont;
+        _primaryBackgroundColor = STPThemeDefaultPrimaryBackgroundColor;
+        _secondaryBackgroundColor = STPThemeDefaultSecondaryBackgroundColor;
+        _primaryForegroundColor = STPThemeDefaultPrimaryForegroundColor;
+        _secondaryForegroundColor = STPThemeDefaultSecondaryForegroundColor;
+        _accentColor = STPThemeDefaultAccentColor;
+        _errorColor = STPThemeDefaultErrorColor;
+        _font = STPThemeDefaultFont;
+        _emphasisFont = STPThemeDefaultMediumFont;
     }
     return self;
 }
 
-- (instancetype)init {
-    return [self initWithPrimaryBackgroundColor:nil
-                       secondaryBackgroundColor:nil
-                         primaryForegroundColor:nil
-                       secondaryForegroundColor:nil
-                                    accentColor:nil
-                                     errorColor:nil
-                                           font:nil
-                                   emphasisFont:nil];
+- (UIColor *)primaryBackgroundColor {
+    return _primaryBackgroundColor ?: STPThemeDefaultPrimaryBackgroundColor;
+}
+
+- (UIColor *)secondaryBackgroundColor {
+    return _secondaryBackgroundColor ?: STPThemeDefaultSecondaryBackgroundColor;
 }
 
 - (UIColor *)tertiaryBackgroundColor {
@@ -89,6 +72,14 @@ static UIFont  *STPThemeDefaultMediumFont;
 	CGFloat alpha;
 	[self.primaryBackgroundColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
     return [UIColor colorWithHue:hue saturation:saturation brightness:(brightness - 0.09f) alpha:alpha];
+}
+
+- (UIColor *)primaryForegroundColor {
+    return _primaryForegroundColor ?: STPThemeDefaultPrimaryForegroundColor;
+}
+
+- (UIColor *)secondaryForegroundColor {
+    return _secondaryForegroundColor ?: STPThemeDefaultSecondaryForegroundColor;
 }
 
 - (UIColor *)tertiaryForegroundColor {
@@ -102,6 +93,14 @@ static UIFont  *STPThemeDefaultMediumFont;
     CGFloat alpha;
     [self.primaryBackgroundColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
     return [UIColor colorWithHue:hue saturation:saturation brightness:(brightness - 0.03f) alpha:alpha];
+}
+
+- (UIColor *)accentColor {
+    return _accentColor ?: STPThemeDefaultAccentColor;
+}
+
+- (UIColor *)errorColor {
+    return _errorColor ?: STPThemeDefaultErrorColor;
 }
 
 - (UIFont *)font {
@@ -121,14 +120,16 @@ static UIFont  *STPThemeDefaultMediumFont;
 }
 
 - (id)copyWithZone:(__unused NSZone *)zone {
-    return [[STPTheme alloc] initWithPrimaryBackgroundColor:self.primaryBackgroundColor
-                                   secondaryBackgroundColor:self.secondaryBackgroundColor
-                                     primaryForegroundColor:self.primaryForegroundColor
-                                   secondaryForegroundColor:self.secondaryForegroundColor
-                                                accentColor:self.accentColor
-                                                 errorColor:self.errorColor
-                                                       font:self.font
-                                               emphasisFont:self.emphasisFont];
+    STPTheme *copyTheme = [STPTheme new];
+    copyTheme.primaryBackgroundColor = self.primaryBackgroundColor;
+    copyTheme.secondaryBackgroundColor = self.secondaryBackgroundColor;
+    copyTheme.primaryForegroundColor = self.primaryForegroundColor;
+    copyTheme.secondaryForegroundColor = self.secondaryForegroundColor;
+    copyTheme.accentColor = self.accentColor;
+    copyTheme.errorColor = self.errorColor;
+    copyTheme.font = self.font;
+    copyTheme.emphasisFont = self.emphasisFont;
+    return copyTheme;
 }
 
 @end
