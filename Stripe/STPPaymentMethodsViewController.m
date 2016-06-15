@@ -146,6 +146,7 @@
     [self.navigationItem.backBarButtonItem stp_setTheme:self.theme];
     [self.backItem stp_setTheme:self.theme];
     [self.cancelItem stp_setTheme:self.theme];
+    self.activityIndicator.tintColor = self.theme.accentColor;
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
 }
 

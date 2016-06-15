@@ -28,8 +28,10 @@
 }
 
 - (void)stp_setTheme:(STPTheme *)theme {
+    self.tintColor = theme.accentColor;
     [self setTitleTextAttributes:@{
                                    NSFontAttributeName: self.style == UIBarButtonItemStylePlain ? theme.font : theme.emphasisFont,
+                                   NSForegroundColorAttributeName: theme.accentColor,
                                    }
                         forState:UIControlStateNormal];
 }

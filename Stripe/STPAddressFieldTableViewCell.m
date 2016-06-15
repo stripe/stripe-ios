@@ -239,11 +239,7 @@
         case STPAddressFieldTypeEmail:
             return [STPEmailAddressValidator stringIsValidEmailAddress:self.contents];
         case STPAddressFieldTypePhone:
-            if ([[[NSLocale autoupdatingCurrentLocale] localeIdentifier] isEqualToString:@"en_US"]) {
-                return [STPPhoneNumberValidator stringIsValidPhoneNumber:self.contents];
-            } else {
-                return [STPCardValidator stringIsNumeric:self.contents];
-            }
+            return [STPPhoneNumberValidator stringIsValidPhoneNumber:self.contents];
     }
 }
 
