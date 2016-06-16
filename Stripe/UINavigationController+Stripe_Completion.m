@@ -8,34 +8,55 @@
 
 #import "UINavigationController+Stripe_Completion.h"
 
+// See http://stackoverflow.com/questions/9906966/completion-handler-for-uinavigationcontroller-pushviewcontrolleranimated/33767837#33767837 for some discussion around why using CATransaction is unreliable here.
+
 @implementation UINavigationController (Stripe_Completion)
 
 - (void)stp_pushViewController:(UIViewController *)viewController
                       animated:(BOOL)animated
                     completion:(STPVoidBlock)completion {
-    [CATransaction begin];
-    [CATransaction setCompletionBlock:completion];
     [self pushViewController:viewController animated:animated];
-    [CATransaction commit];
+    if (!completion) {
+        return;
+    }
+    if (self.transitionCoordinator && animated) {
+        [self.transitionCoordinator animateAlongsideTransition:nil completion:^(__unused id<UIViewControllerTransitionCoordinatorContext> context) {
+            completion();
+        }];
+    } else {
+        completion();
+    }
 }
 
 - (void)stp_popViewControllerAnimated:(BOOL)animated
                            completion:(STPVoidBlock)completion {
-    [CATransaction begin];
-    [CATransaction setCompletionBlock:completion];
     [self popViewControllerAnimated:animated];
-    [CATransaction commit];
+    if (!completion) {
+        return;
+    }
+    if (self.transitionCoordinator && animated) {
+        [self.transitionCoordinator animateAlongsideTransition:nil completion:^(__unused id<UIViewControllerTransitionCoordinatorContext> context) {
+            completion();
+        }];
+    } else {
+        completion();
+    }
 }
 
 - (void)stp_popToViewController:(UIViewController *)viewController
                        animated:(BOOL)animated
                      completion:(STPVoidBlock)completion {
-    [CATransaction begin];
-    if (completion) {
-        [CATransaction setCompletionBlock:completion];
-    }
     [self popToViewController:viewController animated:animated];
-    [CATransaction commit];
+    if (!completion) {
+        return;
+    }
+    if (self.transitionCoordinator && animated) {
+        [self.transitionCoordinator animateAlongsideTransition:nil completion:^(__unused id<UIViewControllerTransitionCoordinatorContext> context) {
+            completion();
+        }];
+    } else {
+        completion();
+    }
 }
 
 @end

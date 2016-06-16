@@ -136,10 +136,14 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
             message: error.localizedDescription,
             preferredStyle: .Alert
         )
-        let action = UIAlertAction(title: "OK", style: .Default, handler: { action in
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: { action in
             self.navigationController?.popViewControllerAnimated(true)
         })
-        alertController.addAction(action)
+        let retry = UIAlertAction(title: "Retry", style: .Default, handler: { action in
+            self.paymentContext.retryLoading()
+        })
+        alertController.addAction(cancel)
+        alertController.addAction(retry)
         self.presentViewController(alertController, animated: true, completion: nil)
     }
 

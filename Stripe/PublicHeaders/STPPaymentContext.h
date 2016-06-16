@@ -144,6 +144,11 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
 @property(nonatomic, copy)NSString *paymentCurrency;
 
 /**
+ *  TODO: document me
+ */
+- (void)retryLoading;
+
+/**
  *  This creates, configures, and appropriately presents an STPPaymentMethodsViewController on top of the payment context's hostViewController. It'll be dismissed automatically when the user is done selecting their payment method.
  */
 - (void)presentPaymentMethodsViewController;
