@@ -94,6 +94,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     tableView.sectionHeaderHeight = 30;
     [self.view addSubview:tableView];
@@ -215,6 +216,17 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     [self reloadRememberMeCellAnimated:NO];
     self.stp_navigationItemProxy.leftBarButtonItem = [self stp_isRootViewControllerOfNavigationController] ? self.cancelItem : self.backItem;
     [self.tableView reloadData];
+    if (self.navigationController.navigationBar.translucent) {
+        CGFloat insetTop = CGRectGetMaxY(self.navigationController.navigationBar.frame);
+        self.tableView.contentInset = UIEdgeInsetsMake(insetTop, 0, 0, 0);
+        self.tableView.scrollIndicatorInsets = self.tableView.contentInset;
+    } else {
+        self.tableView.contentInset = UIEdgeInsetsZero;
+        self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
+    }
+    CGPoint offset = self.tableView.contentOffset;
+    offset.y = -self.tableView.contentInset.top;
+    self.tableView.contentOffset = offset;
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -227,17 +239,19 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         insets.bottom = bottomIntersection.size.height;
         weakself.tableView.contentInset = insets;
         weakself.tableView.scrollIndicatorInsets = insets;
-        if (bottomIntersection.size.height > 0) {
-            // the keyboard is visible
-            CGRect responderFrame = [currentlyEditedField convertRect:currentlyEditedField.bounds toView:self.tableView];
-            CGPoint offset = self.tableView.contentOffset;
-            
-            CGFloat topOfScreenOffset = CGRectGetMinY(responderFrame);
-            CGFloat topOfKeyboardOffset = CGRectGetMinY(responderFrame) - CGRectGetMinY(keyboardFrame);
-            offset.y = (topOfScreenOffset + topOfKeyboardOffset) / 2;
-            offset.y = MAX(offset.y, 0);
-            self.tableView.contentOffset = offset;
+        if (!currentlyEditedField || bottomIntersection.size.height <= 0) {
+            weakself.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
+            return;
         }
+        // the keyboard is visible
+        CGRect responderFrame = [currentlyEditedField convertRect:currentlyEditedField.bounds toView:self.tableView];
+        CGPoint offset = self.tableView.contentOffset;
+        
+        CGFloat topOfScreenOffset = CGRectGetMinY(responderFrame);
+        CGFloat topOfKeyboardOffset = CGRectGetMinY(responderFrame) - CGRectGetMinY(keyboardFrame);
+        offset.y = ((topOfScreenOffset + topOfKeyboardOffset) / 2) - self.tableView.contentInset.top;
+        offset.y = MAX(offset.y, -self.tableView.contentInset.top);
+        self.tableView.contentOffset = offset;
     }];
     [[self firstEmptyField] becomeFirstResponder];
 }
