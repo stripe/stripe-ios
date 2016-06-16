@@ -28,7 +28,13 @@
 }
 
 - (void)stp_setTheme:(STPTheme *)theme {
-    self.tintColor = theme.accentColor;
+    UIImage *image = [self backgroundImageForState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    UIImage *enabledImage = [image stp_imageWithTintColor:theme.accentColor];
+    UIImage *disabledImage = [image stp_imageWithTintColor:theme.secondaryForegroundColor];
+    [self setBackgroundImage:enabledImage forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    [self setBackgroundImage:disabledImage forState:UIControlStateDisabled barMetrics:UIBarMetricsDefault];
+    
+    self.tintColor = self.enabled ? theme.accentColor : theme.secondaryForegroundColor;
     [self setTitleTextAttributes:@{
                                    NSFontAttributeName: self.style == UIBarButtonItemStylePlain ? theme.font : theme.emphasisFont,
                                    NSForegroundColorAttributeName: theme.accentColor,
@@ -39,7 +45,6 @@
                                    NSForegroundColorAttributeName: theme.secondaryForegroundColor,
                                    }
                         forState:UIControlStateDisabled];
-    
 }
 
 @end

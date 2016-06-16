@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage *)stp_largeCardBackImage;
 + (UIImage *)stp_largeCardApplePayImage;
 
+- (UIImage *)stp_imageWithTintColor:(UIColor *)color;
 - (UIImage *)stp_paddedImageWithInsets:(UIEdgeInsets)insets;
 
 @end

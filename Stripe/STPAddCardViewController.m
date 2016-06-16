@@ -87,7 +87,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
         _addressViewModel.delegate = self;
         _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
-        self.title = NSLocalizedString(@"Add Card", nil);
+        self.title = NSLocalizedString(@"Add a Card", nil);
     }
     return self;
 }
