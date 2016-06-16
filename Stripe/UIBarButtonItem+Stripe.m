@@ -34,6 +34,12 @@
                                    NSForegroundColorAttributeName: theme.accentColor,
                                    }
                         forState:UIControlStateNormal];
+    [self setTitleTextAttributes:@{
+                                   NSFontAttributeName: self.style == UIBarButtonItemStylePlain ? theme.font : theme.emphasisFont,
+                                   NSForegroundColorAttributeName: theme.secondaryForegroundColor,
+                                   }
+                        forState:UIControlStateDisabled];
+    
 }
 
 @end

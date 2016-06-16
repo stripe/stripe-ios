@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void(^STPKeyboardFrameBlock)(CGRect keyboardFrame);
+typedef void(^STPKeyboardFrameBlock)(CGRect keyboardFrame, UIView *currentlyEditedField);
 
 @interface UIViewController (Stripe_KeyboardAvoiding)
 

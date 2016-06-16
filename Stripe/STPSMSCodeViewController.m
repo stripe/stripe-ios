@@ -111,8 +111,8 @@
     self.codeField.theme = self.theme;
     self.bottomLabel.font = self.theme.smallFont;
     self.bottomLabel.textColor = self.theme.secondaryForegroundColor;
+    self.cancelButton.tintColor = self.theme.accentColor;
     self.cancelButton.titleLabel.font = self.theme.smallFont;
-    self.cancelButton.titleLabel.textColor = self.theme.accentColor;
     self.errorLabel.font = self.theme.smallFont;
     self.errorLabel.textColor = self.theme.errorColor;
     self.activityIndicator.tintColor = self.theme.accentColor;
@@ -144,7 +144,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     __weak typeof(self) weakself = self;
-    [self stp_beginObservingKeyboardWithBlock:^(CGRect keyboardFrame) {
+    [self stp_beginObservingKeyboardWithBlock:^(CGRect keyboardFrame, __unused UIView *currentlyEditedField) {
         CGFloat base = CGRectGetMaxY(weakself.navigationController.navigationBar.frame);
         CGRect codeFrame = weakself.codeField.frame;
         codeFrame.origin.y += base;
