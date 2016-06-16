@@ -21,7 +21,8 @@
 @interface STPSMSCodeViewController : UIViewController
 
 - (instancetype)initWithCheckoutAPIClient:(STPCheckoutAPIClient *)checkoutAPIClient
-                             verification:(STPCheckoutAPIVerification *)verification;
+                             verification:(STPCheckoutAPIVerification *)verification
+                            redactedPhone:(NSString *)redactedPhone;
 
 @property(nonatomic)STPTheme *theme;
 @property(nonatomic, weak)id<STPSMSCodeViewControllerDelegate>delegate;

@@ -57,6 +57,7 @@
 @property(nonatomic)UIToolbar *inputAccessoryToolbar;
 @property(nonatomic)STPCheckoutAPIClient *checkoutAPIClient;
 @property(nonatomic)STPCheckoutAccount *checkoutAccount;
+@property(nonatomic)STPCheckoutAccountLookup *checkoutLookup;
 @property(nonatomic)STPCard *checkoutAccountCard;
 @property(nonatomic)BOOL lookupSucceeded;
 @property(nonatomic)STPRememberMeTermsView *rememberMeTermsView;
@@ -436,9 +437,10 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
             return [weakself.checkoutAPIClient lookupEmail:email];
         }] flatMap:^STPPromise * _Nonnull(STPCheckoutAccountLookup *lookup) {
             weakself.lookupSucceeded = YES;
+            weakself.checkoutLookup = lookup;
             return [weakself.checkoutAPIClient sendSMSToAccountWithEmail:lookup.email];
         }] onSuccess:^(STPCheckoutAPIVerification *verification) {
-            STPSMSCodeViewController *codeViewController = [[STPSMSCodeViewController alloc] initWithCheckoutAPIClient:self.checkoutAPIClient verification:verification];
+            STPSMSCodeViewController *codeViewController = [[STPSMSCodeViewController alloc] initWithCheckoutAPIClient:self.checkoutAPIClient verification:verification redactedPhone:self.checkoutLookup.redactedPhone];
             codeViewController.theme = self.theme;
             codeViewController.delegate = self;
             UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:codeViewController];

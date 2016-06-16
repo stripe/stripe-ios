@@ -14,11 +14,13 @@
 #import "StripeError.h"
 #import "UIBarButtonItem+Stripe.h"
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
+#import "STPPhoneNumberValidator.h"
 
 @interface STPSMSCodeViewController()<STPSMSCodeTextFieldDelegate>
 
 @property(nonatomic)STPCheckoutAPIClient *checkoutAPIClient;
 @property(nonatomic)STPCheckoutAPIVerification *verification;
+@property(nonatomic)NSString *redactedPhone;
 
 @property(nonatomic, weak)UIScrollView *scrollView;
 @property(nonatomic, weak)UILabel *topLabel;
@@ -26,6 +28,7 @@
 @property(nonatomic, weak)UILabel *bottomLabel;
 @property(nonatomic, weak)UIButton *cancelButton;
 @property(nonatomic, weak)UILabel *errorLabel;
+@property(nonatomic, weak)UILabel *smsSentLabel;
 @property(nonatomic, weak)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic)BOOL loading;
 
@@ -34,11 +37,13 @@
 @implementation STPSMSCodeViewController
 
 - (instancetype)initWithCheckoutAPIClient:(STPCheckoutAPIClient *)checkoutAPIClient
-                             verification:(STPCheckoutAPIVerification *)verification {
+                             verification:(STPCheckoutAPIVerification *)verification
+                            redactedPhone:(NSString *)redactedPhone {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _checkoutAPIClient = checkoutAPIClient;
         _verification = verification;
+        _redactedPhone = redactedPhone;
         _theme = [STPTheme new];
     }
     return self;
@@ -74,6 +79,7 @@
     UILabel *bottomLabel = [UILabel new];
     bottomLabel.textAlignment = NSTextAlignmentCenter;
     bottomLabel.text = NSLocalizedString(@"Didn't receive the code?", nil);
+    bottomLabel.alpha = 0;
     [self.scrollView addSubview:bottomLabel];
     self.bottomLabel = bottomLabel;
     
@@ -81,6 +87,7 @@
     cancelButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     [cancelButton setTitle:NSLocalizedString(@"Fill in your card details manually", nil) forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
+    cancelButton.alpha = 0;
     [self.scrollView addSubview:cancelButton];
     self.cancelButton = cancelButton;
     
@@ -90,6 +97,14 @@
     errorLabel.text = NSLocalizedString(@"Invalid Code", nil);
     [self.scrollView addSubview:errorLabel];
     self.errorLabel = errorLabel;
+
+    UILabel *smsSentLabel = [UILabel new];
+    smsSentLabel.textAlignment = NSTextAlignmentCenter;
+    smsSentLabel.numberOfLines = 2;
+    NSString *sentString = NSLocalizedString(@"We just sent a text message to:", nil);
+    smsSentLabel.text = [NSString stringWithFormat:@"%@\n%@", sentString, [STPPhoneNumberValidator formattedRedactedPhoneNumberForString:self.redactedPhone]];
+    [self.scrollView addSubview:smsSentLabel];
+    self.smsSentLabel = smsSentLabel;
     
     STPPaymentActivityIndicatorView *activityIndicator = [STPPaymentActivityIndicatorView new];
     [self.scrollView addSubview:activityIndicator];
@@ -115,6 +130,8 @@
     self.cancelButton.titleLabel.textColor = self.theme.accentColor;
     self.errorLabel.font = self.theme.smallFont;
     self.errorLabel.textColor = self.theme.errorColor;
+    self.smsSentLabel.font = self.theme.smallFont;
+    self.smsSentLabel.textColor = self.theme.secondaryForegroundColor;
     self.activityIndicator.tintColor = self.theme.accentColor;
 }
 
@@ -136,6 +153,9 @@
     self.errorLabel.frame = self.bottomLabel.frame;
     
     self.cancelButton.frame = CGRectOffset(self.errorLabel.frame, 0, self.errorLabel.frame.size.height + 2);
+
+    CGSize smsSentLabelSize = [self.smsSentLabel sizeThatFits:CGSizeMake(contentWidth, CGFLOAT_MAX)];
+    self.smsSentLabel.frame = CGRectMake(padding, self.bottomLabel.frame.origin.y, contentWidth, smsSentLabelSize.height);
     
     CGFloat activityIndicatorWidth = 30.0f;
     self.activityIndicator.frame = CGRectMake((self.view.bounds.size.width - activityIndicatorWidth) / 2, CGRectGetMaxY(self.cancelButton.frame) + 20, activityIndicatorWidth, activityIndicatorWidth);
@@ -161,6 +181,12 @@
         }
     }];
     [self.codeField becomeFirstResponder];
+
+    [UIView animateWithDuration:0.2f delay:10.0f options:0 animations:^{
+        self.bottomLabel.alpha = 1.0f;
+        self.cancelButton.alpha = 1.0f;
+        self.smsSentLabel.alpha = 0;
+    } completion:nil];
 }
 
 - (void)codeTextField:(STPSMSCodeTextField *)codeField
