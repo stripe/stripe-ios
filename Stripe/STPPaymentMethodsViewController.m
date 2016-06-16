@@ -138,7 +138,9 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.activityIndicator.center = self.view.center;
+    CGFloat centerX = (self.view.frame.size.width - self.activityIndicator.frame.size.width) / 2;
+    CGFloat centerY = (self.view.frame.size.height - self.activityIndicator.frame.size.height) / 2;
+    self.activityIndicator.frame = CGRectMake(centerX, centerY, self.activityIndicator.frame.size.width, self.activityIndicator.frame.size.height);
     self.internalViewController.view.frame = self.view.bounds;
 }
 
