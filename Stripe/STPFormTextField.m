@@ -140,7 +140,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                     return [inputString copy];
                 }
                 __strong id strongself = weakself;
-                NSString *phoneNumber = [STPPhoneNumberValidator formattedPhoneNumberForString:inputString.string];
+                NSString *phoneNumber = [STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:inputString.string];
                 NSDictionary *attributes = [[strongself class] attributesForAttributedString:inputString];
                 return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
             };

@@ -16,7 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)stringIsValidPartialPhoneNumber:(NSString *)string;
 + (BOOL)stringIsValidPhoneNumber:(NSString *)string;
 
-+ (NSString *)formattedPhoneNumberForString:(NSString *)string;
++ (NSString *)formattedSanitizedPhoneNumberForString:(NSString *)string;
++ (NSString *)formattedRedactedPhoneNumberForString:(NSString *)string;
 
 @end
 
