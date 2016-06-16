@@ -155,7 +155,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     return [attributedString copy];
 }
 
-- (void)tableView:(__unused UITableView *)tableView didSelectRowAtIndexPath:(__unused NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == STPPaymentMethodCardListSection) {
         id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
         self.selectedPaymentMethod = paymentMethod;

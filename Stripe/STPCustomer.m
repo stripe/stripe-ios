@@ -38,7 +38,7 @@
     }
     NSError *jsonError;
     id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-    if (jsonError) {
+    if (!json) {
         return [self initWithError:jsonError];
     }
     return [self initWithJSONResponse:json];

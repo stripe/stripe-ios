@@ -16,7 +16,7 @@
     static STPPaymentConfiguration *sharedConfiguration;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedConfiguration = [STPPaymentConfiguration new];
+        sharedConfiguration = [self new];
     });
     return sharedConfiguration;
 }
