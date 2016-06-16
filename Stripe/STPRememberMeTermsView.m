@@ -50,7 +50,7 @@
     NSURL *termsURL = [NSURL URLWithString:@"https://checkout.stripe.com/-/terms"];
     NSString *learnMore = [NSLocalizedString(@"More info", nil) lowercaseString];
     NSURL *learnMoreURL = [NSURL URLWithString:@"https://checkout.stripe.com/-/remember-me"];
-    NSString *contents = NSLocalizedString(@"Stripe may store my payment credentials and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's Privacy Policy and Terms. More Info", nil);
+    NSString *contents = NSLocalizedString(@"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's Privacy Policy and Terms. More Info", nil);
     NSRange privacyRange = [contents.lowercaseString rangeOfString:privacyPolicy];
     NSRange termsRange = [contents.lowercaseString rangeOfString:terms];
     NSRange learnMoreRange = [contents.lowercaseString rangeOfString:learnMore];

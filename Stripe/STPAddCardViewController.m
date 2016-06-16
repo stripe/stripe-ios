@@ -134,7 +134,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.obscuredCardView = obscuredCardView;
     
     self.rememberMeCell = [[STPSwitchTableViewCell alloc] init];
-    [self.rememberMeCell configureWithLabel:NSLocalizedString(@"Autofill my card in other apps", nil) delegate:self];
+    [self.rememberMeCell configureWithLabel:NSLocalizedString(@"Save for use in other apps", nil) delegate:self];
     
     self.rememberMePhoneCell = [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypePhone contents:nil lastInList:YES delegate:self];
     self.rememberMePhoneCell.caption = NSLocalizedString(@"Phone", nil);
