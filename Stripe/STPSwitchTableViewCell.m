@@ -37,6 +37,11 @@
     return self;
 }
 
+- (void)setTheme:(STPTheme *)theme {
+    _theme = theme;
+    [self updateAppearance];
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     CGFloat padding = 15;
