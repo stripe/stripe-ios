@@ -47,17 +47,13 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
         let config = STPPaymentConfiguration.sharedConfiguration()
         config.publishableKey = self.stripePublishableKey
+        config.additionalPaymentMethods = .Zip
         config.appleMerchantIdentifier = self.appleMerchantID
         config.companyName = self.companyName
-        config.requiredBillingAddressFields = .Zip
         
         let theme = STPTheme.defaultTheme()
-        theme.accentColor = UIColor.greenColor()
         
         let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient)
-        let userInformation = STPUserInformation()
-        userInformation.phone = "020 7946 0718"
-        paymentContext.prefilledInformation = userInformation
         
         paymentContext.paymentAmount = price
         paymentContext.paymentCurrency = self.paymentCurrency

@@ -89,7 +89,10 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
             return
         }
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
-            completion(nil, [], nil)
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), { 
+                sleep(2)
+                completion(nil, [], nil)
+            })
             return
         }
         let path = "/customers/\(customerID)"

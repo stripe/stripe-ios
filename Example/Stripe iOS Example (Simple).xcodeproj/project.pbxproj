@@ -139,9 +139,10 @@
 				TargetAttributes = {
 					04823F771A6849200098400B = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = 2N6HG2F4PB;
 						SystemCapabilities = {
 							com.apple.OMC = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Passbook = {
 								enabled = 0;
@@ -312,9 +313,9 @@
 				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.example.ulysses;
 				PRODUCT_NAME = "Stripe iOS Example (Simple)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "f2f61da5-8f02-4304-89f1-992c9ed2b99e";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -338,9 +339,9 @@
 				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.example.ulysses;
 				PRODUCT_NAME = "Stripe iOS Example (Simple)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "f2f61da5-8f02-4304-89f1-992c9ed2b99e";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
