@@ -66,12 +66,12 @@ class SettingsViewController: UITableViewController {
                 let theme = STPTheme()
                 theme.primaryBackgroundColor = UIColor(red:0.96, green:0.93, blue:0.87, alpha:1.00)
                 theme.secondaryBackgroundColor = UIColor(red:0.98, green:0.95, blue:0.88, alpha:1.00)
-                theme.primaryForegroundColor = UIColor(red:0.42, green:0.44, blue:0.76, alpha:1.00)
-                theme.secondaryForegroundColor = UIColor(red:0.64, green:0.66, blue:0.68, alpha:1.00)
+                theme.primaryForegroundColor = UIColor(red:0.4, green:0.4, blue:0.7, alpha:1.00)
+                theme.secondaryForegroundColor = UIColor(red:0.4, green:0.4, blue:0.4, alpha:1.00)
                 theme.accentColor = UIColor(red:0.84, green:0.18, blue:0.51, alpha:1.00)
                 theme.errorColor = UIColor(red:0.87, green:0.18, blue:0.20, alpha:1.00)
-                theme.font = UIFont(name: "Noteworthy-Light", size: 17)
-                theme.emphasisFont = UIFont(name: "Noteworthy-Bold", size: 17)
+                theme.font = UIFont(name: "ChalkboardSE-Light", size: 17)
+                theme.emphasisFont = UIFont(name: "ChalkboardSE-Bold", size: 17)
                 return theme
             case .CustomDark:
                 let theme = STPTheme()
@@ -81,8 +81,8 @@ class SettingsViewController: UITableViewController {
                 theme.secondaryForegroundColor = UIColor(white:0.7, alpha:1.00)
                 theme.accentColor = UIColor(red:0.91, green:0.64, blue:0.46, alpha:1.00)
                 theme.errorColor = UIColor(red:0.85, green:0.48, blue:0.48, alpha:1.00)
-                theme.font = UIFont(name: "Palatino-Roman", size: 17)
-                theme.emphasisFont = UIFont(name: "Palatino-Bold", size: 17)
+                theme.font = UIFont(name: "GillSans", size: 17)
+                theme.emphasisFont = UIFont(name: "GillSans", size: 17)
                 return theme
             }
         }
