@@ -15,6 +15,18 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     let customerID: String?
     let session: NSURLSession
 
+    private static var sharedClient: MyAPIClient?
+    static func sharedClient(baseURL baseURL: String?, customerID: String?) -> MyAPIClient {
+        if let client = sharedClient where client.baseURLString == baseURL && client.customerID == customerID {
+            return client
+        }
+        else {
+            let client = MyAPIClient(baseURL: baseURL, customerID: customerID)
+            sharedClient = client
+            return client
+        }
+    }
+
     init(baseURL: String?, customerID: String?) {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = 5
