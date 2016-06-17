@@ -92,6 +92,10 @@
 
 - (void)updateAppearance {
     self.textView.attributedText = [self buildAttributedString];
+    self.textView.linkTextAttributes = @{
+                                         NSFontAttributeName: self.theme.smallFont,
+                                         NSForegroundColorAttributeName: self.theme.primaryForegroundColor
+                                         };
 }
 
 - (void)layoutSubviews {
