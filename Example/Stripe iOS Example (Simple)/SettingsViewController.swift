@@ -58,15 +58,15 @@ class SettingsViewController: UITableViewController {
             case .Default:
                 return STPTheme.defaultTheme()
             case .Custom:
-                let theme = STPTheme.defaultTheme()
+                let theme = STPTheme()
                 theme.primaryBackgroundColor = UIColor(red:0.09, green:0.09, blue:0.10, alpha:1.00)
                 theme.secondaryBackgroundColor = UIColor(red:0.11, green:0.12, blue:0.13, alpha:1.00)
                 theme.primaryForegroundColor = UIColor(red:0.80, green:0.40, blue:0.40, alpha:1.00)
                 theme.secondaryForegroundColor = UIColor.whiteColor()
-                theme.accentColor = UIColor.whiteColor()
-                theme.errorColor = UIColor(red:0.80, green:0.40, blue:0.40, alpha:1.00)
-                theme.font = UIFont(name: "Menlo-Regular", size: 17)
-                theme.emphasisFont = UIFont(name: "Menlo-Bold", size: 17)
+                theme.accentColor = UIColor(red:0.64, green:0.66, blue:0.68, alpha:1.00)
+                theme.errorColor = theme.primaryForegroundColor
+                theme.font = UIFont(name: "AmericanTypewriter", size: 17)
+                theme.emphasisFont = UIFont(name: "AmericanTypewriter-Bold", size: 17)
                 return theme
             }
         }
