@@ -107,7 +107,12 @@
                                                                                      delegate:weakself];
         } else {
             STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:weakself.configuration theme:weakself.theme completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
-                [weakself internalViewControllerDidCreateToken:token completion:tokenCompletion];
+                if (token && token.card) {
+                    [weakself internalViewControllerDidCreateToken:token completion:tokenCompletion];
+                }
+                else {
+                    [self.delegate paymentMethodsViewControllerDidFinish:self];
+                }
             }];
             addCardViewController.prefilledInformation = self.prefilledInformation;
             internal = addCardViewController;
