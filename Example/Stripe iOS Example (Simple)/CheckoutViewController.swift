@@ -41,8 +41,8 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     
     init(product: String, price: Int, settings: Settings) {
         self.checkoutView.product = product
-        self.myAPIClient = MyAPIClient(baseURL: self.backendBaseURL,
-                                       customerID: self.customerID)
+        self.myAPIClient = MyAPIClient.sharedClient(baseURL: self.backendBaseURL,
+                                                    customerID: self.customerID)
         
         // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
         let config = STPPaymentConfiguration.sharedConfiguration()

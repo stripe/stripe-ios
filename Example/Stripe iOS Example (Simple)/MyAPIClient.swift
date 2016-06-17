@@ -15,6 +15,22 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     let customerID: String?
     let session: NSURLSession
 
+    var defaultSource: STPCard? = nil
+    var sources: [STPCard] = []
+
+    private static var sharedClient: MyAPIClient?
+    static func sharedClient(baseURL baseURL: String?, customerID: String?) -> MyAPIClient {
+        if let client = sharedClient where client.baseURLString == baseURL && client.customerID == customerID {
+            return client
+        }
+        else {
+            let client = MyAPIClient(baseURL: baseURL, customerID: customerID)
+            sharedClient = client
+            return client
+        }
+    }
+
+    /// If no base URL or customerID is given, MyAPIClient will save cards in memory.
     init(baseURL: String?, customerID: String?) {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = 5
@@ -89,7 +105,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
             return
         }
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
-            completion(nil, [], nil)
+            completion(self.defaultSource?.stripeID, self.sources, nil)
             return
         }
         let path = "/customers/\(customerID)"
@@ -111,6 +127,9 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     
     @objc func selectDefaultCustomerSource(source: STPSource, completion: STPErrorBlock) {
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
+            if let token = source as? STPToken {
+                self.defaultSource = token.card
+            }
             completion(nil)
             return
         }
@@ -135,6 +154,10 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     
     @objc func attachSourceToCustomer(source: STPSource, completion: STPErrorBlock) {
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
+            if let token = source as? STPToken, card = token.card {
+                self.sources.append(card)
+                self.defaultSource = card
+            }
             completion(nil)
             return
         }
