@@ -39,7 +39,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     let paymentContext: STPPaymentContext
     let checkoutView = CheckoutView()
     
-    init(product: String, price: Int) {
+    init(product: String, price: Int, settings: Settings) {
         self.checkoutView.product = product
         self.myAPIClient = MyAPIClient(baseURL: self.backendBaseURL,
                                        customerID: self.customerID)
@@ -49,12 +49,13 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.publishableKey = self.stripePublishableKey
         config.appleMerchantIdentifier = self.appleMerchantID
         config.companyName = self.companyName
-        config.requiredBillingAddressFields = .Zip
+        config.requiredBillingAddressFields = settings.requiredBillingAddressFields
+        config.additionalPaymentMethods = settings.additionalPaymentMethods
+        config.smsAutofillDisabled = !settings.smsAutofillEnabled
         
-        let theme = STPTheme.defaultTheme()
-        theme.accentColor = UIColor.greenColor()
-        
-        let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient)
+        let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient,
+                                               configuration: config,
+                                               theme: settings.theme)
         let userInformation = STPUserInformation()
         userInformation.phone = "020 7946 0718"
         paymentContext.prefilledInformation = userInformation

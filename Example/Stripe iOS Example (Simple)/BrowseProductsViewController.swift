@@ -28,11 +28,19 @@ class BrowseProductsViewController: UITableViewController {
         "🕶": 2000,
         "👚": 2500,
     ]
+
+    let settingsVC = SettingsViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Emoji Apparel"
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Products", style: .Plain, target: nil, action: nil)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .Plain, target: self, action: #selector(showSettings))
+    }
+
+    func showSettings() {
+        let navController = UINavigationController(rootViewController: settingsVC)
+        self.presentViewController(navController, animated: true, completion: nil)
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -52,7 +60,9 @@ class BrowseProductsViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let product = Array(self.productsAndPrices.keys)[indexPath.row]
         let price = self.productsAndPrices[product]!
-        let checkoutViewController = CheckoutViewController(product: product, price: price)
+        let checkoutViewController = CheckoutViewController(product: product,
+                                                            price: price,
+                                                            settings: self.settingsVC.settings)
         self.navigationController?.pushViewController(checkoutViewController, animated: true)
     }
     
