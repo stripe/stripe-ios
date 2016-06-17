@@ -46,13 +46,13 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         _selectedPaymentMethod = tuple.selectedPaymentMethod;
         _delegate = delegate;
     }
+    self.title = NSLocalizedString(@"Payment Method", nil);
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.navigationItem.title = NSLocalizedString(@"Choose Payment", nil);
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     tableView.allowsMultipleSelectionDuringEditing = NO;

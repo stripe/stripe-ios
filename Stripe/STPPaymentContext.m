@@ -107,11 +107,20 @@
     }];
 }
 
+- (BOOL)loading {
+    return !self.loadingPromise.completed;
+}
+
 - (void)setHostViewController:(UIViewController *)hostViewController {
     NSCAssert(_hostViewController == nil, @"You cannot change the hostViewController on an STPPaymentContext after it's already been set.");
     _hostViewController = hostViewController;
     [self artificiallyRetain:hostViewController];
     [self.didAppearPromise voidCompleteWith:hostViewController.stp_didAppearPromise];
+}
+
+- (void)setDelegate:(id<STPPaymentContextDelegate>)delegate {
+    _delegate = delegate;
+    [delegate paymentContextDidChange:self];
 }
 
 - (STPPromise<STPPaymentMethodTuple *> *)currentValuePromise {

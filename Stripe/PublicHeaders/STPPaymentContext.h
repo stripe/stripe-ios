@@ -121,7 +121,7 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
 /**
  *  Whether or not the payment context is currently loading information from the network.
  */
-@property(nonatomic, readonly, getter=isLoading)BOOL loading;
+@property(nonatomic, readonly)BOOL loading;
 
 /**
  *  The user's currently selected payment method. May be nil.

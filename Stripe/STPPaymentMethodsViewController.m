@@ -93,8 +93,6 @@
     self.activityIndicator = activityIndicator;
     
     self.navigationItem.title = NSLocalizedString(@"Loading...", nil);
-    if (self.loadingPromise.value) {
-    }
     
     self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
