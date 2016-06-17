@@ -51,6 +51,7 @@
     self.paymentField.placeholderColor = self.theme.tertiaryForegroundColor;
     self.paymentField.borderColor = [UIColor clearColor];
     self.paymentField.textColor = self.theme.primaryForegroundColor;
+    self.paymentField.textErrorColor = self.theme.errorColor;
     self.paymentField.font = self.theme.font;
     self.obscuredCardView.theme = self.theme;
     self.backgroundColor = self.theme.secondaryBackgroundColor;
