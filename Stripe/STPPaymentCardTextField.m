@@ -54,7 +54,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 
 #pragma mark initializers
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
         [self commonInit];

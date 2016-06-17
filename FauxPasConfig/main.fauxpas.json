@@ -151,10 +151,10 @@
         // Options for rule: Constructor return type
         "ConstructorReturnType": {
             // Check init methods (Boolean)
-            //"checkInitMethods": false
+            "checkInitMethods": true,
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            //"ignoredFileRegexes": null
+            "ignoredFileRegexes": ["STPPromise.h"]
         },
         // Options for rule: Copying property of mutable NSCopying type
         "CopyingMutableProperty": {
