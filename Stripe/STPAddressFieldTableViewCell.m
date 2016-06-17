@@ -63,6 +63,9 @@
         
         _type = type;
         self.textField.text = contents;
+        if (!lastInList) {
+            self.textField.returnKeyType = UIReturnKeyNext;
+        }
         switch (type) {
             case STPAddressFieldTypeName:
                 self.captionLabel.text = NSLocalizedString(@"Name", nil);

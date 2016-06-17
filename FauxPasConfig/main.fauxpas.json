@@ -11,7 +11,7 @@
     // Rule tags to apply (Array of strings)
     //"ruleTags": ["Recommended"],
     // Rules to exclude (Array of strings)
-    "excludedRules": ["PrivateCategory"],
+    "excludedRules": ["ConstructorReturnType","PrivateCategory"],
     // Prefixes of files to exclude (Array of strings)
     //"fileExclusionPrefixes": [],
     // Xcode groups to exclude (Array of strings)
@@ -151,10 +151,10 @@
         // Options for rule: Constructor return type
         "ConstructorReturnType": {
             // Check init methods (Boolean)
-            //"checkInitMethods": false
+            "checkInitMethods": true,
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            //"ignoredFileRegexes": null
+            "ignoredFileRegexes": ["STPPromise.h"]
         },
         // Options for rule: Copying property of mutable NSCopying type
         "CopyingMutableProperty": {

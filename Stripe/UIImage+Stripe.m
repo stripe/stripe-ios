@@ -115,13 +115,12 @@
 + (UIImage *)stp_safeImageNamed:(NSString *)imageName
             templateifAvailable:(BOOL)templateIfAvailable {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
-    BOOL templateSupported = [[self.class new] respondsToSelector:@selector(imageWithRenderingMode:)];
     UIImage *image;
     image = [self.class imageNamed:imageName];
     if ([[self.class class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
         image = [self.class imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
     }
-    if (templateSupported && templateIfAvailable) {
+    if ([self.class stp_templateSupported] && templateIfAvailable) {
         image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
     return image;
@@ -129,6 +128,20 @@
 
 + (UIImage *)stp_safeImageNamed:(NSString *)imageName {
     return [self stp_safeImageNamed:imageName templateifAvailable:NO];
+}
+
+- (UIImage *)stp_imageWithTintColor:(UIColor *)color {
+    UIImage *newImage;
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
+    [color set];
+    [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height)];
+    newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
++ (BOOL)stp_templateSupported {
+    return [[self.class new] respondsToSelector:@selector(imageWithRenderingMode:)];
 }
 
 - (UIImage *)stp_paddedImageWithInsets:(UIEdgeInsets)insets {

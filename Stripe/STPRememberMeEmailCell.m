@@ -16,7 +16,7 @@
 @implementation STPRememberMeEmailCell
 
 - (instancetype)initWithDelegate:(id<STPAddressFieldTableViewCellDelegate>)delegate {
-    return [super initWithType:STPAddressFieldTypeEmail contents:nil lastInList:YES delegate:delegate];
+    return [super initWithType:STPAddressFieldTypeEmail contents:nil lastInList:NO delegate:delegate];
 }
 
 - (void)layoutSubviews {

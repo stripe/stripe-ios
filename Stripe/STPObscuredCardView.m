@@ -127,4 +127,19 @@
     [self.delegate obscuredCardViewDidClear:self];
 }
 
+- (BOOL)isEmpty {
+    return self.last4Field.text.length == 0;
+}
+
+- (void)setInputAccessoryView:(UIView *)inputAccessoryView {
+    _inputAccessoryView = inputAccessoryView;
+    self.last4Field.inputAccessoryView = inputAccessoryView;
+    self.expField.inputAccessoryView = inputAccessoryView;
+    self.cvcField.inputAccessoryView = inputAccessoryView;
+}
+
+- (BOOL)becomeFirstResponder {
+    return [self.cvcField becomeFirstResponder];
+}
+
 @end

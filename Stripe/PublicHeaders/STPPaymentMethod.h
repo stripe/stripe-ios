@@ -12,6 +12,12 @@
  *  This represents all of the payment methods available to your user (in addition to card payments, which are always enabled) when configuring an STPPaymentContext.
  */
 typedef NS_OPTIONS(NSUInteger, STPPaymentMethodType) {
+    
+    /**
+     *  Don't use any payment methods except for cards.
+     */
+    STPPaymentMethodTypeNone = 0,
+    
     /**
      *  The user is allowed to pay with Apple Pay (if it's configured and available on their device).
      */
