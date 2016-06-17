@@ -29,7 +29,8 @@
         obscuredView.delegate = self;
         [self.contentView addSubview:obscuredView];
         _obscuredCardView = obscuredView;
-        self.theme = [STPTheme defaultTheme];
+        _theme = [STPTheme defaultTheme];
+        [self updateAppearance];
     }
     return self;
 }
@@ -42,13 +43,17 @@
 
 - (void)setTheme:(STPTheme *)theme {
     _theme = theme;
+    [self updateAppearance];
+}
+
+- (void)updateAppearance {
     self.paymentField.backgroundColor = [UIColor clearColor];
     self.paymentField.placeholderColor = self.theme.tertiaryForegroundColor;
     self.paymentField.borderColor = [UIColor clearColor];
     self.paymentField.textColor = self.theme.primaryForegroundColor;
     self.paymentField.font = self.theme.font;
-    self.obscuredCardView.theme = theme;
-    self.backgroundColor = theme.secondaryBackgroundColor;
+    self.obscuredCardView.theme = self.theme;
+    self.backgroundColor = self.theme.secondaryBackgroundColor;
 }
 
 - (void)setInputAccessoryView:(UIView *)inputAccessoryView {

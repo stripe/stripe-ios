@@ -232,7 +232,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     __weak typeof(self) weakself = self;
-    [self stp_beginObservingKeyboardWithBlock:^(CGRect keyboardFrame, __unused UIView *currentlyEditedField) {
+    [self stp_beginObservingKeyboardWithBlock:^(CGRect keyboardFrame, UIView *currentlyEditedField) {
         UIEdgeInsets insets = weakself.tableView.contentInset;
         CGRect windowFrame = [weakself.view convertRect:weakself.view.frame toView:nil];
         CGRect bottomIntersection = CGRectIntersection(windowFrame, keyboardFrame);

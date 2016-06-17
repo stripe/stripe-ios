@@ -20,13 +20,13 @@
 @implementation STPPromise
 
 + (instancetype)promiseWithError:(NSError *)error {
-    STPPromise *promise = [STPPromise new];
+    STPPromise *promise = [self new];
     [promise fail:error];
     return promise;
 }
 
 + (instancetype)promiseWithValue:(id)value {
-    STPPromise *promise = [STPPromise new];
+    STPPromise *promise = [self new];
     [promise succeed:value];
     return promise;
 }

@@ -1,17 +1,17 @@
 // Generated from the Faux Pas GUI
 {
     // Xcode target to check (String)
-    "target": "StripeiOS",
+    "target": "StripeiOSStatic",
     // Xcode build configuration to check (String)
-    "buildConfig": "Debug",
+    "buildConfig": "Release",
     // Rules to apply (Array of strings)
-    "rules": ["APIAvailability","DefaultInExhaustiveSwitch","IBOutletsInPublicInterface","ImplicitAtomicProperty","InstanceMethodWritesToStaticVariable","MacroLiteral","MallocCast","MallocWithoutSizeof","NonTypedefBlockDeclaration","ReservedIdentifierNaming","StrongInsteadOfRetain","UnusedTranslation","UsedVariableMarkedUnused","XIBUnknownClassReference"],
+    "rules": ["APIAvailability","BuildSettingsSetInGUI","DefaultInExhaustiveSwitch","IBOutletsInPublicInterface","ImplicitAtomicProperty","InstanceMethodWritesToStaticVariable","MacroLiteral","MallocCast","MallocWithoutSizeof","NonTypedefBlockDeclaration","ReservedIdentifierNaming","StrongInsteadOfRetain","ThrowingObjCException","UnusedMethod","UnusedResource","UnusedTranslation","UsedVariableMarkedUnused","XIBUnknownClassReference"],
     // Rules to apply only (Array of strings)
     //"onlyRules": [],
     // Rule tags to apply (Array of strings)
     //"ruleTags": ["Recommended"],
     // Rules to exclude (Array of strings)
-    "excludedRules": ["ImplicitBundleId","NullCoalescingOp","RecommendedVCSIgnores"],
+    "excludedRules": ["PrivateCategory"],
     // Prefixes of files to exclude (Array of strings)
     //"fileExclusionPrefixes": [],
     // Xcode groups to exclude (Array of strings)
@@ -30,7 +30,7 @@
     // Additional compiler arguments to use (Array of strings)
     //"extraCompilerArgs": [],
     // Additional xcodebuild arguments to use (Array of strings)
-    "extraXcodebuildArgs": ["DEFINES_MODULE=NO"],
+    //"extraXcodebuildArgs": [],
     // Build project before checking (Boolean)
     //"fullBuild": false,
     // Cache project build logs (Boolean)
@@ -98,10 +98,10 @@
         // Options for rule: Block-typed declaration without typedef
         "NonTypedefBlockDeclaration": {
             // Apply only to function/method arguments (Boolean)
-            //"onlyArguments": true,
+            //"onlyArguments": true
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            "ignoredFileRegexes": ["STPAPIPostRequest.*"]
+            //"ignoredFileRegexes": null
         },
         // Options for rule: Build settings set in Xcode GUI
         "BuildSettingsSetInGUI": {
@@ -408,10 +408,10 @@
         // Options for rule: NSLog() used in release build
         "NSLogUsed": {
             // Allow calling NSLog() via macros (Boolean)
-            //"allowMacros": true
+            //"allowMacros": true,
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            //"ignoredFileRegexes": null
+            "ignoredFileRegexes": ["STPAPIClient.m"]
         },
         // Options for rule: Non-copying property of immutable NSCopying type
         "RetainingImmutableProperty": {
@@ -477,7 +477,7 @@
         // Options for rule: Problematic release build compiler arguments
         "ReleaseBuildCompilerArgs": {
             // Required compiler arguments for all files (Array of strings)
-            "requiredArguments": ["-DNDEBUG","-DNS_BLOCK_ASSERTIONS"]
+            "requiredArguments": ["-DNDEBUG"]
             // Disallowed compiler arguments for all files (Array of strings)
             //"disallowedArguments": []
             // Regexes for ignored file paths (Array of regular expression
@@ -566,13 +566,13 @@
         // Options for rule: Reserved identifier name
         "ReservedIdentifierNaming": {
             // Check for identifier names reserved by the C standard (Boolean)
-            //"checkCStandard": true,
+            //"checkCStandard": true
             // Check for identifier names reserved by the POSIX standard
             // (Boolean)
-            //"checkPOSIXStandard": true,
+            //"checkPOSIXStandard": true
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            "ignoredFileRegexes": ["STPNullabilityMacros.h"]
+            //"ignoredFileRegexes": null
         },
         // Options for rule: Reserved symbol prefix
         "ReservedPrefix": {
@@ -747,7 +747,7 @@
         "UnprefixedClass": {
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            "ignoredFileRegexes": ["Fabric.h","STPAPIClient.h"]
+            "ignoredFileRegexes": ["Fabric.h"]
         },
         // Options for rule: Unprefixed category method
         "UnprefixedCategoryMethod": {
@@ -781,10 +781,10 @@
         // target
         "APIAvailability": {
             // Avoid false positives (Boolean)
-            //"avoidFalsePositives": true,
+            "avoidFalsePositives": false
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            "ignoredFileRegexes": [".*ApplePay.*"]
+            //"ignoredFileRegexes": null
         },
         // Options for rule: Using -[UIViewController initWithNibName:bundle:]
         // outside the UIViewController implementation
