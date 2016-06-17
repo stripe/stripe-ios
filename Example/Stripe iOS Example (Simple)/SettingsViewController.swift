@@ -47,26 +47,42 @@ class SettingsViewController: UITableViewController {
 
     private enum Theme: String {
         case Default = "Default"
-        case Custom = "Custom"
+        case CustomLight = "Custom – Light"
+        case CustomDark = "Custom – Dark"
 
         init(row: Int) {
-            self = (row == 0) ? Default : Custom
+            switch row {
+            case 0: self = Default
+            case 1: self = CustomLight
+            default: self = CustomDark
+            }
         }
 
         var stpTheme: STPTheme {
             switch self {
             case .Default:
                 return STPTheme.defaultTheme()
-            case .Custom:
+            case .CustomLight:
                 let theme = STPTheme()
-                theme.primaryBackgroundColor = UIColor(red:0.09, green:0.09, blue:0.10, alpha:1.00)
-                theme.secondaryBackgroundColor = UIColor(red:0.11, green:0.12, blue:0.13, alpha:1.00)
-                theme.primaryForegroundColor = UIColor(red:0.80, green:0.40, blue:0.40, alpha:1.00)
-                theme.secondaryForegroundColor = UIColor.whiteColor()
-                theme.accentColor = UIColor(red:0.64, green:0.66, blue:0.68, alpha:1.00)
-                theme.errorColor = theme.primaryForegroundColor
-                theme.font = UIFont(name: "AmericanTypewriter", size: 17)
-                theme.emphasisFont = UIFont(name: "AmericanTypewriter-Bold", size: 17)
+                theme.primaryBackgroundColor = UIColor(red:0.96, green:0.93, blue:0.87, alpha:1.00)
+                theme.secondaryBackgroundColor = UIColor(red:0.98, green:0.95, blue:0.88, alpha:1.00)
+                theme.primaryForegroundColor = UIColor(red:0.42, green:0.44, blue:0.76, alpha:1.00)
+                theme.secondaryForegroundColor = UIColor(red:0.64, green:0.66, blue:0.68, alpha:1.00)
+                theme.accentColor = UIColor(red:0.84, green:0.18, blue:0.51, alpha:1.00)
+                theme.errorColor = UIColor(red:0.87, green:0.18, blue:0.20, alpha:1.00)
+                theme.font = UIFont(name: "Noteworthy-Light", size: 17)
+                theme.emphasisFont = UIFont(name: "Noteworthy-Bold", size: 17)
+                return theme
+            case .CustomDark:
+                let theme = STPTheme()
+                theme.primaryBackgroundColor = UIColor(red:0.13, green:0.14, blue:0.15, alpha:1.00)
+                theme.secondaryBackgroundColor = UIColor(red:0.14, green:0.15, blue:0.16, alpha:1.00)
+                theme.primaryForegroundColor = UIColor(white:0.9, alpha:1.00)
+                theme.secondaryForegroundColor = UIColor(white:0.7, alpha:1.00)
+                theme.accentColor = UIColor(red:0.91, green:0.64, blue:0.46, alpha:1.00)
+                theme.errorColor = UIColor(red:0.85, green:0.48, blue:0.48, alpha:1.00)
+                theme.font = UIFont(name: "Palatino-Roman", size: 17)
+                theme.emphasisFont = UIFont(name: "Palatino-Bold", size: 17)
                 return theme
             }
         }
@@ -127,7 +143,7 @@ class SettingsViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(section: section) {
-        case .Theme: return 2
+        case .Theme: return 3
         case .ApplePay: return 2
         case .RequiredBillingAddressFields: return 3
         case .SMSAutofill: return 2
