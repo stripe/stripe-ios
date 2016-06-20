@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "STPBlocks.h"
 
 typedef NS_ENUM(NSUInteger, STPTokenType) {
     STPTokenTypeCard,
@@ -14,9 +15,28 @@ typedef NS_ENUM(NSUInteger, STPTokenType) {
     STPTokenTypeApplePay,
 };
 
+typedef NS_ENUM(NSUInteger, STPAnalyticsEventType) {
+    STPAnalyticsEventTypeOpen,
+    STPAnalyticsEventTypeCancel,
+    STPAnalyticsEventTypeSuccess,
+    STPAnalyticsEventTypeError,
+};
+
+@class STPPaymentContext, STPAddCardViewController;
+
 @interface STPAnalyticsClient : NSObject
 
++ (STPAnalyticsEventType)eventTypeForPaymentStatus:(STPPaymentStatus)status;
+
++ (instancetype)sharedClient;
+
 + (void)disableAnalytics;
+
+- (void)logEvent:(STPAnalyticsEventType)event
+forPaymentContext:(STPPaymentContext *)paymentContext;
+
+- (void)logEvent:(STPAnalyticsEventType)event
+forAddCardViewController:(STPAddCardViewController *)viewController;
 
 - (void)logRUMWithTokenType:(STPTokenType)tokenType
              publishableKey:(NSString *)publishableKey

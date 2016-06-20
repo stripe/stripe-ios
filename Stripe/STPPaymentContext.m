@@ -20,6 +20,7 @@
 #import "UIViewController+Stripe_Alerts.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "STPPaymentConfiguration+Private.h"
+#import "STPAnalyticsClient.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -56,6 +57,7 @@
         _didAppearPromise = [STPVoidPromise new];
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _paymentCurrency = @"USD";
+        [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeOpen forPaymentContext:self];
         [self retryLoading];
     }
     return self;
@@ -252,6 +254,7 @@
                     }];
                 } else {
                     [weakSelf.hostViewController dismissViewControllerAnimated:YES completion:^{
+                        [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeCancel forPaymentContext:self];
                         [weakSelf.delegate paymentContext:weakSelf didFinishWithStatus:STPPaymentStatusUserCancellation error:nil];
                     }];
                 }
@@ -265,8 +268,10 @@
             STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(STPCard *)weakSelf.selectedPaymentMethod];
             [weakSelf.delegate paymentContext:weakSelf didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
                 if (error) {
+                    [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeError forPaymentContext:self];
                     [weakSelf.delegate paymentContext:weakSelf didFinishWithStatus:STPPaymentStatusError error:error];
                 } else {
+                    [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeSuccess forPaymentContext:self];
                     [weakSelf.delegate paymentContext:weakSelf didFinishWithStatus:STPPaymentStatusSuccess error:nil];
                 }
             }];
@@ -282,9 +287,11 @@
                         [weakSelf.delegate paymentContext:weakSelf didCreatePaymentResult:result completion:^(NSError * error) {
                             if (error) {
                                 tokenCompletion(error);
+                                [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeError forPaymentContext:self];
                                 [weakSelf.delegate paymentContext:weakSelf didFinishWithStatus:STPPaymentStatusError error:error];
                             } else {
                                 tokenCompletion(nil);
+                                [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeSuccess forPaymentContext:self];
                                 [weakSelf.delegate paymentContext:weakSelf didFinishWithStatus:STPPaymentStatusSuccess error:nil];
                             }
                         }];
@@ -298,6 +305,7 @@
                                               onTokenCreation:applePayTokenHandler
                                                      onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
                                                          [weakSelf.hostViewController dismissViewControllerAnimated:YES completion:^{
+                                                             [[STPAnalyticsClient sharedClient] logEvent:[STPAnalyticsClient eventTypeForPaymentStatus:status] forPaymentContext:self];
                                                              [weakSelf.delegate paymentContext:weakSelf
                                                                            didFinishWithStatus:status
                                                                                          error:error];
@@ -308,6 +316,7 @@
                                                     completion:nil];
         }
     }]onFailure:^(NSError *error) {
+        [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeError forPaymentContext:self];
         [weakSelf.delegate paymentContext:weakSelf didFinishWithStatus:STPPaymentStatusError error:error];
     }];
 }
