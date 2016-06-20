@@ -281,8 +281,10 @@
                         STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token.card];
                         [weakSelf.delegate paymentContext:weakSelf didCreatePaymentResult:result completion:^(NSError * error) {
                             if (error) {
+                                tokenCompletion(error);
                                 [weakSelf.delegate paymentContext:weakSelf didFinishWithStatus:STPPaymentStatusError error:error];
                             } else {
+                                tokenCompletion(nil);
                                 [weakSelf.delegate paymentContext:weakSelf didFinishWithStatus:STPPaymentStatusSuccess error:nil];
                             }
                         }];
