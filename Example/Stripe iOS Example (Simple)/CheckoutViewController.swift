@@ -35,14 +35,36 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     let companyName = "Emoji Apparel"
     let paymentCurrency = "usd"
 
-    let myAPIClient: MyAPIClient
     let paymentContext: STPPaymentContext
-    let checkoutView = CheckoutView()
-    
+
+    let paymentRow = CheckoutRowView(title: "Payment", detail: "Select Payment")
+    let totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false)
+    let buyButton = BuyButton(enabled: true)
+    let rowHeight: CGFloat = 44
+    let productImage = UILabel()
+    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+    var product = ""
+    var paymentInProgress: Bool = false {
+        didSet {
+            UIView.animateWithDuration(0.3, delay: 0, options: .CurveEaseIn, animations: {
+                if self.paymentInProgress {
+                    self.activityIndicator.startAnimating()
+                    self.activityIndicator.alpha = 1
+                    self.buyButton.alpha = 0
+                }
+                else {
+                    self.activityIndicator.stopAnimating()
+                    self.activityIndicator.alpha = 0
+                    self.buyButton.alpha = 1
+                }
+                }, completion: nil)
+        }
+    }
+
     init(product: String, price: Int, settings: Settings) {
-        self.checkoutView.product = product
-        self.myAPIClient = MyAPIClient.sharedClient(baseURL: self.backendBaseURL,
-                                                    customerID: self.customerID)
+        self.product = product
+        self.productImage.text = product
+        MyAPIClient.sharedInit(baseURL: self.backendBaseURL, customerID: self.customerID)
         
         // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
         let config = STPPaymentConfiguration.sharedConfiguration()
@@ -53,7 +75,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.additionalPaymentMethods = settings.additionalPaymentMethods
         config.smsAutofillDisabled = !settings.smsAutofillEnabled
         
-        let paymentContext = STPPaymentContext(APIAdapter: self.myAPIClient,
+        let paymentContext = STPPaymentContext(APIAdapter: MyAPIClient.sharedClient,
                                                configuration: config,
                                                theme: settings.theme)
         let userInformation = STPUserInformation()
@@ -73,33 +95,52 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
-        self.view = self.checkoutView
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.translucent = false
         self.navigationItem.title = "Emoji Apparel"
-        self.checkoutView.buyButton.addTarget(self, action: #selector(didTapBuy), forControlEvents: .TouchUpInside)
-        self.checkoutView.totalRow.detail = "$\(self.paymentContext.paymentAmount/100).00"
-        self.checkoutView.paymentRow.onTap = { [weak self] _ in
+        self.productImage.font = UIFont.systemFontOfSize(70)
+        self.view.addSubview(self.totalRow)
+        self.view.addSubview(self.paymentRow)
+        self.view.addSubview(self.productImage)
+        self.view.addSubview(self.buyButton)
+        self.view.addSubview(self.activityIndicator)
+        self.activityIndicator.alpha = 0
+        self.buyButton.addTarget(self, action: #selector(didTapBuy), forControlEvents: .TouchUpInside)
+        self.totalRow.detail = "$\(self.paymentContext.paymentAmount/100).00"
+        self.paymentRow.onTap = { [weak self] _ in
             self?.paymentContext.pushPaymentMethodsViewController()
         }
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let width = CGRectGetWidth(self.view.bounds)
+        self.productImage.sizeToFit()
+        self.productImage.center = CGPointMake(width/2.0,
+                                               CGRectGetHeight(self.productImage.bounds)/2.0 + rowHeight)
+        self.paymentRow.frame = CGRectMake(0, CGRectGetMaxY(self.productImage.frame) + rowHeight,
+                                           width, rowHeight)
+        self.totalRow.frame = CGRectMake(0, CGRectGetMaxY(self.paymentRow.frame),
+                                         width, rowHeight)
+        self.buyButton.frame = CGRectMake(0, 0, 88, 44)
+        self.buyButton.center = CGPointMake(width/2.0, CGRectGetMaxY(self.totalRow.frame) + rowHeight*1.5)
+        self.activityIndicator.center = self.buyButton.center
+    }
+
     func didTapBuy() {
-        self.checkoutView.paymentInProgress = true
+        self.paymentInProgress = true
         self.paymentContext.requestPayment()
     }
     
     func paymentContext(paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: STPErrorBlock) {
-        self.myAPIClient.completeCharge(paymentResult, amount: self.paymentContext.paymentAmount,
-                                        completion: completion)
+        MyAPIClient.sharedClient.completeCharge(paymentResult, amount: self.paymentContext.paymentAmount,
+                                                completion: completion)
     }
     
     func paymentContext(paymentContext: STPPaymentContext, didFinishWithStatus status: STPPaymentStatus, error: NSError?) {
-        self.checkoutView.paymentInProgress = false
+        self.paymentInProgress = false
         let title: String
         let message: String
         switch status {
@@ -108,7 +149,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
             message = error?.localizedDescription ?? ""
         case .Success:
             title = "Success"
-            message = "You bought a \(self.checkoutView.product)!"
+            message = "You bought a \(self.productImage.text)!"
         case .UserCancellation:
             return
         }
@@ -121,12 +162,12 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     // MARK: STPPaymentContextDelegate
 
     func paymentContextDidChange(paymentContext: STPPaymentContext) {
-        self.checkoutView.paymentRow.loading = paymentContext.loading
+        self.paymentRow.loading = paymentContext.loading
         if let paymentMethod = paymentContext.selectedPaymentMethod {
-            self.checkoutView.paymentRow.detail = paymentMethod.label
+            self.paymentRow.detail = paymentMethod.label
         }
         else {
-            self.checkoutView.paymentRow.detail = "Select Payment"
+            self.paymentRow.detail = "Select Payment"
         }
     }
 

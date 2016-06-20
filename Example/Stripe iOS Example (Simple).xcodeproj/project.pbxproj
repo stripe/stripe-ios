@@ -17,7 +17,6 @@
 		C13C24221D14438700F3765E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13C24211D14438700F3765E /* SettingsViewController.swift */; };
 		C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188F2A51CC1A338003A524B /* MyAPIClient.swift */; };
 		C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B83CBC1CCE6C0700F0790B /* Buttons.swift */; };
-		C1B83CBF1CCE6FEE00F0790B /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B83CBE1CCE6FEE00F0790B /* CheckoutView.swift */; };
 		C1C154341CD296CB0036AA63 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C154331CD296CB0036AA63 /* Networking.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,7 +47,6 @@
 		C13C24211D14438700F3765E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		C188F2A51CC1A338003A524B /* MyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
 		C1B83CBC1CCE6C0700F0790B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
-		C1B83CBE1CCE6FEE00F0790B /* CheckoutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
 		C1C154331CD296CB0036AA63 /* Networking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -69,7 +67,6 @@
 			children = (
 				042CA4141A685E8D00D778E7 /* AppDelegate.swift */,
 				C188F2A51CC1A338003A524B /* MyAPIClient.swift */,
-				C1B83CBE1CCE6FEE00F0790B /* CheckoutView.swift */,
 				C13C24211D14438700F3765E /* SettingsViewController.swift */,
 				C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */,
 				04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */,
@@ -208,7 +205,6 @@
 				C124A18B1CCACAA1007D42EE /* CheckoutViewController.swift in Sources */,
 				04BC29A01CD81D3900318357 /* BrowseProductsViewController.swift in Sources */,
 				C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */,
-				C1B83CBF1CCE6FEE00F0790B /* CheckoutView.swift in Sources */,
 				C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */,
 				C124A18D1CCACC92007D42EE /* CheckoutRowView.swift in Sources */,
 				042CA41D1A685E8D00D778E7 /* AppDelegate.swift in Sources */,

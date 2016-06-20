@@ -18,16 +18,9 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     var defaultSource: STPCard? = nil
     var sources: [STPCard] = []
 
-    private static var sharedClient: MyAPIClient?
-    static func sharedClient(baseURL baseURL: String?, customerID: String?) -> MyAPIClient {
-        if let client = sharedClient where client.baseURLString == baseURL && client.customerID == customerID {
-            return client
-        }
-        else {
-            let client = MyAPIClient(baseURL: baseURL, customerID: customerID)
-            sharedClient = client
-            return client
-        }
+    static var sharedClient = MyAPIClient(baseURL: nil, customerID: nil)
+    static func sharedInit(baseURL baseURL: String?, customerID: String?) {
+        sharedClient = MyAPIClient(baseURL: baseURL, customerID: customerID)
     }
 
     /// If no base URL or customerID is given, MyAPIClient will save cards in memory.
