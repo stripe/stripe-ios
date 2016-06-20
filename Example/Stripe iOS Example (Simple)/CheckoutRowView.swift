@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Stripe
 
 class CheckoutRowView: UIView {
 
@@ -48,31 +49,38 @@ class CheckoutRowView: UIView {
     private let topSeparator = UIView()
     private let bottomSeparator = UIView()
 
-    convenience init(title: String, detail: String, tappable: Bool = true) {
+    convenience init(title: String, detail: String, tappable: Bool = true, theme: STPTheme) {
         self.init()
         self.title = title
         self.detail = detail
 
-        self.backgroundColor = UIColor.whiteColor()
+        self.backgroundColor = theme.secondaryBackgroundColor
         self.backgroundView.addTarget(self, action: #selector(didTap), forControlEvents: .TouchUpInside)
         if !tappable {
             self.backgroundView.userInteractionEnabled = false
-            self.backgroundColor = UIColor(white: 0, alpha: 0.02)
+            self.backgroundColor = theme.primaryBackgroundColor
         }
         self.addSubview(self.backgroundView)
-        self.bottomSeparator.backgroundColor = UIColor(white: 0, alpha: 0.1)
+        self.bottomSeparator.backgroundColor = theme.secondaryForegroundColor
         self.addSubview(self.bottomSeparator)
-        self.topSeparator.backgroundColor = UIColor(white: 0, alpha: 0.1)
+        self.topSeparator.backgroundColor = theme.secondaryForegroundColor
         self.addSubview(self.topSeparator)
         self.titleLabel.text = title
         self.titleLabel.backgroundColor = UIColor.clearColor()
         self.titleLabel.textAlignment = .Left;
+        self.titleLabel.font = theme.font
+        self.titleLabel.textColor = theme.primaryForegroundColor
         self.addSubview(self.titleLabel)
         self.detailLabel.text = detail
         self.detailLabel.backgroundColor = UIColor.clearColor()
         self.detailLabel.textColor = UIColor.lightGrayColor()
         self.detailLabel.textAlignment = .Right;
+        self.detailLabel.font = theme.font
+        self.detailLabel.textColor = theme.secondaryForegroundColor
         self.addSubview(self.detailLabel)
+        var red: CGFloat = 0
+        theme.primaryBackgroundColor.getRed(&red, green: nil, blue: nil, alpha: nil)
+        self.activityIndicator.activityIndicatorViewStyle = red < 0.5 ? .White : .Gray
         self.addSubview(self.activityIndicator)
     }
 

@@ -37,9 +37,10 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     let paymentContext: STPPaymentContext
 
-    let paymentRow = CheckoutRowView(title: "Payment", detail: "Select Payment")
-    let totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false)
-    let buyButton = BuyButton(enabled: true)
+    let theme: STPTheme
+    let paymentRow: CheckoutRowView
+    let totalRow: CheckoutRowView
+    let buyButton: BuyButton
     let rowHeight: CGFloat = 44
     let productImage = UILabel()
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
@@ -64,6 +65,12 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     init(product: String, price: Int, settings: Settings) {
         self.product = product
         self.productImage.text = product
+        self.theme = settings.theme
+        self.paymentRow = CheckoutRowView(title: "Payment", detail: "Select Payment",
+                                          theme: settings.theme)
+        self.totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false,
+                                        theme: settings.theme)
+        self.buyButton = BuyButton(enabled: true, theme: settings.theme)
         MyAPIClient.sharedInit(baseURL: self.backendBaseURL, customerID: self.customerID)
         
         // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
@@ -97,8 +104,10 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.translucent = false
+        self.view.backgroundColor = self.theme.primaryBackgroundColor
+        var red: CGFloat = 0
+        self.theme.primaryBackgroundColor.getRed(&red, green: nil, blue: nil, alpha: nil)
+        self.activityIndicator.activityIndicatorViewStyle = red < 0.5 ? .White : .Gray
         self.navigationItem.title = "Emoji Apparel"
 
         self.productImage.font = UIFont.systemFontOfSize(70)

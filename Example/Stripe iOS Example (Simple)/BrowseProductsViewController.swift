@@ -34,8 +34,30 @@ class BrowseProductsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Emoji Apparel"
+        self.navigationController?.navigationBar.translucent = false
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Products", style: .Plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .Plain, target: self, action: #selector(showSettings))
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        let theme = self.settingsVC.settings.theme
+        self.view.backgroundColor = theme.primaryBackgroundColor
+        self.navigationController?.navigationBar.barTintColor = theme.primaryBackgroundColor
+        self.navigationController?.navigationBar.tintColor = theme.accentColor
+        let titleAttributes = [
+            NSForegroundColorAttributeName: theme.primaryForegroundColor,
+            NSFontAttributeName: theme.font,
+        ]
+        let buttonAttributes = [
+            NSForegroundColorAttributeName: theme.accentColor,
+            NSFontAttributeName: theme.font,
+        ]
+        self.navigationController?.navigationBar.titleTextAttributes = titleAttributes
+        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes(buttonAttributes, forState: .Normal)
+        self.navigationItem.backBarButtonItem?.setTitleTextAttributes(buttonAttributes, forState: .Normal)
+        self.tableView.separatorColor = theme.primaryBackgroundColor
+        self.tableView.reloadData()
     }
 
     func showSettings() {
@@ -51,7 +73,11 @@ class BrowseProductsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell") ?? UITableViewCell(style: .Value1, reuseIdentifier: "Cell")
         let product = Array(self.productsAndPrices.keys)[indexPath.row]
         let price = self.productsAndPrices[product]!
+        let theme = self.settingsVC.settings.theme
+        cell.backgroundColor = theme.secondaryBackgroundColor
         cell.textLabel?.text = product
+        cell.textLabel?.font = theme.font
+        cell.textLabel?.textColor = theme.primaryForegroundColor
         cell.detailTextLabel?.text = "$\(price/100).00"
         cell.accessoryType = .DisclosureIndicator
         return cell
@@ -66,5 +92,4 @@ class BrowseProductsViewController: UITableViewController {
                                                             settings: self.settingsVC.settings)
         self.navigationController?.pushViewController(checkoutViewController, animated: true)
     }
-    
 }
