@@ -21,6 +21,7 @@
 @property(nonatomic)STPCheckoutAPIClient *checkoutAPIClient;
 @property(nonatomic)STPCheckoutAPIVerification *verification;
 @property(nonatomic)NSString *redactedPhone;
+@property(nonatomic)NSTimer *hideSMSSentLabelTimer;
 
 @property(nonatomic, weak)UIScrollView *scrollView;
 @property(nonatomic, weak)UILabel *topLabel;
@@ -181,8 +182,11 @@
         }
     }];
     [self.codeField becomeFirstResponder];
+    self.hideSMSSentLabelTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(hideSMSSentLabel) userInfo:nil repeats:NO];
+}
 
-    [UIView animateWithDuration:0.2f delay:10.0f options:0 animations:^{
+- (void)hideSMSSentLabel {
+    [UIView animateWithDuration:0.2f delay:0 options:0 animations:^{
         self.bottomLabel.alpha = 1.0f;
         self.cancelButton.alpha = 1.0f;
         self.smsSentLabel.alpha = 0;
@@ -207,7 +211,9 @@
             weakself.errorLabel.text = NSLocalizedString(@"Too many incorrect attempts", nil);
         }
         [codeField shakeAndClear];
+        [weakself.hideSMSSentLabelTimer invalidate];
         [UIView animateWithDuration:0.2f animations:^{
+            weakself.smsSentLabel.alpha = 0;
             weakself.bottomLabel.alpha = 0;
             weakself.cancelButton.alpha = 0;
             weakself.errorLabel.alpha = 1.0f;
