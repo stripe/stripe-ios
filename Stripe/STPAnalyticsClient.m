@@ -240,6 +240,7 @@ forAddCardViewController:(STPAddCardViewController *)viewController {
 
 - (void)logPayload:(NSDictionary *)payload {
     if (self.logToConsole) {
+        FAUXPAS_IGNORED_IN_METHOD(NSLogUsed);
         NSLog(@"%@", payload);
     }
     if (![[self class] shouldCollectAnalytics]) {
