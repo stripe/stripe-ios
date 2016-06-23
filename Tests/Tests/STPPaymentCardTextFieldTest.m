@@ -246,6 +246,28 @@
     XCTAssertFalse(sut.isValid);
 }
 
+- (void)testSetCard_addressFields {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+
+    STPCardParams *cardParams = [STPCardParams new];
+    cardParams.name = @"John S";
+    cardParams.addressLine1 = @"123 Main St";
+    cardParams.addressLine2 = @"#3B";
+    cardParams.addressCity = @"San Francisco";
+    cardParams.addressState = @"CA";
+    cardParams.addressZip = @"12345";
+    cardParams.addressCountry = @"US";
+    sut.cardParams = cardParams;
+
+    XCTAssertEqualObjects(sut.cardParams.name, @"John S");
+    XCTAssertEqualObjects(sut.cardParams.addressLine1, @"123 Main St");
+    XCTAssertEqualObjects(sut.cardParams.addressLine2, @"#3B");
+    XCTAssertEqualObjects(sut.cardParams.addressCity, @"San Francisco");
+    XCTAssertEqualObjects(sut.cardParams.addressState, @"CA");
+    XCTAssertEqualObjects(sut.cardParams.addressZip, @"12345");
+    XCTAssertEqualObjects(sut.cardParams.addressCountry, @"US");
+}
+
 - (void)testSettingTextUpdatesViewModelText {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
     sut.numberField.text = @"4242424242424242";
