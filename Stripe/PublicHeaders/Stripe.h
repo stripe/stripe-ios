@@ -12,6 +12,7 @@
 #import "STPBankAccount.h"
 #import "STPCardBrand.h"
 #import "STPCardParams.h"
+#import "STPSource.h"
 #import "STPCard.h"
 #import "STPCardValidationState.h"
 #import "STPCardValidator.h"
@@ -19,7 +20,6 @@
 #import "Stripe+ApplePay.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentCardTextField.h"
-#import "STPSource.h"
 #import "STPCustomer.h"
 #import "STPBlocks.h"
 #import "STPAddress.h"
@@ -34,4 +34,3 @@
 #import "STPTheme.h"
 #import "UINavigationBar+Stripe_Theme.h"
 #import "STPUserInformation.h"
-

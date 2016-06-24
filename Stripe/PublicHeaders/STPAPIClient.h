@@ -58,7 +58,7 @@ static NSString *const __nonnull STPSDKVersion = @"7.0.1";
 /**
  *  The operation queue on which to run completion blocks passed to the api client. Defaults to [NSOperationQueue mainQueue].
  */
-@property (nonatomic, nonnull) NSOperationQueue *operationQueue;
+@property (nonatomic, strong, nonnull) NSOperationQueue *operationQueue;
 
 @end
 

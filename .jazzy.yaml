@@ -10,3 +10,4 @@ module: Stripe
 skip_undocumented: true
 hide_documentation_coverage: true
 theme: fullwidth
+sdk: iphonesimulator
