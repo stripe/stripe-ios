@@ -184,7 +184,8 @@
 		046FE9A11CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.h in Headers */ = {isa = PBXBuildFile; fileRef = 046FE99F1CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		046FE9A21CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 046FE9A01CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.m */; };
 		046FE9A31CE5608000DA6A7B /* STPPaymentActivityIndicatorView.h in Headers */ = {isa = PBXBuildFile; fileRef = 046FE99F1CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		04793F561D1D8DDD00B3C551 /* STPSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 04793F551D1D8DDD00B3C551 /* STPSource.h */; };
+		04793F561D1D8DDD00B3C551 /* STPSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 04793F551D1D8DDD00B3C551 /* STPSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04793F571D1D9C0200B3C551 /* STPSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 04793F551D1D8DDD00B3C551 /* STPSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		049880FC1CED5A2300EA4FFD /* STPPaymentConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 049880FA1CED5A2300EA4FFD /* STPPaymentConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		049880FD1CED5A2300EA4FFD /* STPPaymentConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 049880FA1CED5A2300EA4FFD /* STPPaymentConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		049880FE1CED5A2300EA4FFD /* STPPaymentConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 049880FB1CED5A2300EA4FFD /* STPPaymentConfiguration.m */; };
@@ -1219,6 +1220,7 @@
 				049A3FAA1CC96B7C00F57DE7 /* STPApplePayPaymentMethod.h in Headers */,
 				049E84EC1A605EF0000B66CD /* StripeError.h in Headers */,
 				046FE9A31CE5608000DA6A7B /* STPPaymentActivityIndicatorView.h in Headers */,
+				04793F571D1D9C0200B3C551 /* STPSource.h in Headers */,
 				C1718D581C3B2E60002A7CB3 /* UIImage+Stripe.h in Headers */,
 				04A4883E1CA3568800506E53 /* STPBlocks.h in Headers */,
 				045D71211CEFA57000F6CD65 /* UIViewController+Stripe_Promises.h in Headers */,
