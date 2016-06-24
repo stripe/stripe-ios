@@ -171,7 +171,8 @@ pre code {
 
 .nav-group-task {
   font-size: 1em;
-  list-style-type: none; }
+  list-style-type: none;
+  white-space: nowrap; }
 
 .nav-group-task-link {
   color: #808080; }
