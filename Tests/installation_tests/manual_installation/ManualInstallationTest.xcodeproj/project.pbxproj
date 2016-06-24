@@ -15,6 +15,8 @@
 		047C06B31B06830800360F75 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047C06B11B06830800360F75 /* LaunchScreen.xib */; };
 		047C06BF1B06830800360F75 /* ManualInstallationTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 047C06BE1B06830800360F75 /* ManualInstallationTestTests.m */; };
 		047C06CD1B068D0200360F75 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 047C06CC1B068D0200360F75 /* Stripe.framework */; };
+		C1B630DC1D1D87FB00A05285 /* Stripe.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C1B630DB1D1D87FB00A05285 /* Stripe.bundle */; };
+		C1B630DF1D1D88CF00A05285 /* TestImageLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B630DE1D1D88CF00A05285 /* TestImageLoader.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +44,9 @@
 		047C06BD1B06830800360F75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		047C06BE1B06830800360F75 /* ManualInstallationTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ManualInstallationTestTests.m; sourceTree = "<group>"; };
 		047C06CC1B068D0200360F75 /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe.framework; path = ManualInstallationTest/Frameworks/Stripe.framework; sourceTree = "<group>"; };
+		C1B630DB1D1D87FB00A05285 /* Stripe.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Stripe.bundle; path = ManualInstallationTest/Frameworks/Stripe.bundle; sourceTree = "<group>"; };
+		C1B630DD1D1D88CF00A05285 /* TestImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestImageLoader.h; sourceTree = "<group>"; };
+		C1B630DE1D1D88CF00A05285 /* TestImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestImageLoader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +71,7 @@
 		047C06961B06830800360F75 = {
 			isa = PBXGroup;
 			children = (
+				C1B630DB1D1D87FB00A05285 /* Stripe.bundle */,
 				047C06CC1B068D0200360F75 /* Stripe.framework */,
 				047C06A11B06830800360F75 /* ManualInstallationTest */,
 				047C06BB1B06830800360F75 /* ManualInstallationTestTests */,
@@ -89,6 +95,8 @@
 				047C06A71B06830800360F75 /* AppDelegate.m */,
 				047C06A91B06830800360F75 /* ViewController.h */,
 				047C06AA1B06830800360F75 /* ViewController.m */,
+				C1B630DD1D1D88CF00A05285 /* TestImageLoader.h */,
+				C1B630DE1D1D88CF00A05285 /* TestImageLoader.m */,
 				047C06AC1B06830800360F75 /* Main.storyboard */,
 				047C06AF1B06830800360F75 /* Images.xcassets */,
 				047C06B11B06830800360F75 /* LaunchScreen.xib */,
@@ -203,6 +211,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1B630DC1D1D87FB00A05285 /* Stripe.bundle in Resources */,
 				047C06AE1B06830800360F75 /* Main.storyboard in Resources */,
 				047C06B31B06830800360F75 /* LaunchScreen.xib in Resources */,
 				047C06B01B06830800360F75 /* Images.xcassets in Resources */,
@@ -225,6 +234,7 @@
 			files = (
 				047C06AB1B06830800360F75 /* ViewController.m in Sources */,
 				047C06A81B06830800360F75 /* AppDelegate.m in Sources */,
+				C1B630DF1D1D88CF00A05285 /* TestImageLoader.m in Sources */,
 				047C06A51B06830800360F75 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

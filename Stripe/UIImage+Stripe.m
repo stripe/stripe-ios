@@ -86,10 +86,14 @@
 
 + (UIImage *)stp_safeImageNamed:(NSString *)imageName {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
+    UIImage *image = nil;
     if ([self respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        return [self imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
+        image = [self imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
     }
-    return [self imageNamed:imageName];
+    if (image == nil) {
+        image = [UIImage imageNamed:[NSString stringWithFormat:@"Stripe.bundle/%@", imageName]];
+    }
+    return image ?: [self imageNamed:imageName];
 }
 
 @end
