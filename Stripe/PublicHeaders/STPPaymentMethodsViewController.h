@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPPaymentContext, STPPaymentMethodsViewController;
 
 /**
- *  An STPPaymentMethodsViewControllerDelegate responds when a user selects a payment method from (or cancels) an STPPaymentMethodsViewController. In both of these instances, you should dismiss the view controller (either by popping it off the navigation stack, or dismissing it). If you are popping it off of a UINavigationController stack, be aware that it may have already pushed additional view controllers (such as an STPAddCardViewController) onto the stack, so don't call -popViewControllerAnimated: on your UINavigationController. Instead, call -popToViewController: on your navigation controller, with the view controller that was behind the STPPaymentMethodsViewController as the first argument.
+ *  An STPPaymentMethodsViewControllerDelegate responds when a user selects a payment method from (or cancels) an STPPaymentMethodsViewController. In both of these instances, you should dismiss the view controller (either by popping it off the navigation stack, or dismissing it).
  */
 @protocol STPPaymentMethodsViewControllerDelegate <NSObject>
 
@@ -71,6 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Initializes a new payment methods view controller without using a payment context.
  *
  *  @param configuration The configuration to use to determine what types of payment method to offer your user. @see STPPaymentConfiguration.h
+ *  @param theme         The theme to inform the appearance of the UI. @see STPTheme.h
  *  @param apiAdapter    The API adapter to use to retrieve a customer's stored payment methods and save new ones. @see STPBackendAPIAdapter.h
  *  @param delegate      A delegate that will be notified when the payment methods view controller's selection changes.
  *
@@ -79,6 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
                                 theme:(STPTheme *)theme
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
+
 /**
 *  If you've already collected some information from your user, you can set it here and it'll be automatically filled out when possible/appropriate in any UI that the payment context creates.
 */

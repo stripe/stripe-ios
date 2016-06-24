@@ -13,6 +13,24 @@
 
 @implementation UIViewController (Stripe_Promises)
 
+- (STPVoidPromise *)stp_willAppearPromise {
+    STPVoidPromise *promise = objc_getAssociatedObject(self, @selector(stp_willAppearPromise));
+    if (!promise) {
+        promise = [STPVoidPromise new];
+        if (self.isViewLoaded && self.view.window) {
+            [promise succeed];
+        } else {
+            [self stp_aspect_hookSelector:@selector(viewWillAppear:) withOptions:(STPAspectPositionAfter) usingBlock:^{
+                if (!promise.completed) {
+                    [promise succeed];
+                }
+            } error:nil];
+        }
+        objc_setAssociatedObject(self, @selector(stp_willAppearPromise), promise, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return promise;
+}
+
 - (STPVoidPromise *)stp_didAppearPromise {
     STPVoidPromise *promise = objc_getAssociatedObject(self, @selector(stp_didAppearPromise));
     if (!promise) {
@@ -20,7 +38,7 @@
         if (self.isViewLoaded && self.view.window) {
             [promise succeed];
         } else {
-            [self stp_aspect_hookSelector:@selector(viewDidAppear:) withOptions:(STPAspectPositionAfter | STPAspectOptionAutomaticRemoval) usingBlock:^{
+            [self stp_aspect_hookSelector:@selector(viewDidAppear:) withOptions:(STPAspectPositionAfter) usingBlock:^{
                 if (!promise.completed) {
                     [promise succeed];
                 }

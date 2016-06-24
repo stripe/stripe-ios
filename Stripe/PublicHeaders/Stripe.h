@@ -17,7 +17,6 @@
 #import "STPCardValidationState.h"
 #import "STPCardValidator.h"
 #import "STPToken.h"
-#import "Stripe+ApplePay.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPPaymentCardTextField.h"
 #import "STPCustomer.h"

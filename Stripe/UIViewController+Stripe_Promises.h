@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIViewController (Stripe_Promises)
 
+@property(nonatomic, readonly)STPVoidPromise *stp_willAppearPromise;
 @property(nonatomic, readonly)STPVoidPromise *stp_didAppearPromise;
 
 @end

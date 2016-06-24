@@ -11,7 +11,6 @@
 
 #import "STPAPIClient.h"
 #import "STPAPIClient+ApplePay.h"
-#import "Stripe+ApplePay.h"
 
 @interface STPApplePayTest : XCTestCase
 

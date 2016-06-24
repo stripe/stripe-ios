@@ -8,7 +8,7 @@
 
 #import <objc/runtime.h>
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
-#import "Stripe+ApplePay.h"
+#import "STPAPIClient+ApplePay.h"
 
 static char kSTPBlockBasedApplePayDelegateAssociatedObjectKey;
 
