@@ -29,7 +29,11 @@
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
-@property(nonatomic)STPVoidPromise *didAppearPromise; // this wraps hostViewController's promise because the hostVC is nil at init-time
+
+// these wrap hostViewController's promises because the hostVC is nil at init-time
+@property(nonatomic)STPVoidPromise *willAppearPromise;
+@property(nonatomic)STPVoidPromise *didAppearPromise;
+
 @property(nonatomic, weak)STPPaymentMethodsViewController *paymentMethodsViewController;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
@@ -52,6 +56,7 @@
         _configuration = configuration;
         _apiAdapter = apiAdapter;
         _theme = theme;
+        _willAppearPromise = [STPVoidPromise new];
         _didAppearPromise = [STPVoidPromise new];
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _paymentCurrency = @"USD";
@@ -114,12 +119,18 @@
     NSCAssert(_hostViewController == nil, @"You cannot change the hostViewController on an STPPaymentContext after it's already been set.");
     _hostViewController = hostViewController;
     [self artificiallyRetain:hostViewController];
+    [self.willAppearPromise voidCompleteWith:hostViewController.stp_willAppearPromise];
     [self.didAppearPromise voidCompleteWith:hostViewController.stp_didAppearPromise];
 }
 
 - (void)setDelegate:(id<STPPaymentContextDelegate>)delegate {
     _delegate = delegate;
-    [delegate paymentContextDidChange:self];
+    __weak typeof(self) weakself = self;
+    [self.willAppearPromise voidOnSuccess:^{
+        if (weakself.delegate == delegate) {
+            [delegate paymentContextDidChange:weakself];
+        }
+    }];
 }
 
 - (STPPromise<STPPaymentMethodTuple *> *)currentValuePromise {
