@@ -41,7 +41,7 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
                                    NSLocalizedDescriptionKey: STPUnexpectedError,
                                    STPErrorMessageKey: @"Could not interpret the error response that was returned from Stripe."
                                    };
-        return [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
+        return [[self.class alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
     }
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
@@ -81,7 +81,7 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
         }
     }
     
-    return [[NSError alloc] initWithDomain:StripeDomain code:code userInfo:userInfo];
+    return [[self.class alloc] initWithDomain:StripeDomain code:code userInfo:userInfo];
 }
 
 + (nonnull NSError *)stp_genericFailedToParseResponseError {
@@ -89,7 +89,15 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
                                NSLocalizedDescriptionKey: STPUnexpectedError,
                                STPErrorMessageKey: @"The response from Stripe failed to get parsed into valid JSON."
                                };
-    return [[NSError alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
+    return [[self.class alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
+}
+
+- (BOOL)stp_isUnknownCheckoutError {
+    return self.code == STPCheckoutUnknownError;
+}
+
+- (BOOL)stp_isURLSessionCancellationError {
+    return [self.domain isEqualToString:NSURLErrorDomain] && self.code == NSURLErrorCancelled;
 }
 
 @end

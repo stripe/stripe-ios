@@ -32,6 +32,8 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
  */
 + (BOOL)canSubmitPaymentRequest:(nullable PKPaymentRequest *)paymentRequest;
 
++ (BOOL)deviceSupportsApplePay;
+
 /**
  *  A convenience method to return a PKPaymentRequest with sane default values. You will still need to configure the paymentSummaryItems property to indicate
  *what the user is purchasing, as well as the optional requiredShippingAddressFields, requiredBillingAddressFields, and shippingMethods properties to indicate

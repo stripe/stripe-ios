@@ -61,6 +61,12 @@
            [self.card isEqual:object.card] && [self.tokenId isEqualToString:object.tokenId] && [self.created isEqualToDate:object.created];
 }
 
+#pragma mark STPSource
+
+- (NSString *)stripeID {
+    return self.tokenId;
+}
+
 #pragma mark STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {

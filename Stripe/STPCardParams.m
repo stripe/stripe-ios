@@ -30,6 +30,32 @@
     }
 }
 
+#if TARGET_OS_IPHONE
+
+- (STPAddress *)address {
+    STPAddress *address = [STPAddress new];
+    address.name = self.name;
+    address.line1 = self.addressLine1;
+    address.line2 = self.addressLine2;
+    address.city = self.addressCity;
+    address.state = self.addressState;
+    address.postalCode = self.addressZip;
+    address.country = self.addressCountry;
+    return address;
+}
+
+- (void)setAddress:(STPAddress *)address {
+    self.name = address.name;
+    self.addressLine1 = address.line1;
+    self.addressLine2 = address.line2;
+    self.addressCity = address.city;
+    self.addressState = address.state;
+    self.addressZip = address.postalCode;
+    self.addressCountry = address.country;
+}
+
+#endif
+
 - (BOOL)validateNumber:(id *)ioValue error:(NSError **)outError {
     if (*ioValue == nil) {
         return [self.class handleValidationErrorForParameter:@"number" error:outError];

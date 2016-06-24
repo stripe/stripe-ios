@@ -9,13 +9,20 @@
 #import <Foundation/Foundation.h>
 #import "STPAnalyticsClient.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STPAPIClient ()<NSURLSessionDelegate>
 
-- (void)createTokenWithData:(nonnull NSData *)data
+- (void)createTokenWithData:(NSData *)data
                   tokenType:(STPTokenType)tokenType
                  completion:(nullable STPTokenCompletionBlock)completion;
 
-@property (nonatomic, readwrite, nonnull) NSURL *apiURL;
-@property (nonatomic, readwrite, nonnull) NSURLSession *urlSession;
+- (instancetype)initWithPublishableKey:(NSString *)publishableKey
+                               baseURL:(NSString *)baseURL;
+
+@property (nonatomic, readwrite) NSURL *apiURL;
+@property (nonatomic, readwrite) NSURLSession *urlSession;
 
 @end
+
+NS_ASSUME_NONNULL_END

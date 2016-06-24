@@ -6,17 +6,26 @@
 //
 
 #import "Stripe+ApplePay.h"
-#import "STPAPIClient.h"
 
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 @implementation Stripe (ApplePay)
 
 + (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest {
+    if (![self deviceSupportsApplePay]) {
+        return NO;
+    }
     if (paymentRequest == nil) {
         return NO;
     }
-    return [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:paymentRequest.supportedNetworks];
+    if (paymentRequest.merchantIdentifier == nil) {
+        return NO;
+    }
+    return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] > 0;
+}
+
++ (BOOL)deviceSupportsApplePay {
+    return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa]];
 }
 
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier {

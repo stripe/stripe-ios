@@ -18,38 +18,66 @@
 
 @implementation UIImage (Stripe)
 
++ (UIImage *)stp_addIcon {
+    return [self.class stp_safeImageNamed:@"stp_icon_add" templateifAvailable:YES];
+}
+
++ (UIImage *)stp_leftChevronIcon {
+    return [self.class stp_safeImageNamed:@"stp_icon_chevron_left" templateifAvailable:YES];
+}
+
++ (UIImage *)stp_smallRightChevronIcon {
+    return [self.class stp_safeImageNamed:@"stp_icon_chevron_right_small" templateifAvailable:YES];
+}
+
++ (nonnull UIImage *)stp_largeCardFrontImage {
+    return [self.class stp_safeImageNamed:@"stp_card_form_front" templateifAvailable:YES];
+}
+
++ (nonnull UIImage *)stp_largeCardBackImage {
+    return [self.class stp_safeImageNamed:@"stp_card_form_back" templateifAvailable:YES];
+}
+
++ (UIImage *)stp_largeCardApplePayImage {
+    return [self.class stp_safeImageNamed:@"stp_card_form_applepay" templateifAvailable:YES];
+}
+
++ (UIImage *)stp_applePayCardImage {
+    return [self.class stp_safeImageNamed:@"stp_card_applepay"];
+}
+
 + (UIImage *)stp_amexCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandAmex];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandAmex];
 }
 
 + (UIImage *)stp_dinersClubCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandDinersClub];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandDinersClub];
 }
 
 + (UIImage *)stp_discoverCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandDiscover];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandDiscover];
 }
 
 + (UIImage *)stp_jcbCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandJCB];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandJCB];
 }
 
 + (UIImage *)stp_masterCardCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandMasterCard];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandMasterCard];
 }
 
 + (UIImage *)stp_visaCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandVisa];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandVisa];
 }
 
 + (UIImage *)stp_unknownCardCardImage {
-    return [UIImage stp_brandImageForCardBrand:STPCardBrandUnknown];
+    return [self.class stp_brandImageForCardBrand:STPCardBrandUnknown];
 }
 
 + (UIImage *)stp_brandImageForCardBrand:(STPCardBrand)brand {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     NSString *imageName;
-    BOOL templateSupported = [[UIImage new] respondsToSelector:@selector(imageWithRenderingMode:)];
+    BOOL templateSupported = [[self.class new] respondsToSelector:@selector(imageWithRenderingMode:)];
     switch (brand) {
         case STPCardBrandAmex:
             imageName = @"stp_card_amex";
@@ -72,7 +100,7 @@
         case STPCardBrandVisa:
             imageName = @"stp_card_visa";
     }
-    UIImage *image = [UIImage stp_safeImageNamed:imageName];
+    UIImage *image = [self.class stp_safeImageNamed:imageName];
     if (brand == STPCardBrandUnknown && templateSupported) {
         image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
@@ -81,15 +109,54 @@
 
 + (UIImage *)stp_cvcImageForCardBrand:(STPCardBrand)brand {
     NSString *imageName = brand == STPCardBrandAmex ? @"stp_card_cvc_amex" : @"stp_card_cvc";
-    return [UIImage stp_safeImageNamed:imageName];
+    return [self.class stp_safeImageNamed:imageName];
+}
+
++ (UIImage *)stp_safeImageNamed:(NSString *)imageName
+            templateifAvailable:(BOOL)templateIfAvailable {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
+    UIImage *image;
+    image = [self.class imageNamed:imageName];
+    if ([[self.class class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
+        image = [self.class imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
+    }
+    if ([self.class stp_templateSupported] && templateIfAvailable) {
+        image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    }
+    return image;
 }
 
 + (UIImage *)stp_safeImageNamed:(NSString *)imageName {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
-    if ([[UIImage class] respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        return [UIImage imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
+    return [self stp_safeImageNamed:imageName templateifAvailable:NO];
+}
+
+- (UIImage *)stp_imageWithTintColor:(UIColor *)color {
+    UIImage *newImage;
+    UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
+    [color set];
+    [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height)];
+    newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
++ (BOOL)stp_templateSupported {
+    return [[self.class new] respondsToSelector:@selector(imageWithRenderingMode:)];
+}
+
+- (UIImage *)stp_paddedImageWithInsets:(UIEdgeInsets)insets {
+    CGSize size = CGSizeMake(self.size.width + insets.left + insets.right,
+                             self.size.height + insets.top + insets.bottom);
+    UIGraphicsBeginImageContextWithOptions(size, NO, self.scale);
+    CGPoint origin = CGPointMake(insets.left, insets.top);
+    [self drawAtPoint:origin];
+    UIImage *imageWithInsets = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    BOOL templateSupported = [self respondsToSelector:@selector(imageWithRenderingMode:)];
+    if (templateSupported) {
+        imageWithInsets = [imageWithInsets imageWithRenderingMode:self.renderingMode];
     }
-    return [UIImage imageNamed:imageName];
+    return imageWithInsets;
 }
 
 @end

@@ -7,19 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "STPBlocks.h"
+
 #define FAUXPAS_IGNORED_ON_LINE(...)
 
 static NSString *const __nonnull STPSDKVersion = @"7.0.1";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPToken;
-
-/**
- *  A callback to be run with a token response from the Stripe API.
- *
- *  @param token The Stripe token from the response. Will be nil if an error occurs. @see STPToken
- *  @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
- */
-typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * __nullable error);
 
 /**
  A top-level class that imports the rest of the Stripe SDK. This class used to contain several methods to create Stripe tokens, but those are now deprecated in

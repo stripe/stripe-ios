@@ -7,8 +7,6 @@
 //
 
 #import "STPPaymentCardTextFieldViewModel.h"
-#import "STPCardValidator.h"
-#import "UIImage+Stripe.h"
 #import "NSString+Stripe.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)

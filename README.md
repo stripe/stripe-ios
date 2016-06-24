@@ -16,6 +16,8 @@ Our SDK is compatible with iOS apps supporting iOS 7.0 and above. It requires Xc
 
 We've written a [guide](https://stripe.com/docs/mobile/ios) that explains everything from installation, to creating payment tokens, to Apple Pay integration and more.
 
+For more fine-grained information on all of the classes and methods in our SDK, consult our [full SDK reference](http://stripe.github.io/stripe-ios/docs/index.html).
+
 ## Example apps
 
 There are 2 example apps included in the repository:

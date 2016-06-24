@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Stripe. All rights reserved.
 //
 
-#import "TargetConditionals.h"
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
@@ -15,10 +14,9 @@
 #import "STPBankAccount.h"
 #import "STPCard.h"
 #import "STPToken.h"
-#import "StripeError.h"
-#import "STPAPIResponseDecodable.h"
 #import "STPAPIPostRequest.h"
 #import "STPAnalyticsClient.h"
+#import "STPPaymentConfiguration.h"
 
 #if __has_include("Fabric.h")
 #import "Fabric+FABKits.h"
@@ -40,10 +38,11 @@ static NSString *STPDefaultPublishableKey;
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
     STPDefaultPublishableKey = publishableKey;
+    [STPPaymentConfiguration sharedConfiguration].publishableKey = publishableKey;
 }
 
 + (NSString *)defaultPublishableKey {
-    return STPDefaultPublishableKey;
+    return [STPPaymentConfiguration sharedConfiguration].publishableKey;
 }
 
 + (void)disableAnalytics {
@@ -97,6 +96,15 @@ static NSString *STPDefaultPublishableKey;
                                          };
         _urlSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:_operationQueue];
         _analyticsClient = [[STPAnalyticsClient alloc] init];
+    }
+    return self;
+}
+
+- (instancetype)initWithPublishableKey:(NSString *)publishableKey
+                               baseURL:(NSString *)baseURL {
+    self = [self initWithPublishableKey:publishableKey];
+    if (self) {
+        _apiURL = [NSURL URLWithString:baseURL];
     }
     return self;
 }
