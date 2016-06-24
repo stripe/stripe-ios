@@ -55,6 +55,9 @@ static NSInteger const STPTableViewCellBottomBorderTag = 787474;
 }
 
 - (void)setStp_contentAlpha:(CGFloat)stp_contentAlpha {
+    // lazily load these properties
+    __unused UIView *top = [self stp_topBorderView];
+    __unused UIView *bottom = [self stp_topBorderView];
     for (UIView *view in self.subviews) {
         view.alpha = stp_contentAlpha;
     }
