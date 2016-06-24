@@ -8,7 +8,6 @@
 
 #import <PassKit/PassKit.h>
 #import <objc/runtime.h>
-#import "Stripe+ApplePay.h"
 #import "NSDecimalNumber+Stripe_Currency.h"
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "UIViewController+Stripe_ParentViewController.h"
@@ -317,7 +316,8 @@
     if (!self.configuration.appleMerchantIdentifier || !self.paymentAmount) {
         return nil;
     }
-    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.configuration.appleMerchantIdentifier];
+//    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.configuration.appleMerchantIdentifier];
+    PKPaymentRequest *paymentRequest = [[PKPaymentRequest alloc] init];
     NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:self.paymentAmount
                                                                   currency:self.paymentCurrency];
     PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:self.configuration.companyName

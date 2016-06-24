@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-@class STPTheme;
+#import "STPTheme.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  This allows quickly setting the appearance of a UINavigationBar to match your application. This is useful if you're presenting an STPAddCardViewController or STPPaymentMethodsViewController inside a UINavigationController.
@@ -22,3 +24,5 @@
 - (void)stp_setTheme:(STPTheme *)theme;
 
 @end
+
+NS_ASSUME_NONNULL_END

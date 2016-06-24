@@ -11,7 +11,6 @@
 #import "STPCategoryLoader.h"
 #import "PKPayment+Stripe.h"
 #import "NSDictionary+Stripe.h"
-#import "Stripe+ApplePay.h"
 #import "UIImage+Stripe.h"
 #import "NSString+Stripe.h"
 #import "NSMutableURLRequest+Stripe.h"
@@ -21,7 +20,6 @@
 + (void)loadCategories {
     linkPKPaymentCategory();
     linkDictionaryCategory();
-    linkStripeApplePayCategory();
     linkSTPAPIClientApplePayCategory();
     linkUIImageCategory();
     linkStringCategory();
