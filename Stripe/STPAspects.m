@@ -810,7 +810,7 @@ static void stp_aspect_deregisterTrackedSelector(id self, SEL selector) {
 + (instancetype)identifierWithSelector:(SEL)selector object:(id)object options:(STPAspectOptions)options block:(id)block error:(NSError **)error {
     NSCParameterAssert(block);
     NSCParameterAssert(selector);
-    NSMethodSignature *blockSignature = stp_aspect_blockMethodSignature(block, error); // TODO: check signature compatibility, etc.
+    NSMethodSignature *blockSignature = stp_aspect_blockMethodSignature(block, error);
     if (!stp_aspect_isCompatibleBlockSignature(blockSignature, object, selector, error)) {
         return nil;
     }

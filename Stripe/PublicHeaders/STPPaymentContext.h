@@ -26,7 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol STPPaymentContextDelegate <NSObject>
 
 /**
- *  Called when the payment context encounters an error when fetching its initial set of data. If you're showing the user a checkout page, you should dismiss the checkout page when this is called and present the error to the user. To make it harder to get your UI into an inconsistent state, this won't be called until the context's hostViewController has finished appearing.
+ *  Called when the payment context encounters an error when fetching its initial set of data. A few ways to handle this are:
+ - If you're showing the user a checkout page, dismiss the checkout page when this is called and present the error to the user.
+ - Present the error to the user using a UIAlertController with two buttons: Retry and Cancel. If they cancel, dismiss your UI. If they Retry, call `retryLoading` on the payment context.
+ 
+ To make it harder to get your UI into an inconsistent state, this won't be called until the context's hostViewController has finished appearing.
  *
  *  @param paymentContext the payment context that encountered the error
  *  @param error          the error that was encountered
@@ -74,16 +78,20 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
 @interface STPPaymentContext : NSObject
 
 /**
+ *  This is a convenience initializer; it is equivalent to calling `initWithAPIAdapter:apiAdapter configuration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]`.
+ *
+ */
+- (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter;
+
+/**
  *  Initializes a new Payment Context with the provided API adapter and configuration. After this class is initialized, you should also make sure to set its delegate and hostViewController properties.
  *
  *  @param apiAdapter    The API adapter the payment context will use to fetch and modify its contents. You need to make a class conforming to this protocol that talks to your server. @see STPBackendAPIAdapter.h
- *  @param configuration The configuration for the payment context to use internally. @see STPPaymentConfiguration.h
+ *  @param configuration The configuration for the payment context to use. This lets you set your Stripe publishable API key, required billing address fields, etc. @see STPPaymentConfiguration.h
+ *  @param theme         The theme describing the visual appearance of all UI that the payment context automatically creates for you. @see STPTheme.h
  *
  *  @return the newly-instantiated payment context
  */
-// TODO update comment
-- (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter;
-
 - (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                      configuration:(STPPaymentConfiguration *)configuration
                              theme:(STPTheme *)theme;
@@ -144,7 +152,7 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
 @property(nonatomic, copy)NSString *paymentCurrency;
 
 /**
- *  TODO: document me
+ *  If paymentContext:didFailToLoadWithError: is called on your delegate, you can in turn call this method to try loading again (if that hasn't been called, calling this will do nothing). If retrying in turn fails, paymentContext:didFailToLoadWithError: will be called again (and you can again call this to keep retrying, etc).
  */
 - (void)retryLoading;
 

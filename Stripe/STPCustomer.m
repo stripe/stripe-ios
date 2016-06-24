@@ -69,7 +69,7 @@
         if ([json[@"sources"] isKindOfClass:[NSDictionary class]] && [json[@"sources"][@"data"] isKindOfClass:[NSArray class]]) {
             for (id contents in json[@"sources"][@"data"]) {
                 if ([contents isKindOfClass:[NSDictionary class]]) {
-                    // TODO support other source types
+                    // eventually support other source types
                     STPCard *card = [STPCard decodedObjectFromAPIResponse:contents];
                     if (card) {
                         [sources addObject:card];

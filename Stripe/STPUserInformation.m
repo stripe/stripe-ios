@@ -7,7 +7,13 @@
 //
 
 #import "STPUserInformation.h"
+#import "STPCardValidator.h"
+
 
 @implementation STPUserInformation
+
+- (void)setPhone:(NSString *)phone {
+    _phone = [STPCardValidator sanitizedNumericStringForString:phone];
+}
 
 @end
