@@ -1,5 +1,7 @@
 use_frameworks!
 
 target 'CocoapodsTest' do
+	use_frameworks!
 	pod 'Stripe', path: '../../../..'
+	pod 'Stripe/ApplePay', path: '../../../..'
 end
