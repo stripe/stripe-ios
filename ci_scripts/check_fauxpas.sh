@@ -6,4 +6,6 @@ if [[ $CI && "$TRAVIS_SECURE_ENV_VARS" != "true" ]]; then
 fi
 
 echo "Linting with Faux Pas..."
+
+export DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
 fauxpas check Stripe.xcodeproj/ --target "StripeiOSStatic" --configFile "./FauxPasConfig/main.fauxpas.json" --minErrorStatusSeverity Concern
