@@ -8,8 +8,7 @@ xcodebuild build -workspace Stripe.xcworkspace -scheme StripeiOSStaticFramework 
 cd $BUILDDIR/Release-iphonesimulator
 mkdir StripeiOS
 mv Stripe.framework StripeiOS
-cp -r Stripe.bundle StripeiOS/Stripe.framework
-mv Stripe.bundle StripeiOS
+mv Stripe.bundle StripeiOS/Stripe.framework
 ditto -ck --rsrc --sequesterRsrc --keepParent StripeiOS StripeiOS.zip
 cp StripeiOS.zip $BUILDDIR
 cd -
