@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Stripe/Stripe.h>
 
 @interface ViewController : UIViewController
 
