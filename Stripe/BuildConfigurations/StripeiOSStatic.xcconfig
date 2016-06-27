@@ -69,6 +69,14 @@ IPHONEOS_DEPLOYMENT_TARGET = 7.0
 OTHER_LDFLAGS = -ObjC
 
 
+// enable bitcode
+ENABLE_BITCODE_iphonesimulator = NO
+ENABLE_BITCODE_iphoneos = YES
+ENABLE_BITCODE = $(ENABLE_BITCODE_$(PLATFORM_NAME))
+
+OTHER_CFLAGS[sdk=iphoneos*] = $(inherited) -fembed-bitcode -Wno-error=unused-command-line-argument
+
+
 // Product Name
 // 
 // This is the basename of the product generated.
