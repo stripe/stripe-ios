@@ -91,7 +91,7 @@
         image = [self imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
     }
     if (image == nil) {
-        image = [UIImage imageNamed:[NSString stringWithFormat:@"Stripe.bundle/%@", imageName]];
+        image = [self imageNamed:[NSString stringWithFormat:@"Stripe.bundle/%@", imageName]];
     }
     return image ?: [self imageNamed:imageName];
 }
