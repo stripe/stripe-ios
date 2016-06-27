@@ -16,4 +16,4 @@ mkdir $TESTDIR/ManualInstallationTest/Frameworks
 mv $BUILDDIR/Release-iphonesimulator/Stripe.framework $TESTDIR/ManualInstallationTest/Frameworks
 mv $BUILDDIR/Release-iphonesimulator/Stripe.bundle $TESTDIR/ManualInstallationTest/Frameworks/Stripe.framework
 
-xctool build -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator
+xcodebuild test -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator | xcpretty -c
