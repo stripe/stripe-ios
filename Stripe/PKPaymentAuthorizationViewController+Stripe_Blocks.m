@@ -10,6 +10,8 @@
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "STPAPIClient+ApplePay.h"
 
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
+
 static char kSTPBlockBasedApplePayDelegateAssociatedObjectKey;
 
 @interface STPBlockBasedApplePayDelegate : NSObject <PKPaymentAuthorizationViewControllerDelegate>

@@ -29,6 +29,7 @@
 #endif
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 static NSString *const apiURLBase = @"api.stripe.com/v1";
 static NSString *const tokenEndpoint = @"tokens";

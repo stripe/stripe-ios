@@ -13,6 +13,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 #define FAUXPAS_IGNORED_ON_LINE(...)
+#define FAUXPAS_IGNORED_IN_FILE(...)
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 static NSString *const STPSDKVersion = @"7.0.2";
 
