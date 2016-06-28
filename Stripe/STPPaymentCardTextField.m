@@ -81,7 +81,8 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     self.borderWidth = 1.0f;
 
     self.clipsToBounds = YES;
-    
+
+    _internalCardParams = [STPCardParams new];
     _viewModel = [STPPaymentCardTextFieldViewModel new];
     _sizingField = [self buildTextField];
     _sizingField.formDelegate = nil;
