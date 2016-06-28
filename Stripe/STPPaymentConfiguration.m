@@ -9,8 +9,13 @@
 #import "STPPaymentConfiguration.h"
 #import "NSBundle+Stripe_AppName.h"
 #import "Stripe.h"
+#import "STPAnalyticsClient.h"
 
 @implementation STPPaymentConfiguration
+
++ (void)initialize {
+    [STPAnalyticsClient initializeIfNeeded];
+}
 
 + (instancetype)sharedConfiguration {
     static STPPaymentConfiguration *sharedConfiguration;

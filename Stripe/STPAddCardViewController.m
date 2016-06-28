@@ -34,6 +34,7 @@
 #import "UIView+Stripe_FirstResponder.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "STPRememberMePaymentCell.h"
+#import "STPAnalyticsClient.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPRememberMePaymentCellDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
@@ -308,7 +309,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
             } else {
                 NSString *phone = self.rememberMePhoneCell.contents;
                 NSString *email = self.emailCell.contents;
-                if ([STPEmailAddressValidator stringIsValidEmailAddress:email] && [STPPhoneNumberValidator stringIsValidPhoneNumber:phone] && self.rememberMeCell.on) {
+                BOOL rememberMeSelected = [STPEmailAddressValidator stringIsValidEmailAddress:email] && [STPPhoneNumberValidator stringIsValidPhoneNumber:phone] && self.rememberMeCell.on;
+                [[STPAnalyticsClient sharedClient] logRememberMeConversion:rememberMeSelected];
+                if (rememberMeSelected) {
                     [self.checkoutAPIClient createAccountWithCardParams:cardParams email:email phone:phone];
                 }
                 if (self.completion) {

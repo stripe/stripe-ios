@@ -18,7 +18,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 static NSString *const STPSDKVersion = @"7.0.2";
 
-@class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPToken;
+@class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPToken, STPPaymentConfiguration;
 
 /**
  A top-level class that imports the rest of the Stripe SDK. This class used to contain several methods to create Stripe tokens, but those are now deprecated in
@@ -53,7 +53,8 @@ static NSString *const STPSDKVersion = @"7.0.2";
  *  A shared singleton API client. Its API key will be initially equal to [Stripe defaultPublishableKey].
  */
 + (instancetype)sharedClient;
-- (instancetype)initWithPublishableKey:(NSString *)publishableKey NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithPublishableKey:(NSString *)publishableKey;
 
 /**
  *  @see [Stripe setDefaultPublishableKey:]
@@ -61,9 +62,9 @@ static NSString *const STPSDKVersion = @"7.0.2";
 @property (nonatomic, copy, nullable) NSString *publishableKey;
 
 /**
- *  The operation queue on which to run completion blocks passed to the api client. Defaults to [NSOperationQueue mainQueue].
+ *  @see -initWithConfiguration
  */
-@property (nonatomic, strong) NSOperationQueue *operationQueue;
+@property (nonatomic, copy) STPPaymentConfiguration *configuration;
 
 @end
 
@@ -133,10 +134,6 @@ static NSString *const STPSDKVersion = @"7.0.2";
 + (void)createTokenWithPayment:(PKPayment *)payment
                     completion:(STPTokenCompletionBlock)handler __attribute__((deprecated("Use STPAPIClient instead.")));
 
-+ (void)createTokenWithPayment:(nonnull PKPayment *)payment
-                operationQueue:(nonnull NSOperationQueue *)queue
-                    completion:(nonnull STPTokenCompletionBlock)handler __attribute__((deprecated("Use STPAPIClient instead.")));
-
 @end
 
 #pragma mark - Deprecated Methods
@@ -177,30 +174,6 @@ typedef void (^STPCompletionBlock)(STPToken * __nullable token, NSError * __null
 + (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey completion:(nullable STPCompletionBlock)handler __attribute__((deprecated));
 
 /**
- *  Securely convert your user's credit card details into a Stripe token, which you can then safely store on your server and use to charge the user.
- *
- *  @param card    The user's card details. @see STPCard
- *  @param queue   The operation queue on which to run completion blocks passed to the api client. 
- *  @param handler Code to run when the user's card has been turned into a Stripe token.
- *  @deprecated    Use STPAPIClient instead.
- */
-+ (void)createTokenWithCard:(STPCard *)card operationQueue:(NSOperationQueue *)queue completion:(nullable STPCompletionBlock)handler __attribute__((deprecated));
-
-/**
- *  Securely convert your user's credit card details into a Stripe token, which you can then safely store on your server and use to charge the user.
- *
- *  @param card           The user's card details. @see STPCard
- *  @param publishableKey The API key to use to authenticate with Stripe. Get this at https://stripe.com/account/apikeys .
- *  @param queue          The operation queue on which to run completion blocks passed to the api client. 
- *  @param handler        Code to run when the user's card has been turned into a Stripe token.
- *  @deprecated           Use STPAPIClient instead.
- */
-+ (void)createTokenWithCard:(STPCard *)card
-             publishableKey:(NSString *)publishableKey
-             operationQueue:(NSOperationQueue *)queue
-                 completion:(nullable STPCompletionBlock)handler __attribute__((deprecated));
-
-/**
  *  Securely convert your user's credit card details into a Stripe token, which you can then safely store on your server and use to charge the user. The URL
  *connection will run on the main queue. Uses the value of [Stripe defaultPublishableKey] for authentication.
  *
@@ -221,34 +194,6 @@ typedef void (^STPCompletionBlock)(STPToken * __nullable token, NSError * __null
  */
 + (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount
                     publishableKey:(NSString *)publishableKey
-                        completion:(nullable STPCompletionBlock)handler __attribute__((deprecated));
-
-/**
- *  Securely convert your user's credit card details into a Stripe token, which you can then safely store on your server and use to charge the user. The URL
- *connection will run on the main queue. Uses the value of [Stripe defaultPublishableKey] for authentication.
- *
- *  @param bankAccount The user's bank account details. @see STPBankAccount
- *  @param queue       The operation queue on which to run completion blocks passed to the api client. 
- *  @param handler     Code to run when the user's card has been turned into a Stripe token.
- *  @deprecated        Use STPAPIClient instead.
- */
-+ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount
-                    operationQueue:(NSOperationQueue *)queue
-                        completion:(nullable STPCompletionBlock)handler __attribute__((deprecated));
-
-/**
- *  Securely convert your user's credit card details into a Stripe token, which you can then safely store on your server and use to charge the user. The URL
- *connection will run on the main queue. Uses the value of [Stripe defaultPublishableKey] for authentication.
- *
- *  @param bankAccount    The user's bank account details. @see STPBankAccount
- *  @param publishableKey The API key to use to authenticate with Stripe. Get this at https://stripe.com/account/apikeys .
- *  @param queue          The operation queue on which to run completion blocks passed to the api client. 
- *  @param handler        Code to run when the user's card has been turned into a Stripe token.
- *  @deprecated           Use STPAPIClient instead.
- */
-+ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount
-                    publishableKey:(NSString *)publishableKey
-                    operationQueue:(NSOperationQueue *)queue
                         completion:(nullable STPCompletionBlock)handler __attribute__((deprecated));
 
 @end

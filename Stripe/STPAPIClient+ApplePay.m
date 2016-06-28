@@ -10,6 +10,7 @@
 #import "STPAPIClient+ApplePay.h"
 #import "PKPayment+Stripe.h"
 #import "STPAPIClient+Private.h"
+#import "STPAnalyticsClient.h"
 
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
@@ -17,7 +18,6 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 - (void)createTokenWithPayment:(PKPayment *)payment completion:(STPTokenCompletionBlock)completion {
     [self createTokenWithData:[self.class formEncodedDataForPayment:payment]
-                    tokenType:STPTokenTypeApplePay
                    completion:completion];
 }
 
