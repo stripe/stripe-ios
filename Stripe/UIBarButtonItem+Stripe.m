@@ -16,7 +16,7 @@
                                       style:(UIBarButtonItemStyle)style
                                      target:(id)target
                                      action:(SEL)action {
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:title
+    UIBarButtonItem *item = [[self alloc] initWithTitle:title
                                                              style:style
                                                             target:target
                                                             action:action];

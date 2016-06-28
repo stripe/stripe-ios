@@ -136,7 +136,7 @@
 }
 
 - (STPPromise<id> *)map:(STPPromiseMapBlock)callback {
-    STPPromise<id>* wrapper = [STPPromise<id> new];
+    STPPromise<id>* wrapper = [self.class new];
     [[self onSuccess:^(id value) {
         [wrapper succeed:callback(value)];
     }] onFailure:^(NSError *error) {
@@ -147,7 +147,7 @@
 
 
 - (STPPromise *)flatMap:(STPPromiseFlatMapBlock)callback {
-    STPPromise<id>* wrapper = [STPPromise<id> new];
+    STPPromise<id>* wrapper = [self.class new];
     [[self onSuccess:^(id value) {
         STPPromise *internal = callback(value);
         [[internal onSuccess:^(id internalValue) {

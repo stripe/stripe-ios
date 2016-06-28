@@ -19,7 +19,7 @@
 
 + (instancetype)tupleWithSelectedCard:(STPCard *)selectedCard
                                 cards:(NSArray<STPCard *>*)cards {
-    STPCardTuple *tuple = [STPCardTuple new];
+    STPCardTuple *tuple = [self new];
     tuple.selectedCard = selectedCard;
     tuple.cards = cards ?: @[];
     return tuple;

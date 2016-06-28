@@ -37,7 +37,7 @@ static UIFont  *STPThemeDefaultMediumFont;
     static STPTheme  *STPThemeDefaultTheme;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        STPThemeDefaultTheme = [STPTheme new];
+        STPThemeDefaultTheme = [self new];
     });
     return STPThemeDefaultTheme;
 }
@@ -120,7 +120,7 @@ static UIFont  *STPThemeDefaultMediumFont;
 }
 
 - (id)copyWithZone:(__unused NSZone *)zone {
-    STPTheme *copyTheme = [STPTheme new];
+    STPTheme *copyTheme = [self.class new];
     copyTheme.primaryBackgroundColor = self.primaryBackgroundColor;
     copyTheme.secondaryBackgroundColor = self.secondaryBackgroundColor;
     copyTheme.primaryForegroundColor = self.primaryForegroundColor;
