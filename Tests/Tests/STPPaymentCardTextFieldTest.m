@@ -282,6 +282,20 @@
     XCTAssertEqualObjects(sut.viewModel.expirationYear, @"99");
 }
 
+- (void)testSettingTextUpdatesCardParams {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    sut.numberField.text = @"4242424242424242";
+    sut.cvcField.text = @"123";
+    sut.expirationField.text = @"10/99";
+
+    STPCardParams *params = sut.cardParams;
+    XCTAssertNotNil(params);
+    XCTAssertEqualObjects(params.number, @"4242424242424242");
+    XCTAssertEqualObjects(params.cvc, @"123");
+    XCTAssertEqual((int)params.expMonth, 10);
+    XCTAssertEqual((int)params.expYear, 99);
+}
+
 @end
 
 @interface STPPaymentCardTextFieldUITests : XCTestCase
