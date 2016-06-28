@@ -34,6 +34,7 @@
 #import "UIView+Stripe_FirstResponder.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "STPRememberMePaymentCell.h"
+#import "STPAnalyticsClient.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPRememberMePaymentCellDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
@@ -89,6 +90,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         _addressViewModel.delegate = self;
         _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         self.title = NSLocalizedString(@"Add a Card", nil);
+        [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeOpen forAddCardViewController:self];
     }
     return self;
 }
@@ -278,6 +280,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (void)cancel:(__unused id)sender {
+    [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeCancel forAddCardViewController:self];
     if (self.completion) {
         self.completion(nil, ^(__unused NSError *error) {});
     }
@@ -294,16 +297,22 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
             if (strongself.completion) {
                 strongself.completion(token, ^(NSError *error) {
                     if (error) {
+                        [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeError forAddCardViewController:self];
                         [strongself handleCheckoutTokenError:error];
+                    }
+                    else {
+                        [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeSuccess forAddCardViewController:self];
                     }
                 });
             }
         }] onFailure:^(NSError *error) {
+            [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeError forAddCardViewController:self];
             [weakself handleCardTokenError:error];
         }];
     } else if (cardParams) {
         [self.apiClient createTokenWithCard:cardParams completion:^(STPToken *token, NSError *tokenError) {
             if (tokenError) {
+                [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeError forAddCardViewController:self];
                 [self handleCardTokenError:tokenError];
             } else {
                 NSString *phone = self.rememberMePhoneCell.contents;
@@ -314,7 +323,11 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
                 if (self.completion) {
                     self.completion(token, ^(NSError *error) {
                         if (error) {
+                            [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeError forAddCardViewController:self];
                             [self handleCardTokenError:error];
+                        }
+                        else {
+                            [[STPAnalyticsClient sharedClient] logEvent:STPAnalyticsEventTypeSuccess forAddCardViewController:self];
                         }
                     });
                 }

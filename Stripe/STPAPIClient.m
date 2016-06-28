@@ -60,7 +60,6 @@ static NSString *STPDefaultPublishableKey;
 #endif
 @property (nonatomic, readwrite) NSURL *apiURL;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
-@property (nonatomic, readwrite) STPAnalyticsClient *analyticsClient;
 @end
 
 @implementation STPAPIClient
@@ -97,7 +96,6 @@ static NSString *STPDefaultPublishableKey;
                                          @"Authorization": auth,
                                          };
         _urlSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:_operationQueue];
-        _analyticsClient = [[STPAnalyticsClient alloc] init];
     }
     return self;
 }
@@ -129,11 +127,11 @@ static NSString *STPDefaultPublishableKey;
                                            serializer:[STPToken new]
                                            completion:^(STPToken *object, NSHTTPURLResponse *response, NSError *error) {
                                                NSDate *end = [NSDate date];
-                                               [self.analyticsClient logRUMWithTokenType:tokenType
-                                                                          publishableKey:publishableKey
-                                                                                response:response
-                                                                                   start:start
-                                                                                     end:end];
+                                               [[STPAnalyticsClient sharedClient] logRUMWithTokenType:tokenType
+                                                                                       publishableKey:publishableKey
+                                                                                             response:response
+                                                                                                start:start
+                                                                                                  end:end];
                                                completion(object, error);
                                            }];
 }
