@@ -128,6 +128,13 @@ static NSString *const STPSDKVersion = @"7.0.2";
  */
 + (nullable PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier;
 
++ (void)createTokenWithPayment:(PKPayment *)payment
+                    completion:(STPTokenCompletionBlock)handler __attribute__((deprecated("Use STPAPIClient instead.")));
+
++ (void)createTokenWithPayment:(nonnull PKPayment *)payment
+                operationQueue:(nonnull NSOperationQueue *)queue
+                    completion:(nonnull STPTokenCompletionBlock)handler __attribute__((deprecated("Use STPAPIClient instead.")));
+
 @end
 
 #pragma mark - Deprecated Methods

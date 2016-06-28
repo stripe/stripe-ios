@@ -82,8 +82,8 @@
                 [containerView addSubview:separator];
             }
         }
-        self.textFields = [textFields copy];
-        self.separators = [separators copy];
+        _textFields = [textFields copy];
+        _separators = [separators copy];
         
         UIView *coveringView = [UIView new];
         UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(becomeFirstResponder)];

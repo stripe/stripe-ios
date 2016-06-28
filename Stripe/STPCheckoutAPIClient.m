@@ -188,7 +188,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
         [request setValue:account.sessionID forHTTPHeaderField:@"X-Rack-Session"];
         [request setValue:account.sessionID forHTTPHeaderField:@"Stripe-Checkout-Test-Session"];
         [request setValue:account.csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
-        [[weakself.accountSession dataTaskWithRequest:request completionHandler:^(__unused NSData *data, __unused NSURLResponse *response, NSError *error) {
+        [[weakself.accountSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             STPToken *token = [self parseTokenFromResponse:response data:data];
             if (token) {
                 [tokenPromise succeed:token];

@@ -23,8 +23,8 @@
 
 @implementation STPCheckoutBootstrapResponse
 
-+ (nullable instancetype)bootstrapResponseWithData:(__unused NSData *)data
-                                       URLResponse:(__unused NSURLResponse *)response {
++ (nullable instancetype)bootstrapResponseWithData:(NSData *)data
+                                       URLResponse:( NSURLResponse *)response {
     if (![response isKindOfClass:[NSHTTPURLResponse class]]) {
         return nil;
     }
