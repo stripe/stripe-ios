@@ -21,6 +21,7 @@
 #import "STPAddCardViewController.h"
 #import "STPPaymentMethodsViewController.h"
 #import "STPPaymentMethodsViewController+Private.h"
+#import "STPAPIClient+ApplePay.h"
 
 static BOOL STPAnalyticsCollectionDisabled = NO;
 
@@ -125,6 +126,7 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                       @"event": @"stripeios.token_creation",
+                                      @"apple_pay_enabled": @([Stripe deviceSupportsApplePay]),
                                       @"product_usage": productUsage ?: @[],
                                       }];
     [payload addEntriesFromDictionary:configurationDictionary];
@@ -164,6 +166,7 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
 + (NSMutableDictionary *)commonPayload {
     NSMutableDictionary *payload = [NSMutableDictionary dictionary];
     payload[@"bindings_version"] = STPSDKVersion;
+    payload[@"analytics_ua"] = @"analytics.stripeios-1.0";
     NSString *version = [UIDevice currentDevice].systemVersion;
     if (version) {
         payload[@"os_version"] = version;
