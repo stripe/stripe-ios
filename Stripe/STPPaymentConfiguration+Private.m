@@ -13,7 +13,7 @@
 - (BOOL)applePayEnabled {
     return self.appleMerchantIdentifier &&
     (self.additionalPaymentMethods & STPPaymentMethodTypeApplePay) &&
-    YES;//[Stripe deviceSupportsApplePay];
+    [Stripe deviceSupportsApplePay];
 }
 
 @end
