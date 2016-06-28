@@ -13,3 +13,5 @@
 @property(nonatomic)UINavigationItem *stp_navigationItemProxy;
 
 @end
+
+void linkUIViewControllerNavigationItemProxyCategory(void);

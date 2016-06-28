@@ -68,3 +68,5 @@ static NSInteger const STPTableViewCellBottomBorderTag = 787474;
 }
 
 @end
+
+void linkUITableViewCellBordersCategory(void);

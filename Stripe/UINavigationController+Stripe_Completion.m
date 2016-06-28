@@ -60,3 +60,5 @@
 }
 
 @end
+
+void linkUINavigationControllerCompletionCategory(void){}

@@ -15,3 +15,5 @@
 }
 
 @end
+
+void linkNSBundleAppNameCategory(void){}

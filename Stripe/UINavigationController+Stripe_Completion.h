@@ -23,3 +23,5 @@
                      completion:(STPVoidBlock)completion;
 
 @end
+
+void linkUINavigationControllerCompletionCategory(void);

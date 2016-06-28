@@ -20,11 +20,28 @@
 
 + (void)loadCategories {
     linkPKPaymentCategory();
-    linkDictionaryCategory();
+    linkNSDictionaryCategory();
     linkSTPAPIClientApplePayCategory();
     linkUIImageCategory();
-    linkStringCategory();
-    linkURLRequestCategory();
+    linkNSStringCategory();
+    linkNSMutableURLRequestCategory();
+    linkUINavigationBarThemeCategory();
+    linkUIBarButtonItemCategory();
+    linkSTPPaymentConfigurationPrivateCategory();
+    linkPKPaymentAuthorizationViewControllerBlocksCategory();
+    linkUIToolbarInputAccessoryCategory();
+    linkUITableViewCellBordersCategory();
+    linkUIViewControllerAlertsCategory();
+    linkUIViewControllerPromisesCategory();
+    linkUIViewControllerNavigationItemProxyCategory();
+    linkNSStringCardBrandsCategory();
+    linkNSArrayBoundSafeCategory();
+    linkUIViewControllerParentViewControllerCategory();
+    linkUINavigationControllerCompletionCategory();
+    linkUIViewFirstResponderCategory();
+    linkUIViewControllerKeyboardAvoidingCategory();
+    linkNSDecimalNumberCurrencyCategory();
+    linkNSBundleAppNameCategory();
 }
 
 @end

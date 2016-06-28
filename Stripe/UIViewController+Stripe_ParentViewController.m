@@ -34,3 +34,5 @@
 }
 
 @end
+
+void linkUIViewControllerParentViewControllerCategory(void){}

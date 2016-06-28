@@ -37,3 +37,5 @@ typedef NS_ENUM(NSUInteger, STPAlertStyle) {
 @end
 
 NS_ASSUME_NONNULL_END
+
+void linkUIViewControllerAlertsCategory(void);

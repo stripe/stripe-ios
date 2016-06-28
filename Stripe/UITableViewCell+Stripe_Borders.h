@@ -17,3 +17,5 @@
 @property(nonatomic)CGFloat stp_contentAlpha;
 
 @end
+
+void linkUITableViewCellBordersCategory(void);

@@ -50,3 +50,5 @@
 }
 
 @end
+
+void linkUIViewControllerPromisesCategory(void){}

@@ -14,3 +14,5 @@
 + (nonnull instancetype)stp_stringWithCardBrand:(STPCardBrand)brand;
 
 @end
+
+void linkNSStringCardBrandsCategory(void);

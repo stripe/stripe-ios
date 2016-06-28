@@ -24,3 +24,5 @@
 }
 
 @end
+
+void linkUIViewFirstResponderCategory(void){}
