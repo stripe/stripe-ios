@@ -16,3 +16,5 @@
 - (nullable UIViewController *)stp_previousViewControllerInNavigation;
 
 @end
+
+void linkUIViewControllerParentViewControllerCategory(void);

@@ -120,3 +120,5 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability);
 }
 
 @end
+
+void linkUIViewControllerAlertsCategory(void){}

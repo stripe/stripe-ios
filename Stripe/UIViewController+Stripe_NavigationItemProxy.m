@@ -31,3 +31,5 @@ static char kSTPNavigationItemProxyKey;
 }
 
 @end
+
+void linkUIViewControllerNavigationItemProxyCategory(void){}

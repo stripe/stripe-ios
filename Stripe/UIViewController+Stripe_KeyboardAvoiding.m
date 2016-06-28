@@ -99,3 +99,5 @@
 }
 
 @end
+
+void linkUIViewControllerKeyboardAvoidingCategory(void){}

@@ -13,3 +13,5 @@
 @property(nonatomic, readonly)BOOL applePayEnabled;
 
 @end
+
+void linkSTPPaymentConfigurationPrivateCategory(void);

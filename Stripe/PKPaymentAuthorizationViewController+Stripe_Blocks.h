@@ -25,3 +25,5 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError *erro
 
 
 @end
+
+void linkPKPaymentAuthorizationViewControllerBlocksCategory(void);

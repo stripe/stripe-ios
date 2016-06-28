@@ -15,3 +15,5 @@ typedef void(^STPKeyboardFrameBlock)(CGRect keyboardFrame, UIView *currentlyEdit
 - (void)stp_beginObservingKeyboardWithBlock:(STPKeyboardFrameBlock)block;
 
 @end
+
+void linkUIViewControllerKeyboardAvoidingCategory(void);

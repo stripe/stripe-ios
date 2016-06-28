@@ -13,3 +13,5 @@
 + (nullable NSString*)stp_applicationName;
 
 @end
+
+void linkNSBundleAppNameCategory(void);

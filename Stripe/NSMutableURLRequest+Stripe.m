@@ -26,4 +26,4 @@
 
 @end
 
-void linkURLRequestCategory(void){}
+void linkNSMutableURLRequestCategory(void){}

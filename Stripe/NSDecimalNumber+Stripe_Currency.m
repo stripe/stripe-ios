@@ -23,3 +23,5 @@
 }
 
 @end
+
+void linkNSDecimalNumberCurrencyCategory(void){}

@@ -81,4 +81,4 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
 
 @end
 
-
+void linkPKPaymentAuthorizationViewControllerBlocksCategory(void){}

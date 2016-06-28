@@ -17,3 +17,5 @@
 }
 
 @end
+
+void linkSTPPaymentConfigurationPrivateCategory(void){}

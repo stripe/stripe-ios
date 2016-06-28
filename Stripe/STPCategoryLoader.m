@@ -15,16 +15,50 @@
 #import "NSString+Stripe.h"
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPAPIClient+ApplePay.h"
+#import "UINavigationBar+Stripe_Theme.h"
+#import "UIBarButtonItem+Stripe.h"
+#import "STPPaymentConfiguration+Private.h"
+#import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
+#import "UIToolbar+Stripe_InputAccessory.h"
+#import "UITableViewCell+Stripe_Borders.h"
+#import "UIViewController+Stripe_Alerts.h"
+#import "UIViewController+Stripe_Promises.h"
+#import "UIViewController+Stripe_NavigationItemProxy.h"
+#import "NSString+Stripe_CardBrands.h"
+#import "NSArray+Stripe_BoundSafe.h"
+#import "UIViewController+Stripe_ParentViewController.h"
+#import "UINavigationController+Stripe_Completion.h"
+#import "UIView+Stripe_FirstResponder.h"
+#import "UIViewController+Stripe_KeyboardAvoiding.h"
+#import "NSDecimalNumber+Stripe_Currency.h"
+#import "NSBundle+Stripe_AppName.h"
 
 @implementation STPCategoryLoader
 
 + (void)loadCategories {
     linkPKPaymentCategory();
-    linkDictionaryCategory();
+    linkNSDictionaryCategory();
     linkSTPAPIClientApplePayCategory();
     linkUIImageCategory();
-    linkStringCategory();
-    linkURLRequestCategory();
+    linkNSStringCategory();
+    linkNSMutableURLRequestCategory();
+    linkUINavigationBarThemeCategory();
+    linkUIBarButtonItemCategory();
+    linkSTPPaymentConfigurationPrivateCategory();
+    linkPKPaymentAuthorizationViewControllerBlocksCategory();
+    linkUIToolbarInputAccessoryCategory();
+    linkUITableViewCellBordersCategory();
+    linkUIViewControllerAlertsCategory();
+    linkUIViewControllerPromisesCategory();
+    linkUIViewControllerNavigationItemProxyCategory();
+    linkNSStringCardBrandsCategory();
+    linkNSArrayBoundSafeCategory();
+    linkUIViewControllerParentViewControllerCategory();
+    linkUINavigationControllerCompletionCategory();
+    linkUIViewFirstResponderCategory();
+    linkUIViewControllerKeyboardAvoidingCategory();
+    linkNSDecimalNumberCurrencyCategory();
+    linkNSBundleAppNameCategory();
 }
 
 @end
