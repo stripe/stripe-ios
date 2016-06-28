@@ -34,12 +34,10 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 static NSString *const apiURLBase = @"api.stripe.com/v1";
 static NSString *const tokenEndpoint = @"tokens";
 static NSString *const stripeAPIVersion = @"2015-10-12";
-static NSString *STPDefaultPublishableKey;
 
 @implementation Stripe
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
-    STPDefaultPublishableKey = publishableKey;
     [STPPaymentConfiguration sharedConfiguration].publishableKey = publishableKey;
 }
 
