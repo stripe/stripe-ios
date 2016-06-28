@@ -32,6 +32,7 @@
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
 #import "NSDecimalNumber+Stripe_Currency.h"
 #import "NSBundle+Stripe_AppName.h"
+#import "STPAspects.h"
 
 @implementation STPCategoryLoader
 
@@ -59,6 +60,7 @@
     linkUIViewControllerKeyboardAvoidingCategory();
     linkNSDecimalNumberCurrencyCategory();
     linkNSBundleAppNameCategory();
+    linkAspectsCategory();
 }
 
 @end

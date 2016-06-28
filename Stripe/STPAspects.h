@@ -67,6 +67,8 @@ typedef NS_OPTIONS(NSUInteger, STPAspectOptions) {
 
 @end
 
+void linkAspectsCategory(void);
+
 
 typedef NS_ENUM(NSUInteger, STPAspectErrorCode) {
     STPAspectErrorSelectorBlacklisted,                   /// Selectors like release, retain, autorelease are blacklisted.

@@ -943,3 +943,5 @@ static void stp_aspect_deregisterTrackedSelector(id self, SEL selector) {
 }
 
 @end
+
+void linkAspectsCategory(void) {}
