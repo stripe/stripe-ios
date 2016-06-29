@@ -22,7 +22,15 @@
 }
 
 - (BOOL)stp_isRootViewControllerOfNavigationController {
-    return self.navigationController.viewControllers.firstObject == self;
+    UIViewController *viewController = self.navigationController.viewControllers.firstObject;
+    UIViewController *tested = self;
+    while (tested) {
+        if (tested == viewController) {
+            return YES;
+        }
+        tested = [tested parentViewController];
+    }
+    return NO;
 }
 
 - (nullable UIViewController *)stp_previousViewControllerInNavigation {
