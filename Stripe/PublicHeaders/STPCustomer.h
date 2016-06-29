@@ -17,6 +17,19 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPCustomer : NSObject
 
 /**
+ *  Initialize a customer object with the provided values.
+ *
+ *  @param stripeID      The ID of the customer, e.g. "cus_abc"
+ *  @param defaultSource The default source of the customer, such as an `STPCard` object. Can be nil.
+ *  @param sources       All of the customer's payment sources. This might be an empty array.
+ *
+ *  @return an instance of STPCustomer
+ */
++ (instancetype)customerWithStripeID:(NSString *)stripeID
+                       defaultSource:(nullable id<STPSource>)defaultSource
+                             sources:(NSArray<id<STPSource>> *)sources;
+
+/**
  *  The Stripe ID of the customer, e.g. cus_1234
  */
 @property(nonatomic, readonly, copy)NSString *stripeID;

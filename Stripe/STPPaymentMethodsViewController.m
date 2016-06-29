@@ -56,17 +56,17 @@
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
     STPPromise<STPPaymentMethodTuple *> *promise = [STPPromise new];
-    [apiAdapter retrieveCustomerSources:^(NSString * _Nullable defaultSourceID, NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
+    [apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
         if (error) {
             [promise fail:error];
         } else {
             STPCard *selectedCard;
             NSMutableArray<STPCard *> *cards = [NSMutableArray array];
-            for (id<STPSource> source in sources) {
+            for (id<STPSource> source in customer.sources) {
                 if ([source isKindOfClass:[STPCard class]]) {
                     STPCard *card = (STPCard *)source;
                     [cards addObject:card];
-                    if ([card.stripeID isEqualToString:defaultSourceID]) {
+                    if ([card.stripeID isEqualToString:customer.defaultSource.stripeID]) {
                         selectedCard = card;
                     }
                 }

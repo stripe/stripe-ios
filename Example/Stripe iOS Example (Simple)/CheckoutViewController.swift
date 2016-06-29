@@ -86,7 +86,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
                                                configuration: config,
                                                theme: settings.theme)
         let userInformation = STPUserInformation()
-        userInformation.phone = "020 7946 0718"
         paymentContext.prefilledInformation = userInformation
         
         paymentContext.paymentAmount = price

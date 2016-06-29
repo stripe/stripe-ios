@@ -86,7 +86,7 @@
             }];
         }
     }];
-    [self.apiAdapter retrieveCustomerSources:^(NSString * _Nullable defaultSourceID, NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
+    [self.apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
         if (!weakself) {
             return;
         }
@@ -96,11 +96,11 @@
         }
         STPCard *selectedCard;
         NSMutableArray<STPCard *> *cards = [NSMutableArray array];
-        for (id<STPSource> source in sources) {
+        for (id<STPSource> source in customer.sources) {
             if ([source isKindOfClass:[STPCard class]]) {
                 STPCard *card = (STPCard *)source;
                 [cards addObject:card];
-                if ([card.stripeID isEqualToString:defaultSourceID]) {
+                if ([card.stripeID isEqualToString:customer.defaultSource.stripeID]) {
                     selectedCard = card;
                 }
             }

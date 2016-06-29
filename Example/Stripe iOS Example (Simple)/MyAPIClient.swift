@@ -89,16 +89,18 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         task.resume()
     }
     
-    @objc func retrieveCustomerSources(completion: STPSourceCompletionBlock) {
+    @objc func retrieveCustomer(completion: STPCustomerCompletionBlock) {
         guard let key = Stripe.defaultPublishableKey() where !key.containsString("#") else {
             let error = NSError(domain: StripeDomain, code: 50, userInfo: [
                 NSLocalizedDescriptionKey: "Please set stripePublishableKey to your account's test publishable key in CheckoutViewController.swift"
             ])
-            completion(nil, nil, error)
+            completion(nil, error)
             return
         }
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
-            completion(self.defaultSource?.stripeID, self.sources, nil)
+            // This code is just for demo purposes - in this case, if the example app isn't properly configured, we'll return a fake customer just so the app works.
+            let customer = STPCustomer(stripeID: "cus_test", defaultSource: self.defaultSource, sources: self.sources)
+            completion(customer, nil)
             return
         }
         let path = "/customers/\(customerID)"
@@ -108,10 +110,10 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
             dispatch_async(dispatch_get_main_queue()) {
                 let deserializer = STPCustomerDeserializer(data: data, urlResponse: urlResponse, error: error)
                 if let error = deserializer.error {
-                    completion(nil, [], error)
+                    completion(nil, error)
                     return
                 } else if let customer = deserializer.customer {
-                    completion(customer.defaultSource?.stripeID, customer.sources, nil)
+                    completion(customer, nil)
                 }
             }
         }
