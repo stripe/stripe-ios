@@ -60,6 +60,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     tableView.delegate = self;
     [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
     tableView.sectionHeaderHeight = 30;
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone; // use fake separator views
     tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
     self.tableView = tableView;
     [self.view addSubview:tableView];
@@ -75,7 +76,6 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
     self.tableView.tintColor = self.theme.accentColor;
     self.cardImageView.tintColor = self.theme.accentColor;
-    self.tableView.separatorColor = self.theme.quaternaryBackgroundColor;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -183,6 +183,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     [cell stp_setBorderColor:self.theme.tertiaryBackgroundColor];
     [cell stp_setTopBorderHidden:!topRow];
     [cell stp_setBottomBorderHidden:!bottomRow];
+    [cell stp_setFakeSeparatorColor:self.theme.quaternaryBackgroundColor];
+    [cell stp_setFakeSeparatorLeftInset:15.0f];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
