@@ -327,8 +327,7 @@
     if (!self.configuration.appleMerchantIdentifier || !self.paymentAmount) {
         return nil;
     }
-//    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.configuration.appleMerchantIdentifier];
-    PKPaymentRequest *paymentRequest = [[PKPaymentRequest alloc] init];
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.configuration.appleMerchantIdentifier];
     NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:self.paymentAmount
                                                                   currency:self.paymentCurrency];
     PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:self.configuration.companyName

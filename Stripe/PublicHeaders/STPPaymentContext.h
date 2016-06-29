@@ -169,7 +169,7 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
 /**
  *  Whether or not the payment context contains all of the information it needs to complete a payment. For example, you can use the result of this method to enable/disable the "buy" button on a checkout page.
  */
-- (BOOL)isReadyForPayment;
+@property(nonatomic, readonly)BOOL isReadyForPayment;
 
 /**
  *  Requests payment from the user. This may need to present some supplemental UI to the user, in which case it will be presented on the payment context's hostViewController. For instance, if they've selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. After this is called, the paymentContext:didCreatePaymentResult:completion: and paymentContext:didFinishWithStatus:error: methods will be called on the context's delegate.
