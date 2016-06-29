@@ -491,7 +491,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 #pragma mark - UITableView
 
 - (void)reloadRememberMeCellAnimated:(BOOL)animated {
-    BOOL disabled = (!self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.configuration.smsAutofillDisabled || self.lookupSucceeded) && (self.rememberMePhoneCell.contentView.alpha < FLT_EPSILON);
+    BOOL disabled = (!self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.configuration.smsAutofillDisabled || self.lookupSucceeded) && (self.rememberMePhoneCell.contentView.alpha < FLT_EPSILON || self.rememberMePhoneCell.superview == nil);
     [UIView animateWithDuration:(0.2f * animated) animations:^{
         self.rememberMeCell.contentView.alpha = disabled ? 0 : 1;
     } completion:^(__unused BOOL finished) {
