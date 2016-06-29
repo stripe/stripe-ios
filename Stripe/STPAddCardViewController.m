@@ -49,7 +49,6 @@
 @property(nonatomic)STPSwitchTableViewCell *rememberMeCell;
 @property(nonatomic)STPAddressFieldTableViewCell *rememberMePhoneCell;
 @property(nonatomic)STPRememberMePaymentCell *paymentCell;
-@property(nonatomic, copy)STPAddCardCompletionBlock completion;
 @property(nonatomic)BOOL loading;
 @property(nonatomic)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic, weak)STPPaymentActivityIndicatorView *lookupActivityIndicator;
@@ -71,27 +70,42 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 @implementation STPAddCardViewController
 
-- (instancetype)initWithCompletion:(STPAddCardCompletionBlock)completion {
-    return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration]
-                                 theme:[STPTheme defaultTheme]
-                            completion:completion];
+- (instancetype)init {
+    return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
 }
 
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
-                                theme:(STPTheme *)theme
-                           completion:(STPAddCardCompletionBlock)completion {
-    self = [super initWithNibName:nil bundle:nil];
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        _configuration = configuration;
-        _theme = theme;
-        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
-        _completion = completion;
-        _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
-        _addressViewModel.delegate = self;
-        _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
-        self.title = NSLocalizedString(@"Add a Card", nil);
+        [self commonInitWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
     }
     return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self commonInitWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
+    }
+    return self;
+}
+
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration theme:(STPTheme *)theme {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        [self commonInitWithConfiguration:configuration theme:theme];
+    }
+    return self;
+}
+
+- (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration theme:(STPTheme *)theme {
+    _configuration = configuration;
+    _theme = theme;
+    _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
+    _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
+    _addressViewModel.delegate = self;
+    _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
+    self.title = NSLocalizedString(@"Add a Card", nil);
 }
 
 - (void)viewDidLoad {
@@ -279,9 +293,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (void)cancel:(__unused id)sender {
-    if (self.completion) {
-        self.completion(nil, ^(__unused NSError *error) {});
-    }
+    [self.delegate addCardViewControllerDidCancel:self];
 }
 
 - (void)nextPressed:(__unused id)sender {
@@ -292,13 +304,11 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         __weak typeof(self) weakself = self;
         [[[self.checkoutAPIClient createTokenWithAccount:self.checkoutAccount] onSuccess:^(STPToken *token) {
             __strong typeof(weakself) strongself = weakself;
-            if (strongself.completion) {
-                strongself.completion(token, ^(NSError *error) {
-                    if (error) {
-                        [strongself handleCheckoutTokenError:error];
-                    }
-                });
-            }
+            [strongself.delegate addCardViewController:strongself didCreateToken:token completion:^(NSError * _Nullable error) {
+                if (error) {
+                    [strongself handleCheckoutTokenError:error];
+                }
+            }];
         }] onFailure:^(NSError *error) {
             [weakself handleCardTokenError:error];
         }];
@@ -314,13 +324,11 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
                 if (rememberMeSelected) {
                     [self.checkoutAPIClient createAccountWithCardParams:cardParams email:email phone:phone];
                 }
-                if (self.completion) {
-                    self.completion(token, ^(NSError *error) {
-                        if (error) {
-                            [self handleCardTokenError:error];
-                        }
-                    });
-                }
+                [self.delegate addCardViewController:self didCreateToken:token completion:^(NSError * _Nullable error) {
+                    if (error) {
+                        [self handleCardTokenError:error];
+                    }
+                }];
             }
         }];
     }

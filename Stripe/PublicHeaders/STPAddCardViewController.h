@@ -17,35 +17,55 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class STPAddCardViewController;
+
 /**
- *  This callback will be yielded with two arguments: a Stripe token (may be nil, if the user cancels the form) and another callback. If the token is present, you can submit it to your backend API to either create a charge or attach it to a customer. When that is done, call tokenCompletion with any error that occurred (it'll be shown to the user and they'll be able to resubmit the form). If your backend API call succeeds, you should dismiss the view controller and move the user to the next step of your UI.
- *
- *  @param token           A valid Stripe token, or nil if the user presses the "cancel" button.
- *  @param tokenCompletion A callback to call once you're done passing the token to your server.
+ *  An STPAddCardViewControllerDelegate is notified when an STPAddCardViewController successfully creates a card token or is cancelled. It has internal error-handling logic, so there's no error case to deal with.
  */
-typedef void (^STPAddCardCompletionBlock)(STPToken * __nullable token, STPErrorBlock tokenCompletion);
+@protocol STPAddCardViewControllerDelegate <NSObject>
+
+/**
+ *  Called when the user cancels adding a card. You should dismiss (or pop) the view controller at this point.
+ *
+ *  @param addCardViewController the view controller that has been cancelled
+ */
+- (void)addCardViewControllerDidCancel:(STPAddCardViewController *)addCardViewController;
+
+/**
+ *  This is called when the user successfully adds a card and tokenizes it with Stripe. You should send the token to your backend to store it on a customer, and then call the provided `completion` block when that call is finished. If an error occurred while talking to your backend, call `completion(error)`, otherwise, call `completion(nil)` and then dismiss (or pop) the view controller.
+ *
+ *  @param addCardViewController the view controller that successfully created a token
+ *  @param token                 the Stripe token that was created. @see STPToken
+ *  @param completion            call this callback when you're done sending the token to your backend
+ */
+- (void)addCardViewController:(STPAddCardViewController *)addCardViewController
+               didCreateToken:(STPToken *)token
+                   completion:(STPErrorBlock)completion;
+
+@end
 
 /** This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user's card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a UINavigationController.
  */
 @interface STPAddCardViewController : UIViewController
 
 /**
- *  This is a convenience initializer, that is equivalent to calling initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme] completion:completion.
+ *  A convenience initializer; equivalent to calling `initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]`.
  */
-- (instancetype)initWithCompletion:(STPAddCardCompletionBlock)completion;
+- (instancetype)init;
 
 /**
- *  Returns a new view controller with a credit card form.
+ *  Initializes a new STPAddCardViewController with the provided configuration and theme. Don't forget to set the `delegate` property after initialization.
  *
- *  @param configuration The configuration for the view controller to use. This lets you set your Stripe publishable API key, required billing address fields, and if you want to disable SMS autofill. @see STPPaymentConfiguration.h
- *  @param theme         The theme describing the visual appearance of the view controller. @see STPTheme.h
- *  @param completion    A block that will be called when the user has successfully submitted their information, or pressed cancel. If they submit their information, the token parameter will be a valid STPToken object. If they cancel, it will be nil. When this is called, the user will see a spinner on the form. This gives your application time to send the token to your backend and add it to a customer or complete a charge. When you're done, call the `tokenCompletion` parameter with whether or not your call succeeded, and then dismiss the form if it succeeded.
- *
- *  @return a view controller that you can either embed in a UINavigationController and present modally, or push onto an existing UINavigationController stack.
+ *  @param configuration The configuration to use (this determines the Stripe publishable key to use, the required billing address fields, whether or not to use SMS autofill, etc). @see STPPaymentConfiguration
+ *  @param theme         The theme to use to inform the view controller's visual appearance. @see STPTheme
  */
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
-                                theme:(STPTheme *)theme
-                           completion:(STPAddCardCompletionBlock)completion;
+                                theme:(STPTheme *)theme;
+
+/**
+ *  The view controller's delegate. This must be set before showing the view controller in order for it to work properly. @see STPAddCardViewControllerDelegate
+ */
+@property(nonatomic, weak)id<STPAddCardViewControllerDelegate>delegate;
 
 /**
  *  You can set this property to pre-fill any information you've already collected from your user. @see STPUserInformation.h

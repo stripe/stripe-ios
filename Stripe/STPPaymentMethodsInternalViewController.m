@@ -17,7 +17,7 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 static NSInteger STPPaymentMethodCardListSection = 0;
 static NSInteger STPPaymentMethodAddCardSection = 1;
 
-@interface STPPaymentMethodsInternalViewController()<UITableViewDataSource, UITableViewDelegate>
+@interface STPPaymentMethodsInternalViewController()<UITableViewDataSource, UITableViewDelegate, STPAddCardViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)STPTheme *theme;
@@ -169,15 +169,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         // Disable SMS autofill if we already have a card on file
         config.smsAutofillDisabled = (config.smsAutofillDisabled || cardPaymentMethods.count > 0);
         
-        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config theme:self.theme completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
-            if (token && token.card) {
-                [self.delegate internalViewControllerDidCreateToken:token completion:tokenCompletion];
-            } else {
-                [self.navigationController stp_popViewControllerAnimated:YES completion:^{
-                    tokenCompletion(nil);
-                }];
-            }
-        }];
+        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config theme:self.theme];
+        paymentCardViewController.delegate = self;
         paymentCardViewController.prefilledInformation = self.prefilledInformation;
         [self.navigationController pushViewController:paymentCardViewController animated:YES];
     }
@@ -201,6 +194,16 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 - (CGFloat)tableView:(__unused UITableView *)tableView heightForHeaderInSection:(__unused NSInteger)section {
     return 0.01f;
+}
+
+- (void)addCardViewControllerDidCancel:(__unused STPAddCardViewController *)addCardViewController {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
+               didCreateToken:(STPToken *)token
+                   completion:(STPErrorBlock)completion {
+    [self.delegate internalViewControllerDidCreateToken:token completion:completion];
 }
 
 @end

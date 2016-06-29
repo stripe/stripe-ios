@@ -22,7 +22,7 @@
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
-@interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate>
+@interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate, STPAddCardViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)STPTheme *theme;
@@ -247,25 +247,8 @@
             return;
         }
         if (!weakSelf.selectedPaymentMethod) {
-            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
-                if (token) {
-                    [weakSelf.apiAdapter attachSourceToCustomer:token completion:^(NSError *error) {
-                        if (error) {
-                            tokenCompletion(error);
-                        } else {
-                            [weakSelf.hostViewController dismissViewControllerAnimated:YES completion:^{
-                                tokenCompletion(nil);
-                                weakSelf.selectedPaymentMethod = token.card;
-                                [weakSelf requestPayment];
-                            }];
-                        }
-                    }];
-                } else {
-                    [weakSelf.hostViewController dismissViewControllerAnimated:YES completion:^{
-                        [weakSelf.delegate paymentContext:weakSelf didFinishWithStatus:STPPaymentStatusUserCancellation error:nil];
-                    }];
-                }
-            }];
+            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
+            addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addCardViewController];
             [navigationController.navigationBar stp_setTheme:weakSelf.theme];
@@ -341,6 +324,30 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
 
 - (void)artificiallyRetain:(NSObject *)host {
     objc_setAssociatedObject(host, &kSTPPaymentCoordinatorAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)addCardViewControllerDidCancel:(__unused STPAddCardViewController *)addCardViewController {
+    [self.hostViewController dismissViewControllerAnimated:YES completion:^{
+        [self.delegate paymentContext:self
+                  didFinishWithStatus:STPPaymentStatusUserCancellation
+                                error:nil];
+    }];
+}
+
+- (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
+               didCreateToken:(STPToken *)token
+                   completion:(STPErrorBlock)completion {
+    [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *error) {
+        if (error) {
+            completion(error);
+        } else {
+            [self.hostViewController dismissViewControllerAnimated:YES completion:^{
+                completion(nil);
+                self.selectedPaymentMethod = token.card;
+                [self requestPayment];
+            }];
+        }
+    }];
 }
 
 @end

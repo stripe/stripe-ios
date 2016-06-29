@@ -24,7 +24,7 @@
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "STPTheme.h"
 
-@interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate>
+@interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic) STPTheme *theme;
@@ -106,14 +106,8 @@
                                                                            paymentMethodTuple:tuple
                                                                                      delegate:weakself];
         } else {
-            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:weakself.configuration theme:weakself.theme completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
-                if (token && token.card) {
-                    [weakself internalViewControllerDidCreateToken:token completion:tokenCompletion];
-                }
-                else {
-                    [self.delegate paymentMethodsViewControllerDidFinish:self];
-                }
-            }];
+            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:weakself.configuration theme:weakself.theme];
+            addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
             internal = addCardViewController;
             
@@ -182,6 +176,16 @@
             [self finishWithPaymentMethod:token.card];
         }
     }];
+}
+
+- (void)addCardViewControllerDidCancel:(__unused STPAddCardViewController *)addCardViewController {
+    [self.delegate paymentMethodsViewControllerDidFinish:self];
+}
+
+- (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
+               didCreateToken:(STPToken *)token
+                   completion:(STPErrorBlock)completion {
+    [self internalViewControllerDidCreateToken:token completion:completion];
 }
 
 @end

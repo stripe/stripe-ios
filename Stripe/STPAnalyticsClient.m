@@ -19,6 +19,7 @@
 #import "STPPaymentCardTextField.h"
 #import "STPPaymentContext.h"
 #import "STPAddCardViewController.h"
+#import "STPAddCardViewController+Private.h"
 #import "STPPaymentMethodsViewController.h"
 #import "STPPaymentMethodsViewController+Private.h"
 #import "STPAPIClient+ApplePay.h"
@@ -65,7 +66,7 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
                                               } error:nil];
         
         
-        [STPAddCardViewController stp_aspect_hookSelector:@selector(initWithConfiguration:theme:completion:)
+        [STPAddCardViewController stp_aspect_hookSelector:@selector(commonInitWithConfiguration:theme:)
                                               withOptions:STPAspectPositionAfter
                                                usingBlock:^{
                                                    STPAnalyticsClient *client = [self sharedClient];
