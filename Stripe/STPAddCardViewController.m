@@ -9,8 +9,8 @@
 #import "STPAddCardViewController.h"
 #import "STPPaymentCardTextField.h"
 #import "STPToken.h"
-#import "UIImage+Stripe.h"
-#import "UIImage+StripePrivate.h"
+#import "STPImageLibrary.h"
+#import "STPImageLibrary+Private.h"
 #import "STPAddressFieldTableViewCell.h"
 #import "STPAddressViewModel.h"
 #import "NSArray+Stripe_BoundSafe.h"
@@ -126,7 +126,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     
     self.stp_navigationItemProxy.rightBarButtonItem.enabled = NO;
     
-    UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[UIImage stp_largeCardFrontImage]];
+    UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeCardFrontImage]];
     cardImageView.contentMode = UIViewContentModeCenter;
     cardImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, cardImageView.bounds.size.height + (57 * 2));
     self.cardImageView = cardImageView;
@@ -401,7 +401,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
                       duration:0.25
                        options:UIViewAnimationOptionTransitionFlipFromRight
                     animations:^{
-                        self.cardImageView.image = [UIImage stp_largeCardBackImage];
+                        self.cardImageView.image = [STPImageLibrary largeCardBackImage];
                     } completion:nil];
 }
 
@@ -410,7 +410,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
                       duration:0.25
                        options:UIViewAnimationOptionTransitionFlipFromLeft
                     animations:^{
-                        self.cardImageView.image = [UIImage stp_largeCardFrontImage];
+                        self.cardImageView.image = [STPImageLibrary largeCardFrontImage];
                     } completion:nil];
 }
 

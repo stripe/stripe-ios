@@ -7,7 +7,8 @@
 //
 
 #import "STPObscuredCardView.h"
-#import "UIImage+Stripe.h"
+#import "STPImageLibrary.h"
+#import "STPImageLibrary+Private.h"
 
 @interface STPObscuredCardView()<UITextFieldDelegate>
 
@@ -23,7 +24,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        UIImage *cardImage = [UIImage stp_unknownCardCardImage];
+        UIImage *cardImage = [STPImageLibrary unknownCardCardImage];
         UIImageView *brandImageView = [[UIImageView alloc] initWithImage:cardImage];
         brandImageView.contentMode = UIViewContentModeCenter;
         [self addSubview:brandImageView];
@@ -101,7 +102,7 @@
 }
 
 - (void)configureWithCard:(STPCard *)card {
-    UIImage *image = [UIImage stp_brandImageForCardBrand:card.brand];
+    UIImage *image = [STPImageLibrary brandImageForCardBrand:card.brand];
     self.brandImageView.image = image;
     self.last4Field.text = card.last4;
     self.expField.text = [NSString stringWithFormat:@"%lu/%lu", (unsigned long)card.expMonth, (unsigned long)(card.expYear % 100)];

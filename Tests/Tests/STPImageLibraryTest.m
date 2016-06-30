@@ -1,21 +1,23 @@
 //
-//  UIImage+StripeTest.m
+//  STPImageLibraryTest.m
 //  Stripe
 //
-//  Created by Ben Guo on 1/12/16.
+//  Created by Jack Flintermann on 6/30/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>
-#import "UIImage+Stripe.h"
+#import "STPCardBrand.h"
+#import "STPImageLibrary.h"
 
-@interface UIImage_StripeTest : XCTestCase
+@interface STPImageLibraryTest : XCTestCase
 @property NSArray<NSNumber *> *cardBrands;
 @end
 
-@implementation UIImage_StripeTest
+@implementation STPImageLibraryTest
 
 - (void)setUp {
+    [super setUp];
     self.cardBrands = @[
                         @(STPCardBrandAmex),
                         @(STPCardBrandDinersClub),
@@ -26,35 +28,34 @@
                         @(STPCardBrandVisa),
                         ];
 }
-
 - (void)testCardIconMethods {
     UIImage *image = nil;
-    image = [UIImage stp_amexCardImage];
+    image = [STPImageLibrary amexCardImage];
     XCTAssertNotNil(image);
-    image = [UIImage stp_dinersClubCardImage];
+    image = [STPImageLibrary dinersClubCardImage];
     XCTAssertNotNil(image);
-    image = [UIImage stp_discoverCardImage];
+    image = [STPImageLibrary discoverCardImage];
     XCTAssertNotNil(image);
-    image = [UIImage stp_jcbCardImage];
+    image = [STPImageLibrary jcbCardImage];
     XCTAssertNotNil(image);
-    image = [UIImage stp_masterCardCardImage];
+    image = [STPImageLibrary masterCardCardImage];
     XCTAssertNotNil(image);
-    image = [UIImage stp_visaCardImage];
+    image = [STPImageLibrary visaCardImage];
     XCTAssertNotNil(image);
-    image = [UIImage stp_unknownCardCardImage];
+    image = [STPImageLibrary unknownCardCardImage];
     XCTAssertNotNil(image);
 }
 
 - (void)testBrandImageForCardBrand {
     for (NSNumber *brand in self.cardBrands) {
-        UIImage *image = [UIImage stp_brandImageForCardBrand:[brand integerValue]];
+        UIImage *image = [STPImageLibrary brandImageForCardBrand:[brand integerValue]];
         XCTAssertNotNil(image);
     }
 }
 
 - (void)testCVCImageForCardBrand {
     for (NSNumber *brand in self.cardBrands) {
-        UIImage *image = [UIImage stp_cvcImageForCardBrand:[brand integerValue]];
+        UIImage *image = [STPImageLibrary cvcImageForCardBrand:[brand integerValue]];
         XCTAssertNotNil(image);
     }
 }

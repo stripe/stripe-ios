@@ -9,10 +9,8 @@
 #import "STPCard.h"
 #import "NSDictionary+Stripe.h"
 #import "NSString+Stripe_CardBrands.h"
-
-#if TARGET_OS_IPHONE
-#import "UIImage+Stripe.h"
-#endif
+#import "STPImageLibrary.h"
+#import "STPImageLibrary+Private.h"
 
 @interface STPCard ()
 
@@ -188,7 +186,7 @@
 }
 
 - (UIImage *)image {
-    return [UIImage stp_brandImageForCardBrand:self.brand];
+    return [STPImageLibrary brandImageForCardBrand:self.brand];
 }
 
 @end

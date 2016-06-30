@@ -7,12 +7,12 @@
 //
 
 #import "STPApplePayPaymentMethod.h"
-#import "UIImage+Stripe.h"
+#import "STPImageLibrary.h"
 
 @implementation STPApplePayPaymentMethod
 
 - (UIImage *)image {
-    return [UIImage stp_applePayCardImage];
+    return [STPImageLibrary applePayCardImage];
 }
 
 - (NSString *)label {

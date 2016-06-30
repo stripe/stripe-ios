@@ -1,73 +1,73 @@
 //
-//  UIImage+Stripe.h
+//  STPImages.h
 //  Stripe
 //
-//  Created by Ben Guo on 1/4/16.
+//  Created by Jack Flintermann on 6/30/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "STPCardBrand.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  This category lets you access card icons used by the Stripe SDK. All icons are 32 x 20 points.
+ *  This class lets you access card icons used by the Stripe SDK. All icons are 32 x 20 points.
  */
-@interface UIImage (Stripe)
+@interface STPImageLibrary : NSObject
 
 /**
  *  An icon representing Apple Pay.
  */
-+ (UIImage *)stp_applePayCardImage;
++ (UIImage *)applePayCardImage;
 
 /**
  *  An icon representing American Express.
  */
-+ (UIImage *)stp_amexCardImage;
++ (UIImage *)amexCardImage;
 
 /**
  *  An icon representing Diners Club.
  */
-+ (UIImage *)stp_dinersClubCardImage;
++ (UIImage *)dinersClubCardImage;
 
 /**
  *  An icon representing Discover.
  */
-+ (UIImage *)stp_discoverCardImage;
++ (UIImage *)discoverCardImage;
 
 /**
  *  An icon representing JCB.
  */
-+ (UIImage *)stp_jcbCardImage;
++ (UIImage *)jcbCardImage;
 
 /**
  *  An icon representing MasterCard.
  */
-+ (UIImage *)stp_masterCardCardImage;
++ (UIImage *)masterCardCardImage;
 
 /**
  *  An icon representing Visa.
  */
-+ (UIImage *)stp_visaCardImage;
++ (UIImage *)visaCardImage;
 
 /**
  *  An icon to use when the type of the card is unknown.
  */
-+ (UIImage *)stp_unknownCardCardImage;
++ (UIImage *)unknownCardCardImage;
 
 /**
  *  This returns the appropriate icon for the specified card brand.
  */
-+ (UIImage *)stp_brandImageForCardBrand:(STPCardBrand)brand;
++ (UIImage *)brandImageForCardBrand:(STPCardBrand)brand;
 
 /**
  *  This returns a small icon indicating the CVC location for the given card brand.
  */
-+ (UIImage *)stp_cvcImageForCardBrand:(STPCardBrand)brand;
++ (UIImage *)cvcImageForCardBrand:(STPCardBrand)brand;
+
 
 @end
 
 NS_ASSUME_NONNULL_END
-
-void linkUIImageCategory(void);
