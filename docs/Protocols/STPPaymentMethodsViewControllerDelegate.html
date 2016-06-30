@@ -86,6 +86,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
               </li>
               <li class="nav-group-task">
@@ -146,6 +149,9 @@
             <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a>
               </li>
               <li class="nav-group-task">
@@ -172,16 +178,13 @@
             <a class="nav-group-name-link" href="../Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAddCardViewController.h@T@STPAddCardCompletionBlock">STPAddCardCompletionBlock</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAPIClient.h@T@STPCompletionBlock">STPCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -204,7 +207,7 @@
 
                 </div>
               </div>
-            <p>An STPPaymentMethodsViewControllerDelegate responds when a user selects a payment method from (or cancels) an STPPaymentMethodsViewController. In both of these instances, you should dismiss the view controller (either by popping it off the navigation stack, or dismissing it).</p>
+            <p>An <code>STPPaymentMethodsViewControllerDelegate</code> responds when a user selects a payment method from (or cancels) an <code><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code>. In both of these instances, you should dismiss the view controller (either by popping it off the navigation stack, or dismissing it).</p>
 
           </div>
         </section>
@@ -226,7 +229,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This is called when the user either makes a selection, or adds a new card. This will be triggered after the view controller loads with the user&rsquo;s current selection (if they have one) and then subsequently when they change their choice. You should use this callback to update any necessary UI in your app that displays the user&rsquo;s currently selected payment method. You should <em>not</em> dismiss the view controller at this point, instead do this in paymentMethodsViewControllerDidFinish:. STPPaymentMethodsViewController will also call the necessary methods on your API adapter, so you don&rsquo;t need to call them directly during this method.</p>
+                        <p>This is called when the user either makes a selection, or adds a new card. This will be triggered after the view controller loads with the user&rsquo;s current selection (if they have one) and then subsequently when they change their choice. You should use this callback to update any necessary UI in your app that displays the user&rsquo;s currently selected payment method. You should <em>not</em> dismiss the view controller at this point, instead do this in <code>paymentMethodsViewControllerDidFinish:</code>. <code><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code> will also call the necessary methods on your API adapter, so you don&rsquo;t need to call them directly during this method.</p>
 
                       </div>
                       <div class="declaration">
@@ -279,7 +282,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L32-L33">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L69-L70">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -349,7 +352,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L42-L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L79-L80">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -367,7 +370,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This is called when the user taps <q>cancel</q>. It&rsquo;s also called after the user directly selects or adds a payment method, so it will often be called immediately after calling paymentMethodsViewController:didSelectPaymentMethod:. You should dismiss the view controller when this is called.</p>
+                        <p>This is called when the user taps <q>cancel</q>. It&rsquo;s also called after the user directly selects or adds a payment method, so it will often be called immediately after calling <code>paymentMethodsViewController:didSelectPaymentMethod:</code>. You should dismiss the view controller when this is called.</p>
 
                       </div>
                       <div class="declaration">
@@ -405,7 +408,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L87">Show on GitHub</a>
                       </div>
                     </section>
                   </div>

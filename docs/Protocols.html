@@ -85,6 +85,9 @@
                 <a class="nav-group-task-link" href="Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
               </li>
               <li class="nav-group-task">
@@ -145,6 +148,9 @@
             <a class="nav-group-name-link" href="Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a>
               </li>
               <li class="nav-group-task">
@@ -171,16 +177,13 @@
             <a class="nav-group-name-link" href="Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPAddCardViewController.h@T@STPAddCardCompletionBlock">STPAddCardCompletionBlock</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPAPIClient.h@T@STPCompletionBlock">STPCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -209,6 +212,46 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:objc(pl)STPAddCardViewControllerDelegate"></a>
+                    <a name="//apple_ref/objc/Protocol/STPAddCardViewControllerDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)STPAddCardViewControllerDelegate">STPAddCardViewControllerDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An <code>STPAddCardViewControllerDelegate</code> is notified when an <code><a href="Classes/STPAddCardViewController.html">STPAddCardViewController</a></code> successfully creates a card token or is cancelled. It has internal error-handling logic, so there&rsquo;s no error case to deal with.</p>
+
+                        <a href="Protocols/STPAddCardViewControllerDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@protocol</span> <span class="nc">STPAddCardViewControllerDelegate</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">STPAddCardViewControllerDelegate</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddCardViewController.h#L56-L76">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:objc(pl)STPBackendAPIAdapter"></a>
                     <a name="//apple_ref/objc/Protocol/STPBackendAPIAdapter" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter">STPBackendAPIAdapter</a>
@@ -219,7 +262,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>You should make your application&rsquo;s API client conform to this interface in order to use it with an STPPaymentContext. It provides a <q>bridge</q> from the prebuilt UI we expose (such as STPPaymentMethodsViewController) to your backend to fetch the information it needs to power those views. To see examples of implementing these APIs, see MyAPIClient.swift in our example project and <a href="https://github.com/stripe/example-ios-backend">https://github.com/stripe/example-ios-backend</a> .</p>
+                        <p>You should make your application&rsquo;s API client conform to this interface in order to use it with an <code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code>. It provides a <q>bridge</q> from the prebuilt UI we expose (such as <code><a href="Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code>) to your backend to fetch the information it needs to power those views. To read about how to implement this protocol, see <a href="https://stripe.com/docs/mobile/ios#prepare-your-api">https://stripe.com/docs/mobile/ios#prepare-your-api</a> . To see examples of implementing these APIs, see MyAPIClient.swift in our example project and <a href="https://github.com/stripe/example-ios-backend">https://github.com/stripe/example-ios-backend</a> .</p>
 
                         <a href="Protocols/STPBackendAPIAdapter.html" class="slightly-smaller">See more</a>
                       </div>
@@ -339,7 +382,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Implement STPPaymentContextDelegate to get notified when a payment context changes, finishes, encounters errors, etc. In practice, if your app has a <q>checkout screen view controller</q>, that is a good candidate to implement this protocol.</p>
+                        <p>Implement <code>STPPaymentContextDelegate</code> to get notified when a payment context changes, finishes, encounters errors, etc. In practice, if your app has a <q>checkout screen view controller</q>, that is a good candidate to implement this protocol.</p>
 
                         <a href="Protocols/STPPaymentContextDelegate.html" class="slightly-smaller">See more</a>
                       </div>
@@ -357,7 +400,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L26-L69">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L132-L175">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -379,7 +422,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This protocol represents a payment method that a user can select and use to pay. Currently the only classes that conform to it are STPCard (which represents that the user wants to pay with a specific card) and STPApplePayPaymentMethod (which represents that the user wants to pay with Apple Pay).</p>
+                        <p>This protocol represents a payment method that a user can select and use to pay. Currently the only classes that conform to it are <code><a href="Classes/STPCard.html">STPCard</a></code> (which represents that the user wants to pay with a specific card) and <code><a href="Classes.html#/c:objc(cs)STPApplePayPaymentMethod">STPApplePayPaymentMethod</a></code> (which represents that the user wants to pay with Apple Pay).</p>
 
                         <a href="Protocols/STPPaymentMethod.html" class="slightly-smaller">See more</a>
                       </div>
@@ -419,7 +462,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>An STPPaymentMethodsViewControllerDelegate responds when a user selects a payment method from (or cancels) an STPPaymentMethodsViewController. In both of these instances, you should dismiss the view controller (either by popping it off the navigation stack, or dismissing it).</p>
+                        <p>An <code>STPPaymentMethodsViewControllerDelegate</code> responds when a user selects a payment method from (or cancels) an <code><a href="Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code>. In both of these instances, you should dismiss the view controller (either by popping it off the navigation stack, or dismissing it).</p>
 
                         <a href="Protocols/STPPaymentMethodsViewControllerDelegate.html" class="slightly-smaller">See more</a>
                       </div>
@@ -437,7 +480,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L24-L52">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L61-L89">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -459,7 +502,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A source represents a source of funds for your user that you can charge - for example, a card on file. Currently, only STPCard implements this interface, although future payment methods will use it as well. When implementing your server backend, you should pass the stripeID property to the Create Charge method as the <code>source</code> parameter.</p>
+                        <p>A source represents a source of funds for your user that you can charge - for example, a card on file. Currently, only <code><a href="Classes/STPCard.html">STPCard</a></code> implements this interface, although future payment methods will use it as well. When implementing your server backend, you should pass the <code>stripeID</code> property to the Create Charge method as the <code>source</code> parameter.</p>
 
                         <a href="Protocols/STPSource.html" class="slightly-smaller">See more</a>
                       </div>

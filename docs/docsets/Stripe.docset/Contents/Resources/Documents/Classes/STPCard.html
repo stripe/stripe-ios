@@ -86,6 +86,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
               </li>
               <li class="nav-group-task">
@@ -146,6 +149,9 @@
             <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a>
               </li>
               <li class="nav-group-task">
@@ -172,16 +178,13 @@
             <a class="nav-group-name-link" href="../Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAddCardViewController.h@T@STPAddCardCompletionBlock">STPAddCardCompletionBlock</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAPIClient.h@T@STPCompletionBlock">STPCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -260,7 +263,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The Stripe ID of the card, e.g. card_185iQx4JYtv6MPZKfcuXwkOx</p>
+                                  <p>The Stripe ID of the card, e.g. <code>card_185iQx4JYtv6MPZKfcuXwkOx</code></p>
 
                                 </div>
                               </td>
@@ -273,7 +276,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The brand of the card (e.g. <q>Visa</q>. To obtain this enum value from a string, use [STPCardBrand brandFromString:string];</p>
+                                  <p>The brand of the card (e.g. <q>Visa</q>. To obtain this enum value from a string, use <code>[STPCardBrand brandFromString:string]</code>;</p>
 
                                 </div>
                               </td>
@@ -325,7 +328,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The card&rsquo;s funding type (credit, debit, or prepaid). To obtain this enum value from a string, use [STPCardBrand fundingFromString:string].</p>
+                                  <p>The card&rsquo;s funding type (credit, debit, or prepaid). To obtain this enum value from a string, use <code>[STPCardBrand fundingFromString:string]</code>.</p>
 
                                 </div>
                               </td>
@@ -357,7 +360,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This parses a string representing a card&rsquo;s brand into the appropriate STPCardBrand enum value, i.e. [STPCard brandFromString:@<q>American Express</q>] == STPCardBrandAmex</p>
+                        <p>This parses a string representing a card&rsquo;s brand into the appropriate STPCardBrand enum value, i.e. <code>[STPCard brandFromString:@&quot;American Express&quot;] == STPCardBrandAmex</code></p>
 
                       </div>
                       <div class="declaration">
@@ -417,7 +420,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This parses a string representing a card&rsquo;s funding type into the appropriate STPCardFundingType enum value, i.e. [STPCard fundingFromString:@<q>prepaid</q>] == STPCardFundingTypePrepaid.</p>
+                        <p>This parses a string representing a card&rsquo;s funding type into the appropriate <code><a href="../Enums.html#/c:@E@STPCardFundingType">STPCardFundingType</a></code> enum value, i.e. <code>[STPCard fundingFromString:@&quot;prepaid&quot;] == STPCardFundingTypePrepaid</code>.</p>
 
                       </div>
                       <div class="declaration">
@@ -455,7 +458,7 @@
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>an enum value mapped to that string. If the string is unrecognized, returns STPCardFundingTypeOther.</p>
+                        <p>an enum value mapped to that string. If the string is unrecognized, returns <code>STPCardFundingTypeOther</code>.</p>
 
                       </div>
                       <div class="slightly-smaller">
@@ -532,6 +535,41 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:objc(cs)STPCard(py)isApplePayCard"></a>
+                    <a name="//apple_ref/objc/Property/isApplePayCard" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCard(py)isApplePayCard">isApplePayCard</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Whether or not the card originated from Apple Pay.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">isApplePayCard</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">isApplePayCard</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L84">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:objc(cs)STPCard(py)expMonth"></a>
                     <a name="//apple_ref/objc/Property/expMonth" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)STPCard(py)expMonth">expMonth</a>
@@ -559,7 +597,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L84">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L89">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -594,7 +632,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L89">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L94">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -629,7 +667,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L94">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L99">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -664,7 +702,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L99">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L104">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -699,7 +737,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L109">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L114">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -734,7 +772,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L114">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L119">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -754,7 +792,7 @@
                       <div class="abstract">
                         <p>The issuer of the card.
 Can be one of <q>Visa</q>, <q>American Express</q>, <q>MasterCard</q>, <q>Discover</q>, <q>JCB</q>, <q>Diners Club</q>, or <q>Unknown</q>
-@deprecated use <q>brand</q> instead.</p>
+@deprecated use <code><a href="../Classes/STPCard.html#/c:objc(cs)STPCard(py)brand">brand</a></code> instead.</p>
 
                       </div>
                       <div class="declaration">
@@ -771,7 +809,7 @@ Can be one of <q>Visa</q>, <q>American Express</q>, <q>MasterCard</q>, <q>Discov
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L121">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L126">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -806,7 +844,7 @@ Can be one of <q>Visa</q>, <q>American Express</q>, <q>MasterCard</q>, <q>Discov
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L126">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L131">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -842,7 +880,7 @@ Can be one of <q>Visa</q>, <q>American Express</q>, <q>MasterCard</q>, <q>Discov
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L132">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L137">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -877,7 +915,7 @@ Can be one of <q>Visa</q>, <q>American Express</q>, <q>MasterCard</q>, <q>Discov
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L137">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L142">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -912,7 +950,7 @@ Can be one of <q>Visa</q>, <q>American Express</q>, <q>MasterCard</q>, <q>Discov
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L142">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L147">Show on GitHub</a>
                       </div>
                     </section>
                   </div>

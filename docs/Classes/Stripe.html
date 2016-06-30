@@ -86,6 +86,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
               </li>
               <li class="nav-group-task">
@@ -146,6 +149,9 @@
             <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a>
               </li>
               <li class="nav-group-task">
@@ -172,16 +178,13 @@
             <a class="nav-group-name-link" href="../Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAddCardViewController.h@T@STPAddCardCompletionBlock">STPAddCardCompletionBlock</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAPIClient.h@T@STPCompletionBlock">STPCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -271,7 +274,7 @@ favor of STPAPIClient.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -306,7 +309,7 @@ favor of STPAPIClient.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L37">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L39">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -342,7 +345,7 @@ You can call this method to turn off analytics collection.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L45">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -400,9 +403,10 @@ mini 3 or later, as well as whether or not they have stored any cards in Apple P
                               </td>
                               <td>
                                 <div>
-                                  <p>The return value of this method depends on the supportedNetworks property of this payment request, which by default should be
+                                  <p>The return value of this method depends on the <code>supportedNetworks</code> property of this payment request, which by default should be
+<code>
 @
-[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover].</p>
+[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover]</code>.</p>
 
                                 </div>
                               </td>
@@ -416,7 +420,7 @@ mini 3 or later, as well as whether or not they have stored any cards in Apple P
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L116">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L119">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -434,8 +438,8 @@ mini 3 or later, as well as whether or not they have stored any cards in Apple P
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A convenience method to return a PKPaymentRequest with sane default values. You will still need to configure the paymentSummaryItems property to indicate
-what the user is purchasing, as well as the optional requiredShippingAddressFields, requiredBillingAddressFields, and shippingMethods properties to indicate
+                        <p>A convenience method to return a <code>PKPaymentRequest</code> with sane default values. You will still need to configure the <code>paymentSummaryItems</code> property to indicate
+what the user is purchasing, as well as the optional <code>requiredShippingAddressFields</code>, <code>requiredBillingAddressFields</code>, and <code>shippingMethods</code> properties to indicate
 what contact information your application requires.</p>
 
                       </div>
@@ -475,13 +479,13 @@ what contact information your application requires.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>a PKPaymentRequest with proper default values. Returns nil if running on 
+                        <p>a <code>PKPaymentRequest</code> with proper default values. Returns nil if running on 
 &lt;
  iOS8.</p>
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L129">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L132">Show on GitHub</a>
                       </div>
                     </section>
                   </div>

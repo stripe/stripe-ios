@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>STPAPIClient Class Reference</title>
+    <title>STPImageLibrary Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset="utf-8">
@@ -11,9 +11,9 @@
   </head>
   <body>
 
-    <a name="//apple_ref/objc/Class/STPAPIClient" class="dashAnchor"></a>
+    <a name="//apple_ref/objc/Class/STPImageLibrary" class="dashAnchor"></a>
 
-    <a title="STPAPIClient Class Reference"></a>
+    <a title="STPImageLibrary Class Reference"></a>
 
     <header class="header">
       <p class="header-col header-col--primary">
@@ -35,7 +35,7 @@
     <p class="breadcrumbs">
       <a class="breadcrumb" href="../index.html">Stripe Reference</a>
       <img class="carat" src="../img/carat.png" />
-      STPAPIClient Class Reference
+      STPImageLibrary Class Reference
     </p>
 
     <div class="content-wrapper">
@@ -200,14 +200,14 @@
 
         <section class="section">
           <div class="section-content">
-            <h1>STPAPIClient</h1>
+            <h1>STPImageLibrary</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPAPIClient</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
+                  <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPImageLibrary</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
 
                 </div>
               </div>
-            <p>A client for making connections to the Stripe API.</p>
+            <p>This class lets you access card icons used by the Stripe SDK. All icons are 32 x 20 points.</p>
 
           </div>
         </section>
@@ -219,9 +219,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPAPIClient(cm)sharedClient"></a>
-                    <a name="//apple_ref/objc/Method/+sharedClient" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(cm)sharedClient">+sharedClient</a>
+                    <a name="/c:objc(cs)STPImageLibrary(cm)applePayCardImage"></a>
+                    <a name="//apple_ref/objc/Method/+applePayCardImage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPImageLibrary(cm)applePayCardImage">+applePayCardImage</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -229,24 +229,24 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A shared singleton API client. Its API key will be initially equal to [Stripe defaultPublishableKey].</p>
+                        <p>An icon representing Apple Pay.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="n">sharedClient</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">applePayCardImage</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">sharedClient</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">applePayCardImage</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">AnyObject</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L23">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -254,9 +254,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPAPIClient(py)publishableKey"></a>
-                    <a name="//apple_ref/objc/Property/publishableKey" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(py)publishableKey">publishableKey</a>
+                    <a name="/c:objc(cs)STPImageLibrary(cm)amexCardImage"></a>
+                    <a name="//apple_ref/objc/Method/+amexCardImage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPImageLibrary(cm)amexCardImage">+amexCardImage</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -264,28 +264,24 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <div class="aside aside-see">
-    <p class="aside-title">See</p>
-    [Stripe setDefaultPublishableKey:]
-
-</div>
+                        <p>An icon representing American Express.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">publishableKey</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">amexCardImage</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">publishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">amexCardImage</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">AnyObject</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L62">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L28">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -293,9 +289,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPAPIClient(py)configuration"></a>
-                    <a name="//apple_ref/objc/Property/configuration" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(py)configuration">configuration</a>
+                    <a name="/c:objc(cs)STPImageLibrary(cm)dinersClubCardImage"></a>
+                    <a name="//apple_ref/objc/Method/+dinersClubCardImage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPImageLibrary(cm)dinersClubCardImage">+dinersClubCardImage</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -303,50 +299,34 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <div class="aside aside-see">
-    <p class="aside-title">See</p>
-    -initWithConfiguration
-
-</div>
+                        <p>An icon representing Diners Club.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
-    <span class="n">STPPaymentConfiguration</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">configuration</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">dinersClubCardImage</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@NSCopying</span> <span class="k">var</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt">STPPaymentConfiguration</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">dinersClubCardImage</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">AnyObject</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L67">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L33">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/ApplePay"></a>
-                <a name="//apple_ref/objc/Section/ApplePay" class="dashAnchor"></a>
-                <a href="#/ApplePay">
-                  <h3 class="section-name">ApplePay</h3>
-                </a>
-              </div>
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPAPIClient(im)createTokenWithPayment:completion:"></a>
-                    <a name="//apple_ref/objc/Method/-createTokenWithPayment:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithPayment:completion:">-createTokenWithPayment:completion:</a>
+                    <a name="/c:objc(cs)STPImageLibrary(cm)discoverCardImage"></a>
+                    <a name="//apple_ref/objc/Method/+discoverCardImage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPImageLibrary(cm)discoverCardImage">+discoverCardImage</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -354,79 +334,34 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Converts a PKPayment object into a Stripe token using the Stripe API.</p>
+                        <p>An icon representing Discover.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">createTokenWithPayment</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">PKPayment</span> <span class="o">*</span><span class="p">)</span><span class="nv">payment</span>
-                    <span class="nf">completion</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">discoverCardImage</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">createTokenWithPayment</span><span class="p">(</span><span class="nv">payment</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="o">!</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">discoverCardImage</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">AnyObject</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>payment</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The user&rsquo;s encrypted payment information as returned from a PKPaymentAuthorizationViewController. Cannot be nil.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>completion</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The callback to run with the returned Stripe token (and any errors that may have occurred).</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient+ApplePay.h#L27-L28">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/BankAccounts"></a>
-                <a name="//apple_ref/objc/Section/BankAccounts" class="dashAnchor"></a>
-                <a href="#/BankAccounts">
-                  <h3 class="section-name">BankAccounts</h3>
-                </a>
-              </div>
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPAPIClient(im)createTokenWithBankAccount:completion:"></a>
-                    <a name="//apple_ref/objc/Method/-createTokenWithBankAccount:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithBankAccount:completion:">-createTokenWithBankAccount:completion:</a>
+                    <a name="/c:objc(cs)STPImageLibrary(cm)jcbCardImage"></a>
+                    <a name="//apple_ref/objc/Method/+jcbCardImage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPImageLibrary(cm)jcbCardImage">+jcbCardImage</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -434,80 +369,34 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Converts an STPBankAccount object into a Stripe token using the Stripe API.</p>
+                        <p>An icon representing JCB.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">createTokenWithBankAccount</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPBankAccountParams.html">STPBankAccountParams</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">bankAccount</span>
-                        <span class="nf">completion</span><span class="p">:</span>
-                            <span class="p">(</span><span class="n"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a></span> <span class="n">_Nullable</span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">jcbCardImage</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">createTokenWithBankAccount</span><span class="p">(</span><span class="nv">bankAccount</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPBankAccountParams.html">STPBankAccountParams</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a></span><span class="p">?)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">jcbCardImage</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">AnyObject</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>bankAccount</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The user&rsquo;s bank account details. Cannot be nil. </p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>completion</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The callback to run with the returned Stripe token (and any errors that may have occurred).</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L84">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L43">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/CreditCards"></a>
-                <a name="//apple_ref/objc/Section/CreditCards" class="dashAnchor"></a>
-                <a href="#/CreditCards">
-                  <h3 class="section-name">CreditCards</h3>
-                </a>
-              </div>
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPAPIClient(im)createTokenWithCard:completion:"></a>
-                    <a name="//apple_ref/objc/Method/-createTokenWithCard:completion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)createTokenWithCard:completion:">-createTokenWithCard:completion:</a>
+                    <a name="/c:objc(cs)STPImageLibrary(cm)masterCardCardImage"></a>
+                    <a name="//apple_ref/objc/Method/+masterCardCardImage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPImageLibrary(cm)masterCardCardImage">+masterCardCardImage</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -515,58 +404,164 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Converts an STPCardParams object into a Stripe token using the Stripe API.</p>
+                        <p>An icon representing MasterCard.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">createTokenWithCard</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPCardParams.html">STPCardParams</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">card</span>
-                 <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">masterCardCardImage</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">createTokenWithCard</span><span class="p">(</span><span class="nv">card</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCardParams.html">STPCardParams</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a></span><span class="p">?)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">masterCardCardImage</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">AnyObject</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>card</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The user&rsquo;s card details. Cannot be nil. </p>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L48">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPImageLibrary(cm)visaCardImage"></a>
+                    <a name="//apple_ref/objc/Method/+visaCardImage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPImageLibrary(cm)visaCardImage">+visaCardImage</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An icon representing Visa.</p>
 
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>completion</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The callback to run with the returned Stripe token (and any errors that may have occurred).</p>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">visaCardImage</span><span class="p">;</span></code></pre>
 
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">visaCardImage</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">AnyObject</span><span class="o">!</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L101">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L53">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPImageLibrary(cm)unknownCardCardImage"></a>
+                    <a name="//apple_ref/objc/Method/+unknownCardCardImage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPImageLibrary(cm)unknownCardCardImage">+unknownCardCardImage</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An icon to use when the type of the card is unknown.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">unknownCardCardImage</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">unknownCardCardImage</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">AnyObject</span><span class="o">!</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L58">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPImageLibrary(cm)brandImageForCardBrand:"></a>
+                    <a name="//apple_ref/objc/Method/+brandImageForCardBrand:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPImageLibrary(cm)brandImageForCardBrand:">+brandImageForCardBrand:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This returns the appropriate icon for the specified card brand.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">brandImageForCardBrand</span><span class="p">:(</span><span class="n"><a href="../Enums.html#/c:@E@STPCardBrand">STPCardBrand</a></span><span class="p">)</span><span class="nv">brand</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">brandImageForCardBrand</span><span class="p">(</span><span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="../Enums.html#/c:@E@STPCardBrand">STPCardBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyObject</span><span class="o">!</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L63">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPImageLibrary(cm)cvcImageForCardBrand:"></a>
+                    <a name="//apple_ref/objc/Method/+cvcImageForCardBrand:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPImageLibrary(cm)cvcImageForCardBrand:">+cvcImageForCardBrand:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This returns a small icon indicating the CVC location for the given card brand.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">cvcImageForCardBrand</span><span class="p">:(</span><span class="n"><a href="../Enums.html#/c:@E@STPCardBrand">STPCardBrand</a></span><span class="p">)</span><span class="nv">brand</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">cvcImageForCardBrand</span><span class="p">(</span><span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="../Enums.html#/c:@E@STPCardBrand">STPCardBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyObject</span><span class="o">!</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L68">Show on GitHub</a>
                       </div>
                     </section>
                   </div>

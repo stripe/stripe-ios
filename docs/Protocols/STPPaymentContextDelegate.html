@@ -86,6 +86,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
               </li>
               <li class="nav-group-task">
@@ -146,6 +149,9 @@
             <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a>
               </li>
               <li class="nav-group-task">
@@ -172,16 +178,13 @@
             <a class="nav-group-name-link" href="../Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAddCardViewController.h@T@STPAddCardCompletionBlock">STPAddCardCompletionBlock</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAPIClient.h@T@STPCompletionBlock">STPCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -204,7 +207,7 @@
 
                 </div>
               </div>
-            <p>Implement STPPaymentContextDelegate to get notified when a payment context changes, finishes, encounters errors, etc. In practice, if your app has a <q>checkout screen view controller</q>, that is a good candidate to implement this protocol.</p>
+            <p>Implement <code>STPPaymentContextDelegate</code> to get notified when a payment context changes, finishes, encounters errors, etc. In practice, if your app has a <q>checkout screen view controller</q>, that is a good candidate to implement this protocol.</p>
 
           </div>
         </section>
@@ -229,10 +232,10 @@
                         <ul>
 <li>Called when the payment context encounters an error when fetching its initial set of data. A few ways to handle this are:</li>
 <li>If you&rsquo;re showing the user a checkout page, dismiss the checkout page when this is called and present the error to the user.</li>
-<li>Present the error to the user using a UIAlertController with two buttons: Retry and Cancel. If they cancel, dismiss your UI. If they Retry, call <code>retryLoading</code> on the payment context.</li>
+<li>Present the error to the user using a <code>UIAlertController</code> with two buttons: Retry and Cancel. If they cancel, dismiss your UI. If they Retry, call <code>retryLoading</code> on the payment context.</li>
 </ul>
 
-<p>To make it harder to get your UI into an inconsistent state, this won&rsquo;t be called until the context&rsquo;s hostViewController has finished appearing.
+<p>To make it harder to get your UI into a bad state, this won&rsquo;t be called until the context&rsquo;s <code>hostViewController</code> has finished appearing.
 *
 *  - parameter: paymentContext the payment context that encountered the error
 *  - parameter: error          the error that was encountered</p>
@@ -286,7 +289,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L144">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -304,7 +307,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This is called every time the contents of the payment context change. When this is called, you should update your app&rsquo;s UI to reflect the current state of the payment context. For example, if you have a checkout page with a <q>selected payment method</q> row, you should update its payment method with <code>paymentContext.selectedPaymentMethod.label</code>. If that checkout page has a <q>buy</q> button, you should enable/disable it depending on the result of [paymentContext isReadyForPayment].</p>
+                        <p>This is called every time the contents of the payment context change. When this is called, you should update your app&rsquo;s UI to reflect the current state of the payment context. For example, if you have a checkout page with a <q>selected payment method</q> row, you should update its payment method with <code>paymentContext.selectedPaymentMethod.label</code>. If that checkout page has a <q>buy</q> button, you should enable/disable it depending on the result of <code>[paymentContext isReadyForPayment]</code>.</p>
 
                       </div>
                       <div class="declaration">
@@ -341,7 +344,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L45">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L151">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -359,7 +362,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Inside this method, you should make a call to your backend API to make a charge with that Customer + source, and invoke the resultCompletion block when that is done.</p>
+                        <p>Inside this method, you should make a call to your backend API to make a charge with that Customer + source, and invoke the <code>completion</code> block when that is done.</p>
 
                       </div>
                       <div class="declaration">
@@ -402,7 +405,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and make a charge to complete the payment, passing paymentResult.source.stripeID as the <code>source</code> parameter to the create charge method and your customer&rsquo;s ID as the <code>customer</code> parameter (see stripe.com/docs/api#charge_create for more info). Once that&rsquo;s done call the <code>completion</code> block with any error that occurred (or none, if the charge succeeded). </p>
+                                  <p>Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and make a charge to complete the payment, passing <code>paymentResult.source.stripeID</code> as the <code>source</code> parameter to the create charge method and your customer&rsquo;s ID as the <code>customer</code> parameter (see stripe.com/docs/api#charge_create for more info). Once that&rsquo;s done call the <code>completion</code> block with any error that occurred (or none, if the charge succeeded). </p>
 
                                 </div>
                               </td>
@@ -415,7 +418,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>Call this block when you&rsquo;re done creating a charge (or subscription, etc) on your backend. If it succeeded, call completion(nil). If it failed with an error, call completion(error).</p>
+                                  <p>Call this block when you&rsquo;re done creating a charge (or subscription, etc) on your backend. If it succeeded, call <code>completion(nil)</code>. If it failed with an error, call <code>completion(error)</code>.</p>
 
                                 </div>
                               </td>
@@ -424,7 +427,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L54-L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L160-L162">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -442,7 +445,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This is invoked by an STPPaymentContext when it is finished. This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the returned <code>status</code> and behave appropriately. For example: if it&rsquo;s STPPaymentStatusSuccess, show the user a receipt. If it&rsquo;s STPPaymentStatusError, inform the user of the error. If it&rsquo;s STPPaymentStatusUserCanceled, do nothing.</p>
+                        <p>This is invoked by an <code><a href="../Classes/STPPaymentContext.html">STPPaymentContext</a></code> when it is finished. This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the returned <code>status</code> and behave appropriately. For example: if it&rsquo;s <code>STPPaymentStatusSuccess</code>, show the user a receipt. If it&rsquo;s <code>STPPaymentStatusError</code>, inform the user of the error. If it&rsquo;s <code>STPPaymentStatusUserCanceled</code>, do nothing.</p>
 
                       </div>
                       <div class="declaration">
@@ -485,7 +488,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The status of the payment - STPPaymentStatusSuccess if it succeeded, STPPaymentStatusError if it failed with an error (in which case the <code>error</code> parameter will be non-nil), STPPaymentStatusUserCanceled if the user canceled the payment.</p>
+                                  <p>The status of the payment - <code>STPPaymentStatusSuccess</code> if it succeeded, <code>STPPaymentStatusError</code> if it failed with an error (in which case the <code>error</code> parameter will be non-nil), <code>STPPaymentStatusUserCanceled</code> if the user canceled the payment.</p>
 
                                 </div>
                               </td>
@@ -507,7 +510,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L65-L67">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L171-L173">Show on GitHub</a>
                       </div>
                     </section>
                   </div>

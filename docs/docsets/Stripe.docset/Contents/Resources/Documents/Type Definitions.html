@@ -85,6 +85,9 @@
                 <a class="nav-group-task-link" href="Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
               </li>
               <li class="nav-group-task">
@@ -145,6 +148,9 @@
             <a class="nav-group-name-link" href="Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a>
               </li>
               <li class="nav-group-task">
@@ -171,16 +177,13 @@
             <a class="nav-group-name-link" href="Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPAddCardViewController.h@T@STPAddCardCompletionBlock">STPAddCardCompletionBlock</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPAPIClient.h@T@STPCompletionBlock">STPCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -276,7 +279,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L142">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L148">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -288,9 +291,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:STPAddCardViewController.h@T@STPAddCardCompletionBlock"></a>
-                    <a name="//apple_ref/objc/Alias/STPAddCardCompletionBlock" class="dashAnchor"></a>
-                    <a class="token" href="#/c:STPAddCardViewController.h@T@STPAddCardCompletionBlock">STPAddCardCompletionBlock</a>
+                    <a name="/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock"></a>
+                    <a name="//apple_ref/objc/Alias/STPCustomerCompletionBlock" class="dashAnchor"></a>
+                    <a class="token" href="#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -298,20 +301,20 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This callback will be yielded with two arguments: a Stripe token (may be nil, if the user cancels the form) and another callback. If the token is present, you can submit it to your backend API to either create a charge or attach it to a customer. When that is done, call tokenCompletion with any error that occurred (it&rsquo;ll be shown to the user and they&rsquo;ll be able to resubmit the form). If your backend API call succeeds, you should dismiss the view controller and move the user to the next step of your UI.</p>
+                        <p>Call this block after you&rsquo;re done fetching a customer on your server. You can use the <code><a href="Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a></code> class to convert a JSON response into an <code><a href="Classes/STPCustomer.html">STPCustomer</a></code> object.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPAddCardCompletionBlock</span><span class="p">)(</span><span class="n"><a href="Classes/STPToken.html">STPToken</a></span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
-                                          <span class="n"><a href="Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a></span> <span class="n">_Nonnull</span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPCustomerCompletionBlock</span><span class="p">)(</span><span class="n"><a href="Classes/STPCustomer.html">STPCustomer</a></span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
+                                           <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">typealias</span> <span class="kt">STPAddCardCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Classes/STPToken.html">STPToken</a></span><span class="p">?,</span> <span class="kt"><a href="Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">typealias</span> <span class="kt">STPCustomerCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Classes/STPCustomer.html">STPCustomer</a></span><span class="p">?,</span> <span class="kt">NSError</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -322,101 +325,12 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>token</em>
+                                <em>customer</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>A valid Stripe token, or nil if the user presses the <q>cancel</q> button.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>tokenCompletion</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>A callback to call once you&rsquo;re done passing the token to your server.</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddCardViewController.h#L26">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:STPBackendAPIAdapter.h@T@STPSourceCompletionBlock"></a>
-                    <a name="//apple_ref/objc/Alias/STPSourceCompletionBlock" class="dashAnchor"></a>
-                    <a class="token" href="#/c:STPBackendAPIAdapter.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Call this block after you&rsquo;re done fetching a customer on your server, returning their sources and selected source to your iOS application, and parsing them into STPCard objects. For more information, see the <code>retrieveSources</code> documentation.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPSourceCompletionBlock</span><span class="p">)(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
-                                         <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="Protocols/STPSource.html">STPSource</a></span><span class="o">&gt;&gt;</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
-                                         <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">typealias</span> <span class="kt">STPSourceCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt">String</span><span class="p">?,</span> <span class="p">[</span><span class="kt"><a href="Protocols/STPSource.html">STPSource</a></span><span class="p">]?,</span> <span class="kt">NSError</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>selectedSourceID</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the Stripe ID of the customer&rsquo;s default_source (ex. 
-<q>
-card_abcdef</q>)</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>cards</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the user&rsquo;s list of available sources</p>
+                                  <p>a deserialized <code>STPCustomer</code> object obtained from your backend API, or nil if an error occurred.</p>
 
                                 </div>
                               </td>
@@ -429,7 +343,7 @@ card_abcdef</q>)</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>any error that occurred while communicating with your server</p>
+                                  <p>any error that occurred while communicating with your server, or nil if your call succeeded</p>
 
                                 </div>
                               </td>

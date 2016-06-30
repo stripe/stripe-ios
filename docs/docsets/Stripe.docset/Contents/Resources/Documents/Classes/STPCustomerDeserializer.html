@@ -86,6 +86,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
               </li>
               <li class="nav-group-task">
@@ -146,6 +149,9 @@
             <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a>
               </li>
               <li class="nav-group-task">
@@ -172,16 +178,13 @@
             <a class="nav-group-name-link" href="../Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAddCardViewController.h@T@STPAddCardCompletionBlock">STPAddCardCompletionBlock</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAPIClient.h@T@STPCompletionBlock">STPCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -204,7 +207,7 @@
 
                 </div>
               </div>
-            <p>Use STPCustomerDeserializer to convert a response from the Stripe API into an STPCustomer object. STPCustomerDeserializer expects the JSON response to be in the exact same format as the Stripe API.</p>
+            <p>Use <code>STPCustomerDeserializer</code> to convert a response from the Stripe API into an <code><a href="../Classes/STPCustomer.html">STPCustomer</a></code> object. <code>STPCustomerDeserializer</code> expects the JSON response to be in the exact same format as the Stripe API.</p>
 
           </div>
         </section>
@@ -226,7 +229,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initialize a customer deserializer. The data, urlResponse, and error parameters are intended to be used from an NSURLSessionDataTask callback. After it has been initialized, you can inspect the <code>error</code> and <code>customer</code> properties to see if the deserialization was successful. If <code>error</code> is nil, <code>customer</code> will be non-nil (and vice versa).</p>
+                        <p>Initialize a customer deserializer. The <code>data</code>, <code>urlResponse</code>, and <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> parameters are intended to be passed from an <code>NSURLSessionDataTask</code> callback. After it has been initialized, you can inspect the <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> and <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)customer">customer</a></code> properties to see if the deserialization was successful. If <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> is nil, <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)customer">customer</a></code> will be non-nil (and vice versa).</p>
 
                       </div>
                       <div class="declaration">
@@ -256,7 +259,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>An NSData object representing encoded JSON for a Customer object</p>
+                                  <p>An <code>NSData</code> object representing encoded JSON for a Customer object</p>
 
                                 </div>
                               </td>
@@ -269,7 +272,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The URL response obtained from the NSURLSessionTask</p>
+                                  <p>The URL response obtained from the <code>NSURLSessionTask</code></p>
 
                                 </div>
                               </td>
@@ -291,7 +294,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L49-L51">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L62-L64">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -309,7 +312,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initializes a customer deserializer with a JSON dictionary. This JSON should be in the exact same format as what the Stripe API returns. If it&rsquo;s successfully parsed, the <code>customer</code> parameter will be present after initialization; otherwise <code>error</code> will be present.</p>
+                        <p>Initializes a customer deserializer with a JSON dictionary. This JSON should be in the exact same format as what the Stripe API returns. If it&rsquo;s successfully parsed, the <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)customer">customer</a></code> parameter will be present after initialization; otherwise <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> will be present.</p>
 
                       </div>
                       <div class="declaration">
@@ -346,7 +349,77 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L59">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L72">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPCustomerDeserializer(py)customer"></a>
+                    <a name="//apple_ref/objc/Property/customer" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCustomerDeserializer(py)customer">customer</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>If a customer was successfully parsed from the response, it will be set here. Otherwise, this value wil be nil (and the <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> property will explain what went wrong).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPCustomer.html">STPCustomer</a></span> <span class="o">*</span><span class="n">customer</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">customer</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomer.html">STPCustomer</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L77">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPCustomerDeserializer(py)error"></a>
+                    <a name="//apple_ref/objc/Property/error" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCustomerDeserializer(py)error">error</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>If the deserializer failed to parse a customer, this property will explain why (and the <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)customer">customer</a></code> property will be nil).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">NSError</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L82">Show on GitHub</a>
                       </div>
                     </section>
                   </div>

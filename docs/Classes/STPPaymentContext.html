@@ -86,6 +86,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
               </li>
               <li class="nav-group-task">
@@ -146,6 +149,9 @@
             <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a>
               </li>
               <li class="nav-group-task">
@@ -172,16 +178,13 @@
             <a class="nav-group-name-link" href="../Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAddCardViewController.h@T@STPAddCardCompletionBlock">STPAddCardCompletionBlock</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAPIClient.h@T@STPCompletionBlock">STPCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -204,11 +207,11 @@
 
                 </div>
               </div>
-            <p>An STPPaymentContext keeps track of all of the state around a payment. It will manage fetching a user&rsquo;s saved payment methods, tracking any information they select, and prompting them for required additional information before completing their purchase. It can be used to power your application&rsquo;s <q>payment confirmation</q> page with just a few lines of code.</p>
+            <p>An <code>STPPaymentContext</code> keeps track of all of the state around a payment. It will manage fetching a user&rsquo;s saved payment methods, tracking any information they select, and prompting them for required additional information before completing their purchase. It can be used to power your application&rsquo;s <q>payment confirmation</q> page with just a few lines of code.</p>
 
-<p>STPPaymentContext also provides a unified interface to multiple payment methods - for example, you can write a single integration to accept both credit card payments and Apple Pay.</p>
+<p><code>STPPaymentContext</code> also provides a unified interface to multiple payment methods - for example, you can write a single integration to accept both credit card payments and Apple Pay.</p>
 
-<p>STPPaymentContext requires an <q>API Adapter</q> to communicate with your backend API to retrieve and modify a customer&rsquo;s payment methods - see STPBackendAPIAdapter.h for how to implement this. You can also see CheckoutViewController.swift in our example app to see STPPaymentContext in action.</p>
+<p><code>STPPaymentContext</code> requires an <q>API Adapter</q> to communicate with your backend API to retrieve and modify a customer&rsquo;s payment methods - see <a href="https://stripe.com/docs/mobile/ios#prepare-your-api">https://stripe.com/docs/mobile/ios#prepare-your-api</a> for how to implement this. You can also look at CheckoutViewController.swift in our example app to see <code>STPPaymentContext</code> in action.</p>
 
           </div>
         </section>
@@ -248,7 +251,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L84">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -266,7 +269,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initializes a new Payment Context with the provided API adapter and configuration. After this class is initialized, you should also make sure to set its delegate and hostViewController properties.</p>
+                        <p>Initializes a new Payment Context with the provided API adapter and configuration. After this class is initialized, you should also make sure to set its <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)delegate">delegate</a></code> and <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code> properties.</p>
 
                       </div>
                       <div class="declaration">
@@ -337,7 +340,7 @@
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L95-L97">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L47-L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -372,7 +375,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L102">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L54">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -407,7 +410,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L107">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L59">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -442,7 +445,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L112">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L64">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -478,7 +481,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L117">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L69">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -508,7 +511,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L122">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L74">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -544,7 +547,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L127">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L79">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -579,7 +582,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L132">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L84">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -615,7 +618,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L137">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L89">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -651,7 +654,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L142">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L94">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -686,7 +689,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L147">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L99">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -721,7 +724,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L152">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L104">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -739,7 +742,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>If paymentContext:didFailToLoadWithError: is called on your delegate, you can in turn call this method to try loading again (if that hasn&rsquo;t been called, calling this will do nothing). If retrying in turn fails, paymentContext:didFailToLoadWithError: will be called again (and you can again call this to keep retrying, etc).</p>
+                        <p>If <code>paymentContext:didFailToLoadWithError:</code> is called on your delegate, you can in turn call this method to try loading again (if that hasn&rsquo;t been called, calling this will do nothing). If retrying in turn fails, <code>paymentContext:didFailToLoadWithError:</code> will be called again (and you can again call this to keep retrying, etc).</p>
 
                       </div>
                       <div class="declaration">
@@ -756,7 +759,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L157">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L109">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -774,7 +777,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This creates, configures, and appropriately presents an STPPaymentMethodsViewController on top of the payment context&rsquo;s hostViewController. It&rsquo;ll be dismissed automatically when the user is done selecting their payment method.</p>
+                        <p>This creates, configures, and appropriately presents an <code><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code> on top of the payment context&rsquo;s <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code>. It&rsquo;ll be dismissed automatically when the user is done selecting their payment method.</p>
 
                       </div>
                       <div class="declaration">
@@ -791,7 +794,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L162">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L114">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -809,7 +812,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This creates, configures, and appropriately pushes an STPPaymentMethodsViewController onto the navigation stack of the context&rsquo;s hostViewController. It&rsquo;ll be popped automatically when the user is done selecting their payment method.</p>
+                        <p>This creates, configures, and appropriately pushes an <code><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code> onto the navigation stack of the context&rsquo;s <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code>. It&rsquo;ll be popped automatically when the user is done selecting their payment method.</p>
 
                       </div>
                       <div class="declaration">
@@ -826,42 +829,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L167">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)STPPaymentContext(im)isReadyForPayment"></a>
-                    <a name="//apple_ref/objc/Method/-isReadyForPayment" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentContext(im)isReadyForPayment">-isReadyForPayment</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Whether or not the payment context contains all of the information it needs to complete a payment. For example, you can use the result of this method to enable/disable the <q>buy</q> button on a checkout page.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">isReadyForPayment</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">isReadyForPayment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L172">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L119">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -879,7 +847,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Requests payment from the user. This may need to present some supplemental UI to the user, in which case it will be presented on the payment context&rsquo;s hostViewController. For instance, if they&rsquo;ve selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. After this is called, the paymentContext:didCreatePaymentResult:completion: and paymentContext:didFinishWithStatus:error: methods will be called on the context&rsquo;s delegate.</p>
+                        <p>Requests payment from the user. This may need to present some supplemental UI to the user, in which case it will be presented on the payment context&rsquo;s <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code>. For instance, if they&rsquo;ve selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. After this is called, the <code>paymentContext:didCreatePaymentResult:completion:</code> and <code>paymentContext:didFinishWithStatus:error:</code> methods will be called on the context&rsquo;s <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)delegate">delegate</a></code>.</p>
 
                       </div>
                       <div class="declaration">
@@ -896,7 +864,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L177">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L124">Show on GitHub</a>
                       </div>
                     </section>
                   </div>

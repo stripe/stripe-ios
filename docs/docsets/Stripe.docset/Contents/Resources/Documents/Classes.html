@@ -85,6 +85,9 @@
                 <a class="nav-group-task-link" href="Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
               </li>
               <li class="nav-group-task">
@@ -145,6 +148,9 @@
             <a class="nav-group-name-link" href="Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a>
               </li>
               <li class="nav-group-task">
@@ -171,16 +177,13 @@
             <a class="nav-group-name-link" href="Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPAddCardViewController.h@T@STPAddCardCompletionBlock">STPAddCardCompletionBlock</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPAPIClient.h@T@STPCompletionBlock">STPCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -237,7 +240,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L48-L66">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L50-L69">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -274,7 +277,7 @@ favor of STPAPIClient.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L25-L45">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L27-L47">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -296,7 +299,7 @@ favor of STPAPIClient.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user&rsquo;s card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a UINavigationController.</p>
+                        <p>This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user&rsquo;s card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a <code>UINavigationController</code>.</p>
 
                         <a href="Classes/STPAddCardViewController.html" class="slightly-smaller">See more</a>
                       </div>
@@ -314,7 +317,7 @@ favor of STPAPIClient.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddCardViewController.h#L30-L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddCardViewController.h#L25-L51">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -336,7 +339,7 @@ favor of STPAPIClient.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>STPAddress wraps ABRecordRef and CNContact objects returned by iOS and adapts them to the Stripe API.</p>
+                        <p>STPAddress Contains an address as represented by the Stripe API.</p>
 
                         <a href="Classes/STPAddress.html" class="slightly-smaller">See more</a>
                       </div>
@@ -376,7 +379,11 @@ favor of STPAPIClient.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>An empty class representing that the user wishes to pay via Apple Pay. This can be checked on an STPPaymentContext, e.g. if ([paymentContext.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) { // don&rsquo;t ask the user for their card number; they want to pay with apple pay. }</p>
+                        <p>An empty class representing that the user wishes to pay via Apple Pay. This can be checked on an <code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code>, e.g.</p>
+
+<p><code>if ([paymentContext.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
+  // don&#39;t ask the user for their card number; they want to pay with apple pay.
+  }</code></p>
 
                       </div>
                       <div class="declaration">
@@ -393,7 +400,7 @@ favor of STPAPIClient.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPApplePayPaymentMethod.h#L15-L16">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPApplePayPaymentMethod.h#L20-L21">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -515,7 +522,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L32-L161">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L32-L166">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -596,7 +603,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L20-L116">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L20-L117">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -618,7 +625,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>An STPCustomer represents a deserialized Customer object from the Stripe API. You can use STPCustomerDeserializer to convert a JSON response from the Stripe API into an STPCustomer.</p>
+                        <p>An <code>STPCustomer</code> represents a deserialized Customer object from the Stripe API. You can use <code><a href="Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a></code> to convert a JSON response from the Stripe API into an <code>STPCustomer</code>.</p>
 
                         <a href="Classes/STPCustomer.html" class="slightly-smaller">See more</a>
                       </div>
@@ -636,7 +643,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L17-L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L17-L47">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -654,7 +661,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Use STPCustomerDeserializer to convert a response from the Stripe API into an STPCustomer object. STPCustomerDeserializer expects the JSON response to be in the exact same format as the Stripe API.</p>
+                        <p>Use <code>STPCustomerDeserializer</code> to convert a response from the Stripe API into an <code><a href="Classes/STPCustomer.html">STPCustomer</a></code> object. <code>STPCustomerDeserializer</code> expects the JSON response to be in the exact same format as the Stripe API.</p>
 
                         <a href="Classes/STPCustomerDeserializer.html" class="slightly-smaller">See more</a>
                       </div>
@@ -672,7 +679,47 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L39-L64">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L52-L84">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPImageLibrary"></a>
+                    <a name="//apple_ref/objc/Class/STPImageLibrary" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPImageLibrary">STPImageLibrary</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This class lets you access card icons used by the Stripe SDK. All icons are 32 x 20 points.</p>
+
+                        <a href="Classes/STPImageLibrary.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPImageLibrary</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPImageLibrary</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L18-L71">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -694,7 +741,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This class can be used wherever you&rsquo;d use a UIActivityIndicatorView and is intended to have a similar API. It renders as a spinning circle with a gap in it, similar to what you see in the App Store app or in the Apple Pay dialog when making a purchase. To change its color, set the tintColor property.</p>
+                        <p>This class can be used wherever you&rsquo;d use a <code>UIActivityIndicatorView</code> and is intended to have a similar API. It renders as a spinning circle with a gap in it, similar to what you see in the App Store app or in the Apple Pay dialog when making a purchase. To change its color, set the <code>tintColor</code> property.</p>
 
                         <a href="Classes/STPPaymentActivityIndicatorView.html" class="slightly-smaller">See more</a>
                       </div>
@@ -752,7 +799,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L68-L269">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L68-L271">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -774,11 +821,11 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>An STPPaymentContext keeps track of all of the state around a payment. It will manage fetching a user&rsquo;s saved payment methods, tracking any information they select, and prompting them for required additional information before completing their purchase. It can be used to power your application&rsquo;s <q>payment confirmation</q> page with just a few lines of code.</p>
+                        <p>An <code>STPPaymentContext</code> keeps track of all of the state around a payment. It will manage fetching a user&rsquo;s saved payment methods, tracking any information they select, and prompting them for required additional information before completing their purchase. It can be used to power your application&rsquo;s <q>payment confirmation</q> page with just a few lines of code.</p>
 
-<p>STPPaymentContext also provides a unified interface to multiple payment methods - for example, you can write a single integration to accept both credit card payments and Apple Pay.</p>
+<p><code>STPPaymentContext</code> also provides a unified interface to multiple payment methods - for example, you can write a single integration to accept both credit card payments and Apple Pay.</p>
 
-<p>STPPaymentContext requires an <q>API Adapter</q> to communicate with your backend API to retrieve and modify a customer&rsquo;s payment methods - see STPBackendAPIAdapter.h for how to implement this. You can also see CheckoutViewController.swift in our example app to see STPPaymentContext in action.</p>
+<p><code>STPPaymentContext</code> requires an <q>API Adapter</q> to communicate with your backend API to retrieve and modify a customer&rsquo;s payment methods - see <a href="https://stripe.com/docs/mobile/ios#prepare-your-api">https://stripe.com/docs/mobile/ios#prepare-your-api</a> for how to implement this. You can also look at CheckoutViewController.swift in our example app to see <code>STPPaymentContext</code> in action.</p>
 
                         <a href="Classes/STPPaymentContext.html" class="slightly-smaller">See more</a>
                       </div>
@@ -796,7 +843,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L78-L180">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L30-L127">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -818,7 +865,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This view controller presents a list of payment method options to the user, which they can select between. They can also add and remove credit cards from the list. It must be displayed inside a UINavigationController, so you can either create a UINavigationController with an STPPaymentMethodsViewController as the rootViewController and then present the UINavigationController, or push a new STPPaymentMethodsViewController onto an existing UINavigationController&rsquo;s stack. You can also have STPPaymentContext do this for you automatically, by calling presentPaymentMethodsViewControllerOnViewController: or pushPaymentMethodsViewControllerOntoNavigationController: on it.</p>
+                        <p>This view controller presents a list of payment method options to the user, which they can select between. They can also add and remove credit cards from the list. It must be displayed inside a <code>UINavigationController</code>, so you can either create a <code>UINavigationController</code> with an <code>STPPaymentMethodsViewController</code> as the <code>rootViewController</code> and then present the <code>UINavigationController</code>, or push a new <code>STPPaymentMethodsViewController</code> onto an existing <code>UINavigationController</code>&rsquo;s stack. You can also have <code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code> do this for you automatically, by calling <code>presentPaymentMethodsViewController</code> or <code>pushPaymentMethodsViewController</code> on it.</p>
 
                         <a href="Classes/STPPaymentMethodsViewController.html" class="slightly-smaller">See more</a>
                       </div>
@@ -836,7 +883,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L57-L89">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L24-L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -858,7 +905,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>When you&rsquo;re using STPPaymentContext to request your user&rsquo;s payment details, this is the object that will be returned to your application when they&rsquo;ve successfully made a payment. It currently just contains a source, but in the future will include any relevant metadata as well. You should pass <code>source.stripeID</code> to your server, and call the charge creation endpoint. This assumes you are charging a Customer, so you should specify the <code>customer</code> parameter to be that customer&rsquo;s ID and the <code>source</code> parameter to the value returned here. For more information, see <a href="https://stripe.com/docs/api#create_charge">https://stripe.com/docs/api#create_charge</a></p>
+                        <p>When you&rsquo;re using <code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code> to request your user&rsquo;s payment details, this is the object that will be returned to your application when they&rsquo;ve successfully made a payment. It currently just contains a <code>source</code>, but in the future will include any relevant metadata as well. You should pass <code>source.stripeID</code> to your server, and call the charge creation endpoint. This assumes you are charging a Customer, so you should specify the <code>customer</code> parameter to be that customer&rsquo;s ID and the <code>source</code> parameter to the value returned here. For more information, see <a href="https://stripe.com/docs/api#create_charge">https://stripe.com/docs/api#create_charge</a></p>
 
                         <a href="Classes/STPPaymentResult.html" class="slightly-smaller">See more</a>
                       </div>
@@ -938,7 +985,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>You can use this class to specify information that you&rsquo;ve already collected from your user. You can then set the <code>prefilledInformation</code> property on STPPaymentContext, STPAddCardViewController, etc and it will pre-fill this information whenever possible.</p>
+                        <p>You can use this class to specify information that you&rsquo;ve already collected from your user. You can then set the <code>prefilledInformation</code> property on <code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code>, <code><a href="Classes/STPAddCardViewController.html">STPAddCardViewController</a></code>, etc and it will pre-fill this information whenever possible.</p>
 
                         <a href="Classes/STPUserInformation.html" class="slightly-smaller">See more</a>
                       </div>
