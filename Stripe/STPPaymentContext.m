@@ -267,7 +267,7 @@
         else if ([weakSelf.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
             STPApplePayTokenHandlerBlock applePayTokenHandler = ^(STPToken *token, STPErrorBlock tokenCompletion) {
-                [weakSelf.apiAdapter attachSourceToCustomer:token.card completion:^(NSError *tokenError) {
+                [weakSelf.apiAdapter attachSourceToCustomer:token completion:^(NSError *tokenError) {
                     if (tokenError) {
                         tokenCompletion(tokenError);
                     } else {
