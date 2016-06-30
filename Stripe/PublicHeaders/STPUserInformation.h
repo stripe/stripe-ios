@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  You can use this class to specify information that you've already collected from your user. You can then set the `prefilledInformation` property on STPPaymentContext, STPAddCardViewController, etc and it will pre-fill this information whenever possible.
+ *  You can use this class to specify information that you've already collected from your user. You can then set the `prefilledInformation` property on `STPPaymentContext`, `STPAddCardViewController`, etc and it will pre-fill this information whenever possible.
  */
 @interface STPUserInformation : NSObject
 

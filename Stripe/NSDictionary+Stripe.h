@@ -14,4 +14,4 @@
 
 @end
 
-void linkDictionaryCategory(void);
+void linkNSDictionaryCategory(void);

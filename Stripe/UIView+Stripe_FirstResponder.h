@@ -13,3 +13,5 @@
 - (nullable UIView *)stp_findFirstResponder;
 
 @end
+
+void linkUIViewFirstResponderCategory(void);

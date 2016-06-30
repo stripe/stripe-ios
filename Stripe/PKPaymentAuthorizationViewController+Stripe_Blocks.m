@@ -10,6 +10,8 @@
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "STPAPIClient+ApplePay.h"
 
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
+
 static char kSTPBlockBasedApplePayDelegateAssociatedObjectKey;
 
 @interface STPBlockBasedApplePayDelegate : NSObject <PKPaymentAuthorizationViewControllerDelegate>
@@ -71,7 +73,7 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
     delegate.apiClient = apiClient;
     delegate.onTokenCreation = onTokenCreation;
     delegate.onFinish = onFinish;
-    PKPaymentAuthorizationViewController *viewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
+    PKPaymentAuthorizationViewController *viewController = [[self alloc] initWithPaymentRequest:paymentRequest];
     viewController.delegate = delegate;
     objc_setAssociatedObject(viewController, &kSTPBlockBasedApplePayDelegateAssociatedObjectKey, delegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return viewController;
@@ -79,4 +81,4 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
 
 @end
 
-
+void linkPKPaymentAuthorizationViewControllerBlocksCategory(void){}

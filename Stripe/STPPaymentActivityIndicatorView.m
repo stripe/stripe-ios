@@ -32,10 +32,11 @@
         layer.lineCap = @"round";
         layer.strokeEnd = 0.75f;
         layer.lineWidth = 2.0f;
-        self.indicatorLayer = layer;
+        _indicatorLayer = layer;
         [self.layer addSublayer:layer];
+        self.alpha = 0;
+        _hidesWhenStopped = YES;
     }
-    self.hidesWhenStopped = YES;
     return self;
 }
 

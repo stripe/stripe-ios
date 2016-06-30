@@ -35,7 +35,7 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 };
 
 /**
- *  STPAddress wraps ABRecordRef and CNContact objects returned by iOS and adapts them to the Stripe API.
+ *  STPAddress Contains an address as represented by the Stripe API.
  */
 @interface STPAddress : NSObject
 

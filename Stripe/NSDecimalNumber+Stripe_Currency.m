@@ -15,7 +15,7 @@
     NSArray *noDecimalCurrencies = @[@"bif", @"clp",@"djf",@"gnf",
                                      @"jpy",@"kmf",@"krw",@"mga",@"pyg",@"rwf",@"vnd",
                                      @"vuv",@"xaf",@"xof", @"xpf"];
-    NSDecimalNumber *number = [NSDecimalNumber decimalNumberWithMantissa:amount exponent:0 isNegative:NO];
+    NSDecimalNumber *number = [self decimalNumberWithMantissa:amount exponent:0 isNegative:NO];
     if ([noDecimalCurrencies containsObject:currency.lowercaseString]) {
         return number;
     }
@@ -23,3 +23,5 @@
 }
 
 @end
+
+void linkNSDecimalNumberCurrencyCategory(void){}

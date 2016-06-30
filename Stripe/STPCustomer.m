@@ -19,6 +19,17 @@
 @end
 
 @implementation STPCustomer
+
++ (instancetype)customerWithStripeID:(NSString *)stripeID
+                       defaultSource:(id<STPSource>)defaultSource
+                             sources:(NSArray<id<STPSource>> *)sources {
+    STPCustomer *customer = [self new];
+    customer.stripeID = stripeID;
+    customer.defaultSource = defaultSource;
+    customer.sources = sources;
+    return customer;
+}
+
 @end
 
 @interface STPCustomerDeserializer()
@@ -79,7 +90,9 @@
                     }
                 }
             }
+            customer.sources = sources;
         }
+        _customer = customer;
     }
     return self;
 }

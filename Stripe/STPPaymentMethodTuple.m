@@ -21,7 +21,7 @@
 
 + (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods
                   selectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod {
-    STPPaymentMethodTuple *tuple = [STPPaymentMethodTuple new];
+    STPPaymentMethodTuple *tuple = [self new];
     tuple.paymentMethods = paymentMethods ?: @[];
     tuple.selectedPaymentMethod = selectedPaymentMethod;
     return tuple;

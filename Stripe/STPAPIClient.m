@@ -29,16 +29,15 @@
 #endif
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 static NSString *const apiURLBase = @"api.stripe.com/v1";
 static NSString *const tokenEndpoint = @"tokens";
 static NSString *const stripeAPIVersion = @"2015-10-12";
-static NSString *STPDefaultPublishableKey;
 
 @implementation Stripe
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
-    STPDefaultPublishableKey = publishableKey;
     [STPPaymentConfiguration sharedConfiguration].publishableKey = publishableKey;
 }
 
@@ -53,22 +52,22 @@ static NSString *STPDefaultPublishableKey;
 @end
 
 #if __has_include("Fabric.h")
-@interface STPAPIClient ()<NSURLSessionDelegate, FABKit>
+@interface STPAPIClient ()<FABKit>
 #else
-@interface STPAPIClient()<NSURLSessionDelegate>
+@interface STPAPIClient()
 #endif
 @property (nonatomic, readwrite) NSURL *apiURL;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
-@property (nonatomic, readwrite) STPAnalyticsClient *analyticsClient;
 @end
 
 @implementation STPAPIClient
 
-#ifdef STP_STATIC_LIBRARY_BUILD
 + (void)initialize {
+    [STPAnalyticsClient initializeIfNeeded];
+#ifdef STP_STATIC_LIBRARY_BUILD
     [STPCategoryLoader loadCategories];
-}
 #endif
+}
 
 + (instancetype)sharedClient {
     static id sharedClient;
@@ -78,25 +77,30 @@ static NSString *STPDefaultPublishableKey;
 }
 
 - (instancetype)init {
-    return [self initWithPublishableKey:[Stripe defaultPublishableKey]];
+    return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration]];
 }
 
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey {
+    STPPaymentConfiguration *config = [[STPPaymentConfiguration alloc] init];
+    config.publishableKey = [publishableKey copy];
+    [self.class validateKey:publishableKey];
+    return [self initWithConfiguration:config];
+}
+
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration {
     self = [super init];
     if (self) {
-        [self.class validateKey:publishableKey];
         _apiURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]];
-        _publishableKey = [publishableKey copy];
-        _operationQueue = [NSOperationQueue mainQueue];
-        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+        _configuration = configuration;
+        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
         NSString *auth = [@"Bearer " stringByAppendingString:self.publishableKey];
-        config.HTTPAdditionalHeaders = @{
-                                         @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
-                                         @"Stripe-Version": stripeAPIVersion,
-                                         @"Authorization": auth,
-                                         };
-        _urlSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:_operationQueue];
-        _analyticsClient = [[STPAnalyticsClient alloc] init];
+        sessionConfiguration.HTTPAdditionalHeaders = @{
+                                                       @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
+                                                       @"Stripe-Version": stripeAPIVersion,
+                                                       @"Authorization": auth,
+                                                       };
+        _urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
+
     }
     return self;
 }
@@ -110,29 +114,27 @@ static NSString *STPDefaultPublishableKey;
     return self;
 }
 
-- (void)setOperationQueue:(NSOperationQueue *)operationQueue {
-    NSCAssert(operationQueue, @"Operation queue cannot be nil.");
-    _operationQueue = operationQueue;
+- (void)setPublishableKey:(NSString *)publishableKey {
+    self.configuration.publishableKey = [publishableKey copy];
+}
+
+- (NSString *)publishableKey {
+    return self.configuration.publishableKey;
 }
 
 - (void)createTokenWithData:(NSData *)data
-                  tokenType:(STPTokenType)tokenType
                  completion:(STPTokenCompletionBlock)completion {
     NSCAssert(data != nil, @"'data' is required to create a token");
     NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
     NSDate *start = [NSDate date];
-    NSString *publishableKey = self.publishableKey;
+    [[STPAnalyticsClient sharedClient] logTokenCreationAttemptWithConfiguration:self.configuration];
     [STPAPIPostRequest<STPToken *> startWithAPIClient:self
                                              endpoint:tokenEndpoint
                                              postData:data
                                            serializer:[STPToken new]
                                            completion:^(STPToken *object, NSHTTPURLResponse *response, NSError *error) {
                                                NSDate *end = [NSDate date];
-                                               [self.analyticsClient logRUMWithTokenType:tokenType
-                                                                          publishableKey:publishableKey
-                                                                                response:response
-                                                                                   start:start
-                                                                                     end:end];
+                                               [[STPAnalyticsClient sharedClient] logRUMWithToken:object configuration:self.configuration response:response start:start end:end];
                                                completion(object, error);
                                            }];
 }
@@ -221,9 +223,10 @@ static NSString *STPDefaultPublishableKey;
 #pragma mark - Bank Accounts
 @implementation STPAPIClient (BankAccounts)
 
-- (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount completion:(STPTokenCompletionBlock)completion {
+- (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount
+                        completion:(STPTokenCompletionBlock)completion {
     NSData *data = [STPFormEncoder formEncodedDataForObject:bankAccount];
-    [self createTokenWithData:data tokenType:STPTokenTypeBankAccount completion:completion];
+    [self createTokenWithData:data completion:completion];
 }
 
 @end
@@ -233,7 +236,7 @@ static NSString *STPDefaultPublishableKey;
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPTokenCompletionBlock)completion {
     NSData *data = [STPFormEncoder formEncodedDataForObject:card];
-    [self createTokenWithData:data tokenType:STPTokenTypeCard completion:completion];
+    [self createTokenWithData:data completion:completion];
 }
 
 @end
@@ -276,17 +279,7 @@ static NSString *STPDefaultPublishableKey;
 
 + (void)createTokenWithPayment:(PKPayment *)payment
                     completion:(STPTokenCompletionBlock)handler {
-    [self createTokenWithPayment:payment
-                  operationQueue:[NSOperationQueue mainQueue]
-                      completion:handler];
-}
-
-+ (void)createTokenWithPayment:(PKPayment *)payment
-                operationQueue:(NSOperationQueue *)queue
-                    completion:(STPTokenCompletionBlock)handler {
-    STPAPIClient *client = [[STPAPIClient alloc] init];
-    client.operationQueue = queue;
-    [client createTokenWithPayment:payment completion:handler];
+    [[STPAPIClient sharedClient] createTokenWithPayment:payment completion:handler];
 }
 
 @end
@@ -298,52 +291,26 @@ static NSString *STPDefaultPublishableKey;
     return nil;
 }
 
-+ (void)createTokenWithCard:(STPCard *)card
-             publishableKey:(NSString *)publishableKey
-             operationQueue:(NSOperationQueue *)queue
-                 completion:(STPCompletionBlock)handler {
-    NSCAssert(card != nil, @"'card' is required to create a token");
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
-    client.operationQueue = queue;
-    [client createTokenWithCard:card completion:handler];
-}
-
-+ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount
-                    publishableKey:(NSString *)publishableKey
-                    operationQueue:(NSOperationQueue *)queue
-                        completion:(STPCompletionBlock)handler {
-    NSCAssert(bankAccount != nil, @"'bankAccount' is required to create a token");
-    NSCAssert(handler != nil, @"'handler' is required to use the token that is created");
-    
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
-    client.operationQueue = queue;
-    [client createTokenWithBankAccount:bankAccount completion:handler];
-}
-
 #pragma mark Shorthand methods -
 
 + (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)handler {
-    [self createTokenWithCard:card publishableKey:[self defaultPublishableKey] completion:handler];
+    [[STPAPIClient sharedClient] createTokenWithCard:card completion:handler];
 }
 
 + (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler {
-    [self createTokenWithCard:card publishableKey:publishableKey operationQueue:[NSOperationQueue mainQueue] completion:handler];
-}
-
-+ (void)createTokenWithCard:(STPCard *)card operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler {
-    [self createTokenWithCard:card publishableKey:[self defaultPublishableKey] operationQueue:queue completion:handler];
+    STPPaymentConfiguration *config = [STPPaymentConfiguration new];
+    config.publishableKey = publishableKey;
+    [[[STPAPIClient alloc] initWithConfiguration:config] createTokenWithCard:card completion:handler];
 }
 
 + (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount completion:(STPCompletionBlock)handler {
-    [self createTokenWithBankAccount:bankAccount publishableKey:[self defaultPublishableKey] completion:handler];
+    [[STPAPIClient sharedClient] createTokenWithBankAccount:bankAccount completion:handler];
 }
 
 + (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler {
-    [self createTokenWithBankAccount:bankAccount publishableKey:publishableKey operationQueue:[NSOperationQueue mainQueue] completion:handler];
-}
-
-+ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount operationQueue:(NSOperationQueue *)queue completion:(STPCompletionBlock)handler {
-    [self createTokenWithBankAccount:bankAccount publishableKey:[self defaultPublishableKey] operationQueue:queue completion:handler];
+    STPPaymentConfiguration *config = [STPPaymentConfiguration new];
+    config.publishableKey = publishableKey;
+    [[[STPAPIClient alloc] initWithConfiguration:config] createTokenWithBankAccount:bankAccount completion:handler];
 }
 
 @end

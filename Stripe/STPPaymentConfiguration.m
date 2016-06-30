@@ -7,10 +7,16 @@
 //
 
 #import "STPPaymentConfiguration.h"
+#import "STPPaymentConfiguration+Private.h"
 #import "NSBundle+Stripe_AppName.h"
 #import "Stripe.h"
+#import "STPAnalyticsClient.h"
 
 @implementation STPPaymentConfiguration
+
++ (void)initialize {
+    [STPAnalyticsClient initializeIfNeeded];
+}
 
 + (instancetype)sharedConfiguration {
     static STPPaymentConfiguration *sharedConfiguration;
@@ -44,3 +50,14 @@
 }
 
 @end
+
+@implementation STPPaymentConfiguration (Private)
+
+- (BOOL)applePayEnabled {
+    return self.appleMerchantIdentifier &&
+    (self.additionalPaymentMethods & STPPaymentMethodTypeApplePay) &&
+    [Stripe deviceSupportsApplePay];
+}
+
+@end
+

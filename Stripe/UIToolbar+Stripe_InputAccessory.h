@@ -14,3 +14,5 @@
 - (void)stp_setEnabled:(BOOL)enabled;
 
 @end
+
+void linkUIToolbarInputAccessoryCategory(void);

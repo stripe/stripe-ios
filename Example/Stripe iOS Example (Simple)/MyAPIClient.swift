@@ -33,29 +33,6 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         super.init()
     }
 
-    func decodeData(data: NSData?) -> (selectedCard: STPCard?, cards: [STPCard]?)? {
-        guard let json = data?.JSON else { return nil }
-        if let cardsJSON = json["cards"] as? [[String: AnyObject]] {
-            let selectedCardJSON = json["selected_card"] as? [String: AnyObject]
-            let selectedCard = decodeCard(selectedCardJSON)
-            let cards = cardsJSON.flatMap(decodeCard)
-            return (selectedCard, cards)
-        }
-        return nil
-    }
-    
-    func decodeCard(json: [String: AnyObject]?) -> STPCard? {
-        guard let json = json,
-            cardID = json["id"] as? String,
-            brand = json["brand"] as? String,
-            last4 = json["last4"] as? String,
-            expMonth = json["exp_month"] as? UInt,
-            expYear = json["exp_year"] as? UInt,
-            funding = json["funding"] as? String
-            else { return nil }
-        return STPCard(ID: cardID, brand: STPCard.brandFromString(brand), last4: last4, expMonth: expMonth, expYear: expYear, funding: STPCard.fundingFromString(funding))
-    }
-
     func decodeResponse(response: NSURLResponse?, error: NSError?) -> NSError? {
         if let httpResponse = response as? NSHTTPURLResponse
             where httpResponse.statusCode != 200 {
@@ -89,16 +66,18 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         task.resume()
     }
     
-    @objc func retrieveCustomerSources(completion: STPSourceCompletionBlock) {
+    @objc func retrieveCustomer(completion: STPCustomerCompletionBlock) {
         guard let key = Stripe.defaultPublishableKey() where !key.containsString("#") else {
             let error = NSError(domain: StripeDomain, code: 50, userInfo: [
                 NSLocalizedDescriptionKey: "Please set stripePublishableKey to your account's test publishable key in CheckoutViewController.swift"
             ])
-            completion(nil, nil, error)
+            completion(nil, error)
             return
         }
         guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
-            completion(self.defaultSource?.stripeID, self.sources, nil)
+            // This code is just for demo purposes - in this case, if the example app isn't properly configured, we'll return a fake customer just so the app works.
+            let customer = STPCustomer(stripeID: "cus_test", defaultSource: self.defaultSource, sources: self.sources)
+            completion(customer, nil)
             return
         }
         let path = "/customers/\(customerID)"
@@ -108,10 +87,10 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
             dispatch_async(dispatch_get_main_queue()) {
                 let deserializer = STPCustomerDeserializer(data: data, urlResponse: urlResponse, error: error)
                 if let error = deserializer.error {
-                    completion(nil, [], error)
+                    completion(nil, error)
                     return
                 } else if let customer = deserializer.customer {
-                    completion(customer.defaultSource?.stripeID, customer.sources, nil)
+                    completion(customer, nil)
                 }
             }
         }

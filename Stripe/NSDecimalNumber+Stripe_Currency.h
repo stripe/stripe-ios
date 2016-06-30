@@ -14,3 +14,5 @@
                                         currency:(NSString *)currency;
 
 @end
+
+void linkNSDecimalNumberCurrencyCategory(void);

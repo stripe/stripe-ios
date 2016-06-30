@@ -266,6 +266,8 @@
 
 @property(nonatomic, readwrite, nullable) STPCardParams *card __attribute__((deprecated("This has been renamed to cardParams; use that instead.")));
 
+- (void)commonInit;
+
 @end
 
 #pragma mark - PaymentKit compatibility

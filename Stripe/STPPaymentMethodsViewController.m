@@ -1,5 +1,5 @@
 //
-//  STPSourceListViewController.m
+//  STPPaymentMethodsViewController.m
 //  Stripe
 //
 //  Created by Jack Flintermann on 1/12/16.
@@ -24,7 +24,7 @@
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "STPTheme.h"
 
-@interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate>
+@interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic) STPTheme *theme;
@@ -56,17 +56,17 @@
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
     STPPromise<STPPaymentMethodTuple *> *promise = [STPPromise new];
-    [apiAdapter retrieveCustomerSources:^(NSString * _Nullable defaultSourceID, NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
+    [apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
         if (error) {
             [promise fail:error];
         } else {
             STPCard *selectedCard;
             NSMutableArray<STPCard *> *cards = [NSMutableArray array];
-            for (id<STPSource> source in sources) {
+            for (id<STPSource> source in customer.sources) {
                 if ([source isKindOfClass:[STPCard class]]) {
                     STPCard *card = (STPCard *)source;
                     [cards addObject:card];
-                    if ([card.stripeID isEqualToString:defaultSourceID]) {
+                    if ([card.stripeID isEqualToString:customer.defaultSource.stripeID]) {
                         selectedCard = card;
                     }
                 }
@@ -106,14 +106,8 @@
                                                                            paymentMethodTuple:tuple
                                                                                      delegate:weakself];
         } else {
-            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:weakself.configuration theme:weakself.theme completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
-                if (token && token.card) {
-                    [weakself internalViewControllerDidCreateToken:token completion:tokenCompletion];
-                }
-                else {
-                    [self.delegate paymentMethodsViewControllerDidFinish:self];
-                }
-            }];
+            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:weakself.configuration theme:weakself.theme];
+            addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
             internal = addCardViewController;
             
@@ -139,7 +133,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationItem.leftBarButtonItem = [self stp_isRootViewControllerOfNavigationController] ? self.cancelItem : self.backItem;
+    self.navigationItem.leftBarButtonItem = [self stp_isAtRootOfNavigationController] ? self.cancelItem : self.backItem;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -182,6 +176,16 @@
             [self finishWithPaymentMethod:token.card];
         }
     }];
+}
+
+- (void)addCardViewControllerDidCancel:(__unused STPAddCardViewController *)addCardViewController {
+    [self.delegate paymentMethodsViewControllerDidFinish:self];
+}
+
+- (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
+               didCreateToken:(STPToken *)token
+                   completion:(STPErrorBlock)completion {
+    [self internalViewControllerDidCreateToken:token completion:completion];
 }
 
 @end

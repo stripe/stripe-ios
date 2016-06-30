@@ -19,7 +19,7 @@
 @interface STPToken : NSObject<STPAPIResponseDecodable, STPSource>
 
 /**
- *  You cannot directly instantiate an STPToken. You should only use one that has been returned from an STPAPIClient callback.
+ *  You cannot directly instantiate an `STPToken`. You should only use one that has been returned from an `STPAPIClient` callback.
  */
 - (nonnull instancetype) init __attribute__((unavailable("You cannot directly instantiate an STPToken. You should only use one that has been returned from an STPAPIClient callback.")));
 

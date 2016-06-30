@@ -8,6 +8,7 @@
 
 #import "STPRememberMeTermsView.h"
 #import "UIImage+Stripe.h"
+#import "UIImage+StripePrivate.h"
 
 @interface STPRememberMeTermsView()<UITextViewDelegate>
 

@@ -4,6 +4,7 @@ Tests/installation_tests/cocoapods/**/Podfile.lock
 Tests/installation_tests/cocoapods/**/Pods
 Tests/installation_tests/manual_installation/build
 Tests/installation_tests/manual_installation/ManualInstallationTest/Frameworks/Stripe.framework
+Tests/installation_tests/manual_installation/ManualInstallationTest/Frameworks/Stripe.bundle
 Tests/installation_tests/carthage/Cartfile
 Tests/installation_tests/carthage/Cartfile.resolved
 Tests/installation_tests/carthage/Carthage/*

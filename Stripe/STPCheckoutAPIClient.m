@@ -81,7 +81,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
     return [self.bootstrapPromise voidFlatMap:^STPPromise*() {
         __strong typeof(weakself) strongself = weakself;
         if (!strongself) {
-            return [STPPromise promiseWithError:[STPCheckoutAPIClient cancellationError]];
+            return [STPPromise promiseWithError:[self.class cancellationError]];
         }
         STPPromise<STPCheckoutAccountLookup *> *lookupPromise = [STPPromise<STPCheckoutAccountLookup *> new];
         NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:@"account/lookup"];
@@ -111,7 +111,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
         __strong typeof(weakself) strongself = weakself;
         STPPromise *smsPromise = [STPPromise new];
         if (!strongself) {
-            return [STPPromise promiseWithError:[STPCheckoutAPIClient cancellationError]];
+            return [STPPromise promiseWithError:[self.class cancellationError]];
         }
         NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:@"account/verifications"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -145,7 +145,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
         __strong typeof(weakself) strongself = weakself;
         STPPromise<STPCheckoutAccount*> *accountPromise = [STPPromise<STPCheckoutAccount *> new];
         if (!strongself) {
-            return [STPPromise promiseWithError:[STPCheckoutAPIClient cancellationError]];
+            return [STPPromise promiseWithError:[self.class cancellationError]];
         }
         NSString *pathComponent = [@"account/verifications" stringByAppendingPathComponent:verification.verificationID];
         NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:pathComponent];
@@ -176,7 +176,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
         __strong typeof(weakself) strongself = weakself;
         STPPromise<STPToken *> *tokenPromise = [STPPromise new];
         if (!strongself) {
-            return [STPPromise promiseWithError:[STPCheckoutAPIClient cancellationError]];
+            return [STPPromise promiseWithError:[self.class cancellationError]];
         }
         NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:@"account/tokens"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -188,7 +188,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
         [request setValue:account.sessionID forHTTPHeaderField:@"X-Rack-Session"];
         [request setValue:account.sessionID forHTTPHeaderField:@"Stripe-Checkout-Test-Session"];
         [request setValue:account.csrfToken forHTTPHeaderField:@"X-CSRF-Token"];
-        [[weakself.accountSession dataTaskWithRequest:request completionHandler:^(__unused NSData *data, __unused NSURLResponse *response, NSError *error) {
+        [[weakself.accountSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             STPToken *token = [self parseTokenFromResponse:response data:data];
             if (token) {
                 [tokenPromise succeed:token];
@@ -217,7 +217,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
     }] flatMap:^STPPromise *(STPToken *token) {
         __strong typeof(self) strongself = weakself;
         if (!strongself) {
-            return [STPPromise promiseWithError:[STPCheckoutAPIClient cancellationError]];
+            return [STPPromise promiseWithError:[self.class cancellationError]];
         }
         STPPromise<STPCheckoutAccount*> *accountPromise = [STPPromise<STPCheckoutAccount *> new];
         NSURL *url = [[NSURL URLWithString:CheckoutBaseURLString] URLByAppendingPathComponent:@"account"];

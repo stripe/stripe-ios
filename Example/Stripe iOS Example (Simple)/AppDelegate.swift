@@ -23,4 +23,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 }
-

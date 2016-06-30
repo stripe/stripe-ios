@@ -13,3 +13,5 @@
 - (nullable id)stp_boundSafeObjectAtIndex:(NSInteger)index;
 
 @end
+
+void linkNSArrayBoundSafeCategory(void);

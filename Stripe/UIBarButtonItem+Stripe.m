@@ -8,6 +8,7 @@
 
 #import "UIBarButtonItem+Stripe.h"
 #import "UIImage+Stripe.h"
+#import "UIImage+StripePrivate.h"
 #import "STPTheme.h"
 
 @implementation UIBarButtonItem (Stripe)
@@ -16,7 +17,7 @@
                                       style:(UIBarButtonItemStyle)style
                                      target:(id)target
                                      action:(SEL)action {
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:title
+    UIBarButtonItem *item = [[self alloc] initWithTitle:title
                                                              style:style
                                                             target:target
                                                             action:action];
@@ -48,4 +49,6 @@
 }
 
 @end
+
+void linkUIBarButtonItemCategory(void){}
 

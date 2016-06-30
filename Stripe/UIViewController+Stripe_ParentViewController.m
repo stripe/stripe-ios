@@ -21,8 +21,16 @@
     return self.navigationController.topViewController == self;
 }
 
-- (BOOL)stp_isRootViewControllerOfNavigationController {
-    return self.navigationController.viewControllers.firstObject == self;
+- (BOOL)stp_isAtRootOfNavigationController {
+    UIViewController *viewController = self.navigationController.viewControllers.firstObject;
+    UIViewController *tested = self;
+    while (tested) {
+        if (tested == viewController) {
+            return YES;
+        }
+        tested = [tested parentViewController];
+    }
+    return NO;
 }
 
 - (nullable UIViewController *)stp_previousViewControllerInNavigation {
@@ -34,3 +42,5 @@
 }
 
 @end
+
+void linkUIViewControllerParentViewControllerCategory(void){}

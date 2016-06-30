@@ -33,3 +33,4 @@
 #import "STPTheme.h"
 #import "UINavigationBar+Stripe_Theme.h"
 #import "STPUserInformation.h"
+#import "UIImage+Stripe.h"

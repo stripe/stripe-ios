@@ -22,7 +22,7 @@
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
-@interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate>
+@interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate, STPAddCardViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)STPTheme *theme;
@@ -86,7 +86,7 @@
             }];
         }
     }];
-    [self.apiAdapter retrieveCustomerSources:^(NSString * _Nullable defaultSourceID, NSArray<id<STPSource>> * _Nullable sources, NSError * _Nullable error) {
+    [self.apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
         if (!weakself) {
             return;
         }
@@ -96,11 +96,11 @@
         }
         STPCard *selectedCard;
         NSMutableArray<STPCard *> *cards = [NSMutableArray array];
-        for (id<STPSource> source in sources) {
+        for (id<STPSource> source in customer.sources) {
             if ([source isKindOfClass:[STPCard class]]) {
                 STPCard *card = (STPCard *)source;
                 [cards addObject:card];
-                if ([card.stripeID isEqualToString:defaultSourceID]) {
+                if ([card.stripeID isEqualToString:customer.defaultSource.stripeID]) {
                     selectedCard = card;
                 }
             }
@@ -214,7 +214,7 @@
 
 - (void)appropriatelyDismissPaymentMethodsViewController:(STPPaymentMethodsViewController *)viewController
                                               completion:(STPVoidBlock)completion {
-    if ([viewController stp_isRootViewControllerOfNavigationController]) {
+    if ([viewController stp_isAtRootOfNavigationController]) {
         // if we're the root of the navigation controller, we've been presented modally.
         [viewController.presentingViewController dismissViewControllerAnimated:YES completion:^{
             self.paymentMethodsViewController = nil;
@@ -233,10 +233,6 @@
     }
 }
 
-- (BOOL)isReadyForPayment {
-    return self.selectedPaymentMethod != nil;
-}
-
 - (void)requestPayment {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     __weak typeof(self) weakSelf = self;
@@ -247,25 +243,8 @@
             return;
         }
         if (!weakSelf.selectedPaymentMethod) {
-            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
-                if (token) {
-                    [weakSelf.apiAdapter attachSourceToCustomer:token completion:^(NSError *error) {
-                        if (error) {
-                            tokenCompletion(error);
-                        } else {
-                            [weakSelf.hostViewController dismissViewControllerAnimated:YES completion:^{
-                                tokenCompletion(nil);
-                                weakSelf.selectedPaymentMethod = token.card;
-                                [weakSelf requestPayment];
-                            }];
-                        }
-                    }];
-                } else {
-                    [weakSelf.hostViewController dismissViewControllerAnimated:YES completion:^{
-                        [weakSelf.delegate paymentContext:weakSelf didFinishWithStatus:STPPaymentStatusUserCancellation error:nil];
-                    }];
-                }
-            }];
+            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
+            addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addCardViewController];
             [navigationController.navigationBar stp_setTheme:weakSelf.theme];
@@ -327,8 +306,7 @@
     if (!self.configuration.appleMerchantIdentifier || !self.paymentAmount) {
         return nil;
     }
-//    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.configuration.appleMerchantIdentifier];
-    PKPaymentRequest *paymentRequest = [[PKPaymentRequest alloc] init];
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.configuration.appleMerchantIdentifier];
     NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:self.paymentAmount
                                                                   currency:self.paymentCurrency];
     PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:self.configuration.companyName
@@ -342,6 +320,30 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
 
 - (void)artificiallyRetain:(NSObject *)host {
     objc_setAssociatedObject(host, &kSTPPaymentCoordinatorAssociatedObjectKey, self, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (void)addCardViewControllerDidCancel:(__unused STPAddCardViewController *)addCardViewController {
+    [self.hostViewController dismissViewControllerAnimated:YES completion:^{
+        [self.delegate paymentContext:self
+                  didFinishWithStatus:STPPaymentStatusUserCancellation
+                                error:nil];
+    }];
+}
+
+- (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
+               didCreateToken:(STPToken *)token
+                   completion:(STPErrorBlock)completion {
+    [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *error) {
+        if (error) {
+            completion(error);
+        } else {
+            [self.hostViewController dismissViewControllerAnimated:YES completion:^{
+                completion(nil);
+                self.selectedPaymentMethod = token.card;
+                [self requestPayment];
+            }];
+        }
+    }];
 }
 
 @end

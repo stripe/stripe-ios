@@ -52,5 +52,6 @@ static NSInteger const STPNavigationBarHairlineViewTag = 787473;
     return nil;
 }
 
-
 @end
+
+void linkUINavigationBarThemeCategory(void){}

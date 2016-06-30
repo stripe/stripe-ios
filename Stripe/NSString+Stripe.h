@@ -16,4 +16,4 @@
 
 @end
 
-void linkStringCategory(void);
+void linkNSStringCategory(void);

@@ -34,12 +34,12 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 /**
  *  Create an STPCard from a Stripe API response.
  *
- *  @param cardID   The Stripe ID of the card, e.g. card_185iQx4JYtv6MPZKfcuXwkOx
- *  @param brand    The brand of the card (e.g. "Visa". To obtain this enum value from a string, use [STPCardBrand brandFromString:string];
+ *  @param cardID   The Stripe ID of the card, e.g. `card_185iQx4JYtv6MPZKfcuXwkOx`
+ *  @param brand    The brand of the card (e.g. "Visa". To obtain this enum value from a string, use `[STPCardBrand brandFromString:string]`;
  *  @param last4    The last 4 digits of the card, e.g. 4242
  *  @param expMonth The card's expiration month, 1-indexed (i.e. 1 = January)
  *  @param expYear  The card's expiration year
- *  @param funding  The card's funding type (credit, debit, or prepaid). To obtain this enum value from a string, use [STPCardBrand fundingFromString:string].
+ *  @param funding  The card's funding type (credit, debit, or prepaid). To obtain this enum value from a string, use `[STPCardBrand fundingFromString:string]`.
  *
  *  @return an STPCard instance populated with the provided values.
  */
@@ -51,7 +51,7 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
                    funding:(STPCardFundingType)funding;
 
 /**
- *  This parses a string representing a card's brand into the appropriate STPCardBrand enum value, i.e. [STPCard brandFromString:@"American Express"] == STPCardBrandAmex
+ *  This parses a string representing a card's brand into the appropriate STPCardBrand enum value, i.e. `[STPCard brandFromString:@"American Express"] == STPCardBrandAmex`
  *
  *  @param string a string representing the card's brand as returned from the Stripe API
  *
@@ -60,11 +60,11 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 + (STPCardBrand)brandFromString:(NSString *)string;
 
 /**
- *  This parses a string representing a card's funding type into the appropriate STPCardFundingType enum value, i.e. [STPCard fundingFromString:@"prepaid"] == STPCardFundingTypePrepaid.
+ *  This parses a string representing a card's funding type into the appropriate `STPCardFundingType` enum value, i.e. `[STPCard fundingFromString:@"prepaid"] == STPCardFundingTypePrepaid`.
  *
  *  @param string a string representing the card's funding type as returned from the Stripe API
  *
- *  @return an enum value mapped to that string. If the string is unrecognized, returns STPCardFundingTypeOther.
+ *  @return an enum value mapped to that string. If the string is unrecognized, returns `STPCardFundingTypeOther`.
  */
 + (STPCardFundingType)fundingFromString:(NSString *)string;
 
@@ -116,7 +116,7 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 /**
  *  The issuer of the card.
  *  Can be one of "Visa", "American Express", "MasterCard", "Discover", "JCB", "Diners Club", or "Unknown"
- *  @deprecated use "brand" instead.
+ *  @deprecated use `brand` instead.
  */
 @property (nonatomic, readonly) NSString *type __attribute__((deprecated));
 

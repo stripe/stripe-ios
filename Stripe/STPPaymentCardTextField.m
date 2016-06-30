@@ -34,6 +34,8 @@
 
 @property(nonatomic, assign)BOOL numberFieldShrunk;
 
+@property(nonatomic, readwrite, strong)STPCardParams *internalCardParams;
+
 @end
 
 @implementation STPPaymentCardTextField
@@ -77,7 +79,8 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     self.borderWidth = 1.0f;
 
     self.clipsToBounds = YES;
-    
+
+    _internalCardParams = [STPCardParams new];
     _viewModel = [STPPaymentCardTextFieldViewModel new];
     _sizingField = [self buildTextField];
     _sizingField.formDelegate = nil;
@@ -398,15 +401,15 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 }
 
 - (STPCardParams *)cardParams {
-    STPCardParams *c = [[STPCardParams alloc] init];
-    c.number = self.cardNumber;
-    c.expMonth = self.expirationMonth;
-    c.expYear = self.expirationYear;
-    c.cvc = self.cvc;
-    return c;
+    self.internalCardParams.number = self.cardNumber;
+    self.internalCardParams.expMonth = self.expirationMonth;
+    self.internalCardParams.expYear = self.expirationYear;
+    self.internalCardParams.cvc = self.cvc;
+    return self.internalCardParams;
 }
 
 - (void)setCardParams:(STPCardParams *)cardParams {
+    self.internalCardParams = cardParams;
     [self setText:cardParams.number inField:STPCardFieldTypeNumber];
     BOOL expirationPresent = cardParams.expMonth && cardParams.expYear;
     if (expirationPresent) {

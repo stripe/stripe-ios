@@ -8,6 +8,7 @@
 
 #import "STPPaymentMethodsInternalViewController.h"
 #import "UIImage+Stripe.h"
+#import "UIImage+StripePrivate.h"
 #import "NSArray+Stripe_BoundSafe.h"
 #import "NSString+Stripe_CardBrands.h"
 #import "UITableViewCell+Stripe_Borders.h"
@@ -17,7 +18,7 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 static NSInteger STPPaymentMethodCardListSection = 0;
 static NSInteger STPPaymentMethodAddCardSection = 1;
 
-@interface STPPaymentMethodsInternalViewController()<UITableViewDataSource, UITableViewDelegate>
+@interface STPPaymentMethodsInternalViewController()<UITableViewDataSource, UITableViewDelegate, STPAddCardViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)STPTheme *theme;
@@ -60,6 +61,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     tableView.delegate = self;
     [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
     tableView.sectionHeaderHeight = 30;
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone; // use fake separator views
     tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
     self.tableView = tableView;
     [self.view addSubview:tableView];
@@ -75,7 +77,6 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
     self.tableView.tintColor = self.theme.accentColor;
     self.cardImageView.tintColor = self.theme.accentColor;
-    self.tableView.separatorColor = self.theme.quaternaryBackgroundColor;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -169,15 +170,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         // Disable SMS autofill if we already have a card on file
         config.smsAutofillDisabled = (config.smsAutofillDisabled || cardPaymentMethods.count > 0);
         
-        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config theme:self.theme completion:^(STPToken * _Nullable token, STPErrorBlock  _Nonnull tokenCompletion) {
-            if (token && token.card) {
-                [self.delegate internalViewControllerDidCreateToken:token completion:tokenCompletion];
-            } else {
-                [self.navigationController stp_popViewControllerAnimated:YES completion:^{
-                    tokenCompletion(nil);
-                }];
-            }
-        }];
+        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config theme:self.theme];
+        paymentCardViewController.delegate = self;
         paymentCardViewController.prefilledInformation = self.prefilledInformation;
         [self.navigationController pushViewController:paymentCardViewController animated:YES];
     }
@@ -190,6 +184,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     [cell stp_setBorderColor:self.theme.tertiaryBackgroundColor];
     [cell stp_setTopBorderHidden:!topRow];
     [cell stp_setBottomBorderHidden:!bottomRow];
+    [cell stp_setFakeSeparatorColor:self.theme.quaternaryBackgroundColor];
+    [cell stp_setFakeSeparatorLeftInset:15.0f];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
@@ -201,6 +197,16 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 - (CGFloat)tableView:(__unused UITableView *)tableView heightForHeaderInSection:(__unused NSInteger)section {
     return 0.01f;
+}
+
+- (void)addCardViewControllerDidCancel:(__unused STPAddCardViewController *)addCardViewController {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
+               didCreateToken:(STPToken *)token
+                   completion:(STPErrorBlock)completion {
+    [self.delegate internalViewControllerDidCreateToken:token completion:completion];
 }
 
 @end

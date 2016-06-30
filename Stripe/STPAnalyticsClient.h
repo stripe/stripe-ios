@@ -8,20 +8,25 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, STPTokenType) {
-    STPTokenTypeCard,
-    STPTokenTypeBankAccount,
-    STPTokenTypeApplePay,
-};
+@class STPPaymentConfiguration, STPToken;
+@protocol STPFormEncodable;
 
 @interface STPAnalyticsClient : NSObject
 
++ (instancetype)sharedClient;
+
++ (void)initializeIfNeeded;
+
 + (void)disableAnalytics;
 
-- (void)logRUMWithTokenType:(STPTokenType)tokenType
-             publishableKey:(NSString *)publishableKey
-                   response:(NSHTTPURLResponse *)response
-                      start:(NSDate *)startTime
-                        end:(NSDate *)endTime;
+- (void)logRememberMeConversion:(BOOL)selected;
+
+- (void)logTokenCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration;
+
+- (void)logRUMWithToken:(STPToken *)token
+          configuration:(STPPaymentConfiguration *)config
+               response:(NSHTTPURLResponse *)response
+                  start:(NSDate *)startTime
+                    end:(NSDate *)endTime;
 
 @end

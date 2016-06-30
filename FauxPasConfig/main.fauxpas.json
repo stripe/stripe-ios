@@ -107,7 +107,7 @@
         "BuildSettingsSetInGUI": {
             // Which settings are allowed to be set in the GUI (Array of
             // strings)
-            //"allowedGUISettings": ["CODE_SIGN_IDENTITY","PROVISIONING_PROFILE"]
+            "allowedGUISettings": ["CODE_SIGN_IDENTITY","ENABLE_TESTABILITY","ONLY_ACTIVE_ARCH","PROVISIONING_PROFILE"]
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null

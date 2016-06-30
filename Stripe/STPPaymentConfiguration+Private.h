@@ -13,3 +13,4 @@
 @property(nonatomic, readonly)BOOL applePayEnabled;
 
 @end
+

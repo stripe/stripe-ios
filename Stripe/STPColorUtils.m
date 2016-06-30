@@ -17,8 +17,8 @@
 }
 
 + (UIColor *)brighterColor:(UIColor *)color1 color2:(UIColor *)color2 {
-    CGFloat brightness1 = [self.class perceivedBrightnessForColor:color1];
-    CGFloat brightness2 = [self.class perceivedBrightnessForColor:color2];
+    CGFloat brightness1 = [self perceivedBrightnessForColor:color1];
+    CGFloat brightness2 = [self perceivedBrightnessForColor:color2];
     return brightness1 >= brightness2 ? color1 : color2;
 }
 

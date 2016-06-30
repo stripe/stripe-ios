@@ -13,7 +13,9 @@
 - (void)stp_setBorderColor:(UIColor *)color;
 - (void)stp_setTopBorderHidden:(BOOL)hidden;
 - (void)stp_setBottomBorderHidden:(BOOL)hidden;
-// This handles separator views, which are annoyingly hard to modify.
-@property(nonatomic)CGFloat stp_contentAlpha;
+- (void)stp_setFakeSeparatorLeftInset:(CGFloat)leftInset;
+- (void)stp_setFakeSeparatorColor:(UIColor *)color;
 
 @end
+
+void linkUITableViewCellBordersCategory(void);

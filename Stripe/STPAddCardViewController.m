@@ -10,6 +10,7 @@
 #import "STPPaymentCardTextField.h"
 #import "STPToken.h"
 #import "UIImage+Stripe.h"
+#import "UIImage+StripePrivate.h"
 #import "STPAddressFieldTableViewCell.h"
 #import "STPAddressViewModel.h"
 #import "NSArray+Stripe_BoundSafe.h"
@@ -34,6 +35,7 @@
 #import "UIView+Stripe_FirstResponder.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "STPRememberMePaymentCell.h"
+#import "STPAnalyticsClient.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPRememberMePaymentCellDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
@@ -48,7 +50,6 @@
 @property(nonatomic)STPSwitchTableViewCell *rememberMeCell;
 @property(nonatomic)STPAddressFieldTableViewCell *rememberMePhoneCell;
 @property(nonatomic)STPRememberMePaymentCell *paymentCell;
-@property(nonatomic, copy)STPAddCardCompletionBlock completion;
 @property(nonatomic)BOOL loading;
 @property(nonatomic)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic, weak)STPPaymentActivityIndicatorView *lookupActivityIndicator;
@@ -70,27 +71,42 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 @implementation STPAddCardViewController
 
-- (instancetype)initWithCompletion:(STPAddCardCompletionBlock)completion {
-    return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration]
-                                 theme:[STPTheme defaultTheme]
-                            completion:completion];
+- (instancetype)init {
+    return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
 }
 
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
-                                theme:(STPTheme *)theme
-                           completion:(STPAddCardCompletionBlock)completion {
-    self = [super initWithNibName:nil bundle:nil];
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        _configuration = configuration;
-        _theme = theme;
-        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
-        _completion = completion;
-        _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
-        _addressViewModel.delegate = self;
-        _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
-        self.title = NSLocalizedString(@"Add a Card", nil);
+        [self commonInitWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
     }
     return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self commonInitWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
+    }
+    return self;
+}
+
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration theme:(STPTheme *)theme {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        [self commonInitWithConfiguration:configuration theme:theme];
+    }
+    return self;
+}
+
+- (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration theme:(STPTheme *)theme {
+    _configuration = configuration;
+    _theme = theme;
+    _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
+    _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
+    _addressViewModel.delegate = self;
+    _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
+    self.title = NSLocalizedString(@"Add a Card", nil);
 }
 
 - (void)viewDidLoad {
@@ -165,9 +181,8 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     [self.doneItem stp_setTheme:self.theme];
     [self.backItem stp_setTheme:self.theme];
     self.tableView.allowsSelection = NO;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone; // handle this with fake separator views for flexibility
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
-    self.tableView.separatorColor = self.theme.quaternaryBackgroundColor;
-    self.tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
     
     self.cardImageView.tintColor = self.theme.accentColor;
     self.activityIndicator.tintColor = self.theme.accentColor;
@@ -215,7 +230,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self reloadRememberMeCellAnimated:NO];
-    self.stp_navigationItemProxy.leftBarButtonItem = [self stp_isRootViewControllerOfNavigationController] ? self.cancelItem : self.backItem;
+    self.stp_navigationItemProxy.leftBarButtonItem = [self stp_isAtRootOfNavigationController] ? self.cancelItem : self.backItem;
     [self.tableView reloadData];
     if (self.navigationController.navigationBar.translucent) {
         CGFloat insetTop = CGRectGetMaxY(self.navigationController.navigationBar.frame);
@@ -278,9 +293,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (void)cancel:(__unused id)sender {
-    if (self.completion) {
-        self.completion(nil, ^(__unused NSError *error) {});
-    }
+    [self.delegate addCardViewControllerDidCancel:self];
 }
 
 - (void)nextPressed:(__unused id)sender {
@@ -291,13 +304,11 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         __weak typeof(self) weakself = self;
         [[[self.checkoutAPIClient createTokenWithAccount:self.checkoutAccount] onSuccess:^(STPToken *token) {
             __strong typeof(weakself) strongself = weakself;
-            if (strongself.completion) {
-                strongself.completion(token, ^(NSError *error) {
-                    if (error) {
-                        [strongself handleCheckoutTokenError:error];
-                    }
-                });
-            }
+            [strongself.delegate addCardViewController:strongself didCreateToken:token completion:^(NSError * _Nullable error) {
+                if (error) {
+                    [strongself handleCheckoutTokenError:error];
+                }
+            }];
         }] onFailure:^(NSError *error) {
             [weakself handleCardTokenError:error];
         }];
@@ -308,16 +319,16 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
             } else {
                 NSString *phone = self.rememberMePhoneCell.contents;
                 NSString *email = self.emailCell.contents;
-                if ([STPEmailAddressValidator stringIsValidEmailAddress:email] && [STPPhoneNumberValidator stringIsValidPhoneNumber:phone] && self.rememberMeCell.on) {
+                BOOL rememberMeSelected = [STPEmailAddressValidator stringIsValidEmailAddress:email] && [STPPhoneNumberValidator stringIsValidPhoneNumber:phone] && self.rememberMeCell.on;
+                [[STPAnalyticsClient sharedClient] logRememberMeConversion:rememberMeSelected];
+                if (rememberMeSelected) {
                     [self.checkoutAPIClient createAccountWithCardParams:cardParams email:email phone:phone];
                 }
-                if (self.completion) {
-                    self.completion(token, ^(NSError *error) {
-                        if (error) {
-                            [self handleCardTokenError:error];
-                        }
-                    });
-                }
+                [self.delegate addCardViewController:self didCreateToken:token completion:^(NSError * _Nullable error) {
+                    if (error) {
+                        [self handleCardTokenError:error];
+                    }
+                }];
             }
         }];
     }
@@ -481,9 +492,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 #pragma mark - UITableView
 
 - (void)reloadRememberMeCellAnimated:(BOOL)animated {
-    BOOL disabled = (!self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.configuration.smsAutofillDisabled || self.lookupSucceeded) && (self.rememberMePhoneCell.stp_contentAlpha < FLT_EPSILON);
+    BOOL disabled = (!self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.configuration.smsAutofillDisabled || self.lookupSucceeded) && (self.rememberMePhoneCell.contentView.alpha < FLT_EPSILON || self.rememberMePhoneCell.superview == nil);
     [UIView animateWithDuration:(0.2f * animated) animations:^{
-        self.rememberMeCell.stp_contentAlpha = disabled ? 0 : 1;
+        self.rememberMeCell.contentView.alpha = disabled ? 0 : 1;
     } completion:^(__unused BOOL finished) {
         [self tableView:self.tableView willDisplayCell:self.rememberMeCell forRowAtIndexPath:[self.tableView indexPathForCell:self.rememberMeCell]];
     }];
@@ -539,6 +550,8 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     [cell stp_setBorderColor:self.theme.tertiaryBackgroundColor];
     [cell stp_setTopBorderHidden:!topRow];
     [cell stp_setBottomBorderHidden:!bottomRow];
+    [cell stp_setFakeSeparatorColor:self.theme.quaternaryBackgroundColor];
+    [cell stp_setFakeSeparatorLeftInset:15.0f];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
