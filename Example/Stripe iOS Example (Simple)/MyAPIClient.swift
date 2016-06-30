@@ -33,29 +33,6 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         super.init()
     }
 
-    func decodeData(data: NSData?) -> (selectedCard: STPCard?, cards: [STPCard]?)? {
-        guard let json = data?.JSON else { return nil }
-        if let cardsJSON = json["cards"] as? [[String: AnyObject]] {
-            let selectedCardJSON = json["selected_card"] as? [String: AnyObject]
-            let selectedCard = decodeCard(selectedCardJSON)
-            let cards = cardsJSON.flatMap(decodeCard)
-            return (selectedCard, cards)
-        }
-        return nil
-    }
-    
-    func decodeCard(json: [String: AnyObject]?) -> STPCard? {
-        guard let json = json,
-            cardID = json["id"] as? String,
-            brand = json["brand"] as? String,
-            last4 = json["last4"] as? String,
-            expMonth = json["exp_month"] as? UInt,
-            expYear = json["exp_year"] as? UInt,
-            funding = json["funding"] as? String
-            else { return nil }
-        return STPCard(ID: cardID, brand: STPCard.brandFromString(brand), last4: last4, expMonth: expMonth, expYear: expYear, funding: STPCard.fundingFromString(funding))
-    }
-
     func decodeResponse(response: NSURLResponse?, error: NSError?) -> NSError? {
         if let httpResponse = response as? NSHTTPURLResponse
             where httpResponse.statusCode != 200 {

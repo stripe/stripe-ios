@@ -93,27 +93,6 @@ public extension NSMutableURLRequest {
 }
 
 public extension NSData {
-    public var JSON: [String: AnyObject]? {
-        do {
-            let json = try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions()) as? [String: AnyObject]
-            return json
-        }
-        catch {
-            return nil
-        }
-    }
-
-    public static func JSONEncodedData(dict: [String: AnyObject]) -> NSData? {
-        if dict.count == 0 { return nil }
-        do {
-            let data = try NSJSONSerialization.dataWithJSONObject(dict, options: NSJSONWritingOptions())
-            return data
-        }
-        catch {
-            return nil
-        }
-    }
-
     public static func URLEncodedData(dict: [String: AnyObject]) -> NSData? {
         return ParameterEncoding.queryString(dict).dataUsingEncoding(NSUTF8StringEncoding,
                                                                      allowLossyConversion: false)
