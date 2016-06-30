@@ -91,6 +91,7 @@
                 }
             }
         }
+        _customer = customer;
     }
     return self;
 }
