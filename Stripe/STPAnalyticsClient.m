@@ -59,11 +59,11 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
                                               } error:nil];
         
         [STPPaymentContext stp_aspect_hookSelector:@selector(initWithAPIAdapter:configuration:theme:)
-                                             withOptions:STPAspectPositionAfter
-                                              usingBlock:^{
-                                                  STPAnalyticsClient *client = [self sharedClient];
-                                                  [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPPaymentContext class])]];
-                                              } error:nil];
+                                       withOptions:STPAspectPositionAfter
+                                        usingBlock:^{
+                                            STPAnalyticsClient *client = [self sharedClient];
+                                            [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPPaymentContext class])]];
+                                        } error:nil];
         
         
         [STPAddCardViewController stp_aspect_hookSelector:@selector(commonInitWithConfiguration:theme:)
@@ -126,10 +126,10 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
-                                      @"event": @"stripeios.token_creation",
-                                      @"apple_pay_enabled": @([Stripe deviceSupportsApplePay]),
-                                      @"product_usage": productUsage ?: @[],
-                                      }];
+                                        @"event": @"stripeios.token_creation",
+                                        @"apple_pay_enabled": @([Stripe deviceSupportsApplePay]),
+                                        @"product_usage": productUsage ?: @[],
+                                        }];
     [payload addEntriesFromDictionary:configurationDictionary];
     [self logPayload:payload];
 }
@@ -143,7 +143,7 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     if (token.bankAccount) {
         tokenTypeString = @"bank_account";
     } else if (token.card) {
-        if ([token.card.isApplePayCard) {
+        if (token.card.isApplePayCard) {
             tokenTypeString = @"apple_pay";
         } else {
             tokenTypeString = @"card";
@@ -153,14 +153,14 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     NSNumber *end = [[self class] timestampWithDate:endTime];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
-                                       @"event": @"rum.stripeios",
-                                       @"tokenType": tokenTypeString,
-                                       @"url": response.URL.absoluteString ?: @"unknown",
-                                       @"status": @(response.statusCode),
-                                       @"publishable_key": configuration.publishableKey ?: @"unknown",
-                                       @"start": start,
-                                       @"end": end,
-                                       }];
+                                        @"event": @"rum.stripeios",
+                                        @"tokenType": tokenTypeString,
+                                        @"url": response.URL.absoluteString ?: @"unknown",
+                                        @"status": @(response.statusCode),
+                                        @"publishable_key": configuration.publishableKey ?: @"unknown",
+                                        @"start": start,
+                                        @"end": end,
+                                        }];
     [self logPayload:payload];
 }
 
