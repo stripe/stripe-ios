@@ -90,6 +90,7 @@
                     }
                 }
             }
+            customer.sources = sources;
         }
         _customer = customer;
     }
