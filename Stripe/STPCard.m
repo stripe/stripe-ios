@@ -9,10 +9,8 @@
 #import "STPCard.h"
 #import "NSDictionary+Stripe.h"
 #import "NSString+Stripe_CardBrands.h"
-
-#if TARGET_OS_IPHONE
-#import "UIImage+Stripe.h"
-#endif
+#import "STPImageLibrary.h"
+#import "STPImageLibrary+Private.h"
 
 @interface STPCard ()
 
@@ -96,6 +94,10 @@
 
 - (NSString *)last4 {
     return _last4 ?: [super last4];
+}
+
+- (BOOL)isApplePayCard {
+    return [self.allResponseFields[@"tokenization_method"] isEqualToString:@"apple_pay"];
 }
 
 - (NSString *)type {
@@ -188,7 +190,7 @@
 }
 
 - (UIImage *)image {
-    return [UIImage stp_brandImageForCardBrand:self.brand];
+    return [STPImageLibrary brandImageForCardBrand:self.brand];
 }
 
 @end

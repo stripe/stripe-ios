@@ -143,7 +143,7 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     if (token.bankAccount) {
         tokenTypeString = @"bank_account";
     } else if (token.card) {
-        if ([token.card.allResponseFields[@"tokenization_method"] isEqualToString:@"apple_pay"]) {
+        if ([token.card.isApplePayCard) {
             tokenTypeString = @"apple_pay";
         } else {
             tokenTypeString = @"card";

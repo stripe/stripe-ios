@@ -7,8 +7,8 @@
 //
 
 #import "UIBarButtonItem+Stripe.h"
-#import "UIImage+Stripe.h"
-#import "UIImage+StripePrivate.h"
+#import "STPImageLibrary.h"
+#import "STPImageLibrary+Private.h"
 #import "STPTheme.h"
 
 @implementation UIBarButtonItem (Stripe)
@@ -21,17 +21,18 @@
                                                              style:style
                                                             target:target
                                                             action:action];
-    UIImage *chevron = [UIImage stp_leftChevronIcon];
+    UIImage *chevron = [STPImageLibrary leftChevronIcon];
     CGFloat yPadding = (30 - chevron.size.height) / 2;
-    UIImage *paddedChevron = [chevron stp_paddedImageWithInsets:UIEdgeInsetsMake(yPadding, 0, yPadding, 30)];
+    UIImage *paddedChevron = [STPImageLibrary paddedImageWithInsets:UIEdgeInsetsMake(yPadding, 0, yPadding, 30)
+                                                           forImage:chevron];
     [item setBackgroundImage:paddedChevron forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     return item;
 }
 
 - (void)stp_setTheme:(STPTheme *)theme {
     UIImage *image = [self backgroundImageForState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    UIImage *enabledImage = [image stp_imageWithTintColor:theme.accentColor];
-    UIImage *disabledImage = [image stp_imageWithTintColor:theme.secondaryForegroundColor];
+    UIImage *enabledImage = [STPImageLibrary imageWithTintColor:theme.accentColor forImage:image];
+    UIImage *disabledImage = [STPImageLibrary imageWithTintColor:theme.secondaryForegroundColor forImage:image];
     [self setBackgroundImage:enabledImage forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [self setBackgroundImage:disabledImage forState:UIControlStateDisabled barMetrics:UIBarMetricsDefault];
     

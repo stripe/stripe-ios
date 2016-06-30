@@ -79,6 +79,11 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 @property (nonatomic, readonly, nullable) NSString *dynamicLast4;
 
 /**
+ *  Whether or not the card originated from Apple Pay.
+ */
+@property (nonatomic, readonly) BOOL isApplePayCard;
+
+/**
  *  The card's expiration month. 1-indexed (i.e. 1 == January)
  */
 @property (nonatomic) NSUInteger expMonth;

@@ -7,8 +7,8 @@
 //
 
 #import "STPRememberMeTermsView.h"
-#import "UIImage+Stripe.h"
-#import "UIImage+StripePrivate.h"
+#import "STPImageLibrary.h"
+#import "STPImageLibrary+Private.h"
 
 @interface STPRememberMeTermsView()<UITextViewDelegate>
 
@@ -75,7 +75,7 @@
     }
     if (learnMoreURL) {
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
-        attachment.image = [UIImage stp_smallRightChevronIcon];
+        attachment.image = [STPImageLibrary smallRightChevronIcon];
         NSMutableAttributedString *chevron = [[NSMutableAttributedString alloc] initWithString:@" " attributes:@{}];
         [chevron appendAttributedString:[NSMutableAttributedString attributedStringWithAttachment:attachment]];
         NSRange chevronRange = NSMakeRange(0, chevron.length);

@@ -11,7 +11,6 @@
 #import "STPCategoryLoader.h"
 #import "PKPayment+Stripe.h"
 #import "NSDictionary+Stripe.h"
-#import "UIImage+Stripe.h"
 #import "NSString+Stripe.h"
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPAPIClient+ApplePay.h"
@@ -39,7 +38,6 @@
     linkPKPaymentCategory();
     linkNSDictionaryCategory();
     linkSTPAPIClientApplePayCategory();
-    linkUIImageCategory();
     linkNSStringCategory();
     linkNSMutableURLRequestCategory();
     linkUINavigationBarThemeCategory();

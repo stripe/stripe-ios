@@ -7,8 +7,8 @@
 //
 
 #import "STPPaymentMethodsInternalViewController.h"
-#import "UIImage+Stripe.h"
-#import "UIImage+StripePrivate.h"
+#import "STPImageLibrary.h"
+#import "STPImageLibrary+Private.h"
 #import "NSArray+Stripe_BoundSafe.h"
 #import "NSString+Stripe_CardBrands.h"
 #import "UITableViewCell+Stripe_Borders.h"
@@ -66,13 +66,13 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.tableView = tableView;
     [self.view addSubview:tableView];
     
-    UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[UIImage stp_largeCardFrontImage]];
+    UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeCardFrontImage]];
     cardImageView.contentMode = UIViewContentModeCenter;
     cardImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, cardImageView.bounds.size.height + (57 * 2));
     self.cardImageView = cardImageView;
     self.tableView.tableHeaderView = cardImageView;
     
-    self.cardImageView.image = [self.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]] ? [UIImage stp_largeCardApplePayImage] : [UIImage stp_largeCardFrontImage];
+    self.cardImageView.image = [self.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]] ? [STPImageLibrary largeCardApplePayImage] : [STPImageLibrary largeCardFrontImage];
     
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
     self.tableView.tintColor = self.theme.accentColor;
@@ -122,7 +122,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         cell.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
         cell.textLabel.textColor = [self.theme accentColor];
-        cell.imageView.image = [UIImage stp_addIcon];
+        cell.imageView.image = [STPImageLibrary addIcon];
         cell.textLabel.text = NSLocalizedString(@"Add New Card...", nil);
     }
     return cell;
