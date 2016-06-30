@@ -18,22 +18,22 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedConfiguration;
 
 /**
- *  The publishable key that will be used by the payment context.
+ *  Your Stripe publishable key. You can get this from https://dashboard.stripe.com/account/apikeys .
  */
 @property(nonatomic, copy)NSString *publishableKey;
 
 /**
- *  An enum value representing which payment methods you will accept from your user in addition to credit cards. Unless you have a very specific reason not to, you should leave this at the default, STPPaymentMethodTypeAll.
+ *  An enum value representing which payment methods you will accept from your user in addition to credit cards. Unless you have a very specific reason not to, you should leave this at the default, `STPPaymentMethodTypeAll`.
  */
 @property(nonatomic)STPPaymentMethodType additionalPaymentMethods;
 
 /**
- *  The billing address fields the user must fill out in order for the form to validate. These fields will all be present on the returned token from Stripe. See https://stripe.com/docs/api#create_card_token for more information.
+ *  The billing address fields the user must fill out when prompted for their payment details. These fields will all be present on the returned token from Stripe. See https://stripe.com/docs/api#create_card_token for more information.
  */
 @property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
 
 /**
- *  The name of your company, for displaying to the user during the payment flow. For example, when using Apple Pay, the payment sheet's final line item will read "PAY {companyName}". This defaults to the name of your iOS application.
+ *  The name of your company, for displaying to the user during payment flows. For example, when using Apple Pay, the payment sheet's final line item will read "PAY {companyName}". This defaults to the name of your iOS application.
  */
 @property(nonatomic, copy)NSString *companyName;
 
@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, nullable, copy)NSString *appleMerchantIdentifier;
 
 /**
- *  Set this to disable SMS autofill. The user won't receive an SMS code even if they have their payment information stored with Stripe, and won't be prompted to save it if they don't.
+ *  When entering their payment information, users who have a saved card with Stripe will be prompted to autofill it by entering an SMS code. Set this property to `YES` to disable this feature. The user won't receive an SMS code even if they have their payment information stored with Stripe, and won't be prompted to save it if they don't.
  */
 @property(nonatomic)BOOL smsAutofillDisabled;
 

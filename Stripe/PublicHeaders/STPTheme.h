@@ -13,27 +13,27 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPTheme : NSObject<NSCopying>
 
 /**
- *  The default theme used by all Stripe UI.
+ *  The default theme used by all Stripe UI. All themable UI classes, such as `STPAddCardViewController`, have one initializer that takes a `theme` and one that does not. If you use the one that does not, the default theme will be used to customize that view controller's appearance.
  */
 + (STPTheme *)defaultTheme;
 
 /**
- *  The primary background color of the theme. This will be used as the backgroundColor for any views with this theme.
+ *  The primary background color of the theme. This will be used as the `backgroundColor` for any views with this theme.
  */
 @property(nonatomic, copy, null_resettable)UIColor *primaryBackgroundColor;
 
 /**
- *  The secondary background color of this theme. This will be used as the backgroundColor for any supplemental views inside a view with this theme - for example, a UITableView will set it's cells' background color to this value.
+ *  The secondary background color of this theme. This will be used as the `backgroundColor` for any supplemental views inside a view with this theme - for example, a `UITableView` will set it's cells' background color to this value.
  */
 @property(nonatomic, copy, null_resettable)UIColor *secondaryBackgroundColor;
 
 /**
- *  This color is automatically derived by reducing the alpha of the primaryBackground color and is used as a section border color in table view cells.
+ *  This color is automatically derived by reducing the alpha of the `primaryBackgroundColor` and is used as a section border color in table view cells.
  */
 @property(nonatomic, readonly)UIColor *tertiaryBackgroundColor;
 
 /**
- *  This color is automatically derived by reducing the brightness of the primaryBackground color and is used as a separator color in table view cells.
+ *  This color is automatically derived by reducing the brightness of the `primaryBackgroundColor` and is used as a separator color in table view cells.
  */
 @property(nonatomic, readonly)UIColor *quaternaryBackgroundColor;
 
@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, null_resettable)UIColor *secondaryForegroundColor;
 
 /**
- *  This color is automatically derived from the secondaryForegroundColor with a lower alpha component, used for disabled text.
+ *  This color is automatically derived from the `secondaryForegroundColor` with a lower alpha component, used for disabled text.
  */
 @property(nonatomic, readonly)UIColor *tertiaryForegroundColor;
 

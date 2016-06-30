@@ -12,7 +12,7 @@
 
 - (nullable UIViewController *)stp_parentViewControllerOfClass:(nonnull Class)klass;
 - (BOOL)stp_isTopNavigationController;
-- (BOOL)stp_isRootViewControllerOfNavigationController;
+- (BOOL)stp_isAtRootOfNavigationController;
 - (nullable UIViewController *)stp_previousViewControllerInNavigation;
 
 @end

@@ -21,7 +21,7 @@
     return self.navigationController.topViewController == self;
 }
 
-- (BOOL)stp_isRootViewControllerOfNavigationController {
+- (BOOL)stp_isAtRootOfNavigationController {
     UIViewController *viewController = self.navigationController.viewControllers.firstObject;
     UIViewController *tested = self;
     while (tested) {

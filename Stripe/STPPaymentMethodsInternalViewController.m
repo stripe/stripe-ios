@@ -8,6 +8,7 @@
 
 #import "STPPaymentMethodsInternalViewController.h"
 #import "UIImage+Stripe.h"
+#import "UIImage+StripePrivate.h"
 #import "NSArray+Stripe_BoundSafe.h"
 #import "NSString+Stripe_CardBrands.h"
 #import "UITableViewCell+Stripe_Borders.h"

@@ -214,7 +214,7 @@
 
 - (void)appropriatelyDismissPaymentMethodsViewController:(STPPaymentMethodsViewController *)viewController
                                               completion:(STPVoidBlock)completion {
-    if ([viewController stp_isRootViewControllerOfNavigationController]) {
+    if ([viewController stp_isAtRootOfNavigationController]) {
         // if we're the root of the navigation controller, we've been presented modally.
         [viewController.presentingViewController dismissViewControllerAnimated:YES completion:^{
             self.paymentMethodsViewController = nil;
@@ -231,10 +231,6 @@
             }
         }];
     }
-}
-
-- (BOOL)isReadyForPayment {
-    return self.selectedPaymentMethod != nil;
 }
 
 - (void)requestPayment {

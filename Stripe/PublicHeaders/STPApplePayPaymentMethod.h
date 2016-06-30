@@ -10,7 +10,12 @@
 #import "STPPaymentMethod.h"
 
 /**
- *  An empty class representing that the user wishes to pay via Apple Pay. This can be checked on an STPPaymentContext, e.g. if ([paymentContext.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) { // don't ask the user for their card number; they want to pay with apple pay. }
+ *  An empty class representing that the user wishes to pay via Apple Pay. This can be checked on an `STPPaymentContext`, e.g.
+ *
+ * `if ([paymentContext.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
+ *  // don't ask the user for their card number; they want to pay with apple pay.
+ *  }`
+ *
  */
 @interface STPApplePayPaymentMethod : NSObject <STPPaymentMethod>
 @end

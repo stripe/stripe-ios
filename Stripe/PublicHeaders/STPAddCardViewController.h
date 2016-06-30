@@ -18,9 +18,40 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class STPAddCardViewController;
+@protocol STPAddCardViewControllerDelegate;
+
+/** This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user's card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`.
+ */
+@interface STPAddCardViewController : UIViewController
 
 /**
- *  An STPAddCardViewControllerDelegate is notified when an STPAddCardViewController successfully creates a card token or is cancelled. It has internal error-handling logic, so there's no error case to deal with.
+ *  A convenience initializer; equivalent to calling `initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]`.
+ */
+- (instancetype)init;
+
+/**
+ *  Initializes a new `STPAddCardViewController` with the provided configuration and theme. Don't forget to set the `delegate` property after initialization.
+ *
+ *  @param configuration The configuration to use (this determines the Stripe publishable key to use, the required billing address fields, whether or not to use SMS autofill, etc). @see STPPaymentConfiguration
+ *  @param theme         The theme to use to inform the view controller's visual appearance. @see STPTheme
+ */
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
+                                theme:(STPTheme *)theme;
+
+/**
+ *  The view controller's delegate. This must be set before showing the view controller in order for it to work properly. @see STPAddCardViewControllerDelegate
+ */
+@property(nonatomic, weak)id<STPAddCardViewControllerDelegate>delegate;
+
+/**
+ *  You can set this property to pre-fill any information you've already collected from your user. @see STPUserInformation.h
+ */
+@property(nonatomic)STPUserInformation *prefilledInformation;
+
+@end
+
+/**
+ *  An `STPAddCardViewControllerDelegate` is notified when an `STPAddCardViewController` successfully creates a card token or is cancelled. It has internal error-handling logic, so there's no error case to deal with.
  */
 @protocol STPAddCardViewControllerDelegate <NSObject>
 
@@ -41,36 +72,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addCardViewController:(STPAddCardViewController *)addCardViewController
                didCreateToken:(STPToken *)token
                    completion:(STPErrorBlock)completion;
-
-@end
-
-/** This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user's card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a UINavigationController.
- */
-@interface STPAddCardViewController : UIViewController
-
-/**
- *  A convenience initializer; equivalent to calling `initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]`.
- */
-- (instancetype)init;
-
-/**
- *  Initializes a new STPAddCardViewController with the provided configuration and theme. Don't forget to set the `delegate` property after initialization.
- *
- *  @param configuration The configuration to use (this determines the Stripe publishable key to use, the required billing address fields, whether or not to use SMS autofill, etc). @see STPPaymentConfiguration
- *  @param theme         The theme to use to inform the view controller's visual appearance. @see STPTheme
- */
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
-                                theme:(STPTheme *)theme;
-
-/**
- *  The view controller's delegate. This must be set before showing the view controller in order for it to work properly. @see STPAddCardViewControllerDelegate
- */
-@property(nonatomic, weak)id<STPAddCardViewControllerDelegate>delegate;
-
-/**
- *  You can set this property to pre-fill any information you've already collected from your user. @see STPUserInformation.h
- */
-@property(nonatomic)STPUserInformation *prefilledInformation;
 
 @end
 

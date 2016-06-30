@@ -14,4 +14,3 @@
 
 @end
 
-void linkSTPPaymentConfigurationPrivateCategory(void);

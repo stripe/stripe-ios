@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 
 /**
- *  A source represents a source of funds for your user that you can charge - for example, a card on file. Currently, only STPCard implements this interface, although future payment methods will use it as well. When implementing your server backend, you should pass the stripeID property to the Create Charge method as the `source` parameter.
+ *  A source represents a source of funds for your user that you can charge - for example, a card on file. Currently, only `STPCard` implements this interface, although future payment methods will use it as well. When implementing your server backend, you should pass the `stripeID` property to the Create Charge method as the `source` parameter.
  */
 @protocol STPSource <NSObject>
 

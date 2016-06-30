@@ -7,6 +7,7 @@
 //
 
 #import "UIImage+Stripe.h"
+#import "UIImage+StripePrivate.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -17,30 +18,6 @@
 @end
 
 @implementation UIImage (Stripe)
-
-+ (UIImage *)stp_addIcon {
-    return [self stp_safeImageNamed:@"stp_icon_add" templateifAvailable:YES];
-}
-
-+ (UIImage *)stp_leftChevronIcon {
-    return [self stp_safeImageNamed:@"stp_icon_chevron_left" templateifAvailable:YES];
-}
-
-+ (UIImage *)stp_smallRightChevronIcon {
-    return [self stp_safeImageNamed:@"stp_icon_chevron_right_small" templateifAvailable:YES];
-}
-
-+ (nonnull UIImage *)stp_largeCardFrontImage {
-    return [self stp_safeImageNamed:@"stp_card_form_front" templateifAvailable:YES];
-}
-
-+ (nonnull UIImage *)stp_largeCardBackImage {
-    return [self stp_safeImageNamed:@"stp_card_form_back" templateifAvailable:YES];
-}
-
-+ (UIImage *)stp_largeCardApplePayImage {
-    return [self stp_safeImageNamed:@"stp_card_form_applepay" templateifAvailable:YES];
-}
 
 + (UIImage *)stp_applePayCardImage {
     return [self stp_safeImageNamed:@"stp_card_applepay"];
@@ -135,6 +112,38 @@
     return [self stp_safeImageNamed:imageName templateifAvailable:NO];
 }
 
++ (BOOL)stp_templateSupported {
+    return [[self new] respondsToSelector:@selector(imageWithRenderingMode:)];
+}
+
+@end
+
+@implementation UIImage (StripePrivate)
+
++ (UIImage *)stp_addIcon {
+    return [self stp_safeImageNamed:@"stp_icon_add" templateifAvailable:YES];
+}
+
++ (UIImage *)stp_leftChevronIcon {
+    return [self stp_safeImageNamed:@"stp_icon_chevron_left" templateifAvailable:YES];
+}
+
++ (UIImage *)stp_smallRightChevronIcon {
+    return [self stp_safeImageNamed:@"stp_icon_chevron_right_small" templateifAvailable:YES];
+}
+
++ (nonnull UIImage *)stp_largeCardFrontImage {
+    return [self stp_safeImageNamed:@"stp_card_form_front" templateifAvailable:YES];
+}
+
++ (nonnull UIImage *)stp_largeCardBackImage {
+    return [self stp_safeImageNamed:@"stp_card_form_back" templateifAvailable:YES];
+}
+
++ (UIImage *)stp_largeCardApplePayImage {
+    return [self stp_safeImageNamed:@"stp_card_form_applepay" templateifAvailable:YES];
+}
+
 - (UIImage *)stp_imageWithTintColor:(UIColor *)color {
     UIImage *newImage;
     UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
@@ -143,10 +152,6 @@
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
-}
-
-+ (BOOL)stp_templateSupported {
-    return [[self new] respondsToSelector:@selector(imageWithRenderingMode:)];
 }
 
 - (UIImage *)stp_paddedImageWithInsets:(UIEdgeInsets)insets {
@@ -163,6 +168,7 @@
     }
     return imageWithInsets;
 }
+
 
 @end
 

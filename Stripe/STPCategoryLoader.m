@@ -17,7 +17,6 @@
 #import "STPAPIClient+ApplePay.h"
 #import "UINavigationBar+Stripe_Theme.h"
 #import "UIBarButtonItem+Stripe.h"
-#import "STPPaymentConfiguration+Private.h"
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "UIToolbar+Stripe_InputAccessory.h"
 #import "UITableViewCell+Stripe_Borders.h"
@@ -45,7 +44,6 @@
     linkNSMutableURLRequestCategory();
     linkUINavigationBarThemeCategory();
     linkUIBarButtonItemCategory();
-    linkSTPPaymentConfigurationPrivateCategory();
     linkPKPaymentAuthorizationViewControllerBlocksCategory();
     linkUIToolbarInputAccessoryCategory();
     linkUITableViewCellBordersCategory();

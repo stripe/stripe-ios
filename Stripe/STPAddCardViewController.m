@@ -10,6 +10,7 @@
 #import "STPPaymentCardTextField.h"
 #import "STPToken.h"
 #import "UIImage+Stripe.h"
+#import "UIImage+StripePrivate.h"
 #import "STPAddressFieldTableViewCell.h"
 #import "STPAddressViewModel.h"
 #import "NSArray+Stripe_BoundSafe.h"
@@ -229,7 +230,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self reloadRememberMeCellAnimated:NO];
-    self.stp_navigationItemProxy.leftBarButtonItem = [self stp_isRootViewControllerOfNavigationController] ? self.cancelItem : self.backItem;
+    self.stp_navigationItemProxy.leftBarButtonItem = [self stp_isAtRootOfNavigationController] ? self.cancelItem : self.backItem;
     [self.tableView reloadData];
     if (self.navigationController.navigationBar.translucent) {
         CGFloat insetTop = CGRectGetMaxY(self.navigationController.navigationBar.frame);

@@ -9,6 +9,7 @@
 #import "STPPaymentResult.h"
 
 @interface STPPaymentResult()
+@property(nonatomic)id<STPSource> source;
 @end
 
 @implementation STPPaymentResult

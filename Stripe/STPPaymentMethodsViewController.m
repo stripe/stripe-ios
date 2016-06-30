@@ -1,5 +1,5 @@
 //
-//  STPSourceListViewController.m
+//  STPPaymentMethodsViewController.m
 //  Stripe
 //
 //  Created by Jack Flintermann on 1/12/16.
@@ -133,7 +133,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationItem.leftBarButtonItem = [self stp_isRootViewControllerOfNavigationController] ? self.cancelItem : self.backItem;
+    self.navigationItem.leftBarButtonItem = [self stp_isAtRootOfNavigationController] ? self.cancelItem : self.backItem;
 }
 
 - (void)viewDidLayoutSubviews {

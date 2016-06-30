@@ -88,12 +88,22 @@
                 self.textField.keyboardType = UIKeyboardTypeDefault;
                 break;
             case STPAddressFieldTypeState:
-                self.captionLabel.text = NSLocalizedString(@"State", nil);
-                self.textField.placeholder = NSLocalizedString(@"CA", nil);
+                if ([STPPhoneNumberValidator isUSLocale]) {
+                    self.captionLabel.text = NSLocalizedString(@"State", nil);
+                    self.textField.placeholder = NSLocalizedString(@"CA", nil);
+                } else {
+                    self.captionLabel.text = NSLocalizedString(@"County", nil);
+                    self.textField.placeholder = nil;
+                }
                 self.textField.keyboardType = UIKeyboardTypeDefault;
                 break;
             case STPAddressFieldTypeZip:
-                self.captionLabel.text = NSLocalizedString(@"ZIP Code", nil);
+                if ([STPPhoneNumberValidator isUSLocale]) {
+                    self.captionLabel.text = NSLocalizedString(@"ZIP Code", nil);
+                } else {
+                    self.captionLabel.text = NSLocalizedString(@"Postal Code", nil);
+                }
+                
                 self.textField.placeholder = NSLocalizedString(@"12345", nil);
                 self.textField.keyboardType = UIKeyboardTypeNumberPad;
                 self.textField.preservesContentsOnPaste = NO;
@@ -119,7 +129,7 @@
             case STPAddressFieldTypePhone:
                 self.captionLabel.text = NSLocalizedString(@"Phone", nil);
                 self.textField.keyboardType = UIKeyboardTypePhonePad;
-                if ([[[NSLocale autoupdatingCurrentLocale] localeIdentifier] isEqualToString:@"en_US"]) {
+                if ([STPPhoneNumberValidator isUSLocale]) {
                     self.textField.placeholder = NSLocalizedString(@"(555) 123-1234", nil);
                     self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
                 } else {
@@ -160,11 +170,35 @@
     self.textField.defaultColor = self.theme.primaryForegroundColor;
     self.textField.errorColor = self.theme.errorColor;
     self.textField.font = self.theme.font;
+    [self setNeedsLayout];
+}
+
+- (NSString *)longestPossibleCaption {
+    NSArray *captions = @[
+                          NSLocalizedString(@"Name", nil),
+                          NSLocalizedString(@"Address", nil),
+                          NSLocalizedString(@"Apt.", nil),
+                          NSLocalizedString(@"City", nil),
+                          ([STPPhoneNumberValidator isUSLocale] ? NSLocalizedString(@"State", nil) : NSLocalizedString(@"County", nil)),
+                          ([STPPhoneNumberValidator isUSLocale] ? NSLocalizedString(@"ZIP Code", nil) : NSLocalizedString(@"Postal Code", nil)),
+                          NSLocalizedString(@"Country", nil),
+                          NSLocalizedString(@"Email", nil),
+                          NSLocalizedString(@"Phone", nil),
+                          ];
+    NSString *longestCaption = @"";
+    for (NSString *caption in captions) {
+        if ([caption length] > [longestCaption length]) {
+            longestCaption = caption;
+        }
+    }
+    return longestCaption;
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.captionLabel.frame = CGRectMake(15, 0, 80, self.bounds.size.height);
+    NSDictionary *attributes = @{ NSFontAttributeName: self.theme.font };
+    CGFloat captionWidth = [[self longestPossibleCaption] sizeWithAttributes:attributes].width + 5;
+    self.captionLabel.frame = CGRectMake(15, 0, captionWidth, self.bounds.size.height);
     CGFloat textFieldX = CGRectGetMaxX(self.captionLabel.frame) + 10;
     self.textField.frame = CGRectMake(textFieldX, 1, self.bounds.size.width - textFieldX, self.bounds.size.height - 1);
     self.inputAccessoryToolbar.frame = CGRectMake(0, 0, self.bounds.size.width, 44);
