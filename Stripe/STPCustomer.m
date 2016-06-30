@@ -82,7 +82,8 @@
                 if ([contents isKindOfClass:[NSDictionary class]]) {
                     // eventually support other source types
                     STPCard *card = [STPCard decodedObjectFromAPIResponse:contents];
-                    if (card) {
+                    // ignore apple pay cards from the response
+                    if (card && !card.isApplePayCard) {
                         [sources addObject:card];
                         if (defaultSourceId && [card.stripeID isEqualToString:defaultSourceId]) {
                             customer.defaultSource = card;

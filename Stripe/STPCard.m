@@ -96,6 +96,10 @@
     return _last4 ?: [super last4];
 }
 
+- (BOOL)isApplePayCard {
+    return [self.allResponseFields[@"tokenization_method"] isEqualToString:@"apple_pay"];
+}
+
 - (NSString *)type {
     switch (self.brand) {
     case STPCardBrandAmex:
