@@ -19,5 +19,5 @@ mv Stripe.bundle Stripe.framework
 ditto -ck --rsrc --sequesterRsrc --keepParent Stripe.framework StripeiOS-Static.zip
 rm -rf Stripe.framework
 rm -rf Stripe.bundle
-cp Stripe-Static.zip $BUILDDIR
+cp StripeiOS-Static.zip $BUILDDIR
 cd -
