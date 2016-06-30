@@ -9,11 +9,9 @@
 #import <UIKit/UIKit.h>
 
 #import "Stripe.h"
-#import "STPPaymentCardTextField.h"
 #import "STPPaymentCardTextFieldViewModel.h"
 #import "STPFormTextField.h"
-#import "STPCardValidator.h"
-#import "UIImage+Stripe.h"
+#import "STPImageLibrary.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -58,7 +56,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 
 #pragma mark initializers
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
         [self commonInit];
@@ -640,11 +638,14 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     
     switch (fieldType) {
         case STPCardFieldTypeNumber:
-            return [[NSAttributedString alloc] initWithString:self.viewModel.cardNumber];
+            return [[NSAttributedString alloc] initWithString:self.viewModel.cardNumber
+                                                   attributes:self.numberField.defaultTextAttributes];
         case STPCardFieldTypeExpiration:
-            return [[NSAttributedString alloc] initWithString:self.viewModel.rawExpiration];
+            return [[NSAttributedString alloc] initWithString:self.viewModel.rawExpiration
+                                                   attributes:self.expirationField.defaultTextAttributes];
         case STPCardFieldTypeCVC:
-            return [[NSAttributedString alloc] initWithString:self.viewModel.cvc];
+            return [[NSAttributedString alloc] initWithString:self.viewModel.cvc
+                                                   attributes:self.cvcField.defaultTextAttributes];
     }
 }
 
@@ -729,11 +730,11 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 }
 
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand {
-    return [UIImage stp_cvcImageForCardBrand:cardBrand];
+    return [STPImageLibrary cvcImageForCardBrand:cardBrand];
 }
 
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand {
-    return [UIImage stp_brandImageForCardBrand:cardBrand];
+    return [STPImageLibrary brandImageForCardBrand:cardBrand];
 }
 
 - (UIImage *)brandImageForFieldType:(STPCardFieldType)fieldType {

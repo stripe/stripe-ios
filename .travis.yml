@@ -8,7 +8,6 @@ env:
 before_install:
   - gem update cocoapods --no-ri --no-rdoc
   - gem install xcpretty --no-ri --no-rdoc
-  - ./ci_scripts/install_fauxpas.sh
   - SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (9.3) \[.*\]" | grep -o "\[.*\]" | sed "s/^\[\(.*\)\]$/\1/")
 
 script:

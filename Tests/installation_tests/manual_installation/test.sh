@@ -16,4 +16,4 @@ mkdir $TESTDIR/ManualInstallationTest/Frameworks
 mv $BUILDDIR/Release-iphonesimulator/Stripe.framework $TESTDIR/ManualInstallationTest/Frameworks
 mv $BUILDDIR/Release-iphonesimulator/Stripe.bundle $TESTDIR/ManualInstallationTest/Frameworks/Stripe.framework
 
-xcodebuild test -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator | xcpretty -c
+set -o pipefail && xcodebuild test -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator | xcpretty -c

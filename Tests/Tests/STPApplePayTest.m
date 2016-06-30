@@ -82,4 +82,27 @@
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
+- (void)testCanSubmitPaymentRequestReturnsYES {
+    PKPaymentRequest *request = [[PKPaymentRequest alloc] init];
+    request.merchantIdentifier = @"foo";
+    request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"1.00"]]];
+
+    XCTAssertTrue([Stripe canSubmitPaymentRequest:request]);
+}
+
+- (void)testCanSubmitPaymentRequestReturnsNOIfTotalIsZero {
+    PKPaymentRequest *request = [[PKPaymentRequest alloc] init];
+    request.merchantIdentifier = @"foo";
+    request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"0.00"]]];
+
+    XCTAssertFalse([Stripe canSubmitPaymentRequest:request]);
+}
+
+- (void)testCanSubmitPaymentRequestReturnsNOIfMerchantIdentifierIsNil {
+    PKPaymentRequest *request = [[PKPaymentRequest alloc] init];
+    request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"1.00"]]];
+
+    XCTAssertFalse([Stripe canSubmitPaymentRequest:request]);
+}
+
 @end

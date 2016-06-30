@@ -9,6 +9,12 @@
 #import <XCTest/XCTest.h>
 #import "STPPhoneNumberValidator.h"
 
+@interface STPNonUSLocalePhoneNumberValidator: STPPhoneNumberValidator
+@end
+@implementation STPNonUSLocalePhoneNumberValidator
++ (BOOL)isUSLocale { return NO; }
+@end
+
 @interface STPPhoneNumberValidatorTest : XCTestCase
 
 @end
@@ -28,14 +34,20 @@
     XCTAssertFalse([STPPhoneNumberValidator stringIsValidPhoneNumber:@"55555555555"]);
 }
 
-- (void)testFormattedPhoneNumberForString {
-    XCTAssertEqualObjects([STPPhoneNumberValidator formattedPhoneNumberForString:@"55"], @"55");
-    XCTAssertEqualObjects([STPPhoneNumberValidator formattedPhoneNumberForString:@"555"], @"(555) ");
-    XCTAssertEqualObjects([STPPhoneNumberValidator formattedPhoneNumberForString:@"55555"], @"(555) 55");
-    XCTAssertEqualObjects([STPPhoneNumberValidator formattedPhoneNumberForString:@"A-55555"], @"(555) 55");
-    XCTAssertEqualObjects([STPPhoneNumberValidator formattedPhoneNumberForString:@"5555555"], @"(555) 555-5");
-    XCTAssertEqualObjects([STPPhoneNumberValidator formattedPhoneNumberForString:@"5555555555"], @"(555) 555-5555");
-    XCTAssertEqualObjects([STPPhoneNumberValidator formattedPhoneNumberForString:@"5555555555123"], @"(555) 555-5555");
+- (void)testFormattedSanitizedPhoneNumberForString {
+    XCTAssertEqualObjects([STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:@"55"], @"55");
+    XCTAssertEqualObjects([STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:@"555"], @"(555) ");
+    XCTAssertEqualObjects([STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:@"55555"], @"(555) 55");
+    XCTAssertEqualObjects([STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:@"A-55555"], @"(555) 55");
+    XCTAssertEqualObjects([STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:@"5555555"], @"(555) 555-5");
+    XCTAssertEqualObjects([STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:@"5555555555"], @"(555) 555-5555");
+    XCTAssertEqualObjects([STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:@"5555555555123"], @"(555) 555-5555");
+    XCTAssertEqualObjects([STPNonUSLocalePhoneNumberValidator formattedSanitizedPhoneNumberForString:@"5555555555123"], @"5555555555123");
+}
+
+- (void)testFormattedRedactedPhoneNumberForString {
+    XCTAssertEqualObjects([STPPhoneNumberValidator formattedRedactedPhoneNumberForString:@"+1******1234"], @"+1 (•••) •••-1234");
+    XCTAssertEqualObjects([STPNonUSLocalePhoneNumberValidator formattedRedactedPhoneNumberForString:@"+86******1234"], @"+86 ••••••1234");
 }
 
 @end

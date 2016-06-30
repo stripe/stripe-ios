@@ -9,7 +9,6 @@
 #import "STPFormEncoder.h"
 #import "STPBankAccountParams.h"
 #import "STPCardParams.h"
-#import "STPFormEncodable.h"
 
 FOUNDATION_EXPORT NSString * STPPercentEscapedStringFromString(NSString *string);
 FOUNDATION_EXPORT NSString * STPQueryStringFromParameters(NSDictionary *parameters);

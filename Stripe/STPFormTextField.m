@@ -9,8 +9,6 @@
 #import "STPFormTextField.h"
 #import "STPCardValidator.h"
 #import "STPPhoneNumberValidator.h"
-#import <Foundation/Foundation.h>
-#import "TargetConditionals.h"
 #import "NSString+Stripe.h"
 #import "STPDelegateProxy.h"
 
@@ -18,6 +16,7 @@
 
 @interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate>
 @property(nonatomic, assign)STPFormTextFieldAutoFormattingBehavior autoformattingBehavior;
+@property(nonatomic, assign)BOOL selectionEnabled;
 @end
 
 @implementation STPTextFieldDelegateProxy
@@ -33,7 +32,26 @@
         NSString *sanitized = [self unformattedStringForString:newString];
         inputText = sanitized;
     }
+    
+    UITextPosition *beginning = textField.beginningOfDocument;
+    UITextPosition *start = [textField positionFromPosition:beginning offset:range.location];
+    
+    if ([textField.text isEqualToString:inputText]) {
+        return NO;
+    }
+    
     textField.text = inputText;
+    
+    if (self.autoformattingBehavior == STPFormTextFieldAutoFormattingBehaviorNone && self.selectionEnabled) {
+        
+        // this will be the new cursor location after insert/paste/typing
+        NSInteger cursorOffset = [textField offsetFromPosition:beginning toPosition:start] + string.length;
+        
+        UITextPosition *newCursorPosition = [textField positionFromPosition:textField.beginningOfDocument offset:cursorOffset];
+        UITextRange *newSelectedRange = [textField textRangeFromPosition:newCursorPosition toPosition:newCursorPosition];
+        [textField setSelectedTextRange:newSelectedRange];
+    }
+    
     return NO;
 }
 
@@ -77,6 +95,11 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     return [attributedString attributesAtIndex:0 longestEffectiveRange:nil inRange:NSMakeRange(0, attributedString.length)];
 }
 
+- (void)setSelectionEnabled:(BOOL)selectionEnabled {
+    _selectionEnabled = selectionEnabled;
+    self.delegateProxy.selectionEnabled = selectionEnabled;
+}
+
 - (void)setAutoFormattingBehavior:(STPFormTextFieldAutoFormattingBehavior)autoFormattingBehavior {
     _autoFormattingBehavior = autoFormattingBehavior;
     self.delegateProxy.autoformattingBehavior = autoFormattingBehavior;
@@ -117,7 +140,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                     return [inputString copy];
                 }
                 __strong id strongself = weakself;
-                NSString *phoneNumber = [STPPhoneNumberValidator formattedPhoneNumberForString:inputString.string];
+                NSString *phoneNumber = [STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:inputString.string];
                 NSDictionary *attributes = [[strongself class] attributesForAttributedString:inputString];
                 return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
             };
@@ -158,11 +181,6 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
         attributedText;
     NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(modified) : modified;
     [super setAttributedText:transformed];
-    CATransition *transition = [CATransition animation];
-    transition.duration = 0.065;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionFade;
-    [self.layer addAnimation:transition forKey:nil];
     [self sendActionsForControlEvents:UIControlEventEditingChanged];
     if ([self.formDelegate respondsToSelector:@selector(formTextFieldTextDidChange:)]) {
         if (![transformed isEqualToAttributedString:oldValue]) {
@@ -241,7 +259,10 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     self.text = @"";
 }
 
-- (UITextPosition *)closestPositionToPoint:(__unused CGPoint)point {
+- (UITextPosition *)closestPositionToPoint:(CGPoint)point {
+    if (self.selectionEnabled) {
+        return [super closestPositionToPoint:point];
+    }
     return [self positionFromPosition:self.beginningOfDocument offset:self.text.length];
 }
 
@@ -249,13 +270,18 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     return [super canPerformAction:action withSender:sender] && action == @selector(paste:);
 }
 
-- (void)paste:(__unused id)sender {
-    self.text = [UIPasteboard generalPasteboard].string;
+- (void)paste:(id)sender {
+    if (self.preservesContentsOnPaste) {
+        [super paste:sender];
+    } else {
+        self.text = [UIPasteboard generalPasteboard].string;
+    }
 }
 
 - (void)setDelegate:(id <UITextFieldDelegate>)delegate {
     STPTextFieldDelegateProxy *delegateProxy = [[STPTextFieldDelegateProxy alloc] init];
     delegateProxy.autoformattingBehavior = self.autoFormattingBehavior;
+    delegateProxy.selectionEnabled = self.selectionEnabled;
     delegateProxy.delegate = delegate;
     self.delegateProxy = delegateProxy;
     [super setDelegate:delegateProxy];

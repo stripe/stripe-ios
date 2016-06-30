@@ -7,9 +7,10 @@
 //
 
 #import "STPCard.h"
-#import "StripeError.h"
-#import "STPCardValidator.h"
 #import "NSDictionary+Stripe.h"
+#import "NSString+Stripe_CardBrands.h"
+#import "STPImageLibrary.h"
+#import "STPImageLibrary+Private.h"
 
 @interface STPCard ()
 
@@ -28,6 +29,59 @@
 
 @dynamic number, cvc, expMonth, expYear, currency, name, addressLine1, addressLine2, addressCity, addressState, addressZip, addressCountry;
 
+- (instancetype)initWithID:(NSString *)stripeID
+                     brand:(STPCardBrand)brand
+                     last4:(NSString *)last4
+                  expMonth:(NSUInteger)expMonth
+                   expYear:(NSUInteger)expYear
+                   funding:(STPCardFundingType)funding {
+    self = [super init];
+    if (self) {
+        _cardId = stripeID;
+        _brand = brand;
+        _last4 = last4;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        self.expMonth = expMonth;
+        self.expYear = expYear;
+#pragma clang diagnostic pop
+        _funding = funding;
+    }
+    return self;
+}
+
++ (STPCardBrand)brandFromString:(NSString *)string {
+    NSString *brand = [string lowercaseString];
+    if ([brand isEqualToString:@"visa"]) {
+        return STPCardBrandVisa;
+    } else if ([brand isEqualToString:@"american express"]) {
+        return STPCardBrandAmex;
+    } else if ([brand isEqualToString:@"mastercard"]) {
+        return STPCardBrandMasterCard;
+    } else if ([brand isEqualToString:@"discover"]) {
+        return STPCardBrandDiscover;
+    } else if ([brand isEqualToString:@"jcb"]) {
+        return STPCardBrandJCB;
+    } else if ([brand isEqualToString:@"diners club"]) {
+        return STPCardBrandDinersClub;
+    } else {
+        return STPCardBrandUnknown;
+    }
+}
+
++ (STPCardFundingType)fundingFromString:(NSString *)string {
+    NSString *funding = [string lowercaseString];
+    if ([funding isEqualToString:@"credit"]) {
+        return STPCardFundingTypeCredit;
+    } else if ([funding isEqualToString:@"debit"]) {
+        return STPCardFundingTypeDebit;
+    } else if ([funding isEqualToString:@"prepaid"]) {
+        return STPCardFundingTypePrepaid;
+    } else {
+        return STPCardFundingTypeOther;
+    }
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -40,6 +94,10 @@
 
 - (NSString *)last4 {
     return _last4 ?: [super last4];
+}
+
+- (BOOL)isApplePayCard {
+    return [self.allResponseFields[@"tokenization_method"] isEqualToString:@"apple_pay"];
 }
 
 - (NSString *)type {
@@ -99,32 +157,10 @@
     card.name = dict[@"name"];
     card.last4 = dict[@"last4"];
     card.dynamicLast4 = dict[@"dynamic_last4"];
-    NSString *brand = dict[@"brand"];
-    if ([brand isEqualToString:@"Visa"]) {
-        card.brand = STPCardBrandVisa;
-    } else if ([brand isEqualToString:@"American Express"]) {
-        card.brand = STPCardBrandAmex;
-    } else if ([brand isEqualToString:@"MasterCard"]) {
-        card.brand = STPCardBrandMasterCard;
-    } else if ([brand isEqualToString:@"Discover"]) {
-        card.brand = STPCardBrandDiscover;
-    } else if ([brand isEqualToString:@"JCB"]) {
-        card.brand = STPCardBrandJCB;
-    } else if ([brand isEqualToString:@"Diners Club"]) {
-        card.brand = STPCardBrandDinersClub;
-    } else {
-        card.brand = STPCardBrandUnknown;
-    }
+    NSString *brand = [dict[@"brand"] lowercaseString];
+    card.brand = [self.class brandFromString:brand];
     NSString *funding = dict[@"funding"];
-    if ([funding.lowercaseString isEqualToString:@"credit"]) {
-        card.funding = STPCardFundingTypeCredit;
-    } else if ([funding.lowercaseString isEqualToString:@"debit"]) {
-        card.funding = STPCardFundingTypeDebit;
-    } else if ([funding.lowercaseString isEqualToString:@"prepaid"]) {
-        card.funding = STPCardFundingTypePrepaid;
-    } else {
-        card.funding = STPCardFundingTypeOther;
-    }
+    card.funding = [self.class fundingFromString:funding];
     card.fingerprint = dict[@"fingerprint"];
     card.country = dict[@"country"];
     card.currency = dict[@"currency"];
@@ -141,5 +177,20 @@
     return card;
 }
 #pragma clang diagnostic pop
+
+#pragma mark - STPSource
+
+- (NSString *)stripeID {
+    return self.cardId;
+}
+
+- (NSString *)label {
+    NSString *brand = [NSString stp_stringWithCardBrand:self.brand];
+    return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
+}
+
+- (UIImage *)image {
+    return [STPImageLibrary brandImageForCardBrand:self.brand];
+}
 
 @end
