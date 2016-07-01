@@ -71,7 +71,7 @@
             for (NSInteger i=0; i < 3; i++) {
                 STPCodeInternalTextField *textField = [STPCodeInternalTextField new];
                 textField.delegate = self;
-                textField.keyboardType = UIKeyboardTypeNumberPad;
+                textField.keyboardType = UIKeyboardTypePhonePad;
                 textField.internalDelegate = self;
                 textField.textAlignment = NSTextAlignmentCenter;
                 [textFields addObject:textField];

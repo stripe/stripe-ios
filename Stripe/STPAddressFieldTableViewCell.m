@@ -105,7 +105,7 @@
                 }
                 
                 self.textField.placeholder = NSLocalizedString(@"12345", nil);
-                self.textField.keyboardType = UIKeyboardTypeNumberPad;
+                self.textField.keyboardType = UIKeyboardTypePhonePad;
                 self.textField.preservesContentsOnPaste = NO;
                 self.textField.selectionEnabled = NO;
                 if (!lastInList) {

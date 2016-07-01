@@ -536,7 +536,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 - (STPFormTextField *)buildTextField {
     STPFormTextField *textField = [[STPFormTextField alloc] initWithFrame:CGRectZero];
     textField.backgroundColor = [UIColor clearColor];
-    textField.keyboardType = UIKeyboardTypeNumberPad;
+    textField.keyboardType = UIKeyboardTypePhonePad;
     textField.font = self.font;
     textField.defaultColor = self.textColor;
     textField.errorColor = self.textErrorColor;
