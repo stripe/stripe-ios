@@ -149,7 +149,11 @@
     UIImage *newImage;
     UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
     [color set];
-    [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
+    UIImage *templateImage = image;
+    if ([image respondsToSelector:@selector(imageWithRenderingMode:)]) {
+        templateImage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    }
+    [templateImage drawInRect:CGRectMake(0, 0, templateImage.size.width, templateImage.size.height)];
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
