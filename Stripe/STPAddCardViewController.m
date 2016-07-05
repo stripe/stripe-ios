@@ -347,6 +347,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (void)handleCardTokenError:(NSError *)error {
+    self.loading = NO;
     [[self firstEmptyField] becomeFirstResponder];
     NSArray *tuples = @[
                         [STPAlertTuple tupleWithTitle:NSLocalizedString(@"OK", nil) style:STPAlertStyleCancel action:nil],
