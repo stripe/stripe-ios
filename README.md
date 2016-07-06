@@ -21,19 +21,19 @@ For more fine-grained information on all of the classes and methods in our SDK, 
 ## Example apps
 
 There are 2 example apps included in the repository:
-- Stripe iOS Example (Simple) shows a minimal Swift integration with our iOS SDK using Apple Pay.
+- Stripe iOS Example (Simple) shows a Swift integration using our prebuilt UI components.
 - Stripe iOS Example (Custom) demonstrates 2 different ways of collecting your user's payment details: via Apple Pay, and STPPaymentCardTextField, a native credit card UI form component we provide. It, too, uses a small example backend to make charges.
 
 To build and run the example apps, open `Stripe.xcworkspace` and choose the appropriate scheme.
 
-### Getting started with the Simple iOS Example App
+### Getting started with the iOS example apps
 
 Note: all the example apps require Xcode 7.0 to build and run.
 
-Before you can run the app, you need to provide it with your Stripe publishable key.
+Before you can run the apps, you need to provide them with your Stripe publishable key.
 
 1. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds). Then go to https://dashboard.stripe.com/account/apikeys.
-2. Replace the `stripePublishableKey` constant in ViewController.swift (for the Simple app) or Constants.m (for the Custom app) with your Test Publishable Key.
+2. Replace the `stripePublishableKey` constant in CheckoutViewController.swift (for the Simple app) or Constants.m (for the Custom app) with your Test Publishable Key.
 3. Head to https://github.com/stripe/example-ios-backend and click "Deploy to Heroku" (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under 'Env'. Click "Deploy for Free".
 4. Replace the `backendChargeURLString` variable in the example iOS app with the app URL Heroku provides you with (e.g. "https://my-example-app.herokuapp.com")
 
