@@ -54,7 +54,7 @@
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)brand {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     NSString *imageName;
-    BOOL templateSupported = [[self new] respondsToSelector:@selector(imageWithRenderingMode:)];
+    BOOL templateSupported = [self templateSupported];
     switch (brand) {
         case STPCardBrandAmex:
             imageName = @"stp_card_amex";
@@ -113,7 +113,7 @@
 }
 
 + (BOOL)templateSupported {
-    return [[self new] respondsToSelector:@selector(imageWithRenderingMode:)];
+    return [[UIImage class] instancesRespondToSelector:@selector(imageWithRenderingMode:)];
 }
 
 @end
@@ -150,7 +150,7 @@
     UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
     [color set];
     UIImage *templateImage = image;
-    if ([image respondsToSelector:@selector(imageWithRenderingMode:)]) {
+    if ([self templateSupported]) {
         templateImage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
     [templateImage drawInRect:CGRectMake(0, 0, templateImage.size.width, templateImage.size.height)];
