@@ -1,15 +1,15 @@
 PROJECTDIR="$(cd $(dirname $0)/..; pwd)"
 BUILDDIR="${PROJECTDIR}/build"
+CARTHAGEDIR="${PROJECTDIR}/Carthage/Build/iOS"
 rm -rf $BUILDDIR
 mkdir $BUILDDIR
 cd $PROJECTDIR
 
 # Dynamic framework
-xcodebuild build -workspace Stripe.xcworkspace -scheme StripeiOS -configuration Release OBJROOT=$BUILDDIR SYMROOT=$BUILDDIR | xcpretty -c
-cd $BUILDDIR/Release-iphoneos
+carthage build --no-skip-current --platform iOS --configuration Release
+cd $CARTHAGEDIR
 ditto -ck --rsrc --sequesterRsrc --keepParent Stripe.framework Stripe.framework.zip
-rm -rf Stripe.framework
-cp Stripe.framework.zip $BUILDDIR
+mv Stripe.framework.zip $BUILDDIR
 cd -
 
 # Static framework
