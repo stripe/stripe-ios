@@ -1,4 +1,5 @@
 build/*
+Carthage/*
 Tests/build/*
 Tests/installation_tests/cocoapods/**/Podfile.lock
 Tests/installation_tests/cocoapods/**/Pods
