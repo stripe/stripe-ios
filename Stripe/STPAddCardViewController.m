@@ -308,6 +308,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
                 if (error) {
                     [strongself handleCheckoutTokenError:error];
                 }
+                else {
+                    self.loading = NO;
+                }
             }];
         }] onFailure:^(NSError *error) {
             [weakself handleCardTokenError:error];
@@ -327,6 +330,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
                 [self.delegate addCardViewController:self didCreateToken:token completion:^(NSError * _Nullable error) {
                     if (error) {
                         [self handleCardTokenError:error];
+                    }
+                    else {
+                        self.loading = NO;
                     }
                 }];
             }
