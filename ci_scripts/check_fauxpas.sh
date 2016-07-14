@@ -13,7 +13,7 @@ else
 	echo "Installing FauxPas..."
 	brew cask install fauxpas
 
-	$HOME/Applications/FauxPas.app/Contents/Resources/install-cli-tools
+	/Applications/FauxPas.app/Contents/Resources/install-cli-tools
 	fauxpas updatelicense "organization-seat" "Stripe, Inc" $FAUX_PAS_LICENSE
 fi
 
