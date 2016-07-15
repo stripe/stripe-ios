@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This is called when the view controller encounters an error fetching the user's payment methods from its API adapter. You should dismiss the view controller when this is called.
  *
  *  @param paymentMethodsViewController the view controller in question
- *  @param paymentMethod                the selected payment method
+ *  @param error                        the error that occurred
  */
 - (void)paymentMethodsViewController:(STPPaymentMethodsViewController *)paymentMethodsViewController
               didFailToLoadWithError:(NSError *)error;
