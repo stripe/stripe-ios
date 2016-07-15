@@ -14,10 +14,6 @@
 
 @implementation STPPaymentConfiguration
 
-+ (void)initialize {
-    [STPAnalyticsClient initializeIfNeeded];
-}
-
 + (instancetype)sharedConfiguration {
     static STPPaymentConfiguration *sharedConfiguration;
     static dispatch_once_t onceToken;
@@ -30,6 +26,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        __unused STPAnalyticsClient *client = [STPAnalyticsClient sharedClient];
         _additionalPaymentMethods = STPPaymentMethodTypeAll;
         _requiredBillingAddressFields = STPBillingAddressFieldsNone;
         _companyName = [NSBundle stp_applicationName];

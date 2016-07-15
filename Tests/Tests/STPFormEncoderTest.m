@@ -60,7 +60,7 @@
 
 // helper test method
 - (NSString *)encodeObject:(STPTestFormEncodableObject *)object {
-    NSData *encoded = [STPFormEncoder formEncodedDataForObject:object];
+    NSData *encoded = [STPFormEncoder formEncodedDataForObject:object metrics:@{}];
     return [[[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding] stringByRemovingPercentEncoding];
 }
 
@@ -124,6 +124,18 @@
     STPTestNilRootObjectFormEncodableObject *testObject = [STPTestNilRootObjectFormEncodableObject new];
     testObject.testProperty = @"success";
     XCTAssertEqualObjects([self encodeObject:testObject], @"test_property=success");
+}
+
+- (void)testFormEncoding_metrics {
+    STPTestFormEncodableObject *testObject = [STPTestFormEncodableObject new];
+    testObject.testProperty = @"success";
+    NSDictionary *metrics = @{
+                              @"foo": @"bar",
+                              @"baz": @"qux"
+                              };
+    NSData *encoded = [STPFormEncoder formEncodedDataForObject:testObject metrics:metrics];
+    NSString *string = [[[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding] stringByRemovingPercentEncoding];
+    XCTAssertEqualObjects(string, @"baz=qux&foo=bar&test_object[test_property]=success");
 }
 
 - (void)testQueryStringFromParameters {

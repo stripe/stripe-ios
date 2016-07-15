@@ -11,25 +11,26 @@
 #import "PKPayment+Stripe.h"
 #import "STPAPIClient+Private.h"
 #import "STPAnalyticsClient.h"
+#import "STPOptimizationMetrics.h"
+#import "STPFormEncoder.h"
 
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 @implementation STPAPIClient (ApplePay)
 
 - (void)createTokenWithPayment:(PKPayment *)payment completion:(STPTokenCompletionBlock)completion {
-    [self createTokenWithData:[self.class formEncodedDataForPayment:payment]
+    NSDictionary *metrics = [[STPAnalyticsClient sharedClient].optimizationMetrics serialize];
+    NSData *data = [self.class formEncodedDataForPayment:payment metrics: metrics];
+    [self createTokenWithData:data
                    completion:completion];
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-+ (NSData *)formEncodedDataForPayment:(PKPayment *)payment {
++ (NSData *)formEncodedDataForPayment:(PKPayment *)payment metrics:(NSDictionary *)metrics {
     NSCAssert(payment != nil, @"Cannot create a token with a nil payment.");
-    NSMutableCharacterSet *set = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
-    [set removeCharactersInString:@"+="];
-    NSString *paymentString =
-        [[[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding] stringByAddingPercentEncodingWithAllowedCharacters:set];
-    __block NSString *payloadString = [@"pk_token=" stringByAppendingString:paymentString];
+    __block NSMutableDictionary *dictionary = [NSMutableDictionary new];
+    dictionary[@"pk_token"] = [[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding];
 
     ABRecordRef billingAddress = payment.billingAddress;
     if (billingAddress) {
@@ -66,10 +67,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
                     params[@"address_country"] = country;
                 }
                 CFRelease(dict);
-                [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, __unused BOOL *stop) {
-                    NSString *param = [NSString stringWithFormat:@"&card[%@]=%@", key, [obj stringByAddingPercentEncodingWithAllowedCharacters:set]];
-                    payloadString = [payloadString stringByAppendingString:param];
-                }];
+                dictionary[@"card"] = params;
             }
             CFRelease(addressValues);
         }
@@ -77,14 +75,12 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
     NSString *paymentInstrumentName = payment.token.paymentInstrumentName;
     if (paymentInstrumentName) {
-        NSString *param = [NSString stringWithFormat:@"&pk_token_instrument_name=%@", paymentInstrumentName];
-        payloadString = [payloadString stringByAppendingString:param];
+        dictionary[@"pk_token_instrument_name"] = paymentInstrumentName;
     }
 
     NSString *paymentNetwork = payment.token.paymentNetwork;
     if (paymentNetwork) {
-        NSString *param = [NSString stringWithFormat:@"&pk_token_payment_network=%@", paymentNetwork];
-        payloadString = [payloadString stringByAppendingString:param];
+        dictionary[@"pk_token_payment_network"] = paymentNetwork;
     }
     
     NSString *transactionIdentifier = payment.token.transactionIdentifier;
@@ -92,11 +88,12 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
         if ([payment stp_isSimulated]) {
             transactionIdentifier = [PKPayment stp_testTransactionIdentifier];
         }
-        NSString *param = [NSString stringWithFormat:@"&pk_token_transaction_id=%@", transactionIdentifier];
-        payloadString = [payloadString stringByAppendingString:param];
+        dictionary[@"pk_token_transaction_id"] = transactionIdentifier;
     }
 
-    return [payloadString dataUsingEncoding:NSUTF8StringEncoding];
+    [dictionary addEntriesFromDictionary:metrics];
+
+    return [STPFormEncoder formEncodedDataForDictionary:dictionary];
 }
 #pragma clang diagnostic pop
 
