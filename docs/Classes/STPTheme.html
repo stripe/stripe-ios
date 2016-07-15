@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>STPBankAccount Class Reference</title>
+    <title>STPTheme Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset="utf-8">
@@ -11,9 +11,9 @@
   </head>
   <body>
 
-    <a name="//apple_ref/objc/Class/STPBankAccount" class="dashAnchor"></a>
+    <a name="//apple_ref/objc/Class/STPTheme" class="dashAnchor"></a>
 
-    <a title="STPBankAccount Class Reference"></a>
+    <a title="STPTheme Class Reference"></a>
 
     <header class="header">
       <p class="header-col header-col--primary">
@@ -35,7 +35,7 @@
     <p class="breadcrumbs">
       <a class="breadcrumb" href="../index.html">Stripe Reference</a>
       <img class="carat" src="../img/carat.png" />
-      STPBankAccount Class Reference
+      STPTheme Class Reference
     </p>
 
     <div class="content-wrapper">
@@ -203,14 +203,14 @@
 
         <section class="section">
           <div class="section-content">
-            <h1>STPBankAccount</h1>
+            <h1>STPTheme</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPBankAccount</span> <span class="p">:</span> <span class="nc">STPBankAccountParams</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="o">&gt;</span></code></pre>
+                  <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPTheme</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">NSCopying</span><span class="o">&gt;</span></code></pre>
 
                 </div>
               </div>
-            <p>Representation of a user&rsquo;s bank account details that have been tokenized with the Stripe API. - see: <a href="https://stripe.com/docs/api#cards">https://stripe.com/docs/api#cards</a></p>
+            <p>STPTheme objects can be used to visually style Stripe-provided UI. See <a href="https://stripe.com/docs/mobile/ios#theming">https://stripe.com/docs/mobile/ios#theming</a> for more information.</p>
 
           </div>
         </section>
@@ -222,9 +222,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPBankAccount(py)routingNumber"></a>
-                    <a name="//apple_ref/objc/Property/routingNumber" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPBankAccount(py)routingNumber">routingNumber</a>
+                    <a name="/c:objc(cs)STPTheme(cm)defaultTheme"></a>
+                    <a name="//apple_ref/objc/Method/+defaultTheme" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(cm)defaultTheme">+defaultTheme</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -232,24 +232,24 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The routing number for the bank account. This should be the ACH routing number, not the wire routing number.</p>
+                        <p>The default theme used by all Stripe UI. All themable UI classes, such as <code><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></code>, have one initializer that takes a <code>theme</code> and one that does not. If you use the one that does not, the default theme will be used to customize that view controller&rsquo;s appearance.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nonnull</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">routingNumber</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPTheme</span> <span class="o">*</span><span class="p">)</span><span class="n">defaultTheme</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">routingNumber</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">defaultTheme</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">STPTheme</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L33">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L21">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -257,9 +257,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPBankAccount(py)country"></a>
-                    <a name="//apple_ref/objc/Property/country" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPBankAccount(py)country">country</a>
+                    <a name="/c:objc(cs)STPTheme(py)primaryBackgroundColor"></a>
+                    <a name="//apple_ref/objc/Property/primaryBackgroundColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)primaryBackgroundColor">primaryBackgroundColor</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -267,24 +267,20 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Two-letter ISO code representing the country the bank account is located in.</p>
+                        <p>The primary background color of the theme. This will be used as the <code>backgroundColor</code> for any views with this theme.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">country</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">country</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span>
+    <span class="n">UIColor</span> <span class="o">*</span><span class="n">primaryBackgroundColor</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L26">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -292,9 +288,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPBankAccount(py)currency"></a>
-                    <a name="//apple_ref/objc/Property/currency" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPBankAccount(py)currency">currency</a>
+                    <a name="/c:objc(cs)STPTheme(py)secondaryBackgroundColor"></a>
+                    <a name="//apple_ref/objc/Property/secondaryBackgroundColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)secondaryBackgroundColor">secondaryBackgroundColor</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -302,24 +298,20 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The default currency for the bank account.</p>
+                        <p>The secondary background color of this theme. This will be used as the <code>backgroundColor</code> for any supplemental views inside a view with this theme - for example, a <code>UITableView</code> will set it&rsquo;s cells&rsquo; background color to this value.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">currency</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span>
+    <span class="n">UIColor</span> <span class="o">*</span><span class="n">secondaryBackgroundColor</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L31">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -327,9 +319,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPBankAccount(py)bankAccountId"></a>
-                    <a name="//apple_ref/objc/Property/bankAccountId" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPBankAccount(py)bankAccountId">bankAccountId</a>
+                    <a name="/c:objc(cs)STPTheme(py)tertiaryBackgroundColor"></a>
+                    <a name="//apple_ref/objc/Property/tertiaryBackgroundColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)tertiaryBackgroundColor">tertiaryBackgroundColor</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -337,24 +329,24 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The Stripe ID for the bank account.</p>
+                        <p>This color is automatically derived by reducing the alpha of the <code><a href="../Classes/STPTheme.html#/c:objc(cs)STPTheme(py)primaryBackgroundColor">primaryBackgroundColor</a></code> and is used as a section border color in table view cells.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nonnull</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">bankAccountId</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">tertiaryBackgroundColor</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">bankAccountId</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">tertiaryBackgroundColor</span><span class="p">:</span> <span class="kt">UnsafeMutablePointer</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -362,9 +354,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPBankAccount(py)last4"></a>
-                    <a name="//apple_ref/objc/Property/last4" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPBankAccount(py)last4">last4</a>
+                    <a name="/c:objc(cs)STPTheme(py)quaternaryBackgroundColor"></a>
+                    <a name="//apple_ref/objc/Property/quaternaryBackgroundColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)quaternaryBackgroundColor">quaternaryBackgroundColor</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -372,19 +364,24 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The last 4 digits of the account number.</p>
+                        <p>This color is automatically derived by reducing the brightness of the <code><a href="../Classes/STPTheme.html#/c:objc(cs)STPTheme(py)primaryBackgroundColor">primaryBackgroundColor</a></code> and is used as a separator color in table view cells.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">last4</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">quaternaryBackgroundColor</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">quaternaryBackgroundColor</span><span class="p">:</span> <span class="kt">UnsafeMutablePointer</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L53">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L41">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -392,9 +389,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPBankAccount(py)bankName"></a>
-                    <a name="//apple_ref/objc/Property/bankName" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPBankAccount(py)bankName">bankName</a>
+                    <a name="/c:objc(cs)STPTheme(py)primaryForegroundColor"></a>
+                    <a name="//apple_ref/objc/Property/primaryForegroundColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)primaryForegroundColor">primaryForegroundColor</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -402,24 +399,20 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The name of the bank that owns the account.</p>
+                        <p>The primary foreground color of this theme. This will be used as the text color for any important labels in a view with this theme (such as the text color for a text field that the user needs to fill out).</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">bankName</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">bankName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span>
+    <span class="n">UIColor</span> <span class="o">*</span><span class="n">primaryForegroundColor</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L58">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L46">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -427,9 +420,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPBankAccount(py)accountHolderName"></a>
-                    <a name="//apple_ref/objc/Property/accountHolderName" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPBankAccount(py)accountHolderName">accountHolderName</a>
+                    <a name="/c:objc(cs)STPTheme(py)secondaryForegroundColor"></a>
+                    <a name="//apple_ref/objc/Property/secondaryForegroundColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)secondaryForegroundColor">secondaryForegroundColor</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -437,24 +430,20 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The name of the person or business that owns the bank account.</p>
+                        <p>The secondary foreground color of this theme. This will be used as the text color for any supplementary labels in a view with this theme (such as the placeholder color for a text field that the user needs to fill out).</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">accountHolderName</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">accountHolderName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span>
+    <span class="n">UIColor</span> <span class="o">*</span><span class="n">secondaryForegroundColor</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L63">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L51">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -462,9 +451,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPBankAccount(py)accountHolderType"></a>
-                    <a name="//apple_ref/objc/Property/accountHolderType" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPBankAccount(py)accountHolderType">accountHolderType</a>
+                    <a name="/c:objc(cs)STPTheme(py)tertiaryForegroundColor"></a>
+                    <a name="//apple_ref/objc/Property/tertiaryForegroundColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)tertiaryForegroundColor">tertiaryForegroundColor</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -472,25 +461,24 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The type of entity that holds the account.</p>
+                        <p>This color is automatically derived from the <code><a href="../Classes/STPTheme.html#/c:objc(cs)STPTheme(py)secondaryForegroundColor">secondaryForegroundColor</a></code> with a lower alpha component, used for disabled text.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
-    <span class="n">STPBankAccountHolderType</span> <span class="n">accountHolderType</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">tertiaryForegroundColor</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">accountHolderType</span><span class="p">:</span> <span class="kt">STPBankAccountHolderType</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">tertiaryForegroundColor</span><span class="p">:</span> <span class="kt">UnsafeMutablePointer</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -498,9 +486,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPBankAccount(py)fingerprint"></a>
-                    <a name="//apple_ref/objc/Property/fingerprint" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPBankAccount(py)fingerprint">fingerprint</a>
+                    <a name="/c:objc(cs)STPTheme(py)accentColor"></a>
+                    <a name="//apple_ref/objc/Property/accentColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)accentColor">accentColor</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -508,24 +496,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A proxy for the account number, this uniquely identifies the account and can be used to compare equality of different bank accounts.</p>
+                        <p>The accent color of this theme - it will be used for any buttons and other elements on a view that are important to highlight.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">fingerprint</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">fingerprint</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">accentColor</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L73">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L61">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -533,9 +516,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPBankAccount(py)status"></a>
-                    <a name="//apple_ref/objc/Property/status" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPBankAccount(py)status">status</a>
+                    <a name="/c:objc(cs)STPTheme(py)errorColor"></a>
+                    <a name="//apple_ref/objc/Property/errorColor" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)errorColor">errorColor</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -543,24 +526,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The validation status of the bank account. - see: STPBankAccountStatus</p>
+                        <p>The error color of this theme - it will be used for rendering any error messages or views.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">STPBankAccountStatus</span> <span class="n">status</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">status</span><span class="p">:</span> <span class="kt">STPBankAccountStatus</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">errorColor</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L78">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L66">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -568,9 +546,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPBankAccount(py)validated"></a>
-                    <a name="//apple_ref/objc/Property/validated" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPBankAccount(py)validated">validated</a>
+                    <a name="/c:objc(cs)STPTheme(py)font"></a>
+                    <a name="//apple_ref/objc/Property/font" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)font">font</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -578,25 +556,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Whether or not the bank account has been validated via microdeposits or other means.
-@deprecated Use status == STPBankAccountStatusValidated instead.</p>
+                        <p>The font to be used for all views using this theme. Make sure to select an appropriate size.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">validated</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">validated</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span><span class="n">font</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L84">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L71">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -604,9 +576,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPBankAccount(py)disabled"></a>
-                    <a name="//apple_ref/objc/Property/disabled" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPBankAccount(py)disabled">disabled</a>
+                    <a name="/c:objc(cs)STPTheme(py)emphasisFont"></a>
+                    <a name="//apple_ref/objc/Property/emphasisFont" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)emphasisFont">emphasisFont</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -614,25 +586,89 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Whether or not the bank account is currently disabled.
-@deprecated Use status == STPBankAccountStatusErrored instead.</p>
+                        <p>The medium-weight font to be used for all bold text in views using this theme. Make sure to select an appropriate size.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">disabled</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">disabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span><span class="n">emphasisFont</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L90">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L76">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPTheme(py)smallFont"></a>
+                    <a name="//apple_ref/objc/Property/smallFont" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)smallFont">smallFont</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This font is automatically derived from the font, with a slightly lower point size, and will be used for supplementary labels.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">smallFont</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">smallFont</span><span class="p">:</span> <span class="kt">UnsafeMutablePointer</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L81">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPTheme(py)largeFont"></a>
+                    <a name="//apple_ref/objc/Property/largeFont" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)largeFont">largeFont</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This font is automatically derived from the font, with a larger point size, and will be used for large labels such as SMS code entry.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">largeFont</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">largeFont</span><span class="p">:</span> <span class="kt">UnsafeMutablePointer</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L86">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
