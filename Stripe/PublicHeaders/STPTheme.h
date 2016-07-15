@@ -10,6 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ STPTheme objects can be used to visually style Stripe-provided UI. See https://stripe.com/docs/mobile/ios#theming for more information.
+ */
 @interface STPTheme : NSObject<NSCopying>
 
 /**
