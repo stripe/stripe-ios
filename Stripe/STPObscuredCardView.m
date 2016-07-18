@@ -32,19 +32,19 @@
         
         UITextField *last4Field = [UITextField new];
         last4Field.delegate = self;
-        last4Field.keyboardType = UIKeyboardTypeNumberPad;
+        last4Field.keyboardType = UIKeyboardTypePhonePad;
         [self addSubview:last4Field];
         _last4Field = last4Field;
         
         UITextField *expField = [UITextField new];
         expField.delegate = self;
-        expField.keyboardType = UIKeyboardTypeNumberPad;
+        expField.keyboardType = UIKeyboardTypePhonePad;
         [self addSubview:expField];
         _expField = expField;
         
         UITextField *cvcField = [UITextField new];
         cvcField.delegate = self;
-        cvcField.keyboardType = UIKeyboardTypeNumberPad;
+        cvcField.keyboardType = UIKeyboardTypePhonePad;
         cvcField.secureTextEntry = YES;
         [self addSubview:cvcField];
         _cvcField = cvcField;
