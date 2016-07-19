@@ -11,27 +11,17 @@ import Stripe
 
 class MyAPIClient: NSObject, STPBackendAPIAdapter {
 
-    let baseURLString: String?
-    let customerID: String?
+    static let sharedClient = MyAPIClient()
     let session: NSURLSession
-
+    var baseURLString: String? = nil
+    var customerID: String? = nil
     var defaultSource: STPCard? = nil
     var sources: [STPCard] = []
 
-    static var sharedClient = MyAPIClient(baseURL: nil, customerID: nil)
-    static func sharedInit(baseURL baseURL: String?, customerID: String?) {
-        if sharedClient.baseURLString != baseURL || sharedClient.customerID != customerID {
-            sharedClient = MyAPIClient(baseURL: baseURL, customerID: customerID)
-        }
-    }
-
-    /// If no base URL or customerID is given, MyAPIClient will save cards in memory.
-    init(baseURL: String?, customerID: String?) {
+    override init() {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = 5
         self.session = NSURLSession(configuration: configuration)
-        self.baseURLString = baseURL
-        self.customerID = customerID
         super.init()
     }
 

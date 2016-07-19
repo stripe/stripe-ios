@@ -71,8 +71,9 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false,
                                         theme: settings.theme)
         self.buyButton = BuyButton(enabled: true, theme: settings.theme)
-        MyAPIClient.sharedInit(baseURL: self.backendBaseURL, customerID: self.customerID)
-        
+        MyAPIClient.sharedClient.baseURLString = self.backendBaseURL
+        MyAPIClient.sharedClient.customerID = self.customerID
+
         // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
         let config = STPPaymentConfiguration.sharedConfiguration()
         config.publishableKey = self.stripePublishableKey
