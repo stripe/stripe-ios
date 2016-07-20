@@ -17,9 +17,9 @@ before_install:
 script:
 - open -a "simulator" --args -CurrentDeviceUDID $SIMULATOR_ID
 - "./ci_scripts/check_version.rb"
-- '[ "$TEST_TYPE" != lint ] || ./ci_scripts/check_fauxpas.sh'
-- '[ "$TEST_TYPE" != tests ] || ./ci_scripts/run_tests.sh'
-- '[ "$TEST_TYPE" != installation_cocoapods ] || ./Tests/installation_tests/cocoapods/without_frameworks/test.sh'
-- '[ "$TEST_TYPE" != installation_cocoapods_frameworks ] || ./Tests/installation_tests/cocoapods/with_frameworks/test.sh'
 - '[ "$TEST_TYPE" != installation_manual ] || ./Tests/installation_tests/manual_installation/test.sh'
 - '[ "$TEST_TYPE" != installation_carthage ] || ./Tests/installation_tests/carthage/test.sh'
+- '[ "$TEST_TYPE" != installation_cocoapods ] || ./Tests/installation_tests/cocoapods/without_frameworks/test.sh'
+- '[ "$TEST_TYPE" != installation_cocoapods_frameworks ] || ./Tests/installation_tests/cocoapods/with_frameworks/test.sh'
+- '[ "$TEST_TYPE" != lint ] || ./ci_scripts/check_fauxpas.sh'
+- '[ "$TEST_TYPE" != tests ] || ./ci_scripts/run_tests.sh'
