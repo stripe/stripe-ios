@@ -2,6 +2,8 @@
 
 echo "Checking test manual installation app..."
 
+gem install xcpretty --no-ri --no-rdoc
+
 PROJECTDIR="$(cd $(dirname $0)/../../..; pwd)"
 TESTDIR="$(cd $(dirname $0); pwd)"
 BUILDDIR="$(cd $(dirname $0); pwd)/build"
