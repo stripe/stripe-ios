@@ -457,6 +457,8 @@
 		C135380C1D2C22E5003F6157 /* MockSTPAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C135380A1D2C22E5003F6157 /* MockSTPAPIClient.m */; };
 		C135380F1D2C3E99003F6157 /* MockSTPAddCardViewControllerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = C135380D1D2C3E99003F6157 /* MockSTPAddCardViewControllerDelegate.h */; };
 		C13538101D2C3E99003F6157 /* MockSTPAddCardViewControllerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C135380E1D2C3E99003F6157 /* MockSTPAddCardViewControllerDelegate.m */; };
+		C16A4CDD1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = C16A4CDB1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.h */; };
+		C16A4CDE1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C16A4CDC1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.m */; };
 		C16F66AB1CA21BAC006A21B5 /* STPFormTextFieldTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */; };
 		C1717DB11CC00ED60009CF4A /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C17A030D1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C17A030B1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h */; };
@@ -814,6 +816,8 @@
 		C135380A1D2C22E5003F6157 /* MockSTPAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPAPIClient.m; sourceTree = "<group>"; };
 		C135380D1D2C3E99003F6157 /* MockSTPAddCardViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPAddCardViewControllerDelegate.h; sourceTree = "<group>"; };
 		C135380E1D2C3E99003F6157 /* MockSTPAddCardViewControllerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPAddCardViewControllerDelegate.m; sourceTree = "<group>"; };
+		C16A4CDB1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPCheckoutAPIClient.h; sourceTree = "<group>"; };
+		C16A4CDC1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPCheckoutAPIClient.m; sourceTree = "<group>"; };
 		C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFormTextFieldTest.m; sourceTree = "<group>"; };
 		C17A030B1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPAddressFieldTableViewCell.h; sourceTree = "<group>"; };
 		C17A030C1CBEE7A2006C819F /* STPAddressFieldTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddressFieldTableViewCell.m; sourceTree = "<group>"; };
@@ -1171,6 +1175,8 @@
 				C13538071D2C2186003F6157 /* STPAddCardViewControllerTest.m */,
 				C13538091D2C22E5003F6157 /* MockSTPAPIClient.h */,
 				C135380A1D2C22E5003F6157 /* MockSTPAPIClient.m */,
+				C16A4CDB1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.h */,
+				C16A4CDC1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.m */,
 				C135380D1D2C3E99003F6157 /* MockSTPAddCardViewControllerDelegate.h */,
 				C135380E1D2C3E99003F6157 /* MockSTPAddCardViewControllerDelegate.m */,
 				C1D23FAC1D37F81F002FD83C /* STPCustomerDeserializerTest.m */,
@@ -1398,6 +1404,7 @@
 				04633B071CD44F47009D4FB5 /* STPAPIClient+ApplePay.h in Headers */,
 				04BC29BD1CDD535700318357 /* STPSwitchTableViewCell.h in Headers */,
 				049881081CEE695700EA4FFD /* UIViewController+Stripe_Alerts.h in Headers */,
+				C16A4CDD1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.h in Headers */,
 				04CDB5121A5F30A700B854EE /* STPToken.h in Headers */,
 				049952CF1BCF13510088C703 /* STPAPIPostRequest.h in Headers */,
 				049A3FB21CC9FEFC00F57DE7 /* UIToolbar+Stripe_InputAccessory.h in Headers */,
@@ -1910,6 +1917,7 @@
 				04BC29CB1CE40F7500318357 /* STPObscuredCardView.m in Sources */,
 				04B31DD61D08E6E200EF1631 /* STPCustomer.m in Sources */,
 				04A4C3991C4F2C8600B3B290 /* NSString+Stripe_CardBrands.m in Sources */,
+				C16A4CDE1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.m in Sources */,
 				0438EF351B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */,
 				045D71091CEED3AA00F6CD65 /* STPRememberMeEmailCell.m in Sources */,
 				04827D121D2575C6002DB3E8 /* STPImageLibrary.m in Sources */,
