@@ -12,7 +12,7 @@ before_install:
   - SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (9.3) \[.*\]" | grep -o "\[.*\]" | sed "s/^\[\(.*\)\]$/\1/")
 
 script:
-  - open -a "simulator" --args -CurrentDeviceUDID $SIMULATOR_ID
+  - "open -a \"simulator\" --args -CurrentDeviceUDID $SIMULATOR_ID"
   - "./ci_scripts/check_version.rb"
   - "[ "$TEST_TYPE" = lint ] && ./ci_scripts/check_fauxpas.sh"
   - "[ "$TEST_TYPE" = tests ] && ./ci_scripts/run_tests.sh"
