@@ -2,12 +2,13 @@ language: objective-c
 osx_image: xcode7.3
 env:
   matrix:
-  - TEST_TYPE=lint
-  - TEST_TYPE=tests
-  - TEST_TYPE=installation_cocoapods
-  - TEST_TYPE=installation_cocoapods_frameworks
   - TEST_TYPE=installation_manual
   - TEST_TYPE=installation_carthage
+  - TEST_TYPE=installation_cocoapods
+  - TEST_TYPE=installation_cocoapods_frameworks
+  - TEST_TYPE=lint
+  - TEST_TYPE=tests
+  
   global:
     secure: gZMOaHQIeG7nplBCuH7EKf9o6Ez2rtoSskrv3nOTziSxFfZq322MrxvkidDpEN7AKWYQm27FO+tCzgq0slXb578lQ9P5ySDwEdExKtk/jMtKsBsf3cr4dzSMiqV5D5TbsH2jE9HQlpYUoJeoMBicR2XsTmd7wiu2jAzNBFqGfiY=
 
@@ -17,9 +18,9 @@ before_install:
 script:
 - open -a "simulator" --args -CurrentDeviceUDID $SIMULATOR_ID
 - "./ci_scripts/check_version.rb"
-- '[ "$TEST_TYPE" != installation_manual ] || ./Tests/installation_tests/manual_installation/test.sh'
-- '[ "$TEST_TYPE" != installation_carthage ] || ./Tests/installation_tests/carthage/test.sh'
-- '[ "$TEST_TYPE" != installation_cocoapods ] || ./Tests/installation_tests/cocoapods/without_frameworks/test.sh'
-- '[ "$TEST_TYPE" != installation_cocoapods_frameworks ] || ./Tests/installation_tests/cocoapods/with_frameworks/test.sh'
 - '[ "$TEST_TYPE" != lint ] || ./ci_scripts/check_fauxpas.sh'
 - '[ "$TEST_TYPE" != tests ] || ./ci_scripts/run_tests.sh'
+- '[ "$TEST_TYPE" != installation_cocoapods ] || ./Tests/installation_tests/cocoapods/without_frameworks/test.sh'
+- '[ "$TEST_TYPE" != installation_cocoapods_frameworks ] || ./Tests/installation_tests/cocoapods/with_frameworks/test.sh'
+- '[ "$TEST_TYPE" != installation_manual ] || ./Tests/installation_tests/manual_installation/test.sh'
+- '[ "$TEST_TYPE" != installation_carthage ] || ./Tests/installation_tests/carthage/test.sh'
