@@ -1,6 +1,9 @@
 #!/bin/sh
 
 echo "Checking test CocoaPods app (with frameworks)..."
+
+gem update cocoapods --no-ri --no-rdoc
+
 cd $(dirname $0)
 
 rm -rf Pods
