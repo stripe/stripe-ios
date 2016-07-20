@@ -11,7 +11,7 @@ BUILDDIR="$(cd $(dirname $0); pwd)/build"
 rm -rf $BUILDDIR
 mkdir $BUILDDIR
 
-xcodebuild build -workspace "${PROJECTDIR}/Stripe.xcworkspace" -scheme StripeiOSStaticFramework -configuration Release OBJROOT=$BUILDDIR SYMROOT=$BUILDDIR -sdk iphonesimulator | xcpretty -c
+xcodebuild build -workspace "${PROJECTDIR}/Stripe.xcworkspace" -scheme StripeiOSStaticFramework -configuration Debug OBJROOT=$BUILDDIR SYMROOT=$BUILDDIR -sdk iphonesimulator | xcpretty -c
 
 rm -rf $TESTDIR/ManualInstallationTest/Frameworks
 mkdir $TESTDIR/ManualInstallationTest/Frameworks
