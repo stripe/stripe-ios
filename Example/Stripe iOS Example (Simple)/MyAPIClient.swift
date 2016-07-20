@@ -11,25 +11,17 @@ import Stripe
 
 class MyAPIClient: NSObject, STPBackendAPIAdapter {
 
-    let baseURLString: String?
-    let customerID: String?
+    static let sharedClient = MyAPIClient()
     let session: NSURLSession
-
+    var baseURLString: String? = nil
+    var customerID: String? = nil
     var defaultSource: STPCard? = nil
     var sources: [STPCard] = []
 
-    static var sharedClient = MyAPIClient(baseURL: nil, customerID: nil)
-    static func sharedInit(baseURL baseURL: String?, customerID: String?) {
-        sharedClient = MyAPIClient(baseURL: baseURL, customerID: customerID)
-    }
-
-    /// If no base URL or customerID is given, MyAPIClient will save cards in memory.
-    init(baseURL: String?, customerID: String?) {
+    override init() {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.timeoutIntervalForRequest = 5
         self.session = NSURLSession(configuration: configuration)
-        self.baseURLString = baseURL
-        self.customerID = customerID
         super.init()
     }
 
@@ -42,8 +34,18 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     }
 
     func completeCharge(result: STPPaymentResult, amount: Int, completion: STPErrorBlock) {
-        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
-            completion(nil)
+        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString) else {
+            let error = NSError(domain: StripeDomain, code: 50, userInfo: [
+                NSLocalizedDescriptionKey: "Please set baseURLString to your Heroku URL in CheckoutViewController.swift"
+                ])
+            completion(error)
+            return
+        }
+        guard let customerID = customerID else {
+            let error = NSError(domain: StripeDomain, code: 50, userInfo: [
+                NSLocalizedDescriptionKey: "Please set customerID to a valid Stripe customer ID in CheckoutViewController.swift"
+                ])
+            completion(error)
             return
         }
         let path = "charge"
