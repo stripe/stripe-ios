@@ -34,3 +34,6 @@
 #import "UINavigationBar+Stripe_Theme.h"
 #import "STPUserInformation.h"
 #import "STPImageLibrary.h"
+#import "STPPaymentConfiguration.h"
+#import "STPAPIResponseDecodable.h"
+#import "STPFormEncodable.h"
