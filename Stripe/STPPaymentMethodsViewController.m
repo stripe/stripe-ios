@@ -23,11 +23,12 @@
 #import "STPPaymentMethodsInternalViewController.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "STPTheme.h"
+#import "STPColorUtils.h"
 
 @interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
-@property(nonatomic) STPTheme *theme;
+@property(nonatomic)STPTheme *theme;
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
@@ -150,6 +151,13 @@
     [self.cancelItem stp_setTheme:self.theme];
     self.activityIndicator.tintColor = self.theme.accentColor;
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor] 
+            ? UIStatusBarStyleDefault
+            : UIStatusBarStyleLightContent);
 }
 
 - (void)cancel:(__unused id)sender {

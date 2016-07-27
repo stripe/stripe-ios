@@ -13,6 +13,7 @@
 #import "NSString+Stripe_CardBrands.h"
 #import "UITableViewCell+Stripe_Borders.h"
 #import "UINavigationController+Stripe_Completion.h"
+#import "STPColorUtils.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 static NSInteger STPPaymentMethodCardListSection = 0;
@@ -77,6 +78,12 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
     self.tableView.tintColor = self.theme.accentColor;
     self.cardImageView.tintColor = self.theme.accentColor;
+    
+    if ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor]) {
+        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
+    } else {
+        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+    }
 }
 
 - (void)viewDidLayoutSubviews {

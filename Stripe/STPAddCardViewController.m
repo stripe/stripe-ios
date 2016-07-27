@@ -36,10 +36,11 @@
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "STPRememberMePaymentCell.h"
 #import "STPAnalyticsClient.h"
+#import "STPColorUtils.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPRememberMePaymentCellDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
-@property(nonatomic) STPTheme *theme;
+@property(nonatomic)STPTheme *theme;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIImageView *cardImageView;
@@ -183,6 +184,11 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.tableView.allowsSelection = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone; // handle this with fake separator views for flexibility
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
+    if ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor]) {
+        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
+    } else {
+        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+    }
     
     self.cardImageView.tintColor = self.theme.accentColor;
     self.activityIndicator.tintColor = self.theme.accentColor;
@@ -196,6 +202,13 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.rememberMeCell.theme = self.theme;
     self.rememberMePhoneCell.theme = self.theme;
     self.rememberMeTermsView.theme = self.theme;
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor] 
+            ? UIStatusBarStyleDefault
+            : UIStatusBarStyleLightContent);
 }
 
 - (void)viewDidLayoutSubviews {

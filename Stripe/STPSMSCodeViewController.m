@@ -15,6 +15,7 @@
 #import "UIBarButtonItem+Stripe.h"
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
 #import "STPPhoneNumberValidator.h"
+#import "STPColorUtils.h"
 
 @interface STPSMSCodeViewController()<STPSMSCodeTextFieldDelegate>
 
@@ -134,6 +135,18 @@
     self.smsSentLabel.font = self.theme.smallFont;
     self.smsSentLabel.textColor = self.theme.secondaryForegroundColor;
     self.activityIndicator.tintColor = self.theme.accentColor;
+    if ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor]) {
+        self.scrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
+    } else {
+        self.scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+    }
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor] 
+            ? UIStatusBarStyleDefault
+            : UIStatusBarStyleLightContent);
 }
 
 - (void)viewDidLayoutSubviews {
