@@ -31,6 +31,7 @@
 @property(nonatomic, weak)UIButton *cancelButton;
 @property(nonatomic, weak)UILabel *errorLabel;
 @property(nonatomic, weak)UILabel *smsSentLabel;
+@property(nonatomic, weak)UIButton *pasteFromClipboardButton;
 @property(nonatomic, weak)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic)BOOL loading;
 
@@ -108,10 +109,38 @@
     [self.scrollView addSubview:smsSentLabel];
     self.smsSentLabel = smsSentLabel;
     
+    UIButton *pasteFromClipboardButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    pasteFromClipboardButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [pasteFromClipboardButton setTitle:NSLocalizedString(@"Paste copied code?", nil) forState:UIControlStateNormal];
+    [pasteFromClipboardButton addTarget:self action:@selector(pasteCodeFromClipboard) forControlEvents:UIControlEventTouchUpInside];
+    pasteFromClipboardButton.alpha = 0;
+    pasteFromClipboardButton.hidden = YES;
+    [self.scrollView addSubview:pasteFromClipboardButton];
+    self.pasteFromClipboardButton = pasteFromClipboardButton;
+    
     STPPaymentActivityIndicatorView *activityIndicator = [STPPaymentActivityIndicatorView new];
     [self.scrollView addSubview:activityIndicator];
     _activityIndicator = activityIndicator;
     [self updateAppearance];
+    
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter addObserver:self 
+                           selector:@selector(applicationDidBecomeActive) 
+                               name:UIApplicationDidBecomeActiveNotification 
+                             object:nil];
+}
+
+- (void)applicationDidBecomeActive {
+    if (self.view.superview != nil) {
+        NSString *pasteboardString = [UIPasteboard generalPasteboard].string;
+        BOOL clipboardIsCode = NO;
+        if (pasteboardString.length == 6) {
+            NSCharacterSet *invalidCharacterset = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"].invertedSet;
+            clipboardIsCode = [pasteboardString rangeOfCharacterFromSet:invalidCharacterset].location == NSNotFound;
+        }
+
+        [self setPasteFromClipboardButtonVisible:clipboardIsCode];
+    }
 }
 
 - (void)setTheme:(STPTheme *)theme {
@@ -134,6 +163,8 @@
     self.errorLabel.textColor = self.theme.errorColor;
     self.smsSentLabel.font = self.theme.smallFont;
     self.smsSentLabel.textColor = self.theme.secondaryForegroundColor;
+    self.pasteFromClipboardButton.tintColor = self.theme.accentColor;
+    self.pasteFromClipboardButton.titleLabel.font = self.theme.smallFont;
     self.activityIndicator.tintColor = self.theme.accentColor;
     if ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor]) {
         self.scrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
@@ -160,10 +191,21 @@
     CGSize topLabelSize = [self.topLabel sizeThatFits:CGSizeMake(contentWidth, CGFLOAT_MAX)];
     self.topLabel.frame = CGRectMake(padding, 40, contentWidth, topLabelSize.height);
     
-    self.codeField.frame = CGRectMake(padding, CGRectGetMaxY(self.topLabel.frame) + 20, contentWidth, 76);
+    self.codeField.frame = CGRectMake(padding, CGRectGetMaxY(self.topLabel.frame) + padding, contentWidth, 76);
+    
+    CGSize pasteFromClipboardButtonSize = [self.pasteFromClipboardButton sizeThatFits:CGSizeMake(contentWidth, CGFLOAT_MAX)];
+    self.pasteFromClipboardButton.frame = CGRectMake(padding, CGRectGetMaxY(self.codeField.frame) + padding, contentWidth, pasteFromClipboardButtonSize.height);
+    
+    CGFloat bottomLabelTop = (CGRectGetMaxY(self.pasteFromClipboardButton.hidden 
+                                            ? self.codeField.frame
+                                            : self.pasteFromClipboardButton.frame)
+                              + padding);
     
     CGSize bottomLabelSize = [self.bottomLabel sizeThatFits:CGSizeMake(contentWidth, CGFLOAT_MAX)];
-    self.bottomLabel.frame = CGRectMake(padding, CGRectGetMaxY(self.codeField.frame) + 20, contentWidth, bottomLabelSize.height);
+    self.bottomLabel.frame = CGRectMake(padding, 
+                                        bottomLabelTop, 
+                                        contentWidth, 
+                                        bottomLabelSize.height);
     self.errorLabel.frame = self.bottomLabel.frame;
     
     self.cancelButton.frame = CGRectOffset(self.errorLabel.frame, 0, self.errorLabel.frame.size.height + 2);
@@ -257,6 +299,25 @@
 - (void)cancel {
     [self.codeField resignFirstResponder];
     [self.delegate smsCodeViewControllerDidCancel:self];
+}
+
+- (void)setPasteFromClipboardButtonVisible:(BOOL)isVisible {
+    if (isVisible == self.pasteFromClipboardButton.hidden) {
+        [UIView animateWithDuration:0.2f delay:0 options:0 animations:^{
+            self.pasteFromClipboardButton.hidden = !isVisible;
+            self.pasteFromClipboardButton.alpha = isVisible ? 1 : 0;
+            [self.view setNeedsLayout];
+            [self.view layoutIfNeeded];
+        } completion:nil];
+    }
+}
+
+- (void)pasteCodeFromClipboard {
+    self.codeField.code = [UIPasteboard generalPasteboard].string;
+    [UIPasteboard generalPasteboard].string = @"";
+    [self setPasteFromClipboardButtonVisible:NO];
+    [self codeTextField:self.codeField
+           didEnterCode:self.codeField.code];
 }
 
 @end
