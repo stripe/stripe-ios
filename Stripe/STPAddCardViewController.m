@@ -260,28 +260,8 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    __weak typeof(self) weakself = self;
-    [self stp_beginObservingKeyboardWithBlock:^(CGRect keyboardFrame, UIView *currentlyEditedField) {
-        UIEdgeInsets insets = weakself.tableView.contentInset;
-        CGRect windowFrame = [weakself.view convertRect:weakself.view.frame toView:nil];
-        CGRect bottomIntersection = CGRectIntersection(windowFrame, keyboardFrame);
-        insets.bottom = bottomIntersection.size.height;
-        weakself.tableView.contentInset = insets;
-        weakself.tableView.scrollIndicatorInsets = insets;
-        if (!currentlyEditedField || bottomIntersection.size.height <= 0) {
-            weakself.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
-            return;
-        }
-        // the keyboard is visible
-        CGRect responderFrame = [currentlyEditedField convertRect:currentlyEditedField.bounds toView:self.tableView];
-        CGPoint offset = self.tableView.contentOffset;
-        
-        CGFloat topOfScreenOffset = CGRectGetMinY(responderFrame);
-        CGFloat topOfKeyboardOffset = CGRectGetMinY(responderFrame) - CGRectGetMinY(keyboardFrame);
-        offset.y = ((topOfScreenOffset + topOfKeyboardOffset) / 2) - self.tableView.contentInset.top;
-        offset.y = MAX(offset.y, -self.tableView.contentInset.top);
-        self.tableView.contentOffset = offset;
-    }];
+    [self stp_beginObservingKeyboardAndInsettingScrollView:self.tableView
+                                             onChangeBlock:nil];
     [[self firstEmptyField] becomeFirstResponder];
 }
 

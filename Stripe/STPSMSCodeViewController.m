@@ -62,7 +62,6 @@
     self.navigationItem.title = NSLocalizedString(@"Verification Code", nil);
     
     UIScrollView *scrollView = [UIScrollView new];
-    scrollView.scrollEnabled = NO;
     [self.view addSubview:scrollView];
     self.scrollView = scrollView;
     
@@ -152,7 +151,6 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     self.scrollView.frame = self.view.bounds;
-    self.scrollView.contentSize = self.view.bounds.size;
     
     CGFloat padding = 20.0f;
     CGFloat contentWidth = self.view.bounds.size.width - (padding * 2);
@@ -173,27 +171,35 @@
     
     CGFloat activityIndicatorWidth = 30.0f;
     self.activityIndicator.frame = CGRectMake((self.view.bounds.size.width - activityIndicatorWidth) / 2, CGRectGetMaxY(self.cancelButton.frame) + 20, activityIndicatorWidth, activityIndicatorWidth);
+    
+    self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.scrollView.frame), 
+                                             [self contentMaxY]);
+}
+
+- (CGFloat)contentMaxY {
+    return ((self.activityIndicator.animating 
+             ? CGRectGetMaxY(self.activityIndicator.frame) 
+             : CGRectGetMaxY(self.cancelButton.frame)) 
+            + 2);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     __weak typeof(self) weakself = self;
-    [self stp_beginObservingKeyboardWithBlock:^(CGRect keyboardFrame, __unused UIView *currentlyEditedField) {
-        CGFloat base = CGRectGetMaxY(weakself.navigationController.navigationBar.frame);
-        CGRect codeFrame = weakself.codeField.frame;
-        codeFrame.origin.y += base;
-        codeFrame.origin.y += 10.0f;
-        CGFloat offset = CGRectIntersection(codeFrame, keyboardFrame).size.height;
-        CGPoint destination;
-        if (offset > 0) {
-            destination = CGPointMake(0, -(base - offset));
-        } else {
-            destination = CGPointMake(0, -base);
-        }
-        if (!CGPointEqualToPoint(weakself.scrollView.contentOffset, destination)) {
-            weakself.scrollView.contentOffset = destination;
-        }
-    }];
+    [self stp_beginObservingKeyboardAndInsettingScrollView:self.scrollView
+                                             onChangeBlock:^(__unused CGRect keyboardFrame, __unused UIView * _Nullable currentlyEditedField) {
+                                                 CGFloat scrollOffsetY = weakself.scrollView.contentOffset.y + weakself.scrollView.contentInset.top;
+                                                 CGFloat topLabelDistanceFromOffset = CGRectGetMinY(weakself.topLabel.frame) - scrollOffsetY;
+                                                 
+                                                 if (topLabelDistanceFromOffset > 0
+                                                     && [weakself contentMaxY] > weakself.scrollView.contentOffset.y + CGRectGetHeight(weakself.scrollView.bounds) - weakself.scrollView.contentInset.bottom) {
+                                                     // We have extra whitespace on top but the bottom of our content is cut off, so scroll a bit
+                                                     
+                                                     CGPoint contentOffset = weakself.scrollView.contentOffset;
+                                                     contentOffset.y += (topLabelDistanceFromOffset - 2);
+                                                     weakself.scrollView.contentOffset = contentOffset;
+                                                 }
+                                             }];
     [self.codeField becomeFirstResponder];
     self.hideSMSSentLabelTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f target:self selector:@selector(hideSMSSentLabel) userInfo:nil repeats:NO];
 }
@@ -250,6 +256,8 @@
     }
     _loading = loading;
     [self.activityIndicator setAnimating:loading animated:YES];
+    self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.scrollView.frame), 
+                                             [self contentMaxY]);
     self.navigationItem.leftBarButtonItem.enabled = !loading;
     self.cancelButton.enabled = !loading;
 }
