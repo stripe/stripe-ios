@@ -8,12 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void(^STPKeyboardFrameBlock)(CGRect keyboardFrame, UIView *currentlyEditedField);
+NS_ASSUME_NONNULL_BEGIN
+
+typedef void(^STPKeyboardFrameBlock)(CGRect keyboardFrame, UIView *_Nullable currentlyEditedField);
 
 @interface UIViewController (Stripe_KeyboardAvoiding)
 
-- (void)stp_beginObservingKeyboardWithBlock:(STPKeyboardFrameBlock)block;
+- (void)stp_beginObservingKeyboardAndInsettingScrollView:(nullable UIScrollView *)scrollView
+                                           onChangeBlock:(nullable STPKeyboardFrameBlock)block;
 
 @end
 
 void linkUIViewControllerKeyboardAvoidingCategory(void);
+
+NS_ASSUME_NONNULL_END
