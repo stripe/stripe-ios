@@ -1,4 +1,9 @@
-== 8.0.3 2016-07-09
+== 8.0.4 2016-08-01
+* Fixed an issue with Apple Pay payments not using the correct currency.
+* View controllers now update their status bar and scroll view indicator styles based on their theme.
+* SMS code screen now offers to paste copied codes.
+
+== 8.0.3 2016-07-25
 * Fixed an issue with some Cocoapods installations
 
 == 8.0.2 2016-07-09
