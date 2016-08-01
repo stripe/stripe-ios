@@ -9,52 +9,24 @@
 #import <XCTest/XCTest.h>
 #import "STPAPIClient.h"
 #import "STPPaymentContext.h"
+#import "TestSTPBackendAPIAdapter.h"
 
 @interface STPPaymentContext (Testing)
 - (PKPaymentRequest *)buildPaymentRequest;
 @end
 
-@interface TestSTPBackendAPIAdapter: NSObject <STPBackendAPIAdapter>
-@end
-
-@implementation TestSTPBackendAPIAdapter
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-parameter"
-- (void)retrieveCustomer:(STPCustomerCompletionBlock)completion {
-
-}
-
-- (void)attachSourceToCustomer:(id<STPSource>)source completion:(STPErrorBlock)completion {
-    
-}
-
-- (void)selectDefaultCustomerSource:(id<STPSource>)source completion:(STPErrorBlock)completion {
-    
-}
-#pragma clang diagnostic pop
-
-@end
-
 @interface STPPaymentContextTest : XCTestCase
-
 @end
 
 @implementation STPPaymentContextTest
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
     [Stripe setDefaultPublishableKey:@"test"];
     [STPPaymentConfiguration sharedConfiguration].appleMerchantIdentifier = @"testMerchantId";
 }
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
-}
-
-- (void)testPKPaymentTotalAmount {
+- (void)testBuildPaymentRequest_totalAmount {
     STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
     context.paymentAmount = 150;
     PKPaymentRequest *request = [context buildPaymentRequest];
@@ -63,7 +35,7 @@
                   @"PKPayment total is not equal to STPPaymentContext amount");
 }
 
-- (void)testPKPaymentUSDDefault {
+- (void)testBuildPaymentRequest_USDDefault {
     STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
     context.paymentAmount = 100;
     PKPaymentRequest *request = [context buildPaymentRequest];
@@ -72,7 +44,7 @@
                   @"Default PKPaymentRequest currency code is not USD");
 }
 
-- (void)testPKPaymentGBP {
+- (void)testBuildPaymentRequest_currency {
     STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
     context.paymentAmount = 100;
     context.paymentCurrency = @"GBP";
@@ -82,7 +54,7 @@
                   @"PKPaymentRequest currency code is not equal to STPPaymentContext currency");
 }
 
-- (void)testPKPaymentLowercase {
+- (void)testBuildPaymentRequest_uppercaseCurrency {
     STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
     context.paymentAmount = 100;
     context.paymentCurrency = @"eur";
