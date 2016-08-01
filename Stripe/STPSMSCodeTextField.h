@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, weak)id<STPSMSCodeTextFieldDelegate>delegate;
 @property(nonatomic)STPTheme *theme;
+@property(nonatomic, copy)NSString *code;
 
 - (void)shakeAndClear;
 
