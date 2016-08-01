@@ -313,6 +313,7 @@
                                                                           amount:amount];
     paymentRequest.paymentSummaryItems = @[totalItem];
     paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
+    paymentRequest.currencyCode = self.paymentCurrency.uppercaseString;
     return paymentRequest;
 }
 
