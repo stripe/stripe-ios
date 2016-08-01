@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy)NSString *companyName;
 
 /**
- *  The Apple Merchant Identifier to use during Apple Pay transactions. To create one of these, see our guide at https://stripe.com/docs/mobile/applepay . You must set this to a valid identifier in order to automatically enable Apple Pay.
+ *  The Apple Merchant Identifier to use during Apple Pay transactions. To create one of these, see our guide at https://stripe.com/docs/mobile/apple-pay . You must set this to a valid identifier in order to automatically enable Apple Pay.
  */
 @property(nonatomic, nullable, copy)NSString *appleMerchantIdentifier;
 
