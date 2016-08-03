@@ -10,6 +10,7 @@
 #import "STPAPIClient.h"
 #import "STPPaymentContext.h"
 #import "TestSTPBackendAPIAdapter.h"
+#import "NSDecimalNumber+Stripe_Currency.h"
 
 @interface STPPaymentContext (Testing)
 - (PKPaymentRequest *)buildPaymentRequest;
@@ -64,6 +65,51 @@
                   @"PKPaymentRequest currency code is not uppercased");
 }
 
+- (NSArray<PKPaymentSummaryItem *> *)testSummaryItems {
+    return @[[PKPaymentSummaryItem summaryItemWithLabel:@"First item"
+                                                 amount:[NSDecimalNumber decimalNumberWithMantissa:20 exponent:0 isNegative:NO]],
+             [PKPaymentSummaryItem summaryItemWithLabel:@"Second item"
+                                                 amount:[NSDecimalNumber decimalNumberWithMantissa:90 exponent:0 isNegative:NO]],
+             [PKPaymentSummaryItem summaryItemWithLabel:@"Discount"
+                                                 amount:[NSDecimalNumber decimalNumberWithMantissa:10 exponent:0 isNegative:YES]],
+             [PKPaymentSummaryItem summaryItemWithLabel:@"Total"
+                                                 amount:[NSDecimalNumber decimalNumberWithMantissa:100 exponent:0 isNegative:NO]]
+             ];
+}
 
+- (void)testBuildPaymentRequest_summaryItems {
+    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    context.paymentAmount = 10000;
+    context.paymentSummaryItems = [self testSummaryItems];
+    PKPaymentRequest *request = [context buildPaymentRequest];
+    
+    XCTAssertTrue([request.paymentSummaryItems isEqualToArray:context.paymentSummaryItems]);
+}
+
+- (void)testBuildPaymentRequest_autoGenSummaryItem {
+    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    context.paymentAmount = 10000;
+    PKPaymentRequest *request = [context buildPaymentRequest];
+
+    NSDecimalNumber *itemTotalAmount = request.paymentSummaryItems.lastObject.amount;
+    NSDecimalNumber *correctTotalAmount = [NSDecimalNumber stp_decimalNumberWithAmount:context.paymentAmount
+                                                                              currency:context.paymentCurrency];
+    
+    XCTAssertTrue([itemTotalAmount isEqualToNumber:correctTotalAmount]);
+}
+
+- (void)testSetPaymentSummaryItems {
+    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    context.paymentAmount = 10000;
+    NSArray<PKPaymentSummaryItem *> *items = [self testSummaryItems];
+    XCTAssertNoThrow(context.paymentSummaryItems = items);
+}
+
+- (void)testSetPaymentSummaryItems_throwOnAmountMismatch {
+    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    context.paymentAmount = 100;
+    NSArray<PKPaymentSummaryItem *> *items = [self testSummaryItems];
+    XCTAssertThrows(context.paymentSummaryItems = items);
+}
 
 @end

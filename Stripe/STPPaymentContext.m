@@ -167,6 +167,24 @@
     }
 }
 
+- (void)setPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems {
+    if (paymentSummaryItems.count > 0) {
+        PKPaymentSummaryItem *lastItem = paymentSummaryItems.lastObject;
+        NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:self.paymentAmount
+                                                                      currency:self.paymentCurrency];
+        if ([amount isEqualToNumber:lastItem.amount]) {
+            _paymentSummaryItems = paymentSummaryItems;
+        }
+        else {
+            _paymentSummaryItems = nil;
+            NSAssert(0, @"Amount for last object in paymentSummaryItems does not equal paymentAmount (%@ vs %@, currency = )", lastItem.amount, amount, self.paymentCurrency);
+        }
+    }
+    else {
+        _paymentSummaryItems = nil;
+    }
+}
+
 - (void)presentPaymentMethodsViewController {
     NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushPaymentMethodsViewController on it. Next time, set the hostViewController property first!");
     __weak typeof(self)weakself = self;
@@ -307,11 +325,17 @@
         return nil;
     }
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.configuration.appleMerchantIdentifier];
-    NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:self.paymentAmount
-                                                                  currency:self.paymentCurrency];
-    PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:self.configuration.companyName
-                                                                          amount:amount];
-    paymentRequest.paymentSummaryItems = @[totalItem];
+    
+    NSArray<PKPaymentSummaryItem *> *summaryItems = self.paymentSummaryItems;
+    if (!summaryItems) {
+        NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:self.paymentAmount
+                                                                      currency:self.paymentCurrency];
+        PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:self.configuration.companyName
+                                                                              amount:amount];
+        summaryItems = @[totalItem];
+    }
+    
+    paymentRequest.paymentSummaryItems = summaryItems;
     paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
     paymentRequest.currencyCode = self.paymentCurrency.uppercaseString;
     return paymentRequest;
