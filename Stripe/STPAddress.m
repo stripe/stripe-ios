@@ -22,10 +22,15 @@
         NSString *first = firstName ?: @"";
         NSString *last = lastName ?: @"";
         _name = [@[first, last] componentsJoinedByString:@" "];
+        
         ABMultiValueRef emailValues = ABRecordCopyValue(record, kABPersonEmailProperty);
-        _email = (__bridge NSString *)(ABMultiValueCopyValueAtIndex(emailValues, 0));
+        _email = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(emailValues, 0));
+        CFRelease(emailValues);
+        
         ABMultiValueRef phoneValues = ABRecordCopyValue(record, kABPersonPhoneProperty);
-        NSString *phone = (__bridge NSString *)(ABMultiValueCopyValueAtIndex(phoneValues, 0));
+        NSString *phone = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(phoneValues, 0));
+        CFRelease(phoneValues);
+        
         _phone = [STPCardValidator sanitizedNumericStringForString:phone];
 
         ABMultiValueRef addressValues = ABRecordCopyValue(record, kABPersonAddressProperty);
