@@ -168,6 +168,7 @@
 }
 
 - (void)setPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     if (paymentSummaryItems.count > 0) {
         PKPaymentSummaryItem *lastItem = paymentSummaryItems.lastObject;
         NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:self.paymentAmount
@@ -177,7 +178,7 @@
         }
         else {
             _paymentSummaryItems = nil;
-            NSAssert(0, @"Amount for last object in paymentSummaryItems does not equal paymentAmount (%@ vs %@, currency = )", lastItem.amount, amount, self.paymentCurrency);
+            NSAssert(0, @"Amount for last object in paymentSummaryItems does not equal paymentAmount (%@ vs %@, currency = %@)", lastItem.amount, amount, self.paymentCurrency);
         }
     }
     else {

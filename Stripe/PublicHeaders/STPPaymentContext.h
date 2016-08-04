@@ -107,10 +107,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  If you support Apple Pay, you can optionally set the PKPaymentSummaryItems you want to display here.
  *  If nil, a single summary item will be automatically generated using paymentAmount and your companyName.
  *  @see PKPaymentRequest for more information
- 
- *  @warning If you set this array, the last summary item's amount must match the value you set for paymentAmount or an assert will be thrown. 
+ *
+ *  @warning If you set this array, the last summary item's amount must match the value you set for paymentAmount or an assert will be thrown.
+ *  @warning PKPaymentSummaryItem is only available in iOS8+. If you support iOS 7 you should do a runtime availability check before setting this property. 
  */
-@property(nonatomic, copy, nullable)NSArray<PKPaymentSummaryItem *> *paymentSummaryItems;
+@property(nonatomic, copy, nullable)NSArray<PKPaymentSummaryItem *> *paymentSummaryItems; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
 
 /**
  *  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you can in turn call this method to try loading again (if that hasn't been called, calling this will do nothing). If retrying in turn fails, `paymentContext:didFailToLoadWithError:` will be called again (and you can again call this to keep retrying, etc).
