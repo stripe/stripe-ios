@@ -12,6 +12,7 @@
 #import "STPPaymentCardTextFieldViewModel.h"
 #import "STPFormTextField.h"
 #import "STPImageLibrary.h"
+#import "STPWeakStrongMacros.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -357,11 +358,11 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     self.viewModel = [STPPaymentCardTextFieldViewModel new];
     [self onChange];
     [self updateImageForFieldType:STPCardFieldTypeNumber];
-    __weak id weakself = self;
+    WEAK(self);
     [self setNumberFieldShrunk:NO animated:YES completion:^(__unused BOOL completed){
-        __strong id strongself = weakself;
-        if ([strongself isFirstResponder]) {
-            [[strongself numberField] becomeFirstResponder];
+        STRONG(self);
+        if ([self isFirstResponder]) {
+            [[self numberField] becomeFirstResponder];
         }
     }];
 }

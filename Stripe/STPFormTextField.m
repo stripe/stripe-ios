@@ -11,6 +11,7 @@
 #import "STPPhoneNumberValidator.h"
 #import "NSString+Stripe.h"
 #import "STPDelegateProxy.h"
+#import "STPWeakStrongMacros.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -134,14 +135,14 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
             };
             break;
         case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers: {
-            __weak id weakself = self;
+            WEAK(self);
             self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
                 if (![STPCardValidator stringIsNumeric:inputString.string]) {
                     return [inputString copy];
                 }
-                __strong id strongself = weakself;
+                STRONG(self);
                 NSString *phoneNumber = [STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:inputString.string];
-                NSDictionary *attributes = [[strongself class] attributesForAttributedString:inputString];
+                NSDictionary *attributes = [[self class] attributesForAttributedString:inputString];
                 return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
             };
             break;
