@@ -25,7 +25,7 @@
         
         ABMultiValueRef emailValues = ABRecordCopyValue(record, kABPersonEmailProperty);
         _email = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(emailValues, 0));
-        CFRelease(emailValues);
+//        CFRelease(emailValues);
         
         ABMultiValueRef phoneValues = ABRecordCopyValue(record, kABPersonPhoneProperty);
         NSString *phone = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(phoneValues, 0));
