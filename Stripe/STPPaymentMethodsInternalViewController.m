@@ -123,8 +123,9 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     cell.backgroundColor = self.theme.secondaryBackgroundColor;
     if (indexPath.section == STPPaymentMethodCardListSection) {
         id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
-        cell.imageView.image = paymentMethod.image;
+        cell.imageView.image = paymentMethod.templateImage;
         BOOL selected = [paymentMethod isEqual:self.selectedPaymentMethod];
+        cell.imageView.tintColor = selected ? self.theme.accentColor : [self.theme.primaryForegroundColor colorWithAlphaComponent:0.6f];
         cell.textLabel.attributedText = [self buildAttributedStringForPaymentMethod:paymentMethod selected:selected];
         cell.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
