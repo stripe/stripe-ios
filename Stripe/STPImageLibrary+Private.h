@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage *)largeCardApplePayImage;
 
 + (UIImage *)safeImageNamed:(NSString *)imageName
-        templateifAvailable:(BOOL)templateIfAvailable;
+        templateIfAvailable:(BOOL)templateIfAvailable;
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)brand 
                            template:(BOOL)isTemplate;
 + (UIImage *)imageWithTintColor:(UIColor *)color

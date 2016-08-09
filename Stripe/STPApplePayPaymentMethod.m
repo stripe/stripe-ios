@@ -18,7 +18,7 @@
 
 - (UIImage *)templateImage {
     return [STPImageLibrary safeImageNamed:@"stp_card_applepay_template" 
-                       templateifAvailable:YES];
+                       templateIfAvailable:YES];
 }
 
 - (NSString *)label {

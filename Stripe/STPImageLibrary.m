@@ -61,7 +61,7 @@
 }
 
 + (UIImage *)safeImageNamed:(NSString *)imageName {
-    return [self safeImageNamed:imageName templateifAvailable:NO];
+    return [self safeImageNamed:imageName templateIfAvailable:NO];
 }
 
 @end
@@ -69,31 +69,31 @@
 @implementation STPImageLibrary (Private)
 
 + (UIImage *)addIcon {
-    return [self safeImageNamed:@"stp_icon_add" templateifAvailable:YES];
+    return [self safeImageNamed:@"stp_icon_add" templateIfAvailable:YES];
 }
 
 + (UIImage *)leftChevronIcon {
-    return [self safeImageNamed:@"stp_icon_chevron_left" templateifAvailable:YES];
+    return [self safeImageNamed:@"stp_icon_chevron_left" templateIfAvailable:YES];
 }
 
 + (UIImage *)smallRightChevronIcon {
-    return [self safeImageNamed:@"stp_icon_chevron_right_small" templateifAvailable:YES];
+    return [self safeImageNamed:@"stp_icon_chevron_right_small" templateIfAvailable:YES];
 }
 
 + (UIImage *)largeCardFrontImage {
-    return [self safeImageNamed:@"stp_card_form_front" templateifAvailable:YES];
+    return [self safeImageNamed:@"stp_card_form_front" templateIfAvailable:YES];
 }
 
 + (UIImage *)largeCardBackImage {
-    return [self safeImageNamed:@"stp_card_form_back" templateifAvailable:YES];
+    return [self safeImageNamed:@"stp_card_form_back" templateIfAvailable:YES];
 }
 
 + (UIImage *)largeCardApplePayImage {
-    return [self safeImageNamed:@"stp_card_form_applepay" templateifAvailable:YES];
+    return [self safeImageNamed:@"stp_card_form_applepay" templateIfAvailable:YES];
 }
 
 + (UIImage *)safeImageNamed:(NSString *)imageName
-        templateifAvailable:(BOOL)templateIfAvailable {
+        templateIfAvailable:(BOOL)templateIfAvailable {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     UIImage *image = nil;
     if ([UIImage respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
@@ -113,33 +113,35 @@
 
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)brand 
                            template:(BOOL)isTemplate {
+    BOOL shouldUseTemplate = isTemplate;
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     NSString *imageName;
     switch (brand) {
             case STPCardBrandAmex:
-            imageName = isTemplate ? @"stp_card_amex_template" : @"stp_card_amex";
+            imageName = shouldUseTemplate ? @"stp_card_amex_template" : @"stp_card_amex";
             break;
             case STPCardBrandDinersClub:
-            imageName = isTemplate ? @"stp_card_diners_template" : @"stp_card_diners";
+            imageName = shouldUseTemplate ? @"stp_card_diners_template" : @"stp_card_diners";
             break;
             case STPCardBrandDiscover:
-            imageName = isTemplate ? @"stp_card_discover_template" : @"stp_card_discover";
+            imageName = shouldUseTemplate ? @"stp_card_discover_template" : @"stp_card_discover";
             break;
             case STPCardBrandJCB:
-            imageName = isTemplate ? @"stp_card_jcb_template" : @"stp_card_jcb";
+            imageName = shouldUseTemplate ? @"stp_card_jcb_template" : @"stp_card_jcb";
             break;
             case STPCardBrandMasterCard:
-            imageName = isTemplate ? @"stp_card_mastercard_template" : @"stp_card_mastercard";
+            imageName = shouldUseTemplate ? @"stp_card_mastercard_template" : @"stp_card_mastercard";
             break;
             case STPCardBrandUnknown:
-            isTemplate = YES;
+            shouldUseTemplate = YES;
             imageName = @"stp_card_placeholder_template";
             break;
             case STPCardBrandVisa:
-            imageName = isTemplate ? @"stp_card_visa_template" : @"stp_card_visa";
+            imageName = shouldUseTemplate ? @"stp_card_visa_template" : @"stp_card_visa";
+            break;
     }
     UIImage *image = [self safeImageNamed:imageName
-                      templateifAvailable:isTemplate];
+                      templateIfAvailable:shouldUseTemplate];
     return image;
 }
 
