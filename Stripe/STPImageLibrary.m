@@ -120,8 +120,7 @@
             imageName = isTemplate ? @"stp_card_amex_template" : @"stp_card_amex";
             break;
             case STPCardBrandDinersClub:
-            // TODO: replace when diners card template is available
-            imageName = isTemplate ? @"stp_card_diners" : @"stp_card_diners";
+            imageName = isTemplate ? @"stp_card_diners_template" : @"stp_card_diners";
             break;
             case STPCardBrandDiscover:
             imageName = isTemplate ? @"stp_card_discover_template" : @"stp_card_discover";
