@@ -214,7 +214,6 @@
 		049A3F9F1CC8006800F57DE7 /* stp_icon_add.png in Resources */ = {isa = PBXBuildFile; fileRef = 049A3F9C1CC8006800F57DE7 /* stp_icon_add.png */; };
 		049A3FA01CC8006800F57DE7 /* stp_icon_add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 049A3F9D1CC8006800F57DE7 /* stp_icon_add@2x.png */; };
 		049A3FA11CC8006800F57DE7 /* stp_icon_add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 049A3F9E1CC8006800F57DE7 /* stp_icon_add@3x.png */; };
-		049A3FA51CC8071100F57DE7 /* stp_card_applepay.png in Resources */ = {isa = PBXBuildFile; fileRef = 049A3FA21CC8071100F57DE7 /* stp_card_applepay.png */; };
 		049A3FA61CC8071100F57DE7 /* stp_card_applepay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 049A3FA31CC8071100F57DE7 /* stp_card_applepay@2x.png */; };
 		049A3FA71CC8071100F57DE7 /* stp_card_applepay@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 049A3FA41CC8071100F57DE7 /* stp_card_applepay@3x.png */; };
 		049A3FA81CC963EB00F57DE7 /* STPPaymentMethod.h in Headers */ = {isa = PBXBuildFile; fileRef = C11810851CC6AF4C0022FB55 /* STPPaymentMethod.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -666,7 +665,6 @@
 		049A3F9C1CC8006800F57DE7 /* stp_icon_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_icon_add.png; sourceTree = "<group>"; };
 		049A3F9D1CC8006800F57DE7 /* stp_icon_add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_add@2x.png"; sourceTree = "<group>"; };
 		049A3F9E1CC8006800F57DE7 /* stp_icon_add@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_add@3x.png"; sourceTree = "<group>"; };
-		049A3FA21CC8071100F57DE7 /* stp_card_applepay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_card_applepay.png; sourceTree = "<group>"; };
 		049A3FA31CC8071100F57DE7 /* stp_card_applepay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_applepay@2x.png"; sourceTree = "<group>"; };
 		049A3FA41CC8071100F57DE7 /* stp_card_applepay@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_applepay@3x.png"; sourceTree = "<group>"; };
 		049A3FAC1CC9AA9900F57DE7 /* STPAddressViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPAddressViewModel.h; sourceTree = "<group>"; };
@@ -904,7 +902,6 @@
 				049881001CED75AE00EA4FFD /* stp_card_form_applepay.png */,
 				049881011CED75AE00EA4FFD /* stp_card_form_applepay@2x.png */,
 				049881021CED75AE00EA4FFD /* stp_card_form_applepay@3x.png */,
-				049A3FA21CC8071100F57DE7 /* stp_card_applepay.png */,
 				049A3FA31CC8071100F57DE7 /* stp_card_applepay@2x.png */,
 				049A3FA41CC8071100F57DE7 /* stp_card_applepay@3x.png */,
 				0438EF891B741C2800D506CC /* stp_card_amex.png */,
@@ -1660,7 +1657,6 @@
 				0438EFB01B741C2800D506CC /* stp_card_cvc_amex.png in Resources */,
 				042CA1B71B7BD84100AF0DA6 /* stp_card_placeholder_template@2x.png in Resources */,
 				049A3FA11CC8006800F57DE7 /* stp_icon_add@3x.png in Resources */,
-				049A3FA51CC8071100F57DE7 /* stp_card_applepay.png in Resources */,
 				0438EFB21B741C2800D506CC /* stp_card_cvc_amex@2x.png in Resources */,
 				C11810BF1CC7DA290022FB55 /* stp_card_form_back@2x.png in Resources */,
 				0438EFD81B741C2800D506CC /* stp_card_visa@3x.png in Resources */,
