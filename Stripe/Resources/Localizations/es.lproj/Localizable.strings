@@ -1,0 +1,159 @@
+﻿/* No comment provided by engineer. */
+"#23" = "#23";
+
+/* {card brand} ending in {last4} */
+"%@ Ending In %@" = "%1$@ Ending In %2$@";
+
+/* No comment provided by engineer. */
+"(555) 123-1234" = "(555) 123-1234";
+
+/* No comment provided by engineer. */
+"123 Address St" = "123 Address St";
+
+/* No comment provided by engineer. */
+"12345" = "12345";
+
+/* No comment provided by engineer. */
+"Add a Card" = "Add a Card";
+
+/* No comment provided by engineer. */
+"Add New Card..." = "Add New Card...";
+
+/* No comment provided by engineer. */
+"Address" = "Address";
+
+/* No comment provided by engineer. */
+"Apple Pay" = "Apple Pay";
+
+/* No comment provided by engineer. */
+"Apt." = "Apt.";
+
+/* No comment provided by engineer. */
+"Back" = "Back";
+
+/* No comment provided by engineer. */
+"CA" = "CA";
+
+/* No comment provided by engineer. */
+"City" = "City";
+
+/* No comment provided by engineer. */
+"Country" = "Country";
+
+/* No comment provided by engineer. */
+"County" = "County";
+
+/* No comment provided by engineer. */
+"Didn't receive the code?" = "Didn't receive the code?";
+
+/* No comment provided by engineer. */
+"Email" = "Email";
+
+/* No comment provided by engineer. */
+"Enter card details manually" = "Enter card details manually";
+
+/* No comment provided by engineer. */
+"Enter the verification code to use the payment info you stored with Stripe." = "Enter the verification code to use the payment info you stored with Stripe.";
+
+/* No comment provided by engineer. */
+"Fill in your card details manually" = "Fill in your card details manually";
+
+/* No comment provided by engineer. */
+"Invalid Code" = "Invalid Code";
+
+/* No comment provided by engineer. */
+"John Appleseed" = "John Appleseed";
+
+/* No comment provided by engineer. */
+"Loading..." = "Loading...";
+
+/* No comment provided by engineer. */
+"More info" = "More info";
+
+/* No comment provided by engineer. */
+"Name" = "Name";
+
+/* No comment provided by engineer. */
+"Next" = "Next";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* No comment provided by engineer. */
+"Paste copied code?" = "Paste copied code?";
+
+/* No comment provided by engineer. */
+"Payment Method" = "Payment Method";
+
+/* No comment provided by engineer. */
+"Phone" = "Phone";
+
+/* No comment provided by engineer. */
+"Postal Code" = "Postal Code";
+
+/* No comment provided by engineer. */
+"Privacy Policy" = "Privacy Policy";
+
+/* No comment provided by engineer. */
+"San Francisco" = "San Francisco";
+
+/* No comment provided by engineer. */
+"Save for use in other apps" = "Save for use in other apps";
+
+/* No comment provided by engineer. */
+"Something went wrong with remember me: " = "Something went wrong with remember me: ";
+
+/* No comment provided by engineer. */
+"State" = "State";
+
+/* No comment provided by engineer. */
+"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's Privacy Policy and Terms. More Info" = "Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's Privacy Policy and Terms. More Info";
+
+/* No comment provided by engineer. */
+"Terms" = "Terms";
+
+/* No comment provided by engineer. */
+"The operation was cancelled" = "The operation was cancelled";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "There was an error processing your card -- try again in a few seconds";
+
+/* No comment provided by engineer. */
+"There was an error submitting your autofilled card details." = "There was an error submitting your autofilled card details.";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "There was an unexpected error -- try again in a few seconds";
+
+/* No comment provided by engineer. */
+"Too many incorrect attempts" = "Too many incorrect attempts";
+
+/* No comment provided by engineer. */
+"Verification Code" = "Verification Code";
+
+/* No comment provided by engineer. */
+"We just sent a text message to:" = "We just sent a text message to:";
+
+/* email field placeholder */
+"you@email.com" = "you@email.com";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Your card has expired";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Your card was declined";
+
+/* Error when the card's expiration month is not valid */
+"Your card's expiration month is invalid" = "Your card's expiration month is invalid";
+
+/* Error when the card's expiration year is not valid */
+"Your card's expiration year is invalid" = "Your card's expiration year is invalid";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Your card's number is invalid";
+
+/* Error when the card's CVC is not valid */
+"Your card's security code is invalid" = "Your card's security code is invalid";
+
+/* No comment provided by engineer. */
+"ZIP Code" = "ZIP Code";
+

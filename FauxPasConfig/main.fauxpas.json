@@ -5,11 +5,11 @@
     // Xcode build configuration to check (String)
     "buildConfig": "Release",
     // Rules to apply (Array of strings)
-    "rules": ["APIAvailability","BuildSettingsSetInGUI","DefaultInExhaustiveSwitch","IBOutletsInPublicInterface","ImplicitAtomicProperty","InstanceMethodWritesToStaticVariable","MacroLiteral","MallocCast","MallocWithoutSizeof","NonTypedefBlockDeclaration","ReservedIdentifierNaming","StrongInsteadOfRetain","ThrowingObjCException","UnusedMethod","UnusedResource","UnusedTranslation","UsedVariableMarkedUnused","XIBUnknownClassReference"],
+    "rules": ["APIAvailability","BuildSettingsSetInGUI","DefaultInExhaustiveSwitch","IBOutletsInPublicInterface","ImplicitAtomicProperty","InstanceMethodWritesToStaticVariable","MacroLiteral","MallocCast","MallocWithoutSizeof","NonTypedefBlockDeclaration","ReservedIdentifierNaming","StrongInsteadOfRetain","ThrowingObjCException","UnusedMethod","UnusedResource","UsedVariableMarkedUnused","XIBUnknownClassReference"],
     // Rules to apply only (Array of strings)
     //"onlyRules": [],
     // Rule tags to apply (Array of strings)
-    //"ruleTags": ["Recommended"],
+    "ruleTags": ["Localization","Recommended"],
     // Rules to exclude (Array of strings)
     "excludedRules": ["ConstructorReturnType","PrivateCategory"],
     // Prefixes of files to exclude (Array of strings)
@@ -49,7 +49,7 @@
         // Options for localization rules
         "_LocalizationRules": {
             // Functions used in place of NSLocalizedString (Array of strings)
-            //"localizedStringRoutines": []
+            "localizedStringRoutines": ["STPLocalizedString"]
         },
         // Options for rule: +[NSObject load] method without an
         // @autoreleasepool
