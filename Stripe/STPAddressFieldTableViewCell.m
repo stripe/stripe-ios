@@ -48,8 +48,13 @@
         [self.contentView addSubview:textField];
         
         UIToolbar *toolbar = [UIToolbar new];
-        UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStyleDone target:self action:@selector(nextTapped:)];
+        UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                      target:nil 
+                                                                                      action:nil];
+        UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:STPLocalizedString(@"Next", nil)
+                                                                     style:UIBarButtonItemStyleDone
+                                                                    target:self
+                                                                    action:@selector(nextTapped:)];
         toolbar.items = @[flexibleItem, nextItem];
         _inputAccessoryToolbar = toolbar;
         

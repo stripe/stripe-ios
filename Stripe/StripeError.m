@@ -39,7 +39,7 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
     // There should always be a message and type for the error
     if (devMessage == nil || type == nil) {
         NSDictionary *userInfo = @{
-                                   NSLocalizedDescriptionKey: [NSError stp_unexpectedErrorMessage],
+                                   NSLocalizedDescriptionKey: [self stp_unexpectedErrorMessage],
                                    STPErrorMessageKey: @"Could not interpret the error response that was returned from Stripe."
                                    };
         return [[self alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
@@ -54,22 +54,22 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
     
     if ([type isEqualToString:@"api_error"]) {
         code = STPAPIError;
-        userInfo[NSLocalizedDescriptionKey] = [NSError stp_unexpectedErrorMessage];
+        userInfo[NSLocalizedDescriptionKey] = [self stp_unexpectedErrorMessage];
     } else if ([type isEqualToString:@"invalid_request_error"]) {
         code = STPInvalidRequestError;
         userInfo[NSLocalizedDescriptionKey] = devMessage;
     } else if ([type isEqualToString:@"card_error"]) {
         code = STPCardError;
         NSDictionary *errorCodes = @{
-                                     @"incorrect_number": @{@"code": STPIncorrectNumber, @"message": [NSError stp_cardErrorInvalidNumberUserMessage]},
-                                     @"invalid_number": @{@"code": STPInvalidNumber, @"message": [NSError stp_cardErrorInvalidNumberUserMessage]},
-                                     @"invalid_expiry_month": @{@"code": STPInvalidExpMonth, @"message": [NSError stp_cardErrorInvalidExpMonthUserMessage]},
-                                     @"invalid_expiry_year": @{@"code": STPInvalidExpYear, @"message": [NSError stp_cardErrorInvalidExpYearUserMessage]},
-                                     @"invalid_cvc": @{@"code": STPInvalidCVC, @"message": [NSError stp_cardInvalidCVCUserMessage]},
-                                     @"expired_card": @{@"code": STPExpiredCard, @"message": [NSError stp_cardErrorExpiredCardUserMessage]},
-                                     @"incorrect_cvc": @{@"code": STPIncorrectCVC, @"message": [NSError stp_cardInvalidCVCUserMessage]},
-                                     @"card_declined": @{@"code": STPCardDeclined, @"message": [NSError stp_cardErrorDeclinedUserMessage]},
-                                     @"processing_error": @{@"code": STPProcessingError, @"message": [NSError stp_cardErrorProcessingErrorUserMessage]},
+                                     @"incorrect_number": @{@"code": STPIncorrectNumber, @"message": [self stp_cardErrorInvalidNumberUserMessage]},
+                                     @"invalid_number": @{@"code": STPInvalidNumber, @"message": [self stp_cardErrorInvalidNumberUserMessage]},
+                                     @"invalid_expiry_month": @{@"code": STPInvalidExpMonth, @"message": [self stp_cardErrorInvalidExpMonthUserMessage]},
+                                     @"invalid_expiry_year": @{@"code": STPInvalidExpYear, @"message": [self stp_cardErrorInvalidExpYearUserMessage]},
+                                     @"invalid_cvc": @{@"code": STPInvalidCVC, @"message": [self stp_cardInvalidCVCUserMessage]},
+                                     @"expired_card": @{@"code": STPExpiredCard, @"message": [self stp_cardErrorExpiredCardUserMessage]},
+                                     @"incorrect_cvc": @{@"code": STPIncorrectCVC, @"message": [self stp_cardInvalidCVCUserMessage]},
+                                     @"card_declined": @{@"code": STPCardDeclined, @"message": [self stp_cardErrorDeclinedUserMessage]},
+                                     @"processing_error": @{@"code": STPProcessingError, @"message": [self stp_cardErrorProcessingErrorUserMessage]},
                                      };
         NSDictionary *codeMapEntry = errorCodes[errorDictionary[@"code"]];
         
@@ -87,7 +87,7 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
 
 + (nonnull NSError *)stp_genericFailedToParseResponseError {
     NSDictionary *userInfo = @{
-                               NSLocalizedDescriptionKey: [NSError stp_unexpectedErrorMessage],
+                               NSLocalizedDescriptionKey: [self stp_unexpectedErrorMessage],
                                STPErrorMessageKey: @"The response from Stripe failed to get parsed into valid JSON."
                                };
     return [[self alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
