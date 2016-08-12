@@ -14,6 +14,7 @@
 #import "UITableViewCell+Stripe_Borders.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "STPColorUtils.h"
+#import "STPLocalizedStringUtils.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 static NSInteger STPPaymentMethodCardListSection = 0;
@@ -48,7 +49,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         _selectedPaymentMethod = tuple.selectedPaymentMethod;
         _delegate = delegate;
     }
-    self.title = NSLocalizedString(@"Payment Method", nil);
+    self.title = STPLocalizedString(@"Payment Method", nil);
     return self;
 }
 
@@ -130,7 +131,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
         cell.textLabel.textColor = [self.theme accentColor];
         cell.imageView.image = [STPImageLibrary addIcon];
-        cell.textLabel.text = NSLocalizedString(@"Add New Card...", nil);
+        cell.textLabel.text = STPLocalizedString(@"Add New Card...", nil);
     }
     return cell;
 }
@@ -140,7 +141,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     if ([paymentMethod isKindOfClass:[STPCard class]]) {
         return [self buildAttributedStringForCard:(STPCard *)paymentMethod selected:selected];
     } else if ([paymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
-        NSString *label = NSLocalizedString(@"Apple Pay", nil);
+        NSString *label = STPLocalizedString(@"Apple Pay", nil);
         UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
     }
@@ -148,7 +149,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 }
 
 - (NSAttributedString *)buildAttributedStringForCard:(STPCard *)card selected:(BOOL)selected {
-    NSString *template = NSLocalizedString(@"%@ Ending In %@", @"{card brand} ending in {last4}");
+    NSString *template = STPLocalizedString(@"%@ Ending In %@", @"{card brand} ending in {last4}");
     NSString *brandString = [NSString stp_stringWithCardBrand:card.brand];
     NSString *label = [NSString stringWithFormat:template, brandString, card.last4];
     UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;

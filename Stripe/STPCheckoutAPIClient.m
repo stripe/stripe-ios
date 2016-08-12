@@ -14,6 +14,7 @@
 #import "NSBundle+Stripe_AppName.h"
 #import "StripeError.h"
 #import "STPWeakStrongMacros.h"
+#import "STPLocalizedStringUtils.h"
 
 @interface STPCheckoutAPIClient()
 @property(nonatomic, copy)NSString *publishableKey;
@@ -272,7 +273,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
 
 + (NSError *)cancellationError {
     return [NSError errorWithDomain:StripeDomain code:STPCancellationError userInfo:@{
-      NSLocalizedDescriptionKey: NSLocalizedString(@"The operation was cancelled", nil)
+      NSLocalizedDescriptionKey: STPLocalizedString(@"The operation was cancelled", nil)
                                                                                     }];
 }
 
@@ -289,7 +290,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
     }
     
     return [NSError errorWithDomain:StripeDomain code:code userInfo:@{
-    NSLocalizedDescriptionKey: [NSLocalizedString(@"Something went wrong with remember me: ", nil) stringByAppendingString:message]
+    NSLocalizedDescriptionKey: [STPLocalizedString(@"Something went wrong with remember me: ", nil) stringByAppendingString:message]
     }];
 }
 

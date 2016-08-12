@@ -25,6 +25,7 @@
 #import "STPTheme.h"
 #import "STPColorUtils.h"
 #import "STPWeakStrongMacros.h"
+#import "STPLocalizedStringUtils.h"
 
 @interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
 
@@ -94,11 +95,11 @@
     [self.view addSubview:activityIndicator];
     self.activityIndicator = activityIndicator;
     
-    self.navigationItem.title = NSLocalizedString(@"Loading...", nil);
+    self.navigationItem.title = STPLocalizedString(@"Loading...", nil);
     
-    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:STPLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
     WEAK(self);
     [self.loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
         STRONG(self);
