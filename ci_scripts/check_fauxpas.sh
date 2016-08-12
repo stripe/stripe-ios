@@ -20,3 +20,4 @@ fi
 echo "Linting with Faux Pas..."
 
 fauxpas check Stripe.xcodeproj/ --target "StripeiOSStatic" --configFile "./FauxPasConfig/main.fauxpas.json" --minErrorStatusSeverity Concern
+fauxpas check Stripe.xcodeproj/ --target "StripeiOS" --configFile "./FauxPasConfig/main.fauxpas.json" --minErrorStatusSeverity Concern
