@@ -508,6 +508,8 @@
 		F148ABCA1D5D334B0014FD92 /* STPLocalizationUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F148ABC31D5D334B0014FD92 /* STPLocalizationUtils.m */; };
 		F148ABCC1D5D37630014FD92 /* STPLocalizationUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F148ABC21D5D334B0014FD92 /* STPLocalizationUtils.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		F148ABCD1D5D37640014FD92 /* STPLocalizationUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F148ABC21D5D334B0014FD92 /* STPLocalizationUtils.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		F148ABD81D5E58160014FD92 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F148ABD61D5E58160014FD92 /* Localizable.strings */; };
+		F148ABD91D5E58160014FD92 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F148ABD61D5E58160014FD92 /* Localizable.strings */; };
 		F14C872F1D4FCDBA00C7CC6A /* STPPaymentContextTest.m in Sources */ = {isa = PBXBuildFile; fileRef = F14C872E1D4FCDBA00C7CC6A /* STPPaymentContextTest.m */; };
 		F14C873A1D4FE5B900C7CC6A /* TestSTPBackendAPIAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = F14C87381D4FE5B900C7CC6A /* TestSTPBackendAPIAdapter.h */; };
 		F14C873C1D4FE5BD00C7CC6A /* TestSTPBackendAPIAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = F14C87391D4FE5B900C7CC6A /* TestSTPBackendAPIAdapter.m */; };
@@ -844,6 +846,7 @@
 		F132DFE21D51372A002FF5B7 /* STPWeakStrongMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPWeakStrongMacros.h; sourceTree = "<group>"; };
 		F148ABC21D5D334B0014FD92 /* STPLocalizationUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPLocalizationUtils.h; sourceTree = "<group>"; };
 		F148ABC31D5D334B0014FD92 /* STPLocalizationUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPLocalizationUtils.m; sourceTree = "<group>"; };
+		F148ABD71D5E58160014FD92 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Stripe/en.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		F14C872E1D4FCDBA00C7CC6A /* STPPaymentContextTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentContextTest.m; sourceTree = "<group>"; };
 		F14C87381D4FE5B900C7CC6A /* TestSTPBackendAPIAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestSTPBackendAPIAdapter.h; sourceTree = "<group>"; };
 		F14C87391D4FE5B900C7CC6A /* TestSTPBackendAPIAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestSTPBackendAPIAdapter.m; sourceTree = "<group>"; };
@@ -892,6 +895,7 @@
 		0438EF871B741C2800D506CC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F148ABD01D5E57AC0014FD92 /* Localizations */,
 				0438EF881B741C2800D506CC /* Images */,
 			);
 			path = Resources;
@@ -1277,6 +1281,14 @@
 				C1D23FB41D37FE0B002FD83C /* Customer.json */,
 			);
 			name = JSON;
+			sourceTree = "<group>";
+		};
+		F148ABD01D5E57AC0014FD92 /* Localizations */ = {
+			isa = PBXGroup;
+			children = (
+				F148ABD61D5E58160014FD92 /* Localizable.strings */,
+			);
+			name = Localizations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1686,6 +1698,7 @@
 				0438EFBE1B741C2800D506CC /* stp_card_discover@2x.png in Resources */,
 				0438EFC01B741C2800D506CC /* stp_card_discover@3x.png in Resources */,
 				04E39F671CED3B0100AF3B96 /* stp_icon_chevron_right_small@3x.png in Resources */,
+				F148ABD81D5E58160014FD92 /* Localizable.strings in Resources */,
 				0438EFB41B741C2800D506CC /* stp_card_cvc_amex@3x.png in Resources */,
 				04E39F711CED4C7700AF3B96 /* stp_icon_chevron_left@3x.png in Resources */,
 				0438EFB81B741C2800D506CC /* stp_card_diners@2x.png in Resources */,
@@ -1728,6 +1741,7 @@
 				C1B630C51D1D860100A05285 /* stp_card_diners@2x.png in Resources */,
 				C1B630C61D1D860100A05285 /* stp_card_diners@3x.png in Resources */,
 				C1B630C71D1D860100A05285 /* stp_card_discover.png in Resources */,
+				F148ABD91D5E58160014FD92 /* Localizable.strings in Resources */,
 				C1B630C81D1D860100A05285 /* stp_card_discover@2x.png in Resources */,
 				C1B630C91D1D860100A05285 /* stp_card_discover@3x.png in Resources */,
 				C1B630CA1D1D860100A05285 /* stp_card_jcb.png in Resources */,
@@ -2013,6 +2027,17 @@
 			targetProxy = C1B630D91D1D86E100A05285 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F148ABD61D5E58160014FD92 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F148ABD71D5E58160014FD92 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		045E7C0D1A5F41DE004751EF /* Debug */ = {
