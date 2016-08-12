@@ -14,7 +14,7 @@
 #import "NSBundle+Stripe_AppName.h"
 #import "StripeError.h"
 #import "STPWeakStrongMacros.h"
-#import "STPLocalizedStringUtils.h"
+#import "STPLocalizationUtils.h"
 
 @interface STPCheckoutAPIClient()
 @property(nonatomic, copy)NSString *publishableKey;

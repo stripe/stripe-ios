@@ -7,7 +7,7 @@
 //
 
 #import "UIToolbar+Stripe_InputAccessory.h"
-#import "STPLocalizedStringUtils.h"
+#import "STPLocalizationUtils.h"
 
 @implementation UIToolbar (Stripe_InputAccessory)
 

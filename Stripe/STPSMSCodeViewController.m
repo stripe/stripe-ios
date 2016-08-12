@@ -17,7 +17,7 @@
 #import "STPPhoneNumberValidator.h"
 #import "STPColorUtils.h"
 #import "STPWeakStrongMacros.h"
-#import "STPLocalizedStringUtils.h"
+#import "STPLocalizationUtils.h"
 
 @interface STPSMSCodeViewController()<STPSMSCodeTextFieldDelegate>
 

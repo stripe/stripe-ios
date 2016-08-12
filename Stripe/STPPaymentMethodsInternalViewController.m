@@ -14,7 +14,7 @@
 #import "UITableViewCell+Stripe_Borders.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "STPColorUtils.h"
-#import "STPLocalizedStringUtils.h"
+#import "STPLocalizationUtils.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 static NSInteger STPPaymentMethodCardListSection = 0;

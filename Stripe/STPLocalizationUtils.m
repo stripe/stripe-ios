@@ -1,14 +1,14 @@
 //
-//  STPLocalizedStringUtils.m
+//  STPLocalizationUtils.m
 //  Stripe
 //
 //  Created by Brian Dorfman on 8/11/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPLocalizedStringUtils.h"
+#import "STPLocalizationUtils.h"
 
-@implementation STPLocalizedStringUtils
+@implementation STPLocalizationUtils
 
 + (NSString *)localizedStripeStringForKey:(NSString *)key {
     NSBundle *ourBundle = [NSBundle bundleWithPath:@"Stripe.bundle"];

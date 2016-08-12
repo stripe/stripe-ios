@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 
 #define STPLocalizedString(key, comment) \
-[STPLocalizedStringUtils localizedStripeStringForKey:(key)]
+[STPLocalizationUtils localizedStripeStringForKey:(key)]
 
-@interface STPLocalizedStringUtils : NSObject
+@interface STPLocalizationUtils : NSObject
 
 /**
  Acts like NSLocalizedString but tries to find the string in the Stripe

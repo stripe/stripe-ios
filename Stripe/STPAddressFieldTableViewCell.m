@@ -11,7 +11,7 @@
 #import "STPPhoneNumberValidator.h"
 #import "STPEmailAddressValidator.h"
 #import "STPCardValidator.h"
-#import "STPLocalizedStringUtils.h"
+#import "STPLocalizationUtils.h"
 
 @interface STPAddressFieldTableViewCell() <STPFormTextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 

@@ -9,7 +9,7 @@
 #import "STPRememberMeTermsView.h"
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
-#import "STPLocalizedStringUtils.h"
+#import "STPLocalizationUtils.h"
 
 @interface STPRememberMeTermsView()<UITextViewDelegate>
 

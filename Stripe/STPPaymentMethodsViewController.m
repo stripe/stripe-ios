@@ -25,7 +25,7 @@
 #import "STPTheme.h"
 #import "STPColorUtils.h"
 #import "STPWeakStrongMacros.h"
-#import "STPLocalizedStringUtils.h"
+#import "STPLocalizationUtils.h"
 
 @interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
 

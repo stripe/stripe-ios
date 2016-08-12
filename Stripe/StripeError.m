@@ -8,7 +8,7 @@
 
 #import "StripeError.h"
 #import "STPFormEncoder.h"
-#import "STPLocalizedStringUtils.h"
+#import "STPLocalizationUtils.h"
 
 NSString *const StripeDomain = @"com.stripe.lib";
 NSString *const STPCardErrorCodeKey = @"com.stripe.lib:CardErrorCodeKey";

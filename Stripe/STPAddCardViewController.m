@@ -38,7 +38,7 @@
 #import "STPAnalyticsClient.h"
 #import "STPColorUtils.h"
 #import "STPWeakStrongMacros.h"
-#import "STPLocalizedStringUtils.h"
+#import "STPLocalizationUtils.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPRememberMePaymentCellDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
