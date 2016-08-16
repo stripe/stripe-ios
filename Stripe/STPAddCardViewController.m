@@ -109,7 +109,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
     _addressViewModel.delegate = self;
     _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
-    self.title = STPLocalizedString(@"Add a Card", nil);
+    self.title = STPLocalizedString(@"Add a Card", @"Title for Add a Card view");
 }
 
 - (void)viewDidLoad {
@@ -120,7 +120,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     [self.view addSubview:tableView];
     self.tableView = tableView;
     
-    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button") style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(nextPressed:)];
@@ -146,7 +146,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.addressViewModel.previousField = paymentCell;
     
     self.rememberMeCell = [[STPSwitchTableViewCell alloc] init];
-    [self.rememberMeCell configureWithLabel:STPLocalizedString(@"Save for use in other apps", nil) delegate:self];
+    [self.rememberMeCell configureWithLabel:STPLocalizedString(@"Save for use in other apps", @"Label for the switch to enable Remember Me") delegate:self];
     [self reloadRememberMeCellAnimated:NO];
     
     self.rememberMePhoneCell = [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypePhone contents:nil lastInList:YES delegate:self];

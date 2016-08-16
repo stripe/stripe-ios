@@ -61,7 +61,7 @@
 }
 
 + (BOOL)isUSLocale {
-    return [[[NSLocale autoupdatingCurrentLocale] localeIdentifier] isEqualToString:@"en_US"];
+    return [[[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode] isEqualToString:@"US"];
 }
 
 @end

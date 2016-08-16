@@ -49,7 +49,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         _selectedPaymentMethod = tuple.selectedPaymentMethod;
         _delegate = delegate;
     }
-    self.title = STPLocalizedString(@"Payment Method", nil);
+    self.title = STPLocalizedString(@"Payment Method", @"Title for Payment Method screen");
     return self;
 }
 
@@ -131,7 +131,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
         cell.textLabel.textColor = [self.theme accentColor];
         cell.imageView.image = [STPImageLibrary addIcon];
-        cell.textLabel.text = STPLocalizedString(@"Add New Card...", nil);
+        cell.textLabel.text = STPLocalizedString(@"Add New Card…", nil);
     }
     return cell;
 }

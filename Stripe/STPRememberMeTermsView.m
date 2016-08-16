@@ -46,11 +46,11 @@
 }
 
 - (NSAttributedString *)buildAttributedString {
-    NSString *privacyPolicy = [STPLocalizedString(@"Privacy Policy", nil) lowercaseString];
+    NSString *privacyPolicy = STPLocalizedString(@"privacy policy", nil);
     NSURL *privacyURL = [NSURL URLWithString:@"https://checkout.stripe.com/-/privacy"];
-    NSString *terms = [STPLocalizedString(@"Terms", nil) lowercaseString];
+    NSString *terms = STPLocalizedString(@"terms", nil);
     NSURL *termsURL = [NSURL URLWithString:@"https://checkout.stripe.com/-/terms"];
-    NSString *learnMore = [STPLocalizedString(@"More info", nil) lowercaseString];
+    NSString *learnMore = STPLocalizedString(@"more info", nil);
     NSURL *learnMoreURL = [NSURL URLWithString:@"https://checkout.stripe.com/-/remember-me"];
     NSString *contents = STPLocalizedString(@"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's Privacy Policy and Terms. More Info", nil);
     NSRange privacyRange = [contents.lowercaseString rangeOfString:privacyPolicy];

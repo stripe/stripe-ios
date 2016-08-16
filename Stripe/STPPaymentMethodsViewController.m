@@ -95,7 +95,7 @@
     [self.view addSubview:activityIndicator];
     self.activityIndicator = activityIndicator;
     
-    self.navigationItem.title = STPLocalizedString(@"Loading...", nil);
+    self.navigationItem.title = STPLocalizedString(@"Loading…", nil);
     
     self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
