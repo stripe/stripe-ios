@@ -15,18 +15,12 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     // and copy your "Test Publishable Key" (it looks like pk_test_abcdef) into the line below.
     let stripePublishableKey = ""
     
-    // 2a) Next, optionally, to have this demo save your user's payment details, head to
+    // 2) Next, optionally, to have this demo save your user's payment details, head to
     // https://github.com/stripe/example-ios-backend , click "Deploy to Heroku", and follow
     // the instructions (don't worry, it's free). Replace nil on the line below with your
     // Heroku URL (it looks like https://blazing-sunrise-1234.herokuapp.com ).
     let backendBaseURL: String? = nil
-    
-    // 2b) If you're saving your user's payment details, head to https://dashboard.stripe.com/test/customers ,
-    // click "New", and create a customer (you can leave the fields blank). Replace nil on the line below
-    // with the newly-created customer ID (it looks like cus_abcdef). In a real application, you would create
-    // this customer on your backend when your user signs up for your service.
-    let customerID: String? = nil
-    
+
     // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/mobile/apple-pay
     // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
     let appleMerchantID: String? = nil
@@ -72,7 +66,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
                                         theme: settings.theme)
         self.buyButton = BuyButton(enabled: true, theme: settings.theme)
         MyAPIClient.sharedClient.baseURLString = self.backendBaseURL
-        MyAPIClient.sharedClient.customerID = self.customerID
 
         // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
         let config = STPPaymentConfiguration.sharedConfiguration()
