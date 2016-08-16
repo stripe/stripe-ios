@@ -1,5 +1,5 @@
 //
-//  STPLocalizedStringUtils.h
+//  STPLocalizationUtils.h
 //  Stripe
 //
 //  Created by Brian Dorfman on 8/11/16.
@@ -7,9 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#define STPLocalizedString(key, comment) \
-[STPLocalizationUtils localizedStripeStringForKey:(key)]
 
 @interface STPLocalizationUtils : NSObject
 
@@ -20,3 +17,7 @@
 + (nonnull NSString *)localizedStripeStringForKey:(nonnull NSString *)key;
 
 @end
+
+static inline NSString * _Nonnull STPLocalizedString(NSString* _Nonnull key, NSString * _Nullable __unused comment) {
+    return [STPLocalizationUtils localizedStripeStringForKey:key];
+}
