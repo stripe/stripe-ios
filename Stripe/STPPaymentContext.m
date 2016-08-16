@@ -21,6 +21,19 @@
 #import "STPPaymentConfiguration+Private.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
+#define FAUXPAS_IGNORED_IN_CLASS(...)
+
+@interface STPPaymentContextAmountModel : NSObject
+FAUXPAS_IGNORED_IN_CLASS(APIAvailability)
+
+- (instancetype)initWithAmount:(NSInteger)paymentAmount;
+- (instancetype)initWithPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems;
+
+- (NSInteger)paymentAmountWithCurrency:(NSString *)paymentCurrency;
+- (NSArray<PKPaymentSummaryItem *> *)paymentSummaryItemsWithCurrency:(NSString *)paymentCurrency
+                                                         companyName:(NSString *)companyName;
+
+@end
 
 @interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate, STPAddCardViewControllerDelegate>
 
@@ -37,6 +50,8 @@
 @property(nonatomic, weak)STPPaymentMethodsViewController *paymentMethodsViewController;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
+
+@property(nonatomic)STPPaymentContextAmountModel *paymentAmountModel;
 
 @end
 
@@ -60,6 +75,7 @@
         _didAppearPromise = [STPVoidPromise new];
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _paymentCurrency = @"USD";
+        _paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithAmount:0];
         [self retryLoading];
     }
     return self;
@@ -167,23 +183,24 @@
     }
 }
 
+
+- (void)setPaymentAmount:(NSInteger)paymentAmount {
+    self.paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithAmount:paymentAmount];
+}
+
+- (NSInteger)paymentAmount {
+    return [self.paymentAmountModel paymentAmountWithCurrency:self.paymentCurrency];
+}
+
 - (void)setPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
-    if (paymentSummaryItems.count > 0) {
-        PKPaymentSummaryItem *lastItem = paymentSummaryItems.lastObject;
-        NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:self.paymentAmount
-                                                                      currency:self.paymentCurrency];
-        if ([amount isEqualToNumber:lastItem.amount]) {
-            _paymentSummaryItems = paymentSummaryItems;
-        }
-        else {
-            _paymentSummaryItems = nil;
-            NSAssert(0, @"Amount for last object in paymentSummaryItems does not equal paymentAmount (%@ vs %@, currency = %@)", lastItem.amount, amount, self.paymentCurrency);
-        }
-    }
-    else {
-        _paymentSummaryItems = nil;
-    }
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
+    self.paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithPaymentSummaryItems:paymentSummaryItems];
+}
+
+- (NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
+    return [self.paymentAmountModel paymentSummaryItemsWithCurrency:self.paymentCurrency
+                                                        companyName:self.configuration.companyName];
 }
 
 - (void)presentPaymentMethodsViewController {
@@ -328,14 +345,6 @@
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.configuration.appleMerchantIdentifier];
     
     NSArray<PKPaymentSummaryItem *> *summaryItems = self.paymentSummaryItems;
-    if (!summaryItems) {
-        NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:self.paymentAmount
-                                                                      currency:self.paymentCurrency];
-        PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:self.configuration.companyName
-                                                                              amount:amount];
-        summaryItems = @[totalItem];
-    }
-    
     paymentRequest.paymentSummaryItems = summaryItems;
     paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
     paymentRequest.currencyCode = self.paymentCurrency.uppercaseString;
@@ -370,6 +379,58 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
             }];
         }
     }];
+}
+
+@end
+
+@implementation STPPaymentContextAmountModel {
+    NSInteger _paymentAmount;
+    NSArray<PKPaymentSummaryItem *> *_paymentSummaryItems;
+}
+
+FAUXPAS_IGNORED_IN_CLASS(APIAvailability)
+
+- (instancetype)initWithAmount:(NSInteger)paymentAmount {
+    self = [super init];
+    if (self) {
+        _paymentAmount = paymentAmount;
+        _paymentSummaryItems = nil;
+    }
+    return self;
+}
+
+- (instancetype)initWithPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems {
+    self = [super init];
+    if (self) {
+        _paymentAmount = 0;
+        _paymentSummaryItems = paymentSummaryItems;
+    }
+    return self;
+}
+
+- (NSInteger)paymentAmountWithCurrency:(NSString *)paymentCurrency {
+    if (_paymentSummaryItems == nil) {
+        return _paymentAmount;
+    }
+    else {
+        PKPaymentSummaryItem *lastItem = _paymentSummaryItems.lastObject;
+        return [lastItem.amount stp_amountWithCurrency:paymentCurrency];
+    }
+}
+
+- (NSArray<PKPaymentSummaryItem *> *)paymentSummaryItemsWithCurrency:(NSString *)paymentCurrency
+                                                         companyName:(NSString *)companyName {
+    if (_paymentSummaryItems == nil) {
+        NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:_paymentAmount
+                                                                      currency:paymentCurrency];
+        PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:companyName
+                                                                              amount:amount];
+        return @[totalItem];
+
+    }
+    else {
+        return _paymentSummaryItems;
+    }
 }
 
 @end

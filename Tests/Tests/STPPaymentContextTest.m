@@ -79,37 +79,35 @@
 
 - (void)testBuildPaymentRequest_summaryItems {
     STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
-    context.paymentAmount = 10000;
     context.paymentSummaryItems = [self testSummaryItems];
     PKPaymentRequest *request = [context buildPaymentRequest];
     
     XCTAssertTrue([request.paymentSummaryItems isEqualToArray:context.paymentSummaryItems]);
 }
 
-- (void)testBuildPaymentRequest_autoGenSummaryItem {
+- (void)testSetPaymentAmount_generateSummaryItems {
     STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
     context.paymentAmount = 10000;
-    PKPaymentRequest *request = [context buildPaymentRequest];
-
-    NSDecimalNumber *itemTotalAmount = request.paymentSummaryItems.lastObject.amount;
+    context.paymentCurrency = @"USD";
+    NSDecimalNumber *itemTotalAmount = context.paymentSummaryItems.lastObject.amount;
     NSDecimalNumber *correctTotalAmount = [NSDecimalNumber stp_decimalNumberWithAmount:context.paymentAmount
                                                                               currency:context.paymentCurrency];
     
     XCTAssertTrue([itemTotalAmount isEqualToNumber:correctTotalAmount]);
 }
 
-- (void)testSetPaymentSummaryItems {
+- (void)testSummaryItems_generateAmountDecimalCurrency {
     STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
-    context.paymentAmount = 10000;
-    NSArray<PKPaymentSummaryItem *> *items = [self testSummaryItems];
-    XCTAssertNoThrow(context.paymentSummaryItems = items);
+    context.paymentSummaryItems = [self testSummaryItems];
+    context.paymentCurrency = @"USD";
+    XCTAssertTrue(context.paymentAmount == 10000);
 }
 
-- (void)testSetPaymentSummaryItems_throwOnAmountMismatch {
+- (void)testSummaryItems_generateAmountNoDecimalCurrency {
     STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
-    context.paymentAmount = 100;
-    NSArray<PKPaymentSummaryItem *> *items = [self testSummaryItems];
-    XCTAssertThrows(context.paymentSummaryItems = items);
+    context.paymentSummaryItems = [self testSummaryItems];
+    context.paymentCurrency = @"JPY";
+    XCTAssertTrue(context.paymentAmount == 100);
 }
 
 @end
