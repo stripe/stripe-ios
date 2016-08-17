@@ -34,13 +34,15 @@ class SettingsViewController: UITableViewController {
         case ApplePay = "Apple Pay"
         case RequiredBillingAddressFields = "Required Billing Address Fields"
         case SMSAutofill = "SMS Autofill"
+        case Session = "Session"
 
         init(section: Int) {
             switch section {
             case 0: self = Theme
             case 1: self = ApplePay
             case 2: self = RequiredBillingAddressFields
-            default: self = SMSAutofill
+            case 3: self = SMSAutofill
+            default: self = Session
             }
         }
     }
@@ -138,7 +140,7 @@ class SettingsViewController: UITableViewController {
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 4
+        return 5
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -147,6 +149,7 @@ class SettingsViewController: UITableViewController {
         case .ApplePay: return 2
         case .RequiredBillingAddressFields: return 3
         case .SMSAutofill: return 2
+        case .Session: return 1
         }
     }
 
@@ -173,6 +176,9 @@ class SettingsViewController: UITableViewController {
             let value = Switch(row: indexPath.row)
             cell.textLabel?.text = value.rawValue
             cell.accessoryType = value == self.smsAutofill ? .Checkmark : .None
+        case .Session:
+            cell.textLabel?.text = "Log out"
+            cell.accessoryType = .None
         }
         return cell
     }
@@ -188,6 +194,11 @@ class SettingsViewController: UITableViewController {
             self.requiredBillingAddressFields = RequiredBillingAddressFields(row: indexPath.row)
         case .SMSAutofill:
             self.smsAutofill = Switch(row: indexPath.row)
+        case .Session:
+            let cookieStore = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+            for cookie in cookieStore.cookies ?? [] {
+                cookieStore.deleteCookie(cookie)
+            }
         }
         tableView.reloadSections(NSIndexSet(index: indexPath.section), withRowAnimation: .Automatic)
     }
