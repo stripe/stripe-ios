@@ -1,21 +1,24 @@
 #!/bin/sh
 
+# This causes the script to fail if any subscript fails
+set -e
+
 echo "Checking test manual installation app..."
 
 gem install xcpretty --no-ri --no-rdoc
 
 PROJECTDIR="$(cd $(dirname $0)/../../..; pwd)"
 TESTDIR="$(cd $(dirname $0); pwd)"
-BUILDDIR="$(cd $(dirname $0); pwd)/build"
+BUILDDIR=$PROJECTDIR/build
+FRAMEWORKDIR=$TESTDIR/ManualInstallationTest/Frameworks
 
-rm -rf $BUILDDIR
-mkdir $BUILDDIR
+sh $PROJECTDIR/ci_scripts/export_builds.sh --only-static
 
-xcodebuild build -workspace "${PROJECTDIR}/Stripe.xcworkspace" -scheme StripeiOSStaticFramework -configuration Release OBJROOT=$BUILDDIR SYMROOT=$BUILDDIR -sdk iphonesimulator | xcpretty -c
+sh $PROJECTDIR/ci_scripts/validate_zip.sh $BUILDDIR/StripeiOS-Static.zip
 
-rm -rf $TESTDIR/ManualInstallationTest/Frameworks
-mkdir $TESTDIR/ManualInstallationTest/Frameworks
-mv $BUILDDIR/Release-iphonesimulator/Stripe.framework $TESTDIR/ManualInstallationTest/Frameworks
-mv $BUILDDIR/Release-iphonesimulator/Stripe.bundle $TESTDIR/ManualInstallationTest/Frameworks/Stripe.framework
+rm -rf $FRAMEWORKDIR
+mkdir $FRAMEWORKDIR
+cp $BUILDDIR/StripeiOS-Static.zip $FRAMEWORKDIR
+ditto -xk $FRAMEWORKDIR/StripeiOS-Static.zip $FRAMEWORKDIR
 
 set -o pipefail && xcodebuild test -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator | xcpretty -c

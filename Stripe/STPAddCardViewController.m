@@ -37,6 +37,7 @@
 #import "STPRememberMePaymentCell.h"
 #import "STPAnalyticsClient.h"
 #import "STPColorUtils.h"
+#import "STPWeakStrongMacros.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPRememberMePaymentCellDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
@@ -167,9 +168,10 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)]];
     
-    __weak typeof(self) weakself = self;
+    WEAK(self);
     [self.checkoutAPIClient.bootstrapPromise onCompletion:^(__unused id value, __unused NSError *error) {
-        [weakself reloadRememberMeCellAnimated:YES];
+        STRONG(self);
+        [self reloadRememberMeCellAnimated:YES];
     }];
 }
 
@@ -294,19 +296,20 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     STPCardParams *cardParams = self.paymentCell.paymentField.cardParams;
     cardParams.address = self.addressViewModel.address;
     if (self.checkoutAccountCard) {
-        __weak typeof(self) weakself = self;
+        WEAK(self);
         [[[self.checkoutAPIClient createTokenWithAccount:self.checkoutAccount] onSuccess:^(STPToken *token) {
-            __strong typeof(weakself) strongself = weakself;
-            [strongself.delegate addCardViewController:strongself didCreateToken:token completion:^(NSError * _Nullable error) {
+            STRONG(self);
+            [self.delegate addCardViewController:self didCreateToken:token completion:^(NSError * _Nullable error) {
                 if (error) {
-                    [strongself handleCheckoutTokenError:error];
+                    [self handleCheckoutTokenError:error];
                 }
                 else {
                     self.loading = NO;
                 }
             }];
         }] onFailure:^(NSError *error) {
-            [weakself handleCardTokenError:error];
+            STRONG(self);
+            [self handleCardTokenError:error];
         }];
     } else if (cardParams) {
         [self.apiClient createTokenWithCard:cardParams completion:^(STPToken *token, NSError *tokenError) {
@@ -437,25 +440,32 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     if (self.checkoutAccount || self.configuration.smsAutofillDisabled || self.lookupSucceeded) {
         return;
     }
-    __weak typeof(self) weakself = self;
+    WEAK(self);
     if ([STPEmailAddressValidator stringIsValidEmailAddress:email]) {
         [self.emailCell.activityIndicator setAnimating:YES animated:YES];
         [[[[self.stp_didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
-            return [weakself.checkoutAPIClient lookupEmail:email];
+            STRONG(self);
+            return [self.checkoutAPIClient lookupEmail:email];
         }] flatMap:^STPPromise * _Nonnull(STPCheckoutAccountLookup *lookup) {
-            weakself.lookupSucceeded = YES;
-            weakself.checkoutLookup = lookup;
-            return [weakself.checkoutAPIClient sendSMSToAccountWithEmail:lookup.email];
+            STRONG(self);
+            self.lookupSucceeded = YES;
+            self.checkoutLookup = lookup;
+            return [self.checkoutAPIClient sendSMSToAccountWithEmail:lookup.email];
         }] onSuccess:^(STPCheckoutAPIVerification *verification) {
-            STPSMSCodeViewController *codeViewController = [[STPSMSCodeViewController alloc] initWithCheckoutAPIClient:self.checkoutAPIClient verification:verification redactedPhone:self.checkoutLookup.redactedPhone];
+            STRONG(self);
+            STPSMSCodeViewController *codeViewController = [[STPSMSCodeViewController alloc] initWithCheckoutAPIClient:self.checkoutAPIClient 
+                                                                                                          verification:verification 
+                                                                                                         redactedPhone:self.checkoutLookup.redactedPhone];
             codeViewController.theme = self.theme;
             codeViewController.delegate = self;
             UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:codeViewController];
             [nav.navigationBar stp_setTheme:self.theme];
-            [weakself presentViewController:nav animated:YES completion:nil];
+            nav.modalPresentationStyle = UIModalPresentationFormSheet;
+            [self presentViewController:nav animated:YES completion:nil];
         }] onCompletion:^(__unused id value, NSError *error) {
+            STRONG(self);
             if (![error stp_isURLSessionCancellationError]) {
-                [weakself.emailCell.activityIndicator setAnimating:NO animated:YES];
+                [self.emailCell.activityIndicator setAnimating:NO animated:YES];
             }
         }];
     }
