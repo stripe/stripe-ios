@@ -95,23 +95,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  The amount of money you're requesting from the user, in the smallest currency unit for the selected currency. For example, to indicate $10 USD, use 1000 (i.e. 1000 cents). For more information see https://stripe.com/docs/api#charge_object-amount . This value must be present and greater than zero in order for Apple Pay to be automatically enabled.
+ *
+ *  @note You should only set either this or `paymentSummaryItems`, not both. The other will be automatically calculated on demand using your `paymentCurrency`. 
  */
 @property(nonatomic)NSInteger paymentAmount;
 
 /**
  *  The three-letter currency code for the currency of the payment (i.e. USD, GBP, JPY, etc). Defaults to USD.
+ *
+ *  @note Changing this property may change the return value of `paymentAmount` or `paymentSummaryItems` (whichever one you didn't directly set yourself).
  */
 @property(nonatomic, copy)NSString *paymentCurrency;
 
 /**
- *  If you support Apple Pay, you can optionally set the PKPaymentSummaryItems you want to display here.
- *  If nil, a single summary item will be automatically generated using paymentAmount and your companyName.
+ *  If you support Apple Pay, you can optionally set the PKPaymentSummaryItems you want to display here instead of using `paymentAmount`
+ *  If not set, a single summary item will be automatically generated using `paymentAmount` and your companyName.
  *  @see PKPaymentRequest for more information
  *
- *  @warning If you set this array, the last summary item's amount must match the value you set for paymentAmount or an assert will be thrown.
- *  @warning PKPaymentSummaryItem is only available in iOS8+. If you support iOS 7 you should do a runtime availability check before setting this property. 
+ *  @note You should only set either this or `paymentAmount`, not both. The other will be automatically calculated on demand using your `paymentCurrency.`
+ *
+ *  @warning `PKPaymentSummaryItem` is only available in iOS8+. If you support iOS 7 you should do a runtime availability check before accessing or setting this property. 
  */
-@property(nonatomic, copy, nullable)NSArray<PKPaymentSummaryItem *> *paymentSummaryItems; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
+@property(nonatomic, copy)NSArray<PKPaymentSummaryItem *> *paymentSummaryItems; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
 
 /**
  *  The presentation style used for all view controllers presented modally by the context.
