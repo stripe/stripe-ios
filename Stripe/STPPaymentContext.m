@@ -8,7 +8,6 @@
 
 #import <PassKit/PassKit.h>
 #import <objc/runtime.h>
-#import "NSDecimalNumber+Stripe_Currency.h"
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "STPPromise.h"
@@ -19,21 +18,9 @@
 #import "UIViewController+Stripe_Alerts.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "STPPaymentConfiguration+Private.h"
+#import "STPPaymentContextAmountModel.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
-#define FAUXPAS_IGNORED_IN_CLASS(...)
-
-@interface STPPaymentContextAmountModel : NSObject
-FAUXPAS_IGNORED_IN_CLASS(APIAvailability)
-
-- (instancetype)initWithAmount:(NSInteger)paymentAmount;
-- (instancetype)initWithPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems;
-
-- (NSInteger)paymentAmountWithCurrency:(NSString *)paymentCurrency;
-- (NSArray<PKPaymentSummaryItem *> *)paymentSummaryItemsWithCurrency:(NSString *)paymentCurrency
-                                                         companyName:(NSString *)companyName;
-
-@end
 
 @interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate, STPAddCardViewControllerDelegate>
 
@@ -383,54 +370,4 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
 
 @end
 
-@implementation STPPaymentContextAmountModel {
-    NSInteger _paymentAmount;
-    NSArray<PKPaymentSummaryItem *> *_paymentSummaryItems;
-}
 
-FAUXPAS_IGNORED_IN_CLASS(APIAvailability)
-
-- (instancetype)initWithAmount:(NSInteger)paymentAmount {
-    self = [super init];
-    if (self) {
-        _paymentAmount = paymentAmount;
-        _paymentSummaryItems = nil;
-    }
-    return self;
-}
-
-- (instancetype)initWithPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems {
-    self = [super init];
-    if (self) {
-        _paymentAmount = 0;
-        _paymentSummaryItems = paymentSummaryItems;
-    }
-    return self;
-}
-
-- (NSInteger)paymentAmountWithCurrency:(NSString *)paymentCurrency {
-    if (_paymentSummaryItems == nil) {
-        return _paymentAmount;
-    }
-    else {
-        PKPaymentSummaryItem *lastItem = _paymentSummaryItems.lastObject;
-        return [lastItem.amount stp_amountWithCurrency:paymentCurrency];
-    }
-}
-
-- (NSArray<PKPaymentSummaryItem *> *)paymentSummaryItemsWithCurrency:(NSString *)paymentCurrency
-                                                         companyName:(NSString *)companyName {
-    if (_paymentSummaryItems == nil) {
-        NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:_paymentAmount
-                                                                      currency:paymentCurrency];
-        PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:companyName
-                                                                              amount:amount];
-        return @[totalItem];
-
-    }
-    else {
-        return _paymentSummaryItems;
-    }
-}
-
-@end
