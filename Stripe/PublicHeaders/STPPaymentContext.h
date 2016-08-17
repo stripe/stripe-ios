@@ -114,6 +114,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable)NSArray<PKPaymentSummaryItem *> *paymentSummaryItems; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
 
 /**
+ *  The presentation style used for all view controllers presented modally by the context.
+ *  Since custom transition styles are not supported, you should set this to either
+ *  `UIModalPresentationFullScreen`, `UIModalPresentationPageSheet`, or `UIModalPresentationFormSheet`.
+ *  The default value is `UIModalPresentationFullScreen`.
+ */
+@property(nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
+
+/**
  *  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you can in turn call this method to try loading again (if that hasn't been called, calling this will do nothing). If retrying in turn fails, `paymentContext:didFailToLoadWithError:` will be called again (and you can again call this to keep retrying, etc).
  */
 - (void)retryLoading;

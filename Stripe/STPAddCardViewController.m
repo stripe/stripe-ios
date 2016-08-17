@@ -460,6 +460,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
             codeViewController.delegate = self;
             UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:codeViewController];
             [nav.navigationBar stp_setTheme:self.theme];
+            nav.modalPresentationStyle = UIModalPresentationFormSheet;
             [self presentViewController:nav animated:YES completion:nil];
         }] onCompletion:^(__unused id value, NSError *error) {
             STRONG(self);

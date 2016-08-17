@@ -61,6 +61,7 @@
         _didAppearPromise = [STPVoidPromise new];
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _paymentCurrency = @"USD";
+        _modalPresentationStyle = UIModalPresentationFullScreen;
         [self retryLoading];
     }
     return self;
@@ -203,6 +204,7 @@
         paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
         [navigationController.navigationBar stp_setTheme:self.theme];
+        navigationController.modalPresentationStyle = self.modalPresentationStyle;
         [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
     }];
 }
@@ -278,6 +280,7 @@
             addCardViewController.prefilledInformation = self.prefilledInformation;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addCardViewController];
             [navigationController.navigationBar stp_setTheme:self.theme];
+            navigationController.modalPresentationStyle = self.modalPresentationStyle;
             [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
         }
         else if ([self.selectedPaymentMethod isKindOfClass:[STPCard class]]) {
