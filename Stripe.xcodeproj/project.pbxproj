@@ -610,6 +610,8 @@
 		F1510BC51D5A8146000731AD /* stp_card_jcb_template@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510BBE1D5A8146000731AD /* stp_card_jcb_template@3x.png */; };
 		F1510BC61D5A8146000731AD /* stp_card_jcb_template@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510BBE1D5A8146000731AD /* stp_card_jcb_template@3x.png */; };
 		F1510BC71D5A8146000731AD /* stp_card_jcb_template@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510BBE1D5A8146000731AD /* stp_card_jcb_template@3x.png */; };
+		F1C578F11D651AB200912EAE /* stp_card_applepay.png in Resources */ = {isa = PBXBuildFile; fileRef = F1C578F01D651AB200912EAE /* stp_card_applepay.png */; };
+		F1C578F21D651AB200912EAE /* stp_card_applepay.png in Resources */ = {isa = PBXBuildFile; fileRef = F1C578F01D651AB200912EAE /* stp_card_applepay.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -964,6 +966,7 @@
 		F1510BBC1D5A8146000731AD /* stp_card_jcb_template.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_card_jcb_template.png; sourceTree = "<group>"; };
 		F1510BBD1D5A8146000731AD /* stp_card_jcb_template@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_jcb_template@2x.png"; sourceTree = "<group>"; };
 		F1510BBE1D5A8146000731AD /* stp_card_jcb_template@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_jcb_template@3x.png"; sourceTree = "<group>"; };
+		F1C578F01D651AB200912EAE /* stp_card_applepay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_card_applepay.png; sourceTree = "<group>"; };
 		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -1026,6 +1029,7 @@
 				F1510AFF1D5A4C93000731AD /* stp_card_applepay_template.png */,
 				F1510B001D5A4C93000731AD /* stp_card_applepay_template@2x.png */,
 				F1510B011D5A4C93000731AD /* stp_card_applepay_template@3x.png */,
+				F1C578F01D651AB200912EAE /* stp_card_applepay.png */,
 				049A3FA31CC8071100F57DE7 /* stp_card_applepay@2x.png */,
 				049A3FA41CC8071100F57DE7 /* stp_card_applepay@3x.png */,
 				0438EF8F1B741C2800D506CC /* stp_card_cvc_amex.png */,
@@ -1833,6 +1837,7 @@
 				0438EFA81B741C2800D506CC /* stp_card_amex@3x.png in Resources */,
 				0438EFC61B741C2800D506CC /* stp_card_jcb@3x.png in Resources */,
 				0438EFC21B741C2800D506CC /* stp_card_jcb.png in Resources */,
+				F1C578F11D651AB200912EAE /* stp_card_applepay.png in Resources */,
 				04E39F6F1CED4C7700AF3B96 /* stp_icon_chevron_left.png in Resources */,
 				F1510BC21D5A8146000731AD /* stp_card_jcb_template@2x.png in Resources */,
 				F1510B1B1D5A4C93000731AD /* stp_card_discover_template@3x.png in Resources */,
@@ -1915,6 +1920,7 @@
 				C1B630BB1D1D860100A05285 /* stp_card_amex.png in Resources */,
 				F1510B161D5A4C93000731AD /* stp_card_applepay_template@3x.png in Resources */,
 				C1B630BC1D1D860100A05285 /* stp_card_amex@2x.png in Resources */,
+				F1C578F21D651AB200912EAE /* stp_card_applepay.png in Resources */,
 				F1510B5E1D5A4CC4000731AD /* stp_icon_chevron_left@2x.png in Resources */,
 				C1B630BD1D1D860100A05285 /* stp_card_amex@3x.png in Resources */,
 				F1510BC11D5A8146000731AD /* stp_card_jcb_template.png in Resources */,

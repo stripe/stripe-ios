@@ -55,6 +55,10 @@
     return [self brandImageForCardBrand:brand template:NO];
 }
 
++ (UIImage *)templatedBrandImageForCardBrand:(STPCardBrand)brand {
+    return [self brandImageForCardBrand:brand template:YES];
+}
+
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)brand {
     NSString *imageName = brand == STPCardBrandAmex ? @"stp_card_cvc_amex" : @"stp_card_cvc";
     return [self safeImageNamed:imageName];
