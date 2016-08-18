@@ -11,17 +11,44 @@ import Stripe
 
 class ViewController: UIViewController {
 
+    let pushButton = UIButton(type: .System)
+    let presentButton = UIButton(type: .System)
+    var paymentContext: STPPaymentContext? = nil
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        Stripe.setDefaultPublishableKey("test")
-        // Do any additional setup after loading the view, typically from a nib.
+        let config = STPPaymentConfiguration.sharedConfiguration()
+        config.publishableKey = "test"
+        let theme = STPTheme()
+        theme.accentColor = UIColor.purpleColor()
+        let paymentContext = STPPaymentContext(APIAdapter: MyAPIClient(),
+                                               configuration: config,
+                                               theme: theme)
+        paymentContext.hostViewController = self
+        self.paymentContext = paymentContext
+        self.pushButton.setTitle("Push", forState: .Normal)
+        self.pushButton.sizeToFit()
+        self.pushButton.addTarget(self, action: #selector(push), forControlEvents: .TouchUpInside)
+        self.presentButton.setTitle("Present", forState: .Normal)
+        self.presentButton.sizeToFit()
+        self.presentButton.addTarget(self, action: #selector(present), forControlEvents: .TouchUpInside)
+        self.view.addSubview(self.pushButton)
+        self.view.addSubview(self.presentButton)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.pushButton.center = CGPointMake(self.view.bounds.midX, self.view.bounds.midY/2.0)
+        self.presentButton.center = CGPointMake(self.view.bounds.midX, self.view.bounds.midY*3.0/4.0)
     }
 
+    func push() {
+        self.paymentContext?.pushPaymentMethodsViewController()
+    }
+
+    func present() {
+        self.paymentContext?.presentPaymentMethodsViewController()
+    }
 
 }
 
