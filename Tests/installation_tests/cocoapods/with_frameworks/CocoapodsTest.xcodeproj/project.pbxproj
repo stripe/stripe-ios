@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		04E6FCB91B714933000C8759 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E6FCB81B714933000C8759 /* AppDelegate.swift */; };
 		04E6FCBB1B714933000C8759 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E6FCBA1B714933000C8759 /* ViewController.swift */; };
-		04E6FCBE1B714933000C8759 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCBC1B714933000C8759 /* Main.storyboard */; };
 		04E6FCC01B714933000C8759 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCBF1B714933000C8759 /* Images.xcassets */; };
 		04E6FCC31B714933000C8759 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCC11B714933000C8759 /* LaunchScreen.xib */; };
 		04E6FCCF1B714933000C8759 /* CocoapodsTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E6FCCE1B714933000C8759 /* CocoapodsTestTests.swift */; };
@@ -32,7 +31,6 @@
 		04E6FCB71B714933000C8759 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04E6FCB81B714933000C8759 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04E6FCBA1B714933000C8759 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		04E6FCBD1B714933000C8759 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		04E6FCBF1B714933000C8759 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		04E6FCC21B714933000C8759 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		04E6FCC81B714933000C8759 /* CocoapodsTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CocoapodsTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,7 +90,6 @@
 				C1A2B4011D664D9300B8EEDF /* MyAPIClient.swift */,
 				04E6FCB81B714933000C8759 /* AppDelegate.swift */,
 				04E6FCBA1B714933000C8759 /* ViewController.swift */,
-				04E6FCBC1B714933000C8759 /* Main.storyboard */,
 				04E6FCBF1B714933000C8759 /* Images.xcassets */,
 				04E6FCC11B714933000C8759 /* LaunchScreen.xib */,
 				04E6FCB61B714933000C8759 /* Supporting Files */,
@@ -229,7 +226,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04E6FCBE1B714933000C8759 /* Main.storyboard in Resources */,
 				04E6FCC31B714933000C8759 /* LaunchScreen.xib in Resources */,
 				04E6FCC01B714933000C8759 /* Images.xcassets in Resources */,
 			);
@@ -322,14 +318,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		04E6FCBC1B714933000C8759 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				04E6FCBD1B714933000C8759 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		04E6FCC11B714933000C8759 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

@@ -17,6 +17,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.whiteColor()
         let config = STPPaymentConfiguration.sharedConfiguration()
         config.publishableKey = "test"
         let theme = STPTheme()
