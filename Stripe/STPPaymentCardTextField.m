@@ -769,6 +769,20 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
+#pragma mark UIKeyInput
+
+- (BOOL)hasText {
+    return self.numberField.hasText || self.expirationField.hasText || self.cvcField.hasText;
+}
+
+- (void)insertText:(NSString *)text {
+    [self.currentFirstResponderField insertText:text];
+}
+
+- (void)deleteBackward {
+    [self.currentFirstResponderField deleteBackward];
+}
+
 @end
 
 #pragma clang diagnostic push
