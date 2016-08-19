@@ -10,11 +10,11 @@
 		047C06A51B06830800360F75 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 047C06A41B06830800360F75 /* main.m */; };
 		047C06A81B06830800360F75 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 047C06A71B06830800360F75 /* AppDelegate.m */; };
 		047C06AB1B06830800360F75 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 047C06AA1B06830800360F75 /* ViewController.m */; };
-		047C06AE1B06830800360F75 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 047C06AC1B06830800360F75 /* Main.storyboard */; };
 		047C06B01B06830800360F75 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 047C06AF1B06830800360F75 /* Images.xcassets */; };
 		047C06B31B06830800360F75 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047C06B11B06830800360F75 /* LaunchScreen.xib */; };
 		047C06BF1B06830800360F75 /* ManualInstallationTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 047C06BE1B06830800360F75 /* ManualInstallationTestTests.m */; };
 		047C06CD1B068D0200360F75 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 047C06CC1B068D0200360F75 /* Stripe.framework */; };
+		C1AB94231D6763A200418B56 /* MyAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C1AB94221D6763A200418B56 /* MyAPIClient.m */; };
 		C1B630DF1D1D88CF00A05285 /* TestImageLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = C1B630DE1D1D88CF00A05285 /* TestImageLoader.m */; };
 		C1E56F4C1D21C18200F85011 /* Stripe.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C1E56F4B1D21C18200F85011 /* Stripe.bundle */; };
 /* End PBXBuildFile section */
@@ -37,13 +37,14 @@
 		047C06A71B06830800360F75 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		047C06A91B06830800360F75 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		047C06AA1B06830800360F75 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		047C06AD1B06830800360F75 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		047C06AF1B06830800360F75 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		047C06B21B06830800360F75 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		047C06B81B06830800360F75 /* ManualInstallationTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ManualInstallationTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		047C06BD1B06830800360F75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		047C06BE1B06830800360F75 /* ManualInstallationTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ManualInstallationTestTests.m; sourceTree = "<group>"; };
 		047C06CC1B068D0200360F75 /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe.framework; path = ManualInstallationTest/Frameworks/Stripe.framework; sourceTree = "<group>"; };
+		C1AB94211D6763A200418B56 /* MyAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAPIClient.h; sourceTree = "<group>"; };
+		C1AB94221D6763A200418B56 /* MyAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAPIClient.m; sourceTree = "<group>"; };
 		C1B630DD1D1D88CF00A05285 /* TestImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestImageLoader.h; sourceTree = "<group>"; };
 		C1B630DE1D1D88CF00A05285 /* TestImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestImageLoader.m; sourceTree = "<group>"; };
 		C1E56F4B1D21C18200F85011 /* Stripe.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Stripe.bundle; path = ManualInstallationTest/Frameworks/Stripe.framework/Stripe.bundle; sourceTree = "<group>"; };
@@ -95,9 +96,10 @@
 				047C06A71B06830800360F75 /* AppDelegate.m */,
 				047C06A91B06830800360F75 /* ViewController.h */,
 				047C06AA1B06830800360F75 /* ViewController.m */,
+				C1AB94211D6763A200418B56 /* MyAPIClient.h */,
+				C1AB94221D6763A200418B56 /* MyAPIClient.m */,
 				C1B630DD1D1D88CF00A05285 /* TestImageLoader.h */,
 				C1B630DE1D1D88CF00A05285 /* TestImageLoader.m */,
-				047C06AC1B06830800360F75 /* Main.storyboard */,
 				047C06AF1B06830800360F75 /* Images.xcassets */,
 				047C06B11B06830800360F75 /* LaunchScreen.xib */,
 				047C06A21B06830800360F75 /* Supporting Files */,
@@ -212,7 +214,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1E56F4C1D21C18200F85011 /* Stripe.bundle in Resources */,
-				047C06AE1B06830800360F75 /* Main.storyboard in Resources */,
 				047C06B31B06830800360F75 /* LaunchScreen.xib in Resources */,
 				047C06B01B06830800360F75 /* Images.xcassets in Resources */,
 			);
@@ -234,6 +235,7 @@
 			files = (
 				047C06AB1B06830800360F75 /* ViewController.m in Sources */,
 				047C06A81B06830800360F75 /* AppDelegate.m in Sources */,
+				C1AB94231D6763A200418B56 /* MyAPIClient.m in Sources */,
 				C1B630DF1D1D88CF00A05285 /* TestImageLoader.m in Sources */,
 				047C06A51B06830800360F75 /* main.m in Sources */,
 			);
@@ -258,14 +260,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		047C06AC1B06830800360F75 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				047C06AD1B06830800360F75 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		047C06B11B06830800360F75 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
