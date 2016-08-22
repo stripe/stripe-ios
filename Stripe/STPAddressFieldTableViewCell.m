@@ -151,6 +151,7 @@
                 break;
                 
         }
+        self.textField.accessibilityLabel = self.captionLabel.text;
         [self updateAppearance];
     }
     return self;
