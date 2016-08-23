@@ -100,12 +100,14 @@
             case STPAddressFieldTypeZip:
                 if ([STPPhoneNumberValidator isUSLocale]) {
                     self.captionLabel.text = NSLocalizedString(@"ZIP Code", nil);
+                    self.textField.placeholder = NSLocalizedString(@"12345", nil);
+                    self.textField.keyboardType = UIKeyboardTypePhonePad;
                 } else {
                     self.captionLabel.text = NSLocalizedString(@"Postal Code", nil);
+                    self.textField.placeholder = NSLocalizedString(@"ABC-1234", nil);
+                    self.textField.keyboardType = UIKeyboardTypeASCIICapable;
                 }
                 
-                self.textField.placeholder = NSLocalizedString(@"12345", nil);
-                self.textField.keyboardType = UIKeyboardTypePhonePad;
                 self.textField.preservesContentsOnPaste = NO;
                 self.textField.selectionEnabled = NO;
                 if (!lastInList) {
