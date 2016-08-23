@@ -72,6 +72,7 @@
 - (void)configureWithLabel:(NSString *)label
                   delegate:(id<STPSwitchTableViewCellDelegate>)delegate {
     self.captionLabel.text = label;
+    self.switchView.accessibilityLabel = label;
     self.delegate = delegate;
 }
 
