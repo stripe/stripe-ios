@@ -155,6 +155,10 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     self.delegate = formDelegate;
 }
 
+- (void)insertText:(NSString *)text {
+    [self setText:[self.text stringByAppendingString:text]];
+}
+
 - (void)deleteBackward {
     [super deleteBackward];
     if (self.text.length == 0) {

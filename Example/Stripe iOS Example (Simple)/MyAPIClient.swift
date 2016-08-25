@@ -14,7 +14,6 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     static let sharedClient = MyAPIClient()
     let session: NSURLSession
     var baseURLString: String? = nil
-    var customerID: String? = nil
     var defaultSource: STPCard? = nil
     var sources: [STPCard] = []
 
@@ -41,19 +40,11 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
             completion(error)
             return
         }
-        guard let customerID = customerID else {
-            let error = NSError(domain: StripeDomain, code: 50, userInfo: [
-                NSLocalizedDescriptionKey: "Please set customerID to a valid Stripe customer ID in CheckoutViewController.swift"
-                ])
-            completion(error)
-            return
-        }
         let path = "charge"
         let url = baseURL.URLByAppendingPathComponent(path)
         let params: [String: AnyObject] = [
             "source": result.source.stripeID,
-            "amount": amount,
-            "customer": customerID
+            "amount": amount
         ]
         let request = NSURLRequest.request(url, method: .POST, params: params)
         let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in
@@ -76,13 +67,13 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
             completion(nil, error)
             return
         }
-        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
+        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString) else {
             // This code is just for demo purposes - in this case, if the example app isn't properly configured, we'll return a fake customer just so the app works.
             let customer = STPCustomer(stripeID: "cus_test", defaultSource: self.defaultSource, sources: self.sources)
             completion(customer, nil)
             return
         }
-        let path = "/customers/\(customerID)"
+        let path = "/customer"
         let url = baseURL.URLByAppendingPathComponent(path)
         let request = NSURLRequest.request(url, method: .GET, params: [:])
         let task = self.session.dataTaskWithRequest(request) { (data, urlResponse, error) in
@@ -100,17 +91,16 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     }
     
     @objc func selectDefaultCustomerSource(source: STPSource, completion: STPErrorBlock) {
-        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
+        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString) else {
             if let token = source as? STPToken {
                 self.defaultSource = token.card
             }
             completion(nil)
             return
         }
-        let path = "/customers/\(customerID)/select_source"
+        let path = "/customer/default_source"
         let url = baseURL.URLByAppendingPathComponent(path)
         let params = [
-            "customer": customerID,
             "source": source.stripeID,
         ]
         let request = NSURLRequest.request(url, method: .POST, params: params)
@@ -127,7 +117,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     }
     
     @objc func attachSourceToCustomer(source: STPSource, completion: STPErrorBlock) {
-        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString), customerID = customerID else {
+        guard let baseURLString = baseURLString, baseURL = NSURL(string: baseURLString) else {
             if let token = source as? STPToken, card = token.card {
                 self.sources.append(card)
                 self.defaultSource = card
@@ -135,10 +125,9 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
             completion(nil)
             return
         }
-        let path = "/customers/\(customerID)/sources"
+        let path = "/customer/sources"
         let url = baseURL.URLByAppendingPathComponent(path)
         let params = [
-            "customer": customerID,
             "source": source.stripeID,
             ]
         let request = NSURLRequest.request(url, method: .POST, params: params)

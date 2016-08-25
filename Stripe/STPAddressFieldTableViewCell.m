@@ -100,8 +100,14 @@
                 self.textField.keyboardType = UIKeyboardTypeDefault;
                 break;
             case STPAddressFieldTypeZip:
-                self.textField.placeholder = STPLocalizedString(@"12345", @"Placeholder for Zip/Postal Code field on address form");
-                self.textField.keyboardType = UIKeyboardTypePhonePad;
+                if ([STPPhoneNumberValidator isUSLocale]) {
+                    self.textField.placeholder = STPLocalizedString(@"12345", @"Placeholder for Zip Code field on address form");
+                    self.textField.keyboardType = UIKeyboardTypePhonePad;
+                } else {
+                    self.textField.placeholder = STPLocalizedString(@"ABC-1234", @"Placeholder for Postal Code field on address form");
+                    self.textField.keyboardType = UIKeyboardTypeASCIICapable;
+                }
+                
                 self.textField.preservesContentsOnPaste = NO;
                 self.textField.selectionEnabled = NO;
                 if (!lastInList) {
@@ -144,6 +150,7 @@
                 break;
                 
         }
+        self.textField.accessibilityLabel = self.captionLabel.text;
         [self updateAppearance];
     }
     return self;

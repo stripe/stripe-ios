@@ -39,6 +39,11 @@ typedef NS_OPTIONS(NSUInteger, STPPaymentMethodType) {
 @property (nonatomic, readonly) UIImage *image;
 
 /**
+ *  A small (32 x 20 points) logo image representing the payment method that can be used as template for tinted icons. 
+ */
+@property (nonatomic, readonly) UIImage *templateImage;
+
+/**
  *  A string describing the payment method, such as "Apple Pay" or "Visa 4242".
  */
 @property (nonatomic, readonly) NSString *label;

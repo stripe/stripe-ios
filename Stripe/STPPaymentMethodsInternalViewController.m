@@ -118,14 +118,19 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     return 0;
 }
 
+- (UIColor *)primaryColorForPaymentMethodWithSelectedState:(BOOL)isSelected {
+    return isSelected ? self.theme.accentColor : [self.theme.primaryForegroundColor colorWithAlphaComponent:0.6f];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier forIndexPath:indexPath];
     cell.textLabel.font = self.theme.font;
     cell.backgroundColor = self.theme.secondaryBackgroundColor;
     if (indexPath.section == STPPaymentMethodCardListSection) {
         id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
-        cell.imageView.image = paymentMethod.image;
+        cell.imageView.image = paymentMethod.templateImage;
         BOOL selected = [paymentMethod isEqual:self.selectedPaymentMethod];
+        cell.imageView.tintColor = [self primaryColorForPaymentMethodWithSelectedState:selected];
         cell.textLabel.attributedText = [self buildAttributedStringForPaymentMethod:paymentMethod selected:selected];
         cell.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
@@ -142,7 +147,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         return [self buildAttributedStringForCard:(STPCard *)paymentMethod selected:selected];
     } else if ([paymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
         NSString *label = STPLocalizedString(@"Apple Pay", nil);
-        UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
+        UIColor *primaryColor = [self primaryColorForPaymentMethodWithSelectedState:selected];
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
     }
     return nil;

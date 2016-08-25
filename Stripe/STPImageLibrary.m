@@ -52,36 +52,11 @@
 }
 
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)brand {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
-    NSString *imageName;
-    BOOL templateSupported = [self templateSupported];
-    switch (brand) {
-        case STPCardBrandAmex:
-            imageName = @"stp_card_amex";
-            break;
-        case STPCardBrandDinersClub:
-            imageName = @"stp_card_diners";
-            break;
-        case STPCardBrandDiscover:
-            imageName = @"stp_card_discover";
-            break;
-        case STPCardBrandJCB:
-            imageName = @"stp_card_jcb";
-            break;
-        case STPCardBrandMasterCard:
-            imageName = @"stp_card_mastercard";
-            break;
-        case STPCardBrandUnknown:
-            imageName = templateSupported ? @"stp_card_placeholder_template" : @"stp_card_placeholder";
-            break;
-        case STPCardBrandVisa:
-            imageName = @"stp_card_visa";
-    }
-    UIImage *image = [self safeImageNamed:imageName];
-    if (brand == STPCardBrandUnknown && templateSupported) {
-        image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    }
-    return image;
+    return [self brandImageForCardBrand:brand template:NO];
+}
+
++ (UIImage *)templatedBrandImageForCardBrand:(STPCardBrand)brand {
+    return [self brandImageForCardBrand:brand template:YES];
 }
 
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)brand {
@@ -89,8 +64,40 @@
     return [self safeImageNamed:imageName];
 }
 
++ (UIImage *)safeImageNamed:(NSString *)imageName {
+    return [self safeImageNamed:imageName templateIfAvailable:NO];
+}
+
+@end
+
+@implementation STPImageLibrary (Private)
+
++ (UIImage *)addIcon {
+    return [self safeImageNamed:@"stp_icon_add" templateIfAvailable:YES];
+}
+
++ (UIImage *)leftChevronIcon {
+    return [self safeImageNamed:@"stp_icon_chevron_left" templateIfAvailable:YES];
+}
+
++ (UIImage *)smallRightChevronIcon {
+    return [self safeImageNamed:@"stp_icon_chevron_right_small" templateIfAvailable:YES];
+}
+
++ (UIImage *)largeCardFrontImage {
+    return [self safeImageNamed:@"stp_card_form_front" templateIfAvailable:YES];
+}
+
++ (UIImage *)largeCardBackImage {
+    return [self safeImageNamed:@"stp_card_form_back" templateIfAvailable:YES];
+}
+
++ (UIImage *)largeCardApplePayImage {
+    return [self safeImageNamed:@"stp_card_form_applepay" templateIfAvailable:YES];
+}
+
 + (UIImage *)safeImageNamed:(NSString *)imageName
-            templateifAvailable:(BOOL)templateIfAvailable {
+        templateIfAvailable:(BOOL)templateIfAvailable {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     UIImage *image = nil;
     if ([UIImage respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
@@ -102,46 +109,44 @@
     if (image == nil) {
         image = [UIImage imageNamed:imageName];
     }
-    if ([self templateSupported] && templateIfAvailable) {
+    if (templateIfAvailable) {
         image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
     return image;
 }
 
-+ (UIImage *)safeImageNamed:(NSString *)imageName {
-    return [self safeImageNamed:imageName templateifAvailable:NO];
-}
-
-+ (BOOL)templateSupported {
-    return [[UIImage class] instancesRespondToSelector:@selector(imageWithRenderingMode:)];
-}
-
-@end
-
-@implementation STPImageLibrary (Private)
-
-+ (UIImage *)addIcon {
-    return [self safeImageNamed:@"stp_icon_add" templateifAvailable:YES];
-}
-
-+ (UIImage *)leftChevronIcon {
-    return [self safeImageNamed:@"stp_icon_chevron_left" templateifAvailable:YES];
-}
-
-+ (UIImage *)smallRightChevronIcon {
-    return [self safeImageNamed:@"stp_icon_chevron_right_small" templateifAvailable:YES];
-}
-
-+ (UIImage *)largeCardFrontImage {
-    return [self safeImageNamed:@"stp_card_form_front" templateifAvailable:YES];
-}
-
-+ (UIImage *)largeCardBackImage {
-    return [self safeImageNamed:@"stp_card_form_back" templateifAvailable:YES];
-}
-
-+ (UIImage *)largeCardApplePayImage {
-    return [self safeImageNamed:@"stp_card_form_applepay" templateifAvailable:YES];
++ (UIImage *)brandImageForCardBrand:(STPCardBrand)brand 
+                           template:(BOOL)isTemplate {
+    BOOL shouldUseTemplate = isTemplate;
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
+    NSString *imageName;
+    switch (brand) {
+            case STPCardBrandAmex:
+            imageName = shouldUseTemplate ? @"stp_card_amex_template" : @"stp_card_amex";
+            break;
+            case STPCardBrandDinersClub:
+            imageName = shouldUseTemplate ? @"stp_card_diners_template" : @"stp_card_diners";
+            break;
+            case STPCardBrandDiscover:
+            imageName = shouldUseTemplate ? @"stp_card_discover_template" : @"stp_card_discover";
+            break;
+            case STPCardBrandJCB:
+            imageName = shouldUseTemplate ? @"stp_card_jcb_template" : @"stp_card_jcb";
+            break;
+            case STPCardBrandMasterCard:
+            imageName = shouldUseTemplate ? @"stp_card_mastercard_template" : @"stp_card_mastercard";
+            break;
+            case STPCardBrandUnknown:
+            shouldUseTemplate = YES;
+            imageName = @"stp_card_placeholder_template";
+            break;
+            case STPCardBrandVisa:
+            imageName = shouldUseTemplate ? @"stp_card_visa_template" : @"stp_card_visa";
+            break;
+    }
+    UIImage *image = [self safeImageNamed:imageName
+                      templateIfAvailable:shouldUseTemplate];
+    return image;
 }
 
 + (UIImage *)imageWithTintColor:(UIColor *)color
@@ -149,10 +154,7 @@
     UIImage *newImage;
     UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
     [color set];
-    UIImage *templateImage = image;
-    if ([self templateSupported]) {
-        templateImage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    }
+    UIImage *templateImage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [templateImage drawInRect:CGRectMake(0, 0, templateImage.size.width, templateImage.size.height)];
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -168,9 +170,7 @@
     [image drawAtPoint:origin];
     UIImage *imageWithInsets = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    if ([self templateSupported]) {
-        imageWithInsets = [imageWithInsets imageWithRenderingMode:image.renderingMode];
-    }
+    imageWithInsets = [imageWithInsets imageWithRenderingMode:image.renderingMode];
     return imageWithInsets;
 }
 

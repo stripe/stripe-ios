@@ -97,6 +97,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     STPFormTextField *numberField = [self buildTextField];
     numberField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorCardNumbers;
     numberField.tag = STPCardFieldTypeNumber;
+    numberField.accessibilityLabel = NSLocalizedString(@"card number", @"accessibility label for text field");
     self.numberField = numberField;
     self.numberPlaceholder = [self.viewModel defaultPlaceholder];
 
@@ -104,6 +105,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     expirationField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorExpiration;
     expirationField.tag = STPCardFieldTypeExpiration;
     expirationField.alpha = 0;
+    expirationField.accessibilityLabel = NSLocalizedString(@"expiration date", @"accessibility label for text field");
     self.expirationField = expirationField;
     self.expirationPlaceholder = @"MM/YY";
         
@@ -112,6 +114,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     cvcField.alpha = 0;
     self.cvcField = cvcField;
     self.cvcPlaceholder = @"CVC";
+    self.cvcField.accessibilityLabel = self.cvcPlaceholder;
     
     UIView *fieldsView = [[UIView alloc] init];
     fieldsView.clipsToBounds = YES;
@@ -767,6 +770,20 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
         [self.delegate paymentCardTextFieldDidChange:self];
     }
     [self sendActionsForControlEvents:UIControlEventValueChanged];
+}
+
+#pragma mark UIKeyInput
+
+- (BOOL)hasText {
+    return self.numberField.hasText || self.expirationField.hasText || self.cvcField.hasText;
+}
+
+- (void)insertText:(NSString *)text {
+    [self.currentFirstResponderField insertText:text];
+}
+
+- (void)deleteBackward {
+    [self.currentFirstResponderField deleteBackward];
 }
 
 @end
