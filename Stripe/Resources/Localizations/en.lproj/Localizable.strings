@@ -10,8 +10,11 @@
 /* Placeholder for Address field on address form */
 "123 Address St" = "123 Address St";
 
-/* Placeholder for Zip/Postal Code field on address form */
+/* Placeholder for Zip Code field on address form */
 "12345" = "12345";
+
+/* Placeholder for Postal Code field on address form */
+"ABC-1234" = "ABC-1234";
 
 /* Title for Add a Card view */
 "Add a Card" = "Add a Card";
@@ -34,6 +37,9 @@
 /* Placeholder for State field on address form (US region only) */
 "CA" = "CA";
 
+/* accessibility label for text field */
+"card number" = "card number";
+
 /* Caption for City field on address form */
 "City" = "City";
 
@@ -54,6 +60,9 @@
 
 /* No comment provided by engineer. */
 "Enter the verification code to use the payment info you stored with Stripe." = "Enter the verification code to use the payment info you stored with Stripe.";
+
+/* accessibility label for text field */
+"expiration date" = "expiration date";
 
 /* No comment provided by engineer. */
 "Fill in your card details manually" = "Fill in your card details manually";
