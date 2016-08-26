@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPPaymentContext, STPPaymentMethodsViewController;
 
 /**
- *  This view controller presents a list of payment method options to the user, which they can select between. They can also add credit cards from the list. It must be displayed inside a `UINavigationController`, so you can either create a `UINavigationController` with an `STPPaymentMethodsViewController` as the `rootViewController` and then present the `UINavigationController`, or push a new `STPPaymentMethodsViewController` onto an existing `UINavigationController`'s stack. You can also have `STPPaymentContext` do this for you automatically, by calling `presentPaymentMethodsViewController` or `pushPaymentMethodsViewController` on it.
+ *  This view controller presents a list of payment method options to the user, which they can select between. They can also add credit cards to the list. It must be displayed inside a `UINavigationController`, so you can either create a `UINavigationController` with an `STPPaymentMethodsViewController` as the `rootViewController` and then present the `UINavigationController`, or push a new `STPPaymentMethodsViewController` onto an existing `UINavigationController`'s stack. You can also have `STPPaymentContext` do this for you automatically, by calling `presentPaymentMethodsViewController` or `pushPaymentMethodsViewController` on it.
  */
 @interface STPPaymentMethodsViewController : UIViewController
 

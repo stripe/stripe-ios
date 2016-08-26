@@ -2,6 +2,6 @@
 
 rm -rf docs
 
-./jazzy/bin/jazzy \
+jazzy \
   --config .jazzy.yaml \
-  --output "docs"
+  --output "docs/docs"
