@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		04E6FCE71B714AC2000C8759 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E6FCE61B714AC2000C8759 /* AppDelegate.swift */; };
 		04E6FCE91B714AC2000C8759 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E6FCE81B714AC2000C8759 /* ViewController.swift */; };
-		04E6FCEC1B714AC2000C8759 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCEA1B714AC2000C8759 /* Main.storyboard */; };
 		04E6FCEE1B714AC2000C8759 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCED1B714AC2000C8759 /* Images.xcassets */; };
 		04E6FCF11B714AC2000C8759 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCEF1B714AC2000C8759 /* LaunchScreen.xib */; };
 		04E6FCFD1B714AC2000C8759 /* CarthageTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E6FCFC1B714AC2000C8759 /* CarthageTestTests.swift */; };
 		04E6FD071B714DDF000C8759 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E6FD061B714DDF000C8759 /* Stripe.framework */; };
+		C120573D1D6769AF00CFBCB8 /* MyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C120573C1D6769AF00CFBCB8 /* MyAPIClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,15 +29,15 @@
 /* Begin PBXFileReference section */
 		04E6FCE11B714AC2000C8759 /* CarthageTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarthageTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04E6FCE51B714AC2000C8759 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		04E6FCE61B714AC2000C8759 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		04E6FCE81B714AC2000C8759 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		04E6FCEB1B714AC2000C8759 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		04E6FCE61B714AC2000C8759 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ../../source/swift/AppDelegate.swift; sourceTree = "<group>"; };
+		04E6FCE81B714AC2000C8759 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = ../../source/swift/ViewController.swift; sourceTree = "<group>"; };
 		04E6FCED1B714AC2000C8759 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		04E6FCF01B714AC2000C8759 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		04E6FCF61B714AC2000C8759 /* CarthageTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CarthageTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04E6FCFB1B714AC2000C8759 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04E6FCFC1B714AC2000C8759 /* CarthageTestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarthageTestTests.swift; sourceTree = "<group>"; };
 		04E6FD061B714DDF000C8759 /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stripe.framework; path = Carthage/Build/iOS/Stripe.framework; sourceTree = "<group>"; };
+		C120573C1D6769AF00CFBCB8 /* MyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyAPIClient.swift; path = ../../source/swift/MyAPIClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +83,7 @@
 			children = (
 				04E6FCE61B714AC2000C8759 /* AppDelegate.swift */,
 				04E6FCE81B714AC2000C8759 /* ViewController.swift */,
-				04E6FCEA1B714AC2000C8759 /* Main.storyboard */,
+				C120573C1D6769AF00CFBCB8 /* MyAPIClient.swift */,
 				04E6FCED1B714AC2000C8759 /* Images.xcassets */,
 				04E6FCEF1B714AC2000C8759 /* LaunchScreen.xib */,
 				04E6FCE41B714AC2000C8759 /* Supporting Files */,
@@ -126,6 +126,7 @@
 				04E6FCDD1B714AC2000C8759 /* Sources */,
 				04E6FCDE1B714AC2000C8759 /* Frameworks */,
 				04E6FCDF1B714AC2000C8759 /* Resources */,
+				C120573E1D676A4F00CFBCB8 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -160,7 +161,8 @@
 		04E6FCD91B714AC2000C8759 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0640;
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = jflinter;
 				TargetAttributes = {
 					04E6FCE01B714AC2000C8759 = {
@@ -196,7 +198,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04E6FCEC1B714AC2000C8759 /* Main.storyboard in Resources */,
 				04E6FCF11B714AC2000C8759 /* LaunchScreen.xib in Resources */,
 				04E6FCEE1B714AC2000C8759 /* Images.xcassets in Resources */,
 			);
@@ -211,6 +212,24 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		C120573E1D676A4F00CFBCB8 /* Copy Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Stripe.framework",
+			);
+			name = "Copy Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		04E6FCDD1B714AC2000C8759 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -218,6 +237,7 @@
 			files = (
 				04E6FCE91B714AC2000C8759 /* ViewController.swift in Sources */,
 				04E6FCE71B714AC2000C8759 /* AppDelegate.swift in Sources */,
+				C120573D1D6769AF00CFBCB8 /* MyAPIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,14 +260,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		04E6FCEA1B714AC2000C8759 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				04E6FCEB1B714AC2000C8759 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		04E6FCEF1B714AC2000C8759 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -280,6 +292,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -350,6 +363,7 @@
 				);
 				INFOPLIST_FILE = CarthageTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jflinter.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -364,6 +378,7 @@
 				);
 				INFOPLIST_FILE = CarthageTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jflinter.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -382,6 +397,7 @@
 				);
 				INFOPLIST_FILE = CarthageTestTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jflinter.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CarthageTest.app/CarthageTest";
 			};
@@ -397,6 +413,7 @@
 				);
 				INFOPLIST_FILE = CarthageTestTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jflinter.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CarthageTest.app/CarthageTest";
 			};
