@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
+#import "STPShippingMethod.h"
 
 #define FAUXPAS_IGNORED_IN_CLASS(...)
 
@@ -21,8 +22,10 @@ FAUXPAS_IGNORED_IN_CLASS(APIAvailability)
 - (instancetype)initWithAmount:(NSInteger)paymentAmount;
 - (instancetype)initWithPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems;
 
-- (NSInteger)paymentAmountWithCurrency:(NSString *)paymentCurrency;
+- (NSInteger)paymentAmountWithCurrency:(NSString *)paymentCurrency
+                        shippingMethod:(STPShippingMethod *)shippingMethod;
 - (NSArray<PKPaymentSummaryItem *> *)paymentSummaryItemsWithCurrency:(NSString *)paymentCurrency
-                                                         companyName:(NSString *)companyName;
+                                                         companyName:(NSString *)companyName
+                                                      shippingMethod:(STPShippingMethod *)shippingMethod;
 
 @end

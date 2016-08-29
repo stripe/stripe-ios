@@ -35,28 +35,50 @@ FAUXPAS_IGNORED_IN_CLASS(APIAvailability)
     return self;
 }
 
-- (NSInteger)paymentAmountWithCurrency:(NSString *)paymentCurrency {
+- (NSInteger)paymentAmountWithCurrency:(NSString *)paymentCurrency shippingMethod:(STPShippingMethod *)shippingMethod {
+    NSInteger shippingAmount = (shippingMethod != nil) ? shippingMethod.amount : 0;
     if (_paymentSummaryItems == nil) {
-        return _paymentAmount;
+        return _paymentAmount + shippingAmount;
     }
     else {
         PKPaymentSummaryItem *lastItem = _paymentSummaryItems.lastObject;
-        return [lastItem.amount stp_amountWithCurrency:paymentCurrency];
+        return [lastItem.amount stp_amountWithCurrency:paymentCurrency] + shippingAmount;
     }
 }
 
 - (NSArray<PKPaymentSummaryItem *> *)paymentSummaryItemsWithCurrency:(NSString *)paymentCurrency
-                                                         companyName:(NSString *)companyName {
+                                                         companyName:(NSString *)companyName
+                                                      shippingMethod:(STPShippingMethod *)shippingMethod {
+    PKPaymentSummaryItem *shippingItem = nil;
+    if (shippingMethod != nil) {
+        NSDecimalNumber *shippingAmount = [NSDecimalNumber stp_decimalNumberWithAmount:shippingMethod.amount
+                                                                              currency:paymentCurrency];
+        shippingItem = [PKPaymentSummaryItem summaryItemWithLabel:shippingMethod.label
+                                                           amount:shippingAmount];
+    }
     if (_paymentSummaryItems == nil) {
-        NSDecimalNumber *amount = [NSDecimalNumber stp_decimalNumberWithAmount:_paymentAmount
-                                                                      currency:paymentCurrency];
+        NSDecimalNumber *total = [NSDecimalNumber stp_decimalNumberWithAmount:_paymentAmount + shippingMethod.amount
+                                                                     currency:paymentCurrency];
         PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:companyName
-                                                                              amount:amount];
-        return @[totalItem];
-        
+                                                                              amount:total];
+        NSMutableArray *items = [@[totalItem] mutableCopy];
+        if (shippingItem != nil) {
+            [items insertObject:shippingItem atIndex:0];
+        }
+        return items;
     }
     else {
-        return _paymentSummaryItems;
+        if ([_paymentSummaryItems count] > 0 && shippingItem != nil) {
+            NSMutableArray *items = [_paymentSummaryItems mutableCopy];
+            PKPaymentSummaryItem *origTotalItem = [items lastObject];
+            NSDecimalNumber *newTotal = [origTotalItem.amount decimalNumberByAdding:shippingItem.amount];
+            PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:origTotalItem.label amount:newTotal];
+            [items removeLastObject];
+            return [items arrayByAddingObjectsFromArray:@[shippingItem, totalItem]];
+        }
+        else {
+            return _paymentSummaryItems;
+        }
     }
 }
 

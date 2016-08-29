@@ -10,6 +10,7 @@
 #import "STPBackendAPIAdapter.h"
 #import "STPPaymentMethod.h"
 #import "STPTheme.h"
+#import "STPShippingMethod.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +32,16 @@ NS_ASSUME_NONNULL_BEGIN
  *  The billing address fields the user must fill out when prompted for their payment details. These fields will all be present on the returned token from Stripe. See https://stripe.com/docs/api#create_card_token for more information.
  */
 @property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
+
+/**
+ *  The billing address fields the user must fill out when prompted for their shipping info.
+ */
+@property(nonatomic)STPBillingAddressFields requiredShippingAddressFields;
+
+/**
+ *  The type of shipping for this purchase. This property sets the labels displayed when the user is prompted for shipping info, and whether they should also be asked to select a shipping method. The default value is STPShippingTypeShipping.
+ */
+@property(nonatomic)STPShippingType shippingType;
 
 /**
  *  The name of your company, for displaying to the user during payment flows. For example, when using Apple Pay, the payment sheet's final line item will read "PAY {companyName}". This defaults to the name of your iOS application.

@@ -98,6 +98,10 @@
     return [self safeImageNamed:@"stp_card_form_applepay" templateIfAvailable:YES];
 }
 
++ (UIImage *)largeShippingImage {
+    return [self safeImageNamed:@"stp_shipping_form" templateIfAvailable:YES];
+}
+
 + (UIImage *)safeImageNamed:(NSString *)imageName
         templateIfAvailable:(BOOL)templateIfAvailable {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);

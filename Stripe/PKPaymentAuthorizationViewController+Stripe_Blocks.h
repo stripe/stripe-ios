@@ -15,12 +15,15 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 typedef void(^STPApplePayTokenHandlerBlock)(STPToken *token, STPErrorBlock completion);
 typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError *error);
+typedef void (^STPPaymentSummaryItemCompletionBlock)(NSArray<PKPaymentSummaryItem*> *summaryItems);
+typedef void (^STPShippingMethodSelectionBlock)(PKShippingMethod *selectedMethod, STPPaymentSummaryItemCompletionBlock completion);
 
 @interface PKPaymentAuthorizationViewController (Stripe_Blocks)
 
 + (instancetype)stp_controllerWithPaymentRequest:(PKPaymentRequest *)paymentRequest
                                        apiClient:(STPAPIClient *)apiClient
                                  onTokenCreation:(STPApplePayTokenHandlerBlock)onTokenCreation
+                       onShippingMethodSelection:(STPShippingMethodSelectionBlock)onShippingMethodSelection
                                         onFinish:(STPPaymentCompletionBlock)onFinish;
 
 

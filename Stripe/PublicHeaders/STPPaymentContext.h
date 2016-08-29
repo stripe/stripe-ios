@@ -94,6 +94,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly, nullable)NSArray<id<STPPaymentMethod>> *paymentMethods;
 
 /**
+ *  The user's currently selected shipping method. May be nil.
+ */
+@property(nonatomic, readonly, nullable)STPShippingMethod *selectedShippingMethod;
+
+/**
+ *  An array of STPShippingMethod objects that describe the supported shipping methods. May be nil.
+ */
+@property(nonatomic, readonly, nullable)NSArray<STPShippingMethod *> *shippingMethods;
+
+/**
+ *  The user's shipping address. May be nil.
+ */
+@property(nonatomic, readonly, nullable)STPAddress *shippingAddress;
+
+/**
  *  The amount of money you're requesting from the user, in the smallest currency unit for the selected currency. For example, to indicate $10 USD, use 1000 (i.e. 1000 cents). For more information see https://stripe.com/docs/api#charge_object-amount . This value must be present and greater than zero in order for Apple Pay to be automatically enabled.
  *
  *  @note You should only set either this or `paymentSummaryItems`, not both. The other will be automatically calculated on demand using your `paymentCurrency`. 
@@ -140,6 +155,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  This creates, configures, and appropriately pushes an `STPPaymentMethodsViewController` onto the navigation stack of the context's `hostViewController`. It'll be popped automatically when the user is done selecting their payment method.
  */
 - (void)pushPaymentMethodsViewController;
+
+/**
+ *  This creates, configures, and appropriately presents a view controller for collecting shipping address and shipping method on top of the payment context's `hostViewController`. It'll be dismissed automatically when the user is done selecting their payment method.
+ */
+- (void)presentShippingInfoViewController;
 
 /**
  *  Requests payment from the user. This may need to present some supplemental UI to the user, in which case it will be presented on the payment context's `hostViewController`. For instance, if they've selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. After this is called, the `paymentContext:didCreatePaymentResult:completion:` and `paymentContext:didFinishWithStatus:error:` methods will be called on the context's `delegate`.
@@ -194,6 +214,20 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
 - (void)paymentContext:(STPPaymentContext *)paymentContext
    didFinishWithStatus:(STPPaymentStatus)status
                  error:(nullable NSError *)error;
+
+@optional
+/**
+ *  Inside this method, you should verify that you can ship to the given address.
+ *  You should call the completion block with the results of your validation
+ *  and the available shipping methods for the given address.
+ *
+ *  @param paymentContext  The context that updated its shipping address
+ *  @param shippingAddress The current shipping address
+ *  @param completion      Call this block when you're done validating the shipping address and calculating available shipping methods.
+ */
+- (void)paymentContext:(STPPaymentContext *)paymentContext
+didUpdateShippingAddress:(STPAddress *)address
+            completion:(STPShippingMethodsCompletionBlock)completion;
 
 @end
 
