@@ -9,6 +9,7 @@
 #import "STPApplePayPaymentMethod.h"
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
+#import "STPLocalizationUtils.h"
 
 @implementation STPApplePayPaymentMethod
 
@@ -22,7 +23,7 @@
 }
 
 - (NSString *)label {
-    return NSLocalizedString(@"Apple Pay", nil);
+    return STPLocalizedString(@"Apple Pay", @"Text for Apple Pay payment method");
 }
 
 - (BOOL)isEqual:(id)object {
