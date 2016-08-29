@@ -1,3 +1,12 @@
+== 8.0.5 2016-08-26
+* You can now optionally use an array of PKPaymentSummaryItems to set your payment amount, if you would like more control over how Apple Pay forms are rendered.
+* Updated credit card and Apple Pay icons.
+* Fixed some images not being included in the resources bundle target.
+* Non-US locales now have an alphanumeric keyboard for postal code entry.
+* Modals now use UIModalPresentationStyleFormSheet.
+* Added more accessibility labels.
+* STPPaymentCardTextField now conforms to UIKeyInput (thanks @theill).
+
 == 8.0.4 2016-08-01
 * Fixed an issue with Apple Pay payments not using the correct currency.
 * View controllers now update their status bar and scroll view indicator styles based on their theme.

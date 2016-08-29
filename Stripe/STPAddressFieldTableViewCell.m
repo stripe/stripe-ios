@@ -11,6 +11,7 @@
 #import "STPPhoneNumberValidator.h"
 #import "STPEmailAddressValidator.h"
 #import "STPCardValidator.h"
+#import "STPLocalizationUtils.h"
 
 @interface STPAddressFieldTableViewCell() <STPFormTextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
@@ -49,8 +50,13 @@
         [self.contentView addSubview:textField];
         
         UIToolbar *toolbar = [UIToolbar new];
-        UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStyleDone target:self action:@selector(nextTapped:)];
+        UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                      target:nil 
+                                                                                      action:nil];
+        UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:STPLocalizedString(@"Next", nil)
+                                                                     style:UIBarButtonItemStyleDone
+                                                                    target:self
+                                                                    action:@selector(nextTapped:)];
         toolbar.items = @[flexibleItem, nextItem];
         _inputAccessoryToolbar = toolbar;
         
@@ -73,52 +79,49 @@
             self.textField.returnKeyType = UIReturnKeyNext;
         }
         [self updateTextFieldsAndCaptions];
-        self.textField.accessibilityLabel = self.captionLabel.text;
         [self updateAppearance];
     }
     return self;
 }
 
+- (void)setTheme:(STPTheme *)theme {
+    _theme = theme;
+    [self updateAppearance];
+}
+
 - (void)updateTextFieldsAndCaptions {
+    self.captionLabel.text = [self captionForAddressField:self.type];
     switch (self.type) {
         case STPAddressFieldTypeName:
-            self.captionLabel.text = NSLocalizedString(@"Name", nil);
-            self.textField.placeholder = NSLocalizedString(@"John Appleseed", nil);
+            self.textField.placeholder = STPLocalizedString(@"John Appleseed", @"Placeholder for Name field on address form");
             self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
         case STPAddressFieldTypeLine1:
-            self.captionLabel.text = NSLocalizedString(@"Address", nil);
-            self.textField.placeholder = NSLocalizedString(@"123 Address St", nil);
+            self.textField.placeholder = STPLocalizedString(@"123 Address St", @"Placeholder for Address field on address form");
             self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
         case STPAddressFieldTypeLine2:
-            self.captionLabel.text = NSLocalizedString(@"Apt.", nil);
-            self.textField.placeholder = NSLocalizedString(@"#23", nil);
+            self.textField.placeholder = STPLocalizedString(@"#23", @"Placeholder for Apartment/Address line 2 on address form");
             self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
         case STPAddressFieldTypeCity:
-            self.captionLabel.text = NSLocalizedString(@"City", nil);
-            self.textField.placeholder = NSLocalizedString(@"San Francisco", nil);
+            self.textField.placeholder = STPLocalizedString(@"San Francisco", @"Placeholder for City field on address form");
             self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
         case STPAddressFieldTypeState:
             if ([self countryCodeIsUnitedStates]) {
-                self.captionLabel.text = NSLocalizedString(@"State", nil);
-                self.textField.placeholder = NSLocalizedString(@"CA", nil);
+                self.textField.placeholder = STPLocalizedString(@"CA", @"Placeholder for State field on address form (US region only)");
             } else {
-                self.captionLabel.text = NSLocalizedString(@"County", nil);
                 self.textField.placeholder = nil;
             }
             self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
         case STPAddressFieldTypeZip:
             if ([self countryCodeIsUnitedStates]) {
-                self.captionLabel.text = NSLocalizedString(@"ZIP Code", nil);
-                self.textField.placeholder = NSLocalizedString(@"12345", nil);
+                self.textField.placeholder = STPLocalizedString(@"12345", @"Placeholder for Zip Code field on address form");
                 self.textField.keyboardType = UIKeyboardTypePhonePad;
             } else {
-                self.captionLabel.text = NSLocalizedString(@"Postal Code", nil);
-                self.textField.placeholder = NSLocalizedString(@"ABC-1234", nil);
+                self.textField.placeholder = STPLocalizedString(@"ABC-1234", @"Placeholder for Postal Code field on address form");
                 self.textField.keyboardType = UIKeyboardTypeASCIICapable;
             }
             
@@ -129,7 +132,6 @@
             }
             break;
         case STPAddressFieldTypeCountry:
-            self.captionLabel.text = NSLocalizedString(@"Country", nil);
             self.textField.placeholder = nil;
             self.textField.keyboardType = UIKeyboardTypeDefault;
             self.textField.keyboardType = UIKeyboardTypeDefault;
@@ -143,10 +145,9 @@
             }
             break;
         case STPAddressFieldTypePhone:
-            self.captionLabel.text = NSLocalizedString(@"Phone", nil);
             self.textField.keyboardType = UIKeyboardTypePhonePad;
             if ([self countryCodeIsUnitedStates]) {
-                self.textField.placeholder = NSLocalizedString(@"(555) 123-1234", nil);
+                self.textField.placeholder = STPLocalizedString(@"(555) 123-1234", @"Placeholder for Phone field on address form");
                 self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
             } else {
                 self.textField.placeholder = nil;
@@ -159,13 +160,49 @@
             }
             break;
         case STPAddressFieldTypeEmail:
-            self.captionLabel.text = NSLocalizedString(@"Email", nil);
-            self.textField.placeholder = NSLocalizedString(@"you@email.com", @"email field placeholder");
+            self.textField.placeholder = STPLocalizedString(@"you@example.com", @"Placeholder for Email field on address form");
             self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             self.textField.keyboardType = UIKeyboardTypeEmailAddress;
             break;
             
+    }
+    self.textField.accessibilityLabel = self.captionLabel.text;
+}
+
+- (NSString *)captionForAddressField:(STPAddressFieldType)addressFieldType {
+    switch (addressFieldType) {
+        case STPAddressFieldTypeName:
+            return STPLocalizedString(@"Name", @"Caption for Name field on address form");
+            break;
+        case STPAddressFieldTypeLine1:
+            return STPLocalizedString(@"Address", @"Caption for Address field on address form");
+            break;
+        case STPAddressFieldTypeLine2:
+            return STPLocalizedString(@"Apt.", @"Caption for Apartment/Address line 2 field on address form");
+            break;
+        case STPAddressFieldTypeCity:
+            return STPLocalizedString(@"City", @"Caption for City field on address form");
+            break;
+        case STPAddressFieldTypeState:
+            return ([self countryCodeIsUnitedStates] 
+                    ? STPLocalizedString(@"State", @"Caption for State field on address form (US region only)")
+                    : STPLocalizedString(@"County", @"Caption for County field on address form (non-US regions only)"));
+            break;
+        case STPAddressFieldTypeZip:
+            return ([self countryCodeIsUnitedStates] 
+                    ? STPLocalizedString(@"ZIP Code", @"Caption for Zip Code field on address form (US region only)")
+                    : STPLocalizedString(@"Postal Code", @"Caption for Postal Code field on address form (non-US regions only)"));
+            break;
+        case STPAddressFieldTypeCountry:
+            return STPLocalizedString(@"Country", @"Caption for Country field on address form");
+            break;
+        case STPAddressFieldTypeEmail:
+            return STPLocalizedString(@"Email", @"Caption for Email field on address form");
+            break;
+        case STPAddressFieldTypePhone:
+            return STPLocalizedString(@"Phone", @"Caption for Phone field on address form");
+            break;
     }
 }
 
@@ -174,11 +211,6 @@
     _postalCodeType = [STPPostalCodeValidator postalCodeTypeForCountryCode:self.ourCountryCode];
     [self updateTextFieldsAndCaptions];
     [self setNeedsLayout];
-}
-
-- (void)setTheme:(STPTheme *)theme {
-    _theme = theme;
-    [self updateAppearance];
 }
 
 - (void)updateAppearance {
@@ -198,19 +230,19 @@
 }
 
 - (NSString *)longestPossibleCaption {
-    NSArray *captions = @[
-                          NSLocalizedString(@"Name", nil),
-                          NSLocalizedString(@"Address", nil),
-                          NSLocalizedString(@"Apt.", nil),
-                          NSLocalizedString(@"City", nil),
-                          ([self countryCodeIsUnitedStates] ? NSLocalizedString(@"State", nil) : NSLocalizedString(@"County", nil)),
-                          ([self countryCodeIsUnitedStates] ? NSLocalizedString(@"ZIP Code", nil) : NSLocalizedString(@"Postal Code", nil)),
-                          NSLocalizedString(@"Country", nil),
-                          NSLocalizedString(@"Email", nil),
-                          NSLocalizedString(@"Phone", nil),
-                          ];
     NSString *longestCaption = @"";
-    for (NSString *caption in captions) {
+    NSArray *addressFieldTypes = @[@(STPAddressFieldTypeName),
+                                   @(STPAddressFieldTypeLine1),
+                                   @(STPAddressFieldTypeLine2),
+                                   @(STPAddressFieldTypeCity),
+                                   @(STPAddressFieldTypeState),
+                                   @(STPAddressFieldTypeZip),
+                                   @(STPAddressFieldTypeCountry),
+                                   @(STPAddressFieldTypeEmail),
+                                   @(STPAddressFieldTypePhone),
+                                   ];
+    for (NSNumber *addressFieldType in addressFieldTypes) {
+        NSString *caption = [self captionForAddressField:[addressFieldType integerValue]];
         if ([caption length] > [longestCaption length]) {
             longestCaption = caption;
         }

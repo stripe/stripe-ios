@@ -9,6 +9,7 @@
 #import "STPRememberMeTermsView.h"
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
+#import "STPLocalizationUtils.h"
 
 @interface STPRememberMeTermsView()<UITextViewDelegate>
 
@@ -45,13 +46,14 @@
 }
 
 - (NSAttributedString *)buildAttributedString {
-    NSString *privacyPolicy = [NSLocalizedString(@"Privacy Policy", nil) lowercaseString];
+    NSString *privacyPolicy = STPLocalizedString(@"Privacy Policy", @"The text in the full Remember Me TOS/privacy footer to turn into a link to the privacy policy URL. NOTE: this must _EXACTLY_ match a substring in the full remember me footer text");
     NSURL *privacyURL = [NSURL URLWithString:@"https://checkout.stripe.com/-/privacy"];
-    NSString *terms = [NSLocalizedString(@"Terms", nil) lowercaseString];
+    NSString *terms = STPLocalizedString(@"Terms", @"The text in the full Remember Me TOS/privacy footer to turn into a link to the terns of service URL. NOTE: this must _EXACTLY_ match a substring in the full remember me footer text");
     NSURL *termsURL = [NSURL URLWithString:@"https://checkout.stripe.com/-/terms"];
-    NSString *learnMore = [NSLocalizedString(@"More info", nil) lowercaseString];
+    NSString *learnMore = STPLocalizedString(@"More Info", @"The text in the full Remember Me TOS/privacy footer to turn into a link to the more info URL. NOTE: this must _EXACTLY_ match a substring in the full remember me footer text");
     NSURL *learnMoreURL = [NSURL URLWithString:@"https://checkout.stripe.com/-/remember-me"];
-    NSString *contents = NSLocalizedString(@"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's Privacy Policy and Terms. More Info", nil);
+    NSString *contents = STPLocalizedString(@"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's Privacy Policy and Terms. More Info", 
+                                            @"Footer shown when user enables Remember Me that show additional info. If you change/localize this, you _MUST_ change the Privacy Policy, Terms, and More Info strings to match.");
     NSRange privacyRange = [contents.lowercaseString rangeOfString:privacyPolicy];
     NSRange termsRange = [contents.lowercaseString rangeOfString:terms];
     NSRange learnMoreRange = [contents.lowercaseString rangeOfString:learnMore];

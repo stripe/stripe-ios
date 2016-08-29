@@ -17,6 +17,7 @@
 #import "STPPhoneNumberValidator.h"
 #import "STPColorUtils.h"
 #import "STPWeakStrongMacros.h"
+#import "STPLocalizationUtils.h"
 
 @interface STPSMSCodeViewController()<STPSMSCodeTextFieldDelegate>
 
@@ -61,14 +62,14 @@
     [super viewDidLoad];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel)];
-    self.navigationItem.title = NSLocalizedString(@"Verification Code", nil);
+    self.navigationItem.title = STPLocalizedString(@"Verification Code", nil);
     
     UIScrollView *scrollView = [UIScrollView new];
     [self.view addSubview:scrollView];
     self.scrollView = scrollView;
     
     UILabel *topLabel = [UILabel new];
-    topLabel.text = NSLocalizedString(@"Enter the verification code to use the payment info you stored with Stripe.", nil);
+    topLabel.text = STPLocalizedString(@"Enter the verification code to use the payment info you stored with Stripe.", nil);
     topLabel.textAlignment = NSTextAlignmentCenter;
     topLabel.numberOfLines = 0;
     [self.scrollView addSubview:topLabel];
@@ -81,14 +82,14 @@
     
     UILabel *bottomLabel = [UILabel new];
     bottomLabel.textAlignment = NSTextAlignmentCenter;
-    bottomLabel.text = NSLocalizedString(@"Didn't receive the code?", nil);
+    bottomLabel.text = STPLocalizedString(@"Didn't receive the code?", nil);
     bottomLabel.alpha = 0;
     [self.scrollView addSubview:bottomLabel];
     self.bottomLabel = bottomLabel;
     
     UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
     cancelButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [cancelButton setTitle:NSLocalizedString(@"Fill in your card details manually", nil) forState:UIControlStateNormal];
+    [cancelButton setTitle:STPLocalizedString(@"Fill in your card details manually", nil) forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
     cancelButton.alpha = 0;
     [self.scrollView addSubview:cancelButton];
@@ -97,21 +98,21 @@
     UILabel *errorLabel = [UILabel new];
     errorLabel.textAlignment = NSTextAlignmentCenter;
     errorLabel.alpha = 0;
-    errorLabel.text = NSLocalizedString(@"Invalid Code", nil);
+    errorLabel.text = STPLocalizedString(@"Invalid Code", nil);
     [self.scrollView addSubview:errorLabel];
     self.errorLabel = errorLabel;
 
     UILabel *smsSentLabel = [UILabel new];
     smsSentLabel.textAlignment = NSTextAlignmentCenter;
     smsSentLabel.numberOfLines = 2;
-    NSString *sentString = NSLocalizedString(@"We just sent a text message to:", nil);
+    NSString *sentString = STPLocalizedString(@"We just sent a text message to:", nil);
     smsSentLabel.text = [NSString stringWithFormat:@"%@\n%@", sentString, [STPPhoneNumberValidator formattedRedactedPhoneNumberForString:self.redactedPhone]];
     [self.scrollView addSubview:smsSentLabel];
     self.smsSentLabel = smsSentLabel;
     
     UIButton *pasteFromClipboardButton = [UIButton buttonWithType:UIButtonTypeSystem];
     pasteFromClipboardButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [pasteFromClipboardButton setTitle:NSLocalizedString(@"Paste copied code?", nil) forState:UIControlStateNormal];
+    [pasteFromClipboardButton setTitle:STPLocalizedString(@"Paste copied code?", nil) forState:UIControlStateNormal];
     [pasteFromClipboardButton addTarget:self action:@selector(pasteCodeFromClipboard) forControlEvents:UIControlEventTouchUpInside];
     pasteFromClipboardButton.alpha = 0;
     pasteFromClipboardButton.hidden = YES;
@@ -273,7 +274,7 @@
         self.loading = NO;
         BOOL tooManyTries = error.code == STPCheckoutTooManyAttemptsError;
         if (tooManyTries) {
-            self.errorLabel.text = NSLocalizedString(@"Too many incorrect attempts", nil);
+            self.errorLabel.text = STPLocalizedString(@"Too many incorrect attempts", nil);
         }
         [codeField shakeAndClear];
         [self.hideSMSSentLabelTimer invalidate];
