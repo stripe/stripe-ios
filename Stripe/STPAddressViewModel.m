@@ -8,27 +8,32 @@
 
 #import "STPAddressViewModel.h"
 #import "NSArray+Stripe_BoundSafe.h"
+#import "STPPostalCodeValidator.h"
 
 @interface STPAddressViewModel()<STPAddressFieldTableViewCellDelegate>
 
 @property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
 @property(nonatomic)NSArray<STPAddressFieldTableViewCell *> *addressCells;
-
+@property(nonatomic)BOOL showingPostalCodeCell;
 @end
 
 @implementation STPAddressViewModel
+
+@synthesize addressFieldTableViewCountryCode = _addressFieldTableViewCountryCode;
 
 - (instancetype)initWithRequiredBillingFields:(STPBillingAddressFields)requiredBillingAddressFields {
     self = [super init];
     if (self) {
         _requiredBillingAddressFields = requiredBillingAddressFields;
+        _addressFieldTableViewCountryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
+        
         switch (requiredBillingAddressFields) {
             case STPBillingAddressFieldsNone:
                 _addressCells = @[];
                 break;
             case STPBillingAddressFieldsZip:
                 _addressCells = @[
-                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:YES delegate:self]
+                                  // Postal code cell will be added later if necessary
                                   ];
                 break;
             case STPBillingAddressFieldsFull:
@@ -38,13 +43,67 @@
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine2 contents:@"" lastInList:NO delegate:self],
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCity contents:@"" lastInList:NO delegate:self],
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeState contents:@"" lastInList:NO delegate:self],
-                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:NO delegate:self],
-                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCountry contents:@"" lastInList:YES delegate:self],
+                                  // Postal code cell will be added later if necessary
+                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCountry contents:_addressFieldTableViewCountryCode lastInList:YES delegate:self],
                                   ];
                 break;
         }
+        
+        [self updatePostalCodeCellIfNecessary];
     }
     return self;
+}
+
+- (void)updatePostalCodeCellIfNecessary {
+    STPPostalCodeType postalCodeType = [STPPostalCodeValidator postalCodeTypeForCountryCode:_addressFieldTableViewCountryCode];
+    BOOL shouldBeShowingPostalCode = (postalCodeType != STPCountryPostalCodeTypeNotRequired);
+    if (shouldBeShowingPostalCode && !self.showingPostalCodeCell) {
+        switch (self.requiredBillingAddressFields) {
+            case STPBillingAddressFieldsNone:
+                // Do nothing
+                break;
+            case STPBillingAddressFieldsZip:
+                self.addressCells = @[
+                                      [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:YES delegate:self]
+                                      ];
+                break;
+            case STPBillingAddressFieldsFull: {
+                // Add after STPAddressFieldTypeState
+                NSUInteger stateFieldIndex = [self.addressCells indexOfObjectPassingTest:^BOOL(STPAddressFieldTableViewCell * _Nonnull obj, NSUInteger __unused idx, BOOL * _Nonnull __unused stop) {
+                    return (obj.type == STPAddressFieldTypeState);
+                }];
+                
+                NSMutableArray<STPAddressFieldTableViewCell *> *mutableAddressCells = self.addressCells.mutableCopy;
+                [mutableAddressCells insertObject:[[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:NO delegate:self]
+                                          atIndex:stateFieldIndex + 1];
+                self.addressCells = mutableAddressCells.copy;
+                break;             
+            }
+        }
+
+    }
+    else if (!shouldBeShowingPostalCode && self.showingPostalCodeCell) {
+        switch (self.requiredBillingAddressFields) {
+            case STPBillingAddressFieldsNone:
+                // Do nothing
+                break;
+            case STPBillingAddressFieldsZip:
+                self.addressCells = @[];
+                break;
+            case STPBillingAddressFieldsFull: {
+                NSUInteger zipFieldIndex = [self.addressCells indexOfObjectPassingTest:^BOOL(STPAddressFieldTableViewCell * _Nonnull obj, NSUInteger __unused idx, BOOL * _Nonnull __unused stop) {
+                    return (obj.type == STPAddressFieldTypeZip);
+                }];
+                if (zipFieldIndex != NSNotFound) {
+                    NSMutableArray<STPAddressFieldTableViewCell *> *mutableAddressCells = self.addressCells.mutableCopy;
+                    [mutableAddressCells removeObjectAtIndex:zipFieldIndex];
+                    self.addressCells = mutableAddressCells.copy;
+                }
+                break;             
+            }
+        }
+
+    }
 }
 
 - (STPAddressFieldTableViewCell *)cellAtIndex:(NSInteger)index {
@@ -71,7 +130,19 @@
     return [self.address containsRequiredFields:self.requiredBillingAddressFields];
 }
 
+- (void)setAddressFieldTableViewCountryCode:(NSString *)addressFieldTableViewCountryCode {
+    if (![_addressFieldTableViewCountryCode isEqualToString:addressFieldTableViewCountryCode]) {
+        _addressFieldTableViewCountryCode = addressFieldTableViewCountryCode;
+        [self updatePostalCodeCellIfNecessary];
+        for (STPAddressFieldTableViewCell *cell in self.addressCells) {
+            [cell delegateCountryCodeDidChange];
+        }
+    }
+}
+
 - (void)setAddress:(STPAddress *)address {
+    self.addressFieldTableViewCountryCode = address.country;
+    
     for (STPAddressFieldTableViewCell *cell in self.addressCells) {
         switch (cell.type) {
             case STPAddressFieldTypeName:
