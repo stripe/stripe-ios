@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, STPPostalCodeType) {
 + (BOOL)stringIsValidPostalCode:(nullable NSString *)string
                            type:(STPPostalCodeType)postalCodeType;
 + (BOOL)stringIsValidPostalCode:(nullable NSString *)string
-                           countryCode:(nullable NSString *)countryCode;
+                    countryCode:(nullable NSString *)countryCode;
 
 + (STPPostalCodeType)postalCodeTypeForCountryCode:(nullable NSString *)countryCode;
 

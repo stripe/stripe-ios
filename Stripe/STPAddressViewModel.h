@@ -15,6 +15,8 @@
 @protocol STPAddressViewModelDelegate <NSObject>
 
 - (void)addressViewModelDidChange:(STPAddressViewModel *)addressViewModel;
+- (void)addressViewModel:(STPAddressViewModel *)addressViewModel addedCellAtIndex:(NSUInteger)index;
+- (void)addressViewModel:(STPAddressViewModel *)addressViewModel removedCellAtIndex:(NSUInteger)index;
 
 @end
 

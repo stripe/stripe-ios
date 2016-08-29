@@ -31,8 +31,6 @@
 }
 
 + (STPPostalCodeType)postalCodeTypeForCountryCode:(NSString *)countryCode {
-
-    
     if ([countryCode isEqualToString:@"US"]) {
         return STPCountryPostalCodeTypeNumericOnly;
     }

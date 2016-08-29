@@ -36,6 +36,7 @@
     if (self) {
         _delegate = delegate;
         _theme = [STPTheme new];
+        _contents = contents;
         
         UILabel *captionLabel = [UILabel new];
         _captionLabel = captionLabel;
@@ -69,16 +70,13 @@
         pickerView.delegate = self;
         _countryPickerView = pickerView;
         
-        self.ourCountryCode = delegate.addressFieldTableViewCountryCode ?: countryCode;
-        
-        _postalCodeType = [STPPostalCodeValidator postalCodeTypeForCountryCode:self.ourCountryCode];
         _lastInList = lastInList;
         _type = type;
         self.textField.text = contents;
         if (!lastInList) {
             self.textField.returnKeyType = UIReturnKeyNext;
         }
-        [self updateTextFieldsAndCaptions];
+        [self delegateCountryCodeDidChange];
         [self updateAppearance];
     }
     return self;
@@ -134,7 +132,6 @@
         case STPAddressFieldTypeCountry:
             self.textField.placeholder = nil;
             self.textField.keyboardType = UIKeyboardTypeDefault;
-            self.textField.keyboardType = UIKeyboardTypeDefault;
             self.textField.inputView = self.countryPickerView;
             NSInteger index = [self.countryCodes indexOfObject:self.contents];
             if (index == NSNotFound) {
@@ -142,7 +139,9 @@
             }
             else {
                 [self.countryPickerView selectRow:index inComponent:0 animated:NO];
+                self.textField.text = [self pickerView:self.countryPickerView titleForRow:index forComponent:0];
             }
+            self.textField.validText = [self validContents];
             break;
         case STPAddressFieldTypePhone:
             self.textField.keyboardType = UIKeyboardTypePhonePad;
@@ -207,7 +206,13 @@
 }
 
 - (void)delegateCountryCodeDidChange {
-    self.ourCountryCode = self.delegate.addressFieldTableViewCountryCode ?: [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
+    
+    NSString *countryCode = nil;
+    if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCountryCode)]) {
+        countryCode = self.delegate.addressFieldTableViewCountryCode;
+    }
+    
+    self.ourCountryCode = countryCode ?: [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
     _postalCodeType = [STPPostalCodeValidator postalCodeTypeForCountryCode:self.ourCountryCode];
     [self updateTextFieldsAndCaptions];
     [self setNeedsLayout];
@@ -367,7 +372,9 @@
     self.ourCountryCode = self.countryCodes[row];
     self.contents = self.ourCountryCode;
     self.textField.text = [self pickerView:pickerView titleForRow:row forComponent:component];
-    self.delegate.addressFieldTableViewCountryCode = self.ourCountryCode;
+    if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCountryCode)]) {
+        self.delegate.addressFieldTableViewCountryCode = self.ourCountryCode;
+    }
 }
 
 - (NSString *)pickerView:(__unused UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(__unused NSInteger)component {

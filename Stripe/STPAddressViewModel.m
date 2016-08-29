@@ -66,6 +66,8 @@
                 self.addressCells = @[
                                       [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:YES delegate:self]
                                       ];
+                [self.delegate addressViewModel:self addedCellAtIndex:0];
+                [self.delegate addressViewModelDidChange:self];
                 break;
             case STPBillingAddressFieldsFull: {
                 // Add after STPAddressFieldTypeState
@@ -73,10 +75,16 @@
                     return (obj.type == STPAddressFieldTypeState);
                 }];
                 
-                NSMutableArray<STPAddressFieldTableViewCell *> *mutableAddressCells = self.addressCells.mutableCopy;
-                [mutableAddressCells insertObject:[[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:NO delegate:self]
-                                          atIndex:stateFieldIndex + 1];
-                self.addressCells = mutableAddressCells.copy;
+                if (stateFieldIndex != NSNotFound) {
+                    NSUInteger zipFieldIndex = stateFieldIndex + 1;
+                    
+                    NSMutableArray<STPAddressFieldTableViewCell *> *mutableAddressCells = self.addressCells.mutableCopy;
+                    [mutableAddressCells insertObject:[[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:NO delegate:self]
+                                              atIndex:zipFieldIndex];
+                    self.addressCells = mutableAddressCells.copy;
+                    [self.delegate addressViewModel:self addedCellAtIndex:zipFieldIndex];
+                    [self.delegate addressViewModelDidChange:self];
+                }
                 break;             
             }
         }
@@ -89,21 +97,26 @@
                 break;
             case STPBillingAddressFieldsZip:
                 self.addressCells = @[];
+                [self.delegate addressViewModel:self removedCellAtIndex:0];
+                [self.delegate addressViewModelDidChange:self];
                 break;
             case STPBillingAddressFieldsFull: {
                 NSUInteger zipFieldIndex = [self.addressCells indexOfObjectPassingTest:^BOOL(STPAddressFieldTableViewCell * _Nonnull obj, NSUInteger __unused idx, BOOL * _Nonnull __unused stop) {
                     return (obj.type == STPAddressFieldTypeZip);
                 }];
+                
                 if (zipFieldIndex != NSNotFound) {
                     NSMutableArray<STPAddressFieldTableViewCell *> *mutableAddressCells = self.addressCells.mutableCopy;
                     [mutableAddressCells removeObjectAtIndex:zipFieldIndex];
                     self.addressCells = mutableAddressCells.copy;
+                    [self.delegate addressViewModel:self removedCellAtIndex:zipFieldIndex];
+                    [self.delegate addressViewModelDidChange:self];
                 }
                 break;             
             }
         }
-
     }
+    self.showingPostalCodeCell = shouldBeShowingPostalCode;
 }
 
 - (STPAddressFieldTableViewCell *)cellAtIndex:(NSInteger)index {
@@ -131,7 +144,8 @@
 }
 
 - (void)setAddressFieldTableViewCountryCode:(NSString *)addressFieldTableViewCountryCode {
-    if (![_addressFieldTableViewCountryCode isEqualToString:addressFieldTableViewCountryCode]) {
+    if (addressFieldTableViewCountryCode.length > 0 // ignore if someone passing in nil or empty and keep our current setup
+        && ![_addressFieldTableViewCountryCode isEqualToString:addressFieldTableViewCountryCode]) {
         _addressFieldTableViewCountryCode = addressFieldTableViewCountryCode;
         [self updatePostalCodeCellIfNecessary];
         for (STPAddressFieldTableViewCell *cell in self.addressCells) {
