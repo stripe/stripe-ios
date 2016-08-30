@@ -82,6 +82,10 @@
     return [self safeImageNamed:@"stp_icon_chevron_right_small" templateIfAvailable:YES];
 }
 
++ (UIImage *)checkmarkIcon {
+    return [self safeImageNamed:@"stp_icon_checkmark" templateIfAvailable:YES];
+}
+
 + (UIImage *)largeCardFrontImage {
     return [self safeImageNamed:@"stp_card_form_front" templateIfAvailable:YES];
 }
