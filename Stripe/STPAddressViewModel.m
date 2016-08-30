@@ -146,7 +146,7 @@
 - (void)setAddressFieldTableViewCountryCode:(NSString *)addressFieldTableViewCountryCode {
     if (addressFieldTableViewCountryCode.length > 0 // ignore if someone passing in nil or empty and keep our current setup
         && ![_addressFieldTableViewCountryCode isEqualToString:addressFieldTableViewCountryCode]) {
-        _addressFieldTableViewCountryCode = addressFieldTableViewCountryCode;
+        _addressFieldTableViewCountryCode = addressFieldTableViewCountryCode.copy;
         [self updatePostalCodeCellIfNecessary];
         for (STPAddressFieldTableViewCell *cell in self.addressCells) {
             [cell delegateCountryCodeDidChange];

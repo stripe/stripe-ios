@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
 
 @optional
 - (void)addressFieldTableViewCellDidReturn:(STPAddressFieldTableViewCell *)cell;
-@property (nonatomic, readwrite) NSString *addressFieldTableViewCountryCode;
+@property (nonatomic, copy) NSString *addressFieldTableViewCountryCode;
 
 @end
 
