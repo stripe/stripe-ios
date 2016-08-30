@@ -15,25 +15,49 @@
 
 @implementation STPPostalCodeValidatorTest
 
-- (void)testValidPostalCodes {
-    NSArray *numbers = @[
-                          @"10002",
-                          @"10002-1234",
-                          @"21218",
-                          ];
-    for (NSString *number in numbers) {
-        XCTAssertTrue([STPPostalCodeValidator stringIsValidPostalCode:number]);
+- (void)testValidNumericPostalCodes {
+    NSArray *codes = @[
+                       @"10002",
+                       @"10002-1234",
+                       @"21218",
+                       ];
+    for (NSString *code in codes) {
+        XCTAssertTrue([STPPostalCodeValidator stringIsValidPostalCode:code
+                                                                 type:STPCountryPostalCodeTypeNumericOnly]);
     }
 }
 
-- (void)testInvalidPostalCodes {
-     NSArray *numbers = @[
-                          @"",
-                          @"$$$$$",
-                          @"foo",
-                          ];
-    for (NSString *number in numbers) {
-        XCTAssertFalse([STPPostalCodeValidator stringIsValidPostalCode:number]);
+- (void)testInvalidNumericPostalCodes {
+    NSArray *codes = @[
+                       @"",
+                       @"$$$$$",
+                       @"foo",
+                       ];
+    for (NSString *code in codes) {
+        XCTAssertFalse([STPPostalCodeValidator stringIsValidPostalCode:code
+                                                                  type:STPCountryPostalCodeTypeNumericOnly]);
+    }   
+}
+
+- (void)testValidAlphanumericPostalCodes {
+    NSArray *codes = @[
+                       @"ABC10002",
+                       @"10002-ABCD",
+                       @"ABCDE",
+                       ];
+    for (NSString *code in codes) {
+        XCTAssertTrue([STPPostalCodeValidator stringIsValidPostalCode:code
+                                                                 type:STPCountryPostalCodeTypeAlphanumeric]);
+    }
+}
+
+- (void)testInvalidAlphanumericPostalCodes {
+    NSArray *codes = @[
+                       @"",
+                       ];
+    for (NSString *code in codes) {
+        XCTAssertFalse([STPPostalCodeValidator stringIsValidPostalCode:code
+                                                                  type:STPCountryPostalCodeTypeAlphanumeric]);
     }   
 }
 
