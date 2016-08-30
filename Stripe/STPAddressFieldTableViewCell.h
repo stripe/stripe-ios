@@ -49,6 +49,6 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
 @property(nonatomic, copy) NSString *contents;
 @property(nonatomic)STPTheme *theme;
 
-- (void)delegateCountryCodeDidChange;
+- (void)delegateCountryCodeDidChange:(NSString *)countryCode;
 
 @end

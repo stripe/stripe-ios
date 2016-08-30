@@ -76,7 +76,16 @@
         if (!lastInList) {
             self.textField.returnKeyType = UIReturnKeyNext;
         }
-        [self delegateCountryCodeDidChange];
+        
+        NSString *ourCountryCode = nil;
+        if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCountryCode)]) {
+            ourCountryCode = self.delegate.addressFieldTableViewCountryCode;
+        }
+        
+        if (ourCountryCode == nil) {
+            ourCountryCode = countryCode;
+        }
+        [self delegateCountryCodeDidChange:ourCountryCode];
         [self updateAppearance];
     }
     return self;
@@ -205,14 +214,8 @@
     }
 }
 
-- (void)delegateCountryCodeDidChange {
-    
-    NSString *countryCode = nil;
-    if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCountryCode)]) {
-        countryCode = self.delegate.addressFieldTableViewCountryCode;
-    }
-    
-    self.ourCountryCode = countryCode ?: [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
+- (void)delegateCountryCodeDidChange:(NSString *)countryCode {
+    self.ourCountryCode = countryCode;
     _postalCodeType = [STPPostalCodeValidator postalCodeTypeForCountryCode:self.ourCountryCode];
     [self updateTextFieldsAndCaptions];
     [self setNeedsLayout];
@@ -333,8 +336,8 @@
         case STPAddressFieldTypeLine2:
             return YES;
         case STPAddressFieldTypeZip:
-            return  [STPPostalCodeValidator stringIsValidPostalCode:self.contents
-                                                               type:self.postalCodeType];
+            return [STPPostalCodeValidator stringIsValidPostalCode:self.contents
+                                                              type:self.postalCodeType];
         case STPAddressFieldTypeEmail:
             return [STPEmailAddressValidator stringIsValidEmailAddress:self.contents];
         case STPAddressFieldTypePhone:

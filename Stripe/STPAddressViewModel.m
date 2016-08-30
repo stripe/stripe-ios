@@ -149,7 +149,7 @@
         _addressFieldTableViewCountryCode = addressFieldTableViewCountryCode.copy;
         [self updatePostalCodeCellIfNecessary];
         for (STPAddressFieldTableViewCell *cell in self.addressCells) {
-            [cell delegateCountryCodeDidChange];
+            [cell delegateCountryCodeDidChange:_addressFieldTableViewCountryCode];
         }
     }
 }
