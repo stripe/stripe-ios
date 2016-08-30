@@ -43,6 +43,8 @@
                        @[@"4242424242424242", @"4242424242424242"],
                        @[@"XXXXXX", @""],
                        @[@"424242424242424X", @"424242424242424"],
+                       @[@"X4242", @"4242"],
+                       @[@"4242 4242 4242 4242", @"4242424242424242"]
                        ];
     for (NSArray *test in tests) {
         XCTAssertEqualObjects([STPCardValidator sanitizedNumericStringForString:test[0]], test[1]);
