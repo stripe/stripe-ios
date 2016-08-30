@@ -356,7 +356,7 @@
             return YES;
         case STPAddressFieldTypeZip: {
             if (self.postalCodeType == STPCountryPostalCodeTypeNumericOnly) {
-                return  [STPCardValidator stringIsNumeric:self.contents];
+                return [STPCardValidator stringIsNumeric:self.contents];
             }
             else {
                 return YES;
