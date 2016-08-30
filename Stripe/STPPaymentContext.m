@@ -306,12 +306,11 @@
                     } else {
                         STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token.card];
                         [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
+                            // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
                             if (error) {
                                 tokenCompletion(error);
-                                [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
                             } else {
                                 tokenCompletion(nil);
-                                [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
                             }
                         }];
                     }
