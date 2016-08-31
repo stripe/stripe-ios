@@ -8,14 +8,12 @@
 
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
+#import "STPBundleLocator.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
 // Dummy class for locating the framework bundle
-@interface STPBundleLocator : NSObject
-@end
-@implementation STPBundleLocator
-@end
+
 
 @implementation STPImageLibrary
 
@@ -101,10 +99,7 @@
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     UIImage *image = nil;
     if ([UIImage respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        image = [UIImage imageNamed:imageName inBundle:[NSBundle bundleForClass:[STPBundleLocator class]] compatibleWithTraitCollection:nil];
-    }
-    if (image == nil) {
-        image = [UIImage imageNamed:[NSString stringWithFormat:@"Stripe.bundle/%@", imageName]];
+        image = [UIImage imageNamed:imageName inBundle:[STPBundleLocator stripeResourcesBundle] compatibleWithTraitCollection:nil];
     }
     if (image == nil) {
         image = [UIImage imageNamed:imageName];

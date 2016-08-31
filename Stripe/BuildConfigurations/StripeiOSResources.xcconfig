@@ -162,7 +162,7 @@ INFOPLIST_FILE = StripeiOSResources/Info.plist
 
 INSTALL_PATH = $(LOCAL_LIBRARY_DIR)/Bundles
 
-
+IPHONEOS_DEPLOYMENT_TARGET = 7.0
 
 // OS X Deployment Target
 // 
