@@ -259,8 +259,16 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] > 0;
 }
 
++ (NSArray<NSString *> *)supportedPKPaymentNetworks {
+    NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa];
+    if ((&PKPaymentNetworkDiscover) != NULL) {
+        supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
+    }
+    return supportedNetworks;
+}
+
 + (BOOL)deviceSupportsApplePay {
-    return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa]];
+    return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
 }
 
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier {
@@ -269,11 +277,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     }
     PKPaymentRequest *paymentRequest = [PKPaymentRequest new];
     [paymentRequest setMerchantIdentifier:merchantIdentifier];
-    NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa];
-    if ((&PKPaymentNetworkDiscover) != NULL) {
-        supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
-    }
-    [paymentRequest setSupportedNetworks:supportedNetworks];
+    [paymentRequest setSupportedNetworks:[self supportedPKPaymentNetworks]];
     [paymentRequest setMerchantCapabilities:PKMerchantCapability3DS];
     [paymentRequest setCountryCode:@"US"];
     [paymentRequest setCurrencyCode:@"USD"];
