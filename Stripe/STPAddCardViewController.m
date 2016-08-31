@@ -23,7 +23,7 @@
 #import "STPPhoneNumberValidator.h"
 #import "STPSMSCodeViewController.h"
 #import "STPObscuredCardView.h"
-#import "STPPaymentActivityIndicatorView.h"
+#import "STPActivityIndicatorView.h"
 #import "UITableViewCell+Stripe_Borders.h"
 #import "STPRememberMeEmailCell.h"
 #import "STPRememberMeTermsView.h"
@@ -54,8 +54,8 @@
 @property(nonatomic)STPAddressFieldTableViewCell *rememberMePhoneCell;
 @property(nonatomic)STPRememberMePaymentCell *paymentCell;
 @property(nonatomic)BOOL loading;
-@property(nonatomic)STPPaymentActivityIndicatorView *activityIndicator;
-@property(nonatomic, weak)STPPaymentActivityIndicatorView *lookupActivityIndicator;
+@property(nonatomic)STPActivityIndicatorView *activityIndicator;
+@property(nonatomic, weak)STPActivityIndicatorView *lookupActivityIndicator;
 @property(nonatomic)STPAddressViewModel *addressViewModel;
 @property(nonatomic)UIToolbar *inputAccessoryToolbar;
 @property(nonatomic)STPCheckoutAPIClient *checkoutAPIClient;
@@ -156,7 +156,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.rememberMeTermsView = [STPRememberMeTermsView new];
     self.rememberMeTermsView.textView.alpha = 0;
     
-    self.activityIndicator = [[STPPaymentActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20.0f, 20.0f)];
+    self.activityIndicator = [[STPActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20.0f, 20.0f)];
     
     self.inputAccessoryToolbar = [UIToolbar stp_inputAccessoryToolbarWithTarget:self action:@selector(paymentFieldNextTapped)];
     [self.inputAccessoryToolbar stp_setEnabled:NO];

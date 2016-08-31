@@ -10,7 +10,7 @@
 #import "STPSMSCodeTextField.h"
 #import "STPCheckoutAPIClient.h"
 #import "STPTheme.h"
-#import "STPPaymentActivityIndicatorView.h"
+#import "STPActivityIndicatorView.h"
 #import "StripeError.h"
 #import "UIBarButtonItem+Stripe.h"
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
@@ -34,7 +34,7 @@
 @property(nonatomic, weak)UILabel *errorLabel;
 @property(nonatomic, weak)UILabel *smsSentLabel;
 @property(nonatomic, weak)UIButton *pasteFromClipboardButton;
-@property(nonatomic, weak)STPPaymentActivityIndicatorView *activityIndicator;
+@property(nonatomic, weak)STPActivityIndicatorView *activityIndicator;
 @property(nonatomic)BOOL loading;
 
 @end
@@ -119,7 +119,7 @@
     [self.scrollView addSubview:pasteFromClipboardButton];
     self.pasteFromClipboardButton = pasteFromClipboardButton;
     
-    STPPaymentActivityIndicatorView *activityIndicator = [STPPaymentActivityIndicatorView new];
+    STPActivityIndicatorView *activityIndicator = [STPActivityIndicatorView new];
     [self.scrollView addSubview:activityIndicator];
     _activityIndicator = activityIndicator;
     [self updateAppearance];

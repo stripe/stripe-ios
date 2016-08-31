@@ -7,11 +7,11 @@
 //
 
 #import "STPAddressFieldTableViewCell.h"
-#import "STPPaymentActivityIndicatorView.h"
+#import "STPActivityIndicatorView.h"
 
 @interface STPRememberMeEmailCell : STPAddressFieldTableViewCell
 
-@property(nonatomic, weak, readonly)STPPaymentActivityIndicatorView *activityIndicator;
+@property(nonatomic, weak, readonly)STPActivityIndicatorView *activityIndicator;
 
 - (instancetype)initWithDelegate:(id<STPAddressFieldTableViewCellDelegate>)delegate;
 
