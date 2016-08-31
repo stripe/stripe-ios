@@ -13,5 +13,5 @@ Pod::Spec.new do |s|
   s.ios.deployment_target          = '7.0'
   s.public_header_files            = 'Stripe/PublicHeaders/*.h'
   s.source_files                   = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}'
-  s.resources                      = 'Stripe/Resources/**/*'
+  s.ios.resource_bundle            = { 'Stripe' => 'Stripe/Resources/**/*' }
 end
