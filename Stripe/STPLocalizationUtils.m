@@ -7,20 +7,12 @@
 //
 
 #import "STPLocalizationUtils.h"
+#import "STPBundleLocator.h"
 
 @implementation STPLocalizationUtils
 
 + (NSString *)localizedStripeStringForKey:(NSString *)key {
-    NSBundle *ourBundle = [NSBundle bundleWithPath:@"Stripe.bundle"];
-    
-    if (ourBundle == nil) {
-        ourBundle = [NSBundle bundleForClass:[self class]];
-    }
-    if (ourBundle == nil) {
-        ourBundle = [NSBundle mainBundle];
-    }
-    
-    return [ourBundle localizedStringForKey:key value:@"" table:nil];
+    return [[STPBundleLocator stripeResourcesBundle] localizedStringForKey:key value:@"" table:nil];
 }
 
 @end
