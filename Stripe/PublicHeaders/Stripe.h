@@ -29,7 +29,7 @@
 #import "STPPaymentResult.h"
 #import "STPPaymentMethod.h"
 #import "STPApplePayPaymentMethod.h"
-#import "STPActivityIndicatorView.h"
+#import "STPPaymentActivityIndicatorView.h"
 #import "STPTheme.h"
 #import "UINavigationBar+Stripe_Theme.h"
 #import "STPUserInformation.h"

@@ -1,20 +1,20 @@
 //
-//  STPActivityIndicatorView.m
+//  STPPaymentActivityIndicatorView.m
 //  Stripe
 //
 //  Created by Jack Flintermann on 5/12/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPActivityIndicatorView.h"
+#import "STPPaymentActivityIndicatorView.h"
 
-@interface STPActivityIndicatorView()
+@interface STPPaymentActivityIndicatorView()
 
 @property(nonatomic, weak)CAShapeLayer *indicatorLayer;
 
 @end
 
-@implementation STPActivityIndicatorView
+@implementation STPPaymentActivityIndicatorView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     CGRect initialFrame = frame;

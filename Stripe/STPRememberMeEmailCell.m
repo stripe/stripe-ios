@@ -10,7 +10,7 @@
 #import "STPAddress.h"
 
 @interface STPRememberMeEmailCell()
-@property(nonatomic, weak)STPActivityIndicatorView *activityIndicator;
+@property(nonatomic, weak)STPPaymentActivityIndicatorView *activityIndicator;
 @end
 
 @implementation STPRememberMeEmailCell
@@ -39,11 +39,11 @@
     self.activityIndicator.tintColor = theme.accentColor;
 }
 
-- (STPActivityIndicatorView *)activityIndicator {
+- (STPPaymentActivityIndicatorView *)activityIndicator {
     if (!_activityIndicator) {
-        STPActivityIndicatorView *activityIndicator = [[STPActivityIndicatorView alloc] init];
-        [self addSubview:activityIndicator];
-        _activityIndicator = activityIndicator;
+        STPPaymentActivityIndicatorView *paymentIndicator = [[STPPaymentActivityIndicatorView alloc] init];
+        [self addSubview:paymentIndicator];
+        _activityIndicator = paymentIndicator;
     }
     return _activityIndicator;
 }
