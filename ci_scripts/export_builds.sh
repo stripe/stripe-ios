@@ -30,6 +30,9 @@ fi
 echo "building static framework..."
 xcodebuild build -workspace Stripe.xcworkspace -scheme StripeiOSStaticFramework -configuration Release OBJROOT=$BUILDDIR SYMROOT=$BUILDDIR | xcpretty -c
 cd $BUILDDIR/Release-iphonesimulator
+plutil -remove DTSDKName Stripe.bundle/Info.plist
+plutil -remove DTPlatformName Stripe.bundle/Info.plist
+plutil -remove CFBundleSupportedPlatforms Stripe.bundle/Info.plist
 mv Stripe.bundle Stripe.framework
 ditto -ck --rsrc --sequesterRsrc --keepParent Stripe.framework StripeiOS-Static.zip
 rm -rf Stripe.framework
