@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "STPTheme.h"
 #import "STPFormTextField.h"
+#import "STPPostalCodeValidator.h"
 
 typedef NS_ENUM(NSInteger, STPAddressFieldType) {
     STPAddressFieldTypeName,
@@ -31,6 +32,7 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
 
 @optional
 - (void)addressFieldTableViewCellDidReturn:(STPAddressFieldTableViewCell *)cell;
+@property (nonatomic, copy) NSString *addressFieldTableViewCountryCode;
 
 @end
 
@@ -46,5 +48,7 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
 @property(nonatomic, weak, readonly) STPFormTextField *textField;
 @property(nonatomic, copy) NSString *contents;
 @property(nonatomic)STPTheme *theme;
+
+- (void)delegateCountryCodeDidChange:(NSString *)countryCode;
 
 @end

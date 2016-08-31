@@ -8,6 +8,7 @@
 
 #import "STPAddress.h"
 #import "STPCardValidator.h"
+#import "STPPostalCodeValidator.h"
 
 @implementation STPAddress
 
@@ -73,7 +74,8 @@
         case STPBillingAddressFieldsNone:
             return YES;
         case STPBillingAddressFieldsZip:
-            return self.postalCode.length > 0;
+            return [STPPostalCodeValidator stringIsValidPostalCode:self.postalCode 
+                                                       countryCode:self.country];
         case STPBillingAddressFieldsFull:
             return [self hasValidPostalAddress];
     }
@@ -84,8 +86,9 @@
     return self.line1.length > 0 &&
     self.city.length > 0 &&
     self.state.length > 0 &&
-    self.postalCode.length > 0 &&
-    self.country.length > 0;
+    self.country.length > 0 &&
+    [STPPostalCodeValidator stringIsValidPostalCode:self.postalCode 
+                                        countryCode:self.country];
 }
 
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields {

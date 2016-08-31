@@ -18,6 +18,9 @@
 
 /**
  *  What set of billing address information you need to collect from your user.
+ *
+ *  @note If the user is from a country that does not use zip/postal codes,
+ *  the user may not be asked for one regardless of this setting.
  */
 typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
     /**
