@@ -1,3 +1,13 @@
+== 8.0.6 2016-09-01
+* Improved internationalization on billing address forms
+  * Users in countries that don't use postal codes will no longer see that field.
+  * The country field is now auto filled in with the phone's region
+  * Changing the selected country will now live update other fields on the form (such as State/County or Zip/Postal Code).
+* Fixed an issue where certain Cocoapods configurations could result in Stripe resource files being used in place of other frameworks' or the app's resources.
+* Fixed an issue where when using Apple Pay, STPPaymentContext would fire two `didFinishWithStatus` messages.
+* Fixed the `deviceSupportsApplePay` method to also check for Discover cards.
+* Removed keys from Stripe.bundle's Info.plist that were causing iTunes Connect to sometimes error on app submission.
+
 == 8.0.5 2016-08-26
 * You can now optionally use an array of PKPaymentSummaryItems to set your payment amount, if you would like more control over how Apple Pay forms are rendered.
 * Updated credit card and Apple Pay icons.
