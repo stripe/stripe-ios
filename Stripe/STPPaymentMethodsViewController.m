@@ -14,7 +14,7 @@
 #import "STPAddCardViewController.h"
 #import "STPPaymentContext.h"
 #import "STPPaymentMethodTuple.h"
-#import "STPActivityIndicatorView.h"
+#import "STPPaymentActivityIndicatorView.h"
 #import "STPPaymentMethodsViewController+Private.h"
 #import "STPPaymentContext+Private.h"
 #import "UIBarButtonItem+Stripe.h"
@@ -36,7 +36,7 @@
 @property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
-@property(nonatomic, weak)STPActivityIndicatorView *activityIndicator;
+@property(nonatomic, weak)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic, weak)UIViewController *internalViewController;
 @property(nonatomic)UIBarButtonItem *backItem;
 @property(nonatomic)UIBarButtonItem *cancelItem;
@@ -90,7 +90,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    STPActivityIndicatorView *activityIndicator = [STPActivityIndicatorView new];
+    STPPaymentActivityIndicatorView *activityIndicator = [STPPaymentActivityIndicatorView new];
     activityIndicator.animating = YES;
     [self.view addSubview:activityIndicator];
     self.activityIndicator = activityIndicator;
