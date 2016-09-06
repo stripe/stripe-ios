@@ -116,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @warning `PKPaymentSummaryItem` is only available in iOS8+. If you support iOS 7 you should do a runtime availability check before accessing or setting this property. 
  */
-@property(nonatomic, copy)NSArray<PKPaymentSummaryItem *> *paymentSummaryItems; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
+@property(nonatomic, copy)NSArray<PKPaymentSummaryItem *> *paymentSummaryItems NS_AVAILABLE_IOS(8_0);
 
 /**
  *  The presentation style used for all view controllers presented modally by the context.
