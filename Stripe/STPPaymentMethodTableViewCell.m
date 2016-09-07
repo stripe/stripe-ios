@@ -58,7 +58,8 @@
     self.leftIcon.tintColor = self.theme.accentColor;
     self.titleLabel.font = self.theme.font;
     self.titleLabel.textColor = self.theme.accentColor;
-    self.titleLabel.text = STPLocalizedString(@"Add New Card…", nil);
+    self.titleLabel.text = STPLocalizedString(@"Add New Card…", 
+                                              @"Button to add a new credit card.");
     self.checkmarkIcon.hidden = YES;
     [self setNeedsLayout];
 }
@@ -92,7 +93,8 @@
     if ([paymentMethod isKindOfClass:[STPCard class]]) {
         return [self buildAttributedStringForCard:(STPCard *)paymentMethod selected:selected];
     } else if ([paymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
-        NSString *label = STPLocalizedString(@"Apple Pay", nil);
+        NSString *label = STPLocalizedString(@"Apple Pay", 
+                                             @"Apple Pay payment method");
         UIColor *primaryColor = [self primaryColorForPaymentMethodWithSelectedState:selected];
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
     }

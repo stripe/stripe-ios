@@ -95,11 +95,17 @@
     [self.view addSubview:activityIndicator];
     self.activityIndicator = activityIndicator;
     
-    self.navigationItem.title = STPLocalizedString(@"Loading…", nil);
+    self.navigationItem.title = STPLocalizedString(@"Loading…", @"Title for screen when data is still loading from the network.");
     
-    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Back button text") 
+                                                           style:UIBarButtonItemStylePlain 
+                                                          target:self
+                                                          action:@selector(cancel:)];
     self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:STPLocalizedString(@"Back", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:STPLocalizedString(@"Back", @"Back button text") 
+                                                                             style:UIBarButtonItemStylePlain 
+                                                                            target:nil 
+                                                                            action:nil];
     WEAK(self);
     [self.loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
         STRONG(self);
