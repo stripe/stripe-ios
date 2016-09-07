@@ -10,6 +10,7 @@
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
+#import "STPStringUtils.h"
 
 @interface STPRememberMeTermsView()<UITextViewDelegate>
 
@@ -30,6 +31,7 @@
         textView.dataDetectorTypes = UIDataDetectorTypeLink;
         textView.scrollEnabled = NO;
         textView.delegate = self;
+
         // This disables 3D touch previews in the text view.
         for (UIGestureRecognizer *recognizer in textView.gestureRecognizers) {
             if ([[NSStringFromClass([recognizer class]) lowercaseString] containsString:@"preview"] ||
@@ -45,18 +47,32 @@
     return self;
 }
 
+static NSString *const FooterLinkTagPrivacyPolicy = @"pplink";
+static NSString *const FooterLinkTagTermsOfService = @"termslink";
+static NSString *const FooterLinkTagMoreInfo = @"infolink";
+
 - (NSAttributedString *)buildAttributedString {
-    NSString *privacyPolicy = STPLocalizedString(@"Privacy Policy", @"The text in the full Remember Me TOS/privacy footer to turn into a link to the privacy policy URL. NOTE: this must _EXACTLY_ match a substring in the full remember me footer text");
+    __block NSString *contents = STPLocalizedString(@"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>", 
+                                                    @"Footer shown when the user enables Remember Me that shows additional info. The html-style tags control which parts of the text link to the Stripe Privacy Policy, Terms of Service, and Remember Me More Info pages, and can be moved around as needed in the translation (although they CANNOT overlap).");
+    
+    __block NSRange privacyRange;
+    __block NSRange termsRange;
+    __block NSRange learnMoreRange;
+    
+    [STPStringUtils parseRangesFromString:contents 
+                                 withTags:[NSSet setWithArray:@[FooterLinkTagPrivacyPolicy, FooterLinkTagTermsOfService, FooterLinkTagMoreInfo]] 
+                               completion:^(NSString *string, NSDictionary<NSString *,NSValue *> *tagMap) {
+                                   contents = string;
+                                   
+                                   privacyRange = tagMap[FooterLinkTagPrivacyPolicy].rangeValue;
+                                   termsRange = tagMap[FooterLinkTagTermsOfService].rangeValue;
+                                   learnMoreRange = tagMap[FooterLinkTagMoreInfo].rangeValue;
+                               }];
+    
     NSURL *privacyURL = [NSURL URLWithString:@"https://checkout.stripe.com/-/privacy"];
-    NSString *terms = STPLocalizedString(@"Terms", @"The text in the full Remember Me TOS/privacy footer to turn into a link to the terns of service URL. NOTE: this must _EXACTLY_ match a substring in the full remember me footer text");
     NSURL *termsURL = [NSURL URLWithString:@"https://checkout.stripe.com/-/terms"];
-    NSString *learnMore = STPLocalizedString(@"More Info", @"The text in the full Remember Me TOS/privacy footer to turn into a link to the more info URL. NOTE: this must _EXACTLY_ match a substring in the full remember me footer text");
     NSURL *learnMoreURL = [NSURL URLWithString:@"https://checkout.stripe.com/-/remember-me"];
-    NSString *contents = STPLocalizedString(@"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's Privacy Policy and Terms. More Info", 
-                                            @"Footer shown when user enables Remember Me that show additional info. If you change/localize this, you _MUST_ change the Privacy Policy, Terms, and More Info strings to match.");
-    NSRange privacyRange = [contents.lowercaseString rangeOfString:privacyPolicy];
-    NSRange termsRange = [contents.lowercaseString rangeOfString:terms];
-    NSRange learnMoreRange = [contents.lowercaseString rangeOfString:learnMore];
+    
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.alignment = NSTextAlignmentLeft;
     NSDictionary *attributes = @{
