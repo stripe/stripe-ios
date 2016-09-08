@@ -17,21 +17,23 @@
         return;
     }
     
-    NSMutableDictionary<NSValue *, NSString *> *interiorRangesToTags = [NSMutableDictionary new]; 
+    NSMutableDictionary<NSValue *, NSString *> *interiorRangesToTags = [NSMutableDictionary new];
+    NSMutableDictionary<NSString *, NSValue *> *tagsToRange = [NSMutableDictionary new];
+    
     for (NSString *tag in tags) {
-        __block NSRange interiorRange;
         [self parseRangeFromString:string 
                            withTag:tag
                         completion:^(NSString *__unused newString, NSRange tagRange) {
                             if (tagRange.location == NSNotFound) {
-                                interiorRange = tagRange;
+                                tagsToRange[tag] = [NSValue valueWithRange:tagRange];
                             }
                             else {
-                                interiorRange = NSMakeRange(tagRange.location + tag.length + 2, 
+                                NSRange interiorRange = NSMakeRange(tagRange.location + tag.length + 2, 
                                                             tagRange.length);
+                                interiorRangesToTags[[NSValue valueWithRange:interiorRange]] = tag;
                             }
                         }];
-        interiorRangesToTags[[NSValue valueWithRange:interiorRange]] = tag;
+        
     }
     
     NSArray<NSValue *> *sortedRanges = [[interiorRangesToTags allKeys] sortedArrayUsingComparator:^NSComparisonResult(NSValue *  _Nonnull obj1, NSValue *  _Nonnull obj2) {
@@ -52,7 +54,7 @@
     NSMutableString *modifiedString = string.mutableCopy;
     
     NSUInteger deletedCharacters = 0;
-    NSMutableDictionary<NSString *, NSValue *> *tagsToRange = [NSMutableDictionary new];
+    
     
     for (NSValue *rangeValue in sortedRanges) {
         NSString *tag = interiorRangesToTags[rangeValue];
@@ -73,9 +75,8 @@
             
             [modifiedString deleteCharactersInRange:endingTagRange];
             deletedCharacters += endingTagLength;
+            tagsToRange[tag] = [NSValue valueWithRange:interiorTagRange];
         }
-        
-        tagsToRange[tag] = [NSValue valueWithRange:interiorTagRange];
     }
     
     completion(modifiedString.copy, tagsToRange.copy);
@@ -92,6 +93,7 @@
     NSRange startingTagRange = [string rangeOfString:startingTag];
     if (startingTagRange.location == NSNotFound) {
         completion(string, startingTagRange);
+        return;
     }
     
     NSString *finalString = [string stringByReplacingCharactersInRange:startingTagRange
@@ -100,6 +102,7 @@
     NSRange endingTagRange = [finalString rangeOfString:endingTag];
     if (endingTagRange.location == NSNotFound) {
         completion(string, endingTagRange);
+        return;
     }
     
     finalString = [finalString stringByReplacingCharactersInRange:endingTagRange

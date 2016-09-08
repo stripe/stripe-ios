@@ -573,6 +573,7 @@
 		F1852F951D80B6EC00367C86 /* STPStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F1852F921D80B6EC00367C86 /* STPStringUtils.m */; };
 		F1852F961D80B6EC00367C86 /* STPStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F1852F921D80B6EC00367C86 /* STPStringUtils.m */; };
 		F1C578F11D651AB200912EAE /* stp_card_applepay.png in Resources */ = {isa = PBXBuildFile; fileRef = F1C578F01D651AB200912EAE /* stp_card_applepay.png */; };
+		F1D777C01D81DD520076FA19 /* STPStringUtilsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -946,6 +947,7 @@
 		F1852F911D80B6EC00367C86 /* STPStringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPStringUtils.h; sourceTree = "<group>"; };
 		F1852F921D80B6EC00367C86 /* STPStringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPStringUtils.m; sourceTree = "<group>"; };
 		F1C578F01D651AB200912EAE /* stp_card_applepay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_card_applepay.png; sourceTree = "<group>"; };
+		F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPStringUtilsTest.m; sourceTree = "<group>"; };
 		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -1330,6 +1332,7 @@
 				C1D23FAC1D37F81F002FD83C /* STPCustomerDeserializerTest.m */,
 				C1D23FAF1D37FC90002FD83C /* STPTestUtils.h */,
 				C1D23FB01D37FC90002FD83C /* STPTestUtils.m */,
+				F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */,
 				C1D23FB71D37FE0F002FD83C /* JSON */,
 			);
 			name = StripeTests;
@@ -2005,6 +2008,7 @@
 				F148ABF81D5E88BA0014FD92 /* MockSTPCheckoutAPIClient.m in Sources */,
 				C124A1811CCAA1BF007D42EE /* NSMutableURLRequest+StripeTest.m in Sources */,
 				C1EEDCC61CA2126000A54582 /* STPDelegateProxyTest.m in Sources */,
+				F1D777C01D81DD520076FA19 /* STPStringUtilsTest.m in Sources */,
 				C1FEE5991CBFF24000A7632B /* STPPostalCodeValidatorTest.m in Sources */,
 				C13538081D2C2186003F6157 /* STPAddCardViewControllerTest.m in Sources */,
 				04415C671A6605B5001225ED /* STPAPIClientTest.m in Sources */,
