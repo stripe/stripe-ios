@@ -9,6 +9,7 @@ if [[ $? -eq 0 ]]; then
       exit 1
     else
       brew install recode
+    fi
   fi
 
   if [[ $? -eq 0 ]]; then
