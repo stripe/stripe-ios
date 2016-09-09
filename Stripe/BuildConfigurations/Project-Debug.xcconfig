@@ -43,6 +43,6 @@ ONLY_ACTIVE_ARCH = YES
 // in earlier versions will be weak-linked; your code should check for null function
 // pointers or specific system versions before calling newer APIs.
 
-IPHONEOS_DEPLOYMENT_TARGET = 7.0
+IPHONEOS_DEPLOYMENT_TARGET = 8.0
 
 ENABLE_TESTABILITY = YES
