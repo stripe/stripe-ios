@@ -1,5 +1,8 @@
 language: objective-c
 osx_image: xcode7.3
+branches:
+  only: 
+    - master
 env:
   matrix:
   - TEST_TYPE=installation_manual
