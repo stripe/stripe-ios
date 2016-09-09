@@ -19,17 +19,17 @@ struct Settings {
 class SettingsViewController: UITableViewController {
     var settings: Settings {
         return Settings(theme: self.theme.stpTheme,
-                        additionalPaymentMethods: self.applePay.enabled ? .All : .None,
+                        additionalPaymentMethods: self.applePay.enabled ? .all : STPPaymentMethodType(),
                         requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
                         smsAutofillEnabled: self.smsAutofill.enabled)
     }
 
-    private var theme: Theme = .Default
-    private var applePay: Switch = .Enabled
-    private var requiredBillingAddressFields: RequiredBillingAddressFields = .None
-    private var smsAutofill: Switch = .Enabled
+    fileprivate var theme: Theme = .Default
+    fileprivate var applePay: Switch = .Enabled
+    fileprivate var requiredBillingAddressFields: RequiredBillingAddressFields = .None
+    fileprivate var smsAutofill: Switch = .Enabled
 
-    private enum Section: String {
+    fileprivate enum Section: String {
         case Theme = "Theme"
         case ApplePay = "Apple Pay"
         case RequiredBillingAddressFields = "Required Billing Address Fields"
@@ -38,32 +38,32 @@ class SettingsViewController: UITableViewController {
 
         init(section: Int) {
             switch section {
-            case 0: self = Theme
-            case 1: self = ApplePay
-            case 2: self = RequiredBillingAddressFields
-            case 3: self = SMSAutofill
-            default: self = Session
+            case 0: self = .Theme
+            case 1: self = .ApplePay
+            case 2: self = .RequiredBillingAddressFields
+            case 3: self = .SMSAutofill
+            default: self = .Session
             }
         }
     }
 
-    private enum Theme: String {
+    fileprivate enum Theme: String {
         case Default = "Default"
         case CustomLight = "Custom – Light"
         case CustomDark = "Custom – Dark"
 
         init(row: Int) {
             switch row {
-            case 0: self = Default
-            case 1: self = CustomLight
-            default: self = CustomDark
+            case 0: self = .Default
+            case 1: self = .CustomLight
+            default: self = .CustomDark
             }
         }
 
         var stpTheme: STPTheme {
             switch self {
             case .Default:
-                return STPTheme.defaultTheme()
+                return STPTheme.default()
             case .CustomLight:
                 let theme = STPTheme()
                 theme.primaryBackgroundColor = UIColor(red:0.96, green:0.96, blue:0.95, alpha:1.00)
@@ -90,12 +90,12 @@ class SettingsViewController: UITableViewController {
         }
     }
 
-    private enum Switch: String {
+    fileprivate enum Switch: String {
         case Enabled = "Enabled"
         case Disabled = "Disabled"
 
         init(row: Int) {
-            self = (row == 0) ? Enabled : Disabled
+            self = (row == 0) ? .Enabled : .Disabled
         }
 
         var enabled: Bool {
@@ -103,47 +103,47 @@ class SettingsViewController: UITableViewController {
         }
     }
 
-    private enum RequiredBillingAddressFields: String {
+    fileprivate enum RequiredBillingAddressFields: String {
         case None = "None"
         case Zip = "Zip"
         case Full = "Full"
 
         init(row: Int) {
             switch row {
-            case 0: self = None
-            case 1: self = Zip
-            default: self = Full
+            case 0: self = .None
+            case 1: self = .Zip
+            default: self = .Full
             }
         }
 
         var stpBillingAddressFields: STPBillingAddressFields {
             switch self {
-            case .None: return .None
-            case .Zip: return .Zip
-            case .Full: return .Full
+            case .None: return .none
+            case .Zip: return .zip
+            case .Full: return .full
             }
         }
     }
 
     convenience init() {
-        self.init(style: .Grouped)
+        self.init(style: .grouped)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Settings"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(dismiss))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismiss as (Void) -> Void))
     }
 
     func dismiss() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 5
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(section: section) {
         case .Theme: return 3
         case .ApplePay: return 2
@@ -153,53 +153,53 @@ class SettingsViewController: UITableViewController {
         }
     }
 
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return Section(section: section).rawValue
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .Default, reuseIdentifier: nil)
-        switch Section(section: indexPath.section) {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        switch Section(section: (indexPath as NSIndexPath).section) {
         case .Theme:
-            let value = Theme(row: indexPath.row)
+            let value = Theme(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
-            cell.accessoryType = value == self.theme ? .Checkmark : .None
+            cell.accessoryType = value == self.theme ? .checkmark : .none
         case .ApplePay:
-            let value = Switch(row: indexPath.row)
+            let value = Switch(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
-            cell.accessoryType = value == self.applePay ? .Checkmark : .None
+            cell.accessoryType = value == self.applePay ? .checkmark : .none
         case .RequiredBillingAddressFields:
-            let value = RequiredBillingAddressFields(row: indexPath.row)
+            let value = RequiredBillingAddressFields(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
-            cell.accessoryType = value == self.requiredBillingAddressFields ? .Checkmark : .None
+            cell.accessoryType = value == self.requiredBillingAddressFields ? .checkmark : .none
         case .SMSAutofill:
-            let value = Switch(row: indexPath.row)
+            let value = Switch(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
-            cell.accessoryType = value == self.smsAutofill ? .Checkmark : .None
+            cell.accessoryType = value == self.smsAutofill ? .checkmark : .none
         case .Session:
             cell.textLabel?.text = "Log out"
-            cell.accessoryType = .None
+            cell.accessoryType = .none
         }
         return cell
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        switch Section(section: indexPath.section) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        switch Section(section: (indexPath as NSIndexPath).section) {
         case .Theme:
-            self.theme = Theme(row: indexPath.row)
+            self.theme = Theme(row: (indexPath as NSIndexPath).row)
         case .ApplePay:
-            self.applePay = Switch(row: indexPath.row)
+            self.applePay = Switch(row: (indexPath as NSIndexPath).row)
         case .RequiredBillingAddressFields:
-            self.requiredBillingAddressFields = RequiredBillingAddressFields(row: indexPath.row)
+            self.requiredBillingAddressFields = RequiredBillingAddressFields(row: (indexPath as NSIndexPath).row)
         case .SMSAutofill:
-            self.smsAutofill = Switch(row: indexPath.row)
+            self.smsAutofill = Switch(row: (indexPath as NSIndexPath).row)
         case .Session:
-            let cookieStore = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+            let cookieStore = HTTPCookieStorage.shared
             for cookie in cookieStore.cookies ?? [] {
                 cookieStore.deleteCookie(cookie)
             }
         }
-        tableView.reloadSections(NSIndexSet(index: indexPath.section), withRowAnimation: .Automatic)
+        tableView.reloadSections(IndexSet(integer: (indexPath as NSIndexPath).section), with: .automatic)
     }
 }

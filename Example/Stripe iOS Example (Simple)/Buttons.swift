@@ -17,27 +17,27 @@ class HighlightingButton: UIButton {
         self.highlightColor = highlightColor
     }
 
-    override var highlighted: Bool {
+    override var isHighlighted: Bool {
         didSet {
-            if highlighted {
+            if isHighlighted {
                 self.backgroundColor = self.highlightColor
             } else {
-                self.backgroundColor = UIColor.clearColor()
+                self.backgroundColor = UIColor.clear
             }
         }
     }
 }
 
 class BuyButton: HighlightingButton {
-    var disabledColor = UIColor.lightGrayColor()
+    var disabledColor = UIColor.lightGray
     var enabledColor = UIColor(red:0.22, green:0.65, blue:0.91, alpha:1.00)
 
-    override var enabled: Bool {
+    override var isEnabled: Bool {
         didSet {
-            let color = enabled ? enabledColor : disabledColor
-            self.setTitleColor(color, forState: .Normal)
-            self.layer.borderColor = color.CGColor
-            self.highlightColor = color.colorWithAlphaComponent(0.5)
+            let color = isEnabled ? enabledColor : disabledColor
+            self.setTitleColor(color, for: UIControlState())
+            self.layer.borderColor = color.cgColor
+            self.highlightColor = color.withAlphaComponent(0.5)
         }
     }
 
@@ -45,9 +45,9 @@ class BuyButton: HighlightingButton {
         self.init()
         self.layer.borderWidth = 2
         self.layer.cornerRadius = 10
-        self.setTitle("Buy", forState: .Normal)
+        self.setTitle("Buy", for: UIControlState())
         self.disabledColor = theme.secondaryForegroundColor
         self.enabledColor = theme.accentColor
-        self.enabled = enabled
+        self.isEnabled = enabled
     }
 }
