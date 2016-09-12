@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak, readonly)UITextView *textView;
 @property(nonatomic)STPTheme *theme;
 @property(nonatomic)UIEdgeInsets insets;
+@property (nonatomic, copy) void (^pushViewControllerBlock)(UIViewController *vc);
 
 @end
 

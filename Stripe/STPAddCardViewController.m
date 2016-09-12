@@ -155,6 +155,11 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     
     self.rememberMeTermsView = [STPRememberMeTermsView new];
     self.rememberMeTermsView.textView.alpha = 0;
+    WEAK(self);
+    self.rememberMeTermsView.pushViewControllerBlock = ^(UIViewController *vc) {
+        STRONG(self);
+        [self.navigationController pushViewController:vc animated:YES];
+    };
     
     self.activityIndicator = [[STPPaymentActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20.0f, 20.0f)];
     
@@ -168,8 +173,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     [self updateAppearance];
     
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)]];
-    
-    WEAK(self);
+
     [self.checkoutAPIClient.bootstrapPromise onCompletion:^(__unused id value, __unused NSError *error) {
         STRONG(self);
         [self reloadRememberMeCellAnimated:YES];

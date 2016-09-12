@@ -10,6 +10,7 @@
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
+#import "STPWebViewController.h"
 
 @interface STPRememberMeTermsView()<UITextViewDelegate>
 
@@ -106,8 +107,12 @@
     self.textView.frame = UIEdgeInsetsInsetRect(self.bounds, self.insets);
 }
 
-- (BOOL)textView:(__unused UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(__unused NSRange)characterRange {
-    [[UIApplication sharedApplication] openURL:URL];
+- (BOOL)textView:(__unused UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
+    if (self.pushViewControllerBlock) {
+        STPWebViewController *webViewController = [[STPWebViewController alloc] initWithURL:URL 
+                                                                                      title:[textView.text substringWithRange:characterRange]];
+        self.pushViewControllerBlock(webViewController);
+    }
     return NO;
 }
 
