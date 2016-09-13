@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage *)largeCardFrontImage;
 + (UIImage *)largeCardBackImage;
 + (UIImage *)largeCardApplePayImage;
++ (UIImage *)largeShippingImage;
 
 + (UIImage *)safeImageNamed:(NSString *)imageName
         templateIfAvailable:(BOOL)templateIfAvailable;

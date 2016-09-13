@@ -433,6 +433,24 @@
 		C1363BB81D7633D800EB82B4 /* STPPaymentMethodTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C1363BB51D7633D800EB82B4 /* STPPaymentMethodTableViewCell.h */; };
 		C1363BB91D7633D800EB82B4 /* STPPaymentMethodTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C1363BB61D7633D800EB82B4 /* STPPaymentMethodTableViewCell.m */; };
 		C1363BBA1D7633D800EB82B4 /* STPPaymentMethodTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C1363BB61D7633D800EB82B4 /* STPPaymentMethodTableViewCell.m */; };
+		C15993231D8807930047950D /* stp_shipping_form.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993201D8807930047950D /* stp_shipping_form.png */; };
+		C15993241D8807930047950D /* stp_shipping_form@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993211D8807930047950D /* stp_shipping_form@2x.png */; };
+		C15993251D8807930047950D /* stp_shipping_form@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993221D8807930047950D /* stp_shipping_form@3x.png */; };
+		C15993281D8808490047950D /* STPShippingAddressViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C15993261D8808490047950D /* STPShippingAddressViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C159932A1D88084D0047950D /* STPShippingAddressViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C15993261D8808490047950D /* STPShippingAddressViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C15993331D8808680047950D /* STPShippingAddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C159932C1D8808680047950D /* STPShippingAddressViewController.m */; };
+		C15993361D8808680047950D /* STPShippingMethodsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C159932F1D8808680047950D /* STPShippingMethodsViewController.h */; };
+		C15993371D8808680047950D /* STPShippingMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C15993301D8808680047950D /* STPShippingMethodsViewController.m */; };
+		C15993381D8808680047950D /* STPShippingMethodTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C15993311D8808680047950D /* STPShippingMethodTableViewCell.h */; };
+		C15993391D8808680047950D /* STPShippingMethodTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C15993321D8808680047950D /* STPShippingMethodTableViewCell.m */; };
+		C159933A1D8808880047950D /* STPShippingAddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C159932C1D8808680047950D /* STPShippingAddressViewController.m */; };
+		C159933D1D8808970047950D /* STPShippingMethodsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C159932F1D8808680047950D /* STPShippingMethodsViewController.h */; };
+		C159933F1D88089B0047950D /* STPShippingMethodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C15993301D8808680047950D /* STPShippingMethodsViewController.m */; };
+		C15993401D88089E0047950D /* STPShippingMethodTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C15993311D8808680047950D /* STPShippingMethodTableViewCell.h */; };
+		C15993411D8808A10047950D /* STPShippingMethodTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C15993321D8808680047950D /* STPShippingMethodTableViewCell.m */; };
+		C15993451D8829C00047950D /* stp_shipping_form.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993201D8807930047950D /* stp_shipping_form.png */; };
+		C15993461D8829C00047950D /* stp_shipping_form@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993211D8807930047950D /* stp_shipping_form@2x.png */; };
+		C15993471D8829C00047950D /* stp_shipping_form@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993221D8807930047950D /* stp_shipping_form@3x.png */; };
 		C16F66AB1CA21BAC006A21B5 /* STPFormTextFieldTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */; };
 		C1717DB11CC00ED60009CF4A /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C17A030D1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C17A030B1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h */; };
@@ -886,6 +904,15 @@
 		C1363BAE1D76337400EB82B4 /* stp_icon_checkmark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_checkmark@3x.png"; sourceTree = "<group>"; };
 		C1363BB51D7633D800EB82B4 /* STPPaymentMethodTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPPaymentMethodTableViewCell.h; sourceTree = "<group>"; };
 		C1363BB61D7633D800EB82B4 /* STPPaymentMethodTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodTableViewCell.m; sourceTree = "<group>"; };
+		C15993201D8807930047950D /* stp_shipping_form.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_shipping_form.png; sourceTree = "<group>"; };
+		C15993211D8807930047950D /* stp_shipping_form@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_shipping_form@2x.png"; sourceTree = "<group>"; };
+		C15993221D8807930047950D /* stp_shipping_form@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_shipping_form@3x.png"; sourceTree = "<group>"; };
+		C15993261D8808490047950D /* STPShippingAddressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPShippingAddressViewController.h; path = PublicHeaders/STPShippingAddressViewController.h; sourceTree = "<group>"; };
+		C159932C1D8808680047950D /* STPShippingAddressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPShippingAddressViewController.m; sourceTree = "<group>"; };
+		C159932F1D8808680047950D /* STPShippingMethodsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPShippingMethodsViewController.h; sourceTree = "<group>"; };
+		C15993301D8808680047950D /* STPShippingMethodsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPShippingMethodsViewController.m; sourceTree = "<group>"; };
+		C15993311D8808680047950D /* STPShippingMethodTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPShippingMethodTableViewCell.h; sourceTree = "<group>"; };
+		C15993321D8808680047950D /* STPShippingMethodTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPShippingMethodTableViewCell.m; sourceTree = "<group>"; };
 		C16A4CDB1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPCheckoutAPIClient.h; sourceTree = "<group>"; };
 		C16A4CDC1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPCheckoutAPIClient.m; sourceTree = "<group>"; };
 		C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFormTextFieldTest.m; sourceTree = "<group>"; };
@@ -1083,6 +1110,9 @@
 				04E39F621CED3B0100AF3B96 /* stp_icon_chevron_right_small.png */,
 				04E39F631CED3B0100AF3B96 /* stp_icon_chevron_right_small@2x.png */,
 				04E39F641CED3B0100AF3B96 /* stp_icon_chevron_right_small@3x.png */,
+				C15993201D8807930047950D /* stp_shipping_form.png */,
+				C15993211D8807930047950D /* stp_shipping_form@2x.png */,
+				C15993221D8807930047950D /* stp_shipping_form@3x.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -1293,6 +1323,12 @@
 				F1D64B281D8767FC001CDB7C /* STPWebViewController.m */,
 				F1852F911D80B6EC00367C86 /* STPStringUtils.h */,
 				F1852F921D80B6EC00367C86 /* STPStringUtils.m */,
+				C15993261D8808490047950D /* STPShippingAddressViewController.h */,
+				C159932C1D8808680047950D /* STPShippingAddressViewController.m */,
+				C159932F1D8808680047950D /* STPShippingMethodsViewController.h */,
+				C15993301D8808680047950D /* STPShippingMethodsViewController.m */,
+				C15993311D8808680047950D /* STPShippingMethodTableViewCell.h */,
+				C15993321D8808680047950D /* STPShippingMethodTableViewCell.m */,
 			);
 			name = Stripe;
 			path = Tests/../Stripe;
@@ -1453,6 +1489,7 @@
 				04F94DA11D229F12004FC826 /* STPAddressFieldTableViewCell.h in Headers */,
 				04EBC75A1B7533C300A0E6AE /* STPCardValidator.h in Headers */,
 				04F94DA61D229F27004FC826 /* STPCardTuple.h in Headers */,
+				C159933D1D8808970047950D /* STPShippingMethodsViewController.h in Headers */,
 				04F94DCD1D22A22F004FC826 /* UIViewController+Stripe_KeyboardAvoiding.h in Headers */,
 				04A4C3981C4F2C8600B3B290 /* NSString+Stripe_CardBrands.h in Headers */,
 				04A488431CA3580700506E53 /* UINavigationController+Stripe_Completion.h in Headers */,
@@ -1474,6 +1511,7 @@
 				049E84E61A605EF0000B66CD /* STPAPIClient.h in Headers */,
 				04F94DBD1D229F95004FC826 /* UITableViewCell+Stripe_Borders.h in Headers */,
 				049E84E91A605EF0000B66CD /* STPBankAccount.h in Headers */,
+				C15993401D88089E0047950D /* STPShippingMethodTableViewCell.h in Headers */,
 				04B31DD51D08E6E200EF1631 /* STPCustomer.h in Headers */,
 				04633AFB1CD1299B009D4FB5 /* NSString+Stripe.h in Headers */,
 				04B31E001D131D9000EF1631 /* STPRememberMePaymentCell.h in Headers */,
@@ -1518,6 +1556,7 @@
 				04F94DC51D22A1FD004FC826 /* STPCheckoutAccountLookup.h in Headers */,
 				04A4883E1CA3568800506E53 /* STPBlocks.h in Headers */,
 				045D71211CEFA57000F6CD65 /* UIViewController+Stripe_Promises.h in Headers */,
+				C159932A1D88084D0047950D /* STPShippingAddressViewController.h in Headers */,
 				049880FD1CED5A2300EA4FFD /* STPPaymentConfiguration.h in Headers */,
 				049A3F9B1CC7DBCC00F57DE7 /* STPPaymentContext.h in Headers */,
 				04F3BB3E1BA89B1200DE235E /* PKPayment+Stripe.h in Headers */,
@@ -1550,6 +1589,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C15993361D8808680047950D /* STPShippingMethodsViewController.h in Headers */,
 				04BC29A91CD9A83600318357 /* STPCheckoutAPIClient.h in Headers */,
 				C11810A71CC6EE840022FB55 /* STPBackendAPIAdapter.h in Headers */,
 				F12C8DC01D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
@@ -1564,6 +1604,7 @@
 				04695AD91C77F9EF00E08063 /* STPDelegateProxy.h in Headers */,
 				0433EB491BD06313003912B4 /* NSDictionary+Stripe.h in Headers */,
 				C124A1701CCA968B007D42EE /* STPAnalyticsClient.h in Headers */,
+				C15993281D8808490047950D /* STPShippingAddressViewController.h in Headers */,
 				049A3F7A1CC18D5300F57DE7 /* UIView+Stripe_FirstResponder.h in Headers */,
 				04CDB50E1A5F30A700B854EE /* STPCard.h in Headers */,
 				C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */,
@@ -1584,6 +1625,7 @@
 				04BC29BD1CDD535700318357 /* STPSwitchTableViewCell.h in Headers */,
 				04CDB5121A5F30A700B854EE /* STPToken.h in Headers */,
 				049952CF1BCF13510088C703 /* STPAPIPostRequest.h in Headers */,
+				C15993381D8808680047950D /* STPShippingMethodTableViewCell.h in Headers */,
 				049A3FB21CC9FEFC00F57DE7 /* UIToolbar+Stripe_InputAccessory.h in Headers */,
 				04E39F521CECF7A100AF3B96 /* STPCardTuple.h in Headers */,
 				04A488331CA34D3000506E53 /* STPEmailAddressValidator.h in Headers */,
@@ -1793,6 +1835,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C15993251D8807930047950D /* stp_shipping_form@3x.png in Resources */,
 				0438EFA81B741C2800D506CC /* stp_card_amex@3x.png in Resources */,
 				0438EFC61B741C2800D506CC /* stp_card_jcb@3x.png in Resources */,
 				0438EFC21B741C2800D506CC /* stp_card_jcb.png in Resources */,
@@ -1853,6 +1896,7 @@
 				0438EFAC1B741C2800D506CC /* stp_card_cvc@2x.png in Resources */,
 				0438EFCC1B741C2800D506CC /* stp_card_mastercard@3x.png in Resources */,
 				F1510BB91D5A782E000731AD /* stp_card_form_applepay@3x.png in Resources */,
+				C15993241D8807930047950D /* stp_shipping_form@2x.png in Resources */,
 				F1510B0B1D5A4C93000731AD /* stp_card_amex_template.png in Resources */,
 				F1510BB31D5A782E000731AD /* stp_card_form_applepay.png in Resources */,
 				0438EFCA1B741C2800D506CC /* stp_card_mastercard@2x.png in Resources */,
@@ -1861,6 +1905,7 @@
 				049A3FA01CC8006800F57DE7 /* stp_icon_add@2x.png in Resources */,
 				042CA1B81B7BD84100AF0DA6 /* stp_card_placeholder_template@3x.png in Resources */,
 				F1510B211D5A4C93000731AD /* stp_card_mastercard_template@3x.png in Resources */,
+				C15993231D8807930047950D /* stp_shipping_form.png in Resources */,
 				0438EFC81B741C2800D506CC /* stp_card_mastercard.png in Resources */,
 				F1510B151D5A4C93000731AD /* stp_card_applepay_template@3x.png in Resources */,
 				04E39F661CED3B0100AF3B96 /* stp_icon_chevron_right_small@2x.png in Resources */,
@@ -1877,6 +1922,7 @@
 				C1B630BB1D1D860100A05285 /* stp_card_amex.png in Resources */,
 				F1510B161D5A4C93000731AD /* stp_card_applepay_template@3x.png in Resources */,
 				C1B630BC1D1D860100A05285 /* stp_card_amex@2x.png in Resources */,
+				C15993471D8829C00047950D /* stp_shipping_form@3x.png in Resources */,
 				F148AC0C1D5E8DF30014FD92 /* stp_icon_add@3x.png in Resources */,
 				F148AC0D1D5E8DF30014FD92 /* stp_icon_chevron_left.png in Resources */,
 				C1363BB31D76337900EB82B4 /* stp_icon_checkmark@2x.png in Resources */,
@@ -1895,6 +1941,7 @@
 				C1B630C11D1D860100A05285 /* stp_card_cvc_amex.png in Resources */,
 				F1510B4F1D5A4CC4000731AD /* stp_card_form_back@2x.png in Resources */,
 				F1510B5C1D5A4CC4000731AD /* stp_icon_add@3x.png in Resources */,
+				C15993461D8829C00047950D /* stp_shipping_form@2x.png in Resources */,
 				C120574C1D676DD400CFBCB8 /* stp_card_diners_template@3x.png in Resources */,
 				C1B630C21D1D860100A05285 /* stp_card_cvc_amex@2x.png in Resources */,
 				C120574F1D676DD400CFBCB8 /* stp_card_form_applepay@3x.png in Resources */,
@@ -1933,6 +1980,7 @@
 				C1B630CF1D1D860100A05285 /* stp_card_mastercard@3x.png in Resources */,
 				F1510B281D5A4C93000731AD /* stp_card_visa_template@3x.png in Resources */,
 				F1510B221D5A4C93000731AD /* stp_card_mastercard_template@3x.png in Resources */,
+				C15993451D8829C00047950D /* stp_shipping_form.png in Resources */,
 				C120574B1D676DD400CFBCB8 /* stp_card_diners_template@2x.png in Resources */,
 				F1510B591D5A4CC4000731AD /* stp_card_applepay@3x.png in Resources */,
 				F1510B5B1D5A4CC4000731AD /* stp_icon_add@2x.png in Resources */,
@@ -2064,6 +2112,7 @@
 				04A4C3901C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m in Sources */,
 				04F94DA01D229F0B004FC826 /* STPPostalCodeValidator.m in Sources */,
 				C124A17F1CCAA0C2007D42EE /* NSMutableURLRequest+Stripe.m in Sources */,
+				C15993411D8808A10047950D /* STPShippingMethodTableViewCell.m in Sources */,
 				04F94DAA1D229F36004FC826 /* STPTheme.m in Sources */,
 				0439B98A1C454F97005A1ED5 /* STPPaymentMethodsViewController.m in Sources */,
 				04F94DAE1D229F54004FC826 /* STPColorUtils.m in Sources */,
@@ -2078,12 +2127,14 @@
 				0438EF371B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */,
 				049E84CC1A605DE0000B66CD /* STPAPIClient.m in Sources */,
 				049E84CD1A605DE0000B66CD /* STPFormEncoder.m in Sources */,
+				C159933A1D8808880047950D /* STPShippingAddressViewController.m in Sources */,
 				04F94DA41D229F1C004FC826 /* STPAddressViewModel.m in Sources */,
 				049880FF1CED5A2300EA4FFD /* STPPaymentConfiguration.m in Sources */,
 				04F94DB91D229F86004FC826 /* STPApplePayPaymentMethod.m in Sources */,
 				04B31DE91D09D25F00EF1631 /* STPPaymentMethodsInternalViewController.m in Sources */,
 				F12C8DC51D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m in Sources */,
 				04633B011CD129CB009D4FB5 /* STPPhoneNumberValidator.m in Sources */,
+				C159933F1D88089B0047950D /* STPShippingMethodsViewController.m in Sources */,
 				04A488451CA3580700506E53 /* UINavigationController+Stripe_Completion.m in Sources */,
 				049E84CF1A605DE0000B66CD /* STPBankAccount.m in Sources */,
 				049E84D01A605DE0000B66CD /* STPCard.m in Sources */,
@@ -2152,10 +2203,13 @@
 				04BC29BE1CDD535700318357 /* STPSwitchTableViewCell.m in Sources */,
 				04E39F6B1CED48D500AF3B96 /* UIBarButtonItem+Stripe.m in Sources */,
 				04CDB5181A5F30A700B854EE /* StripeError.m in Sources */,
+				C15993371D8808680047950D /* STPShippingMethodsViewController.m in Sources */,
 				C1363BB91D7633D800EB82B4 /* STPPaymentMethodTableViewCell.m in Sources */,
+				C15993331D8808680047950D /* STPShippingAddressViewController.m in Sources */,
 				04633B051CD44F1C009D4FB5 /* STPAPIClient+ApplePay.m in Sources */,
 				04B31DF41D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.m in Sources */,
 				04BC29A51CD8697900318357 /* STPTheme.m in Sources */,
+				C15993391D8808680047950D /* STPShippingMethodTableViewCell.m in Sources */,
 				049A3F8A1CC73C7100F57DE7 /* STPPaymentContext.m in Sources */,
 				0426B9731CEAE3EB006AC8DD /* UITableViewCell+Stripe_Borders.m in Sources */,
 				04BC29B21CD9AAA800318357 /* STPCheckoutAccount.m in Sources */,

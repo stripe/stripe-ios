@@ -25,6 +25,9 @@
 }
 
 + (BOOL)stringIsValidPhoneNumber:(NSString *)string {
+    if (!string) {
+        return NO;
+    }
     return [self stringIsValidPhoneNumber:string forCountryCode:nil];
 }
 

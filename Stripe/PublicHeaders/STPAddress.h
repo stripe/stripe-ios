@@ -93,6 +93,7 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 #pragma clang diagnostic pop
 
 - (BOOL)containsRequiredFields:(STPBillingAddressFields)requiredFields;
+- (BOOL)containsRequiredPKFields:(PKAddressField)requiredFields;
 
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
 

@@ -13,6 +13,8 @@ struct Settings {
     let theme: STPTheme
     let additionalPaymentMethods: STPPaymentMethodType
     let requiredBillingAddressFields: STPBillingAddressFields
+    let requiredShippingAddressFields: PKAddressField
+    let shippingType: STPShippingType
     let smsAutofillEnabled: Bool
 }
 
@@ -21,18 +23,24 @@ class SettingsViewController: UITableViewController {
         return Settings(theme: self.theme.stpTheme,
                         additionalPaymentMethods: self.applePay.enabled ? .all : STPPaymentMethodType(),
                         requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
+                        requiredShippingAddressFields: self.requiredShippingAddressFields.pkAddressFields,
+                        shippingType: self.shippingType.stpShippingType,
                         smsAutofillEnabled: self.smsAutofill.enabled)
     }
 
     fileprivate var theme: Theme = .Default
     fileprivate var applePay: Switch = .Enabled
     fileprivate var requiredBillingAddressFields: RequiredBillingAddressFields = .None
+    fileprivate var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
+    fileprivate var shippingType: ShippingType = .Shipping
     fileprivate var smsAutofill: Switch = .Enabled
 
     fileprivate enum Section: String {
         case Theme = "Theme"
         case ApplePay = "Apple Pay"
         case RequiredBillingAddressFields = "Required Billing Address Fields"
+        case RequiredShippingAddressFields = "Required Shipping Address Fields"
+        case ShippingType = "Shipping Type"
         case SMSAutofill = "SMS Autofill"
         case Session = "Session"
 
@@ -41,7 +49,9 @@ class SettingsViewController: UITableViewController {
             case 0: self = .Theme
             case 1: self = .ApplePay
             case 2: self = .RequiredBillingAddressFields
-            case 3: self = .SMSAutofill
+            case 3: self = .RequiredShippingAddressFields
+            case 4: self = .ShippingType
+            case 5: self = .SMSAutofill
             default: self = .Session
             }
         }
@@ -125,6 +135,64 @@ class SettingsViewController: UITableViewController {
         }
     }
 
+    private enum RequiredShippingAddressFields: String {
+        case None = "None"
+        case Phone = "Phone"
+        case Email = "Email"
+        case NameEmail = "(Name|Email)"
+        case PostalAddress = "PostalAddress"
+        case PostalAddressPhone = "(PostalAddress|Phone)"
+        case All = "All"
+
+        init(row: Int) {
+            switch row {
+            case 0: self = .None
+            case 1: self = .Phone
+            case 2: self = .Email
+            case 3: self = .NameEmail
+            case 4: self = .PostalAddress
+            case 5: self = .PostalAddressPhone
+            default: self = .All
+            }
+        }
+
+        var pkAddressFields: PKAddressField {
+            switch self {
+            case .None: return []
+            case .Phone: return .phone
+            case .Email: return .email
+            case .NameEmail:
+                if #available(iOS 8.3, *) {
+                    return [.name, .email]
+                } else {
+                    return [.email]
+                }
+            case .PostalAddress: return .postalAddress
+            case .PostalAddressPhone: return [.postalAddress, .phone]
+            case .All: return .all
+            }
+        }
+    }
+
+    private enum ShippingType: String {
+        case Shipping = "Shipping"
+        case Delivery = "Delivery"
+
+        init(row: Int) {
+            switch row {
+            case 0: self = .Shipping
+            default: self = .Delivery
+            }
+        }
+
+        var stpShippingType: STPShippingType {
+            switch self {
+            case .Shipping: return .shipping
+            case .Delivery: return .delivery
+            }
+        }
+    }
+
     convenience init() {
         self.init(style: .grouped)
     }
@@ -140,7 +208,7 @@ class SettingsViewController: UITableViewController {
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return 7
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -148,6 +216,8 @@ class SettingsViewController: UITableViewController {
         case .Theme: return 3
         case .ApplePay: return 2
         case .RequiredBillingAddressFields: return 3
+        case .RequiredShippingAddressFields: return 7
+        case .ShippingType: return 2
         case .SMSAutofill: return 2
         case .Session: return 1
         }
@@ -172,6 +242,14 @@ class SettingsViewController: UITableViewController {
             let value = RequiredBillingAddressFields(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
             cell.accessoryType = value == self.requiredBillingAddressFields ? .checkmark : .none
+        case .RequiredShippingAddressFields:
+            let value = RequiredShippingAddressFields(row: indexPath.row)
+            cell.textLabel?.text = value.rawValue
+            cell.accessoryType = value == self.requiredShippingAddressFields ? .checkmark : .none
+        case .ShippingType:
+            let value = ShippingType(row: indexPath.row)
+            cell.textLabel?.text = value.rawValue
+            cell.accessoryType = value == self.shippingType ? .checkmark : .none
         case .SMSAutofill:
             let value = Switch(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
@@ -192,6 +270,10 @@ class SettingsViewController: UITableViewController {
             self.applePay = Switch(row: (indexPath as NSIndexPath).row)
         case .RequiredBillingAddressFields:
             self.requiredBillingAddressFields = RequiredBillingAddressFields(row: (indexPath as NSIndexPath).row)
+        case .RequiredShippingAddressFields:
+            self.requiredShippingAddressFields = RequiredShippingAddressFields(row: (indexPath as NSIndexPath).row)
+        case .ShippingType:
+            self.shippingType = ShippingType(row: (indexPath as NSIndexPath).row)
         case .SMSAutofill:
             self.smsAutofill = Switch(row: (indexPath as NSIndexPath).row)
         case .Session:
