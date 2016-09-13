@@ -11,8 +11,8 @@
 @interface STPStringUtils : NSObject
 /**
  *  Takes a string with the named html-style tags, removes the tags,
- *  and then calls the completion modified string and the range in it that the 
- *  tag would have enclosed.
+ *  and then calls the completion block with the modified string and the range 
+ *  in it that the tag would have enclosed.
  *  
  *  E.g. Passing in @"Test <b>string</b>" with tag @"b" would call completion
  *  with @"Test string" and NSMakeRange(5,6).
