@@ -20,10 +20,13 @@
 #import "STPPaymentConfiguration+Private.h"
 #import "STPWeakStrongMacros.h"
 #import "STPPaymentContextAmountModel.h"
+#import "STPShippingAddressViewController.h"
+#import "STPShippingMethodsViewController.h"
+#import "STPShippingMethod+Private.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
-@interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate, STPAddCardViewControllerDelegate>
+@interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate, STPAddCardViewControllerDelegate, STPShippingAddressViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)STPTheme *theme;
@@ -38,6 +41,9 @@
 @property(nonatomic, weak)STPPaymentMethodsViewController *paymentMethodsViewController;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
+@property(nonatomic)STPAddress *shippingAddress;
+@property(nonatomic)STPShippingMethod *selectedShippingMethod;
+@property(nonatomic)NSArray<STPShippingMethod *> *shippingMethods;
 
 @property(nonatomic)STPPaymentContextAmountModel *paymentAmountModel;
 
@@ -184,7 +190,8 @@
 }
 
 - (NSInteger)paymentAmount {
-    return [self.paymentAmountModel paymentAmountWithCurrency:self.paymentCurrency];
+    return [self.paymentAmountModel paymentAmountWithCurrency:self.paymentCurrency
+                                               shippingMethod:self.selectedShippingMethod];
 }
 
 - (void)setPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems {
@@ -195,8 +202,11 @@
 - (NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
     return [self.paymentAmountModel paymentSummaryItemsWithCurrency:self.paymentCurrency
-                                                        companyName:self.configuration.companyName];
+                                                        companyName:self.configuration.companyName
+                                                     shippingMethod:self.selectedShippingMethod];
 }
+
+#pragma mark - Payment Methods
 
 - (void)presentPaymentMethodsViewController {
     NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushPaymentMethodsViewController on it. Next time, set the hostViewController property first!");
@@ -267,6 +277,94 @@
     }
 }
 
+#pragma mark - Shipping Info
+
+- (void)presentShippingInfoViewController {
+    NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling presentShippingInfoViewController on it. Next time, set the hostViewController property first!");
+    WEAK(self);
+    [self.didAppearPromise voidOnSuccess:^{
+        STRONG(self);
+        STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:self];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addressViewController];
+        [navigationController.navigationBar stp_setTheme:self.theme];
+        navigationController.modalPresentationStyle = self.modalPresentationStyle;
+        [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
+    }];
+}
+
+- (void)pushShippingInfoViewController {
+    NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushShippingInfoViewController on it. Next time, set the hostViewController property first!");
+    UINavigationController *navigationController;
+    if ([self.hostViewController isKindOfClass:[UINavigationController class]]) {
+        navigationController = (UINavigationController *)self.hostViewController;
+    } else {
+        navigationController = self.hostViewController.navigationController;
+    }
+    NSCAssert(self.hostViewController != nil, @"The payment context's hostViewController is not a navigation controller, or is not contained in one. Either make sure it is inside a navigation controller before calling pushShippingInfoViewController, or call presentShippingInfoViewController instead.");
+    WEAK(self);
+    [self.didAppearPromise voidOnSuccess:^{
+        STRONG(self);
+        STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:self];
+        [navigationController pushViewController:addressViewController animated:YES];
+    }];
+}
+
+- (void)shippingAddressViewControllerDidCancel:(STPShippingAddressViewController *)addressViewController {
+    [self appropriatelyDismissViewController:addressViewController completion:nil];
+}
+
+- (void)shippingAddressViewController:(__unused STPShippingAddressViewController *)addressViewController
+                      didEnterAddress:(STPAddress *)address
+                           completion:(STPShippingMethodsCompletionBlock)completion {
+    if ([self.delegate respondsToSelector:@selector(paymentContext:didUpdateShippingAddress:completion:)]) {
+        [self.delegate paymentContext:self didUpdateShippingAddress:address completion:^(NSError *shippingValidationError, NSArray<STPShippingMethod *> * shippingMethods) {
+            self.shippingMethods = shippingMethods;
+            if (completion) {
+                completion(shippingValidationError, shippingMethods);
+            }
+        }];
+    }
+    else {
+        if (completion) {
+            completion(nil, @[]);
+        }
+    }
+}
+
+- (void)shippingAddressViewController:(STPShippingAddressViewController *)addressViewController
+                 didFinishWithAddress:(STPAddress *)address
+                       shippingMethod:(STPShippingMethod *)method {
+    self.shippingAddress = address;
+    self.selectedShippingMethod = method;
+    [self.delegate paymentContextDidChange:self];
+    [self appropriatelyDismissViewController:addressViewController completion:^{
+        if (addressViewController.isMidPaymentRequest) {
+            [self requestPayment];
+        }
+    }];
+}
+
+- (void)appropriatelyDismissViewController:(UIViewController *)viewController
+                                completion:(STPVoidBlock)completion {
+    if ([viewController stp_isAtRootOfNavigationController]) {
+        // if we're the root of the navigation controller, we've been presented modally.
+        [viewController.presentingViewController dismissViewControllerAnimated:YES completion:^{
+            if (completion) {
+                completion();
+            }
+        }];
+    } else {
+        // otherwise, we've been pushed onto the stack.
+        [viewController.navigationController stp_popToViewController:self.hostViewController animated:YES completion:^{
+            if (completion) {
+                completion();
+            }
+        }];
+    }
+}
+
+#pragma mark - Request Payment
+
 - (void)requestPayment {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     WEAK(self);
@@ -283,6 +381,16 @@
             addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addCardViewController];
+            [navigationController.navigationBar stp_setTheme:self.theme];
+            navigationController.modalPresentationStyle = self.modalPresentationStyle;
+            [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
+        }
+        if (self.configuration.requiredShippingAddressFields != STPBillingAddressFieldsNone &&
+            !self.shippingAddress)
+        {
+            STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:self];
+            addressViewController.isMidPaymentRequest = YES;
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addressViewController];
             [navigationController.navigationBar stp_setTheme:self.theme];
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
             [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
@@ -316,11 +424,17 @@
                     }
                 }];
             };
+            STPShippingMethodSelectionBlock shippingMethodHandler = ^(PKShippingMethod *shippingMethod, STPPaymentSummaryItemCompletionBlock completion) {
+                self.selectedShippingMethod = [[STPShippingMethod alloc] initWithPKShippingMethod:shippingMethod currency:self.paymentCurrency];
+                [self.delegate paymentContextDidChange:self];
+                completion(self.paymentSummaryItems);
+            };
             PKPaymentAuthorizationViewController *paymentAuthVC;
             paymentAuthVC = [PKPaymentAuthorizationViewController
                              stp_controllerWithPaymentRequest:paymentRequest
                                                     apiClient:self.apiClient
                                               onTokenCreation:applePayTokenHandler
+                                     onShippingMethodSelection:shippingMethodHandler
                                                      onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
                                                          [self.hostViewController dismissViewControllerAnimated:YES completion:^{
                                                              [self.delegate paymentContext:self
@@ -348,7 +462,10 @@
     NSArray<PKPaymentSummaryItem *> *summaryItems = self.paymentSummaryItems;
     paymentRequest.paymentSummaryItems = summaryItems;
     paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
+    paymentRequest.requiredShippingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredShippingAddressFields];
     paymentRequest.currencyCode = self.paymentCurrency.uppercaseString;
+    paymentRequest.shippingMethods = [STPShippingMethod pkShippingMethods:self.shippingMethods
+                                                           selectedMethod:self.selectedShippingMethod];
     return paymentRequest;
 }
 
