@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void(^STPTaggedSubstringCompletionBlock)(NSString *string, NSRange range);
+typedef void(^STPTaggedSubstringsCompletionBlock)(NSString *string, NSDictionary <NSString *, NSValue *> *tagMap);
+
 @interface STPStringUtils : NSObject
 /**
  *  Takes a string with the named html-style tags, removes the tags,
@@ -27,7 +30,7 @@
  */
 + (void)parseRangeFromString:(NSString *)string
                      withTag:(NSString *)tag
-                  completion:(void (^)(NSString *string, NSRange range))completion;
+                  completion:(STPTaggedSubstringCompletionBlock)completion;
 
 /**
  *  Like `parseRangeFromString:withTag:completion:` but you can pass in a set
@@ -48,5 +51,5 @@
  */
 + (void)parseRangesFromString:(NSString *)string
                      withTags:(NSSet<NSString *> *)tags
-                   completion:(void (^)(NSString *string, NSDictionary <NSString *, NSValue *> *tagMap))completion;
+                   completion:(STPTaggedSubstringsCompletionBlock)completion;
 @end

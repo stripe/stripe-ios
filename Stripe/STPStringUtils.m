@@ -12,7 +12,7 @@
 
 + (void)parseRangesFromString:(NSString *)string
                      withTags:(NSSet<NSString *> *)tags 
-                   completion:(void (^)(NSString *, NSDictionary<NSString *,NSValue *> *))completion {
+                   completion:(STPTaggedSubstringsCompletionBlock)completion {
     if (!completion) {
         return;
     }
@@ -84,7 +84,7 @@
 
 + (void)parseRangeFromString:(NSString *)string 
                      withTag:(NSString *)tag
-                  completion:(void (^)(NSString *, NSRange))completion {
+                  completion:(STPTaggedSubstringCompletionBlock)completion {
     if (!completion) {
         return;
     }
