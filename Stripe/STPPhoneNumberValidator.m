@@ -13,10 +13,11 @@
 @implementation STPPhoneNumberValidator
 
 + (NSString *)countryCodeOrCurrentLocaleCountryFromString:(nullable NSString *)nillableCode {
-    if (!nillableCode) {
-        nillableCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
+    NSString *countryCode = nillableCode;
+    if (!countryCode) {
+        countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
     }
-    return nillableCode;
+    return countryCode;
 }
                                                            
 + (BOOL)stringIsValidPartialPhoneNumber:(NSString *)string {
@@ -28,8 +29,8 @@
 }
 
 + (BOOL)stringIsValidPartialPhoneNumber:(NSString *)string
-                         forCountryCode:(nullable NSString *)countryCode {
-    countryCode = [self countryCodeOrCurrentLocaleCountryFromString:countryCode];
+                         forCountryCode:(nullable NSString *)nillableCode {
+    NSString *countryCode = [self countryCodeOrCurrentLocaleCountryFromString:nillableCode];
     
     if ([countryCode isEqualToString:@"US"]) {
         return [STPCardValidator sanitizedNumericStringForString:string].length <= 10;
@@ -40,8 +41,8 @@
 }
 
 + (BOOL)stringIsValidPhoneNumber:(NSString *)string 
-                  forCountryCode:(nullable NSString *)countryCode {
-    countryCode = [self countryCodeOrCurrentLocaleCountryFromString:countryCode];
+                  forCountryCode:(nullable NSString *)nillableCode {
+    NSString *countryCode = [self countryCodeOrCurrentLocaleCountryFromString:nillableCode];
     
     if ([countryCode isEqualToString:@"US"]) {
         return [STPCardValidator sanitizedNumericStringForString:string].length == 10;
@@ -57,8 +58,8 @@
 }
 
 + (NSString *)formattedSanitizedPhoneNumberForString:(NSString *)string 
-                                      forCountryCode:(nullable NSString *)countryCode {
-    countryCode = [self countryCodeOrCurrentLocaleCountryFromString:countryCode];
+                                      forCountryCode:(nullable NSString *)nillableCode {
+    NSString *countryCode = [self countryCodeOrCurrentLocaleCountryFromString:nillableCode];
     NSString *sanitized = [STPCardValidator sanitizedNumericStringForString:string];
     return [self formattedPhoneNumberForString:sanitized
                                 forCountryCode:countryCode];
@@ -70,8 +71,8 @@
 }
 
 + (NSString *)formattedRedactedPhoneNumberForString:(NSString *)string
-                                     forCountryCode:(nullable NSString *)countryCode {
-    countryCode = [self countryCodeOrCurrentLocaleCountryFromString:countryCode];
+                                     forCountryCode:(nullable NSString *)nillableCode {
+    NSString *countryCode = [self countryCodeOrCurrentLocaleCountryFromString:nillableCode];
     NSScanner *scanner = [NSScanner scannerWithString:string];
     NSMutableString *prefix = [NSMutableString stringWithCapacity:string.length];
     [scanner scanUpToString:@"*" intoString:&prefix];
