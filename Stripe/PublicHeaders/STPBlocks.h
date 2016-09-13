@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <PassKit/PassKit.h>
 
 @class STPToken;
 
@@ -47,3 +48,12 @@ typedef void (^STPErrorBlock)(NSError * __nullable error);
  *  @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
  */
 typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * __nullable error);
+
+/**
+ *  A callback to be run with a validation result and shipping methods for a 
+ *  shipping address.
+ *
+ *  @param shippingValidationError If the shipping address is invalid, an error describing the issue with the address. Will be nil if the address is valid.
+ *  @param shippingMethods The shipping methods available for the address.
+ */
+typedef void (^STPShippingMethodsCompletionBlock)(NSError * __nullable shippingValidationError, NSArray<PKShippingMethod *>* __nonnull shippingMethods);

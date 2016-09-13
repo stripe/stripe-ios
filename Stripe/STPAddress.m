@@ -9,6 +9,8 @@
 #import "STPAddress.h"
 #import "STPCardValidator.h"
 #import "STPPostalCodeValidator.h"
+#import "STPEmailAddressValidator.h"
+#import "STPPhoneNumberValidator.h"
 
 @implementation STPAddress
 
@@ -78,6 +80,23 @@
                                                        countryCode:self.country];
         case STPBillingAddressFieldsFull:
             return [self hasValidPostalAddress];
+    }
+    return containsFields;
+}
+
+- (BOOL)containsRequiredPKFields:(PKAddressField)requiredFields {
+    BOOL containsFields = YES;
+    if (requiredFields & PKAddressFieldName) {
+        containsFields = containsFields && [self.name length] > 0;
+    }
+    if (requiredFields & PKAddressFieldEmail) {
+        containsFields = containsFields && [STPEmailAddressValidator stringIsValidEmailAddress:self.email];
+    }
+    if (requiredFields & PKAddressFieldPhone) {
+        containsFields = containsFields && [STPPhoneNumberValidator stringIsValidPhoneNumber:self.phone];
+    }
+    if (requiredFields & PKAddressFieldPostalAddress) {
+        containsFields = containsFields && [self hasValidPostalAddress];
     }
     return containsFields;
 }

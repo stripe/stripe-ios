@@ -9,7 +9,7 @@
 import UIKit
 import Stripe
 
-class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
+class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPShippingAddressViewControllerDelegate {
 
     // 1) To get started with this demo, first head to https://dashboard.stripe.com/account/apikeys
     // and copy your "Test Publishable Key" (it looks like pk_test_abcdef) into the line below.
@@ -33,11 +33,15 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     let theme: STPTheme
     let paymentRow: CheckoutRowView
+    let shippingRow: CheckoutRowView
     let totalRow: CheckoutRowView
     let buyButton: BuyButton
     let rowHeight: CGFloat = 44
     let productImage = UILabel()
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    let numberFormatter: NumberFormatter
+    let shippingString: String
+    let shippingVC: STPShippingAddressViewController
     var product = ""
     var paymentInProgress: Bool = false {
         didSet {
@@ -60,11 +64,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.product = product
         self.productImage.text = product
         self.theme = settings.theme
-        self.paymentRow = CheckoutRowView(title: "Payment", detail: "Select Payment",
-                                          theme: settings.theme)
-        self.totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false,
-                                        theme: settings.theme)
-        self.buyButton = BuyButton(enabled: true, theme: settings.theme)
         MyAPIClient.sharedClient.baseURLString = self.backendBaseURL
 
         // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
@@ -73,6 +72,8 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.appleMerchantIdentifier = self.appleMerchantID
         config.companyName = self.companyName
         config.requiredBillingAddressFields = settings.requiredBillingAddressFields
+        config.requiredShippingAddressFields = settings.requiredShippingAddressFields
+        config.shippingType = settings.shippingType
         config.additionalPaymentMethods = settings.additionalPaymentMethods
         config.smsAutofillDisabled = !settings.smsAutofillEnabled
         
@@ -81,12 +82,37 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
                                                theme: settings.theme)
         let userInformation = STPUserInformation()
         paymentContext.prefilledInformation = userInformation
-        
         paymentContext.paymentAmount = price
         paymentContext.paymentCurrency = self.paymentCurrency
-        
         self.paymentContext = paymentContext
+
+        self.paymentRow = CheckoutRowView(title: "Payment", detail: "Select Payment",
+                                          theme: settings.theme)
+        var shippingString = "Contact"
+        if config.requiredShippingAddressFields.contains(.postalAddress) {
+            shippingString = config.shippingType == .shipping ? "Shipping" : "Delivery"
+        }
+        self.shippingString = shippingString
+        self.shippingRow = CheckoutRowView(title: self.shippingString,
+                                           detail: "Enter \(self.shippingString) Info",
+                                           theme: settings.theme)
+        self.totalRow = CheckoutRowView(title: "Total", detail: "", tappable: false,
+                                        theme: settings.theme)
+        self.buyButton = BuyButton(enabled: true, theme: settings.theme)
+        var localeComponents: [String: String] = [
+            NSLocale.Key.currencyCode.rawValue: self.paymentCurrency,
+        ]
+        localeComponents[NSLocale.Key.languageCode.rawValue] = NSLocale.preferredLanguages.first
+        let localeID = NSLocale.localeIdentifier(fromComponents: localeComponents)
+        let numberFormatter = NumberFormatter()
+        numberFormatter.locale = Locale(identifier: localeID)
+        numberFormatter.numberStyle = .currency
+        numberFormatter.usesGroupingSeparator = true
+        self.numberFormatter = numberFormatter
+        let shippingVC = STPShippingAddressViewController()
+        self.shippingVC = shippingVC
         super.init(nibName: nil, bundle: nil)
+        shippingVC.delegate = self
         self.paymentContext.delegate = self
         paymentContext.hostViewController = self
     }
@@ -106,14 +132,19 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.productImage.font = UIFont.systemFont(ofSize: 70)
         self.view.addSubview(self.totalRow)
         self.view.addSubview(self.paymentRow)
+        self.view.addSubview(self.shippingRow)
         self.view.addSubview(self.productImage)
         self.view.addSubview(self.buyButton)
         self.view.addSubview(self.activityIndicator)
         self.activityIndicator.alpha = 0
         self.buyButton.addTarget(self, action: #selector(didTapBuy), for: .touchUpInside)
-        self.totalRow.detail = "$\(self.paymentContext.paymentAmount/100).00"
+        self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
         self.paymentRow.onTap = { [weak self] _ in
             self?.paymentContext.pushPaymentMethodsViewController()
+        }
+        self.shippingRow.onTap = { [weak self] _ in
+            guard let strongSelf = self else { return }
+            strongSelf.navigationController?.pushViewController(strongSelf.shippingVC, animated: true)
         }
     }
 
@@ -122,11 +153,13 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         let width = self.view.bounds.width
         self.productImage.sizeToFit()
         self.productImage.center = CGPoint(x: width/2.0,
-                                               y: self.productImage.bounds.height/2.0 + rowHeight)
+                                           y: self.productImage.bounds.height/2.0 + rowHeight)
         self.paymentRow.frame = CGRect(x: 0, y: self.productImage.frame.maxY + rowHeight,
-                                           width: width, height: rowHeight)
-        self.totalRow.frame = CGRect(x: 0, y: self.paymentRow.frame.maxY,
-                                         width: width, height: rowHeight)
+                                       width: width, height: rowHeight)
+        self.shippingRow.frame = CGRect(x: 0, y: self.paymentRow.frame.maxY,
+                                        width: width, height: rowHeight)
+        self.totalRow.frame = CGRect(x: 0, y: self.shippingRow.frame.maxY,
+                                     width: width, height: rowHeight)
         self.buyButton.frame = CGRect(x: 0, y: 0, width: 88, height: 44)
         self.buyButton.center = CGPoint(x: width/2.0, y: self.totalRow.frame.maxY + rowHeight*1.5)
         self.activityIndicator.center = self.buyButton.center
@@ -136,6 +169,8 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.paymentInProgress = true
         self.paymentContext.requestPayment()
     }
+
+    // MARK: STPPaymentContextDelegate
     
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
         MyAPIClient.sharedClient.completeCharge(paymentResult, amount: self.paymentContext.paymentAmount,
@@ -162,8 +197,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.present(alertController, animated: true, completion: nil)
     }
 
-    // MARK: STPPaymentContextDelegate
-
     func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
         self.paymentRow.loading = paymentContext.loading
         if let paymentMethod = paymentContext.selectedPaymentMethod {
@@ -172,6 +205,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         else {
             self.paymentRow.detail = "Select Payment"
         }
+        self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
     }
 
     func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
@@ -191,6 +225,38 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         alertController.addAction(cancel)
         alertController.addAction(retry)
         self.present(alertController, animated: true, completion: nil)
+    }
+
+    // MARK: STPShippingAddressViewControllerDelegate
+
+    func shippingAddressViewControllerDidCancel(_ addressViewController: STPShippingAddressViewController) {
+        let _ = self.navigationController?.popViewController(animated: true)
+    }
+
+    func shippingAddressViewController(_ addressViewController: STPShippingAddressViewController, didEnter address: STPAddress, completion: @escaping STPShippingMethodsCompletionBlock) {
+        let shippingMethod1 = PKShippingMethod()
+        shippingMethod1.amount = 0
+        shippingMethod1.label = "UPS Ground"
+        shippingMethod1.detail = "Arrives in 3-5 days"
+        shippingMethod1.identifier = "123"
+        let shippingMethod2 = PKShippingMethod()
+        shippingMethod2.amount = 5.99
+        shippingMethod2.label = "FedEx"
+        shippingMethod2.detail = "Arrives tomorrow"
+        shippingMethod2.identifier = "456"
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            completion(nil, [shippingMethod1, shippingMethod2])
+        }
+    }
+
+    func shippingAddressViewController(_ addressViewController: STPShippingAddressViewController, didFinishWith address: STPAddress, shippingMethod method: PKShippingMethod?) {
+        if let shippingMethod = method {
+            self.shippingRow.detail = shippingMethod.label
+        }
+        else {
+            self.shippingRow.detail = "Enter \(self.shippingString) Info"
+        }
+        self.shippingVC.dismiss(withHostViewController: self)
     }
 
 }
