@@ -54,9 +54,9 @@
     NSURL *learnMoreURL = [NSURL URLWithString:@"https://checkout.stripe.com/-/remember-me"];
     NSString *contents = STPLocalizedString(@"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's Privacy Policy and Terms. More Info", 
                                             @"Footer shown when user enables Remember Me that show additional info. If you change/localize this, you _MUST_ change the Privacy Policy, Terms, and More Info strings to match.");
-    NSRange privacyRange = [contents.lowercaseString rangeOfString:privacyPolicy];
-    NSRange termsRange = [contents.lowercaseString rangeOfString:terms];
-    NSRange learnMoreRange = [contents.lowercaseString rangeOfString:learnMore];
+    NSRange privacyRange = [contents rangeOfString:privacyPolicy];
+    NSRange termsRange = [contents rangeOfString:terms];
+    NSRange learnMoreRange = [contents rangeOfString:learnMore];
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.alignment = NSTextAlignmentLeft;
     NSDictionary *attributes = @{
