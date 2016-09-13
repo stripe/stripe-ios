@@ -65,7 +65,7 @@ FAUXPAS_IGNORED_IN_CLASS(APIAvailability)
         if (shippingItem != nil) {
             [items insertObject:shippingItem atIndex:0];
         }
-        return items;
+        return [items copy];
     }
     else {
         if ([_paymentSummaryItems count] > 0 && shippingItem != nil) {
@@ -74,7 +74,7 @@ FAUXPAS_IGNORED_IN_CLASS(APIAvailability)
             NSDecimalNumber *newTotal = [origTotalItem.amount decimalNumberByAdding:shippingItem.amount];
             PKPaymentSummaryItem *totalItem = [PKPaymentSummaryItem summaryItemWithLabel:origTotalItem.label amount:newTotal];
             [items removeLastObject];
-            return [items arrayByAddingObjectsFromArray:@[shippingItem, totalItem]];
+            return [[items arrayByAddingObjectsFromArray:@[shippingItem, totalItem]] copy];
         }
         else {
             return _paymentSummaryItems;
