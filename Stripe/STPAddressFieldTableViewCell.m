@@ -341,7 +341,8 @@
         case STPAddressFieldTypeEmail:
             return [STPEmailAddressValidator stringIsValidEmailAddress:self.contents];
         case STPAddressFieldTypePhone:
-            return [STPPhoneNumberValidator stringIsValidPhoneNumber:self.contents];
+            return [STPPhoneNumberValidator stringIsValidPhoneNumber:self.contents
+                                                      forCountryCode:self.ourCountryCode];
     }
 }
 
@@ -365,7 +366,8 @@
         case STPAddressFieldTypeEmail:
             return [STPEmailAddressValidator stringIsValidPartialEmailAddress:self.contents];
         case STPAddressFieldTypePhone:
-            return [STPPhoneNumberValidator stringIsValidPartialPhoneNumber:self.contents];
+            return [STPPhoneNumberValidator stringIsValidPartialPhoneNumber:self.contents
+                                                             forCountryCode:self.ourCountryCode];
     }
 }
 

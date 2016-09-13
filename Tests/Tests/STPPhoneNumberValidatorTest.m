@@ -9,11 +9,8 @@
 #import <XCTest/XCTest.h>
 #import "STPPhoneNumberValidator.h"
 
-@interface STPNonUSLocalePhoneNumberValidator: STPPhoneNumberValidator
-@end
-@implementation STPNonUSLocalePhoneNumberValidator
-+ (BOOL)isUSLocale { return NO; }
-@end
+static NSString *const kUSCountryCode = @"US";
+static NSString *const kUKCountryCode = @"UK";
 
 @interface STPPhoneNumberValidatorTest : XCTestCase
 
@@ -22,9 +19,9 @@
 @implementation STPPhoneNumberValidatorTest
 
 - (void)testValidPhoneNumbers {
-    XCTAssertTrue([STPPhoneNumberValidator stringIsValidPhoneNumber:@"555-555-5555"]);
-    XCTAssertTrue([STPPhoneNumberValidator stringIsValidPhoneNumber:@"5555555555"]);
-    XCTAssertTrue([STPPhoneNumberValidator stringIsValidPhoneNumber:@"(555) 555-5555"]);
+    XCTAssertTrue([STPPhoneNumberValidator stringIsValidPhoneNumber:@"555-555-5555" forCountryCode:kUSCountryCode]);
+    XCTAssertTrue([STPPhoneNumberValidator stringIsValidPhoneNumber:@"5555555555" forCountryCode:kUSCountryCode]);
+    XCTAssertTrue([STPPhoneNumberValidator stringIsValidPhoneNumber:@"(555) 555-5555" forCountryCode:kUSCountryCode]);
 }
 
 - (void)testInvalidPhoneNumbers {
@@ -42,12 +39,13 @@
     XCTAssertEqualObjects([STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:@"5555555"], @"(555) 555-5");
     XCTAssertEqualObjects([STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:@"5555555555"], @"(555) 555-5555");
     XCTAssertEqualObjects([STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:@"5555555555123"], @"(555) 555-5555");
-    XCTAssertEqualObjects([STPNonUSLocalePhoneNumberValidator formattedSanitizedPhoneNumberForString:@"5555555555123"], @"5555555555123");
+    XCTAssertEqualObjects([STPPhoneNumberValidator formattedSanitizedPhoneNumberForString:@"5555555555123" forCountryCode:kUKCountryCode], 
+                          @"5555555555123");
 }
 
 - (void)testFormattedRedactedPhoneNumberForString {
     XCTAssertEqualObjects([STPPhoneNumberValidator formattedRedactedPhoneNumberForString:@"+1******1234"], @"+1 (•••) •••-1234");
-    XCTAssertEqualObjects([STPNonUSLocalePhoneNumberValidator formattedRedactedPhoneNumberForString:@"+86******1234"], @"+86 ••••••1234");
+    XCTAssertEqualObjects([STPPhoneNumberValidator formattedRedactedPhoneNumberForString:@"+86******1234" forCountryCode:kUKCountryCode], @"+86 ••••••1234");
 }
 
 @end

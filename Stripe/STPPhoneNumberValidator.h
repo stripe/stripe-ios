@@ -15,9 +15,17 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)isUSLocale;
 + (BOOL)stringIsValidPartialPhoneNumber:(NSString *)string;
 + (BOOL)stringIsValidPhoneNumber:(NSString *)string;
++ (BOOL)stringIsValidPartialPhoneNumber:(NSString *)string
+                         forCountryCode:(nullable NSString *)countryCode;
++ (BOOL)stringIsValidPhoneNumber:(NSString *)string
+                  forCountryCode:(nullable NSString *)countryCode;
 
 + (NSString *)formattedSanitizedPhoneNumberForString:(NSString *)string;
++ (NSString *)formattedSanitizedPhoneNumberForString:(NSString *)string
+                                      forCountryCode:(nullable NSString *)countryCode;
 + (NSString *)formattedRedactedPhoneNumberForString:(NSString *)string;
++ (NSString *)formattedRedactedPhoneNumberForString:(NSString *)string
+                                     forCountryCode:(nullable NSString *)countryCode;
 
 @end
 
