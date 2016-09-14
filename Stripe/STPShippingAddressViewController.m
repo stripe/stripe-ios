@@ -35,6 +35,7 @@
 @property(nonatomic)UIBarButtonItem *backItem;
 @property(nonatomic)UIBarButtonItem *cancelItem;
 @property(nonatomic)BOOL loading;
+@property(nonatomic)BOOL isMidPaymentRequest;
 @property(nonatomic)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic)STPAddressViewModel *addressViewModel;
 @end
@@ -42,23 +43,49 @@
 @implementation STPShippingAddressViewController
 
 - (instancetype)init {
-    return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme] currency:nil shippingAddress:nil selectedShippingMethod:nil];
+    return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme] currency:nil shippingAddress:nil selectedShippingMethod:nil prefilledInformation:nil];
+}
+
+- (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext {
+    STPShippingAddressViewController *instance = [self initWithConfiguration:paymentContext.configuration
+                                                                       theme:paymentContext.theme
+                                                                    currency:paymentContext.paymentCurrency
+                                                             shippingAddress:paymentContext.shippingAddress
+                                                      selectedShippingMethod:paymentContext.selectedShippingMethod
+                                                        prefilledInformation:paymentContext.prefilledInformation];
+    instance.delegate = paymentContext;
+    return instance;
 }
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                                 theme:(STPTheme *)theme
                              currency:(NSString *)currency
                       shippingAddress:(STPAddress *)shippingAddress
-               selectedShippingMethod:(PKShippingMethod *)selectedShippingMethod {
+               selectedShippingMethod:(PKShippingMethod *)selectedShippingMethod
+                 prefilledInformation:(STPUserInformation *)prefilledInformation {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
+        _isMidPaymentRequest = NO;
         _configuration = configuration;
         _currency = currency ?: @"usd";
         _theme = theme;
         _selectedShippingMethod = selectedShippingMethod;
         _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredShippingFields:configuration.requiredShippingAddressFields];
         _addressViewModel.delegate = self;
-        _addressViewModel.address = shippingAddress;
+        if (shippingAddress != nil) {
+            _addressViewModel.address = shippingAddress;
+        }
+        else if (prefilledInformation != nil) {
+            STPAddress *prefilledAddress = [STPAddress new];
+            if (self.configuration.requiredShippingAddressFields & PKAddressFieldEmail) {
+                prefilledAddress.email = prefilledInformation.email;
+            }
+            if (self.configuration.requiredShippingAddressFields & PKAddressFieldPhone) {
+                prefilledAddress.phone = prefilledInformation.phone;
+            }
+            _addressViewModel.address = prefilledAddress;
+        }
+
         self.title = [self titleForShippingType:self.configuration.shippingType];
     }
     return self;

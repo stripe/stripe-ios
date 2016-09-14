@@ -20,9 +20,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPShippingAddressViewController : UIViewController
 
 /**
- *  A convenience initializer; equivalent to calling `initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme] currency:nil shippingAddress:nil selectedShippingMethod:nil`.
+ *  A convenience initializer; equivalent to calling `initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme] currency:nil shippingAddress:nil selectedShippingMethod:nil prefilledInformation:nil`.
  */
 - (instancetype)init;
+
+/**
+ *  Initializes a new `STPShippingAddressViewController` with the given payment context and sets the payment context as its delegate.
+ *
+ *  @param paymentContext The payment context to use.
+ */
+- (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext;
 
 /**
  *  Initializes a new `STPShippingAddressCardViewController` with the provided parameters.
@@ -32,12 +39,14 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param currency                  The currency to use when displaying amounts for shipping methods. The default is USD.
  *  @param shippingAddress           If set, the shipping address view controller will be pre-filled with this address. @see STPAddress
  *  @param selectedShippingMethod    If set, the shipping methods view controller will use this method as the selected shipping method. If `selectedShippingMethod` is nil, the first shipping method in the array of methods returned by your delegate will be selected.
+ *  @param prefilledInformation      If set, the shipping address view controller will be pre-filled with this information. @see STPUserInformation
  */
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                                 theme:(STPTheme *)theme
                              currency:(nullable NSString *)currency
                       shippingAddress:(nullable STPAddress *)shippingAddress
-               selectedShippingMethod:(nullable PKShippingMethod *)selectedShippingMethod;
+               selectedShippingMethod:(nullable PKShippingMethod *)selectedShippingMethod
+                 prefilledInformation:(nullable STPUserInformation *)prefilledInformation;
 
 /**
  *  The view controller's delegate. This must be set before showing the view controller in order for it to work properly. @see STPShippingAddressViewControllerDelegate
