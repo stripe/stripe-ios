@@ -63,7 +63,15 @@
         
         NSString *countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
         NSMutableArray *otherCountryCodes = [[NSLocale ISOCountryCodes] mutableCopy];
+        NSLocale *locale = [NSLocale currentLocale];
         [otherCountryCodes removeObject:countryCode];
+        [otherCountryCodes sortUsingComparator:^NSComparisonResult(NSString *code1, NSString *code2) {
+            NSString *localeID1 = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: code1}];
+            NSString *localeID2 = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: code2}];
+            NSString *name1 = [locale displayNameForKey:NSLocaleIdentifier value:localeID1];
+            NSString *name2 = [locale displayNameForKey:NSLocaleIdentifier value:localeID2];
+            return [name1 compare:name2];
+        }];
         _countryCodes = [@[@"", countryCode] arrayByAddingObjectsFromArray:otherCountryCodes];
         UIPickerView *pickerView = [UIPickerView new];
         pickerView.dataSource = self;
