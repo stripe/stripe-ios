@@ -79,6 +79,14 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
                                                           STPAnalyticsClient *client = [self sharedClient];
                                                           [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPPaymentMethodsViewController class])]];
                                                       } error:nil];
+
+        [STPShippingAddressViewController stp_aspect_hookSelector:@selector(initWithConfiguration:theme:currency:shippingAddress:selectedShippingMethod:prefilledInformation:)
+                                                      withOptions:STPAspectPositionAfter
+                                                       usingBlock:^{
+                                                           STPAnalyticsClient *client = [self sharedClient];
+                                                           [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPShippingAddressViewController class])]];
+                                                       } error:nil];
+
     });
 }
 
@@ -197,6 +205,29 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
             dictionary[@"required_billing_address_fields"] = @"zip";
         case STPBillingAddressFieldsFull:
             dictionary[@"required_billing_address_fields"] = @"full";
+    }
+    NSMutableArray<NSString *> *shippingFields = [NSMutableArray new];
+    if (configuration.requiredShippingAddressFields & PKAddressFieldName) {
+        [shippingFields addObject:@"name"];
+    }
+    if (configuration.requiredShippingAddressFields & PKAddressFieldEmail) {
+        [shippingFields addObject:@"email"];
+    }
+    if (configuration.requiredShippingAddressFields & PKAddressFieldPostalAddress) {
+        [shippingFields addObject:@"address"];
+    }
+    if (configuration.requiredShippingAddressFields & PKAddressFieldPhone) {
+        [shippingFields addObject:@"phone"];
+    }
+    if ([shippingFields count] == 0) {
+        [shippingFields addObject:@"none"];
+    }
+    dictionary[@"required_shipping_address_fields"] = [shippingFields componentsJoinedByString:@"_"];
+    switch (configuration.shippingType) {
+        case STPShippingTypeShipping:
+            dictionary[@"shipping_type"] = @"shipping";
+        case STPShippingTypeDelivery:
+            dictionary[@"shipping_type"] = @"delivery";
     }
     dictionary[@"company_name"] = configuration.companyName ?: @"unknown";
     dictionary[@"apple_merchant_identifier"] = configuration.appleMerchantIdentifier ?: @"unknown";

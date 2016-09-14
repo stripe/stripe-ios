@@ -13,13 +13,23 @@
 #define FAUXPAS_IGNORED_IN_FILE(...)
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef void(^STPApplePayTokenHandlerBlock)(STPToken *token, STPErrorBlock completion);
-typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError *error);
+typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status,  NSError * __nullable error);
+typedef void (^STPPaymentSummaryItemCompletionBlock)(NSArray<PKPaymentSummaryItem*> *summaryItems);
+typedef void (^STPShippingMethodSelectionBlock)(PKShippingMethod *selectedMethod, STPPaymentSummaryItemCompletionBlock completion);
+typedef void (^STPShippingAddressValidationBlock)(STPShippingStatus status, NSArray<PKShippingMethod *>* shippingMethods, NSArray<PKPaymentSummaryItem*> *summaryItems);
+typedef void (^STPShippingAddressSelectionBlock)(STPAddress *selectedAddress, STPShippingAddressValidationBlock completion);
+typedef void (^STPPaymentAuthorizationBlock)(PKPayment *payment);
 
 @interface PKPaymentAuthorizationViewController (Stripe_Blocks)
 
 + (instancetype)stp_controllerWithPaymentRequest:(PKPaymentRequest *)paymentRequest
                                        apiClient:(STPAPIClient *)apiClient
+                      onShippingAddressSelection:(STPShippingAddressSelectionBlock)onShippingAddressSelection
+                       onShippingMethodSelection:(STPShippingMethodSelectionBlock)onShippingMethodSelection
+                          onPaymentAuthorization:(STPPaymentAuthorizationBlock)onPaymentAuthorization
                                  onTokenCreation:(STPApplePayTokenHandlerBlock)onTokenCreation
                                         onFinish:(STPPaymentCompletionBlock)onFinish;
 
@@ -27,3 +37,5 @@ typedef void (^STPPaymentCompletionBlock)(STPPaymentStatus status, NSError *erro
 @end
 
 void linkPKPaymentAuthorizationViewControllerBlocksCategory(void);
+
+NS_ASSUME_NONNULL_END

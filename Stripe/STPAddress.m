@@ -24,17 +24,24 @@
         NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(record, kABPersonLastNameProperty);
         NSString *first = firstName ?: @"";
         NSString *last = lastName ?: @"";
-        _name = [@[first, last] componentsJoinedByString:@" "];
-        
+        NSString *name = [@[first, last] componentsJoinedByString:@" "];
+        _name = [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+
         ABMultiValueRef emailValues = ABRecordCopyValue(record, kABPersonEmailProperty);
         _email = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(emailValues, 0));
-        CFRelease(emailValues);
+        if (emailValues != NULL) {
+            CFRelease(emailValues);
+        }
         
         ABMultiValueRef phoneValues = ABRecordCopyValue(record, kABPersonPhoneProperty);
         NSString *phone = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(phoneValues, 0));
-        CFRelease(phoneValues);
-        
-        _phone = [STPCardValidator sanitizedNumericStringForString:phone];
+        if (phoneValues != NULL) {
+            CFRelease(phoneValues);
+        }
+        phone = [STPCardValidator sanitizedNumericStringForString:phone];
+        if ([phone length] > 0) {
+            _phone = phone;
+        }
 
         ABMultiValueRef addressValues = ABRecordCopyValue(record, kABPersonAddressProperty);
         if (addressValues != NULL) {
@@ -58,14 +65,64 @@
                 }
                 NSString *country = CFDictionaryGetValue(dict, kABPersonAddressCountryCodeKey);
                 if (country) {
-                    _country = country;
+                    _country = [country uppercaseString];
                 }
-                CFRelease(dict);
+                if (dict != NULL) {
+                    CFRelease(dict);
+                }
             }
             CFRelease(addressValues);
         }
     }
     return self;
+}
+
+- (ABRecordRef)ABRecordValue {
+    ABRecordRef record = ABPersonCreate();
+    NSArray<NSString *>*nameComponents = [self.name componentsSeparatedByString:@" "];
+    NSString *firstName = [nameComponents firstObject];
+    NSString *lastName = [self.name stringByReplacingOccurrencesOfString:firstName withString:@""];
+    lastName = [lastName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if ([lastName length] == 0) {
+        lastName = nil;
+    }
+    if (firstName != nil) {
+        CFStringRef firstNameRef = (__bridge CFStringRef)firstName;
+        ABRecordSetValue(record, kABPersonFirstNameProperty, firstNameRef, nil);
+    }
+    if (lastName != nil) {
+        CFStringRef lastNameRef = (__bridge CFStringRef)lastName;
+        ABRecordSetValue(record, kABPersonLastNameProperty, lastNameRef, nil);
+    }
+    if (self.phone != nil) {
+        ABMutableMultiValueRef phonesRef = ABMultiValueCreateMutable(kABMultiStringPropertyType);
+        ABMultiValueAddValueAndLabel(phonesRef, (__bridge CFStringRef)self.phone,
+                                     kABPersonPhoneMainLabel, NULL);
+        ABRecordSetValue(record, kABPersonPhoneProperty, phonesRef, nil);
+    }
+    if (self.email != nil) {
+        ABMutableMultiValueRef emailsRef = ABMultiValueCreateMutable(kABMultiStringPropertyType);
+        ABMultiValueAddValueAndLabel(emailsRef, (__bridge CFStringRef)self.email,
+                                     kABHomeLabel, NULL);
+        ABRecordSetValue(record, kABPersonEmailProperty, emailsRef, nil);
+    }
+    ABMutableMultiValueRef addressRef = ABMultiValueCreateMutable(kABMultiDictionaryPropertyType);
+    NSMutableDictionary *addressDict = [NSMutableDictionary dictionary];
+    NSString *street = nil;
+    if (self.line1 != nil) {
+        street = [@"" stringByAppendingString:self.line1];
+    }
+    if (self.line2 != nil) {
+        street = [@[street ?: @"", self.line2] componentsJoinedByString:@" "];
+    }
+    addressDict[(NSString *)kABPersonAddressStreetKey] = street;
+    addressDict[(NSString *)kABPersonAddressCityKey] = self.city;
+    addressDict[(NSString *)kABPersonAddressStateKey] = self.state;
+    addressDict[(NSString *)kABPersonAddressZIPKey] = self.postalCode;
+    addressDict[(NSString *)kABPersonAddressCountryCodeKey] = self.country;
+    ABMultiValueAddValueAndLabel(addressRef, (__bridge CFTypeRef)[addressDict copy], kABWorkLabel, NULL);
+    ABRecordSetValue(record, kABPersonAddressProperty, addressRef, nil);
+    return record;
 }
 
 #pragma clang diagnostic pop

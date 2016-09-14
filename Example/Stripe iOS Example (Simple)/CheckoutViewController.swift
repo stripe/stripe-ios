@@ -9,11 +9,11 @@
 import UIKit
 import Stripe
 
-class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPShippingAddressViewControllerDelegate {
+class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     // 1) To get started with this demo, first head to https://dashboard.stripe.com/account/apikeys
     // and copy your "Test Publishable Key" (it looks like pk_test_abcdef) into the line below.
-    let stripePublishableKey = "pk_test_DhW2G4j13BMRIC7gd55hZeW3"
+    let stripePublishableKey = ""
     
     // 2) Next, optionally, to have this demo save your user's payment details, head to
     // https://github.com/stripe/example-ios-backend , click "Deploy to Heroku", and follow
@@ -41,7 +41,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPSh
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     let numberFormatter: NumberFormatter
     let shippingString: String
-    let shippingVC: STPShippingAddressViewController
     var product = ""
     var paymentInProgress: Bool = false {
         didSet {
@@ -109,10 +108,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPSh
         numberFormatter.numberStyle = .currency
         numberFormatter.usesGroupingSeparator = true
         self.numberFormatter = numberFormatter
-        let shippingVC = STPShippingAddressViewController()
-        self.shippingVC = shippingVC
         super.init(nibName: nil, bundle: nil)
-        shippingVC.delegate = self
         self.paymentContext.delegate = self
         paymentContext.hostViewController = self
     }
@@ -143,8 +139,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPSh
             self?.paymentContext.pushPaymentMethodsViewController()
         }
         self.shippingRow.onTap = { [weak self] _ in
-            guard let strongSelf = self else { return }
-            strongSelf.navigationController?.pushViewController(strongSelf.shippingVC, animated: true)
+            self?.paymentContext.presentShippingInfoViewController()
         }
     }
 
@@ -205,6 +200,12 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPSh
         else {
             self.paymentRow.detail = "Select Payment"
         }
+        if let shippingMethod = paymentContext.selectedShippingMethod {
+            self.shippingRow.detail = shippingMethod.label
+        }
+        else {
+            self.shippingRow.detail = "Enter \(self.shippingString) Info"
+        }
         self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
     }
 
@@ -227,68 +228,42 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPSh
         self.present(alertController, animated: true, completion: nil)
     }
 
-    // MARK: STPShippingAddressViewControllerDelegate
+    func paymentContext(_ paymentContext: STPPaymentContext, didUpdateShippingAddress address: STPAddress, completion: @escaping STPShippingMethodsCompletionBlock) {
+        let upsGround = PKShippingMethod()
+        upsGround.amount = 0
+        upsGround.label = "UPS Ground"
+        upsGround.detail = "Arrives in 3-5 days"
+        upsGround.identifier = "ups_ground"
+        let upsWorldwide = PKShippingMethod()
+        upsWorldwide.amount = 10.99
+        upsWorldwide.label = "UPS Worldwide Express"
+        upsWorldwide.detail = "Arrives in 1-3 days"
+        upsWorldwide.identifier = "ups_worldwide"
+        let fedEx = PKShippingMethod()
+        fedEx.amount = 5.99
+        fedEx.label = "FedEx"
+        fedEx.detail = "Arrives tomorrow"
+        fedEx.identifier = "fedex"
 
-    func shippingAddressViewControllerDidCancel(_ addressViewController: STPShippingAddressViewController) {
-        let _ = self.navigationController?.popViewController(animated: true)
-    }
-
-    func shippingAddressViewController(_ addressViewController: STPShippingAddressViewController, didEnter address: STPAddress, completion: @escaping STPShippingMethodsCompletionBlock) {
-        let shippingMethod1 = PKShippingMethod()
-        shippingMethod1.amount = 0
-        shippingMethod1.label = "UPS Ground"
-        shippingMethod1.detail = "Arrives in 3-5 days"
-        shippingMethod1.identifier = "123"
-        let shippingMethod2 = PKShippingMethod()
-        shippingMethod2.amount = 5.99
-        shippingMethod2.label = "FedEx"
-        shippingMethod2.detail = "Arrives tomorrow"
-        shippingMethod2.identifier = "456"
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            completion(.valid, nil, [shippingMethod1, shippingMethod2], shippingMethod2)
-        }
-    }
-
-    func shippingAddressViewController(_ addressViewController: STPShippingAddressViewController, didFinishWith address: STPAddress, shippingMethod method: PKShippingMethod?) {
-        if let shippingMethod = method {
-            self.shippingRow.detail = shippingMethod.label
-        }
-        else {
-            self.shippingRow.detail = "Enter \(self.shippingString) Info"
-        }
-        self.shippingVC.dismiss(completion: nil)
-    }
-
-    // MARK: STPShippingAddressViewControllerDelegate
-
-    func shippingAddressViewControllerDidCancel(addressViewController: STPShippingAddressViewController) {
-        let _ = self.navigationController?.popViewController(animated: true)
-    }
-
-    func shippingAddressViewController(addressViewController: STPShippingAddressViewController, didEnterAddress address: STPAddress, completion: @escaping STPShippingMethodsCompletionBlock) {
-        let shippingMethod1 = PKShippingMethod()
-        shippingMethod1.amount = 0
-        shippingMethod1.label = "UPS Ground"
-        shippingMethod1.detail = "Arrives in 3-5 days"
-        shippingMethod1.identifier = "123"
-        let shippingMethod2 = PKShippingMethod()
-        shippingMethod2.amount = 5.99
-        shippingMethod2.label = "FedEx"
-        shippingMethod2.detail = "Arrives tomorrow"
-        shippingMethod2.identifier = "456"
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            completion(nil, [shippingMethod1, shippingMethod2])
+            if address.country == nil {
+                completion(.valid, nil, nil, nil)
+            }
+            else {
+                if address.country == "US" {
+                    completion(.valid, nil, [upsGround, fedEx], fedEx)
+                }
+                else if address.country == "AE" {
+                    let error = NSError(domain: "ShippingError", code: 123, userInfo: [NSLocalizedDescriptionKey: "Invalid Shipping Address",
+                                                                                       NSLocalizedFailureReasonErrorKey: "We can't ship to this country."])
+                    completion(.invalid, error, nil, nil)
+                }
+                else {
+                    fedEx.amount = 20.99
+                    completion(.valid, nil, [upsWorldwide, fedEx], fedEx)
+                }
+            }
         }
-    }
-
-    func shippingAddressViewController(addressViewController: STPShippingAddressViewController, didFinishWithAddress address: STPAddress, shippingMethod method: PKShippingMethod?) {
-        if let shippingMethod = method {
-            self.shippingRow.detail = shippingMethod.label
-        }
-        else {
-            self.shippingRow.detail = "Enter \(self.shippingString) Info"
-        }
-        self.shippingVC.dismiss(withHostViewController: self)
     }
 
 }
