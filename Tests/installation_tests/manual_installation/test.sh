@@ -2,6 +2,7 @@
 
 # This causes the script to fail if any subscript fails
 set -e
+set -o pipefail
 
 echo "Checking test manual installation app..."
 
@@ -21,4 +22,4 @@ mkdir $FRAMEWORKDIR
 cp $BUILDDIR/StripeiOS-Static.zip $FRAMEWORKDIR
 ditto -xk $FRAMEWORKDIR/StripeiOS-Static.zip $FRAMEWORKDIR
 
-set -o pipefail && xcodebuild test -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator | xcpretty -c
+xcodebuild test -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=latest' | xcpretty -c
