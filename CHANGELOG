@@ -1,3 +1,11 @@
+== 8.0.7 2016-09-15
+* Add ability to set currency for managed accounts when adding card
+* Fix broken links for Privacy Policy/Terms of Service for Remember Me feature
+* Sort countries in picker alphabetically by name instead of ISO code
+* Make "County" field optional on billing address screen.
+* PKPayment-related methods are now annotated as available in iOS8+ only
+* Optimized speed of input sanitation methods (thanks @kballard!)
+
 == 8.0.6 2016-09-01
 * Improved internationalization on billing address forms
   * Users in countries that don't use postal codes will no longer see that field.
