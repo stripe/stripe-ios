@@ -107,7 +107,7 @@
     self.textView.frame = UIEdgeInsetsInsetRect(self.bounds, self.insets);
 }
 
-- (BOOL)textView:(__unused UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
     if (self.pushViewControllerBlock) {
         STPWebViewController *webViewController = [[STPWebViewController alloc] initWithURL:URL 
                                                                                       title:[textView.text substringWithRange:characterRange]];
