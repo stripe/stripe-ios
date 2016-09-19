@@ -48,6 +48,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic)STPUserInformation *prefilledInformation;
 
+/**
+ If you're using the token generated from STPAddCardViewController to make a Managed Account, you should set this property to the currency that account will use. Otherwise, you should leave it empty. For more information, see https://stripe.com/docs/api#create_card_token-card-currency
+ */
+@property(nonatomic, copy, nullable)NSString *managedAccountCurrency;
+
 @end
 
 /**
@@ -68,6 +73,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param addCardViewController the view controller that successfully created a token
  *  @param token                 the Stripe token that was created. @see STPToken
  *  @param completion            call this callback when you're done sending the token to your backend
+ *
+ *  @note If you are on Swift 3, you must declare the completion block as `@escaping` or Xcode will give you a protocol conformance error. https://bugs.swift.org/browse/SR-2597
  */
 - (void)addCardViewController:(STPAddCardViewController *)addCardViewController
                didCreateToken:(STPToken *)token

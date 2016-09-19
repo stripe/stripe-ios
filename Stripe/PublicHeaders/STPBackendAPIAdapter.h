@@ -35,6 +35,8 @@ typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NS
  *
  *  @see STPCard
  *  @param completion call this callback when you're done fetching and parsing the above information from your backend. For example, `completion(customer, nil)` (if your call succeeds) or `completion(nil, error)` if an error is returned.
+ *
+ *  @note If you are on Swift 3, you must declare the completion block as `@escaping` or Xcode will give you a protocol conformance error. https://bugs.swift.org/browse/SR-2597
  */
 - (void)retrieveCustomer:(STPCustomerCompletionBlock)completion;
 
@@ -43,6 +45,8 @@ typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NS
  *
  *  @param source     a valid payment source, such as a card token.
  *  @param completion call this callback when you're done adding the token to the customer on your backend. For example, `completion(nil)` (if your call succeeds) or `completion(error)` if an error is returned.
+ *
+ *  @note If you are on Swift 3, you must declare the completion block as `@escaping` or Xcode will give you a protocol conformance error. https://bugs.swift.org/browse/SR-2597
  */
 - (void)attachSourceToCustomer:(id<STPSource>)source completion:(STPErrorBlock)completion;
 
@@ -51,6 +55,8 @@ typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NS
  *
  *  @param source     The newly-selected default source for the user.
  *  @param completion call this callback when you're done selecting the new default source for the customer on your backend. For example, `completion(nil)` (if your call succeeds) or `completion(error)` if an error is returned.
+ *
+ *  @note If you are on Swift 3, you must declare the completion block as `@escaping` or Xcode will give you a protocol conformance error. https://bugs.swift.org/browse/SR-2597
  */
 - (void)selectDefaultCustomerSource:(id<STPSource>)source completion:(STPErrorBlock)completion;
 

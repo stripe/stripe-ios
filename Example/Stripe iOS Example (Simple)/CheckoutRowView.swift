@@ -13,7 +13,7 @@ class CheckoutRowView: UIView {
 
     var loading = false {
         didSet {
-            UIView.animateWithDuration(0.3, delay: 0, options: .CurveEaseIn, animations: {
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
                 if self.loading {
                     self.activityIndicator.startAnimating()
                     self.activityIndicator.alpha = 1
@@ -42,12 +42,12 @@ class CheckoutRowView: UIView {
 
     var onTap: () -> () = {}
 
-    private let titleLabel = UILabel()
-    private let detailLabel = UILabel()
-    private let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
-    private let backgroundView = HighlightingButton()
-    private let topSeparator = UIView()
-    private let bottomSeparator = UIView()
+    fileprivate let titleLabel = UILabel()
+    fileprivate let detailLabel = UILabel()
+    fileprivate let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    fileprivate let backgroundView = HighlightingButton()
+    fileprivate let topSeparator = UIView()
+    fileprivate let bottomSeparator = UIView()
 
     convenience init(title: String, detail: String, tappable: Bool = true, theme: STPTheme) {
         self.init()
@@ -55,9 +55,9 @@ class CheckoutRowView: UIView {
         self.detail = detail
 
         self.backgroundColor = theme.secondaryBackgroundColor
-        self.backgroundView.addTarget(self, action: #selector(didTap), forControlEvents: .TouchUpInside)
+        self.backgroundView.addTarget(self, action: #selector(didTap), for: .touchUpInside)
         if !tappable {
-            self.backgroundView.userInteractionEnabled = false
+            self.backgroundView.isUserInteractionEnabled = false
             self.backgroundColor = theme.primaryBackgroundColor
         }
         self.addSubview(self.backgroundView)
@@ -66,34 +66,34 @@ class CheckoutRowView: UIView {
         self.topSeparator.backgroundColor = theme.secondaryForegroundColor
         self.addSubview(self.topSeparator)
         self.titleLabel.text = title
-        self.titleLabel.backgroundColor = UIColor.clearColor()
-        self.titleLabel.textAlignment = .Left;
+        self.titleLabel.backgroundColor = UIColor.clear
+        self.titleLabel.textAlignment = .left;
         self.titleLabel.font = theme.font
         self.titleLabel.textColor = theme.primaryForegroundColor
         self.addSubview(self.titleLabel)
         self.detailLabel.text = detail
-        self.detailLabel.backgroundColor = UIColor.clearColor()
-        self.detailLabel.textColor = UIColor.lightGrayColor()
-        self.detailLabel.textAlignment = .Right;
+        self.detailLabel.backgroundColor = UIColor.clear
+        self.detailLabel.textColor = UIColor.lightGray
+        self.detailLabel.textAlignment = .right;
         self.detailLabel.font = theme.font
         self.detailLabel.textColor = theme.secondaryForegroundColor
         self.addSubview(self.detailLabel)
         var red: CGFloat = 0
         theme.primaryBackgroundColor.getRed(&red, green: nil, blue: nil, alpha: nil)
-        self.activityIndicator.activityIndicatorViewStyle = red < 0.5 ? .White : .Gray
+        self.activityIndicator.activityIndicatorViewStyle = red < 0.5 ? .white : .gray
         self.addSubview(self.activityIndicator)
     }
 
     override func layoutSubviews() {
-        self.topSeparator.frame = CGRectMake(0, -1, CGRectGetWidth(self.bounds), 1)
+        self.topSeparator.frame = CGRect(x: 0, y: -1, width: self.bounds.width, height: 1)
         self.backgroundView.frame = self.bounds
-        self.titleLabel.frame = CGRectOffset(self.bounds, 10, 0)
-        self.detailLabel.frame = CGRectOffset(self.bounds, -10, 0)
-        self.bottomSeparator.frame = CGRectMake(0, CGRectGetMaxY(self.bounds) - 1,
-                                                CGRectGetWidth(self.bounds), 1)
-        let height = CGRectGetHeight(self.bounds)
-        self.activityIndicator.frame = CGRectMake(CGRectGetMaxX(self.bounds) - height, 0,
-                                                  height, height)
+        self.titleLabel.frame = self.bounds.offsetBy(dx: 10, dy: 0)
+        self.detailLabel.frame = self.bounds.offsetBy(dx: -10, dy: 0)
+        self.bottomSeparator.frame = CGRect(x: 0, y: self.bounds.maxY - 1,
+                                                width: self.bounds.width, height: 1)
+        let height = self.bounds.height
+        self.activityIndicator.frame = CGRect(x: self.bounds.maxX - height, y: 0,
+                                                  width: height, height: height)
     }
 
     func didTap() {

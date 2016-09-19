@@ -10,6 +10,7 @@
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
+#import "STPWebViewController.h"
 #import "STPStringUtils.h"
 
 @interface STPRememberMeTermsView()<UITextViewDelegate>
@@ -122,8 +123,12 @@ static NSString *const FooterLinkTagMoreInfo = @"infolink";
     self.textView.frame = UIEdgeInsetsInsetRect(self.bounds, self.insets);
 }
 
-- (BOOL)textView:(__unused UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(__unused NSRange)characterRange {
-    [[UIApplication sharedApplication] openURL:URL];
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
+    if (self.pushViewControllerBlock) {
+        STPWebViewController *webViewController = [[STPWebViewController alloc] initWithURL:URL 
+                                                                                      title:[textView.text substringWithRange:characterRange]];
+        self.pushViewControllerBlock(webViewController);
+    }
     return NO;
 }
 

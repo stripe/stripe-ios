@@ -12,19 +12,47 @@
 @implementation STPCardValidator
 
 + (NSString *)sanitizedNumericStringForString:(NSString *)string {
-    NSCharacterSet *set = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
-    NSArray *components = [string componentsSeparatedByCharactersInSet:set];
-    return [components componentsJoinedByString:@""] ?: @"";
+    return stringByRemovingCharactersFromSet(string, invertedAsciiDigitCharacterSet());
+}
+
+static NSCharacterSet *invertedAsciiDigitCharacterSet() {
+    static NSCharacterSet *cs;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        cs = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
+    });
+    return cs;
 }
 
 + (NSString *)stringByRemovingSpacesFromString:(NSString *)string {
     NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
-    NSArray *components = [string componentsSeparatedByCharactersInSet:set];
-    return [components componentsJoinedByString:@""];
+    return stringByRemovingCharactersFromSet(string, set);
+}
+
+static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull string, NSCharacterSet * _Nonnull cs) {
+    NSRange range = [string rangeOfCharacterFromSet:cs];
+    if (range.location != NSNotFound) {
+        NSMutableString *newString = [[string substringWithRange:NSMakeRange(0, range.location)] mutableCopy];
+        NSUInteger lastPosition = NSMaxRange(range);
+        while (lastPosition < string.length) {
+            range = [string rangeOfCharacterFromSet:cs options:0 range:NSMakeRange(lastPosition, string.length - lastPosition)];
+            if (range.location == NSNotFound) break;
+            if (range.location != lastPosition) {
+                [newString appendString:[string substringWithRange:NSMakeRange(lastPosition, range.location - lastPosition)]];
+            }
+            lastPosition = NSMaxRange(range);
+        }
+        if (lastPosition != string.length) {
+            [newString appendString:[string substringWithRange:NSMakeRange(lastPosition, string.length - lastPosition)]];
+        }
+        return newString;
+    } else {
+        return string;
+    }
 }
 
 + (BOOL)stringIsNumeric:(NSString *)string {
-    return [[self sanitizedNumericStringForString:string] isEqualToString:string];
+    return [string rangeOfCharacterFromSet:invertedAsciiDigitCharacterSet()].location == NSNotFound;
 }
 
 + (STPCardValidationState)validationStateForExpirationMonth:(NSString *)expirationMonth {

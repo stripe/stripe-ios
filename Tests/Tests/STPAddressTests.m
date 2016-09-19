@@ -50,10 +50,9 @@
     XCTAssertEqualObjects(@"US", address.country);
 }
 
-- (void)testContainsRequiredFields {
+- (void)testContainsRequiredFieldsNone {
     STPAddress *address = [STPAddress new];
     XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsNone]);
-    
     address.line1 = @"55 John St";
     address.city = @"New York";
     address.state = @"NY";
@@ -62,13 +61,80 @@
     address.phone = @"8885551212";
     address.email = @"foo@example.com";
     address.name = @"John Doe";
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsNone]);
+    address.country = @"UK";
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsNone]);
+}
 
-    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
-    address.country = nil;
-    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsFull]);
-    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
-    address.postalCode = nil;
+
+- (void)testContainsRequiredFieldsZip {
+    STPAddress *address = [STPAddress new];
+
     XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    address.country = @"IE"; //should pass for country which doesnt require zip/postal
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    address.country = @"US";
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    address.postalCode = @"10002";
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    address.postalCode = @"ABCDE";
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    address.country = @"UK"; // should pass for alphanumeric countries
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
+    address.country = nil; // nil treated as alphanumeric
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
+}
+- (void)testContainsRequiredFieldsFull {
+    STPAddress *address = [STPAddress new];
+    
+    /**
+     *  Required fields for full are:
+     *  line1, city, country, state (US only) and a valid postal code (based on country)
+     */
+    
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    address.country = @"US";
+    address.line1 = @"55 John St";
+    
+    // Fail on partial 
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    
+    address.city = @"New York";
+    
+    // For US fail if missing state or zip
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    address.state = @"NY";
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    address.postalCode = @"ABCDE";
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    //postal must be numeric for US
+    address.postalCode = @"10002";
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    address.phone = @"8885551212";
+    address.email = @"foo@example.com";
+    address.name = @"John Doe";
+    // Name/phone/email should have no effect
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    
+    // Non US countries don't require state
+    address.country = @"UK";
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    address.state = nil;
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    // alphanumeric postal ok in some countries
+    address.postalCode = @"ABCDE";
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    // UK requires ZIP
+    address.postalCode = nil;
+    XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    
+    
+    address.country = @"IE"; // Doesn't require postal or state, but allows them
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    address.postalCode = @"ABCDE";
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsFull]);
+    address.state = @"Test";
+    XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsFull]);
 }
 
 @end

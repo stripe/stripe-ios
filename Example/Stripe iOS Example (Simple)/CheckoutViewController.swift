@@ -37,11 +37,11 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     let buyButton: BuyButton
     let rowHeight: CGFloat = 44
     let productImage = UILabel()
-    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     var product = ""
     var paymentInProgress: Bool = false {
         didSet {
-            UIView.animateWithDuration(0.3, delay: 0, options: .CurveEaseIn, animations: {
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
                 if self.paymentInProgress {
                     self.activityIndicator.startAnimating()
                     self.activityIndicator.alpha = 1
@@ -68,7 +68,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         MyAPIClient.sharedClient.baseURLString = self.backendBaseURL
 
         // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
-        let config = STPPaymentConfiguration.sharedConfiguration()
+        let config = STPPaymentConfiguration.shared()
         config.publishableKey = self.stripePublishableKey
         config.appleMerchantIdentifier = self.appleMerchantID
         config.companyName = self.companyName
@@ -76,7 +76,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.additionalPaymentMethods = settings.additionalPaymentMethods
         config.smsAutofillDisabled = !settings.smsAutofillEnabled
         
-        let paymentContext = STPPaymentContext(APIAdapter: MyAPIClient.sharedClient,
+        let paymentContext = STPPaymentContext(apiAdapter: MyAPIClient.sharedClient,
                                                configuration: config,
                                                theme: settings.theme)
         let userInformation = STPUserInformation()
@@ -100,17 +100,17 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.view.backgroundColor = self.theme.primaryBackgroundColor
         var red: CGFloat = 0
         self.theme.primaryBackgroundColor.getRed(&red, green: nil, blue: nil, alpha: nil)
-        self.activityIndicator.activityIndicatorViewStyle = red < 0.5 ? .White : .Gray
+        self.activityIndicator.activityIndicatorViewStyle = red < 0.5 ? .white : .gray
         self.navigationItem.title = "Emoji Apparel"
 
-        self.productImage.font = UIFont.systemFontOfSize(70)
+        self.productImage.font = UIFont.systemFont(ofSize: 70)
         self.view.addSubview(self.totalRow)
         self.view.addSubview(self.paymentRow)
         self.view.addSubview(self.productImage)
         self.view.addSubview(self.buyButton)
         self.view.addSubview(self.activityIndicator)
         self.activityIndicator.alpha = 0
-        self.buyButton.addTarget(self, action: #selector(didTapBuy), forControlEvents: .TouchUpInside)
+        self.buyButton.addTarget(self, action: #selector(didTapBuy), for: .touchUpInside)
         self.totalRow.detail = "$\(self.paymentContext.paymentAmount/100).00"
         self.paymentRow.onTap = { [weak self] _ in
             self?.paymentContext.pushPaymentMethodsViewController()
@@ -119,16 +119,16 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let width = CGRectGetWidth(self.view.bounds)
+        let width = self.view.bounds.width
         self.productImage.sizeToFit()
-        self.productImage.center = CGPointMake(width/2.0,
-                                               CGRectGetHeight(self.productImage.bounds)/2.0 + rowHeight)
-        self.paymentRow.frame = CGRectMake(0, CGRectGetMaxY(self.productImage.frame) + rowHeight,
-                                           width, rowHeight)
-        self.totalRow.frame = CGRectMake(0, CGRectGetMaxY(self.paymentRow.frame),
-                                         width, rowHeight)
-        self.buyButton.frame = CGRectMake(0, 0, 88, 44)
-        self.buyButton.center = CGPointMake(width/2.0, CGRectGetMaxY(self.totalRow.frame) + rowHeight*1.5)
+        self.productImage.center = CGPoint(x: width/2.0,
+                                               y: self.productImage.bounds.height/2.0 + rowHeight)
+        self.paymentRow.frame = CGRect(x: 0, y: self.productImage.frame.maxY + rowHeight,
+                                           width: width, height: rowHeight)
+        self.totalRow.frame = CGRect(x: 0, y: self.paymentRow.frame.maxY,
+                                         width: width, height: rowHeight)
+        self.buyButton.frame = CGRect(x: 0, y: 0, width: 88, height: 44)
+        self.buyButton.center = CGPoint(x: width/2.0, y: self.totalRow.frame.maxY + rowHeight*1.5)
         self.activityIndicator.center = self.buyButton.center
     }
 
@@ -137,34 +137,34 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.paymentContext.requestPayment()
     }
     
-    func paymentContext(paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: STPErrorBlock) {
+    func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
         MyAPIClient.sharedClient.completeCharge(paymentResult, amount: self.paymentContext.paymentAmount,
                                                 completion: completion)
     }
     
-    func paymentContext(paymentContext: STPPaymentContext, didFinishWithStatus status: STPPaymentStatus, error: NSError?) {
+    func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
         self.paymentInProgress = false
         let title: String
         let message: String
         switch status {
-        case .Error:
+        case .error:
             title = "Error"
             message = error?.localizedDescription ?? ""
-        case .Success:
+        case .success:
             title = "Success"
             message = "You bought a \(self.product)!"
-        case .UserCancellation:
+        case .userCancellation:
             return
         }
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
         alertController.addAction(action)
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
 
     // MARK: STPPaymentContextDelegate
 
-    func paymentContextDidChange(paymentContext: STPPaymentContext) {
+    func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
         self.paymentRow.loading = paymentContext.loading
         if let paymentMethod = paymentContext.selectedPaymentMethod {
             self.paymentRow.detail = paymentMethod.label
@@ -174,21 +174,23 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         }
     }
 
-    func paymentContext(paymentContext: STPPaymentContext, didFailToLoadWithError error: NSError) {
+    func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
         let alertController = UIAlertController(
             title: "Error",
             message: error.localizedDescription,
-            preferredStyle: .Alert
+            preferredStyle: .alert
         )
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: { action in
-            self.navigationController?.popViewControllerAnimated(true)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+            // Need to assign to _ because optional binding loses @discardableResult value
+            // https://bugs.swift.org/browse/SR-1681
+            _ = self.navigationController?.popViewController(animated: true)
         })
-        let retry = UIAlertAction(title: "Retry", style: .Default, handler: { action in
+        let retry = UIAlertAction(title: "Retry", style: .default, handler: { action in
             self.paymentContext.retryLoading()
         })
         alertController.addAction(cancel)
         alertController.addAction(retry)
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
 
 }

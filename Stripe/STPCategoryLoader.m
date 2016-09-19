@@ -19,7 +19,6 @@
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "UIToolbar+Stripe_InputAccessory.h"
 #import "UITableViewCell+Stripe_Borders.h"
-#import "UIViewController+Stripe_Alerts.h"
 #import "UIViewController+Stripe_Promises.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "NSString+Stripe_CardBrands.h"
@@ -45,7 +44,6 @@
     linkPKPaymentAuthorizationViewControllerBlocksCategory();
     linkUIToolbarInputAccessoryCategory();
     linkUITableViewCellBordersCategory();
-    linkUIViewControllerAlertsCategory();
     linkUIViewControllerPromisesCategory();
     linkUIViewControllerNavigationItemProxyCategory();
     linkNSStringCardBrandsCategory();

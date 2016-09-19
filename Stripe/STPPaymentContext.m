@@ -15,7 +15,6 @@
 #import "STPPaymentMethodTuple.h"
 #import "STPPaymentContext+Private.h"
 #import "UIViewController+Stripe_Promises.h"
-#import "UIViewController+Stripe_Alerts.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "STPPaymentConfiguration+Private.h"
 #import "STPWeakStrongMacros.h"
