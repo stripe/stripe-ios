@@ -59,7 +59,7 @@ STP_EXTRA_PREPROCESSOR_MACROS = STP_STATIC_LIBRARY_BUILD
 // pointers or specific system versions before calling newer APIs.
 //
 
-IPHONEOS_DEPLOYMENT_TARGET = 7.0
+IPHONEOS_DEPLOYMENT_TARGET = 8.0
 
 
 // Other Linker Flags
