@@ -29,7 +29,6 @@
 #import "STPRememberMeTermsView.h"
 #import "UIBarButtonItem+Stripe.h"
 #import "UINavigationBar+Stripe_Theme.h"
-#import "UIViewController+Stripe_Alerts.h"
 #import "StripeError.h"
 #import "UIViewController+Stripe_Promises.h"
 #import "UIView+Stripe_FirstResponder.h"
@@ -344,25 +343,33 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 - (void)handleCheckoutTokenError:(__unused NSError *)error {
     self.loading = NO;
-    NSArray *tuples = @[
-                        [STPAlertTuple tupleWithTitle:STPLocalizedString(@"Enter card details manually", nil) style:STPAlertStyleDefault action:^{
-                            [self.paymentCell clear];
-                        }],
-                        ];
-    [self stp_showAlertWithTitle:STPLocalizedString(@"There was an error submitting your autofilled card details.", nil)
-                         message:nil
-                          tuples:tuples];
+
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:STPLocalizedString(@"There was an error submitting your autofilled card details.", nil)
+                                                                             message:nil 
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:STPLocalizedString(@"Enter card details manually", nil) 
+                                                        style:UIAlertActionStyleDefault 
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          [self.paymentCell clear];
+                                                      }]];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)handleCardTokenError:(NSError *)error {
     self.loading = NO;
     [[self firstEmptyField] becomeFirstResponder];
-    NSArray *tuples = @[
-                        [STPAlertTuple tupleWithTitle:STPLocalizedString(@"OK", nil) style:STPAlertStyleCancel action:nil],
-                        ];
-    [self stp_showAlertWithTitle:error.localizedDescription
-                         message:error.localizedFailureReason
-                          tuples:tuples];
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:error.localizedDescription
+                                                                             message:error.localizedFailureReason 
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:STPLocalizedString(@"OK", nil) 
+                                                        style:UIAlertActionStyleCancel 
+                                                      handler:nil]];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)setCheckoutAccountCard:(STPCard *)checkoutAccountCard {
