@@ -96,18 +96,11 @@
     XCTAssertTrue([itemTotalAmount isEqualToNumber:correctTotalAmount]);
 }
 
-- (void)testSummaryItems_generateAmountDecimalCurrency {
+- (void)testSummaryItems_generateAmount {
     STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
     context.paymentSummaryItems = [self testSummaryItems];
     context.paymentCurrency = @"USD";
     XCTAssertTrue(context.paymentAmount == 10000);
-}
-
-- (void)testSummaryItems_generateAmountNoDecimalCurrency {
-    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
-    context.paymentSummaryItems = [self testSummaryItems];
-    context.paymentCurrency = @"JPY";
-    XCTAssertTrue(context.paymentAmount == 100);
 }
 
 @end
