@@ -222,7 +222,9 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
 /**
  *  Inside this method, you should verify that you can ship to the given address.
  *  You should call the completion block with the results of your validation
- *  and the available shipping methods for the given address.
+ *  and the available shipping methods for the given address. If you don't implement
+ *  this method, the user won't be prompted to select a shipping method and all
+ *  addresses will be valid.
  *
  *  @note If a user updates their shipping address within the Apple Pay dialog,
  *  this address will be anonymized. For example, in the US, it will only include the
