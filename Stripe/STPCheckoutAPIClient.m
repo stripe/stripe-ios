@@ -252,7 +252,9 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
             if (account) {
                 [accountPromise succeed:account];
             } else {
-                [accountPromise fail:error ?: [self.class genericRememberMeErrorWithResponseData:data message:@"Failed to parse account response"]];
+                [accountPromise fail:error ?: [self.class genericRememberMeErrorWithResponseData:data
+                                                                                         message:STPLocalizedString(@"Failed to parse account response", 
+                                                                                                                    @"Error message for checkout account api call")]];
             }
         }] resume];
         return accountPromise;
@@ -273,7 +275,8 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
 
 + (NSError *)cancellationError {
     return [NSError errorWithDomain:StripeDomain code:STPCancellationError userInfo:@{
-      NSLocalizedDescriptionKey: STPLocalizedString(@"The operation was cancelled", nil)
+      NSLocalizedDescriptionKey: STPLocalizedString(@"The operation was cancelled", 
+                                                    @"Error message for network request being cancelled.")
                                                                                     }];
 }
 
@@ -290,7 +293,9 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
     }
     
     return [NSError errorWithDomain:StripeDomain code:code userInfo:@{
-    NSLocalizedDescriptionKey: [STPLocalizedString(@"Something went wrong with remember me: ", nil) stringByAppendingString:message]
+    NSLocalizedDescriptionKey: [NSString stringWithFormat:STPLocalizedString(@"Something went wrong with Remember Me: %@", 
+                                                                             @"Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution."),
+                                message]
     }];
 }
 

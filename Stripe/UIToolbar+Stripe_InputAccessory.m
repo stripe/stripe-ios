@@ -14,7 +14,7 @@
 + (instancetype)stp_inputAccessoryToolbarWithTarget:(id)target action:(SEL)action {
     UIToolbar *toolbar = [self new];
     UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:STPLocalizedString(@"Next", nil) style:UIBarButtonItemStyleDone target:target action:action];
+    UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithTitle:STPLocalizedString(@"Next", @"Button to move to the next text entry field") style:UIBarButtonItemStyleDone target:target action:action];
     toolbar.items = @[flexibleItem, nextItem];
     toolbar.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     return toolbar;

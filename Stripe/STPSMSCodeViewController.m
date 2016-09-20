@@ -62,7 +62,8 @@
     [super viewDidLoad];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel)];
-    self.navigationItem.title = STPLocalizedString(@"Verification Code", nil);
+    self.navigationItem.title = STPLocalizedString(@"Verification Code", 
+                                                   @"Title for SMS verification code screen");
     
     UIScrollView *scrollView = [UIScrollView new];
     [self.view addSubview:scrollView];
@@ -82,14 +83,17 @@
     
     UILabel *bottomLabel = [UILabel new];
     bottomLabel.textAlignment = NSTextAlignmentCenter;
-    bottomLabel.text = STPLocalizedString(@"Didn't receive the code?", nil);
+    bottomLabel.text = STPLocalizedString(@"Didn't receive the code?", 
+                                          @"Button on SMS verification screen if the user did not receive the SMS code.");
     bottomLabel.alpha = 0;
     [self.scrollView addSubview:bottomLabel];
     self.bottomLabel = bottomLabel;
     
     UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
     cancelButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [cancelButton setTitle:STPLocalizedString(@"Fill in your card details manually", nil) forState:UIControlStateNormal];
+    [cancelButton setTitle:STPLocalizedString(@"Fill in your card details manually", 
+                                              @"Cancel button for Remember Me SMS verification screen.") 
+                  forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(cancel) forControlEvents:UIControlEventTouchUpInside];
     cancelButton.alpha = 0;
     [self.scrollView addSubview:cancelButton];
@@ -98,21 +102,26 @@
     UILabel *errorLabel = [UILabel new];
     errorLabel.textAlignment = NSTextAlignmentCenter;
     errorLabel.alpha = 0;
-    errorLabel.text = STPLocalizedString(@"Invalid Code", nil);
+    errorLabel.text = STPLocalizedString(@"Invalid Code", 
+                                         @"Message shown when the user enters an incorrect SMS verification code.");
     [self.scrollView addSubview:errorLabel];
     self.errorLabel = errorLabel;
 
     UILabel *smsSentLabel = [UILabel new];
     smsSentLabel.textAlignment = NSTextAlignmentCenter;
     smsSentLabel.numberOfLines = 2;
-    NSString *sentString = STPLocalizedString(@"We just sent a text message to:", nil);
-    smsSentLabel.text = [NSString stringWithFormat:@"%@\n%@", sentString, [STPPhoneNumberValidator formattedRedactedPhoneNumberForString:self.redactedPhone]];
+    NSString *sentString = STPLocalizedString(@"We just sent a text message to: %@", 
+                                              @"Message shown after sending SMS verification code. The substitution is a phone number.");
+    smsSentLabel.text = [NSString stringWithFormat:sentString, 
+                         [STPPhoneNumberValidator formattedRedactedPhoneNumberForString:self.redactedPhone]];
     [self.scrollView addSubview:smsSentLabel];
     self.smsSentLabel = smsSentLabel;
     
     UIButton *pasteFromClipboardButton = [UIButton buttonWithType:UIButtonTypeSystem];
     pasteFromClipboardButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [pasteFromClipboardButton setTitle:STPLocalizedString(@"Paste copied code?", nil) forState:UIControlStateNormal];
+    [pasteFromClipboardButton setTitle:STPLocalizedString(@"Paste copied code?", 
+                                                          @"Button to paste a copied SMS code into the verification field.") 
+                              forState:UIControlStateNormal];
     [pasteFromClipboardButton addTarget:self action:@selector(pasteCodeFromClipboard) forControlEvents:UIControlEventTouchUpInside];
     pasteFromClipboardButton.alpha = 0;
     pasteFromClipboardButton.hidden = YES;
@@ -274,7 +283,8 @@
         self.loading = NO;
         BOOL tooManyTries = error.code == STPCheckoutTooManyAttemptsError;
         if (tooManyTries) {
-            self.errorLabel.text = STPLocalizedString(@"Too many incorrect attempts", nil);
+            self.errorLabel.text = STPLocalizedString(@"Too many incorrect attempts", 
+                                                      @"Error message when failing to type in SMS code for Remember me too many times.");
         }
         [codeField shakeAndClear];
         [self.hideSMSSentLabelTimer invalidate];

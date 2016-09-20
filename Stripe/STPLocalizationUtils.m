@@ -12,7 +12,7 @@
 @implementation STPLocalizationUtils
 
 + (NSString *)localizedStripeStringForKey:(NSString *)key {
-    return [[STPBundleLocator stripeResourcesBundle] localizedStringForKey:key value:@"" table:nil];
+    return [[STPBundleLocator stripeResourcesBundle] localizedStringForKey:key value:key table:nil];
 }
 
 @end
