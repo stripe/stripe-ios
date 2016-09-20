@@ -108,6 +108,11 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
         case STPFormTextFieldAutoFormattingBehaviorNone:
         case STPFormTextFieldAutoFormattingBehaviorExpiration:
             self.textFormattingBlock = nil;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+            if ([self respondsToSelector:@selector(setTextContentType:)]) {
+                self.textContentType = nil;
+            }
+#endif
             break;
         case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
             self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
@@ -133,6 +138,11 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                 }
                 return [attributedString copy];
             };
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+            if ([self respondsToSelector:@selector(setTextContentType:)]) {
+                self.textContentType = UITextContentTypeCreditCardNumber;
+            }
+#endif
             break;
         case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers: {
             WEAK(self);
@@ -145,6 +155,11 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                 NSDictionary *attributes = [[self class] attributesForAttributedString:inputString];
                 return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
             };
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+            if ([self respondsToSelector:@selector(setTextContentType:)]) {
+                self.textContentType = UITextContentTypeTelephoneNumber;
+            }
+#endif
             break;
         }
     }
