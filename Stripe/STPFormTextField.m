@@ -108,6 +108,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
         case STPFormTextFieldAutoFormattingBehaviorNone:
         case STPFormTextFieldAutoFormattingBehaviorExpiration:
             self.textFormattingBlock = nil;
+            if ([self respondsToSelector:@selector(setTextContentType:)]) {
+                self.textContentType = nil;
+            }
             break;
         case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
             self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
@@ -133,6 +136,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                 }
                 return [attributedString copy];
             };
+            if ([self respondsToSelector:@selector(setTextContentType:)]) {
+                self.textContentType = UITextContentTypeCreditCardNumber;
+            }
             break;
         case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers: {
             WEAK(self);
@@ -145,6 +151,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                 NSDictionary *attributes = [[self class] attributesForAttributedString:inputString];
                 return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
             };
+            if ([self respondsToSelector:@selector(setTextContentType:)]) {
+                self.textContentType = UITextContentTypeTelephoneNumber;
+            }
             break;
         }
     }
