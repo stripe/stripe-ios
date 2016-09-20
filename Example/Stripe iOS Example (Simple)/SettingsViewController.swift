@@ -137,21 +137,15 @@ class SettingsViewController: UITableViewController {
 
     private enum RequiredShippingAddressFields: String {
         case None = "None"
-        case Phone = "Phone"
         case Email = "Email"
-        case NameEmail = "(Name|Email)"
-        case PostalAddress = "PostalAddress"
         case PostalAddressPhone = "(PostalAddress|Phone)"
         case All = "All"
 
         init(row: Int) {
             switch row {
             case 0: self = .None
-            case 1: self = .Phone
-            case 2: self = .Email
-            case 3: self = .NameEmail
-            case 4: self = .PostalAddress
-            case 5: self = .PostalAddressPhone
+            case 1: self = .Email
+            case 2: self = .PostalAddressPhone
             default: self = .All
             }
         }
@@ -159,15 +153,7 @@ class SettingsViewController: UITableViewController {
         var pkAddressFields: PKAddressField {
             switch self {
             case .None: return []
-            case .Phone: return .phone
             case .Email: return .email
-            case .NameEmail:
-                if #available(iOS 8.3, *) {
-                    return [.name, .email]
-                } else {
-                    return [.email]
-                }
-            case .PostalAddress: return .postalAddress
             case .PostalAddressPhone: return [.postalAddress, .phone]
             case .All: return .all
             }
@@ -216,7 +202,7 @@ class SettingsViewController: UITableViewController {
         case .Theme: return 3
         case .ApplePay: return 2
         case .RequiredBillingAddressFields: return 3
-        case .RequiredShippingAddressFields: return 7
+        case .RequiredShippingAddressFields: return 4
         case .ShippingType: return 2
         case .SMSAutofill: return 2
         case .Session: return 1

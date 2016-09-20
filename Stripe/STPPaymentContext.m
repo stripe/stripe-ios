@@ -325,7 +325,13 @@
 }
 
 - (void)shippingAddressViewControllerDidCancel:(STPShippingAddressViewController *)addressViewController {
-    [self appropriatelyDismissViewController:addressViewController completion:nil];
+    [self appropriatelyDismissViewController:addressViewController completion:^{
+        if (addressViewController.isMidPaymentRequest) {
+            [self.delegate paymentContext:self
+                      didFinishWithStatus:STPPaymentStatusUserCancellation
+                                    error:nil];
+        }
+    }];
 }
 
 - (void)shippingAddressViewController:(__unused STPShippingAddressViewController *)addressViewController
@@ -502,8 +508,16 @@
     paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
     paymentRequest.requiredShippingAddressFields = self.configuration.requiredShippingAddressFields;
     paymentRequest.currencyCode = self.paymentCurrency.uppercaseString;
-    paymentRequest.shippingMethods = self.shippingMethods;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80300
+    if (self.selectedShippingMethod != nil) {
+        NSMutableArray<PKShippingMethod *>* orderedShippingMethods = [self.shippingMethods mutableCopy];
+        [orderedShippingMethods removeObject:self.selectedShippingMethod];
+        [orderedShippingMethods insertObject:self.selectedShippingMethod atIndex:0];
+        paymentRequest.shippingMethods = orderedShippingMethods;
+    }
+    else {
+        paymentRequest.shippingMethods = self.shippingMethods;
+    }
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_3
     if ([paymentRequest respondsToSelector:@selector(shippingType)]) {
         paymentRequest.shippingType = [[self class] pkShippingType:self.configuration.shippingType];;
     }
@@ -511,13 +525,22 @@
     if (self.shippingAddress != nil) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_9_0
+        if ([paymentRequest respondsToSelector:@selector(shippingContact)]) {
+            paymentRequest.shippingContact = [self.shippingAddress PKContactValue];
+        }
+        else {
+            paymentRequest.shippingAddress = [self.shippingAddress ABRecordValue];
+        }
+#else
         paymentRequest.shippingAddress = [self.shippingAddress ABRecordValue];
+#endif
 #pragma clang diagnostic pop
     }
     return paymentRequest;
 }
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80300
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_3
 + (PKShippingType)pkShippingType:(STPShippingType)shippingType {
     switch (shippingType) {
         case STPShippingTypeShipping:

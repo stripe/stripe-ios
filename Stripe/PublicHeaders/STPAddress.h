@@ -95,6 +95,7 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 - (instancetype)initWithABRecord:(ABRecordRef)record;
 - (ABRecordRef)ABRecordValue;
 #pragma clang diagnostic pop
+- (PKContact *)PKContactValue NS_AVAILABLE_IOS(9.0);
 
 - (BOOL)containsRequiredFields:(STPBillingAddressFields)requiredFields;
 - (BOOL)containsRequiredShippingAddressFields:(PKAddressField)requiredFields;
