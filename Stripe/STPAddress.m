@@ -79,19 +79,12 @@
 
 - (ABRecordRef)ABRecordValue {
     ABRecordRef record = ABPersonCreate();
-    NSArray<NSString *>*nameComponents = [self.name componentsSeparatedByString:@" "];
-    NSString *firstName = [nameComponents firstObject];
-    NSString *lastName = [self.name stringByReplacingOccurrencesOfString:firstName withString:@""];
-    lastName = [lastName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    if ([lastName length] == 0) {
-        lastName = nil;
-    }
-    if (firstName != nil) {
-        CFStringRef firstNameRef = (__bridge CFStringRef)firstName;
+    if ([self firstName] != nil) {
+        CFStringRef firstNameRef = (__bridge CFStringRef)[self firstName];
         ABRecordSetValue(record, kABPersonFirstNameProperty, firstNameRef, nil);
     }
-    if (lastName != nil) {
-        CFStringRef lastNameRef = (__bridge CFStringRef)lastName;
+    if ([self lastName] != nil) {
+        CFStringRef lastNameRef = (__bridge CFStringRef)[self lastName];
         ABRecordSetValue(record, kABPersonLastNameProperty, lastNameRef, nil);
     }
     if (self.phone != nil) {
@@ -108,14 +101,7 @@
     }
     ABMutableMultiValueRef addressRef = ABMultiValueCreateMutable(kABMultiDictionaryPropertyType);
     NSMutableDictionary *addressDict = [NSMutableDictionary dictionary];
-    NSString *street = nil;
-    if (self.line1 != nil) {
-        street = [@"" stringByAppendingString:self.line1];
-    }
-    if (self.line2 != nil) {
-        street = [@[street ?: @"", self.line2] componentsJoinedByString:@" "];
-    }
-    addressDict[(NSString *)kABPersonAddressStreetKey] = street;
+    addressDict[(NSString *)kABPersonAddressStreetKey] = [self street];
     addressDict[(NSString *)kABPersonAddressCityKey] = self.city;
     addressDict[(NSString *)kABPersonAddressStateKey] = self.state;
     addressDict[(NSString *)kABPersonAddressZIPKey] = self.postalCode;
@@ -126,6 +112,51 @@
 }
 
 #pragma clang diagnostic pop
+
+- (PKContact *)PKContactValue {
+    PKContact *contact = [PKContact new];
+    NSPersonNameComponents *name = [NSPersonNameComponents new];
+    name.givenName = [self firstName];
+    name.familyName = [self lastName];
+    contact.name = name;
+    contact.emailAddress = self.email;
+    CNMutablePostalAddress *address = [CNMutablePostalAddress new];
+    address.street = [self street];
+    address.city = self.city;
+    address.state = self.state;
+    address.postalCode = self.postalCode;
+    address.country = self.country;
+    contact.postalAddress = address;
+    contact.phoneNumber = [CNPhoneNumber phoneNumberWithStringValue:self.phone];
+    return contact;
+}
+
+- (NSString *)firstName {
+    NSArray<NSString *>*components = [self.name componentsSeparatedByString:@" "];
+    return [components firstObject];
+}
+
+- (NSString *)lastName {
+    NSArray<NSString *>*components = [self.name componentsSeparatedByString:@" "];
+    NSString *firstName = [components firstObject];
+    NSString *lastName = [self.name stringByReplacingOccurrencesOfString:firstName withString:@""];
+    lastName = [lastName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if ([lastName length] == 0) {
+        lastName = nil;
+    }
+    return lastName;
+}
+
+- (NSString *)street {
+    NSString *street = nil;
+    if (self.line1 != nil) {
+        street = [@"" stringByAppendingString:self.line1];
+    }
+    if (self.line2 != nil) {
+        street = [@[street ?: @"", self.line2] componentsJoinedByString:@" "];
+    }
+    return street;
+}
 
 - (BOOL)containsRequiredFields:(STPBillingAddressFields)requiredFields {
     BOOL containsFields = YES;

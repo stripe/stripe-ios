@@ -161,6 +161,30 @@
     XCTAssertNil(postalCode);
 }
 
+- (void)testPKContactValue {
+    STPAddress *address = [STPAddress new];
+    address.name = @"John Smith Doe";
+    address.phone = @"8885551212";
+    address.email = @"foo@example.com";
+    address.line1 = @"55 John St";
+    address.city = @"New York";
+    address.state = @"NY";
+    address.postalCode = @"10002";
+    address.country = @"US";
+
+    PKContact *contact = [address PKContactValue];
+    XCTAssertEqualObjects(contact.name.givenName, @"John");
+    XCTAssertEqualObjects(contact.name.familyName, @"Smith Doe");
+    XCTAssertEqualObjects(contact.phoneNumber.stringValue, @"8885551212");
+    XCTAssertEqualObjects(contact.emailAddress, @"foo@example.com");
+    CNPostalAddress *postalAddress = contact.postalAddress;
+    XCTAssertEqualObjects(postalAddress.street, @"55 John St");
+    XCTAssertEqualObjects(postalAddress.city, @"New York");
+    XCTAssertEqualObjects(postalAddress.state, @"NY");
+    XCTAssertEqualObjects(postalAddress.postalCode, @"10002");
+    XCTAssertEqualObjects(postalAddress.country, @"US");
+}
+
 - (void)testContainsRequiredFieldsNone {
     STPAddress *address = [STPAddress new];
     XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsNone]);
