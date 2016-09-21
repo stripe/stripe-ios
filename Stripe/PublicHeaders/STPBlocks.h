@@ -40,6 +40,9 @@ typedef void (^STPVoidBlock)();
  */
 typedef void (^STPErrorBlock)(NSError * __nullable error);
 
+// This is exposed as a workaround to make Swift properly generate headers. Don't use it in your own code - use STPErrorBlock instead (it compiles to the same thing).
+#define STPErrorBlockParameter void (^)(NSError  * _Nullable error)
+
 /**
  *  A callback to be run with a token response from the Stripe API.
  *
@@ -47,3 +50,6 @@ typedef void (^STPErrorBlock)(NSError * __nullable error);
  *  @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
  */
 typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * __nullable error);
+
+// This is exposed as a workaround to make Swift properly generate headers. Don't use it in your own code - use STPTokenCompletionBlock instead (it compiles to the same thing).
+#define STPTokenCompletionBlockParameter void (^)(STPToken * __nullable token, NSError * __nullable error)
