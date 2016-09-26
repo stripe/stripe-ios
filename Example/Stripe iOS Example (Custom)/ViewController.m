@@ -171,7 +171,7 @@
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
     
-    NSString *urlString = [BackendChargeURLString stringByAppendingPathComponent:@"charge"];
+    NSString *urlString = [BackendChargeURLString stringByAppendingPathComponent:@"charge_custom"];
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
