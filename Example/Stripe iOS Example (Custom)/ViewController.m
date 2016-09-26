@@ -47,6 +47,8 @@
 - (BOOL)applePayEnabled {
     if ([PKPaymentRequest class]) {
         PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:AppleMerchantId];
+        paymentRequest.shippingMethods = [self.shippingManager defaultShippingMethods];
+        paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:paymentRequest.shippingMethods.firstObject];
         return [Stripe canSubmitPaymentRequest:paymentRequest];
     }
     return NO;
@@ -59,11 +61,11 @@
     NSString *merchantId = AppleMerchantId;
 
     PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:merchantId];
+    [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
+    [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
+    paymentRequest.shippingMethods = [self.shippingManager defaultShippingMethods];
+    paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:paymentRequest.shippingMethods.firstObject];
     if ([Stripe canSubmitPaymentRequest:paymentRequest]) {
-        [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
-        [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
-        paymentRequest.shippingMethods = [self.shippingManager defaultShippingMethods];
-        paymentRequest.paymentSummaryItems = [self summaryItemsForShippingMethod:paymentRequest.shippingMethods.firstObject];
         PKPaymentAuthorizationViewController *auth = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
         auth.delegate = self;
         if (auth) {
