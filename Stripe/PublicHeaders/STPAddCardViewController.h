@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)addCardViewController:(STPAddCardViewController *)addCardViewController
                didCreateToken:(STPToken *)token
-                   completion:(STPErrorBlock)completion;
+                   completion:(STPErrorBlockParameter)completion;
 
 @end
 

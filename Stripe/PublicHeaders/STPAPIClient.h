@@ -81,7 +81,7 @@ static NSString *const STPSDKVersion = @"8.0.7";
  *  @param bankAccount The user's bank account details. Cannot be nil. @see https://stripe.com/docs/api#create_bank_account_token
  *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
-- (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount completion:(__nullable STPTokenCompletionBlock)completion;
+- (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount completion:(STPTokenCompletionBlockParameter)completion;
 
 @end
 
@@ -98,7 +98,7 @@ static NSString *const STPSDKVersion = @"8.0.7";
  *  @param card        The user's card details. Cannot be nil. @see https://stripe.com/docs/api#create_card_token
  *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
-- (void)createTokenWithCard:(STPCardParams *)card completion:(nullable STPTokenCompletionBlock)completion;
+- (void)createTokenWithCard:(STPCardParams *)card completion:(STPTokenCompletionBlockParameter)completion;
 
 @end
 

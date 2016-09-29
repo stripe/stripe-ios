@@ -184,7 +184,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)paymentContext:(STPPaymentContext *)paymentContext
 didCreatePaymentResult:(STPPaymentResult *)paymentResult
-            completion:(STPErrorBlock)completion;
+            completion:(STPErrorBlockParameter)completion;
 
 /**
  *  This is invoked by an `STPPaymentContext` when it is finished. This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the returned `status` and behave appropriately. For example: if it's `STPPaymentStatusSuccess`, show the user a receipt. If it's `STPPaymentStatusError`, inform the user of the error. If it's `STPPaymentStatusUserCanceled`, do nothing.
