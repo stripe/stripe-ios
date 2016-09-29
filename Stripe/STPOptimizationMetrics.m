@@ -15,22 +15,14 @@ NSString *const STPUserDefaultsKeyTotalAppOpenCount = @"STPTotalAppOpenCount";
 NSString *const STPUserDefaultsKeyTotalAppUsageDuration = @"STPTotalAppUsageDuration";
 
 @interface STPOptimizationMetrics ()
-@property (nonatomic) NSMutableDictionary *events;
 @end
 
 @implementation STPOptimizationMetrics
-
-+ (NSString *)eventNameWithClass:(Class)aClass suffix:(NSString *)suffix {
-    NSString *className = NSStringFromClass(aClass);
-    return [NSString stringWithFormat:@"%@_%@", className, suffix];
-}
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         [UIDevice currentDevice].batteryMonitoringEnabled = YES;
-        _events = [NSMutableDictionary new];
-        _smsAutofillUsed = NO;
     }
     return self;
 }
@@ -53,17 +45,6 @@ NSString *const STPUserDefaultsKeyTotalAppUsageDuration = @"STPTotalAppUsageDura
         duration += (NSInteger)[[NSDate date] timeIntervalSinceDate:self.sessionAppOpenTime];
     }
     return @(duration);
-}
-
-- (void)logEvent:(NSString *)event {
-    NSNumber *timestamp = [self timestampWithDate:[NSDate date]];
-    NSArray *times = self.events[event];
-    if (!times) {
-        self.events[event] = @[timestamp];
-    }
-    else {
-        self.events[event] = [times arrayByAddingObject:timestamp];
-    }
 }
 
 - (NSNumber *)timestampWithDate:(NSDate *)date {
@@ -92,8 +73,6 @@ NSString *const STPUserDefaultsKeyTotalAppUsageDuration = @"STPTotalAppUsageDura
     payload[@"ios_total_app_open_count"] = [self totalAppOpenCount];
     payload[@"ios_total_app_usage_duration"] = [self totalAppUsageDuration];
     payload[@"ios_session_app_open_time"] = [self timestampWithDate:self.sessionAppOpenTime];
-    payload[@"ios_sms_autofill_used"] = self.smsAutofillUsed ? @"true" : @"false";
-    payload[@"ios_events"] = self.events;
     UIDevice *device = [UIDevice currentDevice];
     NSString *version = device.systemVersion;
     if (version) {

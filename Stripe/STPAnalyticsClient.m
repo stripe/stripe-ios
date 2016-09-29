@@ -66,18 +66,6 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
                                         usingBlock:^{
                                             STPAnalyticsClient *client = [self sharedClient];
                                             [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPPaymentContext class])]];
-                                            NSString *event = [STPOptimizationMetrics eventNameWithClass:[STPPaymentContext class]
-                                                                                                  suffix:@"init"];
-                                            [client.optimizationMetrics logEvent:event];
-                                        } error:nil];
-
-        [STPPaymentContext stp_aspect_hookSelector:@selector(requestPayment)
-                                       withOptions:STPAspectPositionAfter
-                                        usingBlock:^{
-                                            STPAnalyticsClient *client = [self sharedClient];
-                                            NSString *event = [STPOptimizationMetrics eventNameWithClass:[STPPaymentContext class]
-                                                                                                  suffix:@"requestPayment"];
-                                            [client.optimizationMetrics logEvent:event];
                                         } error:nil];
 
         [STPAddCardViewController stp_aspect_hookSelector:@selector(commonInitWithConfiguration:theme:)
@@ -87,46 +75,12 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
                                                    [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPAddCardViewController class])]];
                                                } error:nil];
 
-        [STPAddCardViewController stp_aspect_hookSelector:@selector(viewDidAppear:)
-                                              withOptions:STPAspectPositionAfter
-                                               usingBlock:^{
-                                                   STPAnalyticsClient *client = [self sharedClient];
-                                                   NSString *event = [STPOptimizationMetrics eventNameWithClass:[STPAddCardViewController class]
-                                                                                                         suffix:@"viewDidAppear"];
-                                                   [client.optimizationMetrics logEvent:event];
-                                               } error:nil];
-
-        [STPAddCardViewController stp_aspect_hookSelector:@selector(smsCodeViewController:didAuthenticateAccount:)
-                                              withOptions:STPAspectPositionAfter
-                                               usingBlock:^{
-                                                   STPAnalyticsClient *client = [self sharedClient];
-                                                   client.optimizationMetrics.smsAutofillUsed = YES;
-                                               } error:nil];
-
         [STPPaymentMethodsViewController stp_aspect_hookSelector:@selector(initWithConfiguration:apiAdapter:loadingPromise:theme:delegate:)
                                                      withOptions:STPAspectPositionAfter
                                                       usingBlock:^{
                                                           STPAnalyticsClient *client = [self sharedClient];
                                                           [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPPaymentMethodsViewController class])]];
                                                       } error:nil];
-
-        [STPPaymentMethodsViewController stp_aspect_hookSelector:@selector(viewDidAppear:)
-                                                     withOptions:STPAspectPositionAfter
-                                                      usingBlock:^{
-                                                          STPAnalyticsClient *client = [self sharedClient];
-                                                          NSString *event = [STPOptimizationMetrics eventNameWithClass:[STPPaymentMethodsViewController class]
-                                                                                                                suffix:@"viewDidAppear"];
-                                                          [client.optimizationMetrics logEvent:event];
-                                                      } error:nil];
-
-        [STPSMSCodeViewController stp_aspect_hookSelector:@selector(viewDidAppear:)
-                                              withOptions:STPAspectPositionAfter
-                                               usingBlock:^{
-                                                   STPAnalyticsClient *client = [self sharedClient];
-                                                   NSString *event = [STPOptimizationMetrics eventNameWithClass:[STPSMSCodeViewController class]
-                                                                                                         suffix:@"viewDidAppear"];
-                                                   [client.optimizationMetrics logEvent:event];
-                                               } error:nil];
     });
 }
 

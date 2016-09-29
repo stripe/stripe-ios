@@ -13,13 +13,6 @@ extern NSString *const STPUserDefaultsKeyTotalAppOpenCount;
 extern NSString *const STPUserDefaultsKeyTotalAppUsageDuration;
 
 @interface STPOptimizationMetrics : NSObject
-
-+ (NSString *)eventNameWithClass:(Class)aClass suffix:(NSString *)suffix;
-
-@property (nonatomic, assign) BOOL smsAutofillUsed;
 @property (nonatomic, strong) NSDate *sessionAppOpenTime;
-
-- (void)logEvent:(NSString *)event;
 - (NSDictionary *)serialize;
-
 @end
