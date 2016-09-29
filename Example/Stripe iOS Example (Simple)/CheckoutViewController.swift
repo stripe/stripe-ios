@@ -139,7 +139,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
             self?.paymentContext.pushPaymentMethodsViewController()
         }
         self.shippingRow.onTap = { [weak self] _ in
-            self?.paymentContext.presentShippingInfoViewController()
+            self?.paymentContext.pushShippingInfoViewController()
         }
     }
 
