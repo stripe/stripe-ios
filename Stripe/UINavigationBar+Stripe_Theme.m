@@ -17,16 +17,10 @@ static NSInteger const STPNavigationBarHairlineViewTag = 787473;
 - (void)stp_setTheme:(STPTheme *)theme {
     [self stp_hairlineImageView].hidden = YES;
     [self stp_artificialHairlineView].backgroundColor = theme.tertiaryBackgroundColor;
-    self.barTintColor = theme.secondaryBackgroundColor;
+    self.barTintColor = theme.primaryBackgroundColor;
     self.tintColor = theme.accentColor;
-
-    if ([STPColorUtils colorIsBright:theme.secondaryBackgroundColor]) {
-        self.barStyle = UIBarStyleDefault;
-    }
-    else {
-        self.barStyle = UIBarStyleBlack;
-    }
-
+    self.barStyle = theme.barStyle;
+    self.translucent = theme.translucentNavigationBar;
     self.titleTextAttributes = @{
                                  NSFontAttributeName: theme.emphasisFont,
                                  NSForegroundColorAttributeName: theme.primaryForegroundColor,

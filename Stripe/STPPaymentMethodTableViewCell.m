@@ -54,6 +54,8 @@
 
 - (void)configureForNewCardRowWithTheme:(STPTheme *)theme {
     _theme = theme;
+    self.backgroundColor = [UIColor clearColor];
+    self.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
     self.leftIcon.image = [STPImageLibrary addIcon];
     self.leftIcon.tintColor = self.theme.accentColor;
     self.titleLabel.font = self.theme.font;

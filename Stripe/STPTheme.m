@@ -7,6 +7,7 @@
 //
 
 #import "STPTheme.h"
+#import "STPColorUtils.h"
 
 @interface STPTheme()
 @end
@@ -60,6 +61,10 @@ static UIFont  *STPThemeDefaultMediumFont;
         _errorColor = STPThemeDefaultErrorColor;
         _font = STPThemeDefaultFont;
         _emphasisFont = STPThemeDefaultMediumFont;
+        _translucentNavigationBar = NO;
+        // This is a sentinel value (the equivalent of nil).
+        // If unset, we return the default computed bar style
+        _barStyle = -1;
     }
     return self;
 }
@@ -124,6 +129,25 @@ static UIFont  *STPThemeDefaultMediumFont;
 
 - (UIFont *)largeFont {
     return [self.font fontWithSize:self.font.pointSize + 15];
+}
+
+- (UIBarStyle)barStyleForColor:(UIColor *)color {
+    if ([STPColorUtils colorIsBright:color]) {
+        return UIBarStyleDefault;
+    }
+    else {
+        return UIBarStyleBlack;
+    }
+}
+
+- (UIBarStyle)barStyle {
+    UIBarStyle defaultStyle = [self barStyleForColor:self.primaryBackgroundColor];
+    if (_barStyle < 0) {
+        return defaultStyle;
+    }
+    else {
+        return _barStyle;
+    }
 }
 
 - (id)copyWithZone:(__unused NSZone *)zone {
