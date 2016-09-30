@@ -10,9 +10,6 @@
 #import "STPAnalyticsClient.h"
 #import "STPPaymentConfiguration.h"
 #import "STPOptimizationMetrics.h"
-#import "STPPaymentMethodsViewController.h"
-#import "STPAddCardViewController.h"
-#import "STPSMSCodeViewController.h"
 
 @interface STPAnalyticsClient (Testing)
 + (BOOL)shouldCollectAnalytics;
@@ -34,10 +31,8 @@
     configuration.publishableKey = @"pk_123";
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
     NSInteger currentTime = (NSInteger)[[NSDate date] timeIntervalSince1970];
-    id<STPSMSCodeViewControllerDelegate> addCardVC = (id<STPSMSCodeViewControllerDelegate>)[[STPAddCardViewController alloc] initWithConfiguration:configuration theme:[STPTheme defaultTheme]];
-    [addCardVC smsCodeViewController:nil didAuthenticateAccount:nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidEnterBackgroundNotification object:nil];
-    NSDictionary *payload = [[STPAnalyticsClient sharedClient].optimizationMetrics serialize];
+    NSDictionary *payload = [[STPOptimizationMetrics sharedInstance] serialize];
     XCTAssertEqual(0, [payload[@"ios_total_app_usage_duration"] integerValue]);
     XCTAssertEqual([payload[@"ios_session_app_open_time"] integerValue], currentTime);
     XCTAssertTrue([payload[@"ios_first_app_open_time"] integerValue] <= currentTime);

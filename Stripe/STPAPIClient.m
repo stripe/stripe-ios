@@ -239,7 +239,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @implementation STPAPIClient (CreditCards)
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPTokenCompletionBlock)completion {
-    NSDictionary *metrics = [[STPAnalyticsClient sharedClient].optimizationMetrics serialize];
+    NSDictionary *metrics = [[STPOptimizationMetrics sharedInstance] serialize];
     NSData *data = [STPFormEncoder formEncodedDataForObject:card metrics:metrics];
     [self createTokenWithData:data completion:completion];
 }

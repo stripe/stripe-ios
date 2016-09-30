@@ -437,8 +437,6 @@
 		C1363BBA1D7633D800EB82B4 /* STPPaymentMethodTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C1363BB61D7633D800EB82B4 /* STPPaymentMethodTableViewCell.m */; };
 		C13DA3BA1D5955BE00D36B95 /* STPOptimizationMetrics.h in Headers */ = {isa = PBXBuildFile; fileRef = C11CFE7F1D39384300E8CAE6 /* STPOptimizationMetrics.h */; };
 		C13DA3BB1D5958E700D36B95 /* STPOptimizationMetrics.m in Sources */ = {isa = PBXBuildFile; fileRef = C11CFE801D39384300E8CAE6 /* STPOptimizationMetrics.m */; };
-		C16A4CDD1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = C16A4CDB1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.h */; };
-		C16A4CDE1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C16A4CDC1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.m */; };
 		C16F66AB1CA21BAC006A21B5 /* STPFormTextFieldTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */; };
 		C1717DB11CC00ED60009CF4A /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C17A030D1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C17A030B1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h */; };

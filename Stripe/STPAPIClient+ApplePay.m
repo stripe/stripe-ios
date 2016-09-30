@@ -19,7 +19,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 @implementation STPAPIClient (ApplePay)
 
 - (void)createTokenWithPayment:(PKPayment *)payment completion:(STPTokenCompletionBlock)completion {
-    NSDictionary *metrics = [[STPAnalyticsClient sharedClient].optimizationMetrics serialize];
+    NSDictionary *metrics = [[STPOptimizationMetrics sharedInstance] serialize];
     NSData *data = [self.class formEncodedDataForPayment:payment metrics: metrics];
     [self createTokenWithData:data
                    completion:completion];

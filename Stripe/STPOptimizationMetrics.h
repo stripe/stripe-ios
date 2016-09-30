@@ -8,11 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString *const STPUserDefaultsKeyFirstAppOpenTime;
-extern NSString *const STPUserDefaultsKeyTotalAppOpenCount;
-extern NSString *const STPUserDefaultsKeyTotalAppUsageDuration;
-
 @interface STPOptimizationMetrics : NSObject
-@property (nonatomic, strong) NSDate *sessionAppOpenTime;
++ (instancetype)sharedInstance;
 - (NSDictionary *)serialize;
 @end

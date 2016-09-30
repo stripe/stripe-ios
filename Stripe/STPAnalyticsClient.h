@@ -8,12 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@class STPPaymentConfiguration, STPToken, STPOptimizationMetrics;
+@class STPPaymentConfiguration, STPToken;
 @protocol STPFormEncodable;
 
 @interface STPAnalyticsClient : NSObject
-
-@property (nonatomic) STPOptimizationMetrics *optimizationMetrics;
 
 + (instancetype)sharedClient;
 

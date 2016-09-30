@@ -11,8 +11,13 @@
 #import "NSBundle+Stripe_AppName.h"
 #import "Stripe.h"
 #import "STPAnalyticsClient.h"
+#import "STPOptimizationMetrics.h"
 
 @implementation STPPaymentConfiguration
+
++ (void)initialize {
+    [STPAnalyticsClient initializeIfNeeded];
+}
 
 + (instancetype)sharedConfiguration {
     static STPPaymentConfiguration *sharedConfiguration;
@@ -26,7 +31,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        __unused STPAnalyticsClient *client = [STPAnalyticsClient sharedClient];
+        __unused STPOptimizationMetrics *metrics = [STPOptimizationMetrics sharedInstance];
         _additionalPaymentMethods = STPPaymentMethodTypeAll;
         _requiredBillingAddressFields = STPBillingAddressFieldsNone;
         _companyName = [NSBundle stp_applicationName];

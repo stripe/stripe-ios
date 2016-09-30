@@ -15,16 +15,66 @@ NSString *const STPUserDefaultsKeyTotalAppOpenCount = @"STPTotalAppOpenCount";
 NSString *const STPUserDefaultsKeyTotalAppUsageDuration = @"STPTotalAppUsageDuration";
 
 @interface STPOptimizationMetrics ()
+@property (nonatomic) NSDate *sessionAppOpenTime;
+@property (nonatomic) NSDate *lastAppActiveTime;
 @end
 
 @implementation STPOptimizationMetrics
+
++ (instancetype)sharedInstance {
+    static id sharedClient;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedClient = [self new];
+    });
+    return sharedClient;
+}
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         [UIDevice currentDevice].batteryMonitoringEnabled = YES;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)reset {
+    self.lastAppActiveTime = nil;
+    self.sessionAppOpenTime = nil;
+}
+
+- (void)applicationDidBecomeActive {
+    NSDate *currentTime = [NSDate date];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    if (![userDefaults objectForKey:STPUserDefaultsKeyFirstAppOpenTime]) {
+        [userDefaults setObject:currentTime forKey:STPUserDefaultsKeyFirstAppOpenTime];
+    }
+    NSInteger totalAppOpenCount = [userDefaults integerForKey:STPUserDefaultsKeyTotalAppOpenCount];
+    [userDefaults setInteger:(totalAppOpenCount + 1) forKey:STPUserDefaultsKeyTotalAppOpenCount];
+    NSTimeInterval threshold = 60*5;
+    if (self.lastAppActiveTime == nil || [currentTime timeIntervalSinceDate:self.lastAppActiveTime] > threshold) {
+        [self reset];
+        self.sessionAppOpenTime = currentTime;
+    }
+    [userDefaults synchronize];
+    self.lastAppActiveTime = currentTime;
+}
+
+- (void)applicationDidEnterBackground {
+    if (!self.lastAppActiveTime) {
+        return;
+    }
+    NSInteger seconds = (NSInteger)[[NSDate date] timeIntervalSinceDate:self.lastAppActiveTime];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSInteger usageDuration = [userDefaults integerForKey:STPUserDefaultsKeyTotalAppUsageDuration];
+    [userDefaults setInteger:(usageDuration + seconds) forKey:STPUserDefaultsKeyTotalAppUsageDuration];
+    [userDefaults synchronize];
 }
 
 - (NSDate *)firstAppOpenTime {

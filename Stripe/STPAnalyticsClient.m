@@ -23,8 +23,6 @@
 #import "STPPaymentMethodsViewController.h"
 #import "STPPaymentMethodsViewController+Private.h"
 #import "STPAPIClient+ApplePay.h"
-#import "STPOptimizationMetrics.h"
-#import "STPSMSCodeViewController.h"
 
 static BOOL STPAnalyticsCollectionDisabled = NO;
 
@@ -32,7 +30,6 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
 
 @property (nonatomic) NSSet *apiUsage;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
-@property (nonatomic) NSDate *lastAppActiveTime;
 
 @end
 
@@ -67,14 +64,15 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
                                             STPAnalyticsClient *client = [self sharedClient];
                                             [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPPaymentContext class])]];
                                         } error:nil];
-
+        
+        
         [STPAddCardViewController stp_aspect_hookSelector:@selector(commonInitWithConfiguration:theme:)
                                               withOptions:STPAspectPositionAfter
                                                usingBlock:^{
                                                    STPAnalyticsClient *client = [self sharedClient];
                                                    [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPAddCardViewController class])]];
                                                } error:nil];
-
+        
         [STPPaymentMethodsViewController stp_aspect_hookSelector:@selector(initWithConfiguration:apiAdapter:loadingPromise:theme:delegate:)
                                                      withOptions:STPAspectPositionAfter
                                                       usingBlock:^{
@@ -108,43 +106,8 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         _urlSession = [NSURLSession sessionWithConfiguration:config];
         _apiUsage = [NSSet set];
-        _optimizationMetrics = [STPOptimizationMetrics new];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)applicationDidBecomeActive {
-    NSDate *currentTime = [NSDate date];
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if (![userDefaults objectForKey:STPUserDefaultsKeyFirstAppOpenTime]) {
-        [userDefaults setObject:currentTime forKey:STPUserDefaultsKeyFirstAppOpenTime];
-    }
-    NSInteger totalAppOpenCount = [userDefaults integerForKey:STPUserDefaultsKeyTotalAppOpenCount];
-    [userDefaults setInteger:(totalAppOpenCount + 1) forKey:STPUserDefaultsKeyTotalAppOpenCount];
-    NSTimeInterval threshold = 60*5;
-    if (self.lastAppActiveTime == nil || [currentTime timeIntervalSinceDate:self.lastAppActiveTime] > threshold) {
-        self.optimizationMetrics = [STPOptimizationMetrics new];
-        self.optimizationMetrics.sessionAppOpenTime = currentTime;
-    }
-    [userDefaults synchronize];
-    self.lastAppActiveTime = currentTime;
-}
-
-- (void)applicationDidEnterBackground {
-    if (!self.lastAppActiveTime) {
-        return;
-    }
-    NSInteger seconds = (NSInteger)[[NSDate date] timeIntervalSinceDate:self.lastAppActiveTime];
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSInteger usageDuration = [userDefaults integerForKey:STPUserDefaultsKeyTotalAppUsageDuration];
-    [userDefaults setInteger:(usageDuration + seconds) forKey:STPUserDefaultsKeyTotalAppUsageDuration];
-    [userDefaults synchronize];
 }
 
 - (void)logRememberMeConversion:(BOOL)selected {
