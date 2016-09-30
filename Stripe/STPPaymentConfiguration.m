@@ -31,6 +31,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        // register for becomeActive/enterBackground notifications
         __unused STPOptimizationMetrics *metrics = [STPOptimizationMetrics sharedInstance];
         _additionalPaymentMethods = STPPaymentMethodTypeAll;
         _requiredBillingAddressFields = STPBillingAddressFieldsNone;
