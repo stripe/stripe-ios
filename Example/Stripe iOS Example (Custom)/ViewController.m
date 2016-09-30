@@ -173,11 +173,11 @@
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
     
-    NSString *urlString = [BackendChargeURLString stringByAppendingPathComponent:@"charge"];
+    NSString *urlString = [BackendChargeURLString stringByAppendingPathComponent:@"charge_card"];
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
-    NSString *postBody = [NSString stringWithFormat:@"stripeToken=%@&amount=%@", token.tokenId, @1000];
+    NSString *postBody = [NSString stringWithFormat:@"stripe_token=%@&amount=%@", token.tokenId, @1000];
     NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
     
     NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
