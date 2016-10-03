@@ -33,13 +33,13 @@
     NSInteger currentTime = (NSInteger)[[NSDate date] timeIntervalSince1970];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidEnterBackgroundNotification object:nil];
     NSDictionary *payload = [[STPOptimizationMetrics sharedInstance] serialize];
-    XCTAssertEqual(0, [payload[@"ios_total_app_usage_duration"] integerValue]);
-    XCTAssertEqual([payload[@"ios_session_app_open_time"] integerValue], currentTime);
-    XCTAssertTrue([payload[@"ios_first_app_open_time"] integerValue] <= currentTime);
-    XCTAssertTrue([payload[@"ios_total_app_open_count"] integerValue] >= 1);
-    XCTAssertNotNil(payload[@"ios_os_version"]);
-    XCTAssertNotNil(payload[@"ios_device_type"]);
-    XCTAssertNotNil(payload[@"ios_battery_status"]);
+    XCTAssertEqual(0, [payload[@"total_app_usage_duration"] integerValue]);
+    XCTAssertEqual([payload[@"session_app_open_time"] integerValue], currentTime);
+    XCTAssertTrue([payload[@"first_app_open_time"] integerValue] <= currentTime);
+    XCTAssertTrue([payload[@"total_app_open_count"] integerValue] >= 1);
+    XCTAssertNotNil(payload[@"os_version"]);
+    XCTAssertNotNil(payload[@"device_type"]);
+    XCTAssertNotNil(payload[@"battery_status"]);
 }
 
 @end

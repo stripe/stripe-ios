@@ -31,9 +31,7 @@ FOUNDATION_EXPORT NSString * STPQueryStringFromParameters(NSDictionary *paramete
     NSString *rootObjectName = [object.class rootObjectName];
     NSDictionary *dict = rootObjectName != nil ? @{ rootObjectName: keyPairs } : keyPairs;
     NSMutableDictionary *mutableDict = [dict mutableCopy];
-    if (metrics != nil) {
-        [mutableDict addEntriesFromDictionary:metrics];
-    }
+    mutableDict[@"ios_attrs"] = metrics;
     return [self formEncodedDataForDictionary:mutableDict];
 }
 

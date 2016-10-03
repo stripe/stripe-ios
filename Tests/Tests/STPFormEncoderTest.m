@@ -135,7 +135,7 @@
                               };
     NSData *encoded = [STPFormEncoder formEncodedDataForObject:testObject metrics:metrics];
     NSString *string = [[[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding] stringByRemovingPercentEncoding];
-    XCTAssertEqualObjects(string, @"baz=qux&foo=bar&test_object[test_property]=success");
+    XCTAssertEqualObjects(string, @"ios_attrs[baz]=qux&ios_attrs[foo]=bar&test_object[test_property]=success");
 }
 
 - (void)testQueryStringFromParameters {

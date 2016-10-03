@@ -91,7 +91,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
         dictionary[@"pk_token_transaction_id"] = transactionIdentifier;
     }
 
-    [dictionary addEntriesFromDictionary:metrics];
+    dictionary[@"ios_attrs"] = metrics;
 
     return [STPFormEncoder formEncodedDataForDictionary:dictionary];
 }
