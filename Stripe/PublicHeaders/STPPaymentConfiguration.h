@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  An `STPPaymentConfiguration` represents all the options you can set or change
  around a payment. 
  
- You provide an `STPPaymentConfiguration` method to your `STPPaymentContext` 
+ You provide an `STPPaymentConfiguration` object to your `STPPaymentContext` 
  when making a charge. The configuration generally has settings that
  will not change from payment to payment and thus is reusable, while the context 
  is specific to a single particular payment instance.
