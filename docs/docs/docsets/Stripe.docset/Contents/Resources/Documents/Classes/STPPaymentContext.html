@@ -95,6 +95,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentContext.html">STPPaymentContext</a>
               </li>
               <li class="nav-group-task">
@@ -249,7 +252,7 @@
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="kt">APIAdapter</span> <span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -281,13 +284,13 @@
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span>
 <span class="nf">initWithAPIAdapter</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">apiAdapter</span>
-     <span class="nf">configuration</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">STPPaymentConfiguration</span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span>
+     <span class="nf">configuration</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span>
              <span class="nf">theme</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">theme</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="kt">APIAdapter</span> <span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt">STPPaymentConfiguration</span><span class="p">,</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -403,12 +406,12 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">STPPaymentConfiguration</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">configuration</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">configuration</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt">STPPaymentConfiguration</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -539,8 +542,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentContextDelegate.html">STPPaymentContextDelegate</a></span><span class="o">&gt;</span> <span class="n">delegate</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentContextDelegate.html">STPPaymentContextDelegate</a></span><span class="o">&gt;</span>
+    <span class="n">delegate</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -610,8 +613,8 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="o">&gt;</span> <span class="n">selectedPaymentMethod</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="o">&gt;</span>
+    <span class="n">selectedPaymentMethod</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -757,8 +760,8 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>If you support Apple Pay, you can optionally set the PKPaymentSummaryItems you want to display here instead of using <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code>
-  If not set, a single summary item will be automatically generated using <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code> and your companyName.
+                        <p>If you support Apple Pay, you can optionally set the PKPaymentSummaryItems you want to display here instead of using <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code>. Note that the grand total (the amount of the last summary item) must be greater than zero.
+  If not set, a single summary item will be automatically generated using <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code> and your configuration&rsquo;s <code>companyName</code>.
   - see: PKPaymentRequest for more information</p>
 
 <div class="aside aside-note">
@@ -976,7 +979,7 @@ The default value is <code>UIModalPresentationFullScreen</code>.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2016 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2016-09-14)</p>
+      <p>&copy; 2016 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2016-10-04)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
