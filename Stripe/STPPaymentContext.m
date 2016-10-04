@@ -19,6 +19,7 @@
 #import "STPPaymentConfiguration+Private.h"
 #import "STPWeakStrongMacros.h"
 #import "STPPaymentContextAmountModel.h"
+#import "STPThreeDSecureContext.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -39,6 +40,8 @@
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 
 @property(nonatomic)STPPaymentContextAmountModel *paymentAmountModel;
+
+@property(nonatomic)STPThreeDSecureContext *inProgressThreeDSecureContext;
 
 @end
 
@@ -287,14 +290,46 @@
             [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
         }
         else if ([self.selectedPaymentMethod isKindOfClass:[STPCard class]]) {
-            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(STPCard *)self.selectedPaymentMethod];
-            [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
-                if (error) {
-                    [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
-                } else {
-                    [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
-                }
-            }];
+            if ([self.configuration.threeDSecureConfiguration shouldRequestThreeDSecureForCard:(STPCard *)self.selectedPaymentMethod]) {
+                // TODO: throw up a loading spinner
+                
+                STPThreeDSecureParams *params = [STPThreeDSecureParams new];
+                params.paymentAmount = self.paymentAmount;
+                params.paymentCurrency = self.paymentCurrency;
+                params.cardId = [(STPCard *)self.selectedPaymentMethod cardId];
+                
+                STPThreeDSecureContext *threeDSecureContext = [[STPThreeDSecureContext alloc] initWithAPIAdapter:self.apiAdapter
+                                                                                                   configuration:self.configuration.threeDSecureConfiguration];
+                self.inProgressThreeDSecureContext = threeDSecureContext;
+                [threeDSecureContext startThreeDSecureFlowWithParams:params
+                                            presentingViewController:self.hostViewController
+                                                          completion:^(STPThreeDSecure * _Nullable threeDSecure, BOOL succeeded, NSError * _Nullable error) {
+                                                              if (!succeeded || error) {
+                                                                  [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
+                                                              }
+                                                              else {
+                                                                  STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:threeDSecure];
+                                                                  [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable paymentResultError) {
+                                                                      if (error) {
+                                                                          [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:paymentResultError];
+                                                                      } else {
+                                                                          [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+                                                                      }
+                                                                  }];
+                                                                  
+                                                              }
+                                                          }];
+            }
+            else {
+                STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(STPCard *)self.selectedPaymentMethod];
+                [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
+                    if (error) {
+                        [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
+                    } else {
+                        [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+                    }
+                }]; 
+            }
         }
         else if ([self.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
@@ -382,5 +417,3 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
 }
 
 @end
-
-

@@ -149,6 +149,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+
 /**
  *  Implement `STPPaymentContextDelegate` to get notified when a payment context changes, finishes, encounters errors, etc. In practice, if your app has a "checkout screen view controller", that is a good candidate to implement this protocol.
  */
@@ -172,6 +174,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param paymentContext the payment context that changed
  */
 - (void)paymentContextDidChange:(STPPaymentContext *)paymentContext;
+
 
 /**
  *  Inside this method, you should make a call to your backend API to make a charge with that Customer + source, and invoke the `completion` block when that is done.

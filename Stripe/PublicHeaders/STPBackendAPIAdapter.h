@@ -16,6 +16,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class STPCard, STPToken;
+@class STPThreeDSecure, STPThreeDSecureParams;
 
 /**
  *  Call this block after you're done fetching a customer on your server. You can use the `STPCustomerDeserializer` class to convert a JSON response into an `STPCustomer` object.
@@ -24,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param error        any error that occurred while communicating with your server, or nil if your call succeeded
  */
 typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NSError * __nullable error);
+
+typedef void (^STPThreeDSecureCompletionBlock)(STPThreeDSecure * __nullable threeDSecure, NSError * __nullable error);
 
 /**
  *  You should make your application's API client conform to this interface in order to use it with an `STPPaymentContext`. It provides a "bridge" from the prebuilt UI we expose (such as `STPPaymentMethodsViewController`) to your backend to fetch the information it needs to power those views. To read about how to implement this protocol, see https://stripe.com/docs/mobile/ios#prepare-your-api . To see examples of implementing these APIs, see MyAPIClient.swift in our example project and https://github.com/stripe/example-ios-backend .
@@ -59,6 +62,12 @@ typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NS
  *  @note If you are on Swift 3, you must declare the completion block as `@escaping` or Xcode will give you a protocol conformance error. https://bugs.swift.org/browse/SR-2597
  */
 - (void)selectDefaultCustomerSource:(id<STPSource>)source completion:(STPErrorBlock)completion;
+
+@optional
+
+- (void)createThreeDSecureWithParams:(STPThreeDSecureParams *)params
+                           returnUrl:(NSString *)returnUrl
+                          completion:(STPThreeDSecureCompletionBlock)completion;
 
 @end
 

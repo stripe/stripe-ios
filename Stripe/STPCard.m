@@ -22,7 +22,7 @@
 @property (nonatomic, readwrite) NSString *fingerprint;
 @property (nonatomic, readwrite) NSString *country;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
-
+@property (nonatomic, readwrite) STPCardThreeDSecureSupportType threeDSecureSupport;
 @end
 
 @implementation STPCard
@@ -82,11 +82,25 @@
     }
 }
 
++ (STPCardThreeDSecureSupportType)threeDSecureSupportTypeFromString:(NSString *)string {
+    NSString *status = string.lowercaseString;
+    if ([status isEqualToString:@"required"]) {
+        return STPCardThreeDSecureSupportTypeRequired;
+    }
+    else if ([status isEqualToString:@"optional"]) {
+        return STPCardThreeDSecureSupportTypeOptional;
+    }
+    else {
+        return STPCardThreeDSecureSupportTypeNone;
+    }
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
         _brand = STPCardBrandUnknown;
         _funding = STPCardFundingTypeOther;
+        _threeDSecureSupport = STPCardThreeDSecureSupportTypeNone;
     }
 
     return self;
@@ -172,7 +186,7 @@
     card.addressState = dict[@"address_state"];
     card.addressZip = dict[@"address_zip"];
     card.addressCountry = dict[@"address_country"];
-    
+    card.threeDSecureSupport = [self threeDSecureSupportTypeFromString:dict[@"three_d_secure"][@"supported"]];
     card.allResponseFields = dict;
     return card;
 }

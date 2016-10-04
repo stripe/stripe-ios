@@ -13,6 +13,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class STPThreeDSecureConfiguration;
+
+
 @interface STPPaymentConfiguration : NSObject<NSCopying>
 
 + (instancetype)sharedConfiguration;
@@ -46,6 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
  *  When entering their payment information, users who have a saved card with Stripe will be prompted to autofill it by entering an SMS code. Set this property to `YES` to disable this feature. The user won't receive an SMS code even if they have their payment information stored with Stripe, and won't be prompted to save it if they don't.
  */
 @property(nonatomic)BOOL smsAutofillDisabled;
+
+
+@property(nonatomic, strong) STPThreeDSecureConfiguration *threeDSecureConfiguration;
 
 @end
 

@@ -26,6 +26,12 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
     STPCardFundingTypeOther,
 };
 
+typedef NS_ENUM(NSInteger, STPCardThreeDSecureSupportType) {
+    STPCardThreeDSecureSupportTypeNone,
+    STPCardThreeDSecureSupportTypeOptional,
+    STPCardThreeDSecureSupportTypeRequired,
+};
+
 /**
  *  Representation of a user's credit card details that have been tokenized with the Stripe API. @see https://stripe.com/docs/api#cards
  */
@@ -67,6 +73,8 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
  *  @return an enum value mapped to that string. If the string is unrecognized, returns `STPCardFundingTypeOther`.
  */
 + (STPCardFundingType)fundingFromString:(NSString *)string;
+
++ (STPCardThreeDSecureSupportType)threeDSecureSupportTypeFromString:(NSString *)string;
 
 /**
  *  The last 4 digits of the card.
@@ -145,6 +153,8 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
  *  This is only applicable when tokenizing debit cards to issue payouts to managed accounts. You should not set it otherwise. The card can then be used as a transfer destination for funds in this currency.
  */
 @property (nonatomic, copy, nullable) NSString *currency;
+
+@property (nonatomic, readonly) STPCardThreeDSecureSupportType threeDSecureSupport;
 
 #pragma mark - deprecated properties
 

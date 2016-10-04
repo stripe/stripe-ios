@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class STPToken;
+@class STPThreeDSecure;
 
 /**
  *  An enum representing the status of a payment requested from the user.
@@ -47,3 +48,11 @@ typedef void (^STPErrorBlock)(NSError * __nullable error);
  *  @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
  */
 typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * __nullable error);
+
+/**
+ *  A callback to be run with a 3D Secure response from the Stripe API.
+ *
+ *  @param token The Stripe token from the response. Will be nil if an error occurs. @see STPThreeDSecure
+ *  @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
+ */
+typedef void (^STPThreeDSecureCompletionBlock)(STPThreeDSecure * __nullable token, NSError * __nullable error);
