@@ -39,18 +39,20 @@ FOUNDATION_EXPORT NSString * __nonnull const STPErrorParameterKey;
 
 #pragma mark STPCardErrorCodeKeys
 
+typedef NSString *STPCardErrorCode NS_STRING_ENUM;
+
 // (Usually determined locally:)
-FOUNDATION_EXPORT NSString * __nonnull const STPInvalidNumber;
-FOUNDATION_EXPORT NSString * __nonnull const STPInvalidExpMonth;
-FOUNDATION_EXPORT NSString * __nonnull const STPInvalidExpYear;
-FOUNDATION_EXPORT NSString * __nonnull const STPInvalidCVC;
+FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPInvalidNumber;
+FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPInvalidExpMonth;
+FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPInvalidExpYear;
+FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPInvalidCVC;
 
 // (Usually sent from the server:)
-FOUNDATION_EXPORT NSString * __nonnull const STPIncorrectNumber;
-FOUNDATION_EXPORT NSString * __nonnull const STPExpiredCard;
-FOUNDATION_EXPORT NSString * __nonnull const STPCardDeclined;
-FOUNDATION_EXPORT NSString * __nonnull const STPProcessingError;
-FOUNDATION_EXPORT NSString * __nonnull const STPIncorrectCVC;
+FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectNumber;
+FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPExpiredCard;
+FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPCardDeclined;
+FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPProcessingError;
+FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectCVC;
 
 
 @interface NSError(Stripe)
