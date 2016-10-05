@@ -13,8 +13,13 @@
  */
 FOUNDATION_EXPORT NSString * __nonnull const StripeDomain;
 
+#if __has_attribute(ns_error_domain)
+// NS_ERROR_ENUM has not been defined yet: https://twitter.com/bjhomer/status/775571745197535232
 typedef enum STPError: NSInteger STPErrorCode;
 enum __attribute__((ns_error_domain(StripeDomain))) STPErrorCode: NSInteger {
+#else
+typedef NS_ENUM(NSInteger, STPErrorCode) {
+#endif
     STPConnectionError = 40,     // Trouble connecting to Stripe.
     STPInvalidRequestError = 50, // Your request had invalid parameters.
     STPAPIError = 60,            // General-purpose API error (should be rare).
@@ -39,7 +44,11 @@ FOUNDATION_EXPORT NSString * __nonnull const STPErrorParameterKey;
 
 #pragma mark STPCardErrorCodeKeys
 
-typedef NSString *STPCardErrorCode NS_STRING_ENUM;
+typedef NSString * STPCardErrorCode
+#ifdef NS_STRING_ENUM
+NS_STRING_ENUM
+#endif
+;
 
 // (Usually determined locally:)
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPInvalidNumber;
