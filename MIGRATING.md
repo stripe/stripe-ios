@@ -1,5 +1,9 @@
 ## Migration Guides
 
+### Migrating from versions < 9.0
+
+Version 9.0 drops support for iOS 7.x and Xcode 7.x. If you need to support iOS or Xcode versions below 8.0, the last compatible Stripe SDK release is version 8.0.7.
+
 ### Migrating from versions < 6.0
 
 6.0 moves most of the contents of `STPCard` into a new class, `STPCardParams`, which represents a request to the Stripe API. `STPCard` now only refers to responses from the Stripe API. Most apps should be able to simply replace all usage of `STPCard` with `STPCardParams` - you should only use `STPCard` if you're dealing with an API response, e.g. a card attached to an `STPToken`. This renaming has been done in a way that will avoid breaking changes, although using `STPCard`s to make requests to the Stripe API will produce deprecation warnings.

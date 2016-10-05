@@ -95,6 +95,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentContext.html">STPPaymentContext</a>
               </li>
               <li class="nav-group-task">
@@ -244,7 +247,7 @@
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">defaultTheme</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">STPTheme</span><span class="o">!</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="err">`</span><span class="k">default</span><span class="err">`</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">STPTheme</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -606,6 +609,79 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:objc(cs)STPTheme(py)barStyle"></a>
+                    <a name="//apple_ref/objc/Property/barStyle" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)barStyle">barStyle</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The navigation bar style to use for any view controllers presented modally
+by the SDK. The default value will be determined based on the brightness
+of the theme&rsquo;s <code><a href="../Classes/STPTheme.html#/c:objc(cs)STPTheme(py)primaryBackgroundColor">primaryBackgroundColor</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIBarStyle</span> <span class="n">barStyle</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">barStyle</span><span class="p">:</span> <span class="kt">Int32</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L83">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPTheme(py)translucentNavigationBar"></a>
+                    <a name="//apple_ref/objc/Property/translucentNavigationBar" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPTheme(py)translucentNavigationBar">translucentNavigationBar</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A Boolean value indicating whether the navigation bar for any view controllers
+presented modally by the SDK should be translucent. The default value is NO.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">translucentNavigationBar</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">translucentNavigationBar</span><span class="p">:</span> <span class="kt">Int32</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L89">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:objc(cs)STPTheme(py)smallFont"></a>
                     <a name="//apple_ref/objc/Property/smallFont" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)STPTheme(py)smallFont">smallFont</a>
@@ -633,7 +709,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L81">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L94">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -668,7 +744,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L86">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPTheme.h#L99">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -681,7 +757,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2016 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2016-09-14)</p>
+      <p>&copy; 2016 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2016-10-04)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

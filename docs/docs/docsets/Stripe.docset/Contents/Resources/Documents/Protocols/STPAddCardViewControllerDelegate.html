@@ -95,6 +95,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentContext.html">STPPaymentContext</a>
               </li>
               <li class="nav-group-task">
@@ -245,7 +248,7 @@
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">addCardViewControllerDidCancel</span><span class="p">(</span><span class="nv">addCardViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">addCardViewControllerDidCancel</span><span class="p">(</span><span class="n">_</span> <span class="nv">addCardViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -290,6 +293,12 @@
                       <div class="abstract">
                         <p>This is called when the user successfully adds a card and tokenizes it with Stripe. You should send the token to your backend to store it on a customer, and then call the provided <code>completion</code> block when that call is finished. If an error occurred while talking to your backend, call <code>completion(error)</code>, otherwise, dismiss (or pop) the view controller.</p>
 
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>If you are on Swift 3, you must declare the completion block as <code>@escaping</code> or Xcode will give you a protocol conformance error. <a href="https://bugs.swift.org/browse/SR-2597">https://bugs.swift.org/browse/SR-2597</a></p>
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -303,7 +312,7 @@
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">addCardViewController</span><span class="p">(</span><span class="nv">addCardViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></span><span class="p">,</span> <span class="n">didCreateToken</span> <span class="nv">token</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPToken.html">STPToken</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">addCardViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">addCardViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a></span><span class="p">,</span> <span class="n">didCreateToken</span> <span class="nv">token</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPToken.html">STPToken</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -354,7 +363,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddCardViewController.h#L77-L79">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddCardViewController.h#L79-L81">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -367,7 +376,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2016 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2016-09-14)</p>
+      <p>&copy; 2016 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2016-10-04)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
