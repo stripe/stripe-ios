@@ -13,7 +13,8 @@
  */
 FOUNDATION_EXPORT NSString * __nonnull const StripeDomain;
 
-typedef NS_ENUM(NSInteger, STPErrorCode) {
+typedef enum STPError: NSInteger STPErrorCode;
+enum __attribute__((ns_error_domain(StripeDomain))) STPErrorCode: NSInteger {
     STPConnectionError = 40,     // Trouble connecting to Stripe.
     STPInvalidRequestError = 50, // Your request had invalid parameters.
     STPAPIError = 60,            // General-purpose API error (should be rare).
