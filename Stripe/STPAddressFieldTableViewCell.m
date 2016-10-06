@@ -172,6 +172,21 @@
     self.textField.accessibilityLabel = self.captionLabel.text;
 }
 
++ (NSString *)stateFieldCaptionForCountryCode:(NSString *)countryCode {
+    if ([countryCode isEqualToString:@"US"]) {
+        return STPLocalizedString(@"State", @"Caption for State field on address form (regions that use state only, like united states)");
+    }
+    else if ([countryCode isEqualToString:@"CA"]) {
+        return STPLocalizedString(@"Province", @"Caption for Province field on address form (regions that use province only, like canada)");
+    }
+    else if ([countryCode isEqualToString:@"GB"]) {
+        return STPLocalizedString(@"County", @"Caption for County field on address form (regions that use county only, like united kingdom)");
+    }
+    else  {
+        return STPLocalizedString(@"State / Province / Region", @"Caption for generalized state/province/region field on address form (not tied to a specific country's format)");
+    }
+}
+
 - (NSString *)captionForAddressField:(STPAddressFieldType)addressFieldType {
     switch (addressFieldType) {
         case STPAddressFieldTypeName:
@@ -183,9 +198,7 @@
         case STPAddressFieldTypeCity:
             return STPLocalizedString(@"City", @"Caption for City field on address form");
         case STPAddressFieldTypeState:
-            return ([self countryCodeIsUnitedStates] 
-                    ? STPLocalizedString(@"State", @"Caption for State field on address form (US region only)")
-                    : STPLocalizedString(@"County", @"Caption for County field on address form (non-US regions only)"));
+            return [[self class] stateFieldCaptionForCountryCode:self.ourCountryCode];
         case STPAddressFieldTypeZip:
             return ([self countryCodeIsUnitedStates] 
                     ? STPLocalizedString(@"ZIP Code", @"Caption for Zip Code field on address form (US region only)")
