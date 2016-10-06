@@ -619,10 +619,12 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         NSDictionary *attributes = @{NSParagraphStyleAttributeName: style};
         label.textColor = self.theme.secondaryForegroundColor;
         if (section == STPPaymentCardNumberSection) {
-            label.attributedText = [[NSAttributedString alloc] initWithString:@"Card" attributes:attributes];
+            label.attributedText = [[NSAttributedString alloc] initWithString:STPLocalizedString(@"Card", @"Title for credit card number entry field") 
+                                                                   attributes:attributes];
             return label;
         } else if (section == STPPaymentCardBillingAddressSection) {
-            label.attributedText = [[NSAttributedString alloc] initWithString:@"Billing Address" attributes:attributes];
+            label.attributedText = [[NSAttributedString alloc] initWithString:STPLocalizedString(@"Billing Address", @"Title for billing address entry section")
+                                                                   attributes:attributes];
             return label;
         }
     }
