@@ -106,37 +106,27 @@
 
 - (void)updateTextFieldsAndCaptions {
     self.captionLabel.text = [self captionForAddressField:self.type];
+    self.textField.placeholder = [self placeholderForAddressField:self.type];
     switch (self.type) {
-        case STPAddressFieldTypeName:
-            self.textField.placeholder = STPLocalizedString(@"John Appleseed", @"Placeholder for Name field on address form");
+        case STPAddressFieldTypeName: 
             self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
-        case STPAddressFieldTypeLine1:
-            self.textField.placeholder = STPLocalizedString(@"123 Address St", @"Placeholder for Address field on address form");
+        case STPAddressFieldTypeLine1: 
             self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
-        case STPAddressFieldTypeLine2:
-            self.textField.placeholder = STPLocalizedString(@"#23", @"Placeholder for Apartment/Address line 2 on address form");
+        case STPAddressFieldTypeLine2: 
             self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
         case STPAddressFieldTypeCity:
-            self.textField.placeholder = STPLocalizedString(@"San Francisco", @"Placeholder for City field on address form");
             self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
         case STPAddressFieldTypeState:
-            if ([self countryCodeIsUnitedStates]) {
-                self.textField.placeholder = STPLocalizedString(@"CA", @"Placeholder for State field on address form (US region only)");
-            } else {
-                self.textField.placeholder = nil;
-            }
             self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
         case STPAddressFieldTypeZip:
-            if ([self countryCodeIsUnitedStates]) {
-                self.textField.placeholder = STPLocalizedString(@"12345", @"Placeholder for Zip Code field on address form");
+            if ([self countryCodeIsUnitedStates]) { 
                 self.textField.keyboardType = UIKeyboardTypePhonePad;
             } else {
-                self.textField.placeholder = STPLocalizedString(@"ABC-1234", @"Placeholder for Postal Code field on address form");
                 self.textField.keyboardType = UIKeyboardTypeASCIICapable;
             }
             
@@ -147,7 +137,6 @@
             }
             break;
         case STPAddressFieldTypeCountry:
-            self.textField.placeholder = nil;
             self.textField.keyboardType = UIKeyboardTypeDefault;
             self.textField.inputView = self.countryPickerView;
             NSInteger index = [self.countryCodes indexOfObject:self.contents];
@@ -163,10 +152,8 @@
         case STPAddressFieldTypePhone:
             self.textField.keyboardType = UIKeyboardTypePhonePad;
             if ([self countryCodeIsUnitedStates]) {
-                self.textField.placeholder = STPLocalizedString(@"(555) 123-1234", @"Placeholder for Phone field on address form");
                 self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
             } else {
-                self.textField.placeholder = nil;
                 self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
             }
             self.textField.preservesContentsOnPaste = NO;
@@ -175,8 +162,7 @@
                 self.textField.inputAccessoryView = self.inputAccessoryToolbar;
             }
             break;
-        case STPAddressFieldTypeEmail:
-            self.textField.placeholder = STPLocalizedString(@"you@example.com", @"Placeholder for Email field on address form");
+        case STPAddressFieldTypeEmail: 
             self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             self.textField.keyboardType = UIKeyboardTypeEmailAddress;
@@ -186,39 +172,70 @@
     self.textField.accessibilityLabel = self.captionLabel.text;
 }
 
++ (NSString *)stateFieldCaptionForCountryCode:(NSString *)countryCode {
+    if ([countryCode isEqualToString:@"US"]) {
+        return STPLocalizedString(@"State", @"Caption for State field on address form (only countries that use state , like United States)");
+    }
+    else if ([countryCode isEqualToString:@"CA"]) {
+        return STPLocalizedString(@"Province", @"Caption for Province field on address form (only countries that use province, like Canada)");
+    }
+    else if ([countryCode isEqualToString:@"GB"]) {
+        return STPLocalizedString(@"County", @"Caption for County field on address form (only countries that use county, like United Kingdom)");
+    }
+    else  {
+        return STPLocalizedString(@"State / Region", @"Caption for generalized state/province/region field on address form (not tied to a specific country's format)");
+    }
+}
+
 - (NSString *)captionForAddressField:(STPAddressFieldType)addressFieldType {
     switch (addressFieldType) {
         case STPAddressFieldTypeName:
             return STPLocalizedString(@"Name", @"Caption for Name field on address form");
-            break;
         case STPAddressFieldTypeLine1:
             return STPLocalizedString(@"Address", @"Caption for Address field on address form");
-            break;
         case STPAddressFieldTypeLine2:
             return STPLocalizedString(@"Apt.", @"Caption for Apartment/Address line 2 field on address form");
-            break;
         case STPAddressFieldTypeCity:
             return STPLocalizedString(@"City", @"Caption for City field on address form");
-            break;
         case STPAddressFieldTypeState:
-            return ([self countryCodeIsUnitedStates] 
-                    ? STPLocalizedString(@"State", @"Caption for State field on address form (US region only)")
-                    : STPLocalizedString(@"County", @"Caption for County field on address form (non-US regions only)"));
-            break;
+            return [[self class] stateFieldCaptionForCountryCode:self.ourCountryCode];
         case STPAddressFieldTypeZip:
             return ([self countryCodeIsUnitedStates] 
-                    ? STPLocalizedString(@"ZIP Code", @"Caption for Zip Code field on address form (US region only)")
-                    : STPLocalizedString(@"Postal Code", @"Caption for Postal Code field on address form (non-US regions only)"));
-            break;
+                    ? STPLocalizedString(@"ZIP Code", @"Caption for Zip Code field on address form (only shown when country is United States only)")
+                    : STPLocalizedString(@"Postal Code", @"Caption for Postal Code field on address form (only shown in countries other than the United States)"));
         case STPAddressFieldTypeCountry:
             return STPLocalizedString(@"Country", @"Caption for Country field on address form");
-            break;
         case STPAddressFieldTypeEmail:
             return STPLocalizedString(@"Email", @"Caption for Email field on address form");
-            break;
         case STPAddressFieldTypePhone:
             return STPLocalizedString(@"Phone", @"Caption for Phone field on address form");
-            break;
+    }
+}
+
+- (NSString *)placeholderForAddressField:(STPAddressFieldType)addressFieldType {
+    if (![self countryCodeIsUnitedStates]) {
+        // not currently localizing placeholders for non-US regions
+        return nil;
+    }
+    switch (addressFieldType) {
+        case STPAddressFieldTypeName:
+            return STPLocalizedString(@"John Appleseed", @"Placeholder for Name field on address form");
+        case STPAddressFieldTypeLine1:
+            return STPLocalizedString(@"123 Address St", @"Placeholder for Address field on address form");
+        case STPAddressFieldTypeLine2:
+            return STPLocalizedString(@"#23", @"Placeholder for Apartment/Address line 2 on address form");
+        case STPAddressFieldTypeCity:
+            return @"San Francisco"; // Intentionally not translated
+        case STPAddressFieldTypeState: 
+            return @"CA"; // Intentionally not translated
+        case STPAddressFieldTypeZip:
+            return @"12345"; // Intentionally not translated
+        case STPAddressFieldTypeCountry:
+            return nil;
+        case STPAddressFieldTypeEmail:
+            return STPLocalizedString(@"you@example.com", @"Placeholder for Email field on address form");
+        case STPAddressFieldTypePhone:
+            return STPLocalizedString(@"(555) 123-1234", @"Placeholder for Phone field on address form");
     }
 }
 
