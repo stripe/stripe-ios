@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "STPAPIClient.h"
 #import "STPThreeDSecure.h"
 
 @class STPCard, STPThreeDSecureConfiguration;
@@ -50,23 +49,15 @@ typedef void (^STPThreeDSecureFlowCompletionBlock)(STPThreeDSecure * __nullable 
 
 @interface STPThreeDSecureConfiguration : NSObject
 @property (nonatomic) STPThreeDSecureSupportLevel threeDSecureSupportLevel NS_EXTENSION_UNAVAILABLE("3D Secure support not available in extension");
-@property (nonatomic, readonly) NSString *threeDSecureReturnUrl;
+@property (nonatomic, readonly) NSURL *threeDSecureReturnUrl;
 
 - (instancetype)init NS_UNAVAILABLE;
 
-- (instancetype)initWithReturnUrl:(NSString *)returnUrl NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithReturnUrl:(NSURL *)returnUrl NS_DESIGNATED_INITIALIZER;
 
 - (BOOL)shouldRequestThreeDSecureForCard:(STPCard *)card;
 @end
 
-@interface Stripe (ThreeDSecureAdditions)
 
-/**
- Call this method in your app delegate whenever you receive the url you
- set in `STPThreeDSecureContext`'s `threeDSecureReturnUrl` property.
- */
-+ (void)continueThreeDSecureFlowWithURL:(NSURL *)url;
-
-@end
 
 NS_ASSUME_NONNULL_END

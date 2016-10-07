@@ -11,6 +11,7 @@
 #import <SafariServices/SafariServices.h>
 
 #import "STPBackendAPIAdapter.h"
+#import "STPURLCallbackHandler.h"
 #import "STPCard.h"
 #import "STPThreeDSecure.h"
 #import "STPWeakStrongMacros.h"
@@ -18,21 +19,19 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef BOOL(^STPPaymentConfigThreeDSecureSupportBlock)(STPThreeDSecureConfiguration *config, STPCard *card);
-static NSNotificationName const kSTPThreeDSecureContinueFlowNotification = @"kSTPThreeDSecureContinueFlowNotification";
-static NSString *const KSTPThreeDSecureContinueFlowNotificationURLKey = @"KSTPThreeDSecureContinueNotificationURLKey";
 
 @interface STPThreeDSecure(Private)
 @property (nonatomic, readwrite) BOOL authenticated;
 @end
 
 @interface STPThreeDSecureConfiguration ()
-@property (nonatomic, readwrite, copy) NSString *threeDSecureReturnUrl;
+@property (nonatomic, readwrite, copy) NSURL *threeDSecureReturnUrl;
 @property (nonatomic, nullable, copy) STPPaymentConfigThreeDSecureSupportBlock shouldShowThreeDSecureBlock;
 @end
 
 @implementation STPThreeDSecureConfiguration
 
-- (instancetype)initWithReturnUrl:(NSString *)returnUrl {
+- (instancetype)initWithReturnUrl:(NSURL *)returnUrl {
     if ((self = [super init])) {
         self.threeDSecureReturnUrl = returnUrl;
         _threeDSecureSupportLevel = STPThreeDSecureSupportLevelDisabled;
@@ -58,7 +57,7 @@ static NSString *const KSTPThreeDSecureContinueFlowNotificationURLKey = @"KSTPTh
     // Using a block here to get around API Extension compatibility.
     if (!self.shouldShowThreeDSecureBlock) {  
         self.shouldShowThreeDSecureBlock = ^BOOL (STPThreeDSecureConfiguration *config, STPCard *card) {
-            if (config.threeDSecureReturnUrl.length == 0) {
+            if (config.threeDSecureReturnUrl == nil) {
                 // TODO: also check that this is a valid url with a registered scheme
                 return NO;
             }
@@ -78,7 +77,7 @@ static NSString *const KSTPThreeDSecureContinueFlowNotificationURLKey = @"KSTPTh
 
 @end
 
-@interface STPThreeDSecureContext () <SFSafariViewControllerDelegate>
+@interface STPThreeDSecureContext () <SFSafariViewControllerDelegate, STPURLCallbackListener>
 @property (nonatomic, strong) id<STPBackendAPIAdapter> apiAdapter;
 @property (nonatomic, strong) STPThreeDSecureConfiguration *configuration;
 
@@ -129,7 +128,7 @@ static NSString *const KSTPThreeDSecureContinueFlowNotificationURLKey = @"KSTPTh
     };
     
     [self.apiAdapter createThreeDSecureWithParams:params 
-                                        returnUrl:self.configuration.threeDSecureReturnUrl
+                                        returnUrl:self.configuration.threeDSecureReturnUrl.absoluteString
                                        completion:createCompletion];
 }
 
@@ -138,10 +137,8 @@ static NSString *const KSTPThreeDSecureContinueFlowNotificationURLKey = @"KSTPTh
                  for3DS:(STPThreeDSecure *)threeDSecure {
     self.inProgress3DSecureAuthorization = threeDSecure;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleContinueFlowNotification:) 
-                                                 name:kSTPThreeDSecureContinueFlowNotification 
-                                               object:nil];
+    [[STPURLCallbackHandler shared] registerListener:self
+                                              forURL:self.configuration.threeDSecureReturnUrl];
     
     if ([SFSafariViewController class] != nil) {
         SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
@@ -152,21 +149,17 @@ static NSString *const KSTPThreeDSecureContinueFlowNotificationURLKey = @"KSTPTh
                                        completion:nil];
     }
     else {
-        // TODO: Probably need to flesh out STPWebViewController
+        // TODO: Probably need to flesh out STPWebViewController, or bounce to Safari?
     }
 }
 
-- (void)handleContinueFlowNotification:(NSNotification *)notification {
-    NSURL *url = notification.userInfo[KSTPThreeDSecureContinueFlowNotificationURLKey];
-    [self continueThreeDSecureFlowWithURL:url];
-}
-
-- (void)continueThreeDSecureFlowWithURL:(nullable NSURL *)url {
+- (BOOL)handleURLCallback:(NSURL *)url {
     if (url == nil
         || self.inProgress3DSecureAuthorization == nil) {
         [self cleanupAndCompleteWithThreeDSecure:self.inProgress3DSecureAuthorization 
                                        succeeded:NO
                                            error:nil];
+        return NO;
     }
     else {
         // TODO: Parse out URL parameters
@@ -192,13 +185,15 @@ static NSString *const KSTPThreeDSecureContinueFlowNotificationURLKey = @"KSTPTh
         [self cleanupAndCompleteWithThreeDSecure:self.inProgress3DSecureAuthorization 
                                        succeeded:succeeded 
                                            error:nil];
+        return YES;
     }
 }
 
 - (void)cleanupAndCompleteWithThreeDSecure:(nullable STPThreeDSecure *)threeDSecure
                                  succeeded:(BOOL)succeeded
                                      error:(nullable NSError *)error {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[STPURLCallbackHandler shared] unregisterListener:self
+                                                forURL:self.configuration.threeDSecureReturnUrl];
     self.inProgress3DSecureAuthorization = nil;
     [self.presentedViewController dismissViewControllerAnimated:YES 
                                                      completion:^{
@@ -227,20 +222,6 @@ static NSString *const KSTPThreeDSecureContinueFlowNotificationURLKey = @"KSTPTh
 
 @end
 
-@implementation Stripe (ThreeDSecureAdditions)
 
-+ (void)continueThreeDSecureFlowWithURL:(NSURL *)url {
-    NSDictionary *userInfo = nil;
-    if (url) {
-        userInfo = [NSDictionary dictionaryWithObject:url 
-                                               forKey:KSTPThreeDSecureContinueFlowNotificationURLKey];
-    }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:kSTPThreeDSecureContinueFlowNotification 
-                                                        object:nil 
-                                                      userInfo:userInfo];
-}
-
-@end
 
 NS_ASSUME_NONNULL_END
