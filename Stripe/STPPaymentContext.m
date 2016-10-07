@@ -291,7 +291,6 @@
         }
         else if ([self.selectedPaymentMethod isKindOfClass:[STPCard class]]) {
             if ([self.configuration.threeDSecureConfiguration shouldRequestThreeDSecureForCard:(STPCard *)self.selectedPaymentMethod]) {
-                // TODO: throw up a loading spinner
                 
                 STPThreeDSecureParams *params = [STPThreeDSecureParams new];
                 params.paymentAmount = self.paymentAmount;

@@ -490,6 +490,8 @@
 		F1343BEA1D652CAD00F102D8 /* Customer.json in Resources */ = {isa = PBXBuildFile; fileRef = C1D23FB41D37FE0B002FD83C /* Customer.json */; };
 		F1343BEB1D652CE100F102D8 /* stp_card_form_back.png in Resources */ = {isa = PBXBuildFile; fileRef = C11810B81CC7DA290022FB55 /* stp_card_form_back.png */; };
 		F1343BEE1D652CF300F102D8 /* stp_icon_chevron_right_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F621CED3B0100AF3B96 /* stp_icon_chevron_right_small.png */; };
+		F144354B1DA82191004DF22F /* STPThreeDSecureContext.h in Headers */ = {isa = PBXBuildFile; fileRef = F144354A1DA82191004DF22F /* STPThreeDSecureContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F144354C1DA82191004DF22F /* STPThreeDSecureContext.h in Headers */ = {isa = PBXBuildFile; fileRef = F144354A1DA82191004DF22F /* STPThreeDSecureContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F148ABC81D5D334B0014FD92 /* STPLocalizationUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F148ABC31D5D334B0014FD92 /* STPLocalizationUtils.m */; };
 		F148ABCA1D5D334B0014FD92 /* STPLocalizationUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F148ABC31D5D334B0014FD92 /* STPLocalizationUtils.m */; };
 		F148ABCC1D5D37630014FD92 /* STPLocalizationUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F148ABC21D5D334B0014FD92 /* STPLocalizationUtils.h */; };
@@ -586,8 +588,6 @@
 		F1D64B2C1D8767FC001CDB7C /* STPWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D64B281D8767FC001CDB7C /* STPWebViewController.m */; };
 		F1D64B2E1D87686E001CDB7C /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D64B2D1D87686E001CDB7C /* WebKit.framework */; };
 		F1D777C01D81DD520076FA19 /* STPStringUtilsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */; };
-		F1E0F4351D9D66B0006B7B06 /* STPThreeDSecureContext.h in Headers */ = {isa = PBXBuildFile; fileRef = F1E0F4331D9D66B0006B7B06 /* STPThreeDSecureContext.h */; };
-		F1E0F4361D9D66B0006B7B06 /* STPThreeDSecureContext.h in Headers */ = {isa = PBXBuildFile; fileRef = F1E0F4331D9D66B0006B7B06 /* STPThreeDSecureContext.h */; };
 		F1E0F4371D9D66B0006B7B06 /* STPThreeDSecureContext.m in Sources */ = {isa = PBXBuildFile; fileRef = F1E0F4341D9D66B0006B7B06 /* STPThreeDSecureContext.m */; };
 		F1E0F4381D9D66B0006B7B06 /* STPThreeDSecureContext.m in Sources */ = {isa = PBXBuildFile; fileRef = F1E0F4341D9D66B0006B7B06 /* STPThreeDSecureContext.m */; };
 		F1E0F43A1D9D895A006B7B06 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1E0F4391D9D895A006B7B06 /* SafariServices.framework */; };
@@ -923,6 +923,7 @@
 		F12C8DBE1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPPaymentContextAmountModel.h; sourceTree = "<group>"; };
 		F12C8DBF1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentContextAmountModel.m; sourceTree = "<group>"; };
 		F132DFE21D51372A002FF5B7 /* STPWeakStrongMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPWeakStrongMacros.h; sourceTree = "<group>"; };
+		F144354A1DA82191004DF22F /* STPThreeDSecureContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPThreeDSecureContext.h; path = PublicHeaders/STPThreeDSecureContext.h; sourceTree = "<group>"; };
 		F148ABC21D5D334B0014FD92 /* STPLocalizationUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPLocalizationUtils.h; sourceTree = "<group>"; };
 		F148ABC31D5D334B0014FD92 /* STPLocalizationUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPLocalizationUtils.m; sourceTree = "<group>"; };
 		F148ABE71D5E805A0014FD92 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -970,7 +971,6 @@
 		F1D64B281D8767FC001CDB7C /* STPWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPWebViewController.m; sourceTree = "<group>"; };
 		F1D64B2D1D87686E001CDB7C /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPStringUtilsTest.m; sourceTree = "<group>"; };
-		F1E0F4331D9D66B0006B7B06 /* STPThreeDSecureContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPThreeDSecureContext.h; sourceTree = "<group>"; };
 		F1E0F4341D9D66B0006B7B06 /* STPThreeDSecureContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPThreeDSecureContext.m; sourceTree = "<group>"; };
 		F1E0F4391D9D895A006B7B06 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -1316,7 +1316,7 @@
 				F1852F921D80B6EC00367C86 /* STPStringUtils.m */,
 				F19B3F5D1D999648009E78DB /* STPThreeDSecure.h */,
 				F11F2BF31D9991BE00ADDB39 /* STPThreeDSecure.m */,
-				F1E0F4331D9D66B0006B7B06 /* STPThreeDSecureContext.h */,
+				F144354A1DA82191004DF22F /* STPThreeDSecureContext.h */,
 				F1E0F4341D9D66B0006B7B06 /* STPThreeDSecureContext.m */,
 				F17F36341DA70FFE00900737 /* STPURLCallbackHandler.h */,
 				F17F36351DA70FFE00900737 /* STPURLCallbackHandler.m */,
@@ -1539,6 +1539,7 @@
 				04F94DA51D229F21004FC826 /* STPPaymentContext+Private.h in Headers */,
 				F12829DB1D7747E4008B10D6 /* STPBundleLocator.h in Headers */,
 				04827D161D257764002DB3E8 /* STPImageLibrary+Private.h in Headers */,
+				F144354C1DA82191004DF22F /* STPThreeDSecureContext.h in Headers */,
 				049E84EC1A605EF0000B66CD /* StripeError.h in Headers */,
 				046FE9A31CE5608000DA6A7B /* STPPaymentActivityIndicatorView.h in Headers */,
 				04F94DC71D22A204004FC826 /* STPCheckoutBootstrapResponse.h in Headers */,
@@ -1555,7 +1556,6 @@
 				045D710F1CEEE30500F6CD65 /* STPAspects.h in Headers */,
 				04F94DAF1D229F59004FC826 /* STPPaymentMethodsViewController+Private.h in Headers */,
 				04633AFD1CD129AF009D4FB5 /* STPPhoneNumberValidator.h in Headers */,
-				F1E0F4361D9D66B0006B7B06 /* STPThreeDSecureContext.h in Headers */,
 				04633AFE1CD129B4009D4FB5 /* STPDelegateProxy.h in Headers */,
 				04FCFA191BD59A8C00297732 /* STPCategoryLoader.h in Headers */,
 				049A3FB41CC9FF0500F57DE7 /* UIToolbar+Stripe_InputAccessory.h in Headers */,
@@ -1603,7 +1603,6 @@
 				F17F36361DA70FFE00900737 /* STPURLCallbackHandler.h in Headers */,
 				C1FEE5961CBFF11400A7632B /* STPPostalCodeValidator.h in Headers */,
 				04633B0C1CD44F6C009D4FB5 /* PKPayment+Stripe.h in Headers */,
-				F1E0F4351D9D66B0006B7B06 /* STPThreeDSecureContext.h in Headers */,
 				04B31DFF1D131D9000EF1631 /* STPRememberMePaymentCell.h in Headers */,
 				04CDB50A1A5F30A700B854EE /* STPBankAccount.h in Headers */,
 				04E39F6A1CED48D500AF3B96 /* UIBarButtonItem+Stripe.h in Headers */,
@@ -1613,6 +1612,7 @@
 				04827D151D257764002DB3E8 /* STPImageLibrary+Private.h in Headers */,
 				049952D21BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */,
 				049A3F911CC740FF00F57DE7 /* NSDecimalNumber+Stripe_Currency.h in Headers */,
+				F144354B1DA82191004DF22F /* STPThreeDSecureContext.h in Headers */,
 				04633B071CD44F47009D4FB5 /* STPAPIClient+ApplePay.h in Headers */,
 				04BC29BD1CDD535700318357 /* STPSwitchTableViewCell.h in Headers */,
 				04CDB5121A5F30A700B854EE /* STPToken.h in Headers */,

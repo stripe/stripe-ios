@@ -25,6 +25,8 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
     let appleMerchantID: String? = nil
     
+    let stripeReturnURL = "stpsimpleexample://stripe"
+    
     // These values will be shown to the user when they purchase with Apple Pay.
     let companyName = "Emoji Apparel"
     let paymentCurrency = "usd"
@@ -75,6 +77,12 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.requiredBillingAddressFields = settings.requiredBillingAddressFields
         config.additionalPaymentMethods = settings.additionalPaymentMethods
         config.smsAutofillDisabled = !settings.smsAutofillEnabled
+
+        if let returnURL = URL(string: stripeReturnURL) {
+            let threeDSecureConfig = STPThreeDSecureConfiguration(return: returnURL)
+            threeDSecureConfig.threeDSecureSupportLevel = .optional
+            config.threeDSecureConfiguration = threeDSecureConfig
+        }
         
         let paymentContext = STPPaymentContext(apiAdapter: MyAPIClient.sharedClient,
                                                configuration: config,

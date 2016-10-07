@@ -127,9 +127,18 @@ typedef BOOL(^STPPaymentConfigThreeDSecureSupportBlock)(STPThreeDSecureConfigura
         }
     };
     
-    [self.apiAdapter createThreeDSecureWithParams:params 
-                                        returnUrl:self.configuration.threeDSecureReturnUrl.absoluteString
-                                       completion:createCompletion];
+    if ([self.apiAdapter respondsToSelector:@selector(createThreeDSecureWithParams:returnUrl:completion:)]) {
+        [self.apiAdapter createThreeDSecureWithParams:params 
+                                            returnUrl:self.configuration.threeDSecureReturnUrl.absoluteString
+                                           completion:createCompletion];
+    }
+    else {
+        [self cleanupAndCompleteWithThreeDSecure:nil 
+                                       succeeded:NO
+                                           error:nil];
+    }
+    
+    
 }
 
 - (void)showRedirectURL:(NSURL *)url 
@@ -195,12 +204,20 @@ typedef BOOL(^STPPaymentConfigThreeDSecureSupportBlock)(STPThreeDSecureConfigura
     [[STPURLCallbackHandler shared] unregisterListener:self
                                                 forURL:self.configuration.threeDSecureReturnUrl];
     self.inProgress3DSecureAuthorization = nil;
-    [self.presentedViewController dismissViewControllerAnimated:YES 
-                                                     completion:^{
-                                                         if (self.completion) {
-                                                             self.completion(threeDSecure, succeeded, error);
-                                                         }
-                                                     }];
+    if (self.presentedViewController) {
+        [self.presentedViewController dismissViewControllerAnimated:YES 
+                                                         completion:^{
+                                                             if (self.completion) {
+                                                                 self.completion(threeDSecure, succeeded, error);
+                                                             }
+                                                             self.presentedViewController = nil;
+                                                         }];
+    }
+    else {
+        if (self.completion) {
+            self.completion(threeDSecure, succeeded, error);
+        }
+    }
     self.completion = nil;
 }
 

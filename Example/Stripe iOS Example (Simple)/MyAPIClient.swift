@@ -142,5 +142,45 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         }
         task.resume()
     }
+    
+    @objc func createThreeDSecure(with params: STPThreeDSecureParams, returnUrl: String, completion: @escaping STPThreeDSecureCompletionBlock) {
+        guard let baseURLString = baseURLString, let baseURL = URL(string: baseURLString) else {
+            let error = NSError(domain: StripeDomain, code: 50, userInfo: [
+                NSLocalizedDescriptionKey: "Please set baseURLString to your Heroku URL in CheckoutViewController.swift"
+                ])
+            completion(nil, error)
+            return
+        }
+        
+        let path = "/3d_secure"
+        let url = baseURL.appendingPathComponent(path)
+        let params = [
+            "card": params.cardId,
+            "amount": String(params.paymentAmount),
+            "currency": params.paymentCurrency,
+            "return_url": returnUrl,
+            ]
+
+        let request = URLRequest.request(url, method: .POST, params: params as [String : AnyObject])
+        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
+            print(String(data:data!, encoding:String.Encoding.utf8))
+            
+            DispatchQueue.main.async {
+                guard let jsonData = data,
+                    let jsonDict = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [AnyHashable : Any],
+                    let threeDSecure = STPThreeDSecure.decodedObject(fromAPIResponse: jsonDict) else {
+                        let error = NSError(domain: StripeDomain, code: 50, userInfo: [
+                            NSLocalizedDescriptionKey: "3D Secure creation endpoint returned invalid data"
+                            ])
+                        completion(nil, error)
+                        return
+                }
+                
+                completion(threeDSecure, nil)
+            }
+
+        }
+        task.resume()
+    }
 
 }
