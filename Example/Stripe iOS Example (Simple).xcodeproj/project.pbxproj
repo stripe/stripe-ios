@@ -18,7 +18,19 @@
 		C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188F2A51CC1A338003A524B /* MyAPIClient.swift */; };
 		C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B83CBC1CCE6C0700F0790B /* Buttons.swift */; };
 		C1C154341CD296CB0036AA63 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C154331CD296CB0036AA63 /* Networking.swift */; };
+		F15675301DB19D40004468E3 /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F156752F1DB19D40004468E3 /* FBSnapshotTestCase.framework */; };
+		F15675321DB19D83004468E3 /* AddCardLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15675311DB19D83004468E3 /* AddCardLocalizationTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F15675291DB18229004468E3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04823F701A6849200098400B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04823F771A6849200098400B;
+			remoteInfo = "Stripe iOS Example (Simple)";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		04D0761F1A69E66F00094431 /* Embed Frameworks */ = {
@@ -48,6 +60,11 @@
 		C188F2A51CC1A338003A524B /* MyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
 		C1B83CBC1CCE6C0700F0790B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		C1C154331CD296CB0036AA63 /* Networking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
+		F15675241DB18229004468E3 /* Stripe iOS Example (Simple) Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stripe iOS Example (Simple) Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F15675281DB18229004468E3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F156752F1DB19D40004468E3 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSnapshotTestCase.framework; path = ../Carthage/Build/iOS/FBSnapshotTestCase.framework; sourceTree = "<group>"; };
+		F15675311DB19D83004468E3 /* AddCardLocalizationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCardLocalizationTests.swift; sourceTree = "<group>"; };
+		F15675341DB19EF7004468E3 /* Stripe iOS Example (Simple) Tests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stripe iOS Example (Simple) Tests-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +73,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F15675211DB18229004468E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F15675301DB19D40004468E3 /* FBSnapshotTestCase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				042CA4131A685E8D00D778E7 /* Stripe iOS Example (Simple) */,
+				F15675251DB18229004468E3 /* Stripe iOS Example (Simple) Tests */,
 				04823F9F1A6849850098400B /* Frameworks */,
 				04823F791A6849200098400B /* Products */,
 			);
@@ -93,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				04823F781A6849200098400B /* Stripe iOS Example (Simple).app */,
+				F15675241DB18229004468E3 /* Stripe iOS Example (Simple) Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -100,9 +127,20 @@
 		04823F9F1A6849850098400B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F156752F1DB19D40004468E3 /* FBSnapshotTestCase.framework */,
 				04D076191A69C14700094431 /* Stripe.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F15675251DB18229004468E3 /* Stripe iOS Example (Simple) Tests */ = {
+			isa = PBXGroup;
+			children = (
+				F15675311DB19D83004468E3 /* AddCardLocalizationTests.swift */,
+				F15675341DB19EF7004468E3 /* Stripe iOS Example (Simple) Tests-Bridging-Header.h */,
+				F15675281DB18229004468E3 /* Info.plist */,
+			);
+			path = "Stripe iOS Example (Simple) Tests";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,13 +165,31 @@
 			productReference = 04823F781A6849200098400B /* Stripe iOS Example (Simple).app */;
 			productType = "com.apple.product-type.application";
 		};
+		F15675231DB18229004468E3 /* Stripe iOS Example (Simple) Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F156752D1DB18229004468E3 /* Build configuration list for PBXNativeTarget "Stripe iOS Example (Simple) Tests" */;
+			buildPhases = (
+				F15675201DB18229004468E3 /* Sources */,
+				F15675211DB18229004468E3 /* Frameworks */,
+				F15675221DB18229004468E3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F156752A1DB18229004468E3 /* PBXTargetDependency */,
+			);
+			name = "Stripe iOS Example (Simple) Tests";
+			productName = "Stripe iOS Example (Simple) Tests";
+			productReference = F15675241DB18229004468E3 /* Stripe iOS Example (Simple) Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		04823F701A6849200098400B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0720;
+				LastSwiftUpdateCheck = 0800;
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = Stripe;
 				TargetAttributes = {
@@ -153,6 +209,12 @@
 							};
 						};
 					};
+					F15675231DB18229004468E3 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = Y28TH9SHX7;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 04823F771A6849200098400B;
+					};
 				};
 			};
 			buildConfigurationList = 04823F731A6849200098400B /* Build configuration list for PBXProject "Stripe iOS Example (Simple)" */;
@@ -169,6 +231,7 @@
 			projectRoot = "";
 			targets = (
 				04823F771A6849200098400B /* Stripe iOS Example (Simple) */,
+				F15675231DB18229004468E3 /* Stripe iOS Example (Simple) Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -179,6 +242,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				042CA4201A685E8D00D778E7 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F15675221DB18229004468E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,7 +287,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F15675201DB18229004468E3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F15675321DB19D83004468E3 /* AddCardLocalizationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F156752A1DB18229004468E3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04823F771A6849200098400B /* Stripe iOS Example (Simple) */;
+			targetProxy = F15675291DB18229004468E3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		04823F951A6849200098400B /* Debug */ = {
@@ -365,6 +451,50 @@
 			};
 			name = Release;
 		};
+		F156752B1DB18229004468E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../Carthage/Build/iOS";
+				INFOPLIST_FILE = "Stripe iOS Example (Simple) Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.Stripe-iOS-Example--Simple--Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "Stripe iOS Example (Simple) Tests/Stripe iOS Example (Simple) Tests-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stripe iOS Example (Simple).app/Stripe iOS Example (Simple)";
+			};
+			name = Debug;
+		};
+		F156752C1DB18229004468E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../Carthage/Build/iOS";
+				INFOPLIST_FILE = "Stripe iOS Example (Simple) Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.Stripe-iOS-Example--Simple--Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Stripe iOS Example (Simple) Tests/Stripe iOS Example (Simple) Tests-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Stripe iOS Example (Simple).app/Stripe iOS Example (Simple)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -382,6 +512,15 @@
 			buildConfigurations = (
 				04823F981A6849200098400B /* Debug */,
 				04823F991A6849200098400B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F156752D1DB18229004468E3 /* Build configuration list for PBXNativeTarget "Stripe iOS Example (Simple) Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F156752B1DB18229004468E3 /* Debug */,
+				F156752C1DB18229004468E3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

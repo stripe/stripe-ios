@@ -38,6 +38,16 @@
                ReferencedContainer = "container:Stripe iOS Example (Simple).xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F15675231DB18229004468E3"
+               BuildableName = "Stripe iOS Example (Simple) Tests.xctest"
+               BlueprintName = "Stripe iOS Example (Simple) Tests"
+               ReferencedContainer = "container:Stripe iOS Example (Simple).xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
