@@ -1,142 +1,137 @@
-﻿/* Placeholder for Apartment/Address line 2 on address form */
-"#23" = "#23";
+/* No comment provided by engineer. */
+"#23" = "N.º 23";
 
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ Ending In %2$@";
+"%@ Ending In %@" = "%1$@ cuyas últimas cifras son: %2$@";
 
-/* Placeholder for Phone field on address form */
-"(555) 123-1234" = "(555) 123-1234";
+/* No comment provided by engineer. */
+"(555) 123-1234" = "619 12 34 56";
 
-/* Placeholder for Address field on address form */
-"123 Address St" = "123 Address St";
+/* No comment provided by engineer. */
+"123 Address St" = "Calle Dirección 123";
 
-/* Placeholder for Zip Code field on address form */
+/* No comment provided by engineer. */
 "12345" = "12345";
 
 /* Placeholder for Postal Code field on address form */
-"ABC-1234" = "ABC-1234";
+"ABC-1234" = "12345";
 
-/* Title for Add a Card view */
-"Add a Card" = "Add a Card";
+/* No comment provided by engineer. */
+"Add a Card" = "Añadir una tarjeta";
 
-/* Button to add a new credit card. */
-"Add New Card…" = "Add New Card…";
+/* No comment provided by engineer. */
+"Add New Card…" = "Añadir tarjeta nueva…";
 
-/* Caption for Address field on address form */
-"Address" = "Address";
+/* No comment provided by engineer. */
+"Address" = "Dirección";
 
-/* Apple Pay payment method
- Text for Apple Pay payment method */
+/* No comment provided by engineer. */
 "Apple Pay" = "Apple Pay";
 
-/* Caption for Apartment/Address line 2 field on address form */
-"Apt." = "Apt.";
-
-/* Back button text
- Text for back button */
-"Back" = "Back";
-
-/* Placeholder for State field on address form (US region only) */
-"CA" = "CA";
-
-/* accessibility label for text field */
-"card number" = "card number";
-
-/* Caption for City field on address form */
-"City" = "City";
-
-/* Caption for Country field on address form */
-"Country" = "Country";
-
-/* Caption for County field on address form (non-US regions only) */
-"County" = "County";
-
-/* Button on SMS verification screen if the user did not receive the SMS code. */
-"Didn't receive the code?" = "Didn't receive the code?";
-
-/* Caption for Email field on address form */
-"Email" = "Email";
+/* No comment provided by engineer. */
+"Apt." = "Piso";
 
 /* No comment provided by engineer. */
-"Enter card details manually" = "Enter card details manually";
-
-/* No comment provided by engineer. */
-"Enter the verification code to use the payment info you stored with Stripe." = "Enter the verification code to use the payment info you stored with Stripe.";
+"Back" = "Atrás";
 
 /* accessibility label for text field */
-"expiration date" = "expiration date";
+"card number" = "número de tarjeta";
+
+/* No comment provided by engineer. */
+"City" = "Ciudad";
+
+/* No comment provided by engineer. */
+"Country" = "País";
+
+/* No comment provided by engineer. */
+"County" = "Provincia";
+
+/* No comment provided by engineer. */
+"Didn't receive the code?" = "¿No has recibido el código?";
+
+/* No comment provided by engineer. */
+"Email" = "Dirección de correo electrónico";
+
+/* No comment provided by engineer. */
+"Enter card details manually" = "Escribe los datos de la tarjeta manualmente.";
+
+/* No comment provided by engineer. */
+"Enter the verification code to use the payment info you stored with Stripe." = "Escribe el código de verificación para usar la información de pago que tiene almacenada Stripe.";
+
+/* accessibility label for text field */
+"expiration date" = "fecha de vencimiento";
 
 /* Error message for checkout account api call */
-"Failed to parse account response" = "Failed to parse account response";
-
-/* Cancel button for Remember Me SMS verification screen. */
-"Fill in your card details manually" = "Fill in your card details manually";
-
-/* Message shown when the user enters an incorrect SMS verification code. */
-"Invalid Code" = "Invalid Code";
-
-/* Placeholder for Name field on address form */
-"John Appleseed" = "John Appleseed";
-
-/* Title for screen when data is still loading from the network. */
-"Loading…" = "Loading…";
-
-/* Caption for Name field on address form */
-"Name" = "Name";
-
-/* Button to move to the next text entry field */
-"Next" = "Next";
+"Failed to parse account response" = "Error al analizar la respuesta de la cuenta.";
 
 /* No comment provided by engineer. */
-"OK" = "OK";
+"Fill in your card details manually" = "Rellena los datos de la tarjeta manualmente.";
 
-/* Button to paste a copied SMS code into the verification field. */
-"Paste copied code?" = "Paste copied code?";
+/* No comment provided by engineer. */
+"Invalid Code" = "Código no válido";
 
-/* Title for Payment Method screen */
-"Payment Method" = "Payment Method";
+/* No comment provided by engineer. */
+"John Appleseed" = "David Arenas";
 
-/* Caption for Phone field on address form */
-"Phone" = "Phone";
+/* No comment provided by engineer. */
+"Loading…" = "Cargando…";
 
-/* Caption for Postal Code field on address form (non-US regions only) */
-"Postal Code" = "Postal Code";
+/* No comment provided by engineer. */
+"Name" = "Nombre";
 
-/* Placeholder for City field on address form */
-"San Francisco" = "San Francisco";
+/* No comment provided by engineer. */
+"Next" = "Siguiente";
 
-/* Label for the switch to enable Remember Me */
-"Save for use in other apps" = "Save for use in other apps";
+/* No comment provided by engineer. */
+"OK" = "Aceptar";
+
+/* No comment provided by engineer. */
+"Paste copied code?" = "¿Pegar el código copiado?";
+
+/* No comment provided by engineer. */
+"Payment Method" = "Método de pago";
+
+/* No comment provided by engineer. */
+"Phone" = "Teléfono";
+
+/* No comment provided by engineer. */
+"Postal Code" = "Código postal";
+
+/* No comment provided by engineer. */
+"San Francisco" = "Madrid";
+
+/* No comment provided by engineer. */
+"Save for use in other apps" = "Guardar para otras aplicaciones";
 
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
-"Something went wrong with Remember Me: %@" = "Something went wrong with Remember Me: %@";
-
-/* Caption for State field on address form (US region only) */
-"State" = "State";
-
-/* Footer shown when the user enables Remember Me that shows additional info. The html-style tags control which parts of the text link to the Stripe Privacy Policy, Terms of Service, and Remember Me More Info pages, and can be moved around as needed in the translation (although they CANNOT overlap). */
-"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>";
-
-/* Error message for network request being cancelled. */
-"The operation was cancelled" = "The operation was cancelled";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "There was an error processing your card -- try again in a few seconds";
+"Something went wrong with Remember Me: %@" = "La función \"Recordarme\" no ha funcionado bien: %@";
 
 /* No comment provided by engineer. */
-"There was an error submitting your autofilled card details." = "There was an error submitting your autofilled card details.";
+"State" = "Estado";
+
+/* Footer shown when the user enables Remember Me that shows additional info. The html-style tags control which parts of the text link to the Stripe Privacy Policy, Terms of Service, and Remember Me More Info pages, and can be moved around as needed in the translation (although they CANNOT overlap). */
+"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Es posible que Stripe almacene mis datos de pago y mi número de teléfono para utilizarlos en esta aplicación o en otras, y que utilice mi número para identificarme, según lo estipulado en la <pplink>política de privacidad</pplink>de Stripe y en sus <termslink>condiciones</termslink>. <infolink>Más información</infolink>";
+
+/* No comment provided by engineer. */
+"The operation was cancelled" = "Se ha cancelado la operación";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Ha habido un error al procesar la tarjeta. Vuelve a intentarlo en unos segundos.";
+
+/* No comment provided by engineer. */
+"There was an error submitting your autofilled card details." = "Ha habido un error al enviar los datos de la tarjeta rellenados automáticamente.";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "There was an unexpected error -- try again in a few seconds";
+"There was an unexpected error -- try again in a few seconds" = "Se ha producido un error inesperado. Vuelve a intentarlo en unos segundos.";
 
-/* Error message when failing to type in SMS code for Remember me too many times. */
-"Too many incorrect attempts" = "Too many incorrect attempts";
+/* No comment provided by engineer. */
+"Too many incorrect attempts" = "Se ha superado el límite de intentos fallidos.";
 
-/* Title for SMS verification code screen */
-"Verification Code" = "Verification Code";
+/* No comment provided by engineer. */
+"Verification Code" = "Código de verificación";
 
 /* Message shown after sending SMS verification code. The substitution is a phone number. */
-"We just sent a text message to: %@" = "We just sent a text message to: %@";
+"We just sent a text message to: %@" = "Hemos enviado un mensaje de texto a: %@";
 
 /* Placeholder text for non-Amex CVC field (3 digits) */
 "XXX" = "XXX";
@@ -145,26 +140,26 @@
 "XXXX" = "XXXX";
 
 /* Placeholder for Email field on address form */
-"you@example.com" = "you@example.com";
+"you@example.com" = "tunombre@ejemplo.com";
 
 /* Error when the card has already expired */
-"Your card has expired" = "Your card has expired";
+"Your card has expired" = "La tarjeta ha caducado.";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Your card was declined";
+"Your card was declined" = "Se ha rechazado la tarjeta.";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "Your card's expiration month is invalid";
+"Your card's expiration month is invalid" = "El mes de vencimiento de la tarjeta no es válido.";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "Your card's expiration year is invalid";
+"Your card's expiration year is invalid" = "El año de vencimiento de la tarjeta no es válido.";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "Your card's number is invalid";
+"Your card's number is invalid" = "El número de tarjeta no es válido.";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "Your card's security code is invalid";
+"Your card's security code is invalid" = "El código de seguridad de la tarjeta no es válido.";
 
-/* Caption for Zip Code field on address form (US region only) */
-"ZIP Code" = "ZIP Code";
+/* No comment provided by engineer. */
+"ZIP Code" = "Código postal";
 
