@@ -490,8 +490,8 @@
 		F1343BEE1D652CF300F102D8 /* stp_icon_chevron_right_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F621CED3B0100AF3B96 /* stp_icon_chevron_right_small.png */; };
 		F148ABC81D5D334B0014FD92 /* STPLocalizationUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F148ABC31D5D334B0014FD92 /* STPLocalizationUtils.m */; };
 		F148ABCA1D5D334B0014FD92 /* STPLocalizationUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F148ABC31D5D334B0014FD92 /* STPLocalizationUtils.m */; };
-		F148ABCC1D5D37630014FD92 /* STPLocalizationUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F148ABC21D5D334B0014FD92 /* STPLocalizationUtils.h */; };
-		F148ABCD1D5D37640014FD92 /* STPLocalizationUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F148ABC21D5D334B0014FD92 /* STPLocalizationUtils.h */; };
+		F148ABCC1D5D37630014FD92 /* STPLocalizationUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F148ABC21D5D334B0014FD92 /* STPLocalizationUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F148ABCD1D5D37640014FD92 /* STPLocalizationUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F148ABC21D5D334B0014FD92 /* STPLocalizationUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F148ABE81D5E805A0014FD92 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F148ABE61D5E805A0014FD92 /* Localizable.strings */; };
 		F148ABE91D5E805A0014FD92 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F148ABE61D5E805A0014FD92 /* Localizable.strings */; };
 		F148ABF71D5E88B70014FD92 /* MockSTPCheckoutAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = C16A4CDB1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.h */; };

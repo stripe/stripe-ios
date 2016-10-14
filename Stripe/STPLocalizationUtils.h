@@ -16,6 +16,18 @@
  */
 + (nonnull NSString *)localizedStripeStringForKey:(nonnull NSString *)key;
 
+#if DEBUG
+/**
+ This overrides the bundle used to pull strings from to the specified lproj
+ e.g. passing in @"fr" will use the strings in the "fr.lproj" directory
+ inside the Stripe bundle.
+ 
+ You can use this to override the language used by NSLocalizedString, however
+ it is not recommend outside of debug environments.
+ */
++ (void)overrideLanguageTo:(nullable NSString *)string;
+#endif
+
 @end
 
 static inline NSString * _Nonnull STPLocalizedString(NSString* _Nonnull key, NSString * _Nullable __unused comment) {
