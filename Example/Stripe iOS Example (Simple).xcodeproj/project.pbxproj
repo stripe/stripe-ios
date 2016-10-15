@@ -19,7 +19,8 @@
 		C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B83CBC1CCE6C0700F0790B /* Buttons.swift */; };
 		C1C154341CD296CB0036AA63 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C154331CD296CB0036AA63 /* Networking.swift */; };
 		F15675301DB19D40004468E3 /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F156752F1DB19D40004468E3 /* FBSnapshotTestCase.framework */; };
-		F15675321DB19D83004468E3 /* AddCardLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15675311DB19D83004468E3 /* AddCardLocalizationTests.swift */; };
+		F15675361DB1A192004468E3 /* AddCardLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15675311DB19D83004468E3 /* AddCardLocalizationTests.swift */; };
+		F15675391DB1A6F6004468E3 /* FBSnapshotTestCase.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F156752F1DB19D40004468E3 /* FBSnapshotTestCase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,16 @@
 				04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F15675381DB1A6EC004468E3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F15675391DB1A6F6004468E3 /* FBSnapshotTestCase.framework in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -172,6 +183,7 @@
 				F15675201DB18229004468E3 /* Sources */,
 				F15675211DB18229004468E3 /* Frameworks */,
 				F15675221DB18229004468E3 /* Resources */,
+				F15675381DB1A6EC004468E3 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -291,7 +303,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F15675321DB19D83004468E3 /* AddCardLocalizationTests.swift in Sources */,
+				F15675361DB1A192004468E3 /* AddCardLocalizationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
