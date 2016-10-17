@@ -65,6 +65,16 @@
                   @"PKPaymentRequest currency code is not uppercased");
 }
 
+- (void)testBuildPaymentRequest_shippingAddress {
+    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    context.paymentAmount = 100;
+    context.requiredShippingAddressFields = PKAddressFieldAll;
+    PKPaymentRequest *request = [context buildPaymentRequest];
+
+    XCTAssertTrue(request.requiredShippingAddressFields == PKAddressFieldAll,
+                  @"PKPaymentRequest required shipping address field is not set to All");
+}
+
 - (NSArray<PKPaymentSummaryItem *> *)testSummaryItems {
     return @[[PKPaymentSummaryItem summaryItemWithLabel:@"First item"
                                                  amount:[NSDecimalNumber decimalNumberWithMantissa:20 exponent:0 isNegative:NO]],
