@@ -72,9 +72,12 @@
             NSString *name2 = [locale displayNameForKey:NSLocaleIdentifier value:localeID2];
             return [name1 compare:name2];
         }];
-        if (countryCode != nil) {
-            _countryCodes = [@[@"", countryCode] arrayByAddingObjectsFromArray:otherCountryCodes];
+        if (countryCode) {
+           _countryCodes = [@[@"", countryCode] arrayByAddingObjectsFromArray:otherCountryCodes];
         }
+        else {
+           _countryCodes = [@[@""] arrayByAddingObjectsFromArray:otherCountryCodes];
+         }
         UIPickerView *pickerView = [UIPickerView new];
         pickerView.dataSource = self;
         pickerView.delegate = self;
