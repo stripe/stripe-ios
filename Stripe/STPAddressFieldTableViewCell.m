@@ -77,7 +77,7 @@
         }
         else {
            _countryCodes = [@[@""] arrayByAddingObjectsFromArray:otherCountryCodes];
-         }
+        }
         UIPickerView *pickerView = [UIPickerView new];
         pickerView.dataSource = self;
         pickerView.delegate = self;
