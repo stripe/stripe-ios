@@ -17,11 +17,11 @@
 
 @implementation STPPaymentMethodsViewControllerLocalizationTests
 
-- (void)setUp {
-    [super setUp];
-    
-    self.recordMode = YES;
-}
+//- (void)setUp {
+//    [super setUp];
+//    
+//    self.recordMode = YES;
+//}
 
 
 - (void)performSnapshotTestForLanguage:(NSString *)language {
