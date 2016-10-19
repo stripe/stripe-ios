@@ -173,7 +173,9 @@
     }
     if (![_selectedPaymentMethod isEqual:selectedPaymentMethod]) {
         _selectedPaymentMethod = selectedPaymentMethod;
-        [self.delegate paymentContextDidChange:self];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate paymentContextDidChange:self];
+        });
     }
 }
 
