@@ -174,16 +174,16 @@
 
 + (NSString *)stateFieldCaptionForCountryCode:(NSString *)countryCode {
     if ([countryCode isEqualToString:@"US"]) {
-        return STPLocalizedString(@"State", @"Caption for State field on address form (regions that use state only, like united states)");
+        return STPLocalizedString(@"State", @"Caption for State field on address form (only countries that use state , like United States)");
     }
     else if ([countryCode isEqualToString:@"CA"]) {
-        return STPLocalizedString(@"Province", @"Caption for Province field on address form (regions that use province only, like canada)");
+        return STPLocalizedString(@"Province", @"Caption for Province field on address form (only countries that use province, like Canada)");
     }
     else if ([countryCode isEqualToString:@"GB"]) {
-        return STPLocalizedString(@"County", @"Caption for County field on address form (regions that use county only, like united kingdom)");
+        return STPLocalizedString(@"County", @"Caption for County field on address form (only countries that use county, like United Kingdom)");
     }
     else  {
-        return STPLocalizedString(@"State / Province / Region", @"Caption for generalized state/province/region field on address form (not tied to a specific country's format)");
+        return STPLocalizedString(@"State / Region", @"Caption for generalized state/province/region field on address form (not tied to a specific country's format)");
     }
 }
 
@@ -201,8 +201,8 @@
             return [[self class] stateFieldCaptionForCountryCode:self.ourCountryCode];
         case STPAddressFieldTypeZip:
             return ([self countryCodeIsUnitedStates] 
-                    ? STPLocalizedString(@"ZIP Code", @"Caption for Zip Code field on address form (US region only)")
-                    : STPLocalizedString(@"Postal Code", @"Caption for Postal Code field on address form (non-US regions only)"));
+                    ? STPLocalizedString(@"ZIP Code", @"Caption for Zip Code field on address form (only shown when country is United States only)")
+                    : STPLocalizedString(@"Postal Code", @"Caption for Postal Code field on address form (only shown in countries other than the United States)"));
         case STPAddressFieldTypeCountry:
             return STPLocalizedString(@"Country", @"Caption for Country field on address form");
         case STPAddressFieldTypeEmail:
@@ -225,11 +225,11 @@
         case STPAddressFieldTypeLine2:
             return STPLocalizedString(@"#23", @"Placeholder for Apartment/Address line 2 on address form");
         case STPAddressFieldTypeCity:
-            return STPLocalizedString(@"San Francisco", @"Placeholder for City field on address form");
+            return @"San Francisco"; // Intentionally not translated
         case STPAddressFieldTypeState: 
-            return STPLocalizedString(@"CA", @"Placeholder for State field on address form (US region only)");
+            return @"CA"; // Intentionally not translated
         case STPAddressFieldTypeZip:
-            return STPLocalizedString(@"12345", @"Placeholder for Zip Code field on address form");
+            return @"12345"; // Intentionally not translated
         case STPAddressFieldTypeCountry:
             return nil;
         case STPAddressFieldTypeEmail:
