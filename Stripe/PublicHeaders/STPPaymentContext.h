@@ -118,6 +118,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, copy)NSArray<PKPaymentSummaryItem *> *paymentSummaryItems NS_AVAILABLE_IOS(8_0);
 
+
+/**
+  *  If you support Apple Pay, you can optionally set this field with the required capabilities of an Apple Pay shipping address, that
+     you need in order to process an Apple Pay transaction.
+  */
+@property(nonatomic) PKAddressField requiredShippingAddressFields;
+    
+
 /**
  *  The presentation style used for all view controllers presented modally by the context.
  *  Since custom transition styles are not supported, you should set this to either
