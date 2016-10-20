@@ -83,4 +83,8 @@
     return self.switchView.on;
 }
 
+
+- (void)setOn:(BOOL)on {
+    self.switchView.on = on;
+}
 @end
