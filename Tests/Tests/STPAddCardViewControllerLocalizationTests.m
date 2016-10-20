@@ -8,9 +8,15 @@
 
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import <Stripe/Stripe.h>
+#import "STPSwitchTableViewCell.h"
 
 @interface STPAddCardViewControllerLocalizationTests : FBSnapshotTestCase
 
+@end
+
+@interface STPAddCardViewController (TestsPrivate)
+@property(nonatomic) UITableView *tableView;
+@property(nonatomic)BOOL forceEnableRememberMeForTesting;
 @end
 
 @implementation STPAddCardViewControllerLocalizationTests
@@ -38,7 +44,10 @@
     UINavigationController *navController = [UINavigationController new];
     navController.view.frame = CGRectMake(0, 0, 320, 750);
     [navController pushViewController:addCardVC animated:NO];
-    
+    addCardVC.forceEnableRememberMeForTesting = YES;
+    [navController.view layoutIfNeeded];
+    navController.view.frame = CGRectMake(0, 0, 320, addCardVC.tableView.contentSize.height);
+
     FBSnapshotVerifyView(navController.view, nil)
     
     [STPLocalizationUtils overrideLanguageTo:nil];

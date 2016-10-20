@@ -118,9 +118,21 @@ static NSString *const FooterLinkTagMoreInfo = @"infolink";
                                          };
 }
 
+- (CGFloat)heightForWidth:(CGFloat)maxWidth {
+    CGFloat availableWidth = maxWidth - (self.insets.left + self.insets.right);
+    return ([self.textView sizeThatFits:CGSizeMake(availableWidth, CGFLOAT_MAX)].height
+            + self.insets.top
+            + self.insets.bottom);
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.textView.frame = UIEdgeInsetsInsetRect(self.bounds, self.insets);
+}
+
+- (void)setInsets:(UIEdgeInsets)insets {
+    _insets = insets;
+    [self setNeedsLayout];
 }
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {

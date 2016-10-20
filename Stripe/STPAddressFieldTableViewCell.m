@@ -15,7 +15,6 @@
 
 @interface STPAddressFieldTableViewCell() <STPFormTextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
-@property(nonatomic, weak) UILabel *captionLabel;
 @property(nonatomic, weak) STPFormTextField *textField;
 @property(nonatomic) UIToolbar *inputAccessoryToolbar;
 @property(nonatomic) UIPickerView *countryPickerView;
@@ -37,10 +36,6 @@
         _delegate = delegate;
         _theme = [STPTheme new];
         _contents = contents;
-        
-        UILabel *captionLabel = [UILabel new];
-        _captionLabel = captionLabel;
-        [self.contentView addSubview:captionLabel];
         
         STPFormTextField *textField = [[STPFormTextField alloc] init];
         textField.formDelegate = self;
@@ -105,7 +100,6 @@
 }
 
 - (void)updateTextFieldsAndCaptions {
-    self.captionLabel.text = [self captionForAddressField:self.type];
     self.textField.placeholder = [self placeholderForAddressField:self.type];
     switch (self.type) {
         case STPAddressFieldTypeName: 
@@ -169,7 +163,7 @@
             break;
             
     }
-    self.textField.accessibilityLabel = self.captionLabel.text;
+    self.textField.accessibilityLabel = self.textField.placeholder;
 }
 
 + (NSString *)stateFieldCaptionForCountryCode:(NSString *)countryCode {
@@ -183,11 +177,11 @@
         return STPLocalizedString(@"County", @"Caption for County field on address form (only countries that use county, like United Kingdom)");
     }
     else  {
-        return STPLocalizedString(@"State / Region", @"Caption for generalized state/province/region field on address form (not tied to a specific country's format)");
+        return STPLocalizedString(@"State / Province/ Region", @"Caption for generalized state/province/region field on address form (not tied to a specific country's format)");
     }
 }
 
-- (NSString *)captionForAddressField:(STPAddressFieldType)addressFieldType {
+- (NSString *)placeholderForAddressField:(STPAddressFieldType)addressFieldType {
     switch (addressFieldType) {
         case STPAddressFieldTypeName:
             return STPLocalizedString(@"Name", @"Caption for Name field on address form");
@@ -212,33 +206,6 @@
     }
 }
 
-- (NSString *)placeholderForAddressField:(STPAddressFieldType)addressFieldType {
-    if (![self countryCodeIsUnitedStates]) {
-        // not currently localizing placeholders for non-US regions
-        return nil;
-    }
-    switch (addressFieldType) {
-        case STPAddressFieldTypeName:
-            return STPLocalizedString(@"John Appleseed", @"Placeholder for Name field on address form");
-        case STPAddressFieldTypeLine1:
-            return STPLocalizedString(@"123 Address St", @"Placeholder for Address field on address form");
-        case STPAddressFieldTypeLine2:
-            return STPLocalizedString(@"#23", @"Placeholder for Apartment/Address line 2 on address form");
-        case STPAddressFieldTypeCity:
-            return @"San Francisco"; // Intentionally not translated
-        case STPAddressFieldTypeState: 
-            return @"CA"; // Intentionally not translated
-        case STPAddressFieldTypeZip:
-            return @"12345"; // Intentionally not translated
-        case STPAddressFieldTypeCountry:
-            return nil;
-        case STPAddressFieldTypeEmail:
-            return STPLocalizedString(@"you@example.com", @"Placeholder for Email field on address form");
-        case STPAddressFieldTypePhone:
-            return STPLocalizedString(@"(555) 123-1234", @"Placeholder for Phone field on address form");
-    }
-}
-
 - (void)delegateCountryCodeDidChange:(NSString *)countryCode {
     self.ourCountryCode = countryCode;
     _postalCodeType = [STPPostalCodeValidator postalCodeTypeForCountryCode:self.ourCountryCode];
@@ -249,8 +216,6 @@
 - (void)updateAppearance {
     self.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
     self.backgroundColor = [UIColor clearColor];
-    self.captionLabel.font = self.theme.font;
-    self.captionLabel.textColor = self.theme.secondaryForegroundColor;
     self.textField.placeholderColor = self.theme.tertiaryForegroundColor;
     self.textField.defaultColor = self.theme.primaryForegroundColor;
     self.textField.errorColor = self.theme.errorColor;
@@ -262,33 +227,9 @@
     return [self.ourCountryCode isEqualToString:@"US"];
 }
 
-- (NSString *)longestPossibleCaption {
-    NSString *longestCaption = @"";
-    NSArray *addressFieldTypes = @[@(STPAddressFieldTypeName),
-                                   @(STPAddressFieldTypeLine1),
-                                   @(STPAddressFieldTypeLine2),
-                                   @(STPAddressFieldTypeCity),
-                                   @(STPAddressFieldTypeState),
-                                   @(STPAddressFieldTypeZip),
-                                   @(STPAddressFieldTypeCountry),
-                                   @(STPAddressFieldTypeEmail),
-                                   @(STPAddressFieldTypePhone),
-                                   ];
-    for (NSNumber *addressFieldType in addressFieldTypes) {
-        NSString *caption = [self captionForAddressField:[addressFieldType integerValue]];
-        if ([caption length] > [longestCaption length]) {
-            longestCaption = caption;
-        }
-    }
-    return longestCaption;
-}
-
 - (void)layoutSubviews {
     [super layoutSubviews];
-    NSDictionary *attributes = @{ NSFontAttributeName: self.theme.font };
-    CGFloat captionWidth = [[self longestPossibleCaption] sizeWithAttributes:attributes].width + 5;
-    self.captionLabel.frame = CGRectMake(15, 0, captionWidth, self.bounds.size.height);
-    CGFloat textFieldX = CGRectGetMaxX(self.captionLabel.frame) + 10;
+    CGFloat textFieldX = 15;
     self.textField.frame = CGRectMake(textFieldX, 1, self.bounds.size.width - textFieldX, self.bounds.size.height - 1);
     self.inputAccessoryToolbar.frame = CGRectMake(0, 0, self.bounds.size.width, 44);
 }
@@ -333,11 +274,11 @@
 }
 
 - (void)setCaption:(NSString *)caption {
-    self.captionLabel.text = caption;
+    self.textField.placeholder = caption;
 }
 
 - (NSString *)caption {
-    return self.captionLabel.text;
+    return self.textField.placeholder;
 }
 
 - (void)setContents:(NSString *)contents {
