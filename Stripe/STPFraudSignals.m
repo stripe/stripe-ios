@@ -1,12 +1,12 @@
 //
-//  STPOptimizationMetrics.m
+//  STPFraudSignals.m
 //  Stripe
 //
 //  Created by Ben Guo on 7/15/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPOptimizationMetrics.h"
+#import "STPFraudSignals.h"
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
@@ -14,12 +14,12 @@ NSString *const STPUserDefaultsKeyFirstAppOpenTime = @"STPFirstAppOpenTime";
 NSString *const STPUserDefaultsKeyTotalAppOpenCount = @"STPTotalAppOpenCount";
 NSString *const STPUserDefaultsKeyTotalAppUsageDuration = @"STPTotalAppUsageDuration";
 
-@interface STPOptimizationMetrics ()
+@interface STPFraudSignals ()
 @property (nonatomic) NSDate *sessionAppOpenTime;
 @property (nonatomic) NSDate *lastAppActiveTime;
 @end
 
-@implementation STPOptimizationMetrics
+@implementation STPFraudSignals
 
 + (instancetype)sharedInstance {
     static id sharedClient;

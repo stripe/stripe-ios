@@ -1,5 +1,5 @@
 //
-//  STPOptimizationMetrics.h
+//  STPFraudSignals.h
 //  Stripe
 //
 //  Created by Ben Guo on 7/15/16.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface STPOptimizationMetrics : NSObject
+@interface STPFraudSignals : NSObject
 + (instancetype)sharedInstance;
 - (NSDictionary *)serialize;
 @end

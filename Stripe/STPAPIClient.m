@@ -18,7 +18,7 @@
 #import "STPAPIPostRequest.h"
 #import "STPAnalyticsClient.h"
 #import "STPPaymentConfiguration.h"
-#import "STPOptimizationMetrics.h"
+#import "STPFraudSignals.h"
 
 #if __has_include("Fabric.h")
 #import "Fabric+FABKits.h"
@@ -239,7 +239,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @implementation STPAPIClient (CreditCards)
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPTokenCompletionBlock)completion {
-    NSDictionary *metrics = [[STPOptimizationMetrics sharedInstance] serialize];
+    NSDictionary *metrics = [[STPFraudSignals sharedInstance] serialize];
     NSData *data = [STPFormEncoder formEncodedDataForObject:card metrics:metrics];
     [self createTokenWithData:data completion:completion];
 }

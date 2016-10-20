@@ -11,7 +11,7 @@
 #import "PKPayment+Stripe.h"
 #import "STPAPIClient+Private.h"
 #import "STPAnalyticsClient.h"
-#import "STPOptimizationMetrics.h"
+#import "STPFraudSignals.h"
 #import "STPFormEncoder.h"
 
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
@@ -19,7 +19,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 @implementation STPAPIClient (ApplePay)
 
 - (void)createTokenWithPayment:(PKPayment *)payment completion:(STPTokenCompletionBlock)completion {
-    NSDictionary *metrics = [[STPOptimizationMetrics sharedInstance] serialize];
+    NSDictionary *metrics = [[STPFraudSignals sharedInstance] serialize];
     NSData *data = [self.class formEncodedDataForPayment:payment metrics: metrics];
     [self createTokenWithData:data
                    completion:completion];

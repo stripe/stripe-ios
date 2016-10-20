@@ -11,7 +11,7 @@
 #import "NSBundle+Stripe_AppName.h"
 #import "Stripe.h"
 #import "STPAnalyticsClient.h"
-#import "STPOptimizationMetrics.h"
+#import "STPFraudSignals.h"
 
 @implementation STPPaymentConfiguration
 
@@ -32,7 +32,7 @@
     self = [super init];
     if (self) {
         // register for becomeActive/enterBackground notifications
-        __unused STPOptimizationMetrics *metrics = [STPOptimizationMetrics sharedInstance];
+        __unused STPFraudSignals *metrics = [STPFraudSignals sharedInstance];
         _additionalPaymentMethods = STPPaymentMethodTypeAll;
         _requiredBillingAddressFields = STPBillingAddressFieldsNone;
         _companyName = [NSBundle stp_applicationName];
