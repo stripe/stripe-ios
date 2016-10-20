@@ -45,6 +45,9 @@
 @synthesize textColor = _textColor;
 @synthesize textErrorColor = _textErrorColor;
 @synthesize placeholderColor = _placeholderColor;
+@synthesize borderColor = _borderColor;
+@synthesize borderWidth = _borderWidth;
+@synthesize cornerRadius = _cornerRadius;
 @dynamic enabled;
 
 CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
@@ -74,10 +77,14 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 }
 
 - (void)commonInit {
-    
-    self.borderColor = [self.class placeholderGrayColor];
-    self.cornerRadius = 5.0f;
-    self.borderWidth = 1.0f;
+    // We're using ivars here because UIAppearance tracks when setters are
+    // called, and won't override properties that have already been customized
+    _borderColor = [self.class placeholderGrayColor];
+    _cornerRadius = 5.0f;
+    _borderWidth = 1.0f;
+    self.layer.borderColor = [[_borderColor copy] CGColor];
+    self.layer.cornerRadius = _cornerRadius;
+    self.layer.borderWidth = _borderWidth;
 
     self.clipsToBounds = YES;
 
@@ -251,27 +258,35 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 }
 
 - (void)setBorderColor:(UIColor * __nullable)borderColor {
-    self.layer.borderColor = [[borderColor copy] CGColor];
+    _borderColor = borderColor;
+    if (borderColor) {
+        self.layer.borderColor = [[borderColor copy] CGColor];
+    }
+    else {
+        self.layer.borderColor = [[UIColor clearColor] CGColor];
+    }
 }
 
 - (UIColor * __nullable)borderColor {
-    return [[UIColor alloc] initWithCGColor:self.layer.borderColor];
+    return _borderColor;
 }
 
 - (void)setCornerRadius:(CGFloat)cornerRadius {
+    _cornerRadius = cornerRadius;
     self.layer.cornerRadius = cornerRadius;
 }
 
 - (CGFloat)cornerRadius {
-    return self.layer.cornerRadius;
+    return _cornerRadius;
 }
 
 - (void)setBorderWidth:(CGFloat)borderWidth {
+    _borderWidth = borderWidth;
     self.layer.borderWidth = borderWidth;
 }
 
 - (CGFloat)borderWidth {
-    return self.layer.borderWidth;
+    return _borderWidth;
 }
 
 - (void)setKeyboardAppearance:(UIKeyboardAppearance)keyboardAppearance {
