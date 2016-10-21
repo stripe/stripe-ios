@@ -137,29 +137,29 @@
     XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsFull]);
 }
 
-- (void)testContainsRequiredPKFields {
+- (void)testContainsRequiredShippingAddressFields {
     STPAddress *address = [STPAddress new];
-    XCTAssertTrue([address containsRequiredPKFields:PKAddressFieldNone]);
-    XCTAssertFalse([address containsRequiredPKFields:PKAddressFieldAll]);
+    XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldNone]);
+    XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldAll]);
 
     address.name = @"John Smith";
-    XCTAssertTrue([address containsRequiredPKFields:PKAddressFieldName]);
-    XCTAssertFalse([address containsRequiredPKFields:PKAddressFieldEmail]);
+    XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldName]);
+    XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldEmail]);
 
     address.email = @"john@example.com";
-    XCTAssertTrue([address containsRequiredPKFields:PKAddressFieldEmail|PKAddressFieldName]);
-    XCTAssertFalse([address containsRequiredPKFields:PKAddressFieldAll]);
+    XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldEmail|PKAddressFieldName]);
+    XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldAll]);
 
     address.phone = @"5555555555";
-    XCTAssertTrue([address containsRequiredPKFields:PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone]);
-    XCTAssertFalse([address containsRequiredPKFields:PKAddressFieldAll]);
+    XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone]);
+    XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldAll]);
 
     address.country = @"US";
     address.line1 = @"55 John St";
     address.city = @"New York";
     address.state = @"NY";
     address.postalCode = @"12345";
-    XCTAssertTrue([address containsRequiredPKFields:PKAddressFieldAll]);
+    XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldAll]);
 }
 
 @end

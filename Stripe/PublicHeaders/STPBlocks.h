@@ -12,6 +12,21 @@
 @class STPToken;
 
 /**
+ *  These values control the labels used in the shipping info collection form.
+ */
+typedef NS_ENUM(NSUInteger, STPShippingType) {
+    /**
+     *  Shipping the purchase to the provided address using a third-party
+     *  shipping company.
+     */
+    STPShippingTypeShipping,
+    /**
+     *  Delivering the purchase by the seller.
+     */
+    STPShippingTypeDelivery,
+};
+
+/**
  *  An enum representing the status of a payment requested from the user.
  */
 typedef NS_ENUM(NSUInteger, STPPaymentStatus) {
