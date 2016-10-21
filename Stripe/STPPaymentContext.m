@@ -294,8 +294,8 @@
 
 #pragma mark - Shipping Info
 
-- (void)presentShippingInfoViewController {
-    NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling presentShippingInfoViewController on it. Next time, set the hostViewController property first!");
+- (void)presentShippingViewController {
+    NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling presentShippingViewController on it. Next time, set the hostViewController property first!");
     WEAK(self);
     [self.didAppearPromise voidOnSuccess:^{
         STRONG(self);
@@ -307,8 +307,8 @@
     }];
 }
 
-- (void)pushShippingInfoViewController {
-    NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushShippingInfoViewController on it. Next time, set the hostViewController property first!");
+- (void)pushShippingViewController {
+    NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushShippingViewController on it. Next time, set the hostViewController property first!");
     UINavigationController *navigationController;
     if ([self.hostViewController isKindOfClass:[UINavigationController class]]) {
         navigationController = (UINavigationController *)self.hostViewController;
