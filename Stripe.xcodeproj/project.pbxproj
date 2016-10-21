@@ -418,6 +418,7 @@
 		C124A1851CCAB750007D42EE /* STPAnalyticsClientTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C124A1841CCAB750007D42EE /* STPAnalyticsClientTest.m */; };
 		C12655391CAA238E006F7265 /* STPAddCardViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 04F416241CA3639500486FB5 /* STPAddCardViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C126553A1CAA2392006F7265 /* STPAddCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F416251CA3639500486FB5 /* STPAddCardViewController.m */; };
+		C127110A1DBA7E490087840D /* STPAddressViewModelTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C12711091DBA7E490087840D /* STPAddressViewModelTest.m */; };
 		C13538081D2C2186003F6157 /* STPAddCardViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C13538071D2C2186003F6157 /* STPAddCardViewControllerTest.m */; };
 		C135380B1D2C22E5003F6157 /* MockSTPAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = C13538091D2C22E5003F6157 /* MockSTPAPIClient.h */; };
 		C135380C1D2C22E5003F6157 /* MockSTPAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C135380A1D2C22E5003F6157 /* MockSTPAPIClient.m */; };
@@ -914,6 +915,7 @@
 		C124A17B1CCAA0C2007D42EE /* NSMutableURLRequest+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+Stripe.m"; sourceTree = "<group>"; };
 		C124A1801CCAA1BF007D42EE /* NSMutableURLRequest+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+StripeTest.m"; sourceTree = "<group>"; };
 		C124A1841CCAB750007D42EE /* STPAnalyticsClientTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAnalyticsClientTest.m; sourceTree = "<group>"; };
+		C12711091DBA7E490087840D /* STPAddressViewModelTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddressViewModelTest.m; sourceTree = "<group>"; };
 		C13538071D2C2186003F6157 /* STPAddCardViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddCardViewControllerTest.m; sourceTree = "<group>"; };
 		C13538091D2C22E5003F6157 /* MockSTPAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPAPIClient.h; sourceTree = "<group>"; };
 		C135380A1D2C22E5003F6157 /* MockSTPAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPAPIClient.m; sourceTree = "<group>"; };
@@ -1394,6 +1396,7 @@
 				04A488351CA34DC600506E53 /* STPEmailAddressValidatorTest.m */,
 				C1FEE5981CBFF24000A7632B /* STPPostalCodeValidatorTest.m */,
 				C1080F4B1CBED48A007B2D89 /* STPAddressTests.m */,
+				C12711091DBA7E490087840D /* STPAddressViewModelTest.m */,
 				C11810981CC6D46D0022FB55 /* NSDecimalNumber+StripeTest.m */,
 				C13538071D2C2186003F6157 /* STPAddCardViewControllerTest.m */,
 				F156753F1DB544D3004468E3 /* STPAddCardViewControllerLocalizationTests.m */,
@@ -2099,6 +2102,7 @@
 				04A4C3921C4F263300B3B290 /* STPNSArrayStripeBoundSafeTests.m in Sources */,
 				F148ABFB1D5E88C70014FD92 /* STPTestUtils.m in Sources */,
 				045A62AB1B8E7259000165CE /* STPPaymentCardTextFieldTest.m in Sources */,
+				C127110A1DBA7E490087840D /* STPAddressViewModelTest.m in Sources */,
 				F12C8DC41D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m in Sources */,
 				F14C872F1D4FCDBA00C7CC6A /* STPPaymentContextTest.m in Sources */,
 				F14C873C1D4FE5BD00C7CC6A /* TestSTPBackendAPIAdapter.m in Sources */,
