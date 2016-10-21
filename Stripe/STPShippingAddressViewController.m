@@ -35,7 +35,6 @@
 @property(nonatomic)UIBarButtonItem *backItem;
 @property(nonatomic)UIBarButtonItem *cancelItem;
 @property(nonatomic)BOOL loading;
-@property(nonatomic)BOOL isMidPaymentRequest;
 @property(nonatomic)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic)STPAddressViewModel *addressViewModel;
 @end
@@ -65,7 +64,6 @@
                  prefilledInformation:(STPUserInformation *)prefilledInformation {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        _isMidPaymentRequest = NO;
         _configuration = configuration;
         _currency = currency ?: @"usd";
         _theme = theme;
