@@ -133,7 +133,7 @@
 		04823F701A6849200098400B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0720;
+				LastSwiftUpdateCheck = 0800;
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = Stripe;
 				TargetAttributes = {
