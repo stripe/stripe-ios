@@ -184,7 +184,7 @@
         return [self.address containsRequiredFields:self.requiredBillingAddressFields];
     }
     else {
-        return [self.address containsRequiredPKFields:self.requiredShippingAddressFields];
+        return [self.address containsRequiredShippingAddressFields:self.requiredShippingAddressFields];
     }
 }
 

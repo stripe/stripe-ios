@@ -84,7 +84,7 @@
     return containsFields;
 }
 
-- (BOOL)containsRequiredPKFields:(PKAddressField)requiredFields {
+- (BOOL)containsRequiredShippingAddressFields:(PKAddressField)requiredFields {
     BOOL containsFields = YES;
     if (requiredFields & PKAddressFieldName) {
         containsFields = containsFields && [self.name length] > 0;

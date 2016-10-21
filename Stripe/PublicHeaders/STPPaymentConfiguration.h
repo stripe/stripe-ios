@@ -11,23 +11,7 @@
 #import "STPPaymentMethod.h"
 #import "STPTheme.h"
 
-/**
- *  These values control the labels used in the shipping info collection form.
- */
-typedef NS_ENUM(NSUInteger, STPShippingType) {
-    /**
-     *  Shipping the purchase to the provided address using a third-party
-     *  shipping company.
-     */
-    STPShippingTypeShipping,
-    /**
-     *  Delivering the purchase by the seller.
-     */
-    STPShippingTypeDelivery,
-};
-
 NS_ASSUME_NONNULL_BEGIN
-
 
 /**
  An `STPPaymentConfiguration` represents all the options you can set or change
