@@ -211,12 +211,12 @@
     switch (self.configuration.shippingType) {
         case STPShippingTypeShipping: {
             self.loading = YES;
-            [self.delegate shippingAddressViewController:self didEnterAddress:address completion:^(NSError *shippingValidationError, NSArray<PKShippingMethod *> * _Nonnull shippingMethods) {
+            [self.delegate shippingAddressViewController:self didEnterAddress:address completion:^(STPShippingStatus status, NSError * __nullable shippingValidationError, NSArray<PKShippingMethod *>* __nullable shippingMethods, PKShippingMethod * __nullable selectedShippingMethod) {
                 self.loading = NO;
-                if (shippingValidationError == nil) {
+                if (status == STPShippingStatusValid) {
                     if ([shippingMethods count] > 0) {
                         STPShippingMethodsViewController *nextViewController = [[STPShippingMethodsViewController alloc] initWithShippingMethods:shippingMethods
-                                                                                                                          selectedShippingMethod:self.selectedShippingMethod
+                                                                                                                          selectedShippingMethod:selectedShippingMethod
                                                                                                                                         currency:self.currency
                                                                                                                                            theme:self.theme];
                         nextViewController.delegate = self;
@@ -248,8 +248,14 @@
 
 - (void)handleShippingValidationError:(NSError *)error {
     [[self firstEmptyField] becomeFirstResponder];
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:error.localizedDescription
-                                                                             message:error.localizedFailureReason
+    NSString *title = STPLocalizedString(@"Invalid Shipping Address", @"Shipping form error message");
+    NSString *message = nil;
+    if (error != nil) {
+        title = error.localizedDescription;
+        message = error.localizedFailureReason;
+    }
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     [alertController addAction:[UIAlertAction actionWithTitle:STPLocalizedString(@"OK", @"ok button")
                                                         style:UIAlertActionStyleCancel

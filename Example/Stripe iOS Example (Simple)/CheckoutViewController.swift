@@ -245,7 +245,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPSh
         shippingMethod2.detail = "Arrives tomorrow"
         shippingMethod2.identifier = "456"
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            completion(nil, [shippingMethod1, shippingMethod2])
+            completion(.valid, nil, [shippingMethod1, shippingMethod2], shippingMethod2)
         }
     }
 

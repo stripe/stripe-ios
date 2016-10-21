@@ -27,6 +27,20 @@ typedef NS_ENUM(NSUInteger, STPShippingType) {
 };
 
 /**
+ *  An enum representing the status of a shipping address validation.
+ */
+typedef NS_ENUM(NSUInteger, STPShippingStatus) {
+    /**
+     *  The shipping address is valid.
+     */
+    STPShippingStatusValid,
+    /**
+     *  The shipping address is invalid.
+     */
+    STPShippingStatusInvalid,
+};
+
+/**
  *  An enum representing the status of a payment requested from the user.
  */
 typedef NS_ENUM(NSUInteger, STPPaymentStatus) {
@@ -68,7 +82,9 @@ typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * _
  *  A callback to be run with a validation result and shipping methods for a 
  *  shipping address.
  *
- *  @param shippingValidationError If the shipping address is invalid, an error describing the issue with the address. Will be nil if the address is valid.
+ *  @param shippingStatus An enum representing whether the shipping address is valid.
+ *  @param shippingValidationError If the shipping address is invalid, an error describing the issue with the address. If no error is given and the address is invalid, the default error message will be used.
  *  @param shippingMethods The shipping methods available for the address.
+ *  @param selectedShippingMethod The default selected shipping method for the address.
  */
-typedef void (^STPShippingMethodsCompletionBlock)(NSError * __nullable shippingValidationError, NSArray<PKShippingMethod *>* __nonnull shippingMethods);
+typedef void (^STPShippingMethodsCompletionBlock)(STPShippingStatus status, NSError * __nullable shippingValidationError, NSArray<PKShippingMethod *>* __nullable shippingMethods, PKShippingMethod * __nullable selectedShippingMethod);
