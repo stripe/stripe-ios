@@ -256,7 +256,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate, STPSh
         else {
             self.shippingRow.detail = "Enter \(self.shippingString) Info"
         }
-        self.shippingVC.dismiss(withHostViewController: self)
+        self.shippingVC.dismiss(completion: nil)
     }
 
 }
