@@ -20,7 +20,6 @@
 #import "STPWeakStrongMacros.h"
 #import "STPPaymentContextAmountModel.h"
 #import "STPDispatchFunctions.h"
-#import "STPShippingAddressViewController+Private.h"
 #import "STPShippingMethodsViewController.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
@@ -43,8 +42,12 @@
 @property(nonatomic)STPAddress *shippingAddress;
 @property(nonatomic)PKShippingMethod *selectedShippingMethod;
 @property(nonatomic)NSArray<PKShippingMethod *> *shippingMethods;
+// This property tracks whether we're currently collecting shipping info
+// in the middle of a call to requestPayment
+@property(nonatomic) BOOL isMidShippingInRequestPayment;
 
 @property(nonatomic)STPPaymentContextAmountModel *paymentAmountModel;
+
 
 @end
 
@@ -70,6 +73,7 @@
         _paymentCurrency = @"USD";
         _paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithAmount:0];
         _modalPresentationStyle = UIModalPresentationFullScreen;
+        _isMidShippingInRequestPayment = NO;
         [self retryLoading];
     }
     return self;
@@ -326,10 +330,11 @@
 
 - (void)shippingAddressViewControllerDidCancel:(STPShippingAddressViewController *)addressViewController {
     [self appropriatelyDismissViewController:addressViewController completion:^{
-        if (addressViewController.isMidPaymentRequest) {
+        if (self.isMidShippingInRequestPayment) {
             [self.delegate paymentContext:self
                       didFinishWithStatus:STPPaymentStatusUserCancellation
                                     error:nil];
+            self.isMidShippingInRequestPayment = NO;
         }
     }];
 }
@@ -359,8 +364,9 @@
     self.selectedShippingMethod = method;
     [self.delegate paymentContextDidChange:self];
     [self appropriatelyDismissViewController:addressViewController completion:^{
-        if (addressViewController.isMidPaymentRequest) {
+        if (self.isMidShippingInRequestPayment) {
             [self requestPayment];
+            self.isMidShippingInRequestPayment = NO;
         }
     }];
 }
@@ -410,7 +416,7 @@
             !self.shippingAddress)
         {
             STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:self];
-            addressViewController.isMidPaymentRequest = YES;
+            self.isMidShippingInRequestPayment = YES;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addressViewController];
             [navigationController.navigationBar stp_setTheme:self.theme];
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
