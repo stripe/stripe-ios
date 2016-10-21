@@ -263,8 +263,20 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (void)dismissWithHostViewController:(UIViewController *)hostViewController {
-    [self.navigationController stp_popToViewController:hostViewController animated:YES completion:nil];
+- (void)dismissWithCompletion:(STPVoidBlock)completion {
+    if ([self stp_isAtRootOfNavigationController]) {
+        [self.presentingViewController dismissViewControllerAnimated:YES completion:completion];
+    }
+    else {
+        UIViewController *previous = self.navigationController.viewControllers.firstObject;
+        for (UIViewController *viewController in self.navigationController.viewControllers) {
+            if (viewController == self) {
+                break;
+            }
+            previous = viewController;
+        }
+        [self.navigationController stp_popToViewController:previous animated:YES completion:completion];
+    }
 }
 
 #pragma mark - STPAddressViewModelDelegate

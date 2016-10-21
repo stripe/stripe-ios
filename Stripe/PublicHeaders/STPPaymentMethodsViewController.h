@@ -53,6 +53,13 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property(nonatomic)STPUserInformation *prefilledInformation;
 
+/**
+ *  If you're pushing `STPPaymentMethodsViewController` onto an existing `UINavigationController`'s stack, you should use this method to dismiss it, since it may have pushed an additional add card view controller onto the navigation controller's stack.
+ *
+ *  @param completion The callback to run after the view controller is dismissed. You may specify nil for this parameter.
+ */
+- (void)dismissWithCompletion:(nullable STPVoidBlock)completion;
+
 @end
 
 /**

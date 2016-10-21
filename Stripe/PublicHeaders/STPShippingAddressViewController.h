@@ -47,9 +47,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  If you're pushing `STPShippingAddressViewController` onto an existing `UINavigationController`'s stack, you should use this method to dismiss it, since it may have pushed an additional shipping method view controller onto the navigation controller's stack.
  *
- *  @param hostViewController the view controller that the shipping address view controller was pushed onto.
+ *  @param completion The callback to run after the view controller is dismissed. You may specify nil for this parameter.
  */
-- (void)dismissWithHostViewController:(UIViewController *)hostViewController;
+- (void)dismissWithCompletion:(nullable STPVoidBlock)completion;
 
 @end
 

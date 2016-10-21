@@ -26,6 +26,7 @@
 #import "STPColorUtils.h"
 #import "STPWeakStrongMacros.h"
 #import "STPLocalizationUtils.h"
+#import "UINavigationController+Stripe_Completion.h"
 
 @interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
 
@@ -203,6 +204,22 @@
                didCreateToken:(STPToken *)token
                    completion:(STPErrorBlock)completion {
     [self internalViewControllerDidCreateToken:token completion:completion];
+}
+
+- (void)dismissWithCompletion:(STPVoidBlock)completion {
+    if ([self stp_isAtRootOfNavigationController]) {
+        [self.presentingViewController dismissViewControllerAnimated:YES completion:completion];
+    }
+    else {
+        UIViewController *previous = self.navigationController.viewControllers.firstObject;
+        for (UIViewController *viewController in self.navigationController.viewControllers) {
+            if (viewController == self) {
+                break;
+            }
+            previous = viewController;
+        }
+        [self.navigationController stp_popToViewController:previous animated:YES completion:completion];
+    }
 }
 
 @end
