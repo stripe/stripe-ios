@@ -177,7 +177,7 @@
         return STPLocalizedString(@"County", @"Caption for County field on address form (only countries that use county, like United Kingdom)");
     }
     else  {
-        return STPLocalizedString(@"State / Province/ Region", @"Caption for generalized state/province/region field on address form (not tied to a specific country's format)");
+        return STPLocalizedString(@"State / Province / Region", @"Caption for generalized state/province/region field on address form (not tied to a specific country's format)");
     }
 }
 
