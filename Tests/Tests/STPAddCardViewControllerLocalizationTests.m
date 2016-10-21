@@ -9,6 +9,8 @@
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import <Stripe/Stripe.h>
 #import "STPSwitchTableViewCell.h"
+#import "STPAddressViewModel.h"
+#import "STPAddressFieldTableViewCell.h"
 
 @interface STPAddCardViewControllerLocalizationTests : FBSnapshotTestCase
 
@@ -16,7 +18,8 @@
 
 @interface STPAddCardViewController (TestsPrivate)
 @property(nonatomic) UITableView *tableView;
-@property(nonatomic)BOOL forceEnableRememberMeForTesting;
+@property(nonatomic) BOOL forceEnableRememberMeForTesting;
+@property(nonatomic) STPAddressViewModel<STPAddressFieldTableViewCellDelegate> *addressViewModel;
 @end
 
 @implementation STPAddCardViewControllerLocalizationTests
@@ -48,7 +51,17 @@
     [navController.view layoutIfNeeded];
     navController.view.frame = CGRectMake(0, 0, 320, addCardVC.tableView.contentSize.height);
 
-    FBSnapshotVerifyView(navController.view, nil)
+    addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"US";
+    FBSnapshotVerifyView(navController.view, @"US");
+    
+    addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"GB";
+    FBSnapshotVerifyView(navController.view, @"GB");
+    
+    addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"CA";
+    FBSnapshotVerifyView(navController.view, @"CA");
+
+    addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"MX";
+    FBSnapshotVerifyView(navController.view, @"MX");
     
     [STPLocalizationUtils overrideLanguageTo:nil];
 }

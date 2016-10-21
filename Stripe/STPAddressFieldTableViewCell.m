@@ -207,6 +207,10 @@
 }
 
 - (void)delegateCountryCodeDidChange:(NSString *)countryCode {
+    if (self.type == STPAddressFieldTypeCountry) {
+        self.contents = countryCode;
+    }
+    
     self.ourCountryCode = countryCode;
     _postalCodeType = [STPPostalCodeValidator postalCodeTypeForCountryCode:self.ourCountryCode];
     [self updateTextFieldsAndCaptions];
