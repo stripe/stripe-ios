@@ -66,7 +66,7 @@
     NSMutableDictionary *customer = [[STPTestUtils jsonNamed:@"Customer"] mutableCopy];
     NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
     sources[@"data"] = @[applePayCard1, card1, applePayCard2, card2];
-    customer[@"default_source"] = card1[@"id"];
+    customer[@"defaultSource"] = card1[@"id"];
     customer[@"sources"] = sources;
 
     STPCustomerDeserializer *sut = [[STPCustomerDeserializer alloc] initWithJSONResponse:customer];
