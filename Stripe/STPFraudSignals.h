@@ -10,5 +10,6 @@
 
 @interface STPFraudSignals : NSObject
 + (instancetype)sharedInstance;
++ (void)enable;
 - (NSDictionary *)serialize;
 @end

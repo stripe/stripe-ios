@@ -50,6 +50,10 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     [STPAnalyticsClient disableAnalytics];
 }
 
++ (void)enableFraudSignalsCollection {
+    [STPFraudSignals enable];
+}
+
 @end
 
 #if __has_include("Fabric.h")

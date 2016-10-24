@@ -44,6 +44,14 @@ static NSString *const STPSDKVersion = @"9.0.0";
  */
 + (void)disableAnalytics;
 
+/**
+ *  If you call this method, Stripe will collect some basic app usage data
+ *  in order to help us improve our fraud detection system. You can get an
+ *  overview of how Stripe is protecting you from fraud at
+ *  https://dashboard.stripe.com/fraud
+ */
++ (void)enableFraudSignalsCollection;
+
 @end
 
 /// A client for making connections to the Stripe API.

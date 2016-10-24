@@ -14,6 +14,8 @@ NSString *const STPUserDefaultsKeyFirstAppOpenTime = @"STPFirstAppOpenTime";
 NSString *const STPUserDefaultsKeyTotalAppOpenCount = @"STPTotalAppOpenCount";
 NSString *const STPUserDefaultsKeyTotalAppUsageDuration = @"STPTotalAppUsageDuration";
 
+static BOOL STPFraudSignalsCollectionEnabled = NO;
+
 @interface STPFraudSignals ()
 @property (nonatomic) NSDate *sessionAppOpenTime;
 @property (nonatomic) NSDate *lastAppActiveTime;
@@ -30,12 +32,28 @@ NSString *const STPUserDefaultsKeyTotalAppUsageDuration = @"STPTotalAppUsageDura
     return sharedClient;
 }
 
++ (void)enable {
+    STPFraudSignalsCollectionEnabled = YES;
+}
+
++ (BOOL)shouldCollectFraudSignals {
+#if TARGET_OS_SIMULATOR
+    return NO;
+#endif
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunreachable-code"
+    return NSClassFromString(@"XCTest") == nil && STPFraudSignalsCollectionEnabled;
+#pragma clang diagnostic pop
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
-        [UIDevice currentDevice].batteryMonitoringEnabled = YES;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        if ([STPFraudSignals shouldCollectFraudSignals]) {
+            [UIDevice currentDevice].batteryMonitoringEnabled = YES;
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        }
     }
     return self;
 }
@@ -118,6 +136,9 @@ NSString *const STPUserDefaultsKeyTotalAppUsageDuration = @"STPTotalAppUsageDura
 }
 
 - (NSDictionary *)serialize {
+    if (![STPFraudSignals shouldCollectFraudSignals]) {
+        return nil;
+    }
     NSMutableDictionary *payload = [NSMutableDictionary new];
     payload[@"first_app_open_time"] = [self timestampWithDate:[self firstAppOpenTime]];
     payload[@"total_app_open_count"] = [self totalAppOpenCount];
