@@ -19,6 +19,7 @@
 #import "STPPaymentConfiguration+Private.h"
 #import "STPWeakStrongMacros.h"
 #import "STPPaymentContextAmountModel.h"
+#import "STPDispatchFunctions.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -93,7 +94,7 @@
         }
     }];
     [self.apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        stpDispatchToMainThreadIfNecessary(^{
             STRONG(self);
             if (!self) {
                 return;
@@ -175,7 +176,7 @@
     }
     if (![_selectedPaymentMethod isEqual:selectedPaymentMethod]) {
         _selectedPaymentMethod = selectedPaymentMethod;
-        dispatch_async(dispatch_get_main_queue(), ^{
+        stpDispatchToMainThreadIfNecessary(^{
             [self.delegate paymentContextDidChange:self];
         });
     }
@@ -293,7 +294,7 @@
         else if ([self.selectedPaymentMethod isKindOfClass:[STPCard class]]) {
             STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(STPCard *)self.selectedPaymentMethod];
             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
+                stpDispatchToMainThreadIfNecessary(^{
                     if (error) {
                         [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
                     } else {
@@ -306,7 +307,7 @@
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
             STPApplePayTokenHandlerBlock applePayTokenHandler = ^(STPToken *token, STPErrorBlock tokenCompletion) {
                 [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *tokenError) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                    stpDispatchToMainThreadIfNecessary(^{
                         if (tokenError) {
                             tokenCompletion(tokenError);
                         } else {
@@ -377,7 +378,7 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
                didCreateToken:(STPToken *)token
                    completion:(STPErrorBlock)completion {
     [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        stpDispatchToMainThreadIfNecessary(^{
             if (error) {
                 completion(error);
             } else {

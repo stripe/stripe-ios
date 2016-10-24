@@ -26,6 +26,7 @@
 #import "STPColorUtils.h"
 #import "STPWeakStrongMacros.h"
 #import "STPLocalizationUtils.h"
+#import "STPDispatchFunctions.h"
 
 @interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
 
@@ -60,7 +61,7 @@
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
     STPPromise<STPPaymentMethodTuple *> *promise = [STPPromise new];
     [apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        stpDispatchToMainThreadIfNecessary(^{
             if (error) {
                 [promise fail:error];
             } else {
@@ -190,7 +191,7 @@
 
 - (void)internalViewControllerDidCreateToken:(STPToken *)token completion:(STPErrorBlock)completion {
     [self.apiAdapter attachSourceToCustomer:token completion:^(NSError * _Nullable error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        stpDispatchToMainThreadIfNecessary(^{
             completion(error);
             if (!error) {
                 [self finishWithPaymentMethod:token.card];
