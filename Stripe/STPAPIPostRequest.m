@@ -10,6 +10,7 @@
 #import "STPAPIClient.h"
 #import "STPAPIClient+Private.h"
 #import "StripeError.h"
+#import "STPDispatchFunctions.h"
 
 @implementation STPAPIPostRequest
 
@@ -36,7 +37,7 @@
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             httpResponse = (NSHTTPURLResponse *)response;
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
+        stpDispatchToMainThreadIfNecessary(^{
             if (returnedError) {
                 completion(nil, httpResponse, returnedError);
             } else {
