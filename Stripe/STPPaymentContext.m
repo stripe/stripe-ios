@@ -93,28 +93,30 @@
         }
     }];
     [self.apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
-        STRONG(self);
-        if (!self) {
-            return;
-        }
-        if (error) {
-            [self.loadingPromise fail:error];
-            return;
-        }
-        STPCard *selectedCard;
-        NSMutableArray<STPCard *> *cards = [NSMutableArray array];
-        for (id<STPSource> source in customer.sources) {
-            if ([source isKindOfClass:[STPCard class]]) {
-                STPCard *card = (STPCard *)source;
-                [cards addObject:card];
-                if ([card.stripeID isEqualToString:customer.defaultSource.stripeID]) {
-                    selectedCard = card;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            STRONG(self);
+            if (!self) {
+                return;
+            }
+            if (error) {
+                [self.loadingPromise fail:error];
+                return;
+            }
+            STPCard *selectedCard;
+            NSMutableArray<STPCard *> *cards = [NSMutableArray array];
+            for (id<STPSource> source in customer.sources) {
+                if ([source isKindOfClass:[STPCard class]]) {
+                    STPCard *card = (STPCard *)source;
+                    [cards addObject:card];
+                    if ([card.stripeID isEqualToString:customer.defaultSource.stripeID]) {
+                        selectedCard = card;
+                    }
                 }
             }
-        }
-        STPCardTuple *tuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
-        STPPaymentMethodTuple *paymentTuple = [STPPaymentMethodTuple tupleWithCardTuple:tuple applePayEnabled:self.configuration.applePayEnabled];
-        [self.loadingPromise succeed:paymentTuple];
+            STPCardTuple *tuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
+            STPPaymentMethodTuple *paymentTuple = [STPPaymentMethodTuple tupleWithCardTuple:tuple applePayEnabled:self.configuration.applePayEnabled];
+            [self.loadingPromise succeed:paymentTuple];
+        });
     }];
 }
 
@@ -291,30 +293,34 @@
         else if ([self.selectedPaymentMethod isKindOfClass:[STPCard class]]) {
             STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(STPCard *)self.selectedPaymentMethod];
             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
-                if (error) {
-                    [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
-                } else {
-                    [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (error) {
+                        [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
+                    } else {
+                        [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+                    }
+                });
             }];
         }
         else if ([self.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
             STPApplePayTokenHandlerBlock applePayTokenHandler = ^(STPToken *token, STPErrorBlock tokenCompletion) {
                 [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *tokenError) {
-                    if (tokenError) {
-                        tokenCompletion(tokenError);
-                    } else {
-                        STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token.card];
-                        [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
-                            // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
-                            if (error) {
-                                tokenCompletion(error);
-                            } else {
-                                tokenCompletion(nil);
-                            }
-                        }];
-                    }
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (tokenError) {
+                            tokenCompletion(tokenError);
+                        } else {
+                            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token.card];
+                            [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
+                                // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
+                                if (error) {
+                                    tokenCompletion(error);
+                                } else {
+                                    tokenCompletion(nil);
+                                }
+                            }];
+                        }
+                    });
                 }];
             };
             PKPaymentAuthorizationViewController *paymentAuthVC;
@@ -371,15 +377,17 @@ static char kSTPPaymentCoordinatorAssociatedObjectKey;
                didCreateToken:(STPToken *)token
                    completion:(STPErrorBlock)completion {
     [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *error) {
-        if (error) {
-            completion(error);
-        } else {
-            [self.hostViewController dismissViewControllerAnimated:YES completion:^{
-                completion(nil);
-                self.selectedPaymentMethod = token.card;
-                [self requestPayment];
-            }];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                completion(error);
+            } else {
+                [self.hostViewController dismissViewControllerAnimated:YES completion:^{
+                    completion(nil);
+                    self.selectedPaymentMethod = token.card;
+                    [self requestPayment];
+                }];
+            }
+        });
     }];
 }
 
