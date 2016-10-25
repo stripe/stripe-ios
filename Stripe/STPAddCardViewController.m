@@ -38,6 +38,7 @@
 #import "STPColorUtils.h"
 #import "STPWeakStrongMacros.h"
 #import "STPLocalizationUtils.h"
+#import "STPDispatchFunctions.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPRememberMePaymentCellDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
@@ -305,12 +306,14 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         [[[self.checkoutAPIClient createTokenWithAccount:self.checkoutAccount] onSuccess:^(STPToken *token) {
             STRONG(self);
             [self.delegate addCardViewController:self didCreateToken:token completion:^(NSError * _Nullable error) {
-                if (error) {
-                    [self handleCheckoutTokenError:error];
-                }
-                else {
-                    self.loading = NO;
-                }
+                stpDispatchToMainThreadIfNecessary(^{
+                    if (error) {
+                        [self handleCheckoutTokenError:error];
+                    }
+                    else {
+                        self.loading = NO;
+                    }
+                });
             }];
         }] onFailure:^(NSError *error) {
             STRONG(self);
@@ -329,12 +332,14 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
                     [self.checkoutAPIClient createAccountWithCardParams:cardParams email:email phone:phone];
                 }
                 [self.delegate addCardViewController:self didCreateToken:token completion:^(NSError * _Nullable error) {
-                    if (error) {
-                        [self handleCardTokenError:error];
-                    }
-                    else {
-                        self.loading = NO;
-                    }
+                    stpDispatchToMainThreadIfNecessary(^{
+                        if (error) {
+                            [self handleCardTokenError:error];
+                        }
+                        else {
+                            self.loading = NO;
+                        }
+                    });
                 }];
             }
         }];

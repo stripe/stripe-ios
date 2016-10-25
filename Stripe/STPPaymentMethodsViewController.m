@@ -26,6 +26,7 @@
 #import "STPColorUtils.h"
 #import "STPWeakStrongMacros.h"
 #import "STPLocalizationUtils.h"
+#import "STPDispatchFunctions.h"
 
 @interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
 
@@ -60,25 +61,27 @@
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
     STPPromise<STPPaymentMethodTuple *> *promise = [STPPromise new];
     [apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
-        if (error) {
-            [promise fail:error];
-        } else {
-            STPCard *selectedCard;
-            NSMutableArray<STPCard *> *cards = [NSMutableArray array];
-            for (id<STPSource> source in customer.sources) {
-                if ([source isKindOfClass:[STPCard class]]) {
-                    STPCard *card = (STPCard *)source;
-                    [cards addObject:card];
-                    if ([card.stripeID isEqualToString:customer.defaultSource.stripeID]) {
-                        selectedCard = card;
+        stpDispatchToMainThreadIfNecessary(^{
+            if (error) {
+                [promise fail:error];
+            } else {
+                STPCard *selectedCard;
+                NSMutableArray<STPCard *> *cards = [NSMutableArray array];
+                for (id<STPSource> source in customer.sources) {
+                    if ([source isKindOfClass:[STPCard class]]) {
+                        STPCard *card = (STPCard *)source;
+                        [cards addObject:card];
+                        if ([card.stripeID isEqualToString:customer.defaultSource.stripeID]) {
+                            selectedCard = card;
+                        }
                     }
                 }
+                STPCardTuple *cardTuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
+                STPPaymentMethodTuple *tuple = [STPPaymentMethodTuple tupleWithCardTuple:cardTuple
+                                                                         applePayEnabled:configuration.applePayEnabled];
+                [promise succeed:tuple];
             }
-            STPCardTuple *cardTuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
-            STPPaymentMethodTuple *tuple = [STPPaymentMethodTuple tupleWithCardTuple:cardTuple
-                                                                     applePayEnabled:configuration.applePayEnabled];
-            [promise succeed:tuple];
-        }
+        });
     }];
     return [self initWithConfiguration:configuration
                             apiAdapter:apiAdapter
@@ -188,10 +191,12 @@
 
 - (void)internalViewControllerDidCreateToken:(STPToken *)token completion:(STPErrorBlock)completion {
     [self.apiAdapter attachSourceToCustomer:token completion:^(NSError * _Nullable error) {
-        completion(error);
-        if (!error) {
-            [self finishWithPaymentMethod:token.card];
-        }
+        stpDispatchToMainThreadIfNecessary(^{
+            completion(error);
+            if (!error) {
+                [self finishWithPaymentMethod:token.card];
+            }
+        });
     }];
 }
 
