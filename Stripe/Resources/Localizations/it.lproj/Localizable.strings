@@ -1,5 +1,5 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ che termina con %2$@";
+"%@ Ending In %@" = "%1$@ — %2$@";
 
 /* Title for Add a Card view */
 "Add a Card" = "Aggiungi una carta";

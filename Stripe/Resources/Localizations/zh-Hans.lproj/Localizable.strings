@@ -1,5 +1,5 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ 卡号尾数为 %2$@";
+"%@ Ending In %@" = "%1$@ — %2$@";
 
 /* Title for Add a Card view */
 "Add a Card" = "添加一张卡";
