@@ -40,8 +40,7 @@ CODE_SIGN_IDENTITY = iPhone Developer
 // delimited by whitespace, so any paths with spaces in them need to be properly quoted.
 // [-F]
 
-FRAMEWORK_SEARCH_PATHS = $(inherited)
-
+FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Carthage/Build/iOS
 
 GCC_TREAT_WARNINGS_AS_ERRORS = YES
 
@@ -90,3 +89,7 @@ OTHER_CFLAGS =
 // This is the basename of the product generated.
 
 PRODUCT_NAME = $(TARGET_NAME)
+
+
+ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
+
