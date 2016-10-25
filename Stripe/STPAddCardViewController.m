@@ -546,6 +546,14 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 #pragma mark - UITableView
 
 #if DEBUG
+
+/**
+ This method/property is used by unit tests to force the view into having remember me
+ being enabled for snapshot testing purposes.
+ 
+ It also bypasses the checks for seeing if the remember me switch
+ can be show below in `reloadRememberMeCellAnimated`
+ */
 - (void)setForceEnableRememberMeForTesting:(BOOL)forceEnableRememberMeForTesting {
     // force view load
     __unused UIView *view = self.view;
