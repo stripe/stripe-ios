@@ -1,58 +1,46 @@
-/* No comment provided by engineer. */
-"#23" = "n. 23";
-
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ che termina con %2$@";
 
-/* No comment provided by engineer. */
-"(555) 123-1234" = "0123 1231234";
-
-/* No comment provided by engineer. */
-"123 Address St" = "Via Dell'indirizzo 123";
-
-/* No comment provided by engineer. */
-"12345" = "12345";
-
-/* Placeholder for Postal Code field on address form */
-"ABC-1234" = "12345";
-
-/* No comment provided by engineer. */
+/* Title for Add a Card view */
 "Add a Card" = "Aggiungi una carta";
 
-/* No comment provided by engineer. */
+/* Button to add a new credit card. */
 "Add New Card…" = "Aggiungi nuova carta...";
 
-/* No comment provided by engineer. */
+/* Caption for Address field on address form */
 "Address" = "Indirizzo";
 
-/* No comment provided by engineer. */
+/* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
 
-/* No comment provided by engineer. */
+/* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Int.";
 
-/* No comment provided by engineer. */
+/* Text for back button */
 "Back" = "Indietro";
 
-/* No comment provided by engineer. */
-"CA" = "CA";
+/* Title for billing address entry section */
+"Billing Address" = "Indirizzo di fatturazione";
+
+/* Title for credit card number entry field */
+"Card" = "Carta";
 
 /* accessibility label for text field */
 "card number" = "numero carta";
 
-/* No comment provided by engineer. */
+/* Caption for City field on address form */
 "City" = "Città";
 
-/* No comment provided by engineer. */
+/* Caption for Country field on address form */
 "Country" = "Paese";
 
-/* No comment provided by engineer. */
-"County" = "Provincia";
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Contea";
 
-/* No comment provided by engineer. */
+/* Button on SMS verification screen if the user did not receive the SMS code. */
 "Didn't receive the code?" = "Codice non recapitato?";
 
-/* No comment provided by engineer. */
+/* Caption for Email field on address form */
 "Email" = "Email";
 
 /* No comment provided by engineer. */
@@ -67,55 +55,55 @@
 /* Error message for checkout account api call */
 "Failed to parse account response" = "Analisi sintattica della risposta dell'account non riuscita";
 
-/* No comment provided by engineer. */
+/* Cancel button for Remember Me SMS verification screen. */
 "Fill in your card details manually" = "Inserisci i dati della carta manualmente";
 
-/* No comment provided by engineer. */
+/* Message shown when the user enters an incorrect SMS verification code. */
 "Invalid Code" = "Codice non valido";
 
-/* No comment provided by engineer. */
-"John Appleseed" = "Maria Rossi";
-
-/* No comment provided by engineer. */
+/* Title for screen when data is still loading from the network. */
 "Loading…" = "Caricamento...";
 
-/* No comment provided by engineer. */
+/* Caption for Name field on address form */
 "Name" = "Nome";
 
-/* No comment provided by engineer. */
+/* Button to move to the next text entry field */
 "Next" = "Avanti";
 
 /* No comment provided by engineer. */
 "OK" = "OK";
 
-/* No comment provided by engineer. */
+/* Button to paste a copied SMS code into the verification field. */
 "Paste copied code?" = "Vuoi incollare il codice copiato?";
 
-/* No comment provided by engineer. */
+/* Title for Payment Method screen */
 "Payment Method" = "Metodo di pagamento";
 
-/* No comment provided by engineer. */
+/* Caption for Phone field on address form */
 "Phone" = "Tel.";
 
-/* No comment provided by engineer. */
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "CAP";
 
-/* No comment provided by engineer. */
-"San Francisco" = "Cagliari";
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provincia";
 
-/* No comment provided by engineer. */
+/* Label for the switch to enable Remember Me */
 "Save for use in other apps" = "Salva per usare in altre app";
 
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
 "Something went wrong with Remember Me: %@" = "Errore durante l'uso della funzione \"Ricordami\": %@";
 
-/* No comment provided by engineer. */
+/* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Stato";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+"State / Province / Region" = "Stato / Provincia / Regione";
 
 /* Footer shown when the user enables Remember Me that shows additional info. The html-style tags control which parts of the text link to the Stripe Privacy Policy, Terms of Service, and Remember Me More Info pages, and can be moved around as needed in the translation (although they CANNOT overlap). */
 "Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Autorizzo Stripe a memorizzare i miei dati di pagamento e il mio numero di telefono per usarli in questa e altre app, oltre che a usare il mio numero a scopo di verifica, nel rispetto dell'<pplink>Informativa sulla privacy</pplink> e dei <termslink>Termini del servizio</termslink> Stripe. <infolink>Ulteriori informazioni</infolink>";
 
-/* No comment provided by engineer. */
+/* Error message for network request being cancelled. */
 "The operation was cancelled" = "L'operazione è stata annullata";
 
 /* Error when there is a problem processing the credit card */
@@ -127,10 +115,10 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Errore inaspettato. Riprova fra qualche secondo.";
 
-/* No comment provided by engineer. */
+/* Error message when failing to type in SMS code for Remember me too many times. */
 "Too many incorrect attempts" = "Troppi tentativi falliti";
 
-/* No comment provided by engineer. */
+/* Title for SMS verification code screen */
 "Verification Code" = "Codice di verifica";
 
 /* Message shown after sending SMS verification code. The substitution is a phone number. */
@@ -141,9 +129,6 @@
 
 /* Placeholder text for Amex CVC field (4 digits) */
 "XXXX" = "XXXX";
-
-/* Placeholder for Email field on address form */
-"you@example.com" = "tu@esempio.it";
 
 /* Error when the card has already expired */
 "Your card has expired" = "La carta è scaduta";
@@ -163,6 +148,6 @@
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "Il codice di sicurezza della carta non è valido";
 
-/* No comment provided by engineer. */
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Codice postale";
 

@@ -10,15 +10,13 @@
 /* Caption for Address field on address form */
 "Address" = "Address";
 
-/* Apple Pay payment method
-   Text for Apple Pay payment method */
+/* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Apt.";
 
-/* Back button text
-   Text for back button */
+/* Text for back button */
 "Back" = "Back";
 
 /* Title for billing address entry section */

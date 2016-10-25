@@ -1,58 +1,46 @@
-/* No comment provided by engineer. */
-"#23" = "#23";
-
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@カード、下4桁: %2$@";
 
-/* No comment provided by engineer. */
-"(555) 123-1234" = "(045) 123-1234";
-
-/* No comment provided by engineer. */
-"123 Address St" = "123番地";
-
-/* No comment provided by engineer. */
-"12345" = "12345";
-
-/* Placeholder for Postal Code field on address form */
-"ABC-1234" = "240-0056";
-
-/* No comment provided by engineer. */
+/* Title for Add a Card view */
 "Add a Card" = "カードを追加";
 
-/* No comment provided by engineer. */
+/* Button to add a new credit card. */
 "Add New Card…" = "新しいカードの追加...";
 
-/* No comment provided by engineer. */
+/* Caption for Address field on address form */
 "Address" = "住所";
 
-/* No comment provided by engineer. */
+/* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
 
-/* No comment provided by engineer. */
+/* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "建物名";
 
-/* No comment provided by engineer. */
+/* Text for back button */
 "Back" = "戻る";
 
-/* No comment provided by engineer. */
-"CA" = "市町村区";
+/* Title for billing address entry section */
+"Billing Address" = "請求先住所";
+
+/* Title for credit card number entry field */
+"Card" = "カード番号";
 
 /* accessibility label for text field */
 "card number" = "カード番号";
 
-/* No comment provided by engineer. */
+/* Caption for City field on address form */
 "City" = "市";
 
-/* No comment provided by engineer. */
+/* Caption for Country field on address form */
 "Country" = "国";
 
-/* No comment provided by engineer. */
-"County" = "都道府県";
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "群";
 
-/* No comment provided by engineer. */
+/* Button on SMS verification screen if the user did not receive the SMS code. */
 "Didn't receive the code?" = "確認コードを受けとっていませんか?";
 
-/* No comment provided by engineer. */
+/* Caption for Email field on address form */
 "Email" = "メールアドレス";
 
 /* No comment provided by engineer. */
@@ -67,55 +55,55 @@
 /* Error message for checkout account api call */
 "Failed to parse account response" = "アカウントの応答を解析できませんでした";
 
-/* No comment provided by engineer. */
+/* Cancel button for Remember Me SMS verification screen. */
 "Fill in your card details manually" = "カード情報を手動で入力してください";
 
-/* No comment provided by engineer. */
+/* Message shown when the user enters an incorrect SMS verification code. */
 "Invalid Code" = "確認コードが不正です";
 
-/* No comment provided by engineer. */
-"John Appleseed" = "縞　花子";
-
-/* No comment provided by engineer. */
+/* Title for screen when data is still loading from the network. */
 "Loading…" = "ロード中...";
 
-/* No comment provided by engineer. */
+/* Caption for Name field on address form */
 "Name" = "名前";
 
-/* No comment provided by engineer. */
+/* Button to move to the next text entry field */
 "Next" = "次へ";
 
 /* No comment provided by engineer. */
 "OK" = "OK";
 
-/* No comment provided by engineer. */
+/* Button to paste a copied SMS code into the verification field. */
 "Paste copied code?" = "コピーした確認コードを貼り付けますか?";
 
-/* No comment provided by engineer. */
+/* Title for Payment Method screen */
 "Payment Method" = "お支払い方法";
 
-/* No comment provided by engineer. */
+/* Caption for Phone field on address form */
 "Phone" = "電話";
 
-/* No comment provided by engineer. */
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "郵便番号";
 
-/* No comment provided by engineer. */
-"San Francisco" = "東京";
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "省";
 
-/* No comment provided by engineer. */
+/* Label for the switch to enable Remember Me */
 "Save for use in other apps" = "他のアプリで使用するために保存";
 
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
 "Something went wrong with Remember Me: %@" = "保存中にネットワークエラーが発生しました: %@";
 
-/* No comment provided by engineer. */
-"State" = "市町村区";
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "州";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+"State / Province / Region" = "都道府県";
 
 /* Footer shown when the user enables Remember Me that shows additional info. The html-style tags control which parts of the text link to the Stripe Privacy Policy, Terms of Service, and Remember Me More Info pages, and can be moved around as needed in the translation (although they CANNOT overlap). */
 "Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "入力した支払い情報と電話番号は、Stripe の<pplink>プライバシーポリシー</pplink>と<termslink>利用規約</termslink>に基づき、このアプリおよび他のアプリで使用するために Stripe によって保管されます。Stripe はこの電話番号を確認のために使用することがあります。<infolink>詳しくはこちら</infolink>";
 
-/* No comment provided by engineer. */
+/* Error message for network request being cancelled. */
 "The operation was cancelled" = "処理がキャンセルされました";
 
 /* Error when there is a problem processing the credit card */
@@ -127,10 +115,10 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "予期しないエラーが発生しました。数秒後にもう一度お試しください";
 
-/* No comment provided by engineer. */
+/* Error message when failing to type in SMS code for Remember me too many times. */
 "Too many incorrect attempts" = "再試行の回数が上限を超えました";
 
-/* No comment provided by engineer. */
+/* Title for SMS verification code screen */
 "Verification Code" = "確認コード";
 
 /* Message shown after sending SMS verification code. The substitution is a phone number. */
@@ -141,9 +129,6 @@
 
 /* Placeholder text for Amex CVC field (4 digits) */
 "XXXX" = "XXXX";
-
-/* Placeholder for Email field on address form */
-"you@example.com" = "you@example.com";
 
 /* Error when the card has already expired */
 "Your card has expired" = "カードの有効期限が切れています";
@@ -163,6 +148,6 @@
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "指定したカードのセキュリティコードが無効です";
 
-/* No comment provided by engineer. */
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "郵便番号";
 

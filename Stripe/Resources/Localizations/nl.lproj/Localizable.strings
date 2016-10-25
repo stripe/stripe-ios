@@ -1,58 +1,46 @@
-/* No comment provided by engineer. */
-"#23" = "nr. 23";
-
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ eindigend op %2$@";
 
-/* No comment provided by engineer. */
-"(555) 123-1234" = "012-3456789";
-
-/* No comment provided by engineer. */
-"123 Address St" = "Adreslaan 123";
-
-/* No comment provided by engineer. */
-"12345" = "12345";
-
-/* Placeholder for Postal Code field on address form */
-"ABC-1234" = "1234 ZZ";
-
-/* No comment provided by engineer. */
+/* Title for Add a Card view */
 "Add a Card" = "Een kaart toevoegen";
 
-/* No comment provided by engineer. */
+/* Button to add a new credit card. */
 "Add New Card…" = "Nieuwe kaart toevoegen…";
 
-/* No comment provided by engineer. */
+/* Caption for Address field on address form */
 "Address" = "Adres";
 
-/* No comment provided by engineer. */
+/* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
 
-/* No comment provided by engineer. */
+/* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Adresregel 2";
 
-/* No comment provided by engineer. */
+/* Text for back button */
 "Back" = "Terug";
 
-/* No comment provided by engineer. */
-"CA" = "Gelderland";
+/* Title for billing address entry section */
+"Billing Address" = "Factureringsadres";
+
+/* Title for credit card number entry field */
+"Card" = "Kaart";
 
 /* accessibility label for text field */
 "card number" = "kaartnummer";
 
-/* No comment provided by engineer. */
+/* Caption for City field on address form */
 "City" = "Plaats";
 
-/* No comment provided by engineer. */
+/* Caption for Country field on address form */
 "Country" = "Land";
 
-/* No comment provided by engineer. */
-"County" = "Provincie";
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Graafschap";
 
-/* No comment provided by engineer. */
+/* Button on SMS verification screen if the user did not receive the SMS code. */
 "Didn't receive the code?" = "Code niet ontvangen?";
 
-/* No comment provided by engineer. */
+/* Caption for Email field on address form */
 "Email" = "E-mailadres";
 
 /* No comment provided by engineer. */
@@ -67,55 +55,55 @@
 /* Error message for checkout account api call */
 "Failed to parse account response" = "Kan accountreactie niet parseren";
 
-/* No comment provided by engineer. */
+/* Cancel button for Remember Me SMS verification screen. */
 "Fill in your card details manually" = "Vul uw kaartgegevens handmatig in";
 
-/* No comment provided by engineer. */
+/* Message shown when the user enters an incorrect SMS verification code. */
 "Invalid Code" = "Ongeldige code";
 
-/* No comment provided by engineer. */
-"John Appleseed" = "Jan de Vries";
-
-/* No comment provided by engineer. */
+/* Title for screen when data is still loading from the network. */
 "Loading…" = "Laden…";
 
-/* No comment provided by engineer. */
+/* Caption for Name field on address form */
 "Name" = "Naam";
 
-/* No comment provided by engineer. */
+/* Button to move to the next text entry field */
 "Next" = "Volgende";
 
 /* No comment provided by engineer. */
 "OK" = "OK";
 
-/* No comment provided by engineer. */
+/* Button to paste a copied SMS code into the verification field. */
 "Paste copied code?" = "Gekopieerde code plakken?";
 
-/* No comment provided by engineer. */
+/* Title for Payment Method screen */
 "Payment Method" = "Betalingsmethode";
 
-/* No comment provided by engineer. */
+/* Caption for Phone field on address form */
 "Phone" = "Telefoon";
 
-/* No comment provided by engineer. */
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postcode";
 
-/* No comment provided by engineer. */
-"San Francisco" = "Arnhem";
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provincie";
 
-/* No comment provided by engineer. */
+/* Label for the switch to enable Remember Me */
 "Save for use in other apps" = "Opslaan voor gebruik in andere apps";
 
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
 "Something went wrong with Remember Me: %@" = "Er is iets fout gegaan bij Mij onthouden: %@";
 
-/* No comment provided by engineer. */
+/* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Staat";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+"State / Province / Region" = "Staat/provincie/regio";
 
 /* Footer shown when the user enables Remember Me that shows additional info. The html-style tags control which parts of the text link to the Stripe Privacy Policy, Terms of Service, and Remember Me More Info pages, and can be moved around as needed in the translation (although they CANNOT overlap). */
 "Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Stripe kan mijn betalingsgegevens en telefoonnummer opslaan voor gebruik in deze app en andere apps, en mijn nummer voor verificatiedoeleinden gebruiken, krachtens het <pplink>Privacybeleid</pplink> en de <termslink>Voorwaarden</termslink>. <infolink>Meer info</infolink>";
 
-/* No comment provided by engineer. */
+/* Error message for network request being cancelled. */
 "The operation was cancelled" = "De bewerking is geannuleerd";
 
 /* Error when there is a problem processing the credit card */
@@ -127,10 +115,10 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Er is een onverwachte fout opgetreden -- Probeer het over enkele seconden opnieuw";
 
-/* No comment provided by engineer. */
+/* Error message when failing to type in SMS code for Remember me too many times. */
 "Too many incorrect attempts" = "Te veel onjuiste pogingen";
 
-/* No comment provided by engineer. */
+/* Title for SMS verification code screen */
 "Verification Code" = "Verificatiecode";
 
 /* Message shown after sending SMS verification code. The substitution is a phone number. */
@@ -141,9 +129,6 @@
 
 /* Placeholder text for Amex CVC field (4 digits) */
 "XXXX" = "XXXX";
-
-/* Placeholder for Email field on address form */
-"you@example.com" = "uwnaam@voorbeeld.com";
 
 /* Error when the card has already expired */
 "Your card has expired" = "Uw kaart is vervallen";
@@ -163,6 +148,6 @@
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "De beveiligingscode van uw kaart is ongeldig";
 
-/* No comment provided by engineer. */
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Postcode";
 
