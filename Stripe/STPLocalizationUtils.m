@@ -13,10 +13,10 @@
 
 #if DEBUG
 
-static NSString *gLanguageOverride = nil;
+static NSString *languageOverride = nil;
 
 + (void)overrideLanguageTo:(NSString *)string {
-    gLanguageOverride = string;
+    languageOverride = string;
 }
 
 #endif
@@ -25,13 +25,12 @@ static NSString *gLanguageOverride = nil;
     NSBundle *bundle = [STPBundleLocator stripeResourcesBundle];
     
 #if DEBUG
-    if (gLanguageOverride) {
+    if (languageOverride) {
         
-        NSString *lprojPath = [bundle pathForResource:gLanguageOverride ofType:@"lproj"];
+        NSString *lprojPath = [bundle pathForResource:languageOverride ofType:@"lproj"];
         if (lprojPath) {
             bundle = [NSBundle bundleWithPath:lprojPath];
         }
-        [bundle localizedStringForKey:key value:nil table:nil];
     }
 #endif
     

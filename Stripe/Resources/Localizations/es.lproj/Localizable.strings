@@ -92,7 +92,7 @@
 "Save for use in other apps" = "Guardar para otras aplicaciones";
 
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
-"Something went wrong with Remember Me: %@" = "La función \"Recordarme\" no ha funcionado bien: %@";
+"Something went wrong with Remember Me: %@" = "La función “Recordarme” no ha funcionado bien: %@";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Estado";

@@ -22,8 +22,8 @@
  e.g. passing in @"fr" will use the strings in the "fr.lproj" directory
  inside the Stripe bundle.
  
- You can use this to override the language used by NSLocalizedString, however
- it is not recommend outside of debug environments.
+ You can use this to override the language used by STPLocalizedString, however
+ it is not recommended outside of debug environments.
  */
 + (void)overrideLanguageTo:(nullable NSString *)string;
 #endif
