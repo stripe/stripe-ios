@@ -89,3 +89,7 @@ OTHER_CFLAGS =
 // This is the basename of the product generated.
 
 PRODUCT_NAME = $(TARGET_NAME)
+
+
+ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
+
