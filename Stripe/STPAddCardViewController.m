@@ -64,7 +64,7 @@
 @property(nonatomic)BOOL lookupSucceeded;
 @property(nonatomic)STPRememberMeTermsView *rememberMeTermsView;
 @property(nonatomic)BOOL showingRememberMePhoneAndTerms;
-#if DEBUG
+#ifdef STRIPE_UNIT_TESTS_ENABLED
 @property(nonatomic)BOOL forceEnableRememberMeForTesting;
 #endif
 @end
@@ -545,7 +545,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 #pragma mark - UITableView
 
-#if DEBUG
+#ifdef STRIPE_UNIT_TESTS_ENABLED
 
 /**
  This method/property is used by unit tests to force the view into having remember me
@@ -569,7 +569,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 - (void)reloadRememberMeCellAnimated:(BOOL)animated {
     BOOL disabled = (!self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.configuration.smsAutofillDisabled || self.lookupSucceeded || self.managedAccountCurrency) && (self.rememberMePhoneCell.contentView.alpha < FLT_EPSILON || self.rememberMePhoneCell.superview == nil);
-#if DEBUG
+#ifdef STRIPE_UNIT_TESTS_ENABLED
     if (self.forceEnableRememberMeForTesting) {
         disabled = NO;
     }

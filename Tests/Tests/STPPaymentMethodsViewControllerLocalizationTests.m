@@ -10,6 +10,7 @@
 #import <Stripe/Stripe.h>
 
 #import "TestSTPBackendAPIAdapter.h"
+#import "STPLocalizationUtils+STPTestAdditions.h"
 
 @interface STPPaymentMethodsViewControllerLocalizationTests : FBSnapshotTestCase <STPPaymentMethodsViewControllerDelegate>
 

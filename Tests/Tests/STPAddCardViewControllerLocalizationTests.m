@@ -11,6 +11,9 @@
 #import "STPSwitchTableViewCell.h"
 #import "STPAddressViewModel.h"
 #import "STPAddressFieldTableViewCell.h"
+#import "STPLocalizationUtils.h"
+#import "STPBundleLocator.h"
+#import "STPLocalizationUtils+STPTestAdditions.h"
 
 @interface STPAddCardViewControllerLocalizationTests : FBSnapshotTestCase
 

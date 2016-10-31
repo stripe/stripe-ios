@@ -37,4 +37,3 @@
 #import "STPPaymentConfiguration.h"
 #import "STPAPIResponseDecodable.h"
 #import "STPFormEncodable.h"
-#import "STPLocalizationUtils.h"
