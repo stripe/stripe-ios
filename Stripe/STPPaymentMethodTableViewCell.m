@@ -96,7 +96,7 @@
         return [self buildAttributedStringForCard:(STPCard *)paymentMethod selected:selected];
     } else if ([paymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
         NSString *label = STPLocalizedString(@"Apple Pay", 
-                                             @"Apple Pay payment method");
+                                             @"Text for Apple Pay payment method");
         UIColor *primaryColor = [self primaryColorForPaymentMethodWithSelectedState:selected];
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
     }

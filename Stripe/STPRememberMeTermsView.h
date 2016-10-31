@@ -19,6 +19,8 @@ typedef void(^STPRememberMeTermsPushVCBlock)(UIViewController *vc);
 @property(nonatomic)UIEdgeInsets insets;
 @property (nonatomic, copy)STPRememberMeTermsPushVCBlock pushViewControllerBlock;
 
+- (CGFloat)heightForWidth:(CGFloat)maxWidth;
+
 @end
 
 NS_ASSUME_NONNULL_END

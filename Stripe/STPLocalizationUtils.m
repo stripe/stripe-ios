@@ -12,7 +12,9 @@
 @implementation STPLocalizationUtils
 
 + (NSString *)localizedStripeStringForKey:(NSString *)key {
-    return [[STPBundleLocator stripeResourcesBundle] localizedStringForKey:key value:key table:nil];
+    NSBundle *bundle = [STPBundleLocator stripeResourcesBundle];
+
+    return [bundle localizedStringForKey:key value:nil table:nil];
 }
 
 @end

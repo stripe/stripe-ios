@@ -64,6 +64,10 @@
 @property(nonatomic)STPCard *checkoutAccountCard;
 @property(nonatomic)BOOL lookupSucceeded;
 @property(nonatomic)STPRememberMeTermsView *rememberMeTermsView;
+@property(nonatomic)BOOL showingRememberMePhoneAndTerms;
+#ifdef STRIPE_UNIT_TESTS_ENABLED
+@property(nonatomic)BOOL forceEnableRememberMeForTesting;
+#endif
 @end
 
 static NSString *const STPPaymentCardCellReuseIdentifier = @"STPPaymentCardCellReuseIdentifier";
@@ -209,6 +213,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     self.rememberMeCell.theme = self.theme;
     self.rememberMePhoneCell.theme = self.theme;
     self.rememberMeTermsView.theme = self.theme;
+    [self reloadRememberMeSectionForFooterSizeChangeIfNecessary];
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
@@ -221,6 +226,20 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     self.tableView.frame = self.view.bounds;
+    [self reloadRememberMeSectionForFooterSizeChangeIfNecessary];
+}
+
+- (void)reloadRememberMeSectionForFooterSizeChangeIfNecessary {
+    
+    if (self.showingRememberMePhoneAndTerms
+        && self.rememberMeTermsView.superview != nil) {
+        
+        // This should force the table to recalc all of its heights
+        // And therefore render the footer appropriately if its height changed
+        [self.tableView beginUpdates];
+        [self.tableView endUpdates];
+        
+    }
 }
 
 - (void)setLoading:(BOOL)loading {
@@ -326,7 +345,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
             } else {
                 NSString *phone = self.rememberMePhoneCell.contents;
                 NSString *email = self.emailCell.contents;
-                BOOL rememberMeSelected = [STPEmailAddressValidator stringIsValidEmailAddress:email] && [STPPhoneNumberValidator stringIsValidPhoneNumber:phone] && self.rememberMeCell.on;
+                BOOL rememberMeSelected = [STPEmailAddressValidator stringIsValidEmailAddress:email] && [STPPhoneNumberValidator stringIsValidPhoneNumber:phone] && self.showingRememberMePhoneAndTerms;
                 [[STPAnalyticsClient sharedClient] logRememberMeConversion:rememberMeSelected];
                 if (rememberMeSelected) {
                     [self.checkoutAPIClient createAccountWithCardParams:cardParams email:email phone:phone];
@@ -503,7 +522,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     // this is the email cell; do nothing.
 }
 
-- (void)switchTableViewCell:(STPSwitchTableViewCell *)cell didToggleSwitch:(BOOL)on {
+- (void)switchTableViewCell:(__unused STPSwitchTableViewCell *)cell didToggleSwitch:(BOOL)on {
+    self.showingRememberMePhoneAndTerms = on;
+
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1
                                                 inSection:STPPaymentCardRememberMeSection];
     [self.tableView beginUpdates];
@@ -513,7 +534,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
     }
     [self.tableView endUpdates];
-    
+
     [UIView animateWithDuration:0.1 animations:^{
         self.rememberMeTermsView.textView.alpha = on ? 1.0f : 0.0f;
     }];
@@ -529,8 +550,35 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 
 #pragma mark - UITableView
 
+#ifdef STRIPE_UNIT_TESTS_ENABLED
+
+/**
+ This method/property is used by unit tests to force the view into having remember me
+ being enabled for snapshot testing purposes.
+ 
+ It also bypasses the checks for seeing if the remember me switch
+ can be show below in `reloadRememberMeCellAnimated`
+ */
+- (void)setForceEnableRememberMeForTesting:(BOOL)forceEnableRememberMeForTesting {
+    // force view load
+    __unused UIView *view = self.view;
+    
+    [self.tableView setNeedsLayout];
+    [self.tableView layoutIfNeeded];
+    _forceEnableRememberMeForTesting = forceEnableRememberMeForTesting;
+    [self reloadRememberMeCellAnimated:NO];
+    self.rememberMeCell.on = forceEnableRememberMeForTesting;
+    [self switchTableViewCell:self.rememberMeCell didToggleSwitch:forceEnableRememberMeForTesting];
+}
+#endif
+
 - (void)reloadRememberMeCellAnimated:(BOOL)animated {
     BOOL disabled = (!self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.configuration.smsAutofillDisabled || self.lookupSucceeded || self.managedAccountCurrency) && (self.rememberMePhoneCell.contentView.alpha < FLT_EPSILON || self.rememberMePhoneCell.superview == nil);
+#ifdef STRIPE_UNIT_TESTS_ENABLED
+    if (self.forceEnableRememberMeForTesting) {
+        disabled = NO;
+    }
+#endif
     [UIView animateWithDuration:(0.2f * animated) animations:^{
         self.rememberMeCell.contentView.alpha = disabled ? 0 : 1;
     } completion:^(__unused BOOL finished) {
@@ -554,7 +602,7 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
     } else if (section == STPPaymentCardBillingAddressSection) {
         return self.addressViewModel.addressCells.count;
     } else if (section == STPPaymentCardRememberMeSection) {
-        return self.rememberMeCell.on ? 2 : 1;
+        return self.showingRememberMePhoneAndTerms ? 2 : 1;
     }
     return 0;
 }
@@ -593,8 +641,9 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if (section == STPPaymentCardRememberMeSection) {
-        return 140.0f;
+    if (section == STPPaymentCardRememberMeSection 
+        && self.showingRememberMePhoneAndTerms) {
+        return [self.rememberMeTermsView heightForWidth:CGRectGetWidth(self.tableView.frame)];
     } else if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
         return 0.01f;
     }
@@ -624,10 +673,12 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
         NSDictionary *attributes = @{NSParagraphStyleAttributeName: style};
         label.textColor = self.theme.secondaryForegroundColor;
         if (section == STPPaymentCardNumberSection) {
-            label.attributedText = [[NSAttributedString alloc] initWithString:@"Card" attributes:attributes];
+            label.attributedText = [[NSAttributedString alloc] initWithString:STPLocalizedString(@"Card", @"Title for credit card number entry field") 
+                                                                   attributes:attributes];
             return label;
         } else if (section == STPPaymentCardBillingAddressSection) {
-            label.attributedText = [[NSAttributedString alloc] initWithString:@"Billing Address" attributes:attributes];
+            label.attributedText = [[NSAttributedString alloc] initWithString:STPLocalizedString(@"Billing Address", @"Title for billing address entry section")
+                                                                   attributes:attributes];
             return label;
         }
     }
@@ -635,10 +686,12 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 }
 
 - (UIView *)tableView:(__unused UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if (section != STPPaymentCardRememberMeSection) {
+    if (section == STPPaymentCardRememberMeSection) {
+        return self.rememberMeTermsView;
+    }
+    else {
         return [UIView new];
     }
-    return self.rememberMeTermsView;
 }
 
 @end

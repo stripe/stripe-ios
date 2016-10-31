@@ -1,20 +1,5 @@
-/* Placeholder for Apartment/Address line 2 on address form */
-"#23" = "#23";
-
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ Ending In %2$@";
-
-/* Placeholder for Phone field on address form */
-"(555) 123-1234" = "(555) 123-1234";
-
-/* Placeholder for Address field on address form */
-"123 Address St" = "123 Address St";
-
-/* Placeholder for Zip Code field on address form */
-"12345" = "12345";
-
-/* Placeholder for Postal Code field on address form */
-"ABC-1234" = "ABC-1234";
 
 /* Title for Add a Card view */
 "Add a Card" = "Add a Card";
@@ -25,19 +10,20 @@
 /* Caption for Address field on address form */
 "Address" = "Address";
 
-/* Apple Pay payment method
-   Text for Apple Pay payment method */
+/* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Apt.";
 
-/* Back button text
-   Text for back button */
+/* Text for back button */
 "Back" = "Back";
 
-/* Placeholder for State field on address form (US region only) */
-"CA" = "CA";
+/* Title for billing address entry section */
+"Billing Address" = "Billing Address";
+
+/* Title for credit card number entry field */
+"Card" = "Card";
 
 /* accessibility label for text field */
 "card number" = "card number";
@@ -48,7 +34,7 @@
 /* Caption for Country field on address form */
 "Country" = "Country";
 
-/* Caption for County field on address form (non-US regions only) */
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "County";
 
 /* Button on SMS verification screen if the user did not receive the SMS code. */
@@ -75,9 +61,6 @@
 /* Message shown when the user enters an incorrect SMS verification code. */
 "Invalid Code" = "Invalid Code";
 
-/* Placeholder for Name field on address form */
-"John Appleseed" = "John Appleseed";
-
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Loading…";
 
@@ -99,11 +82,11 @@
 /* Caption for Phone field on address form */
 "Phone" = "Phone";
 
-/* Caption for Postal Code field on address form (non-US regions only) */
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postal Code";
 
-/* Placeholder for City field on address form */
-"San Francisco" = "San Francisco";
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Province";
 
 /* Label for the switch to enable Remember Me */
 "Save for use in other apps" = "Save for use in other apps";
@@ -111,8 +94,11 @@
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
 "Something went wrong with Remember Me: %@" = "Something went wrong with Remember Me: %@";
 
-/* Caption for State field on address form (US region only) */
+/* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "State";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+"State / Province / Region" = "State / Province / Region";
 
 /* Footer shown when the user enables Remember Me that shows additional info. The html-style tags control which parts of the text link to the Stripe Privacy Policy, Terms of Service, and Remember Me More Info pages, and can be moved around as needed in the translation (although they CANNOT overlap). */
 "Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>";
@@ -144,9 +130,6 @@
 /* Placeholder text for Amex CVC field (4 digits) */
 "XXXX" = "XXXX";
 
-/* Placeholder for Email field on address form */
-"you@example.com" = "you@example.com";
-
 /* Error when the card has already expired */
 "Your card has expired" = "Your card has expired";
 
@@ -165,6 +148,6 @@
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "Your card's security code is invalid";
 
-/* Caption for Zip Code field on address form (US region only) */
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "ZIP Code";
 

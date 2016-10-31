@@ -20,7 +20,7 @@
 
 @interface STPSwitchTableViewCell : UITableViewCell
 
-@property(nonatomic, readonly)BOOL on;
+@property(nonatomic)BOOL on;
 @property(nonatomic)STPTheme *theme;
 
 - (void)configureWithLabel:(NSString *)label

@@ -8,21 +8,34 @@
 
 #import "TestSTPBackendAPIAdapter.h"
 
+#import "STPTestUtils.h"
+
 @implementation TestSTPBackendAPIAdapter
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-parameter"
+- (STPCustomer *)createTestCustomer {
+    NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:@"Card"] mutableCopy];
+    card1[@"id"] = @"card_123";
+    
+    NSMutableDictionary *customer = [[STPTestUtils jsonNamed:@"Customer"] mutableCopy];
+    NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
+    sources[@"data"] = @[card1];
+    customer[@"default_source"] = card1[@"id"];
+    customer[@"sources"] = sources;
+    
+    STPCustomerDeserializer *deserializer = [[STPCustomerDeserializer alloc] initWithJSONResponse:customer];
+    return deserializer.customer;
+    
+}
+
 - (void)retrieveCustomer:(STPCustomerCompletionBlock)completion {
-    
+    completion([self createTestCustomer], nil);
 }
 
-- (void)attachSourceToCustomer:(id<STPSource>)source completion:(STPErrorBlock)completion {
-    
+- (void)attachSourceToCustomer:(__unused id<STPSource>)source completion:(STPErrorBlock)completion {
+    completion(nil);
 }
 
-- (void)selectDefaultCustomerSource:(id<STPSource>)source completion:(STPErrorBlock)completion {
-    
+- (void)selectDefaultCustomerSource:(__unused id<STPSource>)source completion:(STPErrorBlock)completion {
+    completion(nil);
 }
-#pragma clang diagnostic pop
-
 @end
