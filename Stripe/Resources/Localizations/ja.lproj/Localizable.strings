@@ -59,7 +59,7 @@
 "Fill in your card details manually" = "カード情報を手動で入力してください";
 
 /* Message shown when the user enters an incorrect SMS verification code. */
-"Invalid Code" = "確認コードが不正です";
+"Invalid Code" = "確認コードが無効です";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "ロード中...";

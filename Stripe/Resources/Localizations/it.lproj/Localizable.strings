@@ -5,7 +5,7 @@
 "Add a Card" = "Aggiungi una carta";
 
 /* Button to add a new credit card. */
-"Add New Card…" = "Aggiungi nuova carta...";
+"Add New Card…" = "Aggiungi una nuova carta...";
 
 /* Caption for Address field on address form */
 "Address" = "Indirizzo";
@@ -26,7 +26,7 @@
 "Card" = "Carta";
 
 /* accessibility label for text field */
-"card number" = "numero carta";
+"card number" = "numero della carta";
 
 /* Caption for City field on address form */
 "City" = "Città";
@@ -35,25 +35,25 @@
 "Country" = "Paese";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Contea";
+"County" = "Stato";
 
 /* Button on SMS verification screen if the user did not receive the SMS code. */
-"Didn't receive the code?" = "Codice non recapitato?";
+"Didn't receive the code?" = "Non hai ricevuto il codice?";
 
 /* Caption for Email field on address form */
 "Email" = "Email";
 
 /* No comment provided by engineer. */
-"Enter card details manually" = "Digita i dati della carta manualmente";
+"Enter card details manually" = "Inserisci i dati della carta manualmente";
 
 /* No comment provided by engineer. */
-"Enter the verification code to use the payment info you stored with Stripe." = "Inserisci il codice di verifica per usare i dati di pagamento memorizzati in Stripe.";
+"Enter the verification code to use the payment info you stored with Stripe." = "Inserisci il codice di verifica per usare i dati di pagamento memorizzati su Stripe.";
 
 /* accessibility label for text field */
 "expiration date" = "data di scadenza";
 
 /* Error message for checkout account api call */
-"Failed to parse account response" = "Analisi sintattica della risposta dell'account non riuscita";
+"Failed to parse account response" = "L'analisi della risposta dell'account è fallita";
 
 /* Cancel button for Remember Me SMS verification screen. */
 "Fill in your card details manually" = "Inserisci i dati della carta manualmente";
@@ -74,16 +74,16 @@
 "OK" = "OK";
 
 /* Button to paste a copied SMS code into the verification field. */
-"Paste copied code?" = "Vuoi incollare il codice copiato?";
+"Paste copied code?" = "Incolla il codice copiato?";
 
 /* Title for Payment Method screen */
 "Payment Method" = "Metodo di pagamento";
 
 /* Caption for Phone field on address form */
-"Phone" = "Tel.";
+"Phone" = "Telefono";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
-"Postal Code" = "CAP";
+"Postal Code" = "Codice postale";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provincia";
@@ -101,7 +101,7 @@
 "State / Province / Region" = "Stato / Provincia / Regione";
 
 /* Footer shown when the user enables Remember Me that shows additional info. The html-style tags control which parts of the text link to the Stripe Privacy Policy, Terms of Service, and Remember Me More Info pages, and can be moved around as needed in the translation (although they CANNOT overlap). */
-"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Autorizzo Stripe a memorizzare i miei dati di pagamento e il mio numero di telefono per usarli in questa e altre app, oltre che a usare il mio numero a scopo di verifica, nel rispetto dell'<pplink>Informativa sulla privacy</pplink> e dei <termslink>Termini del servizio</termslink> Stripe. <infolink>Ulteriori informazioni</infolink>";
+"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Autorizzo Stripe a memorizzare i miei dati di pagamento e il mio numero di telefono per usarli in questa e altre app, oltre che a usare il mio numero di telefono a scopo di verifica, nel rispetto dell'<pplink>Informativa sulla privacy</pplink> e dei <termslink>Termini del servizio</termslink> Stripe. <infolink>Ulteriori informazioni</infolink>";
 
 /* Error message for network request being cancelled. */
 "The operation was cancelled" = "L'operazione è stata annullata";
@@ -122,7 +122,7 @@
 "Verification Code" = "Codice di verifica";
 
 /* Message shown after sending SMS verification code. The substitution is a phone number. */
-"We just sent a text message to: %@" = "Inviato SMS al numero: %@";
+"We just sent a text message to: %@" = "Abbiamo inviato un SMS al numero: %@";
 
 /* Placeholder text for non-Amex CVC field (3 digits) */
 "XXX" = "XXX";

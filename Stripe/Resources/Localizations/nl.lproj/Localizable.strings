@@ -101,7 +101,7 @@
 "State / Province / Region" = "Staat/provincie/regio";
 
 /* Footer shown when the user enables Remember Me that shows additional info. The html-style tags control which parts of the text link to the Stripe Privacy Policy, Terms of Service, and Remember Me More Info pages, and can be moved around as needed in the translation (although they CANNOT overlap). */
-"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Stripe kan mijn betalingsgegevens en telefoonnummer opslaan voor gebruik in deze app en andere apps, en mijn nummer voor verificatiedoeleinden gebruiken, krachtens het <pplink>Privacybeleid</pplink> en de <termslink>Voorwaarden</termslink>. <infolink>Meer info</infolink>";
+"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Stripe kan mijn betalingsgegevens en telefoonnummer opslaan voor gebruik in deze app en andere apps, en mijn nummer voor verificatie doeleinden gebruiken, krachtens het <pplink>Privacy Beleid</pplink> en de <termslink>Voorwaarden</termslink>. <infolink>Meer info</infolink>";
 
 /* Error message for network request being cancelled. */
 "The operation was cancelled" = "De bewerking is geannuleerd";

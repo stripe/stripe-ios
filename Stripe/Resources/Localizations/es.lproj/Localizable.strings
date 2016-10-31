@@ -44,19 +44,19 @@
 "Email" = "Dirección de correo electrónico";
 
 /* No comment provided by engineer. */
-"Enter card details manually" = "Escribe los datos de la tarjeta manualmente.";
+"Enter card details manually" = "Introduce los datos de la tarjeta manualmente";
 
 /* No comment provided by engineer. */
-"Enter the verification code to use the payment info you stored with Stripe." = "Escribe el código de verificación para usar la información de pago que tiene almacenada Stripe.";
+"Enter the verification code to use the payment info you stored with Stripe." = "Escribe el código de verificación para usar la información de pago que guardaste con Stripe.";
 
 /* accessibility label for text field */
 "expiration date" = "fecha de vencimiento";
 
 /* Error message for checkout account api call */
-"Failed to parse account response" = "Error al analizar la respuesta de la cuenta.";
+"Failed to parse account response" = "Fallo al analizar la respuesta de la cuenta";
 
 /* Cancel button for Remember Me SMS verification screen. */
-"Fill in your card details manually" = "Rellena los datos de la tarjeta manualmente.";
+"Fill in your card details manually" = "Introduce los datos de la tarjeta manualmente";
 
 /* Message shown when the user enters an incorrect SMS verification code. */
 "Invalid Code" = "Código no válido";
@@ -92,7 +92,7 @@
 "Save for use in other apps" = "Guardar para otras aplicaciones";
 
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
-"Something went wrong with Remember Me: %@" = "La función “Recordarme” no ha funcionado bien: %@";
+"Something went wrong with Remember Me: %@" = "Error durante el uso de la función “Recordarme”: %@";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Estado";
@@ -101,22 +101,22 @@
 "State / Province / Region" = "Estado, provincia o región";
 
 /* Footer shown when the user enables Remember Me that shows additional info. The html-style tags control which parts of the text link to the Stripe Privacy Policy, Terms of Service, and Remember Me More Info pages, and can be moved around as needed in the translation (although they CANNOT overlap). */
-"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Es posible que Stripe almacene mis datos de pago y mi número de teléfono para utilizarlos en esta aplicación o en otras, y que utilice mi número para identificarme, según lo estipulado en la <pplink>política de privacidad</pplink>de Stripe y en sus <termslink>condiciones</termslink>. <infolink>Más información</infolink>";
+"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Autorizo a Stripe a almacenar mis datos de pago y mi número de teléfono para utilizarlos en esta aplicación o en otras, y a utilizar mi número para identificarme, conforme a lo estipulado en la <pplink>política de privacidad</pplink> y  <termslink>condiciones</termslink> de Stripe. <infolink>Más información</infolink>";
 
 /* Error message for network request being cancelled. */
-"The operation was cancelled" = "Se ha cancelado la operación";
+"The operation was cancelled" = "Operación cancelada ";
 
 /* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Ha habido un error al procesar la tarjeta. Vuelve a intentarlo en unos segundos.";
+"There was an error processing your card -- try again in a few seconds" = "Error al procesar la tarjeta – Vuelve a intentarlo en unos segundos";
 
 /* No comment provided by engineer. */
-"There was an error submitting your autofilled card details." = "Ha habido un error al enviar los datos de la tarjeta rellenados automáticamente.";
+"There was an error submitting your autofilled card details." = "Error al enviar los datos de la tarjeta introducidos automáticamente.";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Se ha producido un error inesperado. Vuelve a intentarlo en unos segundos.";
+"There was an unexpected error -- try again in a few seconds" = "Se ha producido un error inesperado. Vuelve a intentarlo en unos segundos";
 
 /* Error message when failing to type in SMS code for Remember me too many times. */
-"Too many incorrect attempts" = "Se ha superado el límite de intentos fallidos.";
+"Too many incorrect attempts" = "Se han realizado demasiados intentos incorrectos";
 
 /* Title for SMS verification code screen */
 "Verification Code" = "Código de verificación";
@@ -131,22 +131,22 @@
 "XXXX" = "XXXX";
 
 /* Error when the card has already expired */
-"Your card has expired" = "La tarjeta ha caducado.";
+"Your card has expired" = "La tarjeta ha caducado";
 
 /* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Se ha rechazado la tarjeta.";
+"Your card was declined" = "La tarjeta ha sido rechazada.";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "El mes de vencimiento de la tarjeta no es válido.";
+"Your card's expiration month is invalid" = "El mes de vencimiento de la tarjeta no es válido";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "El año de vencimiento de la tarjeta no es válido.";
+"Your card's expiration year is invalid" = "El año de vencimiento de la tarjeta no es válido";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "El número de tarjeta no es válido.";
+"Your card's number is invalid" = "El número de tarjeta no es válido";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "El código de seguridad de la tarjeta no es válido.";
+"Your card's security code is invalid" = "El código de seguridad de la tarjeta no es válido";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Código postal";
