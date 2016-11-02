@@ -1,3 +1,12 @@
+== 9.1.0 2016-11-01
+* Adds localized strings for 7 languages: de, es, fr, it, ja, nl, zh-Hans.
+* Slight redesign to card/billing address entry screen.
+* Improved internationalization for State/Province/County address field.
+* Adds new Mastercard 2-series BIN ranges.
+* Fixes an issue where callbacks may be run on the wrong thread.
+* Fixes UIAppearance compatibility in STPPaymentCardTextField.
+* Fixes a crash when changing application language via an Xcode scheme.
+
 == 9.0.0 2016-10-04
 * Change minimum requirements to iOS 8 and Xcode 8
 * Adds "app extension API only" support.
