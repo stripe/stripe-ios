@@ -34,28 +34,13 @@ static BOOL STPFraudSignalsCollectionEnabled = NO;
 
 + (void)enable {
     STPFraudSignalsCollectionEnabled = YES;
+    [[self sharedInstance] enable];
 }
 
-+ (BOOL)shouldCollectFraudSignals {
-#if TARGET_OS_SIMULATOR
-    return NO;
-#endif
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunreachable-code"
-    return NSClassFromString(@"XCTest") == nil && STPFraudSignalsCollectionEnabled;
-#pragma clang diagnostic pop
-}
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        if ([STPFraudSignals shouldCollectFraudSignals]) {
-            [UIDevice currentDevice].batteryMonitoringEnabled = YES;
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
-        }
-    }
-    return self;
+- (void)enable {
+    [UIDevice currentDevice].batteryMonitoringEnabled = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)dealloc {
@@ -136,7 +121,7 @@ static BOOL STPFraudSignalsCollectionEnabled = NO;
 }
 
 - (NSDictionary *)serialize {
-    if (![STPFraudSignals shouldCollectFraudSignals]) {
+    if (!STPFraudSignalsCollectionEnabled) {
         return nil;
     }
     NSMutableDictionary *payload = [NSMutableDictionary new];

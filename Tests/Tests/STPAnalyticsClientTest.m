@@ -27,6 +27,7 @@
 }
 
 - (void)testOptimizationMetrics {
+    [STPFraudSignals enable];
     STPPaymentConfiguration *configuration = [STPPaymentConfiguration sharedConfiguration];
     configuration.publishableKey = @"pk_123";
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
