@@ -106,7 +106,7 @@
     UIBarButtonItem *nextItem;
     switch (self.configuration.shippingType) {
         case STPShippingTypeShipping:
-            nextItem = [[UIBarButtonItem alloc] initWithTitle:STPLocalizedString(@"Next", @"Text for next button")
+            nextItem = [[UIBarButtonItem alloc] initWithTitle:STPLocalizedString(@"Next", @"Button to move to the next text entry field")
                                                         style:UIBarButtonItemStyleDone
                                                        target:self
                                                        action:@selector(next:)];
