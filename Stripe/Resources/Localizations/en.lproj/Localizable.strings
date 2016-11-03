@@ -31,11 +31,17 @@
 /* Caption for City field on address form */
 "City" = "City";
 
+/* Title for contact info form */
+"Contact" = "Contact";
+
 /* Caption for Country field on address form */
 "Country" = "Country";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "County";
+
+/* Title for delivery info form */
+"Delivery" = "Delivery";
 
 /* Button on SMS verification screen if the user did not receive the SMS code. */
 "Didn't receive the code?" = "Didn't receive the code?";
@@ -58,8 +64,14 @@
 /* Cancel button for Remember Me SMS verification screen. */
 "Fill in your card details manually" = "Fill in your card details manually";
 
+/* Label for free shipping method */
+"Free" = "Free";
+
 /* Message shown when the user enters an incorrect SMS verification code. */
 "Invalid Code" = "Invalid Code";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Invalid Shipping Address";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Loading…";
@@ -70,7 +82,7 @@
 /* Button to move to the next text entry field */
 "Next" = "Next";
 
-/* No comment provided by engineer. */
+/* ok button */
 "OK" = "OK";
 
 /* Button to paste a copied SMS code into the verification field. */
@@ -90,6 +102,12 @@
 
 /* Label for the switch to enable Remember Me */
 "Save for use in other apps" = "Save for use in other apps";
+
+/* Title for shipping info form */
+"Shipping" = "Shipping";
+
+/* Label for shipping method form */
+"Shipping Method" = "Shipping Method";
 
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
 "Something went wrong with Remember Me: %@" = "Something went wrong with Remember Me: %@";
