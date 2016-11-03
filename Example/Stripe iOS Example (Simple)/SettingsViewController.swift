@@ -28,12 +28,12 @@ class SettingsViewController: UITableViewController {
                         smsAutofillEnabled: self.smsAutofill.enabled)
     }
 
-    fileprivate var theme: Theme = .Default
-    fileprivate var applePay: Switch = .Enabled
-    fileprivate var requiredBillingAddressFields: RequiredBillingAddressFields = .None
-    fileprivate var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
-    fileprivate var shippingType: ShippingType = .Shipping
-    fileprivate var smsAutofill: Switch = .Enabled
+    private var theme: Theme = .Default
+    private var applePay: Switch = .Enabled
+    private var requiredBillingAddressFields: RequiredBillingAddressFields = .None
+    private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
+    private var shippingType: ShippingType = .Shipping
+    private var smsAutofill: Switch = .Enabled
 
     fileprivate enum Section: String {
         case Theme = "Theme"
