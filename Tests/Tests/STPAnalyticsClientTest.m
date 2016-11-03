@@ -27,13 +27,16 @@
 }
 
 - (void)testOptimizationMetrics {
+    NSDictionary *payload = [[STPFraudSignals sharedInstance] serialize];
+    XCTAssertNil(payload);
+
     [STPFraudSignals enable];
     STPPaymentConfiguration *configuration = [STPPaymentConfiguration sharedConfiguration];
     configuration.publishableKey = @"pk_123";
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
     NSInteger currentTime = (NSInteger)[[NSDate date] timeIntervalSince1970];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidEnterBackgroundNotification object:nil];
-    NSDictionary *payload = [[STPFraudSignals sharedInstance] serialize];
+    payload = [[STPFraudSignals sharedInstance] serialize];
     XCTAssertEqual(0, [payload[@"total_app_usage_duration"] integerValue]);
     XCTAssertEqual([payload[@"session_app_open_time"] integerValue], currentTime);
     XCTAssertTrue([payload[@"first_app_open_time"] integerValue] <= currentTime);
