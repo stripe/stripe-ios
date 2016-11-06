@@ -71,7 +71,7 @@
     STPAddress *address = [STPAddress new];
 
     XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsZip]);
-    address.country = @"IE"; //should pass for country which doesnt require zip/postal
+    address.country = @"IE"; //should pass for country which doesn't require zip/postal
     XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);
     address.country = @"US";
     XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsZip]);
