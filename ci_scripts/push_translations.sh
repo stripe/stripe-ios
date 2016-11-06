@@ -36,5 +36,5 @@ if [[ $? -eq 0 ]]; then
     echo "Error recoding into utf8"
   fi
 else
-  echo "Error occured generating english strings file."
+  echo "Error occurred generating english strings file."
 fi
