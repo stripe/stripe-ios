@@ -181,7 +181,7 @@
         containsFields = containsFields && [STPEmailAddressValidator stringIsValidEmailAddress:self.email];
     }
     if (requiredFields & PKAddressFieldPhone) {
-        containsFields = containsFields && [STPPhoneNumberValidator stringIsValidPhoneNumber:self.phone];
+        containsFields = containsFields && [STPPhoneNumberValidator stringIsValidPhoneNumber:self.phone forCountryCode:self.country];
     }
     if (requiredFields & PKAddressFieldPostalAddress) {
         containsFields = containsFields && [self hasValidPostalAddress];

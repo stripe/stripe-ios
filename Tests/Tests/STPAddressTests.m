@@ -287,9 +287,14 @@
 
     address.phone = @"5555555555";
     XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone]);
+    address.phone = @"555";
+    XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone]);
     XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldAll]);
+    address.country = @"GB";
+    XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone]);
 
     address.country = @"US";
+    address.phone = @"5555555555";
     address.line1 = @"55 John St";
     address.city = @"New York";
     address.state = @"NY";
