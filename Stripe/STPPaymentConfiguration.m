@@ -11,6 +11,7 @@
 #import "NSBundle+Stripe_AppName.h"
 #import "Stripe.h"
 #import "STPAnalyticsClient.h"
+#import "STPFraudSignals.h"
 
 @implementation STPPaymentConfiguration
 

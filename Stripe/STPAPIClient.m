@@ -18,6 +18,7 @@
 #import "STPAPIPostRequest.h"
 #import "STPAnalyticsClient.h"
 #import "STPPaymentConfiguration.h"
+#import "STPFraudSignals.h"
 
 #if __has_include("Fabric.h")
 #import "Fabric+FABKits.h"
@@ -47,6 +48,10 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 + (void)disableAnalytics {
     [STPAnalyticsClient disableAnalytics];
+}
+
++ (void)enableFraudSignalsCollection {
+    [STPFraudSignals enable];
 }
 
 @end
@@ -228,7 +233,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 - (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount
                         completion:(STPTokenCompletionBlock)completion {
-    NSData *data = [STPFormEncoder formEncodedDataForObject:bankAccount];
+    NSData *data = [STPFormEncoder formEncodedDataForObject:bankAccount metrics:nil];
     [self createTokenWithData:data completion:completion];
 }
 
@@ -238,7 +243,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @implementation STPAPIClient (CreditCards)
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPTokenCompletionBlock)completion {
-    NSData *data = [STPFormEncoder formEncodedDataForObject:card];
+    NSDictionary *metrics = [[STPFraudSignals sharedInstance] serialize];
+    NSData *data = [STPFormEncoder formEncodedDataForObject:card metrics:metrics];
     [self createTokenWithData:data completion:completion];
 }
 

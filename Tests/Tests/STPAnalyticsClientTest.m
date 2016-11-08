@@ -8,11 +8,12 @@
 
 #import <XCTest/XCTest.h>
 #import "STPAnalyticsClient.h"
+#import "STPPaymentConfiguration.h"
+#import "STPFraudSignals.h"
 
 @interface STPAnalyticsClient (Testing)
-
 + (BOOL)shouldCollectAnalytics;
-
+@property (nonatomic) NSDate *lastAppActiveTime;
 @end
 
 @interface STPAnalyticsClientTest : XCTestCase
@@ -23,6 +24,26 @@
 
 - (void)testShouldCollectAnalytics_alwaysFalseInTest {
     XCTAssertFalse([STPAnalyticsClient shouldCollectAnalytics]);
+}
+
+- (void)testOptimizationMetrics {
+    NSDictionary *payload = [[STPFraudSignals sharedInstance] serialize];
+    XCTAssertNil(payload);
+
+    [STPFraudSignals enable];
+    STPPaymentConfiguration *configuration = [STPPaymentConfiguration sharedConfiguration];
+    configuration.publishableKey = @"pk_123";
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
+    NSInteger currentTime = (NSInteger)[[NSDate date] timeIntervalSince1970];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationDidEnterBackgroundNotification object:nil];
+    payload = [[STPFraudSignals sharedInstance] serialize];
+    XCTAssertEqual(0, [payload[@"total_app_usage_duration"] integerValue]);
+    XCTAssertEqual([payload[@"session_app_open_time"] integerValue], currentTime);
+    XCTAssertTrue([payload[@"first_app_open_time"] integerValue] <= currentTime);
+    XCTAssertTrue([payload[@"total_app_open_count"] integerValue] >= 1);
+    XCTAssertNotNil(payload[@"os_version"]);
+    XCTAssertNotNil(payload[@"device_type"]);
+    XCTAssertNotNil(payload[@"battery_status"]);
 }
 
 @end
