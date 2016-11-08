@@ -31,11 +31,17 @@
 /* Caption for City field on address form */
 "City" = "城市";
 
+/* Title for contact info form */
+"Contact" = "联系信息";
+
 /* Caption for Country field on address form */
 "Country" = "国家";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "县";
+
+/* Title for delivery info form */
+"Delivery" = "递送信息";
 
 /* Button on SMS verification screen if the user did not receive the SMS code. */
 "Didn't receive the code?" = "尚未收到验证码？";
@@ -58,8 +64,14 @@
 /* Cancel button for Remember Me SMS verification screen. */
 "Fill in your card details manually" = "手动填写您的银行卡详情";
 
+/* Label for free shipping method */
+"Free" = "免费";
+
 /* Message shown when the user enters an incorrect SMS verification code. */
 "Invalid Code" = "验证码无效";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "无效送货地址";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "正在加载……";
@@ -90,6 +102,12 @@
 
 /* Label for the switch to enable Remember Me */
 "Save for use in other apps" = "保存供其它应用使用";
+
+/* Title for shipping info form */
+"Shipping" = "送货信息";
+
+/* Label for shipping method form */
+"Shipping Method" = "送货方式";
 
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
 "Something went wrong with Remember Me: %@" = "“保存我的信息”出错：%@";
