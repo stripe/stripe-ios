@@ -32,7 +32,7 @@
 "City" = "Ort";
 
 /* Title for contact info form */
-"Contact" = "Kontaktinfos";
+"Contact" = "Kontaktinformationen";
 
 /* Caption for Country field on address form */
 "Country" = "Land";
@@ -41,7 +41,7 @@
 "County" = "Bundesland";
 
 /* Title for delivery info form */
-"Delivery" = "Zustellung";
+"Delivery" = "Versandinformationen";
 
 /* Button on SMS verification screen if the user did not receive the SMS code. */
 "Didn't receive the code?" = "Keinen Verifizierungs-Code erhalten?";
@@ -65,7 +65,7 @@
 "Fill in your card details manually" = "Geben Sie Ihre Karteninformationen manuell ein";
 
 /* Label for free shipping method */
-"Free" = "Gratis";
+"Free" = "Kostenlos";
 
 /* Message shown when the user enters an incorrect SMS verification code. */
 "Invalid Code" = "Ungültiger Verifizierungs-Code";
@@ -107,7 +107,7 @@
 "Shipping" = "Versand";
 
 /* Label for shipping method form */
-"Shipping Method" = "Versandmethode";
+"Shipping Method" = "Versandart";
 
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
 "Something went wrong with Remember Me: %@" = "Fehler beim Speichern der Angaben. %@";

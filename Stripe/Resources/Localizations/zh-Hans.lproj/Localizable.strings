@@ -71,7 +71,7 @@
 "Invalid Code" = "验证码无效";
 
 /* Shipping form error message */
-"Invalid Shipping Address" = "无效送货地址";
+"Invalid Shipping Address" = "无效配送地址";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "正在加载……";
@@ -104,10 +104,10 @@
 "Save for use in other apps" = "保存供其它应用使用";
 
 /* Title for shipping info form */
-"Shipping" = "送货信息";
+"Shipping" = "配送信息";
 
 /* Label for shipping method form */
-"Shipping Method" = "送货方式";
+"Shipping Method" = "配送方式";
 
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
 "Something went wrong with Remember Me: %@" = "“保存我的信息”出错：%@";
