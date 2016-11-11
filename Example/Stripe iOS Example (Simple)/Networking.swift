@@ -58,9 +58,11 @@ public enum ParameterEncoding {
         let generalDelimiters = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
         let subDelimiters = "!$&'()*+,;="
 
-        let legalURLCharactersToBeEscaped: CFString = (generalDelimiters + subDelimiters) as CFString
+        let legalURLCharactersToBeEscaped = (generalDelimiters + subDelimiters)
 
-        return CFURLCreateStringByAddingPercentEscapes(nil, string as CFString!, nil, legalURLCharactersToBeEscaped, CFStringBuiltInEncodings.UTF8.rawValue) as String
+        let allowedCharacters = CharacterSet.init(charactersIn: legalURLCharactersToBeEscaped).inverted;
+        
+        return string.addingPercentEncoding(withAllowedCharacters: allowedCharacters) ?? ""
     }
 
 }
