@@ -106,6 +106,9 @@
                 <a class="nav-group-task-link" href="Classes/STPPaymentResult.html">STPPaymentResult</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPTheme.html">STPTheme</a>
               </li>
               <li class="nav-group-task">
@@ -148,6 +151,12 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPPaymentStatus.html">STPPaymentStatus</a>
               </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPShippingStatus.html">STPShippingStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPShippingType.html">STPShippingType</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -175,6 +184,9 @@
                 <a class="nav-group-task-link" href="Protocols/STPPaymentMethodsViewControllerDelegate.html">STPPaymentMethodsViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/STPShippingAddressViewControllerDelegate.html">STPShippingAddressViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Protocols/STPSource.html">STPSource</a>
               </li>
             </ul>
@@ -190,6 +202,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPShippingMethodsCompletionBlock">STPShippingMethodsCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -397,7 +412,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBlocks.h#L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBlocks.h#L64">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -452,7 +467,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBlocks.h#L41">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBlocks.h#L71">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -520,7 +535,104 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBlocks.h#L49">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBlocks.h#L79">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:STPBlocks.h@T@STPShippingMethodsCompletionBlock"></a>
+                    <a name="//apple_ref/objc/Alias/STPShippingMethodsCompletionBlock" class="dashAnchor"></a>
+                    <a class="token" href="#/c:STPBlocks.h@T@STPShippingMethodsCompletionBlock">STPShippingMethodsCompletionBlock</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A callback to be run with a validation result and shipping methods for a 
+  shipping address.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">STPShippingMethodsCompletionBlock</span><span class="p">)(</span>
+    <span class="n"><a href="Enums/STPShippingStatus.html">STPShippingStatus</a></span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span>
+    <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">PKShippingMethod</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">,</span> <span class="n">PKShippingMethod</span> <span class="o">*</span><span class="n">_Nullable</span><span class="p">)</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">typealias</span> <span class="kt">STPShippingMethodsCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Enums/STPShippingStatus.html">STPShippingStatus</a></span><span class="p">,</span> <span class="kt">Error</span><span class="p">?,</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?,</span> <span class="kt">UnsafeMutablePointer</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>shippingStatus</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An enum representing whether the shipping address is valid.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>shippingValidationError</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If the shipping address is invalid, an error describing the issue with the address. If no error is given and the address is invalid, the default error message will be used.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>shippingMethods</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The shipping methods available for the address.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>selectedShippingMethod</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The default selected shipping method for the address.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBlocks.h#L90">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -533,7 +645,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2016 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2016-11-01)</p>
+      <p>&copy; 2016 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2016-11-14)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
