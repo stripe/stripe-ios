@@ -21,8 +21,10 @@ FAUXPAS_IGNORED_IN_CLASS(APIAvailability)
 - (instancetype)initWithAmount:(NSInteger)paymentAmount;
 - (instancetype)initWithPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems;
 
-- (NSInteger)paymentAmountWithCurrency:(NSString *)paymentCurrency;
-- (NSArray<PKPaymentSummaryItem *> *)paymentSummaryItemsWithCurrency:(NSString *)paymentCurrency
-                                                         companyName:(NSString *)companyName;
+- (NSInteger)paymentAmountWithCurrency:(NSString *)currency
+                        shippingMethod:(PKShippingMethod *)shippingMethod;
+- (NSArray<PKPaymentSummaryItem *> *)paymentSummaryItemsWithCurrency:(NSString *)currency
+                                                         companyName:(NSString *)companyName
+                                                      shippingMethod:(PKShippingMethod *)shippingMethod;
 
 @end

@@ -31,11 +31,17 @@
 /* Caption for City field on address form */
 "City" = "Ort";
 
+/* Title for contact info form */
+"Contact" = "Kontaktinformationen";
+
 /* Caption for Country field on address form */
 "Country" = "Land";
 
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Bundesland";
+
+/* Title for delivery info form */
+"Delivery" = "Versandinformationen";
 
 /* Button on SMS verification screen if the user did not receive the SMS code. */
 "Didn't receive the code?" = "Keinen Verifizierungs-Code erhalten?";
@@ -58,8 +64,14 @@
 /* Cancel button for Remember Me SMS verification screen. */
 "Fill in your card details manually" = "Geben Sie Ihre Karteninformationen manuell ein";
 
+/* Label for free shipping method */
+"Free" = "Kostenlos";
+
 /* Message shown when the user enters an incorrect SMS verification code. */
 "Invalid Code" = "Ungültiger Verifizierungs-Code";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Ungültige Versandadresse";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Laden...";
@@ -90,6 +102,12 @@
 
 /* Label for the switch to enable Remember Me */
 "Save for use in other apps" = "Zur Nutzung in anderen Apps speichern";
+
+/* Title for shipping info form */
+"Shipping" = "Versand";
+
+/* Label for shipping method form */
+"Shipping Method" = "Versandart";
 
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
 "Something went wrong with Remember Me: %@" = "Fehler beim Speichern der Angaben. %@";

@@ -29,6 +29,7 @@
 @property(nonatomic, readonly)BOOL isValid;
 
 - (instancetype)initWithRequiredBillingFields:(STPBillingAddressFields)requiredBillingAddressFields;
+- (instancetype)initWithRequiredShippingFields:(PKAddressField)requiredShippingAddressFields;
 - (STPAddressFieldTableViewCell *)cellAtIndex:(NSInteger)index;
 
 @end

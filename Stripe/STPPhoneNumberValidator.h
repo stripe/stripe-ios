@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPPhoneNumberValidator : NSObject
 
 + (BOOL)stringIsValidPartialPhoneNumber:(NSString *)string;
-+ (BOOL)stringIsValidPhoneNumber:(NSString *)string;
++ (BOOL)stringIsValidPhoneNumber:(nullable NSString *)string;
 + (BOOL)stringIsValidPartialPhoneNumber:(NSString *)string
                          forCountryCode:(nullable NSString *)countryCode;
 + (BOOL)stringIsValidPhoneNumber:(NSString *)string
