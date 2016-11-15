@@ -1,3 +1,7 @@
+== 9.2.0 2016-11-14
+* Moves FBSnapshotTestCase dependency to Cartfile.private. No changes if you are not using Carthage.
+* Adds prebuilt UI for collecting shipping information.
+
 == 9.1.0 2016-11-01
 * Adds localized strings for 7 languages: de, es, fr, it, ja, nl, zh-Hans.
 * Slight redesign to card/billing address entry screen.
