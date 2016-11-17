@@ -60,6 +60,15 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 + (STPCardBrand)brandFromString:(NSString *)string;
 
 /**
+ *  Returns a string representation for the provided card brand; i.e. `[NSString stringFromBrand:STPCardBrandVisa] ==  @"Visa"`.
+ *
+ *  @param brand the brand you want to convert to a string
+ *
+ *  @return A string representing the brand, suitable for displaying to a user.
+ */
++ (NSString *)stringFromBrand:(STPCardBrand)brand;
+
+/**
  *  This parses a string representing a card's funding type into the appropriate `STPCardFundingType` enum value, i.e. `[STPCard fundingFromString:@"prepaid"] == STPCardFundingTypePrepaid`.
  *
  *  @param string a string representing the card's funding type as returned from the Stripe API

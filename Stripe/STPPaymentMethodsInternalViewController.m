@@ -10,7 +10,6 @@
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
 #import "NSArray+Stripe_BoundSafe.h"
-#import "NSString+Stripe_CardBrands.h"
 #import "UITableViewCell+Stripe_Borders.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "STPColorUtils.h"
