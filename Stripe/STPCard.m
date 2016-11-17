@@ -8,6 +8,7 @@
 
 #import "STPCard.h"
 #import "NSDictionary+Stripe.h"
+#import "NSString+Stripe_CardBrands.h"
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
 
@@ -68,25 +69,6 @@
     }
 }
 
-+ (NSString *)stringFromBrand:(STPCardBrand)brand {
-    switch (brand) {
-        case STPCardBrandAmex:
-            return @"American Express";
-        case STPCardBrandDinersClub:
-            return @"Diners Club";
-        case STPCardBrandDiscover:
-            return @"Discover";
-        case STPCardBrandJCB:
-            return @"JCB";
-        case STPCardBrandMasterCard:
-            return @"MasterCard";
-        case STPCardBrandVisa:
-            return @"Visa";
-        case STPCardBrandUnknown:
-            return @"Unknown";
-    }
-}
-
 + (STPCardFundingType)fundingFromString:(NSString *)string {
     NSString *funding = [string lowercaseString];
     if ([funding isEqualToString:@"credit"]) {
@@ -119,7 +101,22 @@
 }
 
 - (NSString *)type {
-    return [self.class stringFromBrand:self.brand];
+    switch (self.brand) {
+    case STPCardBrandAmex:
+        return @"American Express";
+    case STPCardBrandDinersClub:
+        return @"Diners Club";
+    case STPCardBrandDiscover:
+        return @"Discover";
+    case STPCardBrandJCB:
+        return @"JCB";
+    case STPCardBrandMasterCard:
+        return @"MasterCard";
+    case STPCardBrandVisa:
+        return @"Visa";
+    default:
+        return @"Unknown";
+    }
 }
 
 - (BOOL)isEqual:(id)other {
@@ -188,7 +185,7 @@
 }
 
 - (NSString *)label {
-    NSString *brand = [self.class stringFromBrand:self.brand];
+    NSString *brand = [NSString stp_stringWithCardBrand:self.brand];
     return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
 }
 

@@ -46,6 +46,7 @@
     linkUITableViewCellBordersCategory();
     linkUIViewControllerPromisesCategory();
     linkUIViewControllerNavigationItemProxyCategory();
+    linkNSStringCardBrandsCategory();
     linkNSArrayBoundSafeCategory();
     linkUIViewControllerParentViewControllerCategory();
     linkUINavigationControllerCompletionCategory();
