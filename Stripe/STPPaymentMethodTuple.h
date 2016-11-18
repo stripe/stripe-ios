@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPPaymentMethodTuple : NSObject
 
 + (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods
-                  selectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod;
+                  selectedPaymentMethod:(nullable id<STPPaymentMethod>)selectedPaymentMethod;
 
 + (instancetype)tupleWithCardTuple:(STPCardTuple *)cardTuple
                    applePayEnabled:(BOOL)applePayEnabled;

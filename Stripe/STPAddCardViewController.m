@@ -71,10 +71,10 @@
 @end
 
 static NSString *const STPPaymentCardCellReuseIdentifier = @"STPPaymentCardCellReuseIdentifier";
-static NSInteger STPPaymentCardEmailSection = 0;
-static NSInteger STPPaymentCardNumberSection = 1;
-static NSInteger STPPaymentCardBillingAddressSection = 2;
-static NSInteger STPPaymentCardRememberMeSection = 3;
+static const NSInteger STPPaymentCardEmailSection = 0;
+static const NSInteger STPPaymentCardNumberSection = 1;
+static const NSInteger STPPaymentCardBillingAddressSection = 2;
+static const NSInteger STPPaymentCardRememberMeSection = 3;
 
 @implementation STPAddCardViewController
 
@@ -610,20 +610,24 @@ static NSInteger STPPaymentCardRememberMeSection = 3;
 - (UITableViewCell *)tableView:(__unused UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell;
-    if (indexPath.section == STPPaymentCardEmailSection) {
-        return self.emailCell;
-    }
-    else if (indexPath.section == STPPaymentCardNumberSection) {
-        cell = self.paymentCell;
-    } else if (indexPath.section == STPPaymentCardBillingAddressSection) {
-        cell = [self.addressViewModel.addressCells stp_boundSafeObjectAtIndex:indexPath.row];
-    } else if (indexPath.section == STPPaymentCardRememberMeSection) {
-        if (indexPath.row == 0) {
-            cell = self.rememberMeCell;
-        } else {
-            cell = self.rememberMePhoneCell;
-        }
-        
+    switch (indexPath.section) {
+        case STPPaymentCardEmailSection:
+            return self.emailCell;
+        case STPPaymentCardNumberSection:
+            cell = self.paymentCell;
+            break;
+        case STPPaymentCardBillingAddressSection:
+            cell = [self.addressViewModel.addressCells stp_boundSafeObjectAtIndex:indexPath.row];
+            break;
+        case STPPaymentCardRememberMeSection:
+            if (indexPath.row == 0) {
+                cell = self.rememberMeCell;
+            } else {
+                cell = self.rememberMePhoneCell;
+            }
+            break;
+        default:
+            return [UITableViewCell new]; // won't be called; exists to make the static analyzer happy
     }
     cell.backgroundColor = [UIColor clearColor];
     cell.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
