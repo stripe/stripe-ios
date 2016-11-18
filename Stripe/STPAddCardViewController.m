@@ -71,10 +71,13 @@
 @end
 
 static NSString *const STPPaymentCardCellReuseIdentifier = @"STPPaymentCardCellReuseIdentifier";
-static const NSInteger STPPaymentCardEmailSection = 0;
-static const NSInteger STPPaymentCardNumberSection = 1;
-static const NSInteger STPPaymentCardBillingAddressSection = 2;
-static const NSInteger STPPaymentCardRememberMeSection = 3;
+
+typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
+    STPPaymentCardEmailSection = 0,
+    STPPaymentCardNumberSection = 1,
+    STPPaymentCardBillingAddressSection = 2,
+    STPPaymentCardRememberMeSection = 3
+};
 
 @implementation STPAddCardViewController
 
