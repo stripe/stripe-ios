@@ -122,6 +122,7 @@
     XCTAssertEqualObjects(sut.addressCells[5].contents, @"NY");
     XCTAssertEqualObjects(sut.addressCells[6].contents, @"10002");
     XCTAssertEqualObjects(sut.addressCells[7].contents, @"US");
+    XCTAssertEqualObjects(sut.addressCells[7].textField.text, @"United States");
     XCTAssertEqualObjects(sut.addressCells[8].contents, @"555-555-5555");
 }
 

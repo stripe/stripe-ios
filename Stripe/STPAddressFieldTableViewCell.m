@@ -305,7 +305,11 @@
 
 - (void)setContents:(NSString *)contents {
     _contents = contents;
-    self.textField.text = contents;
+    if (self.type == STPAddressFieldTypeCountry) {
+        [self updateTextFieldsAndCaptions];
+    } else {
+        self.textField.text = contents;
+    }
     if ([self.textField isFirstResponder]) {
         self.textField.validText = [self potentiallyValidContents];
     } else {

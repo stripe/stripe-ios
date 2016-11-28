@@ -75,6 +75,7 @@
         }
         else if (prefilledInformation != nil) {
             STPAddress *prefilledAddress = [STPAddress new];
+            prefilledAddress.country = _addressViewModel.address.country;
             if (self.configuration.requiredShippingAddressFields & PKAddressFieldEmail) {
                 prefilledAddress.email = prefilledInformation.email;
             }
