@@ -113,6 +113,9 @@
     WEAK(self);
     [self.loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
         STRONG(self);
+        if (!self) {
+            return;
+        }
         UIViewController *internal;
         if (tuple.paymentMethods.count > 0) {
             internal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:self.configuration
