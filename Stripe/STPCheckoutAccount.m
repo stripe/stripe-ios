@@ -29,7 +29,7 @@
     if (httpResponse.statusCode != 200 && httpResponse.statusCode != 201) {
         return nil;
     }
-    NSDictionary *object = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    NSDictionary *object = [NSJSONSerialization JSONObjectWithData:data options:(NSJSONReadingOptions)kNilOptions error:nil];
     if (![object isKindOfClass:[NSDictionary class]]) {
         return nil;
     }

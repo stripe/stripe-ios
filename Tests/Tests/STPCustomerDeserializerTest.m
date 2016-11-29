@@ -36,7 +36,7 @@
 
 - (void)testInitWithData_validData {
     NSDictionary *customer = [STPTestUtils jsonNamed:@"Customer"];
-    NSData *data = [NSJSONSerialization dataWithJSONObject:customer options:0 error:nil];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:customer options:(NSJSONWritingOptions)kNilOptions error:nil];
     STPCustomerDeserializer *sut = [[STPCustomerDeserializer alloc] initWithData:data
                                                                      urlResponse:nil
                                                                            error:nil];

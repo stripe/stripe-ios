@@ -49,7 +49,7 @@
     STPAddressFieldTableViewCell *cell1 = sut.addressCells[0];
     XCTAssertEqual(cell1.type, STPAddressFieldTypeName);
 
-    sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:PKAddressFieldName|PKAddressFieldEmail];
+    sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:(PKAddressField)(PKAddressFieldName|PKAddressFieldEmail)];
     XCTAssertTrue([sut.addressCells count] == 2);
     NSArray *types = @[
                        @(STPAddressFieldTypeName),
@@ -59,7 +59,7 @@
         XCTAssertEqual(sut.addressCells[i].type, [types[i] integerValue]);
     }
 
-    sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:PKAddressFieldPostalAddress|PKAddressFieldEmail|PKAddressFieldPhone];
+    sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:(PKAddressField)(PKAddressFieldPostalAddress|PKAddressFieldEmail|PKAddressFieldPhone)];
     XCTAssertTrue([sut.addressCells count] == 9);
     types = @[
               @(STPAddressFieldTypeEmail),
@@ -78,7 +78,7 @@
 }
 
 - (void)testGetAddress {
-    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:PKAddressFieldPostalAddress|PKAddressFieldEmail|PKAddressFieldPhone];
+    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:(PKAddressField)(PKAddressFieldPostalAddress|PKAddressFieldEmail|PKAddressFieldPhone)];
     sut.addressCells[0].contents = @"foo@example.com";
     sut.addressCells[1].contents = @"John Smith";
     sut.addressCells[2].contents = @"55 John St";
@@ -112,7 +112,7 @@
     address.country = @"US";
     address.phone = @"555-555-5555";
 
-    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:PKAddressFieldPostalAddress|PKAddressFieldEmail|PKAddressFieldPhone];
+    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:(PKAddressField)(PKAddressFieldPostalAddress|PKAddressFieldEmail|PKAddressFieldPhone)];
     sut.address = address;
     XCTAssertEqualObjects(sut.addressCells[0].contents, @"foo@example.com");
     XCTAssertEqualObjects(sut.addressCells[1].contents, @"John Smith");

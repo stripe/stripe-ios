@@ -238,7 +238,7 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
  *  called.
  *
  *  @param paymentContext  The context that updated its shipping address
- *  @param shippingAddress The current shipping address
+ *  @param address The current shipping address
  *  @param completion      Call this block when you're done validating the shipping address and calculating available shipping methods.
  */
 - (void)paymentContext:(STPPaymentContext *)paymentContext

@@ -16,7 +16,7 @@
 + (NSString *)stp_testTransactionIdentifier {
     NSString *uuid = [[NSUUID UUID] UUIDString];
     uuid = [uuid stringByReplacingOccurrencesOfString:@"~" withString:@""
-                                              options:0
+                                              options:(NSStringCompareOptions)kNilOptions
                                                 range:NSMakeRange(0, uuid.length)];
 
     // Simulated cards don't have enough info yet. For now, use a fake Visa number
