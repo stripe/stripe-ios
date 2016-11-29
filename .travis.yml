@@ -17,7 +17,7 @@ env:
     secure: gZMOaHQIeG7nplBCuH7EKf9o6Ez2rtoSskrv3nOTziSxFfZq322MrxvkidDpEN7AKWYQm27FO+tCzgq0slXb578lQ9P5ySDwEdExKtk/jMtKsBsf3cr4dzSMiqV5D5TbsH2jE9HQlpYUoJeoMBicR2XsTmd7wiu2jAzNBFqGfiY=
 
 before_install:
-- SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (10.0) \[.*\]" | grep -o
+- SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (10.1) \[.*\]" | grep -o
   "\[.*\]" | sed "s/^\[\(.*\)\]$/\1/")
 script:
 - open -a "simulator" --args -CurrentDeviceUDID $SIMULATOR_ID

@@ -11,7 +11,6 @@
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
 #import "STPApplePayPaymentMethod.h"
-#import "NSString+Stripe_CardBrands.h"
 
 @interface STPPaymentMethodTableViewCell ()
 @property(nonatomic) id<STPPaymentMethod> paymentMethod;
@@ -105,7 +104,7 @@
 
 - (NSAttributedString *)buildAttributedStringForCard:(STPCard *)card selected:(BOOL)selected {
     NSString *template = STPLocalizedString(@"%@ Ending In %@", @"{card brand} ending in {last4}");
-    NSString *brandString = [NSString stp_stringWithCardBrand:card.brand];
+    NSString *brandString = [STPCard stringFromBrand:card.brand];
     NSString *label = [NSString stringWithFormat:template, brandString, card.last4];
     UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
     UIColor *secondaryColor = [primaryColor colorWithAlphaComponent:0.6f];
