@@ -20,13 +20,17 @@ CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR
 
 CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR
 
+CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES
+CLANG_WARN_INFINITE_RECURSION = YES
+CLANG_WARN_SUSPICIOUS_MOVE = YES
+
 
 // Code Signing Identity
 // 
 // The name ("common name") of a valid code-signing certificate in a keychain within your
 // keychain path.   A missing or invalid certificate will cause a build error.
 
-CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+CODE_SIGN_IDENTITY[sdk=iphoneos*] =
 
 
 // Current Project Version
@@ -130,6 +134,7 @@ IPHONEOS_DEPLOYMENT_TARGET = 8.0
 
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
 
+PRODUCT_BUNDLE_IDENTIFIER=com.stripe.stripe-ios
 
 // Product Name
 // 
