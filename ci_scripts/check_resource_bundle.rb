@@ -10,7 +10,7 @@ end
 require 'xcodeproj'
 
 contents_of_resources_dir = Dir.glob("Stripe/Resources/Images/*.png").map { |h| File.basename(h) }.uniq.sort
-targets = ['StripeiOSResources']
+targets = ['StripeiOSResources', 'StripeiOS']
 targets.each do |target|
 
   resource_bundle_target = Xcodeproj::Project.open('Stripe.xcodeproj').targets.select { |t| t.name == target }.first
@@ -19,7 +19,7 @@ targets.each do |target|
   if duplicates.any?
     abort("Found some duplicate entries in the resources build phase for target #{target}:\n#{duplicates}")
   end
-  resources = resource_bundle_files.uniq.sort.select{ |n| !n.end_with? ".strings"}
+  resources = resource_bundle_files.uniq.sort.select{ |n| !(n.end_with?(".strings") || n.end_with?(".sh")) }
 
   if contents_of_resources_dir != resources
     likely_culprits = ((contents_of_resources_dir - resources) + (resources - contents_of_resources_dir)).uniq
