@@ -29,7 +29,9 @@
     [contentType appendString:@"\r\n"];
     [data appendData:[contentType dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [data appendData: _data];
+    if (_data) {
+        [data appendData: _data];
+    }
     [data appendData: [@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     
     return data;
