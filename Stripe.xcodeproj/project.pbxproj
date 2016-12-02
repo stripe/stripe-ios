@@ -908,9 +908,9 @@
 		151058D11DF0D89300364C5E /* STPMultipartFormDataEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPMultipartFormDataEncoder.m; sourceTree = "<group>"; };
 		151058D61DF0D8E100364C5E /* STPMultipartFormDataPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPMultipartFormDataPart.h; sourceTree = "<group>"; };
 		151058D71DF0D8E100364C5E /* STPMultipartFormDataPart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPMultipartFormDataPart.m; sourceTree = "<group>"; };
-		15760D591DEF2F9B002A7691 /* STPFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPFile.h; sourceTree = "<group>"; };
+		15760D591DEF2F9B002A7691 /* STPFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPFile.h; path = PublicHeaders/STPFile.h; sourceTree = "<group>"; };
 		15760D5A1DEF2F9B002A7691 /* STPFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFile.m; sourceTree = "<group>"; };
-		15760D5F1DEF427A002A7691 /* STPFileClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPFileClient.h; sourceTree = "<group>"; };
+		15760D5F1DEF427A002A7691 /* STPFileClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPFileClient.h; path = PublicHeaders/STPFileClient.h; sourceTree = "<group>"; };
 		15760D601DEF427A002A7691 /* STPFileClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFileClient.m; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C1080F471CBECF7B007B2D89 /* STPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPAddress.h; path = PublicHeaders/STPAddress.h; sourceTree = "<group>"; };
