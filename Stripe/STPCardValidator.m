@@ -35,7 +35,7 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
         NSMutableString *newString = [[string substringWithRange:NSMakeRange(0, range.location)] mutableCopy];
         NSUInteger lastPosition = NSMaxRange(range);
         while (lastPosition < string.length) {
-            range = [string rangeOfCharacterFromSet:cs options:0 range:NSMakeRange(lastPosition, string.length - lastPosition)];
+            range = [string rangeOfCharacterFromSet:cs options:(NSStringCompareOptions)kNilOptions range:NSMakeRange(lastPosition, string.length - lastPosition)];
             if (range.location == NSNotFound) break;
             if (range.location != lastPosition) {
                 [newString appendString:[string substringWithRange:NSMakeRange(lastPosition, range.location - lastPosition)]];

@@ -17,7 +17,7 @@
 + (NSDictionary *)jsonNamed:(NSString *)name {
     NSData *data = [self dataFromJSONFile:name];
     if (data != nil) {
-        return [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        return [NSJSONSerialization JSONObjectWithData:data options:(NSJSONReadingOptions)kNilOptions error:nil];
     }
     return nil;
 }
