@@ -234,6 +234,16 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 @end
 
+#pragma mark - Personally Identifiable Information
+@implementation STPAPIClient (PII)
+
+- (void)createTokenWithPersonalIDNumber:(NSNumber *)number completion:(__nullable STPTokenCompletionBlock)completion {
+    NSData *data = [STPFormEncoder formEncodedDataForRootObjectName:@"pii" parameters:@{ @"personal_id_number": number }];
+    [self createTokenWithData:data completion:completion];
+}
+
+@end
+
 #pragma mark - Credit Cards
 @implementation STPAPIClient (CreditCards)
 

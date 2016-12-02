@@ -32,6 +32,11 @@ FOUNDATION_EXPORT NSString * STPQueryStringFromParameters(NSDictionary *paramete
     return [STPQueryStringFromParameters(dict) dataUsingEncoding:NSUTF8StringEncoding];
 }
 
++ (nonnull NSData *)formEncodedDataForRootObjectName:(nonnull NSString *)rootObjectName parameters:(nonnull NSDictionary *)parameters {
+    NSDictionary *dict = @{ rootObjectName: parameters };
+    return [STPQueryStringFromParameters(dict) dataUsingEncoding:NSUTF8StringEncoding];
+}
+
 + (NSDictionary *)keyPairDictionaryForObject:(nonnull NSObject<STPFormEncodable> *)object {
     NSMutableDictionary *keyPairs = [NSMutableDictionary dictionary];
     [[object.class propertyNamesToFormFieldNamesMapping] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull propertyName, NSString *  _Nonnull formFieldName, __unused BOOL * _Nonnull stop) {

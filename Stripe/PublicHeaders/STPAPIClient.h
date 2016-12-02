@@ -85,6 +85,23 @@ static NSString *const STPSDKVersion = @"9.2.0";
 
 @end
 
+#pragma mark Personally Identifiable Information
+
+/**
+ *  STPAPIClient extensions to create Stripe tokens from a personal identification number.
+ */
+@interface STPAPIClient (PII)
+
+/**
+ *  Converts a personal identification number into a Stripe token using the Stripe API.
+ *
+ *  @param pii The user's personal identification number. Cannot be nil. @see https://stripe.com/docs/api#create_pii_token
+ *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
+ */
+- (void)createTokenWithPersonalIDNumber:(NSNumber *)number completion:(__nullable STPTokenCompletionBlock)completion;
+
+@end
+
 #pragma mark Credit Cards
 
 /**
