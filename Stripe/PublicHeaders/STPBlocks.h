@@ -10,6 +10,7 @@
 #import <PassKit/PassKit.h>
 
 @class STPToken;
+@class STPFile;
 
 /**
  *  These values control the labels used in the shipping info collection form.
@@ -88,3 +89,11 @@ typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * _
  *  @param selectedShippingMethod The default selected shipping method for the address.
  */
 typedef void (^STPShippingMethodsCompletionBlock)(STPShippingStatus status, NSError * __nullable shippingValidationError, NSArray<PKShippingMethod *>* __nullable shippingMethods, PKShippingMethod * __nullable selectedShippingMethod);
+
+/**
+ *  A callback to be run with a file response from the Stripe API.
+ *
+ *  @param file The Stripe file from the response. Will be nil if an error occurs. @see STPFile
+ *  @param error The error returned from the response, or nil in none occurs. @see StripeError.h for possible values.
+ */
+typedef void (^STPFileCompletionBlock)(STPFile * __nullable file, NSError * __nullable error);

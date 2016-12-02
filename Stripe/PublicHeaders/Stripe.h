@@ -38,3 +38,5 @@
 #import "STPAPIResponseDecodable.h"
 #import "STPFormEncodable.h"
 #import "STPShippingAddressViewController.h"
+#import "STPFileClient.h"
+#import "STPFile.h"

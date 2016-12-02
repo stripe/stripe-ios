@@ -15,7 +15,6 @@
 @property (nonatomic, readwrite) NSDate *created;
 @property (nonatomic, readwrite) STPFilePurpose purpose;
 @property (nonatomic, readwrite) NSNumber *size;
-@property (nonatomic, readwrite) NSURL *url;
 @property (nonatomic, readwrite) NSString *mimeType;
 @property (nonatomic, readwrite, copy) NSDictionary *allResponseFields;
 
@@ -24,6 +23,15 @@
 @end
 
 @implementation STPFile
+
+#pragma mark - Helpers
+
++ (NSString *)stringForPurpose:(STPFilePurpose)purpose {
+    if (purpose == STPFilePurposeDisputeEvidence) {
+        return @"dispute_evidence";
+    }
+    return @"identity_document";
+}
 
 #pragma mark - Equality
 
@@ -63,7 +71,6 @@
     file.fileId = dict[@"id"];
     file.created = [[NSDate alloc] initWithTimeIntervalSince1970:[dict[@"created"] doubleValue]];
     file.size = dict[@"size"];
-    file.url = [[NSURL alloc] initWithString:dict[@"url"]];
     file.mimeType = dict[@"mimetype"];
     
     NSString *purpose = dict[@"purpose"];
@@ -74,6 +81,7 @@
     }
     
     file.allResponseFields = dict;
+    
     return file;
 }
 
