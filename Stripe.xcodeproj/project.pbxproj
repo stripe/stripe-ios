@@ -386,11 +386,11 @@
 		151058DA1DF0D8E100364C5E /* STPMultipartFormDataPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 151058D71DF0D8E100364C5E /* STPMultipartFormDataPart.m */; };
 		151058DB1DF0D8E100364C5E /* STPMultipartFormDataPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 151058D71DF0D8E100364C5E /* STPMultipartFormDataPart.m */; };
 		15760D5B1DEF2F9B002A7691 /* STPFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 15760D591DEF2F9B002A7691 /* STPFile.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		15760D5C1DEF2F9B002A7691 /* STPFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 15760D591DEF2F9B002A7691 /* STPFile.h */; };
+		15760D5C1DEF2F9B002A7691 /* STPFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 15760D591DEF2F9B002A7691 /* STPFile.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		15760D5D1DEF2F9B002A7691 /* STPFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 15760D5A1DEF2F9B002A7691 /* STPFile.m */; };
 		15760D5E1DEF2F9B002A7691 /* STPFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 15760D5A1DEF2F9B002A7691 /* STPFile.m */; };
 		15760D611DEF427A002A7691 /* STPFileClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 15760D5F1DEF427A002A7691 /* STPFileClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		15760D621DEF427A002A7691 /* STPFileClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 15760D5F1DEF427A002A7691 /* STPFileClient.h */; };
+		15760D621DEF427A002A7691 /* STPFileClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 15760D5F1DEF427A002A7691 /* STPFileClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		15760D631DEF427A002A7691 /* STPFileClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 15760D601DEF427A002A7691 /* STPFileClient.m */; };
 		15760D641DEF427A002A7691 /* STPFileClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 15760D601DEF427A002A7691 /* STPFileClient.m */; };
 		C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
