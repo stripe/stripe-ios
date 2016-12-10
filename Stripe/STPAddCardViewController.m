@@ -193,8 +193,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 
 - (void)updateAppearance {
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
-    [self.doneItem stp_setTheme:self.theme];
-    [self.backItem stp_setTheme:self.theme];
+    STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
+    [self.doneItem stp_setTheme:navBarTheme];
+    [self.backItem stp_setTheme:navBarTheme];
     self.tableView.allowsSelection = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone; // handle this with fake separator views for flexibility
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
@@ -509,7 +510,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
             codeViewController.theme = self.theme;
             codeViewController.delegate = self;
             UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:codeViewController];
-            [nav.navigationBar stp_setTheme:self.theme];
+            nav.navigationBar.stp_theme = self.theme;
             nav.modalPresentationStyle = UIModalPresentationFormSheet;
             [self presentViewController:nav animated:YES completion:nil];
         }] onCompletion:^(__unused id value, NSError *error) {

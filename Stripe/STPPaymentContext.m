@@ -236,7 +236,7 @@
         self.paymentMethodsViewController = paymentMethodsViewController;
         paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
-        [navigationController.navigationBar stp_setTheme:self.theme];
+        navigationController.navigationBar.stp_theme = self.theme;
         navigationController.modalPresentationStyle = self.modalPresentationStyle;
         [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
     }];
@@ -305,7 +305,7 @@
         STRONG(self);
         STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:self];
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addressViewController];
-        [navigationController.navigationBar stp_setTheme:self.theme];
+        navigationController.navigationBar.stp_theme = self.theme;
         navigationController.modalPresentationStyle = self.modalPresentationStyle;
         [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
     }];
@@ -408,7 +408,7 @@
             addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addCardViewController];
-            [navigationController.navigationBar stp_setTheme:self.theme];
+            navigationController.navigationBar.stp_theme = self.theme;
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
             [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
         }
@@ -418,7 +418,7 @@
             STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:self];
             self.isMidShippingInRequestPayment = YES;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addressViewController];
-            [navigationController.navigationBar stp_setTheme:self.theme];
+            navigationController.navigationBar.stp_theme = self.theme;
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
             [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
         }

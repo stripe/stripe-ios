@@ -21,7 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param theme the theme to use to style the navigation bar. @see STPTheme.h
  */
-- (void)stp_setTheme:(STPTheme *)theme;
+- (void)stp_setTheme:(STPTheme *)theme __attribute__((deprecated));
+
+
+
+@property (nonatomic, nullable, retain) STPTheme *stp_theme;
 
 @end
 
