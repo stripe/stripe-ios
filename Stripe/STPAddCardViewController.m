@@ -117,6 +117,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     _addressViewModel.delegate = self;
     _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
     self.title = STPLocalizedString(@"Add a Card", @"Title for Add a Card view");
+    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button") style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+    self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+    self.stp_navigationItemProxy.leftBarButtonItem = self.cancelItem;
 }
 
 - (void)viewDidLoad {
@@ -126,9 +129,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     tableView.sectionHeaderHeight = 30;
     [self.view addSubview:tableView];
     self.tableView = tableView;
-    
-    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button") style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
-    self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(nextPressed:)];
     self.doneItem = doneItem;
@@ -195,6 +195,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
     [self.doneItem stp_setTheme:self.theme];
     [self.backItem stp_setTheme:self.theme];
+    [self.cancelItem stp_setTheme:self.theme];
     self.tableView.allowsSelection = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone; // handle this with fake separator views for flexibility
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
@@ -272,7 +273,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self reloadRememberMeCellAnimated:NO];
-    self.stp_navigationItemProxy.leftBarButtonItem = [self stp_isAtRootOfNavigationController] ? self.cancelItem : self.backItem;
+    if (![self stp_isAtRootOfNavigationController]) {
+        self.stp_navigationItemProxy.leftBarButtonItem = self.backItem;
+    }
     [self.tableView reloadData];
     if (self.navigationController.navigationBar.translucent) {
         CGFloat insetTop = CGRectGetMaxY(self.navigationController.navigationBar.frame);
