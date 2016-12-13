@@ -143,9 +143,11 @@
 
 - (void)updateAppearance {
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
-    [self.nextItem stp_setTheme:self.theme];
-    [self.cancelItem stp_setTheme:self.theme];
-    [self.backItem stp_setTheme:self.theme];
+    STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
+    [self.nextItem stp_setTheme:navBarTheme];
+    [self.cancelItem stp_setTheme:navBarTheme];
+    [self.backItem stp_setTheme:navBarTheme];
+    
     self.tableView.allowsSelection = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;

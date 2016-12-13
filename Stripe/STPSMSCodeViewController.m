@@ -18,6 +18,7 @@
 #import "STPColorUtils.h"
 #import "STPWeakStrongMacros.h"
 #import "STPLocalizationUtils.h"
+#import "UINavigationBar+Stripe_Theme.h"
 
 @interface STPSMSCodeViewController()<STPSMSCodeTextFieldDelegate>
 
@@ -159,8 +160,9 @@
 }
 
 - (void)updateAppearance {
-    [self.navigationItem.leftBarButtonItem stp_setTheme:self.theme];
-    [self.navigationItem.rightBarButtonItem stp_setTheme:self.theme];
+    STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
+    [self.navigationItem.leftBarButtonItem stp_setTheme:navBarTheme];
+    [self.navigationItem.rightBarButtonItem stp_setTheme:navBarTheme];
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
     self.topLabel.font = self.theme.smallFont;
     self.topLabel.textColor = self.theme.secondaryForegroundColor;

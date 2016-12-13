@@ -162,9 +162,11 @@
 }
 
 - (void)updateAppearance {
-    [self.navigationItem.backBarButtonItem stp_setTheme:self.theme];
-    [self.backItem stp_setTheme:self.theme];
-    [self.cancelItem stp_setTheme:self.theme];
+    STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
+    [self.navigationItem.backBarButtonItem stp_setTheme:navBarTheme];
+    [self.backItem stp_setTheme:navBarTheme];
+    [self.cancelItem stp_setTheme:navBarTheme];
+
     self.activityIndicator.tintColor = self.theme.accentColor;
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
     [self setNeedsStatusBarAppearanceUpdate];

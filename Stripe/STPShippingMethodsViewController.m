@@ -15,6 +15,7 @@
 #import "UITableViewCell+Stripe_Borders.h"
 #import "NSArray+Stripe_BoundSafe.h"
 #import "STPShippingMethodTableViewCell.h"
+#import "UINavigationBar+Stripe_Theme.h"
 
 static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMethodCellReuseIdentifier";
 
@@ -75,7 +76,8 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
 
 - (void)updateAppearance {
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
-    [self.doneItem stp_setTheme:self.theme];
+    STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
+    [self.doneItem stp_setTheme:navBarTheme];
     self.tableView.allowsSelection = YES;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
