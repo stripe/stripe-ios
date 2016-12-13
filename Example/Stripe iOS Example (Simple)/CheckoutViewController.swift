@@ -60,6 +60,13 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     }
 
     init(product: String, price: Int, settings: Settings) {
+
+        let stripePublishableKey = self.stripePublishableKey
+        let backendBaseURL = self.backendBaseURL
+
+        assert(stripePublishableKey.hasPrefix("pk_"), "You must set your Stripe publishable key at the top of CheckoutViewController.swift to run this app.")
+        assert(backendBaseURL != nil, "You must set your backend base url at the top of CheckoutViewController.swift to run this app.")
+
         self.product = product
         self.productImage.text = product
         self.theme = settings.theme
