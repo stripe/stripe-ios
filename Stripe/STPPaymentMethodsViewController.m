@@ -98,18 +98,7 @@
     activityIndicator.animating = YES;
     [self.view addSubview:activityIndicator];
     self.activityIndicator = activityIndicator;
-    
-    self.navigationItem.title = STPLocalizedString(@"Loading…", @"Title for screen when data is still loading from the network.");
-    
-    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button") 
-                                                           style:UIBarButtonItemStylePlain 
-                                                          target:self
-                                                          action:@selector(cancel:)];
-    self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:STPLocalizedString(@"Back", @"Text for back button") 
-                                                                             style:UIBarButtonItemStylePlain 
-                                                                            target:nil 
-                                                                            action:nil];
+
     WEAK(self);
     [self.loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
         STRONG(self);
@@ -150,7 +139,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationItem.leftBarButtonItem = [self stp_isAtRootOfNavigationController] ? self.cancelItem : self.backItem;
+
+    if (![self stp_isAtRootOfNavigationController]) {
+        self.navigationItem.leftBarButtonItem = self.backItem;
+    }
 }
 
 - (void)viewDidLayoutSubviews {
@@ -249,6 +241,15 @@
         _apiAdapter = apiAdapter;
         _loadingPromise = loadingPromise;
         _delegate = delegate;
+
+        self.navigationItem.title = STPLocalizedString(@"Loading…", @"Title for screen when data is still loading from the network.");
+        self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
+        self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button")
+                                                               style:UIBarButtonItemStylePlain
+                                                              target:self
+                                                              action:@selector(cancel:)];
+        self.navigationItem.backBarButtonItem = self.cancelItem;
+
         WEAK(self);
         [loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
             STRONG(self);
