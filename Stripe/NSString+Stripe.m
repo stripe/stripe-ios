@@ -21,7 +21,7 @@
 - (NSString *)stp_reversedString {
     NSMutableString *mutableReversedString = [NSMutableString stringWithCapacity:self.length];
     [self enumerateSubstringsInRange:NSMakeRange(0, self.length)
-                             options:NSStringEnumerationReverse | NSStringEnumerationByComposedCharacterSequences
+                             options:(NSStringEnumerationOptions)(NSStringEnumerationReverse | NSStringEnumerationByComposedCharacterSequences)
                           usingBlock:^(NSString *substring, __unused NSRange substringRange, __unused NSRange enclosingRange, __unused BOOL *stop) {
         [mutableReversedString appendString:substring];
     }];

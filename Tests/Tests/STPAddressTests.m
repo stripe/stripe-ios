@@ -282,16 +282,16 @@
     XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldEmail]);
 
     address.email = @"john@example.com";
-    XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldEmail|PKAddressFieldName]);
+    XCTAssertTrue([address containsRequiredShippingAddressFields:(PKAddressField)(PKAddressFieldEmail|PKAddressFieldName)]);
     XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldAll]);
 
     address.phone = @"5555555555";
-    XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone]);
+    XCTAssertTrue([address containsRequiredShippingAddressFields:(PKAddressField)(PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone)]);
     address.phone = @"555";
-    XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone]);
-    XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldAll]);
+    XCTAssertFalse([address containsRequiredShippingAddressFields:(PKAddressField)(PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone)]);
+    XCTAssertFalse([address containsRequiredShippingAddressFields:(PKAddressField)(PKAddressFieldAll)]);
     address.country = @"GB";
-    XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone]);
+    XCTAssertTrue([address containsRequiredShippingAddressFields:(PKAddressField)(PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone)]);
 
     address.country = @"US";
     address.phone = @"5555555555";

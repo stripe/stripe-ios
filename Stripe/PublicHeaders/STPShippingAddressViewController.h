@@ -90,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param addressViewController the view controller where the address was entered
  *  @param address               the address that was entered. @see STPAddress
- *  @param shippingMethod        the shipping method that was selected.
+ *  @param method        the shipping method that was selected.
  */
 - (void)shippingAddressViewController:(STPShippingAddressViewController *)addressViewController
                  didFinishWithAddress:(STPAddress *)address
