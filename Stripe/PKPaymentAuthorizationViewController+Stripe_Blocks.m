@@ -14,6 +14,9 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 static char kSTPBlockBasedApplePayDelegateAssociatedObjectKey;
 
+typedef void (^STPApplePayShippingMethodCompletionBlock)(PKPaymentAuthorizationStatus status, NSArray<PKPaymentSummaryItem *> *summaryItems);
+typedef void (^STPApplePayShippingAddressCompletionBlock)(PKPaymentAuthorizationStatus status, NSArray<PKShippingMethod *> *shippingMethods, NSArray<PKPaymentSummaryItem *> *summaryItems);
+
 @interface STPBlockBasedApplePayDelegate : NSObject <PKPaymentAuthorizationViewControllerDelegate>
 @property (nonatomic) STPAPIClient *apiClient;
 @property (nonatomic, copy) STPShippingAddressSelectionBlock onShippingAddressSelection;
@@ -52,7 +55,7 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
 
 - (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
                    didSelectShippingMethod:(PKShippingMethod *)shippingMethod
-                                completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKPaymentSummaryItem *> *))completion {
+                                completion:(STPApplePayShippingMethodCompletionBlock)completion {
     self.onShippingMethodSelection(shippingMethod, ^(NSArray<PKPaymentSummaryItem *> *summaryItems) {
         completion(PKPaymentAuthorizationStatusSuccess, summaryItems);
     });
@@ -62,7 +65,7 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
 #pragma clang diagnostic ignored "-Wdeprecated"
 - (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
                   didSelectShippingAddress:(ABRecordRef)address
-                                completion:(void (^)(PKPaymentAuthorizationStatus, NSArray<PKShippingMethod *> *, NSArray<PKPaymentSummaryItem *> *))completion {
+                                completion:(STPApplePayShippingAddressCompletionBlock)completion {
     STPAddress *stpAddress = [[STPAddress alloc] initWithABRecord:address];
     self.onShippingAddressSelection(stpAddress, ^(STPShippingStatus status, NSArray<PKShippingMethod *>* shippingMethods, NSArray<PKPaymentSummaryItem*> *summaryItems) {
         if (status == STPShippingStatusInvalid) {

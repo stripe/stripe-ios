@@ -87,11 +87,11 @@
 
         self.title = [self titleForShippingType:self.configuration.shippingType];
 
-        self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button")
+        _backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button")
                                                                style:UIBarButtonItemStylePlain
                                                               target:self
                                                               action:@selector(cancel:)];
-        self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+        _cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                         target:self
                                                                         action:@selector(cancel:)];
 

@@ -2353,11 +2353,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0D1AEF2AFE005B926E /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 			};
 			name = Debug;
 		};
@@ -2365,11 +2360,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0E1AEF2AFE005B926E /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 			};
 			name = Release;
 		};

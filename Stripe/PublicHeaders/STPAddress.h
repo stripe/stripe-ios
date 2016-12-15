@@ -5,6 +5,10 @@
 //  Created by Ben Guo on 4/13/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
+
+#define FAUXPAS_IGNORED_IN_FILE(...)
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 #import <AddressBook/AddressBook.h>

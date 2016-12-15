@@ -530,7 +530,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     // this is the email cell; do nothing.
 }
 
-- (void)switchTableViewCell:(__unused STPSwitchTableViewCell *)cell didToggleSwitch:(BOOL)on {
+- (void)switchTableViewCell:(STPSwitchTableViewCell *)cell didToggleSwitch:(BOOL)on {
     self.showingRememberMePhoneAndTerms = on;
 
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1
