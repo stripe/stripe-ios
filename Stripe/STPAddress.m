@@ -12,6 +12,9 @@
 #import "STPEmailAddressValidator.h"
 #import "STPPhoneNumberValidator.h"
 
+#define FAUXPAS_IGNORED_IN_FILE(...)
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
+
 @implementation STPAddress
 
 #pragma clang diagnostic push

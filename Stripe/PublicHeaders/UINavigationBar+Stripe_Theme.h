@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @see STPTheme.h
  */
-@property (nonatomic, nullable, retain) STPTheme *stp_theme;
+@property (nonatomic, nullable, strong) STPTheme *stp_theme;
 
 @end
 

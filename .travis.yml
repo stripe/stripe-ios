@@ -9,7 +9,7 @@ env:
   - TEST_TYPE=installation_carthage
   - TEST_TYPE=installation_cocoapods
   - TEST_TYPE=installation_cocoapods_frameworks
-#  - TEST_TYPE=lint
+  - TEST_TYPE=lint
   - TEST_TYPE=tests
   - TEST_TYPE=analyzer
 

@@ -543,6 +543,7 @@
 }
 
 + (PKShippingType)pkShippingType:(STPShippingType)shippingType {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     switch (shippingType) {
         case STPShippingTypeShipping:
             return PKShippingTypeShipping;
