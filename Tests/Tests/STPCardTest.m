@@ -93,6 +93,26 @@
     XCTAssertEqualObjects(card1, card2, @"cards with equal data should be equal");
 }
 
+- (void)testAddress {
+    NSMutableDictionary *apiResponse = [[self completeAttributeDictionary] mutableCopy];
+    STPCard *card = [STPCard decodedObjectFromAPIResponse:apiResponse];
+    STPAddress *address = [card address];
+    XCTAssertEqualObjects(address.name, @"Smerlock Smolmes");
+    XCTAssertEqualObjects(address.line1, @"221A Baker Street");
+    XCTAssertEqualObjects(address.city, @"New York");
+    XCTAssertEqualObjects(address.state, @"NY");
+    XCTAssertEqualObjects(address.postalCode, @"12345");
+    XCTAssertEqualObjects(address.country, @"USA");
+    apiResponse[@"name"] = nil;
+    apiResponse[@"address_line1"] = nil;
+    apiResponse[@"address_city"] = nil;
+    apiResponse[@"address_state"] = nil;
+    apiResponse[@"address_zip"] = nil;
+    apiResponse[@"address_country"] = nil;
+    STPCard *noAddressCard = [STPCard decodedObjectFromAPIResponse:apiResponse];
+    XCTAssertNil([noAddressCard address]);
+}
+
 #pragma mark - validation tests
 - (void)testValidateCardReturningError_january {
     STPCardParams *params = [[STPCardParams alloc] init];

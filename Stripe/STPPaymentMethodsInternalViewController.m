@@ -9,6 +9,7 @@
 #import "STPPaymentMethodsInternalViewController.h"
 
 #import "NSArray+Stripe_BoundSafe.h"
+#import "STPAddCardViewController+Private.h"
 #import "STPColorUtils.h"
 #import "STPCoreTableViewController+Private.h"
 #import "STPImageLibrary+Private.h"
@@ -26,6 +27,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)STPUserInformation *prefilledInformation;
+@property(nonatomic)STPAddress *shippingAddress;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic, weak)id<STPPaymentMethodsInternalViewControllerDelegate> delegate;
@@ -38,12 +40,14 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                                 theme:(STPTheme *)theme
                  prefilledInformation:(STPUserInformation *)prefilledInformation
+                      shippingAddress:(STPAddress *)shippingAddress
                    paymentMethodTuple:(STPPaymentMethodTuple *)tuple
                              delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate {
     self = [super initWithTheme:theme];
     if (self) {
         _configuration = configuration;
         _prefilledInformation = prefilledInformation;
+        _shippingAddress = shippingAddress;
         _paymentMethods = tuple.paymentMethods;
         _selectedPaymentMethod = tuple.selectedPaymentMethod;
         _delegate = delegate;
@@ -114,6 +118,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config theme:self.theme];
         paymentCardViewController.delegate = self;
         paymentCardViewController.prefilledInformation = self.prefilledInformation;
+        paymentCardViewController.shippingAddress = self.shippingAddress;
         [self.navigationController pushViewController:paymentCardViewController animated:YES];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

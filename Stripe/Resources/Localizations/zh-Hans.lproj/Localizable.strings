@@ -43,6 +43,9 @@
 /* Title for delivery info form */
 "Delivery" = "递送信息";
 
+/* Title for delivery address entry section */
+"Delivery Address" = "递送地址";
+
 /* Button on SMS verification screen if the user did not receive the SMS code. */
 "Didn't receive the code?" = "尚未收到验证码？";
 
@@ -106,6 +109,9 @@
 /* Title for shipping info form */
 "Shipping" = "配送信息";
 
+/* Title for shipping address entry section */
+"Shipping Address" = "送货地址";
+
 /* Label for shipping method form */
 "Shipping Method" = "配送方式";
 
@@ -135,6 +141,15 @@
 
 /* Error message when failing to type in SMS code for Remember me too many times. */
 "Too many incorrect attempts" = "过多错误的尝试";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "使用帐单地址";
+
+/* Button to fill billing address from delivery address */
+"Use Delivery" = "使用递送地址";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "使用送货地址";
 
 /* Title for SMS verification code screen */
 "Verification Code" = "验证码";

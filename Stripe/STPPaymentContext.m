@@ -10,6 +10,7 @@
 #import <objc/runtime.h>
 
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
+#import "STPAddCardViewController+Private.h"
 #import "STPCardTuple.h"
 #import "STPDispatchFunctions.h"
 #import "STPPaymentConfiguration+Private.h"
@@ -408,6 +409,7 @@
             STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
             addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
+            addCardViewController.shippingAddress = self.shippingAddress;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addCardViewController];
             navigationController.navigationBar.stp_theme = self.theme;
             navigationController.modalPresentationStyle = self.modalPresentationStyle;

@@ -27,6 +27,7 @@
 #import "STPRememberMeEmailCell.h"
 #import "STPRememberMePaymentCell.h"
 #import "STPRememberMeTermsView.h"
+#import "STPSectionHeaderView.h"
 #import "STPSMSCodeViewController.h"
 #import "STPSwitchTableViewCell.h"
 #import "STPToken.h"
@@ -44,9 +45,13 @@
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPRememberMePaymentCellDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
+@property(nonatomic)STPAddress *shippingAddress;
+@property(nonatomic)BOOL hasUsedShippingAddress;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)UIBarButtonItem *doneItem;
+@property(nonatomic)STPSectionHeaderView *cardHeaderView;
+@property(nonatomic)STPSectionHeaderView *addressHeaderView;
 @property(nonatomic)STPRememberMeEmailCell *emailCell;
 @property(nonatomic)STPSwitchTableViewCell *rememberMeCell;
 @property(nonatomic)STPAddressFieldTableViewCell *rememberMePhoneCell;
@@ -93,10 +98,13 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 
 - (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration {
     _configuration = configuration;
+    _shippingAddress = nil;
+    _hasUsedShippingAddress = NO;
     _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
     _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
     _addressViewModel.delegate = self;
     _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
+
     self.title = STPLocalizedString(@"Add a Card", @"Title for Add a Card view");
 }
 
@@ -121,7 +129,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     STPRememberMePaymentCell *paymentCell = [[STPRememberMePaymentCell alloc] init];
     paymentCell.paymentField.delegate = self;
     self.paymentCell = paymentCell;
-    
+
+    if (self.prefilledInformation.billingAddress != nil) {
+        self.addressViewModel.address = self.prefilledInformation.billingAddress;
+    }
     self.addressViewModel.previousField = paymentCell;
     
     self.rememberMeCell = [[STPSwitchTableViewCell alloc] init];
@@ -149,7 +160,33 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     }
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
-    
+
+    STPSectionHeaderView *addressHeaderView = [STPSectionHeaderView new];
+    addressHeaderView.theme = self.theme;
+    addressHeaderView.title = STPLocalizedString(@"Billing Address", @"Title for billing address entry section");
+    switch (self.configuration.shippingType) {
+        case STPShippingTypeShipping:
+            [addressHeaderView.button setTitle:STPLocalizedString(@"Use Shipping", @"Button to fill billing address from shipping address.")
+                                      forState:UIControlStateNormal];
+            break;
+        case STPShippingTypeDelivery:
+            [addressHeaderView.button setTitle:STPLocalizedString(@"Use Delivery", @"Button to fill billing address from delivery address.")
+                                      forState:UIControlStateNormal];
+            break;
+    }
+    [addressHeaderView.button addTarget:self action:@selector(useShippingAddress:)
+                       forControlEvents:UIControlEventTouchUpInside];
+    BOOL needsAddress = self.configuration.requiredBillingAddressFields != STPBillingAddressFieldsNone && !self.addressViewModel.isValid;
+    BOOL buttonVisible = (needsAddress && self.shippingAddress != nil && !self.hasUsedShippingAddress);
+    addressHeaderView.button.alpha = buttonVisible ? 1 : 0;
+    [addressHeaderView setNeedsLayout];
+    _addressHeaderView = addressHeaderView;
+    STPSectionHeaderView *cardHeaderView = [STPSectionHeaderView new];
+    cardHeaderView.theme = self.theme;
+    cardHeaderView.title = STPLocalizedString(@"Card", @"Title for credit card number entry field");
+    cardHeaderView.button.hidden = YES;
+    _cardHeaderView = cardHeaderView;
+
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)]];
 
     [self.checkoutAPIClient.bootstrapPromise onCompletion:^(__unused id value, __unused NSError *error) {
@@ -601,10 +638,15 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    CGSize fittingSize = CGSizeMake(self.view.bounds.size.width, CGFLOAT_MAX);
+    NSInteger numberOfRows = [self tableView:tableView numberOfRowsInSection:section];
     if (section == STPPaymentCardEmailSection) {
         return 0.01f;
-    }
-    if (section == STPPaymentCardRememberMeSection || [self tableView:tableView numberOfRowsInSection:section] != 0) {
+    } else if (section == STPPaymentCardNumberSection) {
+        return [self.cardHeaderView sizeThatFits:fittingSize].height;
+    } else if (section == STPPaymentCardBillingAddressSection && numberOfRows != 0) {
+        return [self.addressHeaderView sizeThatFits:fittingSize].height;
+    } else if (section == STPPaymentCardRememberMeSection || numberOfRows != 0) {
         return tableView.sectionHeaderHeight;
     }
     return 0.01f;
@@ -616,20 +658,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     } else if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
         return [UIView new];
     } else {
-        UILabel *label = [UILabel new];
-        label.font = self.theme.smallFont;
-        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-        style.firstLineHeadIndent = 15;
-        NSDictionary *attributes = @{NSParagraphStyleAttributeName: style};
-        label.textColor = self.theme.secondaryForegroundColor;
         if (section == STPPaymentCardNumberSection) {
-            label.attributedText = [[NSAttributedString alloc] initWithString:STPLocalizedString(@"Card", @"Title for credit card number entry field") 
-                                                                   attributes:attributes];
-            return label;
+            return self.cardHeaderView;
         } else if (section == STPPaymentCardBillingAddressSection) {
-            label.attributedText = [[NSAttributedString alloc] initWithString:STPLocalizedString(@"Billing Address", @"Title for billing address entry section")
-                                                                   attributes:attributes];
-            return label;
+            return self.addressHeaderView;
         }
     }
     return nil;
@@ -642,6 +674,17 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     else {
         return [UIView new];
     }
+}
+
+- (void)useShippingAddress:(__unused UIButton *)sender {
+    [self.tableView beginUpdates];
+    self.addressViewModel.address = self.shippingAddress;
+    self.hasUsedShippingAddress = YES;
+    [[self firstEmptyField] becomeFirstResponder];
+    [UIView animateWithDuration:0.2f animations:^{
+        self.addressHeaderView.buttonHidden = YES;
+    }];
+    [self.tableView endUpdates];
 }
 
 @end
