@@ -94,6 +94,12 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return ([STPColorUtils colorIsBright:self.theme.secondaryBackgroundColor]
+            ? UIStatusBarStyleDefault
+            : UIStatusBarStyleLightContent);
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView reloadData];

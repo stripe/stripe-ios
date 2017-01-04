@@ -224,7 +224,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor] 
+    return ([STPColorUtils colorIsBright:self.theme.secondaryBackgroundColor]
             ? UIStatusBarStyleDefault
             : UIStatusBarStyleLightContent);
 }

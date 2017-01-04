@@ -168,6 +168,12 @@
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return ([STPColorUtils colorIsBright:self.theme.secondaryBackgroundColor]
+            ? UIStatusBarStyleDefault
+            : UIStatusBarStyleLightContent);
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     if (![self stp_isAtRootOfNavigationController]) {

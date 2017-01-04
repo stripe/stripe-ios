@@ -165,7 +165,7 @@
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor] 
+    return ([STPColorUtils colorIsBright:self.theme.secondaryBackgroundColor]
             ? UIStatusBarStyleDefault
             : UIStatusBarStyleLightContent);
 }
