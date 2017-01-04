@@ -187,7 +187,8 @@
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
-    return ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor] 
+    STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
+    return ([STPColorUtils colorIsBright:navBarTheme.secondaryBackgroundColor]
             ? UIStatusBarStyleDefault
             : UIStatusBarStyleLightContent);
 }

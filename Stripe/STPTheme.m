@@ -146,7 +146,7 @@ static UIFont  *STPThemeDefaultMediumFont;
     if (_internalBarStyle) {
         return [_internalBarStyle integerValue];
     }
-    return [self barStyleForColor:self.primaryBackgroundColor];
+    return [self barStyleForColor:self.secondaryBackgroundColor];
 }
 
 - (id)copyWithZone:(__unused NSZone *)zone {

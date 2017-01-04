@@ -43,7 +43,7 @@ class BrowseProductsViewController: UITableViewController {
         super.viewDidAppear(animated)
         let theme = self.settingsVC.settings.theme
         self.view.backgroundColor = theme.primaryBackgroundColor
-        self.navigationController?.navigationBar.barTintColor = theme.primaryBackgroundColor
+        self.navigationController?.navigationBar.barTintColor = theme.secondaryBackgroundColor
         self.navigationController?.navigationBar.tintColor = theme.accentColor
         let titleAttributes = [
             NSForegroundColorAttributeName: theme.primaryForegroundColor,

@@ -94,6 +94,13 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
+    return ([STPColorUtils colorIsBright:navBarTheme.secondaryBackgroundColor]
+            ? UIStatusBarStyleDefault
+            : UIStatusBarStyleLightContent);
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView reloadData];
