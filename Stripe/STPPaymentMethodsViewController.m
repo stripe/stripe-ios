@@ -155,7 +155,7 @@
 
 - (void)updateAppearance {
     STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
-    [self.navigationItem.backBarButtonItem stp_setTheme:navBarTheme];
+    [self.navigationItem.leftBarButtonItem stp_setTheme:navBarTheme];
     [self.backItem stp_setTheme:navBarTheme];
     [self.cancelItem stp_setTheme:navBarTheme];
 
@@ -249,7 +249,7 @@
                                                                style:UIBarButtonItemStylePlain
                                                               target:self
                                                               action:@selector(cancel:)];
-        self.navigationItem.backBarButtonItem = self.cancelItem;
+        self.navigationItem.leftBarButtonItem = self.cancelItem;
 
         WEAK(self);
         [loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
