@@ -39,9 +39,9 @@ typedef NS_ENUM(NSInteger, STPFilePurpose) {
 @property (nonatomic, readonly) NSNumber *size;
 
 /**
- * The mime type for this file. This can be image/jpeg, image/png, or application/pdf.
+ * The file type. This can be "jpg", "png", or "pdf".
  */
-@property (nonatomic, readonly) NSString *mimeType;
+@property (nonatomic, readonly) NSString *type;
 
 /**
  * Returns the string value for a purpose.

@@ -15,7 +15,7 @@
 @property (nonatomic, readwrite) NSDate *created;
 @property (nonatomic, readwrite) STPFilePurpose purpose;
 @property (nonatomic, readwrite) NSNumber *size;
-@property (nonatomic, readwrite) NSString *mimeType;
+@property (nonatomic, readwrite) NSString *type;
 @property (nonatomic, readwrite, copy) NSDictionary *allResponseFields;
 
 - (BOOL)isEqualToFile:(STPFile *)file;
@@ -58,7 +58,7 @@
 #pragma mark  - STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {
-    return @[@"id", @"created", @"size", @"purpose", @"mimetype"];
+    return @[@"id", @"created", @"size", @"purpose", @"type"];
 }
 
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
@@ -71,7 +71,7 @@
     file.fileId = dict[@"id"];
     file.created = [[NSDate alloc] initWithTimeIntervalSince1970:[dict[@"created"] doubleValue]];
     file.size = dict[@"size"];
-    file.mimeType = dict[@"mimetype"];
+    file.type = dict[@"type"];
     
     NSString *purpose = dict[@"purpose"];
     if ([purpose isEqualToString:@"identity_document"]) {
