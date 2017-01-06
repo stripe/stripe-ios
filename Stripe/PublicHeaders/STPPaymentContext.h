@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  `STPPaymentContext` also provides a unified interface to multiple payment methods - for example, you can write a single integration to accept both credit card payments and Apple Pay.
  
- `STPPaymentContext` requires an "API Adapter" to communicate with your backend API to retrieve and modify a customer's payment methods - see https://stripe.com/docs/mobile/ios#prepare-your-api for how to implement this. You can also look at CheckoutViewController.swift in our example app to see `STPPaymentContext` in action.
+ `STPPaymentContext` requires an "API Adapter" to communicate with your backend API to retrieve and modify a customer's payment methods - see https://stripe.com/docs/mobile/ios/standard#prepare-your-api for how to implement this. You can also look at CheckoutViewController.swift in our example app to see `STPPaymentContext` in action.
  */
 @interface STPPaymentContext : NSObject
 

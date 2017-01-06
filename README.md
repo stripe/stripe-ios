@@ -43,8 +43,10 @@ After this is done, you can make test payments through the app (use credit card 
 
 ## Running the tests
 
+1. Install Carthage (if you have homebrew installed, `brew install carthage`)
+1. From the root of the repo, install test dependencies by running `carthage bootstrap --platform ios --configuration Release --no-use-binaries`
 1. Open Stripe.xcworkspace
-1. Choose the "iOS Tests" or "OS X Tests" scheme
+1. Choose the "StripeiOS" scheme with the iPhone 6, iOS 10.1 simulator (required for snapshot tests to pass)
 1. Run Product -> Test
 
 ## Migrating from older versions
