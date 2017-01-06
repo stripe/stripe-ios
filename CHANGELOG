@@ -1,3 +1,14 @@
+== 9.3.0 2017-01-05
+* Fixes a regression introduced in v9.0.0 in which color in STPTheme is used as the background color for UINavigationBar
+  * Note: This will cause navigation bar theming to work properly as described in the Stripe iOS docs, but you may need to audit your custom theme settings if you based them on the actual behavior of 9.0-9.2
+* If the navigation bar has a theme different than the view controller's theme, STP view controllers will use the bar's theme to style it's UIBarButtonItems
+* Adds a fallback to using main bundle for localized strings lookup if locale is set to a language the SDK doesn't support
+* Adds method to get a string of a card brand from `STPCardBrand`
+* Updated description of how to run tests in README
+* Fixes crash when user cancels payment before STPBackendAPIAdapter methods finish
+* Fixes bug where country picker wouldn't update when first selected.
+
+
 == 9.2.0 2016-11-14
 * Moves FBSnapshotTestCase dependency to Cartfile.private. No changes if you are not using Carthage.
 * Adds prebuilt UI for collecting shipping information.
