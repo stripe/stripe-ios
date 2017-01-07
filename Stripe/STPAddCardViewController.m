@@ -42,13 +42,9 @@
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPRememberMePaymentCellDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
-@property(nonatomic)STPTheme *theme;
 @property(nonatomic)STPAPIClient *apiClient;
-@property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)UIBarButtonItem *doneItem;
-@property(nonatomic)UIBarButtonItem *backItem;
-@property(nonatomic)UIBarButtonItem *cancelItem;
 @property(nonatomic)STPRememberMeEmailCell *emailCell;
 @property(nonatomic)STPSwitchTableViewCell *rememberMeCell;
 @property(nonatomic)STPAddressFieldTableViewCell *rememberMePhoneCell;
@@ -85,55 +81,29 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     return [self initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
 }
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        [self commonInitWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
-    }
-    return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self commonInitWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]];
-    }
-    return self;
-}
-
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration theme:(STPTheme *)theme {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [super initWithTheme:theme];
     if (self) {
-        [self commonInitWithConfiguration:configuration theme:theme];
+        [self commonInitWithConfiguration:configuration];
     }
     return self;
 }
 
-- (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration theme:(STPTheme *)theme {
+- (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration {
     _configuration = configuration;
-    _theme = theme;
     _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
     _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
     _addressViewModel.delegate = self;
     _checkoutAPIClient = [[STPCheckoutAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
     self.title = STPLocalizedString(@"Add a Card", @"Title for Add a Card view");
-    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button") style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
-    self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
-    self.stp_navigationItemProxy.leftBarButtonItem = self.cancelItem;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-    tableView.sectionHeaderHeight = 30;
-    [self.view addSubview:tableView];
-    self.tableView = tableView;
+- (void)createAndSetupViews {
+    [super createAndSetupViews];
     
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(nextPressed:)];
     self.doneItem = doneItem;
     self.stp_navigationItemProxy.rightBarButtonItem = doneItem;
-    
     self.stp_navigationItemProxy.rightBarButtonItem.enabled = NO;
     
     UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeCardFrontImage]];
@@ -175,9 +145,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     if (self.configuration.requiredBillingAddressFields != STPBillingAddressFieldsNone) {
         paymentCell.inputAccessoryView = self.inputAccessoryToolbar;
     }
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    [self updateAppearance];
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
     
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)]];
 
@@ -192,20 +161,13 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 }
 
 - (void)updateAppearance {
+    [super updateAppearance];
+
     self.view.backgroundColor = self.theme.primaryBackgroundColor;
 
     STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
     [self.doneItem stp_setTheme:navBarTheme];
-    [self.backItem stp_setTheme:navBarTheme];
-    [self.cancelItem stp_setTheme:navBarTheme];
     self.tableView.allowsSelection = NO;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone; // handle this with fake separator views for flexibility
-    self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
-    if ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor]) {
-        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
-    } else {
-        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-    }
     
     self.cardImageView.tintColor = self.theme.accentColor;
     self.activityIndicator.tintColor = self.theme.accentColor;
@@ -223,16 +185,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
-    return ([STPColorUtils colorIsBright:navBarTheme.secondaryBackgroundColor]
-            ? UIStatusBarStyleDefault
-            : UIStatusBarStyleLightContent);
-}
-
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.tableView.frame = self.view.bounds;
+
     [self reloadRememberMeSectionForFooterSizeChangeIfNecessary];
 }
 
@@ -276,24 +231,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self reloadRememberMeCellAnimated:NO];
-    if (![self stp_isAtRootOfNavigationController]) {
-        self.stp_navigationItemProxy.leftBarButtonItem = self.backItem;
-    }
-    [self.tableView reloadData];
-    if (self.navigationController.navigationBar.translucent) {
-        CGFloat insetTop = CGRectGetMaxY(self.navigationController.navigationBar.frame);
-        self.tableView.contentInset = UIEdgeInsetsMake(insetTop, 0, 0, 0);
-        self.tableView.scrollIndicatorInsets = self.tableView.contentInset;
-    } else {
-        self.tableView.contentInset = UIEdgeInsetsZero;
-        self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
-    }
-    CGPoint offset = self.tableView.contentOffset;
-    offset.y = -self.tableView.contentInset.top;
-    self.tableView.contentOffset = offset;
 }
 
--(void)viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self stp_beginObservingKeyboardAndInsettingScrollView:self.tableView
                                              onChangeBlock:nil];
@@ -315,12 +255,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     return nil;
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self.view endEditing:YES];
-}
-
-- (void)cancel:(__unused id)sender {
+- (void)handleBackOrCancelTapped:(__unused id)sender {
     [self.delegate addCardViewControllerDidCancel:self];
 }
 

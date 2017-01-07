@@ -66,7 +66,7 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
                                         } error:nil];
         
         
-        [STPAddCardViewController stp_aspect_hookSelector:@selector(commonInitWithConfiguration:theme:)
+        [STPAddCardViewController stp_aspect_hookSelector:@selector(commonInitWithConfiguration:)
                                               withOptions:STPAspectPositionAfter
                                                usingBlock:^{
                                                    STPAnalyticsClient *client = [self sharedClient];

@@ -6,7 +6,7 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "STPCoreTableViewController.h"
 #import "STPPaymentMethodTuple.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentConfiguration+Private.h"
@@ -19,7 +19,7 @@
 
 @end
 
-@interface STPPaymentMethodsInternalViewController : UIViewController
+@interface STPPaymentMethodsInternalViewController : STPCoreTableViewController
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                                 theme:(STPTheme *)theme

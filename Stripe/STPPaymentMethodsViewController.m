@@ -32,7 +32,6 @@
 @interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
-@property(nonatomic)STPTheme *theme;
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
@@ -40,8 +39,6 @@
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic, weak)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic, weak)UIViewController *internalViewController;
-@property(nonatomic)UIBarButtonItem *backItem;
-@property(nonatomic)UIBarButtonItem *cancelItem;
 @property(nonatomic)BOOL loading;
 
 @end
@@ -91,9 +88,9 @@
                               delegate:delegate];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
+- (void)createAndSetupViews {
+    [super createAndSetupViews];
+
     STPPaymentActivityIndicatorView *activityIndicator = [STPPaymentActivityIndicatorView new];
     activityIndicator.animating = YES;
     [self.view addSubview:activityIndicator];
@@ -134,15 +131,6 @@
         [self.navigationItem setRightBarButtonItem:internal.stp_navigationItemProxy.rightBarButtonItem animated:YES];
     }];
     self.loading = YES;
-    [self updateAppearance];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-
-    if (![self stp_isAtRootOfNavigationController]) {
-        self.navigationItem.leftBarButtonItem = self.backItem;
-    }
 }
 
 - (void)viewDidLayoutSubviews {
@@ -154,24 +142,12 @@
 }
 
 - (void)updateAppearance {
-    STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
-    [self.navigationItem.leftBarButtonItem stp_setTheme:navBarTheme];
-    [self.backItem stp_setTheme:navBarTheme];
-    [self.cancelItem stp_setTheme:navBarTheme];
+    [super updateAppearance];
 
     self.activityIndicator.tintColor = self.theme.accentColor;
-    self.view.backgroundColor = self.theme.primaryBackgroundColor;
-    [self setNeedsStatusBarAppearanceUpdate];
 }
 
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
-    return ([STPColorUtils colorIsBright:navBarTheme.secondaryBackgroundColor]
-            ? UIStatusBarStyleDefault
-            : UIStatusBarStyleLightContent);
-}
-
-- (void)cancel:(__unused id)sender {
+- (void)handleBackOrCancelTapped:(__unused id)sender {
     [self.delegate paymentMethodsViewControllerDidFinish:self];
 }
 
@@ -234,22 +210,15 @@
                        loadingPromise:(STPPromise<STPPaymentMethodTuple *> *)loadingPromise
                                 theme:(STPTheme *)theme
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [super initWithTheme:theme];
     if (self) {
         _configuration = configuration;
-        _theme = theme;
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _apiAdapter = apiAdapter;
         _loadingPromise = loadingPromise;
         _delegate = delegate;
 
         self.navigationItem.title = STPLocalizedString(@"Loading…", @"Title for screen when data is still loading from the network.");
-        _cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
-        _backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button")
-                                                               style:UIBarButtonItemStylePlain
-                                                              target:self
-                                                              action:@selector(cancel:)];
-        self.navigationItem.leftBarButtonItem = self.cancelItem;
 
         WEAK(self);
         [loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {

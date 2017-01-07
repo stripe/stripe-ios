@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <PassKit/PassKit.h>
-#import "STPTheme.h"
+#import "STPCoreTableViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol STPShippingMethodsViewControllerDelegate;
 
-@interface STPShippingMethodsViewController : UIViewController
+@interface STPShippingMethodsViewController : STPCoreTableViewController
 
 - (instancetype)initWithShippingMethods:(NSArray<PKShippingMethod *>*)methods
                  selectedShippingMethod:(nullable PKShippingMethod *)selectedMethod

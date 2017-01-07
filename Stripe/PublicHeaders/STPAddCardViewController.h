@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "STPBlocks.h"
 #import "STPCardParams.h"
+#import "STPCoreTableViewController.h"
 #import "STPAPIClient.h"
 #import "STPAddress.h"
 #import "STPTheme.h"
@@ -22,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user's card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`.
  */
-@interface STPAddCardViewController : UIViewController
+@interface STPAddCardViewController : STPCoreTableViewController
 
 /**
  *  A convenience initializer; equivalent to calling `initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]`.
