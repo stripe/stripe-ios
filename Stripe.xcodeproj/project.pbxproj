@@ -396,6 +396,7 @@
 		1583A9671E228D8700EF2D13 /* STPFileTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1583A9651E228D3500EF2D13 /* STPFileTest.m */; };
 		1583A9691E22946700EF2D13 /* STPFileFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1583A9681E22946700EF2D13 /* STPFileFunctionalTest.m */; };
 		1583A96B1E22998F00EF2D13 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1583A96A1E22998F00EF2D13 /* Images.xcassets */; };
+		1583A96E1E22A69700EF2D13 /* STPPIIFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1583A96D1E22A69700EF2D13 /* STPPIIFunctionalTest.m */; };
 		C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = C1080F481CBECF7B007B2D89 /* STPAddress.m */; };
 		C1080F4C1CBED48A007B2D89 /* STPAddressTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C1080F4B1CBED48A007B2D89 /* STPAddressTests.m */; };
@@ -918,6 +919,7 @@
 		1583A9651E228D3500EF2D13 /* STPFileTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFileTest.m; sourceTree = "<group>"; };
 		1583A9681E22946700EF2D13 /* STPFileFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFileFunctionalTest.m; sourceTree = "<group>"; };
 		1583A96A1E22998F00EF2D13 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		1583A96D1E22A69700EF2D13 /* STPPIIFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPIIFunctionalTest.m; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C1080F471CBECF7B007B2D89 /* STPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPAddress.h; path = PublicHeaders/STPAddress.h; sourceTree = "<group>"; };
 		C1080F481CBECF7B007B2D89 /* STPAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddress.m; sourceTree = "<group>"; };
@@ -1411,6 +1413,7 @@
 				04CDB5231A5F3A9300B854EE /* STPBankAccountTest.m */,
 				1583A9651E228D3500EF2D13 /* STPFileTest.m */,
 				1583A9681E22946700EF2D13 /* STPFileFunctionalTest.m */,
+				1583A96D1E22A69700EF2D13 /* STPPIIFunctionalTest.m */,
 				04CDB5241A5F3A9300B854EE /* STPCardFunctionalTest.m */,
 				0438EF4A1B741B0100D506CC /* STPCardValidatorTest.m */,
 				045D71301CF514BB00F6CD65 /* STPBinRangeTest.m */,
@@ -2153,6 +2156,7 @@
 				F12C8DC41D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m in Sources */,
 				F14C872F1D4FCDBA00C7CC6A /* STPPaymentContextTest.m in Sources */,
 				F14C873C1D4FE5BD00C7CC6A /* TestSTPBackendAPIAdapter.m in Sources */,
+				1583A96E1E22A69700EF2D13 /* STPPIIFunctionalTest.m in Sources */,
 				0438EF4D1B741B0100D506CC /* STPPaymentCardTextFieldViewModelTest.m in Sources */,
 				F148ABF81D5E88BA0014FD92 /* MockSTPCheckoutAPIClient.m in Sources */,
 				C124A1811CCAA1BF007D42EE /* NSMutableURLRequest+StripeTest.m in Sources */,
