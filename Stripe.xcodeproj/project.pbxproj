@@ -394,6 +394,8 @@
 		15760D631DEF427A002A7691 /* STPFileClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 15760D601DEF427A002A7691 /* STPFileClient.m */; };
 		15760D641DEF427A002A7691 /* STPFileClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 15760D601DEF427A002A7691 /* STPFileClient.m */; };
 		1583A9671E228D8700EF2D13 /* STPFileTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1583A9651E228D3500EF2D13 /* STPFileTest.m */; };
+		1583A9691E22946700EF2D13 /* STPFileFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1583A9681E22946700EF2D13 /* STPFileFunctionalTest.m */; };
+		1583A96B1E22998F00EF2D13 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1583A96A1E22998F00EF2D13 /* Images.xcassets */; };
 		C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = C1080F481CBECF7B007B2D89 /* STPAddress.m */; };
 		C1080F4C1CBED48A007B2D89 /* STPAddressTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C1080F4B1CBED48A007B2D89 /* STPAddressTests.m */; };
@@ -914,6 +916,8 @@
 		15760D5F1DEF427A002A7691 /* STPFileClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPFileClient.h; path = PublicHeaders/STPFileClient.h; sourceTree = "<group>"; };
 		15760D601DEF427A002A7691 /* STPFileClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFileClient.m; sourceTree = "<group>"; };
 		1583A9651E228D3500EF2D13 /* STPFileTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFileTest.m; sourceTree = "<group>"; };
+		1583A9681E22946700EF2D13 /* STPFileFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFileFunctionalTest.m; sourceTree = "<group>"; };
+		1583A96A1E22998F00EF2D13 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C1080F471CBECF7B007B2D89 /* STPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPAddress.h; path = PublicHeaders/STPAddress.h; sourceTree = "<group>"; };
 		C1080F481CBECF7B007B2D89 /* STPAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddress.m; sourceTree = "<group>"; };
@@ -1406,6 +1410,7 @@
 				04CDB5221A5F3A9300B854EE /* STPBankAccountFunctionalTest.m */,
 				04CDB5231A5F3A9300B854EE /* STPBankAccountTest.m */,
 				1583A9651E228D3500EF2D13 /* STPFileTest.m */,
+				1583A9681E22946700EF2D13 /* STPFileFunctionalTest.m */,
 				04CDB5241A5F3A9300B854EE /* STPCardFunctionalTest.m */,
 				0438EF4A1B741B0100D506CC /* STPCardValidatorTest.m */,
 				045D71301CF514BB00F6CD65 /* STPBinRangeTest.m */,
@@ -1448,6 +1453,7 @@
 				F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */,
 				F1D96F981DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.h */,
 				F1D96F991DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.m */,
+				1583A96A1E22998F00EF2D13 /* Images.xcassets */,
 				C1D23FB71D37FE0F002FD83C /* JSON */,
 			);
 			name = StripeTests;
@@ -1907,6 +1913,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1583A96B1E22998F00EF2D13 /* Images.xcassets in Resources */,
 				F1343BEA1D652CAD00F102D8 /* Customer.json in Resources */,
 				F1343BE91D652CAB00F102D8 /* Card.json in Resources */,
 			);
@@ -2156,6 +2163,7 @@
 				04415C671A6605B5001225ED /* STPAPIClientTest.m in Sources */,
 				045D71311CF514BB00F6CD65 /* STPBinRangeTest.m in Sources */,
 				C1EF044E1DD2397C00FBF452 /* STPShippingMethodsViewControllerLocalizationTests.m in Sources */,
+				1583A9691E22946700EF2D13 /* STPFileFunctionalTest.m in Sources */,
 				04415C681A6605B5001225ED /* STPFormEncoderTest.m in Sources */,
 				C11810991CC6D46D0022FB55 /* NSDecimalNumber+StripeTest.m in Sources */,
 				C1EEDCC81CA2172700A54582 /* NSString+StripeTest.m in Sources */,
