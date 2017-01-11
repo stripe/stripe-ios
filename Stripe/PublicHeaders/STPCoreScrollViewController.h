@@ -10,12 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ This is the base class for all Stripe scroll view controllers. It is intended 
+ for use only by Stripe classes, you should not subclass it yourself in your app.
+ */
 @interface STPCoreScrollViewController : STPCoreViewController
-
-@property (nonatomic, nullable, readonly) UIScrollView *scrollView;
-
-// For overridding in subclasses
-- (UIScrollView *)createScrollView;
 
 @end
 

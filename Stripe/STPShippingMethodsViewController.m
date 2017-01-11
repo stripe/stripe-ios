@@ -16,6 +16,7 @@
 #import "NSArray+Stripe_BoundSafe.h"
 #import "STPShippingMethodTableViewCell.h"
 #import "UINavigationBar+Stripe_Theme.h"
+#import "STPCoreTableViewController+Private.h"
 
 static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMethodCellReuseIdentifier";
 

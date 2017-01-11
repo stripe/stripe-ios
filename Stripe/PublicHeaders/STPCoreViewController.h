@@ -12,23 +12,41 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ This is the base class for all Stripe view controllers. It is intended for use
+ only by Stripe classes, you should not subclass it yourself in your app.
+ 
+ It theming, back/cancel button management, and other shared logic for
+ Stripe view controllers.
+ */
 @interface STPCoreViewController : UIViewController
 
-@property (nonatomic) STPTheme *theme;
-
+/**
+ A convenience initializer; equivalent to calling `initWithTheme:[STPTheme defaultTheme]`.
+ */
 - (instancetype)init;
+
+
+/**
+ Initializes a new view controller with the specified theme
+
+ @param theme The theme to use to inform the view controller's visual appearance. @see STPTheme
+ */
 - (instancetype)initWithTheme:(STPTheme *)theme NS_DESIGNATED_INITIALIZER;
+
+
+/**
+ Passes through to the default UIViewController behavior for this initializer,
+ and then also sets the default theme as in `init`
+ */
 - (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil
-                         bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
-- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
+                         bundle:(nullable NSBundle *)nibBundleOrNil NS_DESIGNATED_INITIALIZER;
 
-// For overridding in subclasses
-- (void)handleBackOrCancelTapped:(nullable id)sender;
-- (void)createAndSetupViews NS_REQUIRES_SUPER;
-- (void)updateAppearance NS_REQUIRES_SUPER;
-
-- (void)viewWillAppear:(BOOL)animated NS_REQUIRES_SUPER;
-- (void)viewWillDisappear:(BOOL)animated NS_REQUIRES_SUPER;
+/**
+ Passes through to the default UIViewController behavior for this initializer,
+ and then also sets the default theme as in `init`
+ */
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;
 
 @end
 

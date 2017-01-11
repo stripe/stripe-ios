@@ -608,6 +608,12 @@
 		F1DEB89A1E2074480066B8E8 /* STPCoreViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = F1DEB8971E2074480066B8E8 /* STPCoreViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F1DEB89B1E2074480066B8E8 /* STPCoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1DEB8981E2074480066B8E8 /* STPCoreViewController.m */; };
 		F1DEB89C1E2074480066B8E8 /* STPCoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1DEB8981E2074480066B8E8 /* STPCoreViewController.m */; };
+		F1FA6F921E258F6800EB444D /* STPCoreViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FA6F911E258F6800EB444D /* STPCoreViewController+Private.h */; };
+		F1FA6F931E258F6800EB444D /* STPCoreViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FA6F911E258F6800EB444D /* STPCoreViewController+Private.h */; };
+		F1FA6F951E25960500EB444D /* STPCoreScrollViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FA6F941E25960500EB444D /* STPCoreScrollViewController+Private.h */; };
+		F1FA6F961E25960500EB444D /* STPCoreScrollViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FA6F941E25960500EB444D /* STPCoreScrollViewController+Private.h */; };
+		F1FA6F981E25970F00EB444D /* STPCoreTableViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FA6F971E25970F00EB444D /* STPCoreTableViewController+Private.h */; };
+		F1FA6F991E25970F00EB444D /* STPCoreTableViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FA6F971E25970F00EB444D /* STPCoreTableViewController+Private.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1017,6 +1023,9 @@
 		F1DEB88F1E2052150066B8E8 /* STPCoreScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCoreScrollViewController.m; sourceTree = "<group>"; };
 		F1DEB8971E2074480066B8E8 /* STPCoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCoreViewController.h; path = PublicHeaders/STPCoreViewController.h; sourceTree = "<group>"; };
 		F1DEB8981E2074480066B8E8 /* STPCoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCoreViewController.m; sourceTree = "<group>"; };
+		F1FA6F911E258F6800EB444D /* STPCoreViewController+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPCoreViewController+Private.h"; sourceTree = "<group>"; };
+		F1FA6F941E25960500EB444D /* STPCoreScrollViewController+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPCoreScrollViewController+Private.h"; sourceTree = "<group>"; };
+		F1FA6F971E25970F00EB444D /* STPCoreTableViewController+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPCoreTableViewController+Private.h"; sourceTree = "<group>"; };
 		FAFC12C516E5767F0066297F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -1456,10 +1465,13 @@
 				04F416251CA3639500486FB5 /* STPAddCardViewController.m */,
 				04BFFFD81D240B13005F2340 /* STPAddCardViewController+Private.h */,
 				F1DEB88E1E2052150066B8E8 /* STPCoreScrollViewController.h */,
+				F1FA6F941E25960500EB444D /* STPCoreScrollViewController+Private.h */,
 				F1DEB88F1E2052150066B8E8 /* STPCoreScrollViewController.m */,
 				F1DEB8881E2047CA0066B8E8 /* STPCoreTableViewController.h */,
+				F1FA6F971E25970F00EB444D /* STPCoreTableViewController+Private.h */,
 				F1DEB8891E2047CA0066B8E8 /* STPCoreTableViewController.m */,
 				F1DEB8971E2074480066B8E8 /* STPCoreViewController.h */,
+				F1FA6F911E258F6800EB444D /* STPCoreViewController+Private.h */,
 				F1DEB8981E2074480066B8E8 /* STPCoreViewController.m */,
 				04B31DE41D09D25F00EF1631 /* STPPaymentMethodsInternalViewController.h */,
 				04B31DE51D09D25F00EF1631 /* STPPaymentMethodsInternalViewController.m */,
@@ -1612,6 +1624,7 @@
 				049E84EA1A605EF0000B66CD /* STPCard.h in Headers */,
 				049E84EB1A605EF0000B66CD /* STPToken.h in Headers */,
 				C124A17D1CCAA0C2007D42EE /* NSMutableURLRequest+Stripe.h in Headers */,
+				F1FA6F991E25970F00EB444D /* STPCoreTableViewController+Private.h in Headers */,
 				04F94DB01D229F60004FC826 /* STPRememberMeTermsView.h in Headers */,
 				04F94DBF1D22A0AA004FC826 /* STPCheckoutAPIClient.h in Headers */,
 				04E32AA01B7A9490009C9E35 /* STPPaymentCardTextField.h in Headers */,
@@ -1637,6 +1650,7 @@
 				049E84EC1A605EF0000B66CD /* StripeError.h in Headers */,
 				046FE9A31CE5608000DA6A7B /* STPPaymentActivityIndicatorView.h in Headers */,
 				F1DEB88B1E2047CA0066B8E8 /* STPCoreTableViewController.h in Headers */,
+				F1FA6F931E258F6800EB444D /* STPCoreViewController+Private.h in Headers */,
 				04F94DC71D22A204004FC826 /* STPCheckoutBootstrapResponse.h in Headers */,
 				04793F571D1D9C0200B3C551 /* STPSource.h in Headers */,
 				F1D64B2A1D8767FC001CDB7C /* STPWebViewController.h in Headers */,
@@ -1653,6 +1667,7 @@
 				04F94DAF1D229F59004FC826 /* STPPaymentMethodsViewController+Private.h in Headers */,
 				04633AFD1CD129AF009D4FB5 /* STPPhoneNumberValidator.h in Headers */,
 				04633AFE1CD129B4009D4FB5 /* STPDelegateProxy.h in Headers */,
+				F1FA6F961E25960500EB444D /* STPCoreScrollViewController+Private.h in Headers */,
 				04FCFA191BD59A8C00297732 /* STPCategoryLoader.h in Headers */,
 				049A3FB41CC9FF0500F57DE7 /* UIToolbar+Stripe_InputAccessory.h in Headers */,
 				04CDE5CB1BC20B1D00548833 /* STPBankAccountParams.h in Headers */,
@@ -1705,6 +1720,7 @@
 				04CDB50A1A5F30A700B854EE /* STPBankAccount.h in Headers */,
 				F1DEB88A1E2047CA0066B8E8 /* STPCoreTableViewController.h in Headers */,
 				04E39F6A1CED48D500AF3B96 /* UIBarButtonItem+Stripe.h in Headers */,
+				F1FA6F951E25960500EB444D /* STPCoreScrollViewController+Private.h in Headers */,
 				C17A030D1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h in Headers */,
 				04A4C3891C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.h in Headers */,
 				04BC29B11CD9AAA800318357 /* STPCheckoutAccount.h in Headers */,
@@ -1717,6 +1733,7 @@
 				049952CF1BCF13510088C703 /* STPAPIPostRequest.h in Headers */,
 				C15993381D8808680047950D /* STPShippingMethodTableViewCell.h in Headers */,
 				049A3FB21CC9FEFC00F57DE7 /* UIToolbar+Stripe_InputAccessory.h in Headers */,
+				F1FA6F981E25970F00EB444D /* STPCoreTableViewController+Private.h in Headers */,
 				F1DEB8901E2052150066B8E8 /* STPCoreScrollViewController.h in Headers */,
 				04E39F521CECF7A100AF3B96 /* STPCardTuple.h in Headers */,
 				04A488331CA34D3000506E53 /* STPEmailAddressValidator.h in Headers */,
@@ -1762,6 +1779,7 @@
 				04A488421CA3580700506E53 /* UINavigationController+Stripe_Completion.h in Headers */,
 				F1DEB8991E2074480066B8E8 /* STPCoreViewController.h in Headers */,
 				04A4883C1CA3568800506E53 /* STPBlocks.h in Headers */,
+				F1FA6F921E258F6800EB444D /* STPCoreViewController+Private.h in Headers */,
 				04BC29B51CD9AE0000318357 /* STPCheckoutBootstrapResponse.h in Headers */,
 				045D71201CEFA57000F6CD65 /* UIViewController+Stripe_Promises.h in Headers */,
 				04793F561D1D8DDD00B3C551 /* STPSource.h in Headers */,

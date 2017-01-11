@@ -23,6 +23,7 @@
 #import "STPShippingMethodsViewController.h"
 #import "STPPaymentContext+Private.h"
 #import "UINavigationController+Stripe_Completion.h"
+#import "STPCoreTableViewController+Private.h"
 
 @interface STPShippingAddressViewController ()<STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource, STPShippingMethodsViewControllerDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;

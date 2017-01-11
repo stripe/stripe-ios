@@ -28,6 +28,7 @@
 #import "STPLocalizationUtils.h"
 #import "STPDispatchFunctions.h"
 #import "UINavigationController+Stripe_Completion.h"
+#import "STPCoreViewController+Private.h"
 
 @interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
 

@@ -7,9 +7,12 @@
 //
 
 #import "STPCoreTableViewController.h"
+#import "STPCoreTableViewController+Private.h"
 
-@interface STPCoreTableViewController ()
-@end
+
+// Note:
+// The private class extension for this class is in
+// STPCoreTableViewController+Private.h
 
 @implementation STPCoreTableViewController
 

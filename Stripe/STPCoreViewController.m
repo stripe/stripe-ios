@@ -7,6 +7,7 @@
 //
 
 #import "STPCoreViewController.h"
+#import "STPCoreViewController+Private.h"
 
 #import "STPColorUtils.h"
 #import "STPLocalizationUtils.h"
@@ -16,11 +17,9 @@
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "UIViewController+Stripe_ParentViewController.h"
 
-
-@interface STPCoreViewController ()
-@property(nonatomic) UIBarButtonItem *cancelItem;
-@property(nonatomic) UIBarButtonItem *backItem;
-@end
+// Note:
+// The private class extension for this class is in
+// STPCoreViewController+Private.h
 
 @implementation STPCoreViewController
 
@@ -28,21 +27,41 @@
     return [self initWithTheme:[STPTheme defaultTheme]];
 }
 
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        [self commonInitWithTheme:[STPTheme defaultTheme]];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self commonInitWithTheme:[STPTheme defaultTheme]];
+    }
+    return self;
+}
+
 - (instancetype)initWithTheme:(STPTheme *)theme {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        _theme = theme;
-        self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button")
-                                                               style:UIBarButtonItemStylePlain
-                                                              target:self
-                                                              action:@selector(handleBackOrCancelTapped:)];
-        self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                        target:self
-                                                                        action:@selector(handleBackOrCancelTapped:)];
-
-        self.stp_navigationItemProxy.leftBarButtonItem = self.cancelItem;
+        [self commonInitWithTheme:theme];
     }
     return self;
+}
+
+- (void)commonInitWithTheme:(STPTheme *)theme {
+    _theme = theme;
+    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button")
+                                                           style:UIBarButtonItemStylePlain
+                                                          target:self
+                                                          action:@selector(handleBackOrCancelTapped:)];
+    self.cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                    target:self
+                                                                    action:@selector(handleBackOrCancelTapped:)];
+
+    self.stp_navigationItemProxy.leftBarButtonItem = self.cancelItem;
 }
 
 - (void)setTheme:(STPTheme *)theme {

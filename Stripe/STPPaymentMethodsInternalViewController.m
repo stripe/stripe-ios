@@ -15,6 +15,7 @@
 #import "STPColorUtils.h"
 #import "STPLocalizationUtils.h"
 #import "STPPaymentMethodTableViewCell.h"
+#import "STPCoreTableViewController+Private.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 static NSInteger STPPaymentMethodCardListSection = 0;

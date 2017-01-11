@@ -7,16 +7,16 @@
 //
 
 #import "STPCoreScrollViewController.h"
+#import "STPCoreScrollViewController+Private.h"
 
 #import "STPColorUtils.h"
 #import "STPTheme.h"
 
-@interface STPCoreScrollViewController ()
-
-@end
+// Note:
+// The private class extension for this class is in
+// STPCoreScrollViewController+Private.h
 
 @implementation STPCoreScrollViewController
-
 
 - (UIScrollView *)createScrollView {
     return [UIScrollView new];

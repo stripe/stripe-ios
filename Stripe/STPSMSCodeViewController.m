@@ -19,6 +19,7 @@
 #import "STPWeakStrongMacros.h"
 #import "STPLocalizationUtils.h"
 #import "UINavigationBar+Stripe_Theme.h"
+#import "STPCoreScrollViewController+Private.h"
 
 @interface STPSMSCodeViewController()<STPSMSCodeTextFieldDelegate>
 

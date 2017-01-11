@@ -39,6 +39,7 @@
 #import "STPWeakStrongMacros.h"
 #import "STPLocalizationUtils.h"
 #import "STPDispatchFunctions.h"
+#import "STPCoreTableViewController+Private.h"
 
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPRememberMePaymentCellDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
