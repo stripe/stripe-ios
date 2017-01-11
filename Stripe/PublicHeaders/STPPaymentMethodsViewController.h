@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "STPPaymentMethod.h"
+
 #import "STPBackendAPIAdapter.h"
-#import "STPPaymentConfiguration.h"
-#import "STPUserInformation.h"
 #import "STPCoreViewController.h"
+#import "STPPaymentConfiguration.h"
+#import "STPPaymentMethod.h"
+#import "STPUserInformation.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

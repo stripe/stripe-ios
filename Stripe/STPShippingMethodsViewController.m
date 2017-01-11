@@ -7,16 +7,17 @@
 //
 
 #import "STPShippingMethodsViewController.h"
-#import "STPLocalizationUtils.h"
-#import "UIBarButtonItem+Stripe.h"
-#import "UIViewController+Stripe_NavigationItemProxy.h"
-#import "STPImageLibrary+Private.h"
-#import "STPColorUtils.h"
-#import "UITableViewCell+Stripe_Borders.h"
+
 #import "NSArray+Stripe_BoundSafe.h"
-#import "STPShippingMethodTableViewCell.h"
-#import "UINavigationBar+Stripe_Theme.h"
+#import "STPColorUtils.h"
 #import "STPCoreTableViewController+Private.h"
+#import "STPImageLibrary+Private.h"
+#import "STPLocalizationUtils.h"
+#import "STPShippingMethodTableViewCell.h"
+#import "UIBarButtonItem+Stripe.h"
+#import "UINavigationBar+Stripe_Theme.h"
+#import "UITableViewCell+Stripe_Borders.h"
+#import "UIViewController+Stripe_NavigationItemProxy.h"
 
 static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMethodCellReuseIdentifier";
 

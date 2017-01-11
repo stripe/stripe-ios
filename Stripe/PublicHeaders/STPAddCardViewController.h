@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+
+#import "STPAPIClient.h"
+#import "STPAddress.h"
 #import "STPBlocks.h"
 #import "STPCardParams.h"
 #import "STPCoreTableViewController.h"
-#import "STPAPIClient.h"
-#import "STPAddress.h"
+#import "STPPaymentConfiguration.h"
 #import "STPTheme.h"
 #import "STPUserInformation.h"
-#import "STPPaymentConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

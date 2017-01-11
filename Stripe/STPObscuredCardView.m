@@ -7,8 +7,9 @@
 //
 
 #import "STPObscuredCardView.h"
-#import "STPImageLibrary.h"
+
 #import "STPImageLibrary+Private.h"
+#import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
 
 @interface STPObscuredCardView()<UITextFieldDelegate>

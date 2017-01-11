@@ -7,10 +7,11 @@
 //
 
 #import "STPSMSCodeTextField.h"
-#import "STPTheme.h"
+
 #import "NSArray+Stripe_BoundSafe.h"
 #import "NSString+Stripe.h"
 #import "STPCardValidator.h"
+#import "STPTheme.h"
 
 @class STPCodeInternalTextField;
 

@@ -7,10 +7,11 @@
 //
 
 #import "STPPaymentConfiguration.h"
-#import "STPPaymentConfiguration+Private.h"
+
 #import "NSBundle+Stripe_AppName.h"
-#import "Stripe.h"
 #import "STPAnalyticsClient.h"
+#import "STPPaymentConfiguration+Private.h"
+#import "Stripe.h"
 
 @implementation STPPaymentConfiguration
 

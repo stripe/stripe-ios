@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+
 #import "STPAddress.h"
 #import "STPBlocks.h"
-#import "STPSource.h"
 #import "STPCustomer.h"
+#import "STPSource.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

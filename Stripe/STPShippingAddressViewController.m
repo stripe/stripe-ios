@@ -7,23 +7,24 @@
 //
 
 #import "STPShippingAddressViewController.h"
+
+#import "NSArray+Stripe_BoundSafe.h"
+#import "STPAddress.h"
+#import "STPAddressViewModel.h"
+#import "STPColorUtils.h"
+#import "STPCoreTableViewController+Private.h"
+#import "STPImageLibrary+Private.h"
+#import "STPLocalizationUtils.h"
+#import "STPPaymentActivityIndicatorView.h"
+#import "STPPaymentContext+Private.h"
+#import "STPShippingMethodsViewController.h"
 #import "STPTheme.h"
 #import "UIBarButtonItem+Stripe.h"
-#import "UIViewController+Stripe_NavigationItemProxy.h"
-#import "STPAddressViewModel.h"
-#import "STPPaymentActivityIndicatorView.h"
-#import "STPImageLibrary+Private.h"
-#import "STPColorUtils.h"
-#import "UIViewController+Stripe_KeyboardAvoiding.h"
-#import "UIViewController+Stripe_ParentViewController.h"
-#import "NSArray+Stripe_BoundSafe.h"
-#import "UITableViewCell+Stripe_Borders.h"
-#import "STPAddress.h"
-#import "STPLocalizationUtils.h"
-#import "STPShippingMethodsViewController.h"
-#import "STPPaymentContext+Private.h"
 #import "UINavigationController+Stripe_Completion.h"
-#import "STPCoreTableViewController+Private.h"
+#import "UITableViewCell+Stripe_Borders.h"
+#import "UIViewController+Stripe_KeyboardAvoiding.h"
+#import "UIViewController+Stripe_NavigationItemProxy.h"
+#import "UIViewController+Stripe_ParentViewController.h"
 
 @interface STPShippingAddressViewController ()<STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource, STPShippingMethodsViewControllerDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;

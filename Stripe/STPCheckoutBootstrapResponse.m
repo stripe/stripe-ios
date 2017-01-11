@@ -7,9 +7,9 @@
 //
 
 #import "STPCheckoutBootstrapResponse.h"
+
 #import "STPAPIClient.h"
 #import "STPAPIClient+Private.h"
-
 
 @interface STPCheckoutBootstrapResponse()
 

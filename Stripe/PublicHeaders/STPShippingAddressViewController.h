@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <PassKit/PassKit.h>
-#import "STPPaymentContext.h"
+
 #import "STPCoreTableViewController.h"
+#import "STPPaymentContext.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

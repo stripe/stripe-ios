@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "STPCardParams.h"
 #import "STPCardBrand.h"
+#import "STPCardParams.h"
 #import "STPCardValidationState.h"
 
 NS_ASSUME_NONNULL_BEGIN

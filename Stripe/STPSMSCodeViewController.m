@@ -7,19 +7,20 @@
 //
 
 #import "STPSMSCodeViewController.h"
-#import "STPSMSCodeTextField.h"
+
 #import "STPCheckoutAPIClient.h"
-#import "STPTheme.h"
+#import "STPColorUtils.h"
+#import "STPCoreScrollViewController+Private.h"
+#import "STPLocalizationUtils.h"
 #import "STPPaymentActivityIndicatorView.h"
+#import "STPPhoneNumberValidator.h"
+#import "STPSMSCodeTextField.h"
+#import "STPTheme.h"
+#import "STPWeakStrongMacros.h"
 #import "StripeError.h"
 #import "UIBarButtonItem+Stripe.h"
-#import "UIViewController+Stripe_KeyboardAvoiding.h"
-#import "STPPhoneNumberValidator.h"
-#import "STPColorUtils.h"
-#import "STPWeakStrongMacros.h"
-#import "STPLocalizationUtils.h"
 #import "UINavigationBar+Stripe_Theme.h"
-#import "STPCoreScrollViewController+Private.h"
+#import "UIViewController+Stripe_KeyboardAvoiding.h"
 
 @interface STPSMSCodeViewController()<STPSMSCodeTextFieldDelegate>
 

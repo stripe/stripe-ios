@@ -7,8 +7,8 @@
 //
 
 #import "STPUserInformation.h"
-#import "STPCardValidator.h"
 
+#import "STPCardValidator.h"
 
 @implementation STPUserInformation
 

@@ -7,8 +7,9 @@
 //
 
 #import "STPCustomer.h"
-#import "StripeError.h"
+
 #import "STPCard.h"
+#import "StripeError.h"
 
 @interface STPCustomer()
 

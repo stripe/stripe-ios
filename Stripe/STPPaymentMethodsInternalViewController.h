@@ -7,9 +7,10 @@
 //
 
 #import "STPCoreTableViewController.h"
-#import "STPPaymentMethodTuple.h"
-#import "STPPaymentConfiguration.h"
+
 #import "STPPaymentConfiguration+Private.h"
+#import "STPPaymentConfiguration.h"
+#import "STPPaymentMethodTuple.h"
 
 @protocol STPPaymentMethodsInternalViewControllerDelegate
 

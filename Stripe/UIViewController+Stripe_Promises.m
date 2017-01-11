@@ -7,9 +7,10 @@
 //
 
 #import "UIViewController+Stripe_Promises.h"
+
+#import "STPAspects.h"
 #import "STPPromise.h"
 #import <objc/runtime.h>
-#import "STPAspects.h"
 
 @implementation UIViewController (Stripe_Promises)
 

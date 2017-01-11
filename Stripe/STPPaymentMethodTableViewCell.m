@@ -7,10 +7,11 @@
 //
 
 #import "STPPaymentMethodTableViewCell.h"
+
+#import "STPApplePayPaymentMethod.h"
 #import "STPCard.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
-#import "STPApplePayPaymentMethod.h"
 
 @interface STPPaymentMethodTableViewCell ()
 @property(nonatomic) id<STPPaymentMethod> paymentMethod;

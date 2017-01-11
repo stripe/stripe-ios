@@ -9,10 +9,11 @@
 
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
-#import "STPPaymentMethod.h"
-#import "STPBlocks.h"
+
 #import "STPAddress.h"
+#import "STPBlocks.h"
 #import "STPPaymentConfiguration.h"
+#import "STPPaymentMethod.h"
 #import "STPPaymentResult.h"
 #import "STPUserInformation.h"
 

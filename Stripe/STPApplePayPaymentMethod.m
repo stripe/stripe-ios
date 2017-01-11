@@ -7,8 +7,9 @@
 //
 
 #import "STPApplePayPaymentMethod.h"
-#import "STPImageLibrary.h"
+
 #import "STPImageLibrary+Private.h"
+#import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
 
 @implementation STPApplePayPaymentMethod

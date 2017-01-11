@@ -7,15 +7,16 @@
 //
 
 #import "STPPaymentMethodsInternalViewController.h"
-#import "STPImageLibrary.h"
-#import "STPImageLibrary+Private.h"
+
 #import "NSArray+Stripe_BoundSafe.h"
-#import "UITableViewCell+Stripe_Borders.h"
-#import "UINavigationController+Stripe_Completion.h"
 #import "STPColorUtils.h"
+#import "STPCoreTableViewController+Private.h"
+#import "STPImageLibrary+Private.h"
+#import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
 #import "STPPaymentMethodTableViewCell.h"
-#import "STPCoreTableViewController+Private.h"
+#import "UINavigationController+Stripe_Completion.h"
+#import "UITableViewCell+Stripe_Borders.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 static NSInteger STPPaymentMethodCardListSection = 0;
