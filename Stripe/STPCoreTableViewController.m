@@ -9,6 +9,7 @@
 #import "STPCoreTableViewController.h"
 #import "STPCoreTableViewController+Private.h"
 
+#define FAUXPAS_IGNORED_IN_METHOD(...)
 
 // Note:
 // The private class extension for this class is in
@@ -40,6 +41,7 @@
 
 
 - (CGFloat)tableView:(__unused UITableView *)tableView heightForHeaderInSection:(__unused NSInteger)section {
+    FAUXPAS_IGNORED_IN_METHOD(UnusedMethod)
     return 0.01f;
 }
 

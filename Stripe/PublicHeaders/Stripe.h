@@ -38,3 +38,6 @@
 #import "STPAPIResponseDecodable.h"
 #import "STPFormEncodable.h"
 #import "STPShippingAddressViewController.h"
+#import "STPCoreViewController.h"
+#import "STPCoreScrollViewController.h"
+#import "STPCoreTableViewController.h"
