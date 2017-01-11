@@ -237,8 +237,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 #pragma mark - Personally Identifiable Information
 @implementation STPAPIClient (PII)
 
-- (void)createTokenWithPersonalIDNumber:(NSNumber *)number completion:(__nullable STPTokenCompletionBlock)completion {
-    NSData *data = [STPFormEncoder formEncodedDataForRootObjectName:@"pii" parameters:@{ @"personal_id_number": number }];
+- (void)createTokenWithPersonalIDNumber:(NSNumber *)pii completion:(__nullable STPTokenCompletionBlock)completion {
+    NSData *data = [STPFormEncoder formEncodedDataForRootObjectName:@"pii" parameters:@{ @"personal_id_number": pii }];
     [self createTokenWithData:data completion:completion];
 }
 

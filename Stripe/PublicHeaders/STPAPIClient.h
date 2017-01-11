@@ -98,7 +98,7 @@ static NSString *const STPSDKVersion = @"9.2.0";
  *  @param pii The user's personal identification number. Cannot be nil. @see https://stripe.com/docs/api#create_pii_token
  *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
-- (void)createTokenWithPersonalIDNumber:(NSNumber *)number completion:(__nullable STPTokenCompletionBlock)completion;
+- (void)createTokenWithPersonalIDNumber:(NSNumber *)pii completion:(__nullable STPTokenCompletionBlock)completion;
 
 @end
 
