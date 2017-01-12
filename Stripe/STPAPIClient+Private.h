@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "STPAPIClient.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface STPAPIClient()
