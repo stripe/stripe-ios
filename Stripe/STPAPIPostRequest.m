@@ -7,10 +7,11 @@
 //
 
 #import "STPAPIPostRequest.h"
-#import "STPAPIClient.h"
+
 #import "STPAPIClient+Private.h"
-#import "StripeError.h"
+#import "STPAPIClient.h"
 #import "STPDispatchFunctions.h"
+#import "StripeError.h"
 
 @implementation STPAPIPostRequest
 

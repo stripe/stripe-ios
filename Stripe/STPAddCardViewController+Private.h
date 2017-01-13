@@ -12,7 +12,6 @@
 
 @interface STPAddCardViewController (Private)
 
-- (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration
-                              theme:(STPTheme *)theme;
+- (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration;
 
 @end

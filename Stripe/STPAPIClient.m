@@ -9,15 +9,15 @@
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
-#import "STPAPIClient.h"
 #import "STPAPIClient+ApplePay.h"
-#import "STPFormEncoder.h"
-#import "STPBankAccount.h"
-#import "STPCard.h"
-#import "STPToken.h"
+#import "STPAPIClient.h"
 #import "STPAPIPostRequest.h"
 #import "STPAnalyticsClient.h"
+#import "STPBankAccount.h"
+#import "STPCard.h"
+#import "STPFormEncoder.h"
 #import "STPPaymentConfiguration.h"
+#import "STPToken.h"
 
 #if __has_include("Fabric.h")
 #import "Fabric+FABKits.h"

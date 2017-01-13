@@ -7,9 +7,10 @@
 //
 
 #import "STPToken.h"
-#import "STPCard.h"
-#import "STPBankAccount.h"
+
 #import "NSDictionary+Stripe.h"
+#import "STPBankAccount.h"
+#import "STPCard.h"
 
 @interface STPToken()
 @property (nonatomic, nonnull) NSString *tokenId;

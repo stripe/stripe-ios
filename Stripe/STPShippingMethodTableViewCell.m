@@ -7,9 +7,10 @@
 //
 
 #import "STPShippingMethodTableViewCell.h"
+
+#import "NSDecimalNumber+Stripe_Currency.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
-#import "NSDecimalNumber+Stripe_Currency.h"
 
 @interface STPShippingMethodTableViewCell ()
 @property(nonatomic, weak) UILabel *titleLabel;

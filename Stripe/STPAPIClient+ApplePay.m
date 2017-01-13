@@ -7,8 +7,8 @@
 
 #import <AddressBook/AddressBook.h>
 
-#import "STPAPIClient+ApplePay.h"
 #import "PKPayment+Stripe.h"
+#import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient+Private.h"
 #import "STPAnalyticsClient.h"
 

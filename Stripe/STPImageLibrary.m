@@ -7,8 +7,9 @@
 //
 
 #import "STPImageLibrary.h"
-#import "STPImageLibrary+Private.h"
+
 #import "STPBundleLocator.h"
+#import "STPImageLibrary+Private.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 

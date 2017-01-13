@@ -7,9 +7,10 @@
 //
 
 #import "STPPhoneNumberValidator.h"
-#import "STPCardValidator.h"
-#import "NSString+Stripe.h"
 
+
+#import "NSString+Stripe.h"
+#import "STPCardValidator.h"
 @implementation STPPhoneNumberValidator
 
 + (NSString *)countryCodeOrCurrentLocaleCountryFromString:(nullable NSString *)nillableCode {

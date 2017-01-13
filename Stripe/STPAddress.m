@@ -7,10 +7,11 @@
 //
 
 #import "STPAddress.h"
+
 #import "STPCardValidator.h"
-#import "STPPostalCodeValidator.h"
 #import "STPEmailAddressValidator.h"
 #import "STPPhoneNumberValidator.h"
+#import "STPPostalCodeValidator.h"
 
 #define FAUXPAS_IGNORED_IN_FILE(...)
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)

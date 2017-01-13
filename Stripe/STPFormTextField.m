@@ -7,10 +7,11 @@
 //
 
 #import "STPFormTextField.h"
-#import "STPCardValidator.h"
-#import "STPPhoneNumberValidator.h"
+
 #import "NSString+Stripe.h"
+#import "STPCardValidator.h"
 #import "STPDelegateProxy.h"
+#import "STPPhoneNumberValidator.h"
 #import "STPWeakStrongMacros.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)

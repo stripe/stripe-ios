@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STPBankAccountParams.h"
+
 #import "STPAPIResponseDecodable.h"
+#import "STPBankAccountParams.h"
 
 typedef NS_ENUM(NSInteger, STPBankAccountStatus) {
     STPBankAccountStatusNew,

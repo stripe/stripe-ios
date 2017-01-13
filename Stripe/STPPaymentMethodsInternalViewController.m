@@ -7,14 +7,16 @@
 //
 
 #import "STPPaymentMethodsInternalViewController.h"
-#import "STPImageLibrary.h"
-#import "STPImageLibrary+Private.h"
+
 #import "NSArray+Stripe_BoundSafe.h"
-#import "UITableViewCell+Stripe_Borders.h"
-#import "UINavigationController+Stripe_Completion.h"
 #import "STPColorUtils.h"
+#import "STPCoreTableViewController+Private.h"
+#import "STPImageLibrary+Private.h"
+#import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
 #import "STPPaymentMethodTableViewCell.h"
+#import "UINavigationController+Stripe_Completion.h"
+#import "UITableViewCell+Stripe_Borders.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
 static NSInteger STPPaymentMethodCardListSection = 0;
@@ -23,12 +25,10 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 @interface STPPaymentMethodsInternalViewController()<UITableViewDataSource, UITableViewDelegate, STPAddCardViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
-@property(nonatomic)STPTheme *theme;
 @property(nonatomic)STPUserInformation *prefilledInformation;
 @property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic, weak)id<STPPaymentMethodsInternalViewControllerDelegate> delegate;
-@property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIImageView *cardImageView;
 
 @end
@@ -40,10 +40,9 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
                  prefilledInformation:(STPUserInformation *)prefilledInformation
                    paymentMethodTuple:(STPPaymentMethodTuple *)tuple
                              delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [super initWithTheme:theme];
     if (self) {
         _configuration = configuration;
-        _theme = theme;
         _prefilledInformation = prefilledInformation;
         _paymentMethods = tuple.paymentMethods;
         _selectedPaymentMethod = tuple.selectedPaymentMethod;
@@ -53,20 +52,14 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     return self;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    
-    UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    tableView.allowsMultipleSelectionDuringEditing = NO;
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    [tableView registerClass:[STPPaymentMethodTableViewCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
-    tableView.sectionHeaderHeight = 30;
-    tableView.separatorStyle = UITableViewCellSeparatorStyleNone; // use fake separator views
-    tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
-    self.tableView = tableView;
-    [self.view addSubview:tableView];
+- (void)createAndSetupViews {
+    [super createAndSetupViews];
+
+    self.tableView.allowsMultipleSelectionDuringEditing = NO;
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    [self.tableView registerClass:[STPPaymentMethodTableViewCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
     
     UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeCardFrontImage]];
     cardImageView.contentMode = UIViewContentModeCenter;
@@ -75,34 +68,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.tableView.tableHeaderView = cardImageView;
     
     self.cardImageView.image = [self.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]] ? [STPImageLibrary largeCardApplePayImage] : [STPImageLibrary largeCardFrontImage];
-    
-    self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
-    self.tableView.tintColor = self.theme.accentColor;
+
     self.cardImageView.tintColor = self.theme.accentColor;
-    
-    if ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor]) {
-        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
-    } else {
-        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-    }
-}
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    self.tableView.frame = self.view.bounds;
-    if (self.navigationController.navigationBar.translucent) {
-        CGFloat insetTop = CGRectGetMaxY(self.navigationController.navigationBar.frame);
-        self.tableView.contentInset = UIEdgeInsetsMake(insetTop, 0, 0, 0);
-        self.tableView.scrollIndicatorInsets = self.tableView.contentInset;
-    } else {
-        self.tableView.contentInset = UIEdgeInsetsZero;
-        self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
-    }
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {

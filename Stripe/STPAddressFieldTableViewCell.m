@@ -7,11 +7,12 @@
 //
 
 #import "STPAddressFieldTableViewCell.h"
-#import "STPPostalCodeValidator.h"
-#import "STPPhoneNumberValidator.h"
-#import "STPEmailAddressValidator.h"
+
 #import "STPCardValidator.h"
+#import "STPEmailAddressValidator.h"
 #import "STPLocalizationUtils.h"
+#import "STPPhoneNumberValidator.h"
+#import "STPPostalCodeValidator.h"
 
 @interface STPAddressFieldTableViewCell() <STPFormTextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 

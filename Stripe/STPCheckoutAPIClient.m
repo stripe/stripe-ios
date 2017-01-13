@@ -7,14 +7,15 @@
 //
 
 #import "STPCheckoutAPIClient.h"
-#import "STPCheckoutBootstrapResponse.h"
+
+#import "NSBundle+Stripe_AppName.h"
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPAPIClient.h"
 #import "STPCardValidator.h"
-#import "NSBundle+Stripe_AppName.h"
-#import "StripeError.h"
-#import "STPWeakStrongMacros.h"
+#import "STPCheckoutBootstrapResponse.h"
 #import "STPLocalizationUtils.h"
+#import "STPWeakStrongMacros.h"
+#import "StripeError.h"
 
 @interface STPCheckoutAPIClient()
 @property(nonatomic, copy)NSString *publishableKey;

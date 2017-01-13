@@ -7,33 +7,31 @@
 //
 
 #import "STPShippingAddressViewController.h"
+
+#import "NSArray+Stripe_BoundSafe.h"
+#import "STPAddress.h"
+#import "STPAddressViewModel.h"
+#import "STPColorUtils.h"
+#import "STPCoreTableViewController+Private.h"
+#import "STPImageLibrary+Private.h"
+#import "STPLocalizationUtils.h"
+#import "STPPaymentActivityIndicatorView.h"
+#import "STPPaymentContext+Private.h"
+#import "STPShippingMethodsViewController.h"
 #import "STPTheme.h"
 #import "UIBarButtonItem+Stripe.h"
-#import "UIViewController+Stripe_NavigationItemProxy.h"
-#import "STPAddressViewModel.h"
-#import "STPPaymentActivityIndicatorView.h"
-#import "STPImageLibrary+Private.h"
-#import "STPColorUtils.h"
-#import "UIViewController+Stripe_KeyboardAvoiding.h"
-#import "UIViewController+Stripe_ParentViewController.h"
-#import "NSArray+Stripe_BoundSafe.h"
-#import "UITableViewCell+Stripe_Borders.h"
-#import "STPAddress.h"
-#import "STPLocalizationUtils.h"
-#import "STPShippingMethodsViewController.h"
-#import "STPPaymentContext+Private.h"
 #import "UINavigationController+Stripe_Completion.h"
+#import "UITableViewCell+Stripe_Borders.h"
+#import "UIViewController+Stripe_KeyboardAvoiding.h"
+#import "UIViewController+Stripe_NavigationItemProxy.h"
+#import "UIViewController+Stripe_ParentViewController.h"
 
 @interface STPShippingAddressViewController ()<STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource, STPShippingMethodsViewControllerDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)NSString *currency;
-@property(nonatomic)STPTheme *theme;
 @property(nonatomic)PKShippingMethod *selectedShippingMethod;
-@property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIImageView *imageView;
 @property(nonatomic)UIBarButtonItem *nextItem;
-@property(nonatomic)UIBarButtonItem *backItem;
-@property(nonatomic)UIBarButtonItem *cancelItem;
 @property(nonatomic)BOOL loading;
 @property(nonatomic)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic)STPAddressViewModel *addressViewModel;
@@ -62,11 +60,10 @@
                       shippingAddress:(STPAddress *)shippingAddress
                selectedShippingMethod:(PKShippingMethod *)selectedShippingMethod
                  prefilledInformation:(STPUserInformation *)prefilledInformation {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [super initWithTheme:theme];
     if (self) {
         _configuration = configuration;
         _currency = currency ?: @"usd";
-        _theme = theme;
         _selectedShippingMethod = selectedShippingMethod;
         _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredShippingFields:configuration.requiredShippingAddressFields];
         _addressViewModel.delegate = self;
@@ -86,27 +83,12 @@
         }
 
         self.title = [self titleForShippingType:self.configuration.shippingType];
-
-        _backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button")
-                                                               style:UIBarButtonItemStylePlain
-                                                              target:self
-                                                              action:@selector(cancel:)];
-        _cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                        target:self
-                                                                        action:@selector(cancel:)];
-
-        self.stp_navigationItemProxy.leftBarButtonItem = self.cancelItem;
     }
     return self;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-    tableView.sectionHeaderHeight = 30;
-    [self.view addSubview:tableView];
-    self.tableView = tableView;
+- (void)createAndSetupViews {
+    [super createAndSetupViews];
 
     UIBarButtonItem *nextItem;
     switch (self.configuration.shippingType) {
@@ -134,10 +116,9 @@
 
     self.activityIndicator = [[STPPaymentActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20.0f, 20.0f)];
 
-    tableView.dataSource = self;
-    tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)]];
-    [self updateAppearance];
     [self updateDoneButton];
 }
 
@@ -146,55 +127,21 @@
 }
 
 - (void)updateAppearance {
-    self.view.backgroundColor = self.theme.primaryBackgroundColor;
+    [super updateAppearance];
     STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
     [self.nextItem stp_setTheme:navBarTheme];
-    [self.cancelItem stp_setTheme:navBarTheme];
-    [self.backItem stp_setTheme:navBarTheme];
     
     self.tableView.allowsSelection = NO;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
-    if ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor]) {
-        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
-    } else {
-        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-    }
+
     self.imageView.tintColor = self.theme.accentColor;
     self.activityIndicator.tintColor = self.theme.accentColor;
     for (STPAddressFieldTableViewCell *cell in self.addressViewModel.addressCells) {
         cell.theme = self.theme;
     }
-    [self setNeedsStatusBarAppearanceUpdate];
 }
 
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
-    return ([STPColorUtils colorIsBright:navBarTheme.secondaryBackgroundColor]
-            ? UIStatusBarStyleDefault
-            : UIStatusBarStyleLightContent);
-}
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    if (![self stp_isAtRootOfNavigationController]) {
-        self.stp_navigationItemProxy.leftBarButtonItem = self.backItem;
-    }
-    [self.tableView reloadData];
-    if (self.navigationController.navigationBar.translucent) {
-        CGFloat insetTop = CGRectGetMaxY(self.navigationController.navigationBar.frame);
-        self.tableView.contentInset = UIEdgeInsetsMake(insetTop, 0, 0, 0);
-        self.tableView.scrollIndicatorInsets = self.tableView.contentInset;
-    } else {
-        self.tableView.contentInset = UIEdgeInsetsZero;
-        self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
-    }
-    CGPoint offset = self.tableView.contentOffset;
-    offset.y = -self.tableView.contentInset.top;
-    self.tableView.contentOffset = offset;
-}
-
--(void)viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self stp_beginObservingKeyboardAndInsettingScrollView:self.tableView
                                              onChangeBlock:nil];
@@ -208,16 +155,6 @@
         }
     }
     return nil;
-}
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    self.tableView.frame = self.view.bounds;
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self.view endEditing:YES];
 }
 
 - (void)setLoading:(BOOL)loading {
@@ -243,7 +180,7 @@
     }
 }
 
-- (void)cancel:(__unused id)sender {
+- (void)handleBackOrCancelTapped:(__unused id)sender {
     [self.delegate shippingAddressViewControllerDidCancel:self];
 }
 

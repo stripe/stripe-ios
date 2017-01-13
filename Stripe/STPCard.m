@@ -7,9 +7,10 @@
 //
 
 #import "STPCard.h"
+
 #import "NSDictionary+Stripe.h"
-#import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
+#import "STPImageLibrary.h"
 
 @interface STPCard ()
 

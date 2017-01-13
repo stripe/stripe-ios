@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-#import "Stripe.h"
-#import "STPPaymentCardTextFieldViewModel.h"
 #import "STPFormTextField.h"
 #import "STPImageLibrary.h"
+#import "STPPaymentCardTextFieldViewModel.h"
 #import "STPWeakStrongMacros.h"
+#import "Stripe.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 

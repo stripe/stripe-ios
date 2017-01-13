@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import "STPAPIResponseDecodable.h"
 #import "STPCardBrand.h"
 #import "STPCardParams.h"
-#import "STPAPIResponseDecodable.h"
 #import "STPPaymentMethod.h"
 #import "STPSource.h"
 

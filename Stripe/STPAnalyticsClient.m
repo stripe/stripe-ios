@@ -7,22 +7,23 @@
 //
 
 #import "STPAnalyticsClient.h"
+
 #import "NSMutableURLRequest+Stripe.h"
+#import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient.h"
+#import "STPAddCardViewController+Private.h"
+#import "STPAddCardViewController.h"
+#import "STPAspects.h"
+#import "STPCard.h"
+#import "STPFormEncodable.h"
+#import "STPPaymentCardTextField.h"
+#import "STPPaymentConfiguration.h"
+#import "STPPaymentContext.h"
+#import "STPPaymentMethodsViewController+Private.h"
+#import "STPPaymentMethodsViewController.h"
+#import "STPToken.h"
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
-#import "STPToken.h"
-#import "STPCard.h"
-#import "STPPaymentConfiguration.h"
-#import "STPFormEncodable.h"
-#import "STPAspects.h"
-#import "STPPaymentCardTextField.h"
-#import "STPPaymentContext.h"
-#import "STPAddCardViewController.h"
-#import "STPAddCardViewController+Private.h"
-#import "STPPaymentMethodsViewController.h"
-#import "STPPaymentMethodsViewController+Private.h"
-#import "STPAPIClient+ApplePay.h"
 
 static BOOL STPAnalyticsCollectionDisabled = NO;
 
@@ -66,7 +67,7 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
                                         } error:nil];
         
         
-        [STPAddCardViewController stp_aspect_hookSelector:@selector(commonInitWithConfiguration:theme:)
+        [STPAddCardViewController stp_aspect_hookSelector:@selector(commonInitWithConfiguration:)
                                               withOptions:STPAspectPositionAfter
                                                usingBlock:^{
                                                    STPAnalyticsClient *client = [self sharedClient];

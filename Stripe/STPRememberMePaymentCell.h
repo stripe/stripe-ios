@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "STPPaymentCardTextField.h"
+
 #import "STPObscuredCardView.h"
+#import "STPPaymentCardTextField.h"
 #import "STPTheme.h"
 
 NS_ASSUME_NONNULL_BEGIN
