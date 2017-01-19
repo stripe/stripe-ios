@@ -85,16 +85,20 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
     
     NSString *sanitizedMonth = [self sanitizedNumericStringForString:expirationMonth];
     NSString *sanitizedYear = [self sanitizedNumericStringForString:expirationYear];
-    
+
     switch (sanitizedYear.length) {
         case 0:
         case 1:
             return STPCardValidationStateIncomplete;
         case 2: {
-            if (sanitizedYear.integerValue == moddedYear) {
-                return sanitizedMonth.integerValue >= currentMonth ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+            if ([self validationStateForExpirationMonth:sanitizedMonth] == STPCardValidationStateInvalid) {
+                return STPCardValidationStateInvalid;
             } else {
-                return sanitizedYear.integerValue > moddedYear ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+                if (sanitizedYear.integerValue == moddedYear) {
+                    return sanitizedMonth.integerValue >= currentMonth ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+                } else {
+                    return sanitizedYear.integerValue > moddedYear ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+                }
             }
         }
         default:
