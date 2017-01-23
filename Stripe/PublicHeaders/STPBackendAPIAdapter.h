@@ -12,7 +12,7 @@
 #import "STPAddress.h"
 #import "STPBlocks.h"
 #import "STPCustomer.h"
-#import "STPSource.h"
+#import "STPSourceProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -49,7 +49,7 @@ typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NS
  *
  *  @note If you are on Swift 3, you must declare the completion block as `@escaping` or Xcode will give you a protocol conformance error. https://bugs.swift.org/browse/SR-2597
  */
-- (void)attachSourceToCustomer:(id<STPSource>)source completion:(STPErrorBlock)completion;
+- (void)attachSourceToCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion;
 
 /**
  *  Change a customer's `default_source` to be the provided card. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Customer Update method as described at https://stripe.com/docs/api#update_customer , specifying default_source to be the value of source.stripeID (for an example Ruby implementation of this API, see https://github.com/stripe/example-ios-backend/blob/master/web.rb#L82 ). If this API call succeeds, call `completion(nil)`. Otherwise, call `completion(error)` with the error that occurred.
@@ -59,7 +59,7 @@ typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NS
  *
  *  @note If you are on Swift 3, you must declare the completion block as `@escaping` or Xcode will give you a protocol conformance error. https://bugs.swift.org/browse/SR-2597
  */
-- (void)selectDefaultCustomerSource:(id<STPSource>)source completion:(STPErrorBlock)completion;
+- (void)selectDefaultCustomerSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion;
 
 @end
 

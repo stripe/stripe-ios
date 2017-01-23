@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
 
-@class STPToken;
+@class STPToken, STPSource;
 
 /**
  *  These values control the labels used in the shipping info collection form.
@@ -77,6 +77,14 @@ typedef void (^STPErrorBlock)(NSError * __nullable error);
  *  @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
  */
 typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * __nullable error);
+
+/**
+ *  A callback to be run with a source response from the Stripe API.
+ *
+ *  @param source The Stripe source from the response. Will be nil if an error occurs. @see STPSource
+ *  @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
+ */
+typedef void (^STPSourceCompletionBlock)(STPSource * __nullable source, NSError * __nullable error);
 
 /**
  *  A callback to be run with a validation result and shipping methods for a 

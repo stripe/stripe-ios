@@ -14,16 +14,16 @@
 @interface STPCustomer()
 
 @property(nonatomic, copy)NSString *stripeID;
-@property(nonatomic) id<STPSource> defaultSource;
-@property(nonatomic) NSArray<id<STPSource>> *sources;
+@property(nonatomic) id<STPSourceProtocol> defaultSource;
+@property(nonatomic) NSArray<id<STPSourceProtocol>> *sources;
 
 @end
 
 @implementation STPCustomer
 
 + (instancetype)customerWithStripeID:(NSString *)stripeID
-                       defaultSource:(id<STPSource>)defaultSource
-                             sources:(NSArray<id<STPSource>> *)sources {
+                       defaultSource:(id<STPSourceProtocol>)defaultSource
+                             sources:(NSArray<id<STPSourceProtocol>> *)sources {
     STPCustomer *customer = [self new];
     customer.stripeID = stripeID;
     customer.defaultSource = defaultSource;
