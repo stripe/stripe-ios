@@ -12,7 +12,7 @@
 #import "STPAddress.h"
 #import "STPBlocks.h"
 #import "STPCustomer.h"
-#import "STPSource.h"
+#import "STPSourceRepresenting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

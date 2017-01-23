@@ -15,6 +15,8 @@
 #import "STPAnalyticsClient.h"
 #import "STPBankAccount.h"
 #import "STPCard.h"
+#import "STPSourceParams.h"
+#import "STPSource.h"
 #import "STPFormEncoder.h"
 #import "STPPaymentConfiguration.h"
 #import "STPToken.h"
@@ -33,6 +35,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 static NSString *const apiURLBase = @"api.stripe.com/v1";
 static NSString *const tokenEndpoint = @"tokens";
+static NSString *const sourcesEndpoint = @"sources";
 static NSString *const stripeAPIVersion = @"2015-10-12";
 
 @implementation Stripe
@@ -287,6 +290,25 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 }
 
 @end
+
+#pragma mark - Sources
+
+@implementation STPAPIClient (Sources)
+
+- (void)createSourceWithParams:(STPSourceParams *)params completion:(STPSourceCompletionBlock)completion {
+    NSData *data = [STPFormEncoder formEncodedDataForObject:params];
+    [STPAPIPostRequest<STPSource *> startWithAPIClient:self
+                                              endpoint:sourcesEndpoint
+                                              postData:data
+                                            serializer:[STPSource new]
+                                            completion:^(STPSource *object, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                completion(object, error);
+                                            }];
+}
+
+@end
+
+#pragma mark - Deprecated Methods
 
 @implementation Stripe (Deprecated)
 
