@@ -462,15 +462,6 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     [self updateCVCPlaceholder];
 }
 
-- (STPCardParams *)card {
-    if (!self.isValid) { return nil; }
-    return self.cardParams;
-}
-
-- (void)setCard:(STPCardParams *)card {
-    [self setCardParams:card];
-}
-
 - (void)setText:(NSString *)text inField:(STPCardFieldType)field {
     NSString *nonNilText = text ?: @"";
     STPFormTextField *textField = nil;
@@ -823,43 +814,3 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 }
 
 @end
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
-
-@implementation PTKCard
-@end
-
-@interface PTKView()
-@property(nonatomic, weak)id<PTKViewDelegate>internalDelegate;
-@end
-
-@implementation PTKView
-
-@dynamic delegate, card;
-
-- (void)setDelegate:(id<PTKViewDelegate> __nullable)delegate {
-    self.internalDelegate = delegate;
-}
-
-- (id<PTKViewDelegate> __nullable)delegate {
-    return self.internalDelegate;
-}
-
-- (void)onChange {
-    [super onChange];
-    [self.internalDelegate paymentView:self withCard:[self card] isValid:self.isValid];
-}
-
-- (PTKCard * __nonnull)card {
-    PTKCard *card = [[PTKCard alloc] init];
-    card.number = self.cardNumber;
-    card.expMonth = self.expirationMonth;
-    card.expYear = self.expirationYear;
-    card.cvc = self.cvc;
-    return card;
-}
-
-@end
-
-#pragma clang diagnostic pop

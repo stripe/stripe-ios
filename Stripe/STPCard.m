@@ -19,7 +19,6 @@
 @property (nonatomic, readwrite) NSString *dynamicLast4;
 @property (nonatomic, readwrite) STPCardBrand brand;
 @property (nonatomic, readwrite) STPCardFundingType funding;
-@property (nonatomic, readwrite) NSString *fingerprint;
 @property (nonatomic, readwrite) NSString *country;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
@@ -40,11 +39,8 @@
         _cardId = stripeID;
         _brand = brand;
         _last4 = last4;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
         self.expMonth = expMonth;
         self.expYear = expYear;
-#pragma clang diagnostic pop
         _funding = funding;
     }
     return self;
@@ -119,10 +115,6 @@
     return [self.allResponseFields[@"tokenization_method"] isEqualToString:@"apple_pay"];
 }
 
-- (NSString *)type {
-    return [self.class stringFromBrand:self.brand];
-}
-
 - (BOOL)isEqual:(id)other {
     return [self isEqualToCard:other];
 }
@@ -163,8 +155,6 @@
     return @[@"id", @"last4", @"brand", @"exp_month", @"exp_year"];
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
     NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
     if (!dict) {
@@ -180,7 +170,6 @@
     card.brand = [self.class brandFromString:brand];
     NSString *funding = dict[@"funding"];
     card.funding = [self.class fundingFromString:funding];
-    card.fingerprint = dict[@"fingerprint"];
     card.country = dict[@"country"];
     card.currency = dict[@"currency"];
     card.expMonth = [dict[@"exp_month"] intValue];
@@ -195,7 +184,6 @@
     card.allResponseFields = dict;
     return card;
 }
-#pragma clang diagnostic pop
 
 #pragma mark - STPSource
 

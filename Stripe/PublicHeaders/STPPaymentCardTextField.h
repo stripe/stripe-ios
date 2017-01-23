@@ -264,35 +264,6 @@
  */
 @property(nonatomic, strong, readwrite, nonnull) STPCardParams *cardParams;
 
-@property(nonatomic, strong, readwrite, nullable) STPCardParams *card __attribute__((deprecated("This has been renamed to cardParams; use that instead.")));
-
 - (void)commonInit;
 
 @end
-
-#pragma mark - PaymentKit compatibility
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-
-__attribute__((deprecated("This class is provided only for backwards-compatibility with PaymentKit. You shouldn't use it - use STPCard instead.")))
-@interface PTKCard : STPCard
-@end
-
-@class PTKView;
-
-__attribute__((deprecated("This protocol is provided only for backwards-compatibility with PaymentKit. You shouldn't use it - use STPPaymentCardTextFieldDelegate instead.")))
-@protocol PTKViewDelegate <STPPaymentCardTextFieldDelegate>
-
-@optional
-- (void)paymentView:(nonnull PTKView *)paymentView withCard:(nonnull PTKCard *)card isValid:(BOOL)valid;
-
-@end
-
-__attribute__((deprecated("This class is provided only for backwards-compatibility with PaymentKit. You shouldn't use it - use STPPaymentCardTextField instead.")))
-@interface PTKView : STPPaymentCardTextField
-@property(nonatomic, weak, nullable)id<PTKViewDelegate>delegate;
-@property(nonatomic, strong, readwrite, nonnull) PTKCard *card;
-@end
-
-#pragma clang diagnostic pop

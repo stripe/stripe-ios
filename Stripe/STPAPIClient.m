@@ -288,11 +288,6 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     return paymentRequest;
 }
 
-+ (void)createTokenWithPayment:(PKPayment *)payment
-                    completion:(STPTokenCompletionBlock)handler {
-    [[STPAPIClient sharedClient] createTokenWithPayment:payment completion:handler];
-}
-
 @end
 
 #pragma mark - Sources
@@ -350,39 +345,6 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
             self.sourcePollers[identifier] = nil;
         }
     });
-}
-
-@end
-
-#pragma mark - Deprecated Methods
-
-@implementation Stripe (Deprecated)
-
-+ (id)alloc {
-    NSCAssert(NO, @"'Stripe' is a static class and cannot be instantiated.");
-    return nil;
-}
-
-#pragma mark Shorthand methods -
-
-+ (void)createTokenWithCard:(STPCard *)card completion:(STPCompletionBlock)handler {
-    [[STPAPIClient sharedClient] createTokenWithCard:card completion:handler];
-}
-
-+ (void)createTokenWithCard:(STPCard *)card publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler {
-    STPPaymentConfiguration *config = [STPPaymentConfiguration new];
-    config.publishableKey = publishableKey;
-    [[[STPAPIClient alloc] initWithConfiguration:config] createTokenWithCard:card completion:handler];
-}
-
-+ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount completion:(STPCompletionBlock)handler {
-    [[STPAPIClient sharedClient] createTokenWithBankAccount:bankAccount completion:handler];
-}
-
-+ (void)createTokenWithBankAccount:(STPBankAccount *)bankAccount publishableKey:(NSString *)publishableKey completion:(STPCompletionBlock)handler {
-    STPPaymentConfiguration *config = [STPPaymentConfiguration new];
-    config.publishableKey = publishableKey;
-    [[[STPAPIClient alloc] initWithConfiguration:config] createTokenWithBankAccount:bankAccount completion:handler];
 }
 
 @end
