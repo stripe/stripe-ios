@@ -151,6 +151,15 @@ static NSString *const STPSDKVersion = @"9.3.0";
  */
 - (void)createSourceWithParams:(STPSourceParams *)params completion:(nullable STPSourceCompletionBlock)completion;
 
+/**
+ *  Retrieves the Source object with the given ID. @see https://stripe.com/docs/api#retrieve_source
+ *
+ *  @param identifier  The identifier of the source to be retrieved. Cannot be nil.
+ *  @param secret      The client secret of the source. Cannot be nil.
+ *  @param completion  The callback to run with the returned Source object, or an error.
+ */
+- (void)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(nullable STPSourceCompletionBlock)completion;
+
 @end
 
 #pragma mark - Deprecated Methods

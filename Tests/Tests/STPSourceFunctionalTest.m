@@ -242,6 +242,34 @@
             [threeDSExp fulfill];
         }];
     }];
+
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
+- (void)testRetrieveSource_sofort {
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    STPSourceParams *params = [STPSourceParams new];
+    params.type = @"sofort";
+    params.amount = @1099;
+    params.currency = @"eur";
+    params.redirect = @{@"return_url": @"https://shop.foo.com/crtA6B28E1"};
+    params.metadata = @{@"foo": @"bar"};
+    params.additionalAPIParameters = @{ @"sofort": @{ @"country": @"DE" } };
+    XCTestExpectation *createExp = [self expectationWithDescription:@"Source creation"];
+    XCTestExpectation *retrieveExp = [self expectationWithDescription:@"Source retrieval"];
+    [client createSourceWithParams:params completion:^(STPSource *source1, NSError *error1) {
+        XCTAssertNil(error1);
+        XCTAssertNotNil(source1);
+        [createExp fulfill];
+        [client retrieveSourceWithId:source1.stripeID
+                        clientSecret:source1.clientSecret
+                          completion:^(STPSource *source2, NSError *error2) {
+                              XCTAssertNil(error2);
+                              XCTAssertNotNil(source2);
+                              XCTAssertEqualObjects(source1, source2);
+                              [retrieveExp fulfill];
+                          }];
+    }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
