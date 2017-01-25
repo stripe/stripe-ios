@@ -28,15 +28,15 @@
 
 + (NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
-             @"type": @"type",
-             @"amount": @"amount",
-             @"currency": @"currency",
-             @"flow": @"flow",
-             @"metadata": @"metadata",
-             @"owner": @"owner",
-             @"redirect": @"redirect",
-             @"token": @"token",
-             @"usage": @"usage",
+             NSStringFromSelector(@selector(type)): @"type",
+             NSStringFromSelector(@selector(amount)): @"amount",
+             NSStringFromSelector(@selector(currency)): @"currency",
+             NSStringFromSelector(@selector(flow)): @"flow",
+             NSStringFromSelector(@selector(metadata)): @"metadata",
+             NSStringFromSelector(@selector(owner)): @"owner",
+             NSStringFromSelector(@selector(redirect)): @"redirect",
+             NSStringFromSelector(@selector(token)): @"token",
+             NSStringFromSelector(@selector(usage)): @"usage",
              };
 }
 
