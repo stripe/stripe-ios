@@ -41,6 +41,8 @@ typedef NS_ENUM(NSInteger, STPSourceStatus) {
     STPSourceStatusUnknown,
 };
 
+@class STPSourceOwner, STPSourceReceiver, STPSourceRedirect, STPSourceVerification;
+
 @interface STPSource : NSObject<STPAPIResponseDecodable, STPSource>
 
 /**
@@ -86,17 +88,17 @@ typedef NS_ENUM(NSInteger, STPSourceStatus) {
 /**
  *  Information about the owner of the payment instrument.
  */
-@property (nonatomic, readonly, nullable) NSDictionary *owner;
+@property (nonatomic, readonly, nullable) STPSourceOwner *owner;
 
 /**
  *  Information related to the receiver flow. Present if the source is a receiver.
  */
-@property (nonatomic, readonly, nullable) NSDictionary *receiver;
+@property (nonatomic, readonly, nullable) STPSourceReceiver *receiver;
 
 /**
  *  Information related to the redirect flow. Present if the source is authenticated by a redirect.
  */
-@property (nonatomic, readonly, nullable) NSDictionary *redirect;
+@property (nonatomic, readonly, nullable) STPSourceRedirect *redirect;
 
 /**
  *  The status of the source.
@@ -116,6 +118,11 @@ typedef NS_ENUM(NSInteger, STPSourceStatus) {
 /**
  *  Information related to the verification flow. Present if the source is authenticated by a verification.
  */
-@property (nonatomic, readonly, nullable) NSDictionary *verification;
+@property (nonatomic, readonly, nullable) STPSourceVerification *verification;
+
+/**
+ *  Information about the source specific to its type
+ */
+@property (nonatomic, readonly, nullable) NSDictionary *details;
 
 @end

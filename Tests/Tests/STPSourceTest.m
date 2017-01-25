@@ -37,9 +37,9 @@
                                    @"verified_phone": [NSNull null],
                                    },
                            @"redirect": @{
-                                   @"return_url": @"https://shop.foo.com@/crtA6B28E1",
+                                   @"return_url": @"https://shop.foo.com/crtABC",
                                    @"status": @"pending",
-                                   @"url": @"https://pay.stripe.com/redirect/src_16xhynE8WzK49JbAs9M21jaR?client_secret=src_client_secret_UfwvW2WHpZ0s3QEn9g5x7waU"
+                                   @"url": @"https://pay.stripe.com/redirect/src_123?client_secret=src_client_secret_123"
                                    },
                            @"status": @"pending",
                            @"type": @"ideal",
@@ -87,7 +87,7 @@
                                    @"fingerprint": @"NxdSyRegc9PsMkWy",
                                    @"last4": @3001,
                                    @"mandate_reference": @"NXDSYREGC9PSMKWY",
-                                   @"mandate_url": @"https://hooks.stripe.com/adapter/sepa_debit/file/src_18HgGjHNCLa1Vra6Y9TIP6tU/src_client_secret_XcBmS94nTg5o0xc9MSliSlDW"
+                                   @"mandate_url": @"https://hooks.stripe.com/adapter/sepa_debit/file/src_123/src_client_secret_123"
                                    }
                            };
     return dict;
@@ -103,14 +103,15 @@
     XCTAssertEqualObjects(source.currency, @"eur");
     XCTAssertEqual(source.flow, STPSourceFlowRedirect);
     XCTAssertEqual(source.livemode, YES);
-    XCTAssertEqualObjects(source.owner[@"name"], @"Jenny Rosen");
-    XCTAssertEqualObjects(source.owner, response[@"owner"]);
-    XCTAssertEqualObjects(source.redirect[@"status"], @"pending");
-    XCTAssertEqualObjects(source.redirect, response[@"redirect"]);
+    XCTAssertEqualObjects(source.owner.name, @"Jenny Rosen");
+    XCTAssertEqualObjects(source.owner.verifiedName, @"Jenny Rosen");
+    XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
+    XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.foo.com/crtABC"]);
+    XCTAssertEqualObjects(source.redirect.url, [NSURL URLWithString:@"https://pay.stripe.com/redirect/src_123?client_secret=src_client_secret_123"]);
     XCTAssertEqual(source.status, STPSourceStatusPending);
     XCTAssertEqualObjects(source.type, @"ideal");
     XCTAssertEqual(source.usage, STPSourceUsageSingleUse);
-    XCTAssertEqualObjects(source.allResponseFields[@"ideal"], response[@"ideal"]);
+    XCTAssertEqualObjects(source.details, response[@"ideal"]);
 }
 
 - (void)testDecodingSource_sepa_debit {
@@ -123,13 +124,15 @@
     XCTAssertEqualObjects(source.currency, @"eur");
     XCTAssertEqual(source.flow, STPSourceFlowNone);
     XCTAssertEqual(source.livemode, NO);
-    XCTAssertEqualObjects(source.owner[@"name"], @"Jenny Rosen");
-    XCTAssertEqualObjects(source.owner[@"address"][@"city"], @"Berlin");
-    XCTAssertEqualObjects(source.owner, response[@"owner"]);
+    XCTAssertEqualObjects(source.owner.name, @"Jenny Rosen");
+    XCTAssertEqualObjects(source.owner.address.city, @"Berlin");
+    XCTAssertEqualObjects(source.owner.address.country, @"DE");
+    XCTAssertEqualObjects(source.owner.address.line1, @"Nollendorfstraße 27");
+    XCTAssertEqualObjects(source.owner.address.postalCode, @"10777");
     XCTAssertEqual(source.status, STPSourceStatusChargeable);
     XCTAssertEqualObjects(source.type, @"sepa_debit");
     XCTAssertEqual(source.usage, STPSourceUsageReusable);
-    XCTAssertEqualObjects(source.allResponseFields[@"sepa_debit"], response[@"sepa_debit"]);
+    XCTAssertEqualObjects(source.details, response[@"sepa_debit"]);
 }
 
 @end

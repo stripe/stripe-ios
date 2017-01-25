@@ -8,6 +8,10 @@
 
 #import "NSDictionary+Stripe.h"
 #import "STPSource.h"
+#import "STPSourceOwner.h"
+#import "STPSourceReceiver.h"
+#import "STPSourceRedirect.h"
+#import "STPSourceVerification.h"
 
 @interface STPSource ()
 
@@ -19,13 +23,14 @@
 @property (nonatomic) STPSourceFlow flow;
 @property (nonatomic) BOOL livemode;
 @property (nonatomic, nullable) NSDictionary *metadata;
-@property (nonatomic, nullable) NSDictionary *owner;
-@property (nonatomic, nullable) NSDictionary *receiver;
-@property (nonatomic, nullable) NSDictionary *redirect;
+@property (nonatomic, nullable) STPSourceOwner *owner;
+@property (nonatomic, nullable) STPSourceReceiver *receiver;
+@property (nonatomic, nullable) STPSourceRedirect *redirect;
 @property (nonatomic) STPSourceStatus status;
 @property (nonatomic, nonnull) NSString *type;
 @property (nonatomic) STPSourceUsage usage;
-@property (nonatomic, nullable) NSDictionary *verification;
+@property (nonatomic, nullable) STPSourceVerification *verification;
+@property (nonatomic, nullable) NSDictionary *details;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
@@ -116,13 +121,14 @@
     source.flow = [STPSource flowFromString:dict[@"flow"]];
     source.livemode = [dict[@"livemode"] boolValue];
     source.metadata = dict[@"metadata"];
-    source.owner = dict[@"owner"];
-    source.receiver = dict[@"receiver"];
-    source.redirect = dict[@"redirect"];
+    source.owner = [STPSourceOwner decodedObjectFromAPIResponse:dict[@"owner"]];
+    source.receiver = [STPSourceReceiver decodedObjectFromAPIResponse:dict[@"receiver"]];
+    source.redirect = [STPSourceRedirect decodedObjectFromAPIResponse:dict[@"redirect"]];
     source.status = [STPSource statusFromString:dict[@"status"]];
     source.type = dict[@"type"];
     source.usage = [STPSource usageFromString:dict[@"usage"]];
-    source.verification = dict[@"verification"];
+    source.verification = [STPSourceVerification decodedObjectFromAPIResponse:dict[@"verification"]];
+    source.details = dict[source.type];
     source.allResponseFields = dict;
     return source;
 }
