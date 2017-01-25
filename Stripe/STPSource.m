@@ -6,8 +6,8 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-#import "STPSource.h"
 #import "NSDictionary+Stripe.h"
+#import "STPSource.h"
 
 @interface STPSource ()
 

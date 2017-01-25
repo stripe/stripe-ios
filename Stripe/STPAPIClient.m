@@ -15,10 +15,10 @@
 #import "STPAnalyticsClient.h"
 #import "STPBankAccount.h"
 #import "STPCard.h"
-#import "STPSourceParams.h"
-#import "STPSource.h"
 #import "STPFormEncoder.h"
 #import "STPPaymentConfiguration.h"
+#import "STPSource.h"
+#import "STPSourceParams.h"
 #import "STPToken.h"
 
 #if __has_include("Fabric.h")
