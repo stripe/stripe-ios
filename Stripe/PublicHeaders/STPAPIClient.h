@@ -18,7 +18,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 static NSString *const STPSDKVersion = @"9.3.0";
 
-@class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPToken, STPPaymentConfiguration;
+@class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPSourceParams, STPToken, STPPaymentConfiguration;
 
 /**
  A top-level class that imports the rest of the Stripe SDK. This class used to contain several methods to create Stripe tokens, but those are now deprecated in
@@ -133,6 +133,23 @@ static NSString *const STPSDKVersion = @"9.3.0";
 
 + (void)createTokenWithPayment:(PKPayment *)payment
                     completion:(STPTokenCompletionBlock)handler __attribute__((deprecated("Use STPAPIClient instead.")));
+
+@end
+
+#pragma mark Sources
+
+/**
+ *  STPAPIClient extensions for working with Source objects
+ */
+@interface STPAPIClient (Sources)
+
+/**
+ *  Creates a Source object using the provided details.
+ *
+ *  @param params      The details of the source to create. Cannot be nil. @see https://stripe.com/docs/api#create_source
+ *  @param completion  The callback to run with the returned Source object, or an error.
+ */
+- (void)createSourceWithParams:(STPSourceParams *)params completion:(nullable STPSourceCompletionBlock)completion;
 
 @end
 

@@ -12,7 +12,7 @@
 #import "STPCardBrand.h"
 #import "STPCardParams.h"
 #import "STPPaymentMethod.h"
-#import "STPSource.h"
+#import "STPSourceRepresenting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STPSource.h"
+#import "STPSourceRepresenting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
