@@ -19,6 +19,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
+#import "STPAPIResponseDecodable.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,7 +47,7 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 /**
  *  STPAddress Contains an address as represented by the Stripe API.
  */
-@interface STPAddress : NSObject
+@interface STPAddress : NSObject<STPAPIResponseDecodable>
 
 /**
  *  The user's full name (e.g. "Jane Doe")
