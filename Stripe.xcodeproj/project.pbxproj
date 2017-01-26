@@ -599,6 +599,11 @@
 		F1852F941D80B6EC00367C86 /* STPStringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F1852F911D80B6EC00367C86 /* STPStringUtils.h */; };
 		F1852F951D80B6EC00367C86 /* STPStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F1852F921D80B6EC00367C86 /* STPStringUtils.m */; };
 		F1852F961D80B6EC00367C86 /* STPStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F1852F921D80B6EC00367C86 /* STPStringUtils.m */; };
+		F1A0F9421E3A7846001A58C2 /* NSURLComponents+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = F1A0F9401E3A7846001A58C2 /* NSURLComponents+Stripe.h */; };
+		F1A0F9431E3A7846001A58C2 /* NSURLComponents+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = F1A0F9401E3A7846001A58C2 /* NSURLComponents+Stripe.h */; };
+		F1A0F9441E3A7846001A58C2 /* NSURLComponents+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = F1A0F9411E3A7846001A58C2 /* NSURLComponents+Stripe.m */; };
+		F1A0F9451E3A7846001A58C2 /* NSURLComponents+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = F1A0F9411E3A7846001A58C2 /* NSURLComponents+Stripe.m */; };
+		F1A0F9471E3A8665001A58C2 /* NSURLComponents+StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = F1A0F9461E3A8665001A58C2 /* NSURLComponents+StripeTest.m */; };
 		F1B980941DB550E60075332E /* STPPaymentMethodsViewControllerLocalizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B980931DB550E60075332E /* STPPaymentMethodsViewControllerLocalizationTests.m */; };
 		F1C578F11D651AB200912EAE /* stp_card_applepay.png in Resources */ = {isa = PBXBuildFile; fileRef = F1C578F01D651AB200912EAE /* stp_card_applepay.png */; };
 		F1C7B8D31DBECF2400D9F6F0 /* STPDispatchFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = F1C7B8D11DBECF2400D9F6F0 /* STPDispatchFunctions.m */; };
@@ -1036,6 +1041,9 @@
 		F16183251E36A11D004D739B /* STPRedirectClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPRedirectClient.m; sourceTree = "<group>"; };
 		F1852F911D80B6EC00367C86 /* STPStringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPStringUtils.h; sourceTree = "<group>"; };
 		F1852F921D80B6EC00367C86 /* STPStringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPStringUtils.m; sourceTree = "<group>"; };
+		F1A0F9401E3A7846001A58C2 /* NSURLComponents+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLComponents+Stripe.h"; sourceTree = "<group>"; };
+		F1A0F9411E3A7846001A58C2 /* NSURLComponents+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLComponents+Stripe.m"; sourceTree = "<group>"; };
+		F1A0F9461E3A8665001A58C2 /* NSURLComponents+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLComponents+StripeTest.m"; sourceTree = "<group>"; };
 		F1B980931DB550E60075332E /* STPPaymentMethodsViewControllerLocalizationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodsViewControllerLocalizationTests.m; sourceTree = "<group>"; };
 		F1C578F01D651AB200912EAE /* stp_card_applepay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_card_applepay.png; sourceTree = "<group>"; };
 		F1C7B8D11DBECF2400D9F6F0 /* STPDispatchFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPDispatchFunctions.m; sourceTree = "<group>"; };
@@ -1410,6 +1418,7 @@
 				F1D96F991DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.m */,
 				C1D23FB71D37FE0F002FD83C /* JSON */,
 				F1122A7D1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m */,
+				F1A0F9461E3A8665001A58C2 /* NSURLComponents+StripeTest.m */,
 			);
 			name = StripeTests;
 			path = Tests/Tests;
@@ -1580,6 +1589,8 @@
 				04A4C3881C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m */,
 				045D711E1CEFA57000F6CD65 /* UIViewController+Stripe_Promises.h */,
 				045D711F1CEFA57000F6CD65 /* UIViewController+Stripe_Promises.m */,
+				F1A0F9401E3A7846001A58C2 /* NSURLComponents+Stripe.h */,
+				F1A0F9411E3A7846001A58C2 /* NSURLComponents+Stripe.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1630,6 +1641,7 @@
 				04F94DA61D229F27004FC826 /* STPCardTuple.h in Headers */,
 				C159933D1D8808970047950D /* STPShippingMethodsViewController.h in Headers */,
 				04F94DCD1D22A22F004FC826 /* UIViewController+Stripe_KeyboardAvoiding.h in Headers */,
+				F1A0F9431E3A7846001A58C2 /* NSURLComponents+Stripe.h in Headers */,
 				04A488431CA3580700506E53 /* UINavigationController+Stripe_Completion.h in Headers */,
 				C124A1711CCA968B007D42EE /* STPAnalyticsClient.h in Headers */,
 				049A3FA81CC963EB00F57DE7 /* STPPaymentMethod.h in Headers */,
@@ -1840,6 +1852,7 @@
 				04B31DE61D09D25F00EF1631 /* STPPaymentMethodsInternalViewController.h in Headers */,
 				04CDB4FE1A5F30A700B854EE /* STPAPIClient.h in Headers */,
 				045D712C1CF4ED7600F6CD65 /* STPBINRange.h in Headers */,
+				F1A0F9421E3A7846001A58C2 /* NSURLComponents+Stripe.h in Headers */,
 				C1D7B51A1E36B8B9002181F5 /* STPSourceParams.h in Headers */,
 				04827D101D2575C6002DB3E8 /* STPImageLibrary.h in Headers */,
 				C124A17C1CCAA0C2007D42EE /* NSMutableURLRequest+Stripe.h in Headers */,
@@ -2213,6 +2226,7 @@
 				F1122A7E1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m in Sources */,
 				04A4C3941C4F276100B3B290 /* STPUIVCStripeParentViewControllerTests.m in Sources */,
 				C13538101D2C3E99003F6157 /* MockSTPAddCardViewControllerDelegate.m in Sources */,
+				F1A0F9471E3A8665001A58C2 /* NSURLComponents+StripeTest.m in Sources */,
 				04A488361CA34DC600506E53 /* STPEmailAddressValidatorTest.m in Sources */,
 				C1EEDCCA1CA2186300A54582 /* STPPhoneNumberValidatorTest.m in Sources */,
 				04CB86BA1BA89CE100E4F61E /* PKPayment+StripeTest.m in Sources */,
@@ -2334,6 +2348,7 @@
 				04827D131D2575C6002DB3E8 /* STPImageLibrary.m in Sources */,
 				045D712F1CF4ED7600F6CD65 /* STPBINRange.m in Sources */,
 				F15CB69C1E36DF1F000ACE8F /* STPURLCallbackHandler.m in Sources */,
+				F1A0F9451E3A7846001A58C2 /* NSURLComponents+Stripe.m in Sources */,
 				F148ABCA1D5D334B0014FD92 /* STPLocalizationUtils.m in Sources */,
 				045D71111CEEE30500F6CD65 /* STPAspects.m in Sources */,
 				04F94DCA1D22A20D004FC826 /* STPSwitchTableViewCell.m in Sources */,
@@ -2398,6 +2413,7 @@
 				F1DEB89B1E2074480066B8E8 /* STPCoreViewController.m in Sources */,
 				C1D7B5221E36C32F002181F5 /* STPSource.m in Sources */,
 				049A3F8A1CC73C7100F57DE7 /* STPPaymentContext.m in Sources */,
+				F1A0F9441E3A7846001A58C2 /* NSURLComponents+Stripe.m in Sources */,
 				0426B9731CEAE3EB006AC8DD /* UITableViewCell+Stripe_Borders.m in Sources */,
 				04BC29B21CD9AAA800318357 /* STPCheckoutAccount.m in Sources */,
 				04BC29CB1CE40F7500318357 /* STPObscuredCardView.m in Sources */,

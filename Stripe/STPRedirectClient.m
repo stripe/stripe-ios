@@ -9,11 +9,17 @@
 #import "STPRedirectClient.h"
 
 #import <SafariServices/SafariServices.h>
+
+#import "NSURLComponents+Stripe.h"
+#import "STPBlocks.h"
 #import "STPURLCallbackHandler.h"
 
 @interface STPRedirectClient () <SFSafariViewControllerDelegate, STPURLCallbackListener>
 @property (nonatomic, nullable, copy) STPRedirectAuthCompletionBlock completion;
 @property (nonatomic, nullable, strong) UIViewController *presentedViewController;
+
+// To get around app extension restrictions
+@property (nonatomic, nullable, copy) void (^openURLBlock)(NSURL *url);
 @end
 
 @implementation STPRedirectClient
@@ -21,6 +27,7 @@
 - (instancetype)initWithConfiguration:(STPRedirectConfiguration *)configuration {
     if ((self = [super init])) {
         _configuration = configuration;
+        self.openURLBlock = ^(NSURL *redirectURL){ [[UIApplication sharedApplication] openURL:redirectURL]; };
     }
     return self;
 }
@@ -61,8 +68,9 @@
                                              completion:nil];
     }
     else {
-        // TODO: call openURL
-        [[UIApplication sharedApplication] openURL:redirectURL];
+        if (self.openURLBlock) {
+            self.openURLBlock(redirectURL);
+        }
     }
 
     return YES;
@@ -113,13 +121,9 @@
         NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url
                                                    resolvingAgainstBaseURL:NO];
 
-        NSMutableDictionary <NSString *, NSString *> *queryItems = [NSMutableDictionary new];
-        for (NSURLQueryItem *queryItem in components.queryItems) {
-            queryItems[queryItem.name] = queryItem.value;
-        }
+        NSDictionary <NSString *, NSString *> *queryItems = components.stp_queryItemsDictionary;
 
         NSString *clientSecretString = queryItems[@"client_secret"];
-//        NSString *livemodeString = queryItems[@"livemode"];
         NSString *sourceIdString = queryItems[@"source"];
 
         if ([clientSecretString isEqualToString:self.inProgressAuthSource.clientSecret]

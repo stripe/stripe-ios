@@ -10,6 +10,8 @@
 
 #import "STPAPIClient.h"
 
+#import "NSURLComponents+Stripe.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation Stripe (STPURLCallbackHandlerAdditions)
@@ -28,6 +30,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPURLCallback : NSObject
 @property (nonatomic) NSURLComponents *urlComponents;
 @property (nonatomic) id<STPURLCallbackListener> listener;
+@end
+
+@implementation STPURLCallback
 @end
 
 @interface STPURLCallbackHandler ()
@@ -54,13 +59,6 @@ NS_ASSUME_NONNULL_BEGIN
     return self;
 }
 
-- (BOOL)urlComponent:(NSURLComponents *)lhsComponents matchesURL:(NSURLComponents *)rhsComponents {
-    // TODO: Compare query items?
-    return ([lhsComponents.scheme isEqualToString:rhsComponents.scheme]
-            && [lhsComponents.host isEqualToString:rhsComponents.host]
-            && [lhsComponents.path isEqualToString:rhsComponents.path]);
-}
-
 - (BOOL)handleURLCallback:(NSURL *)url {
 
     NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url
@@ -69,8 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL resultsOrred = NO;
 
     for (STPURLCallback *callback in self.callbacks) {
-        if ([self urlComponent:callback.urlComponents matchesURL:components]) {
-
+        if ([callback.urlComponents stp_matchesURLComponents:components]) {
             resultsOrred |= [callback.listener handleURLCallback:url];
         }
     }
@@ -101,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableArray *callbacksToRemove = [NSMutableArray new];
 
     for (STPURLCallback *callback in self.callbacks) {
-        if ([self urlComponent:callback.urlComponents matchesURL:components]
+        if ([callback.urlComponents stp_matchesURLComponents:components]
             && listener == callback.listener) {
             [callbacksToRemove addObject:callback];
         }
