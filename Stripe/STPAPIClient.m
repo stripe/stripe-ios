@@ -11,7 +11,7 @@
 
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient.h"
-#import "STPAPIPostRequest.h"
+#import "STPAPIRequest.h"
 #import "STPAnalyticsClient.h"
 #import "STPBankAccount.h"
 #import "STPCard.h"
@@ -131,15 +131,15 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
     NSDate *start = [NSDate date];
     [[STPAnalyticsClient sharedClient] logTokenCreationAttemptWithConfiguration:self.configuration];
-    [STPAPIPostRequest<STPToken *> startWithAPIClient:self
-                                             endpoint:tokenEndpoint
-                                             postData:data
-                                           serializer:[STPToken new]
-                                           completion:^(STPToken *object, NSHTTPURLResponse *response, NSError *error) {
-                                               NSDate *end = [NSDate date];
-                                               [[STPAnalyticsClient sharedClient] logRUMWithToken:object configuration:self.configuration response:response start:start end:end];
-                                               completion(object, error);
-                                           }];
+    [STPAPIRequest<STPToken *> postWithAPIClient:self
+                                        endpoint:tokenEndpoint
+                                        postData:data
+                                      serializer:[STPToken new]
+                                      completion:^(STPToken *object, NSHTTPURLResponse *response, NSError *error) {
+                                          NSDate *end = [NSDate date];
+                                          [[STPAnalyticsClient sharedClient] logRUMWithToken:object configuration:self.configuration response:response start:start end:end];
+                                          completion(object, error);
+                                      }];
 }
 
 #pragma mark - private helpers
@@ -296,14 +296,31 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @implementation STPAPIClient (Sources)
 
 - (void)createSourceWithParams:(STPSourceParams *)params completion:(STPSourceCompletionBlock)completion {
+    NSCAssert(params != nil, @"'params' is required to create a source");
+    NSCAssert(completion != nil, @"'completion' is required to use the source that is created");
     NSData *data = [STPFormEncoder formEncodedDataForObject:params];
-    [STPAPIPostRequest<STPSource *> startWithAPIClient:self
-                                              endpoint:sourcesEndpoint
-                                              postData:data
-                                            serializer:[STPSource new]
-                                            completion:^(STPSource *object, __unused NSHTTPURLResponse *response, NSError *error) {
-                                                completion(object, error);
-                                            }];
+    [STPAPIRequest<STPSource *> postWithAPIClient:self
+                                         endpoint:sourcesEndpoint
+                                         postData:data
+                                       serializer:[STPSource new]
+                                       completion:^(STPSource *object, __unused NSHTTPURLResponse *response, NSError *error) {
+                                           completion(object, error);
+                                       }];
+}
+
+- (void)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(STPSourceCompletionBlock)completion {
+    NSCAssert(identifier != nil, @"'identifier' is required to create a source");
+    NSCAssert(secret != nil, @"'secret' is required to create a source");
+    NSCAssert(completion != nil, @"'completion' is required to use the source that is created");
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", sourcesEndpoint, identifier];
+    NSDictionary *parameters = @{@"client_secret": secret};
+    [STPAPIRequest<STPSource *> getWithAPIClient:self
+                                        endpoint:endpoint
+                                      parameters:parameters
+                                      serializer:[STPSource new]
+                                      completion:^(STPSource *object, __unused NSHTTPURLResponse *response, NSError *error) {
+                                          completion(object, error);
+                                      }];
 }
 
 @end
