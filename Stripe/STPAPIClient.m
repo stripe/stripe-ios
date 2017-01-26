@@ -19,6 +19,7 @@
 #import "STPPaymentConfiguration.h"
 #import "STPSource.h"
 #import "STPSourceParams.h"
+#import "STPSourcePoller.h"
 #import "STPToken.h"
 
 #if __has_include("Fabric.h")
@@ -61,6 +62,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 #endif
 @property (nonatomic, readwrite) NSURL *apiURL;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
+@property (nonatomic, readwrite) NSMutableDictionary<NSString *,NSObject *>*sourcePollers;
+@property (nonatomic, readwrite) dispatch_queue_t sourcePollersQueue;
 @end
 
 @implementation STPAPIClient
@@ -103,7 +106,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
                                                        @"Authorization": auth,
                                                        };
         _urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
-
+        _sourcePollers = [NSMutableDictionary dictionary];
+        _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
@@ -312,15 +316,37 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     NSCAssert(identifier != nil, @"'identifier' is required to create a source");
     NSCAssert(secret != nil, @"'secret' is required to create a source");
     NSCAssert(completion != nil, @"'completion' is required to use the source that is created");
+    [self retrieveSourceWithId:identifier clientSecret:secret responseCompletion:^(STPSource * object, __unused NSHTTPURLResponse *response, NSError *error) {
+        completion(object, error);
+    }];
+}
+
+- (NSURLSessionDataTask *)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret responseCompletion:(STPAPIResponseBlock)completion {
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@", sourcesEndpoint, identifier];
     NSDictionary *parameters = @{@"client_secret": secret};
-    [STPAPIRequest<STPSource *> getWithAPIClient:self
-                                        endpoint:endpoint
-                                      parameters:parameters
-                                      serializer:[STPSource new]
-                                      completion:^(STPSource *object, __unused NSHTTPURLResponse *response, NSError *error) {
-                                          completion(object, error);
-                                      }];
+    return [STPAPIRequest<STPSource *> getWithAPIClient:self
+                                               endpoint:endpoint
+                                             parameters:parameters
+                                             serializer:[STPSource new]
+                                             completion:completion];
+}
+
+- (void)startPollingSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(STPSourceCompletionBlock)completion {
+    [self stopPollingSourceWithId:identifier];
+    STPSourcePoller *poller = [[STPSourcePoller alloc] initWithAPIClient:self clientSecret:secret sourceID:identifier completion:completion];
+    dispatch_async(self.sourcePollersQueue, ^{
+        self.sourcePollers[identifier] = poller;
+    });
+}
+
+- (void)stopPollingSourceWithId:(NSString *)identifier {
+    dispatch_async(self.sourcePollersQueue, ^{
+        STPSourcePoller *poller = (STPSourcePoller *)self.sourcePollers[identifier];
+        if (poller) {
+            [poller stopPolling];
+            self.sourcePollers[identifier] = nil;
+        }
+    });
 }
 
 @end

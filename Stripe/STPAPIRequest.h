@@ -14,16 +14,16 @@
 
 typedef void(^STPAPIResponseBlock)(ResponseType object, NSHTTPURLResponse *response, NSError *error);
 
-+ (void)postWithAPIClient:(STPAPIClient *)apiClient
-                 endpoint:(NSString *)endpoint
-                 postData:(NSData *)postData
-               serializer:(ResponseType)serializer
-               completion:(STPAPIResponseBlock)completion;
++ (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
+                                   endpoint:(NSString *)endpoint
+                                   postData:(NSData *)postData
+                                 serializer:(ResponseType)serializer
+                                 completion:(STPAPIResponseBlock)completion;
 
-+ (void)getWithAPIClient:(STPAPIClient *)apiClient
-                endpoint:(NSString *)endpoint
-              parameters:(NSDictionary *)parameters
-              serializer:(id<STPAPIResponseDecodable>)serializer
-              completion:(STPAPIResponseBlock)completion;
++ (NSURLSessionDataTask *)getWithAPIClient:(STPAPIClient *)apiClient
+                                  endpoint:(NSString *)endpoint
+                                parameters:(NSDictionary *)parameters
+                                serializer:(id<STPAPIResponseDecodable>)serializer
+                                completion:(STPAPIResponseBlock)completion;
 
 @end

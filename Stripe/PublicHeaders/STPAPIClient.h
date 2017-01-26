@@ -160,6 +160,33 @@ static NSString *const STPSDKVersion = @"9.4.0";
  */
 - (void)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(STPSourceCompletionBlock)completion;
 
+/**
+ *  Starts polling the Source object with the given ID. For payment methods that require
+ *  additional customer action (e.g. authorizing a payment with their bank), polling
+ *  allows you to determine if the action was successful. The provided callback will be
+ *  called as soon as the source is retrieved, and every time its status is updated.
+ *  Polling will end if the source's status is one of `chargeable`, `canceled`, or
+ *  `consumed`. Polling will also end if more than 5 minutes elapse, or if more than
+ *  5 consecutive errors occur. If polling ends due to an error, the callback will be
+ *  fired with the latest retrieved source and the error.
+ *
+ *  Note that if a poll is already running for a source, subsequent calls to `startPolling`
+ *  with the same source ID will do nothing.
+ *
+ *  @param identifier  The identifier of the source to be retrieved. Cannot be nil.
+ *  @param secret      The client secret of the source. Cannot be nil.
+ *  @param completion  The callback to run with the returned Source object, or an error.
+ */
+- (void)startPollingSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(STPSourceCompletionBlock)completion NS_EXTENSION_UNAVAILABLE("Source polling is not available in extensions");;
+
+/**
+ *  Stops polling the Source object with the given ID. Note that the completion block passed to
+ *  `startPolling` will not be fired when `stopPolling` is called.
+ *
+ *  @param identifier  The identifier of the source to be retrieved. Cannot be nil.
+ */
+- (void)stopPollingSourceWithId:(NSString *)identifier NS_EXTENSION_UNAVAILABLE("Source polling is not available in extensions");;
+
 @end
 
 #pragma mark - Deprecated Methods
