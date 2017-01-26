@@ -296,6 +296,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @implementation STPAPIClient (Sources)
 
 - (void)createSourceWithParams:(STPSourceParams *)params completion:(STPSourceCompletionBlock)completion {
+    NSCAssert(params != nil, @"'params' is required to create a source");
+    NSCAssert(completion != nil, @"'completion' is required to use the source that is created");
     NSData *data = [STPFormEncoder formEncodedDataForObject:params];
     [STPAPIRequest<STPSource *> postWithAPIClient:self
                                          endpoint:sourcesEndpoint
@@ -306,7 +308,10 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
                                        }];
 }
 
-- (void)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(nullable STPSourceCompletionBlock)completion {
+- (void)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(STPSourceCompletionBlock)completion {
+    NSCAssert(identifier != nil, @"'identifier' is required to create a source");
+    NSCAssert(secret != nil, @"'secret' is required to create a source");
+    NSCAssert(completion != nil, @"'completion' is required to use the source that is created");
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@", sourcesEndpoint, identifier];
     NSDictionary *parameters = @{@"client_secret": secret};
     [STPAPIRequest<STPSource *> getWithAPIClient:self
