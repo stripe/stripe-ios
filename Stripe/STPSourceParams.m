@@ -6,9 +6,9 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-#import "STPSourceParams.h"
 #import "STPCardParams.h"
 #import "STPFormEncoder.h"
+#import "STPSourceParams.h"
 
 @implementation STPSourceParams
 
