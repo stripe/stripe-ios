@@ -120,8 +120,8 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     cvcField.tag = STPCardFieldTypeCVC;
     cvcField.alpha = 0;
     self.cvcField = cvcField;
-    self.cvcPlaceholder = @"CVC";
-    self.cvcField.accessibilityLabel = self.cvcPlaceholder;
+    self.cvcPlaceholder = nil;
+    self.cvcField.accessibilityLabel = [self defaultCVCPlaceholder];
     
     UIView *fieldsView = [[UIView alloc] init];
     fieldsView.clipsToBounds = YES;
@@ -376,6 +376,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     self.viewModel = [STPPaymentCardTextFieldViewModel new];
     [self onChange];
     [self updateImageForFieldType:STPCardFieldTypeNumber];
+    [self updateCVCPlaceholder];
     WEAK(self);
     [self setNumberFieldShrunk:NO animated:YES completion:^(__unused BOOL completed){
         STRONG(self);
@@ -447,7 +448,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     if ([self isFirstResponder]) {
         [[self nextFirstResponderField] becomeFirstResponder];
     }
-    
+
     // update the card image, falling back to the number field image if not editing
     if ([self.expirationField isFirstResponder]) {
         [self updateImageForFieldType:STPCardFieldTypeExpiration];
@@ -458,6 +459,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     else {
         [self updateImageForFieldType:STPCardFieldTypeNumber];
     }
+    [self updateCVCPlaceholder];
 }
 
 - (STPCardParams *)card {
@@ -672,6 +674,7 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     STPCardFieldType fieldType = formTextField.tag;
     if (fieldType == STPCardFieldTypeNumber) {
         [self updateImageForFieldType:fieldType];
+        [self updateCVCPlaceholder];
     }
     
     STPCardValidationState state = [self.viewModel validationStateForField:fieldType];
@@ -778,6 +781,23 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 
         [self setNeedsLayout];
     }
+}
+
+- (NSString *)defaultCVCPlaceholder {
+    if (self.viewModel.brand == STPCardBrandAmex) {
+        return @"CVV";
+    } else {
+        return @"CVC";
+    }
+}
+
+- (void)updateCVCPlaceholder {
+    if (self.cvcPlaceholder) {
+        self.cvcField.placeholder = self.cvcPlaceholder;
+    } else {
+        self.cvcPlaceholder = [self defaultCVCPlaceholder];
+    }
+    self.cvcField.accessibilityLabel = [self defaultCVCPlaceholder];
 }
 
 - (void)onChange {

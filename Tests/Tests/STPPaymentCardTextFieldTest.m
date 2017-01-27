@@ -121,6 +121,25 @@
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
     XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(sut.cvcField.placeholder, @"CVC");
+    XCTAssertNil(sut.currentFirstResponderField);
+    XCTAssertFalse(sut.isValid);
+}
+
+- (void)testSetCard_numberAmex {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    STPCardParams *card = [STPCardParams new];
+    NSString *number = @"3782";
+    card.number = number;
+    [sut setCardParams:card];
+    NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandAmex]);
+
+    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertTrue([expectedImgData isEqualToData:imgData]);
+    XCTAssertEqualObjects(sut.numberField.text, number);
+    XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
+    XCTAssertEqualObjects(sut.cvcField.placeholder, @"CVV");
     XCTAssertNil(sut.currentFirstResponderField);
     XCTAssertFalse(sut.isValid);
 }
