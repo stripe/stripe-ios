@@ -6,8 +6,8 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+#import "STPAddress.h"
 #import "STPCoreTableViewController.h"
-
 #import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentMethodTuple.h"
@@ -25,6 +25,7 @@
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                                 theme:(STPTheme *)theme
                  prefilledInformation:(STPUserInformation *)prefilledInformation
+                      shippingAddress:(STPAddress *)shippingAddress
                    paymentMethodTuple:(STPPaymentMethodTuple *)tuple
                              delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate;
 

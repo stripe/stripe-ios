@@ -43,6 +43,9 @@
 /* Title for delivery info form */
 "Delivery" = "Delivery";
 
+/* Title for delivery address entry section */
+"Delivery Address" = "Delivery Address";
+
 /* Button on SMS verification screen if the user did not receive the SMS code. */
 "Didn't receive the code?" = "Didn't receive the code?";
 
@@ -106,6 +109,9 @@
 /* Title for shipping info form */
 "Shipping" = "Shipping";
 
+/* Title for shipping address entry section */
+"Shipping Address" = "Shipping Address";
+
 /* Label for shipping method form */
 "Shipping Method" = "Shipping Method";
 
@@ -135,6 +141,15 @@
 
 /* Error message when failing to type in SMS code for Remember me too many times. */
 "Too many incorrect attempts" = "Too many incorrect attempts";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Use Billing";
+
+/* Button to fill billing address from delivery address */
+"Use Delivery" = "Use Delivery";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Use Shipping";
 
 /* Title for SMS verification code screen */
 "Verification Code" = "Verification Code";

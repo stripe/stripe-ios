@@ -43,6 +43,9 @@
 /* Title for delivery info form */
 "Delivery" = "配達先情報";
 
+/* Title for delivery address entry section */
+"Delivery Address" = "配達先住所";
+
 /* Button on SMS verification screen if the user did not receive the SMS code. */
 "Didn't receive the code?" = "確認コードを受けとっていませんか?";
 
@@ -106,6 +109,9 @@
 /* Title for shipping info form */
 "Shipping" = "配送先情報";
 
+/* Title for shipping address entry section */
+"Shipping Address" = "配送先住所";
+
 /* Label for shipping method form */
 "Shipping Method" = "配送方法";
 
@@ -135,6 +141,15 @@
 
 /* Error message when failing to type in SMS code for Remember me too many times. */
 "Too many incorrect attempts" = "再試行の回数が上限を超えました";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "請求先を使用";
+
+/* Button to fill billing address from delivery address */
+"Use Delivery" = "配達先を使用";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "配送先を使用";
 
 /* Title for SMS verification code screen */
 "Verification Code" = "確認コード";

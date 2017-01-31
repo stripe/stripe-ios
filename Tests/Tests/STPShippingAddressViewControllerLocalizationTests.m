@@ -46,8 +46,15 @@
     config.shippingType = shippingType;
 
     [STPLocalizationUtils overrideLanguageTo:language];
+    STPUserInformation *info = [STPUserInformation new];
+    info.billingAddress = [STPAddress new];
 
-    STPShippingAddressViewController *shippingVC = [[STPShippingAddressViewController alloc] initWithConfiguration:config theme:[STPTheme defaultTheme] currency:nil shippingAddress:nil selectedShippingMethod:nil prefilledInformation:nil];
+    STPShippingAddressViewController *shippingVC = [[STPShippingAddressViewController alloc] initWithConfiguration:config
+                                                                                                             theme:[STPTheme defaultTheme]
+                                                                                                          currency:nil
+                                                                                                   shippingAddress:nil
+                                                                                            selectedShippingMethod:nil
+                                                                                              prefilledInformation:info];
 
     UINavigationController *navController = [UINavigationController new];
     navController.view.frame = CGRectMake(0, 0, 320, 750);
