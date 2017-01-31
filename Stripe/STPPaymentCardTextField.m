@@ -794,10 +794,11 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 - (void)updateCVCPlaceholder {
     if (self.cvcPlaceholder) {
         self.cvcField.placeholder = self.cvcPlaceholder;
+        self.cvcField.accessibilityLabel = self.cvcPlaceholder;
     } else {
-        self.cvcPlaceholder = [self defaultCVCPlaceholder];
+        self.cvcField.placeholder = [self defaultCVCPlaceholder];
+        self.cvcField.accessibilityLabel = [self defaultCVCPlaceholder];
     }
-    self.cvcField.accessibilityLabel = [self defaultCVCPlaceholder];
 }
 
 - (void)onChange {
