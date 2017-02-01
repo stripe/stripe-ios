@@ -342,28 +342,28 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
                  5. User saw the email field and added card by SMS code from a previous Remember Me save
                  */
 
-                STPAddCardRememberMeUsage rememberMeSelected;
+                STPAddCardRememberMeUsage rememberMeUsage;
                 if (![self rememberMeCellIsDisabled]) {
                     if (self.showingRememberMePhoneAndTerms
                         && [STPEmailAddressValidator stringIsValidEmailAddress:email]
                         && [STPPhoneNumberValidator stringIsValidPhoneNumber:phone]) {
-                        rememberMeSelected = STPAddCardRememberMeUsageSelected;
+                        rememberMeUsage = STPAddCardRememberMeUsageSelected;
                     }
                     else {
-                        rememberMeSelected = STPAddCardRememberMeUsageNotSelected;
+                        rememberMeUsage = STPAddCardRememberMeUsageNotSelected;
                     }
                 }
                 else {
                     if (self.configuration.smsAutofillDisabled
                         && !self.configuration.ineligibleForSmsAutofill) {
-                        rememberMeSelected = STPAddCardRememberMeUsageDeveloperDisabled;
+                        rememberMeUsage = STPAddCardRememberMeUsageDeveloperDisabled;
                     }
                     else {
-                        rememberMeSelected = STPAddCardRememberMeUsageIneligible;
+                        rememberMeUsage = STPAddCardRememberMeUsageIneligible;
                     }
                 }
-                [[STPAnalyticsClient sharedClient] logRememberMeConversion:rememberMeSelected];
-                if (rememberMeSelected == STPAddCardRememberMeUsageSelected) {
+                [[STPAnalyticsClient sharedClient] logRememberMeConversion:rememberMeUsage];
+                if (rememberMeUsage == STPAddCardRememberMeUsageSelected) {
                     [self.checkoutAPIClient createAccountWithCardParams:cardParams email:email phone:phone];
                 }
                 [self.delegate addCardViewController:self didCreateToken:token completion:^(NSError * _Nullable error) {
