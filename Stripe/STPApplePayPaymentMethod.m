@@ -19,8 +19,8 @@
 }
 
 - (UIImage *)templateImage {
-    return [STPImageLibrary safeImageNamed:@"stp_card_applepay_template" 
-                       templateIfAvailable:YES];
+    // No template for Apple Pay
+    return [STPImageLibrary applePayCardImage];
 }
 
 - (NSString *)label {
