@@ -23,6 +23,7 @@
 #import "STPObscuredCardView.h"
 #import "STPPaymentActivityIndicatorView.h"
 #import "STPPaymentCardTextField.h"
+#import "STPPaymentConfiguration+Private.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPRememberMeEmailCell.h"
 #import "STPRememberMePaymentCell.h"
@@ -307,6 +308,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
         WEAK(self);
         [[[self.checkoutAPIClient createTokenWithAccount:self.checkoutAccount] onSuccess:^(STPToken *token) {
             STRONG(self);
+            [[STPAnalyticsClient sharedClient] logRememberMeConversion:STPAddCardRememberMeUsageAddedFromSMS];
             [self.delegate addCardViewController:self didCreateToken:token completion:^(NSError * _Nullable error) {
                 stpDispatchToMainThreadIfNecessary(^{
                     if (error) {
@@ -328,9 +330,40 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
             } else {
                 NSString *phone = self.rememberMePhoneCell.contents;
                 NSString *email = self.emailCell.contents;
-                BOOL rememberMeSelected = [STPEmailAddressValidator stringIsValidEmailAddress:email] && [STPPhoneNumberValidator stringIsValidPhoneNumber:phone] && self.showingRememberMePhoneAndTerms;
-                [[STPAnalyticsClient sharedClient] logRememberMeConversion:rememberMeSelected];
-                if (rememberMeSelected) {
+
+                /**
+                 Remember me button usage segmented into following categories:
+                 1. User saw the toggle, selected it, and entered valid email/phone details
+                 2. User saw the toggle, and did not select it or entered invalid details
+                 3. User did not see the toggle because the developer disabled it
+                 4. User did not see the toggle because the developer enabled it but they were otherwise ineligible
+                    (eg payment context flow disables if you already have >0 payment methods,
+                     or you had a cancelled SMS fill)
+                 5. User saw the email field and added card by SMS code from a previous Remember Me save
+                 */
+
+                STPAddCardRememberMeUsage rememberMeUsage;
+                if (![self rememberMeCellIsDisabled]) {
+                    if (self.showingRememberMePhoneAndTerms
+                        && [STPEmailAddressValidator stringIsValidEmailAddress:email]
+                        && [STPPhoneNumberValidator stringIsValidPhoneNumber:phone]) {
+                        rememberMeUsage = STPAddCardRememberMeUsageSelected;
+                    }
+                    else {
+                        rememberMeUsage = STPAddCardRememberMeUsageNotSelected;
+                    }
+                }
+                else {
+                    if (self.configuration.smsAutofillDisabled
+                        && !self.configuration.ineligibleForSmsAutofill) {
+                        rememberMeUsage = STPAddCardRememberMeUsageDeveloperDisabled;
+                    }
+                    else {
+                        rememberMeUsage = STPAddCardRememberMeUsageIneligible;
+                    }
+                }
+                [[STPAnalyticsClient sharedClient] logRememberMeConversion:rememberMeUsage];
+                if (rememberMeUsage == STPAddCardRememberMeUsageSelected) {
                     [self.checkoutAPIClient createAccountWithCardParams:cardParams email:email phone:phone];
                 }
                 [self.delegate addCardViewController:self didCreateToken:token completion:^(NSError * _Nullable error) {
@@ -555,8 +588,18 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 }
 #endif
 
+- (BOOL)rememberMeCellIsDisabled {
+    return ((!self.checkoutAPIClient.readyForLookups
+             || self.checkoutAccount
+             || self.configuration.smsAutofillDisabled
+             || self.lookupSucceeded
+             || self.managedAccountCurrency)
+            && (self.rememberMePhoneCell.contentView.alpha < FLT_EPSILON
+                || self.rememberMePhoneCell.superview == nil));
+}
+
 - (void)reloadRememberMeCellAnimated:(BOOL)animated {
-    BOOL disabled = (!self.checkoutAPIClient.readyForLookups || self.checkoutAccount || self.configuration.smsAutofillDisabled || self.lookupSucceeded || self.managedAccountCurrency) && (self.rememberMePhoneCell.contentView.alpha < FLT_EPSILON || self.rememberMePhoneCell.superview == nil);
+    BOOL disabled = [self rememberMeCellIsDisabled];
 #ifdef STRIPE_UNIT_TESTS_ENABLED
     if (self.forceEnableRememberMeForTesting) {
         disabled = NO;

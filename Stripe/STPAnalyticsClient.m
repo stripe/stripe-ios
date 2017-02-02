@@ -119,7 +119,7 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     return self;
 }
 
-- (void)logRememberMeConversion:(BOOL)selected {
+- (void)logRememberMeConversion:(STPAddCardRememberMeUsage)selected {
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.remember_me",
