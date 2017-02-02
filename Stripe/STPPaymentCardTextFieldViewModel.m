@@ -89,7 +89,7 @@
 }
 
 - (NSString *)defaultPlaceholder {
-    return @"1234567812345678";
+    return @"4242424242424242";
 }
 
 - (NSString *)numberWithoutLastDigits {
