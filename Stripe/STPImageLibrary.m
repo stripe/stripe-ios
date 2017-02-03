@@ -95,10 +95,6 @@
     return [self safeImageNamed:@"stp_card_form_back" templateIfAvailable:YES];
 }
 
-+ (UIImage *)largeCardApplePayImage {
-    return [self safeImageNamed:@"stp_card_form_applepay" templateIfAvailable:YES];
-}
-
 + (UIImage *)largeShippingImage {
     return [self safeImageNamed:@"stp_shipping_form" templateIfAvailable:YES];
 }

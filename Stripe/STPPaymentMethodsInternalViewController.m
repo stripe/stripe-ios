@@ -71,7 +71,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     self.cardImageView = cardImageView;
     self.tableView.tableHeaderView = cardImageView;
     
-    self.cardImageView.image = [self.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]] ? [STPImageLibrary largeCardApplePayImage] : [STPImageLibrary largeCardFrontImage];
+    self.cardImageView.image = [STPImageLibrary largeCardFrontImage];
 
     self.cardImageView.tintColor = self.theme.accentColor;
 }
