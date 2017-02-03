@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>STPPaymentCardTextFieldDelegate Protocol Reference</title>
+    <title>STPCoreViewController Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset="utf-8">
@@ -11,9 +11,9 @@
   </head>
   <body>
 
-    <a name="//apple_ref/objc/Protocol/STPPaymentCardTextFieldDelegate" class="dashAnchor"></a>
+    <a name="//apple_ref/objc/Class/STPCoreViewController" class="dashAnchor"></a>
 
-    <a title="STPPaymentCardTextFieldDelegate Protocol Reference"></a>
+    <a title="STPCoreViewController Class Reference"></a>
 
     <header class="header">
       <p class="header-col header-col--primary">
@@ -35,7 +35,7 @@
     <p class="breadcrumbs">
       <a class="breadcrumb" href="../index.html">Stripe Reference</a>
       <img class="carat" src="../img/carat.png" />
-      STPPaymentCardTextFieldDelegate Protocol Reference
+      STPCoreViewController Class Reference
     </p>
 
     <div class="content-wrapper">
@@ -230,14 +230,18 @@
 
         <section class="section">
           <div class="section-content">
-            <h1>STPPaymentCardTextFieldDelegate</h1>
+            <h1>STPCoreViewController</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="k">@protocol</span> <span class="nc">STPPaymentCardTextFieldDelegate</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
+                  <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPCoreViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span></code></pre>
 
                 </div>
               </div>
-            <p>This protocol allows a delegate to be notified when a payment text field&rsquo;s contents change, which can in turn be used to take further actions depending on the validity of its contents.</p>
+            <p>This is the base class for all Stripe view controllers. It is intended for use
+only by Stripe classes, you should not subclass it yourself in your app.</p>
+
+<p>It theming, back/cancel button management, and other shared logic for
+Stripe view controllers.</p>
 
           </div>
         </section>
@@ -249,9 +253,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidChange:"></a>
-                    <a name="//apple_ref/objc/Method/-paymentCardTextFieldDidChange:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidChange:">-paymentCardTextFieldDidChange:</a>
+                    <a name="/c:objc(cs)STPCoreViewController(im)init"></a>
+                    <a name="//apple_ref/objc/Method/-init" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCoreViewController(im)init">-init</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -259,28 +263,54 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <ul>
-<li><p>Called when either the card number, expiration, or CVC changes. At this point, one can call -isValid on the text field to determine, for example, whether or not to enable a button to submit the form. Example:</p></li>
-<li><p>(void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
- self.paymentButton.enabled = textField.isValid;
-}</p></li>
-</ul>
-
-<p>*
-*  - parameter: textField the text field that has changed</p>
+                        <p>A convenience initializer; equivalent to calling <code>initWithTheme:[STPTheme defaultTheme]</code>.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentCardTextFieldDidChange</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="n">init</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidChange</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="nf">init</span><span class="o">!</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCoreViewController.h#L27">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPCoreViewController(im)initWithTheme:"></a>
+                    <a name="//apple_ref/objc/Method/-initWithTheme:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCoreViewController(im)initWithTheme:">-initWithTheme:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializes a new view controller with the specified theme</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithTheme</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">theme</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="nf">init</span><span class="o">!</span><span class="p">(</span><span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="o">!</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -291,12 +321,12 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>textField</em>
+                                <em>theme</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>the text field that has changed</p>
+                                  <p>The theme to use to inform the view controller&rsquo;s visual appearance. </p>
 
                                 </div>
                               </td>
@@ -305,7 +335,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L30">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCoreViewController.h#L35">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -313,9 +343,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingNumber:"></a>
-                    <a name="//apple_ref/objc/Method/-paymentCardTextFieldDidBeginEditingNumber:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingNumber:">-paymentCardTextFieldDidBeginEditingNumber:</a>
+                    <a name="/c:objc(cs)STPCoreViewController(im)initWithNibName:bundle:"></a>
+                    <a name="//apple_ref/objc/Method/-initWithNibName:bundle:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCoreViewController(im)initWithNibName:bundle:">-initWithNibName:bundle:</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -323,25 +353,26 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Called when editing begins in the payment card field&rsquo;s number field.</p>
+                        <p>Passes through to the default UIViewController behavior for this initializer,
+and then also sets the default theme as in <code>init</code></p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentCardTextFieldDidBeginEditingNumber</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithNibName</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">nibNameOrNil</span>
+                                 <span class="nf">bundle</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSBundle</span> <span class="o">*</span><span class="p">)</span><span class="nv">nibBundleOrNil</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditingNumber</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="nf">init</span><span class="o">!</span><span class="p">(</span><span class="n">nibName</span> <span class="nv">nibNameOrNil</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">,</span> <span class="n">bundle</span> <span class="nv">nibBundleOrNil</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L35">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCoreViewController.h#L42-L43">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -349,9 +380,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingNumber:"></a>
-                    <a name="//apple_ref/objc/Method/-paymentCardTextFieldDidEndEditingNumber:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingNumber:">-paymentCardTextFieldDidEndEditingNumber:</a>
+                    <a name="/c:objc(cs)STPCoreViewController(im)initWithCoder:"></a>
+                    <a name="//apple_ref/objc/Method/-initWithCoder:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCoreViewController(im)initWithCoder:">-initWithCoder:</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -359,169 +390,25 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Called when editing ends in the payment card field&rsquo;s number field.</p>
+                        <p>Passes through to the default UIViewController behavior for this initializer,
+and then also sets the default theme as in <code>init</code></p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentCardTextFieldDidEndEditingNumber</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithCoder</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSCoder</span> <span class="o">*</span><span class="p">)</span><span class="nv">aDecoder</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditingNumber</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L40">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingCVC:"></a>
-                    <a name="//apple_ref/objc/Method/-paymentCardTextFieldDidBeginEditingCVC:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingCVC:">-paymentCardTextFieldDidBeginEditingCVC:</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Called when editing begins in the payment card field&rsquo;s CVC field.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentCardTextFieldDidBeginEditingCVC</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditingCVC</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L45">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingCVC:"></a>
-                    <a name="//apple_ref/objc/Method/-paymentCardTextFieldDidEndEditingCVC:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingCVC:">-paymentCardTextFieldDidEndEditingCVC:</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Called when editing ends in the payment card field&rsquo;s CVC field.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentCardTextFieldDidEndEditingCVC</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditingCVC</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L50">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingExpiration:"></a>
-                    <a name="//apple_ref/objc/Method/-paymentCardTextFieldDidBeginEditingExpiration:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingExpiration:">-paymentCardTextFieldDidBeginEditingExpiration:</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Called when editing begins in the payment card field&rsquo;s expiration field.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentCardTextFieldDidBeginEditingExpiration</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditingExpiration</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L55">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingExpiration:"></a>
-                    <a name="//apple_ref/objc/Method/-paymentCardTextFieldDidEndEditingExpiration:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingExpiration:">-paymentCardTextFieldDidEndEditingExpiration:</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Called when editing ends in the payment card field&rsquo;s expiration field.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentCardTextFieldDidEndEditingExpiration</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditingExpiration</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L60">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCoreViewController.h#L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
