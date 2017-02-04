@@ -3,6 +3,8 @@
 * Fixes and unifies view controller behavior around theming and nav bars.
 * Adds month validity check to `validationStateForExpirationYear`
 * Changes some Apple Pay images to better conform to official guidelines.
+* Changes STPPaymentCardTextField's card number placeholder to "4242..."
+* Updates STPPaymentCardTextField's CVC placeholder so that it changes to "CVV" for Amex cards
 
 == 9.3.0 2017-01-05
 * Fixes a regression introduced in v9.0.0 in which color in STPTheme is used as the background color for UINavigationBar
