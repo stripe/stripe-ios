@@ -166,15 +166,14 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 }
 
 - (void)testCreateSource_sepaDebit {
-    STPSourceParams *params = [STPSourceParams sepaDebitParamsWithAmount:1099
-                                                                    name:@"Jenny Rosen"
-                                                                    iban:@"DE89370400440532013000"
-                                                                 address:@{
-                                                                           @"line1": @"Nollendorfstraße 27",
-                                                                           @"city": @"Berlin",
-                                                                           @"postal_code": @"10777",
-                                                                           @"country": @"DE"
-                                                                           }];
+    STPSourceParams *params = [STPSourceParams sepaDebitParamsWithName:@"Jenny Rosen"
+                                                                  iban:@"DE89370400440532013000"
+                                                               address:@{
+                                                                         @"line1": @"Nollendorfstraße 27",
+                                                                         @"city": @"Berlin",
+                                                                         @"postal_code": @"10777",
+                                                                         @"country": @"DE"
+                                                                         }];
     params.metadata = @{@"foo": @"bar"};
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
@@ -183,7 +182,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertNil(error);
         XCTAssertNotNil(source);
         XCTAssertEqualObjects(source.type, @"sepa_debit");
-        XCTAssertEqualObjects(source.amount, params.amount);
+        XCTAssertNil(source.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqualObjects(source.owner.address.city, @"Berlin");

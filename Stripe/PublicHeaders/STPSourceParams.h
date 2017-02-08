@@ -153,17 +153,15 @@ NS_ASSUME_NONNULL_BEGIN
  *  Creates params for a SEPA Debit source.
  *  @see https://stripe.com/docs/sources/sepa-debit#create-source
  *
- *  @param amount      The amount to charge the customer.
  *  @param name        The full name of the account holder.
  *  @param iban        The IBAN number for the bank account you wish to debit.
  *  @param address     The bank account holder's full address.
  *
  *  @return an STPSourceParams object populated with the provided values.
  */
-+ (STPSourceParams *)sepaDebitParamsWithAmount:(NSUInteger)amount
-                                          name:(NSString *)name
-                                          iban:(NSString *)iban
-                                       address:(NSDictionary<NSString *,NSString *>*)address;
++ (STPSourceParams *)sepaDebitParamsWithName:(NSString *)name
+                                        iban:(NSString *)iban
+                                     address:(NSDictionary<NSString *,NSString *>*)address;
 
 /**
  *  Creates params for a Sofort source.

@@ -120,13 +120,11 @@
     return params;
 }
 
-+ (STPSourceParams *)sepaDebitParamsWithAmount:(NSUInteger)amount
-                                          name:(NSString *)name
-                                          iban:(NSString *)iban
-                                       address:(NSDictionary<NSString *,NSString *>*)address {
++ (STPSourceParams *)sepaDebitParamsWithName:(NSString *)name
+                                        iban:(NSString *)iban
+                                     address:(NSDictionary<NSString *,NSString *>*)address {
     STPSourceParams *params = [self new];
     params.type = @"sepa_debit";
-    params.amount = @(amount);
     params.currency = @"eur"; // SEPA Debit must always use eur
     params.owner = @{
                      @"name": name,
