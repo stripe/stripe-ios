@@ -13,10 +13,12 @@
  */
 FOUNDATION_EXPORT NSString * __nonnull const StripeDomain;
 
+#define STP_ERROR_ENUM(_type, _name, _domain) \
+typedef enum _name: _type _name; \
+enum __attribute__((ns_error_domain(_domain))) _name: _type
+
 #if __has_attribute(ns_error_domain)
-// NS_ERROR_ENUM has not been defined yet: https://twitter.com/bjhomer/status/775571745197535232
-typedef enum STPError: NSInteger STPErrorCode;
-enum __attribute__((ns_error_domain(StripeDomain))) STPErrorCode: NSInteger {
+STP_ERROR_ENUM(NSInteger, STPErrorCode, StripeDomain) {
 #else
 typedef NS_ENUM(NSInteger, STPErrorCode) {
 #endif
