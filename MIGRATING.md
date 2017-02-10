@@ -1,5 +1,9 @@
 ## Migration Guides
 
+### Migrating from versions < 10.0
+
+- `STPErrorCode` and `STPCardErrorCode` are now first class Swift enums (before, their types were `Int` and `String`, respectively)
+
 ### Migrating from versions < 9.0
 
 Version 9.0 drops support for iOS 7.x and Xcode 7.x. If you need to support iOS or Xcode versions below 8.0, the last compatible Stripe SDK release is version 8.0.7.
