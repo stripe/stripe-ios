@@ -27,7 +27,7 @@
 @property (nonatomic, nullable) STPSourceReceiver *receiver;
 @property (nonatomic, nullable) STPSourceRedirect *redirect;
 @property (nonatomic) STPSourceStatus status;
-@property (nonatomic, nonnull) NSString *type;
+@property (nonatomic) STPSourceType type;
 @property (nonatomic) STPSourceUsage usage;
 @property (nonatomic, nullable) STPSourceVerification *verification;
 @property (nonatomic, nullable) NSDictionary *details;
@@ -36,6 +36,29 @@
 @end
 
 @implementation STPSource
+
++ (STPSourceType)typeFromString:(NSString *)string {
+    NSString *type = [string lowercaseString];
+    if ([type isEqualToString:@"bancontact"]) {
+        return STPSourceTypeBancontact;
+    } else if ([type isEqualToString:@"bitcoin"]) {
+        return STPSourceTypeBitcoin;
+    } else if ([type isEqualToString:@"card"]) {
+        return STPSourceTypeCard;
+    } else if ([type isEqualToString:@"giropay"]) {
+        return STPSourceTypeGiropay;
+    } else if ([type isEqualToString:@"ideal"]) {
+        return STPSourceTypeIDEAL;
+    } else if ([type isEqualToString:@"sepa_debit"]) {
+        return STPSourceTypeSEPADebit;
+    } else if ([type isEqualToString:@"sofort"]) {
+        return STPSourceTypeSofort;
+    } else if ([type isEqualToString:@"three_d_secure"]) {
+        return STPSourceTypeThreeDSecure;
+    } else {
+        return STPSourceTypeUnknown;
+    }
+}
 
 + (STPSourceFlow)flowFromString:(NSString *)string {
     NSString *flow = [string lowercaseString];
@@ -125,10 +148,11 @@
     source.receiver = [STPSourceReceiver decodedObjectFromAPIResponse:dict[@"receiver"]];
     source.redirect = [STPSourceRedirect decodedObjectFromAPIResponse:dict[@"redirect"]];
     source.status = [[self class] statusFromString:dict[@"status"]];
-    source.type = dict[@"type"];
+    NSString *typeString = dict[@"type"];
+    source.type = [[self class] typeFromString:typeString];
     source.usage = [[self class] usageFromString:dict[@"usage"]];
     source.verification = [STPSourceVerification decodedObjectFromAPIResponse:dict[@"verification"]];
-    source.details = dict[source.type];
+    source.details = dict[typeString];
     source.allResponseFields = dict;
     return source;
 }

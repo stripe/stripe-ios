@@ -30,7 +30,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqualObjects(source.type, @"bancontact");
+        XCTAssertEqual(source.type, STPSourceTypeBancontact);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
@@ -55,7 +55,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqualObjects(source.type, @"bitcoin");
+        XCTAssertEqual(source.type, STPSourceTypeBitcoin);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.email, params.owner[@"email"]);
@@ -91,7 +91,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqualObjects(source.type, @"card");
+        XCTAssertEqual(source.type, STPSourceTypeCard);
         NSDictionary *details = source.details;
         XCTAssertEqualObjects(details[@"last4"], @"4242");
         XCTAssertEqualObjects(details[@"cvc"], card.cvc);
@@ -123,7 +123,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqualObjects(source.type, @"giropay");
+        XCTAssertEqual(source.type, STPSourceTypeGiropay);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
@@ -150,7 +150,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqualObjects(source.type, @"ideal");
+        XCTAssertEqual(source.type, STPSourceTypeIDEAL);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
@@ -181,7 +181,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqualObjects(source.type, @"sepa_debit");
+        XCTAssertEqual(source.type, STPSourceTypeSEPADebit);
         XCTAssertNil(source.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
@@ -205,7 +205,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
         XCTAssertNil(error);
         XCTAssertNotNil(source);
-        XCTAssertEqualObjects(source.type, @"sofort");
+        XCTAssertEqual(source.type, STPSourceTypeSofort);
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
@@ -248,7 +248,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         [client createSourceWithParams:params completion:^(STPSource *source2, NSError *error2) {
             XCTAssertNil(error2);
             XCTAssertNotNil(source2);
-            XCTAssertEqualObjects(source2.type, @"three_d_secure");
+            XCTAssertEqual(source2.type, STPSourceTypeThreeDSecure);
             XCTAssertEqualObjects(source2.amount, params.amount);
             XCTAssertEqualObjects(source2.currency, params.currency);
             XCTAssertEqual(source2.redirect.status, STPSourceRedirectStatusPending);

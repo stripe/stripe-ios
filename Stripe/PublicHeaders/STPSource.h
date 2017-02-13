@@ -45,6 +45,21 @@ typedef NS_ENUM(NSInteger, STPSourceStatus) {
     STPSourceStatusUnknown,
 };
 
+/**
+ *  Types for a Source
+ */
+typedef NS_ENUM(NSInteger, STPSourceType) {
+    STPSourceTypeBancontact,
+    STPSourceTypeBitcoin,
+    STPSourceTypeCard,
+    STPSourceTypeGiropay,
+    STPSourceTypeIDEAL,
+    STPSourceTypeSEPADebit,
+    STPSourceTypeSofort,
+    STPSourceTypeThreeDSecure,
+    STPSourceTypeUnknown,
+};
+
 @class STPSourceOwner, STPSourceReceiver, STPSourceRedirect, STPSourceVerification;
 
 @interface STPSource : NSObject<STPAPIResponseDecodable, STPSourceProtocol>
@@ -112,7 +127,7 @@ typedef NS_ENUM(NSInteger, STPSourceStatus) {
 /**
  *  The type of the source.
  */
-@property (nonatomic, readonly, nonnull) NSString *type;
+@property (nonatomic, readonly) STPSourceType type;
 
 /**
  *   Whether this source should be reusable or not.

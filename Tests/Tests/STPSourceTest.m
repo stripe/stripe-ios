@@ -109,7 +109,7 @@
     XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.foo.com/crtABC"]);
     XCTAssertEqualObjects(source.redirect.url, [NSURL URLWithString:@"https://pay.stripe.com/redirect/src_123?client_secret=src_client_secret_123"]);
     XCTAssertEqual(source.status, STPSourceStatusPending);
-    XCTAssertEqualObjects(source.type, @"ideal");
+    XCTAssertEqual(source.type, STPSourceTypeIDEAL);
     XCTAssertEqual(source.usage, STPSourceUsageSingleUse);
     XCTAssertEqualObjects(source.details, response[@"ideal"]);
 }
@@ -130,7 +130,7 @@
     XCTAssertEqualObjects(source.owner.address.line1, @"Nollendorfstraße 27");
     XCTAssertEqualObjects(source.owner.address.postalCode, @"10777");
     XCTAssertEqual(source.status, STPSourceStatusChargeable);
-    XCTAssertEqualObjects(source.type, @"sepa_debit");
+    XCTAssertEqual(source.type, STPSourceTypeSEPADebit);
     XCTAssertEqual(source.usage, STPSourceUsageReusable);
     XCTAssertEqualObjects(source.details, response[@"sepa_debit"]);
 }
