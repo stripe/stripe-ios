@@ -7,12 +7,14 @@
 //
 
 #import "STPCardValidator.h"
+
+#import "NSString+Stripe.h"
 #import "STPBINRange.h"
 
 @implementation STPCardValidator
 
 + (NSString *)sanitizedNumericStringForString:(NSString *)string {
-    return stringByRemovingCharactersFromSet(string, invertedAsciiDigitCharacterSet());
+    return [string stp_stringByRemovingCharactersFromSet:invertedAsciiDigitCharacterSet()];
 }
 
 static NSCharacterSet *invertedAsciiDigitCharacterSet() {
@@ -26,29 +28,7 @@ static NSCharacterSet *invertedAsciiDigitCharacterSet() {
 
 + (NSString *)stringByRemovingSpacesFromString:(NSString *)string {
     NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
-    return stringByRemovingCharactersFromSet(string, set);
-}
-
-static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull string, NSCharacterSet * _Nonnull cs) {
-    NSRange range = [string rangeOfCharacterFromSet:cs];
-    if (range.location != NSNotFound) {
-        NSMutableString *newString = [[string substringWithRange:NSMakeRange(0, range.location)] mutableCopy];
-        NSUInteger lastPosition = NSMaxRange(range);
-        while (lastPosition < string.length) {
-            range = [string rangeOfCharacterFromSet:cs options:(NSStringCompareOptions)kNilOptions range:NSMakeRange(lastPosition, string.length - lastPosition)];
-            if (range.location == NSNotFound) break;
-            if (range.location != lastPosition) {
-                [newString appendString:[string substringWithRange:NSMakeRange(lastPosition, range.location - lastPosition)]];
-            }
-            lastPosition = NSMaxRange(range);
-        }
-        if (lastPosition != string.length) {
-            [newString appendString:[string substringWithRange:NSMakeRange(lastPosition, string.length - lastPosition)]];
-        }
-        return newString;
-    } else {
-        return string;
-    }
+    return [string stp_stringByRemovingCharactersFromSet:set];
 }
 
 + (BOOL)stringIsNumeric:(NSString *)string {

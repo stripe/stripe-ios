@@ -31,6 +31,17 @@
     XCTAssertEqualObjects([@"" stp_safeSubstringFromIndex:1], @"");
 }
 
+- (void)testSafeSubstringWithRange {
+    XCTAssertEqualObjects([@"foo" stp_safeSubstringWithRange:NSMakeRange(0, 1)], @"f");
+    XCTAssertEqualObjects([@"foo" stp_safeSubstringWithRange:NSMakeRange(1, 2)], @"oo");
+    XCTAssertEqualObjects([@"foo" stp_safeSubstringWithRange:NSMakeRange(2, 1)], @"o");
+    XCTAssertEqualObjects([@"foo" stp_safeSubstringWithRange:NSMakeRange(2, 2)], @"o");
+    XCTAssertEqualObjects([@"foo" stp_safeSubstringWithRange:NSMakeRange(0, 5)], @"foo");
+    XCTAssertEqualObjects([@"foo" stp_safeSubstringWithRange:NSMakeRange(5, 0)], @"");
+    XCTAssertEqualObjects([@"foo" stp_safeSubstringWithRange:NSMakeRange(NSNotFound, 0)], @"");
+    XCTAssertEqualObjects([@"foo" stp_safeSubstringWithRange:NSMakeRange(0, 0)], @"");
+}
+
 - (void)testReversedString {
     XCTAssertEqualObjects([@"foo" stp_reversedString], @"oof");
     XCTAssertEqualObjects([@"12345" stp_reversedString], @"54321");
