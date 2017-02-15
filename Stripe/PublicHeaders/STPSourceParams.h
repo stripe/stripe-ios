@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  An object representing parameters used to create a Source object. 
  *  @see https://stripe.com/docs/api#create_source
  */
-@interface STPSourceParams : NSObject<STPFormEncodable>
+@interface STPSourceParams : NSObject<STPFormEncodable, NSCopying>
 
 /**
  *  The type of the source to create. Required.

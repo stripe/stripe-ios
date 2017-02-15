@@ -193,4 +193,20 @@
              };
 }
 
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(__unused NSZone *)zone {
+    STPSourceParams *copy = [self.class new];
+    copy.type = self.type;
+    copy.amount = self.amount;
+    copy.currency = self.currency;
+    copy.flow = self.flow;
+    copy.metadata = [self.metadata copy];
+    copy.owner = [self.owner copy];
+    copy.redirect = [self.redirect copy];
+    copy.token = self.token;
+    copy.usage = self.usage;
+    return copy;
+}
+
 @end
