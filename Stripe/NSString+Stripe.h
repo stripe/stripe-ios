@@ -12,7 +12,9 @@
 
 - (NSString *)stp_safeSubstringToIndex:(NSUInteger)index;
 - (NSString *)stp_safeSubstringFromIndex:(NSUInteger)index;
+- (NSString *)stp_safeSubstringWithRange:(NSRange)range;
 - (NSString *)stp_reversedString;
+- (NSString *)stp_stringByRemovingCharactersFromSet:(NSCharacterSet *)cs;
 
 @end
 

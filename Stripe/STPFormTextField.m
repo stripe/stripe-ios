@@ -11,6 +11,7 @@
 #import "NSString+Stripe.h"
 #import "STPCardValidator.h"
 #import "STPDelegateProxy.h"
+#import "STPIBANValidator.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPWeakStrongMacros.h"
 
@@ -62,6 +63,8 @@
     switch (self.autoformattingBehavior) {
         case STPFormTextFieldAutoFormattingBehaviorNone:
             return string;
+        case STPFormTextFieldAutoFormattingBehaviorIBAN:
+            return [STPIBANValidator sanitizedIBANForString:string];
         case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
         case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers:
         case STPFormTextFieldAutoFormattingBehaviorExpiration:
@@ -164,6 +167,21 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 #endif
             break;
         }
+        case STPFormTextFieldAutoFormattingBehaviorIBAN: {
+            self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
+                NSMutableAttributedString *attributedString = [inputString mutableCopy];
+                for (NSUInteger i = 0; i < attributedString.length; i++) {
+                    CGFloat spacing = 0;
+                    if ((i + 1)%4 == 0 && i < attributedString.length - 1) {
+                        spacing = 5;
+                    }
+                    [attributedString addAttribute:NSKernAttributeName value:@(spacing)
+                                             range:NSMakeRange(i, 1)];
+                }
+                return [attributedString copy];
+            };
+            break;
+        }
     }
 }
 
@@ -218,7 +236,17 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 }
 
 - (void)setAttributedPlaceholder:(NSAttributedString *)attributedPlaceholder {
-    NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(attributedPlaceholder) : attributedPlaceholder;
+    BOOL shouldTransformPlaceholder = YES;
+    switch (self.autoFormattingBehavior) {
+        case STPFormTextFieldAutoFormattingBehaviorNone:
+            shouldTransformPlaceholder = NO;
+        default:
+            break;
+    }
+    NSAttributedString *transformed = attributedPlaceholder;
+    if (shouldTransformPlaceholder && self.textFormattingBlock) {
+        transformed = self.textFormattingBlock(attributedPlaceholder);
+    }
     [super setAttributedPlaceholder:transformed];
 }
 
