@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "STPFormEncodable.h"
+#import "STPSource.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The type of the source to create. Required.
  */
-@property (nonatomic, copy, nullable) NSString *type;
+@property (nonatomic, assign) STPSourceType type;
 
 /**
  *  A positive integer in the smallest currency unit representing the
@@ -43,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  "receiver", "verification", or "none". It is generally inferred unless a type
  *  supports multiple flows.
  */
-@property (nonatomic, copy, nullable) NSString *flow;
+@property (nonatomic, assign) STPSourceFlow flow;
 
 /**
  *  A set of key/value pairs that you can attach to a source object.
@@ -73,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Some source types may or may not be reusable by construction, while other may leave the
  *  option at creation.
  */
-@property (nonatomic, copy, nullable) NSString *usage;
+@property (nonatomic, assign) STPSourceUsage usage;
 
 /**
  *  Creates params for a Bancontact source.

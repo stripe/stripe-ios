@@ -265,7 +265,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 - (void)testRetrieveSource_sofort {
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
     STPSourceParams *params = [STPSourceParams new];
-    params.type = @"sofort";
+    params.type = STPSourceTypeSofort;
     params.amount = @1099;
     params.currency = @"eur";
     params.redirect = @{@"return_url": @"https://shop.foo.com/crtA6B28E1"};

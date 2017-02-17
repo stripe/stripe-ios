@@ -6,9 +6,11 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
+#import "STPSourceParams.h"
+
 #import "STPCardParams.h"
 #import "STPFormEncoder.h"
-#import "STPSourceParams.h"
+#import "STPSource+Private.h"
 
 @implementation STPSourceParams
 
@@ -17,9 +19,24 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        _type = STPSourceTypeUnknown;
+        _flow = STPSourceFlowUnknown;
+        _usage = STPSourceUsageUnknown;
         _additionalAPIParameters = @{};
     }
     return self;
+}
+
+- (NSString *)typeString {
+    return [STPSource stringFromType:self.type];
+}
+
+- (NSString *)flowString {
+    return [STPSource stringFromFlow:self.flow];
+}
+
+- (NSString *)usageString {
+    return [STPSource stringFromUsage:self.usage];
 }
 
 + (STPSourceParams *)bancontactParamsWithAmount:(NSUInteger)amount
@@ -27,7 +44,7 @@
                                       returnURL:(NSString *)returnURL
                             statementDescriptor:(nullable NSString *)statementDescriptor {
     STPSourceParams *params = [self new];
-    params.type = @"bancontact";
+    params.type = STPSourceTypeBancontact;
     params.amount = @(amount);
     params.currency = @"eur"; // Bancontact must always use eur
     params.owner = @{ @"name": name };
@@ -46,7 +63,7 @@
                                     currency:(NSString *)currency
                                        email:(NSString *)email {
     STPSourceParams *params = [self new];
-    params.type = @"bitcoin";
+    params.type = STPSourceTypeBitcoin;
     params.amount = @(amount);
     params.currency = currency;
     params.owner = @{ @"email": email };
@@ -55,7 +72,7 @@
 
 + (STPSourceParams *)cardParamsWithCard:(STPCardParams *)card {
     STPSourceParams *params = [self new];
-    params.type = @"card";
+    params.type = STPSourceTypeCard;
     NSDictionary *keyPairs = [STPFormEncoder dictionaryForObject:card][@"card"];
     NSMutableDictionary *cardDict = [NSMutableDictionary dictionary];
     NSArray<NSString *>*cardKeys = @[@"number", @"cvc", @"exp_month", @"exp_year"];
@@ -85,7 +102,7 @@
                                    returnURL:(NSString *)returnURL
                          statementDescriptor:(nullable NSString *)statementDescriptor {
     STPSourceParams *params = [self new];
-    params.type = @"giropay";
+    params.type = STPSourceTypeGiropay;
     params.amount = @(amount);
     params.currency = @"eur"; // Giropay must always use eur
     params.owner = @{ @"name": name };
@@ -106,7 +123,7 @@
                        statementDescriptor:(nullable NSString *)statementDescriptor
                                       bank:(nullable NSString *)bank {
     STPSourceParams *params = [self new];
-    params.type = @"ideal";
+    params.type = STPSourceTypeIDEAL;
     params.amount = @(amount);
     params.currency = @"eur"; // iDEAL must always use eur
     params.owner = @{ @"name": name };
@@ -124,7 +141,7 @@
                                         iban:(NSString *)iban
                                      address:(NSDictionary<NSString *,NSString *>*)address {
     STPSourceParams *params = [self new];
-    params.type = @"sepa_debit";
+    params.type = STPSourceTypeSEPADebit;
     params.currency = @"eur"; // SEPA Debit must always use eur
     params.owner = @{
                      @"name": name,
@@ -143,7 +160,7 @@
                                     country:(NSString *)country
                         statementDescriptor:(nullable NSString *)statementDescriptor {
     STPSourceParams *params = [self new];
-    params.type = @"sofort";
+    params.type = STPSourceTypeSofort;
     params.amount = @(amount);
     params.currency = @"eur"; // sofort must always use eur
     params.redirect = @{ @"return_url": returnURL };
@@ -161,7 +178,7 @@
                                         returnURL:(NSString *)returnURL
                                              card:(NSString *)card {
     STPSourceParams *params = [self new];
-    params.type = @"three_d_secure";
+    params.type = STPSourceTypeThreeDSecure;
     params.amount = @(amount);
     params.currency = currency;
     params.additionalAPIParameters = @{
@@ -181,15 +198,15 @@
 
 + (NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
-             NSStringFromSelector(@selector(type)): @"type",
+             NSStringFromSelector(@selector(typeString)): @"type",
              NSStringFromSelector(@selector(amount)): @"amount",
              NSStringFromSelector(@selector(currency)): @"currency",
-             NSStringFromSelector(@selector(flow)): @"flow",
+             NSStringFromSelector(@selector(flowString)): @"flow",
              NSStringFromSelector(@selector(metadata)): @"metadata",
              NSStringFromSelector(@selector(owner)): @"owner",
              NSStringFromSelector(@selector(redirect)): @"redirect",
              NSStringFromSelector(@selector(token)): @"token",
-             NSStringFromSelector(@selector(usage)): @"usage",
+             NSStringFromSelector(@selector(usageString)): @"usage",
              };
 }
 

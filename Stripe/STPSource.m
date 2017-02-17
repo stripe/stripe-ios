@@ -37,42 +37,54 @@
 
 @implementation STPSource
 
++ (NSDictionary<NSString *,NSNumber *>*)stringToType {
+    return @{
+             @"bancontact": @(STPSourceTypeBancontact),
+             @"bitcoin": @(STPSourceTypeBitcoin),
+             @"card": @(STPSourceTypeCard),
+             @"giropay": @(STPSourceTypeGiropay),
+             @"ideal": @(STPSourceTypeIDEAL),
+             @"sepa_debit": @(STPSourceTypeSEPADebit),
+             @"sofort": @(STPSourceTypeSofort),
+             @"three_d_secure": @(STPSourceTypeThreeDSecure)
+             };
+}
+
 + (STPSourceType)typeFromString:(NSString *)string {
-    NSString *type = [string lowercaseString];
-    if ([type isEqualToString:@"bancontact"]) {
-        return STPSourceTypeBancontact;
-    } else if ([type isEqualToString:@"bitcoin"]) {
-        return STPSourceTypeBitcoin;
-    } else if ([type isEqualToString:@"card"]) {
-        return STPSourceTypeCard;
-    } else if ([type isEqualToString:@"giropay"]) {
-        return STPSourceTypeGiropay;
-    } else if ([type isEqualToString:@"ideal"]) {
-        return STPSourceTypeIDEAL;
-    } else if ([type isEqualToString:@"sepa_debit"]) {
-        return STPSourceTypeSEPADebit;
-    } else if ([type isEqualToString:@"sofort"]) {
-        return STPSourceTypeSofort;
-    } else if ([type isEqualToString:@"three_d_secure"]) {
-        return STPSourceTypeThreeDSecure;
+    NSString *key = [string lowercaseString];
+    NSNumber *value = [self stringToType][key];
+    if (value) {
+        return (STPSourceType)[value integerValue];
     } else {
         return STPSourceTypeUnknown;
     }
 }
 
++ (NSString *)stringFromType:(STPSourceType)type {
+    return [[[self stringToType] allKeysForObject:@(type)] firstObject];
+}
+
++ (NSDictionary<NSString *,NSNumber *>*)stringToFlow {
+    return @{
+             @"redirect": @(STPSourceFlowRedirect),
+             @"receiver": @(STPSourceFlowReceiver),
+             @"verification": @(STPSourceFlowVerification),
+             @"none": @(STPSourceFlowNone)
+             };
+}
+
 + (STPSourceFlow)flowFromString:(NSString *)string {
-    NSString *flow = [string lowercaseString];
-    if ([flow isEqualToString:@"redirect"]) {
-        return STPSourceFlowRedirect;
-    } else if ([flow isEqualToString:@"receiver"]) {
-        return STPSourceFlowReceiver;
-    } else if ([flow isEqualToString:@"verification"]) {
-        return STPSourceFlowVerification;
-    } else if ([flow isEqualToString:@"none"]) {
-        return STPSourceFlowNone;
+    NSString *key = [string lowercaseString];
+    NSNumber *value = [self stringToFlow][key];
+    if (value) {
+        return (STPSourceFlow)[value integerValue];
     } else {
         return STPSourceFlowUnknown;
     }
+}
+
++ (NSString *)stringFromFlow:(STPSourceFlow)flow {
+    return [[[self stringToFlow] allKeysForObject:@(flow)] firstObject];
 }
 
 + (STPSourceStatus)statusFromString:(NSString *)string {
@@ -90,15 +102,25 @@
     }
 }
 
++ (NSDictionary<NSString *,NSNumber *>*)stringToUsage {
+    return @{
+             @"reusable": @(STPSourceUsageReusable),
+             @"single_use": @(STPSourceUsageSingleUse)
+             };
+}
+
 + (STPSourceUsage)usageFromString:(NSString *)string {
-    NSString *usage = [string lowercaseString];
-    if ([usage isEqualToString:@"reusable"]) {
-        return STPSourceUsageReusable;
-    } else if ([usage isEqualToString:@"single_use"]) {
-        return STPSourceUsageSingleUse;
+    NSString *key = [string lowercaseString];
+    NSNumber *value = [self stringToUsage][key];
+    if (value) {
+        return (STPSourceUsage)[value integerValue];
     } else {
         return STPSourceUsageUnknown;
     }
+}
+
++ (NSString *)stringFromUsage:(STPSourceUsage)usage {
+    return [[[self stringToUsage] allKeysForObject:@(usage)] firstObject];
 }
 
 #pragma mark - Equality
