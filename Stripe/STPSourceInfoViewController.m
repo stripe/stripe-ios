@@ -126,8 +126,10 @@
         default:
             break;
     }
+    STPTextFieldTableViewCell *lastCell = [self.cells lastObject];
     for (STPTextFieldTableViewCell *cell in self.cells) {
         cell.delegate = self;
+        cell.lastInList = (cell == lastCell);
     }
 }
 

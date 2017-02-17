@@ -79,6 +79,11 @@
     }
 }
 
+- (void)setLastInList:(BOOL)lastInList {
+    _lastInList = lastInList;
+    self.textField.returnKeyType = lastInList ? UIReturnKeyDone : UIReturnKeyDefault;
+}
+
 #pragma mark - STPFormTextFieldDelegate
 
 - (void)formTextFieldTextDidChange:(STPFormTextField *)textField {

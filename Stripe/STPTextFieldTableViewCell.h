@@ -33,6 +33,7 @@ typedef BOOL (^STPTextValidationBlock)(NSString *contents, BOOL editing);
 @property(nonatomic, copy) NSString *contents;
 @property(nonatomic, weak)id<STPTextFieldTableViewCellDelegate>delegate;
 @property(nonatomic, weak) STPFormTextField *textField;
+@property(nonatomic, assign) BOOL lastInList;
 
 @end
 
