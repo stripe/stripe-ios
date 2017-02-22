@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "STPAPIClient.h"
+#import "STPAPIRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)createTokenWithData:(NSData *)data
                  completion:(STPTokenCompletionBlock)completion;
+
+- (NSURLSessionDataTask *)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret responseCompletion:(STPAPIResponseBlock)completion;
 
 @property (nonatomic, readwrite) NSURL *apiURL;
 @property (nonatomic, readwrite) NSURLSession *urlSession;

@@ -15,46 +15,48 @@
 
 @implementation STPAPIRequest
 
-+ (void)postWithAPIClient:(STPAPIClient *)apiClient
-                 endpoint:(NSString *)endpoint
-                 postData:(NSData *)postData
-               serializer:(id<STPAPIResponseDecodable>)serializer
-               completion:(STPAPIResponseBlock)completion {
++ (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
+                                   endpoint:(NSString *)endpoint
+                                   postData:(NSData *)postData
+                                 serializer:(id<STPAPIResponseDecodable>)serializer
+                                 completion:(STPAPIResponseBlock)completion {
 
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     request.HTTPBody = postData;
     
-    [[apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSURLSessionDataTask *task = [apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         [[self class] parseResponse:response
                                body:body
                               error:error
                          serializer:serializer
                          completion:completion];
-    }] resume];
-
+    }];
+    [task resume];
+    return task;
 }
 
-+ (void)getWithAPIClient:(STPAPIClient *)apiClient
-                endpoint:(NSString *)endpoint
-              parameters:(NSDictionary *)parameters
-              serializer:(id<STPAPIResponseDecodable>)serializer
-              completion:(STPAPIResponseBlock)completion {
++ (NSURLSessionDataTask *)getWithAPIClient:(STPAPIClient *)apiClient
+                                  endpoint:(NSString *)endpoint
+                                parameters:(NSDictionary *)parameters
+                                serializer:(id<STPAPIResponseDecodable>)serializer
+                                completion:(STPAPIResponseBlock)completion {
 
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     [request stp_addParametersToURL:parameters];
     request.HTTPMethod = @"GET";
 
-    [[apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSURLSessionDataTask *task = [apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         [[self class] parseResponse:response
                                body:body
                               error:error
                          serializer:serializer
                          completion:completion];
-    }] resume];
-    
+    }];
+    [task resume];
+    return task;
 }
 
 + (void)parseResponse:(NSURLResponse *)response
