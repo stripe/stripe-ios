@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STPSource.h"
+#import "STPSourceProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,8 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return an instance of STPCustomer
  */
 + (instancetype)customerWithStripeID:(NSString *)stripeID
-                       defaultSource:(nullable id<STPSource>)defaultSource
-                             sources:(NSArray<id<STPSource>> *)sources;
+                       defaultSource:(nullable id<STPSourceProtocol>)defaultSource
+                             sources:(NSArray<id<STPSourceProtocol>> *)sources;
 
 /**
  *  The Stripe ID of the customer, e.g. `cus_1234`
@@ -37,12 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The default source used to charge the customer.
  */
-@property(nonatomic, readonly, nullable) id<STPSource> defaultSource;
+@property(nonatomic, readonly, nullable) id<STPSourceProtocol> defaultSource;
 
 /**
  *  The available payment sources the customer has (this may be an empty array).
  */
-@property(nonatomic, readonly) NSArray<id<STPSource>> *sources;
+@property(nonatomic, readonly) NSArray<id<STPSourceProtocol>> *sources;
 
 @end
 

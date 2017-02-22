@@ -10,7 +10,7 @@
 #import "STPCustomer.h"
 #import "StripeError.h"
 #import "STPTestUtils.h"
-#import "STPSource.h"
+#import "STPSourceProtocol.h"
 
 @interface STPCustomerDeserializerTest : XCTestCase
 @end

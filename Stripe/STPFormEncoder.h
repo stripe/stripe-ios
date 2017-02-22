@@ -15,6 +15,8 @@
 
 + (nonnull NSData *)formEncodedDataForObject:(nonnull NSObject<STPFormEncodable> *)object;
 
++ (nonnull NSDictionary *)dictionaryForObject:(nonnull NSObject<STPFormEncodable> *)object;
+
 + (nonnull NSString *)stringByURLEncoding:(nonnull NSString *)string;
 
 + (nonnull NSString *)stringByReplacingSnakeCaseWithCamelCase:(nonnull NSString *)input;

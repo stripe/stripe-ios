@@ -90,7 +90,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         task.resume()
     }
     
-    @objc func selectDefaultCustomerSource(_ source: STPSource, completion: @escaping STPErrorBlock) {
+    @objc func selectDefaultCustomerSource(_ source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
         guard let baseURLString = baseURLString, let baseURL = URL(string: baseURLString) else {
             if let token = source as? STPToken {
                 self.defaultSource = token.card
@@ -116,7 +116,7 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         task.resume()
     }
     
-    @objc func attachSource(toCustomer source: STPSource, completion: @escaping STPErrorBlock) {
+    @objc func attachSource(toCustomer source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
         guard let baseURLString = baseURLString, let baseURL = URL(string: baseURLString) else {
             if let token = source as? STPToken, let card = token.card {
                 self.sources.append(card)

@@ -12,7 +12,7 @@
 #import "STPCardBrand.h"
 #import "STPCardParams.h"
 #import "STPPaymentMethod.h"
-#import "STPSource.h"
+#import "STPSourceProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 /**
  *  Representation of a user's credit card details that have been tokenized with the Stripe API. @see https://stripe.com/docs/api#cards
  */
-@interface STPCard : STPCardParams<STPAPIResponseDecodable, STPPaymentMethod, STPSource>
+@interface STPCard : STPCardParams<STPAPIResponseDecodable, STPPaymentMethod, STPSourceProtocol>
 
 /**
  *  Create an STPCard from a Stripe API response.

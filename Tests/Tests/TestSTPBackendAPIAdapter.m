@@ -31,11 +31,11 @@
     completion([self createTestCustomer], nil);
 }
 
-- (void)attachSourceToCustomer:(__unused id<STPSource>)source completion:(STPErrorBlock)completion {
+- (void)attachSourceToCustomer:(__unused id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
     completion(nil);
 }
 
-- (void)selectDefaultCustomerSource:(__unused id<STPSource>)source completion:(STPErrorBlock)completion {
+- (void)selectDefaultCustomerSource:(__unused id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
     completion(nil);
 }
 @end

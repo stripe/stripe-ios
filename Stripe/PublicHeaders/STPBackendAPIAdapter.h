@@ -12,7 +12,7 @@
 #import "STPAddress.h"
 #import "STPBlocks.h"
 #import "STPCustomer.h"
-#import "STPSource.h"
+#import "STPSourceProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -45,7 +45,7 @@ typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NS
  *  @param source     a valid payment source, such as a card token.
  *  @param completion call this callback when you're done adding the token to the customer on your backend. For example, `completion(nil)` (if your call succeeds) or `completion(error)` if an error is returned.
  */
-- (void)attachSourceToCustomer:(id<STPSource>)source completion:(STPErrorBlock)completion;
+- (void)attachSourceToCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion;
 
 /**
  *  Change a customer's `default_source` to be the provided card. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Customer Update method as described at https://stripe.com/docs/api#update_customer , specifying default_source to be the value of source.stripeID (for an example Ruby implementation of this API, see https://github.com/stripe/example-ios-backend/blob/master/web.rb#L82 ). If this API call succeeds, call `completion(nil)`. Otherwise, call `completion(error)` with the error that occurred.
@@ -53,7 +53,7 @@ typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NS
  *  @param source     The newly-selected default source for the user.
  *  @param completion call this callback when you're done selecting the new default source for the customer on your backend. For example, `completion(nil)` (if your call succeeds) or `completion(error)` if an error is returned.
  */
-- (void)selectDefaultCustomerSource:(id<STPSource>)source completion:(STPErrorBlock)completion;
+- (void)selectDefaultCustomerSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion;
 
 @end
 

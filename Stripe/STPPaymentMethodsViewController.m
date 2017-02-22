@@ -69,7 +69,7 @@
             } else {
                 STPCard *selectedCard;
                 NSMutableArray<STPCard *> *cards = [NSMutableArray array];
-                for (id<STPSource> source in customer.sources) {
+                for (id<STPSourceProtocol> source in customer.sources) {
                     if ([source isKindOfClass:[STPCard class]]) {
                         STPCard *card = (STPCard *)source;
                         [cards addObject:card];
