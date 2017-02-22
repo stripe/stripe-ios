@@ -68,7 +68,7 @@
     return @{
              @"redirect": @(STPSourceFlowRedirect),
              @"receiver": @(STPSourceFlowReceiver),
-             @"verification": @(STPSourceFlowVerification),
+             @"code_verification": @(STPSourceFlowCodeVerification),
              @"none": @(STPSourceFlowNone)
              };
 }
@@ -97,6 +97,8 @@
         return STPSourceStatusConsumed;
     } else if ([status isEqualToString:@"canceled"]) {
         return STPSourceStatusCanceled;
+    } else if ([status isEqualToString:@"failed"]) {
+        return STPSourceStatusFailed;
     } else {
         return STPSourceStatusUnknown;
     }
