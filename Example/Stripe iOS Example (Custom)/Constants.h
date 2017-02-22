@@ -9,9 +9,5 @@
 #import <Foundation/Foundation.h>
 
 extern NSString *const StripePublishableKey;
-extern NSString *const BackendChargeURLString;
+extern NSString *const BackendBaseURL;
 extern NSString *const AppleMerchantId;
-
-@interface Constants : NSObject
-
-@end
