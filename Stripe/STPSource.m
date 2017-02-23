@@ -31,6 +31,7 @@
 @property (nonatomic) STPSourceUsage usage;
 @property (nonatomic, nullable) STPSourceVerification *verification;
 @property (nonatomic, nullable) NSDictionary *details;
+@property (nonatomic, nullable) STPSourceCardDetails *cardDetails;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
@@ -176,6 +177,11 @@
     source.verification = [STPSourceVerification decodedObjectFromAPIResponse:dict[@"verification"]];
     source.details = dict[typeString];
     source.allResponseFields = dict;
+
+    if (source.type == STPSourceTypeCard) {
+        source.cardDetails = [STPSourceCardDetails decodedObjectFromAPIResponse:source.details];
+    }
+
     return source;
 }
 
