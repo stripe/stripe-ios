@@ -21,7 +21,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 - (void)testCreateSource_bancontact {
     STPSourceParams *params = [STPSourceParams bancontactParamsWithAmount:1099
                                                                      name:@"Jenny Rosen"
-                                                                returnURL:@"https://shop.foo.com/crtABC"
+                                                                returnURL:@"https://shop.example.com/crtABC"
                                                       statementDescriptor:@"ORDER AT123"];
     params.metadata = @{@"foo": @"bar"};
 
@@ -35,7 +35,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.foo.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.metadata, params.metadata);
 
@@ -114,7 +114,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 - (void)testCreateSource_giropay {
     STPSourceParams *params = [STPSourceParams giropayParamsWithAmount:1099
                                                                   name:@"Jenny Rosen"
-                                                             returnURL:@"https://shop.foo.com/crtABC"
+                                                             returnURL:@"https://shop.example.com/crtABC"
                                                    statementDescriptor:@"ORDER AT123"];
     params.metadata = @{@"foo": @"bar"};
 
@@ -128,7 +128,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.foo.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.metadata, params.metadata);
 
@@ -140,7 +140,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 - (void)testCreateSource_ideal {
     STPSourceParams *params = [STPSourceParams idealParamsWithAmount:1099
                                                                 name:@"Jenny Rosen"
-                                                           returnURL:@"https://shop.foo.com/crtABC"
+                                                           returnURL:@"https://shop.example.com/crtABC"
                                                  statementDescriptor:@"ORDER AT123"
                                                                 bank:@"ing"];
     params.metadata = @{@"foo": @"bar"};
@@ -155,7 +155,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.foo.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.details[@"bank"], @"ing");
         XCTAssertEqualObjects(source.metadata, params.metadata);
@@ -168,12 +168,10 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 - (void)testCreateSource_sepaDebit {
     STPSourceParams *params = [STPSourceParams sepaDebitParamsWithName:@"Jenny Rosen"
                                                                   iban:@"DE89370400440532013000"
-                                                               address:@{
-                                                                         @"line1": @"Nollendorfstraße 27",
-                                                                         @"city": @"Berlin",
-                                                                         @"postal_code": @"10777",
-                                                                         @"country": @"DE"
-                                                                         }];
+                                                          addressLine1:@"Nollendorfstraße 27"
+                                                                  city:@"Berlin"
+                                                            postalCode:@"10777"
+                                                               country:@"DE"];
     params.metadata = @{@"foo": @"bar"};
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
@@ -195,7 +193,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 
 - (void)testCreateSource_sofort {
     STPSourceParams *params = [STPSourceParams sofortParamsWithAmount:1099
-                                                            returnURL:@"https://shop.foo.com/crtABC"
+                                                            returnURL:@"https://shop.example.com/crtABC"
                                                               country:@"DE"
                                                   statementDescriptor:@"ORDER AT11990"];
     params.metadata = @{@"foo": @"bar"};
@@ -209,7 +207,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.amount, params.amount);
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.foo.com/crtABC"]);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
         XCTAssertNotNil(source.redirect.url);
         XCTAssertEqualObjects(source.metadata, params.metadata);
         XCTAssertEqualObjects(source.details[@"country"], @"DE");
@@ -242,7 +240,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         [cardExp fulfill];
         STPSourceParams *params = [STPSourceParams threeDSecureParamsWithAmount:1099
                                                                        currency:@"eur"
-                                                                      returnURL:@"https://shop.foo.com/crtABC"
+                                                                      returnURL:@"https://shop.example.com/crtABC"
                                                                            card:source1.stripeID];
         params.metadata = @{ @"foo": @"bar" };
         [client createSourceWithParams:params completion:^(STPSource *source2, NSError *error2) {
@@ -252,7 +250,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
             XCTAssertEqualObjects(source2.amount, params.amount);
             XCTAssertEqualObjects(source2.currency, params.currency);
             XCTAssertEqual(source2.redirect.status, STPSourceRedirectStatusPending);
-            XCTAssertEqualObjects(source2.redirect.returnURL, [NSURL URLWithString:@"https://shop.foo.com/crtABC"]);
+            XCTAssertEqualObjects(source2.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
             XCTAssertNotNil(source2.redirect.url);
             XCTAssertEqualObjects(source2.metadata, params.metadata);
             [threeDSExp fulfill];
@@ -268,7 +266,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     params.type = STPSourceTypeSofort;
     params.amount = @1099;
     params.currency = @"eur";
-    params.redirect = @{@"return_url": @"https://shop.foo.com/crtA6B28E1"};
+    params.redirect = @{@"return_url": @"https://shop.example.com/crtA6B28E1"};
     params.metadata = @{@"foo": @"bar"};
     params.additionalAPIParameters = @{ @"sofort": @{ @"country": @"DE" } };
     XCTestExpectation *createExp = [self expectationWithDescription:@"Source creation"];
