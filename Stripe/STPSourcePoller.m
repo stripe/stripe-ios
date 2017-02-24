@@ -87,8 +87,8 @@ static NSTimeInterval const MaxRetries = 5;
     BOOL shouldTimeout = (self.requestCount > 0 &&
                           (totalTime >= Timeout || self.retryCount >= MaxRetries));
     if (!self.apiClient || shouldTimeout) {
-        self.completion(self.latestSource, error);
-        [self stopPolling];
+        [self cleanupAndFireCompletionWithSource:self.latestSource
+                                           error:error];
         return;
     }
     if (self.pollingPaused || self.pollingStopped) {
@@ -128,20 +128,17 @@ static NSTimeInterval const MaxRetries = 5;
         NSUInteger status = response.statusCode;
         if (status >= 400 && status < 500) {
             // Don't retry requests that 4xx
-            self.completion(self.latestSource, error);
-            [self stopPolling];
+            [self cleanupAndFireCompletionWithSource:self.latestSource
+                                               error:error];
         } else if (status == 200) {
             self.pollInterval = DefaultPollInterval;
             self.retryCount = 0;
-            // Only call completion if source.status has changed
-            if (!self.latestSource || source.status != self.latestSource.status) {
-                self.completion(source, nil);
-            }
             self.latestSource = source;
             if ([self shouldContinuePollingSource:source]) {
                 [self pollAfter:self.pollInterval lastError:nil];
             } else {
-                [self stopPolling];
+                [self cleanupAndFireCompletionWithSource:self.latestSource
+                                                   error:nil];
             }
         } else {
             // Backoff and increment retry count
@@ -158,7 +155,8 @@ static NSTimeInterval const MaxRetries = 5;
         } else {
             // Don't call completion if the request was cancelled
             if (error.code != kCFURLErrorCancelled) {
-                self.completion(self.latestSource, error);
+                [self cleanupAndFireCompletionWithSource:self.latestSource
+                                                   error:error];
             }
             [self stopPolling];
         }
@@ -188,6 +186,14 @@ static NSTimeInterval const MaxRetries = 5;
     if (self.timer) {
         [self.timer invalidate];
         self.timer = nil;
+    }
+}
+
+- (void)cleanupAndFireCompletionWithSource:(nullable STPSource *)source
+                                     error:(nullable NSError *)error {
+    if (!self.pollingStopped) {
+        self.completion(source, error);
+        [self stopPolling];
     }
 }
 
