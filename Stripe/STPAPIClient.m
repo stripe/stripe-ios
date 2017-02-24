@@ -17,7 +17,7 @@
 #import "STPCard.h"
 #import "STPFormEncoder.h"
 #import "STPPaymentConfiguration.h"
-#import "STPSource.h"
+#import "STPSource+Private.h"
 #import "STPSourceParams.h"
 #import "STPSourcePoller.h"
 #import "STPToken.h"
@@ -302,6 +302,9 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 - (void)createSourceWithParams:(STPSourceParams *)params completion:(STPSourceCompletionBlock)completion {
     NSCAssert(params != nil, @"'params' is required to create a source");
     NSCAssert(completion != nil, @"'completion' is required to use the source that is created");
+    NSString *sourceType = [STPSource stringFromType:params.type];
+    [[STPAnalyticsClient sharedClient] logSourceCreationAttemptWithConfiguration:self.configuration
+                                                                      sourceType:sourceType];
     NSData *data = [STPFormEncoder formEncodedDataForObject:params];
     [STPAPIRequest<STPSource *> postWithAPIClient:self
                                          endpoint:sourcesEndpoint
