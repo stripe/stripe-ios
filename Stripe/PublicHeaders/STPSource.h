@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "STPAPIResponseDecodable.h"
+#import "STPSourceCardDetails.h"
 #import "STPSourceProtocol.h"
 #import "STPSourceOwner.h"
 #import "STPSourceReceiver.h"
@@ -158,5 +159,11 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
  *  Information about the source specific to its type
  */
 @property (nonatomic, readonly, nullable) NSDictionary *details;
+
+/**
+ *  If this is a card source, this property provides typed access to the
+ *  contents of the `details` dictionary.
+ */
+@property (nonatomic, readonly, nullable) STPSourceCardDetails *cardDetails;
 
 @end
