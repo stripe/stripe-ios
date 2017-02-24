@@ -92,11 +92,9 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertNil(error);
         XCTAssertNotNil(source);
         XCTAssertEqual(source.type, STPSourceTypeCard);
-        NSDictionary *details = source.details;
-        XCTAssertEqualObjects(details[@"last4"], @"4242");
-        XCTAssertEqualObjects(details[@"cvc"], card.cvc);
-        XCTAssertEqualObjects(details[@"exp_month"], @(card.expMonth));
-        XCTAssertEqualObjects(details[@"exp_year"], @(card.expYear));
+        XCTAssertEqualObjects(source.cardDetails.last4, @"4242");
+        XCTAssertEqual(source.cardDetails.expMonth, card.expMonth);
+        XCTAssertEqual(source.cardDetails.expYear, card.expYear);
         STPAddress *address = source.owner.address;
         XCTAssertEqualObjects(address.line1, card.addressLine1);
         XCTAssertEqualObjects(address.line2, card.addressLine2);
@@ -239,6 +237,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [client createSourceWithParams:cardParams completion:^(STPSource *source1, NSError *error1) {
         XCTAssertNil(error1);
         XCTAssertNotNil(source1);
+        XCTAssertEqual(source1.cardDetails.threeDSecure, STPSourceCard3DSecureStatusRequired);
         [cardExp fulfill];
         STPSourceParams *params = [STPSourceParams threeDSecureParamsWithAmount:1099
                                                                        currency:@"eur"
