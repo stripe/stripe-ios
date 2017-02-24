@@ -31,6 +31,9 @@ typedef NS_ENUM(NSUInteger, STPAddCardRememberMeUsage) {
 
 - (void)logTokenCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration;
 
+- (void)logSourceCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
+                                       sourceType:(NSString *)sourceType;
+
 - (void)logRUMWithToken:(STPToken *)token
           configuration:(STPPaymentConfiguration *)config
                response:(NSHTTPURLResponse *)response
