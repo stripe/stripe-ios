@@ -42,7 +42,7 @@
         _expYear = [dict[@"exp_year"] intValue];
         _threeDSecure = [self.class threeDSecureStatusFromString:dict[@"three_d_secure"]];
 
-        self.allResponseFields = dict;
+        _allResponseFields = dict.copy;
     }
     return self;
 
