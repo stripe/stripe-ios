@@ -32,6 +32,7 @@
 @property (nonatomic, nullable) STPSourceVerification *verification;
 @property (nonatomic, nullable) NSDictionary *details;
 @property (nonatomic, nullable) STPSourceCardDetails *cardDetails;
+@property (nonatomic, nullable) STPSourceSEPADebitDetails *sepaDebitDetails;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
@@ -182,6 +183,9 @@
 
     if (source.type == STPSourceTypeCard) {
         source.cardDetails = [STPSourceCardDetails decodedObjectFromAPIResponse:source.details];
+    }
+    else if (source.type == STPSourceTypeSEPADebit) {
+        source.sepaDebitDetails = [STPSourceSEPADebitDetails decodedObjectFromAPIResponse:source.details];
     }
 
     return source;

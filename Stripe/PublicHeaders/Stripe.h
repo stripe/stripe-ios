@@ -42,6 +42,7 @@
 #import "STPSourceProtocol.h"
 #import "STPSourceReceiver.h"
 #import "STPSourceRedirect.h"
+#import "STPSourceSEPADebitDetails.h"
 #import "STPSourceVerification.h"
 #import "STPTheme.h"
 #import "STPToken.h"

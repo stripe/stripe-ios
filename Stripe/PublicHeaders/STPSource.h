@@ -13,6 +13,7 @@
 #import "STPSourceOwner.h"
 #import "STPSourceReceiver.h"
 #import "STPSourceRedirect.h"
+#import "STPSourceSEPADebitDetails.h"
 #import "STPSourceVerification.h"
 
 /**
@@ -165,5 +166,11 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
  *  contents of the `details` dictionary.
  */
 @property (nonatomic, readonly, nullable) STPSourceCardDetails *cardDetails;
+
+/**
+ *  If this is a SEPA Debit source, this property provides typed access to the
+ *  contents of the `details` dictionary.
+ */
+@property (nonatomic, readonly, nullable) STPSourceSEPADebitDetails *sepaDebitDetails;
 
 @end
