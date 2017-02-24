@@ -35,7 +35,7 @@ typedef NS_ENUM(NSInteger, STPSourceCard3DSecureStatus) {
 /**
  *  The last 4 digits of the card.
  */
-@property (nonatomic, readonly) NSString *last4;
+@property (nonatomic, readonly, nullable) NSString *last4;
 
 /**
  *  The card's expiration month. 1-indexed (i.e. 1 == January)
