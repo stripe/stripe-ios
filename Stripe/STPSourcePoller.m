@@ -195,7 +195,9 @@ static NSTimeInterval const MaxRetries = 5;
 - (void)cleanupAndFireCompletionWithSource:(nullable STPSource *)source
                                      error:(nullable NSError *)error {
     if (!self.pollingStopped) {
-        self.completion(source, error);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.completion(source, error);
+        });
         [self stopPolling];
     }
 }
