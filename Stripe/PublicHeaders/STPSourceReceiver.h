@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "STPAPIResponseDecodable.h"
 
+/**
+ *  Information related to a source's receiver flow.
+ */
 @interface STPSourceReceiver : NSObject<STPAPIResponseDecodable>
 
 /**
