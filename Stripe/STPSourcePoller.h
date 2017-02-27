@@ -21,6 +21,7 @@ NS_EXTENSION_UNAVAILABLE("Source polling is not available in extensions")
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
                      clientSecret:(NSString *)clientSecret
                          sourceID:(NSString *)sourceID
+                          timeout:(NSTimeInterval)timeout
                        completion:(STPSourceCompletionBlock)completion;
 
 - (void)stopPolling;

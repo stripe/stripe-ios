@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 static NSTimeInterval const DefaultPollInterval = 1.5;
 static NSTimeInterval const MaxPollInterval = 24;
 // Stop polling after 5 minutes
-static NSTimeInterval const Timeout = 60*5;
+static NSTimeInterval const MaxTimeout = 60*5;
 // Stop polling after 5 consecutive non-200 responses
 static NSTimeInterval const MaxRetries = 5;
 
@@ -28,6 +28,7 @@ static NSTimeInterval const MaxRetries = 5;
 @property (nonatomic, copy) STPSourceCompletionBlock completion;
 @property (nonatomic, nullable) STPSource *latestSource;
 @property (nonatomic) NSTimeInterval pollInterval;
+@property (nonatomic) NSTimeInterval timeout;
 @property (nonatomic, nullable) NSURLSessionDataTask *dataTask;
 @property (nonatomic, nullable) NSTimer *timer;
 @property (nonatomic) NSDate *startTime;
@@ -43,6 +44,7 @@ static NSTimeInterval const MaxRetries = 5;
 - (instancetype)initWithAPIClient:(STPAPIClient *)apiClient
                      clientSecret:(NSString *)clientSecret
                          sourceID:(NSString *)sourceID
+                          timeout:(NSTimeInterval)timeout
                        completion:(STPSourceCompletionBlock)completion {
     self = [super init];
     if (self) {
@@ -51,6 +53,7 @@ static NSTimeInterval const MaxRetries = 5;
         _clientSecret = clientSecret;
         _completion = completion;
         _pollInterval = DefaultPollInterval;
+        _timeout = timeout;
         _startTime = [NSDate date];
         _retryCount = 0;
         _requestCount = 0;
@@ -85,7 +88,7 @@ static NSTimeInterval const MaxRetries = 5;
 - (void)pollAfter:(NSTimeInterval)interval lastError:(nullable NSError *)error {
     NSTimeInterval totalTime = [[NSDate date] timeIntervalSinceDate:self.startTime];
     BOOL shouldTimeout = (self.requestCount > 0 &&
-                          (totalTime >= Timeout || self.retryCount >= MaxRetries));
+                          (totalTime >= MIN(self.timeout, MaxTimeout) || self.retryCount >= MaxRetries));
     if (!self.apiClient || shouldTimeout) {
         [self cleanupAndFireCompletionWithSource:self.latestSource
                                            error:error];
@@ -192,7 +195,9 @@ static NSTimeInterval const MaxRetries = 5;
 - (void)cleanupAndFireCompletionWithSource:(nullable STPSource *)source
                                      error:(nullable NSError *)error {
     if (!self.pollingStopped) {
-        self.completion(source, error);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.completion(source, error);
+        });
         [self stopPolling];
     }
 }

@@ -334,9 +334,13 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
                                              completion:completion];
 }
 
-- (void)startPollingSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(STPSourceCompletionBlock)completion {
+- (void)startPollingSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret timeout:(NSTimeInterval)timeout completion:(STPSourceCompletionBlock)completion {
     [self stopPollingSourceWithId:identifier];
-    STPSourcePoller *poller = [[STPSourcePoller alloc] initWithAPIClient:self clientSecret:secret sourceID:identifier completion:completion];
+    STPSourcePoller *poller = [[STPSourcePoller alloc] initWithAPIClient:self
+                                                            clientSecret:secret
+                                                                sourceID:identifier
+                                                                 timeout:timeout
+                                                              completion:completion];
     dispatch_async(self.sourcePollersQueue, ^{
         self.sourcePollers[identifier] = poller;
     });
