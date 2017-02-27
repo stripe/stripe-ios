@@ -25,36 +25,34 @@ NS_ASSUME_NONNULL_BEGIN
 - (nonnull instancetype) init __attribute__((unavailable("You cannot directly instantiate an STPSourceSEPADebitDetails. You should only use one that is part of an existing STPSource object.")));
 
 /**
- *  The last 4 digits of the card.
+ *  The last 4 digits of the account number.
  */
 @property (nonatomic, readonly, nullable) NSString *last4;
 
 /**
- *
+ *  The account's bank code.
  */
 @property (nonatomic, readonly, nullable) NSString *bankCode;
 
 /**
- *  Two-letter ISO code representing the issuing country of the card.
+ *  Two-letter ISO code representing the country of the bank account.
  */
 @property (nonatomic, readonly, nullable) NSString *country;
 
 /**
- *
+ *  The account's fingerprint.
  */
 @property (nonatomic, readonly, nullable) NSString *fingerprint;
 
 /**
- *
+ *  The reference of the mandate accepted by your customer.
  */
 @property (nonatomic, readonly, nullable) NSString *mandateReference;
 
 /**
- *
+ *  The details of the mandate accepted by your customer.
  */
 @property (nonatomic, readonly, nullable) NSURL *mandateURL;
-
-
 
 @end
 
