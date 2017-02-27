@@ -131,7 +131,10 @@
 
 - (void)handleAppForeground {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[STPAPIClient sharedClient] startPollingSourceWithId:self.source.stripeID clientSecret:self.source.clientSecret completion:^(STPSource *source, NSError *error) {
+    [[STPAPIClient sharedClient] startPollingSourceWithId:self.source.stripeID
+                                             clientSecret:self.source.clientSecret
+                                                  timeout:10
+                                               completion:^(STPSource *source, NSError *error) {
         [self dismissPollingUI];
         if (error) {
             [self.delegate exampleViewController:self didFinishWithError:error];
