@@ -42,6 +42,7 @@
     [button setTitle:@"Pay with Apple Pay" forState:UIControlStateNormal];
     [button sizeToFit];
     [button addTarget:self action:@selector(pay) forControlEvents:UIControlEventTouchUpInside];
+    button.enabled = [self applePayEnabled];
     self.payButton = button;
     [self.view addSubview:button];
 }
