@@ -19,6 +19,9 @@ typedef NS_ENUM(NSInteger, STPSourceVerificationStatus) {
     STPSourceVerificationStatusUnknown
 };
 
+/**
+ *  Information related to a source's verification flow.
+ */
 @interface STPSourceVerification : NSObject<STPAPIResponseDecodable>
 
 /**

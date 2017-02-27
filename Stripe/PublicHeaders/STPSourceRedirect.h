@@ -19,6 +19,9 @@ typedef NS_ENUM(NSInteger, STPSourceRedirectStatus) {
     STPSourceRedirectStatusUnknown
 };
 
+/**
+ *  Information related to a source's redirect flow.
+ */
 @interface STPSourceRedirect : NSObject<STPAPIResponseDecodable>
 
 /**

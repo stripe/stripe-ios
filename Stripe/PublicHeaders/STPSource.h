@@ -78,6 +78,9 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
 
 @class STPSourceOwner, STPSourceReceiver, STPSourceRedirect, STPSourceVerification;
 
+/**
+ *  Representation of a customer's payment instrument created with the Stripe API. @see https://stripe.com/docs/api#sources
+ */
 @interface STPSource : NSObject<STPAPIResponseDecodable, STPSourceProtocol>
 
 /**

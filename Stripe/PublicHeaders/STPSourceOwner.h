@@ -11,6 +11,9 @@
 
 @class STPAddress;
 
+/**
+ *  Information about a source's owner.
+ */
 @interface STPSourceOwner : NSObject<STPAPIResponseDecodable>
 
 /**
