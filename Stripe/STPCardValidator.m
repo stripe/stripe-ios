@@ -235,10 +235,6 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
     return [set copy];
 }
 
-+ (NSInteger)lengthForCardBrand:(STPCardBrand)brand {
-    return [self maxLengthForCardBrand:brand];
-}
-
 + (NSInteger)maxLengthForCardBrand:(STPCardBrand)brand {
     NSInteger maxLength = -1;
     for (NSNumber *length in [self lengthsForCardBrand:brand]) {
