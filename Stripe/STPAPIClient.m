@@ -245,7 +245,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @implementation STPAPIClient (CreditCards)
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPTokenCompletionBlock)completion {
-    NSDictionary *params = [STPFormEncoder dictionaryForObject:card];
+    NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:card] mutableCopy];
+    params[@"muid"] = [STPAnalyticsClient muid];
     [self createTokenWithParameters:params completion:completion];
 }
 
