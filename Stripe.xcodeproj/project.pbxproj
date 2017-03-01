@@ -1988,7 +1988,7 @@
 				CLASSPREFIX = STP;
 				LastSwiftUpdateCheck = 0730;
 				LastTestingUpgradeCheck = 0510;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
 					045E7C021A5F41DE004751EF = {
@@ -2597,7 +2597,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F101AEF2AFE005B926E /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 			};
 			name = Debug;
 		};
