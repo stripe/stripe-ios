@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Creates params for a Bancontact source.
- *  @see https://stripe.com/docs/bitcoin#creating-and-displaying-a-source-object
+ *  @see https://stripe.com/docs/bancontact#create-source
  *
  *  @param amount               The amount to charge the customer.
  *  @param name                 The full name of the account holder.
