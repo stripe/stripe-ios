@@ -169,7 +169,7 @@
 					};
 					04E6FCF51B714AC2000C8759 = {
 						CreatedOnToolsVersion = 6.4;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 						TestTargetID = 04E6FCE01B714AC2000C8759;
 					};
 				};
@@ -360,7 +360,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jflinter.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -376,7 +376,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jflinter.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
