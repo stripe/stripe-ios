@@ -2,6 +2,8 @@
 
 ### Migrating from versions < 10.0
 
+- Methods deprecated in Version 6.0 have now been removed.
+- `STPCustomer` will now include `STPSource` objects in its `sources` array if a customer has attached sources.
 - `STPErrorCode` and `STPCardErrorCode` are now first class Swift enums (before, their types were `Int` and `String`, respectively)
 
 ### Migrating from versions < 9.0
