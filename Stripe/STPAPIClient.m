@@ -64,7 +64,6 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 #endif
 @property (nonatomic, readwrite) NSURL *apiURL;
 @property (nonatomic, readwrite)  STPPromise<NSString *> *publishableKeyPromise;
-@property (nonatomic, readonly)  STPPromise<NSURLSession *> *sessionPromise;
 @property (nonatomic, readwrite) NSMutableDictionary<NSString *,NSObject *>*sourcePollers;
 @property (nonatomic, readwrite) dispatch_queue_t sourcePollersQueue;
 @end
@@ -137,7 +136,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     return _publishableKeyPromise;
 }
 
-- (STPPromise<NSURLSession *> *)sessionPromise {
+- (STPPromise<NSURLSession *> *)urlSessionPromise {
     return (STPPromise<NSURLSession *>*)[self.publishableKeyPromise map:^id _Nonnull(NSString * _Nonnull publishableKey) {
         NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
         NSString *auth = [@"Bearer " stringByAppendingString:publishableKey];
