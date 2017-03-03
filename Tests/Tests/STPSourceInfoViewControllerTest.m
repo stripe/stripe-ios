@@ -8,11 +8,11 @@
 
 #import <XCTest/XCTest.h>
 #import "STPSourceInfoViewController.h"
+#import "STPSourceInfoDataSource.h"
 #import "STPTextFieldTableViewCell.h"
 
 @interface STPSourceInfoViewController ()
-@property(nonatomic)NSArray<STPTextFieldTableViewCell *>*cells;
-- (STPSourceParams *)completedSourceParams;
+@property(nonatomic)STPSourceInfoDataSource *dataSource;
 @end
 
 @interface STPSourceInfoViewControllerTest : XCTestCase
@@ -33,7 +33,7 @@
 
 - (void)testInitWithSourceParams_unsupportedType {
     STPSourceParams *params = [STPSourceParams new];
-    params.type = @"bitcoin";
+    params.type = STPSourceTypeBitcoin;
 
     STPSourceInfoViewController *sut = [self sutWithParams:params];
     XCTAssertNil(sut);
@@ -41,50 +41,50 @@
 
 - (void)testInitWithSourceParams_bancontact {
     STPSourceParams *params = [STPSourceParams new];
-    params.type = @"bancontact";
+    params.type = STPSourceTypeBancontact;
     params.owner = @{@"name": @"Jenny Rosen"};
 
     STPSourceInfoViewController *sut = [self sutWithParams:params];
-    XCTAssertEqual(sut.cells.count, 1U);
-    STPTextFieldTableViewCell *nameCell = [sut.cells firstObject];
+    XCTAssertEqual(sut.dataSource.cells.count, 1U);
+    STPTextFieldTableViewCell *nameCell = [sut.dataSource.cells firstObject];
     XCTAssertEqualObjects(nameCell.contents, @"Jenny Rosen");
 
     nameCell.contents = @"John Smith";
-    STPSourceParams *completedParams = [sut completedSourceParams];
+    STPSourceParams *completedParams = [sut.dataSource completedSourceParams];
     XCTAssertEqualObjects(completedParams.owner[@"name"], nameCell.contents);
 }
 
 - (void)testInitWithSourceParams_giropay {
     STPSourceParams *params = [STPSourceParams new];
-    params.type = @"giropay";
+    params.type = STPSourceTypeGiropay;
     params.owner = @{@"name": @"Jenny Rosen"};
 
     STPSourceInfoViewController *sut = [self sutWithParams:params];
-    XCTAssertEqual(sut.cells.count, 1U);
-    STPTextFieldTableViewCell *nameCell = [sut.cells firstObject];
+    XCTAssertEqual(sut.dataSource.cells.count, 1U);
+    STPTextFieldTableViewCell *nameCell = [sut.dataSource.cells firstObject];
     XCTAssertEqualObjects(nameCell.contents, @"Jenny Rosen");
 
     nameCell.contents = @"John Smith";
-    STPSourceParams *completedParams = [sut completedSourceParams];
+    STPSourceParams *completedParams = [sut.dataSource completedSourceParams];
     XCTAssertEqualObjects(completedParams.owner[@"name"], nameCell.contents);
 }
 
 - (void)testInitWithSourceParams_iDEAL {
     STPSourceParams *params = [STPSourceParams new];
-    params.type = @"ideal";
+    params.type = STPSourceTypeIDEAL;
     params.owner = @{@"name": @"Jenny Rosen"};
     params.additionalAPIParameters = @{@"ideal": @{@"bank": @"bunq"}};
 
     STPSourceInfoViewController *sut = [self sutWithParams:params];
-    XCTAssertEqual(sut.cells.count, 2U);
-    STPTextFieldTableViewCell *nameCell = [sut.cells firstObject];
+    XCTAssertEqual(sut.dataSource.cells.count, 2U);
+    STPTextFieldTableViewCell *nameCell = [sut.dataSource.cells firstObject];
     XCTAssertEqualObjects(nameCell.contents, @"Jenny Rosen");
-    STPTextFieldTableViewCell *bankCell = [sut.cells lastObject];
+    STPTextFieldTableViewCell *bankCell = [sut.dataSource.cells lastObject];
     XCTAssertEqualObjects(bankCell.contents, @"bunq");
 
     nameCell.contents = @"John Smith";
     bankCell.contents = @"rabobank";
-    STPSourceParams *completedParams = [sut completedSourceParams];
+    STPSourceParams *completedParams = [sut.dataSource completedSourceParams];
     XCTAssertEqualObjects(completedParams.owner[@"name"], nameCell.contents);
     NSDictionary *idealDict = completedParams.additionalAPIParameters[@"ideal"];
     XCTAssertEqualObjects(idealDict, @{@"bank": @"rabobank"});
@@ -92,16 +92,16 @@
 
 - (void)testInitWithSourceParams_sofort {
     STPSourceParams *params = [STPSourceParams new];
-    params.type = @"sofort";
+    params.type = STPSourceTypeSofort;
     params.additionalAPIParameters = @{@"sofort": @{@"country": @"FR"}};
 
     STPSourceInfoViewController *sut = [self sutWithParams:params];
-    XCTAssertEqual(sut.cells.count, 1U);
-    STPTextFieldTableViewCell *countryCell = [sut.cells firstObject];
+    XCTAssertEqual(sut.dataSource.cells.count, 1U);
+    STPTextFieldTableViewCell *countryCell = [sut.dataSource.cells firstObject];
     XCTAssertEqualObjects(countryCell.contents, @"FR");
 
     countryCell.contents = @"AT";
-    STPSourceParams *completedParams = [sut completedSourceParams];
+    STPSourceParams *completedParams = [sut.dataSource completedSourceParams];
     NSDictionary *sofortDict = completedParams.additionalAPIParameters[@"sofort"];
     XCTAssertEqualObjects(sofortDict, @{@"country": @"AT"});
 }
