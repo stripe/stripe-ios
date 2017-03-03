@@ -1,3 +1,6 @@
+== 10.0.0 2017-03-06
+* Adds support for creating, retrieving, and polling Sources
+
 == 9.4.0 2017-02-03
 * Adds button to billing/shipping entry screens to fill address information from the other one.
 * Fixes and unifies view controller behavior around theming and nav bars.
