@@ -10,6 +10,7 @@
 
 #import "STPAPIClient.h"
 #import "STPAPIRequest.h"
+#import "STPPromise.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSURLSessionDataTask *)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret responseCompletion:(STPAPIResponseBlock)completion;
 
 @property (nonatomic, readwrite) NSURL *apiURL;
-@property (nonatomic, readwrite) NSURLSession *urlSession;
+@property (nonatomic, readonly) STPPromise<NSURLSession*> *urlSessionPromise;
 
 @end
 

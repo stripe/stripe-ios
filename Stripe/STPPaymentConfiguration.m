@@ -43,9 +43,17 @@
     return self;
 }
 
+- (void)setPublishableKey:(NSString *)publishableKey {
+    _publishableKey = publishableKey;
+    self.publishableKeyFetchBlock = ^(STPPublishableKeyCompletionBlock completion) {
+        completion(publishableKey, nil);
+    };
+}
+
 - (id)copyWithZone:(__unused NSZone *)zone {
     STPPaymentConfiguration *copy = [self.class new];
     copy.publishableKey = self.publishableKey;
+    copy.publishableKeyFetchBlock = self.publishableKeyFetchBlock;
     copy.additionalPaymentMethods = self.additionalPaymentMethods;
     copy.requiredBillingAddressFields = self.requiredBillingAddressFields;
     copy.requiredShippingAddressFields = self.requiredShippingAddressFields;

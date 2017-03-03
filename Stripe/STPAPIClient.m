@@ -21,6 +21,8 @@
 #import "STPSourceParams.h"
 #import "STPSourcePoller.h"
 #import "STPToken.h"
+#import "STPPromise.h"
+#import "STPWeakStrongMacros.h"
 
 #if __has_include("Fabric.h")
 #import "Fabric+FABKits.h"
@@ -61,7 +63,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @interface STPAPIClient()
 #endif
 @property (nonatomic, readwrite) NSURL *apiURL;
-@property (nonatomic, readwrite) NSURLSession *urlSession;
+@property (nonatomic, readwrite)  STPPromise<NSString *> *publishableKeyPromise;
+@property (nonatomic, readonly)  STPPromise<NSURLSession *> *sessionPromise;
 @property (nonatomic, readwrite) NSMutableDictionary<NSString *,NSObject *>*sourcePollers;
 @property (nonatomic, readwrite) dispatch_queue_t sourcePollersQueue;
 @end
@@ -98,14 +101,6 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     if (self) {
         _apiURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]];
         _configuration = configuration;
-        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        NSString *auth = [@"Bearer " stringByAppendingString:self.publishableKey];
-        sessionConfiguration.HTTPAdditionalHeaders = @{
-                                                       @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
-                                                       @"Stripe-Version": stripeAPIVersion,
-                                                       @"Authorization": auth,
-                                                       };
-        _urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
     }
@@ -119,6 +114,40 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
         _apiURL = [NSURL URLWithString:baseURL];
     }
     return self;
+}
+
+- (STPPromise<NSString *> *)publishableKeyPromise {
+    // TODO: handle errors/retry logic better
+    if (!_publishableKeyPromise) {
+        if (!self.configuration.publishableKeyFetchBlock) {
+            // TODO NSLog
+            return [STPPromise promiseWithError:[NSError errorWithDomain:@"blah" code:1 userInfo:nil]];
+        }
+        _publishableKeyPromise = [STPPromise new];
+        WEAK(self);
+        self.configuration.publishableKeyFetchBlock(^void (NSString *publishableKey, NSError *error) {
+            STRONG(self);
+            if (error) {
+                [self.publishableKeyPromise fail:error];
+                return;
+            }
+            [self.publishableKeyPromise succeed:publishableKey];
+        });
+    }
+    return _publishableKeyPromise;
+}
+
+- (STPPromise<NSURLSession *> *)sessionPromise {
+    return (STPPromise<NSURLSession *>*)[self.publishableKeyPromise map:^id _Nonnull(NSString * _Nonnull publishableKey) {
+        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSString *auth = [@"Bearer " stringByAppendingString:publishableKey];
+        sessionConfiguration.HTTPAdditionalHeaders = @{
+                                                       @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
+                                                       @"Stripe-Version": stripeAPIVersion,
+                                                       @"Authorization": auth,
+                                                       };
+        return [NSURLSession sessionWithConfiguration:sessionConfiguration];
+    }];
 }
 
 - (void)setPublishableKey:(NSString *)publishableKey {
@@ -319,7 +348,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     }];
 }
 
-- (NSURLSessionDataTask *)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret responseCompletion:(STPAPIResponseBlock)completion {
+- (void)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret responseCompletion:(STPAPIResponseBlock)completion {
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@", sourcesEndpoint, identifier];
     NSDictionary *parameters = @{@"client_secret": secret};
     return [STPAPIRequest<STPSource *> getWithAPIClient:self
