@@ -71,6 +71,12 @@ typedef void (^STPVoidBlock)();
 typedef void (^STPErrorBlock)(NSError * __nullable error);
 
 /**
+ * TODO
+ */
+typedef void (^STPPublishableKeyCompletionBlock)(NSString * __nullable publishableKey, NSError * __nullable error);
+typedef void (^STPPublishableKeyFetchBlock)(_Nonnull STPPublishableKeyCompletionBlock completion);
+
+/**
  *  A callback to be run with a token response from the Stripe API.
  *
  *  @param token The Stripe token from the response. Will be nil if an error occurs. @see STPToken

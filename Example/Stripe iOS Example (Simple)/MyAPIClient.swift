@@ -60,13 +60,6 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
     }
     
     @objc func retrieveCustomer(_ completion: @escaping STPCustomerCompletionBlock) {
-        guard let key = Stripe.defaultPublishableKey() , !key.contains("#") else {
-            let error = NSError(domain: StripeDomain, code: 50, userInfo: [
-                NSLocalizedDescriptionKey: "Please set stripePublishableKey to your account's test publishable key in CheckoutViewController.swift"
-            ])
-            completion(nil, error)
-            return
-        }
         guard let baseURLString = baseURLString, let baseURL = URL(string: baseURLString) else {
             // This code is just for demo purposes - in this case, if the example app isn't properly configured, we'll return a fake customer just so the app works.
             let customer = STPCustomer(stripeID: "cus_test", defaultSource: self.defaultSource, sources: self.sources)

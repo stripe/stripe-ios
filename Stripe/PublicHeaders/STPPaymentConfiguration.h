@@ -36,6 +36,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy)NSString *publishableKey;
 
 /**
+ *  TODO
+ */
+@property(nonatomic, copy)STPPublishableKeyFetchBlock publishableKeyFetchBlock;
+
+/**
  *  An enum value representing which payment methods you will accept from your user in addition to credit cards. Unless you have a very specific reason not to, you should leave this at the default, `STPPaymentMethodTypeAll`.
  */
 @property(nonatomic)STPPaymentMethodType additionalPaymentMethods;

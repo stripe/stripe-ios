@@ -15,7 +15,7 @@
 
 @implementation STPAPIRequest
 
-+ (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
++ (void)postWithAPIClient:(STPAPIClient *)apiClient
                                    endpoint:(NSString *)endpoint
                                    postData:(NSData *)postData
                                  serializer:(id<STPAPIResponseDecodable>)serializer
@@ -25,19 +25,20 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     request.HTTPBody = postData;
-    
-    NSURLSessionDataTask *task = [apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        [[self class] parseResponse:response
-                               body:body
-                              error:error
-                         serializer:serializer
-                         completion:completion];
+    [apiClient.urlSessionPromise map:^id _Nonnull(NSURLSession * _Nonnull session) {
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            [[self class] parseResponse:response
+                                   body:body
+                                  error:error
+                             serializer:serializer
+                             completion:completion];
+        }];
+        [task resume];
+        return task;
     }];
-    [task resume];
-    return task;
 }
 
-+ (NSURLSessionDataTask *)getWithAPIClient:(STPAPIClient *)apiClient
++ (void)getWithAPIClient:(STPAPIClient *)apiClient
                                   endpoint:(NSString *)endpoint
                                 parameters:(NSDictionary *)parameters
                                 serializer:(id<STPAPIResponseDecodable>)serializer
@@ -47,16 +48,17 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     [request stp_addParametersToURL:parameters];
     request.HTTPMethod = @"GET";
-
-    NSURLSessionDataTask *task = [apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        [[self class] parseResponse:response
-                               body:body
-                              error:error
-                         serializer:serializer
-                         completion:completion];
+    [apiClient.urlSessionPromise map:^id _Nonnull(NSURLSession * _Nonnull session) {
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            [[self class] parseResponse:response
+                                   body:body
+                                  error:error
+                             serializer:serializer
+                             completion:completion];
+        }];
+        [task resume];
+        return task;
     }];
-    [task resume];
-    return task;
 }
 
 + (void)parseResponse:(NSURLResponse *)response
