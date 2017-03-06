@@ -139,7 +139,6 @@ LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/
 
 PRODUCT_NAME = Stripe
 
-
 // Skip Install
 // 
 // Activating this setting when deployment locations are used causes the product to be

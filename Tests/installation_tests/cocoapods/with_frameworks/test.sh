@@ -12,4 +12,4 @@ gem update cocoapods --no-ri --no-rdoc
 
 rm -rf Pods
 rm -f Podfile.lock
-pod install --no-repo-update && xcodebuild build -workspace CocoapodsTest.xcworkspace -scheme CocoapodsTest -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=latest' | xcpretty -c
+pod install --no-repo-update && xcodebuild build -workspace CocoapodsTest.xcworkspace -scheme CocoapodsTest -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.1' | xcpretty -c
