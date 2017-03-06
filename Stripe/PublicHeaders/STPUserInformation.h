@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The user's billing address. When set, the add card form will be filled with this address.
  *  The user will also have the option to fill their shipping address using this address.
  */
-@property(nonatomic, nullable)STPAddress *billingAddress;
+@property(nonatomic, strong, nullable)STPAddress *billingAddress;
 
 @end
 
