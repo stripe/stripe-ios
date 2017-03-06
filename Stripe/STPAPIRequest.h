@@ -16,7 +16,7 @@ typedef void(^STPAPIResponseBlock)(ResponseType object, NSHTTPURLResponse *respo
 
 + (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
                                    endpoint:(NSString *)endpoint
-                                   postData:(NSData *)postData
+                                 parameters:(NSDictionary *)parameters
                                  serializer:(ResponseType)serializer
                                  completion:(STPAPIResponseBlock)completion;
 

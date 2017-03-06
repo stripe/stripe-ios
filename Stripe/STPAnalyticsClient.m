@@ -109,6 +109,10 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     return @((NSInteger)([date timeIntervalSince1970]*1000));
 }
 
++ (NSString *)muid {
+    return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {

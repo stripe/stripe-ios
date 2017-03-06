@@ -129,15 +129,15 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     return self.configuration.publishableKey;
 }
 
-- (void)createTokenWithData:(NSData *)data
-                 completion:(STPTokenCompletionBlock)completion {
-    NSCAssert(data != nil, @"'data' is required to create a token");
+- (void)createTokenWithParameters:(NSDictionary *)parameters
+                       completion:(STPTokenCompletionBlock)completion {
+    NSCAssert(parameters != nil, @"'parameters' is required to create a token");
     NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
     NSDate *start = [NSDate date];
     [[STPAnalyticsClient sharedClient] logTokenCreationAttemptWithConfiguration:self.configuration];
     [STPAPIRequest<STPToken *> postWithAPIClient:self
                                         endpoint:tokenEndpoint
-                                        postData:data
+                                      parameters:parameters
                                       serializer:[STPToken new]
                                       completion:^(STPToken *object, NSHTTPURLResponse *response, NSError *error) {
                                           NSDate *end = [NSDate date];
@@ -235,8 +235,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 - (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount
                         completion:(STPTokenCompletionBlock)completion {
-    NSData *data = [STPFormEncoder formEncodedDataForObject:bankAccount];
-    [self createTokenWithData:data completion:completion];
+    NSDictionary *params = [STPFormEncoder dictionaryForObject:bankAccount];
+    [self createTokenWithParameters:params completion:completion];
 }
 
 @end
@@ -245,8 +245,9 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @implementation STPAPIClient (CreditCards)
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPTokenCompletionBlock)completion {
-    NSData *data = [STPFormEncoder formEncodedDataForObject:card];
-    [self createTokenWithData:data completion:completion];
+    NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:card] mutableCopy];
+    params[@"muid"] = [STPAnalyticsClient muid];
+    [self createTokenWithParameters:params completion:completion];
 }
 
 @end
@@ -294,16 +295,16 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 @implementation STPAPIClient (Sources)
 
-- (void)createSourceWithParams:(STPSourceParams *)params completion:(STPSourceCompletionBlock)completion {
-    NSCAssert(params != nil, @"'params' is required to create a source");
+- (void)createSourceWithParams:(STPSourceParams *)sourceParams completion:(STPSourceCompletionBlock)completion {
+    NSCAssert(sourceParams != nil, @"'params' is required to create a source");
     NSCAssert(completion != nil, @"'completion' is required to use the source that is created");
-    NSString *sourceType = [STPSource stringFromType:params.type];
+    NSString *sourceType = [STPSource stringFromType:sourceParams.type];
     [[STPAnalyticsClient sharedClient] logSourceCreationAttemptWithConfiguration:self.configuration
                                                                       sourceType:sourceType];
-    NSData *data = [STPFormEncoder formEncodedDataForObject:params];
+    NSDictionary *params = [STPFormEncoder dictionaryForObject:sourceParams];
     [STPAPIRequest<STPSource *> postWithAPIClient:self
                                          endpoint:sourcesEndpoint
-                                         postData:data
+                                       parameters:params
                                        serializer:[STPSource new]
                                        completion:^(STPSource *object, __unused NSHTTPURLResponse *response, NSError *error) {
                                            completion(object, error);
