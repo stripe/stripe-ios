@@ -8,18 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "STPTheme.h"
+#import "STPInfoFooterView.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 typedef void(^STPRememberMeTermsPushVCBlock)(UIViewController *vc);
 
-@interface STPRememberMeTermsView : UIView
+@interface STPRememberMeTermsView :  STPInfoFooterView
 
-@property(nonatomic, weak, readonly)UITextView *textView;
-@property(nonatomic)STPTheme *theme;
-@property(nonatomic)UIEdgeInsets insets;
 @property (nonatomic, copy)STPRememberMeTermsPushVCBlock pushViewControllerBlock;
-
-- (CGFloat)heightForWidth:(CGFloat)maxWidth;
 
 @end
 

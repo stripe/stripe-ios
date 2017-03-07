@@ -14,6 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPCountryPickerDataSource : NSObject <STPPickerDataSource>
 
+@property (nonatomic) NSArray<NSString *>*countryCodes;
+
++ (NSArray<NSString *>*)sepaCountryCodes;
+
 - (instancetype)initWithCountryCodes:(NSArray<NSString *>*)countryCodes;
 
 @end
