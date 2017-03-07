@@ -68,12 +68,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  If you've already collected some information from your user, you can set it here and it'll be automatically filled out when possible/appropriate in any UI that the payment context creates.
  */
-@property(nonatomic)STPUserInformation *prefilledInformation;
+@property(nonatomic, strong, nullable)STPUserInformation *prefilledInformation;
 
 /**
  *  The view controller that any additional UI will be presented on. If you have a "checkout view controller" in your app, that should be used as the host view controller.
  */
-@property(nonatomic, weak)UIViewController *hostViewController;
+@property(nonatomic, weak, nullable)UIViewController *hostViewController;
 
 /**
  *  This delegate will be notified when the payment context's contents change. @see STPPaymentContextDelegate

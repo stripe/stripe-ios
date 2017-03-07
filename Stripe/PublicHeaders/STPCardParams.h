@@ -51,9 +51,7 @@
 /**
  *  The cardholder's address.
  */
-#if TARGET_OS_IPHONE
 @property(nonatomic, copy, nonnull) STPAddress *address;
-#endif
 
 @property (nonatomic, copy, nullable) NSString *addressLine1;
 @property (nonatomic, copy, nullable) NSString *addressLine2;

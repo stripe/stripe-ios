@@ -26,7 +26,7 @@
 
 @implementation STPCard
 
-@dynamic number, cvc, expMonth, expYear, currency, name, addressLine1, addressLine2, addressCity, addressState, addressZip, addressCountry;
+@dynamic number, cvc, expMonth, expYear, currency, name, address, addressLine1, addressLine2, addressCity, addressState, addressZip, addressCountry;
 
 - (instancetype)initWithID:(NSString *)stripeID
                      brand:(STPCardBrand)brand

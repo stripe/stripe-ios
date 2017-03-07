@@ -43,12 +43,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The view controller's delegate. This must be set before showing the view controller in order for it to work properly. @see STPAddCardViewControllerDelegate
  */
-@property(nonatomic, weak)id<STPAddCardViewControllerDelegate>delegate;
+@property(nonatomic, weak, nullable)id<STPAddCardViewControllerDelegate>delegate;
 
 /**
  *  You can set this property to pre-fill any information you've already collected from your user. @see STPUserInformation.h
  */
-@property(nonatomic)STPUserInformation *prefilledInformation;
+@property(nonatomic, strong, nullable)STPUserInformation *prefilledInformation;
 
 /**
  If you're using the token generated from STPAddCardViewController to make a Managed Account, you should set this property to the currency that account will use. Otherwise, you should leave it empty. For more information, see https://stripe.com/docs/api#create_card_token-card-currency
