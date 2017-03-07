@@ -108,7 +108,9 @@
 }
 
 - (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
-    [self.delegate textFieldTableViewCellDidBackspaceOnEmpty:self];
+    if ([self.delegate respondsToSelector:@selector(textFieldTableViewCellDidBackspaceOnEmpty:)]) {
+        [self.delegate textFieldTableViewCellDidBackspaceOnEmpty:self];
+    }
 }
 
 @end

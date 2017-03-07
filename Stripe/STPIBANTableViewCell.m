@@ -21,7 +21,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.textField.placeholder = STPLocalizedString(@"GB82WEST12345698765432", @"IBAN placeholder – don't translate");
+        self.textField.placeholder = STPLocalizedString(@"IBAN", @"IBAN placeholder – don't translate");
         self.textField.accessibilityLabel = self.textField.placeholder;
         self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorIBAN;
         self.textField.keyboardType = UIKeyboardTypeASCIICapable;

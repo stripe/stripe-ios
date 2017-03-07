@@ -9,6 +9,7 @@
 #import "STPAddressFieldTableViewCell.h"
 
 #import "STPCardValidator.h"
+#import "STPCountryPickerDataSource.h"
 #import "STPEmailAddressValidator.h"
 #import "STPLocalizationUtils.h"
 #import "STPPhoneNumberValidator.h"
@@ -19,7 +20,7 @@
 @property(nonatomic, weak) STPFormTextField *textField;
 @property(nonatomic) UIToolbar *inputAccessoryToolbar;
 @property(nonatomic) UIPickerView *countryPickerView;
-@property(nonatomic, strong) NSArray *countryCodes;
+@property(nonatomic, strong) STPCountryPickerDataSource *countryPickerDataSource;
 @property(nonatomic, weak)id<STPAddressFieldTableViewCellDelegate>delegate;
 @property(nonatomic, strong) NSString *ourCountryCode;
 @property(nonatomic, assign) STPPostalCodeType postalCodeType;
@@ -55,24 +56,14 @@
                                                                     action:@selector(nextTapped:)];
         toolbar.items = @[flexibleItem, nextItem];
         _inputAccessoryToolbar = toolbar;
-        
-        NSString *countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
-        NSMutableArray *otherCountryCodes = [[NSLocale ISOCountryCodes] mutableCopy];
-        NSLocale *locale = [NSLocale currentLocale];
-        [otherCountryCodes removeObject:countryCode];
-        [otherCountryCodes sortUsingComparator:^NSComparisonResult(NSString *code1, NSString *code2) {
-            NSString *localeID1 = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: code1}];
-            NSString *localeID2 = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: code2}];
-            NSString *name1 = [locale displayNameForKey:NSLocaleIdentifier value:localeID1];
-            NSString *name2 = [locale displayNameForKey:NSLocaleIdentifier value:localeID2];
-            return [name1 compare:name2];
-        }];
-        if (countryCode) {
-           _countryCodes = [@[@"", countryCode] arrayByAddingObjectsFromArray:otherCountryCodes];
+
+        STPCountryPickerDataSource *countryPickerDataSource = [[STPCountryPickerDataSource alloc] init];
+        if (type == STPAddressFieldTypeSEPACountry) {
+            NSArray *sepaCountries = [STPCountryPickerDataSource sepaCountryCodes];
+            countryPickerDataSource = [[STPCountryPickerDataSource alloc] initWithCountryCodes:sepaCountries];
         }
-        else {
-           _countryCodes = [@[@""] arrayByAddingObjectsFromArray:otherCountryCodes];
-        }
+        _countryPickerDataSource = countryPickerDataSource;
+
         UIPickerView *pickerView = [UIPickerView new];
         pickerView.dataSource = self;
         pickerView.delegate = self;
@@ -86,9 +77,8 @@
         if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCountryCode)]) {
             ourCountryCode = self.delegate.addressFieldTableViewCountryCode;
         }
-        
         if (ourCountryCode == nil) {
-            ourCountryCode = countryCode;
+            ourCountryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
         }
         [self delegateCountryCodeDidChange:ourCountryCode];
         [self updateAppearance];
@@ -147,9 +137,10 @@
             }
             break;
         case STPAddressFieldTypeCountry:
+        case STPAddressFieldTypeSEPACountry:
             self.textField.keyboardType = UIKeyboardTypeDefault;
             self.textField.inputView = self.countryPickerView;
-            NSInteger index = [self.countryCodes indexOfObject:self.contents];
+            NSInteger index = [self.countryPickerDataSource.countryCodes indexOfObject:self.contents];
             if (index == NSNotFound) {
                 self.textField.text = @"";
             }
@@ -217,6 +208,7 @@
                     ? STPLocalizedString(@"ZIP Code", @"Caption for Zip Code field on address form (only shown when country is United States only)")
                     : STPLocalizedString(@"Postal Code", @"Caption for Postal Code field on address form (only shown in countries other than the United States)"));
         case STPAddressFieldTypeCountry:
+        case STPAddressFieldTypeSEPACountry:
             return STPLocalizedString(@"Country", @"Caption for Country field on address form");
         case STPAddressFieldTypeEmail:
             return STPLocalizedString(@"Email", @"Caption for Email field on address form");
@@ -226,7 +218,7 @@
 }
 
 - (void)delegateCountryCodeDidChange:(NSString *)countryCode {
-    if (self.type == STPAddressFieldTypeCountry) {
+    if (self.type == STPAddressFieldTypeCountry || self.type == STPAddressFieldTypeSEPACountry) {
         self.contents = countryCode;
     }
     
@@ -325,6 +317,7 @@
         case STPAddressFieldTypeCity:
         case STPAddressFieldTypeState:
         case STPAddressFieldTypeCountry:
+        case STPAddressFieldTypeSEPACountry:
             return self.contents.length > 0;
         case STPAddressFieldTypeLine2:
             return YES;
@@ -346,6 +339,7 @@
         case STPAddressFieldTypeCity:
         case STPAddressFieldTypeState:
         case STPAddressFieldTypeCountry:
+        case STPAddressFieldTypeSEPACountry:
         case STPAddressFieldTypeLine2:
             return YES;
         case STPAddressFieldTypeZip: {
@@ -366,19 +360,17 @@
 
 #pragma mark - UIPickerView
 
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    self.ourCountryCode = self.countryCodes[row];
+- (void)pickerView:(__unused UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(__unused NSInteger)component {
+    self.ourCountryCode = [self.countryPickerDataSource valueForRow:row];
     self.contents = self.ourCountryCode;
-    self.textField.text = [self pickerView:pickerView titleForRow:row forComponent:component];
+    self.textField.text = [self.countryPickerDataSource titleForRow:row];
     if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCountryCode)]) {
         self.delegate.addressFieldTableViewCountryCode = self.ourCountryCode;
     }
 }
 
 - (NSString *)pickerView:(__unused UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(__unused NSInteger)component {
-    NSString *countryCode = self.countryCodes[row];
-    NSString *identifier = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: countryCode}];
-    return [[NSLocale autoupdatingCurrentLocale] displayNameForKey:NSLocaleIdentifier value:identifier];
+    return [self.countryPickerDataSource titleForRow:row];
 }
 
 - (NSInteger)numberOfComponentsInPickerView:(__unused UIPickerView *)pickerView {
@@ -386,7 +378,7 @@
 }
 
 - (NSInteger)pickerView:(__unused UIPickerView *)pickerView numberOfRowsInComponent:(__unused NSInteger)component {
-    return self.countryCodes.count;
+    return [self.countryPickerDataSource numberOfRows];
 }
 
 @end

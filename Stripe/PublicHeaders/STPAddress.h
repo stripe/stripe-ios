@@ -104,6 +104,7 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 
 - (BOOL)containsRequiredFields:(STPBillingAddressFields)requiredFields;
 - (BOOL)containsRequiredShippingAddressFields:(PKAddressField)requiredFields;
+- (BOOL)containsRequiredSEPADebitFields;
 
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
 

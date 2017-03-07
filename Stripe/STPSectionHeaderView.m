@@ -8,12 +8,45 @@
 
 #import "STPSectionHeaderView.h"
 
+#import "STPAddressViewModel.h"
+#import "STPLocalizationUtils.h"
+#import "STPPaymentConfiguration.h"
+
 @interface STPSectionHeaderView()
 @property(nonatomic, weak)UILabel *label;
 @property(nonatomic)UIEdgeInsets buttonInsets;
 @end
 
 @implementation STPSectionHeaderView
+
++ (instancetype)addressHeaderWithConfiguration:(STPPaymentConfiguration *)config
+                                    sourceType:(STPSourceType)sourceType
+                              addressViewModel:(STPAddressViewModel *)addressViewModel
+                               shippingAddress:(STPAddress *)shippingAddress {
+    STPSectionHeaderView *headerView = [STPSectionHeaderView new];
+    headerView.title = STPLocalizedString(@"Billing Address", @"Title for billing address entry section");
+    switch (config.shippingType) {
+        case STPShippingTypeShipping:
+            [headerView.button setTitle:STPLocalizedString(@"Use Shipping", @"Button to fill billing address from shipping address.")
+                                      forState:UIControlStateNormal];
+            break;
+        case STPShippingTypeDelivery:
+            [headerView.button setTitle:STPLocalizedString(@"Use Delivery", @"Button to fill billing address from delivery address.")
+                                      forState:UIControlStateNormal];
+            break;
+    }
+    BOOL needsAddress = !addressViewModel.isValid;
+    switch (sourceType) {
+        case STPSourceTypeCard:
+            needsAddress = needsAddress && config.requiredBillingAddressFields != STPBillingAddressFieldsNone;
+            break;
+        default:
+            break;
+    }
+    headerView.buttonHidden = !(needsAddress && shippingAddress != nil);
+    [headerView setNeedsLayout];
+    return headerView;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
