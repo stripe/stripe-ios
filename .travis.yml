@@ -1,8 +1,8 @@
 language: objective-c
 osx_image: xcode8.2
-branches:
-  only:
-    - master
+# branches:
+#   only:
+#     - master
 env:
   matrix:
   - TEST_TYPE=installation_manual
