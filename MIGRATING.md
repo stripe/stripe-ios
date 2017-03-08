@@ -2,6 +2,10 @@
 
 ### Migrating from versions < 10.0
 
+- Methods deprecated in Version 6.0 have now been removed.
+- The `STPSource` protocol has been renamed `STPSourceProtocol`.
+- `STPSource` is now a model object representing a source from the Stripe API. https://stripe.com/docs/sources
+- `STPCustomer` will now include `STPSource` objects in its `sources` array if a customer has attached sources.
 - `STPErrorCode` and `STPCardErrorCode` are now first class Swift enums (before, their types were `Int` and `String`, respectively)
 
 ### Migrating from versions < 9.0

@@ -1,3 +1,12 @@
+== 10.0.0 2017-03-06
+* Adds support for creating, retrieving, and polling Sources. You can enable any payment methods available to you in the Dashboard.
+  * https://stripe.com/docs/mobile/ios/sources
+  * https://dashboard.stripe.com/account/payments/settings
+* Updates the Objective-C example app to include example integrations using several different payment methods.
+* Updates `STPCustomer` to include `STPSource` objects in its `sources` array if a customer has attached sources.
+* Removes methods deprecated in Version 6.0.
+* Fixes property declarations missing strong/nullable identifiers.
+
 == 9.4.0 2017-02-03
 * Adds button to billing/shipping entry screens to fill address information from the other one.
 * Fixes and unifies view controller behavior around theming and nav bars.
