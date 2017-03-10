@@ -22,6 +22,7 @@
     card.expMonth = 6;
     card.expYear = 2018;
     card.currency = @"usd";
+    card.name = @"Jenny Rosen";
     card.addressLine1 = @"123 Fake Street";
     card.addressLine2 = @"Apartment 4";
     card.addressCity = @"New York";
@@ -35,13 +36,14 @@
     XCTAssertEqual(sourceCard[@"cvc"], card.cvc);
     XCTAssertEqual(sourceCard[@"exp_month"], @(card.expMonth));
     XCTAssertEqual(sourceCard[@"exp_year"], @(card.expYear));
+    XCTAssertEqualObjects(source.owner[@"name"], card.name);
     NSDictionary *sourceAddress = source.owner[@"address"];
-    XCTAssertEqual(sourceAddress[@"line1"], card.addressLine1);
-    XCTAssertEqual(sourceAddress[@"line2"], card.addressLine2);
-    XCTAssertEqual(sourceAddress[@"city"], card.addressCity);
-    XCTAssertEqual(sourceAddress[@"state"], card.addressState);
-    XCTAssertEqual(sourceAddress[@"postal_code"], card.addressZip);
-    XCTAssertEqual(sourceAddress[@"country"], card.addressCountry);
+    XCTAssertEqualObjects(sourceAddress[@"line1"], card.addressLine1);
+    XCTAssertEqualObjects(sourceAddress[@"line2"], card.addressLine2);
+    XCTAssertEqualObjects(sourceAddress[@"city"], card.addressCity);
+    XCTAssertEqualObjects(sourceAddress[@"state"], card.addressState);
+    XCTAssertEqualObjects(sourceAddress[@"postal_code"], card.addressZip);
+    XCTAssertEqualObjects(sourceAddress[@"country"], card.addressCountry);
 }
 
 @end
