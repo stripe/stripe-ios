@@ -14,6 +14,8 @@
 #import "STPDispatchFunctions.h"
 #import "NSMutableURLRequest+Stripe.h"
 
+#define FAUXPAS_IGNORED_IN_METHOD(...)
+
 static NSString * STPStripeFileUploadPath = @"https://uploads.stripe.com/v1/files";
 
 @interface STPFileClient ()
