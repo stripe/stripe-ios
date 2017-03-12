@@ -21,7 +21,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"File creation for identity document"];
     
-    UIImage *image = [UIImage imageNamed:@"mclovin" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
+    UIImage *image = [UIImage imageNamed:@"license" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
     
     [client uploadImage:image
                 purpose:STPFilePurposeIdentityDocument
@@ -44,7 +44,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"File creation for dispute evidence"];
     
-    UIImage *image = [UIImage imageNamed:@"mclovin" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
+    UIImage *image = [UIImage imageNamed:@"license" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
     
     [client uploadImage:image
                 purpose:STPFilePurposeDisputeEvidence
@@ -67,7 +67,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Bad file creation"];
     
-    UIImage *image = [UIImage imageNamed:@"mclovin" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
+    UIImage *image = [UIImage imageNamed:@"license" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
     
     [client uploadImage:image
                  purpose:STPFilePurposeIdentityDocument
