@@ -7,17 +7,20 @@
 //
 
 #import "STPSMSCodeViewController.h"
-#import "STPSMSCodeTextField.h"
+
 #import "STPCheckoutAPIClient.h"
-#import "STPTheme.h"
+#import "STPColorUtils.h"
+#import "STPCoreScrollViewController+Private.h"
+#import "STPLocalizationUtils.h"
 #import "STPPaymentActivityIndicatorView.h"
+#import "STPPhoneNumberValidator.h"
+#import "STPSMSCodeTextField.h"
+#import "STPTheme.h"
+#import "STPWeakStrongMacros.h"
 #import "StripeError.h"
 #import "UIBarButtonItem+Stripe.h"
+#import "UINavigationBar+Stripe_Theme.h"
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
-#import "STPPhoneNumberValidator.h"
-#import "STPColorUtils.h"
-#import "STPWeakStrongMacros.h"
-#import "STPLocalizationUtils.h"
 
 @interface STPSMSCodeViewController()<STPSMSCodeTextFieldDelegate>
 
@@ -26,7 +29,6 @@
 @property(nonatomic)NSString *redactedPhone;
 @property(nonatomic)NSTimer *hideSMSSentLabelTimer;
 
-@property(nonatomic, weak)UIScrollView *scrollView;
 @property(nonatomic, weak)UILabel *topLabel;
 @property(nonatomic, weak)STPSMSCodeTextField *codeField;
 @property(nonatomic, weak)UILabel *bottomLabel;
@@ -44,12 +46,11 @@
 - (instancetype)initWithCheckoutAPIClient:(STPCheckoutAPIClient *)checkoutAPIClient
                              verification:(STPCheckoutAPIVerification *)verification
                             redactedPhone:(NSString *)redactedPhone {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [super init];
     if (self) {
         _checkoutAPIClient = checkoutAPIClient;
         _verification = verification;
         _redactedPhone = redactedPhone;
-        _theme = [STPTheme new];
     }
     return self;
 }
@@ -58,16 +59,11 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel)];
+- (void)createAndSetupViews {
+    [super createAndSetupViews];
+
     self.navigationItem.title = STPLocalizedString(@"Verification Code", 
                                                    @"Title for SMS verification code screen");
-    
-    UIScrollView *scrollView = [UIScrollView new];
-    [self.view addSubview:scrollView];
-    self.scrollView = scrollView;
     
     UILabel *topLabel = [UILabel new];
     topLabel.text = STPLocalizedString(@"Enter the verification code to use the payment info you stored with Stripe.", nil);
@@ -153,15 +149,9 @@
     }
 }
 
-- (void)setTheme:(STPTheme *)theme {
-    _theme = theme;
-    [self updateAppearance];
-}
-
 - (void)updateAppearance {
-    [self.navigationItem.leftBarButtonItem stp_setTheme:self.theme];
-    [self.navigationItem.rightBarButtonItem stp_setTheme:self.theme];
-    self.view.backgroundColor = self.theme.primaryBackgroundColor;
+    [super updateAppearance];
+
     self.topLabel.font = self.theme.smallFont;
     self.topLabel.textColor = self.theme.secondaryForegroundColor;
     self.codeField.theme = self.theme;
@@ -176,23 +166,10 @@
     self.pasteFromClipboardButton.tintColor = self.theme.accentColor;
     self.pasteFromClipboardButton.titleLabel.font = self.theme.smallFont;
     self.activityIndicator.tintColor = self.theme.accentColor;
-    if ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor]) {
-        self.scrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
-    } else {
-        self.scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-    }
-    [self setNeedsStatusBarAppearanceUpdate];
-}
-
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    return ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor] 
-            ? UIStatusBarStyleDefault
-            : UIStatusBarStyleLightContent);
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.scrollView.frame = self.view.bounds;
     
     CGFloat padding = 20.0f;
     CGFloat contentWidth = self.view.bounds.size.width - (padding * 2);
@@ -317,6 +294,10 @@
                                              [self contentMaxY]);
     self.navigationItem.leftBarButtonItem.enabled = !loading;
     self.cancelButton.enabled = !loading;
+}
+
+- (void)handleBackOrCancelTapped:(__unused id)sender {
+    [self cancel];
 }
 
 - (void)cancel {

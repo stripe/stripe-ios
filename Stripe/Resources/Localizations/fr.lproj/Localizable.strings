@@ -43,6 +43,9 @@
 /* Title for delivery info form */
 "Delivery" = "Livraison";
 
+/* Title for delivery address entry section */
+"Delivery Address" = "Adresse de livraison";
+
 /* Button on SMS verification screen if the user did not receive the SMS code. */
 "Didn't receive the code?" = "Code non reçu ?";
 
@@ -71,7 +74,7 @@
 "Invalid Code" = "Code non valide";
 
 /* Shipping form error message */
-"Invalid Shipping Address" = "Adresse de livraison non valide";
+"Invalid Shipping Address" = "Adresse d'expédition incorrecte";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Chargement en cours...";
@@ -104,10 +107,13 @@
 "Save for use in other apps" = "Enregistrer pour une utilisation dans d’autres applications";
 
 /* Title for shipping info form */
-"Shipping" = "Livraison";
+"Shipping" = "Expédition";
+
+/* Title for shipping address entry section */
+"Shipping Address" = "Adresse d'expédition";
 
 /* Label for shipping method form */
-"Shipping Method" = "Mode de livraison";
+"Shipping Method" = "Mode d'expédition";
 
 /* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
 "Something went wrong with Remember Me: %@" = "Un problème est survenu avec \"Se souvenir de moi\" : %@";
@@ -135,6 +141,15 @@
 
 /* Error message when failing to type in SMS code for Remember me too many times. */
 "Too many incorrect attempts" = "Trop de tentatives incorrectes";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Utiliser adr. facturation";
+
+/* Button to fill billing address from delivery address */
+"Use Delivery" = "Utiliser adr. livraison";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Utiliser adr. expédition";
 
 /* Title for SMS verification code screen */
 "Verification Code" = "Code de vérification";

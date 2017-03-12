@@ -11,6 +11,14 @@
 @class STPPaymentConfiguration, STPToken;
 @protocol STPFormEncodable;
 
+typedef NS_ENUM(NSUInteger, STPAddCardRememberMeUsage) {
+    STPAddCardRememberMeUsageNotSelected        = 0,
+    STPAddCardRememberMeUsageSelected           = 1,
+    STPAddCardRememberMeUsageDeveloperDisabled  = 2,
+    STPAddCardRememberMeUsageIneligible         = 3,
+    STPAddCardRememberMeUsageAddedFromSMS       = 4,
+};
+
 @interface STPAnalyticsClient : NSObject
 
 + (instancetype)sharedClient;
@@ -19,9 +27,14 @@
 
 + (void)disableAnalytics;
 
-- (void)logRememberMeConversion:(BOOL)selected;
++ (NSString *)muid;
+
+- (void)logRememberMeConversion:(STPAddCardRememberMeUsage)selected;
 
 - (void)logTokenCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration;
+
+- (void)logSourceCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
+                                       sourceType:(NSString *)sourceType;
 
 - (void)logRUMWithToken:(STPToken *)token
           configuration:(STPPaymentConfiguration *)config

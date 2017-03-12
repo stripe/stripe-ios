@@ -24,9 +24,6 @@
         state = CFDictionaryGetValue(dict, kABPersonAddressStateKey);
         CFRelease(dict);
     }
-    if (!state) {
-        completion(nil, [NSError new]);
-    }
     if ([state isEqualToString:@"CA"]) {
         completion([self californiaShippingMethods], nil);
     } else {
@@ -36,26 +33,26 @@
 }
 
 - (NSArray *)californiaShippingMethods {
-    PKShippingMethod *normalItem =
-        [PKShippingMethod summaryItemWithLabel:@"Llama California Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"20.00"]];
-    normalItem.detail = @"3-5 Business Days";
-    normalItem.identifier = normalItem.label;
-    PKShippingMethod *expressItem =
-        [PKShippingMethod summaryItemWithLabel:@"Llama California Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"30.00"]];
-    expressItem.detail = @"Next Day";
-    expressItem.identifier = expressItem.label;
-    return @[normalItem, expressItem];
+    PKShippingMethod *upsGround = [[PKShippingMethod alloc] init];
+    upsGround.amount = [NSDecimalNumber decimalNumberWithString:@"0.00"];
+    upsGround.label = @"UPS Ground";
+    upsGround.detail = @"Arrives in 3-5 days";
+    upsGround.identifier = @"ups_ground";
+    PKShippingMethod *fedex = [[PKShippingMethod alloc] init];
+    fedex.amount = [NSDecimalNumber decimalNumberWithString:@"5.99"];
+    fedex.label = @"FedEx";
+    fedex.detail = @"Arrives tomorrow";
+    fedex.identifier = @"fedex";
+    return @[upsGround, fedex];
 }
 
 - (NSArray *)internationalShippingMethods {
-    PKShippingMethod *normalItem = [PKShippingMethod summaryItemWithLabel:@"Llama US Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"40.00"]];
-    normalItem.detail = @"3-5 Business Days";
-    normalItem.identifier = normalItem.label;
-    PKShippingMethod *expressItem =
-        [PKShippingMethod summaryItemWithLabel:@"Llama US Express Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"50.00"]];
-    expressItem.detail = @"Next Day";
-    expressItem.identifier = expressItem.label;
-    return @[normalItem, expressItem];
+    PKShippingMethod *upsWorldwide = [[PKShippingMethod alloc] init];
+    upsWorldwide.amount = [NSDecimalNumber decimalNumberWithString:@"10.99"];
+    upsWorldwide.label = @"UPS Worldwide Express";
+    upsWorldwide.detail = @"Arrives in 1-3 days";
+    upsWorldwide.identifier = @"ups_worldwide";
+    return [[self californiaShippingMethods] arrayByAddingObject:upsWorldwide];;
 }
 
 @end

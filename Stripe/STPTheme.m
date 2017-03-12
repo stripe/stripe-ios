@@ -10,6 +10,7 @@
 #import "STPColorUtils.h"
 
 @interface STPTheme()
+@property(nonatomic)NSNumber *internalBarStyle;
 @end
 
 static UIColor *STPThemeDefaultPrimaryBackgroundColor;
@@ -62,9 +63,6 @@ static UIFont  *STPThemeDefaultMediumFont;
         _font = STPThemeDefaultFont;
         _emphasisFont = STPThemeDefaultMediumFont;
         _translucentNavigationBar = NO;
-        // This is a sentinel value (the equivalent of nil).
-        // If unset, we return the default computed bar style
-        _barStyle = -1;
     }
     return self;
 }
@@ -140,14 +138,15 @@ static UIFont  *STPThemeDefaultMediumFont;
     }
 }
 
+- (void)setBarStyle:(UIBarStyle)barStyle {
+    _internalBarStyle = @(barStyle);
+}
+
 - (UIBarStyle)barStyle {
-    UIBarStyle defaultStyle = [self barStyleForColor:self.primaryBackgroundColor];
-    if (_barStyle < 0) {
-        return defaultStyle;
+    if (_internalBarStyle) {
+        return [_internalBarStyle integerValue];
     }
-    else {
-        return _barStyle;
-    }
+    return [self barStyleForColor:self.secondaryBackgroundColor];
 }
 
 - (id)copyWithZone:(__unused NSZone *)zone {

@@ -10,7 +10,7 @@
 #import "STPCustomer.h"
 #import "StripeError.h"
 #import "STPTestUtils.h"
-#import "STPSource.h"
+#import "STPSourceProtocol.h"
 
 @interface STPCustomerDeserializerTest : XCTestCase
 @end
@@ -36,7 +36,7 @@
 
 - (void)testInitWithData_validData {
     NSDictionary *customer = [STPTestUtils jsonNamed:@"Customer"];
-    NSData *data = [NSJSONSerialization dataWithJSONObject:customer options:0 error:nil];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:customer options:(NSJSONWritingOptions)kNilOptions error:nil];
     STPCustomerDeserializer *sut = [[STPCustomerDeserializer alloc] initWithData:data
                                                                      urlResponse:nil
                                                                            error:nil];
@@ -56,16 +56,23 @@
 - (void)testInitWithJSONResponse_validJSON {
     NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:@"Card"] mutableCopy];
     card1[@"id"] = @"card_123";
+
     NSMutableDictionary *card2 = [[STPTestUtils jsonNamed:@"Card"] mutableCopy];
     card2[@"id"] = @"card_456";
+
     NSMutableDictionary *applePayCard1 = [[STPTestUtils jsonNamed:@"Card"] mutableCopy];
     applePayCard1[@"id"] = @"card_apple_pay1";
     applePayCard1[@"tokenization_method"] = @"apple_pay";
+
     NSMutableDictionary *applePayCard2 = [applePayCard1 mutableCopy];
     applePayCard2[@"id"] = @"card_apple_pay2";
+
+    NSDictionary *cardSource = [STPTestUtils jsonNamed:@"CardSource"];
+    NSDictionary *threeDSSource = [STPTestUtils jsonNamed:@"3DSSource"];
+
     NSMutableDictionary *customer = [[STPTestUtils jsonNamed:@"Customer"] mutableCopy];
     NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
-    sources[@"data"] = @[applePayCard1, card1, applePayCard2, card2];
+    sources[@"data"] = @[applePayCard1, card1, applePayCard2, card2, cardSource, threeDSSource];
     customer[@"default_source"] = card1[@"id"];
     customer[@"sources"] = sources;
 
@@ -73,10 +80,12 @@
     XCTAssertNotNil(sut.customer);
     XCTAssertNil(sut.error);
     XCTAssertEqualObjects(sut.customer.stripeID, customer[@"id"]);
-    XCTAssertTrue(sut.customer.sources.count == 2);
+    XCTAssertTrue(sut.customer.sources.count == 4);
     XCTAssertEqualObjects(sut.customer.sources[0].stripeID, card1[@"id"]);
     XCTAssertEqualObjects(sut.customer.sources[1].stripeID, card2[@"id"]);
     XCTAssertEqualObjects(sut.customer.defaultSource.stripeID, card1[@"id"]);
+    XCTAssertEqualObjects(sut.customer.sources[2].stripeID, cardSource[@"id"]);
+    XCTAssertEqualObjects(sut.customer.sources[3].stripeID, threeDSSource[@"id"]);
 }
 
 @end

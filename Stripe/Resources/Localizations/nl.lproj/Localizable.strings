@@ -43,6 +43,9 @@
 /* Title for delivery info form */
 "Delivery" = "Levering";
 
+/* Title for delivery address entry section */
+"Delivery Address" = "Bezorgadres";
+
 /* Button on SMS verification screen if the user did not receive the SMS code. */
 "Didn't receive the code?" = "Code niet ontvangen?";
 
@@ -106,6 +109,9 @@
 /* Title for shipping info form */
 "Shipping" = "Verzending";
 
+/* Title for shipping address entry section */
+"Shipping Address" = "Verzendadres";
+
 /* Label for shipping method form */
 "Shipping Method" = "Verzendmethode";
 
@@ -135,6 +141,15 @@
 
 /* Error message when failing to type in SMS code for Remember me too many times. */
 "Too many incorrect attempts" = "Te veel onjuiste pogingen";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Gebruik factureringsadres";
+
+/* Button to fill billing address from delivery address */
+"Use Delivery" = "Gebruik bezorgadres";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Gebruik verzendadres";
 
 /* Title for SMS verification code screen */
 "Verification Code" = "Verificatiecode";

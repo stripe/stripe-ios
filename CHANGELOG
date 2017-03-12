@@ -1,3 +1,31 @@
+== 10.0.0 2017-03-06
+* Adds support for creating, retrieving, and polling Sources. You can enable any payment methods available to you in the Dashboard.
+  * https://stripe.com/docs/mobile/ios/sources
+  * https://dashboard.stripe.com/account/payments/settings
+* Updates the Objective-C example app to include example integrations using several different payment methods.
+* Updates `STPCustomer` to include `STPSource` objects in its `sources` array if a customer has attached sources.
+* Removes methods deprecated in Version 6.0.
+* Fixes property declarations missing strong/nullable identifiers.
+
+== 9.4.0 2017-02-03
+* Adds button to billing/shipping entry screens to fill address information from the other one.
+* Fixes and unifies view controller behavior around theming and nav bars.
+* Adds month validity check to `validationStateForExpirationYear`
+* Changes some Apple Pay images to better conform to official guidelines.
+* Changes STPPaymentCardTextField's card number placeholder to "4242..."
+* Updates STPPaymentCardTextField's CVC placeholder so that it changes to "CVV" for Amex cards
+
+== 9.3.0 2017-01-05
+* Fixes a regression introduced in v9.0.0 in which color in STPTheme is used as the background color for UINavigationBar
+  * Note: This will cause navigation bar theming to work properly as described in the Stripe iOS docs, but you may need to audit your custom theme settings if you based them on the actual behavior of 9.0-9.2
+* If the navigation bar has a theme different than the view controller's theme, STP view controllers will use the bar's theme to style it's UIBarButtonItems
+* Adds a fallback to using main bundle for localized strings lookup if locale is set to a language the SDK doesn't support
+* Adds method to get a string of a card brand from `STPCardBrand`
+* Updated description of how to run tests in README
+* Fixes crash when user cancels payment before STPBackendAPIAdapter methods finish
+* Fixes bug where country picker wouldn't update when first selected.
+
+
 == 9.2.0 2016-11-14
 * Moves FBSnapshotTestCase dependency to Cartfile.private. No changes if you are not using Carthage.
 * Adds prebuilt UI for collecting shipping information.

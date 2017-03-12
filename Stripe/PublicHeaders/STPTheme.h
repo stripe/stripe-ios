@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- STPTheme objects can be used to visually style Stripe-provided UI. See https://stripe.com/docs/mobile/ios#theming for more information.
+ STPTheme objects can be used to visually style Stripe-provided UI. See https://stripe.com/docs/mobile/ios/standard#theming for more information.
  */
 @interface STPTheme : NSObject<NSCopying>
 
@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The navigation bar style to use for any view controllers presented modally
  *  by the SDK. The default value will be determined based on the brightness
- *  of the theme's `primaryBackgroundColor`.
+ *  of the theme's `secondaryBackgroundColor`.
  */
 @property(nonatomic)UIBarStyle barStyle;
 

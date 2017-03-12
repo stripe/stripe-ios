@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-#import "Stripe.h"
-#import "STPPaymentCardTextFieldViewModel.h"
 #import "STPFormTextField.h"
 #import "STPImageLibrary.h"
+#import "STPPaymentCardTextFieldViewModel.h"
 #import "STPWeakStrongMacros.h"
+#import "Stripe.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -120,8 +120,8 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     cvcField.tag = STPCardFieldTypeCVC;
     cvcField.alpha = 0;
     self.cvcField = cvcField;
-    self.cvcPlaceholder = @"CVC";
-    self.cvcField.accessibilityLabel = self.cvcPlaceholder;
+    self.cvcPlaceholder = nil;
+    self.cvcField.accessibilityLabel = [self defaultCVCPlaceholder];
     
     UIView *fieldsView = [[UIView alloc] init];
     fieldsView.clipsToBounds = YES;
@@ -376,6 +376,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     self.viewModel = [STPPaymentCardTextFieldViewModel new];
     [self onChange];
     [self updateImageForFieldType:STPCardFieldTypeNumber];
+    [self updateCVCPlaceholder];
     WEAK(self);
     [self setNumberFieldShrunk:NO animated:YES completion:^(__unused BOOL completed){
         STRONG(self);
@@ -447,7 +448,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     if ([self isFirstResponder]) {
         [[self nextFirstResponderField] becomeFirstResponder];
     }
-    
+
     // update the card image, falling back to the number field image if not editing
     if ([self.expirationField isFirstResponder]) {
         [self updateImageForFieldType:STPCardFieldTypeExpiration];
@@ -458,15 +459,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     else {
         [self updateImageForFieldType:STPCardFieldTypeNumber];
     }
-}
-
-- (STPCardParams *)card {
-    if (!self.isValid) { return nil; }
-    return self.cardParams;
-}
-
-- (void)setCard:(STPCardParams *)card {
-    [self setCardParams:card];
+    [self updateCVCPlaceholder];
 }
 
 - (void)setText:(NSString *)text inField:(STPCardFieldType)field {
@@ -672,6 +665,7 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     STPCardFieldType fieldType = formTextField.tag;
     if (fieldType == STPCardFieldTypeNumber) {
         [self updateImageForFieldType:fieldType];
+        [self updateCVCPlaceholder];
     }
     
     STPCardValidationState state = [self.viewModel validationStateForField:fieldType];
@@ -780,6 +774,24 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     }
 }
 
+- (NSString *)defaultCVCPlaceholder {
+    if (self.viewModel.brand == STPCardBrandAmex) {
+        return @"CVV";
+    } else {
+        return @"CVC";
+    }
+}
+
+- (void)updateCVCPlaceholder {
+    if (self.cvcPlaceholder) {
+        self.cvcField.placeholder = self.cvcPlaceholder;
+        self.cvcField.accessibilityLabel = self.cvcPlaceholder;
+    } else {
+        self.cvcField.placeholder = [self defaultCVCPlaceholder];
+        self.cvcField.accessibilityLabel = [self defaultCVCPlaceholder];
+    }
+}
+
 - (void)onChange {
     if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidChange:)]) {
         [self.delegate paymentCardTextFieldDidChange:self];
@@ -802,43 +814,3 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 }
 
 @end
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
-
-@implementation PTKCard
-@end
-
-@interface PTKView()
-@property(nonatomic, weak)id<PTKViewDelegate>internalDelegate;
-@end
-
-@implementation PTKView
-
-@dynamic delegate, card;
-
-- (void)setDelegate:(id<PTKViewDelegate> __nullable)delegate {
-    self.internalDelegate = delegate;
-}
-
-- (id<PTKViewDelegate> __nullable)delegate {
-    return self.internalDelegate;
-}
-
-- (void)onChange {
-    [super onChange];
-    [self.internalDelegate paymentView:self withCard:[self card] isValid:self.isValid];
-}
-
-- (PTKCard * __nonnull)card {
-    PTKCard *card = [[PTKCard alloc] init];
-    card.number = self.cardNumber;
-    card.expMonth = self.expirationMonth;
-    card.expYear = self.expirationYear;
-    card.cvc = self.cvc;
-    return card;
-}
-
-@end
-
-#pragma clang diagnostic pop

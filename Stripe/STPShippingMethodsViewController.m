@@ -7,26 +7,26 @@
 //
 
 #import "STPShippingMethodsViewController.h"
-#import "STPLocalizationUtils.h"
-#import "UIBarButtonItem+Stripe.h"
-#import "UIViewController+Stripe_NavigationItemProxy.h"
-#import "STPImageLibrary+Private.h"
-#import "STPColorUtils.h"
-#import "UITableViewCell+Stripe_Borders.h"
+
 #import "NSArray+Stripe_BoundSafe.h"
+#import "STPColorUtils.h"
+#import "STPCoreTableViewController+Private.h"
+#import "STPImageLibrary+Private.h"
+#import "STPLocalizationUtils.h"
 #import "STPShippingMethodTableViewCell.h"
+#import "UIBarButtonItem+Stripe.h"
+#import "UINavigationBar+Stripe_Theme.h"
+#import "UITableViewCell+Stripe_Borders.h"
+#import "UIViewController+Stripe_NavigationItemProxy.h"
 
 static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMethodCellReuseIdentifier";
 
 @interface STPShippingMethodsViewController () <UITableViewDataSource, UITableViewDelegate>
 @property(nonatomic)NSArray<PKShippingMethod *>*shippingMethods;
 @property(nonatomic)PKShippingMethod *selectedShippingMethod;
-@property(nonatomic)STPTheme *theme;
 @property(nonatomic)NSString *currency;
-@property(nonatomic, weak)UITableView *tableView;
 @property(nonatomic, weak)UIImageView *imageView;
 @property(nonatomic)UIBarButtonItem *doneItem;
-@property(nonatomic)UIBarButtonItem *backItem;
 @end
 
 @implementation STPShippingMethodsViewController
@@ -35,7 +35,7 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
                  selectedShippingMethod:(PKShippingMethod *)selectedMethod
                                currency:(NSString *)currency
                                   theme:(STPTheme *)theme {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [super initWithTheme:theme];
     if (self) {
         _shippingMethods = methods;
         if (selectedMethod != nil && [methods indexOfObject:selectedMethod] != NSNotFound) {
@@ -44,78 +44,44 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
         else {
             _selectedShippingMethod = [methods stp_boundSafeObjectAtIndex:0];
         }
-        _theme = theme;
+
         _currency = currency;
         self.title = STPLocalizedString(@"Shipping", @"Title for shipping info form");
     }
     return self;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-    [tableView registerClass:[STPShippingMethodTableViewCell class] forCellReuseIdentifier:STPShippingMethodCellReuseIdentifier];
-    tableView.sectionHeaderHeight = 30;
-    [self.view addSubview:tableView];
-    self.tableView = tableView;
+- (void)createAndSetupViews {
+    [super createAndSetupViews];
+
+    [self.tableView registerClass:[STPShippingMethodTableViewCell class] forCellReuseIdentifier:STPShippingMethodCellReuseIdentifier];
+
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
     self.doneItem = doneItem;
-    self.backItem = [UIBarButtonItem stp_backButtonItemWithTitle:STPLocalizedString(@"Back", @"Text for back button") style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.stp_navigationItemProxy.rightBarButtonItem = doneItem;
+
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeShippingImage]];
     imageView.contentMode = UIViewContentModeCenter;
     imageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, imageView.bounds.size.height + (57 * 2));
     self.imageView = imageView;
+
     self.tableView.tableHeaderView = imageView;
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    [self updateAppearance];
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
 }
 
 - (void)updateAppearance {
-    self.view.backgroundColor = self.theme.primaryBackgroundColor;
-    [self.doneItem stp_setTheme:self.theme];
+    [super updateAppearance];
+
+    STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
+    [self.doneItem stp_setTheme:navBarTheme];
     self.tableView.allowsSelection = YES;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.backgroundColor = self.theme.primaryBackgroundColor;
-    if ([STPColorUtils colorIsBright:self.theme.primaryBackgroundColor]) {
-        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
-    } else {
-        self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-    }
+
     self.imageView.tintColor = self.theme.accentColor;
     for (UITableViewCell *cell in [self.tableView visibleCells]) {
         STPShippingMethodTableViewCell *shippingCell = (STPShippingMethodTableViewCell *)cell;
         [shippingCell setTheme:self.theme];
     }
-    [self setNeedsStatusBarAppearanceUpdate];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.tableView reloadData];
-    self.stp_navigationItemProxy.leftBarButtonItem = self.backItem;
-    if (self.navigationController.navigationBar.translucent) {
-        CGFloat insetTop = CGRectGetMaxY(self.navigationController.navigationBar.frame);
-        self.tableView.contentInset = UIEdgeInsetsMake(insetTop, 0, 0, 0);
-        self.tableView.scrollIndicatorInsets = self.tableView.contentInset;
-    } else {
-        self.tableView.contentInset = UIEdgeInsetsZero;
-        self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
-    }
-    CGPoint offset = self.tableView.contentOffset;
-    offset.y = -self.tableView.contentInset.top;
-    self.tableView.contentOffset = offset;
-}
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    self.tableView.frame = self.view.bounds;
-}
-
-- (void)cancel:(__unused id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)done:(__unused id)sender {

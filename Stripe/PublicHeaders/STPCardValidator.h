@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "STPCardParams.h"
 #import "STPCardBrand.h"
+#import "STPCardParams.h"
 #import "STPCardValidationState.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -54,7 +54,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSSet<NSNumber *>*)lengthsForCardBrand:(STPCardBrand)brand;
 + (NSInteger)maxLengthForCardBrand:(STPCardBrand)brand;
-+ (NSInteger)lengthForCardBrand:(STPCardBrand)brand __attribute__((deprecated("Card brands may have multiple lengths - use lengthsForCardBrand or maxLengthForCardBrand instead.")));
 
 /**
  *  The length of the final grouping of digits to use when formatting a card number for display. For example, Visa cards display their final 4 numbers, e.g. "4242", while American Express cards display their final 5 digits, e.g. "10005".
@@ -71,10 +70,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (STPCardValidationState)validationStateForExpirationMonth:(NSString *)expirationMonth;
 
 /**
- *  Validates an expiration year, passed as a string representing the final 2 digits of the year. This considers the period between the current year until 2099 as valid times. An example valid value would be "16" (assuming the current year, as determined by [NSDate date], is 2015). Will return STPCardValidationStateInvalid for a month/year combination that is earlier than the current date (i.e. @"15" and @"04" in October 2015. Example invalid values are "00", "a", and "13". Any 1-digit string will return STPCardValidationStateIncomplete.
+ *  Validates an expiration year, passed as a string representing the final 2 digits of the year. This considers the period between the current year until 2099 as valid times. An example valid year value would be "16" (assuming the current year, as determined by [NSDate date], is 2015). Will return STPCardValidationStateInvalid for a month/year combination that is earlier than the current date (i.e. @"15" and @"04" in October 2015). Example invalid year values are "00", "a", and "13". Any 1-digit year string will return STPCardValidationStateIncomplete.
  *
  *  @param expirationYear A string representing a 2-digit expiration year for a payment card.
- *  @param expirationMonth A string representing a 2-digit expiration month for a payment card. See -validationStateForExpirationMonth for the desired formatting of this string.
+ *  @param expirationMonth A string representing a valid 2-digit expiration month for a payment card. If the month is invalid (see -validationStateForExpirationMonth), this will return STPCardValidationStateInvalid.
  *
  *  @return STPCardValidationStateValid if the year is valid, STPCardValidationStateInvalid if the year is invalid, or STPCardValidationStateIncomplete if the year is a substring of a valid year (e.g. @"1" or @"2").
  */

@@ -54,14 +54,6 @@
     return [self.bankAccountId isEqualToString:bankAccount.bankAccountId];
 }
 
-- (BOOL)validated {
-    return self.status == STPBankAccountStatusValidated;
-}
-
-- (BOOL)disabled {
-    return self.status == STPBankAccountStatusErrored;
-}
-
 #pragma mark STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {

@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STPBankAccountParams.h"
+
 #import "STPAPIResponseDecodable.h"
+#import "STPBankAccountParams.h"
 
 typedef NS_ENUM(NSInteger, STPBankAccountStatus) {
     STPBankAccountStatusNew,
@@ -76,23 +77,5 @@ typedef NS_ENUM(NSInteger, STPBankAccountStatus) {
  *  The validation status of the bank account. @see STPBankAccountStatus
  */
 @property (nonatomic, readonly) STPBankAccountStatus status;
-
-/**
- *  Whether or not the bank account has been validated via microdeposits or other means.
- *  @deprecated Use status == STPBankAccountStatusValidated instead.
- */
-@property (nonatomic, readonly) BOOL validated __attribute__((deprecated("Use status == STPBankAccountStatusValidated instead.")));
-
-/**
- *  Whether or not the bank account is currently disabled.
- *  @deprecated Use status == STPBankAccountStatusErrored instead.
- */
-@property (nonatomic, readonly) BOOL disabled __attribute__((deprecated("Use status == STPBankAccountStatusErrored instead.")));
-
-#pragma mark - deprecated setters for STPBankAccountParams properties
-
-#define DEPRECATED_IN_FAVOR_OF_STPBANKACCOUNTPARAMS __attribute__((deprecated("For collecting your users' bank account details, you should use an STPBankAccountParams object instead of an STPBankAccount.")))
-
-- (void)setAccountNumber:(nullable NSString *)accountNumber DEPRECATED_IN_FAVOR_OF_STPBANKACCOUNTPARAMS;
 
 @end

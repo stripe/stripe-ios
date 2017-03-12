@@ -1,0 +1,36 @@
+{
+    "id": "src_123",
+    "object": "source",
+    "amount": null,
+    "client_secret": "src_client_secret_123",
+    "created": 1483575790,
+    "currency": null,
+    "flow": "none",
+    "livemode": false,
+    "metadata": {},
+    "owner": {
+        "address": null,
+        "email": null,
+        "name": null,
+        "phone": null,
+        "verified_address": null,
+        "verified_email": null,
+        "verified_name": null,
+        "verified_phone": null
+    },
+    "status": "chargeable",
+    "type": "card",
+    "usage": "reusable",
+    "card": {
+        "exp_month": 12,
+        "exp_year": 2018,
+        "brand": "Visa",
+        "country": "US",
+        "cvc_check": "unchecked",
+        "funding": "credit",
+        "last4": "4242",
+        "three_d_secure": "not_supported",
+        "address_line1_check": null,
+        "address_zip_check": null
+    }
+}

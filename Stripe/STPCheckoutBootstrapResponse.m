@@ -7,9 +7,9 @@
 //
 
 #import "STPCheckoutBootstrapResponse.h"
+
 #import "STPAPIClient.h"
 #import "STPAPIClient+Private.h"
-
 
 @interface STPCheckoutBootstrapResponse()
 
@@ -32,7 +32,7 @@
     if (httpResponse.statusCode != 200) {
         return nil;
     }
-    NSDictionary *object = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    NSDictionary *object = [NSJSONSerialization JSONObjectWithData:data options:(NSJSONReadingOptions)kNilOptions error:nil];
     if (![object isKindOfClass:[NSDictionary class]]) {
         return nil;
     }

@@ -8,6 +8,9 @@
     <script src="js/jquery.min.js" defer></script>
     <script src="js/jazzy.js" defer></script>
     
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
   </head>
   <body>
 
@@ -20,6 +23,12 @@
           Stripe Docs
         </a>
         
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
       </p>
     
         <p class="header-col header-col--secondary">
@@ -79,6 +88,15 @@
                 <a class="nav-group-task-link" href="Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes.html#/c:objc(cs)STPCoreScrollViewController">STPCoreScrollViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes.html#/c:objc(cs)STPCoreTableViewController">STPCoreTableViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPCoreViewController.html">STPCoreViewController</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPCustomer.html">STPCustomer</a>
               </li>
               <li class="nav-group-task">
@@ -107,6 +125,30 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSource.html">STPSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSourceCardDetails.html">STPSourceCardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSourceOwner.html">STPSourceOwner</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSourceParams.html">STPSourceParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSourceReceiver.html">STPSourceReceiver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSourceRedirect.html">STPSourceRedirect</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSourceSEPADebitDetails.html">STPSourceSEPADebitDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPSourceVerification.html">STPSourceVerification</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPTheme.html">STPTheme</a>
@@ -157,6 +199,24 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPShippingType.html">STPShippingType</a>
               </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums.html#/c:@E@STPSourceFlow">STPSourceFlow</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums.html#/c:@E@STPSourceRedirectStatus">STPSourceRedirectStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums.html#/c:@E@STPSourceStatus">STPSourceStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums.html#/c:@E@STPSourceType">STPSourceType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums.html#/c:@E@STPSourceUsage">STPSourceUsage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums.html#/c:@E@STPSourceVerificationStatus">STPSourceVerificationStatus</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -187,16 +247,13 @@
                 <a class="nav-group-task-link" href="Protocols/STPShippingAddressViewControllerDelegate.html">STPShippingAddressViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Protocols/STPSource.html">STPSource</a>
+                <a class="nav-group-task-link" href="Protocols/STPSourceProtocol.html">STPSourceProtocol</a>
               </li>
             </ul>
           </li>
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPAPIClient.h@T@STPCompletionBlock">STPCompletionBlock</a>
-              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
@@ -205,6 +262,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPShippingMethodsCompletionBlock">STPShippingMethodsCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -261,7 +321,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L50-L69">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L49-L68">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -279,8 +339,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A top-level class that imports the rest of the Stripe SDK. This class used to contain several methods to create Stripe tokens, but those are now deprecated in
-favor of STPAPIClient.</p>
+                        <p>A top-level class that imports the rest of the Stripe SDK.</p>
 
                         <a href="Classes/Stripe.html" class="slightly-smaller">See more</a>
                       </div>
@@ -298,7 +357,7 @@ favor of STPAPIClient.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L27-L47">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L26-L46">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -328,17 +387,17 @@ favor of STPAPIClient.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPAddCardViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPAddCardViewController</span> <span class="p">:</span> <span class="nc"><a href="Classes.html#/c:objc(cs)STPCoreTableViewController">STPCoreTableViewController</a></span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPAddCardViewController</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPAddCardViewController</span> <span class="p">:</span> <span class="kt"><a href="Classes.html#/c:objc(cs)STPCoreTableViewController">STPCoreTableViewController</a></span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddCardViewController.h#L25-L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddCardViewController.h#L27-L58">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -368,17 +427,17 @@ favor of STPAPIClient.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPAddress</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPAddress</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="o">&gt;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPAddress</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPAddress</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">STPAPIResponseDecodable</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddress.h#L45-L105">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddress.h#L50-L110">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -451,7 +510,7 @@ favor of STPAPIClient.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPBankAccount</span> <span class="p">:</span> <span class="nc">STPBankAccountParams</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPBankAccount</span> <span class="p">:</span> <span class="nc"><a href="Classes/STPBankAccountParams.html">STPBankAccountParams</a></span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="o">&gt;</span></code></pre>
 
                         </div>
                         <div class="language">
@@ -461,7 +520,7 @@ favor of STPAPIClient.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L23-L98">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPBankAccount.h#L24-L81">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -532,18 +591,18 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPCard</span>
-    <span class="p">:</span> <span class="nc">STPCardParams</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="p">,</span> <span class="n"><a href="Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span> <span class="n"><a href="Protocols/STPSource.html">STPSource</a></span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPCard</span> <span class="p">:</span> <span class="nc"><a href="Classes/STPCardParams.html">STPCardParams</a></span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="p">,</span> <span class="n"><a href="Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span>
+                                    <span class="n"><a href="Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="o">&gt;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPCard</span> <span class="p">:</span> <span class="kt"><a href="Classes/STPCardParams.html">STPCardParams</a></span><span class="p">,</span> <span class="kt">STPAPIResponseDecodable</span><span class="p">,</span> <span class="kt"><a href="Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/STPSource.html">STPSource</a></span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPCard</span> <span class="p">:</span> <span class="kt"><a href="Classes/STPCardParams.html">STPCardParams</a></span><span class="p">,</span> <span class="kt">STPAPIResponseDecodable</span><span class="p">,</span> <span class="kt"><a href="Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L32-L166">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L32-L145">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -584,7 +643,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardParams.h#L19-L98">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardParams.h#L19-L70">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -624,7 +683,124 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L20-L117">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L20-L116">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPCoreScrollViewController"></a>
+                    <a name="//apple_ref/objc/Class/STPCoreScrollViewController" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCoreScrollViewController">STPCoreScrollViewController</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the base class for all Stripe scroll view controllers. It is intended 
+for use only by Stripe classes, you should not subclass it yourself in your app.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPCoreScrollViewController</span> <span class="p">:</span> <span class="nc"><a href="Classes/STPCoreViewController.html">STPCoreViewController</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCoreScrollViewController.h#L17-L19">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPCoreTableViewController"></a>
+                    <a name="//apple_ref/objc/Class/STPCoreTableViewController" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCoreTableViewController">STPCoreTableViewController</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the base class for all Stripe scroll view controllers. It is intended
+for use only by Stripe classes, you should not subclass it yourself in your app.</p>
+
+<p>It inherits from STPCoreScrollViewController and changes the type of the
+created scroll view to UITableView, as well as other shared table view logic.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPCoreTableViewController</span> <span class="p">:</span> <span class="nc"><a href="Classes.html#/c:objc(cs)STPCoreScrollViewController">STPCoreScrollViewController</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCoreTableViewController.h#L20-L22">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPCoreViewController"></a>
+                    <a name="//apple_ref/objc/Class/STPCoreViewController" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCoreViewController">STPCoreViewController</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the base class for all Stripe view controllers. It is intended for use
+only by Stripe classes, you should not subclass it yourself in your app.</p>
+
+<p>It theming, back/cancel button management, and other shared logic for
+Stripe view controllers.</p>
+
+                        <a href="Classes/STPCoreViewController.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPCoreViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPCoreViewController</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCoreViewController.h#L22-L51">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -820,7 +996,7 @@ then create Stripe tokens with them using an STPAPIClient. - see: <a href="https
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L68-L271">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L68-L269">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -892,7 +1068,7 @@ is specific to a single particular payment instance.</p>
 
 <p><code>STPPaymentContext</code> also provides a unified interface to multiple payment methods - for example, you can write a single integration to accept both credit card payments and Apple Pay.</p>
 
-<p><code>STPPaymentContext</code> requires an <q>API Adapter</q> to communicate with your backend API to retrieve and modify a customer&rsquo;s payment methods - see <a href="https://stripe.com/docs/mobile/ios#prepare-your-api">https://stripe.com/docs/mobile/ios#prepare-your-api</a> for how to implement this. You can also look at CheckoutViewController.swift in our example app to see <code>STPPaymentContext</code> in action.</p>
+<p><code>STPPaymentContext</code> requires an <q>API Adapter</q> to communicate with your backend API to retrieve and modify a customer&rsquo;s payment methods - see <a href="https://stripe.com/docs/mobile/ios/standard#prepare-your-api">https://stripe.com/docs/mobile/ios/standard#prepare-your-api</a> for how to implement this. You can also look at CheckoutViewController.swift in our example app to see <code>STPPaymentContext</code> in action.</p>
 
                         <a href="Classes/STPPaymentContext.html" class="slightly-smaller">See more</a>
                       </div>
@@ -910,7 +1086,7 @@ is specific to a single particular payment instance.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L31-L176">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L32-L177">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -932,7 +1108,7 @@ is specific to a single particular payment instance.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This view controller presents a list of payment method options to the user, which they can select between. They can also add credit cards to the list. It must be displayed inside a <code>UINavigationController</code>, so you can either create a <code>UINavigationController</code> with an <code>STPPaymentMethodsViewController</code> as the <code>rootViewController</code> and then present the <code>UINavigationController</code>, or push a new <code>STPPaymentMethodsViewController</code> onto an existing <code>UINavigationController</code>&rsquo;s stack. You can also have <code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code> do this for you automatically, by calling <code>presentPaymentMethodsViewController</code> or <code>pushPaymentMethodsViewController</code> on it.</p>
+                        <p>This view controller presents a list of payment method options to the user, which they can select between. They can also add credit cards to the list. It must be displayed inside a <code>UINavigationController</code>, so you can either create a <code>UINavigationController</code> with an <code>STPPaymentMethodsViewController</code> as the <code>rootViewController</code> and then present the <code>UINavigationController</code>, or push a new <code>STPPaymentMethodsViewController</code> onto an existing <code>UINavigationController</code>&lsquo;s stack. You can also have <code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code> do this for you automatically, by calling <code>presentPaymentMethodsViewController</code> or <code>pushPaymentMethodsViewController</code> on it.</p>
 
                         <a href="Classes/STPPaymentMethodsViewController.html" class="slightly-smaller">See more</a>
                       </div>
@@ -940,17 +1116,17 @@ is specific to a single particular payment instance.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPPaymentMethodsViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPPaymentMethodsViewController</span> <span class="p">:</span> <span class="nc"><a href="Classes/STPCoreViewController.html">STPCoreViewController</a></span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPPaymentMethodsViewController</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPPaymentMethodsViewController</span> <span class="p">:</span> <span class="kt"><a href="Classes/STPCoreViewController.html">STPCoreViewController</a></span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L24-L63">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L25-L64">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1020,7 +1196,7 @@ is specific to a single particular payment instance.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPShippingAddressViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPShippingAddressViewController</span> <span class="p">:</span> <span class="nc"><a href="Classes.html#/c:objc(cs)STPCoreTableViewController">STPCoreTableViewController</a></span></code></pre>
 
                         </div>
                         <div class="language">
@@ -1030,7 +1206,330 @@ is specific to a single particular payment instance.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPShippingAddressViewController.h#L20-L63">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPShippingAddressViewController.h#L21-L64">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSource"></a>
+                    <a name="//apple_ref/objc/Class/STPSource" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSource">STPSource</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Representation of a customer&rsquo;s payment instrument created with the Stripe API. - see: <a href="https://stripe.com/docs/api#sources">https://stripe.com/docs/api#sources</a></p>
+
+                        <a href="Classes/STPSource.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPSource</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="p">,</span> <span class="n"><a href="Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPSource</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">STPAPIResponseDecodable</span><span class="p">,</span> <span class="kt"><a href="Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSource.h#L85-L179">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceCardDetails"></a>
+                    <a name="//apple_ref/objc/Class/STPSourceCardDetails" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceCardDetails">STPSourceCardDetails</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This class provides typed access to the contents of an STPSource <code>details</code>
+dictionary for card sources.</p>
+
+                        <a href="Classes/STPSourceCardDetails.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPSourceCardDetails</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPSourceCardDetails</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">STPAPIResponseDecodable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceCardDetails.h#L27-L70">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceOwner"></a>
+                    <a name="//apple_ref/objc/Class/STPSourceOwner" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceOwner">STPSourceOwner</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Information about a source&rsquo;s owner.</p>
+
+                        <a href="Classes/STPSourceOwner.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPSourceOwner</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPSourceOwner</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">STPAPIResponseDecodable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceOwner.h#L17-L64">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams"></a>
+                    <a name="//apple_ref/objc/Class/STPSourceParams" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams">STPSourceParams</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An object representing parameters used to create a Source object. 
+- see: <a href="https://stripe.com/docs/api#create_source">https://stripe.com/docs/api#create_source</a></p>
+
+                        <a href="Classes/STPSourceParams.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPSourceParams</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n"><a href="Protocols/STPFormEncodable.html">STPFormEncodable</a></span><span class="p">,</span> <span class="n">NSCopying</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPSourceParams</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/STPFormEncodable.html">STPFormEncodable</a></span><span class="p">,</span> <span class="kt">NSCopying</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L22-L205">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceReceiver"></a>
+                    <a name="//apple_ref/objc/Class/STPSourceReceiver" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceReceiver">STPSourceReceiver</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Information related to a source&rsquo;s receiver flow.</p>
+
+                        <a href="Classes/STPSourceReceiver.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPSourceReceiver</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPSourceReceiver</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">STPAPIResponseDecodable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceReceiver.h#L15-L42">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceRedirect"></a>
+                    <a name="//apple_ref/objc/Class/STPSourceRedirect" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceRedirect">STPSourceRedirect</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Information related to a source&rsquo;s redirect flow.</p>
+
+                        <a href="Classes/STPSourceRedirect.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPSourceRedirect</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPSourceRedirect</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">STPAPIResponseDecodable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceRedirect.h#L25-L47">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceSEPADebitDetails"></a>
+                    <a name="//apple_ref/objc/Class/STPSourceSEPADebitDetails" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceSEPADebitDetails">STPSourceSEPADebitDetails</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This class provides typed access to the contents of an STPSource <code>details</code>
+dictionary for SEPA Debit sources.</p>
+
+                        <a href="Classes/STPSourceSEPADebitDetails.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPSourceSEPADebitDetails</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPSourceSEPADebitDetails</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">STPAPIResponseDecodable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceSEPADebitDetails.h#L19-L57">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceVerification"></a>
+                    <a name="//apple_ref/objc/Class/STPSourceVerification" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceVerification">STPSourceVerification</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Information related to a source&rsquo;s verification flow.</p>
+
+                        <a href="Classes/STPSourceVerification.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPSourceVerification</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPSourceVerification</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">STPAPIResponseDecodable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceVerification.h#L25-L42">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1052,7 +1551,7 @@ is specific to a single particular payment instance.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>STPTheme objects can be used to visually style Stripe-provided UI. See <a href="https://stripe.com/docs/mobile/ios#theming">https://stripe.com/docs/mobile/ios#theming</a> for more information.</p>
+                        <p>STPTheme objects can be used to visually style Stripe-provided UI. See <a href="https://stripe.com/docs/mobile/ios/standard#theming">https://stripe.com/docs/mobile/ios/standard#theming</a> for more information.</p>
 
                         <a href="Classes/STPTheme.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1100,12 +1599,12 @@ is specific to a single particular payment instance.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPToken</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="p">,</span> <span class="n"><a href="Protocols/STPSource.html">STPSource</a></span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPToken</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">STPAPIResponseDecodable</span><span class="p">,</span> <span class="n"><a href="Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="o">&gt;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPToken</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">STPAPIResponseDecodable</span><span class="p">,</span> <span class="kt"><a href="Protocols/STPSource.html">STPSource</a></span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPToken</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">STPAPIResponseDecodable</span><span class="p">,</span> <span class="kt"><a href="Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span></code></pre>
 
                         </div>
                       </div>
@@ -1140,17 +1639,17 @@ is specific to a single particular payment instance.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPUserInformation</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPUserInformation</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">NSCopying</span><span class="o">&gt;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPUserInformation</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPUserInformation</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSCopying</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPUserInformation.h#L16-L28">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPUserInformation.h#L17-L35">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1163,8 +1662,8 @@ is specific to a single particular payment instance.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2016 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2016-11-14)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-03-03)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

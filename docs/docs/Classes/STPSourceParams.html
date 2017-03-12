@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>STPSourceParams Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/objc/Class/STPSourceParams" class="dashAnchor"></a>
+
+    <a title="STPSourceParams Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          Stripe Docs
+        </a>
+        
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/stripe/stripe-ios">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">Stripe Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      STPSourceParams Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Categories.html">Categories</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Categories/UINavigationBar(Stripe_Theme).html">UINavigationBar(Stripe_Theme)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAPIClient.html">STPAPIClient</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAddCardViewController.html">STPAddCardViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPAddress.html">STPAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPApplePayPaymentMethod">STPApplePayPaymentMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPBankAccount.html">STPBankAccount</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPBankAccountParams.html">STPBankAccountParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCard.html">STPCard</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCardParams.html">STPCardParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCardValidator.html">STPCardValidator</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPCoreScrollViewController">STPCoreScrollViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPCoreTableViewController">STPCoreTableViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCoreViewController.html">STPCoreViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCustomer.html">STPCustomer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPImageLibrary.html">STPImageLibrary</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentContext.html">STPPaymentContext</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentResult.html">STPPaymentResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSource.html">STPSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceCardDetails.html">STPSourceCardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceOwner.html">STPSourceOwner</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceParams.html">STPSourceParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceReceiver.html">STPSourceReceiver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceRedirect.html">STPSourceRedirect</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceSEPADebitDetails.html">STPSourceSEPADebitDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceVerification.html">STPSourceVerification</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPTheme.html">STPTheme</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPToken.html">STPToken</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPUserInformation.html">STPUserInformation</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Stripe.html">Stripe</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Constants.html">Constants</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@StripeDomain">StripeDomain</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPBillingAddressFields.html">STPBillingAddressFields</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPCardBrand">STPCardBrand</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPCardFundingType">STPCardFundingType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPCardValidationState">STPCardValidationState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentMethodType.html">STPPaymentMethodType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentStatus.html">STPPaymentStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPShippingStatus.html">STPShippingStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPShippingType.html">STPShippingType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPSourceFlow">STPSourceFlow</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPSourceRedirectStatus">STPSourceRedirectStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPSourceStatus">STPSourceStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPSourceType">STPSourceType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPSourceUsage">STPSourceUsage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPSourceVerificationStatus">STPSourceVerificationStatus</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPAddCardViewControllerDelegate.html">STPAddCardViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPFormEncodable.html">STPFormEncodable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPPaymentCardTextFieldDelegate.html">STPPaymentCardTextFieldDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPPaymentContextDelegate.html">STPPaymentContextDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPPaymentMethodsViewControllerDelegate.html">STPPaymentMethodsViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPShippingAddressViewControllerDelegate.html">STPShippingAddressViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Type Definitions.html">Type Definitions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPShippingMethodsCompletionBlock">STPShippingMethodsCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPVoidBlock">STPVoidBlock</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>STPSourceParams</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPSourceParams</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n"><a href="../Protocols/STPFormEncodable.html">STPFormEncodable</a></span><span class="p">,</span> <span class="n">NSCopying</span><span class="o">&gt;</span></code></pre>
+
+                </div>
+              </div>
+            <p>An object representing parameters used to create a Source object. 
+- see: <a href="https://stripe.com/docs/api#create_source">https://stripe.com/docs/api#create_source</a></p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(py)type"></a>
+                    <a name="//apple_ref/objc/Property/type" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(py)type">type</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The type of the source to create. Required.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Enums.html#/c:@E@STPSourceType">STPSourceType</a></span> <span class="n">type</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Enums.html#/c:@E@STPSourceType">STPSourceType</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L27">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(py)amount"></a>
+                    <a name="//apple_ref/objc/Property/amount" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(py)amount">amount</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A positive integer in the smallest currency unit representing the
+amount to charge the customer (e.g., @1099 for a €10.99 payment).
+Required for <code>single_use</code> sources.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSNumber</span> <span class="o">*</span><span class="n">amount</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@NSCopying</span> <span class="k">var</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L34">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(py)currency"></a>
+                    <a name="//apple_ref/objc/Property/currency" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(py)currency">currency</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The currency associated with the source. This is the currency for which the source 
+will be chargeable once ready.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">currency</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L40">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(py)flow"></a>
+                    <a name="//apple_ref/objc/Property/flow" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(py)flow">flow</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The authentication flow of the source to create. <code>flow</code> may be <q>redirect</q>,
+<q>receiver</q>, <q>verification</q>, or <q>none</q>. It is generally inferred unless a type
+supports multiple flows.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Enums.html#/c:@E@STPSourceFlow">STPSourceFlow</a></span> <span class="n">flow</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">flow</span><span class="p">:</span> <span class="kt"><a href="../Enums.html#/c:@E@STPSourceFlow">STPSourceFlow</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L47">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(py)metadata"></a>
+                    <a name="//apple_ref/objc/Property/metadata" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(py)metadata">metadata</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A set of key/value pairs that you can attach to a source object.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">metadata</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">metadata</span><span class="p">:</span> <span class="p">[</span><span class="kt">AnyHashable</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L52">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(py)owner"></a>
+                    <a name="//apple_ref/objc/Property/owner" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(py)owner">owner</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Information about the owner of the payment instrument. May be used or required
+by particular source types.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">owner</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">owner</span><span class="p">:</span> <span class="p">[</span><span class="kt">AnyHashable</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L58">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(py)redirect"></a>
+                    <a name="//apple_ref/objc/Property/redirect" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(py)redirect">redirect</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parameters required for the redirect flow. Required if the source is authenticated by 
+a redirect (<code><a href="../Classes/STPSourceParams.html#/c:objc(cs)STPSourceParams(py)flow">flow</a></code> is <q>redirect</q>).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">redirect</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">redirect</span><span class="p">:</span> <span class="p">[</span><span class="kt">AnyHashable</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L64">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(py)token"></a>
+                    <a name="//apple_ref/objc/Property/token" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(py)token">token</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An optional token used to create the source. When passed, token properties will override 
+source parameters.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">token</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">token</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L70">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(py)usage"></a>
+                    <a name="//apple_ref/objc/Property/usage" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(py)usage">usage</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Whether this source should be reusable or not. <code>usage</code> may be <q>reusable</q> or <q>single_use</q>.
+Some source types may or may not be reusable by construction, while other may leave the
+option at creation.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Enums.html#/c:@E@STPSourceUsage">STPSourceUsage</a></span> <span class="n">usage</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">usage</span><span class="p">:</span> <span class="kt"><a href="../Enums.html#/c:@E@STPSourceUsage">STPSourceUsage</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L77">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(cm)bancontactParamsWithAmount:name:returnURL:statementDescriptor:"></a>
+                    <a name="//apple_ref/objc/Method/+bancontactParamsWithAmount:name:returnURL:statementDescriptor:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(cm)bancontactParamsWithAmount:name:returnURL:statementDescriptor:">+bancontactParamsWithAmount:name:returnURL:statementDescriptor:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for a Bancontact source.
+  - see: <a href="https://stripe.com/docs/bancontact#create-source">https://stripe.com/docs/bancontact#create-source</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPSourceParams</span> <span class="o">*</span><span class="p">)</span>
+<span class="nf">bancontactParamsWithAmount</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">amount</span>
+                      <span class="nf">name</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
+                 <span class="nf">returnURL</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">returnURL</span>
+       <span class="nf">statementDescriptor</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">statementDescriptor</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">bancontactParams</span><span class="p">(</span><span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>amount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount to charge the customer.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The full name of the account holder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>returnURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The URL the customer should be redirected to after they have successfully verified the payment.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>statementDescriptor</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>(Optional) A custom statement descriptor for the payment.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an STPSourceParams object populated with the provided values.</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L90-L93">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(cm)bitcoinParamsWithAmount:currency:email:"></a>
+                    <a name="//apple_ref/objc/Method/+bitcoinParamsWithAmount:currency:email:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(cm)bitcoinParamsWithAmount:currency:email:">+bitcoinParamsWithAmount:currency:email:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for a Bitcoin source.
+  - see: <a href="https://stripe.com/docs/bitcoin#creating-and-displaying-a-source-object">https://stripe.com/docs/bitcoin#creating-and-displaying-a-source-object</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPSourceParams</span> <span class="o">*</span><span class="p">)</span><span class="nf">bitcoinParamsWithAmount</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">amount</span>
+                                            <span class="nf">currency</span><span class="p">:</span>
+                                                <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">currency</span>
+                                               <span class="nf">email</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">email</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">bitcoinParams</span><span class="p">(</span><span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">email</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>amount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount to charge the customer.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>currency</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The currency the payment is being created in.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>email</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The customer&rsquo;s email address.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an STPSourceParams object populated with the provided values.</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L105-L107">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(cm)cardParamsWithCard:"></a>
+                    <a name="//apple_ref/objc/Method/+cardParamsWithCard:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(cm)cardParamsWithCard:">+cardParamsWithCard:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for a Card source.
+  - see: <a href="https://stripe.com/docs/sources/cards#create-source">https://stripe.com/docs/sources/cards#create-source</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPSourceParams</span> <span class="o">*</span><span class="p">)</span><span class="nf">cardParamsWithCard</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPCardParams.html">STPCardParams</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">card</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">cardParams</span><span class="p">(</span><span class="n">withCard</span> <span class="nv">card</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCardParams.html">STPCardParams</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>card</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An object containing the user&rsquo;s card details</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an STPSourceParams object populated with the provided card details.</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L117">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(cm)giropayParamsWithAmount:name:returnURL:statementDescriptor:"></a>
+                    <a name="//apple_ref/objc/Method/+giropayParamsWithAmount:name:returnURL:statementDescriptor:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(cm)giropayParamsWithAmount:name:returnURL:statementDescriptor:">+giropayParamsWithAmount:name:returnURL:statementDescriptor:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for a Giropay source.
+  - see: <a href="https://stripe.com/docs/sources/giropay#create-source">https://stripe.com/docs/sources/giropay#create-source</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPSourceParams</span> <span class="o">*</span><span class="p">)</span>
+<span class="nf">giropayParamsWithAmount</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">amount</span>
+                   <span class="nf">name</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
+              <span class="nf">returnURL</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">returnURL</span>
+    <span class="nf">statementDescriptor</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">statementDescriptor</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">giropayParams</span><span class="p">(</span><span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>amount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount to charge the customer.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The full name of the account holder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>returnURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The URL the customer should be redirected to after they have successfully verified the payment.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>statementDescriptor</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>(Optional) A custom statement descriptor for the payment.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an STPSourceParams object populated with the provided values.</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L130-L133">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(cm)idealParamsWithAmount:name:returnURL:statementDescriptor:bank:"></a>
+                    <a name="//apple_ref/objc/Method/+idealParamsWithAmount:name:returnURL:statementDescriptor:bank:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(cm)idealParamsWithAmount:name:returnURL:statementDescriptor:bank:">+idealParamsWithAmount:name:returnURL:statementDescriptor:bank:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for an iDEAL source.
+  - see: <a href="https://stripe.com/docs/sources/ideal#create-source">https://stripe.com/docs/sources/ideal#create-source</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPSourceParams</span> <span class="o">*</span><span class="p">)</span><span class="nf">idealParamsWithAmount</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">amount</span>
+                                              <span class="nf">name</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
+                                         <span class="nf">returnURL</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">returnURL</span>
+                               <span class="nf">statementDescriptor</span><span class="p">:</span>
+                                   <span class="p">(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">statementDescriptor</span>
+                                              <span class="nf">bank</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">bank</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">idealParams</span><span class="p">(</span><span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">bank</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>amount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount to charge the customer.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The full name of the account holder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>returnURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The URL the customer should be redirected to after they have successfully verified the payment.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>statementDescriptor</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>(Optional) A custom statement descriptor for the payment.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>bank</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>(Optional) The customer&rsquo;s bank.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an STPSourceParams object populated with the provided values.</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L147-L151">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(cm)sepaDebitParamsWithName:iban:addressLine1:city:postalCode:country:"></a>
+                    <a name="//apple_ref/objc/Method/+sepaDebitParamsWithName:iban:addressLine1:city:postalCode:country:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(cm)sepaDebitParamsWithName:iban:addressLine1:city:postalCode:country:">+sepaDebitParamsWithName:iban:addressLine1:city:postalCode:country:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for a SEPA Debit source.
+  - see: <a href="https://stripe.com/docs/sources/sepa-debit#create-source">https://stripe.com/docs/sources/sepa-debit#create-source</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPSourceParams</span> <span class="o">*</span><span class="p">)</span>
+<span class="nf">sepaDebitParamsWithName</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
+                   <span class="nf">iban</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">iban</span>
+           <span class="nf">addressLine1</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">addressLine1</span>
+                   <span class="nf">city</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">city</span>
+             <span class="nf">postalCode</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">postalCode</span>
+                <span class="nf">country</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">country</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">sepaDebitParams</span><span class="p">(</span><span class="n">withName</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">iban</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">addressLine1</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">city</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">postalCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">country</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The full name of the account holder.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>iban</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The IBAN number for the bank account you wish to debit.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>addressLine1</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The bank account holder&rsquo;s first address line.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>city</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The bank account holder&rsquo;s city.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>postalCode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The bank account holder&rsquo;s postal code.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>country</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The bank account holder&rsquo;s two-letter country code.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an STPSourceParams object populated with the provided values.</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L166-L171">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(cm)sofortParamsWithAmount:returnURL:country:statementDescriptor:"></a>
+                    <a name="//apple_ref/objc/Method/+sofortParamsWithAmount:returnURL:country:statementDescriptor:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(cm)sofortParamsWithAmount:returnURL:country:statementDescriptor:">+sofortParamsWithAmount:returnURL:country:statementDescriptor:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for a Sofort source.
+  - see: <a href="https://stripe.com/docs/sources/sofort#create-source">https://stripe.com/docs/sources/sofort#create-source</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPSourceParams</span> <span class="o">*</span><span class="p">)</span>
+<span class="nf">sofortParamsWithAmount</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">amount</span>
+             <span class="nf">returnURL</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">returnURL</span>
+               <span class="nf">country</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">country</span>
+   <span class="nf">statementDescriptor</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">statementDescriptor</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">sofortParams</span><span class="p">(</span><span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">country</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">statementDescriptor</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>amount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount to charge the customer.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>returnURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The URL the customer should be redirected to after they have successfully verified the payment.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>country</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The country code of the customer&rsquo;s bank.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>statementDescriptor</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>(Optional) A custom statement descriptor for the payment.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an STPSourceParams object populated with the provided values.</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L184-L187">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(cm)threeDSecureParamsWithAmount:currency:returnURL:card:"></a>
+                    <a name="//apple_ref/objc/Method/+threeDSecureParamsWithAmount:currency:returnURL:card:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(cm)threeDSecureParamsWithAmount:currency:returnURL:card:">+threeDSecureParamsWithAmount:currency:returnURL:card:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for a 3DS source.
+  - see: <a href="https://stripe.com/docs/sources/three-d-secure#create-3ds-source">https://stripe.com/docs/sources/three-d-secure#create-3ds-source</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPSourceParams</span> <span class="o">*</span><span class="p">)</span>
+<span class="nf">threeDSecureParamsWithAmount</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">amount</span>
+                    <span class="nf">currency</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">currency</span>
+                   <span class="nf">returnURL</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">returnURL</span>
+                        <span class="nf">card</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">card</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">threeDSecureParams</span><span class="p">(</span><span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">card</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>amount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount to charge the customer.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>currency</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The currency the payment is being created in.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>returnURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The URL the customer should be redirected to after they have successfully verified the payment.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>card</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The ID of the card source.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an STPSourceParams object populated with the provided card details.</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L200-L203">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-03-03)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

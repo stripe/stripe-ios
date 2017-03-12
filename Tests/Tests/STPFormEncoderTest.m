@@ -60,8 +60,9 @@
 
 // helper test method
 - (NSString *)encodeObject:(STPTestFormEncodableObject *)object {
-    NSData *encoded = [STPFormEncoder formEncodedDataForObject:object];
-    return [[[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding] stringByRemovingPercentEncoding];
+    NSDictionary *dictionary = [STPFormEncoder dictionaryForObject:object];
+    NSString *queryString = [STPFormEncoder queryStringFromParameters:dictionary];
+    return [queryString stringByRemovingPercentEncoding];
 }
 
 - (void)testFormEncoding_emptyObject {

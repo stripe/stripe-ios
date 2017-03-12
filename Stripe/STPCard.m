@@ -7,9 +7,10 @@
 //
 
 #import "STPCard.h"
+
 #import "NSDictionary+Stripe.h"
-#import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
+#import "STPImageLibrary.h"
 
 @interface STPCard ()
 
@@ -18,7 +19,6 @@
 @property (nonatomic, readwrite) NSString *dynamicLast4;
 @property (nonatomic, readwrite) STPCardBrand brand;
 @property (nonatomic, readwrite) STPCardFundingType funding;
-@property (nonatomic, readwrite) NSString *fingerprint;
 @property (nonatomic, readwrite) NSString *country;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
@@ -26,7 +26,7 @@
 
 @implementation STPCard
 
-@dynamic number, cvc, expMonth, expYear, currency, name, addressLine1, addressLine2, addressCity, addressState, addressZip, addressCountry;
+@dynamic number, cvc, expMonth, expYear, currency, name, address, addressLine1, addressLine2, addressCity, addressState, addressZip, addressCountry;
 
 - (instancetype)initWithID:(NSString *)stripeID
                      brand:(STPCardBrand)brand
@@ -39,11 +39,8 @@
         _cardId = stripeID;
         _brand = brand;
         _last4 = last4;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
         self.expMonth = expMonth;
         self.expYear = expYear;
-#pragma clang diagnostic pop
         _funding = funding;
     }
     return self;
@@ -118,10 +115,6 @@
     return [self.allResponseFields[@"tokenization_method"] isEqualToString:@"apple_pay"];
 }
 
-- (NSString *)type {
-    return [self.class stringFromBrand:self.brand];
-}
-
 - (BOOL)isEqual:(id)other {
     return [self isEqualToCard:other];
 }
@@ -142,13 +135,26 @@
     return [self.cardId isEqualToString:other.cardId];
 }
 
+- (STPAddress *)address {
+    if (self.name || self.addressLine1 || self.addressLine2 || self.addressZip || self.addressCity || self.addressState || self.addressCountry) {
+        STPAddress *address = [STPAddress new];
+        address.name = self.name;
+        address.line1 = self.addressLine1;
+        address.line2 = self.addressLine2;
+        address.postalCode = self.addressZip;
+        address.city = self.addressCity;
+        address.state = self.addressState;
+        address.country = self.addressCountry;
+        return address;
+    }
+    return nil;
+}
+
 #pragma mark STPAPIResponseDecodable
 + (NSArray *)requiredFields {
     return @[@"id", @"last4", @"brand", @"exp_month", @"exp_year"];
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
     NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
     if (!dict) {
@@ -164,7 +170,6 @@
     card.brand = [self.class brandFromString:brand];
     NSString *funding = dict[@"funding"];
     card.funding = [self.class fundingFromString:funding];
-    card.fingerprint = dict[@"fingerprint"];
     card.country = dict[@"country"];
     card.currency = dict[@"currency"];
     card.expMonth = [dict[@"exp_month"] intValue];
@@ -179,7 +184,6 @@
     card.allResponseFields = dict;
     return card;
 }
-#pragma clang diagnostic pop
 
 #pragma mark - STPSource
 

@@ -5,6 +5,10 @@
 //  Created by Ben Guo on 4/13/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
+
+#define FAUXPAS_IGNORED_IN_FILE(...)
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 #import <AddressBook/AddressBook.h>
@@ -15,6 +19,7 @@
 
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
+#import "STPAPIResponseDecodable.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -42,7 +47,7 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 /**
  *  STPAddress Contains an address as represented by the Stripe API.
  */
-@interface STPAddress : NSObject
+@interface STPAddress : NSObject<STPAPIResponseDecodable>
 
 /**
  *  The user's full name (e.g. "Jane Doe")

@@ -7,22 +7,23 @@
 //
 
 #import "STPAnalyticsClient.h"
+
 #import "NSMutableURLRequest+Stripe.h"
+#import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient.h"
+#import "STPAddCardViewController+Private.h"
+#import "STPAddCardViewController.h"
+#import "STPAspects.h"
+#import "STPCard.h"
+#import "STPFormEncodable.h"
+#import "STPPaymentCardTextField.h"
+#import "STPPaymentConfiguration.h"
+#import "STPPaymentContext.h"
+#import "STPPaymentMethodsViewController+Private.h"
+#import "STPPaymentMethodsViewController.h"
+#import "STPToken.h"
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
-#import "STPToken.h"
-#import "STPCard.h"
-#import "STPPaymentConfiguration.h"
-#import "STPFormEncodable.h"
-#import "STPAspects.h"
-#import "STPPaymentCardTextField.h"
-#import "STPPaymentContext.h"
-#import "STPAddCardViewController.h"
-#import "STPAddCardViewController+Private.h"
-#import "STPPaymentMethodsViewController.h"
-#import "STPPaymentMethodsViewController+Private.h"
-#import "STPAPIClient+ApplePay.h"
 
 static BOOL STPAnalyticsCollectionDisabled = NO;
 
@@ -66,14 +67,14 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
                                         } error:nil];
         
         
-        [STPAddCardViewController stp_aspect_hookSelector:@selector(commonInitWithConfiguration:theme:)
+        [STPAddCardViewController stp_aspect_hookSelector:@selector(commonInitWithConfiguration:)
                                               withOptions:STPAspectPositionAfter
                                                usingBlock:^{
                                                    STPAnalyticsClient *client = [self sharedClient];
                                                    [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPAddCardViewController class])]];
                                                } error:nil];
         
-        [STPPaymentMethodsViewController stp_aspect_hookSelector:@selector(initWithConfiguration:apiAdapter:loadingPromise:theme:delegate:)
+        [STPPaymentMethodsViewController stp_aspect_hookSelector:@selector(initWithConfiguration:apiAdapter:loadingPromise:theme:shippingAddress:delegate:)
                                                      withOptions:STPAspectPositionAfter
                                                       usingBlock:^{
                                                           STPAnalyticsClient *client = [self sharedClient];
@@ -108,6 +109,10 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     return @((NSInteger)([date timeIntervalSince1970]*1000));
 }
 
++ (NSString *)muid {
+    return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -118,7 +123,7 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     return self;
 }
 
-- (void)logRememberMeConversion:(BOOL)selected {
+- (void)logRememberMeConversion:(STPAddCardRememberMeUsage)selected {
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.remember_me",
@@ -127,16 +132,33 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     [self logPayload:payload];
 }
 
-- (void)logTokenCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration {
-    
+- (NSArray *)productUsage {
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(description)) ascending:YES];
     NSArray *productUsage = [self.apiUsage sortedArrayUsingDescriptors:@[sortDescriptor]];
+    return productUsage ?: @[];
+}
+
+- (void)logTokenCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration {
     NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.token_creation",
                                         @"apple_pay_enabled": @([Stripe deviceSupportsApplePay]),
-                                        @"product_usage": productUsage ?: @[],
+                                        @"product_usage": [self productUsage],
+                                        }];
+    [payload addEntriesFromDictionary:configurationDictionary];
+    [self logPayload:payload];
+}
+
+- (void)logSourceCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
+                                       sourceType:(NSString *)sourceType {
+    NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
+    NSMutableDictionary *payload = [self.class commonPayload];
+    [payload addEntriesFromDictionary:@{
+                                        @"event": @"stripeios.source_creation",
+                                        @"source_type": sourceType ?: @"unknown",
+                                        @"apple_pay_enabled": @([Stripe deviceSupportsApplePay]),
+                                        @"product_usage": [self productUsage],
                                         }];
     [payload addEntriesFromDictionary:configurationDictionary];
     [self logPayload:payload];

@@ -7,9 +7,9 @@
 //
 
 #import "STPPromise.h"
-#import "STPWeakStrongMacros.h"
-#import "STPDispatchFunctions.h"
 
+#import "STPDispatchFunctions.h"
+#import "STPWeakStrongMacros.h"
 
 @interface STPPromise<T>()
 

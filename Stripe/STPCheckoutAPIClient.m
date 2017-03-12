@@ -7,14 +7,15 @@
 //
 
 #import "STPCheckoutAPIClient.h"
-#import "STPCheckoutBootstrapResponse.h"
+
+#import "NSBundle+Stripe_AppName.h"
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPAPIClient.h"
 #import "STPCardValidator.h"
-#import "NSBundle+Stripe_AppName.h"
-#import "StripeError.h"
-#import "STPWeakStrongMacros.h"
+#import "STPCheckoutBootstrapResponse.h"
 #import "STPLocalizationUtils.h"
+#import "STPWeakStrongMacros.h"
+#import "StripeError.h"
 
 @interface STPCheckoutAPIClient()
 @property(nonatomic, copy)NSString *publishableKey;
@@ -269,7 +270,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
     if (((NSHTTPURLResponse *)response).statusCode != 200) {
         return nil;
     }
-    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:(NSJSONReadingOptions)kNilOptions error:nil];
     return [STPToken decodedObjectFromAPIResponse:json[@"token"]];
 }
 
@@ -284,7 +285,7 @@ static NSString *CheckoutBaseURLString = @"https://checkout.stripe.com/api";
                                             message:(NSString *)message {
     NSInteger code = STPCheckoutUnknownError;
     NSDictionary *json;
-    id object = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:nil];
+    id object = [NSJSONSerialization JSONObjectWithData:responseData options:(NSJSONReadingOptions)kNilOptions error:nil];
     if ([object isKindOfClass:[NSDictionary class]]) {
         json = object;
         if ([json[@"reason"] isEqualToString:@"too_many_attempts"]) {

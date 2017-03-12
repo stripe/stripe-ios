@@ -40,14 +40,21 @@
                                                                                                                  theme:[STPTheme defaultTheme]
                                                                                                             apiAdapter:[TestSTPBackendAPIAdapter new] 
                                                                                                               delegate:self];
-    
-    UINavigationController *navController = [UINavigationController new];
-    navController.view.frame = CGRectMake(0, 0, 320, 480);
-    [navController pushViewController:paymentMethodsVC animated:NO];
-    
-    FBSnapshotVerifyView(navController.view, nil)
-    
-    [STPLocalizationUtils overrideLanguageTo:nil];
+
+    UIViewController *rootVC = [UIViewController new];
+
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsVC];
+
+    UIWindow *testWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+
+    testWindow.rootViewController = rootVC;
+    [rootVC presentViewController:navController animated:NO completion:^{
+
+        FBSnapshotVerifyView(testWindow, nil)
+
+        [STPLocalizationUtils overrideLanguageTo:nil];
+    }];
+
 }
 
 - (void)testGerman {

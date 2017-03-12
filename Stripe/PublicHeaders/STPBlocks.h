@@ -11,6 +11,7 @@
 
 @class STPToken;
 @class STPFile;
+@class STPSource;
 
 /**
  *  These values control the labels used in the shipping info collection form.
@@ -80,10 +81,18 @@ typedef void (^STPErrorBlock)(NSError * __nullable error);
 typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * __nullable error);
 
 /**
+ *  A callback to be run with a source response from the Stripe API.
+ *
+ *  @param source The Stripe source from the response. Will be nil if an error occurs. @see STPSource
+ *  @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
+ */
+typedef void (^STPSourceCompletionBlock)(STPSource * __nullable source, NSError * __nullable error);
+
+/**
  *  A callback to be run with a validation result and shipping methods for a 
  *  shipping address.
  *
- *  @param shippingStatus An enum representing whether the shipping address is valid.
+ *  @param status An enum representing whether the shipping address is valid.
  *  @param shippingValidationError If the shipping address is invalid, an error describing the issue with the address. If no error is given and the address is invalid, the default error message will be used.
  *  @param shippingMethods The shipping methods available for the address.
  *  @param selectedShippingMethod The default selected shipping method for the address.

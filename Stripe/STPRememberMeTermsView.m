@@ -7,11 +7,12 @@
 //
 
 #import "STPRememberMeTermsView.h"
-#import "STPImageLibrary.h"
+
 #import "STPImageLibrary+Private.h"
+#import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
-#import "STPWebViewController.h"
 #import "STPStringUtils.h"
+#import "STPWebViewController.h"
 
 @interface STPRememberMeTermsView()<UITextViewDelegate>
 

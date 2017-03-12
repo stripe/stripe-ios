@@ -9,15 +9,28 @@
 #import "UINavigationBar+Stripe_Theme.h"
 #import "STPTheme.h"
 #import "STPColorUtils.h"
+#import <objc/runtime.h>
 
 static NSInteger const STPNavigationBarHairlineViewTag = 787473;
 
 @implementation UINavigationBar (Stripe_Theme)
 
-- (void)stp_setTheme:(STPTheme *)theme {
-    [self stp_hairlineImageView].hidden = YES;
+
+- (STPTheme *)stp_theme {
+    return objc_getAssociatedObject(self, @selector(stp_theme));
+}
+
+- (void)setStp_theme:(STPTheme *)theme {
+    objc_setAssociatedObject(self, @selector(stp_theme), theme, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+
+    [self stp_hairlineImageView].hidden = (theme != nil);
+
+    if (!theme) {
+        return;
+    }
+
     [self stp_artificialHairlineView].backgroundColor = theme.tertiaryBackgroundColor;
-    self.barTintColor = theme.primaryBackgroundColor;
+    self.barTintColor = theme.secondaryBackgroundColor;
     self.tintColor = theme.accentColor;
     self.barStyle = theme.barStyle;
     self.translucent = theme.translucentNavigationBar;
@@ -25,6 +38,11 @@ static NSInteger const STPNavigationBarHairlineViewTag = 787473;
                                  NSFontAttributeName: theme.emphasisFont,
                                  NSForegroundColorAttributeName: theme.primaryForegroundColor,
                                  };
+}
+
+
+- (void)stp_setTheme:(STPTheme *)theme {
+    [self setStp_theme:theme];
 }
 
 - (UIView *)stp_artificialHairlineView {

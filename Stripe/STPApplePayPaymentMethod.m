@@ -7,8 +7,9 @@
 //
 
 #import "STPApplePayPaymentMethod.h"
-#import "STPImageLibrary.h"
+
 #import "STPImageLibrary+Private.h"
+#import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
 
 @implementation STPApplePayPaymentMethod
@@ -18,8 +19,8 @@
 }
 
 - (UIImage *)templateImage {
-    return [STPImageLibrary safeImageNamed:@"stp_card_applepay_template" 
-                       templateIfAvailable:YES];
+    // No template for Apple Pay
+    return [STPImageLibrary applePayCardImage];
 }
 
 - (NSString *)label {

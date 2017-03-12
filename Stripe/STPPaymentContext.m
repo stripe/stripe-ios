@@ -8,19 +8,21 @@
 
 #import <PassKit/PassKit.h>
 #import <objc/runtime.h>
+
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
-#import "UIViewController+Stripe_ParentViewController.h"
-#import "STPPromise.h"
+#import "STPAddCardViewController+Private.h"
 #import "STPCardTuple.h"
-#import "STPPaymentMethodTuple.h"
-#import "STPPaymentContext+Private.h"
-#import "UIViewController+Stripe_Promises.h"
-#import "UINavigationController+Stripe_Completion.h"
-#import "STPPaymentConfiguration+Private.h"
-#import "STPWeakStrongMacros.h"
-#import "STPPaymentContextAmountModel.h"
 #import "STPDispatchFunctions.h"
+#import "STPPaymentConfiguration+Private.h"
+#import "STPPaymentContext+Private.h"
+#import "STPPaymentContextAmountModel.h"
+#import "STPPaymentMethodTuple.h"
+#import "STPPromise.h"
 #import "STPShippingMethodsViewController.h"
+#import "STPWeakStrongMacros.h"
+#import "UINavigationController+Stripe_Completion.h"
+#import "UIViewController+Stripe_ParentViewController.h"
+#import "UIViewController+Stripe_Promises.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -114,7 +116,7 @@
             }
             STPCard *selectedCard;
             NSMutableArray<STPCard *> *cards = [NSMutableArray array];
-            for (id<STPSource> source in customer.sources) {
+            for (id<STPSourceProtocol> source in customer.sources) {
                 if ([source isKindOfClass:[STPCard class]]) {
                     STPCard *card = (STPCard *)source;
                     [cards addObject:card];
@@ -236,7 +238,7 @@
         self.paymentMethodsViewController = paymentMethodsViewController;
         paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
-        [navigationController.navigationBar stp_setTheme:self.theme];
+        navigationController.navigationBar.stp_theme = self.theme;
         navigationController.modalPresentationStyle = self.modalPresentationStyle;
         [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
     }];
@@ -305,7 +307,7 @@
         STRONG(self);
         STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:self];
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addressViewController];
-        [navigationController.navigationBar stp_setTheme:self.theme];
+        navigationController.navigationBar.stp_theme = self.theme;
         navigationController.modalPresentationStyle = self.modalPresentationStyle;
         [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
     }];
@@ -407,8 +409,9 @@
             STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
             addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
+            addCardViewController.shippingAddress = self.shippingAddress;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addCardViewController];
-            [navigationController.navigationBar stp_setTheme:self.theme];
+            navigationController.navigationBar.stp_theme = self.theme;
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
             [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
         }
@@ -418,7 +421,7 @@
             STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:self];
             self.isMidShippingInRequestPayment = YES;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addressViewController];
-            [navigationController.navigationBar stp_setTheme:self.theme];
+            navigationController.navigationBar.stp_theme = self.theme;
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
             [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
         }
@@ -543,6 +546,7 @@
 }
 
 + (PKShippingType)pkShippingType:(STPShippingType)shippingType {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     switch (shippingType) {
         case STPShippingTypeShipping:
             return PKShippingTypeShipping;

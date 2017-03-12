@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "STPAPIResponseDecodable.h"
-#import "STPSource.h"
+#import "STPSourceProtocol.h"
 
 @class STPCard;
 @class STPBankAccount;
@@ -16,7 +16,7 @@
 /**
  *  A token returned from submitting payment details to the Stripe API. You should not have to instantiate one of these directly.
  */
-@interface STPToken : NSObject<STPAPIResponseDecodable, STPSource>
+@interface STPToken : NSObject<STPAPIResponseDecodable, STPSourceProtocol>
 
 /**
  *  You cannot directly instantiate an `STPToken`. You should only use one that has been returned from an `STPAPIClient` callback.
@@ -24,8 +24,8 @@
 - (nonnull instancetype) init __attribute__((unavailable("You cannot directly instantiate an STPToken. You should only use one that has been returned from an STPAPIClient callback.")));
 
 /**
- *  The value of the token. You can store this value on your server and use it to make charges and customers. @see
- * https://stripe.com/docs/mobile/ios#sending-tokens
+ *  The value of the token. You can store this value on your server and use it to make charges and customers. 
+ *  @see https://stripe.com/docs/charges
  */
 @property (nonatomic, readonly, nonnull) NSString *tokenId;
 

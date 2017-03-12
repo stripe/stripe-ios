@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+
+#import "STPBlocks.h"
 #import "STPCheckoutAPIVerification.h"
 #import "STPCheckoutAccount.h"
 #import "STPCheckoutAccountLookup.h"
-#import "STPBlocks.h"
 #import "STPPromise.h"
 #import "STPToken.h"
 

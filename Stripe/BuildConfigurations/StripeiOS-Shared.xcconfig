@@ -20,13 +20,19 @@ CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR
 
 CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR
 
+CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES
+CLANG_WARN_INFINITE_RECURSION = YES
+CLANG_WARN_SUSPICIOUS_MOVE = YES
+CLANG_WARN_ASSIGN_ENUM = YES
+CLANG_WARN_DOCUMENTATION_COMMENTS = YES
+
 
 // Code Signing Identity
 // 
 // The name ("common name") of a valid code-signing certificate in a keychain within your
 // keychain path.   A missing or invalid certificate will cause a build error.
 
-CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+CODE_SIGN_IDENTITY[sdk=iphoneos*] =
 
 
 // Current Project Version
@@ -85,6 +91,13 @@ GCC_WARN_SHADOW = YES
 
 GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE
 
+GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES
+GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES
+GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES
+GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES
+GCC_WARN_UNKNOWN_PRAGMAS = YES
+GCC_WARN_UNUSED_LABEL = YES
+GCC_WARN_UNUSED_PARAMETER = YES
 
 // Info.plist File
 // 
@@ -120,13 +133,11 @@ IPHONEOS_DEPLOYMENT_TARGET = 8.0
 
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
 
-
 // Product Name
 // 
 // This is the basename of the product generated.
 
 PRODUCT_NAME = Stripe
-
 
 // Skip Install
 // 

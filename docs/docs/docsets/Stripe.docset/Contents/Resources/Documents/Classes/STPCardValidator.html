@@ -8,6 +8,9 @@
     <script src="../js/jquery.min.js" defer></script>
     <script src="../js/jazzy.js" defer></script>
     
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
 
@@ -21,6 +24,12 @@
           Stripe Docs
         </a>
         
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
       </p>
     
         <p class="header-col header-col--secondary">
@@ -80,6 +89,15 @@
                 <a class="nav-group-task-link" href="../Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPCoreScrollViewController">STPCoreScrollViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPCoreTableViewController">STPCoreTableViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCoreViewController.html">STPCoreViewController</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPCustomer.html">STPCustomer</a>
               </li>
               <li class="nav-group-task">
@@ -108,6 +126,30 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSource.html">STPSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceCardDetails.html">STPSourceCardDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceOwner.html">STPSourceOwner</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceParams.html">STPSourceParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceReceiver.html">STPSourceReceiver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceRedirect.html">STPSourceRedirect</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceSEPADebitDetails.html">STPSourceSEPADebitDetails</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPSourceVerification.html">STPSourceVerification</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPTheme.html">STPTheme</a>
@@ -158,6 +200,24 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPShippingType.html">STPShippingType</a>
               </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPSourceFlow">STPSourceFlow</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPSourceRedirectStatus">STPSourceRedirectStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPSourceStatus">STPSourceStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPSourceType">STPSourceType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPSourceUsage">STPSourceUsage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPSourceVerificationStatus">STPSourceVerificationStatus</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -188,16 +248,13 @@
                 <a class="nav-group-task-link" href="../Protocols/STPShippingAddressViewControllerDelegate.html">STPShippingAddressViewControllerDelegate</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Protocols/STPSource.html">STPSource</a>
+                <a class="nav-group-task-link" href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a>
               </li>
             </ul>
           </li>
           <li class="nav-group-name">
             <a class="nav-group-name-link" href="../Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAPIClient.h@T@STPCompletionBlock">STPCompletionBlock</a>
-              </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
@@ -206,6 +263,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPShippingMethodsCompletionBlock">STPShippingMethodsCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -518,7 +578,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L62">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L61">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -583,7 +643,7 @@
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L71">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L70">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -601,7 +661,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Validates an expiration year, passed as a string representing the final 2 digits of the year. This considers the period between the current year until 2099 as valid times. An example valid value would be <q>16</q> (assuming the current year, as determined by [NSDate date], is 2015). Will return STPCardValidationStateInvalid for a month/year combination that is earlier than the current date (i.e. @<q>15</q> and @<q>04</q> in October 2015. Example invalid values are <q>00</q>, <q>a</q>, and <q>13</q>. Any 1-digit string will return STPCardValidationStateIncomplete.</p>
+                        <p>Validates an expiration year, passed as a string representing the final 2 digits of the year. This considers the period between the current year until 2099 as valid times. An example valid year value would be <q>16</q> (assuming the current year, as determined by [NSDate date], is 2015). Will return STPCardValidationStateInvalid for a month/year combination that is earlier than the current date (i.e. @<q>15</q> and @<q>04</q> in October 2015). Example invalid year values are <q>00</q>, <q>a</q>, and <q>13</q>. Any 1-digit year string will return STPCardValidationStateIncomplete.</p>
 
                       </div>
                       <div class="declaration">
@@ -644,7 +704,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>A string representing a 2-digit expiration month for a payment card. See -validationStateForExpirationMonth for the desired formatting of this string.</p>
+                                  <p>A string representing a valid 2-digit expiration month for a payment card. If the month is invalid (see -validationStateForExpirationMonth), this will return STPCardValidationStateInvalid.</p>
 
                                 </div>
                               </td>
@@ -662,7 +722,7 @@
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L81-L82">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L80-L81">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -697,7 +757,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L87">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L86">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -779,7 +839,7 @@
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L97">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L96">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -839,7 +899,7 @@
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L106">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L105">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -852,8 +912,8 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2016 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2016-11-14)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-03-03)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

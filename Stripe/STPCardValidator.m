@@ -35,7 +35,7 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
         NSMutableString *newString = [[string substringWithRange:NSMakeRange(0, range.location)] mutableCopy];
         NSUInteger lastPosition = NSMaxRange(range);
         while (lastPosition < string.length) {
-            range = [string rangeOfCharacterFromSet:cs options:0 range:NSMakeRange(lastPosition, string.length - lastPosition)];
+            range = [string rangeOfCharacterFromSet:cs options:(NSStringCompareOptions)kNilOptions range:NSMakeRange(lastPosition, string.length - lastPosition)];
             if (range.location == NSNotFound) break;
             if (range.location != lastPosition) {
                 [newString appendString:[string substringWithRange:NSMakeRange(lastPosition, range.location - lastPosition)]];
@@ -85,16 +85,20 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
     
     NSString *sanitizedMonth = [self sanitizedNumericStringForString:expirationMonth];
     NSString *sanitizedYear = [self sanitizedNumericStringForString:expirationYear];
-    
+
     switch (sanitizedYear.length) {
         case 0:
         case 1:
             return STPCardValidationStateIncomplete;
         case 2: {
-            if (sanitizedYear.integerValue == moddedYear) {
-                return sanitizedMonth.integerValue >= currentMonth ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+            if ([self validationStateForExpirationMonth:sanitizedMonth] == STPCardValidationStateInvalid) {
+                return STPCardValidationStateInvalid;
             } else {
-                return sanitizedYear.integerValue > moddedYear ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+                if (sanitizedYear.integerValue == moddedYear) {
+                    return sanitizedMonth.integerValue >= currentMonth ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+                } else {
+                    return sanitizedYear.integerValue > moddedYear ? STPCardValidationStateValid : STPCardValidationStateInvalid;
+                }
             }
         }
         default:
@@ -229,10 +233,6 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
         [set addObject:@(binRange.length)];
     }
     return [set copy];
-}
-
-+ (NSInteger)lengthForCardBrand:(STPCardBrand)brand {
-    return [self maxLengthForCardBrand:brand];
 }
 
 + (NSInteger)maxLengthForCardBrand:(STPCardBrand)brand {

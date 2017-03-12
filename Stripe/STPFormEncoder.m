@@ -7,6 +7,7 @@
 //
 
 #import "STPFormEncoder.h"
+
 #import "STPBankAccountParams.h"
 #import "STPCardParams.h"
 
@@ -25,11 +26,11 @@ FOUNDATION_EXPORT NSString * STPQueryStringFromParameters(NSDictionary *paramete
     return [camelCaseParam copy];
 }
 
-+ (nonnull NSData *)formEncodedDataForObject:(nonnull NSObject<STPFormEncodable> *)object {
++ (NSDictionary *)dictionaryForObject:(nonnull NSObject<STPFormEncodable> *)object {
     NSDictionary *keyPairs = [self keyPairDictionaryForObject:object];
     NSString *rootObjectName = [object.class rootObjectName];
     NSDictionary *dict = rootObjectName != nil ? @{ rootObjectName: keyPairs } : keyPairs;
-    return [STPQueryStringFromParameters(dict) dataUsingEncoding:NSUTF8StringEncoding];
+    return dict;
 }
 
 + (nonnull NSData *)formEncodedDataForRootObjectName:(nonnull NSString *)rootObjectName parameters:(nonnull NSDictionary *)parameters {

@@ -13,7 +13,7 @@
 
 @interface STPFormEncoder : NSObject
 
-+ (nonnull NSData *)formEncodedDataForObject:(nonnull NSObject<STPFormEncodable> *)object;
++ (nonnull NSDictionary *)dictionaryForObject:(nonnull NSObject<STPFormEncodable> *)object;
 
 + (nonnull NSData *)formEncodedDataForRootObjectName:(nonnull NSString *)rootObjectName parameters:(nonnull NSDictionary *)parameters;
 

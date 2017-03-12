@@ -82,7 +82,7 @@
     XCTAssertEqualObjects([self.viewModel numberWithoutLastDigits], @"3782822463");
     
     self.viewModel.cardNumber = @"";
-    XCTAssertEqualObjects([self.viewModel numberWithoutLastDigits], @"123456781234");
+    XCTAssertEqualObjects([self.viewModel numberWithoutLastDigits], @"424242424242");
 }
 
 - (void)testValidity {

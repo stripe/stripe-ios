@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "STPTheme.h"
+
 #import "STPFormTextField.h"
 #import "STPPostalCodeValidator.h"
+#import "STPTheme.h"
 
 typedef NS_ENUM(NSInteger, STPAddressFieldType) {
     STPAddressFieldTypeName,

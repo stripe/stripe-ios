@@ -7,8 +7,9 @@
 //
 
 #import "STPImageLibrary.h"
-#import "STPImageLibrary+Private.h"
+
 #import "STPBundleLocator.h"
+#import "STPImageLibrary+Private.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -92,10 +93,6 @@
 
 + (UIImage *)largeCardBackImage {
     return [self safeImageNamed:@"stp_card_form_back" templateIfAvailable:YES];
-}
-
-+ (UIImage *)largeCardApplePayImage {
-    return [self safeImageNamed:@"stp_card_form_applepay" templateIfAvailable:YES];
 }
 
 + (UIImage *)largeShippingImage {

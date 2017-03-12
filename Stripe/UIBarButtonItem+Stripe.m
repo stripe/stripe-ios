@@ -7,8 +7,9 @@
 //
 
 #import "UIBarButtonItem+Stripe.h"
-#import "STPImageLibrary.h"
+
 #import "STPImageLibrary+Private.h"
+#import "STPImageLibrary.h"
 #import "STPTheme.h"
 
 @implementation UIBarButtonItem (Stripe)

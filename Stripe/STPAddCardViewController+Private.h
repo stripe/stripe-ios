@@ -7,12 +7,14 @@
 //
 
 #import "STPAddCardViewController.h"
+#import "STPAddress.h"
 
 @class STPPaymentConfiguration, STPTheme;
 
 @interface STPAddCardViewController (Private)
 
-- (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration
-                              theme:(STPTheme *)theme;
+@property(nonatomic)STPAddress *shippingAddress;
+
+- (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration;
 
 @end

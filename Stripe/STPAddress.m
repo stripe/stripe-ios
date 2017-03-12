@@ -6,11 +6,21 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+#import "NSDictionary+Stripe.h"
 #import "STPAddress.h"
 #import "STPCardValidator.h"
-#import "STPPostalCodeValidator.h"
 #import "STPEmailAddressValidator.h"
 #import "STPPhoneNumberValidator.h"
+#import "STPPostalCodeValidator.h"
+
+#define FAUXPAS_IGNORED_IN_FILE(...)
+FAUXPAS_IGNORED_IN_FILE(APIAvailability)
+
+@interface STPAddress ()
+
+@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+
+@end
 
 @implementation STPAddress
 
@@ -210,6 +220,29 @@
         case STPBillingAddressFieldsFull:
             return PKAddressFieldPostalAddress;
     }
+}
+
+#pragma mark STPAPIResponseDecodable
+
++ (NSArray *)requiredFields {
+    return @[];
+}
+
++ (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
+    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    if (!dict) {
+        return nil;
+    }
+
+    STPAddress *address = [self new];
+    address.allResponseFields = dict;
+    address.city = dict[@"city"];
+    address.country = dict[@"country"];
+    address.line1 = dict[@"line1"];
+    address.line2 = dict[@"line2"];
+    address.postalCode = dict[@"postal_code"];
+    address.state = dict[@"state"];
+    return address;
 }
 
 @end

@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <PassKit/PassKit.h>
-#import "STPTheme.h"
+
+#import "STPCoreTableViewController.h"
 #import "STPPaymentContext.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -17,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** This view controller contains a shipping address collection form. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`. Depending on your configuration's shippingType, the view controller may present a shipping method selection form after the user enters an address.
  */
-@interface STPShippingAddressViewController : UIViewController
+@interface STPShippingAddressViewController : STPCoreTableViewController
 
 /**
  *  A convenience initializer; equivalent to calling `initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme] currency:nil shippingAddress:nil selectedShippingMethod:nil prefilledInformation:nil`.
@@ -90,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param addressViewController the view controller where the address was entered
  *  @param address               the address that was entered. @see STPAddress
- *  @param shippingMethod        the shipping method that was selected.
+ *  @param method        the shipping method that was selected.
  */
 - (void)shippingAddressViewController:(STPShippingAddressViewController *)addressViewController
                  didFinishWithAddress:(STPAddress *)address

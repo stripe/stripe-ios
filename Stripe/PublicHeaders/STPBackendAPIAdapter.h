@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+
 #import "STPAddress.h"
 #import "STPBlocks.h"
-#import "STPSource.h"
 #import "STPCustomer.h"
+#import "STPSourceProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NSError * __nullable error);
 
 /**
- *  You should make your application's API client conform to this interface in order to use it with an `STPPaymentContext`. It provides a "bridge" from the prebuilt UI we expose (such as `STPPaymentMethodsViewController`) to your backend to fetch the information it needs to power those views. To read about how to implement this protocol, see https://stripe.com/docs/mobile/ios#prepare-your-api . To see examples of implementing these APIs, see MyAPIClient.swift in our example project and https://github.com/stripe/example-ios-backend .
+ *  You should make your application's API client conform to this interface in order to use it with an `STPPaymentContext`. It provides a "bridge" from the prebuilt UI we expose (such as `STPPaymentMethodsViewController`) to your backend to fetch the information it needs to power those views. To read about how to implement this protocol, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api . To see examples of implementing these APIs, see MyAPIClient.swift in our example project and https://github.com/stripe/example-ios-backend .
  */
 @protocol STPBackendAPIAdapter<NSObject>
 
@@ -35,8 +36,6 @@ typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NS
  *
  *  @see STPCard
  *  @param completion call this callback when you're done fetching and parsing the above information from your backend. For example, `completion(customer, nil)` (if your call succeeds) or `completion(nil, error)` if an error is returned.
- *
- *  @note If you are on Swift 3, you must declare the completion block as `@escaping` or Xcode will give you a protocol conformance error. https://bugs.swift.org/browse/SR-2597
  */
 - (void)retrieveCustomer:(STPCustomerCompletionBlock)completion;
 
@@ -45,20 +44,16 @@ typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NS
  *
  *  @param source     a valid payment source, such as a card token.
  *  @param completion call this callback when you're done adding the token to the customer on your backend. For example, `completion(nil)` (if your call succeeds) or `completion(error)` if an error is returned.
- *
- *  @note If you are on Swift 3, you must declare the completion block as `@escaping` or Xcode will give you a protocol conformance error. https://bugs.swift.org/browse/SR-2597
  */
-- (void)attachSourceToCustomer:(id<STPSource>)source completion:(STPErrorBlock)completion;
+- (void)attachSourceToCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion;
 
 /**
  *  Change a customer's `default_source` to be the provided card. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Customer Update method as described at https://stripe.com/docs/api#update_customer , specifying default_source to be the value of source.stripeID (for an example Ruby implementation of this API, see https://github.com/stripe/example-ios-backend/blob/master/web.rb#L82 ). If this API call succeeds, call `completion(nil)`. Otherwise, call `completion(error)` with the error that occurred.
  *
  *  @param source     The newly-selected default source for the user.
  *  @param completion call this callback when you're done selecting the new default source for the customer on your backend. For example, `completion(nil)` (if your call succeeds) or `completion(error)` if an error is returned.
- *
- *  @note If you are on Swift 3, you must declare the completion block as `@escaping` or Xcode will give you a protocol conformance error. https://bugs.swift.org/browse/SR-2597
  */
-- (void)selectDefaultCustomerSource:(id<STPSource>)source completion:(STPErrorBlock)completion;
+- (void)selectDefaultCustomerSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion;
 
 @end
 

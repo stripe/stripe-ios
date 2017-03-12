@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "STPCoreScrollViewController.h"
+
 @class STPSMSCodeViewController, STPCheckoutAccount, STPCheckoutAPIClient, STPAPIClient,STPCheckoutAPIVerification, STPTheme;
 
 @protocol STPSMSCodeViewControllerDelegate <NSObject>
@@ -18,13 +20,12 @@
 
 @end
 
-@interface STPSMSCodeViewController : UIViewController
+@interface STPSMSCodeViewController : STPCoreScrollViewController
 
 - (instancetype)initWithCheckoutAPIClient:(STPCheckoutAPIClient *)checkoutAPIClient
                              verification:(STPCheckoutAPIVerification *)verification
                             redactedPhone:(NSString *)redactedPhone;
 
-@property(nonatomic)STPTheme *theme;
 @property(nonatomic, weak)id<STPSMSCodeViewControllerDelegate>delegate;
 
 @end
