@@ -15,8 +15,6 @@
 
 + (nonnull NSDictionary *)dictionaryForObject:(nonnull NSObject<STPFormEncodable> *)object;
 
-+ (nonnull NSData *)formEncodedDataForRootObjectName:(nonnull NSString *)rootObjectName parameters:(nonnull NSDictionary *)parameters;
-
 + (nonnull NSString *)stringByURLEncoding:(nonnull NSString *)string;
 
 + (nonnull NSString *)stringByReplacingSnakeCaseWithCamelCase:(nonnull NSString *)input;

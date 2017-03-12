@@ -245,8 +245,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @implementation STPAPIClient (PII)
 
 - (void)createTokenWithPersonalIDNumber:(NSNumber *)pii completion:(__nullable STPTokenCompletionBlock)completion {
-    NSData *data = [STPFormEncoder formEncodedDataForRootObjectName:@"pii" parameters:@{ @"personal_id_number": pii }];
-    [self createTokenWithData:data completion:completion];
+    NSDictionary *params = @{@"pii": @{ @"personal_id_number": pii }};
+    [self createTokenWithParameters:params completion:completion];
 }
 
 @end
