@@ -13,7 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, STPFilePurpose) {
     STPFilePurposeIdentityDocument,
-    STPFilePurposeDisputeEvidence
+    STPFilePurposeDisputeEvidence,
+    STPFilePurposeUnknown,
 };
 
 @interface STPFile : NSObject <STPAPIResponseDecodable>
@@ -29,7 +30,8 @@ typedef NS_ENUM(NSInteger, STPFilePurpose) {
 @property (nonatomic, readonly) NSDate *created;
 
 /**
- * The purpose of this file. This can be either an identifing document or an evidence dispute. @see https://stripe.com/docs/file-upload
+ * The purpose of this file. This can be either an identifing document or an evidence dispute. 
+ * @see https://stripe.com/docs/file-upload
  */
 @property (nonatomic, readonly) STPFilePurpose purpose;
 
@@ -46,7 +48,7 @@ typedef NS_ENUM(NSInteger, STPFilePurpose) {
 /**
  * Returns the string value for a purpose.
  */
-+ (NSString *)stringForPurpose:(STPFilePurpose)purpose;
++ (NSString *)stringFromPurpose:(STPFilePurpose)purpose;
 
 @end
 

@@ -26,11 +26,25 @@
 
 #pragma mark - Helpers
 
-+ (NSString *)stringForPurpose:(STPFilePurpose)purpose {
-    if (purpose == STPFilePurposeDisputeEvidence) {
-        return @"dispute_evidence";
++ (NSDictionary<NSString *,NSNumber *>*)stringToPurpose {
+    return @{
+             @"dispute_evidence": @(STPFilePurposeDisputeEvidence),
+             @"identity_document": @(STPFilePurposeIdentityDocument),
+             };
+}
+
++ (STPFilePurpose)purposeFromString:(NSString *)string {
+    NSString *key = [string lowercaseString];
+    NSNumber *value = [self stringToPurpose][key];
+    if (value) {
+        return (STPFilePurpose)[value integerValue];
+    } else {
+        return STPFilePurposeUnknown;
     }
-    return @"identity_document";
+}
+
++ (NSString *)stringFromPurpose:(STPFilePurpose)purpose {
+    return [[[self stringToPurpose] allKeysForObject:@(purpose)] firstObject];
 }
 
 #pragma mark - Equality
@@ -74,12 +88,7 @@
     file.type = dict[@"type"];
     
     NSString *purpose = dict[@"purpose"];
-    if ([purpose isEqualToString:@"identity_document"]) {
-        file.purpose = STPFilePurposeIdentityDocument;
-    } else if ([purpose isEqualToString:@"dispute_evidence"]) {
-        file.purpose = STPFilePurposeDisputeEvidence;
-    }
-    
+    file.purpose = [self.class purposeFromString:purpose];
     file.allResponseFields = dict;
     
     return file;
