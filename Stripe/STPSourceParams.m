@@ -93,7 +93,10 @@
         NSString *newKey = addressKeyMapping[key];
         addressDict[newKey] = keyPairs[key];
     }
-    params.owner = @{ @"address": addressDict };
+    NSMutableDictionary *ownerDict = [NSMutableDictionary dictionary];
+    ownerDict[@"address"] = [addressDict copy];
+    ownerDict[@"name"] = card.name;
+    params.owner = [ownerDict copy];
     return params;
 }
 
