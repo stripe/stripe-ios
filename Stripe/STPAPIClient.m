@@ -260,9 +260,42 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 @implementation STPAPIClient (Upload)
 
+- (NSData *)dataForUploadedImage:(UIImage *)image
+                         purpose:(STPFilePurpose)purpose {
+
+    NSUInteger maxBytes;
+    switch (purpose) {
+        case STPFilePurposeIdentityDocument:
+            maxBytes = 4 * 1000000;
+            break;
+        case STPFilePurposeDisputeEvidence:
+            maxBytes = 8 * 1000000;
+            break;
+        case STPFilePurposeUnknown:
+            maxBytes = 0;
+            break;
+    }
+
+    CGFloat scale = 1.0;
+    NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
+    while (imageData.length > maxBytes) {
+        scale = scale * 0.8;
+        CGSize newImageSize = CGSizeMake(image.size.width * scale,
+                                         image.size.height *scale);
+        UIGraphicsBeginImageContextWithOptions(newImageSize, NO, image.scale);
+        [image drawInRect:CGRectMake(0, 0, newImageSize.width, newImageSize.height)];
+        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        imageData = UIImageJPEGRepresentation(newImage, 0.5);
+    }
+
+    return imageData;
+}
+
 - (void)uploadImage:(UIImage *)image
             purpose:(STPFilePurpose)purpose
          completion:(nullable STPFileCompletionBlock)completion {
+
     STPMultipartFormDataPart *purposePart = [[STPMultipartFormDataPart alloc] init];
     purposePart.name = @"purpose";
     purposePart.data = [[STPFile stringFromPurpose:purpose] dataUsingEncoding:NSUTF8StringEncoding];
@@ -271,7 +304,9 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     imagePart.name = @"file";
     imagePart.filename = @"image.jpg";
     imagePart.contentType = @"image/jpeg";
-    imagePart.data = UIImageJPEGRepresentation(image, 0.5);
+
+    imagePart.data = [self dataForUploadedImage:image
+                                        purpose:purpose];
 
     NSString *boundary = [STPMultipartFormDataEncoder generateBoundary];
     NSData *data = [STPMultipartFormDataEncoder multipartFormDataForParts:@[purposePart, imagePart] boundary:boundary];
@@ -289,7 +324,9 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
             returnedError = [NSError stp_genericFailedToParseResponseError];
         }
 
-        if (!completion) return;
+        if (!completion) {
+            return;
+        }
 
         stpDispatchToMainThreadIfNecessary(^{
             if (returnedError) {

@@ -109,11 +109,19 @@ static NSString *const STPSDKVersion = @"10.0.0";
 
 
 /**
- *  Uses the Stripe file upload API to upload an image. This can be used for identity veritfication and evidence disputes.
+ *  Uses the Stripe file upload API to upload an image. This can be used for 
+ *  identity veritfication and evidence disputes.
  *
- *  @param image The image to be uploaded. The maximum allowed file size is 4MB for identity documents and 8MB for evidence disputes. Cannot be nil. @see https://stripe.com/docs/file-upload
- *  @param purpose The purpose of this file. This can be either an identifing document or an evidence dispute.
- *  @param completion The callback to run with the returned Stripe file (and any errors that may have occurred).
+ *  @param image The image to be uploaded. The maximum allowed file size is 4MB 
+ *         for identity documents and 8MB for evidence disputes. Cannot be nil. 
+ *         Your image will be automatically resized down if you pass in one that
+ *         is too large
+ *  @param purpose The purpose of this file. This can be either an identifing 
+ *         document or an evidence dispute.
+ *  @param completion The callback to run with the returned Stripe file 
+ *         (and any errors that may have occurred).
+ *
+ *  @see https://stripe.com/docs/file-upload
  */
 - (void)uploadImage:(UIImage *)image
             purpose:(STPFilePurpose)purpose
