@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * The data for this part.
  */
-@property (nonatomic) NSData *data;
+@property (nonatomic, copy) NSData *data;
 
 /**
  * The name for this part.
