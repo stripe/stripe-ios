@@ -29,4 +29,6 @@
                    paymentMethodTuple:(STPPaymentMethodTuple *)tuple
                              delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate;
 
+- (void)updateWithPaymentMethodTuple:(STPPaymentMethodTuple *)tuple;
+
 @end
