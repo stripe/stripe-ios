@@ -544,6 +544,7 @@
 		F116E94B1D83404D0026A52A /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04B94BC71A47B78A00092C46 /* AddressBook.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F116E94C1D83405E0026A52A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
 		F116E94D1D8340640026A52A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
+		F11C96E81E7744C8008DB23D /* stp_test_upload_image.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = F11C96E71E7744C8008DB23D /* stp_test_upload_image.jpeg */; };
 		F12829DA1D7747E4008B10D6 /* STPBundleLocator.h in Headers */ = {isa = PBXBuildFile; fileRef = F12829D81D7747E4008B10D6 /* STPBundleLocator.h */; };
 		F12829DB1D7747E4008B10D6 /* STPBundleLocator.h in Headers */ = {isa = PBXBuildFile; fileRef = F12829D81D7747E4008B10D6 /* STPBundleLocator.h */; };
 		F12829DC1D7747E4008B10D6 /* STPBundleLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = F12829D91D7747E4008B10D6 /* STPBundleLocator.m */; };
@@ -1045,6 +1046,7 @@
 		C1FEE5951CBFF11400A7632B /* STPPostalCodeValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPostalCodeValidator.m; sourceTree = "<group>"; };
 		C1FEE5981CBFF24000A7632B /* STPPostalCodeValidatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPostalCodeValidatorTest.m; sourceTree = "<group>"; };
 		F1122A7D1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+StripeTest.m"; sourceTree = "<group>"; };
+		F11C96E71E7744C8008DB23D /* stp_test_upload_image.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = stp_test_upload_image.jpeg; sourceTree = "<group>"; };
 		F12829D81D7747E4008B10D6 /* STPBundleLocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBundleLocator.h; sourceTree = "<group>"; };
 		F12829D91D7747E4008B10D6 /* STPBundleLocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBundleLocator.m; sourceTree = "<group>"; };
 		F12C8DBE1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPPaymentContextAmountModel.h; sourceTree = "<group>"; };
@@ -1238,6 +1240,7 @@
 				C15993201D8807930047950D /* stp_shipping_form.png */,
 				C15993211D8807930047950D /* stp_shipping_form@2x.png */,
 				C15993221D8807930047950D /* stp_shipping_form@3x.png */,
+				F11C96E71E7744C8008DB23D /* stp_test_upload_image.jpeg */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -2087,6 +2090,7 @@
 				F1343BEA1D652CAD00F102D8 /* Customer.json in Resources */,
 				F1BA24211E57BECA00E4A1CF /* 3DSSource.json in Resources */,
 				F1BA241E1E57BE5E00E4A1CF /* CardSource.json in Resources */,
+				F11C96E81E7744C8008DB23D /* stp_test_upload_image.jpeg in Resources */,
 				F1343BE91D652CAB00F102D8 /* Card.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

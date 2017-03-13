@@ -8,20 +8,29 @@
 
 @import XCTest;
 
-#import "STPFileClient.h"
+#import "STPAPIClient.h"
 #import "STPFile.h"
+#import "STPImageLibrary+Private.h"
+
+static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 
 @interface STPFileFunctionalTest : XCTestCase
 @end
 
 @implementation STPFileFunctionalTest
 
+- (UIImage *)testImage {
+return [UIImage imageNamed:@"stp_test_upload_image.jpeg"
+                  inBundle:[NSBundle bundleForClass:self.class]
+compatibleWithTraitCollection:nil];
+}
+
 - (void)testCreateFileForIdentityDocument {
-    STPFileClient *client = [[STPFileClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"File creation for identity document"];
     
-    UIImage *image = [UIImage imageNamed:@"license" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
+    UIImage *image = [self testImage];
     
     [client uploadImage:image
                 purpose:STPFilePurposeIdentityDocument
@@ -40,11 +49,11 @@
 }
 
 - (void)testCreateFileForDisputeEvidence {
-    STPFileClient *client = [[STPFileClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"File creation for dispute evidence"];
     
-    UIImage *image = [UIImage imageNamed:@"license" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
+    UIImage *image = [self testImage];
     
     [client uploadImage:image
                 purpose:STPFilePurposeDisputeEvidence
@@ -63,11 +72,11 @@
 }
 
 - (void)testInvalidKey {
-    STPFileClient *client = [[STPFileClient alloc] initWithPublishableKey:@"not_a_valid_key_asdf"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"not_a_valid_key_asdf"];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Bad file creation"];
     
-    UIImage *image = [UIImage imageNamed:@"license" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
+    UIImage *image = [self testImage];
     
     [client uploadImage:image
                  purpose:STPFilePurposeIdentityDocument

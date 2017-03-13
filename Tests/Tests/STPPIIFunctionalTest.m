@@ -21,7 +21,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"PII creation"];
     
-    [client createTokenWithPersonalIDNumber:@123456789 completion:^(STPToken * _Nullable token, NSError * _Nullable error) {
+    [client createTokenWithPersonalIDNumber:@"0123456789" completion:^(STPToken * _Nullable token, NSError * _Nullable error) {
         [expectation fulfill];
         XCTAssertNil(error, @"error should be nil %@", error.localizedDescription);
         XCTAssertNotNil(token, @"token should not be nil");
