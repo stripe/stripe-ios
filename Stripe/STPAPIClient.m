@@ -15,12 +15,17 @@
 #import "STPAnalyticsClient.h"
 #import "STPBankAccount.h"
 #import "STPCard.h"
+#import "STPDispatchFunctions.h"
 #import "STPFormEncoder.h"
+#import "STPMultipartFormDataEncoder.h"
+#import "STPMultipartFormDataPart.h"
+#import "NSMutableURLRequest+Stripe.h"
 #import "STPPaymentConfiguration.h"
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
 #import "STPSourcePoller.h"
 #import "STPToken.h"
+#import "StripeError.h"
 
 #if __has_include("Fabric.h")
 #import "Fabric+FABKits.h"
@@ -37,7 +42,9 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 static NSString *const apiURLBase = @"api.stripe.com/v1";
 static NSString *const tokenEndpoint = @"tokens";
 static NSString *const sourcesEndpoint = @"sources";
+static NSString *const fileUploadPath = @"https://uploads.stripe.com/v1/files";
 static NSString *const stripeAPIVersion = @"2015-10-12";
+
 
 @implementation Stripe
 
@@ -244,9 +251,54 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 #pragma mark - Personally Identifiable Information
 @implementation STPAPIClient (PII)
 
-- (void)createTokenWithPersonalIDNumber:(NSNumber *)pii completion:(__nullable STPTokenCompletionBlock)completion {
+- (void)createTokenWithPersonalIDNumber:(NSString *)pii completion:(__nullable STPTokenCompletionBlock)completion {
     NSDictionary *params = @{@"pii": @{ @"personal_id_number": pii }};
     [self createTokenWithParameters:params completion:completion];
+}
+
+@end
+
+@implementation STPAPIClient (Upload)
+
+- (void)uploadImage:(UIImage *)image
+            purpose:(STPFilePurpose)purpose
+         completion:(nullable STPFileCompletionBlock)completion {
+    STPMultipartFormDataPart *purposePart = [[STPMultipartFormDataPart alloc] init];
+    purposePart.name = @"purpose";
+    purposePart.data = [[STPFile stringFromPurpose:purpose] dataUsingEncoding:NSUTF8StringEncoding];
+
+    STPMultipartFormDataPart *imagePart = [[STPMultipartFormDataPart alloc] init];
+    imagePart.name = @"file";
+    imagePart.filename = @"image.jpg";
+    imagePart.contentType = @"image/jpeg";
+    imagePart.data = UIImageJPEGRepresentation(image, 0.5);
+
+    NSString *boundary = [STPMultipartFormDataEncoder generateBoundary];
+    NSData *data = [STPMultipartFormDataEncoder multipartFormDataForParts:@[purposePart, imagePart] boundary:boundary];
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:fileUploadPath]];
+    [request setHTTPMethod:@"POST"];
+    [request stp_setMultipartFormData:data boundary:boundary];
+
+    [[_urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSDictionary *jsonDictionary = body ? [NSJSONSerialization JSONObjectWithData:body options:(NSJSONReadingOptions)kNilOptions error:NULL] : nil;
+        STPFile *file = [STPFile decodedObjectFromAPIResponse:jsonDictionary];
+
+        NSError *returnedError = [NSError stp_errorFromStripeResponse:jsonDictionary] ?: error;
+        if ((!file || ![response isKindOfClass:[NSHTTPURLResponse class]]) && !returnedError) {
+            returnedError = [NSError stp_genericFailedToParseResponseError];
+        }
+
+        if (!completion) return;
+
+        stpDispatchToMainThreadIfNecessary(^{
+            if (returnedError) {
+                completion(nil, returnedError);
+            } else {
+                completion(file, nil);
+            }
+        });
+    }] resume];
 }
 
 @end

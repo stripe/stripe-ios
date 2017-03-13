@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
 #import "STPBlocks.h"
+#import "STPFile.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -97,7 +98,26 @@ static NSString *const STPSDKVersion = @"10.0.0";
  *  @param pii The user's personal identification number. Cannot be nil. @see https://stripe.com/docs/api#create_pii_token
  *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
-- (void)createTokenWithPersonalIDNumber:(NSNumber *)pii completion:(__nullable STPTokenCompletionBlock)completion;
+- (void)createTokenWithPersonalIDNumber:(NSString *)pii completion:(__nullable STPTokenCompletionBlock)completion;
+
+@end
+
+/**
+ *  STPAPIClient extensions to upload files.
+ */
+@interface STPAPIClient (Upload)
+
+
+/**
+ *  Uses the Stripe file upload API to upload an image. This can be used for identity veritfication and evidence disputes.
+ *
+ *  @param image The image to be uploaded. The maximum allowed file size is 4MB for identity documents and 8MB for evidence disputes. Cannot be nil. @see https://stripe.com/docs/file-upload
+ *  @param purpose The purpose of this file. This can be either an identifing document or an evidence dispute.
+ *  @param completion The callback to run with the returned Stripe file (and any errors that may have occurred).
+ */
+- (void)uploadImage:(UIImage *)image
+            purpose:(STPFilePurpose)purpose
+         completion:(nullable STPFileCompletionBlock)completion;
 
 @end
 
