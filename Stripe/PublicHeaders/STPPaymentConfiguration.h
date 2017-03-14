@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "STPBackendAPIAdapter.h"
 #import "STPPaymentMethod.h"
+#import "STPPaymentMethodType.h"
 #import "STPTheme.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -33,42 +34,75 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Your Stripe publishable key. You can get this from https://dashboard.stripe.com/account/apikeys .
  */
-@property(nonatomic, copy)NSString *publishableKey;
+@property (nonatomic, copy) NSString *publishableKey;
 
 /**
- *  An enum value representing which payment methods you will accept from your user in addition to credit cards. Unless you have a very specific reason not to, you should leave this at the default, `STPPaymentMethodTypeAll`.
+ *  If YES, STPPaymentContext will generate STPSource objects when creating
+ *  new credit cards. Otherwise it will generate STPCard objects.
+ *
+ *  The default value is NO
+ *
+ *  @see https://stripe.com/docs/sources
  */
-@property(nonatomic)STPPaymentMethodType additionalPaymentMethods;
+@property (nonatomic) BOOL useSourcesForCreditCards;
 
 /**
- *  The billing address fields the user must fill out when prompted for their payment details. These fields will all be present on the returned token from Stripe. See https://stripe.com/docs/api#create_card_token for more information.
+ *  An ordered set of payment method type objects that represents the list of
+ *  the available payment methods available to users of your app.
+ * 
+ *  The methods in this list will be shown to users in STPPaymentMethodsViewController
+ *  for users to choose from in the order they are listed in this array.
+ *
+ *  Any methods types not in either this array will not be available to users 
+ *  of your app.
+ *
  */
-@property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
+@property (nonatomic, copy) NSOrderedSet<STPPaymentMethodType *> *availablePaymentMethodTypes;
 
 /**
- *  The billing address fields the user must fill out when prompted for their shipping info.
+ *  The billing address fields the user must fill out when prompted for their 
+ *  payment details. These fields will all be present on the returned token from 
+ *  Stripe. See https://stripe.com/docs/api#create_card_token for more information.
  */
-@property(nonatomic)PKAddressField requiredShippingAddressFields;
+@property (nonatomic) STPBillingAddressFields requiredBillingAddressFields;
 
 /**
- *  The type of shipping for this purchase. This property sets the labels displayed when the user is prompted for shipping info, and whether they should also be asked to select a shipping method. The default value is STPShippingTypeShipping.
+ *  The billing address fields the user must fill out when prompted for their 
+ *  shipping info.
  */
-@property(nonatomic)STPShippingType shippingType;
+@property (nonatomic) PKAddressField requiredShippingAddressFields;
 
 /**
- *  The name of your company, for displaying to the user during payment flows. For example, when using Apple Pay, the payment sheet's final line item will read "PAY {companyName}". This defaults to the name of your iOS application.
+ *  The type of shipping for this purchase. This property sets the labels 
+ *  displayed when the user is prompted for shipping info, and whether they 
+ *  should also be asked to select a shipping method.
+ *
+ *  The default value is STPShippingTypeShipping.
  */
-@property(nonatomic, copy)NSString *companyName;
+@property (nonatomic) STPShippingType shippingType;
 
 /**
- *  The Apple Merchant Identifier to use during Apple Pay transactions. To create one of these, see our guide at https://stripe.com/docs/mobile/apple-pay . You must set this to a valid identifier in order to automatically enable Apple Pay.
+ *  The name of your company, for displaying to the user during payment flows.
+ *  For example, when using Apple Pay, the payment sheet's final line item will 
+ *  read "PAY {companyName}". This defaults to the name of your iOS application.
  */
-@property(nonatomic, nullable, copy)NSString *appleMerchantIdentifier;
+@property (nonatomic, copy) NSString *companyName;
 
 /**
- *  When entering their payment information, users who have a saved card with Stripe will be prompted to autofill it by entering an SMS code. Set this property to `YES` to disable this feature. The user won't receive an SMS code even if they have their payment information stored with Stripe, and won't be prompted to save it if they don't.
+ *  The Apple Merchant Identifier to use during Apple Pay transactions.
+ *  To create one of these, see our guide at https://stripe.com/docs/mobile/apple-pay. 
+ *  You must set this to a valid identifier in order to automatically enable Apple Pay.
  */
-@property(nonatomic)BOOL smsAutofillDisabled;
+@property (nonatomic, nullable, copy) NSString *appleMerchantIdentifier;
+
+/**
+ *  When entering their payment information, users who have a saved card with 
+ *  Stripe will be prompted to autofill it by entering an SMS code. Set this 
+ *  property to `YES` to disable this feature. The user won't receive an 
+ *  SMS code even if they have their payment information stored with Stripe, 
+ *  and won't be prompted to save it if they don't.
+ */
+@property (nonatomic) BOOL smsAutofillDisabled;
 
 @end
 

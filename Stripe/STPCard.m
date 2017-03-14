@@ -11,6 +11,7 @@
 #import "NSDictionary+Stripe.h"
 #import "STPImageLibrary+Private.h"
 #import "STPImageLibrary.h"
+#import "STPPaymentMethodType.h"
 
 @interface STPCard ()
 
@@ -191,17 +192,23 @@
     return self.cardId;
 }
 
-- (NSString *)label {
+- (NSString *)paymentMethodLabel {
     NSString *brand = [self.class stringFromBrand:self.brand];
     return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
 }
 
-- (UIImage *)image {
+- (UIImage *)paymentMethodImage {
     return [STPImageLibrary brandImageForCardBrand:self.brand];
 }
 
-- (UIImage *)templateImage {
+- (UIImage *)paymentMethodTemplateImage {
     return [STPImageLibrary templatedBrandImageForCardBrand:self.brand];
+}
+
+- (STPPaymentMethodType *)paymentMethodType {
+    // TODO: Should this be applePay for apple pay created cards?
+    // At the point we've tokenized an apple pay card maybe it's not important?
+    return [STPPaymentMethodType creditCard];
 }
 
 @end

@@ -11,7 +11,6 @@
 #import "STPAPIResponseDecodable.h"
 #import "STPAddCardViewController.h"
 #import "STPAddress.h"
-#import "STPApplePayPaymentMethod.h"
 #import "STPBackendAPIAdapter.h"
 #import "STPBankAccount.h"
 #import "STPBankAccountParams.h"

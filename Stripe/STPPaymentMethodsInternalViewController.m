@@ -15,23 +15,25 @@
 #import "STPImageLibrary+Private.h"
 #import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
+#import "STPPaymentMethodType+Private.h"
 #import "STPPaymentMethodTableViewCell.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "UITableViewCell+Stripe_Borders.h"
 
 static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodCellReuseIdentifier";
-static NSInteger STPPaymentMethodCardListSection = 0;
-static NSInteger STPPaymentMethodAddCardSection = 1;
+static NSInteger STPPaymentMethodSavedPaymentsSection = 0;
+static NSInteger STPPaymentMethodNewPaymentsSection = 1;
 
 @interface STPPaymentMethodsInternalViewController()<UITableViewDataSource, UITableViewDelegate, STPAddCardViewControllerDelegate>
 
-@property(nonatomic)STPPaymentConfiguration *configuration;
-@property(nonatomic)STPUserInformation *prefilledInformation;
-@property(nonatomic)STPAddress *shippingAddress;
-@property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
-@property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
-@property(nonatomic, weak)id<STPPaymentMethodsInternalViewControllerDelegate> delegate;
-@property(nonatomic, weak)UIImageView *cardImageView;
+@property (nonatomic) STPPaymentConfiguration *configuration;
+@property (nonatomic) STPUserInformation *prefilledInformation;
+@property (nonatomic) STPAddress *shippingAddress;
+@property (nonatomic) NSArray<id<STPPaymentMethod>> *savedPaymentMethods;
+@property (nonatomic) NSArray<STPPaymentMethodType *> *availablePaymentTypes;
+@property (nonatomic) id<STPPaymentMethod> selectedPaymentMethod;
+@property (nonatomic, weak) id<STPPaymentMethodsInternalViewControllerDelegate> delegate;
+@property (nonatomic, weak) UIImageView *cardImageView;
 
 @end
 
@@ -48,7 +50,8 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         _configuration = configuration;
         _prefilledInformation = prefilledInformation;
         _shippingAddress = shippingAddress;
-        _paymentMethods = tuple.paymentMethods;
+        _savedPaymentMethods = tuple.savedPaymentMethods;
+        _availablePaymentTypes = tuple.availablePaymentTypes;
         _selectedPaymentMethod = tuple.selectedPaymentMethod;
         _delegate = delegate;
     }
@@ -81,45 +84,66 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
 }
 
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == STPPaymentMethodCardListSection) {
-        return self.paymentMethods.count;
-    } else if (section == STPPaymentMethodAddCardSection) {
-        return 1;
+    if (section == STPPaymentMethodSavedPaymentsSection) {
+        return self.savedPaymentMethods.count;
+    } else if (section == STPPaymentMethodNewPaymentsSection) {
+        return self.availablePaymentTypes.count;
     }
     return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     STPPaymentMethodTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier forIndexPath:indexPath];
-    if (indexPath.section == STPPaymentMethodCardListSection) {
-        id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
-        [cell configureWithPaymentMethod:paymentMethod theme:self.theme];
-        cell.selected = [paymentMethod isEqual:self.selectedPaymentMethod];
+    id<STPPaymentMethod> paymentMethod;
+    if (indexPath.section == STPPaymentMethodSavedPaymentsSection) {
+        paymentMethod = [self.savedPaymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
+
     } else {
-        [cell configureForNewCardRowWithTheme:self.theme];
+        paymentMethod = [self.availablePaymentTypes stp_boundSafeObjectAtIndex:indexPath.row];
     }
+    [cell configureWithPaymentMethod:paymentMethod theme:self.theme];
+    cell.selected = [paymentMethod isEqual:self.selectedPaymentMethod];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == STPPaymentMethodCardListSection) {
-        id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
-        self.selectedPaymentMethod = paymentMethod;
-        [tableView reloadSections:[NSIndexSet indexSetWithIndex:STPPaymentMethodCardListSection] withRowAnimation:UITableViewRowAnimationFade];
-        [self.delegate internalViewControllerDidSelectPaymentMethod:paymentMethod];
-    } else if (indexPath.section == STPPaymentMethodAddCardSection) {
+    id<STPPaymentMethod> paymentMethod;
+    if (indexPath.section == STPPaymentMethodSavedPaymentsSection) {
+        paymentMethod = [self.savedPaymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
+    } else {
+        paymentMethod = [self.availablePaymentTypes stp_boundSafeObjectAtIndex:indexPath.row];
+    }
+
+    if ([paymentMethod isKindOfClass:[STPPaymentMethodType class]]
+        && [(STPPaymentMethodType *)paymentMethod gathersInfoAtSelection]) {
+        // Go to create screen
+        STPPaymentMethodType *paymentType = (STPPaymentMethodType *)paymentMethod;
+
         STPPaymentConfiguration *config = [self.configuration copy];
-        NSArray *cardPaymentMethods = [self.paymentMethods filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id<STPPaymentMethod> paymentMethod, __unused NSDictionary<NSString *,id> * _Nullable bindings) {
-            return [paymentMethod isKindOfClass:[STPCard class]];
-        }]];
+
         // Disable SMS autofill if we already have a card on file
-        config.ineligibleForSmsAutofill = (cardPaymentMethods.count > 0);
-        
-        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config theme:self.theme];
-        paymentCardViewController.delegate = self;
-        paymentCardViewController.prefilledInformation = self.prefilledInformation;
-        paymentCardViewController.shippingAddress = self.shippingAddress;
-        [self.navigationController pushViewController:paymentCardViewController animated:YES];
+        config.ineligibleForSmsAutofill = (self.savedPaymentMethods.count > 0);
+
+        if ([paymentType isEqual:[STPPaymentMethodType creditCard]]
+            && !config.useSourcesForCreditCards) {
+            // Go to Add Card VC
+            STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config theme:self.theme];
+            paymentCardViewController.delegate = self;
+            paymentCardViewController.prefilledInformation = self.prefilledInformation;
+            paymentCardViewController.shippingAddress = self.shippingAddress;
+            [self.navigationController pushViewController:paymentCardViewController animated:YES];
+        }
+        else {
+            // Go to Add Source VC
+            // TODO: Link to Add Source VC here
+        }
+    }
+    else {
+        // Just select this method
+        self.selectedPaymentMethod = paymentMethod;
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section]
+                      withRowAnimation:UITableViewRowAnimationFade];
+        [self.delegate internalViewControllerDidSelectPaymentMethod:paymentMethod];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }

@@ -33,7 +33,8 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _additionalPaymentMethods = STPPaymentMethodTypeAll;
+        _availablePaymentMethodTypes = [NSOrderedSet orderedSetWithArray:@[[STPPaymentMethodType applePay],
+                                                                           [STPPaymentMethodType creditCard]]];
         _requiredBillingAddressFields = STPBillingAddressFieldsNone;
         _requiredShippingAddressFields = PKAddressFieldNone;
         _companyName = [NSBundle stp_applicationName];
@@ -46,7 +47,7 @@
 - (id)copyWithZone:(__unused NSZone *)zone {
     STPPaymentConfiguration *copy = [self.class new];
     copy.publishableKey = self.publishableKey;
-    copy.additionalPaymentMethods = self.additionalPaymentMethods;
+    copy.availablePaymentMethodTypes = self.availablePaymentMethodTypes;
     copy.requiredBillingAddressFields = self.requiredBillingAddressFields;
     copy.requiredShippingAddressFields = self.requiredShippingAddressFields;
     copy.shippingType = self.shippingType;
@@ -57,9 +58,9 @@
 }
 
 - (BOOL)applePayEnabled {
-    return self.appleMerchantIdentifier &&
-    (self.additionalPaymentMethods & STPPaymentMethodTypeApplePay) &&
-    [Stripe deviceSupportsApplePay];
+    return (self.appleMerchantIdentifier
+            && [self isPaymentMethodTypeAllowed:[STPPaymentMethodType applePay]]
+            && [Stripe deviceSupportsApplePay]);
 }
 
 - (void)setIneligibleForSmsAutofill:(BOOL)ineligibleForSmsAutofill {
@@ -67,6 +68,9 @@
     self.smsAutofillDisabled = (self.smsAutofillDisabled || ineligibleForSmsAutofill);
 }
 
+- (BOOL)isPaymentMethodTypeAllowed:(STPPaymentMethodType *)type {
+    return ([self.availablePaymentMethodTypes containsObject:type]);
+}
 
 @end
 

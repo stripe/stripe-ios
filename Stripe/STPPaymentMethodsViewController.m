@@ -13,6 +13,7 @@
 #import "STPCard.h"
 #import "STPColorUtils.h"
 #import "STPCoreViewController+Private.h"
+#import "STPCustomer+Stripe_PaymentMethods.h"
 #import "STPDispatchFunctions.h"
 #import "STPLocalizationUtils.h"
 #import "STPPaymentActivityIndicatorView.h"
@@ -20,6 +21,7 @@
 #import "STPPaymentContext+Private.h"
 #import "STPPaymentContext.h"
 #import "STPPaymentMethodTuple.h"
+#import "STPPaymentMethodType+Private.h"
 #import "STPPaymentMethodsInternalViewController.h"
 #import "STPPaymentMethodsViewController+Private.h"
 #import "STPTheme.h"
@@ -38,8 +40,6 @@
 @property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
-@property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
-@property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
 @property(nonatomic, weak)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic, weak)UIViewController *internalViewController;
 @property(nonatomic)BOOL loading;
@@ -78,20 +78,7 @@
             if (error) {
                 [promise fail:error];
             } else {
-                STPCard *selectedCard;
-                NSMutableArray<STPCard *> *cards = [NSMutableArray array];
-                for (id<STPSourceProtocol> source in customer.sources) {
-                    if ([source isKindOfClass:[STPCard class]]) {
-                        STPCard *card = (STPCard *)source;
-                        [cards addObject:card];
-                        if ([card.stripeID isEqualToString:customer.defaultSource.stripeID]) {
-                            selectedCard = card;
-                        }
-                    }
-                }
-                STPCardTuple *cardTuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
-                STPPaymentMethodTuple *tuple = [STPPaymentMethodTuple tupleWithCardTuple:cardTuple
-                                                                         applePayEnabled:configuration.applePayEnabled];
+                STPPaymentMethodTuple *tuple = [customer stp_paymentMethodTupleWithConfiguration:configuration];
                 [promise succeed:tuple];
             }
         });
@@ -114,20 +101,32 @@
             return;
         }
         UIViewController *internal;
-        if (tuple.paymentMethods.count > 0) {
+        if (tuple.savedPaymentMethods.count == 0
+            && tuple.availablePaymentTypes.count == 1
+            && [tuple.availablePaymentTypes firstObject].gathersInfoAtSelection) {
+            // There's only one option, go straight to it if reasonable
+
+            STPPaymentMethodType *paymentType = [tuple.availablePaymentTypes firstObject];
+
+            if ([paymentType isEqual:[STPPaymentMethodType creditCard]]
+                && !self.configuration.useSourcesForCreditCards) {
+                STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
+                addCardViewController.delegate = self;
+                addCardViewController.prefilledInformation = self.prefilledInformation;
+                addCardViewController.shippingAddress = self.shippingAddress;
+                internal = addCardViewController;
+            }
+            else {
+                // TODO: Show Add Source VC
+            }
+        }
+        else {
             internal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:self.configuration
                                                                                         theme:self.theme
                                                                          prefilledInformation:self.prefilledInformation
                                                                               shippingAddress:self.shippingAddress
                                                                            paymentMethodTuple:tuple
                                                                                      delegate:self];
-        } else {
-            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
-            addCardViewController.delegate = self;
-            addCardViewController.prefilledInformation = self.prefilledInformation;
-            addCardViewController.shippingAddress = self.shippingAddress;
-            internal = addCardViewController;
-            
         }
         internal.stp_navigationItemProxy = self.navigationItem;
         [self addChildViewController:internal];
@@ -167,8 +166,10 @@
 }
 
 - (void)finishWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
-    if ([paymentMethod isKindOfClass:[STPCard class]]) {
-        [self.apiAdapter selectDefaultCustomerSource:(STPCard *)paymentMethod completion:^(__unused NSError *error) {
+    if ([paymentMethod conformsToProtocol:@protocol(STPSourceProtocol)]
+        && paymentMethod.paymentMethodType.canBeDefaultSource) {
+        [self.apiAdapter selectDefaultCustomerSource:(id<STPSourceProtocol>)paymentMethod
+                                          completion:^(__unused NSError *error) {
         }];
     }
     [self.delegate paymentMethodsViewController:self didSelectPaymentMethod:paymentMethod];
@@ -248,11 +249,6 @@
         self.navigationItem.title = STPLocalizedString(@"Loading…", @"Title for screen when data is still loading from the network.");
 
         WEAK(self);
-        [loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
-            STRONG(self);
-            self.paymentMethods = tuple.paymentMethods;
-            self.selectedPaymentMethod = tuple.selectedPaymentMethod;
-        }];
         [[[self.stp_didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
             return loadingPromise;
         }] onSuccess:^(STPPaymentMethodTuple *tuple) {
