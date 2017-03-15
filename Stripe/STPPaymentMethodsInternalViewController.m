@@ -145,6 +145,17 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     return 0.01f;
 }
 
+- (void)updateWithPaymentMethodTuple:(STPPaymentMethodTuple *)tuple {
+    if ([self.paymentMethods isEqualToArray:tuple.paymentMethods] &&
+        [self.selectedPaymentMethod isEqual:tuple.selectedPaymentMethod]) {
+        return;
+    }
+    self.paymentMethods = tuple.paymentMethods;
+    self.selectedPaymentMethod = tuple.selectedPaymentMethod;
+    NSMutableIndexSet *sections = [NSMutableIndexSet indexSetWithIndex:STPPaymentMethodCardListSection];
+    [self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
 - (void)addCardViewControllerDidCancel:(__unused STPAddCardViewController *)addCardViewController {
     [self.navigationController popViewControllerAnimated:YES];
 }

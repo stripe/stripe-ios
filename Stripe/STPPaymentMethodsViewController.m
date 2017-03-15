@@ -61,6 +61,17 @@
                                 theme:(STPTheme *)theme
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
+    STPPromise<STPPaymentMethodTuple *> *promise = [self retrieveCustomerWithConfiguration:configuration apiAdapter:apiAdapter];
+    return [self initWithConfiguration:configuration
+                            apiAdapter:apiAdapter
+                        loadingPromise:promise
+                                 theme:theme
+                       shippingAddress:nil
+                              delegate:delegate];
+}
+
+- (STPPromise<STPPaymentMethodTuple *>*)retrieveCustomerWithConfiguration:(STPPaymentConfiguration *)configuration
+                                                               apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
     STPPromise<STPPaymentMethodTuple *> *promise = [STPPromise new];
     [apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
         stpDispatchToMainThreadIfNecessary(^{
@@ -85,12 +96,7 @@
             }
         });
     }];
-    return [self initWithConfiguration:configuration
-                            apiAdapter:apiAdapter
-                        loadingPromise:promise
-                                 theme:theme
-                       shippingAddress:nil
-                              delegate:delegate];
+    return promise;
 }
 
 - (void)createAndSetupViews {
@@ -137,6 +143,7 @@
             self.activityIndicator.animating = NO;
         }];
         [self.navigationItem setRightBarButtonItem:internal.stp_navigationItemProxy.rightBarButtonItem animated:YES];
+        self.internalViewController = internal;
     }];
     self.loading = YES;
 }
@@ -173,7 +180,17 @@
 }
 
 - (void)internalViewControllerDidCreateToken:(STPToken *)token completion:(STPErrorBlock)completion {
-    [self.apiAdapter attachSourceToCustomer:token completion:^(NSError * _Nullable error) {
+    [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *error) {
+        STPPromise<STPPaymentMethodTuple *> *promise = [self retrieveCustomerWithConfiguration:self.configuration apiAdapter:self.apiAdapter];
+        [promise onSuccess:^(STPPaymentMethodTuple *tuple) {
+            stpDispatchToMainThreadIfNecessary(^{
+                if ([self.internalViewController isKindOfClass:[STPPaymentMethodsInternalViewController class]]) {
+                    STPPaymentMethodsInternalViewController *paymentMethodsVC = (STPPaymentMethodsInternalViewController *)self.internalViewController;
+                    [paymentMethodsVC updateWithPaymentMethodTuple:tuple];
+                }
+            });
+        }];
+
         stpDispatchToMainThreadIfNecessary(^{
             completion(error);
             if (!error) {
