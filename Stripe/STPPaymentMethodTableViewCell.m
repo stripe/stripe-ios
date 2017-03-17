@@ -54,20 +54,6 @@
     self.checkmarkIcon.center = CGPointMake(CGRectGetWidth(self.bounds) - padding - CGRectGetMidX(self.checkmarkIcon.bounds), midY);
 }
 
-- (void)configureForNewCardRowWithTheme:(STPTheme *)theme {
-    _theme = theme;
-    self.backgroundColor = [UIColor clearColor];
-    self.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
-    self.leftIcon.image = [STPImageLibrary addIcon];
-    self.leftIcon.tintColor = self.theme.accentColor;
-    self.titleLabel.font = self.theme.font;
-    self.titleLabel.textColor = self.theme.accentColor;
-    self.titleLabel.text = STPLocalizedString(@"Add New Card…", 
-                                              @"Button to add a new credit card.");
-    self.checkmarkIcon.hidden = YES;
-    [self setNeedsLayout];
-}
-
 - (void)configureWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod theme:(STPTheme *)theme {
     _paymentMethod = paymentMethod;
     _theme = theme;
@@ -95,31 +81,38 @@
 - (NSAttributedString *)buildAttributedStringForPaymentMethod:(id<STPPaymentMethod>)paymentMethod
                                                      selected:(BOOL)selected {
     if ([paymentMethod.paymentMethodType isEqual:[STPPaymentMethodType creditCard]]) {
+        NSString *last4 = nil;
+        NSString *cardBrand = nil;
+
         if ([paymentMethod isKindOfClass:[STPCard class]]) {
             STPCard *card = (STPCard *)paymentMethod;
-            return [self buildAttributedStringForCardBrand:card.brand
-                                                     last4:card.last4
-                                                  selected:selected];
+            last4 = card.last4;
+            cardBrand = [STPCard stringFromBrand:card.brand];
         }
         else if ([paymentMethod isKindOfClass:[STPSource class]]) {
             STPSource *source = (STPSource *)paymentMethod;
-            return [self buildAttributedStringForCardBrand:source.cardDetails.brand
-                                                     last4:source.cardDetails.last4
+            last4 = source.cardDetails.last4;
+            cardBrand = [STPCard stringFromBrand:source.cardDetails.brand];
+        }
+
+        if (last4 && cardBrand) {
+            return [self buildAttributedStringForCardBrand:cardBrand
+                                                     last4:last4
                                                   selected:selected];
         }
-    } else {
-        NSString *label = paymentMethod.paymentMethodLabel;
-        UIColor *primaryColor = [self primaryColorForPaymentMethodWithSelectedState:selected];
-        return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
+
     }
-    return nil;
+
+    NSString *label = paymentMethod.paymentMethodLabel;
+    UIColor *primaryColor = [self primaryColorForPaymentMethodWithSelectedState:selected];
+    return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
+
 }
 
-- (NSAttributedString *)buildAttributedStringForCardBrand:(STPCardBrand)brand
+- (NSAttributedString *)buildAttributedStringForCardBrand:(NSString *)brandString
                                                     last4:(NSString *)last4
                                                  selected:(BOOL)selected {
     NSString *template = STPLocalizedString(@"%@ Ending In %@", @"{card brand} ending in {last4}");
-    NSString *brandString = [STPCard stringFromBrand:brand];
     NSString *label = [NSString stringWithFormat:template, brandString, last4];
     UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
     UIColor *secondaryColor = [primaryColor colorWithAlphaComponent:0.6f];

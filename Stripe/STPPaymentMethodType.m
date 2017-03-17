@@ -39,7 +39,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return @"New Credit Card";
+    return @"Credit Card";
 }
 
 - (BOOL)gathersInfoAtSelection {
@@ -65,15 +65,15 @@
 @implementation STPPaymentMethodTypeSEPADebit
 
 - (UIImage *)paymentMethodImage {
-    return nil;
+    return [STPImageLibrary addIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return nil;
+    return [STPImageLibrary addIcon];
 }
 
 - (NSString *)paymentMethodLabel {
-    return @"New SEPA Debit";
+    return @"SEPA Debit";
 }
 
 - (BOOL)gathersInfoAtSelection {

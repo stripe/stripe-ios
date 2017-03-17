@@ -80,7 +80,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.requiredBillingAddressFields = settings.requiredBillingAddressFields
         config.requiredShippingAddressFields = settings.requiredShippingAddressFields
         config.shippingType = settings.shippingType
-        config.additionalPaymentMethods = settings.additionalPaymentMethods
+        config.availablePaymentMethodTypes = settings.availablePaymentMethods
         config.smsAutofillDisabled = !settings.smsAutofillEnabled
         
         let paymentContext = STPPaymentContext(apiAdapter: MyAPIClient.sharedClient,
@@ -202,7 +202,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
         self.paymentRow.loading = paymentContext.loading
         if let paymentMethod = paymentContext.selectedPaymentMethod {
-            self.paymentRow.detail = paymentMethod.label
+            self.paymentRow.detail = paymentMethod.paymentMethodLabel ?? ""
         }
         else {
             self.paymentRow.detail = "Select Payment"

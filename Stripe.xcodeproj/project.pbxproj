@@ -520,8 +520,6 @@
 		F116E94B1D83404D0026A52A /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04B94BC71A47B78A00092C46 /* AddressBook.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F116E94C1D83405E0026A52A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C74B9B164043050071C2CA /* Foundation.framework */; };
 		F116E94D1D8340640026A52A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0D74F918F6106100966D7B /* Security.framework */; };
-		F11C96EB1E78A9BB008DB23D /* STPPaymentMethodType.h in Headers */ = {isa = PBXBuildFile; fileRef = F11C96E91E78A9BB008DB23D /* STPPaymentMethodType.h */; };
-		F11C96EC1E78A9BB008DB23D /* STPPaymentMethodType.h in Headers */ = {isa = PBXBuildFile; fileRef = F11C96E91E78A9BB008DB23D /* STPPaymentMethodType.h */; };
 		F11C96ED1E78A9BB008DB23D /* STPPaymentMethodType.m in Sources */ = {isa = PBXBuildFile; fileRef = F11C96EA1E78A9BB008DB23D /* STPPaymentMethodType.m */; };
 		F11C96EE1E78A9BB008DB23D /* STPPaymentMethodType.m in Sources */ = {isa = PBXBuildFile; fileRef = F11C96EA1E78A9BB008DB23D /* STPPaymentMethodType.m */; };
 		F11C96F21E78CD3A008DB23D /* STPPaymentMethodType+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F11C96F01E78CD3A008DB23D /* STPPaymentMethodType+Private.h */; };
@@ -530,6 +528,8 @@
 		F11C96F91E7C82B1008DB23D /* STPCustomer+Stripe_PaymentMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = F11C96F61E7C82B1008DB23D /* STPCustomer+Stripe_PaymentMethods.h */; };
 		F11C96FA1E7C82B1008DB23D /* STPCustomer+Stripe_PaymentMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = F11C96F71E7C82B1008DB23D /* STPCustomer+Stripe_PaymentMethods.m */; };
 		F11C96FB1E7C82B1008DB23D /* STPCustomer+Stripe_PaymentMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = F11C96F71E7C82B1008DB23D /* STPCustomer+Stripe_PaymentMethods.m */; };
+		F11C97001E7C92AD008DB23D /* STPPaymentMethodType.h in Headers */ = {isa = PBXBuildFile; fileRef = F11C96FF1E7C92AD008DB23D /* STPPaymentMethodType.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F11C97011E7C92AD008DB23D /* STPPaymentMethodType.h in Headers */ = {isa = PBXBuildFile; fileRef = F11C96FF1E7C92AD008DB23D /* STPPaymentMethodType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F12829DA1D7747E4008B10D6 /* STPBundleLocator.h in Headers */ = {isa = PBXBuildFile; fileRef = F12829D81D7747E4008B10D6 /* STPBundleLocator.h */; };
 		F12829DB1D7747E4008B10D6 /* STPBundleLocator.h in Headers */ = {isa = PBXBuildFile; fileRef = F12829D81D7747E4008B10D6 /* STPBundleLocator.h */; };
 		F12829DC1D7747E4008B10D6 /* STPBundleLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = F12829D91D7747E4008B10D6 /* STPBundleLocator.m */; };
@@ -1017,11 +1017,11 @@
 		C1FEE5951CBFF11400A7632B /* STPPostalCodeValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPostalCodeValidator.m; sourceTree = "<group>"; };
 		C1FEE5981CBFF24000A7632B /* STPPostalCodeValidatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPostalCodeValidatorTest.m; sourceTree = "<group>"; };
 		F1122A7D1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+StripeTest.m"; sourceTree = "<group>"; };
-		F11C96E91E78A9BB008DB23D /* STPPaymentMethodType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPPaymentMethodType.h; sourceTree = "<group>"; };
 		F11C96EA1E78A9BB008DB23D /* STPPaymentMethodType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodType.m; sourceTree = "<group>"; };
 		F11C96F01E78CD3A008DB23D /* STPPaymentMethodType+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPPaymentMethodType+Private.h"; sourceTree = "<group>"; };
 		F11C96F61E7C82B1008DB23D /* STPCustomer+Stripe_PaymentMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPCustomer+Stripe_PaymentMethods.h"; sourceTree = "<group>"; };
 		F11C96F71E7C82B1008DB23D /* STPCustomer+Stripe_PaymentMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STPCustomer+Stripe_PaymentMethods.m"; sourceTree = "<group>"; };
+		F11C96FF1E7C92AD008DB23D /* STPPaymentMethodType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodType.h; path = PublicHeaders/STPPaymentMethodType.h; sourceTree = "<group>"; };
 		F12829D81D7747E4008B10D6 /* STPBundleLocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBundleLocator.h; sourceTree = "<group>"; };
 		F12829D91D7747E4008B10D6 /* STPBundleLocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBundleLocator.m; sourceTree = "<group>"; };
 		F12C8DBE1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPPaymentContextAmountModel.h; sourceTree = "<group>"; };
@@ -1362,7 +1362,7 @@
 				0451CC421C49AE1C003B2CA6 /* STPPaymentResult.h */,
 				0451CC431C49AE1C003B2CA6 /* STPPaymentResult.m */,
 				C11810851CC6AF4C0022FB55 /* STPPaymentMethod.h */,
-				F11C96E91E78A9BB008DB23D /* STPPaymentMethodType.h */,
+				F11C96FF1E7C92AD008DB23D /* STPPaymentMethodType.h */,
 				F11C96EA1E78A9BB008DB23D /* STPPaymentMethodType.m */,
 				F11C96F01E78CD3A008DB23D /* STPPaymentMethodType+Private.h */,
 				04BC29A71CD9A83600318357 /* STPCheckoutAPIClient.h */,
@@ -1713,8 +1713,8 @@
 				C124A17D1CCAA0C2007D42EE /* NSMutableURLRequest+Stripe.h in Headers */,
 				F1FA6F991E25970F00EB444D /* STPCoreTableViewController+Private.h in Headers */,
 				C1BD9B2F1E3940A200CEE925 /* STPSourceRedirect.h in Headers */,
-				F11C96EC1E78A9BB008DB23D /* STPPaymentMethodType.h in Headers */,
 				04F94DB01D229F60004FC826 /* STPRememberMeTermsView.h in Headers */,
+				F11C97011E7C92AD008DB23D /* STPPaymentMethodType.h in Headers */,
 				04F94DBF1D22A0AA004FC826 /* STPCheckoutAPIClient.h in Headers */,
 				04E32AA01B7A9490009C9E35 /* STPPaymentCardTextField.h in Headers */,
 				04F94DA81D229F2F004FC826 /* STPPaymentMethodTuple.h in Headers */,
@@ -1793,7 +1793,7 @@
 				04BC29A91CD9A83600318357 /* STPCheckoutAPIClient.h in Headers */,
 				C11810A71CC6EE840022FB55 /* STPBackendAPIAdapter.h in Headers */,
 				F12C8DC01D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
-				F11C96EB1E78A9BB008DB23D /* STPPaymentMethodType.h in Headers */,
+				F11C97001E7C92AD008DB23D /* STPPaymentMethodType.h in Headers */,
 				F19491DE1E5F6B8C001E1FC2 /* STPSourceCardDetails.h in Headers */,
 				0439B9871C454F97005A1ED5 /* STPPaymentMethodsViewController.h in Headers */,
 				04B31DF91D11AC6400EF1631 /* STPUserInformation.h in Headers */,

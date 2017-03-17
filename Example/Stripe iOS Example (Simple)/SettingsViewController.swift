@@ -11,7 +11,7 @@ import Stripe
 
 struct Settings {
     let theme: STPTheme
-    let additionalPaymentMethods: STPPaymentMethodType
+    let availablePaymentMethods: NSOrderedSet
     let requiredBillingAddressFields: STPBillingAddressFields
     let requiredShippingAddressFields: PKAddressField
     let shippingType: STPShippingType
@@ -20,8 +20,12 @@ struct Settings {
 
 class SettingsViewController: UITableViewController {
     var settings: Settings {
+
+        let enabledOrderedPaymentMethods = self.allPaymentMethods.mutableCopy() as! NSMutableOrderedSet
+        enabledOrderedPaymentMethods.intersectSet(self.availablePaymentMethods)
+
         return Settings(theme: self.theme.stpTheme,
-                        additionalPaymentMethods: self.applePay.enabled ? .all : STPPaymentMethodType(),
+                        availablePaymentMethods: enabledOrderedPaymentMethods.copy() as! NSOrderedSet,
                         requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
                         requiredShippingAddressFields: self.requiredShippingAddressFields.pkAddressFields,
                         shippingType: self.shippingType.stpShippingType,
@@ -29,7 +33,14 @@ class SettingsViewController: UITableViewController {
     }
 
     private var theme: Theme = .Default
-    private var applePay: Switch = .Enabled
+    private let allPaymentMethods = NSOrderedSet(arrayLiteral:STPPaymentMethodType.creditCard(),
+                                                 STPPaymentMethodType.applePay(),
+                                                 STPPaymentMethodType.bancontact(),
+                                                 STPPaymentMethodType.giropay(),
+                                                 STPPaymentMethodType.ideal(),
+                                                 STPPaymentMethodType.sepaDebit(),
+                                                 STPPaymentMethodType.sofort())
+    private var availablePaymentMethods = Set<STPPaymentMethodType>(arrayLiteral: STPPaymentMethodType.creditCard(), STPPaymentMethodType.applePay())
     private var requiredBillingAddressFields: RequiredBillingAddressFields = .None
     private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
     private var shippingType: ShippingType = .Shipping
@@ -37,7 +48,7 @@ class SettingsViewController: UITableViewController {
 
     fileprivate enum Section: String {
         case Theme = "Theme"
-        case ApplePay = "Apple Pay"
+        case AvailablePaymentTypes = "Available Payment Methods"
         case RequiredBillingAddressFields = "Required Billing Address Fields"
         case RequiredShippingAddressFields = "Required Shipping Address Fields"
         case ShippingType = "Shipping Type"
@@ -47,7 +58,7 @@ class SettingsViewController: UITableViewController {
         init(section: Int) {
             switch section {
             case 0: self = .Theme
-            case 1: self = .ApplePay
+            case 1: self = .AvailablePaymentTypes
             case 2: self = .RequiredBillingAddressFields
             case 3: self = .RequiredShippingAddressFields
             case 4: self = .ShippingType
@@ -200,7 +211,7 @@ class SettingsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(section: section) {
         case .Theme: return 3
-        case .ApplePay: return 2
+        case .AvailablePaymentTypes: return self.allPaymentMethods.count;
         case .RequiredBillingAddressFields: return 3
         case .RequiredShippingAddressFields: return 4
         case .ShippingType: return 2
@@ -220,10 +231,10 @@ class SettingsViewController: UITableViewController {
             let value = Theme(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
             cell.accessoryType = value == self.theme ? .checkmark : .none
-        case .ApplePay:
-            let value = Switch(row: (indexPath as NSIndexPath).row)
-            cell.textLabel?.text = value.rawValue
-            cell.accessoryType = value == self.applePay ? .checkmark : .none
+        case .AvailablePaymentTypes:
+            let value = self.allPaymentMethods.object(at: (indexPath as NSIndexPath).row) as! STPPaymentMethodType
+            cell.textLabel?.text = value.paymentMethodLabel
+            cell.accessoryType = self.availablePaymentMethods.contains(value) ? .checkmark : .none
         case .RequiredBillingAddressFields:
             let value = RequiredBillingAddressFields(row: (indexPath as NSIndexPath).row)
             cell.textLabel?.text = value.rawValue
@@ -252,8 +263,14 @@ class SettingsViewController: UITableViewController {
         switch Section(section: (indexPath as NSIndexPath).section) {
         case .Theme:
             self.theme = Theme(row: (indexPath as NSIndexPath).row)
-        case .ApplePay:
-            self.applePay = Switch(row: (indexPath as NSIndexPath).row)
+        case .AvailablePaymentTypes:
+            let value = self.allPaymentMethods.object(at: (indexPath as NSIndexPath).row) as! STPPaymentMethodType
+            if self.availablePaymentMethods.contains(value) {
+                self.availablePaymentMethods.remove(value)
+            }
+            else {
+                self.availablePaymentMethods.insert(value)
+            }
         case .RequiredBillingAddressFields:
             self.requiredBillingAddressFields = RequiredBillingAddressFields(row: (indexPath as NSIndexPath).row)
         case .RequiredShippingAddressFields:
