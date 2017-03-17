@@ -24,6 +24,12 @@
     [self setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
 }
 
+- (void)stp_setMultipartFormData:(NSData *)data boundary:(NSString *)boundary {
+    self.HTTPBody = data;
+    [self setValue:[NSString stringWithFormat:@"%lu", (unsigned long)data.length] forHTTPHeaderField:@"Content-Length"];
+    [self setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary] forHTTPHeaderField:@"Content-Type"];
+}
+
 @end
 
 void linkNSMutableURLRequestCategory(void){}
