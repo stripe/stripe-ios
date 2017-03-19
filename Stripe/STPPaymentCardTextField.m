@@ -462,6 +462,10 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     [self updateCVCPlaceholder];
 }
 
+- (STPCardBrand)cardBrand {
+    return self.viewModel.brand;
+}
+
 - (void)setText:(NSString *)text inField:(STPCardFieldType)field {
     NSString *nonNilText = text ?: @"";
     STPFormTextField *textField = nil;
