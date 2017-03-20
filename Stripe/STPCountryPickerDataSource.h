@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "STPPickerTableViewCell.h"
+#import "STPPickerDataSource.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

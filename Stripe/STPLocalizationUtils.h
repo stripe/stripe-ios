@@ -16,6 +16,11 @@
  */
 + (nonnull NSString *)localizedStripeStringForKey:(nonnull NSString *)key;
 
+/**
+ Sorts the given country codes by their display name in the current locale.
+ */
++ (void)sortCountryCodesByDisplayName:(nonnull NSMutableArray<NSString *>*)countryCodes;
+
 @end
 
 static inline NSString * _Nonnull STPLocalizedString(NSString* _Nonnull key, NSString * _Nullable __unused comment) {

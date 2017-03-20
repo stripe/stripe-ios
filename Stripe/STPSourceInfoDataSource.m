@@ -8,13 +8,15 @@
 
 #import "STPSourceInfoDataSource.h"
 
+#import "STPSelectorDataSource.h"
+
 @implementation STPSourceInfoDataSource
 
 - (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams {
     self = [super init];
     if (self) {
         _sourceParams = sourceParams;
-        _title = @"";
+        _paymentMethodType = nil;
         _cells = @[];
     }
     return self;

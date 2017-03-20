@@ -9,29 +9,28 @@
 #import "STPIDEALSourceInfoDataSource.h"
 
 #import "NSArray+Stripe_BoundSafe.h"
+#import "STPIDEALBankSelectorDataSource.h"
 #import "STPLocalizationUtils.h"
-#import "STPPickerTableViewCell.h"
-#import "STPBankPickerDataSource.h"
+#import "STPPaymentMethodType.h"
+#import "STPTextFieldTableViewCell.h"
 
 @implementation STPIDEALSourceInfoDataSource
 
 - (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams {
     self = [super initWithSourceParams:sourceParams];
     if (self) {
-        self.title = STPLocalizedString(@"iDEAL Info", @"Title for form to collect iDEAL account info");
+        self.paymentMethodType = [STPPaymentMethodType ideal];
         STPTextFieldTableViewCell *nameCell = [[STPTextFieldTableViewCell alloc] init];
         nameCell.placeholder = STPLocalizedString(@"Name", @"Caption for Name field on bank info form");
         if (self.sourceParams.owner) {
             nameCell.contents = self.sourceParams.owner[@"name"];
         }
-        STPPickerTableViewCell *bankCell = [[STPPickerTableViewCell alloc] init];
-        bankCell.placeholder = STPLocalizedString(@"Bank", @"Caption for Bank field on bank info form");
-        bankCell.pickerDataSource = [STPBankPickerDataSource iDEALBankDataSource];
+        self.cells = @[nameCell];
+        self.selectorDataSource = [STPIDEALBankSelectorDataSource new];
         NSDictionary *idealDict = self.sourceParams.additionalAPIParameters[@"ideal"];
         if (idealDict) {
-            bankCell.contents = idealDict[@"bank"];
+            [self.selectorDataSource selectRowWithValue:idealDict[@"bank"]];
         }
-        self.cells = @[nameCell, bankCell];
     }
     return self;
 }
@@ -53,11 +52,13 @@
     if (additionalParams[@"ideal"]) {
         idealDict = additionalParams[@"ideal"];
     }
-    STPTextFieldTableViewCell *bankCell = [self.cells stp_boundSafeObjectAtIndex:1];
-    idealDict[@"bank"] = bankCell.contents;
-    additionalParams[@"ideal"] = idealDict;
-    params.additionalAPIParameters = additionalParams;
-
+    NSInteger selectedRow = self.selectorDataSource.selectedRow;
+    NSString *selectedBank = [self.selectorDataSource selectorValueForRow:selectedRow];
+    if (selectedBank) {
+        idealDict[@"bank"] = selectedBank;
+        additionalParams[@"ideal"] = idealDict;
+        params.additionalAPIParameters = additionalParams;
+    }
     NSString *name = params.owner[@"name"];
     NSString *bank = params.additionalAPIParameters[@"ideal"][@"bank"];
     if (name.length > 0 && bank.length > 0) {

@@ -7,13 +7,16 @@
 //
 
 #import <Stripe/Stripe.h>
-#import "STPTextFieldTableViewCell.h"
+
+@protocol STPSelectorDataSource;
+@class STPTextFieldTableViewCell, STPPaymentMethodType;
 
 @interface STPSourceInfoDataSource : NSObject
 
-@property (nonatomic, copy) NSString *title;
+@property (nonatomic) STPPaymentMethodType *paymentMethodType;
 @property (nonatomic) STPSourceParams *sourceParams;
 @property (nonatomic, copy) NSArray<STPTextFieldTableViewCell *>*cells;
+@property (nonatomic) id<STPSelectorDataSource>selectorDataSource;
 
 - (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams;
 - (STPSourceParams *)completeSourceParams;

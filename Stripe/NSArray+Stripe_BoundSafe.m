@@ -11,7 +11,7 @@
 @implementation NSArray (Stripe_BoundSafe)
 
 - (nullable id)stp_boundSafeObjectAtIndex:(NSInteger)index {
-    if (index + 1 > (NSInteger)self.count || index < 0) {
+    if (index == NSNotFound || index + 1 > (NSInteger)self.count || index < 0) {
         return nil;
     }
     return self[index];

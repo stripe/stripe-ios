@@ -9,6 +9,7 @@
 #import "STPCountryPickerDataSource.h"
 
 #import "NSArray+Stripe_BoundSafe.h"
+#import "STPLocalizationUtils.h"
 
 @implementation STPCountryPickerDataSource
 
@@ -70,13 +71,7 @@
 - (void)commonInitWithCountryCodes:(NSArray<NSString *>*)countryCodes {
     NSLocale *locale = [NSLocale autoupdatingCurrentLocale];
     NSMutableArray *otherCountryCodes = [countryCodes mutableCopy];
-    [otherCountryCodes sortUsingComparator:^NSComparisonResult(NSString *code1, NSString *code2) {
-        NSString *localeID1 = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: code1}];
-        NSString *localeID2 = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: code2}];
-        NSString *name1 = [locale displayNameForKey:NSLocaleIdentifier value:localeID1];
-        NSString *name2 = [locale displayNameForKey:NSLocaleIdentifier value:localeID2];
-        return [name1 compare:name2];
-    }];
+    [STPLocalizationUtils sortCountryCodesByDisplayName:otherCountryCodes];
     NSString *countryCode = [locale objectForKey:NSLocaleCountryCode];
     if (countryCodes && [otherCountryCodes containsObject:countryCode]) {
         [otherCountryCodes removeObject:countryCode];
@@ -92,12 +87,14 @@
 }
 
 - (NSInteger)indexOfPickerValue:(NSString *)value {
+    if (!value) {
+        return NSNotFound;
+    }
     return [self.countryCodes indexOfObject:value];
 }
 
 - (NSString *)pickerValueForRow:(NSInteger)row {
-    NSString *countryCode = [self.countryCodes stp_boundSafeObjectAtIndex:row];
-    return countryCode ?: @"";
+    return [self.countryCodes stp_boundSafeObjectAtIndex:row];
 }
 
 - (NSString *)pickerTitleForRow:(NSInteger)row {

@@ -32,6 +32,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong, nullable)STPAddress *billingAddress;
 
+/**
+ *  The bank your customer uses for iDEAL payments. 
+ *  https://stripe.com/docs/sources/ideal#optional-specifying-the-customers-bank
+ */
+@property(nonatomic, copy, nullable)NSString *idealBank;
+
 @end
 
 NS_ASSUME_NONNULL_END
