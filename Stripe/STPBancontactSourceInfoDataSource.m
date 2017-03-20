@@ -10,6 +10,7 @@
 
 #import "NSArray+Stripe_BoundSafe.h"
 #import "STPLocalizationUtils.h"
+#import "STPTextFieldTableViewCell.h"
 
 @implementation STPBancontactSourceInfoDataSource
 

@@ -7,13 +7,16 @@
 //
 
 #import <Stripe/Stripe.h>
-#import "STPTextFieldTableViewCell.h"
+
+@protocol STPPickerDataSource;
+@class STPTextFieldTableViewCell;
 
 @interface STPSourceInfoDataSource : NSObject
 
 @property(nonatomic)NSString *title;
 @property(nonatomic)STPSourceParams *sourceParams;
 @property(nonatomic)NSArray<STPTextFieldTableViewCell *>*cells;
+@property(nonatomic)id<STPPickerDataSource>pickerDataSource;
 
 - (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams;
 - (STPSourceParams *)completedSourceParams;

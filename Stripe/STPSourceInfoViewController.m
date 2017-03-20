@@ -16,7 +16,6 @@
 #import "STPGiropaySourceInfoDataSource.h"
 #import "STPIDEALSourceInfoDataSource.h"
 #import "STPLocalizationUtils.h"
-#import "STPPickerTableViewCell.h"
 #import "STPSofortSourceInfoDataSource.h"
 #import "STPSourceParams.h"
 #import "STPSource+Private.h"

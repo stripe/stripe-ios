@@ -9,9 +9,9 @@
 #import "STPIDEALSourceInfoDataSource.h"
 
 #import "NSArray+Stripe_BoundSafe.h"
-#import "STPLocalizationUtils.h"
-#import "STPPickerTableViewCell.h"
 #import "STPBankPickerDataSource.h"
+#import "STPLocalizationUtils.h"
+#import "STPTextFieldTableViewCell.h"
 
 @implementation STPIDEALSourceInfoDataSource
 
@@ -24,14 +24,16 @@
         if (self.sourceParams.owner) {
             nameCell.contents = self.sourceParams.owner[@"name"];
         }
-        STPPickerTableViewCell *bankCell = [[STPPickerTableViewCell alloc] init];
-        bankCell.placeholder = STPLocalizedString(@"Bank", @"Caption for Bank field on bank info form");
-        bankCell.pickerDataSource = [STPBankPickerDataSource iDEALBankDataSource];
-        NSDictionary *idealDict = self.sourceParams.additionalAPIParameters[@"ideal"];
-        if (idealDict) {
-            bankCell.contents = idealDict[@"bank"];
-        }
-        self.cells = @[nameCell, bankCell];
+        self.cells = @[nameCell];
+
+        // TODO: bank picker
+//        STPPickerTableViewCell *bankCell = [[STPPickerTableViewCell alloc] init];
+//        bankCell.placeholder = STPLocalizedString(@"Bank", @"Caption for Bank field on bank info form");
+//        bankCell.pickerDataSource = [STPBankPickerDataSource iDEALBankDataSource];
+//        NSDictionary *idealDict = self.sourceParams.additionalAPIParameters[@"ideal"];
+//        if (idealDict) {
+//            bankCell.contents = idealDict[@"bank"];
+//        }
     }
     return self;
 }
