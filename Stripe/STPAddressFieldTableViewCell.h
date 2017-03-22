@@ -20,6 +20,7 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
     STPAddressFieldTypeState,
     STPAddressFieldTypeZip,
     STPAddressFieldTypeCountry,
+    STPAddressFieldTypeSEPACountry,
     STPAddressFieldTypeEmail,
     STPAddressFieldTypePhone,
 };
