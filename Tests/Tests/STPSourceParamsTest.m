@@ -32,10 +32,10 @@
 
     STPSourceParams *source = [STPSourceParams cardParamsWithCard:card];
     NSDictionary *sourceCard = source.additionalAPIParameters[@"card"];
-    XCTAssertEqual(sourceCard[@"number"], card.number);
-    XCTAssertEqual(sourceCard[@"cvc"], card.cvc);
-    XCTAssertEqual(sourceCard[@"exp_month"], @(card.expMonth));
-    XCTAssertEqual(sourceCard[@"exp_year"], @(card.expYear));
+    XCTAssertEqualObjects(sourceCard[@"number"], card.number);
+    XCTAssertEqualObjects(sourceCard[@"cvc"], card.cvc);
+    XCTAssertEqualObjects(sourceCard[@"exp_month"], @(card.expMonth));
+    XCTAssertEqualObjects(sourceCard[@"exp_year"], @(card.expYear));
     XCTAssertEqualObjects(source.owner[@"name"], card.name);
     NSDictionary *sourceAddress = source.owner[@"address"];
     XCTAssertEqualObjects(sourceAddress[@"line1"], card.addressLine1);
