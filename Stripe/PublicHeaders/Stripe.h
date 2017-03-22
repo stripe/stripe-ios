@@ -31,6 +31,7 @@
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentContext.h"
 #import "STPPaymentMethod.h"
+#import "STPPaymentMethodType.h"
 #import "STPPaymentMethodsViewController.h"
 #import "STPPaymentResult.h"
 #import "STPShippingAddressViewController.h"
