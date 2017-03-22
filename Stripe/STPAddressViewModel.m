@@ -10,8 +10,14 @@
 #import "NSArray+Stripe_BoundSafe.h"
 #import "STPPostalCodeValidator.h"
 
+typedef NS_ENUM(NSUInteger, STPAddressType) {
+    STPAddressTypeBilling,
+    STPAddressTypeShipping,
+    STPAddressTypeSEPADebit,
+};
+
 @interface STPAddressViewModel()<STPAddressFieldTableViewCellDelegate>
-@property(nonatomic)BOOL isBillingAddress;
+@property(nonatomic)STPAddressType addressType;
 @property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
 @property(nonatomic)PKAddressField requiredShippingAddressFields;
 @property(nonatomic)NSArray<STPAddressFieldTableViewCell *> *addressCells;
@@ -25,7 +31,7 @@
 - (instancetype)initWithRequiredBillingFields:(STPBillingAddressFields)requiredBillingAddressFields {
     self = [super init];
     if (self) {
-        _isBillingAddress = YES;
+        _addressType = STPAddressTypeBilling;
         _requiredBillingAddressFields = requiredBillingAddressFields;
         switch (requiredBillingAddressFields) {
             case STPBillingAddressFieldsNone:
@@ -56,7 +62,7 @@
 - (instancetype)initWithRequiredShippingFields:(PKAddressField)requiredShippingAddressFields {
     self = [super init];
     if (self) {
-        _isBillingAddress = NO;
+        _addressType = STPAddressTypeShipping;
         _requiredShippingAddressFields = requiredShippingAddressFields;
         NSMutableArray *cells = [NSMutableArray new];
         if (requiredShippingAddressFields & PKAddressFieldName) {
@@ -93,16 +99,34 @@
     return self;
 }
 
+- (instancetype)initWithSEPADebitFields {
+    self = [super init];
+    if (self) {
+        _addressType = STPAddressTypeSEPADebit;
+        _addressCells = @[
+                          [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine1 contents:@"" lastInList:NO delegate:self],
+                          [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCity contents:@"" lastInList:NO delegate:self],
+                          [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:NO delegate:self],
+                          [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeSEPACountry contents:_addressFieldTableViewCountryCode lastInList:YES delegate:self],
+                          ];
+        [self commonInit];
+    }
+    return self;
+}
+
 - (void)commonInit {
     _addressFieldTableViewCountryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
     [self updatePostalCodeCellIfNecessary];
 }
 
 - (void)updatePostalCodeCellIfNecessary {
+    if (self.addressType == STPAddressTypeSEPADebit) {
+        return;
+    }
     STPPostalCodeType postalCodeType = [STPPostalCodeValidator postalCodeTypeForCountryCode:_addressFieldTableViewCountryCode];
     BOOL shouldBeShowingPostalCode = (postalCodeType != STPCountryPostalCodeTypeNotRequired);
     if (shouldBeShowingPostalCode && !self.showingPostalCodeCell) {
-        if (self.isBillingAddress && self.requiredBillingAddressFields == STPBillingAddressFieldsZip) {
+        if (self.addressType == STPAddressTypeBilling && self.requiredBillingAddressFields == STPBillingAddressFieldsZip) {
             self.addressCells = @[
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:YES delegate:self]
                                   ];
@@ -128,7 +152,7 @@
         }
     }
     else if (!shouldBeShowingPostalCode && self.showingPostalCodeCell) {
-        if (self.isBillingAddress && self.requiredBillingAddressFields == STPBillingAddressFieldsZip) {
+        if (self.addressType == STPAddressTypeBilling && self.requiredBillingAddressFields == STPBillingAddressFieldsZip) {
             self.addressCells = @[];
             [self.delegate addressViewModel:self removedCellAtIndex:0];
             [self.delegate addressViewModelDidChange:self];
@@ -151,12 +175,13 @@
 }
 
 - (BOOL)containsStateAndPostalFields {
-    if (self.isBillingAddress) {
+    if (self.addressType == STPAddressTypeBilling) {
         return self.requiredBillingAddressFields == STPBillingAddressFieldsFull;
     }
-    else {
+    else if (self.addressType == STPAddressTypeShipping) {
         return (self.requiredShippingAddressFields & PKAddressFieldPostalAddress) == PKAddressFieldPostalAddress;
     }
+    return YES;
 }
 
 - (STPAddressFieldTableViewCell *)cellAtIndex:(NSInteger)index {
@@ -180,11 +205,15 @@
 }
 
 - (BOOL)isValid {
-    if (self.isBillingAddress) {
-        return [self.address containsRequiredFields:self.requiredBillingAddressFields];
-    }
-    else {
-        return [self.address containsRequiredShippingAddressFields:self.requiredShippingAddressFields];
+    switch (self.addressType) {
+        case STPAddressTypeBilling:
+            return [self.address containsRequiredFields:self.requiredBillingAddressFields];
+        case STPAddressTypeShipping:
+            return [self.address containsRequiredShippingAddressFields:self.requiredShippingAddressFields];
+        case STPAddressTypeSEPADebit:
+            return [self.address containsRequiredSEPADebitFields];
+        default:
+            return YES;
     }
 }
 
@@ -223,6 +252,7 @@
                 cell.contents = address.postalCode;
                 break;
             case STPAddressFieldTypeCountry:
+            case STPAddressFieldTypeSEPACountry:
                 cell.contents = address.country;
                 break;
             case STPAddressFieldTypeEmail:
@@ -259,6 +289,7 @@
                 address.postalCode = cell.contents;
                 break;
             case STPAddressFieldTypeCountry:
+            case STPAddressFieldTypeSEPACountry:
                 address.country = cell.contents;
                 break;
             case STPAddressFieldTypeEmail:

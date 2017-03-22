@@ -10,13 +10,46 @@
 
 #import "NSArray+Stripe_BoundSafe.h"
 
-@interface STPCountryPickerDataSource()
-
-@property (nonatomic) NSArray<NSString *>*countryCodes;
-
-@end
-
 @implementation STPCountryPickerDataSource
+
++ (NSArray<NSString *>*)sepaCountryCodes {
+    return @[
+             @"AT",
+             @"BE",
+             @"BG",
+             @"CH",
+             @"CY",
+             @"CZ",
+             @"DE",
+             @"DK",
+             @"EE",
+             @"ES",
+             @"FI",
+             @"FR",
+             @"GB",
+             @"GR",
+             @"HR",
+             @"HU",
+             @"IE",
+             @"IS",
+             @"IT",
+             @"LI",
+             @"LV",
+             @"LT",
+             @"LU",
+             @"MC",
+             @"MT",
+             @"NL",
+             @"NO",
+             @"PL",
+             @"PT",
+             @"RO",
+             @"SE",
+             @"SK",
+             @"SI",
+             @"SM",
+             ];
+}
 
 - (instancetype)init {
     self = [super init];
@@ -36,7 +69,6 @@
 
 - (void)commonInitWithCountryCodes:(NSArray<NSString *>*)countryCodes {
     NSLocale *locale = [NSLocale autoupdatingCurrentLocale];
-    NSString *countryCode = [locale objectForKey:NSLocaleCountryCode];
     NSMutableArray *otherCountryCodes = [countryCodes mutableCopy];
     [otherCountryCodes sortUsingComparator:^NSComparisonResult(NSString *code1, NSString *code2) {
         NSString *localeID1 = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode: code1}];
@@ -45,7 +77,8 @@
         NSString *name2 = [locale displayNameForKey:NSLocaleIdentifier value:localeID2];
         return [name1 compare:name2];
     }];
-    if (countryCodes) {
+    NSString *countryCode = [locale objectForKey:NSLocaleCountryCode];
+    if (countryCodes && [otherCountryCodes containsObject:countryCode]) {
         [otherCountryCodes removeObject:countryCode];
         self.countryCodes = [@[@"", countryCode] arrayByAddingObjectsFromArray:otherCountryCodes];
     }

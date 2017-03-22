@@ -47,7 +47,6 @@
 @interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPRememberMePaymentCellDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)STPAddress *shippingAddress;
-@property(nonatomic)BOOL hasUsedShippingAddress;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)UIBarButtonItem *doneItem;
@@ -100,7 +99,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 - (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration {
     _configuration = configuration;
     _shippingAddress = nil;
-    _hasUsedShippingAddress = NO;
     _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
     _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
     _addressViewModel.delegate = self;
@@ -162,28 +160,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
 
-    STPSectionHeaderView *addressHeaderView = [STPSectionHeaderView new];
-    addressHeaderView.theme = self.theme;
-    addressHeaderView.title = STPLocalizedString(@"Billing Address", @"Title for billing address entry section");
-    switch (self.configuration.shippingType) {
-        case STPShippingTypeShipping:
-            [addressHeaderView.button setTitle:STPLocalizedString(@"Use Shipping", @"Button to fill billing address from shipping address.")
-                                      forState:UIControlStateNormal];
-            break;
-        case STPShippingTypeDelivery:
-            [addressHeaderView.button setTitle:STPLocalizedString(@"Use Delivery", @"Button to fill billing address from delivery address.")
-                                      forState:UIControlStateNormal];
-            break;
-    }
+    STPSectionHeaderView *addressHeaderView = [STPSectionHeaderView addressHeaderWithConfiguration:self.configuration
+                                                                                        sourceType:STPSourceTypeCard
+                                                                                  addressViewModel:self.addressViewModel
+                                                                                   shippingAddress:self.shippingAddress];
     [addressHeaderView.button addTarget:self action:@selector(useShippingAddress:)
                        forControlEvents:UIControlEventTouchUpInside];
-    BOOL needsAddress = self.configuration.requiredBillingAddressFields != STPBillingAddressFieldsNone && !self.addressViewModel.isValid;
-    BOOL buttonVisible = (needsAddress && self.shippingAddress != nil && !self.hasUsedShippingAddress);
-    addressHeaderView.button.alpha = buttonVisible ? 1 : 0;
-    [addressHeaderView setNeedsLayout];
     _addressHeaderView = addressHeaderView;
     STPSectionHeaderView *cardHeaderView = [STPSectionHeaderView new];
-    cardHeaderView.theme = self.theme;
     cardHeaderView.title = STPLocalizedString(@"Card", @"Title for credit card number entry field");
     cardHeaderView.button.hidden = YES;
     _cardHeaderView = cardHeaderView;
@@ -211,10 +195,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     
     self.cardImageView.tintColor = self.theme.accentColor;
     self.activityIndicator.tintColor = self.theme.accentColor;
+
+    self.addressHeaderView.theme = self.theme;
+    self.cardHeaderView.theme = self.theme;
+
     self.emailCell.theme = self.theme;
-    
     self.paymentCell.theme = self.theme;
-    
     for (STPAddressFieldTableViewCell *cell in self.addressViewModel.addressCells) {
         cell.theme = self.theme;
     }
@@ -722,7 +708,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 - (void)useShippingAddress:(__unused UIButton *)sender {
     [self.tableView beginUpdates];
     self.addressViewModel.address = self.shippingAddress;
-    self.hasUsedShippingAddress = YES;
     [[self firstEmptyField] becomeFirstResponder];
     [UIView animateWithDuration:0.2f animations:^{
         self.addressHeaderView.buttonHidden = YES;

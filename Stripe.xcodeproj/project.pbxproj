@@ -450,6 +450,10 @@
 		C15993461D8829C00047950D /* stp_shipping_form@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993211D8807930047950D /* stp_shipping_form@2x.png */; };
 		C15993471D8829C00047950D /* stp_shipping_form@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993221D8807930047950D /* stp_shipping_form@3x.png */; };
 		C16F66AB1CA21BAC006A21B5 /* STPFormTextFieldTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */; };
+		C170AD9A1E6F64DB0000F729 /* STPAddSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C170AD991E6F64DB0000F729 /* STPAddSourceViewController.m */; };
+		C170AD9C1E6F64E10000F729 /* STPAddSourceViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C170AD9B1E6F64E10000F729 /* STPAddSourceViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C170AD9D1E6F666F0000F729 /* STPAddSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C170AD991E6F64DB0000F729 /* STPAddSourceViewController.m */; };
+		C170AD9E1E6F66730000F729 /* STPAddSourceViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C170AD9B1E6F64E10000F729 /* STPAddSourceViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1717DB11CC00ED60009CF4A /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C17A030D1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C17A030B1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h */; };
 		C17A030E1CBEE7A2006C819F /* STPAddressFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C17A030C1CBEE7A2006C819F /* STPAddressFieldTableViewCell.m */; };
@@ -462,6 +466,10 @@
 		C180211B1E3A58710089D712 /* STPSourcePoller.h in Headers */ = {isa = PBXBuildFile; fileRef = C18021181E3A58710089D712 /* STPSourcePoller.h */; };
 		C180211C1E3A58710089D712 /* STPSourcePoller.m in Sources */ = {isa = PBXBuildFile; fileRef = C18021191E3A58710089D712 /* STPSourcePoller.m */; };
 		C180211D1E3A58710089D712 /* STPSourcePoller.m in Sources */ = {isa = PBXBuildFile; fileRef = C18021191E3A58710089D712 /* STPSourcePoller.m */; };
+		C1848F3A1E79D0F2006A48E2 /* STPInfoFooterView.h in Headers */ = {isa = PBXBuildFile; fileRef = C1848F381E79D0F2006A48E2 /* STPInfoFooterView.h */; };
+		C1848F3B1E79D0F2006A48E2 /* STPInfoFooterView.h in Headers */ = {isa = PBXBuildFile; fileRef = C1848F381E79D0F2006A48E2 /* STPInfoFooterView.h */; };
+		C1848F3C1E79D0F2006A48E2 /* STPInfoFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1848F391E79D0F2006A48E2 /* STPInfoFooterView.m */; };
+		C1848F3D1E79D0F2006A48E2 /* STPInfoFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1848F391E79D0F2006A48E2 /* STPInfoFooterView.m */; };
 		C18880081E68CDA700FB169F /* STPBancontactSourceInfoDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = C18880061E68CDA700FB169F /* STPBancontactSourceInfoDataSource.h */; };
 		C18880091E68CDA700FB169F /* STPBancontactSourceInfoDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = C18880061E68CDA700FB169F /* STPBancontactSourceInfoDataSource.h */; };
 		C188800A1E68CDA700FB169F /* STPBancontactSourceInfoDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C18880071E68CDA700FB169F /* STPBancontactSourceInfoDataSource.m */; };
@@ -550,6 +558,8 @@
 		C1BD9B3A1E39416700CEE925 /* STPSourceOwner.h in Headers */ = {isa = PBXBuildFile; fileRef = C1BD9B381E39416700CEE925 /* STPSourceOwner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1C1012D1E57A26F00C7BFAE /* STPSource+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = C1C1012C1E57A26F00C7BFAE /* STPSource+Private.h */; };
 		C1C1012E1E57A26F00C7BFAE /* STPSource+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = C1C1012C1E57A26F00C7BFAE /* STPSource+Private.h */; };
+		C1CE41B21E787499009C4BD0 /* STPAddSourceViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = C1CE41B11E787499009C4BD0 /* STPAddSourceViewController+Private.h */; };
+		C1CE41B31E787499009C4BD0 /* STPAddSourceViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = C1CE41B11E787499009C4BD0 /* STPAddSourceViewController+Private.h */; };
 		C1D23FAD1D37F81F002FD83C /* STPCustomerDeserializerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D23FAC1D37F81F002FD83C /* STPCustomerDeserializerTest.m */; };
 		C1D7B51A1E36B8B9002181F5 /* STPSourceParams.h in Headers */ = {isa = PBXBuildFile; fileRef = C1D7B5181E36B8B9002181F5 /* STPSourceParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1D7B51B1E36B8B9002181F5 /* STPSourceParams.h in Headers */ = {isa = PBXBuildFile; fileRef = C1D7B5181E36B8B9002181F5 /* STPSourceParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1034,6 +1044,8 @@
 		C16A4CDB1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockSTPCheckoutAPIClient.h; sourceTree = "<group>"; };
 		C16A4CDC1D36B19B001F46D2 /* MockSTPCheckoutAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockSTPCheckoutAPIClient.m; sourceTree = "<group>"; };
 		C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFormTextFieldTest.m; sourceTree = "<group>"; };
+		C170AD991E6F64DB0000F729 /* STPAddSourceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddSourceViewController.m; sourceTree = "<group>"; };
+		C170AD9B1E6F64E10000F729 /* STPAddSourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPAddSourceViewController.h; path = PublicHeaders/STPAddSourceViewController.h; sourceTree = "<group>"; };
 		C17A030B1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPAddressFieldTableViewCell.h; sourceTree = "<group>"; };
 		C17A030C1CBEE7A2006C819F /* STPAddressFieldTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddressFieldTableViewCell.m; sourceTree = "<group>"; };
 		C17D24ED1E37DBAC005CB188 /* STPSourceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceTest.m; sourceTree = "<group>"; };
@@ -1041,6 +1053,8 @@
 		C17F28B71E4CD13A0073408B /* STPSourceInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceInfoViewController.m; sourceTree = "<group>"; };
 		C18021181E3A58710089D712 /* STPSourcePoller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPSourcePoller.h; sourceTree = "<group>"; };
 		C18021191E3A58710089D712 /* STPSourcePoller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourcePoller.m; sourceTree = "<group>"; };
+		C1848F381E79D0F2006A48E2 /* STPInfoFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPInfoFooterView.h; sourceTree = "<group>"; };
+		C1848F391E79D0F2006A48E2 /* STPInfoFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPInfoFooterView.m; sourceTree = "<group>"; };
 		C18880061E68CDA700FB169F /* STPBancontactSourceInfoDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBancontactSourceInfoDataSource.h; sourceTree = "<group>"; };
 		C18880071E68CDA700FB169F /* STPBancontactSourceInfoDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBancontactSourceInfoDataSource.m; sourceTree = "<group>"; };
 		C188800C1E68CDCC00FB169F /* STPGiropaySourceInfoDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPGiropaySourceInfoDataSource.h; sourceTree = "<group>"; };
@@ -1074,6 +1088,7 @@
 		C1BD9B331E3940C400CEE925 /* STPSourceVerification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceVerification.m; sourceTree = "<group>"; };
 		C1BD9B381E39416700CEE925 /* STPSourceOwner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPSourceOwner.h; path = PublicHeaders/STPSourceOwner.h; sourceTree = "<group>"; };
 		C1C1012C1E57A26F00C7BFAE /* STPSource+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPSource+Private.h"; sourceTree = "<group>"; };
+		C1CE41B11E787499009C4BD0 /* STPAddSourceViewController+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPAddSourceViewController+Private.h"; sourceTree = "<group>"; };
 		C1D23FAC1D37F81F002FD83C /* STPCustomerDeserializerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCustomerDeserializerTest.m; sourceTree = "<group>"; };
 		C1D23FAF1D37FC90002FD83C /* STPTestUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTestUtils.h; sourceTree = "<group>"; };
 		C1D23FB01D37FC90002FD83C /* STPTestUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTestUtils.m; sourceTree = "<group>"; };
@@ -1431,6 +1446,8 @@
 				0426B96D1CEADC98006AC8DD /* STPColorUtils.m */,
 				04E39F5E1CED2C3900AF3B96 /* STPRememberMeTermsView.h */,
 				04E39F5F1CED2C3900AF3B96 /* STPRememberMeTermsView.m */,
+				C1848F381E79D0F2006A48E2 /* STPInfoFooterView.h */,
+				C1848F391E79D0F2006A48E2 /* STPInfoFooterView.m */,
 				046FE99F1CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.h */,
 				046FE9A01CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.m */,
 				04BC29C41CE2A82300318357 /* STPSMSCodeTextField.h */,
@@ -1627,6 +1644,9 @@
 				04F416241CA3639500486FB5 /* STPAddCardViewController.h */,
 				04F416251CA3639500486FB5 /* STPAddCardViewController.m */,
 				04BFFFD81D240B13005F2340 /* STPAddCardViewController+Private.h */,
+				C170AD9B1E6F64E10000F729 /* STPAddSourceViewController.h */,
+				C170AD991E6F64DB0000F729 /* STPAddSourceViewController.m */,
+				C1CE41B11E787499009C4BD0 /* STPAddSourceViewController+Private.h */,
 				F1DEB88E1E2052150066B8E8 /* STPCoreScrollViewController.h */,
 				F1FA6F941E25960500EB444D /* STPCoreScrollViewController+Private.h */,
 				F1DEB88F1E2052150066B8E8 /* STPCoreScrollViewController.m */,
@@ -1768,6 +1788,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C170AD9E1E6F66730000F729 /* STPAddSourceViewController.h in Headers */,
 				04EBC7561B7533C300A0E6AE /* STPCardValidationState.h in Headers */,
 				04F94DA11D229F12004FC826 /* STPAddressFieldTableViewCell.h in Headers */,
 				04EBC75A1B7533C300A0E6AE /* STPCardValidator.h in Headers */,
@@ -1799,6 +1820,7 @@
 				049E84E61A605EF0000B66CD /* STPAPIClient.h in Headers */,
 				F1DEB89A1E2074480066B8E8 /* STPCoreViewController.h in Headers */,
 				04F94DBD1D229F95004FC826 /* UITableViewCell+Stripe_Borders.h in Headers */,
+				C1CE41B31E787499009C4BD0 /* STPAddSourceViewController+Private.h in Headers */,
 				049E84E91A605EF0000B66CD /* STPBankAccount.h in Headers */,
 				C15993401D88089E0047950D /* STPShippingMethodTableViewCell.h in Headers */,
 				04B31DD51D08E6E200EF1631 /* STPCustomer.h in Headers */,
@@ -1863,6 +1885,7 @@
 				045D71211CEFA57000F6CD65 /* UIViewController+Stripe_Promises.h in Headers */,
 				C159932A1D88084D0047950D /* STPShippingAddressViewController.h in Headers */,
 				049880FD1CED5A2300EA4FFD /* STPPaymentConfiguration.h in Headers */,
+				C1848F3B1E79D0F2006A48E2 /* STPInfoFooterView.h in Headers */,
 				C1BB22381E4D2D2200E72B8E /* STPCountryPickerDataSource.h in Headers */,
 				049A3F9B1CC7DBCC00F57DE7 /* STPPaymentContext.h in Headers */,
 				F19491E81E60DD9C001E1FC2 /* STPSourceSEPADebitDetails.h in Headers */,
@@ -1909,6 +1932,7 @@
 				C11810A71CC6EE840022FB55 /* STPBackendAPIAdapter.h in Headers */,
 				F12C8DC01D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
 				F19491DE1E5F6B8C001E1FC2 /* STPSourceCardDetails.h in Headers */,
+				C170AD9C1E6F64E10000F729 /* STPAddSourceViewController.h in Headers */,
 				0439B9871C454F97005A1ED5 /* STPPaymentMethodsViewController.h in Headers */,
 				04B31DF91D11AC6400EF1631 /* STPUserInformation.h in Headers */,
 				04EBC7531B7533C300A0E6AE /* STPCardValidationState.h in Headers */,
@@ -1922,6 +1946,7 @@
 				0433EB491BD06313003912B4 /* NSDictionary+Stripe.h in Headers */,
 				C124A1701CCA968B007D42EE /* STPAnalyticsClient.h in Headers */,
 				C15993281D8808490047950D /* STPShippingAddressViewController.h in Headers */,
+				C1848F3A1E79D0F2006A48E2 /* STPInfoFooterView.h in Headers */,
 				C1D7B5201E36C32F002181F5 /* STPSource.h in Headers */,
 				049A3F7A1CC18D5300F57DE7 /* UIView+Stripe_FirstResponder.h in Headers */,
 				04CDB50E1A5F30A700B854EE /* STPCard.h in Headers */,
@@ -2014,6 +2039,7 @@
 				F1FA6F921E258F6800EB444D /* STPCoreViewController+Private.h in Headers */,
 				04BC29B51CD9AE0000318357 /* STPCheckoutBootstrapResponse.h in Headers */,
 				045D71201CEFA57000F6CD65 /* UIViewController+Stripe_Promises.h in Headers */,
+				C1CE41B21E787499009C4BD0 /* STPAddSourceViewController+Private.h in Headers */,
 				04793F561D1D8DDD00B3C551 /* STPSourceProtocol.h in Headers */,
 				0451CC441C49AE1C003B2CA6 /* STPPaymentResult.h in Headers */,
 				C1EC6D341E52158300AF3659 /* STPSource+Private.h in Headers */,
@@ -2454,6 +2480,7 @@
 				04B31DF51D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.m in Sources */,
 				04633B171CD45437009D4FB5 /* STPCategoryLoader.m in Sources */,
 				F1DEB89C1E2074480066B8E8 /* STPCoreViewController.m in Sources */,
+				C170AD9D1E6F666F0000F729 /* STPAddSourceViewController.m in Sources */,
 				04F94DAC1D229F42004FC826 /* UIBarButtonItem+Stripe.m in Sources */,
 				F1DEB88D1E2047CA0066B8E8 /* STPCoreTableViewController.m in Sources */,
 				F1C7B8D41DBECF2400D9F6F0 /* STPDispatchFunctions.m in Sources */,
@@ -2548,6 +2575,7 @@
 				F1D64B2C1D8767FC001CDB7C /* STPWebViewController.m in Sources */,
 				04CDE5C71BC20AF800548833 /* STPBankAccountParams.m in Sources */,
 				C1363BBA1D7633D800EB82B4 /* STPPaymentMethodTableViewCell.m in Sources */,
+				C1848F3D1E79D0F2006A48E2 /* STPInfoFooterView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2574,6 +2602,7 @@
 				F1852F951D80B6EC00367C86 /* STPStringUtils.m in Sources */,
 				04CDB5101A5F30A700B854EE /* STPCard.m in Sources */,
 				04CDB5001A5F30A700B854EE /* STPAPIClient.m in Sources */,
+				C170AD9A1E6F64DB0000F729 /* STPAddSourceViewController.m in Sources */,
 				04CDB50C1A5F30A700B854EE /* STPBankAccount.m in Sources */,
 				04E39F611CED2C3900AF3B96 /* STPRememberMeTermsView.m in Sources */,
 				049A3F7F1CC1920A00F57DE7 /* UIViewController+Stripe_KeyboardAvoiding.m in Sources */,
@@ -2615,6 +2644,7 @@
 				04CDB5041A5F30A700B854EE /* STPFormEncoder.m in Sources */,
 				0426B96F1CEADC98006AC8DD /* STPColorUtils.m in Sources */,
 				04E39F531CECF7A100AF3B96 /* STPCardTuple.m in Sources */,
+				C1848F3C1E79D0F2006A48E2 /* STPInfoFooterView.m in Sources */,
 				C1D7B51C1E36B8B9002181F5 /* STPSourceParams.m in Sources */,
 				C1BB222C1E4CEB4300E72B8E /* STPTextFieldTableViewCell.m in Sources */,
 				049880FE1CED5A2300EA4FFD /* STPPaymentConfiguration.m in Sources */,

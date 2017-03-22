@@ -202,6 +202,14 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
     return containsFields;
 }
 
+- (BOOL)containsRequiredSEPADebitFields {
+    return (self.line1.length > 0
+            && self.city.length > 0
+            && self.country.length > 0
+            && [STPPostalCodeValidator stringIsValidPostalCode:self.postalCode
+                                                   countryCode:self.country]);
+}
+
 - (BOOL)hasValidPostalAddress {
     return (self.line1.length > 0 
             && self.city.length > 0 
