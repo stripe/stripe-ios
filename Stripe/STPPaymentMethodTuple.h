@@ -7,21 +7,31 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STPCardTuple.h"
 #import "STPPaymentMethod.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPaymentMethodTuple : NSObject
 
-+ (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods
-                  selectedPaymentMethod:(nullable id<STPPaymentMethod>)selectedPaymentMethod;
+- (instancetype)initWithSavedPaymentMethods:(NSArray<id<STPPaymentMethod>> *)savedPaymentMethods
+                      availablePaymentTypes:(NSArray<STPPaymentMethodType *> *)availablePaymentTypes
+                      selectedPaymentMethod:(nullable id<STPPaymentMethod>)selectedPaymentMethod;
 
-+ (instancetype)tupleWithCardTuple:(STPCardTuple *)cardTuple
-                   applePayEnabled:(BOOL)applePayEnabled;
-
+/**
+ The users currently chosen payment method
+ */
 @property(nonatomic, nullable, readonly)id<STPPaymentMethod> selectedPaymentMethod;
-@property(nonatomic, readonly)NSArray<id<STPPaymentMethod>> *paymentMethods;
+
+/**
+ New payment methods the user can choose from (eg New Card, new iDEAL payment, etc)
+ */
+@property(nonatomic, readonly)NSArray<STPPaymentMethodType *> *availablePaymentTypes;
+
+
+/**
+ Available previously known payment methods (eg saved cards, saved sepa debits)
+ */
+@property(nonatomic, readonly)NSArray<id<STPPaymentMethod>> *savedPaymentMethods;
 
 @end
 

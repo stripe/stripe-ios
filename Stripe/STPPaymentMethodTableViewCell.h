@@ -13,6 +13,5 @@
 @interface STPPaymentMethodTableViewCell : UITableViewCell
 
 - (void)configureWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod theme:(STPTheme *)theme;
-- (void)configureForNewCardRowWithTheme:(STPTheme *)theme;
 
 @end

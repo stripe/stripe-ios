@@ -11,6 +11,7 @@
 #import "STPSourceCardDetails.h"
 #import "STPSourceProtocol.h"
 #import "STPSourceOwner.h"
+#import "STPPaymentMethod.h"
 #import "STPSourceReceiver.h"
 #import "STPSourceRedirect.h"
 #import "STPSourceSEPADebitDetails.h"
@@ -82,7 +83,7 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
 /**
  *  Representation of a customer's payment instrument created with the Stripe API. @see https://stripe.com/docs/api#sources
  */
-@interface STPSource : NSObject<STPAPIResponseDecodable, STPSourceProtocol>
+@interface STPSource : NSObject<STPAPIResponseDecodable, STPSourceProtocol, STPPaymentMethod>
 
 /**
  *  You cannot directly instantiate an `STPSource`. You should only use one that has been returned from an `STPAPIClient` callback.

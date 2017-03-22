@@ -6,8 +6,11 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-#import "NSDictionary+Stripe.h"
 #import "STPSource.h"
+
+#import "NSDictionary+Stripe.h"
+#import "STPImageLibrary.h"
+#import "STPPaymentMethodType.h"
 #import "STPSourceOwner.h"
 #import "STPSourceReceiver.h"
 #import "STPSourceRedirect.h"
@@ -129,8 +132,13 @@
 
 #pragma mark - Equality
 
-- (BOOL)isEqual:(STPSource *)source {
-    return [self isEqualToSource:source];
+- (BOOL)isEqual:(id)otherObject {
+    if ([otherObject isKindOfClass:[STPSource class]]) {
+        return [self isEqualToSource:otherObject];
+    }
+    else {
+        return NO;
+    }
 }
 
 - (NSUInteger)hash {
@@ -189,6 +197,66 @@
     }
 
     return source;
+}
+
+#pragma mark - STPPaymentMethod
+
++ (STPPaymentMethodType *)paymentMethodTypeForSourceType:(STPSourceType)sourceType {
+    switch (sourceType) {
+        case STPSourceTypeCard:
+            return [STPPaymentMethodType creditCard];
+        case STPSourceTypeThreeDSecure:
+            return [STPPaymentMethodType creditCard];
+        case STPSourceTypeIDEAL:
+            return [STPPaymentMethodType ideal];
+        case STPSourceTypeSofort:
+            return [STPPaymentMethodType sofort];
+        case STPSourceTypeGiropay:
+            return [STPPaymentMethodType giropay];
+        case STPSourceTypeSEPADebit:
+            return [STPPaymentMethodType sepaDebit];
+        case STPSourceTypeBancontact:
+            return [STPPaymentMethodType bancontact];
+        case STPSourceTypeBitcoin:
+            return nil;
+        case STPSourceTypeUnknown:
+            return nil;
+    }
+}
+
+- (STPPaymentMethodType *)paymentMethodType {
+    return [self.class paymentMethodTypeForSourceType:self.type];
+}
+
+- (UIImage *)paymentMethodImage {
+    if (self.cardDetails != nil) {
+        return [STPImageLibrary brandImageForCardBrand:self.cardDetails.brand];
+    }
+    else {
+        return self.paymentMethodType.paymentMethodImage;
+    }
+}
+
+- (UIImage *)paymentMethodTemplateImage {
+    if (self.cardDetails != nil) {
+        return [STPImageLibrary templatedBrandImageForCardBrand:self.cardDetails.brand];
+    }
+    else {
+        return self.paymentMethodType.paymentMethodImage;
+    }
+}
+
+- (NSString *)paymentMethodLabel {
+    if (self.cardDetails != nil) {
+        NSString *brand = [self.class stringFromBrand:self.cardDetails.brand];
+        return [NSString stringWithFormat:@"%@ %@", brand, self.cardDetails.last4];
+    }
+    else if (self.sepaDebitDetails != nil) {
+        return [NSString stringWithFormat:@"SEPA %@", self.sepaDebitDetails.last4];
+    }
+    else {
+        return self.paymentMethodType.paymentMethodLabel;
+    }
 }
 
 @end

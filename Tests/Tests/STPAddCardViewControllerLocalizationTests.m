@@ -39,7 +39,8 @@
     config.publishableKey = @"test";
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.additionalPaymentMethods = STPPaymentMethodTypeAll;
+    config.availablePaymentMethodTypes = @[[STPPaymentMethodType applePay],
+                                           [STPPaymentMethodType creditCard]];
     config.smsAutofillDisabled = NO;
     config.shippingType = (delivery) ? STPShippingTypeDelivery : STPShippingTypeShipping;
 

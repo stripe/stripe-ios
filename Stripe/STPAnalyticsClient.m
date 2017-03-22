@@ -19,6 +19,7 @@
 #import "STPPaymentCardTextField.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentContext.h"
+#import "STPPaymentMethodType+Private.h"
 #import "STPPaymentMethodsViewController+Private.h"
 #import "STPPaymentMethodsViewController.h"
 #import "STPToken.h"
@@ -211,15 +212,20 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     return payload;
 }
 
++ (NSString *)analyticsStringForPaymentMethodsTypes:(NSArray<STPPaymentMethodType *> *)types {
+
+    NSMutableArray<NSString *> *analyticsStrings = [NSMutableArray new];
+    for (STPPaymentMethodType *type in types) {
+        [analyticsStrings addObject:[type analyticsString]];
+    }
+
+    return [analyticsStrings componentsJoinedByString:@","];
+}
+
 + (NSDictionary *)serializeConfiguration:(STPPaymentConfiguration *)configuration {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"publishable_key"] = configuration.publishableKey ?: @"unknown";
-    switch (configuration.additionalPaymentMethods) {
-        case STPPaymentMethodTypeAll:
-            dictionary[@"additional_payment_methods"] = @"all";
-        case STPPaymentMethodTypeNone:
-            dictionary[@"additional_payment_methods"] = @"none";
-    }
+    dictionary[@"available_payment_methods"] = [self analyticsStringForPaymentMethodsTypes:configuration.availablePaymentMethodTypes];
     switch (configuration.requiredBillingAddressFields) {
         case STPBillingAddressFieldsNone:
             dictionary[@"required_billing_address_fields"] = @"none";

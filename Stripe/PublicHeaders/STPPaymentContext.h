@@ -91,11 +91,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly, nullable)id<STPPaymentMethod> selectedPaymentMethod;
 
 /**
- *  The available payment methods the user can choose between. May be nil.
- */
-@property(nonatomic, readonly, nullable)NSArray<id<STPPaymentMethod>> *paymentMethods;
-
-/**
  *  The user's currently selected shipping method. May be nil.
  */
 @property(nonatomic, readonly, nullable)PKShippingMethod *selectedShippingMethod;
@@ -183,10 +178,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Called when the payment context encounters an error when fetching its initial set of data. A few ways to handle this are:
- - If you're showing the user a checkout page, dismiss the checkout page when this is called and present the error to the user.
- - Present the error to the user using a `UIAlertController` with two buttons: Retry and Cancel. If they cancel, dismiss your UI. If they Retry, call `retryLoading` on the payment context.
- 
- To make it harder to get your UI into a bad state, this won't be called until the context's `hostViewController` has finished appearing.
+ *  - If you're showing the user a checkout page, dismiss the checkout page when this is called and present the error to the user.
+ *  - Present the error to the user using a `UIAlertController` with two buttons: Retry and Cancel. If they cancel, dismiss your UI. If they Retry, call `retryLoading` on the payment context.
+ *
+ *  To make it harder to get your UI into a bad state, this won't be called until the context's `hostViewController` has finished appearing.
  *
  *  @param paymentContext the payment context that encountered the error
  *  @param error          the error that was encountered

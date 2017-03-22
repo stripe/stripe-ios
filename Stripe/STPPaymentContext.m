@@ -11,14 +11,17 @@
 
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "STPAddCardViewController+Private.h"
-#import "STPCardTuple.h"
+#import "STPCustomer+Stripe_PaymentMethods.h"
 #import "STPDispatchFunctions.h"
 #import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentContext+Private.h"
 #import "STPPaymentContextAmountModel.h"
+#import "STPPaymentMethod.h"
 #import "STPPaymentMethodTuple.h"
+#import "STPPaymentMethodType+Private.h"
 #import "STPPromise.h"
 #import "STPShippingMethodsViewController.h"
+#import "STPSourceProtocol.h"
 #import "STPWeakStrongMacros.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "UIViewController+Stripe_ParentViewController.h"
@@ -40,7 +43,6 @@
 
 @property(nonatomic, weak)STPPaymentMethodsViewController *paymentMethodsViewController;
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
-@property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
 @property(nonatomic)STPAddress *shippingAddress;
 @property(nonatomic)PKShippingMethod *selectedShippingMethod;
 @property(nonatomic)NSArray<PKShippingMethod *> *shippingMethods;
@@ -49,6 +51,7 @@
 @property(nonatomic) BOOL isMidShippingInRequestPayment;
 
 @property(nonatomic)STPPaymentContextAmountModel *paymentAmountModel;
+@property(nonatomic)STPPaymentMethodTuple *paymentMethodTuple;
 
 
 @end
@@ -88,8 +91,7 @@
     WEAK(self);
     self.loadingPromise = [[[STPPromise<STPPaymentMethodTuple *> new] onSuccess:^(STPPaymentMethodTuple *tuple) {
         STRONG(self);
-        self.paymentMethods = tuple.paymentMethods;
-        self.selectedPaymentMethod = tuple.selectedPaymentMethod;
+        self.paymentMethodTuple = tuple;
     }] onFailure:^(NSError * _Nonnull error) {
         STRONG(self);
         if (self.hostViewController) {
@@ -114,20 +116,8 @@
                 [self.loadingPromise fail:error];
                 return;
             }
-            STPCard *selectedCard;
-            NSMutableArray<STPCard *> *cards = [NSMutableArray array];
-            for (id<STPSourceProtocol> source in customer.sources) {
-                if ([source isKindOfClass:[STPCard class]]) {
-                    STPCard *card = (STPCard *)source;
-                    [cards addObject:card];
-                    if ([card.stripeID isEqualToString:customer.defaultSource.stripeID]) {
-                        selectedCard = card;
-                    }
-                }
-            }
-            STPCardTuple *tuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
-            STPPaymentMethodTuple *paymentTuple = [STPPaymentMethodTuple tupleWithCardTuple:tuple applePayEnabled:self.configuration.applePayEnabled];
-            [self.loadingPromise succeed:paymentTuple];
+
+            [self.loadingPromise succeed:[customer stp_paymentMethodTupleWithConfiguration:self.configuration]];
         });
     }];
 }
@@ -159,40 +149,50 @@
     WEAK(self);
     return (STPPromise<STPPaymentMethodTuple *> *)[self.loadingPromise map:^id _Nonnull(__unused STPPaymentMethodTuple *value) {
         STRONG(self);
-        return [STPPaymentMethodTuple tupleWithPaymentMethods:self.paymentMethods
-                                        selectedPaymentMethod:self.selectedPaymentMethod];
+        return self.paymentMethodTuple;
     }];
 }
 
-- (void)setPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods {
-    _paymentMethods = [paymentMethods sortedArrayUsingComparator:^NSComparisonResult(id<STPPaymentMethod> obj1, id<STPPaymentMethod> obj2) {
-        Class applePayKlass = [STPApplePayPaymentMethod class];
-        Class cardKlass = [STPCard class];
-        if ([obj1 isKindOfClass:applePayKlass]) {
-            return NSOrderedAscending;
-        } else if ([obj2 isKindOfClass:applePayKlass]) {
-            return NSOrderedDescending;
-        }
-        if ([obj1 isKindOfClass:cardKlass] && [obj2 isKindOfClass:cardKlass]) {
-            return [[((STPCard *)obj1) label]
-                    compare:[((STPCard *)obj2) label]];
-        }
-        return NSOrderedSame;
-    }];
-}
-
-- (void)setSelectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod {
-    if (selectedPaymentMethod && ![self.paymentMethods containsObject:selectedPaymentMethod]) {
-        self.paymentMethods = [self.paymentMethods arrayByAddingObject:selectedPaymentMethod];
-    }
-    if (![_selectedPaymentMethod isEqual:selectedPaymentMethod]) {
-        _selectedPaymentMethod = selectedPaymentMethod;
+- (void)setPaymentMethodTuple:(STPPaymentMethodTuple *)paymentMethodTuple {
+    if (![_paymentMethodTuple isEqual:paymentMethodTuple]) {
+        _paymentMethodTuple = paymentMethodTuple;
         stpDispatchToMainThreadIfNecessary(^{
             [self.delegate paymentContextDidChange:self];
         });
     }
 }
 
+- (void)setSelectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod {
+    if ([selectedPaymentMethod isEqual:self.selectedPaymentMethod]) {
+        return;
+    }
+    else {
+        NSArray *savedPayments = self.paymentMethodTuple.savedPaymentMethods;
+        NSArray *availablePaymentTypes = self.paymentMethodTuple.availablePaymentTypes;
+
+        if (selectedPaymentMethod
+            && ![savedPayments containsObject:selectedPaymentMethod]
+            && ![availablePaymentTypes containsObject:selectedPaymentMethod]) {
+
+            if ([selectedPaymentMethod isKindOfClass:[STPPaymentMethodType class]]) {
+                availablePaymentTypes = [availablePaymentTypes arrayByAddingObject:selectedPaymentMethod];
+
+            }
+            else {
+                savedPayments = [STPCustomer stp_sortedPaymentMethodsFromArray:[savedPayments arrayByAddingObject:selectedPaymentMethod]
+                                                                     sortOrder:self.configuration.availablePaymentMethodTypesSet];
+            }
+        }
+
+        self.paymentMethodTuple = [[STPPaymentMethodTuple alloc] initWithSavedPaymentMethods:savedPayments
+                                                                       availablePaymentTypes:availablePaymentTypes
+                                                                       selectedPaymentMethod:selectedPaymentMethod];
+    }
+}
+
+- (id<STPPaymentMethod>)selectedPaymentMethod {
+    return self.paymentMethodTuple.selectedPaymentMethod;
+}
 
 - (void)setPaymentAmount:(NSInteger)paymentAmount {
     self.paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithAmount:paymentAmount];
@@ -426,6 +426,7 @@
             [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
         }
         else if ([self.selectedPaymentMethod isKindOfClass:[STPCard class]]) {
+            // Concrete card object, can charge synchronously
             STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(STPCard *)self.selectedPaymentMethod];
             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
                 stpDispatchToMainThreadIfNecessary(^{
@@ -437,7 +438,13 @@
                 });
             }];
         }
-        else if ([self.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
+        else if ([self.selectedPaymentMethod isKindOfClass:[STPSource class]]) {
+            // TODO:
+            // Concrete source object, check flow to see if synchronous charge or webhook based
+            // If a card source, we need to check if the user wants us to 3DS or not
+
+        }
+        else if ([self.selectedPaymentMethod isEqual:[STPPaymentMethodType applePay]]) {
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
             STPShippingAddressSelectionBlock shippingAddressHandler = ^(STPAddress *shippingAddress, STPShippingAddressValidationBlock completion) {
                 // Apple Pay always returns a partial address here, so we won't
@@ -498,6 +505,10 @@
             [self.hostViewController presentViewController:paymentAuthVC
                                                       animated:YES
                                                     completion:nil];
+        }
+        else {
+            // TODO:
+            // This is some other new APM we need to handle
         }
     }]onFailure:^(NSError *error) {
         STRONG(self);

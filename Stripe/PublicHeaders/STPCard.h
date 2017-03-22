@@ -102,7 +102,7 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
  */
 @property (nonatomic) NSUInteger expYear;
 
-/**
+/** 
  *  The cardholder's name.
  */
 @property (nonatomic, copy, nullable) NSString *name;
