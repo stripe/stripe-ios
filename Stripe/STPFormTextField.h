@@ -15,6 +15,7 @@ typedef NS_ENUM(NSInteger, STPFormTextFieldAutoFormattingBehavior) {
     STPFormTextFieldAutoFormattingBehaviorPhoneNumbers,
     STPFormTextFieldAutoFormattingBehaviorCardNumbers,
     STPFormTextFieldAutoFormattingBehaviorExpiration,
+    STPFormTextFieldAutoFormattingBehaviorIBAN,
 };
 
 @protocol STPFormTextFieldDelegate <UITextFieldDelegate>
