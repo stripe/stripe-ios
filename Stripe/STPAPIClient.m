@@ -279,7 +279,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     CGFloat scale = 1.0;
     NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
     while (imageData.length > maxBytes) {
-        scale = scale * 0.8;
+        scale = scale * (CGFloat) 0.8;
         CGSize newImageSize = CGSizeMake(image.size.width * scale,
                                          image.size.height *scale);
         UIGraphicsBeginImageContextWithOptions(newImageSize, NO, image.scale);

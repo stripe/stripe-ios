@@ -81,7 +81,7 @@
         return nil;
     }
     
-    STPFile *file = [self init];
+    STPFile *file = [[self alloc] init];
     file.fileId = dict[@"id"];
     file.created = [[NSDate alloc] initWithTimeIntervalSince1970:[dict[@"created"] doubleValue]];
     file.size = dict[@"size"];
