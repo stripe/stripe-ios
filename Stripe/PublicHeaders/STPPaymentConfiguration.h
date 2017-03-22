@@ -47,17 +47,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL useSourcesForCreditCards;
 
 /**
- *  An ordered set of payment method type objects that represents the list of
+ *  An array of payment method type objects that represents the list of
  *  the available payment methods available to users of your app.
  * 
  *  The methods in this list will be shown to users in STPPaymentMethodsViewController
  *  for users to choose from in the order they are listed in this array.
- *
  *  Any methods types not in either this array will not be available to users 
  *  of your app.
  *
+ *  If a method appears in the array twice, all but the first will be removed.
  */
-@property (nonatomic, copy) NSOrderedSet<STPPaymentMethodType *> *availablePaymentMethodTypes;
+@property (nonatomic, copy) NSArray<STPPaymentMethodType *> *availablePaymentMethodTypes;
 
 /**
  *  The billing address fields the user must fill out when prompted for their 

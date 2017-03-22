@@ -212,7 +212,7 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     return payload;
 }
 
-+ (NSString *)analyticsStringForPaymentMethodsTypes:(NSOrderedSet <STPPaymentMethodType *> *)types {
++ (NSString *)analyticsStringForPaymentMethodsTypes:(NSArray<STPPaymentMethodType *> *)types {
 
     NSMutableArray<NSString *> *analyticsStrings = [NSMutableArray new];
     for (STPPaymentMethodType *type in types) {

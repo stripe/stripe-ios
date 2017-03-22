@@ -31,7 +31,8 @@
     config.publishableKey = @"test";
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.additionalPaymentMethods = STPPaymentMethodTypeAll;
+    config.availablePaymentMethodTypes = @[[STPPaymentMethodType creditCard],
+                                           [STPPaymentMethodType applePay]];
     config.smsAutofillDisabled = NO;
     
     [STPLocalizationUtils overrideLanguageTo:language];

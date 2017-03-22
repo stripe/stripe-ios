@@ -33,8 +33,8 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _availablePaymentMethodTypes = [NSOrderedSet orderedSetWithArray:@[[STPPaymentMethodType applePay],
-                                                                           [STPPaymentMethodType creditCard]]];
+        _availablePaymentMethodTypesSet = [NSOrderedSet orderedSetWithArray:@[[STPPaymentMethodType applePay],
+                                                                              [STPPaymentMethodType creditCard]]];
         _requiredBillingAddressFields = STPBillingAddressFieldsNone;
         _requiredShippingAddressFields = PKAddressFieldNone;
         _companyName = [NSBundle stp_applicationName];
@@ -47,7 +47,7 @@
 - (id)copyWithZone:(__unused NSZone *)zone {
     STPPaymentConfiguration *copy = [self.class new];
     copy.publishableKey = self.publishableKey;
-    copy.availablePaymentMethodTypes = self.availablePaymentMethodTypes;
+    copy.availablePaymentMethodTypesSet = self.availablePaymentMethodTypesSet;
     copy.requiredBillingAddressFields = self.requiredBillingAddressFields;
     copy.requiredShippingAddressFields = self.requiredShippingAddressFields;
     copy.shippingType = self.shippingType;
@@ -69,7 +69,15 @@
 }
 
 - (BOOL)isPaymentMethodTypeAllowed:(STPPaymentMethodType *)type {
-    return ([self.availablePaymentMethodTypes containsObject:type]);
+    return ([self.availablePaymentMethodTypesSet containsObject:type]);
+}
+
+- (void)setAvailablePaymentMethodTypes:(NSArray<STPPaymentMethodType *> *)availablePaymentMethodTypes {
+    self.availablePaymentMethodTypesSet = [NSOrderedSet orderedSetWithArray:availablePaymentMethodTypes];
+}
+
+- (NSArray<STPPaymentMethodType *> *)availablePaymentMethodTypes {
+    return self.availablePaymentMethodTypesSet.array;
 }
 
 @end

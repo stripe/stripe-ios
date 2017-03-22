@@ -206,9 +206,13 @@
 }
 
 - (STPPaymentMethodType *)paymentMethodType {
-    // TODO: Should this be applePay for apple pay created cards?
-    // At the point we've tokenized an apple pay card maybe it's not important?
-    return [STPPaymentMethodType creditCard];
+    if (self.isApplePayCard) {
+        return [STPPaymentMethodType applePay];
+    }
+    else {
+        return [STPPaymentMethodType creditCard];
+    }
+
 }
 
 @end

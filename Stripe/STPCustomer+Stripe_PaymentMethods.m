@@ -15,7 +15,7 @@
 - (STPPaymentMethodTuple *)stp_paymentMethodTupleWithConfiguration:(STPPaymentConfiguration *)configuration {
 
 
-    NSOrderedSet<STPPaymentMethodType *> *availableTypes = configuration.availablePaymentMethodTypes;
+    NSOrderedSet<STPPaymentMethodType *> *availableTypes = configuration.availablePaymentMethodTypesSet;
     // TODO: store last payment method locally or on stripe meta data so
     // it can be a non-reusable source
 
@@ -41,10 +41,6 @@
     if (!configuration.applePayEnabled) {
         [availablePaymentTypes removeObject:[STPPaymentMethodType applePay]];
     }
-
-    // TODO: if other types are misconfigured, remove or warn? Also maybe need
-    // to do this validation earlier given that you could now end up with
-    // 0 new types after sanitization
 
     return [[STPPaymentMethodTuple alloc] initWithSavedPaymentMethods:savedPaymentMethods
                                                 availablePaymentTypes:availablePaymentTypes.array

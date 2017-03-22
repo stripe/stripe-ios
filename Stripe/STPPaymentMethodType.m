@@ -39,7 +39,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return @"Credit Card";
+    return STPLocalizedString(@"New Credit Card", @"Label for 'new credit card' payment method field") ;
 }
 
 - (BOOL)gathersInfoAtSelection {
@@ -73,7 +73,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return @"SEPA Debit";
+    return STPLocalizedString(@"New SEPA Debit", @"Label for 'new sepa debit' payment method field") ;;
 }
 
 - (BOOL)gathersInfoAtSelection {
@@ -136,7 +136,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return @"Bancontact";
+    return STPLocalizedString(@"Bancontact", @"Text for Bancontact payment method");
 }
 
 
@@ -163,7 +163,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return @"Giropay";
+    return STPLocalizedString(@"Giropay", @"Text for Giropay payment method");;
 }
 
 
@@ -190,7 +190,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return @"iDEAL";
+    return STPLocalizedString(@"iDEAL", @"Text for iDEAL payment method");
 }
 
 
@@ -217,7 +217,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return @"Sofort";
+    return STPLocalizedString(@"SOFORT", @"Text for SOFORT payment method");
 }
 
 - (NSString *)analyticsString {

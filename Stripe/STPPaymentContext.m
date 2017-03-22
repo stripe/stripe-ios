@@ -180,7 +180,7 @@
             }
             else {
                 savedPayments = [STPCustomer stp_sortedPaymentMethodsFromArray:[savedPayments arrayByAddingObject:selectedPaymentMethod]
-                                                                     sortOrder:self.configuration.availablePaymentMethodTypes];
+                                                                     sortOrder:self.configuration.availablePaymentMethodTypesSet];
             }
         }
 
