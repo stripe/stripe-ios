@@ -170,13 +170,16 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
 }
 
 - (void)updateWithPaymentMethodTuple:(STPPaymentMethodTuple *)tuple {
-    if ([self.paymentMethods isEqualToArray:tuple.paymentMethods] &&
-        [self.selectedPaymentMethod isEqual:tuple.selectedPaymentMethod]) {
+    if ([self.savedPaymentMethods isEqualToArray:tuple.savedPaymentMethods]
+        && [self.availablePaymentTypes isEqualToArray:tuple.availablePaymentTypes]
+        && [self.selectedPaymentMethod isEqual:tuple.selectedPaymentMethod]) {
         return;
     }
-    self.paymentMethods = tuple.paymentMethods;
+    self.savedPaymentMethods = tuple.savedPaymentMethods;
+    self.availablePaymentTypes = tuple.availablePaymentTypes;
     self.selectedPaymentMethod = tuple.selectedPaymentMethod;
-    NSMutableIndexSet *sections = [NSMutableIndexSet indexSetWithIndex:STPPaymentMethodCardListSection];
+
+    NSMutableIndexSet *sections = [NSMutableIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self.tableView numberOfSections])];
     [self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
