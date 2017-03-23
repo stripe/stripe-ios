@@ -8,6 +8,8 @@
 
 #import "STPPaymentMethodTuple.h"
 
+#import "STPPaymentMethodType.h"
+
 @implementation STPPaymentMethodTuple
 
 - (instancetype)initWithSavedPaymentMethods:(NSArray<id<STPPaymentMethod>> *)savedPaymentMethods
@@ -16,7 +18,18 @@
     if ((self = [super init])) {
         _savedPaymentMethods = savedPaymentMethods ? savedPaymentMethods.copy : @[];
         _availablePaymentTypes = availablePaymentTypes ? availablePaymentTypes.copy : @[];
-        _selectedPaymentMethod = selectedPaymentMethod;
+
+        _allPaymentMethods = [NSSet setWithArray:[_savedPaymentMethods arrayByAddingObjectsFromArray:_availablePaymentTypes]];
+
+        if (_allPaymentMethods.count == 1) {
+            _selectedPaymentMethod = _allPaymentMethods.anyObject;
+        }
+        else if ([_allPaymentMethods containsObject:selectedPaymentMethod]) {
+            _selectedPaymentMethod = selectedPaymentMethod;
+        }
+        else {
+            _selectedPaymentMethod = nil;
+        }
     }
     return self;
 }

@@ -18,7 +18,12 @@ NS_ASSUME_NONNULL_BEGIN
                       selectedPaymentMethod:(nullable id<STPPaymentMethod>)selectedPaymentMethod;
 
 /**
- The users currently chosen payment method
+ The users currently chosen payment method.
+ 
+ Must be in one of the other two arrays or will be nil'd.
+ 
+ If there is only one payment method total, it will be automatically set as
+ the selected one.
  */
 @property(nonatomic, nullable, readonly)id<STPPaymentMethod> selectedPaymentMethod;
 
@@ -32,6 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
  Available previously known payment methods (eg saved cards, saved sepa debits)
  */
 @property(nonatomic, readonly)NSArray<id<STPPaymentMethod>> *savedPaymentMethods;
+
+/**
+ Unique set of all payment methods in tuple
+ */
+@property(nonatomic, readonly)NSSet<id<STPPaymentMethod>> *allPaymentMethods;
 
 @end
 

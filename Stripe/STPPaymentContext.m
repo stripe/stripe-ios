@@ -194,6 +194,10 @@
     return self.paymentMethodTuple.selectedPaymentMethod;
 }
 
+- (NSArray<id<STPPaymentMethod>> *)paymentMethods {
+    return self.paymentMethodTuple.allPaymentMethods.allObjects;
+}
+
 - (void)setPaymentAmount:(NSInteger)paymentAmount {
     self.paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithAmount:paymentAmount];
 }
