@@ -104,6 +104,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic) BOOL smsAutofillDisabled;
 
+- (void)setReturnURL:(nullable NSURL *)returnURL NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions");
+- (nullable NSURL *)returnURL;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -11,9 +11,14 @@
 #import "NSBundle+Stripe_AppName.h"
 #import "STPAnalyticsClient.h"
 #import "STPPaymentConfiguration+Private.h"
+#import "STPSource.h"
+#import "STPSourcePoller.h"
+#import "STPWeakStrongMacros.h"
 #import "Stripe.h"
 
-@implementation STPPaymentConfiguration
+@implementation STPPaymentConfiguration {
+    NSURL *_returnURL;
+}
 
 @synthesize ineligibleForSmsAutofill = _ineligibleForSmsAutofill;
 
@@ -78,6 +83,40 @@
 
 - (NSArray<STPPaymentMethodType *> *)availablePaymentMethodTypes {
     return self.availablePaymentMethodTypesSet.array;
+}
+
+- (NSURL *)returnURL {
+    return _returnURL;
+}
+
+- (void)setReturnURL:(nullable NSURL *)returnURL {
+    _returnURL = returnURL;
+    self.sourceURLRedirectBlock = ^(STPAPIClient *apiClient, STPSource *source, STPSourceCompletionBlock completion) {
+        if (completion) {
+            __block id notificationObserver = nil;
+
+            void (^notificationBlock)(NSNotification * _Nonnull note) = ^(NSNotification * __unused _Nonnull note) {
+                [[NSNotificationCenter defaultCenter] removeObserver:notificationObserver];
+                notificationObserver = nil;
+                __block STPSourcePoller *poller = [[STPSourcePoller alloc] initWithAPIClient:apiClient
+                                                                                clientSecret:source.clientSecret
+                                                                                    sourceID:source.stripeID
+                                                                                     timeout:10 //TODO: Add this timeout as a property on STPConfiguration?
+                                                                                  completion:^(STPSource * _Nullable polledSource, NSError * _Nullable error) {
+                                                                                      // reference poller here so it's retained until its own timeout
+                                                                                      poller = nil;
+                                                                                      completion(polledSource, error);
+                                                                                  }];
+            };
+
+            notificationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification
+                                                                                     object:nil
+                                                                                      queue:[NSOperationQueue mainQueue]
+                                                                                 usingBlock:notificationBlock];
+        }
+
+        [[UIApplication sharedApplication] openURL:source.redirect.url];
+    };
 }
 
 @end
