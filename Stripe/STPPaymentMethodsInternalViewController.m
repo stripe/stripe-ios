@@ -10,6 +10,7 @@
 
 #import "NSArray+Stripe_BoundSafe.h"
 #import "STPAddCardViewController+Private.h"
+#import "STPAddSourceViewController+Private.h"
 #import "STPColorUtils.h"
 #import "STPCoreTableViewController+Private.h"
 #import "STPImageLibrary+Private.h"
@@ -24,7 +25,7 @@ static NSString *const STPPaymentMethodCellReuseIdentifier = @"STPPaymentMethodC
 static NSInteger STPPaymentMethodSavedPaymentsSection = 0;
 static NSInteger STPPaymentMethodNewPaymentsSection = 1;
 
-@interface STPPaymentMethodsInternalViewController()<UITableViewDataSource, UITableViewDelegate, STPAddCardViewControllerDelegate>
+@interface STPPaymentMethodsInternalViewController()<UITableViewDataSource, UITableViewDelegate, STPAddCardViewControllerDelegate, STPAddSourceViewControllerDelegate>
 
 @property (nonatomic) STPPaymentConfiguration *configuration;
 @property (nonatomic) STPUserInformation *prefilledInformation;
@@ -134,8 +135,13 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
             [self.navigationController pushViewController:paymentCardViewController animated:YES];
         }
         else {
-            // Go to Add Source VC
-            // TODO: Link to Add Source VC here
+            STPAddSourceViewController *addSourceViewController = [[STPAddSourceViewController alloc] initWithSourceType:paymentType.sourceType
+                                                                                                           configuration:self.configuration
+                                                                                                                   theme:self.theme];
+            addSourceViewController.delegate = self;
+            addSourceViewController.prefilledInformation = self.prefilledInformation;
+            addSourceViewController.shippingAddress = self.shippingAddress;
+            [self.navigationController pushViewController:addSourceViewController animated:YES];
         }
     }
     else {
@@ -191,6 +197,16 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
                didCreateToken:(STPToken *)token
                    completion:(STPErrorBlock)completion {
     [self.delegate internalViewControllerDidCreateToken:token completion:completion];
+}
+
+- (void)addSourceViewControllerDidCancel:(__unused STPAddSourceViewController *)addSourceViewController {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)addSourceViewController:(__unused STPAddSourceViewController *)addSourceViewController
+                didCreateSource:(STPSource *)source
+                     completion:(STPErrorBlock)completion {
+    [self.delegate internalViewControllerDidCreateToken:source completion:completion];
 }
 
 @end

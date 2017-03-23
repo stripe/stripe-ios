@@ -15,7 +15,7 @@
 @protocol STPPaymentMethodsInternalViewControllerDelegate
 
 - (void)internalViewControllerDidSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
-- (void)internalViewControllerDidCreateToken:(STPToken *)token
+- (void)internalViewControllerDidCreateToken:(id<STPSourceProtocol>)tokenOrSource
                                   completion:(STPErrorBlock)completion;
 
 @end

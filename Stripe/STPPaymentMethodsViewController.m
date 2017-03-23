@@ -10,6 +10,7 @@
 
 #import "STPAPIClient.h"
 #import "STPAddCardViewController+Private.h"
+#import "STPAddSourceViewController+Private.h"
 #import "STPCard.h"
 #import "STPColorUtils.h"
 #import "STPCoreViewController+Private.h"
@@ -33,7 +34,7 @@
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "UIViewController+Stripe_Promises.h"
 
-@interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
+@interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate, STPAddSourceViewControllerDelegate>
 
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)STPAddress *shippingAddress;
@@ -117,7 +118,13 @@
                 internal = addCardViewController;
             }
             else {
-                // TODO: Show Add Source VC
+                STPAddSourceViewController *addSourceViewController = [[STPAddSourceViewController alloc] initWithSourceType:paymentType.sourceType
+                                                                                                               configuration:self.configuration
+                                                                                                                       theme:self.theme];
+                addSourceViewController.delegate = self;
+                addSourceViewController.prefilledInformation = self.prefilledInformation;
+                addSourceViewController.shippingAddress = self.shippingAddress;
+                internal = addSourceViewController;
             }
         }
         else {
@@ -180,8 +187,8 @@
     [self finishWithPaymentMethod:paymentMethod];
 }
 
-- (void)internalViewControllerDidCreateToken:(STPToken *)token completion:(STPErrorBlock)completion {
-    [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *error) {
+- (void)internalViewControllerDidCreateToken:(id<STPSourceProtocol>)tokenOrSource completion:(STPErrorBlock)completion {
+    [self.apiAdapter attachSourceToCustomer:tokenOrSource completion:^(NSError *error) {
         STPPromise<STPPaymentMethodTuple *> *promise = [self retrieveCustomerWithConfiguration:self.configuration apiAdapter:self.apiAdapter];
         [promise onSuccess:^(STPPaymentMethodTuple *tuple) {
             stpDispatchToMainThreadIfNecessary(^{
@@ -195,7 +202,12 @@
         stpDispatchToMainThreadIfNecessary(^{
             completion(error);
             if (!error) {
-                [self finishWithPaymentMethod:token.card];
+                if ([tokenOrSource isKindOfClass:[STPToken class]]) {
+                    [self finishWithPaymentMethod:((STPToken *)tokenOrSource).card];
+                }
+                else {
+                    [self finishWithPaymentMethod:(id<STPPaymentMethod>)tokenOrSource];
+                }
             }
         });
     }];
@@ -209,6 +221,16 @@
                didCreateToken:(STPToken *)token
                    completion:(STPErrorBlock)completion {
     [self internalViewControllerDidCreateToken:token completion:completion];
+}
+
+- (void)addSourceViewControllerDidCancel:(__unused STPAddSourceViewController *)addSourceViewController {
+    [self.delegate paymentMethodsViewControllerDidFinish:self];
+}
+
+- (void)addSourceViewController:(__unused STPAddSourceViewController *)addSourceViewController
+                didCreateSource:(STPSource *)source
+                     completion:(STPErrorBlock)completion {
+    [self internalViewControllerDidCreateToken:source completion:completion];
 }
 
 - (void)dismissWithCompletion:(STPVoidBlock)completion {
