@@ -406,16 +406,9 @@
             return;
         }
         if (!self.selectedPaymentMethod) {
-            STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
-            addCardViewController.delegate = self;
-            addCardViewController.prefilledInformation = self.prefilledInformation;
-            addCardViewController.shippingAddress = self.shippingAddress;
-            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addCardViewController];
-            navigationController.navigationBar.stp_theme = self.theme;
-            navigationController.modalPresentationStyle = self.modalPresentationStyle;
-            [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
+            [self presentPaymentMethodsViewController];
         }
-        if (self.configuration.requiredShippingAddressFields != STPBillingAddressFieldsNone &&
+        else if (self.configuration.requiredShippingAddressFields != STPBillingAddressFieldsNone &&
             !self.shippingAddress)
         {
             STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:self];
