@@ -13,11 +13,14 @@
 
 
 /**
- YES if this type needs to get information at selection time 
- 
+ YES if this type immediately gathers info and converts to a token/source
+ at selection time
  ie show Add Card/Source VC when chosen
+ 
+ If YES, this type shouldn't be allowed to be the selectedPaymentMethod
+ (selecting it always generates a source that becomes the selection instead)
  */
-- (BOOL)gathersInfoAtSelection;
+- (BOOL)convertsToSourceAtSelection;
 
 
 /**

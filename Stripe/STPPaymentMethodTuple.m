@@ -8,7 +8,7 @@
 
 #import "STPPaymentMethodTuple.h"
 
-#import "STPPaymentMethodType.h"
+#import "STPPaymentMethodType+Private.h"
 
 @implementation STPPaymentMethodTuple
 
@@ -21,11 +21,27 @@
 
         _allPaymentMethods = [NSSet setWithArray:[_savedPaymentMethods arrayByAddingObjectsFromArray:_availablePaymentTypes]];
 
-        if (_allPaymentMethods.count == 1) {
-            _selectedPaymentMethod = _allPaymentMethods.anyObject;
-        }
-        else if ([_allPaymentMethods containsObject:selectedPaymentMethod]) {
+        if ([_allPaymentMethods containsObject:selectedPaymentMethod]) {
             _selectedPaymentMethod = selectedPaymentMethod;
+        }
+        else if (_allPaymentMethods.count == 1) {
+            id<STPPaymentMethod> method = _allPaymentMethods.anyObject;
+
+
+
+            if ([method isKindOfClass:[STPPaymentMethodType class]]) {
+                STPPaymentMethodType *paymentType = (STPPaymentMethodType *)method;
+                if (paymentType.convertsToSourceAtSelection) {
+                    // Can't already be selected
+                    _selectedPaymentMethod = nil;
+                }
+                else {
+                    _selectedPaymentMethod = method;
+                }
+            }
+            else {
+                _selectedPaymentMethod = method;
+            }
         }
         else {
             _selectedPaymentMethod = nil;

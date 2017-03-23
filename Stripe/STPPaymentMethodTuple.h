@@ -23,7 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
  Must be in one of the other two arrays or will be nil'd.
  
  If there is only one payment method total, it will be automatically set as
- the selected one.
+ the selected one if it is allowed to be selected (but not if its a generic
+ type that converts to source at selection like credit cards)
  */
 @property(nonatomic, nullable, readonly)id<STPPaymentMethod> selectedPaymentMethod;
 
