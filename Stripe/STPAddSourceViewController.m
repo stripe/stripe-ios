@@ -9,11 +9,13 @@
 #import "STPAddSourceViewController.h"
 
 #import "NSArray+Stripe_BoundSafe.h"
+#import "NSString+Stripe.h"
 #import "STPAddressFieldTableViewCell.h"
 #import "STPAddressViewModel.h"
 #import "STPCoreTableViewController+Private.h"
 #import "STPDispatchFunctions.h"
 #import "STPIBANTableViewCell.h"
+#import "STPIBANValidator.h"
 #import "STPImageLibrary+Private.h"
 #import "STPImageLibrary.h"
 #import "STPInfoFooterView.h"
@@ -318,6 +320,15 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
 
 - (void)textFieldTableViewCellDidUpdateText:(STPTextFieldTableViewCell *)cell {
     [self.inputAccessoryToolbar stp_setEnabled:cell.isValid];
+    if (cell == self.ibanCell && cell.contents.length >= 2 &&
+        [STPIBANValidator stringIsValidPartialIBAN:cell.contents]) {
+        STPAddress *address = self.addressViewModel.address;
+        NSString *country = [[cell.contents stp_safeSubstringToIndex:2] uppercaseString];
+        if (address.country != country) {
+            address.country = country;
+            self.addressViewModel.address = address;
+        }
+    }
     [self updateDoneButton];
 }
 

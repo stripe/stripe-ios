@@ -298,7 +298,8 @@
 
 - (void)setContents:(NSString *)contents {
     _contents = contents;
-    if (self.type == STPAddressFieldTypeCountry) {
+    if (self.type == STPAddressFieldTypeCountry ||
+        self.type == STPAddressFieldTypeSEPACountry) {
         [self updateTextFieldsAndCaptions];
     } else {
         self.textField.text = contents;
