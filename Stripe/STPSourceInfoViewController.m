@@ -326,12 +326,14 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
     return nil;
 }
 
-- (CGFloat)tableView:(__unused UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     NSInteger numberOfSections = [tableView numberOfSections];
     if (numberOfSections == 1 || section == STPSourceInfoSelectorSection) {
         return [self.footerView heightForWidth:CGRectGetWidth(self.tableView.frame)];
-    } else {
+    } else if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
         return 0.01f;
+    } else {
+        return 27.0f;
     }
 }
 
