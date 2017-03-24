@@ -21,7 +21,7 @@
     if (self) {
         self.paymentMethodType = [STPPaymentMethodType bancontact];
         STPTextFieldTableViewCell *nameCell = [[STPTextFieldTableViewCell alloc] init];
-        nameCell.placeholder = STPLocalizedString(@"Name", @"Caption for Name field on bank info form");
+        nameCell.placeholder = STPLocalizedString(@"Account Holder Name", @"Caption for Name field on bank info form");
         nameCell.contents = prefilledInfo.billingAddress.name;
         self.cells = @[nameCell];
     }
