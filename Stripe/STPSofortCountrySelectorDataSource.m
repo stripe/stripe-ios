@@ -41,12 +41,13 @@
     return [self.countryCodes count];
 }
 
-- (void)selectRowWithValue:(NSString *)value {
+- (BOOL)selectRowWithValue:(NSString *)value {
     if (!value) {
         self.selectedRow = NSNotFound;
-        return;
+    } else {
+        self.selectedRow = [self.countryCodes indexOfObject:value];
     }
-    self.selectedRow = [self.countryCodes indexOfObject:value];
+    return self.selectedRow != NSNotFound;
 }
 
 - (NSString *)selectorValueForRow:(NSInteger)row {

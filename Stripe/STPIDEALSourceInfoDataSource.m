@@ -16,21 +16,17 @@
 
 @implementation STPIDEALSourceInfoDataSource
 
-- (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams {
-    self = [super initWithSourceParams:sourceParams];
+- (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams
+                prefilledInformation:(STPUserInformation *)prefilledInfo {
+    self = [super initWithSourceParams:sourceParams prefilledInformation:prefilledInfo];
     if (self) {
         self.paymentMethodType = [STPPaymentMethodType ideal];
         STPTextFieldTableViewCell *nameCell = [[STPTextFieldTableViewCell alloc] init];
         nameCell.placeholder = STPLocalizedString(@"Name", @"Caption for Name field on bank info form");
-        if (self.sourceParams.owner) {
-            nameCell.contents = self.sourceParams.owner[@"name"];
-        }
+        nameCell.contents = prefilledInfo.billingAddress.name;
         self.cells = @[nameCell];
         self.selectorDataSource = [STPIDEALBankSelectorDataSource new];
-        NSDictionary *idealDict = self.sourceParams.additionalAPIParameters[@"ideal"];
-        if (idealDict) {
-            [self.selectorDataSource selectRowWithValue:idealDict[@"bank"]];
-        }
+        [self.selectorDataSource selectRowWithValue:prefilledInfo.idealBank];
     }
     return self;
 }

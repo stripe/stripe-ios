@@ -74,38 +74,23 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
         sourceParams.currency = @"eur";
         sourceParams.amount = @(amount);
         // TODO: get returnURL from STPPaymentConfiguration
-        if (prefilledInformation.billingAddress.name &&
-            (type == STPSourceTypeBancontact ||
-             type == STPSourceTypeGiropay ||
-             type == STPSourceTypeIDEAL))
-        {
-            NSMutableDictionary *owner = [NSMutableDictionary new];
-            owner[@"name"] = prefilledInformation.billingAddress.name;
-            sourceParams.owner = owner;
-        }
-        if (prefilledInformation.billingAddress.country && type == STPSourceTypeSofort) {
-            NSMutableDictionary *sofortDict = [NSMutableDictionary new];
-            sofortDict[@"country"] = prefilledInformation.billingAddress.country;
-            sourceParams.additionalAPIParameters = @{@"sofort": sofortDict};
-        }
-        if (prefilledInformation.idealBank && type == STPSourceTypeIDEAL) {
-            NSMutableDictionary *idealDict = [NSMutableDictionary new];
-            idealDict[@"bank"] = prefilledInformation.idealBank;
-            sourceParams.additionalAPIParameters = @{@"ideal": idealDict};
-        }
         switch (type) {
             case STPSourceTypeBancontact: {
-                dataSource = [[STPBancontactSourceInfoDataSource alloc] initWithSourceParams:sourceParams];
+                dataSource = [[STPBancontactSourceInfoDataSource alloc] initWithSourceParams:sourceParams
+                                                                        prefilledInformation:prefilledInformation];
                 break;
             }
             case STPSourceTypeGiropay:
-                dataSource = [[STPGiropaySourceInfoDataSource alloc] initWithSourceParams:sourceParams];
+                dataSource = [[STPGiropaySourceInfoDataSource alloc] initWithSourceParams:sourceParams
+                                                                     prefilledInformation:prefilledInformation];
                 break;
             case STPSourceTypeIDEAL:
-                dataSource = [[STPIDEALSourceInfoDataSource alloc] initWithSourceParams:sourceParams];
+                dataSource = [[STPIDEALSourceInfoDataSource alloc] initWithSourceParams:sourceParams
+                                                                   prefilledInformation:prefilledInformation];
                 break;
             case STPSourceTypeSofort:
-                dataSource = [[STPSofortSourceInfoDataSource alloc] initWithSourceParams:sourceParams];
+                dataSource = [[STPSofortSourceInfoDataSource alloc] initWithSourceParams:sourceParams
+                                                                    prefilledInformation:prefilledInformation];
                 break;
             default:
                 dataSource = [[STPSourceInfoDataSource alloc] init];
@@ -120,7 +105,11 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
 }
 
 - (STPSourceParams *)completeSourceParams {
-    return self.dataSource.completeSourceParams;
+    if (self.dataSource.requiresUserVerification) {
+        return nil;
+    } else {
+        return self.dataSource.completeSourceParams;
+    }
 }
 
 - (void)createAndSetupViews {

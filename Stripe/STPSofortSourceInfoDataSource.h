@@ -11,4 +11,7 @@
 
 @interface STPSofortSourceInfoDataSource : STPSourceInfoDataSource
 
+- (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams
+                prefilledInformation:(STPUserInformation *)prefilledInfo;
+
 @end

@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSString *)selectorValueForRow:(NSInteger)row;
 - (NSString *)selectorTitleForRow:(NSInteger)row;
 - (nullable UIImage *)selectorImageForRow:(NSInteger)row;
-- (void)selectRowWithValue:(nullable NSString *)value;
+- (BOOL)selectRowWithValue:(nullable NSString *)value;
 
 @end
 

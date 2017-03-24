@@ -55,17 +55,18 @@
     return [self.bankNames count];
 }
 
-- (void)selectRowWithValue:(NSString *)value {
+- (BOOL)selectRowWithValue:(NSString *)value {
     if (!value) {
         self.selectedRow = NSNotFound;
-        return;
-    }
-    NSString *name = [[self.bankNameToBankCode allKeysForObject:value] firstObject];
-    if (name) {
-        self.selectedRow = [self.bankNames indexOfObject:name];
     } else {
-        self.selectedRow = NSNotFound;
+        NSString *name = [[self.bankNameToBankCode allKeysForObject:value] firstObject];
+        if (name) {
+            self.selectedRow = [self.bankNames indexOfObject:name];
+        } else {
+            self.selectedRow = NSNotFound;
+        }
     }
+    return self.selectedRow != NSNotFound;
 }
 
 - (NSString *)selectorValueForRow:(NSInteger)row {

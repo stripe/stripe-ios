@@ -18,7 +18,14 @@
 @property (nonatomic, copy) NSArray<STPTextFieldTableViewCell *>*cells;
 @property (nonatomic) id<STPSelectorDataSource>selectorDataSource;
 
-- (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams;
+/// If YES, the data source must be verified by the user even if
+/// completedSourceParams is non-nil.
+@property (nonatomic, assign) BOOL requiresUserVerification;
+
+- (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams
+                prefilledInformation:(STPUserInformation *)prefilledInfo;
+
+/// If the data source contains incomplete info, this method will return nil.
 - (STPSourceParams *)completeSourceParams;
 
 @end

@@ -15,15 +15,14 @@
 
 @implementation STPBancontactSourceInfoDataSource
 
-- (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams {
-    self = [super initWithSourceParams:sourceParams];
+- (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams
+                prefilledInformation:(STPUserInformation *)prefilledInfo {
+    self = [super initWithSourceParams:sourceParams prefilledInformation:prefilledInfo];
     if (self) {
         self.paymentMethodType = [STPPaymentMethodType bancontact];
         STPTextFieldTableViewCell *nameCell = [[STPTextFieldTableViewCell alloc] init];
         nameCell.placeholder = STPLocalizedString(@"Name", @"Caption for Name field on bank info form");
-        if (self.sourceParams.owner) {
-            nameCell.contents = self.sourceParams.owner[@"name"];
-        }
+        nameCell.contents = prefilledInfo.billingAddress.name;
         self.cells = @[nameCell];
     }
     return self;
