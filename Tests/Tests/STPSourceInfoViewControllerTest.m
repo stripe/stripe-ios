@@ -7,8 +7,9 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "STPSourceInfoViewController.h"
+#import "STPSelectorDataSource.h"
 #import "STPSourceInfoDataSource.h"
+#import "STPSourceInfoViewController.h"
 #import "STPTextFieldTableViewCell.h"
 
 @interface STPSourceInfoViewController ()
@@ -53,13 +54,17 @@
     STPSourceInfoViewController *sut = [self sutWithType:STPSourceTypeBancontact
                                                     info:info];
 
+    // Test initial state
     XCTAssertEqual(sut.dataSource.cells.count, 1U);
     STPTextFieldTableViewCell *nameCell = [sut.dataSource.cells firstObject];
     XCTAssertEqualObjects(nameCell.contents, @"Jenny Rosen");
+    XCTAssertNotNil(sut.completeSourceParams);
 
+    // Unfilled form should not return source params
     nameCell.contents = @"";
     XCTAssertNil(sut.completeSourceParams);
 
+    // Filled form should return source params
     nameCell.contents = @"John Smith";
     XCTAssertNotNil(sut.completeSourceParams);
     XCTAssertEqualObjects(sut.completeSourceParams.owner[@"name"], nameCell.contents);
@@ -73,13 +78,17 @@
     STPSourceInfoViewController *sut = [self sutWithType:STPSourceTypeGiropay
                                                     info:info];
 
+    // Test initial state
     XCTAssertEqual(sut.dataSource.cells.count, 1U);
     STPTextFieldTableViewCell *nameCell = [sut.dataSource.cells firstObject];
     XCTAssertEqualObjects(nameCell.contents, @"Jenny Rosen");
+    XCTAssertNotNil(sut.completeSourceParams);
 
+    // Unfilled form should not return source params
     nameCell.contents = @"";
     XCTAssertNil(sut.completeSourceParams);
 
+    // Filled form should return source params
     nameCell.contents = @"John Smith";
     XCTAssertNotNil(sut.completeSourceParams);
     XCTAssertEqualObjects(sut.completeSourceParams.owner[@"name"], nameCell.contents);
@@ -87,25 +96,33 @@
 
 - (void)testInitWithSourceParams_iDEAL {
     STPUserInformation *info = [STPUserInformation new];
-    // TODO: test setting idealBank in STPUserInformation
     STPAddress *address = [STPAddress new];
     address.name = @"Jenny Rosen";
     info.billingAddress = address;
+    info.idealBank = @"ing";
     STPSourceInfoViewController *sut = [self sutWithType:STPSourceTypeIDEAL
                                                     info:info];
 
-    XCTAssertEqual(sut.dataSource.cells.count, 2U);
+    // Test initial state
+    id<STPSelectorDataSource> selectorDataSource = sut.dataSource.selectorDataSource;
+    XCTAssertEqual(sut.dataSource.cells.count, 1U);
     STPTextFieldTableViewCell *nameCell = [sut.dataSource.cells firstObject];
     XCTAssertEqualObjects(nameCell.contents, @"Jenny Rosen");
-    STPTextFieldTableViewCell *bankCell = [sut.dataSource.cells lastObject];
-//    XCTAssertEqualObjects(bankCell.contents, @"bunq");
+    NSInteger selectedRow = selectorDataSource.selectedRow;
+    NSString *bank = [selectorDataSource selectorValueForRow:selectedRow];
+    XCTAssertEqualObjects(bank, @"ing");
+    XCTAssertNotNil(sut.completeSourceParams);
 
+    // Unfilled form should not return source params
     nameCell.contents = @"";
-    bankCell.contents = @"";
+    XCTAssertNil(sut.completeSourceParams);
+    nameCell.contents = @"John Smith";
+    [selectorDataSource selectRowWithValue:@"invalid_bank"];
+    XCTAssertEqual(selectorDataSource.selectedRow, NSNotFound);
     XCTAssertNil(sut.completeSourceParams);
 
-    nameCell.contents = @"John Smith";
-    bankCell.contents = @"rabobank";
+    // Filled form should return source params
+    [selectorDataSource selectRowWithValue:@"rabobank"];
     XCTAssertNotNil(sut.completeSourceParams);
     XCTAssertEqualObjects(sut.completeSourceParams.owner[@"name"], nameCell.contents);
     NSDictionary *idealDict = sut.completeSourceParams.additionalAPIParameters[@"ideal"];
@@ -120,14 +137,21 @@
     STPSourceInfoViewController *sut = [self sutWithType:STPSourceTypeSofort
                                                     info:info];
 
-    XCTAssertEqual(sut.dataSource.cells.count, 1U);
-    STPTextFieldTableViewCell *countryCell = [sut.dataSource.cells firstObject];
-    XCTAssertEqualObjects(countryCell.contents, @"FR");
+    // Test initial state
+    id<STPSelectorDataSource> selectorDataSource = sut.dataSource.selectorDataSource;
+    XCTAssertEqual(sut.dataSource.cells.count, 0U);
+    NSInteger selectedRow = selectorDataSource.selectedRow;
+    NSString *country = [selectorDataSource selectorValueForRow:selectedRow];
+    XCTAssertEqualObjects(country, @"FR");
+    XCTAssertNotNil(sut.completeSourceParams);
 
-    countryCell.contents = @"";
+    // Unfilled form should not return source params
+    [selectorDataSource selectRowWithValue:@"invalid_country"];
+    XCTAssertEqual(selectorDataSource.selectedRow, NSNotFound);
     XCTAssertNil(sut.completeSourceParams);
 
-    countryCell.contents = @"AT";
+    // Filled form should return source params
+    [selectorDataSource selectRowWithValue:@"AT"];
     XCTAssertNotNil(sut.completeSourceParams);
     NSDictionary *sofortDict = sut.completeSourceParams.additionalAPIParameters[@"sofort"];
     XCTAssertEqualObjects(sofortDict, @{@"country": @"AT"});

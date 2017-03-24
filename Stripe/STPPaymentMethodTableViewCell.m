@@ -17,46 +17,13 @@
 
 @interface STPPaymentMethodTableViewCell ()
 @property(nonatomic) id<STPPaymentMethod> paymentMethod;
-@property(nonatomic) STPTheme *theme;
-@property(nonatomic, weak) UIImageView *leftIcon;
-@property(nonatomic, weak) UILabel *titleLabel;
-@property(nonatomic, weak) UIImageView *checkmarkIcon;
 @end
 
 @implementation STPPaymentMethodTableViewCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        UIImageView *leftIcon = [[UIImageView alloc] init];
-        _leftIcon = leftIcon;
-        UILabel *titleLabel = [UILabel new];
-        _titleLabel = titleLabel;
-        UIImageView *checkmarkIcon = [[UIImageView alloc] initWithImage:[STPImageLibrary checkmarkIcon]];
-        _checkmarkIcon = checkmarkIcon;
-        [self.contentView addSubview:leftIcon];
-        [self.contentView addSubview:titleLabel];
-        [self.contentView addSubview:checkmarkIcon];
-    }
-    return self;
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    CGFloat midY = CGRectGetMidY(self.bounds);
-    [self.leftIcon sizeToFit];
-    CGFloat padding = 15.0f;
-    CGFloat iconWidth = 26.0f;
-    self.leftIcon.center = CGPointMake(padding + iconWidth/2.0f, midY);
-    [self.titleLabel sizeToFit];
-    self.titleLabel.center = CGPointMake(padding*2.0f + iconWidth + CGRectGetMidX(self.titleLabel.bounds), midY);
-    self.checkmarkIcon.frame = CGRectMake(0, 0, 14.0f, 14.0f);
-    self.checkmarkIcon.center = CGPointMake(CGRectGetWidth(self.bounds) - padding - CGRectGetMidX(self.checkmarkIcon.bounds), midY);
-}
-
 - (void)configureWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod theme:(STPTheme *)theme {
     _paymentMethod = paymentMethod;
-    _theme = theme;
+    self.theme = theme;
     self.backgroundColor = [UIColor clearColor];
     self.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
     self.leftIcon.image = paymentMethod.paymentMethodTemplateImage;

@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "STPOptionTableViewCell.h"
 #import "STPPaymentMethod.h"
 #import "STPTheme.h"
 
-@interface STPPaymentMethodTableViewCell : UITableViewCell
+@interface STPPaymentMethodTableViewCell : STPOptionTableViewCell
 
 - (void)configureWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod theme:(STPTheme *)theme;
 
