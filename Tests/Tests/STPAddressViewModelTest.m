@@ -35,8 +35,11 @@
                        @(STPAddressFieldTypeZip),
                        @(STPAddressFieldTypeCountry),
                        ];
-    for (NSUInteger i=0; i<[sut.addressCells count]; i++) {
-        XCTAssertEqual(sut.addressCells[i].type, [types[i] integerValue]);
+    NSUInteger count = sut.addressCells.count;
+    for (NSUInteger i = 0; i < count; i++) {
+        STPAddressFieldTableViewCell *cell = sut.addressCells[i];
+        XCTAssertEqual(cell.type, [types[i] integerValue]);
+        XCTAssertEqual(cell.lastInList, (i == count - 1));
     }
 }
 
@@ -72,8 +75,28 @@
               @(STPAddressFieldTypeCountry),
               @(STPAddressFieldTypePhone),
               ];
-    for (NSUInteger i=0; i<[sut.addressCells count]; i++) {
-        XCTAssertEqual(sut.addressCells[i].type, [types[i] integerValue]);
+    NSUInteger count = sut.addressCells.count;
+    for (NSUInteger i = 0; i < count; i++) {
+        STPAddressFieldTableViewCell *cell = sut.addressCells[i];
+        XCTAssertEqual(cell.type, [types[i] integerValue]);
+        XCTAssertEqual(cell.lastInList, (i == count - 1));
+    }
+}
+
+- (void)testInitWithSEPADebitFields {
+    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithSEPADebitFields];
+    XCTAssertTrue([sut.addressCells count] == 4);
+    NSArray *types = @[
+                       @(STPAddressFieldTypeLine1),
+                       @(STPAddressFieldTypeCity),
+                       @(STPAddressFieldTypeZip),
+                       @(STPAddressFieldTypeSEPACountry),
+                       ];
+    NSUInteger count = sut.addressCells.count;
+    for (NSUInteger i = 0; i < count; i++) {
+        STPAddressFieldTableViewCell *cell = sut.addressCells[i];
+        XCTAssertEqual(cell.type, [types[i] integerValue]);
+        XCTAssertEqual(cell.lastInList, (i == count - 1));
     }
 }
 

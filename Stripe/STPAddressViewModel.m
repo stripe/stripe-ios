@@ -141,10 +141,14 @@ typedef NS_ENUM(NSUInteger, STPAddressType) {
             zipFieldIndex = previousFieldIndex + 1;
         } else {
             zipFieldIndex = 0;
-            zipCell.lastInList = YES;
         }
         NSMutableArray<STPAddressFieldTableViewCell *> *mutableAddressCells = self.addressCells.mutableCopy;
         [mutableAddressCells insertObject:zipCell atIndex:zipFieldIndex];
+        NSUInteger count = mutableAddressCells.count;
+        for (NSUInteger i = 0; i < count; i++) {
+            STPAddressFieldTableViewCell *cell = [mutableAddressCells stp_boundSafeObjectAtIndex:i];
+            cell.lastInList = (i == count - 1);
+        }
         self.addressCells = mutableAddressCells.copy;
         [self.delegate addressViewModel:self addedCellAtIndex:zipFieldIndex];
         [self.delegate addressViewModelDidChange:self];

@@ -20,6 +20,8 @@ typedef NS_ENUM(NSInteger, STPPostalCodeType) {
                            type:(STPPostalCodeType)postalCodeType;
 + (BOOL)stringIsValidPostalCode:(nullable NSString *)string
                     countryCode:(nullable NSString *)countryCode;
++ (BOOL)stringIsValidSEPAPostalCode:(nullable NSString *)string
+                        countryCode:(nullable NSString *)countryCode;
 
 + (STPPostalCodeType)postalCodeTypeForCountryCode:(nullable NSString *)countryCode;
 
