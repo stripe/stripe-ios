@@ -124,6 +124,9 @@ typedef NS_ENUM(NSUInteger, STPAddressType) {
         return;
     }
     STPPostalCodeType postalCodeType = [STPPostalCodeValidator postalCodeTypeForCountryCode:_addressFieldTableViewCountryCode];
+    if (self.addressType == STPAddressTypeSEPADebit) {
+        postalCodeType = [STPPostalCodeValidator postalCodeTypeForSEPACountryCode:_addressFieldTableViewCountryCode];
+    }
     BOOL shouldBeShowingPostalCode = (postalCodeType != STPCountryPostalCodeTypeNotRequired);
     // Add postal code field
     if (shouldBeShowingPostalCode && !self.showingPostalCodeCell) {
