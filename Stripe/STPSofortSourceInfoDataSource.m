@@ -16,15 +16,25 @@
 
 @implementation STPSofortSourceInfoDataSource
 
-- (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams {
-    self = [super initWithSourceParams:sourceParams];
+- (instancetype)initWithSourceParams:(STPSourceParams *)sourceParams
+                prefilledInformation:(STPUserInformation *)prefilledInfo {
+    self = [super initWithSourceParams:sourceParams prefilledInformation:prefilledInfo];
     if (self) {
         self.paymentMethodType = [STPPaymentMethodType sofort];
         self.cells = @[];
         self.selectorDataSource = [STPSofortCountrySelectorDataSource new];
-        NSDictionary *sofortDict = self.sourceParams.additionalAPIParameters[@"sofort"];
-        if (sofortDict) {
-            [self.selectorDataSource selectRowWithValue:sofortDict[@"country"]];
+        NSString *country = prefilledInfo.billingAddress.country;
+        BOOL selected = NO;
+        if (country) {
+            selected = [self.selectorDataSource selectRowWithValue:country];
+        }
+        if (!selected) {
+            NSLocale *locale = [NSLocale autoupdatingCurrentLocale];
+            NSString *localeCountry = [locale objectForKey:NSLocaleCountryCode];
+            selected = [self.selectorDataSource selectRowWithValue:localeCountry];
+            if (selected) {
+                self.requiresUserVerification = YES;
+            }
         }
     }
     return self;

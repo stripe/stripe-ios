@@ -74,38 +74,23 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
         sourceParams.currency = @"eur";
         sourceParams.amount = @(amount);
         // TODO: get returnURL from STPPaymentConfiguration
-        if (prefilledInformation.billingAddress.name &&
-            (type == STPSourceTypeBancontact ||
-             type == STPSourceTypeGiropay ||
-             type == STPSourceTypeIDEAL))
-        {
-            NSMutableDictionary *owner = [NSMutableDictionary new];
-            owner[@"name"] = prefilledInformation.billingAddress.name;
-            sourceParams.owner = owner;
-        }
-        if (prefilledInformation.billingAddress.country && type == STPSourceTypeSofort) {
-            NSMutableDictionary *sofortDict = [NSMutableDictionary new];
-            sofortDict[@"country"] = prefilledInformation.billingAddress.country;
-            sourceParams.additionalAPIParameters = @{@"sofort": sofortDict};
-        }
-        if (prefilledInformation.idealBank && type == STPSourceTypeIDEAL) {
-            NSMutableDictionary *idealDict = [NSMutableDictionary new];
-            idealDict[@"bank"] = prefilledInformation.idealBank;
-            sourceParams.additionalAPIParameters = @{@"ideal": idealDict};
-        }
         switch (type) {
             case STPSourceTypeBancontact: {
-                dataSource = [[STPBancontactSourceInfoDataSource alloc] initWithSourceParams:sourceParams];
+                dataSource = [[STPBancontactSourceInfoDataSource alloc] initWithSourceParams:sourceParams
+                                                                        prefilledInformation:prefilledInformation];
                 break;
             }
             case STPSourceTypeGiropay:
-                dataSource = [[STPGiropaySourceInfoDataSource alloc] initWithSourceParams:sourceParams];
+                dataSource = [[STPGiropaySourceInfoDataSource alloc] initWithSourceParams:sourceParams
+                                                                     prefilledInformation:prefilledInformation];
                 break;
             case STPSourceTypeIDEAL:
-                dataSource = [[STPIDEALSourceInfoDataSource alloc] initWithSourceParams:sourceParams];
+                dataSource = [[STPIDEALSourceInfoDataSource alloc] initWithSourceParams:sourceParams
+                                                                   prefilledInformation:prefilledInformation];
                 break;
             case STPSourceTypeSofort:
-                dataSource = [[STPSofortSourceInfoDataSource alloc] initWithSourceParams:sourceParams];
+                dataSource = [[STPSofortSourceInfoDataSource alloc] initWithSourceParams:sourceParams
+                                                                    prefilledInformation:prefilledInformation];
                 break;
             default:
                 dataSource = [[STPSourceInfoDataSource alloc] init];
@@ -120,7 +105,11 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
 }
 
 - (STPSourceParams *)completeSourceParams {
-    return self.dataSource.completeSourceParams;
+    if (self.dataSource.requiresUserVerification) {
+        return nil;
+    } else {
+        return self.dataSource.completeSourceParams;
+    }
 }
 
 - (void)createAndSetupViews {
@@ -134,7 +123,7 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
     self.stp_navigationItemProxy.rightBarButtonItem.enabled = NO;
 
     STPSectionHeaderView *firstSectionHeader = [STPSectionHeaderView new];
-    firstSectionHeader.title = STPLocalizedString(@"Account Information", @"Title for bank account information form");
+    firstSectionHeader.title = STPLocalizedString(@"Bank Account Information", @"Title for bank account information form");
     firstSectionHeader.buttonHidden = YES;
     self.firstSectionHeaderView = firstSectionHeader;
 
@@ -337,12 +326,14 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
     return nil;
 }
 
-- (CGFloat)tableView:(__unused UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     NSInteger numberOfSections = [tableView numberOfSections];
     if (numberOfSections == 1 || section == STPSourceInfoSelectorSection) {
         return [self.footerView heightForWidth:CGRectGetWidth(self.tableView.frame)];
-    } else {
+    } else if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
         return 0.01f;
+    } else {
+        return 27.0f;
     }
 }
 

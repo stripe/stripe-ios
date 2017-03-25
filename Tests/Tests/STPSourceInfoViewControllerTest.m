@@ -155,6 +155,24 @@
     XCTAssertNotNil(sut.completeSourceParams);
     NSDictionary *sofortDict = sut.completeSourceParams.additionalAPIParameters[@"sofort"];
     XCTAssertEqualObjects(sofortDict, @{@"country": @"AT"});
+
+    // Test initializing with a non-Sofort country
+    address.country = @"US";
+    info.billingAddress = address;
+    sut = [self sutWithType:STPSourceTypeSofort info:info];
+    XCTAssertNil(sut.completeSourceParams);
+}
+
+- (void)testRequiresUserVerification {
+    STPUserInformation *info = [STPUserInformation new];
+    STPAddress *address = [STPAddress new];
+    address.country = @"FR";
+    info.billingAddress = address;
+    STPSourceInfoViewController *sut = [self sutWithType:STPSourceTypeSofort
+                                                    info:info];
+    XCTAssertNotNil(sut.completeSourceParams);
+    sut.dataSource.requiresUserVerification = YES;
+    XCTAssertNil(sut.completeSourceParams);
 }
 
 @end
