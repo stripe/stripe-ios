@@ -30,6 +30,12 @@
                                     type:[self postalCodeTypeForCountryCode:countryCode]];
 }
 
++ (BOOL)stringIsValidSEPAPostalCode:(nullable NSString *)string
+                        countryCode:(nullable NSString *)countryCode {
+    return [self stringIsValidPostalCode:string
+                                    type:[self postalCodeTypeForSEPACountryCode:countryCode]];
+}
+
 + (STPPostalCodeType)postalCodeTypeForCountryCode:(NSString *)countryCode {
     if ([countryCode isEqualToString:@"US"]) {
         return STPCountryPostalCodeTypeNumericOnly;
@@ -40,6 +46,15 @@
     else {
         return STPCountryPostalCodeTypeAlphanumeric;
     }
+}
+
++ (STPPostalCodeType)postalCodeTypeForSEPACountryCode:(nullable NSString *)countryCode {
+    STPPostalCodeType type = STPCountryPostalCodeTypeAlphanumeric;
+    NSArray *sepaCountriesWithNoPostalCodes = @[@"IE"];
+    if ([sepaCountriesWithNoPostalCodes containsObject:countryCode]) {
+        type = STPCountryPostalCodeTypeNotRequired;
+    }
+    return type;
 }
 
 + (NSArray *)countriesWithNoPostalCodes {

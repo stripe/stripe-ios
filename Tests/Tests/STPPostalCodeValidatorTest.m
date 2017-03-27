@@ -61,4 +61,10 @@
     }   
 }
 
+- (void)testStringIsValidSEPAPostalCode {
+    XCTAssertTrue([STPPostalCodeValidator stringIsValidSEPAPostalCode:nil countryCode:@"IE"]);
+    XCTAssertFalse([STPPostalCodeValidator stringIsValidSEPAPostalCode:@"" countryCode:@"DE"]);
+    XCTAssertTrue([STPPostalCodeValidator stringIsValidSEPAPostalCode:@"100077" countryCode:@"DE"]);
+}
+
 @end
