@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol STPSourceInfoViewControllerDelegate;
 @class STPSourceParams, STPPaymentConfiguration, STPUserInformation;
 
+typedef void (^STPSourceInfoCompletionBlock)(STPSourceParams * _Nullable sourceParams);
+
 /** 
  *  You can use this view controller to collect information for payment sources
  *  that require additional information upon creation (e.g. iDEAL, which requires 
@@ -26,21 +28,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Initializes a new `STPSourceInfoViewController` with the provided parameters. 
- *  When the user submits the form, the view controller will return an STPSourceParams 
- *  object its delegate, updated with the information entered by the user. If the 
- *  given source type is unsupported, this initializer will return nil.
+ *  When the user submits the form, the completion block will be called with an
+ *  STPSourceParams object, populated with information entered by the user.
+ *  If the user cancels, the completion block will be called with nil.
+ *  If the given source type is unsupported, this initializer will return nil.
  *
  *  @param type                   The type of the source.
  *  @param amount                 The amount of the source.
  *  @param configuration          The configuration to use. This determines the source's returnURL.
  *  @param prefilledInformation   Use this to provide any information you've already collected from your user.
  *  @param theme                  The theme to use to inform the view controller's visual appearance. @see STPTheme
+ *  @param completion             The completion block called when the user submits the forms or cancels.
  */
 - (nullable instancetype)initWithSourceType:(STPSourceType)type
                                      amount:(NSInteger)amount
                               configuration:(STPPaymentConfiguration *)configuration
                        prefilledInformation:(STPUserInformation *)prefilledInformation
-                                      theme:(STPTheme *)theme;
+                                      theme:(STPTheme *)theme
+                                 completion:(STPSourceInfoCompletionBlock)completion;
 
 /**
  *  You should check this property after initializing `STPSourceInfoViewController`.
@@ -58,28 +63,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  controller in order for it to work properly. @see STPSourceInfoViewControllerDelegate
  */
 @property(nonatomic, weak) id<STPSourceInfoViewControllerDelegate> delegate;
-
-@end
-
-/**
- *  An `STPSourceInfoViewControllerDelegate` is notified when a user submits information or cancels in an `STPSourceInfoViewController`.
- */
-@protocol STPSourceInfoViewControllerDelegate <NSObject>
-
-/**
- *  This is called when the user cancels entering source information. You should dismiss (or pop) the view controller at this point.
- *
- *  @param sourceInfoViewController the view controller that has been cancelled
- */
-- (void)sourceInfoViewControllerDidCancel:(STPSourceInfoViewController *)sourceInfoViewController;
-
-/**
- *  This is called when the user finishes entering source information and submits the form. You should use the `STPSourceParams` object returned by this callback to create a source, and dismiss (or pop) the view controller.
- *
- *  @param sourceInfoViewController the view controller that has been cancelled
- */
-- (void)sourceInfoViewController:(STPSourceInfoViewController *)sourceInfoViewController
-       didFinishWithSourceParams:(STPSourceParams *)sourceParams;
 
 @end
 

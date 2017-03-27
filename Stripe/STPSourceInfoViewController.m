@@ -41,6 +41,7 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
 @property(nonatomic)STPSectionHeaderView *firstSectionHeaderView;
 @property(nonatomic)STPSectionHeaderView *selectorHeaderView;
 @property(nonatomic)STPInfoFooterView *footerView;
+@property(nonatomic, copy)STPSourceInfoCompletionBlock completion;
 
 @end
 
@@ -62,12 +63,14 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
                                      amount:(NSInteger)amount
                               configuration:(__unused STPPaymentConfiguration *)configuration
                        prefilledInformation:(STPUserInformation *)prefilledInformation
-                                      theme:(STPTheme *)theme {
+                                      theme:(STPTheme *)theme
+                                 completion:(STPSourceInfoCompletionBlock)completion {
     self = [super initWithTheme:theme];
     if (![[self class] canCollectInfoForSourceType:type]) {
         return nil;
     }
     if (self) {
+        _completion = completion;
         STPSourceInfoDataSource *dataSource;
         STPSourceParams *sourceParams = [STPSourceParams new];
         sourceParams.type = type;
@@ -197,13 +200,16 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
 }
 
 - (void)handleBackOrCancelTapped:(__unused id)sender {
-    [self.delegate sourceInfoViewControllerDidCancel:self];
+    if (self.completion) {
+        self.completion(nil);
+    }
 }
 
 - (void)nextPressed:(__unused id)sender {
-    STPSourceParams *params = [self.dataSource completeSourceParams];
-    [self.delegate sourceInfoViewController:self
-                  didFinishWithSourceParams:params];
+    if (self.completion) {
+        STPSourceParams *params = [self.dataSource completeSourceParams];
+        self.completion(params);
+    }
 }
 
 - (void)updateDoneButton {

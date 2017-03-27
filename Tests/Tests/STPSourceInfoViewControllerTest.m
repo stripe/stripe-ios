@@ -32,7 +32,10 @@
                                                                                         amount:amount
                                                                                  configuration:config
                                                                           prefilledInformation:info
-                                                                                         theme:theme];
+                                                                                         theme:theme
+                                                                                    completion:^(__unused STPSourceParams *sourceParams) {
+                                                                                        // noop
+                                                                                    }];
     UINavigationController *navController = [UINavigationController new];
     navController.view.frame = CGRectMake(0, 0, 320, 750);
     [navController pushViewController:sut animated:NO];
