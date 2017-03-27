@@ -138,10 +138,13 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
             STPAddSourceViewController *addSourceViewController = [[STPAddSourceViewController alloc] initWithSourceType:paymentType.sourceType
                                                                                                            configuration:self.configuration
                                                                                                                    theme:self.theme];
-            addSourceViewController.delegate = self;
-            addSourceViewController.prefilledInformation = self.prefilledInformation;
-            addSourceViewController.shippingAddress = self.shippingAddress;
-            [self.navigationController pushViewController:addSourceViewController animated:YES];
+            if (addSourceViewController) {
+                addSourceViewController.delegate = self;
+                addSourceViewController.prefilledInformation = self.prefilledInformation;
+                addSourceViewController.shippingAddress = self.shippingAddress;
+                [self.navigationController pushViewController:addSourceViewController
+                                                     animated:YES];
+            }
         }
     }
     else {
