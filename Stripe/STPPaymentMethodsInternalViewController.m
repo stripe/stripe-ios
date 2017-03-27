@@ -196,7 +196,8 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
 - (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
                didCreateToken:(STPToken *)token
                    completion:(STPErrorBlock)completion {
-    [self.delegate internalViewControllerDidCreateToken:token completion:completion];
+    [self.delegate internalViewControllerDidCreateTokenOrSource:token
+                                                     completion:completion];
 }
 
 - (void)addSourceViewControllerDidCancel:(__unused STPAddSourceViewController *)addSourceViewController {
@@ -206,7 +207,8 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
 - (void)addSourceViewController:(__unused STPAddSourceViewController *)addSourceViewController
                 didCreateSource:(STPSource *)source
                      completion:(STPErrorBlock)completion {
-    [self.delegate internalViewControllerDidCreateToken:source completion:completion];
+    [self.delegate internalViewControllerDidCreateTokenOrSource:source
+                                                     completion:completion];
 }
 
 @end

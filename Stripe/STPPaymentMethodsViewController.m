@@ -187,7 +187,8 @@
     [self finishWithPaymentMethod:paymentMethod];
 }
 
-- (void)internalViewControllerDidCreateToken:(id<STPSourceProtocol>)tokenOrSource completion:(STPErrorBlock)completion {
+- (void)internalViewControllerDidCreateTokenOrSource:(id<STPSourceProtocol>)tokenOrSource
+                                          completion:(STPErrorBlock)completion {
     [self.apiAdapter attachSourceToCustomer:tokenOrSource completion:^(NSError *error) {
         STPPromise<STPPaymentMethodTuple *> *promise = [self retrieveCustomerWithConfiguration:self.configuration apiAdapter:self.apiAdapter];
         [promise onSuccess:^(STPPaymentMethodTuple *tuple) {
@@ -220,7 +221,7 @@
 - (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
                didCreateToken:(STPToken *)token
                    completion:(STPErrorBlock)completion {
-    [self internalViewControllerDidCreateToken:token completion:completion];
+    [self internalViewControllerDidCreateTokenOrSource:token completion:completion];
 }
 
 - (void)addSourceViewControllerDidCancel:(__unused STPAddSourceViewController *)addSourceViewController {
@@ -230,7 +231,7 @@
 - (void)addSourceViewController:(__unused STPAddSourceViewController *)addSourceViewController
                 didCreateSource:(STPSource *)source
                      completion:(STPErrorBlock)completion {
-    [self internalViewControllerDidCreateToken:source completion:completion];
+    [self internalViewControllerDidCreateTokenOrSource:source completion:completion];
 }
 
 - (void)dismissWithCompletion:(STPVoidBlock)completion {
