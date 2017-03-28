@@ -91,13 +91,18 @@
 
 - (void)setReturnURL:(nullable NSURL *)returnURL {
     _returnURL = returnURL;
-    self.sourceURLRedirectBlock = ^(STPAPIClient *apiClient, STPSource *source, STPSourceCompletionBlock completion) {
+    self.sourceURLRedirectBlock = ^(STPAPIClient *apiClient, STPSource *source, STPVoidBlock onRedirectReturn, STPSourceCompletionBlock completion) {
         if (completion) {
             __block id notificationObserver = nil;
 
             void (^notificationBlock)(NSNotification * _Nonnull note) = ^(NSNotification * __unused _Nonnull note) {
                 [[NSNotificationCenter defaultCenter] removeObserver:notificationObserver];
                 notificationObserver = nil;
+
+                if (onRedirectReturn) {
+                    onRedirectReturn();
+                }
+
                 __block STPSourcePoller *poller = [[STPSourcePoller alloc] initWithAPIClient:apiClient
                                                                                 clientSecret:source.clientSecret
                                                                                     sourceID:source.stripeID

@@ -198,7 +198,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Inside this method, you should make a call to your backend API to make a charge with that Customer + source, and invoke the `completion` block when that is done.
  *
- *  @note This method is not called for redirect-based sources. See `paymentContext:redirectDidReturnForSource:`
+ *  @note This method is not called for redirect-based sources.
  *
  *  @param paymentContext The context that succeeded
  *  @param paymentResult  Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and make a charge to complete the payment, passing `paymentResult.source.stripeID` as the `source` parameter to the create charge method and your customer's ID as the `customer` parameter (see stripe.com/docs/api#charge_create for more info). Once that's done call the `completion` block with any error that occurred (or none, if the charge succeeded). @see STPPaymentResult.h
@@ -240,6 +240,16 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
 - (void)paymentContext:(STPPaymentContext *)paymentContext
 didUpdateShippingAddress:(STPAddress *)address
             completion:(STPShippingMethodsCompletionBlock)completion;
+
+/**
+ *  This method is called after the user returns to the app after completing
+ *  a redirect-based payment method.
+ *
+ *  You may want to show some sort of loading UI on screen when this happens,
+ *  while payment context polls for updated source information. When source polling
+ *  completes, the delegate will receive a call to `paymentContext:didFinishWithStatus:error:`
+ */
+- (void)paymentContextDidReturnFromRedirect:(STPPaymentContext *)paymentContext;
 
 @end
 

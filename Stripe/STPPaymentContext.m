@@ -462,7 +462,14 @@
                 }
                     break;
                 case STPSourceFlowRedirect: {
-                    self.configuration.sourceURLRedirectBlock(self.apiClient, source, ^(STPSource *finishedSource, NSError *error) {
+
+                    STPVoidBlock onRedirectReturn = ^ {
+                        if ([self.delegate respondsToSelector:@selector(paymentContextDidReturnFromRedirect:)]) {
+                            [self.delegate paymentContextDidReturnFromRedirect:self];
+                        }
+                    };
+
+                    STPSourceCompletionBlock onRedirectCompletion = ^(STPSource *finishedSource, NSError *error) {
                         stpDispatchToMainThreadIfNecessary(^{
                             if (error) {
                                 [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
@@ -479,19 +486,40 @@
                                                   didFinishWithStatus:STPPaymentStatusPending
                                                                 error:nil];
                                         break;
-                                    case STPSourceStatusCanceled:
                                     case STPSourceStatusFailed:
-                                    case STPSourceStatusUnknown:
-                                        // TODO: should this be user cancelled in the failed state?
-                                        // (which means the user did not do the required action during the redirect)
+                                        /*
+                                         Source status failed is a failure because
+                                         the user did not do the redirect action and
+                                         so is treated as a user cancel
+                                         */
+                                        [self.delegate paymentContext:self
+                                                  didFinishWithStatus:STPPaymentStatusUserCancellation
+                                                                error:nil];
+                                        break;
+                                    case STPSourceStatusCanceled:
+                                        /*
+                                         Source status canceled is a failure because
+                                         the merchant did not charge the source quickly enough
+                                         and it expired, and so is an error.
+                                         */
                                         [self.delegate paymentContext:self
                                                   didFinishWithStatus:STPPaymentStatusError
-                                                                error:nil];
+                                                                error:[NSError stp_genericFailedToParseResponseError]];
+                                        break;
+                                    case STPSourceStatusUnknown:
+                                        [self.delegate paymentContext:self
+                                                  didFinishWithStatus:STPPaymentStatusError
+                                                                error:[NSError stp_genericFailedToParseResponseError]];
                                         break;
                                 }
                             }
                         });
-                    });
+                    };
+
+                    self.configuration.sourceURLRedirectBlock(self.apiClient,
+                                                              source,
+                                                              onRedirectReturn,
+                                                              onRedirectCompletion);
                 }
                     break;
                 case STPSourceFlowReceiver:
