@@ -497,6 +497,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             // Concrete source object, check flow to see if synchronous charge or webhook based
             // If a card source, we need to check if the user wants us to 3DS or not
 
+            self.state = STPPaymentContextStateRequestingPayment;
+
             STPSource *source = (STPSource *)self.selectedPaymentMethod;
 
             switch (source.flow) {
@@ -506,9 +508,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                     [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
                         stpDispatchToMainThreadIfNecessary(^{
                             if (error) {
-                                [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
+                                [self didFinishWithStatus:STPPaymentStatusError error:error];
                             } else {
-                                [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+                                [self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
                             }
                         });
                     }];
@@ -526,19 +528,17 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                     STPSourceCompletionBlock onRedirectCompletion = ^(STPSource *finishedSource, NSError *error) {
                         stpDispatchToMainThreadIfNecessary(^{
                             if (error) {
-                                [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
+                                [self didFinishWithStatus:STPPaymentStatusError error:error];
                             } else {
                                 switch (finishedSource.status) {
                                     case STPSourceStatusChargeable:
                                     case STPSourceStatusConsumed:
-                                        [self.delegate paymentContext:self
-                                                  didFinishWithStatus:STPPaymentStatusSuccess
-                                                                error:nil];
+                                        [self didFinishWithStatus:STPPaymentStatusSuccess
+                                                            error:nil];
                                         break;
                                     case STPSourceStatusPending:
-                                        [self.delegate paymentContext:self
-                                                  didFinishWithStatus:STPPaymentStatusPending
-                                                                error:nil];
+                                        [self didFinishWithStatus:STPPaymentStatusPending
+                                                            error:nil];
                                         break;
                                     case STPSourceStatusFailed:
                                         /*
@@ -546,9 +546,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                                          the user did not do the redirect action and
                                          so is treated as a user cancel
                                          */
-                                        [self.delegate paymentContext:self
-                                                  didFinishWithStatus:STPPaymentStatusUserCancellation
-                                                                error:nil];
+                                        [self didFinishWithStatus:STPPaymentStatusUserCancellation
+                                                            error:nil];
                                         break;
                                     case STPSourceStatusCanceled:
                                         /*
@@ -556,14 +555,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                                          the merchant did not charge the source quickly enough
                                          and it expired, and so is an error.
                                          */
-                                        [self.delegate paymentContext:self
-                                                  didFinishWithStatus:STPPaymentStatusError
-                                                                error:[NSError stp_genericFailedToParseResponseError]];
+                                        [self didFinishWithStatus:STPPaymentStatusError
+                                                            error:[NSError stp_genericFailedToParseResponseError]];
                                         break;
                                     case STPSourceStatusUnknown:
-                                        [self.delegate paymentContext:self
-                                                  didFinishWithStatus:STPPaymentStatusError
-                                                                error:[NSError stp_genericFailedToParseResponseError]];
+                                        [self didFinishWithStatus:STPPaymentStatusError
+                                                            error:[NSError stp_genericFailedToParseResponseError]];
                                         break;
                                 }
                             }
@@ -581,9 +578,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                 case STPSourceFlowUnknown:
                 {
                     // We don't support this type
-                    [self.delegate paymentContext:self
-                              didFinishWithStatus:STPPaymentStatusError
-                                            error:[NSError stp_genericFailedToParseResponseError]];
+                    [self didFinishWithStatus:STPPaymentStatusError
+                                        error:[NSError stp_genericFailedToParseResponseError]];
                 }
                     break;
             }
