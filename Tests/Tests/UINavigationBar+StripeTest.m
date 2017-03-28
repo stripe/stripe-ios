@@ -34,6 +34,10 @@
 
 }
 
+- (void)paymentMethodsViewControllerDidCancel:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController {
+
+}
+
 - (void)testVCUsesNavigationBarColor {
     STPPaymentMethodsViewController *paymentMethodsVC = [[STPPaymentMethodsViewController alloc] initWithConfiguration:[STPPaymentConfiguration sharedConfiguration]
                                                                                                                  theme:[STPTheme defaultTheme]
