@@ -69,14 +69,6 @@
     XCTAssertNil(tuple.selectedPaymentMethod);
 }
 
-- (void)testOnlyOneAvailableUnselectablePaymentMethod {
-    STPPaymentMethodTuple *tuple = [[STPPaymentMethodTuple alloc] initWithSavedPaymentMethods:nil
-                                                                        availablePaymentTypes:@[[STPPaymentMethodType creditCard]]
-                                                                        selectedPaymentMethod:nil];
-
-    XCTAssertNil(tuple.selectedPaymentMethod);
-}
-
 - (void)testOnlyOneAvailableNotAllowedPaymentMethod {
     STPPaymentMethodTuple *tuple = [[STPPaymentMethodTuple alloc] initWithSavedPaymentMethods:nil
                                                                         availablePaymentTypes:@[[STPPaymentMethodType creditCard]]
