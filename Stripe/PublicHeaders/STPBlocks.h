@@ -56,6 +56,13 @@ typedef NS_ENUM(NSUInteger, STPPaymentStatus) {
      *  The user cancelled the payment (for example, by hitting "cancel" in the Apple Pay dialog).
      */
     STPPaymentStatusUserCancellation,
+
+    /**
+     * The status of the payment cannot be determined at this time.
+     * E.g. the user payed with a redirect-flow source, and the source
+     * is still in the pending state.
+     */
+    STPPaymentStatusPending,
 };
 
 /**

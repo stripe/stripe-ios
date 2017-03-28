@@ -443,6 +443,96 @@
             // Concrete source object, check flow to see if synchronous charge or webhook based
             // If a card source, we need to check if the user wants us to 3DS or not
 
+            STPSource *source = (STPSource *)self.selectedPaymentMethod;
+
+            switch (source.flow) {
+                case STPSourceFlowNone: {
+                    // TODO: if this is a card, check if 3DS should be used
+                    STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:source];
+                    [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
+                        stpDispatchToMainThreadIfNecessary(^{
+                            if (error) {
+                                [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
+                            } else {
+                                [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+                            }
+                        });
+                    }];
+
+                }
+                    break;
+                case STPSourceFlowRedirect: {
+
+                    STPVoidBlock onRedirectReturn = ^ {
+                        if ([self.delegate respondsToSelector:@selector(paymentContextDidReturnFromRedirect:)]) {
+                            [self.delegate paymentContextDidReturnFromRedirect:self];
+                        }
+                    };
+
+                    STPSourceCompletionBlock onRedirectCompletion = ^(STPSource *finishedSource, NSError *error) {
+                        stpDispatchToMainThreadIfNecessary(^{
+                            if (error) {
+                                [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
+                            } else {
+                                switch (finishedSource.status) {
+                                    case STPSourceStatusChargeable:
+                                    case STPSourceStatusConsumed:
+                                        [self.delegate paymentContext:self
+                                                  didFinishWithStatus:STPPaymentStatusSuccess
+                                                                error:nil];
+                                        break;
+                                    case STPSourceStatusPending:
+                                        [self.delegate paymentContext:self
+                                                  didFinishWithStatus:STPPaymentStatusPending
+                                                                error:nil];
+                                        break;
+                                    case STPSourceStatusFailed:
+                                        /*
+                                         Source status failed is a failure because
+                                         the user did not do the redirect action and
+                                         so is treated as a user cancel
+                                         */
+                                        [self.delegate paymentContext:self
+                                                  didFinishWithStatus:STPPaymentStatusUserCancellation
+                                                                error:nil];
+                                        break;
+                                    case STPSourceStatusCanceled:
+                                        /*
+                                         Source status canceled is a failure because
+                                         the merchant did not charge the source quickly enough
+                                         and it expired, and so is an error.
+                                         */
+                                        [self.delegate paymentContext:self
+                                                  didFinishWithStatus:STPPaymentStatusError
+                                                                error:[NSError stp_genericFailedToParseResponseError]];
+                                        break;
+                                    case STPSourceStatusUnknown:
+                                        [self.delegate paymentContext:self
+                                                  didFinishWithStatus:STPPaymentStatusError
+                                                                error:[NSError stp_genericFailedToParseResponseError]];
+                                        break;
+                                }
+                            }
+                        });
+                    };
+
+                    self.configuration.sourceURLRedirectBlock(self.apiClient,
+                                                              source,
+                                                              onRedirectReturn,
+                                                              onRedirectCompletion);
+                }
+                    break;
+                case STPSourceFlowReceiver:
+                case STPSourceFlowCodeVerification:
+                case STPSourceFlowUnknown:
+                {
+                    // We don't support this type
+                    [self.delegate paymentContext:self
+                              didFinishWithStatus:STPPaymentStatusError
+                                            error:[NSError stp_genericFailedToParseResponseError]];
+                }
+                    break;
+            }
         }
         else if ([self.selectedPaymentMethod isEqual:[STPPaymentMethodType applePay]]) {
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
@@ -508,9 +598,10 @@
         }
         else {
             // TODO:
-            // This is some other new APM we need to handle
+            // This is a non-concrete method (eg just a type they want to use)
+            // Need to convert to an actual source and then re-call requestPayment
         }
-    }]onFailure:^(NSError *error) {
+    }] onFailure:^(NSError *error) {
         STRONG(self);
         [self.delegate paymentContext:self didFinishWithStatus:STPPaymentStatusError error:error];
     }];

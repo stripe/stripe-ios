@@ -192,6 +192,9 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
             message = "You bought a \(self.product)!"
         case .userCancellation:
             return
+        case .pending:
+            title = "Order received"
+            message = "Item will ship when payment is confirmed."
         }
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .default, handler: nil)
