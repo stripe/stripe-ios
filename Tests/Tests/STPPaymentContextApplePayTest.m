@@ -1,5 +1,5 @@
 //
-//  STPPaymentContextTest.m
+//  STPPaymentContextApplePayTest.m
 //  Stripe
 //
 //  Created by Brian Dorfman on 8/1/16.
@@ -7,29 +7,42 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "STPAPIClient.h"
-#import "STPPaymentContext.h"
-#import "TestSTPBackendAPIAdapter.h"
+#import <OCMock/OCMock.h>
 #import "NSDecimalNumber+Stripe_Currency.h"
+#import "STPAPIClient.h"
+#import "STPFixtures.h"
+#import "STPPaymentContext.h"
 
 @interface STPPaymentContext (Testing)
 @property(nonatomic) PKShippingMethod *selectedShippingMethod;
 - (PKPaymentRequest *)buildPaymentRequest;
 @end
 
-@interface STPPaymentContextTest : XCTestCase
+/**
+ These tests cover STPPaymentContext's Apple Pay specific behavior:
+ - building a PKPaymentRequest
+ - determining paymentSummaryItems
+ */
+@interface STPPaymentContextApplePayTest : XCTestCase
 @end
 
-@implementation STPPaymentContextTest
+@implementation STPPaymentContextApplePayTest
 
-- (void)setUp {
-    [super setUp];
-    [Stripe setDefaultPublishableKey:@"test"];
-    [STPPaymentConfiguration sharedConfiguration].appleMerchantIdentifier = @"testMerchantId";
+- (STPPaymentContext *)buildPaymentContext {
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.appleMerchantIdentifier = @"fake_merchant_id";
+    STPTheme *theme = [STPTheme defaultTheme];
+    id<STPBackendAPIAdapter> mockAPIAdapter = [STPFixtures staticAPIAdapter];
+    STPPaymentContext *paymentContext = [[STPPaymentContext alloc] initWithAPIAdapter:mockAPIAdapter
+                                                                        configuration:config
+                                                                                theme:theme];
+    return paymentContext;
 }
 
+#pragma mark - buildPaymentRequest
+
 - (void)testBuildPaymentRequest_totalAmount {
-    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    STPPaymentContext *context = [self buildPaymentContext];
     context.paymentAmount = 150;
     PKPaymentRequest *request = [context buildPaymentRequest];
 
@@ -38,7 +51,7 @@
 }
 
 - (void)testBuildPaymentRequest_USDDefault {
-    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    STPPaymentContext *context = [self buildPaymentContext];
     context.paymentAmount = 100;
     PKPaymentRequest *request = [context buildPaymentRequest];
     
@@ -47,7 +60,7 @@
 }
 
 - (void)testBuildPaymentRequest_currency {
-    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    STPPaymentContext *context = [self buildPaymentContext];
     context.paymentAmount = 100;
     context.paymentCurrency = @"GBP";
     PKPaymentRequest *request = [context buildPaymentRequest];
@@ -57,7 +70,7 @@
 }
 
 - (void)testBuildPaymentRequest_uppercaseCurrency {
-    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    STPPaymentContext *context = [self buildPaymentContext];
     context.paymentAmount = 100;
     context.paymentCurrency = @"eur";
     PKPaymentRequest *request = [context buildPaymentRequest];
@@ -79,15 +92,17 @@
 }
 
 - (void)testBuildPaymentRequest_summaryItems {
-    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    STPPaymentContext *context = [self buildPaymentContext];
     context.paymentSummaryItems = [self testSummaryItems];
     PKPaymentRequest *request = [context buildPaymentRequest];
     
     XCTAssertTrue([request.paymentSummaryItems isEqualToArray:context.paymentSummaryItems]);
 }
 
+#pragma mark - paymentSummaryItems
+
 - (void)testSetPaymentAmount_generateSummaryItems {
-    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    STPPaymentContext *context = [self buildPaymentContext];
     context.paymentAmount = 10000;
     context.paymentCurrency = @"USD";
     NSDecimalNumber *itemTotalAmount = context.paymentSummaryItems.lastObject.amount;
@@ -98,7 +113,7 @@
 }
 
 - (void)testSetPaymentAmount_generateSummaryItemsShippingMethod {
-    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    STPPaymentContext *context = [self buildPaymentContext];
     context.paymentAmount = 100;
     context.configuration.companyName = @"Foo Company";
     PKShippingMethod *method = [PKShippingMethod new];
@@ -119,7 +134,7 @@
 }
 
 - (void)testSummaryItemsToSummaryItems_shippingMethod {
-    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    STPPaymentContext *context = [self buildPaymentContext];
     PKPaymentSummaryItem *item1 = [PKPaymentSummaryItem new];
     item1.amount = [NSDecimalNumber decimalNumberWithString:@"1.00"];
     item1.label = @"foo";
@@ -154,7 +169,7 @@
 }
 
 - (void)testAmountToAmount_shippingMethod_usd {
-    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    STPPaymentContext *context = [self buildPaymentContext];
     context.paymentAmount = 100;
     PKShippingMethod *method = [PKShippingMethod new];
     method.amount = [NSDecimalNumber decimalNumberWithString:@"5.99"];
@@ -167,14 +182,14 @@
 }
 
 - (void)testSummaryItems_generateAmountDecimalCurrency {
-    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    STPPaymentContext *context = [self buildPaymentContext];
     context.paymentSummaryItems = [self testSummaryItems];
     context.paymentCurrency = @"USD";
     XCTAssertTrue(context.paymentAmount == 10000);
 }
 
 - (void)testSummaryItems_generateAmountNoDecimalCurrency {
-    STPPaymentContext *context = [[STPPaymentContext alloc] initWithAPIAdapter:[TestSTPBackendAPIAdapter new]];
+    STPPaymentContext *context = [self buildPaymentContext];
     context.paymentSummaryItems = [self testSummaryItems];
     context.paymentCurrency = @"JPY";
     XCTAssertTrue(context.paymentAmount == 100);

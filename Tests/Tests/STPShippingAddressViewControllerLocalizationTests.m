@@ -11,8 +11,9 @@
 #import <Stripe/Stripe.h>
 #import "STPAddressViewModel.h"
 #import "STPAddressFieldTableViewCell.h"
-#import "STPLocalizationUtils.h"
 #import "STPBundleLocator.h"
+#import "STPFixtures.h"
+#import "STPLocalizationUtils.h"
 #import "STPLocalizationUtils+STPTestAdditions.h"
 
 @interface STPShippingAddressViewController (TestsPrivate)
@@ -33,10 +34,8 @@
 //}
 
 - (void)performSnapshotTestForLanguage:(NSString *)language shippingType:(STPShippingType)shippingType contact:(BOOL)contact {
-
     NSString *identifier = (shippingType == STPShippingTypeShipping) ? @"shipping" : @"delivery";
-    STPPaymentConfiguration *config = [STPPaymentConfiguration new];
-    config.publishableKey = @"test";
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredShippingAddressFields = PKAddressFieldAll;
     if (contact) {

@@ -9,11 +9,11 @@
 #import <XCTest/XCTest.h>
 #import "NSArray+Stripe_BoundSafe.h"
 
-@interface STPNSArrayStripeBoundSafeTests : XCTestCase
+@interface NSArray_StripeBoundSafeTests : XCTestCase
 
 @end
 
-@implementation STPNSArrayStripeBoundSafeTests
+@implementation NSArray_StripeBoundSafeTests
 
 - (void)testEmptyArray {
     XCTAssertNil([@[] stp_boundSafeObjectAtIndex:5]);
