@@ -144,32 +144,67 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
 
 /**
- *  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you can in turn call this method to try loading again (if that hasn't been called, calling this will do nothing). If retrying in turn fails, `paymentContext:didFailToLoadWithError:` will be called again (and you can again call this to keep retrying, etc).
+ *  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you
+ *  can in turn call this method to try loading again (if that hasn't been called, 
+ *  calling this will do nothing). If retrying in turn fails, `paymentContext:didFailToLoadWithError:` 
+ *  will be called again (and you can again call this to keep retrying, etc).
  */
 - (void)retryLoading;
 
 /**
- *  This creates, configures, and appropriately presents an `STPPaymentMethodsViewController` on top of the payment context's `hostViewController`. It'll be dismissed automatically when the user is done selecting their payment method.
+ *  This creates, configures, and appropriately presents an `STPPaymentMethodsViewController` 
+ *  on top of the payment context's `hostViewController`. It'll be dismissed automatically 
+ *  when the user is done selecting their payment method.
+ *  
+ *  @note This method will do nothing if it is called while STPPaymentContext is 
+ *        already showing a view controller or in the middle of requesting a payment.
  */
 - (void)presentPaymentMethodsViewController;
 
 /**
- *  This creates, configures, and appropriately pushes an `STPPaymentMethodsViewController` onto the navigation stack of the context's `hostViewController`. It'll be popped automatically when the user is done selecting their payment method.
+ *  This creates, configures, and appropriately pushes an `STPPaymentMethodsViewController` 
+ *  onto the navigation stack of the context's `hostViewController`. It'll be popped 
+ *  automatically when the user is done selecting their payment method.
+ *
+ *  @note This method will do nothing if it is called while STPPaymentContext is
+ *        already showing a view controller or in the middle of requesting a payment.
  */
 - (void)pushPaymentMethodsViewController;
 
 /**
- *  This creates, configures, and appropriately presents a view controller for collecting shipping address and shipping method on top of the payment context's `hostViewController`. It'll be dismissed automatically when the user is done entering their shipping info.
+ *  This creates, configures, and appropriately presents a view controller for 
+ *  collecting shipping address and shipping method on top of the payment context's 
+ *  `hostViewController`. It'll be dismissed automatically when the user is done 
+ *  entering their shipping info.
+ *
+ *  @note This method will do nothing if it is called while STPPaymentContext is
+ *        already showing a view controller or in the middle of requesting a payment.
  */
 - (void)presentShippingViewController;
 
 /**
- *  This creates, configures, and appropriately pushes a view controller for collecting shipping address and shipping method onto the navigation stack of the context's `hostViewController`. It'll be popped automatically when the user is done entering their shipping info.
+ *  This creates, configures, and appropriately pushes a view controller for 
+ *  collecting shipping address and shipping method onto the navigation stack of 
+ *  the context's `hostViewController`. It'll be popped automatically when the 
+ *  user is done entering their shipping info.
+ *
+ *  @note This method will do nothing if it is called while STPPaymentContext is
+ *        already showing a view controller, or in the middle of requesting a payment.
  */
 - (void)pushShippingViewController;
 
 /**
- *  Requests payment from the user. This may need to present some supplemental UI to the user, in which case it will be presented on the payment context's `hostViewController`. For instance, if they've selected Apple Pay as their payment method, calling this method will show the payment sheet. If the user has a card on file, this will use that without presenting any additional UI. After this is called, the `paymentContext:didCreatePaymentResult:completion:` and `paymentContext:didFinishWithStatus:error:` methods will be called on the context's `delegate`.
+ *  Requests payment from the user. This may need to present some supplemental UI
+ *  to the user, in which case it will be presented on the payment context's 
+ *  `hostViewController`. For instance, if they've selected Apple Pay as their 
+ *  payment method, calling this method will show the payment sheet. If the user
+ *  has a card on file, this will use that without presenting any additional UI.
+ *  After this is called, the `paymentContext:didCreatePaymentResult:completion:` 
+ *  and `paymentContext:didFinishWithStatus:error:` methods will be called on the
+ *  context's `delegate`.
+ *
+ *  @note This method will do nothing if it is called while STPPaymentContext is
+ *        already showing a view controller, or in the middle of requesting a payment.
  */
 - (void)requestPayment;
 

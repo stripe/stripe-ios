@@ -107,5 +107,8 @@
     
 }
 
+- (void)paymentMethodsViewControllerDidCancel:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController {
+
+}
 
 @end
