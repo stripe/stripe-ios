@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "STPFixtures.h"
 #import "STPSelectorDataSource.h"
 #import "STPSourceInfoDataSource.h"
 #import "STPSourceInfoViewController.h"
@@ -25,7 +26,7 @@
 - (STPSourceInfoViewController *)sutWithType:(STPSourceType)type
                                         info:(STPUserInformation *)info {
     STPTheme *theme = [STPTheme defaultTheme];
-    STPPaymentConfiguration *config = [STPPaymentConfiguration sharedConfiguration];
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     // TODO: set returnURL and verify in tests
     NSInteger amount = 100;
     STPSourceInfoViewController *sut = [[STPSourceInfoViewController alloc] initWithSourceType:type
