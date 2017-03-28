@@ -6,10 +6,12 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
+#import "STPSourcePoller.h"
+
 #import "STPAPIClient+Private.h"
 #import "STPAPIRequest.h"
 #import "STPSource.h"
-#import "STPSourcePoller.h"
+#import "StripeError.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -196,7 +198,11 @@ static NSTimeInterval const MaxRetries = 5;
                                      error:(nullable NSError *)error {
     if (!self.pollingStopped) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.completion(source, error);
+            if (!error && !source) {
+                self.completion(nil, [NSError stp_genericConnectionError]);
+            } else {
+                self.completion(source, error);
+            }
         });
         [self stopPolling];
     }
