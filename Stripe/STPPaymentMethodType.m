@@ -42,7 +42,7 @@
     return STPLocalizedString(@"New Credit Card", @"Label for 'new credit card' payment method field") ;
 }
 
-- (BOOL)gathersInfoAtSelection {
+- (BOOL)convertsToSourceAtSelection {
     return YES;
 }
 
@@ -76,7 +76,7 @@
     return STPLocalizedString(@"New SEPA Debit", @"Label for 'new sepa debit' payment method field") ;;
 }
 
-- (BOOL)gathersInfoAtSelection {
+- (BOOL)convertsToSourceAtSelection {
     return YES;
 }
 
@@ -273,7 +273,7 @@
     return nil;
 }
 
-- (BOOL)gathersInfoAtSelection {
+- (BOOL)convertsToSourceAtSelection {
     return NO;
 }
 

@@ -89,6 +89,10 @@ NS_ASSUME_NONNULL_BEGIN
  *  The user's currently selected payment method. May be nil.
  */
 @property(nonatomic, readonly, nullable)id<STPPaymentMethod> selectedPaymentMethod;
+/**
+ *  The available payment methods the user can choose between. May be nil.
+ */
+@property(nonatomic, readonly, nullable)NSArray<id<STPPaymentMethod>> *paymentMethods;
 
 /**
  *  The user's currently selected shipping method. May be nil.

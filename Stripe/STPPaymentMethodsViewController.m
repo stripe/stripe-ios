@@ -104,7 +104,7 @@
         UIViewController *internal;
         if (tuple.savedPaymentMethods.count == 0
             && tuple.availablePaymentTypes.count == 1
-            && [tuple.availablePaymentTypes firstObject].gathersInfoAtSelection) {
+            && [tuple.availablePaymentTypes firstObject].convertsToSourceAtSelection) {
             // There's only one option, go straight to it if reasonable
 
             STPPaymentMethodType *paymentType = [tuple.availablePaymentTypes firstObject];

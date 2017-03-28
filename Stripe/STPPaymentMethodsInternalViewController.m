@@ -116,7 +116,7 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
     }
 
     if ([paymentMethod isKindOfClass:[STPPaymentMethodType class]]
-        && [(STPPaymentMethodType *)paymentMethod gathersInfoAtSelection]) {
+        && [(STPPaymentMethodType *)paymentMethod convertsToSourceAtSelection]) {
         // Go to create screen
         STPPaymentMethodType *paymentType = (STPPaymentMethodType *)paymentMethod;
 
