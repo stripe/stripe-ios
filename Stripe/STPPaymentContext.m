@@ -383,9 +383,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:self];
             [navigationController pushViewController:addressViewController animated:YES];
         }
-        else {
-            self.state = STPPaymentContextStateNone;
-        }
     }];
 }
 
