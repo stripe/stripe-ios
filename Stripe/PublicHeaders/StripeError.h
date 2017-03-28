@@ -69,6 +69,7 @@ FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectCVC;
 @interface NSError(Stripe)
 
 + (nullable NSError *)stp_errorFromStripeResponse:(nullable NSDictionary *)jsonDictionary;
++ (nonnull NSError *)stp_genericConnectionError;
 + (nonnull NSError *)stp_genericFailedToParseResponseError;
 - (BOOL)stp_isUnknownCheckoutError;
 - (BOOL)stp_isURLSessionCancellationError;

@@ -94,6 +94,14 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
     return [[self alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
 }
 
++ (nonnull NSError *)stp_genericConnectionError {
+    NSDictionary *userInfo = @{
+                               NSLocalizedDescriptionKey: [self stp_unexpectedErrorMessage],
+                               STPErrorMessageKey: @"There was an error connecting to Stripe."
+                               };
+    return [[self alloc] initWithDomain:StripeDomain code:STPConnectionError userInfo:userInfo];
+}
+
 - (BOOL)stp_isUnknownCheckoutError {
     return self.code == STPCheckoutUnknownError;
 }
