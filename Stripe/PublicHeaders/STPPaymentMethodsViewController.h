@@ -88,11 +88,19 @@ NS_ASSUME_NONNULL_BEGIN
               didFailToLoadWithError:(NSError *)error;
 
 /**
- *  This is called when the user taps "cancel". It's also called after the user directly selects or adds a payment method, so it will often be called immediately after calling `paymentMethodsViewController:didSelectPaymentMethod:`. You should dismiss the view controller when this is called.
+ *  This is called when the user selects or adds a payment method, so it will often be called immediately after calling `paymentMethodsViewController:didSelectPaymentMethod:`. You should dismiss the view controller when this is called.
  *
  *  @param paymentMethodsViewController the view controller that has finished
  */
 - (void)paymentMethodsViewControllerDidFinish:(STPPaymentMethodsViewController *)paymentMethodsViewController;
+
+/**
+ *  This is called when the user taps "cancel".
+ *  You should dismiss the view controller when this is called.
+ *
+ *  @param paymentMethodsViewController the view controller that has finished
+ */
+- (void)paymentMethodsViewControllerDidCancel:(STPPaymentMethodsViewController *)paymentMethodsViewController;
 
 @end
 
