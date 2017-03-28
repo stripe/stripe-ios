@@ -12,11 +12,11 @@
 #import "STPAPIClient.h"
 #import "STPAPIClient+ApplePay.h"
 
-@interface STPApplePayTest : XCTestCase
+@interface STPApplePayFunctionalTest : XCTestCase
 
 @end
 
-@implementation STPApplePayTest
+@implementation STPApplePayFunctionalTest
 
 - (void)testCreateTokenWithPayment {
     if (![PKPayment class]) {
