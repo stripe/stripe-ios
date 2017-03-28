@@ -527,10 +527,9 @@
                 case STPSourceFlowUnknown:
                 {
                     // We don't support this type
-                    // TODO: Fill in an apprioriate NSError object
                     [self.delegate paymentContext:self
                               didFinishWithStatus:STPPaymentStatusError
-                                            error:nil];
+                                            error:[NSError stp_genericFailedToParseResponseError]];
                 }
                     break;
             }
