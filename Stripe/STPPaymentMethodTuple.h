@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPaymentMethodTuple : NSObject
 
-- (instancetype)initWithSavedPaymentMethods:(NSArray<id<STPPaymentMethod>> *)savedPaymentMethods
-                      availablePaymentTypes:(NSArray<STPPaymentMethodType *> *)availablePaymentTypes
+- (instancetype)initWithSavedPaymentMethods:(nullable NSArray<id<STPPaymentMethod>> *)savedPaymentMethods
+                      availablePaymentTypes:(nullable NSArray<STPPaymentMethodType *> *)availablePaymentTypes
                       selectedPaymentMethod:(nullable id<STPPaymentMethod>)selectedPaymentMethod;
 
 /**

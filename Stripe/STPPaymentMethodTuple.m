@@ -12,8 +12,8 @@
 
 @implementation STPPaymentMethodTuple
 
-- (instancetype)initWithSavedPaymentMethods:(NSArray<id<STPPaymentMethod>> *)savedPaymentMethods
-                      availablePaymentTypes:(NSArray<STPPaymentMethodType *> *)availablePaymentTypes
+- (instancetype)initWithSavedPaymentMethods:(nullable NSArray<id<STPPaymentMethod>> *)savedPaymentMethods
+                      availablePaymentTypes:(nullable NSArray<STPPaymentMethodType *> *)availablePaymentTypes
                       selectedPaymentMethod:(nullable id<STPPaymentMethod>)selectedPaymentMethod {
     if ((self = [super init])) {
         _savedPaymentMethods = savedPaymentMethods ? savedPaymentMethods.copy : @[];
@@ -25,26 +25,18 @@
             _selectedPaymentMethod = selectedPaymentMethod;
         }
         else if (_allPaymentMethods.count == 1) {
-            id<STPPaymentMethod> method = _allPaymentMethods.anyObject;
-
-
-
-            if ([method isKindOfClass:[STPPaymentMethodType class]]) {
-                STPPaymentMethodType *paymentType = (STPPaymentMethodType *)method;
-                if (paymentType.convertsToSourceAtSelection) {
-                    // Can't already be selected
-                    _selectedPaymentMethod = nil;
-                }
-                else {
-                    _selectedPaymentMethod = method;
-                }
-            }
-            else {
-                _selectedPaymentMethod = method;
-            }
+            _selectedPaymentMethod = _allPaymentMethods.anyObject;
         }
         else {
             _selectedPaymentMethod = nil;
+        }
+
+        if ([_selectedPaymentMethod isKindOfClass:[STPPaymentMethodType class]]) {
+            STPPaymentMethodType *paymentType = (STPPaymentMethodType *)_selectedPaymentMethod;
+            if (paymentType.convertsToSourceAtSelection) {
+                // Can't already be selected
+                _selectedPaymentMethod = nil;
+            }
         }
     }
     return self;
