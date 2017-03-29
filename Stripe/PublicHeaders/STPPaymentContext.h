@@ -280,16 +280,6 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
 didUpdateShippingAddress:(STPAddress *)address
             completion:(STPShippingMethodsCompletionBlock)completion;
 
-/**
- *  This method is called after the user returns to the app after completing
- *  a redirect-based payment method.
- *
- *  You may want to show some sort of loading UI on screen when this happens,
- *  while payment context polls for updated source information. When source polling
- *  completes, the delegate will receive a call to `paymentContext:didFinishWithStatus:error:`
- */
-- (void)paymentContextDidReturnFromRedirect:(STPPaymentContext *)paymentContext;
-
 @end
 
 NS_ASSUME_NONNULL_END

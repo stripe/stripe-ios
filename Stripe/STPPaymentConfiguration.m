@@ -10,11 +10,14 @@
 
 #import "NSBundle+Stripe_AppName.h"
 #import "STPAnalyticsClient.h"
+#import "STPAPIClient.h"
 #import "STPPaymentConfiguration+Private.h"
+#import "STPRedirectContext.h"
 #import "STPSource.h"
 #import "STPSourcePoller.h"
 #import "STPWeakStrongMacros.h"
-#import "Stripe.h"
+
+#import <SafariServices/SafariServices.h>
 
 @implementation STPPaymentConfiguration {
     NSURL *_returnURL;
@@ -91,36 +94,44 @@
 
 - (void)setReturnURL:(nullable NSURL *)returnURL {
     _returnURL = returnURL;
-    self.sourceURLRedirectBlock = ^(STPAPIClient *apiClient, STPSource *source, STPVoidBlock onRedirectReturn, STPSourceCompletionBlock completion) {
-        if (completion) {
-            __block id notificationObserver = nil;
+    WEAK(self);
+    self.sourceURLRedirectBlock = ^(STPAPIClient *apiClient, STPSource *source, UIViewController *presentingViewController, STPSourceCompletionBlock completion) {
+        STRONG(self);
+        STPRedirectContextCompletionBlock redirectCompletion = ^(NSString * _Nonnull sourceId, NSString * _Nonnull sourceClientSecret, NSError * _Nonnull redirectError) {
+            STRONG(self);
+            self.cancelSourceURLRedirectBlock = nil;
 
-            void (^notificationBlock)(NSNotification * _Nonnull note) = ^(NSNotification * __unused _Nonnull note) {
-                [[NSNotificationCenter defaultCenter] removeObserver:notificationObserver];
-                notificationObserver = nil;
+            if (redirectError) {
+                completion(nil, redirectError);
+            }
+            else {
+                [apiClient startPollingSourceWithId:sourceId
+                                       clientSecret:sourceClientSecret
+                                            timeout:10 //TODO: Add this timeout as a property on STPConfiguration?
+                                         completion:^(STPSource * _Nullable polledSource, NSError * _Nullable pollerError) {
+                                             completion(polledSource, pollerError);
+                                         }];
 
-                if (onRedirectReturn) {
-                    onRedirectReturn();
-                }
+            }
+        };
 
-                __block STPSourcePoller *poller = [[STPSourcePoller alloc] initWithAPIClient:apiClient
-                                                                                clientSecret:source.clientSecret
-                                                                                    sourceID:source.stripeID
-                                                                                     timeout:10 //TODO: Add this timeout as a property on STPConfiguration?
-                                                                                  completion:^(STPSource * _Nullable polledSource, NSError * _Nullable error) {
-                                                                                      // reference poller here so it's retained until its own timeout
-                                                                                      poller = nil;
-                                                                                      completion(polledSource, error);
-                                                                                  }];
-            };
+        STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
+                                                                      completion:redirectCompletion];
 
-            notificationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification
-                                                                                     object:nil
-                                                                                      queue:[NSOperationQueue mainQueue]
-                                                                                 usingBlock:notificationBlock];
+        self.cancelSourceURLRedirectBlock = ^ {
+            STRONG(self);
+            // Capturing context in this other block retains it until the block is cleared,
+            // which is done in both here and redirect completion
+            [context cancel];
+            self.cancelSourceURLRedirectBlock = nil;
+        };
+
+        if ([SFSafariViewController class] != nil) {
+            [context startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
         }
-
-        [[UIApplication sharedApplication] openURL:source.redirect.url];
+        else {
+            [context startSafariAppRedirectFlow];
+        }
     };
 }
 

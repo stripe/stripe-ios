@@ -1,0 +1,139 @@
+//
+//  STPRedirectContext.m
+//  Stripe
+//
+//  Created by Brian Dorfman on 3/29/17.
+//  Copyright © 2017 Stripe, Inc. All rights reserved.
+//
+
+#import "STPRedirectContext.h"
+
+#import "STPDispatchFunctions.h"
+#import "STPSource.h"
+#import "StripeError.h"
+
+#import <SafariServices/SafariServices.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface STPRedirectContext () <SFSafariViewControllerDelegate>
+@property (nonatomic, copy) STPRedirectContextCompletionBlock completion;
+@property (nonatomic, retain) STPSource *source;
+@property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
+@end
+
+@implementation STPRedirectContext
+
+- (nullable instancetype)initWithSource:(STPSource *)source
+                             completion:(STPRedirectContextCompletionBlock)completion {
+
+    if (source.flow != STPSourceFlowRedirect
+        || source.redirect.url == nil) {
+        return nil;
+    }
+
+    self = [super init];
+    if (self) {
+        self.source = source;
+        self.completion = completion;
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [self unsubscribeFromNotificationsAndDismissPresentedViewControllers];
+}
+
+- (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController {
+    if (self.state == STPRedirectContextStateNotStarted) {
+        _state = STPRedirectContextStateInProgress;
+        [self subscribeToUrlAndForegroundNotifications];
+        self.safariVC = [[SFSafariViewController alloc] initWithURL:self.source.redirect.url];
+        self.safariVC.delegate = self;
+        [presentingViewController presentViewController:self.safariVC
+                                               animated:YES
+                                             completion:nil];
+    }
+}
+
+- (void)startSafariAppRedirectFlow {
+    if (self.state == STPRedirectContextStateNotStarted) {
+        _state = STPRedirectContextStateInProgress;
+        [self subscribeToUrlAndForegroundNotifications];
+        [[UIApplication sharedApplication] openURL:self.source.redirect.url];
+    }
+}
+
+- (void)cancel {
+    if (self.state == STPRedirectContextStateInProgress) {
+        _state = STPRedirectContextStateCancelled;
+        [self unsubscribeFromNotificationsAndDismissPresentedViewControllers];
+    }
+}
+
+#pragma mark - SFSafariViewControllerDelegate -
+
+- (void)safariViewControllerDidFinish:(__unused SFSafariViewController *)controller {
+    stpDispatchToMainThreadIfNecessary(^{
+        [self handleRedirectCompletionWithError:nil];
+    });
+}
+
+- (void)safariViewController:(__unused SFSafariViewController *)controller didCompleteInitialLoad:(BOOL)didLoadSuccessfully {
+    if (didLoadSuccessfully == NO) {
+        stpDispatchToMainThreadIfNecessary(^{
+            [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]];
+        });
+    }
+}
+
+#pragma mark - Private methods -
+
+- (void)handleWillForegroundNotification {
+    stpDispatchToMainThreadIfNecessary(^{
+        [self handleRedirectCompletionWithError:nil];
+    });
+}
+
+- (void)handleURLCallbackNotification {
+    stpDispatchToMainThreadIfNecessary(^{
+        [self handleRedirectCompletionWithError:nil];
+    });
+}
+
+- (void)handleRedirectCompletionWithError:(nullable NSError *)error {
+    if (self.state != STPRedirectContextStateInProgress) {
+        return;
+    }
+    [self unsubscribeFromNotificationsAndDismissPresentedViewControllers];
+    _state = STPRedirectContextStateCompleted;
+
+    self.completion(self.source.stripeID, self.source.clientSecret, error);
+}
+
+- (void)dismissSafariVCIfNecessary {
+    if (self.safariVC) {
+        [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
+                                                                   completion:nil];
+    }
+}
+
+- (void)subscribeToUrlAndForegroundNotifications {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleWillForegroundNotification)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+}
+
+- (void)unsubscribeFromNotificationsAndDismissPresentedViewControllers {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
+    if (self.safariVC) {
+        [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
+                                                                   completion:nil];
+    }
+}
+
+@end
+
+NS_ASSUME_NONNULL_END

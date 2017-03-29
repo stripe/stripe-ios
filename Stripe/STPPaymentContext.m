@@ -519,12 +519,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                     break;
                 case STPSourceFlowRedirect: {
 
-                    STPVoidBlock onRedirectReturn = ^ {
-                        if ([self.delegate respondsToSelector:@selector(paymentContextDidReturnFromRedirect:)]) {
-                            [self.delegate paymentContextDidReturnFromRedirect:self];
-                        }
-                    };
-
                     STPSourceCompletionBlock onRedirectCompletion = ^(STPSource *finishedSource, NSError *error) {
                         stpDispatchToMainThreadIfNecessary(^{
                             if (error) {
@@ -569,7 +563,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
                     self.configuration.sourceURLRedirectBlock(self.apiClient,
                                                               source,
-                                                              onRedirectReturn,
+                                                              self.hostViewController,
                                                               onRedirectCompletion);
                 }
                     break;
