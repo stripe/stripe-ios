@@ -28,8 +28,14 @@
     request.HTTPMethod = @"POST";
     NSString *query = [STPFormEncoder queryStringFromParameters:parameters];
     request.HTTPBody = [query dataUsingEncoding:NSUTF8StringEncoding];
-    
+
+    stpDispatchToMainThreadIfNecessary(^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidBeginNotification object:self];
+    });
     NSURLSessionDataTask *task = [apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        stpDispatchToMainThreadIfNecessary(^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidEndNotification object:self];
+        });
         [[self class] parseResponse:response
                                body:body
                               error:error
@@ -51,7 +57,13 @@
     [request stp_addParametersToURL:parameters];
     request.HTTPMethod = @"GET";
 
+    stpDispatchToMainThreadIfNecessary(^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidBeginNotification object:self];
+    });
     NSURLSessionDataTask *task = [apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        stpDispatchToMainThreadIfNecessary(^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidEndNotification object:self];
+        });
         [[self class] parseResponse:response
                                body:body
                               error:error
