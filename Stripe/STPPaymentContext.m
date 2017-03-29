@@ -694,14 +694,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             }
             else {
                 // Unsupported source type
-                // Do nothing
-                self.state = STPPaymentContextStateNone;
+                // TODO: Add STPPaymentContext error domain and fill this in
+                [self didFinishWithStatus:STPPaymentStatusError error:nil];
             }
         }
         else {
             // Unsupported payment method
-            // Do nothing
-            self.state = STPPaymentContextStateNone;
+            // TODO: Add STPPaymentContext error domain and fill this in
+            [self didFinishWithStatus:STPPaymentStatusError error:nil];
         }
     }] onFailure:^(NSError *error) {
         STRONG(self);
