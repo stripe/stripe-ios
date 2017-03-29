@@ -61,7 +61,7 @@ typedef void (^STPRedirectContextCompletionBlock)(NSString *sourceId, NSString *
  *
  *  You should not use either this class, nor `STPAPIClient`, as a way
  *  to determine when you should charge the source. Use Stripe webhooks on your
- *  backend server to listen for source state changes and make the charge.
+ *  backend server to listen for source state changes and to make the charge.
  *
  */
 NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions")
