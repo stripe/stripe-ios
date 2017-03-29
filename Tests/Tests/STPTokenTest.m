@@ -8,37 +8,17 @@
 
 @import XCTest;
 
-#import "STPToken.h"
 #import "STPCard.h"
+#import "STPFixtures.h"
+#import "STPToken.h"
 
 @interface STPTokenTest : XCTestCase
 @end
 
 @implementation STPTokenTest
 
-- (NSDictionary *)buildTestTokenResponse {
-    NSDictionary *cardDict = @{
-                               @"id": @"card_123",
-                               @"exp_month": @"12",
-                               @"exp_year": @"2013",
-                               @"name": @"Smerlock Smolmes",
-                               @"address_line1": @"221A Baker Street",
-                               @"address_city": @"New York",
-                               @"address_state": @"NY",
-                               @"address_zip": @"12345",
-                               @"address_country": @"USA",
-                               @"last4": @"1234",
-                               @"brand": @"Visa",
-                               @"fingerprint": @"Fingolfin",
-                               @"country": @"Japan",
-                               };
-    
-    NSDictionary *tokenDict = @{ @"id": @"id_for_token", @"object": @"token", @"livemode": @NO, @"created": @1353025450.0, @"used": @NO, @"card": cardDict };
-    return tokenDict;
-}
-
 - (void)testCreatingTokenWithAttributeDictionarySetsAttributes {
-    STPToken *token = [STPToken decodedObjectFromAPIResponse:[self buildTestTokenResponse]];
+    STPToken *token = [STPFixtures cardToken];
     XCTAssertEqualObjects([token tokenId], @"id_for_token", @"Generated token has the correct id");
     XCTAssertEqual([token livemode], NO, @"Generated token has the correct livemode");
 
@@ -46,7 +26,8 @@
 }
 
 - (void)testCreatingTokenSetsAdditionalResponseFields {
-    NSMutableDictionary *tokenResponse = [[self buildTestTokenResponse] mutableCopy];
+    STPToken *origToken = [STPFixtures cardToken];
+    NSMutableDictionary *tokenResponse = [[origToken allResponseFields] mutableCopy];
     tokenResponse[@"foo"] = @"bar";
     STPToken *token = [STPToken decodedObjectFromAPIResponse:tokenResponse];
     NSDictionary *allResponseFields = token.allResponseFields;

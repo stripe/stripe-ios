@@ -262,7 +262,7 @@
 #pragma mark - STPFormTextFieldDelegate
 
 - (void)formTextFieldTextDidChange:(STPFormTextField *)textField {
-    if (self.type != STPAddressFieldTypeCountry) {
+    if (self.type != STPAddressFieldTypeCountry && self.type != STPAddressFieldTypeSEPACountry) {
         _contents = textField.text;
         if ([textField isFirstResponder]) {
             textField.validText = [self potentiallyValidContents];

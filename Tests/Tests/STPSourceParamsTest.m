@@ -7,7 +7,8 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "Stripe.h"
+#import <Stripe/Stripe.h>
+#import "STPFixtures.h"
 
 @interface STPSourceParamsTest : XCTestCase
 
@@ -16,19 +17,7 @@
 @implementation STPSourceParamsTest
 
 - (void)testCardParamsWithCard {
-    STPCardParams *card = [STPCardParams new];
-    card.number = @"4242 4242 4242 4242";
-    card.cvc = @"123";
-    card.expMonth = 6;
-    card.expYear = 2018;
-    card.currency = @"usd";
-    card.name = @"Jenny Rosen";
-    card.addressLine1 = @"123 Fake Street";
-    card.addressLine2 = @"Apartment 4";
-    card.addressCity = @"New York";
-    card.addressState = @"NY";
-    card.addressCountry = @"USA";
-    card.addressZip = @"10002";
+    STPCardParams *card = [STPFixtures cardParams];
 
     STPSourceParams *source = [STPSourceParams cardParamsWithCard:card];
     NSDictionary *sourceCard = source.additionalAPIParameters[@"card"];
