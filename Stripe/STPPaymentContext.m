@@ -646,10 +646,62 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                                                   animated:YES
                                                 completion:nil];
         }
-        else {
-            // TODO:
+        else if ([self.selectedPaymentMethod isKindOfClass:[STPPaymentMethodType class]]) {
             // This is a non-concrete method (eg just a type they want to use)
             // Need to convert to an actual source and then re-call requestPayment
+            STPPaymentMethodType *type = (STPPaymentMethodType *)self.selectedPaymentMethod;
+
+            STPSourceInfoCompletionBlock completion = ^(STPSourceParams * _Nullable sourceParams) {
+                if (sourceParams) {
+                    [self.apiClient createSourceWithParams:sourceParams completion:^(STPSource * _Nullable source, NSError * _Nullable error) {
+                        if (source) {
+                            self.selectedPaymentMethod = source;
+                            self.state = STPPaymentContextStateNone;
+                            [self requestPayment];
+                        }
+                        else {
+                            [self didFinishWithStatus:STPPaymentStatusError
+                                                error:error ?: [NSError stp_genericConnectionError]];
+                        }
+                    }];
+                }
+                else {
+                    // User cancelled
+                    [self didFinishWithStatus:STPPaymentStatusUserCancellation
+                                        error:nil];
+                }
+            };
+
+            STPSourceInfoViewController *sourceInfoVC = [[STPSourceInfoViewController alloc] initWithSourceType:type.sourceType
+                                                                                                         amount:self.paymentAmount
+                                                                                                  configuration:self.configuration
+                                                                                           prefilledInformation:self.prefilledInformation
+                                                                                                          theme:self.theme
+                                                                                                     completion:completion];
+
+            if (sourceInfoVC) {
+                self.state = STPPaymentContextStateRequestingPayment;
+
+                if (sourceInfoVC.completeSourceParams) {
+                    completion(sourceInfoVC.completeSourceParams);
+                }
+                else {
+                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:sourceInfoVC];
+                    navigationController.navigationBar.stp_theme = self.theme;
+                    navigationController.modalPresentationStyle = self.modalPresentationStyle;
+                    [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
+                }
+            }
+            else {
+                // Unsupported source type
+                // TODO: Add STPPaymentContext error domain and fill this in
+                [self didFinishWithStatus:STPPaymentStatusError error:nil];
+            }
+        }
+        else {
+            // Unsupported payment method
+            // TODO: Add STPPaymentContext error domain and fill this in
+            [self didFinishWithStatus:STPPaymentStatusError error:nil];
         }
     }] onFailure:^(NSError *error) {
         STRONG(self);
