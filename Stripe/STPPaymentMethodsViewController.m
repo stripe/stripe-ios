@@ -162,10 +162,6 @@
     self.activityIndicator.tintColor = self.theme.accentColor;
 }
 
-- (void)handleBackOrCancelTapped:(__unused id)sender {
-    [self.delegate paymentMethodsViewControllerDidCancel:self];
-}
-
 - (void)finishWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
     if ([paymentMethod isKindOfClass:[STPCard class]]) {
         [self.apiAdapter selectDefaultCustomerSource:(STPCard *)paymentMethod completion:^(__unused NSError *error) {
@@ -198,6 +194,10 @@
             }
         });
     }];
+}
+
+- (void)internalViewControllerDidCancel {
+    [self.delegate paymentMethodsViewControllerDidCancel:self];
 }
 
 - (void)addCardViewControllerDidCancel:(__unused STPAddCardViewController *)addCardViewController {
