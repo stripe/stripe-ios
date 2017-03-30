@@ -10,13 +10,14 @@
 
 #import "STPDispatchFunctions.h"
 #import "STPSource.h"
+#import "STPURLCallbackHandler.h"
 #import "StripeError.h"
 
 #import <SafariServices/SafariServices.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPRedirectContext () <SFSafariViewControllerDelegate>
+@interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener>
 @property (nonatomic, copy) STPRedirectContextCompletionBlock completion;
 @property (nonatomic, retain) STPSource *source;
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
@@ -28,7 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
                              completion:(STPRedirectContextCompletionBlock)completion {
 
     if (source.flow != STPSourceFlowRedirect
-        || source.redirect.url == nil) {
+        || source.redirect.url == nil
+        || source.redirect.returnURL == nil) {
         return nil;
     }
 
@@ -95,10 +97,12 @@ NS_ASSUME_NONNULL_BEGIN
     });
 }
 
-- (void)handleURLCallbackNotification {
+- (BOOL)handleURLCallback:(__unused NSURL *)url {
     stpDispatchToMainThreadIfNecessary(^{
         [self handleRedirectCompletionWithError:nil];
     });
+    // We handle all returned urls that match what we registered for
+    return YES;
 }
 
 - (void)handleRedirectCompletionWithError:(nullable NSError *)error {
@@ -123,10 +127,13 @@ NS_ASSUME_NONNULL_BEGIN
                                              selector:@selector(handleWillForegroundNotification)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
+    [[STPURLCallbackHandler shared] registerListener:self
+                                              forURL:self.source.redirect.returnURL];
 }
 
 - (void)unsubscribeFromNotificationsAndDismissPresentedViewControllers {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[STPURLCallbackHandler shared] unregisterListener:self];
 
     if (self.safariVC) {
         [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
