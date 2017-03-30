@@ -16,6 +16,7 @@
 #import "NSDictionary+Stripe.h"
 #import "NSMutableURLRequest+Stripe.h"
 #import "NSString+Stripe.h"
+#import "NSURLComponents+Stripe.h"
 #import "PKPayment+Stripe.h"
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "STPAPIClient+ApplePay.h"
@@ -54,6 +55,7 @@
     linkNSDecimalNumberCurrencyCategory();
     linkNSBundleAppNameCategory();
     linkAspectsCategory();
+    linkNSURLComponentsCategory();
 }
 
 @end

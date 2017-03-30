@@ -23,7 +23,15 @@ NS_ASSUME_NONNULL_BEGIN
  It handles opening the redirect url, subscribes for foreground notifications, 
  does some polling when the customer comes back, and then returns you the completed source object
  */
-@property (nonatomic, copy, nullable) void (^sourceURLRedirectBlock)(STPAPIClient *apiClient, STPSource *source, STPVoidBlock onRedirectReturn, STPSourceCompletionBlock completion);
+@property (nonatomic, copy, nullable) void (^sourceURLRedirectBlock)(STPAPIClient *apiClient, STPSource *source, UIViewController *presentingViewController, STPSourceCompletionBlock completion);
+
+
+/**
+ Cancels the current source url redirect, if any.
+ 
+ Nullable block to get around app extension restrictions. Non-nil if there is a redirect in progress.
+ */
+@property (nonatomic, copy, nullable) STPVoidBlock cancelSourceURLRedirectBlock;
 
 @end
 
