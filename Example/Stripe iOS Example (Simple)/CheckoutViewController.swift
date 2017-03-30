@@ -25,12 +25,12 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
     let appleMerchantID: String? = nil
     
-    // These values will be shown to the user when they purchase with Apple Pay.
     let companyName = "Emoji Apparel"
     let paymentCurrency = "usd"
 
-    let paymentContext: STPPaymentContext
-
+    let paymentAmount: Int
+    var paymentContext: STPPaymentContext?
+    let paymentConfiguration: STPPaymentConfiguration
     let theme: STPTheme
     let paymentRow: CheckoutRowView
     let shippingRow: CheckoutRowView
@@ -60,7 +60,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     }
 
     init(product: String, price: Int, settings: Settings) {
-
         let stripePublishableKey = self.stripePublishableKey
         let backendBaseURL = self.backendBaseURL
 
@@ -70,6 +69,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.product = product
         self.productImage.text = product
         self.theme = settings.theme
+        self.paymentAmount = price
         MyAPIClient.sharedClient.baseURLString = self.backendBaseURL
 
         // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
@@ -82,16 +82,8 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.shippingType = settings.shippingType
         config.availablePaymentMethodTypes = settings.availablePaymentMethods.array as! [STPPaymentMethodType]
         config.smsAutofillDisabled = !settings.smsAutofillEnabled
+        self.paymentConfiguration = config
         
-        let paymentContext = STPPaymentContext(apiAdapter: MyAPIClient.sharedClient,
-                                               configuration: config,
-                                               theme: settings.theme)
-        let userInformation = STPUserInformation()
-        paymentContext.prefilledInformation = userInformation
-        paymentContext.paymentAmount = price
-        paymentContext.paymentCurrency = self.paymentCurrency
-        self.paymentContext = paymentContext
-
         self.paymentRow = CheckoutRowView(title: "Payment", detail: "Select Payment",
                                           theme: settings.theme)
         var shippingString = "Contact"
@@ -116,8 +108,15 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         numberFormatter.usesGroupingSeparator = true
         self.numberFormatter = numberFormatter
         super.init(nibName: nil, bundle: nil)
-        self.paymentContext.delegate = self
-        paymentContext.hostViewController = self
+
+        NotificationCenter.default.addObserver(self, selector: #selector(networkActivityDidBegin),
+                                               name: NSNotification.Name.STPNetworkActivityDidBegin, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(networkActivityDidEnd),
+                                               name: NSNotification.Name.STPNetworkActivityDidEnd, object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -126,6 +125,17 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let paymentContext = STPPaymentContext(apiAdapter: MyAPIClient.sharedClient,
+                                               configuration: self.paymentConfiguration,
+                                               theme: self.theme)
+        let userInformation = STPUserInformation()
+        paymentContext.prefilledInformation = userInformation
+        paymentContext.paymentAmount = self.paymentAmount
+        paymentContext.paymentCurrency = self.paymentCurrency
+        paymentContext.delegate = self
+        paymentContext.hostViewController = self
+        self.paymentContext = paymentContext
+
         self.view.backgroundColor = self.theme.primaryBackgroundColor
         var red: CGFloat = 0
         self.theme.primaryBackgroundColor.getRed(&red, green: nil, blue: nil, alpha: nil)
@@ -141,12 +151,14 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.view.addSubview(self.activityIndicator)
         self.activityIndicator.alpha = 0
         self.buyButton.addTarget(self, action: #selector(didTapBuy), for: .touchUpInside)
-        self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
+        self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(paymentContext.paymentAmount)/100))!
         self.paymentRow.onTap = { [weak self] _ in
-            self?.paymentContext.pushPaymentMethodsViewController()
+            guard let strongSelf = self else { return }
+            strongSelf.paymentContext?.pushPaymentMethodsViewController()
         }
         self.shippingRow.onTap = { [weak self] _ in
-            self?.paymentContext.pushShippingViewController()
+            guard let strongSelf = self else { return }
+            strongSelf.paymentContext?.pushShippingViewController()
         }
     }
 
@@ -169,13 +181,13 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     func didTapBuy() {
         self.paymentInProgress = true
-        self.paymentContext.requestPayment()
+        self.paymentContext?.requestPayment()
     }
 
     // MARK: STPPaymentContextDelegate
     
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
-        MyAPIClient.sharedClient.completeCharge(paymentResult, amount: self.paymentContext.paymentAmount,
+        MyAPIClient.sharedClient.completeCharge(paymentResult, amount: paymentContext.paymentAmount,
                                                 completion: completion)
     }
     
@@ -216,7 +228,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         else {
             self.shippingRow.detail = "Enter \(self.shippingString) Info"
         }
-        self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
+        self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(paymentContext.paymentAmount)/100))!
     }
 
     func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
@@ -231,7 +243,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
             _ = self.navigationController?.popViewController(animated: true)
         })
         let retry = UIAlertAction(title: "Retry", style: .default, handler: { action in
-            self.paymentContext.retryLoading()
+            paymentContext.retryLoading()
         })
         alertController.addAction(cancel)
         alertController.addAction(retry)
@@ -269,6 +281,22 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
                 completion(.valid, nil, [upsWorldwide, fedEx], fedEx)
             }
         }
+    }
+
+    // MARK: Network activity
+
+    var networkActivityCount: Int = 0 {
+        didSet {
+            UIApplication.shared.isNetworkActivityIndicatorVisible = self.networkActivityCount > 0;
+        }
+    }
+
+    func networkActivityDidBegin() {
+        self.networkActivityCount += 1;
+    }
+
+    func networkActivityDidEnd() {
+        self.networkActivityCount = max(self.networkActivityCount - 1, 0);
     }
 
 }
