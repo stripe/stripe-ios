@@ -142,7 +142,6 @@
 
 + (STPSourceParams *)sepaDebitParamsWithName:(NSString *)name
                                         iban:(NSString *)iban
-                                addressLine1:(NSString *)addressLine1
                                         city:(NSString *)city
                                   postalCode:(NSString *)postalCode
                                      country:(NSString *)country {
@@ -152,7 +151,6 @@
 
     NSDictionary<NSString *,NSString *> *address =
     @{
-      @"line1": addressLine1,
       @"city": city,
       @"postal_code": postalCode,
       @"country": country

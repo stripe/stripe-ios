@@ -168,7 +168,6 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 - (void)testCreateSource_sepaDebit {
     STPSourceParams *params = [STPSourceParams sepaDebitParamsWithName:@"Jenny Rosen"
                                                                   iban:@"DE89370400440532013000"
-                                                          addressLine1:@"Nollendorfstraße 27"
                                                                   city:@"Berlin"
                                                             postalCode:@"10777"
                                                                country:@"DE"];
@@ -184,8 +183,13 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqualObjects(source.owner.address.city, @"Berlin");
+        XCTAssertEqualObjects(source.owner.address.postalCode, @"10777");
+        XCTAssertEqualObjects(source.owner.address.country, @"DE");
+        XCTAssertNotNil(source.sepaDebitDetails.bankCode);
         XCTAssertEqualObjects(source.sepaDebitDetails.country, @"DE");
         XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3000");
+        XCTAssertNotNil(source.sepaDebitDetails.mandateReference);
+        XCTAssertNotNil(source.sepaDebitDetails.mandateURL);
         XCTAssertEqualObjects(source.metadata, params.metadata);
 
         [expectation fulfill];

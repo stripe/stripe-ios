@@ -156,7 +156,6 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param name         The full name of the account holder.
  *  @param iban         The IBAN number for the bank account you wish to debit.
- *  @param addressLine1 The bank account holder's first address line.
  *  @param city         The bank account holder's city.
  *  @param postalCode   The bank account holder's postal code.
  *  @param country      The bank account holder's two-letter country code.
@@ -165,7 +164,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (STPSourceParams *)sepaDebitParamsWithName:(NSString *)name
                                         iban:(NSString *)iban
-                                addressLine1:(NSString *)addressLine1
                                         city:(NSString *)city
                                   postalCode:(NSString *)postalCode
                                      country:(NSString *)country;
