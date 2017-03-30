@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  - STPRedirectContextStateNotStarted: Initialized, but redirect not started
  - STPRedirectContextStateInProgress: Redirect is in progress
+ - STPRedirectContextStateCancelled: Redirect has been cancelled programmatically before completing
  - STPRedirectContextStateCompleted: Redirect has completed.
  */
 typedef NS_ENUM(NSUInteger, STPRedirectContextState) {

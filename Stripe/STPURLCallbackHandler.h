@@ -22,8 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)registerListener:(id<STPURLCallbackListener>)listener
                   forURL:(NSURL *)url;
 
-- (void)unregisterListener:(id<STPURLCallbackListener>)listener
-                    forURL:(NSURL *)url;
 - (void)unregisterListener:(id<STPURLCallbackListener>)listener;
 
 @end

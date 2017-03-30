@@ -97,6 +97,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     return self;
 }
 
+- (void)dealloc {
+    if (self.configuration.cancelSourceURLRedirectBlock) {
+        self.configuration.cancelSourceURLRedirectBlock();
+    }
+}
+
 - (void)retryLoading {
     if (self.loadingPromise && self.loadingPromise.value) {
         return;

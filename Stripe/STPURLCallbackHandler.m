@@ -90,24 +90,6 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
-- (void)unregisterListener:(id<STPURLCallbackListener>)listener
-                    forURL:(NSURL *)url {
-    NSURLComponents *components = [[NSURLComponents alloc] initWithURL:url
-                                               resolvingAgainstBaseURL:NO];
-
-    NSMutableArray *callbacksToRemove = [NSMutableArray new];
-
-    for (STPURLCallback *callback in self.callbacks) {
-        if ([callback.urlComponents stp_matchesURLComponents:components]
-            && listener == callback.listener) {
-            [callbacksToRemove addObject:callback];
-        }
-    }
-    NSMutableArray <STPURLCallback *> *callbacksCopy = self.callbacks.mutableCopy;
-    [callbacksCopy removeObjectsInArray:callbacksToRemove];
-    self.callbacks = callbacksCopy.copy;
-}
-
 - (void)unregisterListener:(id<STPURLCallbackListener>)listener {
     NSMutableArray *callbacksToRemove = [NSMutableArray new];
 

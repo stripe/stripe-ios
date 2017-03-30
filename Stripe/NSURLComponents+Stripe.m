@@ -49,3 +49,5 @@
 }
 
 @end
+
+void linkNSURLComponentsCategory(void){}

@@ -34,4 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+void linkNSURLComponentsCategory(void);
+
 NS_ASSUME_NONNULL_END
