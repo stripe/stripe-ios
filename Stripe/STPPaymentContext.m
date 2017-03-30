@@ -29,7 +29,6 @@
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
-
 /**
  The current state of the payment context
 
@@ -119,8 +118,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             }];
         }
     }];
+    stpDispatchToMainThreadIfNecessary(^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidBeginNotification object:self];
+    });
     [self.apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
         stpDispatchToMainThreadIfNecessary(^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidEndNotification object:self];
             STRONG(self);
             if (!self) {
                 return;
@@ -610,8 +613,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                 [self.delegate paymentContextDidChange:self];
             };
             STPApplePayTokenHandlerBlock applePayTokenHandler = ^(STPToken *token, STPErrorBlock tokenCompletion) {
+                stpDispatchToMainThreadIfNecessary(^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidBeginNotification object:self];
+                });
                 [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *tokenError) {
                     stpDispatchToMainThreadIfNecessary(^{
+                        [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidEndNotification object:self];
                         if (tokenError) {
                             tokenCompletion(tokenError);
                         } else {

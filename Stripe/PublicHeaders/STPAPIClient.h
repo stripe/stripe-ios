@@ -185,5 +185,18 @@ static NSString *const STPSDKVersion = @"10.0.1";
 
 @end
 
+///--------------------
+/// @name Notifications
+///--------------------
+
+/**
+ *  Posted when network activity begins.
+ */
+FOUNDATION_EXPORT NSString *const STPNetworkActivityDidBeginNotification;
+
+/**
+ *  Posted when network activity ends.
+ */
+FOUNDATION_EXPORT NSString *const STPNetworkActivityDidEndNotification;
 
 NS_ASSUME_NONNULL_END

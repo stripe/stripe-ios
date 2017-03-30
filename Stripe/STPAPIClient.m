@@ -39,6 +39,9 @@ static NSString *const tokenEndpoint = @"tokens";
 static NSString *const sourcesEndpoint = @"sources";
 static NSString *const stripeAPIVersion = @"2015-10-12";
 
+NSString *const STPNetworkActivityDidBeginNotification = @"com.stripe.networkactivity.begin";
+NSString *const STPNetworkActivityDidEndNotification = @"com.stripe.networkactivity.end";
+
 @implementation Stripe
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {

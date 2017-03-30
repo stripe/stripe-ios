@@ -74,8 +74,12 @@
 - (STPPromise<STPPaymentMethodTuple *>*)retrieveCustomerWithConfiguration:(STPPaymentConfiguration *)configuration
                                                                apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
     STPPromise<STPPaymentMethodTuple *> *promise = [STPPromise new];
+    stpDispatchToMainThreadIfNecessary(^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidBeginNotification object:self];
+    });
     [apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
         stpDispatchToMainThreadIfNecessary(^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidEndNotification object:self];
             if (error) {
                 [promise fail:error];
             } else {
@@ -175,8 +179,13 @@
 - (void)finishWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
     if ([paymentMethod conformsToProtocol:@protocol(STPSourceProtocol)]
         && paymentMethod.paymentMethodType.canBeDefaultSource) {
-        [self.apiAdapter selectDefaultCustomerSource:(id<STPSourceProtocol>)paymentMethod
-                                          completion:^(__unused NSError *error) {
+        stpDispatchToMainThreadIfNecessary(^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidBeginNotification object:self];
+        });
+        [self.apiAdapter selectDefaultCustomerSource:(id<STPSourceProtocol>)paymentMethod completion:^(__unused NSError *error) {
+            stpDispatchToMainThreadIfNecessary(^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidEndNotification object:self];
+            });
         }];
     }
     [self.delegate paymentMethodsViewController:self didSelectPaymentMethod:paymentMethod];
@@ -189,6 +198,9 @@
 
 - (void)internalViewControllerDidCreateTokenOrSource:(id<STPSourceProtocol>)tokenOrSource
                                           completion:(STPErrorBlock)completion {
+    stpDispatchToMainThreadIfNecessary(^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidBeginNotification object:self];
+    });
     [self.apiAdapter attachSourceToCustomer:tokenOrSource completion:^(NSError *error) {
         STPPromise<STPPaymentMethodTuple *> *promise = [self retrieveCustomerWithConfiguration:self.configuration apiAdapter:self.apiAdapter];
         [promise onSuccess:^(STPPaymentMethodTuple *tuple) {
@@ -201,6 +213,7 @@
         }];
 
         stpDispatchToMainThreadIfNecessary(^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidEndNotification object:self];
             completion(error);
             if (!error) {
                 if ([tokenOrSource isKindOfClass:[STPToken class]]) {
