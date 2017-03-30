@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "STPAddressViewModel.h"
+#import "STPFixtures.h"
 
 @interface STPAddressViewModelTest : XCTestCase
 
@@ -124,16 +125,7 @@
 }
 
 - (void)testSetAddress {
-    STPAddress *address = [STPAddress new];
-    address.email = @"foo@example.com";
-    address.name = @"John Smith";
-    address.line1 = @"55 John St";
-    address.line2 = @"#3B";
-    address.city = @"New York";
-    address.state = @"NY";
-    address.postalCode = @"10002";
-    address.country = @"US";
-    address.phone = @"555-555-5555";
+    STPAddress *address = [STPFixtures address];
 
     STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:(PKAddressField)(PKAddressFieldPostalAddress|PKAddressFieldEmail|PKAddressFieldPhone)];
     sut.address = address;
