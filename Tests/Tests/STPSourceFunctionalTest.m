@@ -184,6 +184,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.currency, params.currency);
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqualObjects(source.owner.address.city, @"Berlin");
+        XCTAssertEqualObjects(source.owner.address.line1, @"Nollendorfstraße 27");
         XCTAssertEqualObjects(source.sepaDebitDetails.country, @"DE");
         XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3000");
         XCTAssertEqualObjects(source.metadata, params.metadata);
