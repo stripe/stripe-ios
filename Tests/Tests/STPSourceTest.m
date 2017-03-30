@@ -18,47 +18,47 @@
 
 - (void)testDecodingSource_ideal {
     STPSource *source = [STPFixtures iDEALSource];
-    XCTAssertEqualObjects(source.stripeID, @"src_123");
-    XCTAssertEqualObjects(source.amount, @1099);
-    XCTAssertEqualObjects(source.clientSecret, @"src_client_secret_123");
-    XCTAssertEqualWithAccuracy([source.created timeIntervalSince1970], 1445277809.0, 1.0);
-    XCTAssertEqualObjects(source.currency, @"eur");
+    NSDictionary *fields = source.allResponseFields;
+    XCTAssertEqualObjects(source.stripeID, fields[@"id"]);
+    XCTAssertEqual(source.livemode, [fields[@"livemode"] boolValue]);
+    XCTAssertEqualObjects(source.amount, fields[@"amount"]);
+    XCTAssertEqualObjects(source.currency, fields[@"currency"]);
+    XCTAssertEqualObjects(source.clientSecret, fields[@"client_secret"]);
+    XCTAssertEqualObjects(source.owner.name, fields[@"owner"][@"name"]);
+    XCTAssertEqualObjects(source.owner.verifiedName, fields[@"owner"][@"verified_name"]);
+    XCTAssertEqualObjects(source.redirect.returnURL.absoluteString, fields[@"redirect"][@"return_url"]);
+    XCTAssertEqualObjects(source.redirect.url.absoluteString, fields[@"redirect"][@"url"]);
+    XCTAssertEqualObjects(source.details[@"bank"], fields[@"ideal"][@"bank"]);
     XCTAssertEqual(source.flow, STPSourceFlowRedirect);
-    XCTAssertEqual(source.livemode, YES);
-    XCTAssertEqualObjects(source.owner.name, @"Jenny Rosen");
-    XCTAssertEqualObjects(source.owner.verifiedName, @"Jenny Rosen");
-    XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
-    XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.foo.com/crtABC"]);
-    XCTAssertEqualObjects(source.redirect.url, [NSURL URLWithString:@"https://pay.stripe.com/redirect/src_123?client_secret=src_client_secret_123"]);
     XCTAssertEqual(source.status, STPSourceStatusPending);
+    XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
     XCTAssertEqual(source.type, STPSourceTypeIDEAL);
     XCTAssertEqual(source.usage, STPSourceUsageSingleUse);
-    XCTAssertEqualObjects(source.details[@"bank"], @"ing");
 }
 
 - (void)testDecodingSource_sepa_debit {
     STPSource *source = [STPFixtures sepaDebitSource];
-    XCTAssertEqualObjects(source.stripeID, @"src_123");
-    XCTAssertNil(source.amount);
-    XCTAssertEqualObjects(source.clientSecret, @"src_client_secret_123");
-    XCTAssertEqualWithAccuracy([source.created timeIntervalSince1970], 1445277809.0, 1.0);
-    XCTAssertEqualObjects(source.currency, @"eur");
-    XCTAssertEqual(source.flow, STPSourceFlowNone);
-    XCTAssertEqual(source.livemode, NO);
-    XCTAssertEqualObjects(source.owner.name, @"Jenny Rosen");
-    XCTAssertEqualObjects(source.owner.address.city, @"Berlin");
-    XCTAssertEqualObjects(source.owner.address.country, @"DE");
-    XCTAssertEqualObjects(source.owner.address.line1, @"Nollendorfstraße 27");
-    XCTAssertEqualObjects(source.owner.address.postalCode, @"10777");
+    NSDictionary *fields = source.allResponseFields;
+    XCTAssertEqualObjects(source.stripeID, fields[@"id"]);
+    XCTAssertEqual(source.livemode, [fields[@"livemode"] boolValue]);
+    XCTAssertEqualObjects(source.amount, fields[@"amount"]);
+    XCTAssertEqualObjects(source.currency, fields[@"currency"]);
+    XCTAssertEqualObjects(source.clientSecret, fields[@"client_secret"]);
+    XCTAssertEqualObjects(source.owner.name, fields[@"owner"][@"name"]);
+    XCTAssertEqualObjects(source.owner.address.city, fields[@"owner"][@"address"][@"city"]);
+    XCTAssertEqualObjects(source.owner.address.country, fields[@"owner"][@"address"][@"country"]);
+    XCTAssertEqualObjects(source.owner.address.line1, fields[@"owner"][@"address"][@"line1"]);
+    XCTAssertEqualObjects(source.owner.address.postalCode, fields[@"owner"][@"address"][@"postal_code"]);
+    XCTAssertEqualObjects(source.sepaDebitDetails.bankCode, fields[@"sepa_debit"][@"bank_code"]);
+    XCTAssertEqualObjects(source.sepaDebitDetails.country, fields[@"sepa_debit"][@"country"]);
+    XCTAssertEqualObjects(source.sepaDebitDetails.fingerprint, fields[@"sepa_debit"][@"fingerprint"]);
+    XCTAssertEqualObjects(source.sepaDebitDetails.last4, fields[@"sepa_debit"][@"last4"]);
+    XCTAssertEqualObjects(source.sepaDebitDetails.mandateReference, fields[@"sepa_debit"][@"mandate_reference"]);
+    XCTAssertEqualObjects(source.sepaDebitDetails.mandateURL.absoluteString, fields[@"sepa_debit"][@"mandate_url"]);
     XCTAssertEqual(source.status, STPSourceStatusChargeable);
     XCTAssertEqual(source.type, STPSourceTypeSEPADebit);
     XCTAssertEqual(source.usage, STPSourceUsageReusable);
-    XCTAssertEqualObjects(source.sepaDebitDetails.bankCode, @"37040044");
-    XCTAssertEqualObjects(source.sepaDebitDetails.country, @"DE");
-    XCTAssertEqualObjects(source.sepaDebitDetails.fingerprint, @"NxdSyRegc9PsMkWy");
-    XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3001");
-    XCTAssertEqualObjects(source.sepaDebitDetails.mandateReference, @"NXDSYREGC9PSMKWY");
-    XCTAssertEqualObjects(source.sepaDebitDetails.mandateURL.absoluteString, @"https://hooks.stripe.com/adapter/sepa_debit/file/src_123/src_client_secret_123");
+
 }
 
 @end
