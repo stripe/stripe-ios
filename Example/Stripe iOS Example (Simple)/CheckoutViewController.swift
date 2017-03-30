@@ -283,14 +283,20 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         }
     }
 
-    // MARK: Network activity notifications
+    // MARK: Network activity
+
+    var networkActivityCount: Int = 0 {
+        didSet {
+            UIApplication.shared.isNetworkActivityIndicatorVisible = self.networkActivityCount > 0;
+        }
+    }
 
     func networkActivityDidBegin() {
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        self.networkActivityCount += 1;
     }
 
     func networkActivityDidEnd() {
-        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+        self.networkActivityCount = max(self.networkActivityCount - 1, 0);
     }
 
 }
