@@ -49,25 +49,25 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  A set of key/value pairs that you can attach to a source object.
  */
-@property (nonatomic, copy, nullable) NSDictionary *metadata;
+@property (nonatomic, copy, nullable) NSDictionary<NSString *,NSString *>*metadata;
 
 /**
  *  Information about the owner of the payment instrument. May be used or required
  *  by particular source types.
  */
-@property (nonatomic, copy, nullable) NSDictionary *owner;
+@property (nonatomic, copy, nullable) NSDictionary<NSString *, id>*owner;
 
 /**
  *  Parameters required for the redirect flow. Required if the source is authenticated by 
  *  a redirect (`flow` is "redirect").
  */
-@property (nonatomic, copy, nullable) NSDictionary *redirect;
+@property (nonatomic, copy, nullable) NSDictionary<NSString *, id>*redirect;
 
 /**
  *  An optional token used to create the source. When passed, token properties will override 
  *  source parameters.
  */
-@property (nonatomic, copy, nullable) NSString *token;
+@property (nonatomic, copy, nullable) NSDictionary<NSString *, id>*token;
 
 /**
  *  Whether this source should be reusable or not. `usage` may be "reusable" or "single_use".
