@@ -104,7 +104,6 @@ typedef NS_ENUM(NSUInteger, STPAddressType) {
     if (self) {
         _addressType = STPAddressTypeSEPADebit;
         _addressCells = @[
-                          [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine1 contents:@"" lastInList:NO delegate:self],
                           [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCity contents:@"" lastInList:NO delegate:self],
                           // Postal code cell will be added later if necessary
                           [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeSEPACountry contents:_addressFieldTableViewCountryCode lastInList:YES delegate:self],

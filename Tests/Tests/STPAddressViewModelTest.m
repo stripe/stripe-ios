@@ -86,9 +86,8 @@
 
 - (void)testInitWithSEPADebitFields {
     STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithSEPADebitFields];
-    XCTAssertTrue([sut.addressCells count] == 4);
+    XCTAssertTrue([sut.addressCells count] == 3);
     NSArray *types = @[
-                       @(STPAddressFieldTypeLine1),
                        @(STPAddressFieldTypeCity),
                        @(STPAddressFieldTypeZip),
                        @(STPAddressFieldTypeSEPACountry),
