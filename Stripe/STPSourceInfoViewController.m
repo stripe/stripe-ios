@@ -76,6 +76,7 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
         sourceParams.type = type;
         sourceParams.currency = @"eur";
         sourceParams.amount = @(amount);
+        sourceParams.redirect = @{@"return_url": configuration.returnURL.absoluteString};
         // TODO: get returnURL from STPPaymentConfiguration
         switch (type) {
             case STPSourceTypeBancontact: {

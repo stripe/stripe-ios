@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  `STPPaymentContext` requires an "API Adapter" to communicate with your backend API to retrieve and modify a customer's payment methods - see https://stripe.com/docs/mobile/ios/standard#prepare-your-api for how to implement this. You can also look at CheckoutViewController.swift in our example app to see `STPPaymentContext` in action.
  */
+NS_EXTENSION_UNAVAILABLE("STPPaymentContext is not available in extensions")
 @interface STPPaymentContext : NSObject
 
 /**
@@ -213,6 +214,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Implement `STPPaymentContextDelegate` to get notified when a payment context changes, finishes, encounters errors, etc. In practice, if your app has a "checkout screen view controller", that is a good candidate to implement this protocol.
  */
+NS_EXTENSION_UNAVAILABLE("STPPaymentContext is not available in extensions")
 @protocol STPPaymentContextDelegate <NSObject>
 
 /**
