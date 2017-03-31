@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) STPVoidBlock cancelSourceURLRedirectBlock;
 
+@property (nonatomic, copy)  NSURL * _Nullable (^returnURLBlock)();
+
 @end
 
 NS_ASSUME_NONNULL_END
