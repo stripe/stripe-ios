@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  This view controller presents a list of payment method options to the user, which they can select between. They can also add credit cards to the list. It must be displayed inside a `UINavigationController`, so you can either create a `UINavigationController` with an `STPPaymentMethodsViewController` as the `rootViewController` and then present the `UINavigationController`, or push a new `STPPaymentMethodsViewController` onto an existing `UINavigationController`'s stack. You can also have `STPPaymentContext` do this for you automatically, by calling `presentPaymentMethodsViewController` or `pushPaymentMethodsViewController` on it.
  */
+NS_EXTENSION_UNAVAILABLE("STPPaymentMethodsViewController is not available in extensions")
 @interface STPPaymentMethodsViewController : STPCoreViewController
 
 @property(nonatomic, weak, readonly)id<STPPaymentMethodsViewControllerDelegate>delegate;
@@ -66,6 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  An `STPPaymentMethodsViewControllerDelegate` responds when a user selects a payment method from (or cancels) an `STPPaymentMethodsViewController`. In both of these instances, you should dismiss the view controller (either by popping it off the navigation stack, or dismissing it).
  */
+NS_EXTENSION_UNAVAILABLE("STPPaymentMethodsViewController is not available in extensions")
 @protocol STPPaymentMethodsViewControllerDelegate <NSObject>
 
 /**

@@ -50,7 +50,7 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     [self initializeIfNeeded];
 }
 
-+ (void)initializeIfNeeded {
++ (void)initializeIfNeeded NS_EXTENSION_UNAVAILABLE("") {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [STPPaymentCardTextField stp_aspect_hookSelector:@selector(commonInit)

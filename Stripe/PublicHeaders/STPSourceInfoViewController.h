@@ -24,6 +24,7 @@ typedef void (^STPSourceInfoCompletionBlock)(STPSourceParams * _Nullable sourceP
  *  bar button item that submits the form, so it must be shown inside a
  *  `UINavigationController`.
  */
+NS_EXTENSION_UNAVAILABLE("STPSourceInfoViewController is unavailable in extensions")
 @interface STPSourceInfoViewController : STPCoreTableViewController
 
 /**

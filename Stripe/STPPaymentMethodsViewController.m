@@ -71,6 +71,40 @@
                               delegate:delegate];
 }
 
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
+                           apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
+                       loadingPromise:(STPPromise<STPPaymentMethodTuple *> *)loadingPromise
+                                theme:(STPTheme *)theme
+                      shippingAddress:(STPAddress *)shippingAddress
+                             delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate NS_EXTENSION_UNAVAILABLE("") {
+    self = [super initWithTheme:theme];
+    if (self) {
+        _configuration = configuration;
+        _shippingAddress = shippingAddress;
+        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
+        _apiAdapter = apiAdapter;
+        _loadingPromise = loadingPromise;
+        _delegate = delegate;
+
+        self.navigationItem.title = STPLocalizedString(@"Loading…", @"Title for screen when data is still loading from the network.");
+
+        WEAK(self);
+        [[[self.stp_didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
+            return loadingPromise;
+        }] onSuccess:^(STPPaymentMethodTuple *tuple) {
+            STRONG(self);
+            if (tuple.selectedPaymentMethod) {
+                [self.delegate paymentMethodsViewController:self
+                                     didSelectPaymentMethod:tuple.selectedPaymentMethod];
+            }
+        }] onFailure:^(NSError *error) {
+            STRONG(self);
+            [self.delegate paymentMethodsViewController:self didFailToLoadWithError:error];
+        }];
+    }
+    return self;
+}
+
 - (STPPromise<STPPaymentMethodTuple *>*)retrieveCustomerWithConfiguration:(STPPaymentConfiguration *)configuration
                                                                apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
     STPPromise<STPPaymentMethodTuple *> *promise = [STPPromise new];
@@ -263,44 +297,6 @@
         }
         [self.navigationController stp_popToViewController:previous animated:YES completion:completion];
     }
-}
-
-@end
-
-@implementation STPPaymentMethodsViewController (Private)
-
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
-                           apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                       loadingPromise:(STPPromise<STPPaymentMethodTuple *> *)loadingPromise
-                                theme:(STPTheme *)theme
-                      shippingAddress:(STPAddress *)shippingAddress
-                             delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
-    self = [super initWithTheme:theme];
-    if (self) {
-        _configuration = configuration;
-        _shippingAddress = shippingAddress;
-        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
-        _apiAdapter = apiAdapter;
-        _loadingPromise = loadingPromise;
-        _delegate = delegate;
-
-        self.navigationItem.title = STPLocalizedString(@"Loading…", @"Title for screen when data is still loading from the network.");
-
-        WEAK(self);
-        [[[self.stp_didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
-            return loadingPromise;
-        }] onSuccess:^(STPPaymentMethodTuple *tuple) {
-            STRONG(self);
-            if (tuple.selectedPaymentMethod) {
-                [self.delegate paymentMethodsViewController:self
-                                         didSelectPaymentMethod:tuple.selectedPaymentMethod];
-            }
-        }] onFailure:^(NSError *error) {
-            STRONG(self);
-            [self.delegate paymentMethodsViewController:self didFailToLoadWithError:error];
-        }];
-    }
-    return self;
 }
 
 @end

@@ -259,7 +259,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     [self presentPaymentMethodsViewControllerWithNewState:STPPaymentContextStateShowingRequestedViewController];
 }
 
-- (void)presentPaymentMethodsViewControllerWithNewState:(STPPaymentContextState)state {
+- (void)presentPaymentMethodsViewControllerWithNewState:(STPPaymentContextState)state NS_EXTENSION_UNAVAILABLE("") {
     NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushPaymentMethodsViewController on it. Next time, set the hostViewController property first!");
     WEAK(self);
     [self.didAppearPromise voidOnSuccess:^{
@@ -277,7 +277,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
-- (void)pushPaymentMethodsViewController {
+- (void)pushPaymentMethodsViewController NS_EXTENSION_UNAVAILABLE("") {
     NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushPaymentMethodsViewController on it. Next time, set the hostViewController property first!");
     UINavigationController *navigationController;
     if ([self.hostViewController isKindOfClass:[UINavigationController class]]) {
@@ -361,7 +361,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     [self presentShippingViewControllerWithNewState:STPPaymentContextStateShowingRequestedViewController];
 }
 
-- (void)presentShippingViewControllerWithNewState:(STPPaymentContextState)state {
+- (void)presentShippingViewControllerWithNewState:(STPPaymentContextState)state NS_EXTENSION_UNAVAILABLE("") {
     NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling presentShippingViewController on it. Next time, set the hostViewController property first!");
     WEAK(self);
     [self.didAppearPromise voidOnSuccess:^{
@@ -378,7 +378,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
-- (void)pushShippingViewController {
+- (void)pushShippingViewController NS_EXTENSION_UNAVAILABLE("") {
     NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushShippingViewController on it. Next time, set the hostViewController property first!");
     UINavigationController *navigationController;
     if ([self.hostViewController isKindOfClass:[UINavigationController class]]) {
@@ -464,7 +464,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 #pragma mark - Request Payment
 
-- (void)requestPayment {
+- (void)requestPayment NS_EXTENSION_UNAVAILABLE("") {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     WEAK(self);
     [[[self.didAppearPromise voidFlatMap:^STPPromise * _Nonnull{

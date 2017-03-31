@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** This view controller contains a shipping address collection form. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`. Depending on your configuration's shippingType, the view controller may present a shipping method selection form after the user enters an address.
  */
+NS_EXTENSION_UNAVAILABLE("STPShippingAddressViewController is not available in extensions")
 @interface STPShippingAddressViewController : STPCoreTableViewController
 
 /**
@@ -66,6 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  An `STPShippingAddressViewControllerDelegate` is notified when an `STPShippingAddressViewController` receives an address, completes with an address, or is cancelled.
  */
+NS_EXTENSION_UNAVAILABLE("STPShippingAddressViewController is not available in extensions")
 @protocol STPShippingAddressViewControllerDelegate <NSObject>
 
 /**
