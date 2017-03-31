@@ -660,6 +660,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
             STPSourceInfoCompletionBlock completion = ^(STPSourceParams * _Nullable sourceParams) {
                 if (sourceParams) {
+                    if (self.prefilledInformation.metadata) {
+                        sourceParams.metadata = self.prefilledInformation.metadata;
+                    }
                     [self.apiClient createSourceWithParams:sourceParams completion:^(STPSource * _Nullable source, NSError * _Nullable error) {
                         if (source) {
                             self.selectedPaymentMethod = source;
