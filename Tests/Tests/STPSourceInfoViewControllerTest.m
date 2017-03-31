@@ -13,6 +13,9 @@
 #import "STPSourceInfoViewController.h"
 #import "STPTextFieldTableViewCell.h"
 
+NSString * const kReturnURLString = @"testscheme://stripe";
+
+
 @interface STPSourceInfoViewController ()
 @property(nonatomic)STPSourceInfoDataSource *dataSource;
 @end
@@ -27,7 +30,7 @@
                                         info:(STPUserInformation *)info {
     STPTheme *theme = [STPTheme defaultTheme];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    // TODO: set returnURL and verify in tests
+    config.returnURL = [NSURL URLWithString:kReturnURLString];
     NSInteger amount = 100;
     STPSourceInfoViewController *sut = [[STPSourceInfoViewController alloc] initWithSourceType:type
                                                                                         amount:amount
@@ -72,6 +75,7 @@
     nameCell.contents = @"John Smith";
     XCTAssertNotNil(sut.completeSourceParams);
     XCTAssertEqualObjects(sut.completeSourceParams.owner[@"name"], nameCell.contents);
+    XCTAssertEqualObjects(sut.completeSourceParams.redirect[@"return_url"], kReturnURLString);
 }
 
 - (void)testInitWithSourceParams_giropay {
@@ -96,6 +100,7 @@
     nameCell.contents = @"John Smith";
     XCTAssertNotNil(sut.completeSourceParams);
     XCTAssertEqualObjects(sut.completeSourceParams.owner[@"name"], nameCell.contents);
+    XCTAssertEqualObjects(sut.completeSourceParams.redirect[@"return_url"], kReturnURLString);
 }
 
 - (void)testInitWithSourceParams_iDEAL {
@@ -131,6 +136,7 @@
     XCTAssertEqualObjects(sut.completeSourceParams.owner[@"name"], nameCell.contents);
     NSDictionary *idealDict = sut.completeSourceParams.additionalAPIParameters[@"ideal"];
     XCTAssertEqualObjects(idealDict, @{@"bank": @"rabobank"});
+    XCTAssertEqualObjects(sut.completeSourceParams.redirect[@"return_url"], kReturnURLString);
 }
 
 - (void)testInitWithSourceParams_sofort {
@@ -159,6 +165,7 @@
     XCTAssertNotNil(sut.completeSourceParams);
     NSDictionary *sofortDict = sut.completeSourceParams.additionalAPIParameters[@"sofort"];
     XCTAssertEqualObjects(sofortDict, @{@"country": @"AT"});
+    XCTAssertEqualObjects(sut.completeSourceParams.redirect[@"return_url"], kReturnURLString);
 
     // Test initializing with a non-Sofort country
     address.country = @"US";
