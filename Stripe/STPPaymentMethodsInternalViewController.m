@@ -80,6 +80,10 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
     self.cardImageView.tintColor = self.theme.accentColor;
 }
 
+- (void)handleBackOrCancelTapped:(__unused id)sender {
+    [self.delegate internalViewControllerDidCancel];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
     return 2;
 }
