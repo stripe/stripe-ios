@@ -48,6 +48,7 @@
         _companyName = [NSBundle stp_applicationName];
         _smsAutofillDisabled = NO;
         _shippingType = STPShippingTypeShipping;
+        self.returnURLBlock = ^NSURL *() { return  nil; };
     }
     return self;
 }
@@ -92,47 +93,61 @@
     return _returnURL;
 }
 
+
+/**
+ This gets around the fact that you can't reference UIApplication in app extension
+ safe frameworks. This method is only available in non-extensions and sets up
+ some blocks that do the non-extension-safe work. These blocks can then be
+ safely referenced from other parts of the app (and will just be nil or do
+ nothing if the user never called here).
+ */
 - (void)setReturnURL:(nullable NSURL *)returnURL {
     _returnURL = returnURL;
-    WEAK(self);
-    self.sourceURLRedirectBlock = ^(STPAPIClient *apiClient, STPSource *source, UIViewController *presentingViewController, STPSourceCompletionBlock completion) {
-        STRONG(self);
-        STPRedirectContextCompletionBlock redirectCompletion = ^(NSString * _Nonnull sourceId, NSString * _Nonnull sourceClientSecret, NSError * _Nonnull redirectError) {
-            STRONG(self);
-            self.cancelSourceURLRedirectBlock = nil;
+    self.returnURLBlock = ^() {
+        return returnURL;
+    };
 
-            if (redirectError) {
-                completion(nil, redirectError);
+    if (!self.sourceURLRedirectBlock) {
+        WEAK(self);
+        self.sourceURLRedirectBlock = ^(STPAPIClient *apiClient, STPSource *source, UIViewController *presentingViewController, STPSourceCompletionBlock completion) {
+            STRONG(self);
+            STPRedirectContextCompletionBlock redirectCompletion = ^(NSString * _Nonnull sourceId, NSString * _Nonnull sourceClientSecret, NSError * _Nonnull redirectError) {
+                STRONG(self);
+                self.cancelSourceURLRedirectBlock = nil;
+
+                if (redirectError) {
+                    completion(nil, redirectError);
+                }
+                else {
+                    [apiClient startPollingSourceWithId:sourceId
+                                           clientSecret:sourceClientSecret
+                                                timeout:10 //TODO: Add this timeout as a property on STPConfiguration?
+                                             completion:^(STPSource * _Nullable polledSource, NSError * _Nullable pollerError) {
+                                                 completion(polledSource, pollerError);
+                                             }];
+
+                }
+            };
+
+            STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
+                                                                          completion:redirectCompletion];
+
+            self.cancelSourceURLRedirectBlock = ^ {
+                STRONG(self);
+                // Capturing context in this other block retains it until the block is cleared,
+                // which is done in both here and redirect completion
+                [context cancel];
+                self.cancelSourceURLRedirectBlock = nil;
+            };
+
+            if ([SFSafariViewController class] != nil) {
+                [context startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
             }
             else {
-                [apiClient startPollingSourceWithId:sourceId
-                                       clientSecret:sourceClientSecret
-                                            timeout:10 //TODO: Add this timeout as a property on STPConfiguration?
-                                         completion:^(STPSource * _Nullable polledSource, NSError * _Nullable pollerError) {
-                                             completion(polledSource, pollerError);
-                                         }];
-
+                [context startSafariAppRedirectFlow];
             }
         };
-
-        STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
-                                                                      completion:redirectCompletion];
-
-        self.cancelSourceURLRedirectBlock = ^ {
-            STRONG(self);
-            // Capturing context in this other block retains it until the block is cleared,
-            // which is done in both here and redirect completion
-            [context cancel];
-            self.cancelSourceURLRedirectBlock = nil;
-        };
-
-        if ([SFSafariViewController class] != nil) {
-            [context startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
-        }
-        else {
-            [context startSafariAppRedirectFlow];
-        }
-    };
+    }
 }
 
 @end

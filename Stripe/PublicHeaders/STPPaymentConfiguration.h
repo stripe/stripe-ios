@@ -104,8 +104,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic) BOOL smsAutofillDisabled;
 
-- (void)setReturnURL:(nullable NSURL *)returnURL NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions");
-- (nullable NSURL *)returnURL;
+
+/**
+ *  If you use payment methods which require redirect flows, this returnURL
+ *  must be set to a URL that will bring the user back into your app so they
+ *  can continue your checkout flow. It can be either a universal link or a 
+ *  native scheme.
+ *
+ *  To learn more about universal links, see https://developer.apple.com/library/content/documentation/General/Conceptual/AppSearch/UniversalLinks.html
+ *  To learn more about native url schemes, see https://developer.apple.com/library/content/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Inter-AppCommunication/Inter-AppCommunication.html#//apple_ref/doc/uid/TP40007072-CH6-SW10
+ */
+@property (nonatomic, nullable, copy) NSURL *returnURL  NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions");
 
 @end
 
