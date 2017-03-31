@@ -134,7 +134,9 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     NSCAssert(parameters != nil, @"'parameters' is required to create a token");
     NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
     NSDate *start = [NSDate date];
-    [[STPAnalyticsClient sharedClient] logTokenCreationAttemptWithConfiguration:self.configuration];
+    NSString *tokenType = [STPAnalyticsClient tokenTypeFromParameters:parameters];
+    [[STPAnalyticsClient sharedClient] logTokenCreationAttemptWithConfiguration:self.configuration
+                                                                      tokenType:tokenType];
     [STPAPIRequest<STPToken *> postWithAPIClient:self
                                         endpoint:tokenEndpoint
                                       parameters:parameters
