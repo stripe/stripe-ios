@@ -47,7 +47,7 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 /**
  *  STPAddress Contains an address as represented by the Stripe API.
  */
-@interface STPAddress : NSObject<STPAPIResponseDecodable>
+@interface STPAddress : NSObject<STPAPIResponseDecodable, NSCopying>
 
 /**
  *  The user's full name (e.g. "Jane Doe")

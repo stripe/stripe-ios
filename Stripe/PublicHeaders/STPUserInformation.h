@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The user's billing address. When set, the add card form will be filled with this address.
  *  The user will also have the option to fill their shipping address using this address.
  */
-@property(nonatomic, strong, nullable)STPAddress *billingAddress;
+@property(nonatomic, copy, nullable)STPAddress *billingAddress;
 
 /**
  *  The bank your customer uses for iDEAL payments. 
@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  your customer's order.
  *  https://stripe.com/docs/sources#best-practices
  */
-@property(nonatomic, copy, nullable)NSDictionary *metadata;
+@property(nonatomic, copy, nullable)NSDictionary<NSString *, NSString *>*metadata;
 
 @end
 
