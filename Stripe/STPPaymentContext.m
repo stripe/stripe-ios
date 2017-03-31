@@ -659,24 +659,35 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             STPPaymentMethodType *type = (STPPaymentMethodType *)self.selectedPaymentMethod;
 
             STPSourceInfoCompletionBlock completion = ^(STPSourceParams * _Nullable sourceParams) {
-                if (sourceParams) {
-                    [self.apiClient createSourceWithParams:sourceParams completion:^(STPSource * _Nullable source, NSError * _Nullable error) {
-                        if (source) {
-                            self.selectedPaymentMethod = source;
-                            self.state = STPPaymentContextStateNone;
-                            [self requestPayment];
-                        }
-                        else {
-                            [self didFinishWithStatus:STPPaymentStatusError
-                                                error:error ?: [NSError stp_genericConnectionError]];
-                        }
-                    }];
+                STPVoidBlock vcCompletion = ^() {
+                    if (sourceParams) {
+                        [self.apiClient createSourceWithParams:sourceParams completion:^(STPSource * _Nullable source, NSError * _Nullable error) {
+                            if (source) {
+                                self.selectedPaymentMethod = source;
+                                self.state = STPPaymentContextStateNone;
+                                [self requestPayment];
+                            }
+                            else {
+                                [self didFinishWithStatus:STPPaymentStatusError
+                                                    error:error ?: [NSError stp_genericConnectionError]];
+                            }
+                        }];
+                    }
+                    else {
+                        // User cancelled
+                        [self didFinishWithStatus:STPPaymentStatusUserCancellation
+                                            error:nil];
+                    }
+                };
+
+                if (self.hostViewController.presentedViewController) {
+                    [self.hostViewController dismissViewControllerAnimated:YES
+                                                                completion:vcCompletion];
                 }
                 else {
-                    // User cancelled
-                    [self didFinishWithStatus:STPPaymentStatusUserCancellation
-                                        error:nil];
+                    vcCompletion();
                 }
+
             };
 
             STPSourceInfoViewController *sourceInfoVC = [[STPSourceInfoViewController alloc] initWithSourceType:type.sourceType
