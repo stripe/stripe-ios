@@ -190,17 +190,23 @@ static NSString *const STPSDKVersion = @"10.0.1";
 @interface Stripe (STPURLCallbackHandlerAdditions)
 
 /**
- Call this method in your app delegate whenever you receive an openURL for
- a Stripe callback.
-
- For convenience, you can pass all URL's you receive in
- `application:openURL:options:` to this method first, and check the return value
- to easily determine whether it is a callback URL that Stripe will handle
- or if your app should process it normally.
-
- @param url The URL that you received in your app delegate
-
- @return YES if the URL is expected and will be handled by Stripe. NO otherwise.
+ *  Call this method in your app delegate whenever you receive an URL in your
+ *  app delegate for a Stripe callback.
+ *
+ *  For convenience, you can pass all URL's you receive in your app delegate
+ *  to this method first, and check the return value
+ *  to easily determine whether it is a callback URL that Stripe will handle
+ *  or if your app should process it normally.
+ *
+ *  If you are using a universal link URL, you will receive the callback in `application:continueUserActivity:restorationHandler:`
+ *  To learn more about universal links, see https://developer.apple.com/library/content/documentation/General/Conceptual/AppSearch/UniversalLinks.html
+ *
+ *  If you are using a native scheme URL, you will receive the callback in `application:openURL:options:`
+ *  To learn more about native url schemes, see https://developer.apple.com/library/content/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Inter-AppCommunication/Inter-AppCommunication.html#//apple_ref/doc/uid/TP40007072-CH6-SW10
+ *
+ *  @param url The URL that you received in your app delegate
+ *
+ *  @return YES if the URL is expected and will be handled by Stripe. NO otherwise.
  */
 + (BOOL)handleStripeURLCallbackWithURL:(NSURL *)url;
 
