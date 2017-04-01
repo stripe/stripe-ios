@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  An optional token used to create the source. When passed, token properties will override 
  *  source parameters.
  */
-@property (nonatomic, copy, nullable) NSDictionary<NSString *, id>*token;
+@property (nonatomic, copy, nullable) NSString *token;
 
 /**
  *  Whether this source should be reusable or not. `usage` may be "reusable" or "single_use".
