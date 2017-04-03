@@ -203,8 +203,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 }
 
 - (BOOL)containsRequiredSEPADebitFields {
-    return (self.line1.length > 0
-            && self.city.length > 0
+    return (self.city.length > 0
             && self.country.length > 0
             && [STPPostalCodeValidator stringIsValidSEPAPostalCode:self.postalCode
                                                        countryCode:self.country]);

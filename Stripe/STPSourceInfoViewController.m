@@ -16,6 +16,7 @@
 #import "STPInfoFooterView.h"
 #import "STPLocalizationUtils.h"
 #import "STPOptionTableViewCell.h"
+#import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentMethodType.h"
 #import "STPSectionHeaderView.h"
 #import "STPSelectorDataSource.h"
@@ -76,7 +77,10 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
         sourceParams.type = type;
         sourceParams.currency = @"eur";
         sourceParams.amount = @(amount);
-        // TODO: get returnURL from STPPaymentConfiguration
+        NSURL *returnURL = configuration.returnURLBlock();
+        if (returnURL) {
+            sourceParams.redirect = @{ @"return_url": returnURL.absoluteString };
+        }
         switch (type) {
             case STPSourceTypeBancontact: {
                 dataSource = [[STPBancontactSourceInfoDataSource alloc] initWithSourceParams:sourceParams

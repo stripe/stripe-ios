@@ -94,8 +94,7 @@
 }
 
 - (BOOL)sourceParams:(STPSourceParams *)sourceParams matchSEPAAddress:(STPAddress *)address {
-    return ([sourceParams.owner[@"address"][@"line1"] isEqualToString:address.line1] &&
-            [sourceParams.owner[@"address"][@"city"] isEqualToString:address.city] &&
+    return ([sourceParams.owner[@"address"][@"city"] isEqualToString:address.city] &&
             [sourceParams.owner[@"address"][@"country"] isEqualToString:address.country] &&
             [sourceParams.owner[@"address"][@"postal_code"] isEqualToString:address.postalCode]);
 }
