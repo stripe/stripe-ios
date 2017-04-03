@@ -252,5 +252,21 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
     return address;
 }
 
+#pragma mark NSCopying
+
+- (id)copyWithZone:(__unused NSZone *)zone {
+    STPAddress *copy = [self.class new];
+    copy.name = self.name;
+    copy.line1 = self.line1;
+    copy.line2 = self.line2;
+    copy.city = self.city;
+    copy.state = self.state;
+    copy.postalCode = self.postalCode;
+    copy.country = self.country;
+    copy.phone = self.phone;
+    copy.email = self.email;
+    return copy;
+}
+
 @end
 

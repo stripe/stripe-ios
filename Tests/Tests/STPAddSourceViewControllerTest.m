@@ -30,7 +30,8 @@
 
 @implementation STPAddSourceViewControllerTest
 
-- (STPAddSourceViewController *)buildAddSourceViewControllerWithType:(STPSourceType)type {
+- (STPAddSourceViewController *)buildAddSourceViewControllerWithType:(STPSourceType)type
+                                                            userInfo:(nullable STPUserInformation *)userInfo {
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     if (type == STPSourceTypeCard) {
         config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
@@ -39,21 +40,39 @@
     STPAddSourceViewController *vc = [[STPAddSourceViewController alloc] initWithSourceType:type
                                                                               configuration:config
                                                                                       theme:theme];
+    vc.prefilledInformation = userInfo;
     if (vc) {
         XCTAssertNotNil(vc.view);
     }
     return vc;
 }
 
+- (STPUserInformation *)buildUserInfoForCardTests {
+    STPUserInformation *info = [STPUserInformation new];
+    info.billingAddress = [STPFixtures address];
+    info.metadata = @{@"foo": @"bar"};
+    return info;
+}
+
+- (STPUserInformation *)buildUserInfoForSEPATests {
+    STPUserInformation *info = [STPUserInformation new];
+    info.billingAddress = [STPFixtures sepaAddress];
+    info.metadata = @{@"foo": @"bar"};
+    return info;
+}
+
 - (void)testInitWithValidSourceTypesNotNil {
-    STPAddSourceViewController *cardVC = [self buildAddSourceViewControllerWithType:STPSourceTypeCard];
+    STPAddSourceViewController *cardVC = [self buildAddSourceViewControllerWithType:STPSourceTypeCard
+                                                                           userInfo:nil];
     XCTAssertNotNil(cardVC);
-    STPAddSourceViewController *sepaVC = [self buildAddSourceViewControllerWithType:STPSourceTypeSEPADebit];
+    STPAddSourceViewController *sepaVC = [self buildAddSourceViewControllerWithType:STPSourceTypeSEPADebit
+                                                                           userInfo:nil];
     XCTAssertNotNil(sepaVC);
 }
 
 - (void)testInitWithInvalidSourceTypeReturnsNil {
-    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeBancontact];
+    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeBancontact
+                                                                        userInfo:nil];
     XCTAssertNil(sut);
 }
 
@@ -86,13 +105,13 @@
 #pragma mark - Card
 
 - (void)testCard_nextWithCreateSourceError {
-    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeCard];
+    STPUserInformation *info = [self buildUserInfoForCardTests];
+    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeCard
+                                                                        userInfo:info];
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     sut.apiClient = mockAPIClient;
     STPCardParams *cardParams = [STPFixtures cardParams];
     sut.cardCell.paymentField.cardParams = cardParams;
-    STPAddress *address = [STPFixtures address];
-    sut.addressViewModel.address = address;
 
     XCTestExpectation *exp = [self expectationWithDescription:@"createSource"];
     OCMStub([mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]])
@@ -102,7 +121,8 @@
         [invocation getArgument:&sourceParams atIndex:2];
         [invocation getArgument:&completion atIndex:3];
         XCTAssertTrue([self sourceParams:sourceParams matchCardParams:cardParams]);
-        XCTAssertTrue([self sourceParams:sourceParams matchBillingAddress:address]);
+        XCTAssertTrue([self sourceParams:sourceParams matchBillingAddress:info.billingAddress]);
+        XCTAssertEqualObjects(sourceParams.metadata, info.metadata);
         XCTAssertTrue(sut.loading);
         NSError *error = [NSError stp_genericFailedToParseResponseError];
         completion(nil, error);
@@ -118,15 +138,15 @@
 }
 
 - (void)testCard_nextWithCreateSourceSuccessAndDidCreateSourceError {
-    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeCard];
+    STPUserInformation *info = [self buildUserInfoForCardTests];
+    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeCard
+                                                                        userInfo:info];
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     id mockDelegate = OCMProtocolMock(@protocol(STPAddSourceViewControllerDelegate));
     sut.apiClient = mockAPIClient;
     sut.delegate = mockDelegate;
     STPCardParams *cardParams = [STPFixtures cardParams];
     sut.cardCell.paymentField.cardParams = cardParams;
-    STPAddress *address = [STPFixtures address];
-    sut.addressViewModel.address = address;
 
     STPSource *expectedSource = [STPFixtures cardSource];
     XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
@@ -137,7 +157,8 @@
         [invocation getArgument:&sourceParams atIndex:2];
         [invocation getArgument:&completion atIndex:3];
         XCTAssertTrue([self sourceParams:sourceParams matchCardParams:cardParams]);
-        XCTAssertTrue([self sourceParams:sourceParams matchBillingAddress:address]);
+        XCTAssertTrue([self sourceParams:sourceParams matchBillingAddress:info.billingAddress]);
+        XCTAssertEqualObjects(sourceParams.metadata, info.metadata);
         XCTAssertTrue(sut.loading);
         completion(expectedSource, nil);
         [createSourceExp fulfill];
@@ -166,15 +187,15 @@
 }
 
 - (void)testCard_nextWithCreateSourceSuccessAndDidCreateSourceSuccess {
-    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeCard];
+    STPUserInformation *info = [self buildUserInfoForCardTests];
+    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeCard
+                                                                        userInfo:info];
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     id mockDelegate = OCMProtocolMock(@protocol(STPAddSourceViewControllerDelegate));
     sut.apiClient = mockAPIClient;
     sut.delegate = mockDelegate;
     STPCardParams *cardParams = [STPFixtures cardParams];
     sut.cardCell.paymentField.cardParams = cardParams;
-    STPAddress *address = [STPFixtures address];
-    sut.addressViewModel.address = address;
 
     STPSource *expectedSource = [STPFixtures cardSource];
     XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
@@ -185,7 +206,8 @@
         [invocation getArgument:&sourceParams atIndex:2];
         [invocation getArgument:&completion atIndex:3];
         XCTAssertTrue([self sourceParams:sourceParams matchCardParams:cardParams]);
-        XCTAssertTrue([self sourceParams:sourceParams matchBillingAddress:address]);
+        XCTAssertTrue([self sourceParams:sourceParams matchBillingAddress:info.billingAddress]);
+        XCTAssertEqualObjects(sourceParams.metadata, info.metadata);
         XCTAssertTrue(sut.loading);
         completion(expectedSource, nil);
         [createSourceExp fulfill];
@@ -215,13 +237,13 @@
 #pragma mark - SEPA Debit
 
 - (void)testSEPA_nextWithCreateSourceError {
-    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeSEPADebit];
+    STPUserInformation *info = [self buildUserInfoForSEPATests];
+    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeSEPADebit
+                                                                        userInfo:info];
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     sut.apiClient = mockAPIClient;
-    sut.ibanCell.contents = @"GB82WEST12345698765432";
+    sut.ibanCell.contents = @"DE89370400440532013000";
     sut.nameCell.contents = @"Jenny Rosen";
-    STPAddress *address = [STPFixtures sepaAddress];
-    sut.addressViewModel.address = address;
 
     XCTestExpectation *exp = [self expectationWithDescription:@"createSource"];
     OCMStub([mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]])
@@ -232,7 +254,8 @@
         [invocation getArgument:&completion atIndex:3];
         XCTAssertEqualObjects(sourceParams.additionalAPIParameters[@"sepa_debit"][@"iban"], sut.ibanCell.contents);
         XCTAssertEqualObjects(sourceParams.owner[@"name"], sut.nameCell.contents);
-        XCTAssertTrue([self sourceParams:sourceParams matchSEPAAddress:address]);
+        XCTAssertTrue([self sourceParams:sourceParams matchSEPAAddress:info.billingAddress]);
+        XCTAssertEqualObjects(sourceParams.metadata, info.metadata);
         XCTAssertTrue(sut.loading);
         NSError *error = [NSError stp_genericFailedToParseResponseError];
         completion(nil, error);
@@ -248,15 +271,15 @@
 }
 
 - (void)testSEPA_nextWithCreateSourceSuccessAndDidCreateSourceError {
-    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeSEPADebit];
+    STPUserInformation *info = [self buildUserInfoForSEPATests];
+    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeSEPADebit
+                                                                        userInfo:info];
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     id mockDelegate = OCMProtocolMock(@protocol(STPAddSourceViewControllerDelegate));
     sut.apiClient = mockAPIClient;
     sut.delegate = mockDelegate;
-    sut.ibanCell.contents = @"GB82WEST12345698765432";
+    sut.ibanCell.contents = @"DE89370400440532013000";
     sut.nameCell.contents = @"Jenny Rosen";
-    STPAddress *address = [STPFixtures sepaAddress];
-    sut.addressViewModel.address = address;
 
     STPSource *expectedSource = [STPFixtures sepaDebitSource];
     XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
@@ -268,7 +291,8 @@
         [invocation getArgument:&completion atIndex:3];
         XCTAssertEqualObjects(sourceParams.additionalAPIParameters[@"sepa_debit"][@"iban"], sut.ibanCell.contents);
         XCTAssertEqualObjects(sourceParams.owner[@"name"], sut.nameCell.contents);
-        XCTAssertTrue([self sourceParams:sourceParams matchSEPAAddress:address]);
+        XCTAssertTrue([self sourceParams:sourceParams matchSEPAAddress:info.billingAddress]);
+        XCTAssertEqualObjects(sourceParams.metadata, info.metadata);
         XCTAssertTrue(sut.loading);
         completion(expectedSource, nil);
         [createSourceExp fulfill];
@@ -297,15 +321,15 @@
 }
 
 - (void)testSEPA_nextWithCreateSourceSuccessAndDidCreateSourceSuccess {
-    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeSEPADebit];
+    STPUserInformation *info = [self buildUserInfoForSEPATests];
+    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeSEPADebit
+                                                                        userInfo:info];
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     id mockDelegate = OCMProtocolMock(@protocol(STPAddSourceViewControllerDelegate));
     sut.apiClient = mockAPIClient;
     sut.delegate = mockDelegate;
-    sut.ibanCell.contents = @"GB82WEST12345698765432";
+    sut.ibanCell.contents = @"DE89370400440532013000";
     sut.nameCell.contents = @"Jenny Rosen";
-    STPAddress *address = [STPFixtures sepaAddress];
-    sut.addressViewModel.address = address;
 
     STPSource *expectedSource = [STPFixtures sepaDebitSource];
     XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
@@ -317,7 +341,8 @@
         [invocation getArgument:&completion atIndex:3];
         XCTAssertEqualObjects(sourceParams.additionalAPIParameters[@"sepa_debit"][@"iban"], sut.ibanCell.contents);
         XCTAssertEqualObjects(sourceParams.owner[@"name"], sut.nameCell.contents);
-        XCTAssertTrue([self sourceParams:sourceParams matchSEPAAddress:address]);
+        XCTAssertTrue([self sourceParams:sourceParams matchSEPAAddress:info.billingAddress]);
+        XCTAssertEqualObjects(sourceParams.metadata, info.metadata);
         XCTAssertTrue(sut.loading);
         completion(expectedSource, nil);
         [createSourceExp fulfill];
@@ -342,6 +367,18 @@
     [nextButton.target performSelector:nextButton.action withObject:nextButton];
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testSettingIBANUpdatesCountry {
+    STPUserInformation *info = [STPUserInformation new];
+    STPAddress *address = [STPAddress new];
+    address.country = @"DE";
+    info.billingAddress = address;
+    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeSEPADebit
+                                                                        userInfo:info];
+    XCTAssertEqualObjects(sut.addressViewModel.address.country, @"DE");
+    sut.ibanCell.contents = @"GB82WEST12345698765432";
+    XCTAssertEqualObjects(sut.addressViewModel.address.country, @"GB");
 }
 
 #pragma clang diagnostic pop
