@@ -23,7 +23,7 @@
     STPSource *source = [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"]];
 
     STPPaymentMethodTuple *tuple = [[STPPaymentMethodTuple alloc] initWithSavedPaymentMethods:@[card, source]
-                                                                        availablePaymentTypes:@[[STPPaymentMethodType creditCard],
+                                                                        availablePaymentTypes:@[[STPPaymentMethodType card],
                                                                                                 [STPPaymentMethodType giropay]]
                                                                         selectedPaymentMethod:source];
 
@@ -36,7 +36,7 @@
     STPSource *source = [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"]];
 
     STPPaymentMethodTuple *tuple = [[STPPaymentMethodTuple alloc] initWithSavedPaymentMethods:@[card, source]
-                                                                        availablePaymentTypes:@[[STPPaymentMethodType creditCard],
+                                                                        availablePaymentTypes:@[[STPPaymentMethodType card],
                                                                                                 [STPPaymentMethodType giropay]]
                                                                         selectedPaymentMethod:[STPPaymentMethodType giropay]];
 
@@ -49,7 +49,7 @@
     STPSource *source = [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"]];
 
     STPPaymentMethodTuple *tuple = [[STPPaymentMethodTuple alloc] initWithSavedPaymentMethods:@[card, source]
-                                                                        availablePaymentTypes:@[[STPPaymentMethodType creditCard],
+                                                                        availablePaymentTypes:@[[STPPaymentMethodType card],
                                                                                                 [STPPaymentMethodType giropay]]
                                                                         selectedPaymentMethod:[STPPaymentMethodType creditCard]];
 
@@ -62,7 +62,7 @@
     STPSource *source = [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"]];
 
     STPPaymentMethodTuple *tuple = [[STPPaymentMethodTuple alloc] initWithSavedPaymentMethods:@[card, source]
-                                                                        availablePaymentTypes:@[[STPPaymentMethodType creditCard],
+                                                                        availablePaymentTypes:@[[STPPaymentMethodType card],
                                                                                                 [STPPaymentMethodType giropay]]
                                                                         selectedPaymentMethod:[STPPaymentMethodType sofort]];
 
@@ -71,7 +71,7 @@
 
 - (void)testOnlyOneAvailableNotAllowedPaymentMethod {
     STPPaymentMethodTuple *tuple = [[STPPaymentMethodTuple alloc] initWithSavedPaymentMethods:nil
-                                                                        availablePaymentTypes:@[[STPPaymentMethodType creditCard]]
+                                                                        availablePaymentTypes:@[[STPPaymentMethodType card]]
                                                                         selectedPaymentMethod:nil];
 
     XCTAssertNil(tuple.selectedPaymentMethod);

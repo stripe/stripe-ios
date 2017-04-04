@@ -204,9 +204,9 @@
 + (STPPaymentMethodType *)paymentMethodTypeForSourceType:(STPSourceType)sourceType {
     switch (sourceType) {
         case STPSourceTypeCard:
-            return [STPPaymentMethodType creditCard];
+            return [STPPaymentMethodType card];
         case STPSourceTypeThreeDSecure:
-            return [STPPaymentMethodType creditCard];
+            return [STPPaymentMethodType card];
         case STPSourceTypeIDEAL:
             return [STPPaymentMethodType ideal];
         case STPSourceTypeSofort:

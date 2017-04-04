@@ -133,7 +133,7 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
 }
 
 + (nonnull NSString *)stp_cardErrorDeclinedUserMessage {
-    return STPLocalizedString(@"Your card was declined", @"Error when the card was declined by the credit card networks");
+    return STPLocalizedString(@"Your card was declined", @"Error when the card was declined by the card networks");
 }
 
 + (nonnull NSString *)stp_unexpectedErrorMessage {
@@ -141,7 +141,7 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
 }
 
 + (nonnull NSString *)stp_cardErrorProcessingErrorUserMessage {
-    return STPLocalizedString(@"There was an error processing your card -- try again in a few seconds", @"Error when there is a problem processing the credit card");
+    return STPLocalizedString(@"There was an error processing your card -- try again in a few seconds", @"Error when there is a problem processing the card");
 }
 
 @end

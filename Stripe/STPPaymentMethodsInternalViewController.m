@@ -129,8 +129,8 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
         // Disable SMS autofill if we already have a card on file
         config.ineligibleForSmsAutofill = (self.savedPaymentMethods.count > 0);
 
-        if ([paymentType isEqual:[STPPaymentMethodType creditCard]]
-            && !config.useSourcesForCreditCards) {
+        if ([paymentType isEqual:[STPPaymentMethodType card]]
+            && !config.useSourcesForCards) {
             // Go to Add Card VC
             STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config theme:self.theme];
             paymentCardViewController.delegate = self;

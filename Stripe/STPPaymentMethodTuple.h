@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  If there is only one payment method total, it will be automatically set as
  the selected one if it is allowed to be selected (but not if its a generic
- type that converts to source at selection like credit cards)
+ type that converts to source at selection like cards)
  */
 @property(nonatomic, nullable, readonly)id<STPPaymentMethod> selectedPaymentMethod;
 
