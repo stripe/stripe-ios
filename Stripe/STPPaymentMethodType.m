@@ -16,7 +16,7 @@
 
 /*
  Reusable payment methods types cannot be used directly at payment time
- (eg you cant pay with just "credit cards", it has to be a specific card.)
+ (eg you cant pay with just "cards", it has to be a specific card.)
 
  Single Use payment methods types are allowed to be payment methods types.
  When the user attempts payment with one of these, we go create the source and
@@ -39,7 +39,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"New Credit Card", @"Label for 'new credit card' payment method field") ;
+    return STPLocalizedString(@"New Card", @"Label for 'new card' payment method field") ;
 }
 
 - (BOOL)convertsToSourceAtSelection {
@@ -233,7 +233,7 @@
 
 @implementation STPPaymentMethodType
 
-+ (instancetype)creditCard {
++ (instancetype)card {
     return [STPPaymentMethodTypeCreditCard new];
 }
 

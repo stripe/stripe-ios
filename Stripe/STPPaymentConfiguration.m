@@ -42,7 +42,7 @@
     self = [super init];
     if (self) {
         _availablePaymentMethodTypesSet = [NSOrderedSet orderedSetWithArray:@[[STPPaymentMethodType applePay],
-                                                                              [STPPaymentMethodType creditCard]]];
+                                                                              [STPPaymentMethodType card]]];
         _requiredBillingAddressFields = STPBillingAddressFieldsNone;
         _requiredShippingAddressFields = PKAddressFieldNone;
         _companyName = [NSBundle stp_applicationName];

@@ -23,16 +23,16 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol STPPaymentMethod <NSObject>
 
 /**
- *  If this is a known, specific payment method, (eg an individual credit card
+ *  If this is a known, specific payment method, (eg an individual  card
  *  represented by `STPCard` or `STPSource`) this will give you the generic 
- *  payment method type (eg `[STPPaymentMethodType creditCard]`).
+ *  payment method type (eg `[STPPaymentMethodType card]`).
  * 
  *  If this is already a generic type, it will simply return self.
  *
  *  If you want to learn the generic type of an `STPPaymentMethodType` object,
  *  you can compare to the class methods on `STPPaymentMethodType`
- *  e.g. to check if the method is a credit card do
- *  `if ([myPaymentMethod.type isEqual:[STPPaymentMethodType creditCard]])`
+ *  e.g. to check if the method is a card do
+ *  `if ([myPaymentMethod.type isEqual:[STPPaymentMethodType card]])`
  *
  *  This may return nil for unknown source types, or source types that are not
  *  supported by the SDK's pre-built UI.

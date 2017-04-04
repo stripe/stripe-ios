@@ -33,14 +33,14 @@ class SettingsViewController: UITableViewController {
     }
 
     private var theme: Theme = .Default
-    private let allPaymentMethods = NSOrderedSet(arrayLiteral:STPPaymentMethodType.creditCard(),
+    private let allPaymentMethods = NSOrderedSet(arrayLiteral:STPPaymentMethodType.card(),
                                                  STPPaymentMethodType.applePay(),
                                                  STPPaymentMethodType.bancontact(),
                                                  STPPaymentMethodType.giropay(),
                                                  STPPaymentMethodType.ideal(),
                                                  STPPaymentMethodType.sepaDebit(),
                                                  STPPaymentMethodType.sofort())
-    private var availablePaymentMethods = Set<STPPaymentMethodType>(arrayLiteral: STPPaymentMethodType.creditCard(), STPPaymentMethodType.applePay())
+    private var availablePaymentMethods = Set<STPPaymentMethodType>(arrayLiteral: STPPaymentMethodType.card(), STPPaymentMethodType.applePay())
     private var requiredBillingAddressFields: RequiredBillingAddressFields = .None
     private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
     private var shippingType: ShippingType = .Shipping

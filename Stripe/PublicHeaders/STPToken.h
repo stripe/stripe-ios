@@ -35,7 +35,7 @@
 @property (nonatomic, readonly) BOOL livemode;
 
 /**
- *  The credit card details that were used to create the token. Will only be set if the token was created via a credit card or Apple Pay, otherwise it will be
+ *  The card details that were used to create the token. Will only be set if the token was created via a card or Apple Pay, otherwise it will be
  * nil.
  */
 @property (nonatomic, readonly, nullable) STPCard *card;

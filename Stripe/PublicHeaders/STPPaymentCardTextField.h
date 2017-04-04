@@ -259,7 +259,7 @@
 /**
  *  Convenience property for creating an STPCardParams from the currently entered information
  *  or programmatically setting the field's contents. For example, if you're using another library
- *  to scan your user's credit card with a camera, you can assemble that data into an STPCardParams
+ *  to scan your user's card with a camera, you can assemble that data into an STPCardParams
  *  object and set this property to that object to prefill the fields you've collected.
  */
 @property(nonatomic, strong, readwrite, nonnull) STPCardParams *cardParams;

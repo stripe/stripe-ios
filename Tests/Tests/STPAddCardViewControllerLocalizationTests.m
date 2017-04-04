@@ -40,7 +40,7 @@
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
     config.availablePaymentMethodTypes = @[[STPPaymentMethodType applePay],
-                                           [STPPaymentMethodType creditCard]];
+                                           [STPPaymentMethodType card]];
     config.smsAutofillDisabled = NO;
     config.shippingType = (delivery) ? STPShippingTypeDelivery : STPShippingTypeShipping;
 

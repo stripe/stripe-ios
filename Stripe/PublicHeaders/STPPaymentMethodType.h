@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)init NS_UNAVAILABLE;
 
-+ (instancetype)creditCard;
++ (instancetype)card;
 + (instancetype)applePay;
 + (instancetype)bancontact;
 + (instancetype)giropay;
