@@ -24,6 +24,7 @@
 @property (nonatomic, weak) UIButton *payButton;
 @property (nonatomic, weak) UILabel *waitingLabel;
 @property (nonatomic, weak) UIActivityIndicatorView *activityIndicator;
+@property (nonatomic) STPRedirectContext *redirectContext;
 @end
 
 @implementation SofortExampleViewController
@@ -98,7 +99,7 @@
             // In order to use STPRedirectContext, you'll need to set up
             // your app delegate to forward URLs to the Stripe SDK.
             // See `[Stripe handleStripeURLCallback:]`
-            STPRedirectContext *redirect = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
+            self.redirectContext = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
                 [[STPAPIClient sharedClient] startPollingSourceWithId:sourceID
                                                          clientSecret:clientSecret
                                                               timeout:10
@@ -107,18 +108,25 @@
                                                                if (error) {
                                                                    [self.delegate exampleViewController:self didFinishWithError:error];
                                                                } else {
-                                                                   if (source.status == STPSourceStatusConsumed ||
-                                                                       source.status == STPSourceStatusChargeable) {
-                                                                       [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-                                                                   } else if (source.status == STPSourceStatusFailed || source.status == STPSourceStatusCanceled) {
-                                                                       [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
-                                                                   } else {
-                                                                       [self.delegate exampleViewController:self didFinishWithMessage:@"Order received"];
+                                                                   switch (source.status) {
+                                                                       case STPSourceStatusChargeable:
+                                                                       case STPSourceStatusConsumed:
+                                                                           [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+                                                                           break;
+                                                                       case STPSourceStatusCanceled:
+                                                                           [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
+                                                                           break;
+                                                                       case STPSourceStatusPending:
+                                                                       case STPSourceStatusFailed:
+                                                                       case STPSourceStatusUnknown:
+                                                                           [self.delegate exampleViewController:self didFinishWithMessage:@"Order received"];
+                                                                           break;
                                                                    }
                                                                }
+                                                               self.redirectContext = nil;
                                                            }];
             }];
-            [redirect startSafariViewControllerRedirectFlowFromViewController:self];
+            [self.redirectContext startSafariViewControllerRedirectFlowFromViewController:self];
         }
     }];
 }
