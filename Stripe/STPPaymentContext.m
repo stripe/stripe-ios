@@ -489,7 +489,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             [self presentShippingViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
         }
         else if ([self.selectedPaymentMethod isKindOfClass:[STPCard class]]) {
-            [self requestCardPayment:(STPCard *)self.selectedPaymentMethod];
+            [self requestSynchronousSourcePayment:(STPCard *)self.selectedPaymentMethod];
         }
         else if ([self.selectedPaymentMethod isKindOfClass:[STPSource class]]) {
             [self requestSourcePayment:(STPSource *)self.selectedPaymentMethod];
@@ -511,22 +511,29 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
-- (void)requestCardPayment:(STPCard *)card {
-    if (self.state != STPPaymentContextStateNone) {
-        return;
+- (BOOL)threeDSecureShouldBeUsedForCard:(STPSource *)source {
+    if (source.type != STPSourceTypeCard
+        || source.cardDetails == nil
+        || self.configuration.returnURLBlock() == nil
+        ) {
+        return NO;
     }
 
-    self.state = STPPaymentContextStateRequestingPayment;
-    STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:card];
-    [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
-        stpDispatchToMainThreadIfNecessary(^{
-            if (error) {
-                [self didFinishWithStatus:STPPaymentStatusError error:error];
-            } else {
-                [self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+    switch (self.configuration.threeDSecureSupportType) {
+        case STPThreeDSecureSupportTypeStatic: {
+            switch (source.cardDetails.threeDSecure) {
+                case STPSourceCard3DSecureStatusRequired:
+                case STPSourceCard3DSecureStatusOptional:
+                    return YES;
+                case STPSourceCard3DSecureStatusNotSupported:
+                case STPSourceCard3DSecureStatusUnknown:
+                    return NO;
             }
-        });
-    }];
+        }
+            break;
+        case STPThreeDSecureSupportTypeDisabled:
+            return NO;
+    }
 }
 
 - (void)requestSourceFlowNonePayment:(STPSource *)source {
@@ -538,9 +545,27 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         return;
     }
 
-    self.state = STPPaymentContextStateRequestingPayment;
+    if (source.type == STPSourceTypeCard
+        && [self threeDSecureShouldBeUsedForCard:source]) {
+        // If 3DS should be attempted, create 3DS source instead
+        [self requestThreeDSSourceCreationAndPayment:source];
 
-     // TODO: if this is a card, check if 3DS should be used
+    }
+    else {
+        // Else Just pass this source along for charging on their backend
+        [self requestSynchronousSourcePayment:source];
+    }
+}
+
+- (void)requestSynchronousSourcePayment:(id<STPSourceProtocol>)source {
+    if (self.state != STPPaymentContextStateNone) {
+        return;
+    }
+
+    // This is an STPCard or a source with source flow = none.
+    // If its a card source we have already decided to not do 3ds
+
+    self.state = STPPaymentContextStateRequestingPayment;
 
     STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:source];
     [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
@@ -553,6 +578,88 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         });
     }];
 }
+
+- (void)requestThreeDSSourceCreationAndPayment:(STPSource *)cardSource {
+    if (self.state != STPPaymentContextStateNone) {
+        return;
+    }
+
+    // This is a card source we have decided needs to be 3DS'd
+
+    self.state = STPPaymentContextStateRequestingPayment;
+
+    // User checked out with a card source, we want to create a 3DS source
+    // and request payment with that if possible
+
+    BOOL threeDSecureRequired = (cardSource.cardDetails.threeDSecure == STPSourceCard3DSecureStatusRequired);
+
+    STPSourceParams *threeDSecureParams = [STPSourceParams threeDSecureParamsWithAmount:self.paymentAmount
+                                                                               currency:self.paymentCurrency
+                                                                              returnURL:self.configuration.returnURLBlock().absoluteString
+                                                                                   card:cardSource.stripeID];
+
+    STPSourceCompletionBlock threeDSSourceCompletion = ^(STPSource * _Nullable threeDSSource, NSError * _Nullable error) {
+        if (error
+            || threeDSSource == nil
+            || threeDSSource.flow != STPSourceFlowRedirect) {
+            if (!threeDSecureRequired
+                && error.domain == StripeDomain
+                && error.code == STPCardError
+                && [error.userInfo[STPCardErrorCodeKey] isEqualToString:STPPaymentMethodNotAvailable]) {
+                // This is a card that doesn't actually support 3ds and the card source didn't say 3ds was required
+                // So we can just return the original card source to be charged
+                self.state = STPPaymentContextStateNone;
+                [self requestSynchronousSourcePayment:cardSource];
+
+            }
+            else {
+                // Finish with an error
+                [self didFinishWithStatus:STPPaymentStatusError
+                                    error:error ?: [NSError stp_genericConnectionError]];
+            }
+        }
+        else {
+            // We successfully have a 3ds source
+            switch (threeDSSource.status) {
+                case STPSourceStatusPending:
+                    // Do 3DS redirect
+                    self.state = STPPaymentContextStateNone;
+                    [self requestSourceFlowRedirectPayment:threeDSSource];
+                    break;
+                case STPSourceStatusFailed:
+                    if (threeDSecureRequired) {
+                        // If required, fail with error
+                        [self didFinishWithStatus:STPPaymentStatusError
+                                            error:nil]; // TODO: Create STPPaymentContext error domain
+                    }
+                    else {
+                        // If not required, charge original source
+                        self.state = STPPaymentContextStateNone;
+                        [self requestSynchronousSourcePayment:cardSource];
+                    }
+
+                    break;
+                case STPSourceStatusConsumed:
+                case STPSourceStatusChargeable:
+                    // Success, we can just finish
+                    // (charge will happen on webhook)
+                    [self didFinishWithStatus:STPPaymentStatusSuccess
+                                        error:nil];
+                    break;
+                case STPSourceStatusUnknown:
+                case STPSourceStatusCanceled:
+                    [self didFinishWithStatus:STPPaymentStatusError
+                                        error:nil]; // TODO: Create STPPaymentContext error domain
+                    break;
+            }
+        }
+    };
+
+
+    [self.apiClient createSourceWithParams:threeDSecureParams
+                                completion:threeDSSourceCompletion];
+}
+
 
 - (void)requestSourceFlowRedirectPayment:(STPSource *)source {
     if (source.flow != STPSourceFlowRedirect) {
@@ -619,9 +726,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         return;
     }
 
-    // TODO:
     // Concrete source object, check flow to see if synchronous charge or webhook based
-    // If a card source, we need to check if the user wants us to 3DS or not
 
     switch (source.flow) {
         case STPSourceFlowNone:

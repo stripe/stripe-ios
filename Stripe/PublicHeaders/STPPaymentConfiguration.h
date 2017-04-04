@@ -14,6 +14,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+/**
+ Possible values for 3DS source support
+
+ - STPThreeDSecureSupportTypeDisabled: 3DS sources will  never be created
+ - STPThreeDSecureSupportTypeStatic: An attempt to create 3DS sources will be done for all card sources that may possibly support 3ds
+   A failure to create a 3DS source will result in the card source being passed through to your backend API adapter as normal.
+   If you want to forbid all non-3DS payments, you should not charge and throw an error when receiving any non-3DS card source there.
+ */
+typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {
+    STPThreeDSecureSupportTypeDisabled,
+    STPThreeDSecureSupportTypeStatic,
+};
+
 /**
  An `STPPaymentConfiguration` represents all the options you can set or change
  around a payment. 
@@ -115,6 +129,21 @@ NS_ASSUME_NONNULL_BEGIN
  *  To learn more about native url schemes, see https://developer.apple.com/library/content/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Inter-AppCommunication/Inter-AppCommunication.html#//apple_ref/doc/uid/TP40007072-CH6-SW10
  */
 @property (nonatomic, nullable, copy) NSURL *returnURL  NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions");
+
+
+/**
+ *  This setting controls whether or not STPPaymentContext will attempt to create
+ *  3D Secure source objects from card source objects when payment is requested.
+ *
+ *  See the enum for description of the possible values.
+ *
+ *  The default value is STPThreeDSecureSupportTypeDisabled.
+ *
+ *  @note To use a non-Disabled value here, your `useSourcesForCards` property 
+ *  must be set to YES and `returnURL` must be set to a valid URL that your 
+ *  app can receive callbacks from.
+ */
+@property (nonatomic, assign) STPThreeDSecureSupportType threeDSecureSupportType;
 
 @end
 

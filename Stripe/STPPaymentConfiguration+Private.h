@@ -33,6 +33,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) STPVoidBlock cancelSourceURLRedirectBlock;
 
+
+/**
+ This gets around accessing the returnURL property with app extension restrictions
+ 
+ returnURL is publicly only accessible in app extensions. For internal convenience,
+ this block is always available non-nil. It just returns nil if there is no 
+ returnURL set or else returns the returnURL
+
+ */
 @property (nonatomic, copy)  NSURL * _Nullable (^returnURLBlock)();
 
 @end
