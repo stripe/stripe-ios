@@ -51,7 +51,7 @@
     STPPaymentMethodTuple *tuple = [[STPPaymentMethodTuple alloc] initWithSavedPaymentMethods:@[card, source]
                                                                         availablePaymentTypes:@[[STPPaymentMethodType card],
                                                                                                 [STPPaymentMethodType giropay]]
-                                                                        selectedPaymentMethod:[STPPaymentMethodType creditCard]];
+                                                                        selectedPaymentMethod:[STPPaymentMethodType card]];
 
     XCTAssertNil(tuple.selectedPaymentMethod);
 }
