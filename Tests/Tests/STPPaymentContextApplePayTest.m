@@ -11,6 +11,7 @@
 #import "NSDecimalNumber+Stripe_Currency.h"
 #import "STPAPIClient.h"
 #import "STPFixtures.h"
+#import "STPMocks.h"
 #import "STPPaymentContext.h"
 
 @interface STPPaymentContext (Testing)
@@ -32,7 +33,7 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.appleMerchantIdentifier = @"fake_merchant_id";
     STPTheme *theme = [STPTheme defaultTheme];
-    id<STPBackendAPIAdapter> mockAPIAdapter = [STPFixtures staticAPIAdapter];
+    id<STPBackendAPIAdapter> mockAPIAdapter = [STPMocks staticAPIAdapter];
     STPPaymentContext *paymentContext = [[STPPaymentContext alloc] initWithAPIAdapter:mockAPIAdapter
                                                                         configuration:config
                                                                                 theme:theme];
