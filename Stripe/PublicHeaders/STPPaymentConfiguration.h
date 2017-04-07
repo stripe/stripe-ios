@@ -20,8 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 
  - STPThreeDSecureSupportTypeDisabled: 3DS sources will  never be created
  - STPThreeDSecureSupportTypeStatic: An attempt to create 3DS sources will be done for all card sources that may possibly support 3ds
-   A failure to create a 3DS source will result in the card source being passed through to your backend API adapter as normal.
-   If you want to forbid all non-3DS payments, you should not charge and throw an error when receiving any non-3DS card source there.
+   A failure to create a 3DS source for a card that does not require 3DS will result in the original card source being passed through 
+   to your backend API adapter for charging. If you want to forbid all non-3DS payments, you should not charge and throw an error 
+   when receiving any non-3DS card source to charge.
  */
 typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {
     STPThreeDSecureSupportTypeDisabled,
@@ -128,7 +129,7 @@ typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {
  *  To learn more about universal links, see https://developer.apple.com/library/content/documentation/General/Conceptual/AppSearch/UniversalLinks.html
  *  To learn more about native url schemes, see https://developer.apple.com/library/content/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Inter-AppCommunication/Inter-AppCommunication.html#//apple_ref/doc/uid/TP40007072-CH6-SW10
  */
-@property (nonatomic, nullable, copy) NSURL *returnURL  NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions");
+@property (nonatomic, nullable, copy) NSURL *returnURL NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions");
 
 
 /**
@@ -139,11 +140,20 @@ typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {
  *
  *  The default value is STPThreeDSecureSupportTypeDisabled.
  *
+ *  A successful 3DS source creation will result in a redirect, if necessary,
+ *  so the user can authorize the charge. The resulting source will not be 
+ *  passed back to your app for charging, you must set up your backend
+ *  to listen for source status change notifications and create the charge
+ *  when the source status becomes chargeable (the same as all other flow=redirect sources).
+ *  See: 
+ *   - https://stripe.com/docs/sources/three-d-secure
+ *   - https://stripe.com/docs/webhooks
+ *
  *  @note To use a non-Disabled value here, your `useSourcesForCards` property 
  *  must be set to YES and `returnURL` must be set to a valid URL that your 
  *  app can receive callbacks from.
  */
-@property (nonatomic, assign) STPThreeDSecureSupportType threeDSecureSupportType;
+@property (nonatomic, assign) STPThreeDSecureSupportType threeDSecureSupportType NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions");
 
 @end
 

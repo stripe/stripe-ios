@@ -238,6 +238,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  Inside this method, you should make a call to your backend API to make a charge with that Customer + source, and invoke the `completion` block when that is done.
  *
  *  @note This method is not called for redirect-based sources.
+ *  For sources that have flows other than "none", you must set up your backend
+ *  to listen for source status change webhook notifications and create the charge
+ *  when the source status becomes chargeable.
+ *  See:
+ *   - https://stripe.com/docs/webhooks
  *
  *  @param paymentContext The context that succeeded
  *  @param paymentResult  Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and make a charge to complete the payment, passing `paymentResult.source.stripeID` as the `source` parameter to the create charge method and your customer's ID as the `customer` parameter (see stripe.com/docs/api#charge_create for more info). Once that's done call the `completion` block with any error that occurred (or none, if the charge succeeded). @see STPPaymentResult.h

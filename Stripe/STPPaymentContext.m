@@ -519,7 +519,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         return NO;
     }
 
-    switch (self.configuration.threeDSecureSupportType) {
+    switch (self.configuration.threeDSecureSupportTypeBlock()) {
         case STPThreeDSecureSupportTypeStatic: {
             switch (source.cardDetails.threeDSecure) {
                 case STPSourceCard3DSecureStatusRequired:
@@ -584,12 +584,27 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         return;
     }
 
-    // This is a card source we have decided needs to be 3DS'd
-
     self.state = STPPaymentContextStateRequestingPayment;
 
-    // User checked out with a card source, we want to create a 3DS source
-    // and request payment with that if possible
+    /*
+     This is a card source we have decided needs to be 3DS'd.
+     User checked out with a card source, we want to create a 3DS source
+     and request payment with that if possible
+     
+     At this point we should only be receiving card sources that have
+     three_d_secure types of required or optional (not_supported are filtered earlier)
+
+     Logic should be:
+        Try to create 3DS source from the card source.
+        If it could not be created...
+            If three_d_secure was optional and error code is `payment_method_not_available`, then fallback to synchronous charge of original card source
+            Else finish with STPPaymentStatusError
+        If 3DS source was created successfully, check its status
+            If pending, perform redirect flow source as normal
+            If chargeable, no further action required, return STPPaymentStatusSuccess (payment happens on webhook)
+            If failed, return Error if type was required, or fallback to charging original card source if type was optional
+
+     */
 
     BOOL threeDSecureRequired = (cardSource.cardDetails.threeDSecure == STPSourceCard3DSecureStatusRequired);
 

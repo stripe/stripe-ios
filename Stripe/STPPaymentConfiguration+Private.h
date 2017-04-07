@@ -44,6 +44,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy)  NSURL * _Nullable (^returnURLBlock)();
 
+/**
+ This gets around accessing the threeDSecureSupportType property with app extension restrictions
+
+ Same logic as returnURLBlock.
+
+ */
+@property (nonatomic, copy)  STPThreeDSecureSupportType (^threeDSecureSupportTypeBlock)();
+
 @end
 
 NS_ASSUME_NONNULL_END
