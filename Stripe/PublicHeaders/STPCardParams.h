@@ -13,7 +13,7 @@
 #endif
 
 /**
- *  Representation of a user's credit card details. You can assemble these with information that your user enters and
+ *  Representation of a user's card details. You can assemble these with information that your user enters and
  *  then create Stripe tokens with them using an STPAPIClient. @see https://stripe.com/docs/api#cards
  */
 @interface STPCardParams : NSObject<STPFormEncodable>

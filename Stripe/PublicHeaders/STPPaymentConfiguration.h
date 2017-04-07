@@ -38,13 +38,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  If YES, STPPaymentContext will generate STPSource objects when creating
- *  new credit cards. Otherwise it will generate STPCard objects.
+ *  new cards. Otherwise it will generate STPCard objects.
  *
  *  The default value is NO
  *
  *  @see https://stripe.com/docs/sources
  */
-@property (nonatomic) BOOL useSourcesForCreditCards;
+@property (nonatomic) BOOL useSourcesForCards;
 
 /**
  *  An array of payment method type objects that represents the list of

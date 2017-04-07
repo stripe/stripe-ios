@@ -151,7 +151,7 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
     UIImage *image;
     if (self.sourceType == STPSourceTypeCard) {
         self.addressViewModel.previousField = cardCell;
-        self.firstSectionHeaderView.title = STPLocalizedString(@"Card", @"Title for credit card number entry field");
+        self.firstSectionHeaderView.title = STPLocalizedString(@"Card", @"Title for card number entry field");
         image = [STPImageLibrary largeCardFrontImage];
     } else if (self.sourceType == STPSourceTypeSEPADebit) {
         self.addressViewModel.previousField = ibanCell;
@@ -271,6 +271,9 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
                                                      city:address.city
                                                postalCode:address.postalCode
                                                   country:address.country];
+    }
+    if (self.prefilledInformation.metadata) {
+        params.metadata = self.prefilledInformation.metadata;
     }
     [self.apiClient createSourceWithParams:params completion:^(STPSource *source, NSError *sourceError) {
         if (sourceError) {

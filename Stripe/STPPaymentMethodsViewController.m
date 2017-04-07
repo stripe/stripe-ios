@@ -113,8 +113,8 @@
 
             STPPaymentMethodType *paymentType = [tuple.availablePaymentTypes firstObject];
 
-            if ([paymentType isEqual:[STPPaymentMethodType creditCard]]
-                && !self.configuration.useSourcesForCreditCards) {
+            if ([paymentType isEqual:[STPPaymentMethodType card]]
+                && !self.configuration.useSourcesForCards) {
                 STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
                 addCardViewController.delegate = self;
                 addCardViewController.prefilledInformation = self.prefilledInformation;

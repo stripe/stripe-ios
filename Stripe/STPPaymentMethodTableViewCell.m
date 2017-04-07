@@ -47,7 +47,7 @@
 
 - (NSAttributedString *)buildAttributedStringForPaymentMethod:(id<STPPaymentMethod>)paymentMethod
                                                      selected:(BOOL)selected {
-    if ([paymentMethod.paymentMethodType isEqual:[STPPaymentMethodType creditCard]]) {
+    if ([paymentMethod.paymentMethodType isEqual:[STPPaymentMethodType card]]) {
         NSString *last4 = nil;
         NSString *cardBrand = nil;
 

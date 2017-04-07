@@ -464,6 +464,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 #pragma mark - Request Payment
 
+
 - (void)requestPayment {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     WEAK(self);
@@ -484,237 +485,20 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             [self presentPaymentMethodsViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
         }
         else if (self.configuration.requiredShippingAddressFields != STPBillingAddressFieldsNone &&
-                 !self.shippingAddress)
-        {
+                 !self.shippingAddress) {
             [self presentShippingViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
         }
         else if ([self.selectedPaymentMethod isKindOfClass:[STPCard class]]) {
-            self.state = STPPaymentContextStateRequestingPayment;
-            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(STPCard *)self.selectedPaymentMethod];
-            [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
-                stpDispatchToMainThreadIfNecessary(^{
-                    if (error) {
-                        [self didFinishWithStatus:STPPaymentStatusError error:error];
-                    } else {
-                        [self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
-                    }
-                });
-            }];
+            [self requestCardPayment:(STPCard *)self.selectedPaymentMethod];
         }
         else if ([self.selectedPaymentMethod isKindOfClass:[STPSource class]]) {
-            // TODO:
-            // Concrete source object, check flow to see if synchronous charge or webhook based
-            // If a card source, we need to check if the user wants us to 3DS or not
-
-            self.state = STPPaymentContextStateRequestingPayment;
-
-            STPSource *source = (STPSource *)self.selectedPaymentMethod;
-
-            switch (source.flow) {
-                case STPSourceFlowNone: {
-                    // TODO: if this is a card, check if 3DS should be used
-                    STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:source];
-                    [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
-                        stpDispatchToMainThreadIfNecessary(^{
-                            if (error) {
-                                [self didFinishWithStatus:STPPaymentStatusError error:error];
-                            } else {
-                                [self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
-                            }
-                        });
-                    }];
-
-                }
-                    break;
-                case STPSourceFlowRedirect: {
-
-                    STPSourceCompletionBlock onRedirectCompletion = ^(STPSource *finishedSource, NSError *error) {
-                        stpDispatchToMainThreadIfNecessary(^{
-                            if (error) {
-                                [self didFinishWithStatus:STPPaymentStatusError error:error];
-                            } else {
-                                switch (finishedSource.status) {
-                                    case STPSourceStatusChargeable:
-                                    case STPSourceStatusConsumed:
-                                        [self didFinishWithStatus:STPPaymentStatusSuccess
-                                                            error:nil];
-                                        break;
-                                    case STPSourceStatusPending:
-                                        [self didFinishWithStatus:STPPaymentStatusPending
-                                                            error:nil];
-                                        break;
-                                    case STPSourceStatusFailed:
-                                        /*
-                                         Source status failed is a failure because
-                                         the user did not do the redirect action and
-                                         so is treated as a user cancel
-                                         */
-                                        [self didFinishWithStatus:STPPaymentStatusUserCancellation
-                                                            error:nil];
-                                        break;
-                                    case STPSourceStatusCanceled:
-                                        /*
-                                         Source status canceled is a failure because
-                                         the merchant did not charge the source quickly enough
-                                         and it expired, and so is an error.
-                                         */
-                                        [self didFinishWithStatus:STPPaymentStatusError
-                                                            error:[NSError stp_genericFailedToParseResponseError]];
-                                        break;
-                                    case STPSourceStatusUnknown:
-                                        [self didFinishWithStatus:STPPaymentStatusError
-                                                            error:[NSError stp_genericFailedToParseResponseError]];
-                                        break;
-                                }
-                            }
-                        });
-                    };
-
-                    self.configuration.sourceURLRedirectBlock(self.apiClient,
-                                                              source,
-                                                              self.hostViewController,
-                                                              onRedirectCompletion);
-                }
-                    break;
-                case STPSourceFlowReceiver:
-                case STPSourceFlowCodeVerification:
-                case STPSourceFlowUnknown:
-                {
-                    // We don't support this type
-                    [self didFinishWithStatus:STPPaymentStatusError
-                                        error:[NSError stp_genericFailedToParseResponseError]];
-                }
-                    break;
-            }
+            [self requestSourcePayment:(STPSource *)self.selectedPaymentMethod];
         }
         else if ([self.selectedPaymentMethod isEqual:[STPPaymentMethodType applePay]]) {
-            self.state = STPPaymentContextStateRequestingPayment;
-            PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
-            STPShippingAddressSelectionBlock shippingAddressHandler = ^(STPAddress *shippingAddress, STPShippingAddressValidationBlock completion) {
-                // Apple Pay always returns a partial address here, so we won't
-                // update self.shippingAddress or self.shippingMethods
-                if ([self.delegate respondsToSelector:@selector(paymentContext:didUpdateShippingAddress:completion:)]) {
-                    [self.delegate paymentContext:self didUpdateShippingAddress:shippingAddress completion:^(STPShippingStatus status, __unused NSError *shippingValidationError, NSArray<PKShippingMethod *> *shippingMethods, __unused PKShippingMethod *selectedMethod) {
-                        completion(status, shippingMethods, self.paymentSummaryItems);
-                    }];
-                }
-                else {
-                    completion(STPShippingStatusValid, self.shippingMethods, self.paymentSummaryItems);
-                }
-            };
-            STPShippingMethodSelectionBlock shippingMethodHandler = ^(PKShippingMethod *shippingMethod, STPPaymentSummaryItemCompletionBlock completion) {
-                self.selectedShippingMethod = shippingMethod;
-                [self.delegate paymentContextDidChange:self];
-                completion(self.paymentSummaryItems);
-            };
-            STPPaymentAuthorizationBlock paymentHandler = ^(PKPayment *payment) {
-                self.selectedShippingMethod = payment.shippingMethod;
-                self.shippingAddress = [[STPAddress alloc] initWithABRecord:payment.shippingAddress];
-                [self.delegate paymentContextDidChange:self];
-            };
-            STPApplePayTokenHandlerBlock applePayTokenHandler = ^(STPToken *token, STPErrorBlock tokenCompletion) {
-                stpDispatchToMainThreadIfNecessary(^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidBeginNotification object:self];
-                });
-                [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *tokenError) {
-                    stpDispatchToMainThreadIfNecessary(^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidEndNotification object:self];
-                        if (tokenError) {
-                            tokenCompletion(tokenError);
-                        } else {
-                            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token.card];
-                            [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
-                                // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
-                                if (error) {
-                                    tokenCompletion(error);
-                                } else {
-                                    tokenCompletion(nil);
-                                }
-                            }];
-                        }
-                    });
-                }];
-            };
-            PKPaymentAuthorizationViewController *paymentAuthVC;
-            paymentAuthVC = [PKPaymentAuthorizationViewController
-                             stp_controllerWithPaymentRequest:paymentRequest
-                             apiClient:self.apiClient
-                             onShippingAddressSelection:shippingAddressHandler
-                             onShippingMethodSelection:shippingMethodHandler
-                             onPaymentAuthorization:paymentHandler
-                             onTokenCreation:applePayTokenHandler
-                             onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
-                                 [self.hostViewController dismissViewControllerAnimated:YES completion:^{
-                                     [self didFinishWithStatus:status
-                                                         error:error];
-                                 }];
-                             }];
-            [self.hostViewController presentViewController:paymentAuthVC
-                                                  animated:YES
-                                                completion:nil];
+            [self requestApplePayPayment];
         }
         else if ([self.selectedPaymentMethod isKindOfClass:[STPPaymentMethodType class]]) {
-            // This is a non-concrete method (eg just a type they want to use)
-            // Need to convert to an actual source and then re-call requestPayment
-            STPPaymentMethodType *type = (STPPaymentMethodType *)self.selectedPaymentMethod;
-
-            STPSourceInfoCompletionBlock completion = ^(STPSourceParams * _Nullable sourceParams) {
-                STPVoidBlock vcCompletion = ^() {
-                    if (sourceParams) {
-                        [self.apiClient createSourceWithParams:sourceParams completion:^(STPSource * _Nullable source, NSError * _Nullable error) {
-                            if (source) {
-                                self.selectedPaymentMethod = source;
-                                self.state = STPPaymentContextStateNone;
-                                [self requestPayment];
-                            }
-                            else {
-                                [self didFinishWithStatus:STPPaymentStatusError
-                                                    error:error ?: [NSError stp_genericConnectionError]];
-                            }
-                        }];
-                    }
-                    else {
-                        // User cancelled
-                        [self didFinishWithStatus:STPPaymentStatusUserCancellation
-                                            error:nil];
-                    }
-                };
-
-                if (self.hostViewController.presentedViewController) {
-                    [self.hostViewController dismissViewControllerAnimated:YES
-                                                                completion:vcCompletion];
-                }
-                else {
-                    vcCompletion();
-                }
-
-            };
-
-            STPSourceInfoViewController *sourceInfoVC = [[STPSourceInfoViewController alloc] initWithSourceType:type.sourceType
-                                                                                                         amount:self.paymentAmount
-                                                                                                  configuration:self.configuration
-                                                                                           prefilledInformation:self.prefilledInformation
-                                                                                                          theme:self.theme
-                                                                                                     completion:completion];
-
-            if (sourceInfoVC) {
-                self.state = STPPaymentContextStateRequestingPayment;
-
-                if (sourceInfoVC.completeSourceParams) {
-                    completion(sourceInfoVC.completeSourceParams);
-                }
-                else {
-                    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:sourceInfoVC];
-                    navigationController.navigationBar.stp_theme = self.theme;
-                    navigationController.modalPresentationStyle = self.modalPresentationStyle;
-                    [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
-                }
-            }
-            else {
-                // Unsupported source type
-                // TODO: Add STPPaymentContext error domain and fill this in
-                [self didFinishWithStatus:STPPaymentStatusError error:nil];
-            }
+            [self requestAbstractPaymentMethodTypePayment:(STPPaymentMethodType *)self.selectedPaymentMethod];
         }
         else {
             // Unsupported payment method
@@ -727,6 +511,275 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
+- (void)requestCardPayment:(STPCard *)card {
+    if (self.state != STPPaymentContextStateNone) {
+        return;
+    }
+
+    self.state = STPPaymentContextStateRequestingPayment;
+    STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:card];
+    [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
+        stpDispatchToMainThreadIfNecessary(^{
+            if (error) {
+                [self didFinishWithStatus:STPPaymentStatusError error:error];
+            } else {
+                [self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+            }
+        });
+    }];
+}
+
+- (void)requestSourceFlowNonePayment:(STPSource *)source {
+    if (source.flow != STPSourceFlowNone) {
+        return;
+    }
+
+    if (self.state != STPPaymentContextStateNone) {
+        return;
+    }
+
+    self.state = STPPaymentContextStateRequestingPayment;
+
+     // TODO: if this is a card, check if 3DS should be used
+
+    STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:source];
+    [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
+        stpDispatchToMainThreadIfNecessary(^{
+            if (error) {
+                [self didFinishWithStatus:STPPaymentStatusError error:error];
+            } else {
+                [self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+            }
+        });
+    }];
+}
+
+- (void)requestSourceFlowRedirectPayment:(STPSource *)source {
+    if (source.flow != STPSourceFlowRedirect) {
+        return;
+    }
+
+    if (self.state != STPPaymentContextStateNone) {
+        return;
+    }
+
+    self.state = STPPaymentContextStateRequestingPayment;
+
+    STPSourceCompletionBlock onRedirectCompletion = ^(STPSource *finishedSource, NSError *error) {
+        stpDispatchToMainThreadIfNecessary(^{
+            if (error) {
+                [self didFinishWithStatus:STPPaymentStatusError error:error];
+            } else {
+                switch (finishedSource.status) {
+                    case STPSourceStatusChargeable:
+                    case STPSourceStatusConsumed:
+                        [self didFinishWithStatus:STPPaymentStatusSuccess
+                                            error:nil];
+                        break;
+                    case STPSourceStatusPending:
+                        [self didFinishWithStatus:STPPaymentStatusPending
+                                            error:nil];
+                        break;
+                    case STPSourceStatusFailed:
+                        /*
+                         Source status failed is a failure because
+                         the user did not do the redirect action and
+                         so is treated as a user cancel
+                         */
+                        [self didFinishWithStatus:STPPaymentStatusUserCancellation
+                                            error:nil];
+                        break;
+                    case STPSourceStatusCanceled:
+                        /*
+                         Source status canceled is a failure because
+                         the merchant did not charge the source quickly enough
+                         and it expired, and so is an error.
+                         */
+                        [self didFinishWithStatus:STPPaymentStatusError
+                                            error:[NSError stp_genericFailedToParseResponseError]];
+                        break;
+                    case STPSourceStatusUnknown:
+                        [self didFinishWithStatus:STPPaymentStatusError
+                                            error:[NSError stp_genericFailedToParseResponseError]];
+                        break;
+                }
+            }
+        });
+    };
+
+    self.configuration.sourceURLRedirectBlock(self.apiClient,
+                                              source,
+                                              self.hostViewController,
+                                              onRedirectCompletion);
+
+}
+
+- (void)requestSourcePayment:(STPSource *)source {
+    if (self.state != STPPaymentContextStateNone) {
+        return;
+    }
+
+    // TODO:
+    // Concrete source object, check flow to see if synchronous charge or webhook based
+    // If a card source, we need to check if the user wants us to 3DS or not
+
+    switch (source.flow) {
+        case STPSourceFlowNone:
+            [self requestSourceFlowNonePayment:source];
+            break;
+        case STPSourceFlowRedirect:
+            [self requestSourceFlowRedirectPayment:source];
+            break;
+        case STPSourceFlowReceiver:
+        case STPSourceFlowCodeVerification:
+        case STPSourceFlowUnknown:
+            // We don't support this type
+            [self didFinishWithStatus:STPPaymentStatusError
+                                error:[NSError stp_genericFailedToParseResponseError]];
+            break;
+    }
+}
+
+- (void)requestApplePayPayment {
+    if (self.state != STPPaymentContextStateNone) {
+        return;
+    }
+
+    self.state = STPPaymentContextStateRequestingPayment;
+    PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
+    STPShippingAddressSelectionBlock shippingAddressHandler = ^(STPAddress *shippingAddress, STPShippingAddressValidationBlock completion) {
+        // Apple Pay always returns a partial address here, so we won't
+        // update self.shippingAddress or self.shippingMethods
+        if ([self.delegate respondsToSelector:@selector(paymentContext:didUpdateShippingAddress:completion:)]) {
+            [self.delegate paymentContext:self didUpdateShippingAddress:shippingAddress completion:^(STPShippingStatus status, __unused NSError *shippingValidationError, NSArray<PKShippingMethod *> *shippingMethods, __unused PKShippingMethod *selectedMethod) {
+                completion(status, shippingMethods, self.paymentSummaryItems);
+            }];
+        }
+        else {
+            completion(STPShippingStatusValid, self.shippingMethods, self.paymentSummaryItems);
+        }
+    };
+    STPShippingMethodSelectionBlock shippingMethodHandler = ^(PKShippingMethod *shippingMethod, STPPaymentSummaryItemCompletionBlock completion) {
+        self.selectedShippingMethod = shippingMethod;
+        [self.delegate paymentContextDidChange:self];
+        completion(self.paymentSummaryItems);
+    };
+    STPPaymentAuthorizationBlock paymentHandler = ^(PKPayment *payment) {
+        self.selectedShippingMethod = payment.shippingMethod;
+        self.shippingAddress = [[STPAddress alloc] initWithABRecord:payment.shippingAddress];
+        [self.delegate paymentContextDidChange:self];
+    };
+    STPApplePayTokenHandlerBlock applePayTokenHandler = ^(STPToken *token, STPErrorBlock tokenCompletion) {
+        stpDispatchToMainThreadIfNecessary(^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidBeginNotification object:self];
+        });
+        [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *tokenError) {
+            stpDispatchToMainThreadIfNecessary(^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:STPNetworkActivityDidEndNotification object:self];
+                if (tokenError) {
+                    tokenCompletion(tokenError);
+                } else {
+                    STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token.card];
+                    [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
+                        // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
+                        if (error) {
+                            tokenCompletion(error);
+                        } else {
+                            tokenCompletion(nil);
+                        }
+                    }];
+                }
+            });
+        }];
+    };
+    PKPaymentAuthorizationViewController *paymentAuthVC;
+    paymentAuthVC = [PKPaymentAuthorizationViewController
+                     stp_controllerWithPaymentRequest:paymentRequest
+                     apiClient:self.apiClient
+                     onShippingAddressSelection:shippingAddressHandler
+                     onShippingMethodSelection:shippingMethodHandler
+                     onPaymentAuthorization:paymentHandler
+                     onTokenCreation:applePayTokenHandler
+                     onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
+                         [self.hostViewController dismissViewControllerAnimated:YES completion:^{
+                             [self didFinishWithStatus:status
+                                                 error:error];
+                         }];
+                     }];
+    [self.hostViewController presentViewController:paymentAuthVC
+                                          animated:YES
+                                        completion:nil];
+}
+
+- (void)requestAbstractPaymentMethodTypePayment:(STPPaymentMethodType *)type {
+    // This is a non-concrete method (eg just a type they want to use)
+    // Need to convert to an actual source and then re-call requestPayment
+
+    // We currently only support this for single use sources
+    // Reusable types should be converted to concrete sources before reaching here
+    // Apple pay is handled separately as it is a special case
+
+    STPSourceInfoCompletionBlock completion = ^(STPSourceParams * _Nullable sourceParams) {
+        STPVoidBlock vcCompletion = ^() {
+            if (sourceParams) {
+                if (self.prefilledInformation.metadata) {
+                    sourceParams.metadata = self.prefilledInformation.metadata;
+                }
+                [self.apiClient createSourceWithParams:sourceParams completion:^(STPSource * _Nullable source, NSError * _Nullable error) {
+                    if (source) {
+                        self.state = STPPaymentContextStateNone;
+                        [self requestSourcePayment:source];
+                    }
+                    else {
+                        [self didFinishWithStatus:STPPaymentStatusError
+                                            error:error ?: [NSError stp_genericConnectionError]];
+                    }
+                }];
+            }
+            else {
+                // User cancelled
+                [self didFinishWithStatus:STPPaymentStatusUserCancellation
+                                    error:nil];
+            }
+        };
+
+        if (self.hostViewController.presentedViewController) {
+            [self.hostViewController dismissViewControllerAnimated:YES
+                                                        completion:vcCompletion];
+        }
+        else {
+            vcCompletion();
+        }
+
+    };
+
+    STPSourceInfoViewController *sourceInfoVC = [[STPSourceInfoViewController alloc] initWithSourceType:type.sourceType
+                                                                                                 amount:self.paymentAmount
+                                                                                          configuration:self.configuration
+                                                                                   prefilledInformation:self.prefilledInformation
+                                                                                                  theme:self.theme
+                                                                                             completion:completion];
+
+    if (sourceInfoVC) {
+        self.state = STPPaymentContextStateRequestingPayment;
+
+        if (sourceInfoVC.completeSourceParams) {
+            completion(sourceInfoVC.completeSourceParams);
+        }
+        else {
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:sourceInfoVC];
+            navigationController.navigationBar.stp_theme = self.theme;
+            navigationController.modalPresentationStyle = self.modalPresentationStyle;
+            [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
+        }
+    }
+    else {
+        // Unsupported source type
+        // TODO: Add STPPaymentContext error domain and fill this in
+        [self didFinishWithStatus:STPPaymentStatusError error:nil];
+    }
+}
+
 - (void)didFinishWithStatus:(STPPaymentStatus)status
                       error:(nullable NSError *)error {
     self.state = STPPaymentContextStateNone;
@@ -734,6 +787,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
               didFinishWithStatus:status
                             error:error];
 }
+
+#pragma mark - Apple Pay -
 
 - (PKPaymentRequest *)buildPaymentRequest {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
