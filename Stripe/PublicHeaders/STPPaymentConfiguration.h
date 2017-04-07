@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  - STPThreeDSecureSupportTypeDisabled: 3DS sources will  never be created
  - STPThreeDSecureSupportTypeStatic: An attempt to create 3DS sources will be done for all card sources that may possibly support 3ds
    A failure to create a 3DS source for a card that does not require 3DS will result in the original card source being passed through 
-   to your backend API adapter for charging. If you want to forbid all non-3DS payments, you should not charge and throw an error 
+   to your backend API adapter for charging. If you want to forbid all non-3DS payments, you should not charge and throw an error
    when receiving any non-3DS card source to charge.
  */
 typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {

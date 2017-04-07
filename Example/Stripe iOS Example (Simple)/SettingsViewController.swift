@@ -16,6 +16,7 @@ struct Settings {
     let requiredShippingAddressFields: PKAddressField
     let shippingType: STPShippingType
     let smsAutofillEnabled: Bool
+    let threeDSSupportType: STPThreeDSecureSupportType
 }
 
 class SettingsViewController: UITableViewController {
@@ -29,7 +30,8 @@ class SettingsViewController: UITableViewController {
                         requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
                         requiredShippingAddressFields: self.requiredShippingAddressFields.pkAddressFields,
                         shippingType: self.shippingType.stpShippingType,
-                        smsAutofillEnabled: self.smsAutofill.enabled)
+                        smsAutofillEnabled: self.smsAutofill.enabled,
+                        threeDSSupportType: self.threeDSSupportType.stpThreeDSType)
     }
 
     private var theme: Theme = .Default
@@ -42,9 +44,10 @@ class SettingsViewController: UITableViewController {
                                                  STPPaymentMethodType.sofort())
     private var availablePaymentMethods = Set<STPPaymentMethodType>(arrayLiteral: STPPaymentMethodType.card(), STPPaymentMethodType.applePay())
     private var requiredBillingAddressFields: RequiredBillingAddressFields = .None
-    private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
+    private var requiredShippingAddressFields: RequiredShippingAddressFields = PostalAddressPhone
     private var shippingType: ShippingType = .Shipping
-    private var smsAutofill: Switch = .Enabled
+    private var smsAutofill: Switch = Enabled
+    private var threeDSSupportType: ThreeDSType = Disabled
 
     fileprivate enum Section: String {
         case Theme = "Theme"
@@ -53,6 +56,7 @@ class SettingsViewController: UITableViewController {
         case RequiredShippingAddressFields = "Required Shipping Address Fields"
         case ShippingType = "Shipping Type"
         case SMSAutofill = "SMS Autofill"
+        case ThreeDSSupport = "3DS Support Type"
         case Session = "Session"
 
         init(section: Int) {
@@ -63,6 +67,7 @@ class SettingsViewController: UITableViewController {
             case 3: self = .RequiredShippingAddressFields
             case 4: self = .ShippingType
             case 5: self = .SMSAutofill
+            case 6: self = .ThreeDSSupport
             default: self = .Session
             }
         }
@@ -190,6 +195,25 @@ class SettingsViewController: UITableViewController {
         }
     }
 
+    private enum ThreeDSType: String {
+        case Disabled = "Disabled"
+        case Static = "Static"
+
+        init(row: Int) {
+            switch row {
+            case 0: self = .Disabled
+            default: self = .Static
+            }
+        }
+
+        var stpThreeDSType: STPThreeDSecureSupportType {
+            switch self {
+            case .Disabled: return .disabled
+            case .Static: return .static
+            }
+        }
+    }
+
     convenience init() {
         self.init(style: .grouped)
     }
@@ -216,6 +240,7 @@ class SettingsViewController: UITableViewController {
         case .RequiredShippingAddressFields: return 4
         case .ShippingType: return 2
         case .SMSAutofill: return 2
+        case .ThreeDSSupport: return 2
         case .Session: return 1
         }
     }
@@ -226,17 +251,17 @@ class SettingsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-        switch Section(section: (indexPath as NSIndexPath).section) {
+        switch Section(section: indexPath.section) {
         case .Theme:
-            let value = Theme(row: (indexPath as NSIndexPath).row)
+            let value = Theme(row: indexPath.row)
             cell.textLabel?.text = value.rawValue
             cell.accessoryType = value == self.theme ? .checkmark : .none
         case .AvailablePaymentTypes:
-            let value = self.allPaymentMethods.object(at: (indexPath as NSIndexPath).row) as! STPPaymentMethodType
+            let value = self.allPaymentMethods.object(at: indexPath.row) as! STPPaymentMethodType
             cell.textLabel?.text = value.paymentMethodLabel
             cell.accessoryType = self.availablePaymentMethods.contains(value) ? .checkmark : .none
         case .RequiredBillingAddressFields:
-            let value = RequiredBillingAddressFields(row: (indexPath as NSIndexPath).row)
+            let value = RequiredBillingAddressFields(row: indexPath.row)
             cell.textLabel?.text = value.rawValue
             cell.accessoryType = value == self.requiredBillingAddressFields ? .checkmark : .none
         case .RequiredShippingAddressFields:
@@ -248,9 +273,13 @@ class SettingsViewController: UITableViewController {
             cell.textLabel?.text = value.rawValue
             cell.accessoryType = value == self.shippingType ? .checkmark : .none
         case .SMSAutofill:
-            let value = Switch(row: (indexPath as NSIndexPath).row)
+            let value = Switch(row: indexPath.row)
             cell.textLabel?.text = value.rawValue
             cell.accessoryType = value == self.smsAutofill ? .checkmark : .none
+        case .ThreeDSSupport:
+            let value = ThreeDSType(row: indexPath.row)
+            cell.textLabel?.text = value.rawValue
+            cell.accessoryType = value == self.threeDSSupportType ? .checkmark : .none
         case .Session:
             cell.textLabel?.text = "Log out"
             cell.accessoryType = .none
@@ -260,9 +289,9 @@ class SettingsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch Section(section: (indexPath as NSIndexPath).section) {
+        switch Section(section: indexPath.section) {
         case .Theme:
-            self.theme = Theme(row: (indexPath as NSIndexPath).row)
+            self.theme = Theme(row: indexPath.row)
         case .AvailablePaymentTypes:
             let value = self.allPaymentMethods.object(at: (indexPath as NSIndexPath).row) as! STPPaymentMethodType
             if self.availablePaymentMethods.contains(value) {
@@ -272,19 +301,21 @@ class SettingsViewController: UITableViewController {
                 self.availablePaymentMethods.insert(value)
             }
         case .RequiredBillingAddressFields:
-            self.requiredBillingAddressFields = RequiredBillingAddressFields(row: (indexPath as NSIndexPath).row)
+            self.requiredBillingAddressFields = RequiredBillingAddressFields(row: indexPath.row)
         case .RequiredShippingAddressFields:
-            self.requiredShippingAddressFields = RequiredShippingAddressFields(row: (indexPath as NSIndexPath).row)
+            self.requiredShippingAddressFields = RequiredShippingAddressFields(row: indexPath.row)
         case .ShippingType:
-            self.shippingType = ShippingType(row: (indexPath as NSIndexPath).row)
+            self.shippingType = ShippingType(row: indexPath.row)
         case .SMSAutofill:
-            self.smsAutofill = Switch(row: (indexPath as NSIndexPath).row)
+            self.smsAutofill = Switch(row: indexPath.row)
+        case .ThreeDSSupport:
+            self.threeDSSupportType = ThreeDSType(row: indexPath.row)
         case .Session:
             let cookieStore = HTTPCookieStorage.shared
             for cookie in cookieStore.cookies ?? [] {
                 cookieStore.deleteCookie(cookie)
             }
         }
-        tableView.reloadSections(IndexSet(integer: (indexPath as NSIndexPath).section), with: .automatic)
+        tableView.reloadSections(IndexSet(integer: indexPath.section), with: .automatic)
     }
 }
