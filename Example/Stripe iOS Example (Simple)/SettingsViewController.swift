@@ -44,10 +44,10 @@ class SettingsViewController: UITableViewController {
                                                  STPPaymentMethodType.sofort())
     private var availablePaymentMethods = Set<STPPaymentMethodType>(arrayLiteral: STPPaymentMethodType.card(), STPPaymentMethodType.applePay())
     private var requiredBillingAddressFields: RequiredBillingAddressFields = .None
-    private var requiredShippingAddressFields: RequiredShippingAddressFields = PostalAddressPhone
+    private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
     private var shippingType: ShippingType = .Shipping
-    private var smsAutofill: Switch = Enabled
-    private var threeDSSupportType: ThreeDSType = Disabled
+    private var smsAutofill: Switch = .Enabled
+    private var threeDSSupportType: ThreeDSType = .Disabled
 
     fileprivate enum Section: String {
         case Theme = "Theme"
