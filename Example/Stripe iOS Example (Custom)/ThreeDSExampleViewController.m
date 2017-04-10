@@ -25,8 +25,9 @@
  */
 @interface ThreeDSExampleViewController () <STPPaymentCardTextFieldDelegate>
 @property (weak, nonatomic) STPPaymentCardTextField *paymentTextField;
+@property (weak, nonatomic) UILabel *waitingLabel;
 @property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
-@property (nonatomic) STPSource *source;
+@property (nonatomic) STPRedirectContext *redirectContext;
 @end
 
 @implementation ThreeDSExampleViewController
@@ -48,6 +49,14 @@
     paymentTextField.cursorColor = [UIColor purpleColor];
     self.paymentTextField = paymentTextField;
     [self.view addSubview:paymentTextField];
+
+    UILabel *label = [UILabel new];
+    label.text = @"Waiting for payment authorization";
+    [label sizeToFit];
+    label.textColor = [UIColor grayColor];
+    label.alpha = 0;
+    [self.view addSubview:label];
+    self.waitingLabel = label;
 
     NSString *title = @"Pay";
     UIBarButtonItem *payButton = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStyleDone target:self action:@selector(pay)];
@@ -73,17 +82,22 @@
     self.paymentTextField.frame = CGRectMake(padding, padding, width, 44);
     self.activityIndicator.center = CGPointMake(CGRectGetMidX(bounds),
                                                 CGRectGetMaxY(self.paymentTextField.frame) + padding*2);
+    self.waitingLabel.center = CGPointMake(CGRectGetMidX(bounds),
+                                           CGRectGetMaxY(self.activityIndicator.frame) + padding*2);
 }
 
-- (void)presentPollingUI {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Waiting for payment authorization"
-                                                                             message:nil
-                                                                      preferredStyle:UIAlertControllerStyleAlert];
-    [self presentViewController:alertController animated:YES completion:nil];
-}
-
-- (void)dismissPollingUI {
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (void)updateUIForPaymentInProgress:(BOOL)paymentInProgress {
+    self.navigationController.navigationBar.userInteractionEnabled = !paymentInProgress;
+    self.navigationItem.rightBarButtonItem.enabled = !paymentInProgress;
+    self.paymentTextField.userInteractionEnabled = !paymentInProgress;
+    [UIView animateWithDuration:0.2 animations:^{
+        self.waitingLabel.alpha = paymentInProgress ? 1 : 0;
+    }];
+    if (paymentInProgress) {
+        [self.activityIndicator startAnimating];
+    } else {
+        [self.activityIndicator stopAnimating];
+    }
 }
 
 - (void)paymentCardTextFieldDidChange:(nonnull STPPaymentCardTextField *)textField {
@@ -98,7 +112,7 @@
         [self.delegate exampleViewController:self didFinishWithMessage:@"Please set a Stripe Publishable Key in Constants.m"];
         return;
     }
-    [self.activityIndicator startAnimating];
+    [self updateUIForPaymentInProgress:YES];
     STPAPIClient *stripeClient = [STPAPIClient sharedClient];
     STPSourceParams *sourceParams = [STPSourceParams cardParamsWithCard:self.paymentTextField.cardParams];
     [stripeClient createSourceWithParams:sourceParams completion:^(STPSource *source, NSError *error) {
@@ -111,10 +125,37 @@
                 if (error) {
                     [self.delegate exampleViewController:self didFinishWithError:error];
                 } else {
-                    self.source = source;
-                    [self presentPollingUI];
-                    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAppForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
-                    [[UIApplication sharedApplication] openURL:source.redirect.url];
+                    // In order to use STPRedirectContext, you'll need to set up
+                    // your app delegate to forwards URLs to the Stripe SDK.
+                    // See `[Stripe handleStripeURLCallback:]`
+                    self.redirectContext = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
+                        [[STPAPIClient sharedClient] startPollingSourceWithId:sourceID
+                                                                 clientSecret:clientSecret
+                                                                      timeout:10
+                                                                   completion:^(STPSource *source, NSError *error) {
+                                                                       [self updateUIForPaymentInProgress:NO];
+                                                                       if (error) {
+                                                                           [self.delegate exampleViewController:self didFinishWithError:error];
+                                                                       } else {
+                                                                           switch (source.status) {
+                                                                               case STPSourceStatusChargeable:
+                                                                               case STPSourceStatusConsumed:
+                                                                                   [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+                                                                                   break;
+                                                                               case STPSourceStatusCanceled:
+                                                                                   [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
+                                                                                   break;
+                                                                               case STPSourceStatusPending:
+                                                                               case STPSourceStatusFailed:
+                                                                               case STPSourceStatusUnknown:
+                                                                                   [self.delegate exampleViewController:self didFinishWithMessage:@"Order received"];
+                                                                                   break;
+                                                                           }
+                                                                       }
+                                                                       self.redirectContext = nil;
+                                                                   }];
+                    }];
+                    [self.redirectContext startSafariViewControllerRedirectFlowFromViewController:self];
                 }
             }];
         } else {
@@ -125,27 +166,6 @@
                 }
                 [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
             }];
-        }
-    }];
-}
-
-- (void)handleAppForeground {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[STPAPIClient sharedClient] startPollingSourceWithId:self.source.stripeID
-                                             clientSecret:self.source.clientSecret
-                                                  timeout:10
-                                               completion:^(STPSource *source, NSError *error) {
-        [self dismissPollingUI];
-        if (error) {
-            [self.delegate exampleViewController:self didFinishWithError:error];
-        } else {
-            if (source.status == STPSourceStatusConsumed) {
-                [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-            } else if (source.status == STPSourceStatusFailed) {
-                [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
-            } else {
-                [self.delegate exampleViewController:self didFinishWithMessage:@"Order received"];
-            }
         }
     }];
 }

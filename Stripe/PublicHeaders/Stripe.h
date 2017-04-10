@@ -36,6 +36,7 @@
 #import "STPPaymentMethodsViewController.h"
 #import "STPPaymentResult.h"
 #import "STPShippingAddressViewController.h"
+#import "STPRedirectContext.h"
 #import "STPSource.h"
 #import "STPSourceCardDetails.h"
 #import "STPSourceInfoViewController.h"
