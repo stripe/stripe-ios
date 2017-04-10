@@ -41,26 +41,37 @@ typedef NS_ENUM(NSUInteger, STPShippingStatus) {
 };
 
 /**
- *  An enum representing the status of a payment requested from the user.
+ *  An enum representing the status of a payment requested from the customer.
  */
 typedef NS_ENUM(NSUInteger, STPPaymentStatus) {
     /**
-     *  The payment succeeded.
+     *  The payment succeeded or the user authorized the payment.
+     *  Note that for payment methods that require additional customer action,
+     *  (e.g., redirecting to authorize the payment with their bank), a `Success`
+     *  means the payment has been authorized, but does not necessarily mean the
+     *  customer has been charged. If you are using one of these payment methods,
+     *  your backend should listen to the `source.chargeable` webhook to complete
+     *  the charge.
+     *  @see https://stripe.com/docs/sources#best-practices
      */
     STPPaymentStatusSuccess,
     /**
-     *  The payment failed due to an unforeseen error, such as the user's Internet connection being offline.
+     *  The payment failed due to an unforeseen error, such as the user's
+     *  Internet connection being offline.
      */
     STPPaymentStatusError,
     /**
-     *  The user cancelled the payment (for example, by hitting "cancel" in the Apple Pay dialog).
+     *  The user cancelled the payment (for example, by hitting "cancel"
+     *  in the Apple Pay dialog).
      */
     STPPaymentStatusUserCancellation,
-
     /**
-     * The status of the payment cannot be determined at this time.
-     * E.g. the user payed with a redirect-flow source, and the source
-     * is still in the pending state.
+     *  The status of the payment cannot be determined at this time.
+     *  In general, this means your customer chose to complete their payment using
+     *  a method that requires additional action (e.g., they were redirected to
+     *  authorize the payment with their bank), and the SDK was unable to determine
+     *  the status of the action. In this case, you can simply inform your
+     *  customer that their order was received.
      */
     STPPaymentStatusPending,
 };

@@ -568,7 +568,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     STPSourceCompletionBlock onRedirectCompletion = ^(STPSource *finishedSource, NSError *error) {
         stpDispatchToMainThreadIfNecessary(^{
             if (error) {
-                [self didFinishWithStatus:STPPaymentStatusError error:error];
+                [self didFinishWithStatus:STPPaymentStatusPending error:nil];
             } else {
                 switch (finishedSource.status) {
                     case STPSourceStatusChargeable:
