@@ -28,7 +28,7 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.availablePaymentMethodTypes = @[[STPPaymentMethodType creditCard],
+    config.availablePaymentMethodTypes = @[[STPPaymentMethodType card],
                                            [STPPaymentMethodType applePay]];
     config.smsAutofillDisabled = NO;
     STPTheme *theme = [STPTheme defaultTheme];

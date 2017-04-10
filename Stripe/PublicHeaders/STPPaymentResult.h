@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPPaymentResult : NSObject
 
 /**
- *  The returned source that the user has selected. This may come from a variety of different payment methods, such as an Apple Pay payment or a stored credit card. @see STPSourceProtocol.h
+ *  The returned source that the user has selected. This may come from a variety of different payment methods, such as an Apple Pay payment or a stored card. @see STPSourceProtocol.h
  */
 @property(nonatomic, readonly)id<STPSourceProtocol> source;
 

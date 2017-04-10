@@ -210,7 +210,7 @@
         return [STPPaymentMethodType applePay];
     }
     else {
-        return [STPPaymentMethodType creditCard];
+        return [STPPaymentMethodType card];
     }
 
 }

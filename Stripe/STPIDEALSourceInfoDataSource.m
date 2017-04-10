@@ -27,6 +27,7 @@
         self.cells = @[nameCell];
         self.selectorDataSource = [STPIDEALBankSelectorDataSource new];
         [self.selectorDataSource selectRowWithValue:prefilledInfo.idealBank];
+        self.requiresUserVerification = YES;
     }
     return self;
 }

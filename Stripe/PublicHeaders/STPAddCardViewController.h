@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPAddCardViewController;
 @protocol STPAddCardViewControllerDelegate;
 
-/** This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user's card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`.
+/** This view controller contains a card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user's card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`.
  */
 @interface STPAddCardViewController : STPCoreTableViewController
 
