@@ -228,8 +228,6 @@
 }
 
 - (void)addCardViewControllerDidCancel:(__unused STPAddCardViewController *)addCardViewController {
-    // Add card is only our direct delegate if there are no other payment methods possible
-    // and we skipped directly to this screen. In this case, a cancel from it is the same as a cancel to us.
     [self.delegate paymentMethodsViewControllerDidCancel:self];
 }
 
@@ -240,7 +238,7 @@
 }
 
 - (void)addSourceViewControllerDidCancel:(__unused STPAddSourceViewController *)addSourceViewController {
-    [self.delegate paymentMethodsViewControllerDidFinish:self];
+    [self.delegate paymentMethodsViewControllerDidCancel:self];
 }
 
 - (void)addSourceViewController:(__unused STPAddSourceViewController *)addSourceViewController
