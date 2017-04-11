@@ -16,13 +16,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- Possible values for 3DS source support
+ Options for 3D Secure support.
 
- - STPThreeDSecureSupportTypeDisabled: 3DS sources will  never be created
- - STPThreeDSecureSupportTypeStatic: An attempt to create 3DS sources will be done for all card sources that may possibly support 3ds
-   A failure to create a 3DS source for a card that does not require 3DS will result in the original card source being passed through 
-   to your backend API adapter for charging. If you want to forbid all non-3DS payments, you should not charge and throw an error
-   when receiving any non-3DS card source to charge.
+ - STPThreeDSecureSupportTypeDisabled: Your customer will never be prompted for 
+ 3DS verification.
+
+ - STPThreeDSecureSupportTypeStatic: Your customer will be prompted for 
+ 3DS verification if available.  If 3DS is not available, the original card 
+ source will be passed to your app. Note that if you charge a card source, you 
+ will not be protected from fraud by 3DS. If you want to reject all card payments
+ that haven't passed 3DS verification, you should update your logic accordingly 
+ in paymentContext:didCreatePaymentResult:completion: if the payment result is
+ a card source, instead of passing the source to your backend to be charged, you
+ should call the completion block with an error.
  */
 typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {
     STPThreeDSecureSupportTypeDisabled,
@@ -53,7 +59,9 @@ typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {
 
 /**
  *  If YES, STPPaymentContext will generate STPSource objects when creating
- *  new cards. Otherwise it will generate STPCard objects.
+ *  new cards. Otherwise it will generate STPCard objects. Existing saved cards 
+ *  on the customer will be processed regardless of whether they were created
+ *  uses sources or tokens.
  *
  *  The default value is NO
  *
@@ -140,14 +148,14 @@ typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {
  *
  *  The default value is STPThreeDSecureSupportTypeDisabled.
  *
- *  A successful 3DS source creation will result in a redirect, if necessary,
- *  so the user can authorize the charge. The resulting source will not be 
- *  passed back to your app for charging, you must set up your backend
- *  to listen for source status change notifications and create the charge
- *  when the source status becomes chargeable (the same as all other flow=redirect sources).
- *  See: 
- *   - https://stripe.com/docs/sources/three-d-secure
- *   - https://stripe.com/docs/webhooks
+ *  A successful 3DS source creation will result in a redirect, if necessary, 
+ *  so the user can authorize the charge. If a 3DS source is created, neither 
+ *  the original card source nor the 3DS source will be passed back to your app. 
+ *  Instead, your backend should listen for source status webhooks and charge 
+ *  the 3DS source when it becomes chargeable.
+ *  See:
+ *  https://stripe.com/docs/sources/three-d-secure
+ *  https://stripe.com/docs/sources#best-practices
  *
  *  @note To use a non-Disabled value here, your `useSourcesForCards` property 
  *  must be set to YES and `returnURL` must be set to a valid URL that your 
