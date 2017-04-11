@@ -41,7 +41,6 @@
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
     config.availablePaymentMethodTypes = @[[STPPaymentMethodType applePay],
                                            [STPPaymentMethodType card]];
-    config.smsAutofillDisabled = NO;
     config.shippingType = (delivery) ? STPShippingTypeDelivery : STPShippingTypeShipping;
 
     [STPLocalizationUtils overrideLanguageTo:language];

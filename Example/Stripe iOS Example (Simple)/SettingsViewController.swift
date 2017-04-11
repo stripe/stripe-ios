@@ -15,7 +15,6 @@ struct Settings {
     let requiredBillingAddressFields: STPBillingAddressFields
     let requiredShippingAddressFields: PKAddressField
     let shippingType: STPShippingType
-    let smsAutofillEnabled: Bool
 }
 
 class SettingsViewController: UITableViewController {
@@ -28,8 +27,7 @@ class SettingsViewController: UITableViewController {
                         availablePaymentMethods: enabledOrderedPaymentMethods.copy() as! NSOrderedSet,
                         requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
                         requiredShippingAddressFields: self.requiredShippingAddressFields.pkAddressFields,
-                        shippingType: self.shippingType.stpShippingType,
-                        smsAutofillEnabled: self.smsAutofill.enabled)
+                        shippingType: self.shippingType.stpShippingType)
     }
 
     private var theme: Theme = .Default
@@ -44,7 +42,6 @@ class SettingsViewController: UITableViewController {
     private var requiredBillingAddressFields: RequiredBillingAddressFields = .None
     private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
     private var shippingType: ShippingType = .Shipping
-    private var smsAutofill: Switch = .Enabled
 
     fileprivate enum Section: String {
         case Theme = "Theme"
@@ -52,7 +49,6 @@ class SettingsViewController: UITableViewController {
         case RequiredBillingAddressFields = "Required Billing Address Fields"
         case RequiredShippingAddressFields = "Required Shipping Address Fields"
         case ShippingType = "Shipping Type"
-        case SMSAutofill = "SMS Autofill"
         case Session = "Session"
 
         init(section: Int) {
@@ -62,7 +58,6 @@ class SettingsViewController: UITableViewController {
             case 2: self = .RequiredBillingAddressFields
             case 3: self = .RequiredShippingAddressFields
             case 4: self = .ShippingType
-            case 5: self = .SMSAutofill
             default: self = .Session
             }
         }
@@ -215,7 +210,6 @@ class SettingsViewController: UITableViewController {
         case .RequiredBillingAddressFields: return 3
         case .RequiredShippingAddressFields: return 4
         case .ShippingType: return 2
-        case .SMSAutofill: return 2
         case .Session: return 1
         }
     }
@@ -247,10 +241,6 @@ class SettingsViewController: UITableViewController {
             let value = ShippingType(row: indexPath.row)
             cell.textLabel?.text = value.rawValue
             cell.accessoryType = value == self.shippingType ? .checkmark : .none
-        case .SMSAutofill:
-            let value = Switch(row: (indexPath as NSIndexPath).row)
-            cell.textLabel?.text = value.rawValue
-            cell.accessoryType = value == self.smsAutofill ? .checkmark : .none
         case .Session:
             cell.textLabel?.text = "Log out"
             cell.accessoryType = .none
@@ -277,8 +267,6 @@ class SettingsViewController: UITableViewController {
             self.requiredShippingAddressFields = RequiredShippingAddressFields(row: (indexPath as NSIndexPath).row)
         case .ShippingType:
             self.shippingType = ShippingType(row: (indexPath as NSIndexPath).row)
-        case .SMSAutofill:
-            self.smsAutofill = Switch(row: (indexPath as NSIndexPath).row)
         case .Session:
             let cookieStore = HTTPCookieStorage.shared
             for cookie in cookieStore.cookies ?? [] {

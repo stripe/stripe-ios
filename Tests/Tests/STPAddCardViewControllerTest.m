@@ -10,7 +10,6 @@
 #import <OCMock/OCMock.h>
 #import <Stripe/Stripe.h>
 #import "STPCard.h"
-#import "STPCheckoutAccount.h"
 #import "STPFixtures.h"
 #import "STPRememberMePaymentCell.h"
 
