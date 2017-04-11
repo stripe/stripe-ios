@@ -11,13 +11,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- You can use this class to specify additional information for the SDK to use
- when creating sources.
+ You can use this class to specify additional information to use when creating sources.
  */
 @interface STPAdditionalSourceInfo : NSObject<NSCopying>
 
 /**
- *  Metadata associated with your user. This will be attached to any Source
+ *  Metadata associated with your user. This will be attached to any source
  *  objects created by `STPPaymentContext`, `STPAddSourceViewController`, etc.
  *  You should consider storing any order information (e.g., order number) here.
  *  For payment methods that require additional user action, your backend will

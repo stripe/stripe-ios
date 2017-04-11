@@ -72,9 +72,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable)STPUserInformation *prefilledInformation;
 
 /**
- *  If you would like to specify additional information to use when the SDK creates
- *  sources (e.g. metadata, statement descriptor, or details about a specific
- *  payment method), you can set it here.
+ *  If you would like to specify additional information for PaymentContext to
+ *  attach to sources it creates (e.g. metadata) you can set it here.
+ *  You should consider storing any order information (e.g. order number) as
+ *  metadata here.
  */
 @property(nonatomic, strong, nullable)STPAdditionalSourceInfo *sourceInformation;
 
