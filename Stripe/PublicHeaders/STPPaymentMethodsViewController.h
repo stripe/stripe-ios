@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import "STPAdditionalSourceInfo.h"
 #import "STPBackendAPIAdapter.h"
 #import "STPCoreViewController.h"
 #import "STPPaymentConfiguration.h"
@@ -53,6 +54,13 @@ NS_ASSUME_NONNULL_BEGIN
 *  If you've already collected some information from your user, you can set it here and it'll be automatically filled out when possible/appropriate in any UI that the payment context creates.
 */
 @property(nonatomic, strong, nullable)STPUserInformation *prefilledInformation;
+
+/**
+ *  You can set this property to specify any additional information you'd
+ *  like to attach when creating a source, e.g. metadata.
+ *  @see STPAdditionalSourceInfo
+ */
+@property(nonatomic, strong, nullable)STPAdditionalSourceInfo *sourceInformation;
 
 /**
  *  If you're pushing `STPPaymentMethodsViewController` onto an existing `UINavigationController`'s stack, you should use this method to dismiss it, since it may have pushed an additional add card view controller onto the navigation controller's stack.

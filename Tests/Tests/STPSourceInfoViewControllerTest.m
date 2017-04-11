@@ -33,10 +33,14 @@ NSString * const kReturnURLString = @"testscheme://stripe";
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.returnURL = [NSURL URLWithString:kReturnURLString];
     NSInteger amount = 100;
+    STPAdditionalSourceInfo *sourceInfo = [STPAdditionalSourceInfo new];
+    sourceInfo.metadata = @{@"foo": @"bar"};
+    sourceInfo.statementDescriptor = @"ORDER 123";
     STPSourceInfoViewController *sut = [[STPSourceInfoViewController alloc] initWithSourceType:type
                                                                                         amount:amount
                                                                                  configuration:config
                                                                           prefilledInformation:info
+                                                                             sourceInformation:sourceInfo
                                                                                          theme:theme
                                                                                     completion:completion];
     UINavigationController *navController = [UINavigationController new];
@@ -78,6 +82,7 @@ NSString * const kReturnURLString = @"testscheme://stripe";
     XCTAssertNotNil(sut.completeSourceParams);
     XCTAssertEqualObjects(sut.completeSourceParams.owner[@"name"], nameCell.contents);
     XCTAssertEqualObjects(sut.completeSourceParams.redirect[@"return_url"], kReturnURLString);
+    XCTAssertEqualObjects(sut.completeSourceParams.additionalAPIParameters[@"bancontact"][@"statement_descriptor"], @"ORDER 123");
 }
 
 - (void)testInitWithSourceParams_giropay {
@@ -104,6 +109,7 @@ NSString * const kReturnURLString = @"testscheme://stripe";
     XCTAssertNotNil(sut.completeSourceParams);
     XCTAssertEqualObjects(sut.completeSourceParams.owner[@"name"], nameCell.contents);
     XCTAssertEqualObjects(sut.completeSourceParams.redirect[@"return_url"], kReturnURLString);
+    XCTAssertEqualObjects(sut.completeSourceParams.additionalAPIParameters[@"giropay"][@"statement_descriptor"], @"ORDER 123");
 }
 
 #pragma clang diagnostic push
@@ -125,7 +131,9 @@ NSString * const kReturnURLString = @"testscheme://stripe";
                                                   XCTAssertNotNil(sourceParams);
                                                   XCTAssertEqualObjects(sourceParams.owner[@"name"], expectedName);
                                                   NSDictionary *idealDict = sourceParams.additionalAPIParameters[@"ideal"];
-                                                  XCTAssertEqualObjects(idealDict, @{@"bank": expectedBank});
+                                                  NSDictionary *expectedDict = @{@"bank": expectedBank,
+                                                                                 @"statement_descriptor": @"ORDER 123"};
+                                                  XCTAssertEqualObjects(idealDict, expectedDict);
                                                   XCTAssertEqualObjects(sourceParams.redirect[@"return_url"], kReturnURLString);
                                                   [exp fulfill];
                                               }];
@@ -180,7 +188,9 @@ NSString * const kReturnURLString = @"testscheme://stripe";
     [selectorDataSource selectRowWithValue:@"AT"];
     XCTAssertNotNil(sut.completeSourceParams);
     NSDictionary *sofortDict = sut.completeSourceParams.additionalAPIParameters[@"sofort"];
-    XCTAssertEqualObjects(sofortDict, @{@"country": @"AT"});
+    NSDictionary *expectedDict = @{@"country": @"AT",
+                                   @"statement_descriptor": @"ORDER 123"};
+    XCTAssertEqualObjects(sofortDict, expectedDict);
     XCTAssertEqualObjects(sut.completeSourceParams.redirect[@"return_url"], kReturnURLString);
 
     // Test initializing with a non-Sofort country

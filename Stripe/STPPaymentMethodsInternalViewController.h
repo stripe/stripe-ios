@@ -26,6 +26,7 @@
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                                 theme:(STPTheme *)theme
                  prefilledInformation:(STPUserInformation *)prefilledInformation
+                    sourceInformation:(STPAdditionalSourceInfo *)sourceInformation
                       shippingAddress:(STPAddress *)shippingAddress
                    paymentMethodTuple:(STPPaymentMethodTuple *)tuple
                              delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate;

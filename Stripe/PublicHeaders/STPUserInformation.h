@@ -31,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable)NSString *phone;
 
 /**
- *  The user's billing address. When set, the add card form will be filled with this address.
- *  The user will also have the option to fill their shipping address using this address.
+ *  The user's billing address. If set, address fields will be prefilled with 
+ *  this information when your customer adds a new source.
  */
 @property(nonatomic, copy, nullable)STPAddress *billingAddress;
 
@@ -41,18 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  https://stripe.com/docs/sources/ideal#optional-specifying-the-customers-bank
  */
 @property(nonatomic, copy, nullable)NSString *idealBank;
-
-/**
- *  Metadata associated with your user. This will be attached to any Source
- *  objects created by `STPPaymentContext`, `STPAddSourceViewController`, etc.
- *  You should consider storing any order information (e.g., order number) here.
- *  For payment methods that require additional user action, your backend will
- *  need to listen to the `source.chargeable` webhook to create a charge request.
- *  You can retrieve this metadata from the webhook event, and use it to fulfill
- *  your customer's order.
- *  https://stripe.com/docs/sources#best-practices
- */
-@property(nonatomic, copy, nullable)NSDictionary<NSString *, NSString *>*metadata;
 
 @end
 
