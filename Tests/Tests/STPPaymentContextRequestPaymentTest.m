@@ -214,10 +214,6 @@
     sut.delegate = mockDelegate;
     XCTAssertEqual(sut.state, STPPaymentContextStateNone);
     XCTestExpectation *exp = [self expectationWithDescription:@"didCreatePaymentResult"];
-    OCMExpect([mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess error:[OCMArg isNil]])
-    .andDo(^(__unused NSInvocation *invocation){
-        XCTAssertEqual(sut.state, STPPaymentContextStateNone);
-    });
     OCMStub([mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation){
         XCTAssertEqual(sut.state, STPPaymentContextStateRequestingPayment);
@@ -227,7 +223,9 @@
         [invocation getArgument:&completion atIndex:4];
         XCTAssertEqual(result.source, customer.defaultSource);
         completion(nil);
-        OCMVerifyAll(mockDelegate);
+        OCMVerify([mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess
+                                         error:[OCMArg isNil]]);
+        XCTAssertEqual(sut.state, STPPaymentContextStateNone);
         [exp fulfill];
     });
 
@@ -253,10 +251,6 @@
     sut.delegate = mockDelegate;
     XCTAssertEqual(sut.state, STPPaymentContextStateNone);
     XCTestExpectation *exp = [self expectationWithDescription:@"didCreatePaymentResult"];
-    OCMExpect([mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess error:[OCMArg isNil]])
-    .andDo(^(__unused NSInvocation *invocation){
-        XCTAssertEqual(sut.state, STPPaymentContextStateNone);
-    });
     OCMStub([mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation){
         XCTAssertEqual(sut.state, STPPaymentContextStateRequestingPayment);
@@ -266,7 +260,9 @@
         [invocation getArgument:&completion atIndex:4];
         XCTAssertEqual(result.source, customer.defaultSource);
         completion(nil);
-        OCMVerifyAll(mockDelegate);
+        OCMVerify([mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess
+                                         error:[OCMArg isNil]]);
+        XCTAssertEqual(sut.state, STPPaymentContextStateNone);
         [exp fulfill];
     });
 
@@ -291,18 +287,15 @@
     XCTAssertEqual(sut.state, STPPaymentContextStateNone);
     NSError *expectedError = [[NSError alloc] initWithDomain:@"com.stripe.tests" code:0 userInfo:nil];
     XCTestExpectation *exp = [self expectationWithDescription:@"didCreatePaymentResult"];
-    OCMExpect([mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusError
-                                     error:[OCMArg isEqual:expectedError]])
-    .andDo(^(__unused NSInvocation *invocation){
-        XCTAssertEqual(sut.state, STPPaymentContextStateNone);
-    });;
     OCMStub([mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation){
         XCTAssertEqual(sut.state, STPPaymentContextStateRequestingPayment);
         STPErrorBlock completion;
         [invocation getArgument:&completion atIndex:4];
         completion(expectedError);
-        OCMVerifyAll(mockDelegate);
+        OCMVerify([mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusError
+                                         error:[OCMArg isEqual:expectedError]]);
+        XCTAssertEqual(sut.state, STPPaymentContextStateNone);
         [exp fulfill];
     });
 
