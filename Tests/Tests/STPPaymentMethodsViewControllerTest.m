@@ -12,6 +12,10 @@
 #import "STPMocks.h"
 #import "STPPaymentMethodsInternalViewController.h"
 
+@interface STPAddSourceViewController (Testing)
+@property(nonatomic)STPSourceType sourceType;
+@end
+
 @interface STPPaymentMethodsViewController (Testing)
 @property(nonatomic, weak)UIViewController *internalViewController;
 @end
@@ -38,12 +42,14 @@
 }
 
 /**
- When the customer has no sources and the configuration doesn't use sources,
- STPAddCardViewController should be shown.
+ When the customer has no sources, the configuration doesn't use sources,
+ and card is the sole available payment method, STPAddCardViewController
+ should be shown.
  */
-- (void)testInitWithNoSourcesAndUseSourcesOff {
+- (void)testInitWithNoSourcesAndConfigWithUseSourcesOffAndCardAvailable {
     STPCustomer *customer = [STPFixtures customerWithNoSources];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.availablePaymentMethodTypes = @[[STPPaymentMethodType card]];
     config.useSourcesForCards = NO;
     id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
     STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
@@ -53,27 +59,85 @@
 }
 
 /**
- When the customer has no sources and the configuration uses sources,
- STPAddSourceViewController should be shown.
+ When the customer has no sources, the configuration uses sources,
+ and card is the sole available payment method, STPAddSourceViewController
+ should be shown configured for cards.
  */
-- (void)testInitWithNoSourcesAndUseSourcesOn {
+- (void)testInitWithNoSourcesAndConfigWithUseSourcesOnAndCardAvailable {
     STPCustomer *customer = [STPFixtures customerWithNoSources];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.availablePaymentMethodTypes = @[[STPPaymentMethodType card]];
     config.useSourcesForCards = YES;
     id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
     STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
                                                                    configuration:config
                                                                         delegate:delegate];
     XCTAssertTrue([sut.internalViewController isKindOfClass:[STPAddSourceViewController class]]);
+    STPAddSourceViewController *internal = (STPAddSourceViewController *)sut.internalViewController;
+    XCTAssertTrue(internal.sourceType == STPSourceTypeCard);
 }
 
 /**
- When the customer has no sources and the configuration uses sources,
+ When the customer has no sources and sepaDebit is the sole available payment 
+ method, STPAddSourceViewController should be shown configured for SEPA.
+ */
+- (void)testInitWithNoSourcesAndConfigWithUseSourcesOnAndSEPAAvailable {
+    STPCustomer *customer = [STPFixtures customerWithNoSources];
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.availablePaymentMethodTypes = @[[STPPaymentMethodType sepaDebit]];
+    id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
+    STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
+                                                                   configuration:config
+                                                                        delegate:delegate];
+    XCTAssertTrue([sut.internalViewController isKindOfClass:[STPAddSourceViewController class]]);
+    STPAddSourceViewController *internal = (STPAddSourceViewController *)sut.internalViewController;
+    XCTAssertTrue(internal.sourceType == STPSourceTypeSEPADebit);
+}
+
+/**
+ When the customer has no sources and there are multiple available payment methods,
  STPPaymentMethodsInternalVC should be shown.
  */
-- (void)testInitWithSingleCardSource {
+- (void)testInitWithNoSourcesAndMultipleTypesAvailable {
+    STPCustomer *customer = [STPFixtures customerWithNoSources];
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.availablePaymentMethodTypes = @[
+                                           [STPPaymentMethodType card],
+                                           [STPPaymentMethodType sepaDebit],
+                                           ];
+    id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
+    STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
+                                                                   configuration:config
+                                                                        delegate:delegate];
+    XCTAssertTrue([sut.internalViewController isKindOfClass:[STPPaymentMethodsInternalViewController class]]);
+}
+
+/**
+ When the customer has no sources and iDEAL is the sole available payment method,
+ STPPaymentMethodsInternalVC should be shown.
+ */
+- (void)testInitWithNoSourcesAndIDEALAvailable {
+    STPCustomer *customer = [STPFixtures customerWithNoSources];
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.availablePaymentMethodTypes = @[[STPPaymentMethodType ideal]];
+    id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
+    STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
+                                                                   configuration:config
+                                                                        delegate:delegate];
+    XCTAssertTrue([sut.internalViewController isKindOfClass:[STPPaymentMethodsInternalViewController class]]);
+}
+
+/**
+ When the customer has a single card source and the available payment methods
+ are card and apple pay, STPPaymentMethodsInternalVC should be shown.
+ */
+- (void)testInitWithSingleCardSourceAndCardAvailable {
     STPCustomer *customer = [STPFixtures customerWithSingleCardTokenSource];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.availablePaymentMethodTypes = @[
+                                           [STPPaymentMethodType card],
+                                           [STPPaymentMethodType applePay],
+                                           ];
     id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
     STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
                                                                    configuration:config
