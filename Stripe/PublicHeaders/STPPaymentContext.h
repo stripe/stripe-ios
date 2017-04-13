@@ -253,10 +253,25 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
             completion:(STPErrorBlock)completion;
 
 /**
- *  This is invoked by an `STPPaymentContext` when it is finished. This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the returned `status` and behave appropriately. For example: if it's `STPPaymentStatusSuccess`, show the user a receipt. If it's `STPPaymentStatusError`, inform the user of the error. If it's `STPPaymentStatusUserCanceled`, do nothing.
+ *  This is invoked by an `STPPaymentContext` when it is finished. This will be
+ *  called after the payment is done and all necessary UI has been dismissed.
+ *  You should inspect the returned `status` and behave appropriately.
+ *  For example: if it's `STPPaymentStatusSuccess`, show the user an order
+ *  confirmation. If it's `STPPaymentStatusError`, inform the user of the error.
+ *  If it's `STPPaymentStatusUserCanceled`, do nothing.
  *
- *  @param paymentContext The payment context that finished
- *  @param status         The status of the payment - `STPPaymentStatusSuccess` if it succeeded, `STPPaymentStatusError` if it failed with an error (in which case the `error` parameter will be non-nil), `STPPaymentStatusUserCanceled` if the user canceled the payment.
+ *  If the status is `STPaymentStatusPending`, your customer chose to complete
+ *  their payment using a method that requires additional action (e.g., they
+ *  were redirected to authorize the payment with their bank), and the SDK
+ *  was unable to determine the status of the action. In this case, you may
+ *  want to simply inform the user that their order has been received.
+ *  Once your backend completes the charge, you can notify your customer that
+ *  their order has been fulfilled (e.g., by sending an email or a push
+ *  notification).
+ *  @see https://stripe.com/docs/sources#best-practices
+ *
+ *  @param paymentContext The payment context that finished.
+ *  @param status         The status of the payment.
  *  @param error          An error that occurred, if any.
  */
 - (void)paymentContext:(STPPaymentContext *)paymentContext

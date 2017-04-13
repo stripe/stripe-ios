@@ -11,6 +11,7 @@
 
 #import "STPFixtures.h"
 #import "STPLocalizationUtils+STPTestAdditions.h"
+#import "STPMocks.h"
 
 @interface STPPaymentMethodsViewControllerLocalizationTests : FBSnapshotTestCase
 
@@ -32,7 +33,7 @@
                                            [STPPaymentMethodType applePay]];
     config.smsAutofillDisabled = NO;
     STPTheme *theme = [STPTheme defaultTheme];
-    id apiAdapter = [STPFixtures staticAPIAdapter];
+    id apiAdapter = [STPMocks staticAPIAdapter];
     id delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
     [STPLocalizationUtils overrideLanguageTo:language];
     STPPaymentMethodsViewController *paymentMethodsVC = [[STPPaymentMethodsViewController alloc] initWithConfiguration:config

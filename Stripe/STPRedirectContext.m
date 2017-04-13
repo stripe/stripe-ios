@@ -115,13 +115,6 @@ NS_ASSUME_NONNULL_BEGIN
     self.completion(self.source.stripeID, self.source.clientSecret, error);
 }
 
-- (void)dismissSafariVCIfNecessary {
-    if (self.safariVC) {
-        [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
-                                                                   completion:nil];
-    }
-}
-
 - (void)subscribeToUrlAndForegroundNotifications {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleWillForegroundNotification)
@@ -137,7 +130,11 @@ NS_ASSUME_NONNULL_BEGIN
 
     if (self.safariVC) {
         [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
-                                                                   completion:nil];
+                                                                   completion:^{
+                                                                       stpDispatchToMainThreadIfNecessary(^{
+                                                                           [self handleRedirectCompletionWithError:nil];
+                                                                       });
+                                                                   }];
     }
 }
 
