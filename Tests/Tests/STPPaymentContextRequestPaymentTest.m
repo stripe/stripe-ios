@@ -125,25 +125,22 @@
 
     STPSourceParams *expectedParams = [STPSourceParams idealParamsWithAmount:1099 name:@"Jenny Rosen" returnURL:@"test://redirect" statementDescriptor:nil bank:nil];
 
-    __block NSInteger call = 0;
+    XCTestExpectation *sourceInfoExp = [self expectationWithDescription:@"presented SourceInfoVC"];
+    XCTestExpectation *safariExp = [self expectationWithDescription:@"present SafariVC"];
     BOOL (^checker)() = ^BOOL(id vc) {
         XCTAssertEqual(sut.state, STPPaymentContextStateRequestingPayment);
-        // First call should present STPSourceInfoVC
-        if (call == 0) {
-            if ([vc isKindOfClass:[UINavigationController class]]) {
-                UINavigationController *nc = (UINavigationController *)vc;
-                if ([nc.topViewController isKindOfClass:[STPSourceInfoViewController class]]) {
-                    STPSourceInfoViewController *sourceInfoVC = (STPSourceInfoViewController *)nc.topViewController;
-                    sourceInfoVC.completion(expectedParams);
-                    call++;
-                    return YES;
-                };
-            }
+        if ([vc isKindOfClass:[UINavigationController class]]) {
+            UINavigationController *nc = (UINavigationController *)vc;
+            if ([nc.topViewController isKindOfClass:[STPSourceInfoViewController class]]) {
+                STPSourceInfoViewController *sourceInfoVC = (STPSourceInfoViewController *)nc.topViewController;
+                sourceInfoVC.completion(expectedParams);
+                [sourceInfoExp fulfill];
+                return YES;
+            };
         }
-        // Second call should present SFSafariVC
-        else if (call == 1) {
-            call++;
-            return [vc isKindOfClass:[SFSafariViewController class]];
+        if ([vc isKindOfClass:[SFSafariViewController class]]) {
+            [safariExp fulfill];
+            return YES;
         }
         return NO;
     };
