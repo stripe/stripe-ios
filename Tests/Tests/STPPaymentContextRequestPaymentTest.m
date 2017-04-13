@@ -125,25 +125,22 @@
 
     STPSourceParams *expectedParams = [STPSourceParams idealParamsWithAmount:1099 name:@"Jenny Rosen" returnURL:@"test://redirect" statementDescriptor:nil bank:nil];
 
-    __block NSInteger call = 0;
+    XCTestExpectation *sourceInfoExp = [self expectationWithDescription:@"presented SourceInfoVC"];
+    XCTestExpectation *safariExp = [self expectationWithDescription:@"present SafariVC"];
     BOOL (^checker)() = ^BOOL(id vc) {
         XCTAssertEqual(sut.state, STPPaymentContextStateRequestingPayment);
-        // First call should present STPSourceInfoVC
-        if (call == 0) {
-            if ([vc isKindOfClass:[UINavigationController class]]) {
-                UINavigationController *nc = (UINavigationController *)vc;
-                if ([nc.topViewController isKindOfClass:[STPSourceInfoViewController class]]) {
-                    STPSourceInfoViewController *sourceInfoVC = (STPSourceInfoViewController *)nc.topViewController;
-                    sourceInfoVC.completion(expectedParams);
-                    call++;
-                    return YES;
-                };
-            }
+        if ([vc isKindOfClass:[UINavigationController class]]) {
+            UINavigationController *nc = (UINavigationController *)vc;
+            if ([nc.topViewController isKindOfClass:[STPSourceInfoViewController class]]) {
+                STPSourceInfoViewController *sourceInfoVC = (STPSourceInfoViewController *)nc.topViewController;
+                sourceInfoVC.completion(expectedParams);
+                [sourceInfoExp fulfill];
+                return YES;
+            };
         }
-        // Second call should present SFSafariVC
-        else if (call == 1) {
-            call++;
-            return [vc isKindOfClass:[SFSafariViewController class]];
+        if ([vc isKindOfClass:[SFSafariViewController class]]) {
+            [safariExp fulfill];
+            return YES;
         }
         return NO;
     };
@@ -214,10 +211,6 @@
     sut.delegate = mockDelegate;
     XCTAssertEqual(sut.state, STPPaymentContextStateNone);
     XCTestExpectation *exp = [self expectationWithDescription:@"didCreatePaymentResult"];
-    OCMExpect([mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess error:[OCMArg isNil]])
-    .andDo(^(__unused NSInvocation *invocation){
-        XCTAssertEqual(sut.state, STPPaymentContextStateNone);
-    });
     OCMStub([mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation){
         XCTAssertEqual(sut.state, STPPaymentContextStateRequestingPayment);
@@ -227,7 +220,9 @@
         [invocation getArgument:&completion atIndex:4];
         XCTAssertEqual(result.source, customer.defaultSource);
         completion(nil);
-        OCMVerifyAll(mockDelegate);
+        OCMVerify([mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess
+                                         error:[OCMArg isNil]]);
+        XCTAssertEqual(sut.state, STPPaymentContextStateNone);
         [exp fulfill];
     });
 
@@ -253,10 +248,6 @@
     sut.delegate = mockDelegate;
     XCTAssertEqual(sut.state, STPPaymentContextStateNone);
     XCTestExpectation *exp = [self expectationWithDescription:@"didCreatePaymentResult"];
-    OCMExpect([mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess error:[OCMArg isNil]])
-    .andDo(^(__unused NSInvocation *invocation){
-        XCTAssertEqual(sut.state, STPPaymentContextStateNone);
-    });
     OCMStub([mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation){
         XCTAssertEqual(sut.state, STPPaymentContextStateRequestingPayment);
@@ -266,7 +257,9 @@
         [invocation getArgument:&completion atIndex:4];
         XCTAssertEqual(result.source, customer.defaultSource);
         completion(nil);
-        OCMVerifyAll(mockDelegate);
+        OCMVerify([mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess
+                                         error:[OCMArg isNil]]);
+        XCTAssertEqual(sut.state, STPPaymentContextStateNone);
         [exp fulfill];
     });
 
@@ -291,18 +284,15 @@
     XCTAssertEqual(sut.state, STPPaymentContextStateNone);
     NSError *expectedError = [[NSError alloc] initWithDomain:@"com.stripe.tests" code:0 userInfo:nil];
     XCTestExpectation *exp = [self expectationWithDescription:@"didCreatePaymentResult"];
-    OCMExpect([mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusError
-                                     error:[OCMArg isEqual:expectedError]])
-    .andDo(^(__unused NSInvocation *invocation){
-        XCTAssertEqual(sut.state, STPPaymentContextStateNone);
-    });;
     OCMStub([mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation){
         XCTAssertEqual(sut.state, STPPaymentContextStateRequestingPayment);
         STPErrorBlock completion;
         [invocation getArgument:&completion atIndex:4];
         completion(expectedError);
-        OCMVerifyAll(mockDelegate);
+        OCMVerify([mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusError
+                                         error:[OCMArg isEqual:expectedError]]);
+        XCTAssertEqual(sut.state, STPPaymentContextStateNone);
         [exp fulfill];
     });
 
