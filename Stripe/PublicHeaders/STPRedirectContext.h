@@ -29,8 +29,8 @@ typedef NS_ENUM(NSUInteger, STPRedirectContextState) {
 /**
  A callback run when the context believes the redirect action has been completed.
 
- @param sourceId The stripe id of the source.
- @param sourceClientSecret The client secret of the source.
+ @param sourceID The stripe id of the source.
+ @param clientSecret The client secret of the source.
  @param error An error if one occured. Note that a lack of an error does not mean that the action was completed successfully, the presence of one confirms that it was not.
  Currently the only possible error the context can know about is if SFSafariViewController fails its initial load (like the user has no internet connection, or servers are down).
  
@@ -39,7 +39,7 @@ typedef NS_ENUM(NSUInteger, STPRedirectContextState) {
  @see `[STPAPIClient retrieveSourceWithId:clientSecret:completion]`
  @see `[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]`
  */
-typedef void (^STPRedirectContextCompletionBlock)(NSString *sourceId, NSString *sourceClientSecret, NSError *error);
+typedef void (^STPRedirectContextCompletionBlock)(NSString *sourceID, NSString *clientSecret, NSError *error);
 
 /**
  *  This is a helper class for handling redirect sources.
