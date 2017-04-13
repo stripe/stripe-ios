@@ -19,7 +19,6 @@
 #import "STPImageLibrary+Private.h"
 #import "STPImageLibrary.h"
 #import "STPLocalizationUtils.h"
-#import "STPObscuredCardView.h"
 #import "STPPaymentActivityIndicatorView.h"
 #import "STPPaymentCardTextField.h"
 #import "STPPaymentCardTextFieldCell.h"
@@ -39,7 +38,7 @@
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "UIViewController+Stripe_Promises.h"
 
-@interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource, STPPaymentCardTextFieldCellDelegate>
+@interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource>
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)STPAddress *shippingAddress;
 @property(nonatomic)STPAPIClient *apiClient;
@@ -232,22 +231,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     }
 }
 
-- (void)handleCheckoutTokenError:(__unused NSError *)error {
-    self.loading = NO;
-
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:STPLocalizedString(@"There was an error submitting your autofilled card details.", nil)
-                                                                             message:nil 
-                                                                      preferredStyle:UIAlertControllerStyleAlert];
-    
-    [alertController addAction:[UIAlertAction actionWithTitle:STPLocalizedString(@"Enter card details manually", nil) 
-                                                        style:UIAlertActionStyleDefault 
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          [self.paymentCell clear];
-                                                      }]];
-    
-    [self presentViewController:alertController animated:YES completion:nil];
-}
-
 - (void)handleCardTokenError:(NSError *)error {
     self.loading = NO;
     [[self firstEmptyField] becomeFirstResponder];
@@ -265,10 +248,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 - (void)updateDoneButton {
     self.stp_navigationItemProxy.rightBarButtonItem.enabled = (self.paymentCell.paymentField.isValid
                                                                && self.addressViewModel.isValid);
-}
-
-- (void)paymentCellDidClear:(__unused STPPaymentCardTextFieldCell *)cell {
-    // Do nothing
 }
 
 #pragma mark - STPPaymentCardTextField

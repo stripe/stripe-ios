@@ -23,7 +23,6 @@
 
 @interface STPAddCardViewController (TestsPrivate)
 @property(nonatomic) UITableView *tableView;
-@property(nonatomic) BOOL forceEnableRememberMeForTesting;
 @property(nonatomic) STPAddressViewModel<STPAddressFieldTableViewCellDelegate> *addressViewModel;
 @end
 
@@ -52,7 +51,6 @@
     UINavigationController *navController = [UINavigationController new];
     navController.view.frame = CGRectMake(0, 0, 320, 750);
     [navController pushViewController:addCardVC animated:NO];
-    addCardVC.forceEnableRememberMeForTesting = YES;
     [navController.view layoutIfNeeded];
     navController.view.frame = CGRectMake(0, 0, 320, addCardVC.tableView.contentSize.height);
 

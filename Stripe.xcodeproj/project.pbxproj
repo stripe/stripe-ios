@@ -247,8 +247,6 @@
 		04BC29BE1CDD535700318357 /* STPSwitchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BC29BC1CDD535700318357 /* STPSwitchTableViewCell.m */; };
 		04BC29C61CE2A82300318357 /* STPSMSCodeTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BC29C41CE2A82300318357 /* STPSMSCodeTextField.h */; };
 		04BC29C71CE2A82300318357 /* STPSMSCodeTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BC29C51CE2A82300318357 /* STPSMSCodeTextField.m */; };
-		04BC29CA1CE40F7500318357 /* STPObscuredCardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BC29C81CE40F7500318357 /* STPObscuredCardView.h */; };
-		04BC29CB1CE40F7500318357 /* STPObscuredCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BC29C91CE40F7500318357 /* STPObscuredCardView.m */; };
 		04BFFFD91D240B13005F2340 /* STPAddCardViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BFFFD81D240B13005F2340 /* STPAddCardViewController+Private.h */; };
 		04BFFFDA1D240B13005F2340 /* STPAddCardViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BFFFD81D240B13005F2340 /* STPAddCardViewController+Private.h */; };
 		04CB86BA1BA89CE100E4F61E /* PKPayment+StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */; };
@@ -319,8 +317,6 @@
 		04F94DB41D229F71004FC826 /* STPPaymentActivityIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 046FE9A01CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.m */; };
 		04F94DB51D229F74004FC826 /* STPSMSCodeTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BC29C41CE2A82300318357 /* STPSMSCodeTextField.h */; };
 		04F94DB61D229F77004FC826 /* STPSMSCodeTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BC29C51CE2A82300318357 /* STPSMSCodeTextField.m */; };
-		04F94DB71D229F7C004FC826 /* STPObscuredCardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 04BC29C81CE40F7500318357 /* STPObscuredCardView.h */; };
-		04F94DB81D229F7F004FC826 /* STPObscuredCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BC29C91CE40F7500318357 /* STPObscuredCardView.m */; };
 		04F94DBA1D229F8A004FC826 /* PKPaymentAuthorizationViewController+Stripe_Blocks.h in Headers */ = {isa = PBXBuildFile; fileRef = C11810931CC6C4700022FB55 /* PKPaymentAuthorizationViewController+Stripe_Blocks.h */; };
 		04F94DBB1D229F8D004FC826 /* PKPaymentAuthorizationViewController+Stripe_Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = C11810941CC6C4700022FB55 /* PKPaymentAuthorizationViewController+Stripe_Blocks.m */; };
 		04F94DBC1D229F92004FC826 /* UIToolbar+Stripe_InputAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = 049A3FB11CC9FEFC00F57DE7 /* UIToolbar+Stripe_InputAccessory.m */; };
@@ -906,8 +902,6 @@
 		04BC29BC1CDD535700318357 /* STPSwitchTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSwitchTableViewCell.m; sourceTree = "<group>"; };
 		04BC29C41CE2A82300318357 /* STPSMSCodeTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPSMSCodeTextField.h; sourceTree = "<group>"; };
 		04BC29C51CE2A82300318357 /* STPSMSCodeTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSMSCodeTextField.m; sourceTree = "<group>"; };
-		04BC29C81CE40F7500318357 /* STPObscuredCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPObscuredCardView.h; sourceTree = "<group>"; };
-		04BC29C91CE40F7500318357 /* STPObscuredCardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPObscuredCardView.m; sourceTree = "<group>"; };
 		04BFFFD81D240B13005F2340 /* STPAddCardViewController+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPAddCardViewController+Private.h"; sourceTree = "<group>"; };
 		04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PKPayment+StripeTest.m"; sourceTree = "<group>"; };
 		04CDB4421A5F2E1800B854EE /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1443,8 +1437,6 @@
 				046FE9A01CE55D1D00DA6A7B /* STPPaymentActivityIndicatorView.m */,
 				04BC29C41CE2A82300318357 /* STPSMSCodeTextField.h */,
 				04BC29C51CE2A82300318357 /* STPSMSCodeTextField.m */,
-				04BC29C81CE40F7500318357 /* STPObscuredCardView.h */,
-				04BC29C91CE40F7500318357 /* STPObscuredCardView.m */,
 				C11810A61CC6E2160022FB55 /* STPBackendAPIAdapter.h */,
 				0451CC421C49AE1C003B2CA6 /* STPPaymentResult.h */,
 				0451CC431C49AE1C003B2CA6 /* STPPaymentResult.m */,
@@ -1861,7 +1853,6 @@
 				04F94DA81D229F2F004FC826 /* STPPaymentMethodTuple.h in Headers */,
 				0438EF491B74183100D506CC /* STPCardBrand.h in Headers */,
 				F11C96F91E7C82B1008DB23D /* STPCustomer+Stripe_PaymentMethods.h in Headers */,
-				04F94DB71D229F7C004FC826 /* STPObscuredCardView.h in Headers */,
 				F12C8DC21D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
 				F1D96F971DC7D82400477E64 /* STPLocalizationUtils.h in Headers */,
 				C1B3DD4A1E54EE2A00E19587 /* STPIBANTableViewCell.h in Headers */,
@@ -2012,7 +2003,6 @@
 				04695ADB1C77F9EF00E08063 /* STPPhoneNumberValidator.h in Headers */,
 				F1C7B8D51DBECF2400D9F6F0 /* STPDispatchFunctions.h in Headers */,
 				0426B9761CEBD001006AC8DD /* UINavigationBar+Stripe_Theme.h in Headers */,
-				04BC29CA1CE40F7500318357 /* STPObscuredCardView.h in Headers */,
 				04E39F581CECF9A800AF3B96 /* STPPaymentMethodsViewController+Private.h in Headers */,
 				0426B9721CEAE3EB006AC8DD /* UITableViewCell+Stripe_Borders.h in Headers */,
 				04CDE5C91BC20B1D00548833 /* STPBankAccountParams.h in Headers */,
@@ -2559,7 +2549,6 @@
 				C18880231E68D40300FB169F /* STPSourceInfoDataSource.m in Sources */,
 				F1852F961D80B6EC00367C86 /* STPStringUtils.m in Sources */,
 				04F94DBC1D229F92004FC826 /* UIToolbar+Stripe_InputAccessory.m in Sources */,
-				04F94DB81D229F7F004FC826 /* STPObscuredCardView.m in Sources */,
 				04F94DB41D229F71004FC826 /* STPPaymentActivityIndicatorView.m in Sources */,
 				C1BD9B251E393FFE00CEE925 /* STPSourceReceiver.m in Sources */,
 				F118291A1E8C7E0F0056B8C7 /* STPURLCallbackHandler.m in Sources */,
@@ -2642,7 +2631,6 @@
 				0426B9731CEAE3EB006AC8DD /* UITableViewCell+Stripe_Borders.m in Sources */,
 				C18880221E68D40300FB169F /* STPSourceInfoDataSource.m in Sources */,
 				C1BD9B241E393FFE00CEE925 /* STPSourceReceiver.m in Sources */,
-				04BC29CB1CE40F7500318357 /* STPObscuredCardView.m in Sources */,
 				04B31DD61D08E6E200EF1631 /* STPCustomer.m in Sources */,
 				0438EF351B7416BB00D506CC /* STPPaymentCardTextField.m in Sources */,
 				C18880101E68CDCC00FB169F /* STPGiropaySourceInfoDataSource.m in Sources */,
