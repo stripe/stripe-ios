@@ -28,9 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable)NSDictionary<NSString *, NSString *>*metadata;
 
 /**
- *  Some payment methods, like SOFORT, allow setting a custom statement descriptor.
- *  By default, your Stripe account’s statement descriptor is used (you can review 
- *  this in the Dashboard at https://dashboard.stripe.com/account).
+ *  Bancontact, Giropay, iDEAL, and SOFORT payments allow specifying a custom
+ *  statement descriptor. By default, your Stripe account’s statement descriptor
+ *  is used. You can review this in the Dashboard at https://dashboard.stripe.com/account
  */
 @property(nonatomic, copy, nullable)NSString *statementDescriptor;
 

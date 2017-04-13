@@ -158,7 +158,7 @@ typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {
  *  For payment methods that redirect a user to authorize a payment, the SDK
  *  will poll the source for up to this amount of time after the user returns to
  *  the app in order to determine the status of the payment. The default is 10
- *  seconds.
+ *  seconds. Timeouts are capped at 5 minutes.
  */
 @property (nonatomic) NSTimeInterval pollingTimeout;
 
