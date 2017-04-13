@@ -1,21 +1,21 @@
 //
-//  STPRememberMePaymentCell.m
+//  STPPaymentCardTextFieldCell.m
 //  Stripe
 //
 //  Created by Jack Flintermann on 6/16/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPRememberMePaymentCell.h"
+#import "STPPaymentCardTextFieldCell.h"
 
-@interface STPRememberMePaymentCell()<STPObscuredCardViewDelegate>
+@interface STPPaymentCardTextFieldCell()<STPObscuredCardViewDelegate>
 
 @property(nonatomic, weak)STPPaymentCardTextField *paymentField;
 @property(nonatomic, weak)STPObscuredCardView *obscuredCardView;
 
 @end
 
-@implementation STPRememberMePaymentCell
+@implementation STPPaymentCardTextFieldCell
 
 - (instancetype)init {
     self = [super init];

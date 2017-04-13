@@ -22,9 +22,9 @@
 #import "STPObscuredCardView.h"
 #import "STPPaymentActivityIndicatorView.h"
 #import "STPPaymentCardTextField.h"
+#import "STPPaymentCardTextFieldCell.h"
 #import "STPPaymentConfiguration+Private.h"
 #import "STPPhoneNumberValidator.h"
-#import "STPRememberMePaymentCell.h"
 #import "STPSectionHeaderView.h"
 #import "STPToken.h"
 #import "STPWeakStrongMacros.h"
@@ -39,7 +39,7 @@
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "UIViewController+Stripe_Promises.h"
 
-@interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource, STPRememberMePaymentCellDelegate>
+@interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource, STPPaymentCardTextFieldCellDelegate>
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)STPAddress *shippingAddress;
 @property(nonatomic)STPAPIClient *apiClient;
@@ -47,7 +47,7 @@
 @property(nonatomic)UIBarButtonItem *doneItem;
 @property(nonatomic)STPSectionHeaderView *cardHeaderView;
 @property(nonatomic)STPSectionHeaderView *addressHeaderView;
-@property(nonatomic)STPRememberMePaymentCell *paymentCell;
+@property(nonatomic)STPPaymentCardTextFieldCell *paymentCell;
 @property(nonatomic)BOOL loading;
 @property(nonatomic)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic, weak)STPPaymentActivityIndicatorView *lookupActivityIndicator;
@@ -100,7 +100,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     self.cardImageView = cardImageView;
     self.tableView.tableHeaderView = cardImageView;
     
-    STPRememberMePaymentCell *paymentCell = [[STPRememberMePaymentCell alloc] init];
+    STPPaymentCardTextFieldCell *paymentCell = [[STPPaymentCardTextFieldCell alloc] init];
     paymentCell.paymentField.delegate = self;
     self.paymentCell = paymentCell;
 
@@ -267,7 +267,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
                                                                && self.addressViewModel.isValid);
 }
 
-- (void)paymentCellDidClear:(__unused STPRememberMePaymentCell *)cell {
+- (void)paymentCellDidClear:(__unused STPPaymentCardTextFieldCell *)cell {
     // Do nothing
 }
 

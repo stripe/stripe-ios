@@ -20,8 +20,8 @@
 #import "STPImageLibrary.h"
 #import "STPInfoFooterView.h"
 #import "STPLocalizationUtils.h"
+#import "STPPaymentCardTextFieldCell.h"
 #import "STPPaymentConfiguration+Private.h"
-#import "STPRememberMePaymentCell.h"
 #import "STPSectionHeaderView.h"
 #import "STPTextFieldTableViewCell.h"
 #import "UIBarButtonItem+Stripe.h"
@@ -50,7 +50,7 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
 @property(nonatomic)STPSectionHeaderView *addressHeaderView;
 @property(nonatomic)STPTextFieldTableViewCell *nameCell;
 @property(nonatomic)STPIBANTableViewCell *ibanCell;
-@property(nonatomic)STPRememberMePaymentCell *cardCell;
+@property(nonatomic)STPPaymentCardTextFieldCell *cardCell;
 @property(nonatomic)STPInfoFooterView *sepaFooterView;
 @property(nonatomic)UIToolbar *inputAccessoryToolbar;
 @property(nonatomic)STPSourceType sourceType;
@@ -113,7 +113,7 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
     self.stp_navigationItemProxy.rightBarButtonItem = doneItem;
     self.stp_navigationItemProxy.rightBarButtonItem.enabled = NO;
 
-    STPRememberMePaymentCell *cardCell = [[STPRememberMePaymentCell alloc] init];
+    STPPaymentCardTextFieldCell *cardCell = [[STPPaymentCardTextFieldCell alloc] init];
     cardCell.paymentField.delegate = self;
     self.cardCell = cardCell;
 
