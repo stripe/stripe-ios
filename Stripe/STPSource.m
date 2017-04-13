@@ -248,7 +248,7 @@
 
 - (NSString *)paymentMethodLabel {
     if (self.cardDetails != nil) {
-        NSString *brand = [self.class stringFromBrand:self.cardDetails.brand];
+        NSString *brand = [STPCard stringFromBrand:self.cardDetails.brand];
         return [NSString stringWithFormat:@"%@ %@", brand, self.cardDetails.last4];
     }
     else if (self.sepaDebitDetails != nil) {

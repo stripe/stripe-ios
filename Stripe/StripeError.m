@@ -24,6 +24,7 @@ NSString *const STPExpiredCard = @"com.stripe.lib:ExpiredCard";
 NSString *const STPCardDeclined = @"com.stripe.lib:CardDeclined";
 NSString *const STPProcessingError = @"com.stripe.lib:ProcessingError";
 NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
+NSString *const STPPaymentMethodNotAvailable = @"com.stripe.lib:PaymentMethodNotAvailable";
 
 @implementation NSError(Stripe)
 
@@ -71,6 +72,7 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
                                      @"incorrect_cvc": @{@"code": STPIncorrectCVC, @"message": [self stp_cardInvalidCVCUserMessage]},
                                      @"card_declined": @{@"code": STPCardDeclined, @"message": [self stp_cardErrorDeclinedUserMessage]},
                                      @"processing_error": @{@"code": STPProcessingError, @"message": [self stp_cardErrorProcessingErrorUserMessage]},
+                                     @"payment_method_not_available": @{@"code": STPPaymentMethodNotAvailable, @"message": [self stp_cardErrorPaymentMethodNotAvailableUserMessage]},
                                      };
         NSDictionary *codeMapEntry = errorCodes[errorDictionary[@"code"]];
         
@@ -142,6 +144,10 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
 
 + (nonnull NSString *)stp_cardErrorProcessingErrorUserMessage {
     return STPLocalizedString(@"There was an error processing your card -- try again in a few seconds", @"Error when there is a problem processing the card");
+}
+
++ (nonnull NSString *)stp_cardErrorPaymentMethodNotAvailableUserMessage {
+    return STPLocalizedString(@"The selected payment method is not available.", @"Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it).");
 }
 
 @end

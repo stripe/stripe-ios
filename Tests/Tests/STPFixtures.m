@@ -59,16 +59,39 @@
     return [STPToken decodedObjectFromAPIResponse:tokenDict];
 }
 
++ (STPCustomer *)customerWithNoSources {
+    NSMutableDictionary *customer = [[STPTestUtils jsonNamed:@"Customer"] mutableCopy];
+    NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
+    sources[@"data"] = @[];
+    customer[@"sources"] = sources;
+    customer[@"default_source"] = nil;
+
+    STPCustomerDeserializer *deserializer = [[STPCustomerDeserializer alloc] initWithJSONResponse:customer];
+    return deserializer.customer;
+}
+
 + (STPCustomer *)customerWithSingleCardTokenSource {
-    NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:@"Card"] mutableCopy];
-    card1[@"id"] = @"card_123";
+    NSMutableDictionary *card = [[STPTestUtils jsonNamed:@"Card"] mutableCopy];
+    card[@"id"] = @"card_123";
 
     NSMutableDictionary *customer = [[STPTestUtils jsonNamed:@"Customer"] mutableCopy];
     NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
-    sources[@"data"] = @[card1];
-    customer[@"default_source"] = card1[@"id"];
+    sources[@"data"] = @[card];
+    customer[@"default_source"] = card[@"id"];
     customer[@"sources"] = sources;
 
+    STPCustomerDeserializer *deserializer = [[STPCustomerDeserializer alloc] initWithJSONResponse:customer];
+    return deserializer.customer;
+}
+
++ (STPCustomer *)customerWithSingleSEPADebitSource {
+    NSMutableDictionary *customer = [[STPTestUtils jsonNamed:@"Customer"] mutableCopy];
+    NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
+    NSDictionary *source = [STPTestUtils jsonNamed:@"SEPADebitSource"];
+    sources[@"data"] = @[source];
+    customer[@"default_source"] = source[@"id"];
+    customer[@"sources"] = sources;
+    
     STPCustomerDeserializer *deserializer = [[STPCustomerDeserializer alloc] initWithJSONResponse:customer];
     return deserializer.customer;
 }
@@ -94,22 +117,6 @@
 
 + (STPSource *)sepaDebitSource {
     return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"SEPADebitSource"]];
-}
-
-+ (id<STPBackendAPIAdapter>)staticAPIAdapter {
-    return [self staticAPIAdapterWithCustomer:[self customerWithSingleCardTokenSource]];
-}
-
-+ (id<STPBackendAPIAdapter>)staticAPIAdapterWithCustomer:(STPCustomer *)customer {
-    id mockAPIAdapter = OCMProtocolMock(@protocol(STPBackendAPIAdapter));
-    OCMStub([mockAPIAdapter retrieveCustomer:[OCMArg any]]).andDo(^(NSInvocation *invocation){
-        STPCustomerCompletionBlock completion;
-        [invocation getArgument:&completion atIndex:2];
-        completion(customer, nil);
-    });
-    OCMStub([mockAPIAdapter selectDefaultCustomerSource:[OCMArg any] completion:[OCMArg invokeBlock]]);
-    OCMStub([mockAPIAdapter attachSourceToCustomer:[OCMArg any] completion:[OCMArg invokeBlock]]);
-    return mockAPIAdapter;
 }
 
 @end
