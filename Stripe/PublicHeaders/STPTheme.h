@@ -68,12 +68,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The font to be used for all views using this theme. Make sure to select an appropriate size.
  */
-@property(nonatomic, copy, null_resettable)UIFont  *font;
+@property(nonatomic, copy, null_resettable)UIFont *font;
 
 /**
  *  The medium-weight font to be used for all bold text in views using this theme. Make sure to select an appropriate size.
  */
-@property(nonatomic, copy, null_resettable)UIFont  *emphasisFont;
+@property(nonatomic, copy, null_resettable)UIFont *emphasisFont;
 
 /**
  *  The navigation bar style to use for any view controllers presented modally
@@ -91,12 +91,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  This font is automatically derived from the font, with a slightly lower point size, and will be used for supplementary labels.
  */
-@property(nonatomic, readonly)UIFont  *smallFont;
+@property(nonatomic, readonly)UIFont *smallFont;
 
 /**
- *  This font is automatically derived from the font, with a larger point size, and will be used for large labels such as SMS code entry.
+ *  This font is automatically derived from the font, with a larger point size, and will be used for large labels.
  */
-@property(nonatomic, readonly)UIFont  *largeFont;
+@property(nonatomic, readonly)UIFont *largeFont;
 
 @end
 
