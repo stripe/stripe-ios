@@ -49,6 +49,7 @@
         _smsAutofillDisabled = NO;
         _shippingType = STPShippingTypeShipping;
         self.returnURLBlock = ^NSURL *() { return  nil; };
+        self.threeDSecureSupportTypeBlock = ^STPThreeDSecureSupportType() { return STPThreeDSecureSupportTypeDisabled; };
     }
     return self;
 }
@@ -88,11 +89,6 @@
 - (NSArray<STPPaymentMethodType *> *)availablePaymentMethodTypes {
     return self.availablePaymentMethodTypesSet.array;
 }
-
-- (NSURL *)returnURL {
-    return _returnURL;
-}
-
 
 /**
  This gets around the fact that you can't reference UIApplication in app extension
@@ -148,6 +144,13 @@
             }
         };
     }
+}
+
+- (void)setThreeDSecureSupportType:(STPThreeDSecureSupportType)threeDSecureSupportType {
+    _threeDSecureSupportType = threeDSecureSupportType;
+    self.threeDSecureSupportTypeBlock = ^() {
+        return threeDSecureSupportType;
+    };
 }
 
 @end
