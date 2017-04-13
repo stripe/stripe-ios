@@ -81,7 +81,12 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.requiredShippingAddressFields = settings.requiredShippingAddressFields
         config.shippingType = settings.shippingType
         config.availablePaymentMethodTypes = settings.availablePaymentMethods.array as! [STPPaymentMethodType]
-        config.smsAutofillDisabled = !settings.smsAutofillEnabled
+
+        if settings.threeDSSupportType != .disabled {
+            config.useSourcesForCards = true
+        }
+        config.threeDSecureSupportType = settings.threeDSSupportType
+
         config.returnURL = URL(string: "stripeexampleapp://stripe_callback")
         self.paymentConfiguration = config
         

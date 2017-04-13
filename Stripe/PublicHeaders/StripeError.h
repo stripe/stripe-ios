@@ -64,7 +64,7 @@ FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPExpiredCard;
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPCardDeclined;
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPProcessingError;
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectCVC;
-
+FOUNDATION_EXPORT STPCardErrorCode  __nonnull const STPPaymentMethodNotAvailable;
 
 @interface NSError(Stripe)
 
@@ -83,6 +83,7 @@ FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectCVC;
 + (nonnull NSString *)stp_cardErrorExpiredCardUserMessage;
 + (nonnull NSString *)stp_cardErrorDeclinedUserMessage;
 + (nonnull NSString *)stp_cardErrorProcessingErrorUserMessage;
++ (nonnull NSString *)stp_cardErrorPaymentMethodNotAvailableUserMessage;
 + (nonnull NSString *)stp_unexpectedErrorMessage;
 
 

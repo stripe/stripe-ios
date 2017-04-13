@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Initializes a new `STPAddCardViewController` with the provided configuration and theme. Don't forget to set the `delegate` property after initialization.
  *
- *  @param configuration The configuration to use (this determines the Stripe publishable key to use, the required billing address fields, whether or not to use SMS autofill, etc). @see STPPaymentConfiguration
+ *  @param configuration The configuration to use (this determines the Stripe publishable key to use, the required billing address fields, etc). @see STPPaymentConfiguration
  *  @param theme         The theme to use to inform the view controller's visual appearance. @see STPTheme
  */
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
