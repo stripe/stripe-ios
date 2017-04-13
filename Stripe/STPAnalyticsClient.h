@@ -11,14 +11,6 @@
 @class STPPaymentConfiguration, STPToken;
 @protocol STPFormEncodable;
 
-typedef NS_ENUM(NSUInteger, STPAddCardRememberMeUsage) {
-    STPAddCardRememberMeUsageNotSelected        = 0,
-    STPAddCardRememberMeUsageSelected           = 1,
-    STPAddCardRememberMeUsageDeveloperDisabled  = 2,
-    STPAddCardRememberMeUsageIneligible         = 3,
-    STPAddCardRememberMeUsageAddedFromSMS       = 4,
-};
-
 @interface STPAnalyticsClient : NSObject
 
 + (instancetype)sharedClient;
@@ -28,8 +20,6 @@ typedef NS_ENUM(NSUInteger, STPAddCardRememberMeUsage) {
 + (void)disableAnalytics;
 
 + (NSString *)muid;
-
-- (void)logRememberMeConversion:(STPAddCardRememberMeUsage)selected;
 
 - (void)logTokenCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration;
 

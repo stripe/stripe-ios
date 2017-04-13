@@ -23,8 +23,6 @@
     NSURL *_returnURL;
 }
 
-@synthesize ineligibleForSmsAutofill = _ineligibleForSmsAutofill;
-
 + (void)initialize {
     [STPAnalyticsClient initializeIfNeeded];
 }
@@ -46,7 +44,6 @@
         _requiredBillingAddressFields = STPBillingAddressFieldsNone;
         _requiredShippingAddressFields = PKAddressFieldNone;
         _companyName = [NSBundle stp_applicationName];
-        _smsAutofillDisabled = NO;
         _shippingType = STPShippingTypeShipping;
         self.returnURLBlock = ^NSURL *() { return  nil; };
         self.threeDSecureSupportTypeBlock = ^STPThreeDSecureSupportType() { return STPThreeDSecureSupportTypeDisabled; };
@@ -63,7 +60,6 @@
     copy.shippingType = self.shippingType;
     copy.companyName = self.companyName;
     copy.appleMerchantIdentifier = self.appleMerchantIdentifier;
-    copy.smsAutofillDisabled = self.smsAutofillDisabled;
     return copy;
 }
 
@@ -71,11 +67,6 @@
     return (self.appleMerchantIdentifier
             && [self isPaymentMethodTypeAllowed:[STPPaymentMethodType applePay]]
             && [Stripe deviceSupportsApplePay]);
-}
-
-- (void)setIneligibleForSmsAutofill:(BOOL)ineligibleForSmsAutofill {
-    _ineligibleForSmsAutofill = ineligibleForSmsAutofill;
-    self.smsAutofillDisabled = (self.smsAutofillDisabled || ineligibleForSmsAutofill);
 }
 
 - (BOOL)isPaymentMethodTypeAllowed:(STPPaymentMethodType *)type {

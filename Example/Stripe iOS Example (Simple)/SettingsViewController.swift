@@ -15,7 +15,6 @@ struct Settings {
     let requiredBillingAddressFields: STPBillingAddressFields
     let requiredShippingAddressFields: PKAddressField
     let shippingType: STPShippingType
-    let smsAutofillEnabled: Bool
     let threeDSSupportType: STPThreeDSecureSupportType
 }
 
@@ -30,7 +29,6 @@ class SettingsViewController: UITableViewController {
                         requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
                         requiredShippingAddressFields: self.requiredShippingAddressFields.pkAddressFields,
                         shippingType: self.shippingType.stpShippingType,
-                        smsAutofillEnabled: self.smsAutofill.enabled,
                         threeDSSupportType: self.threeDSSupportType.stpThreeDSType)
     }
 
@@ -46,7 +44,6 @@ class SettingsViewController: UITableViewController {
     private var requiredBillingAddressFields: RequiredBillingAddressFields = .None
     private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
     private var shippingType: ShippingType = .Shipping
-    private var smsAutofill: Switch = .Enabled
     private var threeDSSupportType: ThreeDSType = .Disabled
 
     fileprivate enum Section: String {
@@ -55,7 +52,6 @@ class SettingsViewController: UITableViewController {
         case RequiredBillingAddressFields = "Required Billing Address Fields"
         case RequiredShippingAddressFields = "Required Shipping Address Fields"
         case ShippingType = "Shipping Type"
-        case SMSAutofill = "SMS Autofill"
         case ThreeDSSupport = "3DS Support Type"
         case Session = "Session"
 
@@ -66,8 +62,7 @@ class SettingsViewController: UITableViewController {
             case 2: self = .RequiredBillingAddressFields
             case 3: self = .RequiredShippingAddressFields
             case 4: self = .ShippingType
-            case 5: self = .SMSAutofill
-            case 6: self = .ThreeDSSupport
+            case 5: self = .ThreeDSSupport
             default: self = .Session
             }
         }
@@ -239,7 +234,6 @@ class SettingsViewController: UITableViewController {
         case .RequiredBillingAddressFields: return 3
         case .RequiredShippingAddressFields: return 4
         case .ShippingType: return 2
-        case .SMSAutofill: return 2
         case .ThreeDSSupport: return 2
         case .Session: return 1
         }
@@ -272,10 +266,6 @@ class SettingsViewController: UITableViewController {
             let value = ShippingType(row: indexPath.row)
             cell.textLabel?.text = value.rawValue
             cell.accessoryType = value == self.shippingType ? .checkmark : .none
-        case .SMSAutofill:
-            let value = Switch(row: indexPath.row)
-            cell.textLabel?.text = value.rawValue
-            cell.accessoryType = value == self.smsAutofill ? .checkmark : .none
         case .ThreeDSSupport:
             let value = ThreeDSType(row: indexPath.row)
             cell.textLabel?.text = value.rawValue
@@ -306,8 +296,6 @@ class SettingsViewController: UITableViewController {
             self.requiredShippingAddressFields = RequiredShippingAddressFields(row: indexPath.row)
         case .ShippingType:
             self.shippingType = ShippingType(row: indexPath.row)
-        case .SMSAutofill:
-            self.smsAutofill = Switch(row: indexPath.row)
         case .ThreeDSSupport:
             self.threeDSSupportType = ThreeDSType(row: indexPath.row)
         case .Session:

@@ -31,7 +31,6 @@
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
     config.availablePaymentMethodTypes = @[[STPPaymentMethodType card],
                                            [STPPaymentMethodType applePay]];
-    config.smsAutofillDisabled = NO;
     STPTheme *theme = [STPTheme defaultTheme];
     id apiAdapter = [STPMocks staticAPIAdapter];
     id delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));

@@ -12,7 +12,7 @@
 #import "STPAddressViewModel.h"
 #import "STPFixtures.h"
 #import "STPIBANTableViewCell.h"
-#import "STPRememberMePaymentCell.h"
+#import "STPPaymentCardTextFieldCell.h"
 #import "STPTextFieldTableViewCell.h"
 
 @interface STPAddSourceViewController (Testing)
@@ -20,7 +20,7 @@
 @property(nonatomic)BOOL loading;
 @property(nonatomic)STPTextFieldTableViewCell *nameCell;
 @property(nonatomic)STPIBANTableViewCell *ibanCell;
-@property(nonatomic)STPRememberMePaymentCell *cardCell;
+@property(nonatomic)STPPaymentCardTextFieldCell *cardCell;
 @property(nonatomic)STPAddressViewModel *addressViewModel;
 @end
 

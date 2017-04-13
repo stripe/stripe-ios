@@ -119,16 +119,6 @@ typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {
 @property (nonatomic, nullable, copy) NSString *appleMerchantIdentifier;
 
 /**
- *  When entering their payment information, users who have a saved card with 
- *  Stripe will be prompted to autofill it by entering an SMS code. Set this 
- *  property to `YES` to disable this feature. The user won't receive an 
- *  SMS code even if they have their payment information stored with Stripe, 
- *  and won't be prompted to save it if they don't.
- */
-@property (nonatomic) BOOL smsAutofillDisabled;
-
-
-/**
  *  If you use payment methods which require redirect flows, this returnURL
  *  must be set to a URL that will bring the user back into your app so they
  *  can continue your checkout flow. It can be either a universal link or a 

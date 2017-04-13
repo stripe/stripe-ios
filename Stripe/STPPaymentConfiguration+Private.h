@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPPaymentConfiguration ()
 
 @property(nonatomic, readonly)BOOL applePayEnabled;
-@property(nonatomic, readwrite) BOOL ineligibleForSmsAutofill;
 @property (nonatomic, copy) NSOrderedSet<STPPaymentMethodType *> *availablePaymentMethodTypesSet;
 
 /**

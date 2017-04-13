@@ -124,15 +124,6 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     return self;
 }
 
-- (void)logRememberMeConversion:(STPAddCardRememberMeUsage)selected {
-    NSMutableDictionary *payload = [self.class commonPayload];
-    [payload addEntriesFromDictionary:@{
-                                        @"event": @"stripeios.remember_me",
-                                        @"selected": @(selected),
-                                        }];
-    [self logPayload:payload];
-}
-
 - (NSArray *)productUsage {
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(description)) ascending:YES];
     NSArray *productUsage = [self.apiUsage sortedArrayUsingDescriptors:@[sortDescriptor]];
@@ -259,7 +250,6 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     }
     dictionary[@"company_name"] = configuration.companyName ?: @"unknown";
     dictionary[@"apple_merchant_identifier"] = configuration.appleMerchantIdentifier ?: @"unknown";
-    dictionary[@"sms_autofill_disabled"] = @(configuration.smsAutofillDisabled);
     return [dictionary copy];
 }
 
