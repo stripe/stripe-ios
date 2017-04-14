@@ -9,7 +9,6 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import <SafariServices/SafariServices.h>
-#import "UIViewController+Stripe_Promises.h"
 #import "STPAPIClient.h"
 #import "STPFixtures.h"
 #import "STPFormEncoder.h"
@@ -40,24 +39,14 @@
  */
 @implementation STPPaymentContextRequestPaymentTest
 
-- (STPPaymentContext *)buildPaymentContextWithCustomer:(STPCustomer *)customer
-                                         configuration:(STPPaymentConfiguration *)config {
-    STPTheme *theme = [STPTheme defaultTheme];
-    id<STPBackendAPIAdapter> mockAPIAdapter = [STPMocks staticAPIAdapterWithCustomer:customer];
-    STPPaymentContext *paymentContext = [[STPPaymentContext alloc] initWithAPIAdapter:mockAPIAdapter
-                                                                        configuration:config
-                                                                                theme:theme];
-    return paymentContext;
-}
-
 /**
  When selectedPaymentMethod is nil, STPPaymentMethodsVC should be presented.
  */
 - (void)testRequestPaymentWithNoSelectedPaymentMethod {
     STPCustomer *customer = [STPFixtures customerWithNoSources];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    STPPaymentContext *sut = [self buildPaymentContextWithCustomer:customer
-                                                     configuration:config];
+    STPPaymentContext *sut = [STPFixtures paymentContextWithCustomer:customer
+                                                       configuration:config];
     XCTAssertNil(sut.selectedPaymentMethod);
     XCTAssertEqual(sut.state, STPPaymentContextStateNone);
     id mockVC = [STPMocks hostViewController];
@@ -85,8 +74,8 @@
     STPCustomer *customer = [STPFixtures customerWithSingleCardTokenSource];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.requiredShippingAddressFields = PKAddressFieldAll;
-    STPPaymentContext *sut = [self buildPaymentContextWithCustomer:customer
-                                                     configuration:config];
+    STPPaymentContext *sut = [STPFixtures paymentContextWithCustomer:customer
+                                                       configuration:config];
     XCTAssertNotNil(sut.selectedPaymentMethod);
     XCTAssertNil(sut.shippingAddress);
     XCTAssertEqual(sut.state, STPPaymentContextStateNone);
@@ -119,8 +108,8 @@
     STPCustomer *customer = [STPFixtures customerWithNoSources];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.returnURL = [NSURL URLWithString:@"test://redirect"];
-    STPPaymentContext *sut = [self buildPaymentContextWithCustomer:customer
-                                                     configuration:config];
+    STPPaymentContext *sut = [STPFixtures paymentContextWithCustomer:customer
+                                                       configuration:config];
     sut.paymentAmount = 1099;
     STPUserInformation *userInfo = [STPUserInformation new];
     userInfo.idealBank = @"ing";
@@ -139,8 +128,12 @@
     sut.selectedPaymentMethod = [STPPaymentMethodType ideal];
     XCTAssertEqual(sut.state, STPPaymentContextStateNone);
 
-    STPSourceParams *expectedParams = [STPSourceParams idealParamsWithAmount:1099 name:@"Jenny Rosen" returnURL:@"test://redirect" statementDescriptor:@"ORDER 123" bank:@"ing"];
-    expectedParams.metadata = @{@"foo": @"bar"};
+    STPSourceParams *expectedParams = [STPSourceParams idealParamsWithAmount:sut.paymentAmount
+                                                                        name:address.name
+                                                                   returnURL:config.returnURL.absoluteString
+                                                         statementDescriptor:sourceInfo.statementDescriptor
+                                                                        bank:userInfo.idealBank];
+    expectedParams.metadata = sourceInfo.metadata;
 
     XCTestExpectation *sourceInfoExp = [self expectationWithDescription:@"presented SourceInfoVC"];
     XCTestExpectation *safariExp = [self expectationWithDescription:@"present SafariVC"];
@@ -198,8 +191,8 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.appleMerchantIdentifier = @"fake_merchant_id";
     config.companyName = @"Test Company";
-    STPPaymentContext *sut = [self buildPaymentContextWithCustomer:customer
-                                                     configuration:config];
+    STPPaymentContext *sut = [STPFixtures paymentContextWithCustomer:customer
+                                                       configuration:config];
     sut.paymentAmount = 150;
     id mockVC = [STPMocks hostViewController];
     sut.hostViewController = mockVC;
@@ -224,8 +217,8 @@
 - (void)testRequestPaymentWithSTPCardSelected {
     STPCustomer *customer = [STPFixtures customerWithSingleCardTokenSource];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    STPPaymentContext *sut = [self buildPaymentContextWithCustomer:customer
-                                                     configuration:config];
+    STPPaymentContext *sut = [STPFixtures paymentContextWithCustomer:customer
+                                                       configuration:config];
     XCTAssertTrue([sut.selectedPaymentMethod isKindOfClass:[STPCard class]]);
     id mockVC = [STPMocks hostViewController];
     sut.hostViewController = mockVC;
@@ -260,8 +253,8 @@
     STPCustomer *customer = [STPFixtures customerWithSingleSEPADebitSource];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.availablePaymentMethodTypes = @[[STPPaymentMethodType sepaDebit]];
-    STPPaymentContext *sut = [self buildPaymentContextWithCustomer:customer
-                                                     configuration:config];
+    STPPaymentContext *sut = [STPFixtures paymentContextWithCustomer:customer
+                                                       configuration:config];
     XCTAssertTrue([sut.selectedPaymentMethod isKindOfClass:[STPSource class]]);
     XCTAssertTrue([sut.selectedPaymentMethod.paymentMethodType isEqual:[STPPaymentMethodType sepaDebit]]);
     id mockVC = [STPMocks hostViewController];
@@ -296,8 +289,8 @@
 - (void)testDidCreatePaymentResultWithErrorReturnsErrorToDidFinishWithStatus {
     STPCustomer *customer = [STPFixtures customerWithSingleCardTokenSource];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    STPPaymentContext *sut = [self buildPaymentContextWithCustomer:customer
-                                                     configuration:config];
+    STPPaymentContext *sut = [STPFixtures paymentContextWithCustomer:customer
+                                                       configuration:config];
     XCTAssertTrue([sut.selectedPaymentMethod isKindOfClass:[STPCard class]]);
     id mockVC = [STPMocks hostViewController];
     sut.hostViewController = mockVC;
