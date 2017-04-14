@@ -48,7 +48,7 @@
 @synthesize borderColor = _borderColor;
 @synthesize borderWidth = _borderWidth;
 @synthesize cornerRadius = _cornerRadius;
-@dynamic enabled;
+@dynamic enabled, isValid, valid;
 
 CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 
@@ -811,6 +811,14 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 
 - (void)deleteBackward {
     [self.currentFirstResponderField deleteBackward];
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingIsValid {
+    return [NSSet setWithArray:@[
+                                 [NSString stringWithFormat:@"%@.%@",
+                                  NSStringFromSelector(@selector(viewModel)),
+                                  NSStringFromSelector(@selector(valid))]
+                                 ]];
 }
 
 @end

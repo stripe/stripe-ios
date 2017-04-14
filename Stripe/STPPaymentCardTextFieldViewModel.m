@@ -12,6 +12,7 @@
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
 @implementation STPPaymentCardTextFieldViewModel
+@dynamic valid;
 
 - (void)setCardNumber:(NSString *)cardNumber {
     NSString *sanitizedNumber = [STPCardValidator sanitizedNumericStringForString:cardNumber];
@@ -100,6 +101,16 @@
         [self.cardNumber substringToIndex:toIndex] :
         [self.defaultPlaceholder stp_safeSubstringToIndex:[self defaultPlaceholder].length - length];
 
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingValid {
+    return [NSSet setWithArray:@[
+                                 NSStringFromSelector(@selector(cardNumber)),
+                                 NSStringFromSelector(@selector(expirationMonth)),
+                                 NSStringFromSelector(@selector(expirationYear)),
+                                 NSStringFromSelector(@selector(cvc)),
+                                 NSStringFromSelector(@selector(brand))
+                                 ]];
 }
 
 @end
