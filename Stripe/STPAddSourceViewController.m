@@ -272,8 +272,8 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
                                                postalCode:address.postalCode
                                                   country:address.country];
     }
-    if (self.prefilledInformation.metadata) {
-        params.metadata = self.prefilledInformation.metadata;
+    if (self.sourceInformation.metadata) {
+        params.metadata = self.sourceInformation.metadata;
     }
     [self.apiClient createSourceWithParams:params completion:^(STPSource *source, NSError *sourceError) {
         if (sourceError) {

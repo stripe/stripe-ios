@@ -11,6 +11,7 @@
 #import <PassKit/PassKit.h>
 
 #import "STPAddress.h"
+#import "STPAdditionalSourceInfo.h"
 #import "STPBlocks.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentMethod.h"
@@ -69,6 +70,14 @@ NS_ASSUME_NONNULL_BEGIN
  *  If you've already collected some information from your user, you can set it here and it'll be automatically filled out when possible/appropriate in any UI that the payment context creates.
  */
 @property(nonatomic, strong, nullable)STPUserInformation *prefilledInformation;
+
+/**
+ *  If you would like to specify additional information for PaymentContext to
+ *  attach to sources it creates (e.g. metadata) you can set it here.
+ *  You should consider storing any order information (e.g. order number) as
+ *  metadata here.
+ */
+@property(nonatomic, strong, nullable)STPAdditionalSourceInfo *sourceInformation;
 
 /**
  *  The view controller that any additional UI will be presented on. If you have a "checkout view controller" in your app, that should be used as the host view controller.

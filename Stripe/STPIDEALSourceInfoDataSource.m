@@ -47,7 +47,7 @@
     params.owner = owner;
     NSMutableDictionary *idealDict = [NSMutableDictionary new];
     if (additionalParams[@"ideal"]) {
-        idealDict = additionalParams[@"ideal"];
+        idealDict = [additionalParams[@"ideal"] mutableCopy];
     }
     NSInteger selectedRow = self.selectorDataSource.selectedRow;
     NSString *selectedBank = [self.selectorDataSource selectorValueForRow:selectedRow];

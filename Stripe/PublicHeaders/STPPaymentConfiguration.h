@@ -153,6 +153,15 @@ typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {
  */
 @property (nonatomic, assign) STPThreeDSecureSupportType threeDSecureSupportType NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions");
 
+
+/**
+ *  For payment methods that redirect a user to authorize a payment, the SDK
+ *  will poll the source for up to this amount of time after the user returns to
+ *  the app in order to determine the status of the payment. The default is 10
+ *  seconds. Timeouts are capped at 5 minutes.
+ */
+@property (nonatomic) NSTimeInterval pollingTimeout;
+
 @end
 
 NS_ASSUME_NONNULL_END

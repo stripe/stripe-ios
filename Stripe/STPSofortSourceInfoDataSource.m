@@ -48,7 +48,7 @@
     }
     NSMutableDictionary *sofortDict = [NSMutableDictionary new];
     if (additionalParams[@"sofort"]) {
-        sofortDict = additionalParams[@"sofort"];
+        sofortDict = [additionalParams[@"sofort"] mutableCopy];
     }
     NSInteger selectedRow = self.selectorDataSource.selectedRow;
     NSString *selectedCountry = [self.selectorDataSource selectorValueForRow:selectedRow];
@@ -57,7 +57,6 @@
         additionalParams[@"sofort"] = sofortDict;
         params.additionalAPIParameters = additionalParams;
     }
-
     NSString *country = params.additionalAPIParameters[@"sofort"][@"country"];
     if (country.length > 0) {
         return params;

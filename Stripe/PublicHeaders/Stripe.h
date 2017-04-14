@@ -10,6 +10,7 @@
 #import "STPAPIClient.h"
 #import "STPAPIResponseDecodable.h"
 #import "STPAddCardViewController.h"
+#import "STPAdditionalSourceInfo.h"
 #import "STPAddSourceViewController.h"
 #import "STPAddress.h"
 #import "STPBackendAPIAdapter.h"

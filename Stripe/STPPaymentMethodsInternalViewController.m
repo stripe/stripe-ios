@@ -29,6 +29,7 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
 
 @property (nonatomic) STPPaymentConfiguration *configuration;
 @property (nonatomic) STPUserInformation *prefilledInformation;
+@property (nonatomic) STPAdditionalSourceInfo *sourceInformation;
 @property (nonatomic) STPAddress *shippingAddress;
 @property (nonatomic) NSArray<id<STPPaymentMethod>> *savedPaymentMethods;
 @property (nonatomic) NSArray<STPPaymentMethodType *> *availablePaymentTypes;
@@ -43,6 +44,7 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                                 theme:(STPTheme *)theme
                  prefilledInformation:(STPUserInformation *)prefilledInformation
+                    sourceInformation:(STPAdditionalSourceInfo *)sourceInformation
                       shippingAddress:(STPAddress *)shippingAddress
                    paymentMethodTuple:(STPPaymentMethodTuple *)tuple
                              delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate {
@@ -50,6 +52,7 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
     if (self) {
         _configuration = configuration;
         _prefilledInformation = prefilledInformation;
+        _sourceInformation = sourceInformation;
         _shippingAddress = shippingAddress;
         _savedPaymentMethods = tuple.savedPaymentMethods;
         _availablePaymentTypes = tuple.availablePaymentTypes;
@@ -142,6 +145,7 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
             if (addSourceViewController) {
                 addSourceViewController.delegate = self;
                 addSourceViewController.prefilledInformation = self.prefilledInformation;
+                addSourceViewController.sourceInformation = self.sourceInformation;
                 addSourceViewController.shippingAddress = self.shippingAddress;
                 [self.navigationController pushViewController:addSourceViewController
                                                      animated:YES];

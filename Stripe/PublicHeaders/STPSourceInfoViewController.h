@@ -37,13 +37,15 @@ typedef void (^STPSourceInfoCompletionBlock)(STPSourceParams * _Nullable sourceP
  *  @param amount                 The amount of the source.
  *  @param configuration          The configuration to use. This determines the source's returnURL.
  *  @param prefilledInformation   Use this to provide any information you've already collected from your user.
+ *  @param sourceInformation      Use this to specify any additional information about the source.
  *  @param theme                  The theme to use to inform the view controller's visual appearance. @see STPTheme
  *  @param completion             The completion block called when the user submits the forms or cancels.
  */
 - (nullable instancetype)initWithSourceType:(STPSourceType)type
                                      amount:(NSInteger)amount
                               configuration:(STPPaymentConfiguration *)configuration
-                       prefilledInformation:(STPUserInformation *)prefilledInformation
+                       prefilledInformation:(nullable STPUserInformation *)prefilledInformation
+                          sourceInformation:(nullable STPAdditionalSourceInfo *)sourceInformation
                                       theme:(STPTheme *)theme
                                  completion:(STPSourceInfoCompletionBlock)completion;
 
