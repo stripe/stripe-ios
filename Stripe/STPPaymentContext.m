@@ -9,6 +9,7 @@
 #import <PassKit/PassKit.h>
 #import <objc/runtime.h>
 
+#import "NSError+STPPaymentContext.h"
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "STPAddCardViewController+Private.h"
 #import "STPCustomer+Stripe_PaymentMethods.h"
@@ -489,8 +490,8 @@
         }
         else {
             // Unsupported payment method
-            // TODO: Add STPPaymentContext error domain and fill this in
-            [self didFinishWithStatus:STPPaymentStatusError error:nil];
+            [self didFinishWithStatus:STPPaymentStatusError
+                                error:[NSError stp_paymentContextUnsupportedPaymentMethodError]];
         }
     }] onFailure:^(NSError *error) {
         STRONG(self);
@@ -631,8 +632,8 @@
                 case STPSourceStatusFailed:
                     if (threeDSecureRequired) {
                         // If required, fail with error
-                        [self didFinishWithStatus:STPPaymentStatusError
-                                            error:nil]; // TODO: Create STPPaymentContext error domain
+                        [self didFinishWithStatus:STPPaymentStatusUserCancellation
+                                            error:nil];
                     }
                     else {
                         // If not required, charge original source
@@ -651,7 +652,7 @@
                 case STPSourceStatusUnknown:
                 case STPSourceStatusCanceled:
                     [self didFinishWithStatus:STPPaymentStatusError
-                                        error:nil]; // TODO: Create STPPaymentContext error domain
+                                        error:[NSError stp_paymentContextInvalidSourceStatusErrorWithStatus:threeDSSource.status]];
                     break;
             }
         }
@@ -705,11 +706,11 @@
                          and it expired, and so is an error.
                          */
                         [self didFinishWithStatus:STPPaymentStatusError
-                                            error:[NSError stp_genericFailedToParseResponseError]];
+                                            error:[NSError stp_paymentContextInvalidSourceStatusErrorWithStatus:finishedSource.status]];
                         break;
                     case STPSourceStatusUnknown:
                         [self didFinishWithStatus:STPPaymentStatusError
-                                            error:[NSError stp_genericFailedToParseResponseError]];
+                                            error:[NSError stp_paymentContextInvalidSourceStatusErrorWithStatus:finishedSource.status]];
                         break;
                 }
             }
@@ -742,7 +743,7 @@
         case STPSourceFlowUnknown:
             // We don't support this type
             [self didFinishWithStatus:STPPaymentStatusError
-                                error:[NSError stp_genericFailedToParseResponseError]];
+                                error:[NSError stp_paymentContextUnsupportedPaymentMethodError]];
             break;
     }
 }
@@ -882,8 +883,8 @@
     }
     else {
         // Unsupported source type
-        // TODO: Add STPPaymentContext error domain and fill this in
-        [self didFinishWithStatus:STPPaymentStatusError error:nil];
+        [self didFinishWithStatus:STPPaymentStatusError
+                            error:[NSError stp_paymentContextUnsupportedPaymentMethodError]];
     }
 }
 

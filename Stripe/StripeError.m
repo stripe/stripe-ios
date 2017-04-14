@@ -15,6 +15,7 @@ NSString *const StripeDomain = @"com.stripe.lib";
 NSString *const STPCardErrorCodeKey = @"com.stripe.lib:CardErrorCodeKey";
 NSString *const STPErrorMessageKey = @"com.stripe.lib:ErrorMessageKey";
 NSString *const STPErrorParameterKey = @"com.stripe.lib:ErrorParameterKey";
+NSString *const STPSourceStatusErrorKey = @"com.stripe.lib:SourceStatusErrorKey";
 NSString *const STPInvalidNumber = @"com.stripe.lib:InvalidNumber";
 NSString *const STPInvalidExpMonth = @"com.stripe.lib:InvalidExpiryMonth";
 NSString *const STPInvalidExpYear = @"com.stripe.lib:InvalidExpiryYear";

@@ -29,6 +29,10 @@ typedef NS_ENUM(NSInteger, STPErrorCode) {
     STPCancellationError = 80,   // The operation was cancelled.
     STPCheckoutUnknownError = 5000,   // Checkout failed
     STPCheckoutTooManyAttemptsError = 5001,   // Too many incorrect code attempts
+
+    STPPaymentContextUnknownError = 10000, // General purpose payment context failure
+    STPPaymentContextUnsupportedPaymentMethodError = 10010, // Tried to pay using a payment method not supported by payment context (generally not possible)
+    STPPaymentContextInvalidSourceStatusError = 10020, // Payment failed because source did not have the expected status. You can find the received status that caused this error via the STPSourceStatusErrorKey key
 };
 
 #pragma mark userInfo keys
@@ -43,6 +47,9 @@ FOUNDATION_EXPORT NSString * __nonnull const STPCardErrorCodeKey;
 // Which parameter on the STPCard had an error (e.g., "cvc"). Useful for marking up the
 // right UI element.
 FOUNDATION_EXPORT NSString * __nonnull const STPErrorParameterKey;
+
+// The source status that was received for STPPaymentContextInvalidSourceStatusError errors (see STPSourceStatus). Wrapped in an NSNumber
+FOUNDATION_EXPORT NSString * __nonnull const STPSourceStatusErrorKey;
 
 #pragma mark STPCardErrorCodeKeys
 
