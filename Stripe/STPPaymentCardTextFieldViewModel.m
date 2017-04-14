@@ -12,7 +12,6 @@
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
 @implementation STPPaymentCardTextFieldViewModel
-@dynamic valid;
 
 - (void)setCardNumber:(NSString *)cardNumber {
     NSString *sanitizedNumber = [STPCardValidator sanitizedNumericStringForString:cardNumber];

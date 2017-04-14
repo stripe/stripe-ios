@@ -48,7 +48,7 @@
 @synthesize borderColor = _borderColor;
 @synthesize borderWidth = _borderWidth;
 @synthesize cornerRadius = _cornerRadius;
-@dynamic enabled, isValid, valid;
+@dynamic enabled;
 
 CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 
