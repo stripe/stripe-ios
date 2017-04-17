@@ -8,6 +8,8 @@
 
 #import <XCTest/XCTest.h>
 #import "Stripe.h"
+#import "STPSourceParams+Private.h"
+#import "STPFormEncoder.h"
 
 @interface STPSourceParamsTest : XCTestCase
 
@@ -44,6 +46,31 @@
     XCTAssertEqualObjects(sourceAddress[@"state"], card.addressState);
     XCTAssertEqualObjects(sourceAddress[@"postal_code"], card.addressZip);
     XCTAssertEqualObjects(sourceAddress[@"country"], card.addressCountry);
+}
+
+- (NSString *)redirectMerchantNameQueryItemValueFromURLString:(NSString *)urlString {
+    NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
+    for (NSURLQueryItem *item in components.queryItems) {
+        if ([item.name isEqualToString:@"redirect_merchant_name"]) {
+            return item.value;
+        }
+    }
+    return nil;
+}
+
+- (void)testRedirectMerchantNameURL {
+    STPSourceParams *sourceParams = [STPSourceParams sofortParamsWithAmount:1000
+                                                                  returnURL:@"test://foo?value=baz"
+                                                                    country:@"DE"
+                                                        statementDescriptor:nil];
+
+    NSDictionary *params = [STPFormEncoder dictionaryForObject:sourceParams];
+    // Should be nil because we have no app name in tests
+    XCTAssertNil([self redirectMerchantNameQueryItemValueFromURLString:params[@"redirect"][@"return_url"]]);
+
+    sourceParams.redirectMerchantName = @"bar";
+    params = [STPFormEncoder dictionaryForObject:sourceParams];
+    XCTAssertEqualObjects([self redirectMerchantNameQueryItemValueFromURLString:params[@"redirect"][@"return_url"]], @"bar");
 }
 
 @end

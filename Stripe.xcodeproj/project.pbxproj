@@ -611,6 +611,8 @@
 		F19491E51E60DD72001E1FC2 /* STPSourceSEPADebitDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = F19491E11E60DD72001E1FC2 /* STPSourceSEPADebitDetails.m */; };
 		F19491E71E60DD9C001E1FC2 /* STPSourceSEPADebitDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = F19491E61E60DD9C001E1FC2 /* STPSourceSEPADebitDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F19491E81E60DD9C001E1FC2 /* STPSourceSEPADebitDetails.h in Headers */ = {isa = PBXBuildFile; fileRef = F19491E61E60DD9C001E1FC2 /* STPSourceSEPADebitDetails.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F1A0197C1EA5733200354301 /* STPSourceParams+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F1A0197A1EA5733200354301 /* STPSourceParams+Private.h */; };
+		F1A0197D1EA5733200354301 /* STPSourceParams+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F1A0197A1EA5733200354301 /* STPSourceParams+Private.h */; };
 		F1B980941DB550E60075332E /* STPPaymentMethodsViewControllerLocalizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B980931DB550E60075332E /* STPPaymentMethodsViewControllerLocalizationTests.m */; };
 		F1BA241E1E57BE5E00E4A1CF /* CardSource.json in Resources */ = {isa = PBXBuildFile; fileRef = F1BA241C1E57BE5700E4A1CF /* CardSource.json */; };
 		F1BA24211E57BECA00E4A1CF /* 3DSSource.json in Resources */ = {isa = PBXBuildFile; fileRef = F1BA241F1E57BEC600E4A1CF /* 3DSSource.json */; };
@@ -1054,6 +1056,7 @@
 		F19491DD1E5F6B8C001E1FC2 /* STPSourceCardDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPSourceCardDetails.h; path = PublicHeaders/STPSourceCardDetails.h; sourceTree = "<group>"; };
 		F19491E11E60DD72001E1FC2 /* STPSourceSEPADebitDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceSEPADebitDetails.m; sourceTree = "<group>"; };
 		F19491E61E60DD9C001E1FC2 /* STPSourceSEPADebitDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPSourceSEPADebitDetails.h; path = PublicHeaders/STPSourceSEPADebitDetails.h; sourceTree = "<group>"; };
+		F1A0197A1EA5733200354301 /* STPSourceParams+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPSourceParams+Private.h"; sourceTree = "<group>"; };
 		F1B980931DB550E60075332E /* STPPaymentMethodsViewControllerLocalizationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodsViewControllerLocalizationTests.m; sourceTree = "<group>"; };
 		F1BA241C1E57BE5700E4A1CF /* CardSource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CardSource.json; sourceTree = "<group>"; };
 		F1BA241F1E57BEC600E4A1CF /* 3DSSource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = 3DSSource.json; sourceTree = "<group>"; };
@@ -1380,6 +1383,7 @@
 				F1C7B8D11DBECF2400D9F6F0 /* STPDispatchFunctions.m */,
 				C158AB3D1E1EE98900348D01 /* STPSectionHeaderView.h */,
 				C158AB3E1E1EE98900348D01 /* STPSectionHeaderView.m */,
+				F1A0197A1EA5733200354301 /* STPSourceParams+Private.h */,
 			);
 			name = Stripe;
 			path = Tests/../Stripe;
@@ -1694,6 +1698,7 @@
 				04F94DCB1D22A229004FC826 /* UIView+Stripe_FirstResponder.h in Headers */,
 				04F94DD11D22A239004FC826 /* STPPromise.h in Headers */,
 				C1BD9B351E3940C400CEE925 /* STPSourceVerification.h in Headers */,
+				F1A0197D1EA5733200354301 /* STPSourceParams+Private.h in Headers */,
 				04633B161CD45222009D4FB5 /* STPAPIClient+ApplePay.h in Headers */,
 				0438EF2E1B7416BB00D506CC /* STPFormTextField.h in Headers */,
 				04A4C38A1C4F25F900B3B290 /* NSArray+Stripe_BoundSafe.h in Headers */,
@@ -1886,6 +1891,7 @@
 				04CDB4D31A5F30A700B854EE /* Stripe.h in Headers */,
 				04BC29C61CE2A82300318357 /* STPSMSCodeTextField.h in Headers */,
 				04E39F601CED2C3900AF3B96 /* STPRememberMeTermsView.h in Headers */,
+				F1A0197C1EA5733200354301 /* STPSourceParams+Private.h in Headers */,
 				F19491E71E60DD9C001E1FC2 /* STPSourceSEPADebitDetails.h in Headers */,
 				04A488421CA3580700506E53 /* UINavigationController+Stripe_Completion.h in Headers */,
 				F1DEB8991E2074480066B8E8 /* STPCoreViewController.h in Headers */,
