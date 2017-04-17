@@ -102,4 +102,14 @@
 
 }
 
++ (NSSet<NSString *> *)keyPathsForValuesAffectingValid {
+    return [NSSet setWithArray:@[
+                                 NSStringFromSelector(@selector(cardNumber)),
+                                 NSStringFromSelector(@selector(expirationMonth)),
+                                 NSStringFromSelector(@selector(expirationYear)),
+                                 NSStringFromSelector(@selector(cvc)),
+                                 NSStringFromSelector(@selector(brand))
+                                 ]];
+}
+
 @end
