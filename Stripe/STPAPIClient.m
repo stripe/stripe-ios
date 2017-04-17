@@ -19,6 +19,7 @@
 #import "STPPaymentConfiguration.h"
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
+#import "STPSourceParams+Private.h"
 #import "STPSourcePoller.h"
 #import "STPToken.h"
 
@@ -304,6 +305,7 @@ NSString *const STPNetworkActivityDidEndNotification = @"com.stripe.networkactiv
     NSString *sourceType = [STPSource stringFromType:sourceParams.type];
     [[STPAnalyticsClient sharedClient] logSourceCreationAttemptWithConfiguration:self.configuration
                                                                       sourceType:sourceType];
+    sourceParams.redirectMerchantName = self.configuration.companyName;
     NSDictionary *params = [STPFormEncoder dictionaryForObject:sourceParams];
     [STPAPIRequest<STPSource *> postWithAPIClient:self
                                          endpoint:sourcesEndpoint
