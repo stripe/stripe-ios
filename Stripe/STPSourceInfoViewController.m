@@ -62,8 +62,9 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
 
 - (nullable instancetype)initWithSourceType:(STPSourceType)type
                                      amount:(NSInteger)amount
-                              configuration:(__unused STPPaymentConfiguration *)configuration
+                              configuration:(STPPaymentConfiguration *)configuration
                        prefilledInformation:(STPUserInformation *)prefilledInformation
+                          sourceInformation:(STPAdditionalSourceInfo *)sourceInformation
                                       theme:(STPTheme *)theme
                                  completion:(STPSourceInfoCompletionBlock)completion {
     self = [super initWithTheme:theme];
@@ -77,9 +78,15 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
         sourceParams.type = type;
         sourceParams.currency = @"eur";
         sourceParams.amount = @(amount);
+        sourceParams.metadata = sourceInformation.metadata;
         NSURL *returnURL = configuration.returnURLBlock();
         if (returnURL) {
             sourceParams.redirect = @{ @"return_url": returnURL.absoluteString };
+        }
+        if ([self shouldAddStatementDescriptor] && sourceInformation.statementDescriptor) {
+            NSDictionary *detailDict = @{@"statement_descriptor": sourceInformation.statementDescriptor};
+            NSString *typeString = [STPSource stringFromType:type];
+            sourceParams.additionalAPIParameters = @{typeString: detailDict};
         }
         switch (type) {
             case STPSourceTypeBancontact: {
@@ -109,6 +116,19 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
         self.title = [NSString stringWithFormat:template, paymentMethodLabel];
     }
     return self;
+}
+
+// Return YES if the current source type allows setting a custom statement descriptor.
+- (BOOL)shouldAddStatementDescriptor {
+     switch (self.dataSource.sourceParams.type) {
+        case STPSourceTypeBancontact:
+        case STPSourceTypeGiropay:
+        case STPSourceTypeIDEAL:
+        case STPSourceTypeSofort:
+            return YES;
+        default:
+            return NO;
+    }   
 }
 
 - (STPSourceParams *)completeSourceParams {

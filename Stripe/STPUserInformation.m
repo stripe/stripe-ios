@@ -22,7 +22,6 @@
     copy.phone = self.phone;
     copy.billingAddress = self.billingAddress;
     copy.idealBank = self.idealBank;
-    copy.metadata = self.metadata;
     return copy;
 }
 

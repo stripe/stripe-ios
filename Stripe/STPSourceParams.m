@@ -226,6 +226,7 @@
 
 - (id)copyWithZone:(__unused NSZone *)zone {
     STPSourceParams *copy = [self.class new];
+    copy.additionalAPIParameters = self.additionalAPIParameters;
     copy.type = self.type;
     copy.amount = self.amount;
     copy.currency = self.currency;

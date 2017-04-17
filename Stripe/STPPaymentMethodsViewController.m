@@ -50,12 +50,15 @@
 @implementation STPPaymentMethodsViewController
 
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext {
-    return [self initWithConfiguration:paymentContext.configuration
-                            apiAdapter:paymentContext.apiAdapter
-                        loadingPromise:paymentContext.currentValuePromise
-                                 theme:paymentContext.theme
-                       shippingAddress:paymentContext.shippingAddress
-                              delegate:paymentContext];
+    STPPaymentMethodsViewController *instance = [self initWithConfiguration:paymentContext.configuration
+                                                                 apiAdapter:paymentContext.apiAdapter
+                                                             loadingPromise:paymentContext.currentValuePromise
+                                                                      theme:paymentContext.theme
+                                                            shippingAddress:paymentContext.shippingAddress
+                                                                   delegate:paymentContext];
+    instance.prefilledInformation = paymentContext.prefilledInformation;
+    instance.sourceInformation = paymentContext.sourceInformation;
+    return instance;
 }
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
@@ -127,6 +130,7 @@
                                                                                                                        theme:self.theme];
                 addSourceViewController.delegate = self;
                 addSourceViewController.prefilledInformation = self.prefilledInformation;
+                addSourceViewController.sourceInformation = self.sourceInformation;
                 addSourceViewController.shippingAddress = self.shippingAddress;
                 internal = addSourceViewController;
             }
@@ -135,6 +139,7 @@
             internal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:self.configuration
                                                                                         theme:self.theme
                                                                          prefilledInformation:self.prefilledInformation
+                                                                            sourceInformation:self.sourceInformation
                                                                               shippingAddress:self.shippingAddress
                                                                            paymentMethodTuple:tuple
                                                                                      delegate:self];

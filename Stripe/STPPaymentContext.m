@@ -256,7 +256,6 @@
             self.state = state;
             STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
             self.paymentMethodsViewController = paymentMethodsViewController;
-            paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
             navigationController.navigationBar.stp_theme = self.theme;
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
@@ -282,7 +281,6 @@
 
             STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
             self.paymentMethodsViewController = paymentMethodsViewController;
-            paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
             [navigationController pushViewController:paymentMethodsViewController animated:YES];
         }
     }];
@@ -830,8 +828,8 @@
     STPSourceInfoCompletionBlock completion = ^(STPSourceParams * _Nullable sourceParams) {
         STPVoidBlock vcCompletion = ^() {
             if (sourceParams) {
-                if (self.prefilledInformation.metadata) {
-                    sourceParams.metadata = self.prefilledInformation.metadata;
+                if (self.sourceInformation.metadata) {
+                    sourceParams.metadata = self.sourceInformation.metadata;
                 }
                 [self.apiClient createSourceWithParams:sourceParams completion:^(STPSource * _Nullable source, NSError * _Nullable error) {
                     if (source) {
@@ -865,9 +863,9 @@
                                                                                                  amount:self.paymentAmount
                                                                                           configuration:self.configuration
                                                                                    prefilledInformation:self.prefilledInformation
+                                                                                      sourceInformation:self.sourceInformation
                                                                                                   theme:self.theme
                                                                                              completion:completion];
-
     if (sourceInfoVC) {
         self.state = STPPaymentContextStateRequestingPayment;
 

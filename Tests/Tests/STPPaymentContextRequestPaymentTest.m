@@ -15,6 +15,7 @@
 #import "STPFormEncoder.h"
 #import "STPMocks.h"
 #import "STPPaymentContext+Private.h"
+#import "STPSourceInfoDataSource.h"
 
 @interface STPPaymentContext (Testing)
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
@@ -23,12 +24,16 @@
 @end
 
 @interface STPSourceInfoViewController (Testing)
+@property(nonatomic)STPSourceInfoDataSource *dataSource;
 @property(nonatomic, copy)STPSourceInfoCompletionBlock completion;
 @end
 
 @interface STPPaymentContextRequestPaymentTest : XCTestCase
 
 @end
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
 /**
  These tests cover STPPaymentContext's requestPayment method
@@ -116,6 +121,17 @@
     config.returnURL = [NSURL URLWithString:@"test://redirect"];
     STPPaymentContext *sut = [self buildPaymentContextWithCustomer:customer
                                                      configuration:config];
+    sut.paymentAmount = 1099;
+    STPUserInformation *userInfo = [STPUserInformation new];
+    userInfo.idealBank = @"ing";
+    STPAddress *address = [STPAddress new];
+    address.name = @"Jenny Rosen";
+    userInfo.billingAddress = address;
+    sut.prefilledInformation = userInfo;
+    STPAdditionalSourceInfo *sourceInfo = [STPAdditionalSourceInfo new];
+    sourceInfo.metadata = @{@"foo": @"bar"};
+    sourceInfo.statementDescriptor = @"ORDER 123";
+    sut.sourceInformation = sourceInfo;
     id mockVC = [STPMocks hostViewController];
     sut.hostViewController = mockVC;
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
@@ -123,7 +139,8 @@
     sut.selectedPaymentMethod = [STPPaymentMethodType ideal];
     XCTAssertEqual(sut.state, STPPaymentContextStateNone);
 
-    STPSourceParams *expectedParams = [STPSourceParams idealParamsWithAmount:1099 name:@"Jenny Rosen" returnURL:@"test://redirect" statementDescriptor:nil bank:nil];
+    STPSourceParams *expectedParams = [STPSourceParams idealParamsWithAmount:1099 name:@"Jenny Rosen" returnURL:@"test://redirect" statementDescriptor:@"ORDER 123" bank:@"ing"];
+    expectedParams.metadata = @{@"foo": @"bar"};
 
     XCTestExpectation *sourceInfoExp = [self expectationWithDescription:@"presented SourceInfoVC"];
     XCTestExpectation *safariExp = [self expectationWithDescription:@"present SafariVC"];
@@ -133,7 +150,11 @@
             UINavigationController *nc = (UINavigationController *)vc;
             if ([nc.topViewController isKindOfClass:[STPSourceInfoViewController class]]) {
                 STPSourceInfoViewController *sourceInfoVC = (STPSourceInfoViewController *)nc.topViewController;
-                sourceInfoVC.completion(expectedParams);
+                // Because iDEAL always requires the user to verify their
+                // bank, sourceInfoVC.completeSourceParams will be nil.
+                // As a workaround, we get completeSourceParams from sourceInfoVC's
+                // internal data source.
+                sourceInfoVC.completion(sourceInfoVC.dataSource.completeSourceParams);
                 [sourceInfoExp fulfill];
                 return YES;
             };
@@ -167,6 +188,7 @@
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
+
 
 /**
  When selectedPaymentMethod is ApplePay, PKPaymentAuthVC should be presented.
@@ -299,5 +321,7 @@
     [sut requestPayment];
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
+
+#pragma clang diagnostic pop
 
 @end

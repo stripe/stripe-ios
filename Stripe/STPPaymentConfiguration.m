@@ -47,6 +47,7 @@
         _shippingType = STPShippingTypeShipping;
         self.returnURLBlock = ^NSURL *() { return  nil; };
         self.threeDSecureSupportTypeBlock = ^STPThreeDSecureSupportType() { return STPThreeDSecureSupportTypeDisabled; };
+        _pollingTimeout = 10;
     }
     return self;
 }
@@ -60,6 +61,10 @@
     copy.shippingType = self.shippingType;
     copy.companyName = self.companyName;
     copy.appleMerchantIdentifier = self.appleMerchantIdentifier;
+    copy.useSourcesForCards = self.useSourcesForCards;
+    copy.returnURLBlock = self.returnURLBlock;
+    copy.threeDSecureSupportTypeBlock = self.threeDSecureSupportTypeBlock;
+    copy.pollingTimeout = self.pollingTimeout;
     return copy;
 }
 
@@ -108,7 +113,7 @@
                 else {
                     [apiClient startPollingSourceWithId:sourceId
                                            clientSecret:sourceClientSecret
-                                                timeout:10 //TODO: Add this timeout as a property on STPConfiguration?
+                                                timeout:self.pollingTimeout
                                              completion:^(STPSource * _Nullable polledSource, NSError * _Nullable pollerError) {
                                                  completion(polledSource, pollerError);
                                              }];
