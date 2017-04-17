@@ -105,10 +105,6 @@ NSString *const STPPaymentMethodNotAvailable = @"com.stripe.lib:PaymentMethodNot
     return [[self alloc] initWithDomain:StripeDomain code:STPConnectionError userInfo:userInfo];
 }
 
-- (BOOL)stp_isUnknownCheckoutError {
-    return self.code == STPCheckoutUnknownError;
-}
-
 - (BOOL)stp_isURLSessionCancellationError {
     return [self.domain isEqualToString:NSURLErrorDomain] && self.code == NSURLErrorCancelled;
 }
