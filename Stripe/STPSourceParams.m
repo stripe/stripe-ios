@@ -7,6 +7,7 @@
 //
 
 #import "STPSourceParams.h"
+#import "STPSourceParams+Private.h"
 
 #import "STPCardParams.h"
 #import "STPFormEncoder.h"
@@ -202,6 +203,39 @@
     return params;
 }
 
+#pragma mark - Redirect url
+
+
+/**
+ Private setter allows for setting the name of the app in the returnURL so
+ that it can be displayed on hooks.stripe.com if the automatic redirect back
+ to the app fails.
+ 
+ We intercept the reading of redirect dictionary from STPFormEncoder and replace
+ the value of return_url if necessary
+ */
+- (NSDictionary *)redirectDictionaryWithMerchantNameIfNecessary {
+    if (self.redirectMerchantName
+        && self.redirect[@"return_url"]) {
+        NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:[NSURL URLWithString:self.redirect[@"return_url"]]
+                                                    resolvingAgainstBaseURL:NO];
+        NSMutableArray<NSURLQueryItem *> *queryItems = (urlComponents.queryItems ?: @[]).mutableCopy;
+        [queryItems addObject:[NSURLQueryItem queryItemWithName:@"redirect_merchant_name"
+                                                          value:self.redirectMerchantName]];
+        urlComponents.queryItems = queryItems;
+
+
+        NSMutableDictionary *redirectCopy = self.redirect.mutableCopy;
+        redirectCopy[@"return_url"] = urlComponents.URL;
+
+        return redirectCopy.copy;;
+    }
+    else {
+        return self.redirect;
+    }
+}
+
+
 #pragma mark - STPFormEncodable
 
 + (NSString *)rootObjectName {
@@ -216,7 +250,7 @@
              NSStringFromSelector(@selector(flowString)): @"flow",
              NSStringFromSelector(@selector(metadata)): @"metadata",
              NSStringFromSelector(@selector(owner)): @"owner",
-             NSStringFromSelector(@selector(redirect)): @"redirect",
+             NSStringFromSelector(@selector(redirectDictionaryWithMerchantNameIfNecessary)): @"redirect",
              NSStringFromSelector(@selector(token)): @"token",
              NSStringFromSelector(@selector(usageString)): @"usage",
              };
