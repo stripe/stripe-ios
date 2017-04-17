@@ -26,7 +26,7 @@ typedef NS_ENUM(NSInteger, STPCardFieldType) {
 @property(nonatomic, readonly, nullable)NSString *expirationYear;
 @property(nonatomic, readwrite, copy, nullable)NSString *cvc;
 @property(nonatomic, readonly) STPCardBrand brand;
-@property(nonatomic, getter=isValid, readonly) BOOL valid;
+@property(nonatomic, readonly) BOOL isValid;
 
 - (nonnull NSString *)defaultPlaceholder;
 - (nullable NSString *)numberWithoutLastDigits;
