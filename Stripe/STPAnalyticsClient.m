@@ -25,8 +25,6 @@
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
-static BOOL STPAnalyticsCollectionDisabled = NO;
-
 @interface STPAnalyticsClient()
 
 @property (nonatomic) NSSet *apiUsage;
@@ -91,26 +89,18 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     });
 }
 
-+ (void)disableAnalytics {
-    STPAnalyticsCollectionDisabled = YES;
-}
-
 + (BOOL)shouldCollectAnalytics {
 #if TARGET_OS_SIMULATOR
     return NO;
 #endif
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunreachable-code"
-    return NSClassFromString(@"XCTest") == nil && !STPAnalyticsCollectionDisabled;
+    return NSClassFromString(@"XCTest") == nil;
 #pragma clang diagnostic pop
 }
 
 + (NSNumber *)timestampWithDate:(NSDate *)date {
     return @((NSInteger)([date timeIntervalSince1970]*1000));
-}
-
-+ (NSString *)muid {
-    return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
 }
 
 + (NSString *)tokenTypeFromParameters:(NSDictionary *)parameters {

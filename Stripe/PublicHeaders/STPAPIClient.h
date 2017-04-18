@@ -37,12 +37,6 @@ static NSString *const STPSDKVersion = @"10.0.1";
 /// The current default publishable key.
 + (nullable NSString *)defaultPublishableKey;
 
-/**
- *  By default, Stripe collects some basic information about SDK usage.
- *  You can call this method to turn off analytics collection.
- */
-+ (void)disableAnalytics;
-
 @end
 
 /// A client for making connections to the Stripe API.

@@ -11,6 +11,7 @@
 #import "NSBundle+Stripe_AppName.h"
 #import "STPAnalyticsClient.h"
 #import "STPPaymentConfiguration+Private.h"
+#import "STPTelemetryClient.h"
 #import "Stripe.h"
 
 @implementation STPPaymentConfiguration
@@ -19,6 +20,7 @@
 
 + (void)initialize {
     [STPAnalyticsClient initializeIfNeeded];
+    [STPTelemetryClient sharedInstance];
 }
 
 + (instancetype)sharedConfiguration {
