@@ -1,0 +1,31 @@
+{
+    "id": "src_123",
+    "object": "source",
+    "amount": 1099,
+    "client_secret": "src_client_secret_123",
+    "created": 1445277809,
+    "currency": "eur",
+    "flow": "redirect",
+    "livemode": true,
+    "owner": {
+	       "address": null,
+	       "email": null,
+	       "name": "Jenny Rosen",
+	       "phone": null,
+	       "verified_address": null,
+	       "verified_email": null,
+	       "verified_name": "Jenny Rosen",
+	       "verified_phone": null,
+    },
+    "redirect": {
+	       "return_url": "https://shop.foo.com/crtABC",
+	       "status": "pending",
+	       "url": "https://pay.stripe.com/redirect/src_123?client_secret=src_client_secret_123"
+    },
+    "status": "pending",
+    "type": "ideal",
+    "usage": "single_use",
+    "ideal": {
+	       "bank": "ing"
+    }
+}
