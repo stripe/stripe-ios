@@ -7,6 +7,7 @@ Pod::Spec.new do |s|
   s.authors                        = { 'Jack Flintermann' => 'jack@stripe.com', 'Stripe' => 'support+github@stripe.com' }
   s.source                         = { :git => 'https://github.com/stripe/stripe-ios.git', :tag => "v#{s.version}" }
   s.frameworks                     = 'Foundation', 'Security', 'WebKit', 'PassKit', 'AddressBook'
+  s.weak_frameworks                = 'Contacts'
   s.requires_arc                   = true
   s.platform                       = :ios
   s.ios.deployment_target          = '8.0'

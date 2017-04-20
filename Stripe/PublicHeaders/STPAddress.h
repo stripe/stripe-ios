@@ -6,20 +6,20 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#define FAUXPAS_IGNORED_IN_FILE(...)
-FAUXPAS_IGNORED_IN_FILE(APIAvailability)
+#define FAUXPAS_IGNORED_IN_METHOD(...)
+#define FAUXPAS_IGNORED_ON_LINE(...)
+
+#import <Foundation/Foundation.h>
+#import <PassKit/PassKit.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 #import <AddressBook/AddressBook.h>
 #pragma clang diagnostic pop
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-#define FAUXPAS_IGNORED_ON_LINE(...)
-
-#import <Foundation/Foundation.h>
-#import <PassKit/PassKit.h>
 #import "STPAPIResponseDecodable.h"
+
+@class CNContact;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -100,12 +100,16 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 - (instancetype)initWithABRecord:(ABRecordRef)record;
 - (ABRecordRef)ABRecordValue;
 #pragma clang diagnostic pop
-- (PKContact *)PKContactValue NS_AVAILABLE_IOS(9.0);
+
+- (instancetype)initWithPKContact:(PKContact *)contact NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);
+- (PKContact *)PKContactValue NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);
+
+- (instancetype)initWithCNContact:(CNContact *)contact NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);
 
 - (BOOL)containsRequiredFields:(STPBillingAddressFields)requiredFields;
 - (BOOL)containsRequiredShippingAddressFields:(PKAddressField)requiredFields;
 
-+ (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
++ (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields;
 
 @end
 

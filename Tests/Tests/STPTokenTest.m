@@ -26,11 +26,11 @@
                                @"address_city": @"New York",
                                @"address_state": @"NY",
                                @"address_zip": @"12345",
-                               @"address_country": @"USA",
+                               @"address_country": @"US",
                                @"last4": @"1234",
                                @"brand": @"Visa",
                                @"fingerprint": @"Fingolfin",
-                               @"country": @"Japan",
+                               @"country": @"JP",
                                };
     
     NSDictionary *tokenDict = @{ @"id": @"id_for_token", @"object": @"token", @"livemode": @NO, @"created": @1353025450.0, @"used": @NO, @"card": cardDict };
