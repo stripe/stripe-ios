@@ -30,11 +30,11 @@
     self = [super init];
     if (self) {
         _bankNameToBankCode = @{
-                                @"ABN AMRO": @"abn_amro",
+                                @"ABN": @"abn_amro",
                                 @"ASN Bank": @"asn_bank",
-                                @"Bunq": @"bunq",
-                                @"ING": @"ing",
+                                @"bunq": @"bunq",
                                 @"Knab": @"knab",
+                                @"ING": @"ing",
                                 @"Rabobank": @"rabobank",
                                 @"RegioBank": @"regiobank",
                                 @"SNS Bank": @"sns_bank",
@@ -48,7 +48,7 @@
 }
 
 - (NSString *)selectorTitle {
-    return STPLocalizedString(@"Bank", @"Title for bank picker section");
+    return STPLocalizedString(@"BANK", @"Title for bank picker section");
 }
 
 - (NSInteger)numberOfRowsInSelector {
@@ -82,7 +82,7 @@
 }
 
 - (UIImage *)selectorImageForRow:(__unused NSInteger)row {
-    return [STPImageLibrary addIcon];
+    return nil;
 }
 
 @end

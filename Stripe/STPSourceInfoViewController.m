@@ -150,7 +150,7 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
     self.stp_navigationItemProxy.rightBarButtonItem.enabled = NO;
 
     STPSectionHeaderView *firstSectionHeader = [STPSectionHeaderView new];
-    firstSectionHeader.title = STPLocalizedString(@"Bank Account Information", @"Title for bank account information form");
+    firstSectionHeader.title = STPLocalizedString(@"BANK ACCOUNT INFORMATION", @"Title for bank account information form");
     firstSectionHeader.buttonHidden = YES;
     self.firstSectionHeaderView = firstSectionHeader;
 
@@ -162,7 +162,7 @@ typedef NS_ENUM(NSUInteger, STPSourceInfoSection) {
     self.selectorHeaderView = selectorHeader;
 
     STPInfoFooterView *footerView = [STPInfoFooterView new];
-    NSString *template = STPLocalizedString(@"You'll be redirected to %@ to finish your payment.", @"You'll be redirected to {bank name} to finish your payment.");
+    NSString *template = STPLocalizedString(@"You'll be taken to %@ to finish your purchase.", @"You'll be taken to {bank name} to finish your purchase.");
     NSString *paymentMethodLabel = self.dataSource.paymentMethodType.paymentMethodLabel;
     footerView.textView.text = [NSString stringWithFormat:template, paymentMethodLabel];
     self.footerView = footerView;

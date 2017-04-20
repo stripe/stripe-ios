@@ -24,21 +24,24 @@
                               addressViewModel:(STPAddressViewModel *)addressViewModel
                                shippingAddress:(STPAddress *)shippingAddress {
     STPSectionHeaderView *headerView = [STPSectionHeaderView new];
-    headerView.title = STPLocalizedString(@"Billing Address", @"Title for billing address entry section");
     switch (config.shippingType) {
         case STPShippingTypeShipping:
-            [headerView.button setTitle:STPLocalizedString(@"Use Shipping", @"Button to fill billing address from shipping address.")
+            [headerView.button setTitle:STPLocalizedString(@"USE SHIPPING", @"Button to fill billing address from shipping address.")
                                       forState:UIControlStateNormal];
             break;
         case STPShippingTypeDelivery:
-            [headerView.button setTitle:STPLocalizedString(@"Use Delivery", @"Button to fill billing address from delivery address.")
+            [headerView.button setTitle:STPLocalizedString(@"USE DELIVERY", @"Button to fill billing address from delivery address.")
                                       forState:UIControlStateNormal];
             break;
     }
     BOOL needsAddress = !addressViewModel.isValid;
     switch (sourceType) {
         case STPSourceTypeCard:
+            headerView.title = STPLocalizedString(@"BILLING ADDRESS", @"Title for billing address entry section");
             needsAddress = needsAddress && config.requiredBillingAddressFields != STPBillingAddressFieldsNone;
+            break;
+        case STPSourceTypeSEPADebit:
+            headerView.title = STPLocalizedString(@"ACCOUNT HOLDER ADDRESS", @"Title for address entry section");
             break;
         default:
             break;
@@ -90,6 +93,7 @@
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         style.firstLineHeadIndent = 15;
         style.headIndent = style.firstLineHeadIndent;
+        style.lineSpacing = 2;
         NSDictionary *attributes = @{NSParagraphStyleAttributeName: style};
         self.label.attributedText = [[NSAttributedString alloc] initWithString:title
                                                                     attributes:attributes];
@@ -117,7 +121,7 @@
 }
 
 - (CGFloat)heightThatFits:(CGSize)size {
-    CGFloat labelPadding = 16;
+    CGFloat labelPadding = 20;
     if (self.buttonHidden) {
         CGFloat labelHeight = [self.label sizeThatFits:size].height;
         return labelHeight + labelPadding;

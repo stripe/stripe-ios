@@ -31,15 +31,15 @@
 @implementation STPPaymentMethodTypeCreditCard
 
 - (UIImage *)paymentMethodImage {
-    return [STPImageLibrary addIcon];
+    return [STPImageLibrary cardIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return [STPImageLibrary addIcon];
+    return [STPImageLibrary cardIcon];
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"New Card", @"Label for 'new card' payment method field") ;
+    return STPLocalizedString(@"Credit or Debit Card", @"Label for card payment method field") ;
 }
 
 - (BOOL)convertsToSourceAtSelection {
@@ -65,15 +65,15 @@
 @implementation STPPaymentMethodTypeSEPADebit
 
 - (UIImage *)paymentMethodImage {
-    return [STPImageLibrary addIcon];
+    return [STPImageLibrary sepaIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return [STPImageLibrary addIcon];
+    return [STPImageLibrary sepaIcon];
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"New SEPA Debit", @"Label for 'new sepa debit' payment method field") ;;
+    return STPLocalizedString(@"Direct Debit Account", @"Label for SEPA Direct Debit payment method field") ;;
 }
 
 - (BOOL)convertsToSourceAtSelection {
@@ -128,11 +128,11 @@
 @implementation STPPaymentMethodTypeBancontact
 
 - (UIImage *)paymentMethodImage {
-    return nil;
+    return [STPImageLibrary bancontactIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return nil;
+    return [STPImageLibrary bancontactIcon];
 }
 
 - (NSString *)paymentMethodLabel {
@@ -155,11 +155,11 @@
 @implementation STPPaymentMethodTypeGiropay
 
 - (UIImage *)paymentMethodImage {
-    return nil;
+    return [STPImageLibrary giropayIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return nil;
+    return [STPImageLibrary giropayIcon];
 }
 
 - (NSString *)paymentMethodLabel {
@@ -182,11 +182,11 @@
 @implementation STPPaymentMethodTypeIdeal
 
 - (UIImage *)paymentMethodImage {
-    return nil;
+    return [STPImageLibrary idealIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return nil;
+    return [STPImageLibrary idealIcon];
 }
 
 - (NSString *)paymentMethodLabel {
@@ -209,11 +209,11 @@
 @implementation STPPaymentMethodTypeSofort
 
 - (UIImage *)paymentMethodImage {
-    return nil;
+    return [STPImageLibrary sofortIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return nil;
+    return [STPImageLibrary sofortIcon];
 }
 
 - (NSString *)paymentMethodLabel {

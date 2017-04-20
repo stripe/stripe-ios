@@ -13,11 +13,7 @@
 @implementation STPCustomer (Stripe_PaymentMethods)
 
 - (STPPaymentMethodTuple *)stp_paymentMethodTupleWithConfiguration:(STPPaymentConfiguration *)configuration {
-
-
     NSOrderedSet<STPPaymentMethodType *> *availableTypes = configuration.availablePaymentMethodTypesSet;
-    // TODO: store last payment method locally or on stripe meta data so
-    // it can be a non-reusable source
 
     id<STPPaymentMethod> selectedPaymentMethod = nil;
     NSMutableArray<id<STPPaymentMethod>> *filteredSavedPaymentMethods = [NSMutableArray new];

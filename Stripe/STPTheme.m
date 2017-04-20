@@ -122,7 +122,7 @@ static UIFont  *STPThemeDefaultMediumFont;
 }
 
 - (UIFont *)smallFont {
-    return [self.font fontWithSize:self.font.pointSize - 2];
+    return [self.font fontWithSize:self.font.pointSize - 4];
 }
 
 - (UIFont *)largeFont {

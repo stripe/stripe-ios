@@ -85,4 +85,37 @@
     XCTAssertEqualObjects(tuple.selectedPaymentMethod, [STPPaymentMethodType bancontact]);
 }
 
+
+/**
+ When there are no saved payment methods, and apple pay and card are available,
+ apple pay should become a saved payment method and the selected payment method
+ */
+- (void)testApplePayAndCardAvailable {
+    STPPaymentMethodTuple *tuple = [[STPPaymentMethodTuple alloc] initWithSavedPaymentMethods:nil
+                                                                        availablePaymentTypes:@[
+                                                                                                [STPPaymentMethodType applePay],
+                                                                                                [STPPaymentMethodType card]
+                                                                                                ]
+                                                                        selectedPaymentMethod:nil];
+
+    XCTAssertEqualObjects(tuple.savedPaymentMethods, @[[STPPaymentMethodType applePay]]);
+    XCTAssertEqualObjects(tuple.availablePaymentTypes, @[[STPPaymentMethodType card]]);
+    XCTAssertEqualObjects(tuple.selectedPaymentMethod, [STPPaymentMethodType applePay]);
+}
+
+/**
+ When there are saved payment methods in addition to apple pay, apple pay should become the first option
+ */
+- (void)testSavedMethodsWithApplePay {
+    STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
+    STPSource *source = [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"]];
+    STPPaymentMethodTuple *tuple = [[STPPaymentMethodTuple alloc] initWithSavedPaymentMethods:@[card, source, [STPPaymentMethodType applePay]]
+                                                                        availablePaymentTypes:@[[STPPaymentMethodType card]]
+                                                                        selectedPaymentMethod:card];
+    NSArray *expectedSavedMethods = @[[STPPaymentMethodType applePay], card, source];
+    XCTAssertEqualObjects(tuple.savedPaymentMethods, expectedSavedMethods);
+    XCTAssertEqualObjects(tuple.availablePaymentTypes, @[[STPPaymentMethodType card]]);
+    XCTAssertEqualObjects(tuple.selectedPaymentMethod, card);
+}
+
 @end

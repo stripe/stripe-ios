@@ -13,6 +13,7 @@
 #import "STPCoreTableViewController+Private.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
+#import "STPSectionHeaderView.h"
 #import "STPShippingMethodTableViewCell.h"
 #import "UIBarButtonItem+Stripe.h"
 #import "UINavigationBar+Stripe_Theme.h"
@@ -27,6 +28,7 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
 @property(nonatomic)NSString *currency;
 @property(nonatomic, weak)UIImageView *imageView;
 @property(nonatomic)UIBarButtonItem *doneItem;
+@property(nonatomic)STPSectionHeaderView *sectionHeaderView;
 @end
 
 @implementation STPShippingMethodsViewController
@@ -68,6 +70,11 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
     self.tableView.tableHeaderView = imageView;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+
+    STPSectionHeaderView *headerView = [STPSectionHeaderView new];
+    headerView.title = STPLocalizedString(@"SHIPPING METHOD", @"Label for shipping method form");
+    headerView.buttonHidden = YES;
+    self.sectionHeaderView = headerView;
 }
 
 - (void)updateAppearance {
@@ -76,6 +83,7 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
     STPTheme *navBarTheme = self.navigationController.navigationBar.stp_theme ?: self.theme;
     [self.doneItem stp_setTheme:navBarTheme];
     self.tableView.allowsSelection = YES;
+    self.sectionHeaderView.theme = self.theme;
 
     self.imageView.tintColor = self.theme.accentColor;
     for (UITableViewCell *cell in [self.tableView visibleCells]) {
@@ -126,8 +134,9 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
     return 27.0f;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(__unused NSInteger)section {
-    return tableView.sectionHeaderHeight;
+- (CGFloat)tableView:(__unused UITableView *)tableView heightForHeaderInSection:(__unused NSInteger)section {
+    CGSize fittingSize = CGSizeMake(self.view.bounds.size.width, CGFLOAT_MAX);
+    return [self.sectionHeaderView sizeThatFits:fittingSize].height;
 }
 
 - (UIView *)tableView:(__unused UITableView *)tableView viewForHeaderInSection:(__unused NSInteger)section {
@@ -137,7 +146,7 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
     style.firstLineHeadIndent = 15;
     NSDictionary *attributes = @{NSParagraphStyleAttributeName: style};
     label.textColor = self.theme.secondaryForegroundColor;
-    label.attributedText = [[NSAttributedString alloc] initWithString:STPLocalizedString(@"Shipping Method", @"Label for shipping method form") attributes:attributes];
+    label.attributedText = [[NSAttributedString alloc] initWithString:STPLocalizedString(@"SHIPPING METHOD", @"Label for shipping method form") attributes:attributes];
     return label;
 }
 
