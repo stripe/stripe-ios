@@ -75,8 +75,8 @@
         STPCustomer *customer = [STPCustomer new];
         customer.stripeID = json[@"id"];
         NSString *defaultSourceId;
-        if ([json[@"default_source"] isKindOfClass:[NSString class]]) {
-            defaultSourceId = json[@"default_source"];
+        if ([json[@"defaultSource"] isKindOfClass:[NSString class]]) {
+            defaultSourceId = json[@"defaultSource"];
         }
         NSMutableArray *sources = [NSMutableArray array];
         if ([json[@"sources"] isKindOfClass:[NSDictionary class]] && [json[@"sources"][@"data"] isKindOfClass:[NSArray class]]) {
