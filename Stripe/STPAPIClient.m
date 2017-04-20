@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
+#import "NSBundle+Stripe_AppName.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient.h"
 #import "STPAPIRequest.h"
@@ -19,6 +20,7 @@
 #import "STPPaymentConfiguration.h"
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
+#import "STPSourceParams+Private.h"
 #import "STPSourcePoller.h"
 #import "STPToken.h"
 
@@ -303,6 +305,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     NSString *sourceType = [STPSource stringFromType:sourceParams.type];
     [[STPAnalyticsClient sharedClient] logSourceCreationAttemptWithConfiguration:self.configuration
                                                                       sourceType:sourceType];
+    sourceParams.redirectMerchantName = self.configuration.companyName ?: [NSBundle stp_applicationName];
     NSDictionary *params = [STPFormEncoder dictionaryForObject:sourceParams];
     [STPAPIRequest<STPSource *> postWithAPIClient:self
                                          endpoint:sourcesEndpoint
