@@ -106,7 +106,7 @@ NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions
  *  You must ensure that your app delegate listens for  the `returnURL` that you
  *  set on your source object, and forwards it to the Stripe SDK so that the
  *  context can be notified when the redirect is completed and dismiss the
- *  view controller. See `[Stripe handleStripeURLCallback:]`
+ *  view controller. See `[Stripe handleStripeURLCallbackWithURL:]`
  *
  *  The context will listen for both received URLs and app open notifications 
  *  and fire its completion block when either the URL is received, or the next
