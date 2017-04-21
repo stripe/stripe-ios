@@ -31,6 +31,10 @@
     return cardParams;
 }
 
++ (STPSource *)cardSource {
+    return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"]];
+}
+
 + (STPCustomer *)customerWithSingleCardTokenSource {
     NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:@"Card"] mutableCopy];
     card1[@"id"] = @"card_123";
@@ -43,6 +47,10 @@
 
     STPCustomerDeserializer *deserializer = [[STPCustomerDeserializer alloc] initWithJSONResponse:customer];
     return deserializer.customer;
+}
+
++ (STPSource *)iDEALSource {
+    return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"iDEALSource"]];
 }
 
 + (STPPaymentConfiguration *)paymentConfiguration {

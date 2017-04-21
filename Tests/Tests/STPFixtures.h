@@ -29,10 +29,20 @@
 + (STPCardParams *)cardParams;
 
 /**
+ A Source object with type card
+ */
++ (STPSource *)cardSource;
+
+/**
  A Customer object with a single card token in its sources array, and
  default_source set to that card token.
  */
 + (STPCustomer *)customerWithSingleCardTokenSource;
+
+/**
+ A Source object with type iDEAL
+ */
++ (STPSource *)iDEALSource;
 
 /**
  A PaymentConfiguration object with a fake publishable key. Use this to avoid
