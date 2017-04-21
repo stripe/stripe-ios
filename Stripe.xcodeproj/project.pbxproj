@@ -446,6 +446,7 @@
 		C15993451D8829C00047950D /* stp_shipping_form.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993201D8807930047950D /* stp_shipping_form.png */; };
 		C15993461D8829C00047950D /* stp_shipping_form@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993211D8807930047950D /* stp_shipping_form@2x.png */; };
 		C15993471D8829C00047950D /* stp_shipping_form@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993221D8807930047950D /* stp_shipping_form@3x.png */; };
+		C15B02731EA176090026E606 /* StripeErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C15B02721EA176090026E606 /* StripeErrorTest.m */; };
 		C16F66AB1CA21BAC006A21B5 /* STPFormTextFieldTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */; };
 		C1717DB11CC00ED60009CF4A /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C17A030D1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C17A030B1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h */; };
@@ -975,6 +976,7 @@
 		C15993301D8808680047950D /* STPShippingMethodsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPShippingMethodsViewController.m; sourceTree = "<group>"; };
 		C15993311D8808680047950D /* STPShippingMethodTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPShippingMethodTableViewCell.h; sourceTree = "<group>"; };
 		C15993321D8808680047950D /* STPShippingMethodTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPShippingMethodTableViewCell.m; sourceTree = "<group>"; };
+		C15B02721EA176090026E606 /* StripeErrorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StripeErrorTest.m; sourceTree = "<group>"; };
 		C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFormTextFieldTest.m; sourceTree = "<group>"; };
 		C17A030B1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPAddressFieldTableViewCell.h; sourceTree = "<group>"; };
 		C17A030C1CBEE7A2006C819F /* STPAddressFieldTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddressFieldTableViewCell.m; sourceTree = "<group>"; };
@@ -1495,6 +1497,7 @@
 				C124A1801CCAA1BF007D42EE /* NSMutableURLRequest+StripeTest.m */,
 				C1EEDCC71CA2172700A54582 /* NSString+StripeTest.m */,
 				04CB86B81BA89CD400E4F61E /* PKPayment+StripeTest.m */,
+				C15B02721EA176090026E606 /* StripeErrorTest.m */,
 				C13538071D2C2186003F6157 /* STPAddCardViewControllerTest.m */,
 				C1080F4B1CBED48A007B2D89 /* STPAddressTests.m */,
 				C12711091DBA7E490087840D /* STPAddressViewModelTest.m */,
@@ -2298,6 +2301,7 @@
 				C13538081D2C2186003F6157 /* STPAddCardViewControllerTest.m in Sources */,
 				04415C671A6605B5001225ED /* STPAPIClientTest.m in Sources */,
 				045D71311CF514BB00F6CD65 /* STPBinRangeTest.m in Sources */,
+				C15B02731EA176090026E606 /* StripeErrorTest.m in Sources */,
 				C1EF044E1DD2397C00FBF452 /* STPShippingMethodsViewControllerLocalizationTests.m in Sources */,
 				04415C681A6605B5001225ED /* STPFormEncoderTest.m in Sources */,
 				C11810991CC6D46D0022FB55 /* NSDecimalNumber+StripeTest.m in Sources */,
