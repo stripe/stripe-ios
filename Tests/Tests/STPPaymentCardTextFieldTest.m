@@ -419,7 +419,7 @@
 }
 
 - (void)testIsValidKVO {
-    id observer = OCMClassMock([NSObject class]);
+    id observer = OCMClassMock([UIViewController class]);
     self.sut.numberField.text = @"4242424242424242";
     self.sut.expirationField.text = @"10/99";
     XCTAssertFalse(self.sut.isValid);
