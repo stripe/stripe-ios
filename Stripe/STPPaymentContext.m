@@ -426,6 +426,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         if (self.state == STPPaymentContextStateRequestingPayment) {
             self.state = STPPaymentContextStateNone;
             [self requestPayment];
+        } else {
+            self.state = STPPaymentContextStateNone;
         }
     }];
 }
