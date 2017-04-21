@@ -11,6 +11,7 @@
 #import "STPAPIClient.h"
 #import "STPAddCardViewController+Private.h"
 #import "STPCard.h"
+#import "STPCard+STPPaymentMethod.h"
 #import "STPColorUtils.h"
 #import "STPCoreViewController+Private.h"
 #import "STPDispatchFunctions.h"

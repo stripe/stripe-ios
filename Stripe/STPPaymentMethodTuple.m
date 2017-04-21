@@ -9,6 +9,7 @@
 #import "STPPaymentMethodTuple.h"
 #import "STPApplePayPaymentMethod.h"
 #import "STPCard.h"
+#import "STPCard+STPPaymentMethod.h"
 
 @interface STPPaymentMethodTuple()
 

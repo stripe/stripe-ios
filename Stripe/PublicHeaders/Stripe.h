@@ -5,6 +5,7 @@
 //  Created by Saikat Chakrabarti on 10/30/12.
 //  Copyright (c) 2012 Stripe. All rights reserved.
 //
+#if TARGET_OS_IOS
 
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient.h"
@@ -50,3 +51,31 @@
 #import "STPUserInformation.h"
 #import "StripeError.h"
 #import "UINavigationBar+Stripe_Theme.h"
+
+#elif TARGET_OS_WATCH
+
+#import "STPAPIClient+ApplePay.h"
+#import "STPAPIClient.h"
+#import "STPAPIResponseDecodable.h"
+#import "STPBankAccount.h"
+#import "STPBankAccountParams.h"
+#import "STPBlocks.h"
+#import "STPCard.h"
+#import "STPCardBrand.h"
+#import "STPCardParams.h"
+#import "STPCardValidationState.h"
+#import "STPCardValidator.h"
+#import "STPFormEncodable.h"
+#import "STPSource.h"
+#import "STPSourceCardDetails.h"
+#import "STPSourceOwner.h"
+#import "STPSourceParams.h"
+#import "STPSourceProtocol.h"
+#import "STPSourceReceiver.h"
+#import "STPSourceRedirect.h"
+#import "STPSourceSEPADebitDetails.h"
+#import "STPSourceVerification.h"
+#import "StripeError.h"
+
+#endif
+

@@ -8,22 +8,33 @@
 
 #import "STPAnalyticsClient.h"
 
+#import <sys/utsname.h>
+
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient.h"
-#import "STPAddCardViewController+Private.h"
-#import "STPAddCardViewController.h"
 #import "STPAspects.h"
 #import "STPCard.h"
 #import "STPFormEncodable.h"
-#import "STPPaymentCardTextField.h"
 #import "STPPaymentConfiguration.h"
-#import "STPPaymentContext.h"
+#import "STPToken.h"
+
+#if TARGET_OS_IOS
+#import <UIKit/UIKit.h>
+#import "STPAddCardViewController+Private.h"
+#import "STPAddCardViewController.h"
 #import "STPPaymentMethodsViewController+Private.h"
 #import "STPPaymentMethodsViewController.h"
-#import "STPToken.h"
-#import <UIKit/UIKit.h>
-#import <sys/utsname.h>
+#import "STPPaymentCardTextField.h"
+#import "STPPaymentContext.h"
+#elif TARGET_OS_WATCH
+#import <WatchKit/WatchKit.h>
+#endif
+
+
+
+
+
 
 static BOOL STPAnalyticsCollectionDisabled = NO;
 
@@ -45,11 +56,13 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     return sharedClient;
 }
 
+
 + (void)initialize {
     [self initializeIfNeeded];
 }
 
 + (void)initializeIfNeeded {
+    #if TARGET_OS_IOS
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [STPPaymentCardTextField stp_aspect_hookSelector:@selector(commonInit)
@@ -89,7 +102,9 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
                                                        } error:nil];
 
     });
+    #endif
 }
+
 
 + (void)disableAnalytics {
     STPAnalyticsCollectionDisabled = YES;
@@ -110,7 +125,11 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
 }
 
 + (NSString *)muid {
+#if TARGET_OS_IOS
     return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+#else 
+    return nil;
+#endif
 }
 
 + (NSString *)tokenTypeFromParameters:(NSDictionary *)parameters {
@@ -214,10 +233,17 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     NSMutableDictionary *payload = [NSMutableDictionary dictionary];
     payload[@"bindings_version"] = STPSDKVersion;
     payload[@"analytics_ua"] = @"analytics.stripeios-1.0";
-    NSString *version = [UIDevice currentDevice].systemVersion;
+    NSString *version = nil;
+
+#if TARGET_OS_IOS
+    version = [UIDevice currentDevice].systemVersion;
+#elif TARGET_OS_WATCH
+    version = [WKInterfaceDevice currentDevice].systemVersion;
+#endif
     if (version) {
         payload[@"os_version"] = version;
     }
+
     struct utsname systemInfo;
     uname(&systemInfo);
     NSString *deviceType = @(systemInfo.machine);

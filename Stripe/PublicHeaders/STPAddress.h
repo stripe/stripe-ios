@@ -12,10 +12,12 @@
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
 
+#if TARGET_OS_IOS
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 #import <AddressBook/AddressBook.h>
 #pragma clang diagnostic pop
+#endif
 
 #import "STPAPIResponseDecodable.h"
 
@@ -94,12 +96,13 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
  */
 @property (nonatomic, copy, nullable) NSString *email;
 
-
+#if TARGET_OS_IOS
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 - (instancetype)initWithABRecord:(ABRecordRef)record;
 - (ABRecordRef)ABRecordValue;
 #pragma clang diagnostic pop
+#endif
 
 - (instancetype)initWithPKContact:(PKContact *)contact NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);
 - (PKContact *)PKContactValue NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);

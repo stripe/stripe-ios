@@ -5,10 +5,13 @@
 //  Created by Jack Flintermann on 12/19/14.
 //
 
+#import "STPAPIClient+ApplePay.h"
+
+#if !TARGET_OS_WATCH
 #import <AddressBook/AddressBook.h>
+#endif
 
 #import "PKPayment+Stripe.h"
-#import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient+Private.h"
 #import "STPAnalyticsClient.h"
 
@@ -22,6 +25,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
                          completion:completion];
 }
 
+#if !TARGET_OS_WATCH
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 + (NSDictionary *)addressParamsFromABRecord:(ABRecordRef)billingAddress {
@@ -70,6 +74,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 }
 #pragma clang diagnostic pop
+#endif
 
 + (NSDictionary *)addressParamsFromPKContact:(PKContact *)billingContact {
     if (billingContact) {
@@ -105,6 +110,9 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
     NSMutableDictionary *payload = [NSMutableDictionary new];
     payload[@"pk_token"] = paymentString;
 
+#if TARGET_OS_WATCH
+    payload[@"card"] = [self addressParamsFromPKContact:payment.billingContact];
+#else
     if ([PKContact class]
         && [payment respondsToSelector:@selector(billingContact)]) {
         payload[@"card"] = [self addressParamsFromPKContact:payment.billingContact];
@@ -112,13 +120,31 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
     else {
         payload[@"card"] = [self addressParamsFromABRecord:payment.billingAddress];
     }
+#endif
 
-    NSString *paymentInstrumentName = payment.token.paymentInstrumentName;
+    PKPaymentToken *token = payment.token;
+    NSString *paymentInstrumentName = nil;
+    NSString *paymentNetwork = nil;
+
+#if TARGET_OS_WATCH
+    paymentInstrumentName = token.paymentMethod.displayName;
+    paymentNetwork = token.paymentMethod.network;
+#else
+
+    if ([token respondsToSelector:@selector(paymentMethod)]) {
+        paymentInstrumentName = token.paymentMethod.displayName;
+        paymentNetwork = token.paymentMethod.network;
+    }
+    else {
+        paymentInstrumentName = token.paymentInstrumentName;
+        paymentNetwork = token.paymentNetwork;
+    }
+#endif
+
     if (paymentInstrumentName) {
         payload[@"pk_token_instrument_name"] = paymentInstrumentName;
     }
 
-    NSString *paymentNetwork = payment.token.paymentNetwork;
     if (paymentNetwork) {
         payload[@"pk_token_payment_network"] = paymentNetwork;
     }

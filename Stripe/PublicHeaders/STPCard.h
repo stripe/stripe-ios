@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 /**
  *  Representation of a user's credit card details that have been tokenized with the Stripe API. @see https://stripe.com/docs/api#cards
  */
-@interface STPCard : STPCardParams<STPAPIResponseDecodable, STPPaymentMethod, STPSourceProtocol>
+@interface STPCard : STPCardParams<STPAPIResponseDecodable, STPSourceProtocol>
 
 /**
  *  Create an STPCard from a Stripe API response.

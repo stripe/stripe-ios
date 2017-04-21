@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "STPBackendAPIAdapter.h"
 #import "STPPaymentMethod.h"
-#import "STPTheme.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

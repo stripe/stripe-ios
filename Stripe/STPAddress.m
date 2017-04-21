@@ -29,6 +29,7 @@ NSString *stringIfHasContentsElseNil(NSString *string);
 
 @implementation STPAddress
 
+#if TARGET_OS_IOS
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 
@@ -130,6 +131,7 @@ NSString *stringIfHasContentsElseNil(NSString *string);
 }
 
 #pragma clang diagnostic pop
+#endif
 
 - (NSString *)sanitizedPhoneStringFromCNPhoneNumber:(CNPhoneNumber *)phoneNumber {
     NSString *phone = phoneNumber.stringValue;

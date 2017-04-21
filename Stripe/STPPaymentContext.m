@@ -11,6 +11,7 @@
 
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "STPAddCardViewController+Private.h"
+#import "STPCard+STPPaymentMethod.h"
 #import "STPCardTuple.h"
 #import "STPDispatchFunctions.h"
 #import "STPPaymentConfiguration+Private.h"

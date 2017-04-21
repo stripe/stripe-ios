@@ -173,7 +173,7 @@ static NSString *const STPSDKVersion = @"10.0.1";
  *  @param timeout     The timeout for the polling operation, in seconds. Timeouts are capped at 5 minutes.
  *  @param completion  The callback to run with the returned Source object, or an error.
  */
-- (void)startPollingSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret timeout:(NSTimeInterval)timeout completion:(STPSourceCompletionBlock)completion NS_EXTENSION_UNAVAILABLE("Source polling is not available in extensions");;
+- (void)startPollingSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret timeout:(NSTimeInterval)timeout completion:(STPSourceCompletionBlock)completion __WATCHOS_UNAVAILABLE NS_EXTENSION_UNAVAILABLE("Source polling is not available in extensions");;
 
 /**
  *  Stops polling the Source object with the given ID. Note that the completion block passed to
@@ -181,7 +181,7 @@ static NSString *const STPSDKVersion = @"10.0.1";
  *
  *  @param identifier  The identifier of the source to be retrieved. Cannot be nil.
  */
-- (void)stopPollingSourceWithId:(NSString *)identifier NS_EXTENSION_UNAVAILABLE("Source polling is not available in extensions");;
+- (void)stopPollingSourceWithId:(NSString *)identifier __WATCHOS_UNAVAILABLE NS_EXTENSION_UNAVAILABLE("Source polling is not available in extensions");;
 
 @end
 

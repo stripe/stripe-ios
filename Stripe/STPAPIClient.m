@@ -9,6 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
+#if TARGET_OS_WATCH
+#import <WatchKit/WatchKit.h>
+#endif
+
 #import "NSBundle+Stripe_AppName.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient.h"
@@ -21,8 +25,11 @@
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
 #import "STPSourceParams+Private.h"
-#import "STPSourcePoller.h"
 #import "STPToken.h"
+
+#if TARGET_OS_IOS
+#import "STPSourcePoller.h"
+#endif
 
 #if __has_include("Fabric.h")
 #import "Fabric+FABKits.h"
@@ -179,27 +186,45 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
         @"lang": @"objective-c",
         @"bindings_version": STPSDKVersion,
     } mutableCopy];
-    NSString *version = [UIDevice currentDevice].systemVersion;
+
+    NSString *version = nil;
+    NSString *deviceType = nil;
+    NSString *model = nil;
+    NSString *vendorIdentifier = nil;
+
+#if TARGET_OS_IOS
+    version = [UIDevice currentDevice].systemVersion;
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    deviceType = @(systemInfo.machine);
+    model = [UIDevice currentDevice].localizedModel;
+    vendorIdentifier = [UIDevice currentDevice].identifierForVendor.UUIDString;
+#elif TARGET_OS_WATCH
+    version = [WKInterfaceDevice currentDevice].systemVersion;
+    model = [WKInterfaceDevice currentDevice].localizedModel;
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    deviceType = @(systemInfo.machine);
+    //vendor id unavailable on watchos
+#endif
+
+
     if (version) {
         details[@"os_version"] = version;
     }
-    struct utsname systemInfo;
-    uname(&systemInfo);
-    NSString *deviceType = @(systemInfo.machine);
     if (deviceType) {
         details[@"type"] = deviceType;
     }
-    NSString *model = [UIDevice currentDevice].localizedModel;
     if (model) {
         details[@"model"] = model;
     }
-    if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
-        NSString *vendorIdentifier = [[[UIDevice currentDevice] performSelector:@selector(identifierForVendor)] performSelector:@selector(UUIDString)];
-        if (vendorIdentifier) {
-            details[@"vendor_identifier"] = vendorIdentifier;
-        }
+    if (vendorIdentifier) {
+        details[@"vendor_identifier"] = vendorIdentifier;
     }
-    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[details copy] options:(NSJSONWritingOptions)kNilOptions error:NULL] encoding:NSUTF8StringEncoding];
+
+    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[details copy]
+                                                                          options:(NSJSONWritingOptions)kNilOptions error:NULL]
+                                 encoding:NSUTF8StringEncoding];
 }
 
 #pragma mark Fabric
@@ -280,7 +305,11 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 }
 
 + (BOOL)deviceSupportsApplePay {
+#if TARGET_OS_IOS
     return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
+#elif TARGET_OS_WATCH
+    return [PKPaymentAuthorizationController class] && [PKPaymentAuthorizationController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
+#endif
 }
 
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier {
@@ -335,7 +364,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
                                              completion:completion];
 }
 
-- (void)startPollingSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret timeout:(NSTimeInterval)timeout completion:(STPSourceCompletionBlock)completion {
+#if TARGET_OS_IOS
+- (void)startPollingSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret timeout:(NSTimeInterval)timeout completion:(STPSourceCompletionBlock)completion __WATCHOS_UNAVAILABLE {
     [self stopPollingSourceWithId:identifier];
     STPSourcePoller *poller = [[STPSourcePoller alloc] initWithAPIClient:self
                                                             clientSecret:secret
@@ -347,7 +377,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     });
 }
 
-- (void)stopPollingSourceWithId:(NSString *)identifier {
+- (void)stopPollingSourceWithId:(NSString *)identifier __WATCHOS_UNAVAILABLE {
     dispatch_async(self.sourcePollersQueue, ^{
         STPSourcePoller *poller = (STPSourcePoller *)self.sourcePollers[identifier];
         if (poller) {
@@ -356,5 +386,6 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
         }
     });
 }
+#endif
 
 @end
