@@ -7,6 +7,7 @@
 //
 
 #import "STPFixtures.h"
+#import "STPMocks.h"
 #import "STPTestUtils.h"
 
 @implementation STPFixtures
@@ -115,6 +116,16 @@
     STPPaymentConfiguration *config = [STPPaymentConfiguration new];
     config.publishableKey = @"pk_fake_publishable_key";
     return config;
+}
+
++ (STPPaymentContext *)paymentContextWithCustomer:(STPCustomer *)customer
+                                    configuration:(STPPaymentConfiguration *)config {
+    STPTheme *theme = [STPTheme defaultTheme];
+    id<STPBackendAPIAdapter> mockAPIAdapter = [STPMocks staticAPIAdapterWithCustomer:customer];
+    STPPaymentContext *paymentContext = [[STPPaymentContext alloc] initWithAPIAdapter:mockAPIAdapter
+                                                                        configuration:config
+                                                                                theme:theme];
+    return paymentContext;
 }
 
 + (STPAddress *)sepaAddress {

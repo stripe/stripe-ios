@@ -72,6 +72,14 @@
  */
 + (STPPaymentConfiguration *)paymentConfiguration;
 
+
+
+/**
+ A PaymentContext that retrieves the given customer and uses the given configuration.
+ */
++ (STPPaymentContext *)paymentContextWithCustomer:(STPCustomer *)customer
+                                    configuration:(STPPaymentConfiguration *)config;
+
 /**
  A Source object with type SEPA debit
  */

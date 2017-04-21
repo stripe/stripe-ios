@@ -598,6 +598,7 @@
                                                                                currency:self.paymentCurrency
                                                                               returnURL:self.configuration.returnURLBlock().absoluteString
                                                                                    card:cardSource.stripeID];
+    threeDSecureParams.metadata = self.sourceInformation.metadata;
 
     STPSourceCompletionBlock threeDSSourceCompletion = ^(STPSource * _Nullable threeDSSource, NSError * _Nullable error) {
         if (error
@@ -605,7 +606,6 @@
             || threeDSSource.flow != STPSourceFlowRedirect) {
             if (!threeDSecureRequired
                 && error.domain == StripeDomain
-                && error.code == STPCardError
                 && [error.userInfo[STPCardErrorCodeKey] isEqualToString:STPPaymentMethodNotAvailable]) {
                 // This is a card that doesn't actually support 3ds and the card source didn't say 3ds was required
                 // So we can just return the original card source to be charged
