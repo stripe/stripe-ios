@@ -21,7 +21,10 @@
 
 + (NSString *)muid;
 
-- (void)logTokenCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration;
++ (NSString *)tokenTypeFromParameters:(NSDictionary *)parameters;
+
+- (void)logTokenCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
+                                       tokenType:(NSString *)tokenType;
 
 - (void)logSourceCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
                                        sourceType:(NSString *)sourceType;

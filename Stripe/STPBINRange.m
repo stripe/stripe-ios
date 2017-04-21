@@ -81,11 +81,31 @@
     return STPBINRangeAllRanges;
 }
 
+
+/**
+ Number matching strategy: Truncate the longer of the two numbers (theirs and our
+ bounds) to match the length of the shorter one, then do numerical compare.
+ */
 - (BOOL)matchesNumber:(NSString *)number {
-    NSString *low = [number stringByPaddingToLength:self.qRangeLow.length withString:@"0" startingAtIndex:0];
-    NSString *high = [number stringByPaddingToLength:self.qRangeHigh.length withString:@"0" startingAtIndex:0];
-    
-    return self.qRangeLow.integerValue <= low.integerValue && self.qRangeHigh.integerValue >= high.integerValue;
+
+    BOOL withinLowRange = NO;
+    BOOL withinHighRange = NO;
+
+    if (number.length < self.qRangeLow.length) {
+        withinLowRange = number.integerValue >= [self.qRangeLow substringToIndex:number.length].integerValue;
+    }
+    else {
+        withinLowRange = [number substringToIndex:self.qRangeLow.length].integerValue >= self.qRangeLow.integerValue;
+    }
+
+    if (number.length < self.qRangeHigh.length) {
+        withinHighRange = number.integerValue <= [self.qRangeHigh substringToIndex:number.length].integerValue;
+    }
+    else {
+        withinHighRange = [number substringToIndex:self.qRangeHigh.length].integerValue <= self.qRangeHigh.integerValue;
+    }
+
+    return withinLowRange && withinHighRange;
 }
 
 - (NSComparisonResult)compare:(STPBINRange *)other {

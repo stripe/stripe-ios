@@ -114,6 +114,20 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
 }
 
++ (NSString *)tokenTypeFromParameters:(NSDictionary *)parameters {
+    if ([parameters.allKeys count] == 1) {
+        NSArray *validTypes = @[@"bank_account", @"card", @"pii"];
+        NSString *type = [parameters.allKeys firstObject];
+        if ([validTypes containsObject:type]) {
+            return type;
+        }
+    }
+    if ([parameters.allKeys containsObject:@"pk_token"]) {
+        return @"apple_pay";
+    }
+    return nil;
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -130,11 +144,13 @@ static BOOL STPAnalyticsCollectionDisabled = NO;
     return productUsage ?: @[];
 }
 
-- (void)logTokenCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration {
+- (void)logTokenCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
+                                       tokenType:(NSString *)tokenType {
     NSDictionary *configurationDictionary = [self.class serializeConfiguration:configuration];
     NSMutableDictionary *payload = [self.class commonPayload];
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.token_creation",
+                                        @"token_type": tokenType ?: @"unknown",
                                         @"apple_pay_enabled": @([Stripe deviceSupportsApplePay]),
                                         @"product_usage": [self productUsage],
                                         }];

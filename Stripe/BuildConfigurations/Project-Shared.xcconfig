@@ -135,5 +135,3 @@ SDKROOT = iphoneos
 
 
 WARNING_CFLAGS = -Wall -Wextra -Wundef -Wfloat-equal
-
-PRODUCT_BUNDLE_IDENTIFIER=com.stripe.stripe-ios

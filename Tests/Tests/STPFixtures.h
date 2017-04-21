@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <OCMock/OCMock.h>
+#import <PassKit/PassKit.h>
 #import <Stripe/Stripe.h>
 
 @interface STPFixtures : NSObject
@@ -16,6 +17,16 @@
  An Address object with all fields filled.
  */
 + (STPAddress *)address;
+
+/**
+ A PKPaymentObject with test payment data.
+ */
++ (PKPayment *)applePayPayment;
+
+/**
+ A BankAccountParams object with all fields filled.
+ */
++ (STPBankAccountParams *)bankAccountParams;
 
 /**
  A CardParams object with all fields filled.

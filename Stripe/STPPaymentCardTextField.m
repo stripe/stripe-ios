@@ -813,4 +813,12 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     [self.currentFirstResponderField deleteBackward];
 }
 
++ (NSSet<NSString *> *)keyPathsForValuesAffectingIsValid {
+    return [NSSet setWithArray:@[
+                                 [NSString stringWithFormat:@"%@.%@",
+                                  NSStringFromSelector(@selector(viewModel)),
+                                  NSStringFromSelector(@selector(valid))]
+                                 ]];
+}
+
 @end

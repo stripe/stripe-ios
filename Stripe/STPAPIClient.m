@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
+#import "NSBundle+Stripe_AppName.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient.h"
 #import "STPAPIRequest.h"
@@ -19,6 +20,7 @@
 #import "STPPaymentConfiguration.h"
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
+#import "STPSourceParams+Private.h"
 #import "STPSourcePoller.h"
 #import "STPToken.h"
 
@@ -137,7 +139,9 @@ NSString *const STPNetworkActivityDidEndNotification = @"com.stripe.networkactiv
     NSCAssert(parameters != nil, @"'parameters' is required to create a token");
     NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
     NSDate *start = [NSDate date];
-    [[STPAnalyticsClient sharedClient] logTokenCreationAttemptWithConfiguration:self.configuration];
+    NSString *tokenType = [STPAnalyticsClient tokenTypeFromParameters:parameters];
+    [[STPAnalyticsClient sharedClient] logTokenCreationAttemptWithConfiguration:self.configuration
+                                                                      tokenType:tokenType];
     [STPAPIRequest<STPToken *> postWithAPIClient:self
                                         endpoint:tokenEndpoint
                                       parameters:parameters
@@ -304,6 +308,7 @@ NSString *const STPNetworkActivityDidEndNotification = @"com.stripe.networkactiv
     NSString *sourceType = [STPSource stringFromType:sourceParams.type];
     [[STPAnalyticsClient sharedClient] logSourceCreationAttemptWithConfiguration:self.configuration
                                                                       sourceType:sourceType];
+    sourceParams.redirectMerchantName = self.configuration.companyName ?: [NSBundle stp_applicationName];
     NSDictionary *params = [STPFormEncoder dictionaryForObject:sourceParams];
     [STPAPIRequest<STPSource *> postWithAPIClient:self
                                          endpoint:sourcesEndpoint
