@@ -264,6 +264,11 @@
  */
 @property(nonatomic, strong, readwrite, nonnull) STPCardParams *cardParams;
 
+/**
+ *  Convenience property for reading the enterred card's brand
+ */
+@property(nonatomic, readonly) STPCardBrand cardBrand;
+
 - (void)commonInit;
 
 @end
