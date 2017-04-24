@@ -15,11 +15,13 @@
 
 #import <SafariServices/SafariServices.h>
 
+#define FAUXPAS_IGNORED_IN_METHOD(...)
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener>
 @property (nonatomic, copy) STPRedirectContextCompletionBlock completion;
-@property (nonatomic, retain) STPSource *source;
+@property (nonatomic, strong) STPSource *source;
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
 @end
 
@@ -36,8 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 
     self = [super init];
     if (self) {
-        self.source = source;
-        self.completion = completion;
+        _source = source;
+        _completion = [completion copy];
     }
     return self;
 }
@@ -47,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
     if (self.state == STPRedirectContextStateNotStarted) {
         _state = STPRedirectContextStateInProgress;
         [self subscribeToUrlAndForegroundNotifications];
@@ -75,13 +78,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - SFSafariViewControllerDelegate -
 
-- (void)safariViewControllerDidFinish:(__unused SFSafariViewController *)controller {
+- (void)safariViewControllerDidFinish:(__unused SFSafariViewController *)controller { FAUXPAS_IGNORED_ON_LINE(APIAvailability)
     stpDispatchToMainThreadIfNecessary(^{
         [self handleRedirectCompletionWithError:nil];
     });
 }
 
-- (void)safariViewController:(__unused SFSafariViewController *)controller didCompleteInitialLoad:(BOOL)didLoadSuccessfully {
+- (void)safariViewController:(__unused SFSafariViewController *)controller didCompleteInitialLoad:(BOOL)didLoadSuccessfully { FAUXPAS_IGNORED_ON_LINE(APIAvailability)
     if (didLoadSuccessfully == NO) {
         stpDispatchToMainThreadIfNecessary(^{
             [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]];
@@ -125,7 +128,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)unsubscribeFromNotificationsAndDismissPresentedViewControllers {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIApplicationWillEnterForegroundNotification
+                                                  object:nil];
     [[STPURLCallbackHandler shared] unregisterListener:self];
 
     if (self.safariVC) {

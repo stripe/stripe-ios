@@ -12,11 +12,14 @@
 
 #import "NSURLComponents+Stripe.h"
 
+
+#define FAUXPAS_IGNORED_ON_LINE(...)
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation Stripe (STPURLCallbackHandlerAdditions)
 
-+ (BOOL)handleStripeURLCallbackWithURL:(NSURL *)url {
+
++ (BOOL)handleStripeURLCallbackWithURL:(NSURL *)url FAUXPAS_IGNORED_ON_LINE(UnusedMethod) {
     if (url) {
         return [[STPURLCallbackHandler shared] handleURLCallback:url];
     }
@@ -45,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
     static STPURLCallbackHandler *handler;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        handler = [STPURLCallbackHandler new];
+        handler = [self new];
     });
 
     return handler;
@@ -54,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.callbacks = [NSArray new];
+        _callbacks = [NSArray new];
     }
     return self;
 }

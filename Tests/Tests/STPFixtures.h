@@ -72,8 +72,6 @@
  */
 + (STPPaymentConfiguration *)paymentConfiguration;
 
-
-
 /**
  A PaymentContext that retrieves the given customer and uses the given configuration.
  */

@@ -425,6 +425,8 @@
         if (self.state == STPPaymentContextStateRequestingPayment) {
             self.state = STPPaymentContextStateNone;
             [self requestPayment];
+        } else {
+            self.state = STPPaymentContextStateNone;
         }
     }];
 }
