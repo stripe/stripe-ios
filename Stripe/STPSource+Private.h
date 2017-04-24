@@ -10,6 +10,7 @@
 
 @interface STPSource (Private)
 + (NSString *)stringFromType:(STPSourceType)type;
++ (STPSourceType)typeFromString:(NSString *)string;
 + (NSString *)stringFromFlow:(STPSourceFlow)flow;
 + (NSString *)stringFromUsage:(STPSourceUsage)usage;
 @end

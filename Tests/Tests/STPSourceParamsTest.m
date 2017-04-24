@@ -8,8 +8,10 @@
 
 #import <XCTest/XCTest.h>
 #import "Stripe.h"
-#import "STPSourceParams+Private.h"
 #import "STPFormEncoder.h"
+#import "STPSource+Private.h"
+#import "STPSourceParams+Private.h"
+
 
 @interface STPSourceParamsTest : XCTestCase
 
@@ -81,6 +83,29 @@
     // Don't override names set by the user directly in the url
     XCTAssertEqualObjects([self redirectMerchantNameQueryItemValueFromURLString:params[@"redirect"][@"return_url"]], @"Manual Custom Name");
 
+}
+
+- (void)testRawTypeString {
+    STPSourceParams *sourceParams = [STPSourceParams new];
+
+    // Check defaults to unknown
+    XCTAssertEqual(sourceParams.type, STPSourceTypeUnknown);
+
+    // Check changing type sets rawTypeString
+    sourceParams.type = STPSourceTypeCard;
+    XCTAssertEqualObjects(sourceParams.rawTypeString, [STPSource stringFromType:STPSourceTypeCard]);
+
+    // Check changing to unknown raw string sets type to unknown
+    sourceParams.rawTypeString = @"new_source_type";
+    XCTAssertEqual(sourceParams.type, STPSourceTypeUnknown);
+
+    // Check once unknown that setting type to unknown doesnt clobber string
+    sourceParams.type = STPSourceTypeUnknown;
+    XCTAssertEqualObjects(sourceParams.rawTypeString, @"new_source_type");
+
+    // Check setting string to known type sets type correctly
+    sourceParams.rawTypeString = [STPSource stringFromType:STPSourceTypeIDEAL];
+    XCTAssertEqual(sourceParams.type, STPSourceTypeIDEAL);
 }
 
 @end
