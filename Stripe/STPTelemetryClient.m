@@ -155,16 +155,14 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
                 [fields addObject:@[[self userAgent]]];
                 break;
             default:
-                [fields addObject:@[@""]];
+                [fields addObject:@[]];
                 break;
         }
     }
     payload[@"f"] = fields;
     payload[@"d"] = @[
                       @"",
-                      @{@"fr": @"",
-                        @"ft": @"",
-                        @"muid": [self muid]},
+                      @{@"muid": [self muid]},
                       ];
     payload[@"tag"] = STPSDKVersion;
     payload[@"src"] = @"ios-sdk";
