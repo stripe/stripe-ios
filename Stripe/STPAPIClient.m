@@ -28,6 +28,7 @@
 #import "STPSourcePoller.h"
 #import "STPToken.h"
 #import "StripeError.h"
+#import "UIImage+Stripe.h"
 
 #if __has_include("Fabric.h")
 #import "Fabric+FABKits.h"
@@ -279,21 +280,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
             maxBytes = 0;
             break;
     }
-
-    CGFloat scale = 1.0;
-    NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
-    while (imageData.length > maxBytes) {
-        scale = scale * (CGFloat) 0.8;
-        CGSize newImageSize = CGSizeMake(image.size.width * scale,
-                                         image.size.height *scale);
-        UIGraphicsBeginImageContextWithOptions(newImageSize, NO, image.scale);
-        [image drawInRect:CGRectMake(0, 0, newImageSize.width, newImageSize.height)];
-        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        imageData = UIImageJPEGRepresentation(newImage, 0.5);
-    }
-
-    return imageData;
+    return [image jpegDataWithMaxFileSize:maxBytes];
 }
 
 - (void)uploadImage:(UIImage *)image

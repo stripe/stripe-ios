@@ -54,6 +54,7 @@
     linkNSDecimalNumberCurrencyCategory();
     linkNSBundleAppNameCategory();
     linkAspectsCategory();
+    linkUIImageCategory();
 }
 
 @end
