@@ -39,7 +39,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"Credit or Debit Card", @"Label for card payment method field") ;
+    return STPLocalizedString(@"New Card", @"Label for button to add a new credit or debit card") ;
 }
 
 - (BOOL)convertsToSourceAtSelection {
@@ -73,7 +73,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"Direct Debit Account", @"Label for SEPA Direct Debit payment method field") ;;
+    return STPLocalizedString(@"New Direct Debit Account", @"Label for button to add a new SEPA Direct Debit account") ;;
 }
 
 - (BOOL)convertsToSourceAtSelection {
