@@ -6,8 +6,7 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-@import WebKit;
-@import UIKit;
+#import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
 #import "STPTelemetryClient.h"
@@ -35,8 +34,6 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
 @interface STPTelemetryClient ()
 @property (nonatomic) NSDate *appOpenTime;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
-@property (nonatomic, readwrite) NSString *userAgent;
-@property (nonatomic, readwrite) WKWebView *webView;
 @end
 
 @implementation STPTelemetryClient
@@ -44,11 +41,9 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
 + (BOOL)shouldSendTelemetry {
 #if TARGET_OS_SIMULATOR
     return NO;
-#endif
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunreachable-code"
+#else
     return NSClassFromString(@"XCTest") == nil;
-#pragma clang diagnostic pop
+#endif
 }
 
 + (instancetype)sharedInstance {
@@ -66,12 +61,6 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         _urlSession = [NSURLSession sessionWithConfiguration:config];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-        WKWebView *webView = [WKWebView new];
-        [webView loadHTMLString:@"<html></html>" baseURL:nil];
-        [webView evaluateJavaScript:@"navigator.userAgent" completionHandler:^(id result, __unused NSError *error) {
-            self.userAgent = result;
-        }];
-        _webView = webView;
     }
     return self;
 }
@@ -111,8 +100,9 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
 - (NSString *)platform {
     struct utsname systemInfo;
     uname(&systemInfo);
-    NSString *deviceType = @(systemInfo.machine);
-    return deviceType ?: @"";
+    NSString *deviceType = @(systemInfo.machine) ?: @"";
+    NSString *version = [UIDevice currentDevice].systemVersion ?: @"";
+    return [@[deviceType, version] componentsJoinedByString:@" "];
 }
 
 - (NSString *)screenSize {
@@ -128,10 +118,6 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
     NSTimeZone *timeZone = [NSTimeZone localTimeZone];
     double hoursFromGMT = (double)timeZone.secondsFromGMT/(60*60);
     return [NSString stringWithFormat:@"%.0f", hoursFromGMT];
-}
-
-- (NSString *)userAgent {
-    return _userAgent ?: @"";
 }
 
 - (NSDictionary *)payload {
@@ -150,9 +136,6 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
                 break;
             case STPMetricFieldTimeZoneOffset:
                 [fields addObject:@[[self timeZoneOffset]]];
-                break;
-            case STPMetricFieldUserAgent:
-                [fields addObject:@[[self userAgent]]];
                 break;
             default:
                 [fields addObject:@[]];
