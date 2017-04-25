@@ -92,11 +92,9 @@
 + (BOOL)shouldCollectAnalytics {
 #if TARGET_OS_SIMULATOR
     return NO;
-#endif
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunreachable-code"
+#else
     return NSClassFromString(@"XCTest") == nil;
-#pragma clang diagnostic pop
+#endif
 }
 
 + (NSNumber *)timestampWithDate:(NSDate *)date {
