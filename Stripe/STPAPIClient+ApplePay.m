@@ -24,14 +24,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-+ (NSDictionary *)parametersForPayment:(PKPayment *)payment {
-    NSCAssert(payment != nil, @"Cannot create a token with a nil payment.");
-    NSString *paymentString =
-    [[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding];
-    NSMutableDictionary *payload = [NSMutableDictionary new];
-    payload[@"pk_token"] = paymentString;
-
-    ABRecordRef billingAddress = payment.billingAddress;
++ (NSDictionary *)addressParamsFromABRecord:(ABRecordRef)billingAddress {
     if (billingAddress) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
 
@@ -66,10 +59,58 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
                     params[@"address_country"] = country;
                 }
                 CFRelease(dict);
-                payload[@"card"] = params;
             }
             CFRelease(addressValues);
         }
+        return params;
+    }
+    else {
+        return nil;
+    }
+
+}
+#pragma clang diagnostic pop
+
++ (NSDictionary *)addressParamsFromPKContact:(PKContact *)billingContact {
+    if (billingContact) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+
+        NSPersonNameComponents *nameComponents = billingContact.name;
+        if (nameComponents) {
+            params[@"name"] = [NSPersonNameComponentsFormatter localizedStringFromPersonNameComponents:nameComponents
+                                                                                       style:NSPersonNameComponentsFormatterStyleDefault
+                                                                                     options:(NSPersonNameComponentsFormatterOptions)0];
+        }
+
+        CNPostalAddress *address = billingContact.postalAddress;
+        if (address) {
+            params[@"address_line1"] = address.street;
+            params[@"address_city"] = address.city;
+            params[@"address_state"] = address.state;
+            params[@"address_zip"] = address.postalCode;
+            params[@"address_country"] = address.ISOCountryCode;
+        }
+
+        return params;
+    }
+    else {
+        return nil;
+    }
+}
+
++ (NSDictionary *)parametersForPayment:(PKPayment *)payment {
+    NSCAssert(payment != nil, @"Cannot create a token with a nil payment.");
+    NSString *paymentString =
+    [[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding];
+    NSMutableDictionary *payload = [NSMutableDictionary new];
+    payload[@"pk_token"] = paymentString;
+
+    if ([PKContact class]
+        && [payment respondsToSelector:@selector(billingContact)]) {
+        payload[@"card"] = [self addressParamsFromPKContact:payment.billingContact];
+    }
+    else {
+        payload[@"card"] = [self addressParamsFromABRecord:payment.billingAddress];
     }
 
     NSString *paymentInstrumentName = payment.token.paymentInstrumentName;
@@ -93,7 +134,6 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
     return payload;
 }
 
-#pragma clang diagnostic pop
 
 @end
 

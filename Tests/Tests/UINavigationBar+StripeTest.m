@@ -7,38 +7,31 @@
 //
 
 #import <XCTest/XCTest.h>
-
+#import <OCMock/OCMock.h>
 #import <Stripe/Stripe.h>
-#import "TestSTPBackendAPIAdapter.h"
+#import "STPFixtures.h"
 
-@interface UINavigationBar_StripeTest : XCTestCase <STPPaymentMethodsViewControllerDelegate>
+@interface UINavigationBar_StripeTest : XCTestCase
 
 @end
 
 @implementation UINavigationBar_StripeTest
 
-- (void)setUp {
-    [super setUp];
-    [STPPaymentConfiguration sharedConfiguration].publishableKey = @"pk_test";
-}
-
-- (void)paymentMethodsViewController:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController didSelectPaymentMethod:(__unused id<STPPaymentMethod>)paymentMethod {
-
-}
-
-- (void)paymentMethodsViewControllerDidFinish:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController {
-
-}
-
-- (void)paymentMethodsViewController:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController didFailToLoadWithError:(__unused NSError *)error {
-
+- (STPPaymentMethodsViewController *)buildPaymentMethodsViewController {
+    id apiAdapter = [STPFixtures staticAPIAdapter];
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.publishableKey = @"pk_test";
+    STPTheme *theme = [STPTheme defaultTheme];
+    id delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
+    STPPaymentMethodsViewController *paymentMethodsVC = [[STPPaymentMethodsViewController alloc] initWithConfiguration:config
+                                                                                                                 theme:theme
+                                                                                                            apiAdapter:apiAdapter
+                                                                                                              delegate:delegate];
+    return paymentMethodsVC;
 }
 
 - (void)testVCUsesNavigationBarColor {
-    STPPaymentMethodsViewController *paymentMethodsVC = [[STPPaymentMethodsViewController alloc] initWithConfiguration:[STPPaymentConfiguration sharedConfiguration]
-                                                                                                                 theme:[STPTheme defaultTheme]
-                                                                                                            apiAdapter:[TestSTPBackendAPIAdapter new]
-                                                                                                              delegate:self];
+    STPPaymentMethodsViewController *paymentMethodsVC = [self buildPaymentMethodsViewController];
     STPTheme *navTheme = [STPTheme new];
     navTheme.accentColor = [UIColor purpleColor];
 
@@ -49,12 +42,7 @@
 }
 
 - (void)testVCDoesNotUseNavigationBarColor {
-
-    STPPaymentMethodsViewController *paymentMethodsVC = [[STPPaymentMethodsViewController alloc] initWithConfiguration:[STPPaymentConfiguration sharedConfiguration]
-                                                                                                                 theme:[STPTheme defaultTheme]
-                                                                                                            apiAdapter:[TestSTPBackendAPIAdapter new]
-                                                                                                              delegate:self];
-
+    STPPaymentMethodsViewController *paymentMethodsVC = [self buildPaymentMethodsViewController];
     __unused UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsVC];
     __unused UIView *view = paymentMethodsVC.view;
     XCTAssertEqualObjects(paymentMethodsVC.navigationItem.leftBarButtonItem.tintColor, [STPTheme defaultTheme].accentColor);

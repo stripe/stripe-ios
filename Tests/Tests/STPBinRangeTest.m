@@ -37,27 +37,64 @@
     binRange.qRangeHigh = @"167";
     
     XCTAssertFalse([binRange matchesNumber:@"0"]);
-    XCTAssertFalse([binRange matchesNumber:@"1"]);
+    XCTAssertTrue([binRange matchesNumber:@"1"]);
     XCTAssertFalse([binRange matchesNumber:@"2"]);
-    
+
+    XCTAssertFalse([binRange matchesNumber:@"00"]);
+    XCTAssertTrue([binRange matchesNumber:@"13"]);
+    XCTAssertTrue([binRange matchesNumber:@"14"]);
+    XCTAssertTrue([binRange matchesNumber:@"16"]);
+    XCTAssertFalse([binRange matchesNumber:@"20"]);
+
     XCTAssertFalse([binRange matchesNumber:@"133"]);
-    XCTAssert([binRange matchesNumber:@"134"]);
-    XCTAssert([binRange matchesNumber:@"135"]);
-    XCTAssert([binRange matchesNumber:@"167"]);
+    XCTAssertTrue([binRange matchesNumber:@"134"]);
+    XCTAssertTrue([binRange matchesNumber:@"135"]);
+    XCTAssertTrue([binRange matchesNumber:@"167"]);
     XCTAssertFalse([binRange matchesNumber:@"168"]);
     
     XCTAssertFalse([binRange matchesNumber:@"1244"]);
-    XCTAssert([binRange matchesNumber:@"1340"]);
-    XCTAssert([binRange matchesNumber:@"1344"]);
-    XCTAssert([binRange matchesNumber:@"1444"]);
-    XCTAssert([binRange matchesNumber:@"1670"]);
-    XCTAssert([binRange matchesNumber:@"1679"]);
+    XCTAssertTrue([binRange matchesNumber:@"1340"]);
+    XCTAssertTrue([binRange matchesNumber:@"1344"]);
+    XCTAssertTrue([binRange matchesNumber:@"1444"]);
+    XCTAssertTrue([binRange matchesNumber:@"1670"]);
+    XCTAssertTrue([binRange matchesNumber:@"1679"]);
     XCTAssertFalse([binRange matchesNumber:@"1680"]);
-    
+
+    binRange.qRangeLow = @"004";
+    binRange.qRangeHigh = @"017";
+
+    XCTAssertTrue([binRange matchesNumber:@"0"]);
+    XCTAssertFalse([binRange matchesNumber:@"1"]);
+
+    XCTAssertTrue([binRange matchesNumber:@"00"]);
+    XCTAssertTrue([binRange matchesNumber:@"01"]);
+    XCTAssertFalse([binRange matchesNumber:@"10"]);
+    XCTAssertFalse([binRange matchesNumber:@"20"]);
+
+    XCTAssertFalse([binRange matchesNumber:@"000"]);
+    XCTAssertFalse([binRange matchesNumber:@"002"]);
+    XCTAssertTrue([binRange matchesNumber:@"004"]);
+    XCTAssertTrue([binRange matchesNumber:@"009"]);
+    XCTAssertTrue([binRange matchesNumber:@"014"]);
+    XCTAssertTrue([binRange matchesNumber:@"017"]);
+    XCTAssertFalse([binRange matchesNumber:@"019"]);
+    XCTAssertFalse([binRange matchesNumber:@"020"]);
+    XCTAssertFalse([binRange matchesNumber:@"100"]);
+
+    XCTAssertFalse([binRange matchesNumber:@"0000"]);
+    XCTAssertFalse([binRange matchesNumber:@"0021"]);
+    XCTAssertTrue([binRange matchesNumber:@"0044"]);
+    XCTAssertTrue([binRange matchesNumber:@"0098"]);
+    XCTAssertTrue([binRange matchesNumber:@"0143"]);
+    XCTAssertTrue([binRange matchesNumber:@"0173"]);
+    XCTAssertFalse([binRange matchesNumber:@"0195"]);
+    XCTAssertFalse([binRange matchesNumber:@"0202"]);
+    XCTAssertFalse([binRange matchesNumber:@"1004"]);
+
     binRange.qRangeLow = @"";
     binRange.qRangeHigh = @"";
-    XCTAssert([binRange matchesNumber:@""]);
-    XCTAssert([binRange matchesNumber:@"1"]);
+    XCTAssertTrue([binRange matchesNumber:@""]);
+    XCTAssertTrue([binRange matchesNumber:@"1"]);
 }
 
 - (void)testBinRangesForNumber {
@@ -73,7 +110,7 @@
     XCTAssertEqual(binRanges.count, 2U);
     
     binRanges = [STPBINRange binRangesForNumber:@""];
-    XCTAssertEqual(binRanges.count, 1U);
+    XCTAssertEqual(binRanges.count, [STPBINRange allRanges].count);
     
     binRanges = [STPBINRange binRangesForNumber:@"123"];
     XCTAssertEqual(binRanges.count, 1U);
@@ -95,11 +132,11 @@
     }
 }
 
-- (void)testMostSpecifiBinRangeForNumber {
+- (void)testMostSpecificBinRangeForNumber {
     STPBINRange *binRange;
     
     binRange = [STPBINRange mostSpecificBINRangeForNumber:@""];
-    XCTAssertEqual(binRange.brand, STPCardBrandUnknown);
+    XCTAssertNotEqual(binRange.brand, STPCardBrandUnknown);
     
     binRange = [STPBINRange mostSpecificBINRangeForNumber:@"4242424242422"];
     XCTAssertEqual(binRange.brand, STPCardBrandVisa);

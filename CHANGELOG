@@ -1,3 +1,7 @@
+== 10.0.1 2017-03-16
+* Fixes a bug where card sources didn't include the card owner's name.
+* Fixes an issue where STPPaymentMethodsViewController didn't reload after adding a new payment method.
+
 == 10.0.0 2017-03-06
 * Adds support for creating, retrieving, and polling Sources. You can enable any payment methods available to you in the Dashboard.
   * https://stripe.com/docs/mobile/ios/sources

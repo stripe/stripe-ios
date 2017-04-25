@@ -7,6 +7,7 @@
 //
 
 #import "STPSourceParams.h"
+#import "STPSourceParams+Private.h"
 
 #import "STPCardParams.h"
 #import "STPFormEncoder.h"
@@ -19,7 +20,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _type = STPSourceTypeUnknown;
+        _rawTypeString = @"";
         _flow = STPSourceFlowUnknown;
         _usage = STPSourceUsageUnknown;
         _additionalAPIParameters = @{};
@@ -27,8 +28,16 @@
     return self;
 }
 
-- (NSString *)typeString {
-    return [STPSource stringFromType:self.type];
+- (STPSourceType)type {
+    return [STPSource typeFromString:self.rawTypeString];
+}
+
+- (void)setType:(STPSourceType)type {
+
+    // If setting unknown and we're already unknown, don't want to override raw value
+    if (type != self.type) {
+        self.rawTypeString = [STPSource stringFromType:type];
+    }
 }
 
 - (NSString *)flowString {
@@ -150,17 +159,14 @@
     params.type = STPSourceTypeSEPADebit;
     params.currency = @"eur"; // SEPA Debit must always use eur
 
-    NSDictionary<NSString *,NSString *> *address =
-    @{
-      @"line1": addressLine1,
-      @"city": city,
-      @"postal_code": postalCode,
-      @"country": country
-      };
-
+    NSMutableDictionary<NSString *,NSString *> *address = [NSMutableDictionary new];
+    address[@"city"] = city;
+    address[@"postal_code"] = postalCode,
+    address[@"country"] = country;
+    address[@"line1"] = addressLine1;
     params.owner = @{
                      @"name": name,
-                     @"address": address
+                     @"address": [address copy]
                      };
     params.additionalAPIParameters = @{
                                        @"sepa_debit": @{
@@ -205,6 +211,58 @@
     return params;
 }
 
+#pragma mark - Redirect url
+
+
+/**
+ Private setter allows for setting the name of the app in the returnURL so
+ that it can be displayed on hooks.stripe.com if the automatic redirect back
+ to the app fails.
+ 
+ We intercept the reading of redirect dictionary from STPFormEncoder and replace
+ the value of return_url if necessary
+ */
+- (NSDictionary *)redirectDictionaryWithMerchantNameIfNecessary {
+    if (self.redirectMerchantName
+        && self.redirect[@"return_url"]) {
+
+        NSURL *url = [NSURL URLWithString:self.redirect[@"return_url"]];
+        if (url) {
+            NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url
+                                                        resolvingAgainstBaseURL:NO];
+
+            if (urlComponents) {
+
+                for (NSURLQueryItem *item in urlComponents.queryItems) {
+                    if ([item.name isEqualToString:@"redirect_merchant_name"]) {
+                        // Just return, don't replace their value
+                        return self.redirect;
+                    }
+                }
+
+                // If we get here, there was no existing redirect name
+
+                NSMutableArray<NSURLQueryItem *> *queryItems = (urlComponents.queryItems ?: @[]).mutableCopy;
+
+                [queryItems addObject:[NSURLQueryItem queryItemWithName:@"redirect_merchant_name"
+                                                                  value:self.redirectMerchantName]];
+                urlComponents.queryItems = queryItems;
+
+
+                NSMutableDictionary *redirectCopy = self.redirect.mutableCopy;
+                redirectCopy[@"return_url"] = urlComponents.URL.absoluteString;
+                
+                return redirectCopy.copy;
+            }
+        }
+
+    }
+
+    return self.redirect;
+
+}
+
+
 #pragma mark - STPFormEncodable
 
 + (NSString *)rootObjectName {
@@ -213,13 +271,13 @@
 
 + (NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
-             NSStringFromSelector(@selector(typeString)): @"type",
+             NSStringFromSelector(@selector(rawTypeString)): @"type",
              NSStringFromSelector(@selector(amount)): @"amount",
              NSStringFromSelector(@selector(currency)): @"currency",
              NSStringFromSelector(@selector(flowString)): @"flow",
              NSStringFromSelector(@selector(metadata)): @"metadata",
              NSStringFromSelector(@selector(owner)): @"owner",
-             NSStringFromSelector(@selector(redirect)): @"redirect",
+             NSStringFromSelector(@selector(redirectDictionaryWithMerchantNameIfNecessary)): @"redirect",
              NSStringFromSelector(@selector(token)): @"token",
              NSStringFromSelector(@selector(usageString)): @"usage",
              };

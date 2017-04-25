@@ -18,6 +18,12 @@ end.compact.map do |match|
 end + ["Stripe.h"]).sort
 contents_of_public_headers_dir = Dir.glob("Stripe/PublicHeaders/*.h").map { |h| File.basename(h) }.sort
 
+duplicate_dot_h_imports = contents_of_stripe_dot_h.select{ |e| contents_of_stripe_dot_h.count(e) > 1 }.uniq
+
+if !duplicate_dot_h_imports.empty?
+  abort("There are duplicate imports in Stripe.h. Likely culprits: #{duplicate_dot_h_imports}.")
+end
+
 if contents_of_public_headers_dir != contents_of_stripe_dot_h
 	likely_culprits = ([contents_of_stripe_dot_h - contents_of_public_headers_dir] + [contents_of_public_headers_dir - contents_of_stripe_dot_h]).uniq
 	abort("The contents of Stripe/PublicHeaders do not match what is #imported in Stripe/PublicHeaders/Stripe.h. Likely culprits: #{likely_culprits}.")

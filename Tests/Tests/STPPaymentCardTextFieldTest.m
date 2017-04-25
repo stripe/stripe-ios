@@ -8,6 +8,7 @@
 
 @import UIKit;
 @import XCTest;
+@import OCMock;
 
 #import "Stripe.h"
 #import "STPFormTextField.h"
@@ -417,5 +418,32 @@
     XCTAssertFalse(self.sut.isValid);
 }
 
+- (void)testIsValidKVO {
+    id observer = OCMClassMock([UIViewController class]);
+    self.sut.numberField.text = @"4242424242424242";
+    self.sut.expirationField.text = @"10/99";
+    XCTAssertFalse(self.sut.isValid);
+
+    NSString *expectedKeyPath = @"sut.isValid";
+    [self addObserver:observer forKeyPath:expectedKeyPath options:NSKeyValueObservingOptionNew context:nil];
+    XCTestExpectation *exp = [self expectationWithDescription:@"observeValue"];
+    OCMStub([observer observeValueForKeyPath:[OCMArg any] ofObject:[OCMArg any] change:[OCMArg any] context:nil])
+    .andDo(^(NSInvocation *invocation) {
+        NSString *keyPath;
+        NSDictionary *change;
+        [invocation getArgument:&keyPath atIndex:2];
+        [invocation getArgument:&change atIndex:4];
+        if ([keyPath isEqualToString:expectedKeyPath]) {
+            if ([change[@"new"] boolValue]) {
+                [exp fulfill];
+                [self removeObserver:observer forKeyPath:@"sut.isValid"];
+            }
+        }
+    });
+
+    self.sut.cvcField.text = @"123";
+
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
 
 @end

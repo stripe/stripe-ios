@@ -9,12 +9,13 @@
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import <Stripe/Stripe.h>
 #import "STPSwitchTableViewCell.h"
+#import "STPAddCardViewController+Private.h"
 #import "STPAddressViewModel.h"
 #import "STPAddressFieldTableViewCell.h"
-#import "STPLocalizationUtils.h"
 #import "STPBundleLocator.h"
+#import "STPFixtures.h"
+#import "STPLocalizationUtils.h"
 #import "STPLocalizationUtils+STPTestAdditions.h"
-#import "STPAddCardViewController+Private.h"
 
 @interface STPAddCardViewControllerLocalizationTests : FBSnapshotTestCase
 
@@ -35,8 +36,7 @@
 //}
 
 - (void)performSnapshotTestForLanguage:(NSString *)language delivery:(BOOL)delivery {
-    STPPaymentConfiguration *config = [STPPaymentConfiguration new];
-    config.publishableKey = @"test";
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
     config.additionalPaymentMethods = STPPaymentMethodTypeAll;

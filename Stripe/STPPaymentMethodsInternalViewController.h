@@ -17,6 +17,7 @@
 - (void)internalViewControllerDidSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
 - (void)internalViewControllerDidCreateToken:(STPToken *)token
                                   completion:(STPErrorBlock)completion;
+- (void)internalViewControllerDidCancel;
 
 @end
 
@@ -28,5 +29,7 @@
                       shippingAddress:(STPAddress *)shippingAddress
                    paymentMethodTuple:(STPPaymentMethodTuple *)tuple
                              delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate;
+
+- (void)updateWithPaymentMethodTuple:(STPPaymentMethodTuple *)tuple;
 
 @end

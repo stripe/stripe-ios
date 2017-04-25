@@ -142,35 +142,35 @@
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCard.h",
-      "line": 114,
+      "line": 119,
       "symbol": "STPCard.addressLine2",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCard.h",
-      "line": 115,
+      "line": 120,
       "symbol": "STPCard.addressCity",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCard.h",
-      "line": 116,
+      "line": 121,
       "symbol": "STPCard.addressState",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCard.h",
-      "line": 117,
+      "line": 122,
       "symbol": "STPCard.addressZip",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCard.h",
-      "line": 118,
+      "line": 123,
       "symbol": "STPCard.addressCountry",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
@@ -226,49 +226,42 @@
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCardParams.h",
-      "line": 55,
-      "symbol": "STPCardParams.address",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCardParams.h",
-      "line": 58,
+      "line": 56,
       "symbol": "STPCardParams.addressLine1",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCardParams.h",
-      "line": 59,
+      "line": 57,
       "symbol": "STPCardParams.addressLine2",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCardParams.h",
-      "line": 60,
+      "line": 58,
       "symbol": "STPCardParams.addressCity",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCardParams.h",
-      "line": 61,
+      "line": 59,
       "symbol": "STPCardParams.addressState",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCardParams.h",
-      "line": 62,
+      "line": 60,
       "symbol": "STPCardParams.addressZip",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCardParams.h",
-      "line": 63,
+      "line": 61,
       "symbol": "STPCardParams.addressCountry",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"

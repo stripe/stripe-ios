@@ -1,5 +1,9 @@
 ## Migration Guides
 
+### Migrating from versions < 11.0
+
+- STPPaymentMethodsViewControllerDelegate now has a separate `paymentMethodsViewControllerDidCancel:` callback, differentiating from successful method selections. You should make sure to also dismiss the view controller in that callback.
+
 ### Migrating from versions < 10.0
 
 - Methods deprecated in Version 6.0 have now been removed.

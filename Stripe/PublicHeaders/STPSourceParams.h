@@ -27,6 +27,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) STPSourceType type;
 
 /**
+ *  The raw underlying type string sent to the server.
+ *
+ *  Generally you should use `type` instead unless you have a reason not to.
+ *  You can use this if you want to create a param of a type not yet supported
+ *  by the current version of the SDK's `STPSourceType` enum.
+ *
+ *  Setting this to a value not known by the SDK causes `type` to 
+ *  return `STPSourceTypeUnknown`
+ */
+@property (nonatomic, copy) NSString *rawTypeString;
+
+/**
  *  A positive integer in the smallest currency unit representing the
  *  amount to charge the customer (e.g., @1099 for a €10.99 payment).
  *  Required for `single_use` sources.
@@ -156,7 +168,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param name         The full name of the account holder.
  *  @param iban         The IBAN number for the bank account you wish to debit.
- *  @param addressLine1 The bank account holder's first address line.
+ *  @param addressLine1 The bank account holder's first address line (optional).
  *  @param city         The bank account holder's city.
  *  @param postalCode   The bank account holder's postal code.
  *  @param country      The bank account holder's two-letter country code.
@@ -165,7 +177,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (STPSourceParams *)sepaDebitParamsWithName:(NSString *)name
                                         iban:(NSString *)iban
-                                addressLine1:(NSString *)addressLine1
+                                addressLine1:(nullable NSString *)addressLine1
                                         city:(NSString *)city
                                   postalCode:(NSString *)postalCode
                                      country:(NSString *)country;
