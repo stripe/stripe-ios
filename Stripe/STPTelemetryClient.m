@@ -21,14 +21,6 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
     STPMetricFieldPlugins,
     STPMetricFieldScreenSize,
     STPMetricFieldTimeZoneOffset,
-    STPMetricFieldTouchSupport,
-    STPMetricFieldAvailableStorage,
-    STPMetricFieldFonts,
-    STPMetricFieldGraphicsConfiguration,
-    STPMetricFieldUserAgent,
-    STPMetricFieldFlashVersion,
-    STPMetricFieldHasAdBlocker,
-    STPMetricFieldCanvasId,
     STPMetricFieldMax
 };
 
@@ -139,16 +131,33 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
 
 - (NSString *)deviceOrientation {
     UIDevice *device = [UIDevice currentDevice];
+    [device beginGeneratingDeviceOrientationNotifications];
+    NSString *orientation;
     switch (device.orientation) {
-        case UIDeviceOrientationFaceUp: return @"face_up";
-        case UIDeviceOrientationFaceDown: return @"face_down";
-        case UIDeviceOrientationLandscapeLeft: return @"landscape_left";
-        case UIDeviceOrientationLandscapeRight: return @"landscape_right";
-        case UIDeviceOrientationPortrait: return @"portrait";
-        case UIDeviceOrientationPortraitUpsideDown: return @"portrait_upside_down";
-        case UIDeviceOrientationUnknown: return @"unknown";
+        case UIDeviceOrientationFaceUp:
+            orientation = @"face_up";
+            break;
+        case UIDeviceOrientationFaceDown:
+            orientation = @"face_down";
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            orientation = @"landscape_left";
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            orientation = @"landscape_right";
+            break;
+        case UIDeviceOrientationPortrait:
+            orientation = @"portrait";
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            orientation = @"portrait_upside_down";
+            break;
+        case UIDeviceOrientationUnknown:
+            orientation = @"unknown";
+            break;
     }
-    return @"";
+    [device endGeneratingDeviceOrientationNotifications];
+    return orientation;
 }
 
 - (NSDictionary *)payload {
@@ -169,7 +178,7 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
                 [fields addObject:@[[self timeZoneOffset]]];
                 break;
             default:
-                [fields addObject:@[]];
+                [fields addObject:@[@""]];
                 break;
         }
     }
