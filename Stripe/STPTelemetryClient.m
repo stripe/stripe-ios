@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
+#import "NSBundle+Stripe_AppName.h"
 #import "STPTelemetryClient.h"
 #import "STPAPIClient.h"
 
@@ -61,6 +62,7 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         _urlSession = [NSURLSession sessionWithConfiguration:config];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
     }
     return self;
 }
@@ -120,6 +122,35 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
     return [NSString stringWithFormat:@"%.0f", hoursFromGMT];
 }
 
+- (NSString *)batteryLevel {
+    UIDevice *device = [UIDevice currentDevice];
+    return [NSString stringWithFormat:@"%.2f", device.batteryLevel];
+}
+
+- (NSString *)batteryState {
+    UIDevice *device = [UIDevice currentDevice];
+    switch (device.batteryState) {
+        case UIDeviceBatteryStateFull: return @"full";
+        case UIDeviceBatteryStateCharging: return @"charging";
+        case UIDeviceBatteryStateUnplugged: return @"unplugged";
+        case UIDeviceBatteryStateUnknown: return @"unknown";
+    }
+}
+
+- (NSString *)deviceOrientation {
+    UIDevice *device = [UIDevice currentDevice];
+    switch (device.orientation) {
+        case UIDeviceOrientationFaceUp: return @"face_up";
+        case UIDeviceOrientationFaceDown: return @"face_down";
+        case UIDeviceOrientationLandscapeLeft: return @"landscape_left";
+        case UIDeviceOrientationLandscapeRight: return @"landscape_right";
+        case UIDeviceOrientationPortrait: return @"portrait";
+        case UIDeviceOrientationPortraitUpsideDown: return @"portrait_upside_down";
+        case UIDeviceOrientationUnknown: return @"unknown";
+    }
+    return @"";
+}
+
 - (NSDictionary *)payload {
     NSMutableDictionary *payload = [NSMutableDictionary new];
     NSMutableArray *fields = [NSMutableArray new];
@@ -143,9 +174,17 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
         }
     }
     payload[@"f"] = fields;
+    NSMutableDictionary *platformData = [NSMutableDictionary new];
+    platformData[@"muid"] = [self muid];
+    platformData[@"app_name"] = [NSBundle stp_applicationName];
+    platformData[@"app_version"] = [NSBundle stp_applicationVersion];
+    platformData[@"battery_level"] = [self batteryLevel];
+    platformData[@"battery_state"] = [self batteryState];
+    platformData[@"device_orientation"] = [self deviceOrientation];
+    platformData[@"apple_pay_enabled"] = @([Stripe deviceSupportsApplePay]);
     payload[@"d"] = @[
                       @"",
-                      @{@"muid": [self muid]},
+                      [platformData copy]
                       ];
     payload[@"tag"] = STPSDKVersion;
     payload[@"src"] = @"ios-sdk";
