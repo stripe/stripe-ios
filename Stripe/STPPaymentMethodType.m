@@ -76,6 +76,10 @@
     return STPLocalizedString(@"New Direct Debit Account", @"Label for button to add a new SEPA Direct Debit account") ;;
 }
 
+- (NSString *)paymentMethodAccessibilityLabel {
+    return STPLocalizedString(@"New SEPA Direct Debit Account", @"Accessibility label for button to add a new SEPA Direct Debit account");
+}
+
 - (BOOL)convertsToSourceAtSelection {
     return YES;
 }
@@ -110,7 +114,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"Apple Pay", @"Text for Apple Pay payment method");
+    return @"Apple Pay"; // brand name, doesn't need to be localized
 }
 
 - (NSString *)analyticsString {
@@ -136,9 +140,8 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"Bancontact", @"Text for Bancontact payment method");
+    return @"Bancontact"; // brand name, doesn't need to be localized
 }
-
 
 - (NSString *)analyticsString {
     return @"bancontact";
@@ -163,9 +166,8 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"Giropay", @"Text for Giropay payment method");;
+    return @"Giropay"; // brand name, doesn't need to be localized
 }
-
 
 - (NSString *)analyticsString {
     return @"giropay";
@@ -190,9 +192,8 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"iDEAL", @"Text for iDEAL payment method");
+    return @"iDEAL"; // brand name, doesn't need to be localized
 }
-
 
 - (NSString *)analyticsString {
     return @"ideal";
@@ -217,7 +218,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"SOFORT", @"Text for SOFORT payment method");
+    return @"SOFORT"; // brand name, doesn't need to be localized
 }
 
 - (NSString *)analyticsString {
@@ -271,6 +272,10 @@
 
 - (NSString *)paymentMethodLabel {
     return nil;
+}
+
+- (NSString *)paymentMethodAccessibilityLabel {
+    return self.paymentMethodLabel;
 }
 
 - (BOOL)convertsToSourceAtSelection {

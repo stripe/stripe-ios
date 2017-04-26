@@ -28,6 +28,7 @@
     self.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
     self.leftIcon.image = paymentMethod.paymentMethodTemplateImage;
     self.titleLabel.font = self.theme.font;
+    self.titleLabel.accessibilityLabel = paymentMethod.paymentMethodAccessibilityLabel;
     self.checkmarkIcon.tintColor = self.theme.accentColor;
     self.selected = NO;
 }
@@ -74,7 +75,7 @@
             last4 = source.sepaDebitDetails.last4;
         }
         if (last4) {
-            return [self buildAttributedStringWithName:STPLocalizedString(@"Account", @"part of Account ending in {last4}")
+            return [self buildAttributedStringWithName:STPLocalizedString(@"Account", @"part of {Account} ending in {last4}")
                                                  last4:last4
                                               selected:selected];
         }

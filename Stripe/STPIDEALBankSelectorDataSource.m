@@ -29,6 +29,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        // These are brand names, and don't need to be localized.
         _bankNameToBankCode = @{
                                 @"ABN": @"abn_amro",
                                 @"ASN Bank": @"asn_bank",

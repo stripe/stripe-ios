@@ -58,6 +58,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, nullable,  readonly) NSString *paymentMethodLabel;
 
+/**
+ *  A string describing the payment method, suitable for use as an accessibilty label.
+ */
+@property (nonatomic, nullable,  readonly) NSString *paymentMethodAccessibilityLabel;
+
 @end
 
 NS_ASSUME_NONNULL_END

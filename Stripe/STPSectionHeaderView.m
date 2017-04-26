@@ -43,7 +43,13 @@
         case STPSourceTypeSEPADebit:
             headerView.title = STPLocalizedString(@"ACCOUNT HOLDER ADDRESS", @"Title for address entry section");
             break;
-        default:
+        case STPSourceTypeBancontact:
+        case STPSourceTypeBitcoin:
+        case STPSourceTypeGiropay:
+        case STPSourceTypeIDEAL:
+        case STPSourceTypeSofort:
+        case STPSourceTypeThreeDSecure:
+        case STPSourceTypeUnknown:
             break;
     }
     headerView.buttonHidden = !(needsAddress && shippingAddress != nil);
