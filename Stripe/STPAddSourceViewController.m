@@ -158,7 +158,7 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
         image = [STPImageLibrary largeCardFrontImage];
     } else if (self.sourceType == STPSourceTypeSEPADebit) {
         self.addressViewModel.previousField = ibanCell;
-        self.firstSectionHeaderView.title = STPLocalizedString(@"BANK ACCOUNT INFORMATION", @"Title for IBAN entry field");
+        self.firstSectionHeaderView.title = STPLocalizedString(@"BANK ACCOUNT INFORMATION", @"Title for bank account information form");
     }
     [self.firstSectionHeaderView setNeedsLayout];
     [self.addressHeaderView setNeedsLayout];
