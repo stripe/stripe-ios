@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
 #import "STPBlocks.h"
+#import "STPFile.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -81,6 +82,50 @@ static NSString *const STPSDKVersion = @"10.0.1";
  *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
 - (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount completion:(__nullable STPTokenCompletionBlock)completion;
+
+@end
+
+#pragma mark Personally Identifiable Information
+
+/**
+ *  STPAPIClient extensions to create Stripe tokens from a personal identification number.
+ */
+@interface STPAPIClient (PII)
+
+/**
+ *  Converts a personal identification number into a Stripe token using the Stripe API.
+ *
+ *  @param pii The user's personal identification number. Cannot be nil. @see https://stripe.com/docs/api#create_pii_token
+ *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
+ */
+- (void)createTokenWithPersonalIDNumber:(NSString *)pii completion:(__nullable STPTokenCompletionBlock)completion;
+
+@end
+
+/**
+ *  STPAPIClient extensions to upload files.
+ */
+@interface STPAPIClient (Upload)
+
+
+/**
+ *  Uses the Stripe file upload API to upload an image. This can be used for 
+ *  identity veritfication and evidence disputes.
+ *
+ *  @param image The image to be uploaded. The maximum allowed file size is 4MB 
+ *         for identity documents and 8MB for evidence disputes. Cannot be nil. 
+ *         Your image will be automatically resized down if you pass in one that
+ *         is too large
+ *  @param purpose The purpose of this file. This can be either an identifing 
+ *         document or an evidence dispute.
+ *  @param completion The callback to run with the returned Stripe file 
+ *         (and any errors that may have occurred).
+ *
+ *  @see https://stripe.com/docs/file-upload
+ */
+- (void)uploadImage:(UIImage *)image
+            purpose:(STPFilePurpose)purpose
+         completion:(nullable STPFileCompletionBlock)completion;
 
 @end
 
