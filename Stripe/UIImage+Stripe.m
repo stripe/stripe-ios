@@ -10,7 +10,7 @@
 
 @implementation UIImage (Stripe)
 
-- (NSData *)jpegDataWithMaxFileSize:(NSUInteger)maxBytes {
+- (NSData *)stp_jpegDataWithMaxFileSize:(NSUInteger)maxBytes {
     CGFloat scale = 1.0;
     NSData *imageData = UIImageJPEGRepresentation(self, 0.5);
     while (imageData.length > maxBytes) {

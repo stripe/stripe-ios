@@ -26,15 +26,15 @@
                                      templateIfAvailable:NO];
 
     NSData *data = nil;
-    data = [testImage jpegDataWithMaxFileSize:50000];
+    data = [testImage stp_jpegDataWithMaxFileSize:50000];
     XCTAssertNotNil(data);
     XCTAssertTrue(data.length < 50000);
 
-    data = [testImage jpegDataWithMaxFileSize:10000];
+    data = [testImage stp_jpegDataWithMaxFileSize:10000];
     XCTAssertNotNil(data);
     XCTAssertTrue(data.length < 10000);
 
-    data = [testImage jpegDataWithMaxFileSize:1000];
+    data = [testImage stp_jpegDataWithMaxFileSize:1000];
     XCTAssertNotNil(data);
     XCTAssertTrue(data.length < 1000);
 }

@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UIImage (Stripe)
-- (NSData *)jpegDataWithMaxFileSize:(NSUInteger)maxBytes;
+- (NSData *)stp_jpegDataWithMaxFileSize:(NSUInteger)maxBytes;
 @end
 
 NS_ASSUME_NONNULL_END

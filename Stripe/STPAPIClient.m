@@ -280,7 +280,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
             maxBytes = 0;
             break;
     }
-    return [image jpegDataWithMaxFileSize:maxBytes];
+    return [image stp_jpegDataWithMaxFileSize:maxBytes];
 }
 
 - (void)uploadImage:(UIImage *)image
