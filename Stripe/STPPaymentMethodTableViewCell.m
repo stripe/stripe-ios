@@ -28,6 +28,7 @@
     self.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
     self.leftIcon.image = paymentMethod.paymentMethodTemplateImage;
     self.titleLabel.font = self.theme.font;
+    self.titleLabel.accessibilityLabel = paymentMethod.paymentMethodAccessibilityLabel;
     self.checkmarkIcon.tintColor = self.theme.accentColor;
     self.selected = NO;
 }
@@ -42,7 +43,7 @@
 }
 
 - (UIColor *)primaryColorForPaymentMethodWithSelectedState:(BOOL)isSelected {
-    return isSelected ? self.theme.accentColor : [self.theme.primaryForegroundColor colorWithAlphaComponent:0.6f];
+    return isSelected ? self.theme.accentColor : self.theme.primaryForegroundColor;
 }
 
 - (NSAttributedString *)buildAttributedStringForPaymentMethod:(id<STPPaymentMethod>)paymentMethod
@@ -63,11 +64,21 @@
         }
 
         if (last4 && cardBrand) {
-            return [self buildAttributedStringForCardBrand:cardBrand
-                                                     last4:last4
-                                                  selected:selected];
+            return [self buildAttributedStringWithName:cardBrand
+                                                 last4:last4
+                                              selected:selected];
         }
-
+    } else if ([paymentMethod.paymentMethodType isEqual:[STPPaymentMethodType sepaDebit]]) {
+        NSString *last4 = nil;
+        if ([paymentMethod isKindOfClass:[STPSource class]]) {
+            STPSource *source = (STPSource *)paymentMethod;
+            last4 = source.sepaDebitDetails.last4;
+        }
+        if (last4) {
+            return [self buildAttributedStringWithName:STPLocalizedString(@"Account", @"part of {Account} ending in {last4}")
+                                                 last4:last4
+                                              selected:selected];
+        }
     }
 
     NSString *label = paymentMethod.paymentMethodLabel;
@@ -76,10 +87,10 @@
 
 }
 
-- (NSAttributedString *)buildAttributedStringForCardBrand:(NSString *)brandString
-                                                    last4:(NSString *)last4
-                                                 selected:(BOOL)selected {
-    NSString *template = STPLocalizedString(@"%@ Ending In %@", @"{card brand} ending in {last4}");
+- (NSAttributedString *)buildAttributedStringWithName:(NSString *)brandString
+                                                last4:(NSString *)last4
+                                             selected:(BOOL)selected {
+    NSString *template = STPLocalizedString(@"%@ Ending In %@", @"{account name} ending in {last4}");
     NSString *label = [NSString stringWithFormat:template, brandString, last4];
     UIColor *primaryColor = selected ? self.theme.accentColor : self.theme.primaryForegroundColor;
     UIColor *secondaryColor = [primaryColor colorWithAlphaComponent:0.6f];

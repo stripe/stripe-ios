@@ -10,6 +10,7 @@
 
 #import "NSDictionary+Stripe.h"
 #import "STPImageLibrary.h"
+#import "STPLocalizationUtils.h"
 #import "STPPaymentMethodType.h"
 #import "STPSourceOwner.h"
 #import "STPSourceReceiver.h"
@@ -247,16 +248,23 @@
 }
 
 - (NSString *)paymentMethodLabel {
+    NSString *template = STPLocalizedString(@"%@ Ending In %@", @"{account name} ending in {last4}");
     if (self.cardDetails != nil) {
         NSString *brand = [STPCard stringFromBrand:self.cardDetails.brand];
-        return [NSString stringWithFormat:@"%@ %@", brand, self.cardDetails.last4];
+        return [NSString stringWithFormat:template, brand, self.cardDetails.last4];
     }
     else if (self.sepaDebitDetails != nil) {
-        return [NSString stringWithFormat:@"SEPA %@", self.sepaDebitDetails.last4];
+        NSString *prefix = STPLocalizedString(@"SEPA Account", @"part of {SEPA Account} ending in {last4}");
+        return [NSString stringWithFormat:template, prefix, self.sepaDebitDetails.last4];
     }
     else {
         return self.paymentMethodType.paymentMethodLabel;
     }
 }
+
+- (NSString *)paymentMethodAccessibilityLabel {
+    return self.paymentMethodLabel;
+}
+
 
 @end

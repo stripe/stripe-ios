@@ -92,7 +92,7 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
         self.title = STPLocalizedString(@"Add a Card", @"Title for Add a Card view");
         addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
     } else if (self.sourceType == STPSourceTypeSEPADebit) {
-        self.title = STPLocalizedString(@"Add a SEPA Debit Account", @"Title for SEPA Debit Account form");
+        self.title = STPLocalizedString(@"Add a Direct Debit Account", @"Title for SEPA Debit Account form");
         addressViewModel = [[STPAddressViewModel alloc] initWithSEPADebitFields];
     }
     addressViewModel.delegate = self;
@@ -127,8 +127,11 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
     self.ibanCell = ibanCell;
 
     STPInfoFooterView *footerView = [[STPInfoFooterView alloc] init];
-    NSString *template = STPLocalizedString(@"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited.", @"SEPA legal authorization text – must use official translations");
-    footerView.textView.text = [NSString stringWithFormat:template, self.configuration.companyName];
+    NSString *template = STPLocalizedString(@"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited.", @"SEPA legal authorization text – must use official translations.");
+    NSString *footerText = [NSString stringWithFormat:template, self.configuration.companyName];
+    NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+    paragraphStyle.lineSpacing = 3;
+    footerView.textView.attributedText = [[NSAttributedString alloc] initWithString:footerText attributes:@{NSParagraphStyleAttributeName: paragraphStyle}];
     self.sepaFooterView = footerView;
 
     UIToolbar *inputAccessoryToolbar = [UIToolbar stp_inputAccessoryToolbarWithTarget:self action:@selector(firstSectionNextTapped)];
@@ -151,21 +154,24 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
     UIImage *image;
     if (self.sourceType == STPSourceTypeCard) {
         self.addressViewModel.previousField = cardCell;
-        self.firstSectionHeaderView.title = STPLocalizedString(@"Card", @"Title for card number entry field");
+        self.firstSectionHeaderView.title = STPLocalizedString(@"CARD", @"Title for card number entry field");
         image = [STPImageLibrary largeCardFrontImage];
     } else if (self.sourceType == STPSourceTypeSEPADebit) {
         self.addressViewModel.previousField = ibanCell;
-        self.firstSectionHeaderView.title = STPLocalizedString(@"Bank Account Information", @"Title for IBAN entry field");
-        image = [STPImageLibrary largeShippingImage]; // TODO: replace placeholder image
+        self.firstSectionHeaderView.title = STPLocalizedString(@"BANK ACCOUNT INFORMATION", @"Title for IBAN entry field");
     }
     [self.firstSectionHeaderView setNeedsLayout];
     [self.addressHeaderView setNeedsLayout];
 
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    imageView.contentMode = UIViewContentModeCenter;
-    imageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, imageView.bounds.size.height + (57 * 2));
-    self.imageView = imageView;
-    self.tableView.tableHeaderView = imageView;
+    if (image) {
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+        imageView.contentMode = UIViewContentModeCenter;
+        imageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, imageView.bounds.size.height + (57 * 2));
+        self.imageView = imageView;
+        self.tableView.tableHeaderView = imageView;
+    } else {
+        self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 16)];
+    }
 
     self.tableView.dataSource = self;
     self.tableView.delegate = self;

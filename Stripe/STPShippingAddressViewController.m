@@ -141,7 +141,7 @@
     STPSectionHeaderView *headerView = [STPSectionHeaderView new];
     headerView.theme = self.theme;
     headerView.title = [self headerTitleForShippingType:self.configuration.shippingType];
-    [headerView.button setTitle:STPLocalizedString(@"Use Billing", @"Button to fill shipping address from billing address.")
+    [headerView.button setTitle:STPLocalizedString(@"USE BILLING", @"Button to fill shipping address from billing address.")
                        forState:UIControlStateNormal];
     [headerView.button addTarget:self action:@selector(useBillingAddress:)
                 forControlEvents:UIControlEventTouchUpInside];
@@ -381,15 +381,15 @@
      if (self.configuration.requiredShippingAddressFields & PKAddressFieldPostalAddress) {
         switch (type) {
             case STPShippingTypeShipping:
-                return STPLocalizedString(@"Shipping Address", @"Title for shipping address entry section");
+                return STPLocalizedString(@"SHIPPING ADDRESS", @"Title for shipping address entry section");
                 break;
             case STPShippingTypeDelivery:
-                return STPLocalizedString(@"Delivery Address", @"Title for delivery address entry section");
+                return STPLocalizedString(@"DELIVERY ADDRESS", @"Title for delivery address entry section");
                 break;
         }
     }
     else {
-        return STPLocalizedString(@"Contact", @"Title for contact info form");
+        return STPLocalizedString(@"CONTACT", @"Title for contact info form");
     }
 }
 

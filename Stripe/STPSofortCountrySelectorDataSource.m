@@ -34,7 +34,7 @@
 }
 
 - (NSString *)selectorTitle {
-    return STPLocalizedString(@"Country", @"Title for country picker section");
+    return STPLocalizedString(@"COUNTRY", @"Title for country picker section");
 }
 
 - (NSInteger)numberOfRowsInSelector {
@@ -64,8 +64,9 @@
     return displayName ?: @"";
 }
 
-- (UIImage *)selectorImageForRow:(__unused NSInteger)row {
-    return [STPImageLibrary addIcon]; // TODO
+- (UIImage *)selectorImageForRow:(NSInteger)row {
+    NSString *countryCode = [self.countryCodes stp_boundSafeObjectAtIndex:row];
+    return [STPImageLibrary flagIconForCountryCode:countryCode];
 }
 
 @end

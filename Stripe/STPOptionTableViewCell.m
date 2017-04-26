@@ -41,7 +41,11 @@
     CGFloat iconWidth = 26.0f;
     self.leftIcon.center = CGPointMake(padding + iconWidth/2.0f, midY);
     [self.titleLabel sizeToFit];
-    self.titleLabel.center = CGPointMake(padding*2.0f + iconWidth + CGRectGetMidX(self.titleLabel.bounds), midY);
+    CGFloat titleLabelCenterX = padding + CGRectGetMidX(self.titleLabel.bounds);
+    if (self.leftIcon.image) {
+        titleLabelCenterX += iconWidth + padding;
+    }
+    self.titleLabel.center = CGPointMake(titleLabelCenterX, midY);
     self.checkmarkIcon.frame = CGRectMake(0, 0, 14.0f, 14.0f);
     self.checkmarkIcon.center = CGPointMake(CGRectGetWidth(self.bounds) - padding - CGRectGetMidX(self.checkmarkIcon.bounds), midY);
 }
@@ -63,7 +67,7 @@
 - (void)updateAppearance {
     self.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
     self.backgroundColor = [UIColor clearColor];
-    self.titleLabel.font = self.theme.font;
+    self.titleLabel.font = self.theme.emphasisFont;
     self.titleLabel.textColor = [self colorForSelectedState:self.selected];
     self.leftIcon.tintColor = [self colorForSelectedState:self.selected];
     self.checkmarkIcon.tintColor = self.theme.accentColor;

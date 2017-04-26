@@ -37,7 +37,7 @@
         }
         _textView = textView;
         _theme = [STPTheme new];
-        _insets = UIEdgeInsetsMake(10, 15, 0, 15);
+        _insets = UIEdgeInsetsMake(5, 12, 0, 12);
         [self updateAppearance];
     }
     return self;

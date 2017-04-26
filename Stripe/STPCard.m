@@ -197,6 +197,10 @@
     return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
 }
 
+- (NSString *)paymentMethodAccessibilityLabel {
+    return self.paymentMethodLabel;
+}
+
 - (UIImage *)paymentMethodImage {
     return [STPImageLibrary brandImageForCardBrand:self.brand];
 }

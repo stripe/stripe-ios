@@ -31,15 +31,15 @@
 @implementation STPPaymentMethodTypeCreditCard
 
 - (UIImage *)paymentMethodImage {
-    return [STPImageLibrary addIcon];
+    return [STPImageLibrary cardIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return [STPImageLibrary addIcon];
+    return [STPImageLibrary cardIcon];
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"New Card", @"Label for 'new card' payment method field") ;
+    return STPLocalizedString(@"New Card", @"Label for button to add a new credit or debit card") ;
 }
 
 - (BOOL)convertsToSourceAtSelection {
@@ -65,15 +65,19 @@
 @implementation STPPaymentMethodTypeSEPADebit
 
 - (UIImage *)paymentMethodImage {
-    return [STPImageLibrary addIcon];
+    return [STPImageLibrary sepaIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return [STPImageLibrary addIcon];
+    return [STPImageLibrary sepaIcon];
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"New SEPA Debit", @"Label for 'new sepa debit' payment method field") ;;
+    return STPLocalizedString(@"New Direct Debit Account", @"Label for button to add a new SEPA Direct Debit account") ;;
+}
+
+- (NSString *)paymentMethodAccessibilityLabel {
+    return STPLocalizedString(@"New SEPA Direct Debit Account", @"Accessibility label for button to add a new SEPA Direct Debit account");
 }
 
 - (BOOL)convertsToSourceAtSelection {
@@ -110,7 +114,7 @@
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"Apple Pay", @"Text for Apple Pay payment method");
+    return @"Apple Pay"; // brand name, doesn't need to be localized
 }
 
 - (NSString *)analyticsString {
@@ -128,17 +132,16 @@
 @implementation STPPaymentMethodTypeBancontact
 
 - (UIImage *)paymentMethodImage {
-    return nil;
+    return [STPImageLibrary bancontactIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return nil;
+    return [STPImageLibrary bancontactIcon];
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"Bancontact", @"Text for Bancontact payment method");
+    return @"Bancontact"; // brand name, doesn't need to be localized
 }
-
 
 - (NSString *)analyticsString {
     return @"bancontact";
@@ -155,17 +158,16 @@
 @implementation STPPaymentMethodTypeGiropay
 
 - (UIImage *)paymentMethodImage {
-    return nil;
+    return [STPImageLibrary giropayIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return nil;
+    return [STPImageLibrary giropayIcon];
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"Giropay", @"Text for Giropay payment method");;
+    return @"Giropay"; // brand name, doesn't need to be localized
 }
-
 
 - (NSString *)analyticsString {
     return @"giropay";
@@ -182,17 +184,16 @@
 @implementation STPPaymentMethodTypeIdeal
 
 - (UIImage *)paymentMethodImage {
-    return nil;
+    return [STPImageLibrary idealIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return nil;
+    return [STPImageLibrary idealIcon];
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"iDEAL", @"Text for iDEAL payment method");
+    return @"iDEAL"; // brand name, doesn't need to be localized
 }
-
 
 - (NSString *)analyticsString {
     return @"ideal";
@@ -209,15 +210,15 @@
 @implementation STPPaymentMethodTypeSofort
 
 - (UIImage *)paymentMethodImage {
-    return nil;
+    return [STPImageLibrary sofortIcon];
 }
 
 - (UIImage *)paymentMethodTemplateImage {
-    return nil;
+    return [STPImageLibrary sofortIcon];
 }
 
 - (NSString *)paymentMethodLabel {
-    return STPLocalizedString(@"SOFORT", @"Text for SOFORT payment method");
+    return @"SOFORT"; // brand name, doesn't need to be localized
 }
 
 - (NSString *)analyticsString {
@@ -271,6 +272,10 @@
 
 - (NSString *)paymentMethodLabel {
     return nil;
+}
+
+- (NSString *)paymentMethodAccessibilityLabel {
+    return self.paymentMethodLabel;
 }
 
 - (BOOL)convertsToSourceAtSelection {

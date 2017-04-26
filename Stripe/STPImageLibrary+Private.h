@@ -21,6 +21,15 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage *)largeCardBackImage;
 + (UIImage *)largeShippingImage;
 
++ (UIImage *)bancontactIcon;
++ (UIImage *)cardIcon;
++ (UIImage *)giropayIcon;
++ (UIImage *)idealIcon;
++ (UIImage *)sepaIcon;
++ (UIImage *)sofortIcon;
+
++ (UIImage *)flagIconForCountryCode:(NSString *)countryCode;
+
 + (UIImage *)safeImageNamed:(NSString *)imageName
         templateIfAvailable:(BOOL)templateIfAvailable;
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)brand 

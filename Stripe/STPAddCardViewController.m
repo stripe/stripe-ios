@@ -124,7 +124,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
                        forControlEvents:UIControlEventTouchUpInside];
     _addressHeaderView = addressHeaderView;
     STPSectionHeaderView *cardHeaderView = [STPSectionHeaderView new];
-    cardHeaderView.title = STPLocalizedString(@"Card", @"Title for card number entry field");
+    cardHeaderView.title = STPLocalizedString(@"CARD", @"Title for card number entry field");
     cardHeaderView.button.hidden = YES;
     _cardHeaderView = cardHeaderView;
 

@@ -18,6 +18,7 @@
 #import "STPLocalizationUtils.h"
 #import "STPPaymentMethodType+Private.h"
 #import "STPPaymentMethodTableViewCell.h"
+#import "STPSectionHeaderView.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "UITableViewCell+Stripe_Borders.h"
 
@@ -35,7 +36,7 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
 @property (nonatomic) NSArray<STPPaymentMethodType *> *availablePaymentTypes;
 @property (nonatomic) id<STPPaymentMethod> selectedPaymentMethod;
 @property (nonatomic, weak) id<STPPaymentMethodsInternalViewControllerDelegate> delegate;
-@property (nonatomic, weak) UIImageView *cardImageView;
+@property (nonatomic) STPSectionHeaderView *moreSectionHeaderView;
 
 @end
 
@@ -71,16 +72,20 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
     self.tableView.delegate = self;
     [self.tableView registerClass:[STPPaymentMethodTableViewCell class] forCellReuseIdentifier:STPPaymentMethodCellReuseIdentifier];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 18, 0, 0);
-    
-    UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeCardFrontImage]];
-    cardImageView.contentMode = UIViewContentModeCenter;
-    cardImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, cardImageView.bounds.size.height + (57 * 2));
-    self.cardImageView = cardImageView;
-    self.tableView.tableHeaderView = cardImageView;
-    
-    self.cardImageView.image = [STPImageLibrary largeCardFrontImage];
+    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 35)];
 
-    self.cardImageView.tintColor = self.theme.accentColor;
+    STPSectionHeaderView *headerView = [STPSectionHeaderView new];
+    headerView.buttonHidden = YES;
+    headerView.title = STPLocalizedString(@"MORE OPTIONS", @"Title for payment options section");
+    self.moreSectionHeaderView = headerView;
+    [self.moreSectionHeaderView setNeedsLayout];
+}
+
+- (void)updateAppearance {
+    [super updateAppearance];
+
+    self.view.backgroundColor = self.theme.primaryBackgroundColor;
+    self.moreSectionHeaderView.theme = self.theme;
 }
 
 - (void)handleBackOrCancelTapped:(__unused id)sender {
@@ -180,7 +185,23 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
 }
 
 - (CGFloat)tableView:(__unused UITableView *)tableView heightForHeaderInSection:(__unused NSInteger)section {
+    BOOL showingSavedSection = [self tableView:tableView numberOfRowsInSection:STPPaymentMethodSavedPaymentsSection] > 0;
+    CGSize fittingSize = CGSizeMake(self.view.bounds.size.width, CGFLOAT_MAX);
+    NSInteger numberOfRows = [self tableView:tableView numberOfRowsInSection:section];
+    if (section == STPPaymentMethodNewPaymentsSection && numberOfRows != 0 && showingSavedSection) {
+        return [self.moreSectionHeaderView sizeThatFits:fittingSize].height;
+    }
     return 0.01f;
+}
+
+- (UIView *)tableView:(__unused UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    BOOL showingSavedSection = [self tableView:tableView numberOfRowsInSection:STPPaymentMethodSavedPaymentsSection] > 0;
+    if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
+        return [UIView new];
+    } else if (section == STPPaymentMethodNewPaymentsSection && showingSavedSection) {
+        return self.moreSectionHeaderView;
+    }
+    return nil;
 }
 
 - (void)updateWithPaymentMethodTuple:(STPPaymentMethodTuple *)tuple {
