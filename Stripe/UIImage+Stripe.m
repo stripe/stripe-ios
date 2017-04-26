@@ -23,11 +23,11 @@
         // Shrink to a little bit less than we need to try to ensure we're under
         // (otherwise its likely our first pass will be over the limit due to
         // compression variance and floating point rounding)
-        scale = scale * sqrt(percentSmallerNeeded - (percentSmallerNeeded * 0.05));
+        scale = scale * (CGFloat) (percentSmallerNeeded - (percentSmallerNeeded * 0.05));
 
         do {
-            CGSize newImageSize = CGSizeMake(floor(self.size.width * scale),
-                                             floor(self.size.height *scale));
+            CGSize newImageSize = CGSizeMake((CGFloat)floor(self.size.width * scale),
+                                             (CGFloat)floor(self.size.height *scale));
             UIGraphicsBeginImageContextWithOptions(newImageSize, NO, self.scale);
             [self drawInRect:CGRectMake(0, 0, newImageSize.width, newImageSize.height)];
             UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
