@@ -26,11 +26,11 @@
 
 @implementation STPShippingMethodsViewControllerLocalizationTests
 
-//- (void)setUp {
-//    [super setUp];
-//
-//    self.recordMode = YES;
-//}
+- (void)setUp {
+    [super setUp];
+
+    self.recordMode = YES;
+}
 
 - (void)performSnapshotTestForLanguage:(NSString *)language {
     [STPLocalizationUtils overrideLanguageTo:language];
@@ -48,10 +48,12 @@
     STPShippingMethodsViewController *shippingVC = [[STPShippingMethodsViewController alloc]  initWithShippingMethods:@[method1, method2] selectedShippingMethod:method1 currency:@"usd" theme:[STPTheme defaultTheme]];
 
     UINavigationController *navController = [UINavigationController new];
+    navController.navigationBar.translucent = NO;
     navController.view.frame = CGRectMake(0, 0, 320, 750);
     [navController pushViewController:shippingVC animated:NO];
     [navController.view layoutIfNeeded];
-    navController.view.frame = CGRectMake(0, 0, 320, shippingVC.tableView.contentSize.height);
+    CGFloat height = shippingVC.tableView.contentSize.height + navController.navigationBar.frame.size.height;
+    navController.view.frame = CGRectMake(0, 0, 320, height);
 
     FBSnapshotVerifyView(navController.view, nil);
 

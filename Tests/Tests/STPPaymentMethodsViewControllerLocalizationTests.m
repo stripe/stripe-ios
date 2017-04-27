@@ -12,48 +12,77 @@
 #import "STPFixtures.h"
 #import "STPLocalizationUtils+STPTestAdditions.h"
 #import "STPMocks.h"
+#import "STPPaymentMethodsInternalViewController.h"
+#import "STPTestUtils.h"
 
 @interface STPPaymentMethodsViewControllerLocalizationTests : FBSnapshotTestCase
 
 @end
 
+@interface STPPaymentMethodsViewController (Testing)
+@property (nonatomic) STPPaymentMethodsInternalViewController *internalViewController;
+@end
+
+@interface STPPaymentMethodsInternalViewController (Testing)
+@property (nonatomic) UITableView *tableView;
+@end
+
 @implementation STPPaymentMethodsViewControllerLocalizationTests
 
-//- (void)setUp {
-//    [super setUp];
-//    
-//    self.recordMode = YES;
-//}
+- (void)setUp {
+    [super setUp];
+    
+    self.recordMode = YES;
+}
+
+- (STPCustomer *)buildCustomer {
+    NSMutableDictionary *customer = [[STPTestUtils jsonNamed:@"Customer"] mutableCopy];
+    NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
+    NSMutableDictionary *sepaSource = [[STPTestUtils jsonNamed:@"SEPADebitSource"] mutableCopy];
+    sepaSource[@"id"] = @"foo";
+    NSMutableDictionary *cardSource = [[STPTestUtils jsonNamed:@"CardSource"] mutableCopy];
+    cardSource[@"id"] = @"bar";
+    sources[@"data"] = @[sepaSource, cardSource];
+    customer[@"default_source"] = cardSource[@"id"];
+    customer[@"sources"] = sources;
+
+    STPCustomerDeserializer *deserializer = [[STPCustomerDeserializer alloc] initWithJSONResponse:customer];
+    return deserializer.customer;
+}
 
 - (void)performSnapshotTestForLanguage:(NSString *)language {
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
+    config.appleMerchantIdentifier = @"fake_merchant_id";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.availablePaymentMethodTypes = @[[STPPaymentMethodType card],
-                                           [STPPaymentMethodType applePay]];
+    config.availablePaymentMethodTypes = @[[STPPaymentMethodType applePay],
+                                           [STPPaymentMethodType card],
+                                           [STPPaymentMethodType bancontact],
+                                           [STPPaymentMethodType giropay],
+                                           [STPPaymentMethodType ideal],
+                                           [STPPaymentMethodType sepaDebit],
+                                           [STPPaymentMethodType sofort],
+                                           ];
     STPTheme *theme = [STPTheme defaultTheme];
-    id apiAdapter = [STPMocks staticAPIAdapter];
+    id apiAdapter = [STPMocks staticAPIAdapterWithCustomer:[self buildCustomer]];
     id delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
     [STPLocalizationUtils overrideLanguageTo:language];
-    STPPaymentMethodsViewController *paymentMethodsVC = [[STPPaymentMethodsViewController alloc] initWithConfiguration:config
+
+    STPPaymentMethodsViewController *sut = [[STPPaymentMethodsViewController alloc] initWithConfiguration:config
                                                                                                                  theme:theme
                                                                                                             apiAdapter:apiAdapter
                                                                                                               delegate:delegate];
 
-    UIViewController *rootVC = [UIViewController new];
+    UINavigationController *navController = [UINavigationController new];
+    navController.navigationBar.translucent = NO;
+    navController.view.frame = CGRectMake(0, 0, 320, 750);
+    [navController pushViewController:sut animated:NO];
+    [navController.view layoutIfNeeded];
+    CGFloat height = sut.internalViewController.tableView.contentSize.height + navController.navigationBar.frame.size.height;
+    navController.view.frame = CGRectMake(0, 0, 320, height);
+    FBSnapshotVerifyView(navController.view, nil)
 
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsVC];
-
-    UIWindow *testWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-
-    testWindow.rootViewController = rootVC;
-    [rootVC presentViewController:navController animated:NO completion:^{
-
-        FBSnapshotVerifyView(testWindow, nil)
-
-        [STPLocalizationUtils overrideLanguageTo:nil];
-    }];
-
+    [STPLocalizationUtils overrideLanguageTo:nil];
 }
 
 - (void)testGerman {

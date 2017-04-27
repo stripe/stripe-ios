@@ -9,17 +9,25 @@
 #import <XCTest/XCTest.h>
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import <Stripe/Stripe.h>
+#import "STPAddressViewModel.h"
 #import "STPAddSourceViewController+Private.h"
 #import "STPFixtures.h"
 #import "STPLocalizationUtils+STPTestAdditions.h"
 #import "STPSource+Private.h"
 
-@interface STPAddSourceViewControllerLocalizationTests : FBSnapshotTestCase
+typedef NS_ENUM(NSUInteger, STPAddSourceLocalizationTestType) {
+    STPAddSourceLocalizationTestTypeSEPADebit,
+    STPAddSourceLocalizationTestTypeCard,
+    STPAddSourceLocalizationTestTypeUseDelivery,
+    STPAddSourceLocalizationTestTypeMax,
+};
 
+@interface STPAddSourceViewControllerLocalizationTests : FBSnapshotTestCase
 @end
 
 @interface STPAddSourceViewController (Testing)
 @property(nonatomic) UITableView *tableView;
+@property(nonatomic) STPAddressViewModel<STPAddressFieldTableViewCellDelegate> *addressViewModel;
 @end
 
 @implementation STPAddSourceViewControllerLocalizationTests
@@ -29,69 +37,106 @@
     self.recordMode = YES;
 }
 
-- (void)performSnapshotTestForLanguage:(NSString *)language sourceType:(STPSourceType)sourceType {
+- (void)performSnapshotTestForLanguage:(NSString *)language testType:(STPAddSourceLocalizationTestType)testType {
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.availablePaymentMethodTypes = @[[STPPaymentMethodType card],
                                            [STPPaymentMethodType sepaDebit]];
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.shippingType = STPShippingTypeShipping;
+    STPShippingType shippingType = STPShippingTypeShipping;
+    if (testType == STPAddSourceLocalizationTestTypeUseDelivery) {
+        shippingType = STPShippingTypeDelivery;
+    }
+    config.shippingType = shippingType;
     STPTheme *theme = [STPTheme defaultTheme];
 
     [STPLocalizationUtils overrideLanguageTo:language];
 
+    STPSourceType sourceType = (testType == STPAddSourceLocalizationTestTypeSEPADebit) ? STPSourceTypeSEPADebit : STPSourceTypeCard;
     STPAddSourceViewController *sut = [[STPAddSourceViewController alloc] initWithSourceType:sourceType configuration:config theme:theme];
     sut.shippingAddress = [STPAddress new];
     UINavigationController *navController = [UINavigationController new];
+    navController.navigationBar.translucent = NO;
     navController.view.frame = CGRectMake(0, 0, 320, 750);
     [navController pushViewController:sut animated:NO];
     [navController.view layoutIfNeeded];
-    navController.view.frame = CGRectMake(0, 0, 320, sut.tableView.contentSize.height);
+    CGFloat height = sut.tableView.contentSize.height + navController.navigationBar.frame.size.height;
+    navController.view.frame = CGRectMake(0, 0, 320, height);
 
-    NSString *sourceTypeString = [STPSource stringFromType:sourceType];
-    FBSnapshotVerifyView(navController.view, sourceTypeString);
+    switch (testType) {
+        case STPAddSourceLocalizationTestTypeSEPADebit:
+            FBSnapshotVerifyView(navController.view, @"sepa_debit");
+            break;
+        case STPAddSourceLocalizationTestTypeUseDelivery:
+            FBSnapshotVerifyView(navController.view, @"use_delivery");
+            break;
+        case STPAddSourceLocalizationTestTypeCard: {
+            /**
+             This method rejects nil or empty country codes to stop strange looking behavior
+             when scrolling to the top "unset" position in the picker, so put in
+             an invalid country code instead to test seeing the "Country" placeholder
+             */
+            sut.addressViewModel.addressFieldTableViewCountryCode = @"INVALID";
+            FBSnapshotVerifyView(navController.view, @"card_no_country");
+
+            // Strings for state and postal code are different for US addresses
+            sut.addressViewModel.addressFieldTableViewCountryCode = @"US";
+            FBSnapshotVerifyView(navController.view, @"card_US");
+            break;
+        case STPAddSourceLocalizationTestTypeMax:
+            break;
+        }
+    }
 
     [STPLocalizationUtils overrideLanguageTo:nil];
 }
 
 - (void)testGerman {
-    [self performSnapshotTestForLanguage:@"de" sourceType:STPSourceTypeCard];
-    [self performSnapshotTestForLanguage:@"de" sourceType:STPSourceTypeSEPADebit];
+    for (NSUInteger i = 0; i < STPAddSourceLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"de" testType:i];
+    }
 }
 
 - (void)testEnglish {
-    [self performSnapshotTestForLanguage:@"en" sourceType:STPSourceTypeCard];
-    [self performSnapshotTestForLanguage:@"en" sourceType:STPSourceTypeSEPADebit];
+    for (NSUInteger i = 0; i < STPAddSourceLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"en" testType:i];
+    }
 }
 
 - (void)testSpanish {
-    [self performSnapshotTestForLanguage:@"es" sourceType:STPSourceTypeCard];
-    [self performSnapshotTestForLanguage:@"es" sourceType:STPSourceTypeSEPADebit];
+    for (NSUInteger i = 0; i < STPAddSourceLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"es" testType:i];
+    }
 }
 
 - (void)testFrench {
-    [self performSnapshotTestForLanguage:@"fr" sourceType:STPSourceTypeCard];
-    [self performSnapshotTestForLanguage:@"fr" sourceType:STPSourceTypeSEPADebit];
+    for (NSUInteger i = 0; i < STPAddSourceLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"fr" testType:i];
+    }
 }
 
 - (void)testItalian {
-    [self performSnapshotTestForLanguage:@"it" sourceType:STPSourceTypeCard];
-    [self performSnapshotTestForLanguage:@"it" sourceType:STPSourceTypeSEPADebit];
+    for (NSUInteger i = 0; i < STPAddSourceLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"it" testType:i];
+    }
 }
 
 - (void)testJapanese {
-    [self performSnapshotTestForLanguage:@"ja" sourceType:STPSourceTypeCard];
-    [self performSnapshotTestForLanguage:@"ja" sourceType:STPSourceTypeSEPADebit];
+    for (NSUInteger i = 0; i < STPAddSourceLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"ja" testType:i];
+    }
 }
 
 - (void)testDutch {
-    [self performSnapshotTestForLanguage:@"nl" sourceType:STPSourceTypeCard];
-    [self performSnapshotTestForLanguage:@"nl" sourceType:STPSourceTypeSEPADebit];
+    for (NSUInteger i = 0; i < STPAddSourceLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"nl" testType:i];
+    }
 }
 
 - (void)testChinese {
-    [self performSnapshotTestForLanguage:@"zh-Hans" sourceType:STPSourceTypeCard];
-    [self performSnapshotTestForLanguage:@"zh-Hans" sourceType:STPSourceTypeSEPADebit];
+    for (NSUInteger i = 0; i < STPAddSourceLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"zh-Hans" testType:i];
+    }
 }
 
 @end

@@ -28,11 +28,11 @@
 
 @implementation STPAddCardViewControllerLocalizationTests
 
-//- (void)setUp {
-//    [super setUp];
-//
-//    self.recordMode = YES;
-//}
+- (void)setUp {
+    [super setUp];
+
+    self.recordMode = YES;
+}
 
 - (void)performSnapshotTestForLanguage:(NSString *)language delivery:(BOOL)delivery {
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
@@ -49,10 +49,12 @@
     addCardVC.shippingAddress = [STPAddress new];
     
     UINavigationController *navController = [UINavigationController new];
+    navController.navigationBar.translucent = NO;
     navController.view.frame = CGRectMake(0, 0, 320, 750);
     [navController pushViewController:addCardVC animated:NO];
     [navController.view layoutIfNeeded];
-    navController.view.frame = CGRectMake(0, 0, 320, addCardVC.tableView.contentSize.height);
+    CGFloat height = addCardVC.tableView.contentSize.height + navController.navigationBar.frame.size.height;
+    navController.view.frame = CGRectMake(0, 0, 320, height);
 
     if (delivery) {
         addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"INVALID";
@@ -66,17 +68,9 @@
         addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"INVALID";
         FBSnapshotVerifyView(navController.view, @"no_country");
 
+        // Strings for state and postal code are different for US addresses
         addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"US";
         FBSnapshotVerifyView(navController.view, @"US");
-
-        addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"GB";
-        FBSnapshotVerifyView(navController.view, @"GB");
-
-        addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"CA";
-        FBSnapshotVerifyView(navController.view, @"CA");
-
-        addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"MX";
-        FBSnapshotVerifyView(navController.view, @"MX");
     }
 
     [STPLocalizationUtils overrideLanguageTo:nil];

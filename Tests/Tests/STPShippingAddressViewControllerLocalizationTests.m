@@ -16,6 +16,13 @@
 #import "STPLocalizationUtils.h"
 #import "STPLocalizationUtils+STPTestAdditions.h"
 
+typedef NS_ENUM(NSUInteger, STPShippingAddressLocalizationTestType) {
+    STPShippingAddressLocalizationTestTypeShipping,
+    STPShippingAddressLocalizationTestTypeShippingContact,
+    STPShippingAddressLocalizationTestTypeDelivery,
+    STPShippingAddressLocalizationTestTypeMax,
+};
+
 @interface STPShippingAddressViewController (TestsPrivate)
 @property(nonatomic) UITableView *tableView;
 @property(nonatomic) STPAddressViewModel<STPAddressFieldTableViewCellDelegate> *addressViewModel;
@@ -27,20 +34,22 @@
 
 @implementation STPShippingAddressViewControllerLocalizationTests
 
-//- (void)setUp {
-//    [super setUp];
-//
-//    self.recordMode = YES;
-//}
+- (void)setUp {
+    [super setUp];
 
-- (void)performSnapshotTestForLanguage:(NSString *)language shippingType:(STPShippingType)shippingType contact:(BOOL)contact {
-    NSString *identifier = (shippingType == STPShippingTypeShipping) ? @"shipping" : @"delivery";
+    self.recordMode = YES;
+}
+
+- (void)performSnapshotTestForLanguage:(NSString *)language testType:(STPShippingAddressLocalizationTestType)testType {
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredShippingAddressFields = PKAddressFieldAll;
-    if (contact) {
+    if (testType == STPShippingAddressLocalizationTestTypeShippingContact) {
         config.requiredShippingAddressFields = PKAddressFieldEmail;
-        identifier = @"contact";
+    }
+    STPShippingType shippingType = STPShippingTypeShipping;
+    if (testType == STPShippingAddressLocalizationTestTypeDelivery) {
+        shippingType = STPShippingTypeDelivery;
     }
     config.shippingType = shippingType;
 
@@ -56,10 +65,12 @@
                                                                                               prefilledInformation:info];
 
     UINavigationController *navController = [UINavigationController new];
+    navController.navigationBar.translucent = NO;
     navController.view.frame = CGRectMake(0, 0, 320, 750);
     [navController pushViewController:shippingVC animated:NO];
     [navController.view layoutIfNeeded];
-    navController.view.frame = CGRectMake(0, 0, 320, shippingVC.tableView.contentSize.height);
+    CGFloat height = shippingVC.tableView.contentSize.height + navController.navigationBar.frame.size.height;
+    navController.view.frame = CGRectMake(0, 0, 320, height);
 
     /**
      This method rejects nil or empty country codes to stop strange looking behavior
@@ -67,57 +78,71 @@
      an invalid country code instead to test seeing the "Country" placeholder
      */
     shippingVC.addressViewModel.addressFieldTableViewCountryCode = @"INVALID";
+    NSString *identifier;
+    switch (testType) {
+        case STPShippingAddressLocalizationTestTypeShipping:
+            identifier = @"shipping";
+            break;
+        case STPShippingAddressLocalizationTestTypeShippingContact:
+            identifier = @"shipping_contact";
+            break;
+        case STPShippingAddressLocalizationTestTypeDelivery:
+            identifier = @"delivery";
+            break;
+        case STPShippingAddressLocalizationTestTypeMax:
+            break;
+    }
     FBSnapshotVerifyView(navController.view, identifier);
 
     [STPLocalizationUtils overrideLanguageTo:nil];
 }
 
 - (void)testGerman {
-    [self performSnapshotTestForLanguage:@"de" shippingType:STPShippingTypeShipping contact:NO];
-    [self performSnapshotTestForLanguage:@"de" shippingType:STPShippingTypeShipping contact:YES];
-    [self performSnapshotTestForLanguage:@"de" shippingType:STPShippingTypeDelivery contact:NO];
+    for (NSUInteger i = 0; i < STPShippingAddressLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"de" testType:i];
+    }
 }
 
 - (void)testEnglish {
-    [self performSnapshotTestForLanguage:@"en" shippingType:STPShippingTypeShipping contact:NO];
-    [self performSnapshotTestForLanguage:@"en" shippingType:STPShippingTypeShipping contact:YES];
-    [self performSnapshotTestForLanguage:@"en" shippingType:STPShippingTypeDelivery contact:NO];
+    for (NSUInteger i = 0; i < STPShippingAddressLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"en" testType:i];
+    }
 }
 
 - (void)testSpanish {
-    [self performSnapshotTestForLanguage:@"es" shippingType:STPShippingTypeShipping contact:NO];
-    [self performSnapshotTestForLanguage:@"es" shippingType:STPShippingTypeShipping contact:YES];
-    [self performSnapshotTestForLanguage:@"es" shippingType:STPShippingTypeDelivery contact:NO];
+    for (NSUInteger i = 0; i < STPShippingAddressLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"es" testType:i];
+    }
 }
 
 - (void)testFrench {
-    [self performSnapshotTestForLanguage:@"fr" shippingType:STPShippingTypeShipping contact:NO];
-    [self performSnapshotTestForLanguage:@"fr" shippingType:STPShippingTypeShipping contact:YES];
-    [self performSnapshotTestForLanguage:@"fr" shippingType:STPShippingTypeDelivery contact:NO];
+    for (NSUInteger i = 0; i < STPShippingAddressLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"fr" testType:i];
+    }
 }
 
 - (void)testItalian {
-    [self performSnapshotTestForLanguage:@"it" shippingType:STPShippingTypeShipping contact:NO];
-    [self performSnapshotTestForLanguage:@"it" shippingType:STPShippingTypeShipping contact:YES];
-    [self performSnapshotTestForLanguage:@"it" shippingType:STPShippingTypeDelivery contact:NO];
+    for (NSUInteger i = 0; i < STPShippingAddressLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"it" testType:i];
+    }
 }
 
 - (void)testJapanese {
-    [self performSnapshotTestForLanguage:@"ja" shippingType:STPShippingTypeShipping contact:NO];
-    [self performSnapshotTestForLanguage:@"ja" shippingType:STPShippingTypeShipping contact:YES];
-    [self performSnapshotTestForLanguage:@"ja" shippingType:STPShippingTypeDelivery contact:NO];
+    for (NSUInteger i = 0; i < STPShippingAddressLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"ja" testType:i];
+    }
 }
 
 - (void)testDutch {
-    [self performSnapshotTestForLanguage:@"nl" shippingType:STPShippingTypeShipping contact:NO];
-    [self performSnapshotTestForLanguage:@"nl" shippingType:STPShippingTypeShipping contact:YES];
-    [self performSnapshotTestForLanguage:@"nl" shippingType:STPShippingTypeDelivery contact:NO];
+    for (NSUInteger i = 0; i < STPShippingAddressLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"nl" testType:i];
+    }
 }
 
 - (void)testChinese {
-    [self performSnapshotTestForLanguage:@"zh-Hans" shippingType:STPShippingTypeShipping contact:NO];
-    [self performSnapshotTestForLanguage:@"zh-Hans" shippingType:STPShippingTypeShipping contact:YES];
-    [self performSnapshotTestForLanguage:@"zh-Hans" shippingType:STPShippingTypeDelivery contact:NO];
+    for (NSUInteger i = 0; i < STPShippingAddressLocalizationTestTypeMax; i++) {
+        [self performSnapshotTestForLanguage:@"zh-Hans" testType:i];
+    }
 }
 
 @end
