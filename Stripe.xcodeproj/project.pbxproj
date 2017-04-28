@@ -626,10 +626,10 @@
 		F12959BF1EAE9868003496FE /* STPAddSourceViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = F129596F1EAE9724003496FE /* STPAddSourceViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F12959C01EAE9869003496FE /* STPAddSourceViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = F129596F1EAE9724003496FE /* STPAddSourceViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F12959C11EAE986F003496FE /* STPAddSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F129591E1EAE96EA003496FE /* STPAddSourceViewController.m */; };
-		F12959C21EAE986F003496FE /* STPSourceInfoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = F12959711EAE9724003496FE /* STPSourceInfoViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F12959C21EAE986F003496FE /* STPSourceInfoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = F12959711EAE9724003496FE /* STPSourceInfoViewController.h */; };
 		F12959C31EAE986F003496FE /* STPSourceInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F12959431EAE96EA003496FE /* STPSourceInfoViewController.m */; };
 		F12959C41EAE9870003496FE /* STPAddSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F129591E1EAE96EA003496FE /* STPAddSourceViewController.m */; };
-		F12959C51EAE9870003496FE /* STPSourceInfoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = F12959711EAE9724003496FE /* STPSourceInfoViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F12959C51EAE9870003496FE /* STPSourceInfoViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = F12959711EAE9724003496FE /* STPSourceInfoViewController.h */; };
 		F12959C61EAE9870003496FE /* STPSourceInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F12959431EAE96EA003496FE /* STPSourceInfoViewController.m */; };
 		F12959C91EAE9895003496FE /* STPPaymentMethodType.h in Headers */ = {isa = PBXBuildFile; fileRef = F12959701EAE9724003496FE /* STPPaymentMethodType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F12959CA1EAE9895003496FE /* STPPaymentMethodType.m in Sources */ = {isa = PBXBuildFile; fileRef = F12959391EAE96EA003496FE /* STPPaymentMethodType.m */; };
@@ -1198,7 +1198,7 @@
 		F129596E1EAE9724003496FE /* STPAdditionalSourceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPAdditionalSourceInfo.h; path = PublicHeaders/STPAdditionalSourceInfo.h; sourceTree = "<group>"; };
 		F129596F1EAE9724003496FE /* STPAddSourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPAddSourceViewController.h; path = PublicHeaders/STPAddSourceViewController.h; sourceTree = "<group>"; };
 		F12959701EAE9724003496FE /* STPPaymentMethodType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodType.h; path = PublicHeaders/STPPaymentMethodType.h; sourceTree = "<group>"; };
-		F12959711EAE9724003496FE /* STPSourceInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPSourceInfoViewController.h; path = PublicHeaders/STPSourceInfoViewController.h; sourceTree = "<group>"; };
+		F12959711EAE9724003496FE /* STPSourceInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPSourceInfoViewController.h; sourceTree = "<group>"; };
 		F12959D11EAE99DC003496FE /* NSURLComponents+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLComponents+StripeTest.m"; sourceTree = "<group>"; };
 		F12959D21EAE99DC003496FE /* STPAddSourceViewControllerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddSourceViewControllerTest.m; sourceTree = "<group>"; };
 		F12959D31EAE99DC003496FE /* STPFixturesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFixturesTest.m; sourceTree = "<group>"; };
@@ -1971,6 +1971,8 @@
 				04E39F561CECF9A800AF3B96 /* STPPaymentMethodsViewController+Private.h */,
 				C159932F1D8808680047950D /* STPShippingMethodsViewController.h */,
 				C15993301D8808680047950D /* STPShippingMethodsViewController.m */,
+				F12959711EAE9724003496FE /* STPSourceInfoViewController.h */,
+				F12959431EAE96EA003496FE /* STPSourceInfoViewController.m */,
 				F1D64B271D8767FC001CDB7C /* STPWebViewController.h */,
 				F1D64B281D8767FC001CDB7C /* STPWebViewController.m */,
 			);
@@ -2020,8 +2022,6 @@
 				0439B9861C454F97005A1ED5 /* STPPaymentMethodsViewController.m */,
 				C15993261D8808490047950D /* STPShippingAddressViewController.h */,
 				C159932C1D8808680047950D /* STPShippingAddressViewController.m */,
-				F12959711EAE9724003496FE /* STPSourceInfoViewController.h */,
-				F12959431EAE96EA003496FE /* STPSourceInfoViewController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
