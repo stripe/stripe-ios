@@ -30,6 +30,7 @@ typedef NS_ENUM(NSInteger, STPErrorCode) {
     STPPaymentContextUnknownError = 10000, // General purpose payment context failure
     STPPaymentContextUnsupportedPaymentMethodError = 10010, // Tried to pay using a payment method not supported by payment context (generally not possible)
     STPPaymentContextInvalidSourceStatusError = 10020, // Payment failed because source did not have the expected status. You can find the received status that caused this error via the STPSourceStatusErrorKey key
+    STPRedirectContextPageLoadError = 20000, // Redirect failed because the page couldn't be loaded
 };
 
 #pragma mark userInfo keys

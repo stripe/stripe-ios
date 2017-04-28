@@ -678,7 +678,14 @@
     STPSourceCompletionBlock onRedirectCompletion = ^(STPSource *finishedSource, NSError *error) {
         stpDispatchToMainThreadIfNecessary(^{
             if (error) {
-                [self didFinishWithStatus:STPPaymentStatusPending error:nil];
+                // If the page load failed, we know that the redirect failed
+                // and should return an error. Otherwise (e.g. if polling errored),
+                // we don't know the status of the source and should return status pending.
+                if (error.domain == StripeDomain && error.code == STPRedirectContextPageLoadError) {
+                    [self didFinishWithStatus:STPPaymentStatusError error:[NSError stp_genericConnectionError]];
+                } else {
+                    [self didFinishWithStatus:STPPaymentStatusPending error:nil];
+                }
             } else {
                 switch (finishedSource.status) {
                     case STPSourceStatusChargeable:
