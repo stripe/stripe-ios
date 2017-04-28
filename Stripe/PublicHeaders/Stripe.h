@@ -40,7 +40,6 @@
 #import "STPShippingAddressViewController.h"
 #import "STPSource.h"
 #import "STPSourceCardDetails.h"
-#import "STPSourceInfoViewController.h"
 #import "STPSourceOwner.h"
 #import "STPSourceParams.h"
 #import "STPSourceProtocol.h"

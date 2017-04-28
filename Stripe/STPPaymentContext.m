@@ -22,6 +22,7 @@
 #import "STPPaymentMethodType+Private.h"
 #import "STPPromise.h"
 #import "STPShippingMethodsViewController.h"
+#import "STPSourceInfoViewController.h"
 #import "STPSourceProtocol.h"
 #import "STPWeakStrongMacros.h"
 #import "UINavigationController+Stripe_Completion.h"

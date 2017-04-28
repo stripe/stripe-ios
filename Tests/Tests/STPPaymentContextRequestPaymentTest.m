@@ -15,6 +15,7 @@
 #import "STPMocks.h"
 #import "STPPaymentContext+Private.h"
 #import "STPSourceInfoDataSource.h"
+#import "STPSourceInfoViewController.h"
 
 @interface STPPaymentContext (Testing)
 @property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
