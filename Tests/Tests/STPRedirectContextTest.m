@@ -145,8 +145,8 @@
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
         XCTAssertEqualObjects(sourceID, source.stripeID);
         XCTAssertEqualObjects(clientSecret, source.clientSecret);
-        NSError *expectedError = [NSError stp_genericConnectionError];
-        XCTAssertEqualObjects(error, expectedError);
+        XCTAssertEqual(error.domain, StripeDomain);
+        XCTAssertEqual(error.code, STPRedirectContextPageLoadError);
         [exp fulfill];
     }];
     id sut = OCMPartialMock(context);
