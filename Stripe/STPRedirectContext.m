@@ -87,7 +87,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)safariViewController:(__unused SFSafariViewController *)controller didCompleteInitialLoad:(BOOL)didLoadSuccessfully { FAUXPAS_IGNORED_ON_LINE(APIAvailability)
     if (didLoadSuccessfully == NO) {
         stpDispatchToMainThreadIfNecessary(^{
-            [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]];
+            NSDictionary *userInfo = @{
+                                       NSLocalizedDescriptionKey: [NSError stp_unexpectedErrorMessage],
+                                       STPErrorMessageKey: @"Redirect failed because the page could not be loaded."
+                                       };
+            NSError *error = [[NSError alloc] initWithDomain:StripeDomain code:STPRedirectContextPageLoadError userInfo:userInfo];
+            [self handleRedirectCompletionWithError:error];
         });
     }
 }
