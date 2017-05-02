@@ -13,17 +13,6 @@
 #import "STPTelemetryClient.h"
 #import "STPAPIClient.h"
 
-typedef NS_ENUM(NSInteger, STPMetricField) {
-    STPMetricFieldCookieSupport = 0,
-    STPMetricFieldDoNotTrack,
-    STPMetricFieldLanguage,
-    STPMetricFieldPlatform,
-    STPMetricFieldPlugins,
-    STPMetricFieldScreenSize,
-    STPMetricFieldTimeZoneOffset,
-    STPMetricFieldMax
-};
-
 @interface STPTelemetryClient ()
 @property (nonatomic) NSDate *appOpenTime;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
@@ -114,89 +103,30 @@ typedef NS_ENUM(NSInteger, STPMetricField) {
     return [NSString stringWithFormat:@"%.0f", hoursFromGMT];
 }
 
-- (NSString *)batteryLevel {
-    UIDevice *device = [UIDevice currentDevice];
-    return [NSString stringWithFormat:@"%.2f", device.batteryLevel];
-}
-
-- (NSString *)batteryState {
-    UIDevice *device = [UIDevice currentDevice];
-    switch (device.batteryState) {
-        case UIDeviceBatteryStateFull: return @"full";
-        case UIDeviceBatteryStateCharging: return @"charging";
-        case UIDeviceBatteryStateUnplugged: return @"unplugged";
-        case UIDeviceBatteryStateUnknown: return @"unknown";
+- (NSDictionary *)encodeValue:(NSString *)value {
+    if (value) {
+        return @{@"v": value};
     }
-}
-
-- (NSString *)deviceOrientation {
-    UIDevice *device = [UIDevice currentDevice];
-    [device beginGeneratingDeviceOrientationNotifications];
-    NSString *orientation;
-    switch (device.orientation) {
-        case UIDeviceOrientationFaceUp:
-            orientation = @"face_up";
-            break;
-        case UIDeviceOrientationFaceDown:
-            orientation = @"face_down";
-            break;
-        case UIDeviceOrientationLandscapeLeft:
-            orientation = @"landscape_left";
-            break;
-        case UIDeviceOrientationLandscapeRight:
-            orientation = @"landscape_right";
-            break;
-        case UIDeviceOrientationPortrait:
-            orientation = @"portrait";
-            break;
-        case UIDeviceOrientationPortraitUpsideDown:
-            orientation = @"portrait_upside_down";
-            break;
-        case UIDeviceOrientationUnknown:
-            orientation = @"unknown";
-            break;
-    }
-    [device endGeneratingDeviceOrientationNotifications];
-    return orientation;
+    return nil;
 }
 
 - (NSDictionary *)payload {
     NSMutableDictionary *payload = [NSMutableDictionary new];
-    NSMutableArray *fields = [NSMutableArray new];
-    for (STPMetricField i = 0; i < STPMetricFieldMax; i++) {
-        switch (i) {
-            case STPMetricFieldLanguage:
-                [fields addObject:@[[self language]]];
-                break;
-            case STPMetricFieldPlatform:
-                [fields addObject:@[[self platform]]];
-                break;
-            case STPMetricFieldScreenSize:
-                [fields addObject:@[[self screenSize]]];
-                break;
-            case STPMetricFieldTimeZoneOffset:
-                [fields addObject:@[[self timeZoneOffset]]];
-                break;
-            default:
-                [fields addObject:@[@""]];
-                break;
-        }
-    }
-    payload[@"f"] = fields;
-    NSMutableDictionary *platformData = [NSMutableDictionary new];
-    platformData[@"muid"] = [self muid];
-    platformData[@"app_name"] = [NSBundle stp_applicationName];
-    platformData[@"app_version"] = [NSBundle stp_applicationVersion];
-    platformData[@"battery_level"] = [self batteryLevel];
-    platformData[@"battery_state"] = [self batteryState];
-    platformData[@"device_orientation"] = [self deviceOrientation];
-    platformData[@"apple_pay_enabled"] = @([Stripe deviceSupportsApplePay]);
-    payload[@"d"] = @[
-                      @"",
-                      [platformData copy]
-                      ];
+    NSMutableDictionary *data = [NSMutableDictionary new];
+    data[@"c"] = [self encodeValue:[self language]];
+    data[@"d"] = [self encodeValue:[self platform]];
+    data[@"f"] = [self encodeValue:[self screenSize]];
+    data[@"g"] = [self encodeValue:[self timeZoneOffset]];
+    payload[@"a"] = [data copy];
+    NSMutableDictionary *otherData = [NSMutableDictionary new];
+    otherData[@"d"] = [self muid];
+    otherData[@"k"] = [NSBundle stp_applicationName];
+    otherData[@"l"] = [NSBundle stp_applicationVersion];
+    otherData[@"m"] = @([Stripe deviceSupportsApplePay]);
+    payload[@"b"] = [otherData copy];
     payload[@"tag"] = STPSDKVersion;
     payload[@"src"] = @"ios-sdk";
+    payload[@"v2"] = @YES;
     return [payload copy];
 }
 
