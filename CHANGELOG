@@ -1,3 +1,6 @@
+== 10.1.0 2017-05-XX
+* Updates STPPaymentCardTextField's icons to match Elements on the web. When the card number is invalid, the field will now display an error icon.
+
 == 10.0.1 2017-03-16
 * Fixes a bug where card sources didn't include the card owner's name.
 * Fixes an issue where STPPaymentMethodsViewController didn't reload after adding a new payment method.
