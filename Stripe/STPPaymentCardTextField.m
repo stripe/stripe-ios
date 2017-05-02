@@ -494,7 +494,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 }
 
 - (CGRect)brandImageRectForBounds:(CGRect)bounds {
-    return CGRectMake(STPPaymentCardTextFieldDefaultPadding, 0, self.brandImageView.image.size.width, bounds.size.height - 1);
+    return CGRectMake(STPPaymentCardTextFieldDefaultPadding, -1, self.brandImageView.image.size.width, bounds.size.height);
 }
 
 - (CGRect)fieldsRectForBounds:(CGRect)bounds {
