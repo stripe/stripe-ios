@@ -1,4 +1,6 @@
-== 10.1.0 2017-04-XX
+== 10.1.0 2017-05-XX
+* Updates STPPaymentCardTextField's icons to match Elements on the web. When the card number is invalid, the field will now display an error icon.
+* The alignment of the new brand icons has changed to match the new CVC and error icons. If you use these icons via `STPImageLibrary`, you may need to adjust your layout.
 * Because collecting some basic data on tokenization helps us detect fraud, we've removed the ability to disable analytics collection using `[Stripe disableAnalytics]`.
 
 == 10.0.1 2017-03-16
