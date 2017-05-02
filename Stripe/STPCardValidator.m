@@ -137,15 +137,15 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
     }
 }
 
-+ (STPCardValidationState)validationStateForNumber:(nonnull NSString *)cardNumber
++ (STPCardValidationState)validationStateForNumber:(NSString *)cardNumber
                                validatingCardBrand:(BOOL)validatingCardBrand {
     
     NSString *sanitizedNumber = [self stringByRemovingSpacesFromString:cardNumber];
-    if (![self stringIsNumeric:sanitizedNumber]) {
-        return STPCardValidationStateInvalid;
-    }
     if (sanitizedNumber.length == 0) {
         return STPCardValidationStateIncomplete;
+    }
+    if (![self stringIsNumeric:sanitizedNumber]) {
+        return STPCardValidationStateInvalid;
     }
     STPBINRange *binRange = [STPBINRange mostSpecificBINRangeForNumber:sanitizedNumber];
     if (binRange.brand == STPCardBrandUnknown && validatingCardBrand) {

@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return STPCardValidationStateValid if the number is valid, STPCardValidationStateInvalid if the number is invalid, or STPCardValidationStateIncomplete if the number is a substring of a valid card (e.g. @"4242").
  */
-+ (STPCardValidationState)validationStateForNumber:(NSString *)cardNumber
++ (STPCardValidationState)validationStateForNumber:(nullable NSString *)cardNumber
                                validatingCardBrand:(BOOL)validatingCardBrand;
 
 /**

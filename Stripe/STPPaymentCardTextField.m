@@ -494,7 +494,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 }
 
 - (CGRect)brandImageRectForBounds:(CGRect)bounds {
-    return CGRectMake(STPPaymentCardTextFieldDefaultPadding, 0, self.brandImageView.image.size.width, bounds.size.height - 1);
+    return CGRectMake(STPPaymentCardTextFieldDefaultPadding, -1, self.brandImageView.image.size.width, bounds.size.height);
 }
 
 - (CGRect)fieldsRectForBounds:(CGRect)bounds {
@@ -735,11 +735,12 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 }
 
 - (UIImage *)brandImage {
+    STPCardFieldType fieldType = STPCardFieldTypeNumber;
     if (self.currentFirstResponderField) {
-        return [self brandImageForFieldType:self.currentFirstResponderField.tag];
-    } else {
-        return [self brandImageForFieldType:STPCardFieldTypeNumber];
+        fieldType = self.currentFirstResponderField.tag;
     }
+    STPCardValidationState validationState = [self.viewModel validationStateForField:fieldType];
+    return [self brandImageForFieldType:fieldType validationState:validationState];
 }
 
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand {
@@ -750,16 +751,28 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
     return [STPImageLibrary brandImageForCardBrand:cardBrand];
 }
 
-- (UIImage *)brandImageForFieldType:(STPCardFieldType)fieldType {
-    if (fieldType == STPCardFieldTypeCVC) {
-        return [self.class cvcImageForCardBrand:self.viewModel.brand];
-    }
++ (UIImage *)errorImageForCardBrand:(STPCardBrand)cardBrand {
+    return [STPImageLibrary errorImageForCardBrand:cardBrand];
+}
 
-    return [self.class brandImageForCardBrand:self.viewModel.brand];
+- (UIImage *)brandImageForFieldType:(STPCardFieldType)fieldType validationState:(STPCardValidationState)validationState {
+    switch (fieldType) {
+        case STPCardFieldTypeNumber:
+            if (validationState == STPCardValidationStateInvalid) {
+                return [self.class errorImageForCardBrand:self.viewModel.brand];
+            } else {
+                return [self.class brandImageForCardBrand:self.viewModel.brand];
+            }
+        case STPCardFieldTypeCVC:
+            return [self.class cvcImageForCardBrand:self.viewModel.brand];
+        case STPCardFieldTypeExpiration:
+            return [self.class brandImageForCardBrand:self.viewModel.brand];
+    }
 }
 
 - (void)updateImageForFieldType:(STPCardFieldType)fieldType {
-    UIImage *image = [self brandImageForFieldType:fieldType];
+    STPCardValidationState validationState = [self.viewModel validationStateForField:fieldType];
+    UIImage *image = [self brandImageForFieldType:fieldType validationState:validationState];
     if (image != self.brandImageView.image) {
         self.brandImageView.image = image;
         
