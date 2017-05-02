@@ -126,7 +126,7 @@
     payload[@"b"] = [otherData copy];
     payload[@"tag"] = STPSDKVersion;
     payload[@"src"] = @"ios-sdk";
-    payload[@"v2"] = @YES;
+    payload[@"v2"] = @1;
     return [payload copy];
 }
 
