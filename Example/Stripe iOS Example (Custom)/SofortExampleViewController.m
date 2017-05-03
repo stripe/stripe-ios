@@ -126,7 +126,7 @@
                                                                self.redirectContext = nil;
                                                            }];
             }];
-            [self.redirectContext startSafariViewControllerRedirectFlowFromViewController:self];
+            [self.redirectContext startRedirectFlowFromViewController:self];
         }
     }];
 }
