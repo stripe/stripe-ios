@@ -476,6 +476,10 @@
 		C18867DC1E8B0C4100A77634 /* STPFixtures.m in Sources */ = {isa = PBXBuildFile; fileRef = C18867DA1E8B0C4100A77634 /* STPFixtures.m */; };
 		C192268A1EBA228900BED563 /* STPTelemetryClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D098E1EAEAE4000A4AB3E /* STPTelemetryClient.m */; };
 		C192268B1EBA228C00BED563 /* STPTelemetryClient.h in Headers */ = {isa = PBXBuildFile; fileRef = C19D098D1EAEAE4000A4AB3E /* STPTelemetryClient.h */; };
+		C192269C1EBA99F900BED563 /* STPCustomerContext.h in Headers */ = {isa = PBXBuildFile; fileRef = C192269B1EBA99F900BED563 /* STPCustomerContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C192269D1EBA99FD00BED563 /* STPCustomerContext.h in Headers */ = {isa = PBXBuildFile; fileRef = C192269B1EBA99F900BED563 /* STPCustomerContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C192269F1EBA9A0800BED563 /* STPCustomerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = C192269E1EBA9A0800BED563 /* STPCustomerContext.m */; };
+		C19226A01EBA9A0B00BED563 /* STPCustomerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = C192269E1EBA9A0800BED563 /* STPCustomerContext.m */; };
 		C19D098F1EAEAE4000A4AB3E /* STPTelemetryClient.h in Headers */ = {isa = PBXBuildFile; fileRef = C19D098D1EAEAE4000A4AB3E /* STPTelemetryClient.h */; };
 		C19D09901EAEAE4000A4AB3E /* STPTelemetryClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D098E1EAEAE4000A4AB3E /* STPTelemetryClient.m */; };
 		C19D09931EAEAE5E00A4AB3E /* STPTelemetryClientTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D09911EAEAE5200A4AB3E /* STPTelemetryClientTest.m */; };
@@ -1040,6 +1044,8 @@
 		C18021191E3A58710089D712 /* STPSourcePoller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourcePoller.m; sourceTree = "<group>"; };
 		C18867D91E8B0C4100A77634 /* STPFixtures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPFixtures.h; sourceTree = "<group>"; };
 		C18867DA1E8B0C4100A77634 /* STPFixtures.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFixtures.m; sourceTree = "<group>"; };
+		C192269B1EBA99F900BED563 /* STPCustomerContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCustomerContext.h; path = PublicHeaders/STPCustomerContext.h; sourceTree = "<group>"; };
+		C192269E1EBA9A0800BED563 /* STPCustomerContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCustomerContext.m; sourceTree = "<group>"; };
 		C19D098D1EAEAE4000A4AB3E /* STPTelemetryClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTelemetryClient.h; sourceTree = "<group>"; };
 		C19D098E1EAEAE4000A4AB3E /* STPTelemetryClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTelemetryClient.m; sourceTree = "<group>"; };
 		C19D09911EAEAE5200A4AB3E /* STPTelemetryClientTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTelemetryClientTest.m; sourceTree = "<group>"; };
@@ -1734,6 +1740,8 @@
 				C11810871CC6B00D0022FB55 /* STPApplePayPaymentMethod.h */,
 				C11810881CC6B00D0022FB55 /* STPApplePayPaymentMethod.m */,
 				C11810A61CC6E2160022FB55 /* STPBackendAPIAdapter.h */,
+				C192269B1EBA99F900BED563 /* STPCustomerContext.h */,
+				C192269E1EBA9A0800BED563 /* STPCustomerContext.m */,
 				049880FA1CED5A2300EA4FFD /* STPPaymentConfiguration.h */,
 				049880FB1CED5A2300EA4FFD /* STPPaymentConfiguration.m */,
 				049A3F871CC73C7100F57DE7 /* STPPaymentContext.h */,
@@ -1976,6 +1984,7 @@
 				049A3FA91CC96B3B00F57DE7 /* STPBackendAPIAdapter.h in Headers */,
 				049952D61BCF14930088C703 /* STPAPIRequest.h in Headers */,
 				04827D111D2575C6002DB3E8 /* STPImageLibrary.h in Headers */,
+				C192269D1EBA99FD00BED563 /* STPCustomerContext.h in Headers */,
 				0451CC451C49AE1C003B2CA6 /* STPPaymentResult.h in Headers */,
 				F19491DF1E5F6B8C001E1FC2 /* STPSourceCardDetails.h in Headers */,
 				C12655391CAA238E006F7265 /* STPAddCardViewController.h in Headers */,
@@ -2094,6 +2103,7 @@
 				F1DEB8901E2052150066B8E8 /* STPCoreScrollViewController.h in Headers */,
 				04E39F521CECF7A100AF3B96 /* STPCardTuple.h in Headers */,
 				04A488331CA34D3000506E53 /* STPEmailAddressValidator.h in Headers */,
+				C192269C1EBA99F900BED563 /* STPCustomerContext.h in Headers */,
 				04A4C38D1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.h in Headers */,
 				0438EF471B74183100D506CC /* STPCardBrand.h in Headers */,
 				04B31DD41D08E6E200EF1631 /* STPCustomer.h in Headers */,
@@ -2681,6 +2691,7 @@
 				04B31DD71D08E6E200EF1631 /* STPCustomer.m in Sources */,
 				045D710A1CEED3AA00F6CD65 /* STPRememberMeEmailCell.m in Sources */,
 				04F94DA71D229F2A004FC826 /* STPCardTuple.m in Sources */,
+				C19226A01EBA9A0B00BED563 /* STPCustomerContext.m in Sources */,
 				049952D81BCF14990088C703 /* STPAPIRequest.m in Sources */,
 				04F94DBE1D229F98004FC826 /* UITableViewCell+Stripe_Borders.m in Sources */,
 				0426B9791CEBD001006AC8DD /* UINavigationBar+Stripe_Theme.m in Sources */,
@@ -2742,6 +2753,7 @@
 				F1DEB89B1E2074480066B8E8 /* STPCoreViewController.m in Sources */,
 				C1D7B5221E36C32F002181F5 /* STPSource.m in Sources */,
 				049A3F8A1CC73C7100F57DE7 /* STPPaymentContext.m in Sources */,
+				C192269F1EBA9A0800BED563 /* STPCustomerContext.m in Sources */,
 				0426B9731CEAE3EB006AC8DD /* UITableViewCell+Stripe_Borders.m in Sources */,
 				C1BD9B241E393FFE00CEE925 /* STPSourceReceiver.m in Sources */,
 				04BC29B21CD9AAA800318357 /* STPCheckoutAccount.m in Sources */,

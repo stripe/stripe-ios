@@ -25,6 +25,7 @@
 #import "STPCoreTableViewController.h"
 #import "STPCoreViewController.h"
 #import "STPCustomer.h"
+#import "STPCustomerContext.h"
 #import "STPFile.h"
 #import "STPFormEncodable.h"
 #import "STPImageLibrary.h"
