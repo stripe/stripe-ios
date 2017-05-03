@@ -272,6 +272,4 @@
  */
 @property(nonatomic, strong, readwrite, nonnull) STPCardParams *cardParams;
 
-- (void)commonInit;
-
 @end
