@@ -7,10 +7,11 @@
 //
 
 #import "STPSource.h"
+#import "STPInternalAPIResponseDecodable.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPSource ()
+@interface STPSource () <STPInternalAPIResponseDecodable>
 
 + (STPSourceType)typeFromString:(NSString *)string;
 + (nullable NSString *)stringFromType:(STPSourceType)type;

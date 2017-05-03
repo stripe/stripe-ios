@@ -51,4 +51,14 @@
  */
 + (STPPaymentConfiguration *)paymentConfiguration;
 
+/**
+ A customer-scoped ephemeral key that expires in 100 seconds.
+ */
++ (STPEphemeralKey *)ephemeralKey;
+
+/**
+ A customer-scoped ephemeral key that expires in 10 seconds.
+ */
++ (STPEphemeralKey *)expiringEphemeralKey;
+
 @end

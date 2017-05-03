@@ -16,11 +16,14 @@
 
 @interface STPPaymentMethodsViewController (Private)
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                        loadingPromise:(STPPromise<STPPaymentMethodTuple *> *)loadingPromise
                                 theme:(STPTheme *)theme
                       shippingAddress:(STPAddress *)shippingAddress
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
+#pragma clang diagnostic pop
 
 @end

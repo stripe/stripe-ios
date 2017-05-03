@@ -33,10 +33,10 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.appleMerchantIdentifier = @"fake_merchant_id";
     STPTheme *theme = [STPTheme defaultTheme];
-    id<STPBackendAPIAdapter> mockAPIAdapter = [STPMocks staticAPIAdapter];
-    STPPaymentContext *paymentContext = [[STPPaymentContext alloc] initWithAPIAdapter:mockAPIAdapter
-                                                                        configuration:config
-                                                                                theme:theme];
+    STPCustomerContext *customerContext = [STPMocks staticCustomerContext];
+    STPPaymentContext *paymentContext = [[STPPaymentContext alloc] initWithCustomerContext:customerContext
+                                                                             configuration:config
+                                                                                     theme:theme];
     return paymentContext;
 }
 

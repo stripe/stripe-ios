@@ -13,7 +13,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class STPEphemeralKey;
+
 @interface STPAPIClient()
+
++ (NSString *)apiVersion;
 
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey
                                baseURL:(NSString *)baseURL;
@@ -25,6 +29,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readwrite) NSURL *apiURL;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
+
+@end
+
+@interface STPAPIClient (Customers)
+
+/**
+ https://stripe.com/docs/api#retrieve_customer
+ */
++ (void)retrieveCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
+                      completion:(STPCustomerCompletionBlock)completion;
+
+/**
+ https://stripe.com/docs/api#create_card
+ */
++ (void)addSource:(NSString *)sourceID
+toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
+       completion:(STPSourceProtocolCompletionBlock)completion;
+
+/**
+ https://stripe.com/docs/api#update_customer
+ */
++ (void)updateCustomerWithParameters:(NSDictionary *)parameters
+                            usingKey:(STPEphemeralKey *)ephemeralKey
+                          completion:(STPCustomerCompletionBlock)completion;
 
 @end
 

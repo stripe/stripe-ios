@@ -97,6 +97,13 @@
                                                            [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPShippingAddressViewController class])]];
                                                        } error:nil];
 
+        [STPCustomerContext stp_aspect_hookSelector:@selector(initWithKeyProvider:)
+                                        withOptions:STPAspectPositionAfter
+                                         usingBlock:^{
+                                             STPAnalyticsClient *client = [self sharedClient];
+                                             [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPCustomerContext class])]];
+                                         } error:nil];
+
     });
 }
 

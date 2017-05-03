@@ -17,7 +17,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol STPPaymentMethod, STPPaymentMethodsViewControllerDelegate;
-@class STPPaymentContext, STPPaymentMethodsViewController;
+@class STPPaymentContext, STPPaymentMethodsViewController, STPCustomerContext;
 
 /**
  *  This view controller presents a list of payment method options to the user, which they can select between. They can also add credit cards to the list. It must be displayed inside a `UINavigationController`, so you can either create a `UINavigationController` with an `STPPaymentMethodsViewController` as the `rootViewController` and then present the `UINavigationController`, or push a new `STPPaymentMethodsViewController` onto an existing `UINavigationController`'s stack. You can also have `STPPaymentContext` do this for you automatically, by calling `presentPaymentMethodsViewController` or `pushPaymentMethodsViewController` on it.
@@ -36,6 +36,22 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext;
 
 /**
+ Initializes a new payment methods view controller without using a payment context.
+
+ @param configuration   The configuration to use to determine what types of payment method to offer your user. @see STPPaymentConfiguration.h
+
+ @param theme           The theme to inform the appearance of the UI. @see STPTheme.h
+ @param customerContext The customer context the view controller will use to fetch
+ and modify its Stripe customer. @see STPCustomerContext.h
+ @param delegate         A delegate that will be notified when the payment methods view controller's selection changes.
+ @return an initialized view controller.
+ */
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
+                                theme:(STPTheme *)theme
+                      customerContext:(STPCustomerContext *)customerContext
+                             delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
+
+/**
  *  Initializes a new payment methods view controller without using a payment context.
  *
  *  @param configuration The configuration to use to determine what types of payment method to offer your user. @see STPPaymentConfiguration.h
@@ -43,11 +59,15 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param apiAdapter    The API adapter to use to retrieve a customer's stored payment methods and save new ones. @see STPBackendAPIAdapter.h
  *  @param delegate      A delegate that will be notified when the payment methods view controller's selection changes.
  *
+ *  @deprecated Use `initWithConfiguration:theme:customerContext:delegate:`.
+ *  Instead of providing your own backend API adapter, you can now create an
+ *  `STPCustomerContext`, which will manage retrieving and updating a
+ *  Stripe customer for you. @see STPCustomerContext.h
  */
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                                 theme:(STPTheme *)theme
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                             delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
+                             delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate __attribute__((deprecated));
 
 /**
 *  If you've already collected some information from your user, you can set it here and it'll be automatically filled out when possible/appropriate in any UI that the payment context creates.

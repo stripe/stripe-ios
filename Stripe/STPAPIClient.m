@@ -17,6 +17,7 @@
 #import "STPBankAccount.h"
 #import "STPCard.h"
 #import "STPDispatchFunctions.h"
+#import "STPEphemeralKey.h"
 #import "STPFormEncoder.h"
 #import "STPMultipartFormDataEncoder.h"
 #import "STPMultipartFormDataPart.h"
@@ -46,6 +47,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 static NSString *const apiURLBase = @"api.stripe.com/v1";
 static NSString *const tokenEndpoint = @"tokens";
 static NSString *const sourcesEndpoint = @"sources";
+static NSString *const customersEndpoint = @"customers";
 static NSString *const fileUploadPath = @"https://uploads.stripe.com/v1/files";
 static NSString *const stripeAPIVersion = @"2015-10-12";
 
@@ -75,6 +77,10 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 @implementation STPAPIClient
 
++ (NSString *)apiVersion {
+    return stripeAPIVersion;
+}
+
 + (void)initialize {
     [STPAnalyticsClient initializeIfNeeded];
     [STPTelemetryClient sharedInstance];
@@ -97,25 +103,21 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey {
     STPPaymentConfiguration *config = [[STPPaymentConfiguration alloc] init];
     config.publishableKey = [publishableKey copy];
-    [self.class validateKey:publishableKey];
     return [self initWithConfiguration:config];
 }
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration {
+    NSString *publishableKey = [configuration.publishableKey copy];
+    if (publishableKey) {
+        [self.class validateKey:publishableKey];
+    }
     self = [super init];
     if (self) {
         _apiURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]];
         _configuration = configuration;
-        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        NSString *auth = [@"Bearer " stringByAppendingString:self.publishableKey];
-        sessionConfiguration.HTTPAdditionalHeaders = @{
-                                                       @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
-                                                       @"Stripe-Version": stripeAPIVersion,
-                                                       @"Authorization": auth,
-                                                       };
-        _urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
+        self.apiKey = publishableKey;
     }
     return self;
 }
@@ -129,8 +131,20 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     return self;
 }
 
+- (void)setApiKey:(NSString *)apiKey {
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSString *auth = [@"Bearer " stringByAppendingString:apiKey ?: @""];
+    sessionConfiguration.HTTPAdditionalHeaders = @{
+                                                   @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
+                                                   @"Stripe-Version": stripeAPIVersion,
+                                                   @"Authorization": auth,
+                                                   };
+    self.urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
+}
+
 - (void)setPublishableKey:(NSString *)publishableKey {
     self.configuration.publishableKey = [publishableKey copy];
+    self.apiKey = [publishableKey copy];
 }
 
 - (NSString *)publishableKey {
@@ -452,6 +466,58 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
             self.sourcePollers[identifier] = nil;
         }
     });
+}
+
+@end
+
+#pragma mark - Customers
+
+@implementation STPAPIClient (Customers)
+
++ (STPAPIClient *)apiClientWithEphemeralKey:(STPEphemeralKey *)key {
+    STPAPIClient *client = [[self alloc] init];
+    client.apiKey = key.secret;
+    return client;
+}
+
++ (void)retrieveCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPCustomerCompletionBlock)completion {
+    STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", customersEndpoint, ephemeralKey.customerID];
+    [STPAPIRequest<STPCustomer *> getWithAPIClient:client
+                                          endpoint:endpoint
+                                        parameters:nil
+                                        serializer:[STPCustomer new]
+                                        completion:^(STPCustomer *object, __unused NSHTTPURLResponse *response, NSError *error) {
+                                            completion(object, error);
+                                        }];
+}
+
++ (void)updateCustomerWithParameters:(NSDictionary *)parameters
+                            usingKey:(STPEphemeralKey *)ephemeralKey
+                          completion:(STPCustomerCompletionBlock)completion {
+    STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", customersEndpoint, ephemeralKey.customerID];
+    [STPAPIRequest<STPCustomer *> postWithAPIClient:client
+                                           endpoint:endpoint
+                                         parameters:parameters
+                                         serializer:[STPCustomer new]
+                                         completion:^(STPCustomer *object, __unused NSHTTPURLResponse *response, NSError *error) {
+                                             completion(object, error);
+                                         }];
+}
+
++ (void)addSource:(NSString *)sourceID
+toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
+       completion:(STPSourceProtocolCompletionBlock)completion {
+    STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@", customersEndpoint, ephemeralKey.customerID, sourcesEndpoint];
+    [STPAPIRequest<STPSourceProtocol> postWithAPIClient:client
+                                               endpoint:endpoint
+                                             parameters:@{@"source": sourceID}
+                                            serializers:@[[STPCard new], [STPSource new]]
+                                             completion:^(STPCard *object, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                 completion(object, error);
+                                             }];
 }
 
 @end

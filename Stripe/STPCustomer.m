@@ -12,6 +12,11 @@
 #import "STPSource.h"
 #import "StripeError.h"
 
+/**
+ NOTE: STPCustomer has been deprecated. When we remove STPBackendAPIAdapter,
+ we should rename STPCustomer with STPLimitedCustomer, to avoid confusion –
+ customers retrieved using an ephemeral key have a limited set of fields.
+ */
 @interface STPCustomer()
 
 @property(nonatomic, copy)NSString *stripeID;
@@ -57,13 +62,20 @@
     return @[@"id"];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
     STPCustomerDeserializer *deserializer = [[STPCustomerDeserializer alloc] initWithJSONResponse:response];
     return deserializer.customer;
 }
+#pragma clang diagnostic pop
 
 @end
 
+/**
+ NOTE: STPCustomerDeserializer has been deprecated. When we remove 
+ STPBackendAPIAdapter, we should also remove STPCustomerDeserializer.
+ */
 @interface STPCustomerDeserializer()
 
 @property(nonatomic, nullable)STPCustomer *customer;

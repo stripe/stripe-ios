@@ -29,6 +29,7 @@ typedef NS_ENUM(NSInteger, STPErrorCode) {
     STPCancellationError = 80,   // The operation was cancelled.
     STPCheckoutUnknownError = 5000,   // Checkout failed
     STPCheckoutTooManyAttemptsError = 5001,   // Too many incorrect code attempts
+    STPCustomerContextMissingKeyProviderError = 30000,  // STPCustomerContext is missing a key provider.
 };
 
 #pragma mark userInfo keys

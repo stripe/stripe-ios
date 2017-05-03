@@ -18,15 +18,14 @@
 + (id)hostViewController;
 
 /**
- A stateless API adapter that always retrieves the same customer object.
+ A stateless customer context that always retrieves the same customer object.
  */
-+ (id<STPBackendAPIAdapter>)staticAPIAdapter;
++ (STPCustomerContext *)staticCustomerContext;
 
 /**
- A stateless API adapter that always retrieves the given customer.
- selectDefaultSource and attachSource immediately call their completion blocks
- with nil.
+ A static customer context that always retrieves the given customer.
+ Selecting a default source and attaching a source have no effect.
  */
-+ (id<STPBackendAPIAdapter>)staticAPIAdapterWithCustomer:(STPCustomer *)customer;
++ (STPCustomerContext *)staticCustomerContextWithCustomer:(STPCustomer *)customer;
 
 @end

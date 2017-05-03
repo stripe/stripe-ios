@@ -148,3 +148,15 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
 }
 
 @end
+
+@implementation NSError (STPCustomerContext)
+
++ (NSError *)stp_customerContextMissingKeyProviderError {
+    NSDictionary *userInfo = @{
+                               NSLocalizedDescriptionKey: [self stp_unexpectedErrorMessage],
+                               STPErrorMessageKey: @"STPCustomerContext is missing a key provider. Did you forget to set the singleton instance's key provider?"
+                               };
+    return [[self alloc] initWithDomain:StripeDomain code:STPCustomerContextMissingKeyProviderError userInfo:userInfo];
+}
+
+@end
