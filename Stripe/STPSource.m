@@ -208,6 +208,10 @@
     return @"source";
 }
 
+- (NSString *)stripeObject {
+    return @"source";
+}
+
 + (NSArray *)requiredFields {
     return @[@"id", @"livemode", @"status", @"type"];
 }
