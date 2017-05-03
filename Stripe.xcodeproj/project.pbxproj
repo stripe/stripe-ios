@@ -474,6 +474,8 @@
 		C18867D41E8AF8F300A77634 /* OCMock.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = C11B14961E8AE316000F760C /* OCMock.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C18867DB1E8B0C4100A77634 /* STPFixtures.h in Headers */ = {isa = PBXBuildFile; fileRef = C18867D91E8B0C4100A77634 /* STPFixtures.h */; };
 		C18867DC1E8B0C4100A77634 /* STPFixtures.m in Sources */ = {isa = PBXBuildFile; fileRef = C18867DA1E8B0C4100A77634 /* STPFixtures.m */; };
+		C192268A1EBA228900BED563 /* STPTelemetryClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D098E1EAEAE4000A4AB3E /* STPTelemetryClient.m */; };
+		C192268B1EBA228C00BED563 /* STPTelemetryClient.h in Headers */ = {isa = PBXBuildFile; fileRef = C19D098D1EAEAE4000A4AB3E /* STPTelemetryClient.h */; };
 		C19D098F1EAEAE4000A4AB3E /* STPTelemetryClient.h in Headers */ = {isa = PBXBuildFile; fileRef = C19D098D1EAEAE4000A4AB3E /* STPTelemetryClient.h */; };
 		C19D09901EAEAE4000A4AB3E /* STPTelemetryClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D098E1EAEAE4000A4AB3E /* STPTelemetryClient.m */; };
 		C19D09931EAEAE5E00A4AB3E /* STPTelemetryClientTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D09911EAEAE5200A4AB3E /* STPTelemetryClientTest.m */; };
@@ -1978,6 +1980,7 @@
 				F19491DF1E5F6B8C001E1FC2 /* STPSourceCardDetails.h in Headers */,
 				C12655391CAA238E006F7265 /* STPAddCardViewController.h in Headers */,
 				04F94DAD1D229F4E004FC826 /* STPColorUtils.h in Headers */,
+				C192268B1EBA228C00BED563 /* STPTelemetryClient.h in Headers */,
 				04F94D9B1D229E76004FC826 /* STPTheme.h in Headers */,
 				04F213331BCEAB61001D6F22 /* STPFormEncodable.h in Headers */,
 				04F94D9C1D229EAA004FC826 /* PKPayment+Stripe.h in Headers */,
@@ -2681,6 +2684,7 @@
 				049952D81BCF14990088C703 /* STPAPIRequest.m in Sources */,
 				04F94DBE1D229F98004FC826 /* UITableViewCell+Stripe_Borders.m in Sources */,
 				0426B9791CEBD001006AC8DD /* UINavigationBar+Stripe_Theme.m in Sources */,
+				C192268A1EBA228900BED563 /* STPTelemetryClient.m in Sources */,
 				045D71231CEFA57000F6CD65 /* UIViewController+Stripe_Promises.m in Sources */,
 				04BC29A11CD8412000318357 /* STPPaymentContext.m in Sources */,
 				F1D64B2C1D8767FC001CDB7C /* STPWebViewController.m in Sources */,
