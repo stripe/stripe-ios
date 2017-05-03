@@ -671,6 +671,8 @@
 		F1D3A25C1EB014BD0095BFA9 /* UIImage+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D3A2591EB014BD0095BFA9 /* UIImage+Stripe.m */; };
 		F1D3A25D1EB014BD0095BFA9 /* UIImage+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D3A2591EB014BD0095BFA9 /* UIImage+Stripe.m */; };
 		F1D3A25F1EB015B30095BFA9 /* UIImage+StripeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D3A25E1EB015B30095BFA9 /* UIImage+StripeTests.m */; };
+		F1D3A2651EBA5BAE0095BFA9 /* STPPaymentCardTextField+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F1D3A2631EBA5BAE0095BFA9 /* STPPaymentCardTextField+Private.h */; };
+		F1D3A2661EBA5BAE0095BFA9 /* STPPaymentCardTextField+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F1D3A2631EBA5BAE0095BFA9 /* STPPaymentCardTextField+Private.h */; };
 		F1D64B291D8767FC001CDB7C /* STPWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = F1D64B271D8767FC001CDB7C /* STPWebViewController.h */; };
 		F1D64B2A1D8767FC001CDB7C /* STPWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = F1D64B271D8767FC001CDB7C /* STPWebViewController.h */; };
 		F1D64B2B1D8767FC001CDB7C /* STPWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D64B281D8767FC001CDB7C /* STPWebViewController.m */; };
@@ -1141,6 +1143,7 @@
 		F1D3A2581EB014BD0095BFA9 /* UIImage+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Stripe.h"; sourceTree = "<group>"; };
 		F1D3A2591EB014BD0095BFA9 /* UIImage+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Stripe.m"; sourceTree = "<group>"; };
 		F1D3A25E1EB015B30095BFA9 /* UIImage+StripeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+StripeTests.m"; sourceTree = "<group>"; };
+		F1D3A2631EBA5BAE0095BFA9 /* STPPaymentCardTextField+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPPaymentCardTextField+Private.h"; sourceTree = "<group>"; };
 		F1D64B271D8767FC001CDB7C /* STPWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPWebViewController.h; sourceTree = "<group>"; };
 		F1D64B281D8767FC001CDB7C /* STPWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPWebViewController.m; sourceTree = "<group>"; };
 		F1D64B2D1D87686E001CDB7C /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -1716,6 +1719,7 @@
 				04BC29AC1CD9A88600318357 /* STPCheckoutAPIVerification.m */,
 				04BC29B31CD9AE0000318357 /* STPCheckoutBootstrapResponse.h */,
 				04BC29B41CD9AE0000318357 /* STPCheckoutBootstrapResponse.m */,
+				F1D3A2631EBA5BAE0095BFA9 /* STPPaymentCardTextField+Private.h */,
 				04B31DD81D09A4DC00EF1631 /* STPPaymentConfiguration+Private.h */,
 				04E39F5A1CECFAFD00AF3B96 /* STPPaymentContext+Private.h */,
 				F12C8DBE1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h */,
@@ -1924,6 +1928,7 @@
 				04A488431CA3580700506E53 /* UINavigationController+Stripe_Completion.h in Headers */,
 				C124A1711CCA968B007D42EE /* STPAnalyticsClient.h in Headers */,
 				049A3FA81CC963EB00F57DE7 /* STPPaymentMethod.h in Headers */,
+				F1D3A2661EBA5BAE0095BFA9 /* STPPaymentCardTextField+Private.h in Headers */,
 				F1DEB8911E2052150066B8E8 /* STPCoreScrollViewController.h in Headers */,
 				04F94DB51D229F74004FC826 /* STPSMSCodeTextField.h in Headers */,
 				C1363BB81D7633D800EB82B4 /* STPPaymentMethodTableViewCell.h in Headers */,
@@ -2123,6 +2128,7 @@
 				049880FC1CED5A2300EA4FFD /* STPPaymentConfiguration.h in Headers */,
 				F1852F931D80B6EC00367C86 /* STPStringUtils.h in Headers */,
 				049A3FAE1CC9AA9900F57DE7 /* STPAddressViewModel.h in Headers */,
+				F1D3A2651EBA5BAE0095BFA9 /* STPPaymentCardTextField+Private.h in Headers */,
 				0426B96E1CEADC98006AC8DD /* STPColorUtils.h in Headers */,
 				04B31DDA1D09A4DC00EF1631 /* STPPaymentConfiguration+Private.h in Headers */,
 				F1D96F961DC7D82400477E64 /* STPLocalizationUtils.h in Headers */,
