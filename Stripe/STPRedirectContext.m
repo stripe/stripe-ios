@@ -48,6 +48,16 @@ NS_ASSUME_NONNULL_BEGIN
     [self unsubscribeFromNotificationsAndDismissPresentedViewControllers];
 }
 
+- (void)startRedirectFlowFromViewController:(UIViewController *)presentingViewController {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
+    if ([SFSafariViewController class] != nil) {
+        [self startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
+    }
+    else {
+        [self startSafariAppRedirectFlow];
+    }
+}
+
 - (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
     if (self.state == STPRedirectContextStateNotStarted) {
