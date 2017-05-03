@@ -26,6 +26,7 @@
 #import "STPSourceParams.h"
 #import "STPSourceParams+Private.h"
 #import "STPSourcePoller.h"
+#import "STPTelemetryClient.h"
 #import "STPToken.h"
 #import "StripeError.h"
 #import "UIImage+Stripe.h"
@@ -59,10 +60,6 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     return [STPPaymentConfiguration sharedConfiguration].publishableKey;
 }
 
-+ (void)disableAnalytics {
-    [STPAnalyticsClient disableAnalytics];
-}
-
 @end
 
 #if __has_include("Fabric.h")
@@ -80,6 +77,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 + (void)initialize {
     [STPAnalyticsClient initializeIfNeeded];
+    [STPTelemetryClient sharedInstance];
 #ifdef STP_STATIC_LIBRARY_BUILD
     [STPCategoryLoader loadCategories];
 #endif
@@ -336,8 +334,9 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPTokenCompletionBlock)completion {
     NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:card] mutableCopy];
-    params[@"muid"] = [STPAnalyticsClient muid];
+    [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
     [self createTokenWithParameters:params completion:completion];
+    [[STPTelemetryClient sharedInstance] sendTelemetryData];
 }
 
 @end

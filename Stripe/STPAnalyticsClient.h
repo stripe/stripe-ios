@@ -25,10 +25,6 @@ typedef NS_ENUM(NSUInteger, STPAddCardRememberMeUsage) {
 
 + (void)initializeIfNeeded;
 
-+ (void)disableAnalytics;
-
-+ (NSString *)muid;
-
 + (NSString *)tokenTypeFromParameters:(NSDictionary *)parameters;
 
 - (void)logRememberMeConversion:(STPAddCardRememberMeUsage)selected;
