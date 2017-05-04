@@ -159,15 +159,20 @@
     params.type = STPSourceTypeSEPADebit;
     params.currency = @"eur"; // SEPA Debit must always use eur
 
+    NSMutableDictionary *owner = [NSMutableDictionary new];
+    owner[@"name"] = name;
+
     NSMutableDictionary<NSString *,NSString *> *address = [NSMutableDictionary new];
     address[@"city"] = city;
     address[@"postal_code"] = postalCode,
     address[@"country"] = country;
     address[@"line1"] = addressLine1;
-    params.owner = @{
-                     @"name": name,
-                     @"address": [address copy]
-                     };
+
+    if (address.count > 0) {
+        owner[@"address"] = address;
+    }
+
+    params.owner = owner;
     params.additionalAPIParameters = @{
                                        @"sepa_debit": @{
                                                @"iban": iban
