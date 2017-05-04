@@ -45,8 +45,7 @@
     customer[@"default_source"] = card1[@"id"];
     customer[@"sources"] = sources;
 
-    STPCustomerDeserializer *deserializer = [[STPCustomerDeserializer alloc] initWithJSONResponse:customer];
-    return deserializer.customer;
+    return [STPCustomer decodedObjectFromAPIResponse:customer];
 }
 
 + (STPSource *)iDEALSource {

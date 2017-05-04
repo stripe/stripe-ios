@@ -28,7 +28,13 @@ typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NS
 
 /**
  *  You should make your application's API client conform to this interface in order to use it with an `STPPaymentContext`. It provides a "bridge" from the prebuilt UI we expose (such as `STPPaymentMethodsViewController`) to your backend to fetch the information it needs to power those views. To read about how to implement this protocol, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api . To see examples of implementing these APIs, see MyAPIClient.swift in our example project and https://github.com/stripe/example-ios-backend .
+ *
+ *  @deprecated Use `STPCustomerContext`.
+ *  Instead of providing your own backend API adapter, you can now create an
+ *  `STPCustomerContext`, which will manage retrieving and updating a
+ *  Stripe customer for you. @see STPCustomerContext.h
  */
+__attribute__((deprecated))
 @protocol STPBackendAPIAdapter<NSObject>
 
 /**

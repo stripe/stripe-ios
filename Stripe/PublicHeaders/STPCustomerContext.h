@@ -53,8 +53,10 @@ typedef void (^STPResourceKeyCompletionBlock)(STPResourceKey * __nullable resour
  An `STPCustomerContext` retrieves and updates a Stripe customer using 
  a resource key, a short-lived API key with a specific set of permissions.
  */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 @interface STPCustomerContext : NSObject <STPBackendAPIAdapter>
-
+#pragma clang diagnostic pop
 
 /**
  Initializes a new `STPCustomerContext` with the specified customer and key provider.

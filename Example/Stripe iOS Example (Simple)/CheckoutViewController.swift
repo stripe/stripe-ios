@@ -85,7 +85,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
         let customerContext = STPCustomerContext(customerId: "cus_AaDf8iRLJhh6sk",
                                                  keyProvider: MyAPIClient.sharedClient)
-        let paymentContext = STPPaymentContext(apiAdapter: customerContext,
+        let paymentContext = STPPaymentContext(customerContext: customerContext,
                                                configuration: config,
                                                theme: settings.theme)
         let userInformation = STPUserInformation()

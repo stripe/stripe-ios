@@ -59,18 +59,28 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param urlResponse The URL response obtained from the `NSURLSessionTask`
  *  @param error       Any error that occurred from the URL session task (if this is non-nil, the `error` property will be set to this value after initialization).
  *
+ *  @deprecated Use `STPCustomerContext` to manage retrieving and updating a Stripe customer.
+ *  Instead of providing your own backend API adapter, you can now create an
+ *  `STPCustomerContext`, which will manage retrieving and updating a
+ *  Stripe customer for you. You will no longer need to deserialize a customer object.
+ *  @see STPCustomerContext.h
  */
 - (instancetype)initWithData:(nullable NSData *)data
                  urlResponse:(nullable NSURLResponse *)urlResponse
-                       error:(nullable NSError *)error;
+                       error:(nullable NSError *)error __attribute__((deprecated));
 
 /**
  *  Initializes a customer deserializer with a JSON dictionary. This JSON should be in the exact same format as what the Stripe API returns. If it's successfully parsed, the `customer` parameter will be present after initialization; otherwise `error` will be present.
  *
  *  @param json a JSON dictionary.
  *
+ *  @deprecated Use `STPCustomerContext` to manage retrieving and updating a Stripe customer.
+ *  Instead of providing your own backend API adapter, you can now create an
+ *  `STPCustomerContext`, which will manage retrieving and updating a
+ *  Stripe customer for you. You will no longer need to deserialize a customer object.
+ *  @see STPCustomerContext.h
  */
-- (instancetype)initWithJSONResponse:(id)json;
+- (instancetype)initWithJSONResponse:(id)json __attribute__((deprecated));
 
 /**
  *  If a customer was successfully parsed from the response, it will be set here. Otherwise, this value wil be nil (and the `error` property will explain what went wrong).
