@@ -13,7 +13,7 @@
 #import "STPResourceKey.h"
 #import "StripeError.h"
 
-static NSTimeInterval const MinExpirationInterval = 100;
+static NSTimeInterval const MinExpirationInterval = 60;
 
 @interface STPCustomerContext ()
 
@@ -52,8 +52,13 @@ static NSTimeInterval const MinExpirationInterval = 100;
     [self refreshResourceKeyIfNecessary];
 }
 
+- (BOOL)needsNewResourceKey {
+    return !self.resourceKey ||
+        self.resourceKey.expirationDate.timeIntervalSinceNow < MinExpirationInterval;
+}
+
 - (void)refreshResourceKeyIfNecessary {
-    if (!self.resourceKey || self.resourceKey.expirationDate.timeIntervalSinceNow < MinExpirationInterval) {
+    if ([self needsNewResourceKey]) {
         [self.keyProvider retrieveKey:^(STPResourceKey *resourceKey, __unused NSError *error) {
             if (resourceKey) {
                 self.resourceKey = resourceKey;

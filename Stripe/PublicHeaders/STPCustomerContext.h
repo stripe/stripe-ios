@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Call this block after you're done creating a new resource key on your server.
- You can use `STPResourceKey`'s `decodedObjectFromAPIResponse` method to convert
+ You can use `[STPResourceKey decodedObjectFromAPIResponse:json]` to convert
  a JSON response into an `STPResourceKey` object.
 
  @param resourceKey   a deserialized `STPResourceKey` object obtained from your
@@ -42,8 +42,9 @@ typedef void (^STPResourceKeyCompletionBlock)(STPResourceKey * __nullable resour
  into an `STPResourceKey` object using `decodedObjectFromAPIResponse`.
  See MyAPIClient.swift in our example project to see this in action.
 
- @param completion call this callback when you're done fetching a new resource 
- key from your backend. For example, `completion(key, nil)` (if your call succeeds) or `completion(nil, error)` if an error is returned.
+ @param completion  Call this callback when you're done fetching a new resource
+ key from your backend. For example, `completion(key, nil)` (if your call succeeds)
+ or `completion(nil, error)` if an error is returned.
  */
 - (void)retrieveKey:(STPResourceKeyCompletionBlock)completion;
 
