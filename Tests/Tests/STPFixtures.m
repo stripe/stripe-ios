@@ -58,20 +58,20 @@
     return config;
 }
 
-+ (id<STPBackendAPIAdapter>)staticAPIAdapter {
-    return [self staticAPIAdapterWithCustomer:[self customerWithSingleCardTokenSource]];
++ (STPCustomerContext *)staticCustomerContext {
+    return [self staticCustomerContextWithCustomer:[self customerWithSingleCardTokenSource]];
 }
 
-+ (id<STPBackendAPIAdapter>)staticAPIAdapterWithCustomer:(STPCustomer *)customer {
-    id mockAPIAdapter = OCMProtocolMock(@protocol(STPBackendAPIAdapter));
-    OCMStub([mockAPIAdapter retrieveCustomer:[OCMArg any]]).andDo(^(NSInvocation *invocation){
++ (STPCustomerContext *)staticCustomerContextWithCustomer:(STPCustomer *)customer {
+    id mock = OCMClassMock([STPCustomerContext class]);
+    OCMStub([mock retrieveCustomer:[OCMArg any]]).andDo(^(NSInvocation *invocation){
         STPCustomerCompletionBlock completion;
         [invocation getArgument:&completion atIndex:2];
         completion(customer, nil);
     });
-    OCMStub([mockAPIAdapter selectDefaultCustomerSource:[OCMArg any] completion:[OCMArg invokeBlock]]);
-    OCMStub([mockAPIAdapter attachSourceToCustomer:[OCMArg any] completion:[OCMArg invokeBlock]]);
-    return mockAPIAdapter;
+    OCMStub([mock selectDefaultCustomerSource:[OCMArg any] completion:[OCMArg invokeBlock]]);
+    OCMStub([mock attachSourceToCustomer:[OCMArg any] completion:[OCMArg invokeBlock]]);
+    return mock;
 }
 
 + (PKPayment *)applePayPayment {

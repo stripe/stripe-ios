@@ -31,12 +31,12 @@
     config.additionalPaymentMethods = STPPaymentMethodTypeAll;
     config.smsAutofillDisabled = NO;
     STPTheme *theme = [STPTheme defaultTheme];
-    id apiAdapter = [STPFixtures staticAPIAdapter];
+    id customerContext = [STPFixtures staticCustomerContext];
     id delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
     [STPLocalizationUtils overrideLanguageTo:language];
     STPPaymentMethodsViewController *paymentMethodsVC = [[STPPaymentMethodsViewController alloc] initWithConfiguration:config
                                                                                                                  theme:theme
-                                                                                                            apiAdapter:apiAdapter
+                                                                                                       customerContext:customerContext
                                                                                                               delegate:delegate];
 
     UIViewController *rootVC = [UIViewController new];

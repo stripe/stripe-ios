@@ -18,14 +18,14 @@
 @implementation UINavigationBar_StripeTest
 
 - (STPPaymentMethodsViewController *)buildPaymentMethodsViewController {
-    id apiAdapter = [STPFixtures staticAPIAdapter];
+    id customerContext = [STPFixtures staticCustomerContext];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.publishableKey = @"pk_test";
     STPTheme *theme = [STPTheme defaultTheme];
     id delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
     STPPaymentMethodsViewController *paymentMethodsVC = [[STPPaymentMethodsViewController alloc] initWithConfiguration:config
                                                                                                                  theme:theme
-                                                                                                            apiAdapter:apiAdapter
+                                                                                                       customerContext:customerContext
                                                                                                               delegate:delegate];
     return paymentMethodsVC;
 }
