@@ -185,7 +185,38 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
         XCTAssertEqualObjects(source.owner.address.city, @"Berlin");
         XCTAssertEqualObjects(source.owner.address.line1, @"Nollendorfstraße 27");
+        XCTAssertEqualObjects(source.owner.address.country, @"DE");
         XCTAssertEqualObjects(source.sepaDebitDetails.country, @"DE");
+        XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3000");
+        XCTAssertEqualObjects(source.metadata, params.metadata);
+
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
+- (void)testCreateSource_sepaDebit_NoAddress {
+    STPSourceParams *params = [STPSourceParams sepaDebitParamsWithName:@"Jenny Rosen"
+                                                                  iban:@"DE89370400440532013000"
+                                                          addressLine1:nil
+                                                                  city:nil
+                                                            postalCode:nil
+                                                               country:nil];
+    params.metadata = @{@"foo": @"bar"};
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
+    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeSEPADebit);
+        XCTAssertNil(source.amount);
+        XCTAssertEqualObjects(source.currency, params.currency);
+        XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
+        XCTAssertNil(source.owner.address.city);
+        XCTAssertNil(source.owner.address.line1);
+        XCTAssertNil(source.owner.address.country);
+        XCTAssertEqualObjects(source.sepaDebitDetails.country, @"DE"); // German IBAN so sepa tells us country here even though we didnt pass it up as owner info
         XCTAssertEqualObjects(source.sepaDebitDetails.last4, @"3000");
         XCTAssertEqualObjects(source.metadata, params.metadata);
 
