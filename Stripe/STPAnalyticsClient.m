@@ -21,6 +21,7 @@
 #import "STPPaymentCardTextField.h"
 #import "STPPaymentCardTextField+Private.h"
 #import "STPPaymentConfiguration.h"
+#import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentContext.h"
 #import "STPPaymentMethodType+Private.h"
 #import "STPPaymentMethodsViewController+Private.h"
@@ -276,6 +277,21 @@
     }
     dictionary[@"company_name"] = configuration.companyName ?: @"unknown";
     dictionary[@"apple_merchant_identifier"] = configuration.appleMerchantIdentifier ?: @"unknown";
+    dictionary[@"use_card_sources"] = configuration.useSourcesForCards ? @"1" : @"0";
+
+    NSString *threeDSecureType = nil;
+    switch (configuration.threeDSecureSupportTypeBlock()) {
+        case STPThreeDSecureSupportTypeDisabled:
+            threeDSecureType = @"disabled";
+            break;
+        case STPThreeDSecureSupportTypeStatic:
+            threeDSecureType = @"static";
+            break;
+    }
+    dictionary[@"three_d_secure_type"] = threeDSecureType;
+    dictionary[@"polling_timeout"] = @(configuration.pollingTimeout);
+    dictionary[@"return_url"] = configuration.returnURLBlock().absoluteString;
+
     return [dictionary copy];
 }
 
