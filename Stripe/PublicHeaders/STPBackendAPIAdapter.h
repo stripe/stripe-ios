@@ -43,7 +43,7 @@ __attribute__((deprecated))
  *  @see STPCard
  *  @param completion call this callback when you're done fetching and parsing the above information from your backend. For example, `completion(customer, nil)` (if your call succeeds) or `completion(nil, error)` if an error is returned.
  */
-- (void)retrieveCustomer:(STPCustomerCompletionBlock)completion;
+- (void)retrieveCustomer:(nullable STPCustomerCompletionBlock)completion;
 
 /**
  *  Adds a payment source to a customer. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Update Customer method on that customer as described at https://stripe.com/docs/api#update_customer (for an example Ruby implementation of this API, see https://github.com/stripe/example-ios-backend/blob/master/web.rb#L60 ). If this API call succeeds, call `completion(nil)`. Otherwise, call `completion(error)` with the error that occurred.

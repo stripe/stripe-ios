@@ -39,7 +39,7 @@ typedef void (^STPResourceKeyCompletionBlock)(STPResourceKey * __nullable resour
  and return the raw JSON response from the Stripe API. For an example Ruby 
  implementation of this API, see: {// TODO}
  Back in your iOS app, after you've called this API, deserialize your API response
- into an `STPResourceKey` object using `decodedObjectFromAPIResponse`.
+ into resource key using `[STPResourceKey decodedObjectFromAPIResponse:json]`.
  See MyAPIClient.swift in our example project to see this in action.
 
  @param completion  Call this callback when you're done fetching a new resource
@@ -60,7 +60,17 @@ typedef void (^STPResourceKeyCompletionBlock)(STPResourceKey * __nullable resour
 #pragma clang diagnostic pop
 
 /**
+ When the customer context retrieves a customer, it will return a cached
+ value if it was retrieved less than this number of seconds ago.
+ The default value is 60 seconds.
+ */
+@property (nonatomic, assign) NSTimeInterval cachedCustomerMaxAge;
+
+/**
  Initializes a new `STPCustomerContext` with the specified customer and key provider.
+ Upon initialization, a customer context will prefetch the specified customer.
+ Subsequent customer retrievals (e.g. by `STPPaymentContext`) will return the
+ prefetched customer immediately if its age does not exceed `cachedCustomerMaxAge`.
 
  @param customerId    The id of the Stripe customer the customer context will retrieve and modify.
  @param keyProvider   The key provider the customer context will user to retrieve a new resource key.
