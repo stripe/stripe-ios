@@ -9,7 +9,7 @@
 import Foundation
 import Stripe
 
-class MyAPIClient: NSObject, STPBackendAPIAdapter {
+class MyAPIClient: NSObject, STPResourceKeyProvider {
 
     static let sharedClient = MyAPIClient()
     let session: URLSession
@@ -58,89 +58,15 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         }
         task.resume()
     }
-    
-    @objc func retrieveCustomer(_ completion: @escaping STPCustomerCompletionBlock) {
-        guard let key = Stripe.defaultPublishableKey() , !key.contains("#") else {
-            let error = NSError(domain: StripeDomain, code: 50, userInfo: [
-                NSLocalizedDescriptionKey: "Please set stripePublishableKey to your account's test publishable key in CheckoutViewController.swift"
-            ])
-            completion(nil, error)
-            return
-        }
-        guard let baseURLString = baseURLString, let baseURL = URL(string: baseURLString) else {
-            // This code is just for demo purposes - in this case, if the example app isn't properly configured, we'll return a fake customer just so the app works.
-            let customer = STPCustomer(stripeID: "cus_test", defaultSource: self.defaultSource, sources: self.sources)
-            completion(customer, nil)
-            return
-        }
-        let path = "/customer"
-        let url = baseURL.appendingPathComponent(path)
-        let request = URLRequest.request(url, method: .GET, params: [:])
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
-            DispatchQueue.main.async {
-                let deserializer = STPCustomerDeserializer(data: data, urlResponse: urlResponse, error: error)
-                if let error = deserializer.error {
-                    completion(nil, error)
-                    return
-                } else if let customer = deserializer.customer {
-                    completion(customer, nil)
-                }
-            }
-        }
-        task.resume()
-    }
-    
-    @objc func selectDefaultCustomerSource(_ source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
-        guard let baseURLString = baseURLString, let baseURL = URL(string: baseURLString) else {
-            if let token = source as? STPToken {
-                self.defaultSource = token.card
-            }
-            completion(nil)
-            return
-        }
-        let path = "/customer/default_source"
-        let url = baseURL.appendingPathComponent(path)
-        let params = [
-            "source": source.stripeID,
+
+    func retrieveKey(_ completion: @escaping STPResourceKeyCompletionBlock) {
+        let expires = Date().addingTimeInterval(60)
+        let response: [String: Any] = [
+            "contents": "sk_test_5RuiSbuDuzhua8zWiMCG0QT0",
+            "expires": expires.timeIntervalSince1970
         ]
-        let request = URLRequest.request(url, method: .POST, params: params as [String : AnyObject])
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
-            DispatchQueue.main.async {
-                if let error = self.decodeResponse(urlResponse, error: error as NSError?) {
-                    completion(error)
-                    return
-                }
-                completion(nil)
-            }
-        }
-        task.resume()
-    }
-    
-    @objc func attachSource(toCustomer source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
-        guard let baseURLString = baseURLString, let baseURL = URL(string: baseURLString) else {
-            if let token = source as? STPToken, let card = token.card {
-                self.sources.append(card)
-                self.defaultSource = card
-            }
-            completion(nil)
-            return
-        }
-        let path = "/customer/sources"
-        let url = baseURL.appendingPathComponent(path)
-        let params = [
-            "source": source.stripeID,
-            ]
-        let request = URLRequest.request(url, method: .POST, params: params as [String : AnyObject])
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
-            DispatchQueue.main.async {
-                if let error = self.decodeResponse(urlResponse, error: error as NSError?) {
-                    completion(error)
-                    return
-                }
-                completion(nil)
-            }
-        }
-        task.resume()
+        let key = STPResourceKey.decodedObject(fromAPIResponse: response)
+        completion(key, nil)
     }
 
 }
