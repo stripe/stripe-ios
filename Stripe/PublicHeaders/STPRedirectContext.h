@@ -99,6 +99,32 @@ NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions
  */
 - (instancetype)init NS_UNAVAILABLE;
 
+
+/**
+ *  Starts a redirect flow.
+ *
+ *  You must ensure that your app delegate listens for  the `returnURL` that you
+ *  set on your source object, and forwards it to the Stripe SDK so that the
+ *  context can be notified when the redirect is completed and dismiss the
+ *  view controller. See `[Stripe handleStripeURLCallbackWithURL:]`
+ *
+ *  The context will listen for both received URLs and app open notifications
+ *  and fire its completion block when either the URL is received, or the next
+ *  time the app is foregrounded.
+
+ *  If the app is running on iOS 9+ it will initiate the flow by presenting
+ *  a SFSafariViewController instance from the pass in view controller.
+ *  Otherwise, if the app is running on iOS 8 it will initiate the flow by
+ *  bouncing the user out to the Safari app. If you want more manual control 
+ *  over the redirect method, you can use `startSafariViewControllerRedirectFlowFromViewController`
+ *  or `startSafariAppRedirectFlow`
+ *
+ *  @note This method does nothing if the context is not in the `STPRedirectContextStateNotStarted` state.
+ *
+ *  @param presentingViewController The view controller to present the Safari view controller from.
+ */
+- (void)startRedirectFlowFromViewController:(UIViewController *)presentingViewController;
+
 /**
  *  Starts a redirect flow by presenting an SFSafariViewController in your app
  *  from the passed in view controller.

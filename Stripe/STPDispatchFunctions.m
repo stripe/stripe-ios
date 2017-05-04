@@ -6,7 +6,7 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#include "STPDispatchFunctions.h"
+#import "STPDispatchFunctions.h"
 
 void stpDispatchToMainThreadIfNecessary(dispatch_block_t block) {
     if ([NSThread isMainThread]) {

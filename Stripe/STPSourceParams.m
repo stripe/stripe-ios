@@ -20,7 +20,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _type = STPSourceTypeUnknown;
+        _rawTypeString = @"";
         _flow = STPSourceFlowUnknown;
         _usage = STPSourceUsageUnknown;
         _additionalAPIParameters = @{};
@@ -28,8 +28,16 @@
     return self;
 }
 
-- (NSString *)typeString {
-    return [STPSource stringFromType:self.type];
+- (STPSourceType)type {
+    return [STPSource typeFromString:self.rawTypeString];
+}
+
+- (void)setType:(STPSourceType)type {
+
+    // If setting unknown and we're already unknown, don't want to override raw value
+    if (type != self.type) {
+        self.rawTypeString = [STPSource stringFromType:type];
+    }
 }
 
 - (NSString *)flowString {
@@ -263,7 +271,7 @@
 
 + (NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
-             NSStringFromSelector(@selector(typeString)): @"type",
+             NSStringFromSelector(@selector(rawTypeString)): @"type",
              NSStringFromSelector(@selector(amount)): @"amount",
              NSStringFromSelector(@selector(currency)): @"currency",
              NSStringFromSelector(@selector(flowString)): @"flow",

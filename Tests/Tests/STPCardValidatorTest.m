@@ -103,6 +103,7 @@
     XCTAssertEqual(STPCardValidationStateValid, [STPCardValidator validationStateForNumber:@"0000000000000000" validatingCardBrand:NO]);
     XCTAssertEqual(STPCardValidationStateValid, [STPCardValidator validationStateForNumber:@"9999999999999995" validatingCardBrand:NO]);
     XCTAssertEqual(STPCardValidationStateIncomplete, [STPCardValidator validationStateForNumber:@"4242424242424" validatingCardBrand:YES]);
+    XCTAssertEqual(STPCardValidationStateIncomplete, [STPCardValidator validationStateForNumber:nil validatingCardBrand:YES]);
 }
 
 - (void)testBrand {

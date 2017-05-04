@@ -14,6 +14,10 @@
     return [[self mainBundle] infoDictionary][(NSString *)kCFBundleNameKey];
 }
 
++ (nullable NSString *)stp_applicationVersion {
+    return [[self mainBundle] infoDictionary][@"CFBundleShortVersionString"];
+}
+
 @end
 
 void linkNSBundleAppNameCategory(void){}

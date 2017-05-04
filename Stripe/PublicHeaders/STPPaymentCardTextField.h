@@ -180,6 +180,14 @@
 + (nullable UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
 
 /**
+ *  Returns the error image used for a card brand.
+ *  Override this method in a subclass if you would like to provide custom images.
+ *  @param cardBrand The brand of card entered.
+ *  @return The error image used for a card brand.
+ */
++ (nullable UIImage *)errorImageForCardBrand:(STPCardBrand)cardBrand;
+
+/**
  *  Returns the rectangle in which the receiver draws its brand image.
  *  @param bounds The bounding rectangle of the receiver.
  *  @return the rectangle in which the receiver draws its brand image.
@@ -263,7 +271,5 @@
  *  object and set this property to that object to prefill the fields you've collected.
  */
 @property(nonatomic, strong, readwrite, nonnull) STPCardParams *cardParams;
-
-- (void)commonInit;
 
 @end

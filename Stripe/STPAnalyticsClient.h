@@ -17,10 +17,6 @@
 
 + (void)initializeIfNeeded;
 
-+ (void)disableAnalytics;
-
-+ (NSString *)muid;
-
 + (NSString *)tokenTypeFromParameters:(NSDictionary *)parameters;
 
 - (void)logTokenCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration

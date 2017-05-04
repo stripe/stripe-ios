@@ -12,6 +12,7 @@
 #import "STPAnalyticsClient.h"
 #import "STPAPIClient.h"
 #import "STPPaymentConfiguration+Private.h"
+#import "STPTelemetryClient.h"
 #import "STPRedirectContext.h"
 #import "STPSource.h"
 #import "STPSourcePoller.h"
@@ -25,6 +26,7 @@
 
 + (void)initialize {
     [STPAnalyticsClient initializeIfNeeded];
+    [STPTelemetryClient sharedInstance];
 }
 
 + (instancetype)sharedConfiguration {

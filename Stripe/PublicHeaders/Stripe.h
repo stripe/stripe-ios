@@ -6,13 +6,13 @@
 //  Copyright (c) 2012 Stripe. All rights reserved.
 //
 
+#import "STPAddCardViewController.h"
+#import "STPAdditionalSourceInfo.h"
+#import "STPAddress.h"
+#import "STPAddSourceViewController.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient.h"
 #import "STPAPIResponseDecodable.h"
-#import "STPAddCardViewController.h"
-#import "STPAdditionalSourceInfo.h"
-#import "STPAddSourceViewController.h"
-#import "STPAddress.h"
 #import "STPBackendAPIAdapter.h"
 #import "STPBankAccount.h"
 #import "STPBankAccountParams.h"
@@ -26,6 +26,7 @@
 #import "STPCoreTableViewController.h"
 #import "STPCoreViewController.h"
 #import "STPCustomer.h"
+#import "STPFile.h"
 #import "STPFormEncodable.h"
 #import "STPImageLibrary.h"
 #import "STPPaymentActivityIndicatorView.h"

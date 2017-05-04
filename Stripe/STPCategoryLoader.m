@@ -22,6 +22,7 @@
 #import "STPAPIClient+ApplePay.h"
 #import "STPAspects.h"
 #import "UIBarButtonItem+Stripe.h"
+#import "UIImage+Stripe.h"
 #import "UINavigationBar+Stripe_Theme.h"
 #import "UINavigationController+Stripe_Completion.h"
 #import "UITableViewCell+Stripe_Borders.h"
@@ -55,6 +56,7 @@
     linkNSDecimalNumberCurrencyCategory();
     linkNSBundleAppNameCategory();
     linkAspectsCategory();
+    linkUIImageCategory();
     linkNSURLComponentsCategory();
 }
 

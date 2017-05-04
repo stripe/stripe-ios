@@ -16,13 +16,20 @@
 #import "STPAnalyticsClient.h"
 #import "STPBankAccount.h"
 #import "STPCard.h"
+#import "STPDispatchFunctions.h"
 #import "STPFormEncoder.h"
+#import "STPMultipartFormDataEncoder.h"
+#import "STPMultipartFormDataPart.h"
+#import "NSMutableURLRequest+Stripe.h"
 #import "STPPaymentConfiguration.h"
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
 #import "STPSourceParams+Private.h"
 #import "STPSourcePoller.h"
+#import "STPTelemetryClient.h"
 #import "STPToken.h"
+#import "StripeError.h"
+#import "UIImage+Stripe.h"
 
 #if __has_include("Fabric.h")
 #import "Fabric+FABKits.h"
@@ -39,6 +46,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 static NSString *const apiURLBase = @"api.stripe.com/v1";
 static NSString *const tokenEndpoint = @"tokens";
 static NSString *const sourcesEndpoint = @"sources";
+static NSString *const fileUploadPath = @"https://uploads.stripe.com/v1/files";
 static NSString *const stripeAPIVersion = @"2015-10-12";
 
 NSString *const STPNetworkActivityDidBeginNotification = @"com.stripe.networkactivity.begin";
@@ -52,10 +60,6 @@ NSString *const STPNetworkActivityDidEndNotification = @"com.stripe.networkactiv
 
 + (NSString *)defaultPublishableKey {
     return [STPPaymentConfiguration sharedConfiguration].publishableKey;
-}
-
-+ (void)disableAnalytics {
-    [STPAnalyticsClient disableAnalytics];
 }
 
 @end
@@ -75,6 +79,7 @@ NSString *const STPNetworkActivityDidEndNotification = @"com.stripe.networkactiv
 
 + (void)initialize {
     [STPAnalyticsClient initializeIfNeeded];
+    [STPTelemetryClient sharedInstance];
 #ifdef STP_STATIC_LIBRARY_BUILD
     [STPCategoryLoader loadCategories];
 #endif
@@ -248,13 +253,92 @@ NSString *const STPNetworkActivityDidEndNotification = @"com.stripe.networkactiv
 
 @end
 
+#pragma mark - Personally Identifiable Information
+@implementation STPAPIClient (PII)
+
+- (void)createTokenWithPersonalIDNumber:(NSString *)pii completion:(__nullable STPTokenCompletionBlock)completion {
+    NSDictionary *params = @{@"pii": @{ @"personal_id_number": pii }};
+    [self createTokenWithParameters:params completion:completion];
+}
+
+@end
+
+@implementation STPAPIClient (Upload)
+
+- (NSData *)dataForUploadedImage:(UIImage *)image
+                         purpose:(STPFilePurpose)purpose {
+
+    NSUInteger maxBytes;
+    switch (purpose) {
+        case STPFilePurposeIdentityDocument:
+            maxBytes = 4 * 1000000;
+            break;
+        case STPFilePurposeDisputeEvidence:
+            maxBytes = 8 * 1000000;
+            break;
+        case STPFilePurposeUnknown:
+            maxBytes = 0;
+            break;
+    }
+    return [image stp_jpegDataWithMaxFileSize:maxBytes];
+}
+
+- (void)uploadImage:(UIImage *)image
+            purpose:(STPFilePurpose)purpose
+         completion:(nullable STPFileCompletionBlock)completion {
+
+    STPMultipartFormDataPart *purposePart = [[STPMultipartFormDataPart alloc] init];
+    purposePart.name = @"purpose";
+    purposePart.data = [[STPFile stringFromPurpose:purpose] dataUsingEncoding:NSUTF8StringEncoding];
+
+    STPMultipartFormDataPart *imagePart = [[STPMultipartFormDataPart alloc] init];
+    imagePart.name = @"file";
+    imagePart.filename = @"image.jpg";
+    imagePart.contentType = @"image/jpeg";
+
+    imagePart.data = [self dataForUploadedImage:image
+                                        purpose:purpose];
+
+    NSString *boundary = [STPMultipartFormDataEncoder generateBoundary];
+    NSData *data = [STPMultipartFormDataEncoder multipartFormDataForParts:@[purposePart, imagePart] boundary:boundary];
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:fileUploadPath]];
+    [request setHTTPMethod:@"POST"];
+    [request stp_setMultipartFormData:data boundary:boundary];
+
+    [[_urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSDictionary *jsonDictionary = body ? [NSJSONSerialization JSONObjectWithData:body options:(NSJSONReadingOptions)kNilOptions error:NULL] : nil;
+        STPFile *file = [STPFile decodedObjectFromAPIResponse:jsonDictionary];
+
+        NSError *returnedError = [NSError stp_errorFromStripeResponse:jsonDictionary] ?: error;
+        if ((!file || ![response isKindOfClass:[NSHTTPURLResponse class]]) && !returnedError) {
+            returnedError = [NSError stp_genericFailedToParseResponseError];
+        }
+
+        if (!completion) {
+            return;
+        }
+
+        stpDispatchToMainThreadIfNecessary(^{
+            if (returnedError) {
+                completion(nil, returnedError);
+            } else {
+                completion(file, nil);
+            }
+        });
+    }] resume];
+}
+
+@end
+
 #pragma mark - Credit Cards
 @implementation STPAPIClient (CreditCards)
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPTokenCompletionBlock)completion {
     NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:card] mutableCopy];
-    params[@"muid"] = [STPAnalyticsClient muid];
+    [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
     [self createTokenWithParameters:params completion:completion];
+    [[STPTelemetryClient sharedInstance] sendTelemetryData];
 }
 
 @end

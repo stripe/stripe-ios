@@ -73,6 +73,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)brand;
 
+/**
+ *  This returns a small icon indicating a card number error for the given card brand.
+ */
++ (UIImage *)errorImageForCardBrand:(STPCardBrand)brand;
 
 @end
 

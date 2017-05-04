@@ -11,6 +11,7 @@
 @interface NSBundle (Stripe_AppName)
 
 + (nullable NSString*)stp_applicationName;
++ (nullable NSString*)stp_applicationVersion;
 
 @end
 
