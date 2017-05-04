@@ -14,5 +14,5 @@
 @interface STPAddSourceViewController (Private)
 
 @property(nonatomic)STPAddress *shippingAddress;
-
+- (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration;
 @end

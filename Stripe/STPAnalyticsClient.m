@@ -14,6 +14,7 @@
 #import "STPAPIClient.h"
 #import "STPAddCardViewController+Private.h"
 #import "STPAddCardViewController.h"
+#import "STPAddSourceViewController+Private.h"
 #import "STPAspects.h"
 #import "STPCard.h"
 #import "STPFormEncodable.h"
@@ -50,52 +51,39 @@
     [self initializeIfNeeded];
 }
 
++ (void)addHookForClass:(Class)hookedClass selector:(SEL)selector {
+    [hookedClass stp_aspect_hookSelector:selector
+                             withOptions:STPAspectPositionAfter
+                              usingBlock:^{
+                                  STPAnalyticsClient *client = [self sharedClient];
+                                  [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass(hookedClass)]];
+                              }
+                                   error:nil];
+}
+
 + (void)initializeIfNeeded {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-
         // Individual views
-
-        [STPPaymentCardTextField stp_aspect_hookSelector:@selector(commonInit)
-                                             withOptions:STPAspectPositionAfter
-                                              usingBlock:^{
-                                                  STPAnalyticsClient *client = [self sharedClient];
-                                                  [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPPaymentCardTextField class])]];
-                                              } error:nil];
+        [self addHookForClass:[STPPaymentCardTextField class]
+                     selector:@selector(commonInit)];
 
         // Pay context
-
-        [STPPaymentContext stp_aspect_hookSelector:@selector(initWithAPIAdapter:configuration:theme:)
-                                       withOptions:STPAspectPositionAfter
-                                        usingBlock:^{
-                                            STPAnalyticsClient *client = [self sharedClient];
-                                            [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPPaymentContext class])]];
-                                        } error:nil];
-        
+        [self addHookForClass:[STPPaymentContext class]
+                     selector:@selector(initWithAPIAdapter:configuration:theme:)];
 
         // View controllers
+        [self addHookForClass:[STPAddCardViewController class]
+                     selector:@selector(commonInitWithConfiguration:)];
 
-        [STPAddCardViewController stp_aspect_hookSelector:@selector(commonInitWithConfiguration:)
-                                              withOptions:STPAspectPositionAfter
-                                               usingBlock:^{
-                                                   STPAnalyticsClient *client = [self sharedClient];
-                                                   [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPAddCardViewController class])]];
-                                               } error:nil];
-        
-        [STPPaymentMethodsViewController stp_aspect_hookSelector:@selector(initWithConfiguration:apiAdapter:loadingPromise:theme:shippingAddress:delegate:)
-                                                     withOptions:STPAspectPositionAfter
-                                                      usingBlock:^{
-                                                          STPAnalyticsClient *client = [self sharedClient];
-                                                          [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPPaymentMethodsViewController class])]];
-                                                      } error:nil];
+        [self addHookForClass:[STPPaymentMethodsViewController class]
+                     selector:@selector(initWithConfiguration:apiAdapter:loadingPromise:theme:shippingAddress:delegate:)];
 
-        [STPShippingAddressViewController stp_aspect_hookSelector:@selector(initWithConfiguration:theme:currency:shippingAddress:selectedShippingMethod:prefilledInformation:)
-                                                      withOptions:STPAspectPositionAfter
-                                                       usingBlock:^{
-                                                           STPAnalyticsClient *client = [self sharedClient];
-                                                           [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPShippingAddressViewController class])]];
-                                                       } error:nil];
+        [self addHookForClass:[STPShippingAddressViewController class]
+                     selector:@selector(initWithConfiguration:theme:currency:shippingAddress:selectedShippingMethod:prefilledInformation:)];
 
+        [self addHookForClass:[STPAddSourceViewController class]
+                     selector:@selector(commonInitWithConfiguration:)];
     });
 }
 
@@ -184,7 +172,6 @@
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.source_creation",
                                         @"source_type": sourceType ?: @"unknown",
-                                        @"apple_pay_enabled": @([Stripe deviceSupportsApplePay]),
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
     [payload addEntriesFromDictionary:configurationDictionary];
