@@ -11,7 +11,7 @@
 #import "STPAPIResponseDecodable.h"
 
 /**
- // TODO docs
+ // TODO docs, more fields, etc.
  */
 @interface STPResourceKey : NSObject <STPAPIResponseDecodable>
 
