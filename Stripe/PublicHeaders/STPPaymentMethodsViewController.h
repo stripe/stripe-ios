@@ -58,7 +58,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param theme         The theme to inform the appearance of the UI. @see STPTheme.h
  *  @param apiAdapter    The API adapter to use to retrieve a customer's stored payment methods and save new ones. @see STPBackendAPIAdapter.h
  *  @param delegate      A delegate that will be notified when the payment methods view controller's selection changes.
- *  @return an initialized view controller.
  *
  *  @deprecated Use `initWithConfiguration:theme:customerContext:delegate:`.
  *  Instead of providing your own backend API adapter, you can now create an

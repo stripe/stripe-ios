@@ -60,7 +60,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  This is a convenience initializer; it is equivalent to calling `initWithAPIAdapter:apiAdapter configuration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]`.
- *  @return the newly-instantiated payment context
  *
  *  @deprecated Use `initWithCustomerContext:`.
  *  Instead of providing your own backend API adapter, you can now create an
@@ -86,12 +85,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                      configuration:(STPPaymentConfiguration *)configuration
                              theme:(STPTheme *)theme __attribute__((deprecated));
-
-/**
- The customer context the payment context will use to fetch and modify its Stripe
- customer.
- */
-@property(nonatomic, readonly)STPCustomerContext *customerContext;
 
 /**
  *  The API adapter the payment context will use to fetch and modify its contents. You need to make a class conforming to this protocol that talks to your server. @see STPBackendAPIAdapter.h

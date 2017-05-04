@@ -112,13 +112,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     return self;
 }
 
-- (STPCustomerContext *)customerContext {
-    if ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) {
-        return self.apiAdapter;
-    }
-    return nil;
-}
-
 - (void)retryLoading {
     if (self.loadingPromise && self.loadingPromise.value) {
         return;
