@@ -277,7 +277,7 @@
     }
     dictionary[@"company_name"] = configuration.companyName ?: @"unknown";
     dictionary[@"apple_merchant_identifier"] = configuration.appleMerchantIdentifier ?: @"unknown";
-    dictionary[@"use_card_sources"] = configuration.useSourcesForCards ? @"1" : @"0";
+    dictionary[@"use_card_sources"] = @(configuration.useSourcesForCards);
 
     NSString *threeDSecureType = nil;
     switch (configuration.threeDSecureSupportTypeBlock()) {
