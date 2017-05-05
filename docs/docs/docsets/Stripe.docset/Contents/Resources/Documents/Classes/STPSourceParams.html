@@ -125,6 +125,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentResult.html">STPPaymentResult</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPRedirectContext.html">STPRedirectContext</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
               </li>
               <li class="nav-group-task">
@@ -195,6 +198,9 @@
                 <a class="nav-group-task-link" href="../Enums/STPPaymentStatus.html">STPPaymentStatus</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/c:@E@STPRedirectContextState">STPRedirectContextState</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPShippingStatus.html">STPShippingStatus</a>
               </li>
               <li class="nav-group-task">
@@ -260,6 +266,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextCompletionBlock">STPRedirectContextCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPShippingMethodsCompletionBlock">STPShippingMethodsCompletionBlock</a>
@@ -336,6 +348,48 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/c:objc(cs)STPSourceParams(py)rawTypeString"></a>
+                    <a name="//apple_ref/objc/Property/rawTypeString" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(py)rawTypeString">rawTypeString</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The raw underlying type string sent to the server.</p>
+
+<p>Generally you should use <code><a href="../Classes/STPSourceParams.html#/c:objc(cs)STPSourceParams(py)type">type</a></code> instead unless you have a reason not to.
+  You can use this if you want to create a param of a type not yet supported
+  by the current version of the SDK&rsquo;s <code><a href="../Enums.html#/c:@E@STPSourceType">STPSourceType</a></code> enum.</p>
+
+<p>Setting this to a value not known by the SDK causes <code><a href="../Classes/STPSourceParams.html#/c:objc(cs)STPSourceParams(py)type">type</a></code> to 
+  return <code>STPSourceTypeUnknown</code></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">rawTypeString</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">rawTypeString</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L39">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/c:objc(cs)STPSourceParams(py)amount"></a>
                     <a name="//apple_ref/objc/Property/amount" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(cs)STPSourceParams(py)amount">amount</a>
@@ -365,7 +419,7 @@ Required for <code>single_use</code> sources.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L46">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -401,7 +455,7 @@ will be chargeable once ready.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L40">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L52">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -438,7 +492,7 @@ supports multiple flows.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L47">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L59">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -473,7 +527,7 @@ supports multiple flows.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L52">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L64">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -509,7 +563,7 @@ by particular source types.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L58">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L70">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -545,7 +599,7 @@ a redirect (<code><a href="../Classes/STPSourceParams.html#/c:objc(cs)STPSourceP
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L64">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L76">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -581,7 +635,7 @@ source parameters.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L70">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L82">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -618,7 +672,7 @@ option at creation.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L77">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L89">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -722,7 +776,7 @@ option at creation.</p>
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L90-L93">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L102-L105">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -812,7 +866,7 @@ option at creation.</p>
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L105-L107">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L117-L119">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -873,7 +927,7 @@ option at creation.</p>
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L117">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L129">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -977,7 +1031,7 @@ option at creation.</p>
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L130-L133">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L142-L145">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1095,7 +1149,7 @@ option at creation.</p>
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L147-L151">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L159-L163">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1124,15 +1178,15 @@ option at creation.</p>
                           <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPSourceParams</span> <span class="o">*</span><span class="p">)</span>
 <span class="nf">sepaDebitParamsWithName</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">name</span>
                    <span class="nf">iban</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">iban</span>
-           <span class="nf">addressLine1</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">addressLine1</span>
-                   <span class="nf">city</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">city</span>
-             <span class="nf">postalCode</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">postalCode</span>
-                <span class="nf">country</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">country</span><span class="p">;</span></code></pre>
+           <span class="nf">addressLine1</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">addressLine1</span>
+                   <span class="nf">city</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">city</span>
+             <span class="nf">postalCode</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">postalCode</span>
+                <span class="nf">country</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">country</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">sepaDebitParams</span><span class="p">(</span><span class="n">withName</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">iban</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">addressLine1</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">city</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">postalCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">country</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">sepaDebitParams</span><span class="p">(</span><span class="n">withName</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">iban</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">addressLine1</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">city</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">postalCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">country</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
 
                         </div>
                       </div>
@@ -1174,7 +1228,7 @@ option at creation.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The bank account holder&rsquo;s first address line.</p>
+                                  <p>The bank account holder&rsquo;s first address line (optional).</p>
 
                                 </div>
                               </td>
@@ -1227,7 +1281,7 @@ option at creation.</p>
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L166-L171">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L178-L183">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1331,7 +1385,7 @@ option at creation.</p>
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L184-L187">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L196-L199">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1435,7 +1489,7 @@ option at creation.</p>
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L200-L203">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L212-L215">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1448,7 +1502,7 @@ option at creation.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-03-15)</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-05-05)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

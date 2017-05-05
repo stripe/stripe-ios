@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>STPPaymentMethodsViewController Class Reference</title>
+    <title>STPRedirectContext Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset="utf-8">
@@ -14,9 +14,9 @@
   </head>
   <body>
 
-    <a name="//apple_ref/objc/Class/STPPaymentMethodsViewController" class="dashAnchor"></a>
+    <a name="//apple_ref/objc/Class/STPRedirectContext" class="dashAnchor"></a>
 
-    <a title="STPPaymentMethodsViewController Class Reference"></a>
+    <a title="STPRedirectContext Class Reference"></a>
 
     <header class="header">
       <p class="header-col header-col--primary">
@@ -44,7 +44,7 @@
     <p class="breadcrumbs">
       <a class="breadcrumb" href="../index.html">Stripe Reference</a>
       <img class="carat" src="../img/carat.png" />
-      STPPaymentMethodsViewController Class Reference
+      STPRedirectContext Class Reference
     </p>
 
     <div class="content-wrapper">
@@ -293,14 +293,35 @@
 
         <section class="section">
           <div class="section-content">
-            <h1>STPPaymentMethodsViewController</h1>
+            <h1>STPRedirectContext</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPPaymentMethodsViewController</span> <span class="p">:</span> <span class="nc"><a href="../Classes/STPCoreViewController.html">STPCoreViewController</a></span></code></pre>
+                  <pre class="highlight"><code>
+<span class="k">@interface</span> <span class="nc">STPRedirectContext</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
 
                 </div>
               </div>
-            <p>This view controller presents a list of payment method options to the user, which they can select between. They can also add credit cards to the list. It must be displayed inside a <code>UINavigationController</code>, so you can either create a <code>UINavigationController</code> with an <code>STPPaymentMethodsViewController</code> as the <code>rootViewController</code> and then present the <code>UINavigationController</code>, or push a new <code>STPPaymentMethodsViewController</code> onto an existing <code>UINavigationController</code>&lsquo;s stack. You can also have <code><a href="../Classes/STPPaymentContext.html">STPPaymentContext</a></code> do this for you automatically, by calling <code>presentPaymentMethodsViewController</code> or <code>pushPaymentMethodsViewController</code> on it.</p>
+            <p>This is a helper class for handling redirect sources.</p>
+
+<p>Init an instance with the redirect flow source you want to handle,
+  then choose a redirect method. The context will fire the completion handler
+  when the redirect completes.</p>
+
+<p>Due to the nature of iOS, very little concrete information can be gained
+  during this process, as all actions take place in either the Safari app
+  or the sandboxed SFSafariViewController class. The context attempts to 
+  detect when the user has completed the necessary redirect action by listening
+  for both app foregrounds and url callbacks received in the app delegate.
+  However, it is possible the when the redirect is <q>completed</q>, the user may
+  have not actually completed the necessary actions to authorize the charge.</p>
+
+<p>You can use <code><a href="../Classes/STPAPIClient.html">STPAPIClient</a></code> to listen for state changes on the source
+  object as a way to identify whether the user action succeeded or not.
+  - see: <code>[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]</code></p>
+
+<p>You should not use either this class, nor <code><a href="../Classes/STPAPIClient.html">STPAPIClient</a></code>, as a way
+  to determine when you should charge the source. Use Stripe webhooks on your
+  backend server to listen for source state changes and to make the charge.</p>
 
           </div>
         </section>
@@ -312,9 +333,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPPaymentMethodsViewController(im)initWithPaymentContext:"></a>
-                    <a name="//apple_ref/objc/Method/-initWithPaymentContext:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentMethodsViewController(im)initWithPaymentContext:">-initWithPaymentContext:</a>
+                    <a name="/c:objc(cs)STPRedirectContext(py)state"></a>
+                    <a name="//apple_ref/objc/Property/state" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPRedirectContext(py)state">state</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -322,20 +343,79 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Creates a new payment methods view controller.</p>
+                        <p>The current state of the context.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithPaymentContext</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentContext.html">STPPaymentContext</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentContext</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Enums.html#/c:@E@STPRedirectContextState">STPRedirectContextState</a></span> <span class="n">state</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">paymentContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentContext.html">STPPaymentContext</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">state</span><span class="p">:</span> <span class="kt"><a href="../Enums.html#/c:@E@STPRedirectContextState">STPRedirectContextState</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPRedirectContext.h#L74">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPRedirectContext(im)initWithSource:completion:"></a>
+                    <a name="//apple_ref/objc/Method/-initWithSource:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPRedirectContext(im)initWithSource:completion:">-initWithSource:completion:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializer for context.</p>
+
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>You must ensure that the returnURL set up in the created source
+correctly goes to your app so that users can be returned once
+they complete the redirect in the web broswer.</p>
+
+</div>
+
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>Firing of the completion block does not necessarily mean the user successfully
+performed the redirect action. You can re-fetch the source object using
+its id and clientSecret, and poll for status updates on it to determine if
+the source was sucessfully made chargeable.</p>
+
+</div>
+
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><code>[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]</code></p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">instancetype</span><span class="p">)</span>
+<span class="nf">initWithSource</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPSource.html">STPSource</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">source</span>
+    <span class="nf">completion</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextCompletionBlock">STPRedirectContextCompletionBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="nf">init</span><span class="p">?(</span><span class="nv">source</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPSource.html">STPSource</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextCompletionBlock">STPRedirectContextCompletionBlock</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -346,12 +426,25 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>paymentContext</em>
+                                <em>source</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>A payment context to power the view controller&rsquo;s view. The payment context will in turn use its backend API adapter to fetch the information it needs from your application.</p>
+                                  <p>The source that needs user redirect action to be taken.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A block to fire when the action is believed to have been completed.</p>
 
                                 </div>
                               </td>
@@ -361,11 +454,11 @@
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>an initialized view controller.</p>
+                        <p>Nil if the specified source is not a redirect-flow source. Otherwise a new context object.</p>
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L36">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPRedirectContext.h#L93-L94">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -373,9 +466,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPPaymentMethodsViewController(im)initWithConfiguration:theme:apiAdapter:delegate:"></a>
-                    <a name="//apple_ref/objc/Method/-initWithConfiguration:theme:apiAdapter:delegate:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentMethodsViewController(im)initWithConfiguration:theme:apiAdapter:delegate:">-initWithConfiguration:theme:apiAdapter:delegate:</a>
+                    <a name="/c:objc(cs)STPRedirectContext(im)init"></a>
+                    <a name="//apple_ref/objc/Method/-init" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPRedirectContext(im)init">-init</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -383,24 +476,72 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initializes a new payment methods view controller without using a payment context.</p>
+                        <p>Use <code>initWithSource:completion:</code></p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span>
-<span class="nf">initWithConfiguration</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span>
-                <span class="nf">theme</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">theme</span>
-           <span class="nf">apiAdapter</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">apiAdapter</span>
-             <span class="nf">delegate</span><span class="p">:</span>
-                 <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentMethodsViewControllerDelegate.html">STPPaymentMethodsViewControllerDelegate</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">delegate</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="n">init</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPRedirectContext.h#L100">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPRedirectContext(im)startRedirectFlowFromViewController:"></a>
+                    <a name="//apple_ref/objc/Method/-startRedirectFlowFromViewController:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPRedirectContext(im)startRedirectFlowFromViewController:">-startRedirectFlowFromViewController:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Starts a redirect flow.</p>
+
+<p>You must ensure that your app delegate listens for  the <code>returnURL</code> that you
+  set on your source object, and forwards it to the Stripe SDK so that the
+  context can be notified when the redirect is completed and dismiss the
+  view controller. See <code>[Stripe handleStripeURLCallbackWithURL:]</code></p>
+
+<p>The context will listen for both received URLs and app open notifications
+  and fire its completion block when either the URL is received, or the next
+  time the app is foregrounded.</p>
+
+<p>If the app is running on iOS 9+ it will initiate the flow by presenting
+  a SFSafariViewController instance from the pass in view controller.
+  Otherwise, if the app is running on iOS 8 it will initiate the flow by
+  bouncing the user out to the Safari app. If you want more manual control 
+  over the redirect method, you can use <code>startSafariViewControllerRedirectFlowFromViewController</code>
+  or <code>startSafariAppRedirectFlow</code></p>
+
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>This method does nothing if the context is not in the <code>STPRedirectContextStateNotStarted</code> state.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">startRedirectFlowFromViewController</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">presentingViewController</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">,</span> <span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentMethodsViewControllerDelegate.html">STPPaymentMethodsViewControllerDelegate</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">startRedirectFlow</span><span class="p">(</span><span class="n">fromViewController</span> <span class="nv">presentingViewController</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -411,51 +552,12 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>configuration</em>
+                                <em>presentingViewController</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>The configuration to use to determine what types of payment method to offer your user. </p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>theme</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The theme to inform the appearance of the UI. </p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>apiAdapter</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The API adapter to use to retrieve a customer&rsquo;s stored payment methods and save new ones. </p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>delegate</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>A delegate that will be notified when the payment methods view controller&rsquo;s selection changes.</p>
+                                  <p>The view controller to present the Safari view controller from.</p>
 
                                 </div>
                               </td>
@@ -464,7 +566,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L47-L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPRedirectContext.h#L126">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -472,9 +574,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPPaymentMethodsViewController(py)prefilledInformation"></a>
-                    <a name="//apple_ref/objc/Property/prefilledInformation" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentMethodsViewController(py)prefilledInformation">prefilledInformation</a>
+                    <a name="/c:objc(cs)STPRedirectContext(im)startSafariViewControllerRedirectFlowFromViewController:"></a>
+                    <a name="//apple_ref/objc/Method/-startSafariViewControllerRedirectFlowFromViewController:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPRedirectContext(im)startSafariViewControllerRedirectFlowFromViewController:">-startSafariViewControllerRedirectFlowFromViewController:</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -482,55 +584,31 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>If you&rsquo;ve already collected some information from your user, you can set it here and it&rsquo;ll be automatically filled out when possible/appropriate in any UI that the payment context creates.</p>
+                        <p>Starts a redirect flow by presenting an SFSafariViewController in your app
+  from the passed in view controller.</p>
+
+<p>You must ensure that your app delegate listens for  the <code>returnURL</code> that you
+  set on your source object, and forwards it to the Stripe SDK so that the
+  context can be notified when the redirect is completed and dismiss the
+  view controller. See <code>[Stripe handleStripeURLCallbackWithURL:]</code></p>
+
+<p>The context will listen for both received URLs and app open notifications 
+  and fire its completion block when either the URL is received, or the next
+  time the app is foregrounded.</p>
+
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>This method does nothing if the context is not in the <code>STPRedirectContextStateNotStarted</code> state.</p>
+
+</div>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
-    <span class="n"><a href="../Classes/STPUserInformation.html">STPUserInformation</a></span> <span class="o">*</span><span class="n">prefilledInformation</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">prefilledInformation</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPUserInformation.html">STPUserInformation</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L55">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)STPPaymentMethodsViewController(im)dismissWithCompletion:"></a>
-                    <a name="//apple_ref/objc/Method/-dismissWithCompletion:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPPaymentMethodsViewController(im)dismissWithCompletion:">-dismissWithCompletion:</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>If you&rsquo;re pushing <code>STPPaymentMethodsViewController</code> onto an existing <code>UINavigationController</code>&lsquo;s stack, you should use this method to dismiss it, since it may have pushed an additional add card view controller onto the navigation controller&rsquo;s stack.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">dismissWithCompletion</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPVoidBlock">STPVoidBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">dismiss</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPVoidBlock">STPVoidBlock</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">startSafariViewControllerRedirectFlowFromViewController</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">presentingViewController</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -541,12 +619,12 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>completion</em>
+                                <em>presentingViewController</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>The callback to run after the view controller is dismissed. You may specify nil for this parameter.</p>
+                                  <p>The view controller to present the Safari view controller from.</p>
 
                                 </div>
                               </td>
@@ -555,7 +633,88 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L62">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPRedirectContext.h#L145">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPRedirectContext(im)startSafariAppRedirectFlow"></a>
+                    <a name="//apple_ref/objc/Method/-startSafariAppRedirectFlow" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPRedirectContext(im)startSafariAppRedirectFlow">-startSafariAppRedirectFlow</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Starts a redirect flow by calling <code>openURL</code> to bounce the user out to
+  the Safari app.</p>
+
+<p>The context will listen for app open notifications and fire its completion
+  block the next time the user re-opens the app (either manually or via url)</p>
+
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    This method does nothing if the context is not in the <code>STPRedirectContextStateNotStarted</code> state.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">startSafariAppRedirectFlow</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">startSafariAppRedirectFlow</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPRedirectContext.h#L156">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPRedirectContext(im)cancel"></a>
+                    <a name="//apple_ref/objc/Method/-cancel" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPRedirectContext(im)cancel">-cancel</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Dismisses any presented views and stops listening for any
+app opens or callbacks. The completion block will not be fired.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">cancel</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">cancel</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPRedirectContext.h#L162">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
