@@ -17,12 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPAPIClient()
 
 @property (nonatomic, readwrite) NSURL *apiURL;
+@property (nonatomic, readwrite) NSString *apiKey;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
 
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey
                                baseURL:(NSString *)baseURL;
 
-- (instancetype)initWithAPIKey:(NSString *)apiKey;
+- (instancetype)initWithAPIKey:(nullable NSString *)apiKey;
 
 - (void)createTokenWithParameters:(NSDictionary *)parameters
                        completion:(STPTokenCompletionBlock)completion;

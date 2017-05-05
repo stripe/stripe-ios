@@ -13,7 +13,7 @@
 #import "STPResourceKey.h"
 #import "StripeError.h"
 
-static NSTimeInterval const MinExpirationInterval = 60;
+static NSTimeInterval const MinResourceKeyExpirationInterval = 60;
 static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 
 @interface STPCustomerContext ()
@@ -22,7 +22,7 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 @property (nonatomic) STPCustomer *customer;
 @property (nonatomic) NSDate *customerRetrievedDate;
 @property (nonatomic) NSString *customerId;
-@property (nonatomic) id<STPResourceKeyProvider> keyProvider;
+@property (nonatomic, weak) id<STPResourceKeyProvider> keyProvider;
 @property (nonatomic) STPResourceKey *resourceKey;
 
 @end
@@ -31,10 +31,18 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 
 - (instancetype)initWithCustomerId:(NSString *)customerId
                        keyProvider:(nonnull id<STPResourceKeyProvider>)keyProvider {
+    STPAPIClient *apiClient = [[STPAPIClient alloc] initWithAPIKey:nil];
+    return [self initWithCustomerId:customerId keyProvider:keyProvider apiClient:apiClient];
+}
+
+- (instancetype)initWithCustomerId:(NSString *)customerId
+                       keyProvider:(nonnull id<STPResourceKeyProvider>)keyProvider
+                         apiClient:(STPAPIClient *)apiClient {
     self = [super init];
     if (self) {
         _customerId = customerId;
         _keyProvider = keyProvider;
+        _apiClient = apiClient;
         _cachedCustomerMaxAge = DefaultCachedCustomerMaxAge;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleWillForegroundNotification)
@@ -57,22 +65,26 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 
 - (BOOL)needsNewResourceKey {
     return !self.resourceKey ||
-        self.resourceKey.expirationDate.timeIntervalSinceNow < MinExpirationInterval;
+        self.resourceKey.expirationDate.timeIntervalSinceNow < MinResourceKeyExpirationInterval;
 }
 
-- (void)refreshResourceKeyIfNecessary:(STPVoidBlock)completion {
+- (BOOL)resourceKeyHasExpired {
+    return !self.resourceKey || self.resourceKey.expirationDate.timeIntervalSinceNow <= 0;
+}
+
+- (void)refreshResourceKeyIfNecessary:(STPErrorBlock)completion {
     if (![self needsNewResourceKey]) {
         if (completion) {
-            completion();
+            completion(nil);
         }
     } else {
-        [self.keyProvider retrieveKey:^(STPResourceKey *resourceKey, __unused NSError *error) {
+        [self.keyProvider retrieveKey:^(STPResourceKey *resourceKey, NSError *error) {
             if (resourceKey) {
                 self.resourceKey = resourceKey;
-                self.apiClient = [[STPAPIClient alloc] initWithAPIKey:resourceKey.key];
+                self.apiClient.apiKey = resourceKey.key;
             }
             if (completion) {
-                completion();
+                completion(error);
             }
         }];
     }
@@ -88,13 +100,15 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 
 - (void)retrieveCustomer:(STPCustomerCompletionBlock)completion {
     if ([self shouldUseCachedCustomer]) {
-        completion(self.customer, nil);
+        if (completion) {
+            completion(self.customer, nil);
+        }
         return;
     }
-    [self refreshResourceKeyIfNecessary:^{
-        if (!self.apiClient) {
+    [self refreshResourceKeyIfNecessary:^(NSError *refreshKeyError){
+        if (refreshKeyError && [self resourceKeyHasExpired]) {
             if (completion) {
-                completion(nil, [NSError stp_genericConnectionError]);
+                completion(nil, refreshKeyError);
             }
             return;
         }
@@ -111,10 +125,10 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 }
 
 - (void)attachSourceToCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
-    [self refreshResourceKeyIfNecessary:^{
-        if (!self.apiClient) {
+    [self refreshResourceKeyIfNecessary:^(NSError *refreshKeyError){
+        if (refreshKeyError && [self resourceKeyHasExpired]) {
             if (completion) {
-                completion([NSError stp_genericConnectionError]);
+                completion(refreshKeyError);
             }
             return;
         }
@@ -133,10 +147,10 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 }
 
 - (void)selectDefaultCustomerSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
-    [self refreshResourceKeyIfNecessary:^{
-        if (!self.apiClient) {
+    [self refreshResourceKeyIfNecessary:^(NSError *refreshKeyError){
+        if (refreshKeyError && [self resourceKeyHasExpired]) {
             if (completion) {
-                completion([NSError stp_genericConnectionError]);
+                completion(refreshKeyError);
             }
             return;
         }

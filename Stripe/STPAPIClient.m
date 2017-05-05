@@ -104,7 +104,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 }
 
 - (instancetype)initWithAPIKey:(NSString *)apiKey {
-    _apiKey = apiKey;
+    self.apiKey = apiKey;
     STPPaymentConfiguration *config = [[STPPaymentConfiguration alloc] init];
     return [self initWithConfiguration:config];
 }
@@ -114,19 +114,11 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     if (self) {
         _apiURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]];
         _configuration = configuration;
-        if (!_apiKey) {
-            _apiKey = configuration.publishableKey;
-        }
-        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        NSString *auth = [@"Bearer " stringByAppendingString:_apiKey];
-        sessionConfiguration.HTTPAdditionalHeaders = @{
-                                                       @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
-                                                       @"Stripe-Version": stripeAPIVersion,
-                                                       @"Authorization": auth,
-                                                       };
-        _urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
+        if (!self.apiKey) {
+            self.apiKey = configuration.publishableKey;
+        }
     }
     return self;
 }
@@ -140,8 +132,21 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     return self;
 }
 
+- (void)setApiKey:(NSString *)apiKey {
+    _apiKey = apiKey;
+    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSString *auth = [@"Bearer " stringByAppendingString:apiKey ?: @""];
+    sessionConfiguration.HTTPAdditionalHeaders = @{
+                                                   @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
+                                                   @"Stripe-Version": stripeAPIVersion,
+                                                   @"Authorization": auth,
+                                                   };
+    self.urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
+}
+
 - (void)setPublishableKey:(NSString *)publishableKey {
     self.configuration.publishableKey = [publishableKey copy];
+    self.apiKey = publishableKey;
 }
 
 - (NSString *)publishableKey {
