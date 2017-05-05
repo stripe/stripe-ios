@@ -124,6 +124,9 @@
                 <a class="nav-group-task-link" href="Classes/STPPaymentResult.html">STPPaymentResult</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPRedirectContext.html">STPRedirectContext</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPShippingAddressViewController.html">STPShippingAddressViewController</a>
               </li>
               <li class="nav-group-task">
@@ -194,6 +197,9 @@
                 <a class="nav-group-task-link" href="Enums/STPPaymentStatus.html">STPPaymentStatus</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums.html#/c:@E@STPRedirectContextState">STPRedirectContextState</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPShippingStatus.html">STPShippingStatus</a>
               </li>
               <li class="nav-group-task">
@@ -261,6 +267,12 @@
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextCompletionBlock">STPRedirectContextCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPShippingMethodsCompletionBlock">STPShippingMethodsCompletionBlock</a>
               </li>
               <li class="nav-group-task">
@@ -321,7 +333,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L49-L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L44-L63">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -357,7 +369,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L26-L46">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L27-L41">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -437,7 +449,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddress.h#L50-L110">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddress.h#L50-L114">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -916,7 +928,7 @@ Stripe view controllers.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L18-L77">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPImageLibrary.h#L18-L81">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -996,7 +1008,7 @@ Stripe view controllers.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L68-L269">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L68-L275">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1086,7 +1098,7 @@ is specific to a single particular payment instance.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L32-L177">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L32-L212">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1167,6 +1179,67 @@ is specific to a single particular payment instance.</p>
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentResult.h#L19-L31">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPRedirectContext"></a>
+                    <a name="//apple_ref/objc/Class/STPRedirectContext" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPRedirectContext">STPRedirectContext</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is a helper class for handling redirect sources.</p>
+
+<p>Init an instance with the redirect flow source you want to handle,
+  then choose a redirect method. The context will fire the completion handler
+  when the redirect completes.</p>
+
+<p>Due to the nature of iOS, very little concrete information can be gained
+  during this process, as all actions take place in either the Safari app
+  or the sandboxed SFSafariViewController class. The context attempts to 
+  detect when the user has completed the necessary redirect action by listening
+  for both app foregrounds and url callbacks received in the app delegate.
+  However, it is possible the when the redirect is <q>completed</q>, the user may
+  have not actually completed the necessary actions to authorize the charge.</p>
+
+<p>You can use <code><a href="Classes/STPAPIClient.html">STPAPIClient</a></code> to listen for state changes on the source
+  object as a way to identify whether the user action succeeded or not.
+  - see: <code>[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]</code></p>
+
+<p>You should not use either this class, nor <code><a href="Classes/STPAPIClient.html">STPAPIClient</a></code>, as a way
+  to determine when you should charge the source. Use Stripe webhooks on your
+  backend server to listen for source state changes and to make the charge.</p>
+
+                        <a href="Classes/STPRedirectContext.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code>
+<span class="k">@interface</span> <span class="nc">STPRedirectContext</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPRedirectContext</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPRedirectContext.h#L69-L164">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1368,7 +1441,7 @@ dictionary for card sources.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L22-L205">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L22-L217">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1662,7 +1735,7 @@ dictionary for SEPA Debit sources.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-03-15)</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-05-05)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
