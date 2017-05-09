@@ -13,6 +13,8 @@
 
 @interface STPAnalyticsClient : NSObject
 
+@property (nonatomic) NSString *publishableKey;
+
 + (instancetype)sharedClient;
 
 + (void)initializeIfNeeded;
@@ -26,7 +28,6 @@
                                        sourceType:(NSString *)sourceType;
 
 - (void)logRUMWithToken:(STPToken *)token
-          configuration:(STPPaymentConfiguration *)config
                response:(NSHTTPURLResponse *)response
                   start:(NSDate *)startTime
                     end:(NSDate *)endTime;

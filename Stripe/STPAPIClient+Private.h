@@ -18,8 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readwrite) NSURL *apiURL;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
+@property (nonatomic, readwrite) NSString *apiKey;
 
-- (instancetype)initWithAPIKey:(NSString *)apiKey NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithAPIKey:(nullable NSString *)apiKey NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey
                                baseURL:(NSString *)baseURL;

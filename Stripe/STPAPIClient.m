@@ -97,12 +97,12 @@ NSString *const STPNetworkActivityDidEndNotification = @"com.stripe.networkactiv
 
 - (instancetype)init {
     NSString *publishableKey = [STPPublishableKeyStore sharedInstance].publishableKey;
-    [self.class validateKey:publishableKey];
-    return [self initWithAPIKey:publishableKey];
+    return [self initWithPublishableKey:publishableKey];
 }
 
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey {
     [self.class validateKey:publishableKey];
+    [STPAnalyticsClient sharedClient].publishableKey = publishableKey;
     return [self initWithAPIKey:publishableKey];
 }
 
@@ -136,14 +136,21 @@ NSString *const STPNetworkActivityDidEndNotification = @"com.stripe.networkactiv
 }
 
 - (void)setPublishableKey:(NSString *)publishableKey {
+    [STPAnalyticsClient sharedClient].publishableKey = publishableKey;
     self.apiKey = publishableKey;
 }
 
 - (NSString *)publishableKey {
-    return self.apiKey;
+    if ([self.apiKey isEqualToString:[STPAnalyticsClient sharedClient].publishableKey]) {
+        return self.apiKey;
+    }
+    return nil;
 }
 
 - (void)setApiKey:(NSString *)apiKey {
+    if ([self.apiKey isEqualToString:apiKey]){
+        return;
+    }
     _apiKey = apiKey;
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSString *auth = [@"Bearer " stringByAppendingString:apiKey ?: @""];
@@ -169,7 +176,7 @@ NSString *const STPNetworkActivityDidEndNotification = @"com.stripe.networkactiv
                                       serializer:[STPToken new]
                                       completion:^(STPToken *object, NSHTTPURLResponse *response, NSError *error) {
                                           NSDate *end = [NSDate date];
-                                          [[STPAnalyticsClient sharedClient] logRUMWithToken:object configuration:self.configuration response:response start:start end:end];
+                                          [[STPAnalyticsClient sharedClient] logRUMWithToken:object response:response start:start end:end];
                                           completion(object, error);
                                       }];
 }

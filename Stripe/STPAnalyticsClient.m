@@ -180,7 +180,6 @@
 }
 
 - (void)logRUMWithToken:(STPToken *)token
-          configuration:(STPPaymentConfiguration *)configuration
                response:(NSHTTPURLResponse *)response
                   start:(NSDate *)startTime
                     end:(NSDate *)endTime {
@@ -202,7 +201,7 @@
                                         @"tokenType": tokenTypeString,
                                         @"url": response.URL.absoluteString ?: @"unknown",
                                         @"status": @(response.statusCode),
-                                        @"publishable_key": configuration.publishableKey ?: @"unknown",
+                                        @"publishable_key": self.publishableKey ?: @"unknown",
                                         @"start": start,
                                         @"end": end,
                                         }];
@@ -240,10 +239,10 @@
     return [analyticsStrings componentsJoinedByString:@","];
 }
 
-+ (NSDictionary *)serializeConfiguration:(STPPaymentConfiguration *)configuration {
+- (NSDictionary *)serializeConfiguration:(STPPaymentConfiguration *)configuration {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    dictionary[@"publishable_key"] = configuration.publishableKey ?: @"unknown";
-    dictionary[@"available_payment_methods"] = [self analyticsStringForPaymentMethodsTypes:configuration.availablePaymentMethodTypes];
+    dictionary[@"publishable_key"] = self.publishableKey ?: @"unknown";
+    dictionary[@"available_payment_methods"] = [self.class analyticsStringForPaymentMethodsTypes:configuration.availablePaymentMethodTypes];
     switch (configuration.requiredBillingAddressFields) {
         case STPBillingAddressFieldsNone:
             dictionary[@"required_billing_address_fields"] = @"none";
