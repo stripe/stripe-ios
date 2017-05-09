@@ -38,6 +38,8 @@
 #import "STPPaymentResult.h"
 #import "STPRedirectContext.h"
 #import "STPResourceKey.h"
+#import "STPResourceKeyManager.h"
+#import "STPResourceKeyProvider.h"
 #import "STPShippingAddressViewController.h"
 #import "STPSource.h"
 #import "STPSourceCardDetails.h"

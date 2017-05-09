@@ -136,6 +136,9 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 }
 
 - (void)setApiKey:(NSString *)apiKey {
+    if ([_apiKey isEqualToString:apiKey]) {
+        return;
+    }
     _apiKey = apiKey;
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSString *auth = [@"Bearer " stringByAppendingString:apiKey ?: @""];

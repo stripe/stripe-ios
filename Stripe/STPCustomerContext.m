@@ -11,9 +11,9 @@
 #import "STPAPIClient+Private.h"
 #import "STPCustomer.h"
 #import "STPResourceKey.h"
+#import "STPResourceKeyRetriever.h"
 #import "StripeError.h"
 
-static NSTimeInterval const MinResourceKeyExpirationInterval = 60;
 static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 
 @interface STPCustomerContext ()
@@ -22,8 +22,7 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 @property (nonatomic) STPCustomer *customer;
 @property (nonatomic) NSDate *customerRetrievedDate;
 @property (nonatomic) NSString *customerId;
-@property (nonatomic, weak) id<STPResourceKeyProvider> keyProvider;
-@property (nonatomic) STPResourceKey *resourceKey;
+@property (nonatomic) STPResourceKeyRetriever *keyRetriever;
 
 @end
 
@@ -41,53 +40,17 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
     self = [super init];
     if (self) {
         _customerId = customerId;
-        _keyProvider = keyProvider;
         _apiClient = apiClient;
         _cachedCustomerMaxAge = DefaultCachedCustomerMaxAge;
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(handleWillForegroundNotification)
-                                                     name:UIApplicationWillEnterForegroundNotification
-                                                   object:nil];
+        _keyRetriever = [[STPResourceKeyRetriever alloc] initWithKeyProvider:keyProvider];
         [self retrieveCustomer:nil];
     }
     return self;
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIApplicationWillEnterForegroundNotification
-                                                  object:nil];
-}
-
-- (void)handleWillForegroundNotification {
-    [self refreshResourceKeyIfNecessary:nil];
-}
-
-- (BOOL)needsNewResourceKey {
-    return !self.resourceKey ||
-        self.resourceKey.expirationDate.timeIntervalSinceNow < MinResourceKeyExpirationInterval;
-}
-
-- (BOOL)resourceKeyHasExpired {
-    return !self.resourceKey || self.resourceKey.expirationDate.timeIntervalSinceNow <= 0;
-}
-
-- (void)refreshResourceKeyIfNecessary:(STPErrorBlock)completion {
-    if (![self needsNewResourceKey]) {
-        if (completion) {
-            completion(nil);
-        }
-    } else {
-        [self.keyProvider retrieveKey:^(STPResourceKey *resourceKey, NSError *error) {
-            if (resourceKey) {
-                self.resourceKey = resourceKey;
-                self.apiClient.apiKey = resourceKey.key;
-            }
-            if (completion) {
-                completion(error);
-            }
-        }];
-    }
+- (void)setCustomer:(STPCustomer *)customer {
+    _customer = customer;
+    _customerRetrievedDate = [NSDate date];
 }
 
 - (BOOL)shouldUseCachedCustomer {
@@ -105,17 +68,17 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
         }
         return;
     }
-    [self refreshResourceKeyIfNecessary:^(NSError *refreshKeyError){
-        if (refreshKeyError && [self resourceKeyHasExpired]) {
+    [self.keyRetriever retrieveResourceKey:^(STPResourceKey *resourceKey, NSError *retrieveKeyError) {
+        if (retrieveKeyError) {
             if (completion) {
-                completion(nil, refreshKeyError);
+                completion(nil, retrieveKeyError);
             }
             return;
         }
+        self.apiClient.apiKey = resourceKey.key;
         [self.apiClient retrieveCustomerWithId:self.customerId completion:^(STPCustomer *customer, NSError *error) {
             if (customer) {
                 self.customer = customer;
-                self.customerRetrievedDate = [NSDate date];
             }
             if (completion) {
                 completion(customer, error);
@@ -125,19 +88,19 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 }
 
 - (void)attachSourceToCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
-    [self refreshResourceKeyIfNecessary:^(NSError *refreshKeyError){
-        if (refreshKeyError && [self resourceKeyHasExpired]) {
+    [self.keyRetriever retrieveResourceKey:^(STPResourceKey *resourceKey, NSError *retrieveKeyError) {
+        if (retrieveKeyError) {
             if (completion) {
-                completion(refreshKeyError);
+                completion(retrieveKeyError);
             }
             return;
         }
+        self.apiClient.apiKey = resourceKey.key;
         [self.apiClient updateCustomerWithId:self.customerId
                                 addingSource:source.stripeID
                                   completion:^(STPCustomer *customer, NSError *error) {
                                       if (customer) {
                                           self.customer = customer;
-                                          self.customerRetrievedDate = [NSDate date];
                                       }
                                       if (completion) {
                                           completion(error);
@@ -147,19 +110,19 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 }
 
 - (void)selectDefaultCustomerSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
-    [self refreshResourceKeyIfNecessary:^(NSError *refreshKeyError){
-        if (refreshKeyError && [self resourceKeyHasExpired]) {
+    [self.keyRetriever retrieveResourceKey:^(STPResourceKey *resourceKey, NSError *retrieveKeyError) {
+        if (retrieveKeyError) {
             if (completion) {
-                completion(refreshKeyError);
+                completion(retrieveKeyError);
             }
             return;
         }
+        self.apiClient.apiKey = resourceKey.key;
         [self.apiClient updateCustomerWithId:self.customerId
                                   parameters:@{@"default_source": source.stripeID}
                                   completion:^(STPCustomer *customer, NSError *error) {
                                       if (customer) {
                                           self.customer = customer;
-                                          self.customerRetrievedDate = [NSDate date];
                                       }
                                       if (completion) {
                                           completion(error);
