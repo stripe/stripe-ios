@@ -56,7 +56,6 @@
 
 - (id)copyWithZone:(__unused NSZone *)zone {
     STPPaymentConfiguration *copy = [self.class new];
-    copy.publishableKey = self.publishableKey;
     copy.availablePaymentMethodTypesSet = self.availablePaymentMethodTypesSet;
     copy.requiredBillingAddressFields = self.requiredBillingAddressFields;
     copy.requiredShippingAddressFields = self.requiredShippingAddressFields;

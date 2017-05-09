@@ -47,7 +47,8 @@ static NSString *const STPSDKVersion = @"10.0.1";
  *  A shared singleton API client. Its API key will be initially equal to [Stripe defaultPublishableKey].
  */
 + (instancetype)sharedClient;
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
+// TODO: remove this initializer
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration;
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey;
 
 /**

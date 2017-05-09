@@ -75,7 +75,7 @@
         _theme = theme;
         _willAppearPromise = [STPVoidPromise new];
         _didAppearPromise = [STPVoidPromise new];
-        _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
+        _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
         _paymentCurrency = @"USD";
         _paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithAmount:0];
         _modalPresentationStyle = UIModalPresentationFullScreen;

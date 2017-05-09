@@ -53,11 +53,6 @@ typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {
 + (instancetype)sharedConfiguration;
 
 /**
- *  Your Stripe publishable key. You can get this from https://dashboard.stripe.com/account/apikeys .
- */
-@property (nonatomic, copy) NSString *publishableKey;
-
-/**
  *  If YES, STPPaymentContext will generate STPSource objects when creating
  *  new cards. Otherwise it will generate STPCard objects. Existing saved cards 
  *  on the customer will be processed regardless of whether they were created

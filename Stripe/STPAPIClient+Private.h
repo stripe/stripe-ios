@@ -10,10 +10,16 @@
 
 #import "STPAPIClient.h"
 #import "STPAPIRequest.h"
+#import "STPBackendAPIAdapter.h" // TODO: remove
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface STPAPIClient()
+
+@property (nonatomic, readwrite) NSURL *apiURL;
+@property (nonatomic, readwrite) NSURLSession *urlSession;
+
+- (instancetype)initWithAPIKey:(NSString *)apiKey NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey
                                baseURL:(NSString *)baseURL;
@@ -23,8 +29,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSURLSessionDataTask *)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret responseCompletion:(STPAPIResponseBlock)completion;
 
-@property (nonatomic, readwrite) NSURL *apiURL;
-@property (nonatomic, readwrite) NSURLSession *urlSession;
+- (void)retrieveCustomerWithId:(NSString *)identifier completion:(STPCustomerCompletionBlock)completion;
+
+- (void)updateCustomerWithId:(NSString *)customerId
+                addingSource:(NSString *)sourceId
+                  completion:(STPCustomerCompletionBlock)completion;
+
+- (void)updateCustomerWithId:(NSString *)identifier
+                  parameters:(NSDictionary *)parameters
+                  completion:(STPCustomerCompletionBlock)completion;
 
 @end
 

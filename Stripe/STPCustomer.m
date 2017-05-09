@@ -17,6 +17,7 @@
 @property(nonatomic, copy)NSString *stripeID;
 @property(nonatomic) id<STPSourceProtocol> defaultSource;
 @property(nonatomic) NSArray<id<STPSourceProtocol>> *sources;
+@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
 
@@ -30,6 +31,17 @@
     customer.defaultSource = defaultSource;
     customer.sources = sources;
     return customer;
+}
+
+#pragma mark STPAPIResponseDecodable
+
++ (NSArray *)requiredFields {
+    return @[@"id"];
+}
+
++ (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
+    STPCustomerDeserializer *deserializer = [[STPCustomerDeserializer alloc] initWithJSONResponse:response];
+    return deserializer.customer;
 }
 
 @end
