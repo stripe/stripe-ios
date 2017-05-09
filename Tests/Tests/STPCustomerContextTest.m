@@ -28,19 +28,6 @@
 
 @implementation STPCustomerContextTest
 
-- (STPResourceKey *)buildResourceKey {
-    return [self buildResourceKeyExpiring:NO];
-}
-
-- (STPResourceKey *)buildResourceKeyExpiring:(BOOL)expiring {
-    NSTimeInterval interval = expiring ? 10 : 100;
-    NSDictionary *resourceKeyResponse = @{
-                                          @"contents": @"rk_123",
-                                          @"expires": @([[NSDate dateWithTimeIntervalSinceNow:interval] timeIntervalSince1970])
-                                          };
-    return [STPResourceKey decodedObjectFromAPIResponse:resourceKeyResponse];
-}
-
 - (void)testInitRetrievesResourceKeyAndCustomer {
     NSString *expectedCustomerID = @"cus_123";
     id mockKeyProvider = OCMProtocolMock(@protocol(STPResourceKeyProvider));
@@ -49,7 +36,7 @@
     .andDo(^(NSInvocation *invocation) {
         STPResourceKeyCompletionBlock completion;
         [invocation getArgument:&completion atIndex:2];
-        completion([self buildResourceKey], nil);
+        completion([STPFixtures resourceKey], nil);
         [retrieveKeyExp fulfill];
     });
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
@@ -73,49 +60,7 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
-- (void)testEnterForegroundRefreshesResourceKeyIfExpiring {
-    id mockKeyProvider = OCMProtocolMock(@protocol(STPResourceKeyProvider));
-    XCTestExpectation *exp = [self expectationWithDescription:@"retrieveKey"];
-    exp.expectedFulfillmentCount = 2; // retrieveKey should be called twice
-    OCMStub([mockKeyProvider retrieveKey:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation) {
-        STPResourceKeyCompletionBlock completion;
-        [invocation getArgument:&completion atIndex:2];
-        // returning an expiring resource key
-        completion([self buildResourceKeyExpiring:YES], nil);
-        [exp fulfill];
-    });
-    id mockAPIClient = OCMClassMock([STPAPIClient class]);
-    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithCustomerId:@"cus_123"
-                                                                 keyProvider:mockKeyProvider
-                                                                   apiClient:mockAPIClient];
-    XCTAssertNotNil(sut);
-    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
 
-    [self waitForExpectationsWithTimeout:2 handler:nil];
-}
-
-- (void)testEnterForegroundDoesNotRefreshResourceKeyIfNotExpiring {
-    id mockKeyProvider = OCMProtocolMock(@protocol(STPResourceKeyProvider));
-    XCTestExpectation *exp = [self expectationWithDescription:@"retrieveKey"];
-    exp.expectedFulfillmentCount = 1; // retrieveKey should be called once
-    OCMStub([mockKeyProvider retrieveKey:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation) {
-        STPResourceKeyCompletionBlock completion;
-        [invocation getArgument:&completion atIndex:2];
-        // resource key will not expire
-        completion([self buildResourceKeyExpiring:NO], nil);
-        [exp fulfill];
-    });
-    id mockAPIClient = OCMClassMock([STPAPIClient class]);
-    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithCustomerId:@"cus_123"
-                                                                 keyProvider:mockKeyProvider
-                                                                   apiClient:mockAPIClient];
-    XCTAssertNotNil(sut);
-    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
-
-    [self waitForExpectationsWithTimeout:2 handler:nil];
-}
 
 - (void)testRetrieveCustomerUsesCachedCustomerIfNotExpired {
     id mockKeyProvider = OCMProtocolMock(@protocol(STPResourceKeyProvider));
@@ -123,7 +68,7 @@
     .andDo(^(NSInvocation *invocation) {
         STPResourceKeyCompletionBlock completion;
         [invocation getArgument:&completion atIndex:2];
-        completion([self buildResourceKey], nil);
+        completion([STPFixtures resourceKey], nil);
     });
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     STPCustomer *expectedCustomer = [STPFixtures customerWithSingleCardTokenSource];
@@ -156,7 +101,7 @@
     .andDo(^(NSInvocation *invocation) {
         STPResourceKeyCompletionBlock completion;
         [invocation getArgument:&completion atIndex:2];
-        completion([self buildResourceKey], nil);
+        completion([STPFixtures resourceKey], nil);
     });
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     STPCustomer *expectedCustomer = [STPFixtures customerWithSingleCardTokenSource];
@@ -192,7 +137,7 @@
     .andDo(^(NSInvocation *invocation) {
         STPResourceKeyCompletionBlock completion;
         [invocation getArgument:&completion atIndex:2];
-        completion([self buildResourceKey], nil);
+        completion([STPFixtures resourceKey], nil);
     });
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     STPSource *expectedSource = [STPFixtures cardSource];
@@ -227,7 +172,7 @@
     .andDo(^(NSInvocation *invocation) {
         STPResourceKeyCompletionBlock completion;
         [invocation getArgument:&completion atIndex:2];
-        completion([self buildResourceKey], nil);
+        completion([STPFixtures resourceKey], nil);
     });
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     STPSource *expectedSource = [STPFixtures cardSource];

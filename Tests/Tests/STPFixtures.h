@@ -52,6 +52,16 @@
 + (STPPaymentConfiguration *)paymentConfiguration;
 
 /**
+ A ResourceKey with fake contents that expires in 100 seconds.
+ */
++ (STPResourceKey *)resourceKey;
+
+/**
+ A ResourceKey with fake contents that expires in 10 seconds.
+ */
++ (STPResourceKey *)expiringResourceKey;
+
+/**
  A stateless customer context that always retrieves the same customer object.
  */
 + (STPCustomerContext *)staticCustomerContext;

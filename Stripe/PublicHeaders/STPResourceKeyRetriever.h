@@ -13,7 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  An `STPResourceKeyRetriever` manages retrieving a resource key, a short-lived
- API key with a specific set of permissions.
+ API key with a specific set of permissions. If you're using `STPAPIClient`
+ methods that require a resource key, e.g. retrieving or updating a Stripe 
+ customer, you can use `STPResourceKeyRetriever` to get an unexpired key before 
+ making an API request.
  */
 @interface STPResourceKeyRetriever : NSObject
 

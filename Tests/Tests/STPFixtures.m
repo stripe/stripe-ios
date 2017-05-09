@@ -58,6 +58,24 @@
     return config;
 }
 
++ (STPResourceKey *)resourceKey {
+    NSTimeInterval interval = 100;
+    NSDictionary *resourceKeyResponse = @{
+                                          @"contents": @"rk_123",
+                                          @"expires": @([[NSDate dateWithTimeIntervalSinceNow:interval] timeIntervalSince1970])
+                                          };
+    return [STPResourceKey decodedObjectFromAPIResponse:resourceKeyResponse];
+}
+
++ (STPResourceKey *)expiringResourceKey {
+    NSTimeInterval interval = 10;
+    NSDictionary *resourceKeyResponse = @{
+                                          @"contents": @"rk_123",
+                                          @"expires": @([[NSDate dateWithTimeIntervalSinceNow:interval] timeIntervalSince1970])
+                                          };
+    return [STPResourceKey decodedObjectFromAPIResponse:resourceKeyResponse];   
+}
+
 + (STPCustomerContext *)staticCustomerContext {
     return [self staticCustomerContextWithCustomer:[self customerWithSingleCardTokenSource]];
 }
