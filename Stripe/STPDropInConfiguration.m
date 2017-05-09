@@ -12,6 +12,7 @@
 @interface STPDropInConfiguration ()
 
 @property (nonatomic, readwrite) NSString *publishableKey;
+@property (nonatomic, readwrite) NSString *customerID;
 @property (nonatomic, readwrite) NSString *customerResourceKey;
 @property (nonatomic, readwrite) NSDate *customerResourceKeyExpirationDate;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
@@ -31,6 +32,7 @@
     }
     STPDropInConfiguration *config = [self new];
     config.publishableKey = dict[@"publishable_key"];
+    config.customerID = dict[@"customer_id"];
     config.customerResourceKey = dict[@"resource_key"];
     config.customerResourceKeyExpirationDate = [NSDate dateWithTimeIntervalSince1970:[dict[@"expires"] doubleValue]];
     config.allResponseFields = dict;

@@ -24,6 +24,7 @@ typedef void (^STPDropInConfigurationCompletionBlock)(STPDropInConfiguration * _
 @interface STPDropInConfiguration : NSObject <STPAPIResponseDecodable>
 
 @property (nonatomic, readonly) NSString *publishableKey;
+@property (nonatomic, readonly) NSString *customerID;
 @property (nonatomic, readonly) NSString *customerResourceKey;
 @property (nonatomic, readonly) NSDate *customerResourceKeyExpirationDate;
 

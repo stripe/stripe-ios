@@ -10,6 +10,7 @@
 
 #import "STPAPIClient+Private.h"
 #import "STPDropInConfiguration.h"
+#import "StripeError.h"
 
 static NSTimeInterval const MinResourceKeyExpirationInterval = 60;
 
@@ -76,30 +77,38 @@ static NSTimeInterval const MinResourceKeyExpirationInterval = 60;
     }
 }
 
-
 - (void)retrieveCustomer:(STPCustomerCompletionBlock)completion {
-    if ([self shouldUseCachedCustomer]) {
-        if (completion) {
-            completion(self.customer, nil);
-        }
-        return;
-    }
-    [self refreshResourceKeyIfNecessary:^(NSError *refreshKeyError){
-        if (refreshKeyError && [self resourceKeyHasExpired]) {
+    [self refreshConfigurationIfNecessary:^(NSError *refreshConfigError){
+        if ([self resourceKeyHasExpired]) {
             if (completion) {
-                completion(nil, refreshKeyError);
+                completion(nil, refreshConfigError ?: [NSError stp_genericConnectionError]);
             }
             return;
         }
-        [self.apiClient retrieveCustomerWithId:self.customerId completion:^(STPCustomer *customer, NSError *error) {
-            if (customer) {
-                self.customer = customer;
-                self.customerRetrievedDate = [NSDate date];
-            }
+        [self.resourceKeyClient retrieveCustomerWithId:self.configuration.customerID
+                                            completion:^(STPCustomer *customer, NSError *error) {
+                                                if (completion) {
+                                                    completion(customer, error);
+                                                }
+                                            }];
+    }];
+}
+
+- (void)attachSourceToCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
+    [self refreshConfigurationIfNecessary:^(NSError *refreshConfigError){
+        if ([self resourceKeyHasExpired]) {
             if (completion) {
-                completion(customer, error);
+                completion(refreshConfigError ?: [NSError stp_genericConnectionError]);
             }
-        }];
+            return;
+        }
+        [self.resourceKeyClient updateCustomerWithId:self.configuration.customerID
+                                        addingSource:source.stripeID
+                                          completion:^(STPCustomer *customer, NSError *error) {
+                                              if (completion) {
+                                                  completion(error);
+                                              }
+                                          }];
     }];
 }
 
