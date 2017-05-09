@@ -12,6 +12,7 @@
 @class STPToken;
 @class STPFile;
 @class STPSource;
+@class STPCustomer;
 
 /**
  *  These values control the labels used in the shipping info collection form.
@@ -106,3 +107,11 @@ typedef void (^STPShippingMethodsCompletionBlock)(STPShippingStatus status, NSEr
  *  @param error The error returned from the response, or nil in none occurs. @see StripeError.h for possible values.
  */
 typedef void (^STPFileCompletionBlock)(STPFile * __nullable file, NSError * __nullable error);
+
+/**
+ *  A callback to be run with a customer response from the Stripe API.
+ *
+ *  @param customer     The Stripe customer from the response, or nil if an error occurred. @see STPCustomer
+ *  @param error        The error returned from the response, or nil in none occurs.
+ */
+typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NSError * __nullable error);

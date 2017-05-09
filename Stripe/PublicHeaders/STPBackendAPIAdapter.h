@@ -19,14 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPCard, STPToken;
 
 /**
- *  Call this block after you're done fetching a customer on your server. You can use the `STPCustomerDeserializer` class to convert a JSON response into an `STPCustomer` object.
- *
- *  @param customer     a deserialized `STPCustomer` object obtained from your backend API, or nil if an error occurred.
- *  @param error        any error that occurred while communicating with your server, or nil if your call succeeded
- */
-typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NSError * __nullable error);
-
-/**
  *  You should make your application's API client conform to this interface in order to use it with an `STPPaymentContext`. It provides a "bridge" from the prebuilt UI we expose (such as `STPPaymentMethodsViewController`) to your backend to fetch the information it needs to power those views. To read about how to implement this protocol, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api . To see examples of implementing these APIs, see MyAPIClient.swift in our example project and https://github.com/stripe/example-ios-backend .
  *
  *  @deprecated Use `STPCustomerContext`.

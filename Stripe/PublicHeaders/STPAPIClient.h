@@ -47,13 +47,35 @@ static NSString *const STPSDKVersion = @"10.0.1";
  *  A shared singleton API client. Its API key will be initially equal to [Stripe defaultPublishableKey].
  */
 + (instancetype)sharedClient;
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
+
+/**
+ *  Initializes an API client with an `STPPaymentConfiguration`. The client
+ *  will use the configuration's publishable key.
+ */
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration;
+
+/**
+ *  Initializes an API client with a publishable key.
+ */
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey;
 
 /**
- *  @see [Stripe setDefaultPublishableKey:]
+ *  Initializes an API client with an API key. This should be either your 
+ *  publishable key, a resource key, or nil if you will set the key later.
+ *  // TODO: more about resource keys
  */
-@property (nonatomic, copy, nullable) NSString *publishableKey;
+- (instancetype)initWithAPIKey:(nullable NSString *)apiKey NS_DESIGNATED_INITIALIZER;
+
+/**
+ *  The client's API key.
+ */
+@property (nonatomic, copy, nullable) NSString *apiKey;
+
+/**
+ *  The client's publishable key.
+ *  @deprecated Use apiKey
+ */
+@property (nonatomic, copy, nullable) NSString *publishableKey __attribute__((deprecated));
 
 /**
  *  @see -initWithConfiguration
@@ -221,6 +243,48 @@ static NSString *const STPSDKVersion = @"10.0.1";
  *  @param identifier  The identifier of the source to be retrieved. Cannot be nil.
  */
 - (void)stopPollingSourceWithId:(NSString *)identifier NS_EXTENSION_UNAVAILABLE("Source polling is not available in extensions");;
+
+@end
+
+/**
+ *  STPAPIClient extensions for working with Customer objects.
+ *  You will need to provide STPAPIClient with a resource key in order to use
+ *  these methods. You can use STPResourceKeyManager to handle fetching and
+ *  refreshing a resource key from your backend.
+ *  // TODO: more docs
+ */
+@interface STPAPIClient (Customers)
+
+/**
+ *  // TODO docs
+ *
+ *  @param identifier <#identifier description#>
+ *  @param completion <#completion description#>
+ */
+- (void)retrieveCustomerWithId:(NSString *)identifier completion:(STPCustomerCompletionBlock)completion;
+
+
+/**
+ *  // TODO docs
+ *
+ *  @param customerId <#customerId description#>
+ *  @param sourceId <#sourceId description#>
+ *  @param completion <#completion description#>
+ */
+- (void)updateCustomerWithId:(NSString *)customerId
+                addingSource:(NSString *)sourceId
+                  completion:(STPCustomerCompletionBlock)completion;
+
+/**
+ *  // TODO docs
+ *
+ *  @param identifier <#identifier description#>
+ *  @param parameters <#parameters description#>
+ *  @param completion <#completion description#>
+ */
+- (void)updateCustomerWithId:(NSString *)identifier
+                  parameters:(NSDictionary *)parameters
+                  completion:(STPCustomerCompletionBlock)completion;
 
 @end
 

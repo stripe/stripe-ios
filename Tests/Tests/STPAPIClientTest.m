@@ -25,19 +25,16 @@
     XCTAssertEqualObjects([STPAPIClient sharedClient], [STPAPIClient sharedClient]);
 }
 
-- (void)testPublishableKey {
+- (void)testSetDefaultPublishableKey {
     [Stripe setDefaultPublishableKey:@"test"];
     STPAPIClient *client = [STPAPIClient sharedClient];
-    XCTAssertEqualObjects(client.publishableKey, @"test");
+    XCTAssertEqualObjects(client.apiKey, @"test");
 }
 
-- (void)testSetPublishableKey {
+- (void)testInitWithPublishableKey {
     STPAPIClient *sut = [[STPAPIClient alloc] initWithPublishableKey:@"pk_foo"];
     NSString *authHeader = sut.urlSession.configuration.HTTPAdditionalHeaders[@"Authorization"];
     XCTAssertEqualObjects(authHeader, @"Bearer pk_foo");
-    sut.publishableKey = @"pk_bar";
-    authHeader = sut.urlSession.configuration.HTTPAdditionalHeaders[@"Authorization"];
-    XCTAssertEqualObjects(authHeader, @"Bearer pk_bar");
 }
 
 - (void)testSetAPIKey {

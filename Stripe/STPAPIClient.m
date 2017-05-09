@@ -69,7 +69,6 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @interface STPAPIClient()
 #endif
 @property (nonatomic, readwrite) NSURL *apiURL;
-@property (nonatomic, readwrite) NSString *apiKey;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
 @property (nonatomic, readwrite) NSMutableDictionary<NSString *,NSObject *>*sourcePollers;
 @property (nonatomic, readwrite) dispatch_queue_t sourcePollersQueue;
@@ -97,28 +96,32 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 }
 
 - (instancetype)initWithPublishableKey:(NSString *)publishableKey {
-    STPPaymentConfiguration *config = [[STPPaymentConfiguration alloc] init];
-    config.publishableKey = [publishableKey copy];
     [self.class validateKey:publishableKey];
-    return [self initWithConfiguration:config];
+    self = [self initWithAPIKey:publishableKey];
+    if (self){
+        STPPaymentConfiguration *config = [[STPPaymentConfiguration alloc] init];
+        config.publishableKey = [publishableKey copy];
+        _configuration = config;
+    }
+    return self;
 }
 
 - (instancetype)initWithAPIKey:(NSString *)apiKey {
-    self.apiKey = apiKey;
-    STPPaymentConfiguration *config = [[STPPaymentConfiguration alloc] init];
-    return [self initWithConfiguration:config];
-}
-
-- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration {
     self = [super init];
     if (self) {
         _apiURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]];
-        _configuration = configuration;
+        _configuration = [[STPPaymentConfiguration alloc] init];
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
-        if (!self.apiKey) {
-            self.apiKey = configuration.publishableKey;
-        }
+        self.apiKey = apiKey;
+    }
+    return self;
+}
+
+- (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration {
+    self = [self initWithAPIKey:configuration.publishableKey];
+    if (self) {
+        _configuration = configuration;
     }
     return self;
 }
