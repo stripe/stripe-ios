@@ -481,19 +481,6 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
                                         }];
 }
 
-- (void)updateCustomerWithId:(NSString *)customerId
-                addingSource:(NSString *)sourceId
-                  completion:(STPCustomerCompletionBlock)completion {
-    NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@", customersEndpoint, customerId, sourcesEndpoint];
-    [STPAPIRequest<STPCustomer *> postWithAPIClient:self
-                                           endpoint:endpoint
-                                         parameters:@{@"source": sourceId}
-                                         serializer:[STPCustomer new]
-                                         completion:^(STPCustomer *object, __unused NSHTTPURLResponse *response, NSError *error) {
-                                             completion(object, error);
-                                         }];
-}
-
 - (void)updateCustomerWithId:(NSString *)identifier
                   parameters:(NSDictionary *)parameters
                   completion:(STPCustomerCompletionBlock)completion {
@@ -505,6 +492,19 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
                                          completion:^(STPCustomer *object, __unused NSHTTPURLResponse *response, NSError *error) {
                                              completion(object, error);
                                          }];
+}
+
+- (void)addSource:(NSString *)sourceId
+ toCustomerWithId:(NSString *)customerId
+       completion:(STPSourceProtocolCompletionBlock)completion {
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@", customersEndpoint, customerId, sourcesEndpoint];
+    [STPAPIRequest<STPSourceProtocol> postWithAPIClient:self
+                                               endpoint:endpoint
+                                             parameters:@{@"source": sourceId}
+                                             serializer:[STPCard new] // TODO: card or source
+                                             completion:^(STPCard *object, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                 completion(object, error);
+                                             }];
 }
 
 @end

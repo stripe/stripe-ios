@@ -12,6 +12,7 @@
 #import "STPCustomer.h"
 #import "STPResourceKey.h"
 #import "STPResourceKeyRetriever.h"
+#import "STPWeakStrongMacros.h"
 #import "StripeError.h"
 
 static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
@@ -96,16 +97,13 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
             return;
         }
         self.apiClient.apiKey = resourceKey.key;
-        [self.apiClient updateCustomerWithId:self.customerId
-                                addingSource:source.stripeID
-                                  completion:^(STPCustomer *customer, NSError *error) {
-                                      if (customer) {
-                                          self.customer = customer;
-                                      }
-                                      if (completion) {
-                                          completion(error);
-                                      }
-                                  }];
+        [self.apiClient addSource:source.stripeID
+                 toCustomerWithId:self.customerId
+                       completion:^(__unused id<STPSourceProtocol> object, NSError *error) {
+                           if (completion) {
+                               completion(error);
+                           }
+                       }];
     }];
 }
 

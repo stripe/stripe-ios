@@ -13,7 +13,7 @@
 
 @interface STPResourceKeyRetriever (Testing)
 
-@property (nonatomic) STP
+@property (nonatomic) STPResourceKey *resourceKey;
 
 @end
 
@@ -23,10 +23,63 @@
 
 @implementation STPResourceKeyRetrieverTest
 
+- (void)testRetrieveKeyRetrievesNewKeyAfterInit {
+    id mockKeyProvider = OCMProtocolMock(@protocol(STPResourceKeyProvider));
+    STPResourceKey *expectedKey = [STPFixtures resourceKey];
+    OCMStub([mockKeyProvider retrieveKey:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation) {
+        STPResourceKeyCompletionBlock completion;
+        [invocation getArgument:&completion atIndex:2];
+        completion(expectedKey, nil);
+    });
+    STPResourceKeyRetriever *sut = [[STPResourceKeyRetriever alloc] initWithKeyProvider:mockKeyProvider];
+    XCTestExpectation *exp = [self expectationWithDescription:@"retrieve"];
+    [sut retrieveResourceKey:^(STPResourceKey *resourceKey, NSError *error) {
+        XCTAssertEqualObjects(resourceKey, expectedKey);
+        XCTAssertNil(error);
+        [exp fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testRetrieveKeyUsesStoredKeyIfNotExpiring {
+    id mockKeyProvider = OCMProtocolMock(@protocol(STPResourceKeyProvider));
+    OCMReject([mockKeyProvider retrieveKey:[OCMArg any]]);
+    STPResourceKeyRetriever *sut = [[STPResourceKeyRetriever alloc] initWithKeyProvider:mockKeyProvider];
+    STPResourceKey *expectedKey = [STPFixtures resourceKey];
+    sut.resourceKey = expectedKey;
+    XCTestExpectation *exp = [self expectationWithDescription:@"retrieve"];
+    [sut retrieveResourceKey:^(STPResourceKey *resourceKey, NSError *error) {
+        XCTAssertEqualObjects(resourceKey, expectedKey);
+        XCTAssertNil(error);
+        [exp fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testRetrieveKeyRetrievesNewKeyIfExpiring {
+    id mockKeyProvider = OCMProtocolMock(@protocol(STPResourceKeyProvider));
+    STPResourceKey *expectedKey = [STPFixtures resourceKey];
+    OCMStub([mockKeyProvider retrieveKey:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation) {
+        STPResourceKeyCompletionBlock completion;
+        [invocation getArgument:&completion atIndex:2];
+        completion(expectedKey, nil);
+    });
+    STPResourceKeyRetriever *sut = [[STPResourceKeyRetriever alloc] initWithKeyProvider:mockKeyProvider];
+    sut.resourceKey = [STPFixtures expiringResourceKey];
+    XCTestExpectation *exp = [self expectationWithDescription:@"retrieve"];
+    [sut retrieveResourceKey:^(STPResourceKey *resourceKey, NSError *error) {
+        XCTAssertEqualObjects(resourceKey, expectedKey);
+        XCTAssertNil(error);
+        [exp fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
 - (void)testEnterForegroundRefreshesResourceKeyIfExpiring {
     id mockKeyProvider = OCMProtocolMock(@protocol(STPResourceKeyProvider));
     XCTestExpectation *exp = [self expectationWithDescription:@"retrieveKey"];
-    exp.expectedFulfillmentCount = 2; // retrieveKey should be called twice
     OCMStub([mockKeyProvider retrieveKey:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
         STPResourceKeyCompletionBlock completion;
@@ -43,21 +96,10 @@
 
 - (void)testEnterForegroundDoesNotRefreshResourceKeyIfNotExpiring {
     id mockKeyProvider = OCMProtocolMock(@protocol(STPResourceKeyProvider));
-    XCTestExpectation *exp = [self expectationWithDescription:@"retrieveKey"];
-    exp.expectedFulfillmentCount = 1; // retrieveKey should be called once
-    OCMStub([mockKeyProvider retrieveKey:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation) {
-        STPResourceKeyCompletionBlock completion;
-        [invocation getArgument:&completion atIndex:2];
-        // resource key will not expire
-        completion([STPFixtures resourceKey], nil);
-        [exp fulfill];
-    });
+    OCMReject([mockKeyProvider retrieveKey:[OCMArg any]]);
     STPResourceKeyRetriever *sut = [[STPResourceKeyRetriever alloc] initWithKeyProvider:mockKeyProvider];
-    XCTAssertNotNil(sut);
+    sut.resourceKey = [STPFixtures resourceKey];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
-
-    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 @end

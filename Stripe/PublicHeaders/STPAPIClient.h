@@ -256,31 +256,34 @@ static NSString *const STPSDKVersion = @"10.0.1";
 @interface STPAPIClient (Customers)
 
 /**
- *  // TODO docs
+ *  Retrieves the customer with the given id.
+ *  https://stripe.com/docs/api#retrieve_customer
  *
- *  @param identifier <#identifier description#>
- *  @param completion <#completion description#>
+ *  @param identifier The id of a Stripe customer
+ *  @param completion The callback to run with the customer
  */
 - (void)retrieveCustomerWithId:(NSString *)identifier completion:(STPCustomerCompletionBlock)completion;
 
-
 /**
- *  // TODO docs
+ *  Adds the given source to the specified customer's sources.
+ *  https://stripe.com/docs/api#create_card
  *
- *  @param customerId <#customerId description#>
- *  @param sourceId <#sourceId description#>
- *  @param completion <#completion description#>
+ *  @param sourceId   The id of a token or source.
+ *  @param customerId The id of a Stripe customer to add the source to.
+ *  @param completion The callback to run with the added source.
  */
-- (void)updateCustomerWithId:(NSString *)customerId
-                addingSource:(NSString *)sourceId
-                  completion:(STPCustomerCompletionBlock)completion;
+- (void)addSource:(NSString *)sourceId
+ toCustomerWithId:(NSString *)customerId
+       completion:(STPSourceProtocolCompletionBlock)completion;
 
 /**
- *  // TODO docs
+ *  Updates the specified customer by setting the values of the parameters passed.
+ *  Any parameters not provided will be left unchanged.
+ *  https://stripe.com/docs/api#update_customer
  *
- *  @param identifier <#identifier description#>
- *  @param parameters <#parameters description#>
- *  @param completion <#completion description#>
+ *  @param identifier The id of a Stripe customer
+ *  @param parameters The parameters to update on the customer.
+ *  @param completion The callback to be run with the updated customer object.
  */
 - (void)updateCustomerWithId:(NSString *)identifier
                   parameters:(NSDictionary *)parameters

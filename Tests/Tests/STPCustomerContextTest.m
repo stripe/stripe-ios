@@ -60,8 +60,6 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
-
-
 - (void)testRetrieveCustomerUsesCachedCustomerIfNotExpired {
     id mockKeyProvider = OCMProtocolMock(@protocol(STPResourceKeyProvider));
     OCMStub([mockKeyProvider retrieveKey:[OCMArg any]])
