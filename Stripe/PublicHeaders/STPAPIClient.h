@@ -262,7 +262,8 @@ static NSString *const STPSDKVersion = @"10.0.1";
  *  @param identifier The id of a Stripe customer
  *  @param completion The callback to run with the customer
  */
-- (void)retrieveCustomerWithId:(NSString *)identifier completion:(STPCustomerCompletionBlock)completion;
+- (void)retrieveCustomerWithId:(NSString *)identifier
+                    completion:(STPCustomerCompletionBlock)completion;
 
 /**
  *  Adds the given source to the specified customer's sources.

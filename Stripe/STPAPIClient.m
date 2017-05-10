@@ -119,7 +119,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 }
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration {
-    self = [self initWithAPIKey:configuration.publishableKey];
+    self = [self initWithPublishableKey:configuration.publishableKey];
     if (self) {
         _configuration = configuration;
     }
@@ -139,7 +139,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     if ([_apiKey isEqualToString:apiKey]) {
         return;
     }
-    _apiKey = apiKey;
+    _apiKey = [apiKey copy];
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSString *auth = [@"Bearer " stringByAppendingString:apiKey ?: @""];
     sessionConfiguration.HTTPAdditionalHeaders = @{
@@ -152,7 +152,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 - (void)setPublishableKey:(NSString *)publishableKey {
     self.configuration.publishableKey = [publishableKey copy];
-    self.apiKey = publishableKey;
+    self.apiKey = [publishableKey copy];
 }
 
 - (NSString *)publishableKey {

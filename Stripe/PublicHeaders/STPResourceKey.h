@@ -25,4 +25,6 @@
  */
 @property (nonatomic, readonly) NSDate *expirationDate;
 
+// TODO: disable initializer
+
 @end
