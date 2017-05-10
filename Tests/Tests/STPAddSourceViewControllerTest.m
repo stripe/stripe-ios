@@ -56,7 +56,6 @@
 
 - (STPUserInformation *)buildUserInfoForSEPATests {
     STPUserInformation *info = [STPUserInformation new];
-    info.billingAddress = [STPFixtures sepaAddress];
     return info;
 }
 
@@ -85,12 +84,6 @@
             [sourceParams.owner[@"address"][@"line2"] isEqualToString:address.line2] &&
             [sourceParams.owner[@"address"][@"city"] isEqualToString:address.city] &&
             [sourceParams.owner[@"address"][@"state"] isEqualToString:address.state] &&
-            [sourceParams.owner[@"address"][@"country"] isEqualToString:address.country] &&
-            [sourceParams.owner[@"address"][@"postal_code"] isEqualToString:address.postalCode]);
-}
-
-- (BOOL)sourceParams:(STPSourceParams *)sourceParams matchSEPAAddress:(STPAddress *)address {
-    return ([sourceParams.owner[@"address"][@"city"] isEqualToString:address.city] &&
             [sourceParams.owner[@"address"][@"country"] isEqualToString:address.country] &&
             [sourceParams.owner[@"address"][@"postal_code"] isEqualToString:address.postalCode]);
 }
@@ -266,7 +259,6 @@
         [invocation getArgument:&completion atIndex:3];
         XCTAssertEqualObjects(sourceParams.additionalAPIParameters[@"sepa_debit"][@"iban"], sut.ibanCell.contents);
         XCTAssertEqualObjects(sourceParams.owner[@"name"], sut.nameCell.contents);
-        XCTAssertTrue([self sourceParams:sourceParams matchSEPAAddress:userInfo.billingAddress]);
         XCTAssertEqualObjects(sourceParams.metadata, sourceInfo.metadata);
         XCTAssertTrue(sut.loading);
         NSError *error = [NSError stp_genericFailedToParseResponseError];
@@ -307,7 +299,6 @@
         [invocation getArgument:&completion atIndex:3];
         XCTAssertEqualObjects(sourceParams.additionalAPIParameters[@"sepa_debit"][@"iban"], sut.ibanCell.contents);
         XCTAssertEqualObjects(sourceParams.owner[@"name"], sut.nameCell.contents);
-        XCTAssertTrue([self sourceParams:sourceParams matchSEPAAddress:userInfo.billingAddress]);
         XCTAssertEqualObjects(sourceParams.metadata, sourceInfo.metadata);
         XCTAssertTrue(sut.loading);
         completion(expectedSource, nil);
@@ -361,7 +352,6 @@
         [invocation getArgument:&completion atIndex:3];
         XCTAssertEqualObjects(sourceParams.additionalAPIParameters[@"sepa_debit"][@"iban"], sut.ibanCell.contents);
         XCTAssertEqualObjects(sourceParams.owner[@"name"], sut.nameCell.contents);
-        XCTAssertTrue([self sourceParams:sourceParams matchSEPAAddress:userInfo.billingAddress]);
         XCTAssertEqualObjects(sourceParams.metadata, sourceInfo.metadata);
         XCTAssertTrue(sut.loading);
         completion(expectedSource, nil);
@@ -387,19 +377,6 @@
     [nextButton.target performSelector:nextButton.action withObject:nextButton];
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
-}
-
-- (void)testSettingIBANUpdatesCountry {
-    STPUserInformation *userInfo = [STPUserInformation new];
-    STPAddress *address = [STPAddress new];
-    address.country = @"DE";
-    userInfo.billingAddress = address;
-    STPAddSourceViewController *sut = [self buildAddSourceViewControllerWithType:STPSourceTypeSEPADebit];
-    sut.prefilledInformation = userInfo;
-    XCTAssertNotNil(sut.view);
-    XCTAssertEqualObjects(sut.addressViewModel.address.country, @"DE");
-    sut.ibanCell.contents = @"GB82WEST12345698765432";
-    XCTAssertEqualObjects(sut.addressViewModel.address.country, @"GB");
 }
 
 #pragma clang diagnostic pop

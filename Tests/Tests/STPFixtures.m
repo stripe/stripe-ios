@@ -128,15 +128,6 @@
     return paymentContext;
 }
 
-+ (STPAddress *)sepaAddress {
-    STPAddress *address = [STPAddress new];
-    address.line1 = @"Nollendorfstraße 27";
-    address.city = @"Berlin";
-    address.postalCode = @"10777";
-    address.country = @"DE";
-    return address;
-}
-
 + (STPSource *)sepaDebitSource {
     return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"SEPADebitSource"]];
 }

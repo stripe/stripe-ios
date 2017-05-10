@@ -13,7 +13,6 @@
 typedef NS_ENUM(NSUInteger, STPAddressType) {
     STPAddressTypeBilling,
     STPAddressTypeShipping,
-    STPAddressTypeSEPADebit,
 };
 
 @interface STPAddressViewModel()<STPAddressFieldTableViewCellDelegate>
@@ -99,20 +98,6 @@ typedef NS_ENUM(NSUInteger, STPAddressType) {
     return self;
 }
 
-- (instancetype)initWithSEPADebitFields {
-    self = [super init];
-    if (self) {
-        _addressType = STPAddressTypeSEPADebit;
-        _addressCells = @[
-                          [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCity contents:@"" lastInList:NO delegate:self],
-                          // Postal code cell will be added later if necessary
-                          [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeSEPACountry contents:_addressFieldTableViewCountryCode lastInList:YES delegate:self],
-                          ];
-        [self commonInit];
-    }
-    return self;
-}
-
 - (void)commonInit {
     _addressFieldTableViewCountryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
     [self updatePostalCodeFieldIfNecessary];
@@ -123,9 +108,6 @@ typedef NS_ENUM(NSUInteger, STPAddressType) {
         return;
     }
     STPPostalCodeType postalCodeType = [STPPostalCodeValidator postalCodeTypeForCountryCode:_addressFieldTableViewCountryCode];
-    if (self.addressType == STPAddressTypeSEPADebit) {
-        postalCodeType = [STPPostalCodeValidator postalCodeTypeForSEPACountryCode:_addressFieldTableViewCountryCode];
-    }
     BOOL shouldBeShowingPostalCode = (postalCodeType != STPCountryPostalCodeTypeNotRequired);
     // Add postal code field
     if (shouldBeShowingPostalCode && !self.showingPostalCodeCell) {
@@ -183,8 +165,6 @@ typedef NS_ENUM(NSUInteger, STPAddressType) {
             }
         case STPAddressTypeShipping:
             return @(STPAddressFieldTypeState);
-        case STPAddressTypeSEPADebit:
-            return @(STPAddressFieldTypeCity);
     }
 }
 
@@ -195,8 +175,6 @@ typedef NS_ENUM(NSUInteger, STPAddressType) {
                     (self.requiredBillingAddressFields == STPBillingAddressFieldsZip));
         case STPAddressTypeShipping:
             return ((self.requiredShippingAddressFields & PKAddressFieldPostalAddress) == PKAddressFieldPostalAddress);
-        case STPAddressTypeSEPADebit:
-            return YES;
     }
 }
 
@@ -226,8 +204,6 @@ typedef NS_ENUM(NSUInteger, STPAddressType) {
             return [self.address containsRequiredFields:self.requiredBillingAddressFields];
         case STPAddressTypeShipping:
             return [self.address containsRequiredShippingAddressFields:self.requiredShippingAddressFields];
-        case STPAddressTypeSEPADebit:
-            return [self.address containsRequiredSEPADebitFields];
         default:
             return YES;
     }
