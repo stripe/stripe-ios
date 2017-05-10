@@ -178,9 +178,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (STPSourceParams *)sepaDebitParamsWithName:(NSString *)name
                                         iban:(NSString *)iban
                                 addressLine1:(nullable NSString *)addressLine1
-                                        city:(NSString *)city
-                                  postalCode:(NSString *)postalCode
-                                     country:(NSString *)country;
+                                        city:(nullable NSString *)city
+                                  postalCode:(nullable NSString *)postalCode
+                                     country:(nullable NSString *)country;
 
 /**
  *  Creates params for a Sofort source.

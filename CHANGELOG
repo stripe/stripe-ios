@@ -1,6 +1,11 @@
-== 10.1.0 2017-05-XX
+== 10.1.0 2017-05-05
+* Adds STPRedirectContext, a helper class for handling redirect sources.
+* STPAPIClient now supports tokenizing a PII number and uploading images.
 * Updates STPPaymentCardTextField's icons to match Elements on the web. When the card number is invalid, the field will now display an error icon.
 * The alignment of the new brand icons has changed to match the new CVC and error icons. If you use these icons via `STPImageLibrary`, you may need to adjust your layout.
+* STPPaymentCardTextField's isValid property is now KVO-observable.
+* When creating STPSourceParams for a SEPA debit source, address fields are now optional.
+* `STPPaymentMethodsViewControllerDelegate` now has a separate `paymentMethodsViewControllerDidCancel:` callback, differentiating from successful method selections. You should make sure to also dismiss the view controller in that callback
 * Because collecting some basic data on tokenization helps us detect fraud, we've removed the ability to disable analytics collection using `[Stripe disableAnalytics]`.
 
 == 10.0.1 2017-03-16
