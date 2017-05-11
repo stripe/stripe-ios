@@ -22,10 +22,4 @@ typedef NS_ENUM(NSInteger, STPPostalCodeType) {
                     countryCode:(nullable NSString *)countryCode;
 + (STPPostalCodeType)postalCodeTypeForCountryCode:(nullable NSString *)countryCode;
 
-/// We use a separate validation path for SEPA postal codes, where Ireland
-/// is the only country that doesn't require a postal code.
-+ (BOOL)stringIsValidSEPAPostalCode:(nullable NSString *)string
-                        countryCode:(nullable NSString *)countryCode;
-+ (STPPostalCodeType)postalCodeTypeForSEPACountryCode:(nullable NSString *)countryCode;
-
 @end

@@ -83,9 +83,4 @@
  */
 + (STPSource *)sepaDebitSource;
 
-/**
- An Address object for creating a SEPA source.
- */
-+ (STPAddress *)sepaAddress;
-
 @end

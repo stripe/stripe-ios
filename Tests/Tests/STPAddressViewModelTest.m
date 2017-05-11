@@ -84,22 +84,6 @@
     }
 }
 
-- (void)testInitWithSEPADebitFields {
-    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithSEPADebitFields];
-    XCTAssertTrue([sut.addressCells count] == 3);
-    NSArray *types = @[
-                       @(STPAddressFieldTypeCity),
-                       @(STPAddressFieldTypeZip),
-                       @(STPAddressFieldTypeSEPACountry),
-                       ];
-    NSUInteger count = sut.addressCells.count;
-    for (NSUInteger i = 0; i < count; i++) {
-        STPAddressFieldTableViewCell *cell = sut.addressCells[i];
-        XCTAssertEqual(cell.type, [types[i] integerValue]);
-        XCTAssertEqual(cell.lastInList, (i == count - 1));
-    }
-}
-
 - (void)testGetAddress {
     STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:(PKAddressField)(PKAddressFieldPostalAddress|PKAddressFieldEmail|PKAddressFieldPhone)];
     sut.addressCells[0].contents = @"foo@example.com";

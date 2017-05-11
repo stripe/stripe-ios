@@ -87,16 +87,14 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
 - (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration {
     _configuration = configuration;
     _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
-    STPAddressViewModel *addressViewModel;
     if (self.sourceType == STPSourceTypeCard) {
         self.title = STPLocalizedString(@"Add a Card", @"Title for Add a Card view");
-        addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
+        STPAddressViewModel *addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
+        addressViewModel.delegate = self;
+        _addressViewModel = addressViewModel;
     } else if (self.sourceType == STPSourceTypeSEPADebit) {
         self.title = STPLocalizedString(@"Add a Direct Debit Account", @"Title for SEPA Debit Account form");
-        addressViewModel = [[STPAddressViewModel alloc] initWithSEPADebitFields];
     }
-    addressViewModel.delegate = self;
-    _addressViewModel = addressViewModel;
 }
 
 - (void)createAndSetupViews {
@@ -270,13 +268,12 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
         cardParams.address = self.addressViewModel.address;
         params = [STPSourceParams cardParamsWithCard:cardParams];
     } else if (self.sourceType == STPSourceTypeSEPADebit) {
-        STPAddress *address = self.addressViewModel.address;
         params = [STPSourceParams sepaDebitParamsWithName:self.nameCell.contents
                                                      iban:self.ibanCell.contents
-                                             addressLine1:address.line1
-                                                     city:address.city
-                                               postalCode:address.postalCode
-                                                  country:address.country];
+                                             addressLine1:nil
+                                                     city:nil
+                                               postalCode:nil
+                                                  country:nil];
     }
     if (self.sourceInformation.metadata) {
         params.metadata = self.sourceInformation.metadata;
@@ -401,7 +398,11 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
 #pragma mark - UITableViewDelegate
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
-    return 2;
+    switch (self.sourceType) {
+        case STPSourceTypeCard: return 2;
+        case STPSourceTypeSEPADebit: return 1;
+        default: return 0;
+    }
 }
 
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -456,7 +457,7 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if (section == STPAddSourceAddressSection && self.sourceType == STPSourceTypeSEPADebit) {
+    if (section == STPAddSourceFirstSection && self.sourceType == STPSourceTypeSEPADebit) {
         return [self.sepaFooterView heightForWidth:CGRectGetWidth(self.tableView.frame)];
     } else if ([self tableView:tableView numberOfRowsInSection:section] == 0) {
         return 0.01f;
@@ -488,7 +489,7 @@ typedef NS_ENUM(NSUInteger, STPAddSourceSection) {
 }
 
 - (UIView *)tableView:(__unused UITableView *)tableView viewForFooterInSection:(__unused NSInteger)section {
-    if (section == STPAddSourceAddressSection && self.sourceType == STPSourceTypeSEPADebit) {
+    if (section == STPAddSourceFirstSection && self.sourceType == STPSourceTypeSEPADebit) {
         return self.sepaFooterView;
     } else {
         return [UIView new];
