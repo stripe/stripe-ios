@@ -106,6 +106,9 @@
 /* Label for the switch to enable Remember Me */
 "Save for use in other apps" = "Enregistrer pour une utilisation dans d’autres applications";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Scanner la carte";
+
 /* Title for shipping info form */
 "Shipping" = "Expédition";
 

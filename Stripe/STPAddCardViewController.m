@@ -12,6 +12,7 @@
 #import "STPAddressFieldTableViewCell.h"
 #import "STPAddressViewModel.h"
 #import "STPAnalyticsClient.h"
+#import "STPCardIOProxy.h"
 #import "STPCheckoutAPIClient.h"
 #import "STPColorUtils.h"
 #import "STPCoreTableViewController+Private.h"
@@ -44,7 +45,17 @@
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "UIViewController+Stripe_Promises.h"
 
-@interface STPAddCardViewController ()<STPPaymentCardTextFieldDelegate, STPAddressViewModelDelegate, STPAddressFieldTableViewCellDelegate, STPSwitchTableViewCellDelegate, UITableViewDelegate, UITableViewDataSource, STPSMSCodeViewControllerDelegate, STPRememberMePaymentCellDelegate>
+@interface STPAddCardViewController ()<
+    STPAddressViewModelDelegate,
+    STPAddressFieldTableViewCellDelegate,
+    STPCardIOProxyDelegate,
+    STPPaymentCardTextFieldDelegate,
+    STPSwitchTableViewCellDelegate,
+    UITableViewDelegate,
+    UITableViewDataSource,
+    STPSMSCodeViewControllerDelegate,
+    STPRememberMePaymentCellDelegate>
+
 @property(nonatomic)STPPaymentConfiguration *configuration;
 @property(nonatomic)STPAddress *shippingAddress;
 @property(nonatomic)BOOL hasUsedShippingAddress;
@@ -52,6 +63,7 @@
 @property(nonatomic, weak)UIImageView *cardImageView;
 @property(nonatomic)UIBarButtonItem *doneItem;
 @property(nonatomic)STPSectionHeaderView *cardHeaderView;
+@property(nonatomic)STPCardIOProxy *cardIOProxy;
 @property(nonatomic)STPSectionHeaderView *addressHeaderView;
 @property(nonatomic)STPRememberMeEmailCell *emailCell;
 @property(nonatomic)STPSwitchTableViewCell *rememberMeCell;
@@ -179,13 +191,13 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
                        forControlEvents:UIControlEventTouchUpInside];
     BOOL needsAddress = self.configuration.requiredBillingAddressFields != STPBillingAddressFieldsNone && !self.addressViewModel.isValid;
     BOOL buttonVisible = (needsAddress && self.shippingAddress != nil && !self.hasUsedShippingAddress);
-    addressHeaderView.button.alpha = buttonVisible ? 1 : 0;
+    addressHeaderView.buttonHidden = !buttonVisible;
     [addressHeaderView setNeedsLayout];
     _addressHeaderView = addressHeaderView;
     STPSectionHeaderView *cardHeaderView = [STPSectionHeaderView new];
     cardHeaderView.theme = self.theme;
     cardHeaderView.title = STPLocalizedString(@"Card", @"Title for credit card number entry field");
-    cardHeaderView.button.hidden = YES;
+    cardHeaderView.buttonHidden = YES;
     _cardHeaderView = cardHeaderView;
 
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endEditing)]];
@@ -194,6 +206,30 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
         STRONG(self);
         [self reloadRememberMeCellAnimated:YES];
     }];
+
+    [self setUpCardScanningIfAvailable];
+
+    [[STPAnalyticsClient sharedClient] clearAdditionalInfo];
+}
+
+- (void)setUpCardScanningIfAvailable {
+    if ([STPCardIOProxy isCardIOAvailable]) {
+        self.cardIOProxy = [[STPCardIOProxy alloc] initWithDelegate:self];
+        self.cardHeaderView.buttonHidden = NO;
+        [self.cardHeaderView.button setTitle:STPLocalizedString(@"Scan Card", @"Text for button to scan a credit card") forState:UIControlStateNormal];
+        [self.cardHeaderView.button addTarget:self action:@selector(presentCardIO) forControlEvents:UIControlEventTouchUpInside];
+        [self.cardHeaderView setNeedsLayout];
+    }
+}
+
+- (void)presentCardIO {
+    [self.cardIOProxy presentCardIOFromViewController:self];
+}
+
+- (void)cardIOProxy:(__unused STPCardIOProxy *)proxy didFinishWithCardParams:(STPCardParams *)cardParams {
+    if (cardParams) {
+        self.paymentCell.paymentField.cardParams = cardParams;
+    }
 }
 
 - (void)endEditing {

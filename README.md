@@ -41,6 +41,10 @@ Before you can run the apps, you need to provide them with your Stripe publishab
 
 After this is done, you can make test payments through the app and see them in your Stripe dashboard. Head to https://stripe.com/docs/testing#cards for a list of test card numbers.
 
+## card.io
+
+To add card scanning capabilities to our prebuilt UI components, you can simply [install card.io](https://github.com/card-io/card.io-iOS-SDK#setup) alongside our SDK. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards").
+
 ## Running the tests
 
 1. Install Carthage (if you have homebrew installed, `brew install carthage`)

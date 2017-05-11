@@ -16,6 +16,7 @@
 #import "STPAddCardViewController.h"
 #import "STPAspects.h"
 #import "STPCard.h"
+#import "STPCardIOProxy.h"
 #import "STPFormEncodable.h"
 #import "STPPaymentCardTextField.h"
 #import "STPPaymentCardTextField+Private.h"
@@ -30,6 +31,7 @@
 @interface STPAnalyticsClient()
 
 @property (nonatomic) NSSet *apiUsage;
+@property (nonatomic) NSSet *additionalInfoSet;
 @property (nonatomic, readwrite) NSURLSession *urlSession;
 
 @end
@@ -130,8 +132,23 @@
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         _urlSession = [NSURLSession sessionWithConfiguration:config];
         _apiUsage = [NSSet set];
+        _additionalInfoSet = [NSSet set];
     }
     return self;
+}
+
+- (void)addAdditionalInfo:(NSString *)info {
+    self.additionalInfoSet = [self.additionalInfoSet setByAddingObject:info];
+}
+
+- (void)clearAdditionalInfo {
+    self.additionalInfoSet = [NSSet set];
+}
+
+- (NSArray *)additionalInfo {
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(description)) ascending:YES];
+    NSArray *additionalInfo = [self.additionalInfoSet sortedArrayUsingDescriptors:@[sortDescriptor]];
+    return additionalInfo ?: @[];
 }
 
 - (void)logRememberMeConversion:(STPAddCardRememberMeUsage)selected {
@@ -179,6 +196,7 @@
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.token_creation",
                                         @"token_type": tokenType ?: @"unknown",
+                                        @"additional_info": [self additionalInfo],
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
     [payload addEntriesFromDictionary:configurationDictionary];
@@ -192,7 +210,7 @@
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.source_creation",
                                         @"source_type": sourceType ?: @"unknown",
-                                        @"apple_pay_enabled": @([Stripe deviceSupportsApplePay]),
+                                        @"additional_info": [self additionalInfo],
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
     [payload addEntriesFromDictionary:configurationDictionary];
@@ -246,6 +264,7 @@
     payload[@"app_name"] = [NSBundle stp_applicationName];
     payload[@"app_version"] = [NSBundle stp_applicationVersion];
     payload[@"apple_pay_enabled"] = @([Stripe deviceSupportsApplePay]);
+    payload[@"card_io_enabled"] = @([STPCardIOProxy isCardIOAvailable]);
     
     return payload;
 }

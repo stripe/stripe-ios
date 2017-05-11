@@ -106,6 +106,9 @@
 /* Label for the switch to enable Remember Me */
 "Save for use in other apps" = "他のアプリで使用するために保存";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "カードをスキャン";
+
 /* Title for shipping info form */
 "Shipping" = "配送先情報";
 

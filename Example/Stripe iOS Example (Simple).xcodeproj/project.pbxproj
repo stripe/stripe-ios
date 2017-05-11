@@ -18,6 +18,7 @@
 		C186AC341ECD0DDD00497DE3 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C186AC331ECD0DDD00497DE3 /* Alamofire.framework */; };
 		C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188F2A51CC1A338003A524B /* MyAPIClient.swift */; };
 		C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B83CBC1CCE6C0700F0790B /* Buttons.swift */; };
+		C1CB67FD1EE09C1000E9B15B /* CardIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1CB67FC1EE09C1000E9B15B /* CardIO.framework */; };
 		F10C9F6B1DC916BD00A91F7C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F10C9F691DC916BD00A91F7C /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		C186AC331ECD0DDD00497DE3 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		C188F2A51CC1A338003A524B /* MyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
 		C1B83CBC1CCE6C0700F0790B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
+		C1CB67FC1EE09C1000E9B15B /* CardIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CardIO.framework; path = Carthage/Build/iOS/CardIO.framework; sourceTree = "<group>"; };
 		F10C9F6A1DC916BD00A91F7C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Localizations/de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F10C9F6C1DC916C200A91F7C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F10C9F6D1DC916C800A91F7C /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = Localizations/nl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */,
+				C1CB67FD1EE09C1000E9B15B /* CardIO.framework in Frameworks */,
 				C186AC341ECD0DDD00497DE3 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -111,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				C186AC331ECD0DDD00497DE3 /* Alamofire.framework */,
+				C1CB67FC1EE09C1000E9B15B /* CardIO.framework */,
 				04D076191A69C14700094431 /* Stripe.framework */,
 			);
 			name = Frameworks;
@@ -131,7 +135,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Stripe iOS Example (Simple)" */;
 			buildPhases = (
-				C186AC351ECD0E1C00497DE3 /* Install Dependencies */,
+				C186AC351ECD0E1C00497DE3 /* Check Dependencies */,
 				04823F741A6849200098400B /* Sources */,
 				04823F751A6849200098400B /* Frameworks */,
 				04823F761A6849200098400B /* Resources */,
@@ -235,6 +239,7 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/CardIO.framework",
 			);
 			name = "Carthage Copy Frameworks";
 			outputPaths = (
@@ -243,19 +248,19 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
-		C186AC351ECD0E1C00497DE3 /* Install Dependencies */ = {
+		C186AC351ECD0E1C00497DE3 /* Check Dependencies */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Install Dependencies";
+			name = "Check Dependencies";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "file=\"$PROJECT_DIR/Cartfile.resolved\";\nif [ ! -f \"$file\" ]; then\n    printf \"error: To build the example app, you'll need to first run the setup script.\\n\";\n    printf \"error: Please run ./setup.sh , and then try building again. \\n\";\n    exit 1;\nfi";
+			shellScript = "alamofire=\"$PROJECT_DIR/Carthage/Build/iOS/Alamofire.framework\";\ncardio=\"$PROJECT_DIR/Carthage/Build/iOS/CardIO.framework\";\nif [ ! -d \"$alamofire\" ] || [ ! -d \"$cardio\" ]; then\n    printf \"error: To build the example app, you'll need to first run the setup script.\\n\";\n    printf \"error: Please run ./setup.sh , and then try building again. \\n\";\n    exit 1;\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 

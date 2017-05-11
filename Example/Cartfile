@@ -1,1 +1,2 @@
 github "Alamofire/Alamofire" "4.4.0"
+github "card-io/card.io-iOS-source"
