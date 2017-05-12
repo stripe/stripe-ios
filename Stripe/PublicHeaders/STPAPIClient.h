@@ -19,7 +19,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 static NSString *const STPSDKVersion = @"10.1.0";
 
-@class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPSourceParams, STPToken, STPPaymentConfiguration;
+@class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPSourceParams, STPToken, STPPaymentConfiguration, STPSourcePrecheckParams;
 
 /**
  A top-level class that imports the rest of the Stripe SDK.
@@ -185,6 +185,34 @@ static NSString *const STPSDKVersion = @"10.1.0";
  *  @param completion  The callback to run with the returned Source object, or an error.
  */
 - (void)createSourceWithParams:(STPSourceParams *)params completion:(STPSourceCompletionBlock)completion;
+
+/**
+ *  Checks a Source object against dynamic server rules.
+ *
+ *  You can use this to check a source for required extra actions, such as
+ *  whether or not a card source should be converted to a 3DS source before charging.
+ *
+ *  @param precheckParams The details of the source to check.
+ *  @param completion The callback with the returned precheck result, or an error.
+ */
+- (void)precheckSourceWithParams:(STPSourcePrecheckParams *)precheckParams
+                      completion:(STPSourcePrecheckCompletionBlock)completion;
+
+
+/**
+ *  Convenience method that combines precheck and createSource together for three d secure sources only,
+ *
+ *  You can pass in the parameters necessary to create a 3DS source from your 
+ *  card source. This method will run the card through precheck, and if it is
+ *  necessary to create a 3DS source for this card it will create it and return
+ *  you that new source. Otherwise it will return nil (and you can proceed with
+ *  charging the original card source).
+ *
+ *  @param sourceParams The details of the 3DS source to create. Passing in params for creating any other source type will result in an exception.
+ *  @param completion The callback to run. If it did not contain an error, it will contain a new 3DS source if precheck said 3DS was required for the card, or a nil source if 3DS was not required.
+ */
+- (void)precheckAndCreate3DSSourceIfNeededWithSourceParams:(STPSourceParams *)sourceParams
+                                                completion:(STP3DSSourcePrecheckCompletionBlock)completion;
 
 /**
  *  Retrieves the Source object with the given ID. @see https://stripe.com/docs/api#retrieve_source
