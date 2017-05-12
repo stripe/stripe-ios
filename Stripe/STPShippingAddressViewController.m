@@ -141,7 +141,7 @@
     STPSectionHeaderView *headerView = [STPSectionHeaderView new];
     headerView.theme = self.theme;
     headerView.title = [self headerTitleForShippingType:self.configuration.shippingType];
-    [headerView.button setTitle:STPLocalizedString(@"USE BILLING", @"Button to fill shipping address from billing address.")
+    [headerView.button setTitle:STPLocalizedString(@"Use Billing", @"Button to fill shipping address from billing address.")
                        forState:UIControlStateNormal];
     [headerView.button addTarget:self action:@selector(useBillingAddress:)
                 forControlEvents:UIControlEventTouchUpInside];

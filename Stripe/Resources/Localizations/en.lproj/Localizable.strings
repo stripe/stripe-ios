@@ -152,13 +152,13 @@
 "There was an unexpected error -- try again in a few seconds" = "There was an unexpected error -- try again in a few seconds";
 
 /* Button to fill shipping address from billing address. */
-"USE BILLING" = "USE BILLING";
+"Use Billing" = "Use Billing";
 
 /* Button to fill billing address from delivery address. */
-"USE DELIVERY" = "USE DELIVERY";
+"Use Delivery" = "Use Delivery";
 
 /* Button to fill billing address from shipping address. */
-"USE SHIPPING" = "USE SHIPPING";
+"Use Shipping" = "Use Shipping";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "You'll be taken to %@ to finish your purchase.";

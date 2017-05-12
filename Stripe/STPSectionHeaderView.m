@@ -26,11 +26,11 @@
     STPSectionHeaderView *headerView = [STPSectionHeaderView new];
     switch (config.shippingType) {
         case STPShippingTypeShipping:
-            [headerView.button setTitle:STPLocalizedString(@"USE SHIPPING", @"Button to fill billing address from shipping address.")
+            [headerView.button setTitle:STPLocalizedString(@"Use Shipping", @"Button to fill billing address from shipping address.")
                                       forState:UIControlStateNormal];
             break;
         case STPShippingTypeDelivery:
-            [headerView.button setTitle:STPLocalizedString(@"USE DELIVERY", @"Button to fill billing address from delivery address.")
+            [headerView.button setTitle:STPLocalizedString(@"Use Delivery", @"Button to fill billing address from delivery address.")
                                       forState:UIControlStateNormal];
             break;
     }
