@@ -107,7 +107,7 @@ typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * _
  */
 typedef void (^STPSourceCompletionBlock)(STPSource * __nullable source, NSError * __nullable error);
 
-typedef void (^STPSourcePrecheckCompletionBlock)(STPSourcePrecheckResult * __nullable precheck, NSError * __nullable error);
+typedef void (^STPSourcePrecheckCompletionBlock)(STPSourcePrecheckResult * __nullable precheckResult, NSError * __nullable error);
 typedef void (^STP3DSSourcePrecheckCompletionBlock)(STPSource * __nullable source, STPSourcePrecheckResult * __nullable precheck, NSError * __nullable error);
 
 /**

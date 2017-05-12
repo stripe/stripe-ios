@@ -287,6 +287,8 @@
         case STPThreeDSecureSupportTypeStatic:
             threeDSecureType = @"static";
             break;
+        case STPThreeDSecureSupportTypeDynamic:
+            threeDSecureType = @"dynamic";
     }
     dictionary[@"three_d_secure_type"] = threeDSecureType;
     dictionary[@"polling_timeout"] = @(configuration.pollingTimeout);

@@ -23,6 +23,8 @@
 #import "STPPromise.h"
 #import "STPShippingMethodsViewController.h"
 #import "STPSourceInfoViewController.h"
+#import "STPSourcePrecheckParams.h"
+#import "STPSourcePrecheckResult.h"
 #import "STPSourceProtocol.h"
 #import "STPWeakStrongMacros.h"
 #import "UINavigationController+Stripe_Completion.h"
@@ -500,31 +502,6 @@
     }];
 }
 
-- (BOOL)threeDSecureShouldBeUsedForCard:(STPSource *)source {
-    if (source.type != STPSourceTypeCard
-        || source.cardDetails == nil
-        || self.configuration.returnURLBlock() == nil
-        ) {
-        return NO;
-    }
-
-    switch (self.configuration.threeDSecureSupportTypeBlock()) {
-        case STPThreeDSecureSupportTypeStatic: {
-            switch (source.cardDetails.threeDSecure) {
-                case STPSourceCard3DSecureStatusRequired:
-                case STPSourceCard3DSecureStatusOptional:
-                    return YES;
-                case STPSourceCard3DSecureStatusNotSupported:
-                case STPSourceCard3DSecureStatusUnknown:
-                    return NO;
-            }
-        }
-            break;
-        case STPThreeDSecureSupportTypeDisabled:
-            return NO;
-    }
-}
-
 - (void)requestSourceFlowNonePayment:(STPSource *)source {
     if (source.flow != STPSourceFlowNone) {
         return;
@@ -534,10 +511,9 @@
         return;
     }
 
-    if (source.type == STPSourceTypeCard
-        && [self threeDSecureShouldBeUsedForCard:source]) {
-        // If 3DS should be attempted, create 3DS source instead
-        [self requestThreeDSSourceCreationAndPayment:source];
+    if (source.type == STPSourceTypeCard) {
+        // Cards have extra steps to see if 3DS is required
+        [self requestCardSourcePayment:source];
 
     }
     else {
@@ -566,6 +542,89 @@
             }
         });
     }];
+}
+
+- (void)requestCardSourcePayment:(STPSource *)source {
+    if (self.state != STPPaymentContextStateNone) {
+        return;
+    }
+
+    if (source.type != STPSourceTypeCard) {
+        return;
+    }
+
+    STPThreeDSecureSupportType threeDSecureMethodToUse = self.configuration.threeDSecureSupportTypeBlock();
+
+    if (threeDSecureMethodToUse == STPThreeDSecureSupportTypeStatic) {
+        /**
+         For static type, only actually do 3DS conversion if card says
+         3ds support is required or optional.
+         
+         TODO: Also do this for dynamic maybe? It's not necessary since the precheck
+         result will just tell us not to 3DS, but maybe would be good to save the extra roundtrip.
+         */
+        if (source.cardDetails != nil) {
+            switch (source.cardDetails.threeDSecure) {
+                case STPSourceCard3DSecureStatusRequired:
+                case STPSourceCard3DSecureStatusOptional:
+                    threeDSecureMethodToUse = STPThreeDSecureSupportTypeStatic;
+                    break;
+                case STPSourceCard3DSecureStatusNotSupported:
+                case STPSourceCard3DSecureStatusUnknown:
+                    threeDSecureMethodToUse = STPThreeDSecureSupportTypeDisabled;
+                    break;
+            }
+        }
+        else {
+            threeDSecureMethodToUse = STPThreeDSecureSupportTypeDisabled;
+        }
+    }
+
+    switch (threeDSecureMethodToUse) {
+        case STPThreeDSecureSupportTypeStatic:
+            [self requestThreeDSSourceCreationAndPayment:source];
+            break;
+        case STPThreeDSecureSupportTypeDynamic:
+            [self requestPrecheckAndTakeRequiredActions:source];
+            break;
+        case STPThreeDSecureSupportTypeDisabled:
+            [self requestSynchronousSourcePayment:source];
+            break;
+    }
+}
+
+- (void)requestPrecheckAndTakeRequiredActions:(STPSource *)source {
+    if (self.state != STPPaymentContextStateNone) {
+        return;
+    }
+
+    self.state = STPPaymentContextStateRequestingPayment;
+
+    STPSourcePrecheckParams *precheckParams = [STPSourcePrecheckParams new];
+    precheckParams.sourceID = source.stripeID;
+    precheckParams.paymentAmount = @(self.paymentAmount);
+    precheckParams.paymentCurrency = self.paymentCurrency;
+    // TODO: method for merchant to add metadata/additional fields
+
+    STPSourcePrecheckCompletionBlock completion = ^(STPSourcePrecheckResult * _Nullable precheckResult, NSError * _Nullable error) {
+        self.state = STPPaymentContextStateNone;
+        if (error
+            || precheckResult == nil) {
+            [self didFinishWithStatus:STPPaymentStatusError
+                                error:error ?: [NSError stp_genericConnectionError]] ;
+        }
+        else {
+            if ([precheckResult.requiredActions containsObject:STPSourcePrecheckRequiredActionCreateThreeDSecureSource]) {
+                [self requestThreeDSSourceCreationAndPayment:source];
+            }
+            else {
+                [self requestSynchronousSourcePayment:source];
+            }
+        }
+    };
+
+    [self.apiClient precheckSourceWithParams:precheckParams
+                                  completion:completion];
 }
 
 - (void)requestThreeDSSourceCreationAndPayment:(STPSource *)cardSource {

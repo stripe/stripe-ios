@@ -29,10 +29,15 @@ NS_ASSUME_NONNULL_BEGIN
  in paymentContext:didCreatePaymentResult:completion: if the payment result is
  a card source, instead of passing the source to your backend to be charged, you
  should call the completion block with an error.
+ 
+ - STPThreeDSecureSupportTypeDynamic: Card sources will be checked against
+ the precheck API and the user will be prompted for 3DS verification based on
+ the dynamic rules you have set up in your Stripe dashboard.
  */
 typedef NS_ENUM(NSUInteger, STPThreeDSecureSupportType) {
     STPThreeDSecureSupportTypeDisabled,
     STPThreeDSecureSupportTypeStatic,
+    STPThreeDSecureSupportTypeDynamic,
 };
 
 /**
