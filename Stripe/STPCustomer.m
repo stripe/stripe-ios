@@ -49,6 +49,11 @@
     if (error) {
         return [self initWithError:error];
     }
+
+    if (data == nil) {
+        return [self initWithError:[NSError stp_genericFailedToParseResponseError]];
+    }
+
     NSError *jsonError;
     id json = [NSJSONSerialization JSONObjectWithData:data options:(NSJSONReadingOptions)kNilOptions error:&jsonError];
     if (!json) {
