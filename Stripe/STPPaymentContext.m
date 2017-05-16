@@ -544,22 +544,6 @@
     }];
 }
 
-- (BOOL)cardPossiblySupports3DS:(STPSource *)source {
-    if (source.cardDetails != nil) {
-        switch (source.cardDetails.threeDSecure) {
-            case STPSourceCard3DSecureStatusRequired:
-            case STPSourceCard3DSecureStatusOptional:
-                return YES;
-            case STPSourceCard3DSecureStatusNotSupported:
-            case STPSourceCard3DSecureStatusUnknown:
-                return NO;
-        }
-    }
-    else {
-        return NO;
-    }
-}
-
 - (void)requestCardSourcePayment:(STPSource *)source {
     if (self.state != STPPaymentContextStateNone) {
         return;
@@ -569,20 +553,45 @@
         return;
     }
 
+    STPSourceCard3DSecureStatus threeDSecureStatus;
 
-    if (![self cardPossiblySupports3DS:source]) {
-        [self requestSynchronousSourcePayment:source];
-        return;
+    if (source.cardDetails != nil) {
+        threeDSecureStatus = source.cardDetails.threeDSecure;
+    }
+    else {
+        threeDSecureStatus = STPSourceCard3DSecureStatusNotSupported;
     }
 
     STPThreeDSecureSupportType threeDSecureMethodToUse = self.configuration.threeDSecureSupportTypeBlock();
 
     switch (threeDSecureMethodToUse) {
-        case STPThreeDSecureSupportTypeStatic:
-            [self requestThreeDSSourceCreationAndPayment:source];
+        case STPThreeDSecureSupportTypeStatic: {
+            switch (threeDSecureStatus) {
+                case STPSourceCard3DSecureStatusRequired:
+                case STPSourceCard3DSecureStatusOptional:
+                    [self requestThreeDSSourceCreationAndPayment:source];
+                    break;
+                case STPSourceCard3DSecureStatusNotSupported:
+                case STPSourceCard3DSecureStatusUnknown:
+                    [self requestSynchronousSourcePayment:source];
+                    break;
+            }
+        }
             break;
-        case STPThreeDSecureSupportTypeDynamic:
-            [self requestPrecheckAndTakeRequiredActions:source];
+        case STPThreeDSecureSupportTypeDynamic: {
+            switch (threeDSecureStatus) {
+                case STPSourceCard3DSecureStatusRequired:
+                    [self requestThreeDSSourceCreationAndPayment:source];
+                    break;
+                case STPSourceCard3DSecureStatusOptional:
+                    [self requestPrecheckAndTakeRequiredActions:source];
+                    break;
+                case STPSourceCard3DSecureStatusNotSupported:
+                case STPSourceCard3DSecureStatusUnknown:
+                    [self requestSynchronousSourcePayment:source];
+                    break;
+            }
+        }
             break;
         case STPThreeDSecureSupportTypeDisabled:
             [self requestSynchronousSourcePayment:source];
@@ -662,12 +671,12 @@
      Logic should be:
         Try to create 3DS source from the card source.
         If it could not be created...
-            If three_d_secure was not required and error code is `payment_method_not_available`, then fallback to synchronous charge of original card source
+            If we're allowed to fallback to charging the card and error code is `payment_method_not_available`, then charge the original card source
             Else finish with STPPaymentStatusError
         If 3DS source was created successfully, check its status
             If pending, perform redirect flow source as normal
             If chargeable, no further action required, return STPPaymentStatusSuccess (payment happens on webhook)
-            If failed, return Error if type was required, or fallback to charging original card source if type was optional
+            If failed, return Error or fallback to charging original card source if we are allowed to
 
      */
 
