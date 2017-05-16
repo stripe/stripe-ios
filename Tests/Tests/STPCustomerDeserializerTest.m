@@ -26,6 +26,14 @@
     XCTAssertEqualObjects(sut.error, error);
 }
 
+- (void)testInitWithData_nil {
+    STPCustomerDeserializer *sut = [[STPCustomerDeserializer alloc] initWithData:nil
+                                                                     urlResponse:nil
+                                                                           error:nil];
+    XCTAssertNil(sut.customer);
+    XCTAssertNotNil(sut.error);
+}
+
 - (void)testInitWithData_invalidData {
     STPCustomerDeserializer *sut = [[STPCustomerDeserializer alloc] initWithData:[NSData new]
                                                                      urlResponse:nil
