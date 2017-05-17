@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "STPAPIResponseDecodable.h"
 #import "STPSourceProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -14,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  An `STPCustomer` represents a deserialized Customer object from the Stripe API. You can use `STPCustomerDeserializer` to convert a JSON response from the Stripe API into an `STPCustomer`.
  */
-@interface STPCustomer : NSObject
+@interface STPCustomer : NSObject <STPAPIResponseDecodable>
 
 /**
  *  Initialize a customer object with the provided values.
