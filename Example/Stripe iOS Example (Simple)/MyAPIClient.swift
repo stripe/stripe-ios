@@ -8,139 +8,92 @@
 
 import Foundation
 import Stripe
+import Alamofire
 
 class MyAPIClient: NSObject, STPBackendAPIAdapter {
 
     static let sharedClient = MyAPIClient()
-    let session: URLSession
     var baseURLString: String? = nil
-    var defaultSource: STPCard? = nil
-    var sources: [STPCard] = []
-
-    override init() {
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 5
-        self.session = URLSession(configuration: configuration)
-        super.init()
-    }
-
-    func decodeResponse(_ response: URLResponse?, error: NSError?) -> NSError? {
-        if let httpResponse = response as? HTTPURLResponse
-            , httpResponse.statusCode != 200 {
-            return error ?? NSError.networkingError(httpResponse.statusCode)
+    var baseURL: URL {
+        if let urlString = self.baseURLString, let url = URL(string: urlString) {
+            return url
+        } else {
+            fatalError()
         }
-        return error
     }
 
     func completeCharge(_ result: STPPaymentResult, amount: Int, completion: @escaping STPErrorBlock) {
-        guard let baseURLString = baseURLString, let baseURL = URL(string: baseURLString) else {
-            let error = NSError(domain: StripeDomain, code: 50, userInfo: [
-                NSLocalizedDescriptionKey: "Please set baseURLString to your Heroku URL in CheckoutViewController.swift"
-                ])
-            completion(error)
-            return
-        }
-        let path = "charge"
-        let url = baseURL.appendingPathComponent(path)
-        let params: [String: AnyObject] = [
-            "source": result.source.stripeID as AnyObject,
-            "amount": amount as AnyObject
-        ]
-        let request = URLRequest.request(url, method: .POST, params: params)
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
-            DispatchQueue.main.async {
-                if let error = self.decodeResponse(urlResponse, error: error as NSError?) {
+        let url = self.baseURL.appendingPathComponent("charge")
+        Alamofire.request(url, method: .post, parameters: [
+            "source": result.source.stripeID,
+            "amount": amount
+            ])
+            .validate(statusCode: 200..<300)
+            .responseString { response in
+                switch response.result {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
                     completion(error)
-                    return
                 }
-                completion(nil)
-            }
         }
-        task.resume()
     }
     
     @objc func retrieveCustomer(_ completion: @escaping STPCustomerCompletionBlock) {
-        guard let key = Stripe.defaultPublishableKey() , !key.contains("#") else {
-            let error = NSError(domain: StripeDomain, code: 50, userInfo: [
-                NSLocalizedDescriptionKey: "Please set stripePublishableKey to your account's test publishable key in CheckoutViewController.swift"
-            ])
-            completion(nil, error)
-            return
-        }
-        guard let baseURLString = baseURLString, let baseURL = URL(string: baseURLString) else {
-            // This code is just for demo purposes - in this case, if the example app isn't properly configured, we'll return a fake customer just so the app works.
-            let customer = STPCustomer(stripeID: "cus_test", defaultSource: self.defaultSource, sources: self.sources)
-            completion(customer, nil)
-            return
-        }
-        let path = "/customer"
-        let url = baseURL.appendingPathComponent(path)
-        let request = URLRequest.request(url, method: .GET, params: [:])
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
-            DispatchQueue.main.async {
-                let deserializer = STPCustomerDeserializer(data: data, urlResponse: urlResponse, error: error)
-                if let error = deserializer.error {
+        let url = self.baseURL.appendingPathComponent("customer")
+        Alamofire.request(url)
+            .validate(statusCode: 200..<300)
+            .responseJSON { response in
+                switch response.result {
+                case .success(let result):
+                    if let customer = STPCustomer.decodedObject(fromAPIResponse: result as? [String: AnyObject]) {
+                        completion(customer, nil)
+                    } else {
+                        completion(nil, NSError.customerDecodingError)
+                    }
+                case .failure(let error):
                     completion(nil, error)
-                    return
-                } else if let customer = deserializer.customer {
-                    completion(customer, nil)
                 }
-            }
         }
-        task.resume()
     }
     
     @objc func selectDefaultCustomerSource(_ source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
-        guard let baseURLString = baseURLString, let baseURL = URL(string: baseURLString) else {
-            if let token = source as? STPToken {
-                self.defaultSource = token.card
-            }
-            completion(nil)
-            return
-        }
-        let path = "/customer/default_source"
-        let url = baseURL.appendingPathComponent(path)
-        let params = [
+        let url = self.baseURL.appendingPathComponent("customer/default_source")
+        Alamofire.request(url, method: .post, parameters: [
             "source": source.stripeID,
-        ]
-        let request = URLRequest.request(url, method: .POST, params: params as [String : AnyObject])
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
-            DispatchQueue.main.async {
-                if let error = self.decodeResponse(urlResponse, error: error as NSError?) {
+            ])
+            .validate(statusCode: 200..<300)
+            .responseString { response in
+                switch response.result {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
                     completion(error)
-                    return
                 }
-                completion(nil)
-            }
         }
-        task.resume()
     }
     
     @objc func attachSource(toCustomer source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
-        guard let baseURLString = baseURLString, let baseURL = URL(string: baseURLString) else {
-            if let token = source as? STPToken, let card = token.card {
-                self.sources.append(card)
-                self.defaultSource = card
-            }
-            completion(nil)
-            return
-        }
-        let path = "/customer/sources"
-        let url = baseURL.appendingPathComponent(path)
-        let params = [
+        let url = self.baseURL.appendingPathComponent("customer/sources")
+        Alamofire.request(url, method: .post, parameters: [
             "source": source.stripeID,
-            ]
-        let request = URLRequest.request(url, method: .POST, params: params as [String : AnyObject])
-        let task = self.session.dataTask(with: request) { (data, urlResponse, error) in
-            DispatchQueue.main.async {
-                if let error = self.decodeResponse(urlResponse, error: error as NSError?) {
+            ])
+            .validate(statusCode: 200..<300)
+            .responseString { response in
+                switch response.result {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
                     completion(error)
-                    return
                 }
-                completion(nil)
-            }
         }
-        task.resume()
     }
+}
 
+extension NSError {
+    static var customerDecodingError: NSError {
+        return NSError(domain: StripeDomain, code: 50, userInfo: [
+            NSLocalizedDescriptionKey: "Failed to decode the Stripe customer. Have you modified the example backend?"
+            ])
+    }
 }

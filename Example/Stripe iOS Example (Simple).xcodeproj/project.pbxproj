@@ -15,9 +15,9 @@
 		C124A18B1CCACAA1007D42EE /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */; };
 		C124A18D1CCACC92007D42EE /* CheckoutRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */; };
 		C13C24221D14438700F3765E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13C24211D14438700F3765E /* SettingsViewController.swift */; };
+		C186AC341ECD0DDD00497DE3 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C186AC331ECD0DDD00497DE3 /* Alamofire.framework */; };
 		C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188F2A51CC1A338003A524B /* MyAPIClient.swift */; };
 		C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B83CBC1CCE6C0700F0790B /* Buttons.swift */; };
-		C1C154341CD296CB0036AA63 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C154331CD296CB0036AA63 /* Networking.swift */; };
 		F10C9F6B1DC916BD00A91F7C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F10C9F691DC916BD00A91F7C /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
@@ -46,9 +46,9 @@
 		C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutViewController.swift; sourceTree = "<group>"; };
 		C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutRowView.swift; sourceTree = "<group>"; };
 		C13C24211D14438700F3765E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		C186AC331ECD0DDD00497DE3 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		C188F2A51CC1A338003A524B /* MyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
 		C1B83CBC1CCE6C0700F0790B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
-		C1C154331CD296CB0036AA63 /* Networking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		F10C9F6A1DC916BD00A91F7C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Localizations/de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F10C9F6C1DC916C200A91F7C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F10C9F6D1DC916C800A91F7C /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = Localizations/nl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -65,6 +65,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */,
+				C186AC341ECD0DDD00497DE3 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,7 +81,6 @@
 				C13C24211D14438700F3765E /* SettingsViewController.swift */,
 				C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */,
 				04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */,
-				C1C154331CD296CB0036AA63 /* Networking.swift */,
 				C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */,
 				C1B83CBC1CCE6C0700F0790B /* Buttons.swift */,
 				042CA4191A685E8D00D778E7 /* Images.xcassets */,
@@ -110,6 +110,7 @@
 		04823F9F1A6849850098400B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C186AC331ECD0DDD00497DE3 /* Alamofire.framework */,
 				04D076191A69C14700094431 /* Stripe.framework */,
 			);
 			name = Frameworks;
@@ -135,6 +136,7 @@
 				04823F761A6849200098400B /* Resources */,
 				04D0761F1A69E66F00094431 /* Embed Frameworks */,
 				04BC29A61CD9468500318357 /* Run Script */,
+				C186AC351ECD0E1C00497DE3 /* Carthage Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -225,6 +227,21 @@
 			shellPath = /bin/sh;
 			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework/integrate-dynamic-framework.sh\"";
 		};
+		C186AC351ECD0E1C00497DE3 /* Carthage Copy Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
+			);
+			name = "Carthage Copy Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -232,7 +249,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C1C154341CD296CB0036AA63 /* Networking.swift in Sources */,
 				C124A18B1CCACAA1007D42EE /* CheckoutViewController.swift in Sources */,
 				04BC29A01CD81D3900318357 /* BrowseProductsViewController.swift in Sources */,
 				C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */,
@@ -364,6 +380,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
@@ -393,6 +410,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
