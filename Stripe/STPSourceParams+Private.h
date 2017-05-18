@@ -11,5 +11,6 @@
 @interface STPSourceParams ()
 
 @property (nonatomic, nullable, strong) NSString *redirectMerchantName;
+@property (nonatomic, nullable, readonly) NSString *threeDSecureParamsCardId;
 
 @end

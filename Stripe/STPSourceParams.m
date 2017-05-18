@@ -13,6 +13,17 @@
 #import "STPFormEncoder.h"
 #import "STPSource+Private.h"
 
+static NSString *const STPSourceParamsKeyOwnerName = @"name";
+static NSString *const STPSourceParamsKeyOwnerEmail = @"email";
+static NSString *const STPSourceParamsKeyOwnerAddress = @"address";
+static NSString *const STPSourceParamsKeyOwnerAddressCity = @"city";
+static NSString *const STPSourceParamsKeyOwnerAddressPostalCode = @"postal_code";
+static NSString *const STPSourceParamsKeyOwnerAddressState = @"state";
+static NSString *const STPSourceParamsKeyOwnerAddressCountry = @"country";
+static NSString *const STPSourceParamsKeyOwnerAddressLine1 = @"line1";
+static NSString *const STPSourceParamsKeyOwnerAddressLine2 = @"line2";
+static NSString *const STPSourceParamsKeyRedirectReturnURL = @"return_url";
+
 @implementation STPSourceParams
 
 @synthesize additionalAPIParameters = _additionalAPIParameters;
@@ -56,8 +67,8 @@
     params.type = STPSourceTypeBancontact;
     params.amount = @(amount);
     params.currency = @"eur"; // Bancontact must always use eur
-    params.owner = @{ @"name": name };
-    params.redirect = @{ @"return_url": returnURL };
+    params.owner = @{ STPSourceParamsKeyOwnerName: name };
+    params.redirect = @{ STPSourceParamsKeyRedirectReturnURL: returnURL };
     if (statementDescriptor != nil) {
         params.additionalAPIParameters = @{
                                            @"bancontact": @{
@@ -75,7 +86,7 @@
     params.type = STPSourceTypeBitcoin;
     params.amount = @(amount);
     params.currency = currency;
-    params.owner = @{ @"email": email };
+    params.owner = @{ STPSourceParamsKeyOwnerEmail: email };
     return params;
 }
 
@@ -91,20 +102,20 @@
     params.additionalAPIParameters = @{ @"card": cardDict };
     NSMutableDictionary *addressDict = [NSMutableDictionary dictionary];
     NSDictionary<NSString *,NSString *>*addressKeyMapping = @{
-                                                              @"address_line1": @"line1",
-                                                              @"address_line2": @"line2",
-                                                              @"address_city": @"city",
-                                                              @"address_state": @"state",
-                                                              @"address_zip": @"postal_code",
-                                                              @"address_country": @"country",
+                                                              @"address_line1": STPSourceParamsKeyOwnerAddressLine1,
+                                                              @"address_line2": STPSourceParamsKeyOwnerAddressLine2,
+                                                              @"address_city": STPSourceParamsKeyOwnerAddressCity,
+                                                              @"address_state": STPSourceParamsKeyOwnerAddressState,
+                                                              @"address_zip": STPSourceParamsKeyOwnerAddressPostalCode,
+                                                              @"address_country": STPSourceParamsKeyOwnerAddressCountry,
                                                               };
     for (NSString *key in [addressKeyMapping allKeys]) {
         NSString *newKey = addressKeyMapping[key];
         addressDict[newKey] = keyPairs[key];
     }
     NSMutableDictionary *ownerDict = [NSMutableDictionary dictionary];
-    ownerDict[@"address"] = [addressDict copy];
-    ownerDict[@"name"] = card.name;
+    ownerDict[STPSourceParamsKeyOwnerAddress] = [addressDict copy];
+    ownerDict[STPSourceParamsKeyOwnerName] = card.name;
     params.owner = [ownerDict copy];
     return params;
 }
@@ -117,8 +128,8 @@
     params.type = STPSourceTypeGiropay;
     params.amount = @(amount);
     params.currency = @"eur"; // Giropay must always use eur
-    params.owner = @{ @"name": name };
-    params.redirect = @{ @"return_url": returnURL };
+    params.owner = @{ STPSourceParamsKeyOwnerName: name };
+    params.redirect = @{ STPSourceParamsKeyRedirectReturnURL: returnURL };
     if (statementDescriptor != nil) {
         params.additionalAPIParameters = @{
                                            @"giropay": @{
@@ -138,8 +149,8 @@
     params.type = STPSourceTypeIDEAL;
     params.amount = @(amount);
     params.currency = @"eur"; // iDEAL must always use eur
-    params.owner = @{ @"name": name };
-    params.redirect = @{ @"return_url": returnURL };
+    params.owner = @{ STPSourceParamsKeyOwnerName: name };
+    params.redirect = @{ STPSourceParamsKeyRedirectReturnURL: returnURL };
     if (statementDescriptor != nil || bank != nil) {
         NSMutableDictionary *idealDict = [NSMutableDictionary dictionary];
         idealDict[@"statement_descriptor"] = statementDescriptor;
@@ -160,16 +171,16 @@
     params.currency = @"eur"; // SEPA Debit must always use eur
 
     NSMutableDictionary *owner = [NSMutableDictionary new];
-    owner[@"name"] = name;
+    owner[STPSourceParamsKeyOwnerName] = name;
 
     NSMutableDictionary<NSString *,NSString *> *address = [NSMutableDictionary new];
-    address[@"city"] = city;
-    address[@"postal_code"] = postalCode,
-    address[@"country"] = country;
-    address[@"line1"] = addressLine1;
+    address[STPSourceParamsKeyOwnerAddressCity] = city;
+    address[STPSourceParamsKeyOwnerAddressPostalCode] = postalCode,
+    address[STPSourceParamsKeyOwnerAddressCountry] = country;
+    address[STPSourceParamsKeyOwnerAddressLine1] = addressLine1;
 
     if (address.count > 0) {
-        owner[@"address"] = address;
+        owner[STPSourceParamsKeyOwnerAddress] = address;
     }
 
     params.owner = owner;
@@ -189,7 +200,7 @@
     params.type = STPSourceTypeSofort;
     params.amount = @(amount);
     params.currency = @"eur"; // sofort must always use eur
-    params.redirect = @{ @"return_url": returnURL };
+    params.redirect = @{ STPSourceParamsKeyRedirectReturnURL: returnURL };
     NSMutableDictionary *sofortDict = [NSMutableDictionary dictionary];
     sofortDict[@"country"] = country;
     if (statementDescriptor != nil) {
@@ -212,8 +223,12 @@
                                                @"card": card
                                                }
                                        };
-    params.redirect = @{ @"return_url": returnURL };
+    params.redirect = @{ STPSourceParamsKeyRedirectReturnURL: returnURL };
     return params;
+}
+
+- (NSString *)threeDSecureParamsCardId {
+    return self.additionalAPIParameters[@"three_d_secure"][@"card"];
 }
 
 #pragma mark - Redirect url
@@ -229,9 +244,9 @@
  */
 - (NSDictionary *)redirectDictionaryWithMerchantNameIfNecessary {
     if (self.redirectMerchantName
-        && self.redirect[@"return_url"]) {
+        && self.redirect[STPSourceParamsKeyRedirectReturnURL]) {
 
-        NSURL *url = [NSURL URLWithString:self.redirect[@"return_url"]];
+        NSURL *url = [NSURL URLWithString:self.redirect[STPSourceParamsKeyRedirectReturnURL]];
         if (url) {
             NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url
                                                         resolvingAgainstBaseURL:NO];
@@ -255,7 +270,7 @@
 
 
                 NSMutableDictionary *redirectCopy = self.redirect.mutableCopy;
-                redirectCopy[@"return_url"] = urlComponents.URL.absoluteString;
+                redirectCopy[STPSourceParamsKeyRedirectReturnURL] = urlComponents.URL.absoluteString;
                 
                 return redirectCopy.copy;
             }
@@ -266,7 +281,6 @@
     return self.redirect;
 
 }
-
 
 #pragma mark - STPFormEncodable
 

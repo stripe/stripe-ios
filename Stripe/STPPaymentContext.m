@@ -23,6 +23,8 @@
 #import "STPPromise.h"
 #import "STPShippingMethodsViewController.h"
 #import "STPSourceInfoViewController.h"
+#import "STPSourcePrecheckParams.h"
+#import "STPSourcePrecheckResult.h"
 #import "STPSourceProtocol.h"
 #import "STPWeakStrongMacros.h"
 #import "UINavigationController+Stripe_Completion.h"
@@ -500,31 +502,6 @@
     }];
 }
 
-- (BOOL)threeDSecureShouldBeUsedForCard:(STPSource *)source {
-    if (source.type != STPSourceTypeCard
-        || source.cardDetails == nil
-        || self.configuration.returnURLBlock() == nil
-        ) {
-        return NO;
-    }
-
-    switch (self.configuration.threeDSecureSupportTypeBlock()) {
-        case STPThreeDSecureSupportTypeStatic: {
-            switch (source.cardDetails.threeDSecure) {
-                case STPSourceCard3DSecureStatusRequired:
-                case STPSourceCard3DSecureStatusOptional:
-                    return YES;
-                case STPSourceCard3DSecureStatusNotSupported:
-                case STPSourceCard3DSecureStatusUnknown:
-                    return NO;
-            }
-        }
-            break;
-        case STPThreeDSecureSupportTypeDisabled:
-            return NO;
-    }
-}
-
 - (void)requestSourceFlowNonePayment:(STPSource *)source {
     if (source.flow != STPSourceFlowNone) {
         return;
@@ -534,10 +511,9 @@
         return;
     }
 
-    if (source.type == STPSourceTypeCard
-        && [self threeDSecureShouldBeUsedForCard:source]) {
-        // If 3DS should be attempted, create 3DS source instead
-        [self requestThreeDSSourceCreationAndPayment:source];
+    if (source.type == STPSourceTypeCard) {
+        // Cards have extra steps to see if 3DS is required
+        [self requestCardSourcePayment:source];
 
     }
     else {
@@ -568,7 +544,116 @@
     }];
 }
 
+- (void)requestCardSourcePayment:(STPSource *)source {
+    if (self.state != STPPaymentContextStateNone) {
+        return;
+    }
+
+    if (source.type != STPSourceTypeCard) {
+        return;
+    }
+
+    STPSourceCard3DSecureStatus threeDSecureStatus;
+
+    if (source.cardDetails != nil) {
+        threeDSecureStatus = source.cardDetails.threeDSecure;
+    }
+    else {
+        threeDSecureStatus = STPSourceCard3DSecureStatusNotSupported;
+    }
+
+    STPThreeDSecureSupportType threeDSecureMethodToUse = self.configuration.threeDSecureSupportTypeBlock();
+
+    switch (threeDSecureMethodToUse) {
+        case STPThreeDSecureSupportTypeStatic: {
+            switch (threeDSecureStatus) {
+                case STPSourceCard3DSecureStatusRequired:
+                case STPSourceCard3DSecureStatusOptional:
+                    [self requestThreeDSSourceCreationAndPayment:source];
+                    break;
+                case STPSourceCard3DSecureStatusNotSupported:
+                case STPSourceCard3DSecureStatusUnknown:
+                    [self requestSynchronousSourcePayment:source];
+                    break;
+            }
+        }
+            break;
+        case STPThreeDSecureSupportTypeDynamic: {
+            switch (threeDSecureStatus) {
+                case STPSourceCard3DSecureStatusRequired:
+                    [self requestThreeDSSourceCreationAndPayment:source];
+                    break;
+                case STPSourceCard3DSecureStatusOptional:
+                    [self requestPrecheckAndTakeRequiredActions:source];
+                    break;
+                case STPSourceCard3DSecureStatusNotSupported:
+                case STPSourceCard3DSecureStatusUnknown:
+                    [self requestSynchronousSourcePayment:source];
+                    break;
+            }
+        }
+            break;
+        case STPThreeDSecureSupportTypeDisabled:
+            [self requestSynchronousSourcePayment:source];
+            break;
+    }
+}
+
+- (void)requestPrecheckAndTakeRequiredActions:(STPSource *)source {
+    if (self.state != STPPaymentContextStateNone) {
+        return;
+    }
+
+    self.state = STPPaymentContextStateRequestingPayment;
+
+    STPSourcePrecheckParams *precheckParams = [STPSourcePrecheckParams new];
+    precheckParams.sourceID = source.stripeID;
+    precheckParams.paymentAmount = @(self.paymentAmount);
+    precheckParams.paymentCurrency = self.paymentCurrency;
+    // TODO: method for merchant to add metadata/additional fields
+
+    STPSourcePrecheckCompletionBlock completion = ^(STPSourcePrecheckResult * _Nullable precheckResult, NSError * _Nullable error) {
+        self.state = STPPaymentContextStateNone;
+        if (error
+            || precheckResult == nil) {
+            /* 
+             Fallback to "static" behavior if there's an error getting the precheck
+             
+             Rules are run again on actual charge, so there is no chance that
+             invalid charges will get through
+             */
+            [self requestThreeDSSourceCreationAndPayment:source];
+        }
+        else {
+            if ([precheckResult.requiredActions containsObject:STPSourcePrecheckRequiredActionCreateThreeDSecureSource]) {
+                /*
+                 If precheck said we need 3DS, don't allow falling back to
+                 charging the non-3DS card
+                 */
+                [self requestThreeDSSourceCreationAndPayment:source
+                                    allowCardSourceOnFailure:NO];
+            }
+            else {
+                [self requestSynchronousSourcePayment:source];
+            }
+        }
+    };
+
+    [self.apiClient precheckSourceWithParams:precheckParams
+                                  completion:completion];
+}
+
 - (void)requestThreeDSSourceCreationAndPayment:(STPSource *)cardSource {
+    /*
+     If the card says three d secure is required, an error to create a 3DS source
+     should error. Otherwise, allow continuing payment with card source.
+     */
+    [self requestThreeDSSourceCreationAndPayment:cardSource
+                        allowCardSourceOnFailure:(cardSource.cardDetails.threeDSecure != STPSourceCard3DSecureStatusRequired)];
+}
+
+- (void)requestThreeDSSourceCreationAndPayment:(STPSource *)cardSource
+                      allowCardSourceOnFailure:(BOOL)allowCardSourceOnFailure {
     if (self.state != STPPaymentContextStateNone) {
         return;
     }
@@ -586,16 +671,14 @@
      Logic should be:
         Try to create 3DS source from the card source.
         If it could not be created...
-            If three_d_secure was optional and error code is `payment_method_not_available`, then fallback to synchronous charge of original card source
+            If we're allowed to fallback to charging the card and error code is `payment_method_not_available`, then charge the original card source
             Else finish with STPPaymentStatusError
         If 3DS source was created successfully, check its status
             If pending, perform redirect flow source as normal
             If chargeable, no further action required, return STPPaymentStatusSuccess (payment happens on webhook)
-            If failed, return Error if type was required, or fallback to charging original card source if type was optional
+            If failed, return Error or fallback to charging original card source if we are allowed to
 
      */
-
-    BOOL threeDSecureRequired = (cardSource.cardDetails.threeDSecure == STPSourceCard3DSecureStatusRequired);
 
     STPSourceParams *threeDSecureParams = [STPSourceParams threeDSecureParamsWithAmount:self.paymentAmount
                                                                                currency:self.paymentCurrency
@@ -607,7 +690,7 @@
         if (error
             || threeDSSource == nil
             || threeDSSource.flow != STPSourceFlowRedirect) {
-            if (!threeDSecureRequired
+            if (allowCardSourceOnFailure
                 && error.domain == StripeDomain
                 && [error.userInfo[STPCardErrorCodeKey] isEqualToString:STPPaymentMethodNotAvailable]) {
                 // This is a card that doesn't actually support 3ds and the card source didn't say 3ds was required
@@ -631,7 +714,7 @@
                     [self requestSourceFlowRedirectPayment:threeDSSource];
                     break;
                 case STPSourceStatusFailed:
-                    if (threeDSecureRequired) {
+                    if (!allowCardSourceOnFailure) {
                         // If required, fail with error
                         [self didFinishWithStatus:STPPaymentStatusUserCancellation
                                             error:nil];

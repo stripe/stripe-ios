@@ -12,6 +12,7 @@
 @class STPToken;
 @class STPFile;
 @class STPSource;
+@class STPSourcePrecheckResult;
 
 /**
  *  These values control the labels used in the shipping info collection form.
@@ -105,6 +106,9 @@ typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * _
  *  @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
  */
 typedef void (^STPSourceCompletionBlock)(STPSource * __nullable source, NSError * __nullable error);
+
+typedef void (^STPSourcePrecheckCompletionBlock)(STPSourcePrecheckResult * __nullable precheckResult, NSError * __nullable error);
+typedef void (^STP3DSSourcePrecheckCompletionBlock)(STPSource * __nullable source, STPSourcePrecheckResult * __nullable precheck, NSError * __nullable error);
 
 /**
  *  A callback to be run with a validation result and shipping methods for a 

@@ -424,9 +424,6 @@
 		C18867DC1E8B0C4100A77634 /* STPFixtures.m in Sources */ = {isa = PBXBuildFile; fileRef = C18867DA1E8B0C4100A77634 /* STPFixtures.m */; };
 		C192268A1EBA228900BED563 /* STPTelemetryClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D098E1EAEAE4000A4AB3E /* STPTelemetryClient.m */; };
 		C192268B1EBA228C00BED563 /* STPTelemetryClient.h in Headers */ = {isa = PBXBuildFile; fileRef = C19D098D1EAEAE4000A4AB3E /* STPTelemetryClient.h */; };
-		C19D098F1EAEAE4000A4AB3E /* STPTelemetryClient.h in Headers */ = {isa = PBXBuildFile; fileRef = C19D098D1EAEAE4000A4AB3E /* STPTelemetryClient.h */; };
-		C19D09901EAEAE4000A4AB3E /* STPTelemetryClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D098E1EAEAE4000A4AB3E /* STPTelemetryClient.m */; };
-		C19D09931EAEAE5E00A4AB3E /* STPTelemetryClientTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D09911EAEAE5200A4AB3E /* STPTelemetryClientTest.m */; };
 		C1966F6E1EAEA87D00FB43AA /* stp_icon_bancontact.png in Resources */ = {isa = PBXBuildFile; fileRef = C1966F681EAEA87D00FB43AA /* stp_icon_bancontact.png */; };
 		C1966F6F1EAEA87D00FB43AA /* stp_icon_bancontact@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1966F691EAEA87D00FB43AA /* stp_icon_bancontact@2x.png */; };
 		C1966F701EAEA87D00FB43AA /* stp_icon_bancontact@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1966F6A1EAEA87D00FB43AA /* stp_icon_bancontact@3x.png */; };
@@ -460,6 +457,9 @@
 		C1966FA71EAEA88C00FB43AA /* stp_icon_sofort.png in Resources */ = {isa = PBXBuildFile; fileRef = C1966F8C1EAEA88C00FB43AA /* stp_icon_sofort.png */; };
 		C1966FA81EAEA88C00FB43AA /* stp_icon_sofort@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1966F8D1EAEA88C00FB43AA /* stp_icon_sofort@2x.png */; };
 		C1966FA91EAEA88C00FB43AA /* stp_icon_sofort@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1966F8E1EAEA88C00FB43AA /* stp_icon_sofort@3x.png */; };
+		C19D098F1EAEAE4000A4AB3E /* STPTelemetryClient.h in Headers */ = {isa = PBXBuildFile; fileRef = C19D098D1EAEAE4000A4AB3E /* STPTelemetryClient.h */; };
+		C19D09901EAEAE4000A4AB3E /* STPTelemetryClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D098E1EAEAE4000A4AB3E /* STPTelemetryClient.m */; };
+		C19D09931EAEAE5E00A4AB3E /* STPTelemetryClientTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C19D09911EAEAE5200A4AB3E /* STPTelemetryClientTest.m */; };
 		C19D09941EAEB73800A4AB3E /* stp_icon_bancontact.png in Resources */ = {isa = PBXBuildFile; fileRef = C1966F681EAEA87D00FB43AA /* stp_icon_bancontact.png */; };
 		C19D09951EAEB73800A4AB3E /* stp_icon_bancontact@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1966F691EAEA87D00FB43AA /* stp_icon_bancontact@2x.png */; };
 		C19D09961EAEB73800A4AB3E /* stp_icon_bancontact@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1966F6A1EAEA87D00FB43AA /* stp_icon_bancontact@3x.png */; };
@@ -741,6 +741,11 @@
 		F152322C1EA9306100D65C67 /* NSURLComponents+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = F15232291EA9306100D65C67 /* NSURLComponents+Stripe.m */; };
 		F152322D1EA9306100D65C67 /* NSURLComponents+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = F15232291EA9306100D65C67 /* NSURLComponents+Stripe.m */; };
 		F15232311EA93E6800D65C67 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F15232301EA93E6800D65C67 /* Contacts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F152D3741ECA747500BBABD8 /* STPAPIClient+OCMStub.h in Headers */ = {isa = PBXBuildFile; fileRef = F152D3721ECA747500BBABD8 /* STPAPIClient+OCMStub.h */; };
+		F152D3751ECA747500BBABD8 /* STPAPIClient+OCMStub.m in Sources */ = {isa = PBXBuildFile; fileRef = F152D3731ECA747500BBABD8 /* STPAPIClient+OCMStub.m */; };
+		F152D3771ECA7A5600BBABD8 /* STPSourcePrecheckResult.h in Headers */ = {isa = PBXBuildFile; fileRef = F152D3761ECA7A5600BBABD8 /* STPSourcePrecheckResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F152D3781ECA7A5600BBABD8 /* STPSourcePrecheckResult.h in Headers */ = {isa = PBXBuildFile; fileRef = F152D3761ECA7A5600BBABD8 /* STPSourcePrecheckResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F152D37A1ECA8B1500BBABD8 /* PrecheckResult.json in Resources */ = {isa = PBXBuildFile; fileRef = F152D3791ECA8B1500BBABD8 /* PrecheckResult.json */; };
 		F15675401DB544D3004468E3 /* STPAddCardViewControllerLocalizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F156753F1DB544D3004468E3 /* STPAddCardViewControllerLocalizationTests.m */; };
 		F15AC18E1DBA9CA90009EADE /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */; };
 		F15AC1901DBA9CC60009EADE /* FBSnapshotTestCase.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -764,6 +769,12 @@
 		F1C7B8D41DBECF2400D9F6F0 /* STPDispatchFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = F1C7B8D11DBECF2400D9F6F0 /* STPDispatchFunctions.m */; };
 		F1C7B8D51DBECF2400D9F6F0 /* STPDispatchFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = F1C7B8D21DBECF2400D9F6F0 /* STPDispatchFunctions.h */; };
 		F1C7B8D61DBECF2400D9F6F0 /* STPDispatchFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = F1C7B8D21DBECF2400D9F6F0 /* STPDispatchFunctions.h */; };
+		F1CC36721EC13EB200668C46 /* STPSourcePrecheckParams.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CC366F1EC13EB200668C46 /* STPSourcePrecheckParams.m */; };
+		F1CC36731EC13EB200668C46 /* STPSourcePrecheckParams.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CC366F1EC13EB200668C46 /* STPSourcePrecheckParams.m */; };
+		F1CC36751EC13EE100668C46 /* STPSourcePrecheckParams.h in Headers */ = {isa = PBXBuildFile; fileRef = F1CC36741EC13EE100668C46 /* STPSourcePrecheckParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F1CC36761EC13EE100668C46 /* STPSourcePrecheckParams.h in Headers */ = {isa = PBXBuildFile; fileRef = F1CC36741EC13EE100668C46 /* STPSourcePrecheckParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F1CFFDA41EC1475300D544C7 /* STPSourcePrecheckResult.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CFFDA11EC1475300D544C7 /* STPSourcePrecheckResult.m */; };
+		F1CFFDA51EC1475300D544C7 /* STPSourcePrecheckResult.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CFFDA11EC1475300D544C7 /* STPSourcePrecheckResult.m */; };
 		F1D3A24B1EB012010095BFA9 /* STPFile.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D3A2461EB012010095BFA9 /* STPFile.m */; };
 		F1D3A24C1EB012010095BFA9 /* STPMultipartFormDataEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = F1D3A2471EB012010095BFA9 /* STPMultipartFormDataEncoder.h */; };
 		F1D3A24D1EB012010095BFA9 /* STPMultipartFormDataEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D3A2481EB012010095BFA9 /* STPMultipartFormDataEncoder.m */; };
@@ -1126,13 +1137,10 @@
 		C18021191E3A58710089D712 /* STPSourcePoller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourcePoller.m; sourceTree = "<group>"; };
 		C18867D91E8B0C4100A77634 /* STPFixtures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPFixtures.h; sourceTree = "<group>"; };
 		C18867DA1E8B0C4100A77634 /* STPFixtures.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFixtures.m; sourceTree = "<group>"; };
-		C19D098D1EAEAE4000A4AB3E /* STPTelemetryClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTelemetryClient.h; sourceTree = "<group>"; };
 		C1966F681EAEA87D00FB43AA /* stp_icon_bancontact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_icon_bancontact.png; sourceTree = "<group>"; };
 		C1966F691EAEA87D00FB43AA /* stp_icon_bancontact@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_bancontact@2x.png"; sourceTree = "<group>"; };
-		C19D098E1EAEAE4000A4AB3E /* STPTelemetryClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTelemetryClient.m; sourceTree = "<group>"; };
 		C1966F6A1EAEA87D00FB43AA /* stp_icon_bancontact@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_bancontact@3x.png"; sourceTree = "<group>"; };
 		C1966F6B1EAEA87D00FB43AA /* stp_icon_card.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_icon_card.png; sourceTree = "<group>"; };
-		C19D09911EAEAE5200A4AB3E /* STPTelemetryClientTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTelemetryClientTest.m; sourceTree = "<group>"; };
 		C1966F6C1EAEA87D00FB43AA /* stp_icon_card@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_card@2x.png"; sourceTree = "<group>"; };
 		C1966F6D1EAEA87D00FB43AA /* stp_icon_card@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_card@3x.png"; sourceTree = "<group>"; };
 		C1966F741EAEA88C00FB43AA /* stp_icon_country_at.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_icon_country_at.png; sourceTree = "<group>"; };
@@ -1162,6 +1170,9 @@
 		C1966F8C1EAEA88C00FB43AA /* stp_icon_sofort.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_icon_sofort.png; sourceTree = "<group>"; };
 		C1966F8D1EAEA88C00FB43AA /* stp_icon_sofort@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_sofort@2x.png"; sourceTree = "<group>"; };
 		C1966F8E1EAEA88C00FB43AA /* stp_icon_sofort@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_sofort@3x.png"; sourceTree = "<group>"; };
+		C19D098D1EAEAE4000A4AB3E /* STPTelemetryClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPTelemetryClient.h; sourceTree = "<group>"; };
+		C19D098E1EAEAE4000A4AB3E /* STPTelemetryClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTelemetryClient.m; sourceTree = "<group>"; };
+		C19D09911EAEAE5200A4AB3E /* STPTelemetryClientTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPTelemetryClientTest.m; sourceTree = "<group>"; };
 		C1A06F0F1E1D8A6E004DCA06 /* STPCard+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPCard+Private.h"; sourceTree = "<group>"; };
 		C1B630B31D1D817900A05285 /* Stripe.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Stripe.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1B630B51D1D817900A05285 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1294,6 +1305,10 @@
 		F15232281EA9306100D65C67 /* NSURLComponents+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLComponents+Stripe.h"; sourceTree = "<group>"; };
 		F15232291EA9306100D65C67 /* NSURLComponents+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLComponents+Stripe.m"; sourceTree = "<group>"; };
 		F15232301EA93E6800D65C67 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
+		F152D3721ECA747500BBABD8 /* STPAPIClient+OCMStub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPAPIClient+OCMStub.h"; sourceTree = "<group>"; };
+		F152D3731ECA747500BBABD8 /* STPAPIClient+OCMStub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STPAPIClient+OCMStub.m"; sourceTree = "<group>"; };
+		F152D3761ECA7A5600BBABD8 /* STPSourcePrecheckResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPSourcePrecheckResult.h; path = PublicHeaders/STPSourcePrecheckResult.h; sourceTree = "<group>"; };
+		F152D3791ECA8B1500BBABD8 /* PrecheckResult.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = PrecheckResult.json; path = JSON/PrecheckResult.json; sourceTree = "<group>"; };
 		F156753F1DB544D3004468E3 /* STPAddCardViewControllerLocalizationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddCardViewControllerLocalizationTests.m; sourceTree = "<group>"; };
 		F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSnapshotTestCase.framework; path = Carthage/Build/iOS/FBSnapshotTestCase.framework; sourceTree = "<group>"; };
 		F1852F911D80B6EC00367C86 /* STPStringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPStringUtils.h; sourceTree = "<group>"; };
@@ -1307,6 +1322,9 @@
 		F1C578F01D651AB200912EAE /* stp_card_applepay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_card_applepay.png; sourceTree = "<group>"; };
 		F1C7B8D11DBECF2400D9F6F0 /* STPDispatchFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPDispatchFunctions.m; sourceTree = "<group>"; };
 		F1C7B8D21DBECF2400D9F6F0 /* STPDispatchFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPDispatchFunctions.h; sourceTree = "<group>"; };
+		F1CC366F1EC13EB200668C46 /* STPSourcePrecheckParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourcePrecheckParams.m; sourceTree = "<group>"; };
+		F1CC36741EC13EE100668C46 /* STPSourcePrecheckParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPSourcePrecheckParams.h; path = PublicHeaders/STPSourcePrecheckParams.h; sourceTree = "<group>"; };
+		F1CFFDA11EC1475300D544C7 /* STPSourcePrecheckResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourcePrecheckResult.m; sourceTree = "<group>"; };
 		F1D3A2461EB012010095BFA9 /* STPFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFile.m; sourceTree = "<group>"; };
 		F1D3A2471EB012010095BFA9 /* STPMultipartFormDataEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPMultipartFormDataEncoder.h; sourceTree = "<group>"; };
 		F1D3A2481EB012010095BFA9 /* STPMultipartFormDataEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPMultipartFormDataEncoder.m; sourceTree = "<group>"; };
@@ -1551,6 +1569,7 @@
 		04CDB5281A5F3A9300B854EE /* StripeTests */ = {
 			isa = PBXGroup;
 			children = (
+				F152D3711ECA744B00BBABD8 /* Stub Helpers */,
 				C18867D61E8B069E00A77634 /* Snapshot */,
 				C18867D71E8B07F600A77634 /* Functional */,
 				C18867D81E8B093300A77634 /* Unit */,
@@ -1718,6 +1737,7 @@
 				F12959151EAE96BF003496FE /* Customer.json */,
 				F12959161EAE96BF003496FE /* iDEALSource.json */,
 				F12959171EAE96BF003496FE /* SEPADebitSource.json */,
+				F152D3791ECA8B1500BBABD8 /* PrecheckResult.json */,
 			);
 			name = JSON;
 			sourceTree = "<group>";
@@ -1749,6 +1769,15 @@
 				F148ABE61D5E805A0014FD92 /* Localizable.strings */,
 			);
 			name = Localizations;
+			sourceTree = "<group>";
+		};
+		F152D3711ECA744B00BBABD8 /* Stub Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				F152D3721ECA747500BBABD8 /* STPAPIClient+OCMStub.h */,
+				F152D3731ECA747500BBABD8 /* STPAPIClient+OCMStub.m */,
+			);
+			name = "Stub Helpers";
 			sourceTree = "<group>";
 		};
 		F1728CE81EAAA243002E0C29 /* Public */ = {
@@ -2017,6 +2046,10 @@
 				C1BD9B271E39406C00CEE925 /* STPSourceOwner.m */,
 				C1D7B5181E36B8B9002181F5 /* STPSourceParams.h */,
 				C1D7B5191E36B8B9002181F5 /* STPSourceParams.m */,
+				F1CC36741EC13EE100668C46 /* STPSourcePrecheckParams.h */,
+				F1CC366F1EC13EB200668C46 /* STPSourcePrecheckParams.m */,
+				F152D3761ECA7A5600BBABD8 /* STPSourcePrecheckResult.h */,
+				F1CFFDA11EC1475300D544C7 /* STPSourcePrecheckResult.m */,
 				04793F551D1D8DDD00B3C551 /* STPSourceProtocol.h */,
 				C1BD9B201E393FFE00CEE925 /* STPSourceReceiver.h */,
 				C1BD9B211E393FFE00CEE925 /* STPSourceReceiver.m */,
@@ -2141,6 +2174,7 @@
 			files = (
 				F1D96F9A1DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.h in Headers */,
 				F148ABFA1D5E88C40014FD92 /* STPTestUtils.h in Headers */,
+				F152D3741ECA747500BBABD8 /* STPAPIClient+OCMStub.h in Headers */,
 				F12959E01EAE99DC003496FE /* STPMocks.h in Headers */,
 				F12959691EAE96EA003496FE /* STPSourceInfoDataSource.h in Headers */,
 				C18867DB1E8B0C4100A77634 /* STPFixtures.h in Headers */,
@@ -2163,6 +2197,7 @@
 				C1BD9B3A1E39416700CEE925 /* STPSourceOwner.h in Headers */,
 				F1D3A2541EB012350095BFA9 /* STPMultipartFormDataEncoder.h in Headers */,
 				C1C1012E1E57A26F00C7BFAE /* STPSource+Private.h in Headers */,
+				F152D3781ECA7A5600BBABD8 /* STPSourcePrecheckResult.h in Headers */,
 				04A488431CA3580700506E53 /* UINavigationController+Stripe_Completion.h in Headers */,
 				C124A1711CCA968B007D42EE /* STPAnalyticsClient.h in Headers */,
 				049A3FA81CC963EB00F57DE7 /* STPPaymentMethod.h in Headers */,
@@ -2265,6 +2300,7 @@
 				04FCFA191BD59A8C00297732 /* STPCategoryLoader.h in Headers */,
 				C1D7B5211E36C32F002181F5 /* STPSource.h in Headers */,
 				049A3FB41CC9FF0500F57DE7 /* UIToolbar+Stripe_InputAccessory.h in Headers */,
+				F1CC36761EC13EE100668C46 /* STPSourcePrecheckParams.h in Headers */,
 				F12959971EAE984B003496FE /* STPTextFieldTableViewCell.h in Headers */,
 				F129598E1EAE984B003496FE /* STPOptionTableViewCell.h in Headers */,
 				04CDE5CB1BC20B1D00548833 /* STPBankAccountParams.h in Headers */,
@@ -2389,6 +2425,7 @@
 				04F213351BCECB1C001D6F22 /* STPAPIResponseDecodable.h in Headers */,
 				04695AD31C77F9DB00E08063 /* NSString+Stripe.h in Headers */,
 				F12959A01EAE984C003496FE /* STPGiropaySourceInfoDataSource.h in Headers */,
+				F1CC36751EC13EE100668C46 /* STPSourcePrecheckParams.h in Headers */,
 				C1BD9B341E3940C400CEE925 /* STPSourceVerification.h in Headers */,
 				F12959BD1EAE9858003496FE /* STPAdditionalSourceInfo.h in Headers */,
 				C1BD9B2E1E3940A200CEE925 /* STPSourceRedirect.h in Headers */,
@@ -2403,6 +2440,7 @@
 				F15232201EA92FCF00D65C67 /* STPRedirectContext.h in Headers */,
 				04A488421CA3580700506E53 /* UINavigationController+Stripe_Completion.h in Headers */,
 				F1DEB8991E2074480066B8E8 /* STPCoreViewController.h in Headers */,
+				F152D3771ECA7A5600BBABD8 /* STPSourcePrecheckResult.h in Headers */,
 				04A4883C1CA3568800506E53 /* STPBlocks.h in Headers */,
 				F1D3A2511EB0120F0095BFA9 /* STPFile.h in Headers */,
 				F1FA6F921E258F6800EB444D /* STPCoreViewController+Private.h in Headers */,
@@ -2572,6 +2610,7 @@
 				F129591D1EAE96BF003496FE /* SEPADebitSource.json in Resources */,
 				F129591A1EAE96BF003496FE /* CardSource.json in Resources */,
 				F12959181EAE96BF003496FE /* 3DSSource.json in Resources */,
+				F152D37A1ECA8B1500BBABD8 /* PrecheckResult.json in Resources */,
 				F12959191EAE96BF003496FE /* Card.json in Resources */,
 				F129591B1EAE96BF003496FE /* Customer.json in Resources */,
 				F129591C1EAE96BF003496FE /* iDEALSource.json in Resources */,
@@ -2883,6 +2922,7 @@
 				045A62AB1B8E7259000165CE /* STPPaymentCardTextFieldTest.m in Sources */,
 				C127110A1DBA7E490087840D /* STPAddressViewModelTest.m in Sources */,
 				C17D24EE1E37DBAC005CB188 /* STPSourceTest.m in Sources */,
+				F152D3751ECA747500BBABD8 /* STPAPIClient+OCMStub.m in Sources */,
 				F14C872F1D4FCDBA00C7CC6A /* STPPaymentContextApplePayTest.m in Sources */,
 				F12959E21EAE99DC003496FE /* STPPaymentContext3DSTest.m in Sources */,
 				C1BD9B1F1E390A2700CEE925 /* STPSourceParamsTest.m in Sources */,
@@ -3002,6 +3042,7 @@
 				F1852F961D80B6EC00367C86 /* STPStringUtils.m in Sources */,
 				04F94DBC1D229F92004FC826 /* UIToolbar+Stripe_InputAccessory.m in Sources */,
 				F15232271EA9303800D65C67 /* STPURLCallbackHandler.m in Sources */,
+				F1CFFDA51EC1475300D544C7 /* STPSourcePrecheckResult.m in Sources */,
 				F129597F1EAE984B003496FE /* STPCountryPickerDataSource.m in Sources */,
 				04F94DB41D229F71004FC826 /* STPPaymentActivityIndicatorView.m in Sources */,
 				C1BD9B251E393FFE00CEE925 /* STPSourceReceiver.m in Sources */,
@@ -3019,6 +3060,7 @@
 				0451CC471C49AE1C003B2CA6 /* STPPaymentResult.m in Sources */,
 				049E84D11A605DE0000B66CD /* STPToken.m in Sources */,
 				F129597A1EAE983F003496FE /* STPSourceInfoDataSource.m in Sources */,
+				F1CC36731EC13EB200668C46 /* STPSourcePrecheckParams.m in Sources */,
 				C1BD9B371E3940C400CEE925 /* STPSourceVerification.m in Sources */,
 				049E84D21A605DE0000B66CD /* StripeError.m in Sources */,
 				F12959961EAE984B003496FE /* STPSofortCountrySelectorDataSource.m in Sources */,
@@ -3052,6 +3094,7 @@
 				049A3F921CC740FF00F57DE7 /* NSDecimalNumber+Stripe_Currency.m in Sources */,
 				C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */,
 				04B31DE81D09D25F00EF1631 /* STPPaymentMethodsInternalViewController.m in Sources */,
+				F1CFFDA41EC1475300D544C7 /* STPSourcePrecheckResult.m in Sources */,
 				F1D3A25C1EB014BD0095BFA9 /* UIImage+Stripe.m in Sources */,
 				F1DEB8921E2052150066B8E8 /* STPCoreScrollViewController.m in Sources */,
 				0438EF2F1B7416BB00D506CC /* STPFormTextField.m in Sources */,
@@ -3120,6 +3163,7 @@
 				04A4C38F1C4F25F900B3B290 /* UIViewController+Stripe_ParentViewController.m in Sources */,
 				049A3FAF1CC9AA9900F57DE7 /* STPAddressViewModel.m in Sources */,
 				04695ADC1C77F9EF00E08063 /* STPPhoneNumberValidator.m in Sources */,
+				F1CC36721EC13EB200668C46 /* STPSourcePrecheckParams.m in Sources */,
 				04CDB5141A5F30A700B854EE /* STPToken.m in Sources */,
 				04A488341CA34D3000506E53 /* STPEmailAddressValidator.m in Sources */,
 				0433EB4C1BD06313003912B4 /* NSDictionary+Stripe.m in Sources */,

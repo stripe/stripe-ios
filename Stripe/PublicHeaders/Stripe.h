@@ -43,6 +43,8 @@
 #import "STPSourceCardDetails.h"
 #import "STPSourceOwner.h"
 #import "STPSourceParams.h"
+#import "STPSourcePrecheckParams.h"
+#import "STPSourcePrecheckResult.h"
 #import "STPSourceProtocol.h"
 #import "STPSourceReceiver.h"
 #import "STPSourceRedirect.h"

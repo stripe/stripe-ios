@@ -19,7 +19,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 static NSString *const STPSDKVersion = @"10.1.0";
 
-@class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPSourceParams, STPToken, STPPaymentConfiguration;
+@class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPSourceParams, STPToken, STPPaymentConfiguration, STPSourcePrecheckParams;
 
 /**
  A top-level class that imports the rest of the Stripe SDK.
@@ -185,6 +185,18 @@ static NSString *const STPSDKVersion = @"10.1.0";
  *  @param completion  The callback to run with the returned Source object, or an error.
  */
 - (void)createSourceWithParams:(STPSourceParams *)params completion:(STPSourceCompletionBlock)completion;
+
+/**
+ *  Checks a Source object against dynamic server rules.
+ *
+ *  You can use this to check a source for required extra actions, such as
+ *  whether or not a card source should be converted to a 3DS source before charging.
+ *
+ *  @param precheckParams The details of the source to check.
+ *  @param completion The callback with the returned precheck result, or an error.
+ */
+- (void)precheckSourceWithParams:(STPSourcePrecheckParams *)precheckParams
+                      completion:(STPSourcePrecheckCompletionBlock)completion;
 
 /**
  *  Retrieves the Source object with the given ID. @see https://stripe.com/docs/api#retrieve_source

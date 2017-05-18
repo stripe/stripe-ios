@@ -10,10 +10,13 @@
 #import <OCMock/OCMock.h>
 #import <SafariServices/SafariServices.h>
 #import "STPAPIClient.h"
+#import "STPAPIClient+OCMStub.h"
 #import "STPFixtures.h"
 #import "STPFormEncoder.h"
 #import "STPMocks.h"
 #import "STPSource+Private.h"
+#import "STPSourcePrecheckParams.h"
+#import "STPSourcePrecheckResult.h"
 #import "STPTestUtils.h"
 #import "StripeError.h"
 
@@ -74,6 +77,12 @@
     return [STPSource decodedObjectFromAPIResponse:json];
 }
 
+- (STPSourcePrecheckResult *)precheckResultWithRequiredActions:(NSArray<NSString *> *)requiredActions {
+    NSMutableDictionary *json = [[STPTestUtils jsonNamed:@"PrecheckResult"] mutableCopy];
+    json[@"required_actions"] = requiredActions;
+    return [STPSourcePrecheckResult decodedObjectFromAPIResponse:json];
+}
+
 - (STPSourceParams *)expected3DSParamsForSource:(STPSource *)source {
     STPSourceParams *expectedParams = [STPSourceParams threeDSecureParamsWithAmount:self.sut.paymentAmount
                                                                            currency:self.sut.paymentCurrency
@@ -90,6 +99,25 @@
     return [expectedDict isEqualToDictionary:dict];
 }
 
+
+
+- (BOOL)precheckParams:(STPSourcePrecheckParams *)precheckParams matchPaymentContext:(STPPaymentContext *)paymentContext {
+
+    id<STPSourceProtocol> source = nil;
+    if ([paymentContext.selectedPaymentMethod conformsToProtocol:@protocol(STPSourceProtocol)]) {
+        source = (id<STPSourceProtocol>)paymentContext.selectedPaymentMethod;
+    }
+
+    STPSourcePrecheckParams *expectedParams = [STPSourcePrecheckParams new];
+    expectedParams.sourceID = source.stripeID;
+    expectedParams.paymentAmount = @(paymentContext.paymentAmount);
+    expectedParams.paymentCurrency = paymentContext.paymentCurrency;
+
+    NSDictionary *dict = [STPFormEncoder dictionaryForObject:precheckParams];
+    NSDictionary *expectedDict = [STPFormEncoder dictionaryForObject:expectedParams];
+    return [expectedDict isEqualToDictionary:dict];
+}
+
 - (NSError *)paymentMethodNotAvailableError {
     NSDictionary *response = @{
                                @"error": @{
@@ -98,6 +126,69 @@
                                        }
                                };
     return [NSError stp_errorFromStripeResponse:response];
+}
+
+#pragma mark - Stub helpers
+
+
+- (void)stubAndVerifyCreateSourceCalledAndReturn3DSSource:(STPSource *)threeDSSource {
+    [self stubAndVerifyCreateSourceCalledAndReturn3DSSource:threeDSSource
+                                              returnedError:(threeDSSource == nil) ? [NSError stp_genericFailedToParseResponseError] : nil];
+}
+
+- (void)stubAndVerifyCreateSourceCalledAndReturn3DSSource:(STPSource *)threeDSSource
+                                            returnedError:(NSError *)error {
+    XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
+
+    [STPAPIClient stub:self.mockAPIClient createSourceWithParamsCompletion:^(STPSourceParams * _Nonnull sourceParams, STPSourceCompletionBlock  _Nonnull completion) {
+        XCTAssertTrue([self threeDSParams:sourceParams matchCardSource:(STPSource *)self.sut.selectedPaymentMethod]);
+        completion(threeDSSource, error);
+        [createSourceExp fulfill];
+    }];
+}
+
+- (void)stubAndVerifyPrecheckCalledAndReturnResult:(STPSourcePrecheckResult *)precheckResult {
+    XCTestExpectation *precheckSourceExp = [self expectationWithDescription:@"precheckSource"];
+
+    NSError *error = (precheckResult == nil) ? [NSError stp_genericFailedToParseResponseError] : nil;
+
+    [STPAPIClient stub:self.mockAPIClient precheckSourceWithParamsCompletion:^(STPSourcePrecheckParams *precheckParams, STPSourcePrecheckCompletionBlock completion) {
+        XCTAssertTrue([self precheckParams:precheckParams matchPaymentContext:self.sut]);
+        completion(precheckResult, error);
+        [precheckSourceExp fulfill];
+    }];
+
+}
+
+- (void)stubAndVerifyHostViewControllerPresentsViewControllerOfClass:(Class)vcClass {
+    XCTestExpectation *vcExp = [self expectationWithDescription:@"present view controller"];
+    BOOL (^checker)() = ^BOOL(id vc) {
+        if ([vc isKindOfClass:vcClass]) {
+            [vcExp fulfill];
+            return YES;
+        }
+        return NO;
+    };
+
+    OCMStub([self.mockHostViewController presentViewController:[OCMArg checkWithBlock:checker]
+                                                      animated:YES
+                                                    completion:[OCMArg any]]);
+}
+
+- (void)stubAndVerifyDidCreatePaymentResultCalledWithSource:(STPSource *)source {
+    XCTestExpectation *exp = [self expectationWithDescription:@"didCreatePaymentResult"];
+    OCMStub([self.mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation){
+        STPPaymentResult *result;
+        STPErrorBlock completion;
+        [invocation getArgument:&result atIndex:3];
+        [invocation getArgument:&completion atIndex:4];
+        XCTAssertEqual(result.source, source);
+        completion(nil);
+        OCMVerify([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess
+                                              error:[OCMArg isNil]]);
+        [exp fulfill];
+    });
 }
 
 #pragma mark - 3DS disabled
@@ -111,20 +202,113 @@
     STPSource *cardSource = [self cardSourceWith3DSStatus:@"required"];
     self.sut.selectedPaymentMethod = cardSource;
     OCMReject([self.mockHostViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]);
+    OCMReject([self.mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]]);
 
-    XCTestExpectation *exp = [self expectationWithDescription:@"didCreatePaymentResult"];
-    OCMStub([self.mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation){
-        STPPaymentResult *result;
-        STPErrorBlock completion;
-        [invocation getArgument:&result atIndex:3];
-        [invocation getArgument:&completion atIndex:4];
-        XCTAssertEqual(result.source, cardSource);
-        completion(nil);
-        OCMVerify([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess
-                                              error:[OCMArg any]]);
-        [exp fulfill];
-    });
+    [self stubAndVerifyDidCreatePaymentResultCalledWithSource:cardSource];
+
+    [self.sut requestPayment];
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+#pragma mark - 3DS dynamic, not supported on card
+
+/**
+ When 3DS type is dynamic, a card source that does not support 3ds
+ should behave the same as if 3DS is disabled
+ */
+- (void)test3DSDynamicNotSupportedOnCard {
+    self.config.threeDSecureSupportType = STPThreeDSecureSupportTypeDynamic;
+    STPSource *cardSource = [self cardSourceWith3DSStatus:@"not_supported"];
+    self.sut.selectedPaymentMethod = cardSource;
+    OCMReject([self.mockHostViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]);
+    OCMReject([self.mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]]);
+
+    [self stubAndVerifyDidCreatePaymentResultCalledWithSource:cardSource];
+
+    [self.sut requestPayment];
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+#pragma mark - 3DS dynamic, required on card
+
+/**
+ When 3DS type is dynamic, a card source with 3DS required
+ should not hit precheck and proceed with charging the same as if
+ the type were static
+ */
+- (void)test3DSDynamicRequiredOnCardAndStatusPending {
+    self.config.threeDSecureSupportType = STPThreeDSecureSupportTypeDynamic;
+    STPSource *cardSource = [self cardSourceWith3DSStatus:@"required"];
+    self.sut.selectedPaymentMethod = cardSource;
+    OCMReject([self.mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]]);
+    OCMReject([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess error:[OCMArg any]]);
+    OCMReject([self.mockAPIClient precheckSourceWithParams:[OCMArg any] completion:[OCMArg any]]);
+
+    [self stubAndVerifyCreateSourceCalledAndReturn3DSSource:[self threeDSSourceWithStatus:@"pending"]];
+    [self stubAndVerifyHostViewControllerPresentsViewControllerOfClass:[SFSafariViewController class]];
+
+    [self.sut requestPayment];
+
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+#pragma mark - 3DS dynamic, optional on card
+/**
+ When 3DS type is dynamic, a card source with 3DS optional
+ should hit precheck. If it returns create 3ds source as a required action,
+ a call to createSource should happen.If the created 3DS source has status 
+ pending, SFSafariVC should be presented.
+ */
+- (void)test3DSDynamicOptionalOnCardRequiredOnPrecheckAndStatusPending {
+    self.config.threeDSecureSupportType = STPThreeDSecureSupportTypeDynamic;
+    STPSource *cardSource = [self cardSourceWith3DSStatus:@"optional"];
+    self.sut.selectedPaymentMethod = cardSource;
+    OCMReject([self.mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]]);
+    OCMReject([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess error:[OCMArg any]]);
+
+    [self stubAndVerifyPrecheckCalledAndReturnResult:[self precheckResultWithRequiredActions:@[STPSourcePrecheckRequiredActionCreateThreeDSecureSource]]];
+    [self stubAndVerifyCreateSourceCalledAndReturn3DSSource:[self threeDSSourceWithStatus:@"pending"]];
+    [self stubAndVerifyHostViewControllerPresentsViewControllerOfClass:[SFSafariViewController class]];
+
+    [self.sut requestPayment];
+
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+/**
+ When 3DS type is dynamic, a card source with 3DS optional
+ should hit precheck. If it returns no required actions, a 3ds source should not
+ be created and instead the card source should be charged.
+ */
+- (void)test3DSDynamicOptionalOnCardNoActionOnPrecheck {
+    self.config.threeDSecureSupportType = STPThreeDSecureSupportTypeDynamic;
+    STPSource *cardSource = [self cardSourceWith3DSStatus:@"optional"];
+    self.sut.selectedPaymentMethod = cardSource;
+    OCMReject([self.mockHostViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]);
+    OCMReject([self.mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]]);
+
+    [self stubAndVerifyPrecheckCalledAndReturnResult:[self precheckResultWithRequiredActions:@[]]];
+    [self stubAndVerifyDidCreatePaymentResultCalledWithSource:cardSource];
+
+    [self.sut requestPayment];
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+/**
+ When 3DS type is dynamic, a card source with 3DS optional
+ should hit precheck. If precheck errors, we should proceed as if
+ it said to create a 3DS source
+ */
+- (void)test3DSDynamicOptionalOnCardErrorOnPrecheck {
+    self.config.threeDSecureSupportType = STPThreeDSecureSupportTypeDynamic;
+    STPSource *cardSource = [self cardSourceWith3DSStatus:@"optional"];
+    self.sut.selectedPaymentMethod = cardSource;
+    OCMReject([self.mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]]);
+    OCMReject([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess error:[OCMArg any]]);
+
+    [self stubAndVerifyPrecheckCalledAndReturnResult:[self precheckResultWithRequiredActions:nil]];
+    [self stubAndVerifyCreateSourceCalledAndReturn3DSSource:[self threeDSSourceWithStatus:@"pending"]];
+    [self stubAndVerifyHostViewControllerPresentsViewControllerOfClass:[SFSafariViewController class]];
 
     [self.sut requestPayment];
     [self waitForExpectationsWithTimeout:2 handler:nil];
@@ -144,31 +328,8 @@
     OCMReject([self.mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]]);
     OCMReject([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess error:[OCMArg any]]);
 
-    XCTestExpectation *safariExp = [self expectationWithDescription:@"present SafariVC"];
-    BOOL (^checker)() = ^BOOL(id vc) {
-        if ([vc isKindOfClass:[SFSafariViewController class]]) {
-            [safariExp fulfill];
-            return YES;
-        }
-        return NO;
-    };
-    OCMStub([self.mockHostViewController presentViewController:[OCMArg checkWithBlock:checker]
-                                                      animated:YES
-                                                    completion:[OCMArg any]]);
-
-    STPSource *threeDSSource = [self threeDSSourceWithStatus:@"pending"];
-    XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
-    OCMStub([self.mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation){
-        STPSourceParams *sourceParams;
-        STPSourceCompletionBlock completion;
-        [invocation getArgument:&sourceParams atIndex:2];
-        [invocation getArgument:&completion atIndex:3];
-        XCTAssertTrue([self threeDSParams:sourceParams matchCardSource:cardSource]);
-        completion(threeDSSource, nil);
-
-        [createSourceExp fulfill];
-    });
+    [self stubAndVerifyCreateSourceCalledAndReturn3DSSource:[self threeDSSourceWithStatus:@"pending"]];
+    [self stubAndVerifyHostViewControllerPresentsViewControllerOfClass:[SFSafariViewController class]];
 
     [self.sut requestPayment];
 
@@ -187,24 +348,14 @@
     OCMReject([self.mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]]);
     OCMReject([self.mockHostViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]);
 
-    STPSource *threeDSSource = [self threeDSSourceWithStatus:@"failed"];
-    XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
-    OCMStub([self.mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation){
-        STPSourceParams *sourceParams;
-        STPSourceCompletionBlock completion;
-        [invocation getArgument:&sourceParams atIndex:2];
-        [invocation getArgument:&completion atIndex:3];
-        XCTAssertTrue([self threeDSParams:sourceParams matchCardSource:cardSource]);
-        completion(threeDSSource, nil);
-        OCMVerify([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusUserCancellation
-                                              error:[OCMArg isNil]]);
-        [createSourceExp fulfill];
-    });
+    [self stubAndVerifyCreateSourceCalledAndReturn3DSSource:[self threeDSSourceWithStatus:@"failed"]];
 
     [self.sut requestPayment];
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
+
+    OCMVerify([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusUserCancellation
+                                          error:[OCMArg isNil]]);
 }
 
 /**
@@ -219,24 +370,14 @@
     OCMReject([self.mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]]);
     OCMReject([self.mockHostViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]);
 
-    STPSource *threeDSSource = [self threeDSSourceWithStatus:@"chargeable"];
-    XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
-    OCMStub([self.mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation){
-        STPSourceParams *sourceParams;
-        STPSourceCompletionBlock completion;
-        [invocation getArgument:&sourceParams atIndex:2];
-        [invocation getArgument:&completion atIndex:3];
-        XCTAssertTrue([self threeDSParams:sourceParams matchCardSource:cardSource]);
-        completion(threeDSSource, nil);
-        OCMVerify([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess
-                                              error:[OCMArg any]]);
-        [createSourceExp fulfill];
-    });
+    [self stubAndVerifyCreateSourceCalledAndReturn3DSSource:[self threeDSSourceWithStatus:@"chargeable"]];
 
     [self.sut requestPayment];
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
+
+    OCMVerify([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess
+                                          error:[OCMArg isNil]]);
 }
 
 /**
@@ -252,23 +393,15 @@
     OCMReject([self.mockHostViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]);
 
     NSError *expectedError = [self paymentMethodNotAvailableError];
-    XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
-    OCMStub([self.mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation){
-        STPSourceParams *sourceParams;
-        STPSourceCompletionBlock completion;
-        [invocation getArgument:&sourceParams atIndex:2];
-        [invocation getArgument:&completion atIndex:3];
-        XCTAssertTrue([self threeDSParams:sourceParams matchCardSource:cardSource]);
-        completion(nil, expectedError);
-        OCMVerify([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusError
-                                              error:[OCMArg isEqual:expectedError]]);
-        [createSourceExp fulfill];
-    });
+    [self stubAndVerifyCreateSourceCalledAndReturn3DSSource:nil
+                                              returnedError:expectedError];
 
     [self.sut requestPayment];
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
+
+    OCMVerify([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusError
+                                          error:[OCMArg isEqual:expectedError]]);
 }
 
 #pragma mark - 3DS static, optional on card
@@ -285,31 +418,8 @@
     OCMReject([self.mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]]);
     OCMReject([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess error:[OCMArg any]]);
 
-    XCTestExpectation *safariExp = [self expectationWithDescription:@"present SafariVC"];
-    BOOL (^checker)() = ^BOOL(id vc) {
-        if ([vc isKindOfClass:[SFSafariViewController class]]) {
-            [safariExp fulfill];
-            return YES;
-        }
-        return NO;
-    };
-    OCMStub([self.mockHostViewController presentViewController:[OCMArg checkWithBlock:checker]
-                                                      animated:YES
-                                                    completion:[OCMArg any]]);
-
-    STPSource *threeDSSource = [self threeDSSourceWithStatus:@"pending"];
-    XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
-    OCMStub([self.mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation){
-        STPSourceParams *sourceParams;
-        STPSourceCompletionBlock completion;
-        [invocation getArgument:&sourceParams atIndex:2];
-        [invocation getArgument:&completion atIndex:3];
-        XCTAssertTrue([self threeDSParams:sourceParams matchCardSource:cardSource]);
-        completion(threeDSSource, nil);
-
-        [createSourceExp fulfill];
-    });
+    [self stubAndVerifyCreateSourceCalledAndReturn3DSSource:[self threeDSSourceWithStatus:@"pending"]];
+    [self stubAndVerifyHostViewControllerPresentsViewControllerOfClass:[SFSafariViewController class]];
 
     [self.sut requestPayment];
 
@@ -327,33 +437,8 @@
     self.sut.selectedPaymentMethod = cardSource;
     OCMReject([self.mockHostViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]);
 
-    STPSource *threeDSSource = [self threeDSSourceWithStatus:@"failed"];
-    XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
-    OCMStub([self.mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation){
-        STPSourceParams *sourceParams;
-        STPSourceCompletionBlock completion;
-        [invocation getArgument:&sourceParams atIndex:2];
-        [invocation getArgument:&completion atIndex:3];
-        XCTAssertTrue([self threeDSParams:sourceParams matchCardSource:cardSource]);
-        completion(threeDSSource, nil);
-        [createSourceExp fulfill];
-    });
-
-    XCTestExpectation *paymentResultExp = [self expectationWithDescription:@"didCreatePaymentResult"];
-    OCMStub([self.mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation){
-        STPPaymentResult *result;
-        STPErrorBlock completion;
-        [invocation getArgument:&result atIndex:3];
-        [invocation getArgument:&completion atIndex:4];
-        XCTAssertEqual(result.source, cardSource);
-        completion(nil);
-        OCMVerify([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess
-                                              error:[OCMArg any]]);
-        [paymentResultExp fulfill];
-    });
-
+    [self stubAndVerifyCreateSourceCalledAndReturn3DSSource:[self threeDSSourceWithStatus:@"failed"]];
+    [self stubAndVerifyDidCreatePaymentResultCalledWithSource:cardSource];
     [self.sut requestPayment];
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
@@ -371,24 +456,14 @@
     OCMReject([self.mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]]);
     OCMReject([self.mockHostViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]);
 
-    STPSource *threeDSSource = [self threeDSSourceWithStatus:@"chargeable"];
-    XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
-    OCMStub([self.mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation){
-        STPSourceParams *sourceParams;
-        STPSourceCompletionBlock completion;
-        [invocation getArgument:&sourceParams atIndex:2];
-        [invocation getArgument:&completion atIndex:3];
-        XCTAssertTrue([self threeDSParams:sourceParams matchCardSource:cardSource]);
-        completion(threeDSSource, nil);
-        OCMVerify([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess
-                                              error:[OCMArg any]]);
-        [createSourceExp fulfill];
-    });
+    [self stubAndVerifyCreateSourceCalledAndReturn3DSSource:[self threeDSSourceWithStatus:@"chargeable"]];
 
     [self.sut requestPayment];
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
+
+    OCMVerify([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess
+                                          error:[OCMArg isNil]]);
 }
 
 /**
@@ -403,31 +478,11 @@
     OCMReject([self.mockHostViewController presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]);
 
     NSError *expectedError = [self paymentMethodNotAvailableError];
-    XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
-    OCMStub([self.mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation){
-        STPSourceParams *sourceParams;
-        STPSourceCompletionBlock completion;
-        [invocation getArgument:&sourceParams atIndex:2];
-        [invocation getArgument:&completion atIndex:3];
-        XCTAssertTrue([self threeDSParams:sourceParams matchCardSource:cardSource]);
-        completion(nil, expectedError);
-        [createSourceExp fulfill];
-    });
 
-    XCTestExpectation *paymentResultExp = [self expectationWithDescription:@"didCreatePaymentResult"];
-    OCMStub([self.mockDelegate paymentContext:[OCMArg any] didCreatePaymentResult:[OCMArg any] completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation){
-        STPPaymentResult *result;
-        STPErrorBlock completion;
-        [invocation getArgument:&result atIndex:3];
-        [invocation getArgument:&completion atIndex:4];
-        XCTAssertEqual(result.source, cardSource);
-        completion(nil);
-        OCMVerify([self.mockDelegate paymentContext:[OCMArg any] didFinishWithStatus:STPPaymentStatusSuccess
-                                              error:[OCMArg any]]);
-        [paymentResultExp fulfill];
-    });
+    [self stubAndVerifyCreateSourceCalledAndReturn3DSSource:nil
+                                              returnedError:expectedError];
+
+    [self stubAndVerifyDidCreatePaymentResultCalledWithSource:cardSource];
 
     [self.sut requestPayment];
 

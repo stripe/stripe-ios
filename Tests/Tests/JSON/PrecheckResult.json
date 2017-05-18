@@ -1,0 +1,5 @@
+{
+  "object": "precheck",
+  "required_actions": ["create_three_d_secure_source"],
+  "reason": "required_by_bank",
+}

@@ -25,6 +25,8 @@
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
 #import "STPSourceParams+Private.h"
+#import "STPSourcePrecheckParams.h"
+#import "STPSourcePrecheckResult.h"
 #import "STPSourcePoller.h"
 #import "STPTelemetryClient.h"
 #import "STPToken.h"
@@ -46,6 +48,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 static NSString *const apiURLBase = @"api.stripe.com/v1";
 static NSString *const tokenEndpoint = @"tokens";
 static NSString *const sourcesEndpoint = @"sources";
+static NSString *const precheckFinalPathComponent = @"precheck"; // precheck format is sources/SOURCE_ID/precheck
 static NSString *const fileUploadPath = @"https://uploads.stripe.com/v1/files";
 static NSString *const stripeAPIVersion = @"2015-10-12";
 
@@ -401,6 +404,23 @@ NSString *const STPNetworkActivityDidEndNotification = @"com.stripe.networkactiv
                                        completion:^(STPSource *object, __unused NSHTTPURLResponse *response, NSError *error) {
                                            completion(object, error);
                                        }];
+}
+
+- (void)precheckSourceWithParams:(STPSourcePrecheckParams *)precheckParams
+                      completion:(STPSourcePrecheckCompletionBlock)completion {
+    NSCAssert(precheckParams != nil, @"'precheckParams' is required for precheck");
+    NSCAssert(precheckParams.sourceID != nil, @"'precheckParams.sourceID' is required for precheck");
+    NSCAssert(completion != nil, @"'completion' is required to use the precheck result that is created");
+
+    NSString *precheckEndpoint = [[sourcesEndpoint stringByAppendingPathComponent:precheckParams.sourceID] stringByAppendingPathComponent:precheckFinalPathComponent];
+    NSDictionary *params = [STPFormEncoder dictionaryForObject:precheckParams];
+    [STPAPIRequest<STPSourcePrecheckResult *> postWithAPIClient:self
+                                                       endpoint:precheckEndpoint
+                                                     parameters:params
+                                                     serializer:[STPSourcePrecheckResult new]
+                                                     completion:^(STPSourcePrecheckResult *object, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                         completion(object, error);
+                                                     }];
 }
 
 - (void)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(STPSourceCompletionBlock)completion {
