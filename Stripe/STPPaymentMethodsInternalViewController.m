@@ -97,8 +97,9 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
     STPPaymentMethodTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STPPaymentMethodCellReuseIdentifier forIndexPath:indexPath];
     if (indexPath.section == STPPaymentMethodCardListSection) {
         id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
-        [cell configureWithPaymentMethod:paymentMethod theme:self.theme];
-        cell.selected = [paymentMethod isEqual:self.selectedPaymentMethod];
+        [cell configureWithPaymentMethod:paymentMethod
+                                selected:[paymentMethod isEqual:self.selectedPaymentMethod]
+                                   theme:self.theme];
     } else {
         [cell configureForNewCardRowWithTheme:self.theme];
     }

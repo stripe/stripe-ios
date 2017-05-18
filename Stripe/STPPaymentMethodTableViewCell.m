@@ -66,7 +66,9 @@
     [self setNeedsLayout];
 }
 
-- (void)configureWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod theme:(STPTheme *)theme {
+- (void)configureWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod
+                          selected:(BOOL)selected
+                             theme:(STPTheme *)theme {
     _paymentMethod = paymentMethod;
     _theme = theme;
     self.backgroundColor = [UIColor clearColor];
@@ -75,15 +77,9 @@
     self.titleLabel.font = self.theme.font;
     self.checkmarkIcon.tintColor = self.theme.accentColor;
     self.selected = NO;
-}
-
-- (void)setSelected:(BOOL)selected {
-    [super setSelected:selected];
-    if (self.paymentMethod != nil) {
-        self.checkmarkIcon.hidden = !self.selected;
-        self.leftIcon.tintColor = [self primaryColorForPaymentMethodWithSelectedState:self.selected];
-        self.titleLabel.attributedText = [self buildAttributedStringForPaymentMethod:self.paymentMethod selected:self.selected];
-    }
+    self.checkmarkIcon.hidden = !selected;
+    self.leftIcon.tintColor = [self primaryColorForPaymentMethodWithSelectedState:selected];
+    self.titleLabel.attributedText = [self buildAttributedStringForPaymentMethod:self.paymentMethod selected:selected];
 }
 
 - (UIColor *)primaryColorForPaymentMethodWithSelectedState:(BOOL)isSelected {
