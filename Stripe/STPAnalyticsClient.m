@@ -16,6 +16,7 @@
 #import "STPAddCardViewController.h"
 #import "STPAspects.h"
 #import "STPCard.h"
+#import "STPCardIOProxy.h"
 #import "STPFormEncodable.h"
 #import "STPPaymentCardTextField.h"
 #import "STPPaymentCardTextField+Private.h"
@@ -192,7 +193,6 @@
     [payload addEntriesFromDictionary:@{
                                         @"event": @"stripeios.source_creation",
                                         @"source_type": sourceType ?: @"unknown",
-                                        @"apple_pay_enabled": @([Stripe deviceSupportsApplePay]),
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
     [payload addEntriesFromDictionary:configurationDictionary];
@@ -246,6 +246,7 @@
     payload[@"app_name"] = [NSBundle stp_applicationName];
     payload[@"app_version"] = [NSBundle stp_applicationVersion];
     payload[@"apple_pay_enabled"] = @([Stripe deviceSupportsApplePay]);
+    payload[@"card_io_enabled"] = @([STPCardIOProxy isCardIOAvailable]);
     
     return payload;
 }
