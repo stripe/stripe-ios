@@ -114,7 +114,7 @@ static NSString *const STPSourceParamsKeyRedirectReturnURL = @"return_url";
         addressDict[newKey] = keyPairs[key];
     }
     NSMutableDictionary *ownerDict = [NSMutableDictionary dictionary];
-    ownerDict[STPSourceParamsKeyOwnerName] = [addressDict copy];
+    ownerDict[STPSourceParamsKeyOwnerAddress] = [addressDict copy];
     ownerDict[STPSourceParamsKeyOwnerName] = card.name;
     params.owner = [ownerDict copy];
     return params;
