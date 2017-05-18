@@ -198,22 +198,6 @@ static NSString *const STPSDKVersion = @"10.1.0";
 - (void)precheckSourceWithParams:(STPSourcePrecheckParams *)precheckParams
                       completion:(STPSourcePrecheckCompletionBlock)completion;
 
-
-/**
- *  Convenience method that combines precheck and createSource together for three d secure sources only,
- *
- *  You can pass in the parameters necessary to create a 3DS source from your 
- *  card source. This method will run the card through precheck, and if it is
- *  necessary to create a 3DS source for this card it will create it and return
- *  you that new source. Otherwise it will return nil (and you can proceed with
- *  charging the original card source).
- *
- *  @param sourceParams The details of the 3DS source to create. Passing in params for creating any other source type will result in an exception.
- *  @param completion The callback to run. If it did not contain an error, it will contain a new 3DS source if precheck said 3DS was required for the card, or a nil source if 3DS was not required.
- */
-- (void)precheckAndCreate3DSSourceIfNeededWithSourceParams:(STPSourceParams *)sourceParams
-                                                completion:(STP3DSSourcePrecheckCompletionBlock)completion;
-
 /**
  *  Retrieves the Source object with the given ID. @see https://stripe.com/docs/api#retrieve_source
  *

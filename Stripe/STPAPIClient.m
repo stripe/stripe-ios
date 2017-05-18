@@ -423,30 +423,6 @@ NSString *const STPNetworkActivityDidEndNotification = @"com.stripe.networkactiv
                                                      }];
 }
 
-- (void)precheckAndCreate3DSSourceIfNeededWithSourceParams:(STPSourceParams *)sourceParams
-                                                completion:(STP3DSSourcePrecheckCompletionBlock)completion {
-    NSCAssert(sourceParams != nil, @"'params' is required to create a source");
-    NSCAssert(completion != nil, @"'completion' is required to use the source that is created");
-    NSCAssert(sourceParams.type == STPSourceTypeThreeDSecure, @"Must use 3DS params");
-    NSCAssert(sourceParams.threeDSecureParamsCardId != nil, @"Must have a card id");
-
-    STPSourcePrecheckParams *precheckParams = [STPSourcePrecheckParams new];
-    precheckParams.sourceID = sourceParams.threeDSecureParamsCardId;
-    precheckParams.paymentAmount = sourceParams.amount;
-    precheckParams.paymentCurrency = sourceParams.currency;
-
-    [self precheckSourceWithParams:precheckParams completion:^(STPSourcePrecheckResult * _Nullable precheckResult, NSError * _Nullable precheckError) {
-        if ([precheckResult.requiredActions containsObject:STPSourcePrecheckRequiredActionCreateThreeDSecureSource]) {
-            [self createSourceWithParams:sourceParams completion:^(STPSource * _Nullable source, NSError * _Nullable createSourceError) {
-                completion(source, precheckResult, createSourceError);
-            }];
-        }
-        else {
-            completion(nil, precheckResult, precheckError);
-        }
-    }];
-}
-
 - (void)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(STPSourceCompletionBlock)completion {
     NSCAssert(identifier != nil, @"'identifier' is required to create a source");
     NSCAssert(secret != nil, @"'secret' is required to create a source");
