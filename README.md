@@ -26,7 +26,7 @@ There are 2 example apps included in the repository:
 - Stripe iOS Example (Simple) shows an integration using our prebuilt UI components [Swift]
 - Stripe iOS Example (Custom) shows how to use our low-level methods to accept payments using several different payment methods [Objective-C].
 
-To build and run the example apps, open `Stripe.xcworkspace` and choose the appropriate scheme.
+To build the example apps, you'll need to first run `./setup.sh`. Then, open `Stripe.xcworkspace` and choose the appropriate scheme.
 
 ### Getting started with the iOS example apps
 
