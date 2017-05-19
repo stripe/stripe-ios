@@ -43,7 +43,7 @@
     linkNSDictionaryCategory();
     linkNSMutableURLRequestCategory();
     linkNSStringCategory();
-    linkNSURLComponentsCategory()
+    linkNSURLComponentsCategory();
     linkPKPaymentAuthorizationViewControllerBlocksCategory();
     linkPKPaymentCategory();
     linkSTPAPIClientApplePayCategory();
