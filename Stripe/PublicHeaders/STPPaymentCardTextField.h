@@ -65,6 +65,7 @@
 /**
  *  STPPaymentCardTextField is a text field with similar properties to UITextField, but specialized for collecting credit/debit card information. It manages multiple UITextFields under the hood to collect this information. It's designed to fit on a single line, and from a design perspective can be used anywhere a UITextField would be appropriate.
  */
+IB_DESIGNABLE
 @interface STPPaymentCardTextField : UIControl <UIKeyInput>
 
 /**
@@ -95,17 +96,17 @@
 /**
  *  The placeholder for the card number field. Default is @"1234567812345678". If this is set to something that resembles a card number, it will automatically format it as such (in other words, you don't need to add spaces to this string).
  */
-@property(nonatomic, copy, nullable) NSString *numberPlaceholder;
+@property(nonatomic, copy, nullable) IBInspectable NSString *numberPlaceholder;
 
 /**
  *  The placeholder for the expiration field. Defaults to @"MM/YY".
  */
-@property(nonatomic, copy, nullable) NSString *expirationPlaceholder;
+@property(nonatomic, copy, nullable) IBInspectable NSString *expirationPlaceholder;
 
 /**
  *  The placeholder for the cvc field. Defaults to @"CVC".
  */
-@property(nonatomic, copy, nullable) NSString *cvcPlaceholder;
+@property(nonatomic, copy, nullable) IBInspectable NSString *cvcPlaceholder;
 
 /**
  *  The cursor color for the field. This is a proxy for the view's tintColor property, exposed for clarity only (in other words, calling setCursorColor is identical to calling setTintColor).
