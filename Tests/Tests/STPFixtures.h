@@ -51,16 +51,4 @@
  */
 + (STPPaymentConfiguration *)paymentConfiguration;
 
-/**
- A stateless API adapter that always retrieves the same customer object.
- */
-+ (id<STPBackendAPIAdapter>)staticAPIAdapter;
-
-/**
- A stateless API adapter that always retrieves the given customer.
- selectDefaultSource and attachSource immediately call their completion blocks
- with nil.
- */
-+ (id<STPBackendAPIAdapter>)staticAPIAdapterWithCustomer:(STPCustomer *)customer;
-
 @end

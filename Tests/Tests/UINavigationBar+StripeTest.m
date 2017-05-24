@@ -10,6 +10,7 @@
 #import <OCMock/OCMock.h>
 #import <Stripe/Stripe.h>
 #import "STPFixtures.h"
+#import "STPMocks.h"
 
 @interface UINavigationBar_StripeTest : XCTestCase
 
@@ -18,7 +19,7 @@
 @implementation UINavigationBar_StripeTest
 
 - (STPPaymentMethodsViewController *)buildPaymentMethodsViewController {
-    id apiAdapter = [STPFixtures staticAPIAdapter];
+    id apiAdapter = [STPMocks staticAPIAdapter];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.publishableKey = @"pk_test";
     STPTheme *theme = [STPTheme defaultTheme];
