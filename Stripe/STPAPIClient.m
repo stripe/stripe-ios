@@ -387,7 +387,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 - (void)createSourceWithParams:(STPSourceParams *)sourceParams completion:(STPSourceCompletionBlock)completion {
     NSCAssert(sourceParams != nil, @"'params' is required to create a source");
     NSCAssert(completion != nil, @"'completion' is required to use the source that is created");
-    NSString *sourceType = [STPSource stringFromType:sourceParams.type];
+    NSString *sourceType = sourceParams.rawTypeString;
     [[STPAnalyticsClient sharedClient] logSourceCreationAttemptWithConfiguration:self.configuration
                                                                       sourceType:sourceType];
     sourceParams.redirectMerchantName = self.configuration.companyName ?: [NSBundle stp_applicationName];
