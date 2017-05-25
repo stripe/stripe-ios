@@ -167,7 +167,9 @@
         [self.apiAdapter selectDefaultCustomerSource:(STPCard *)paymentMethod completion:^(__unused NSError *error) {
         }];
     }
-    [self.delegate paymentMethodsViewController:self didSelectPaymentMethod:paymentMethod];
+    if ([self.delegate respondsToSelector:@selector(paymentMethodsViewController:didSelectPaymentMethod:)]) {
+        [self.delegate paymentMethodsViewController:self didSelectPaymentMethod:paymentMethod];
+    }
     [self.delegate paymentMethodsViewControllerDidFinish:self];
 }
 
@@ -260,8 +262,10 @@
         }] onSuccess:^(STPPaymentMethodTuple *tuple) {
             STRONG(self);
             if (tuple.selectedPaymentMethod) {
-                [self.delegate paymentMethodsViewController:self
+                if ([self.delegate respondsToSelector:@selector(paymentMethodsViewController:didSelectPaymentMethod:)]) {
+                    [self.delegate paymentMethodsViewController:self
                                          didSelectPaymentMethod:tuple.selectedPaymentMethod];
+                }
             }
         }] onFailure:^(NSError *error) {
             STRONG(self);
