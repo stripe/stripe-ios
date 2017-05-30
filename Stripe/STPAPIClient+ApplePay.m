@@ -11,14 +11,16 @@
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient+Private.h"
 #import "STPAnalyticsClient.h"
+#import "STPTelemetryClient.h"
 
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 @implementation STPAPIClient (ApplePay)
 
 - (void)createTokenWithPayment:(PKPayment *)payment completion:(STPTokenCompletionBlock)completion {
-    NSDictionary *parameters = [[self class] parametersForPayment:payment];
-    [self createTokenWithParameters:parameters
+    NSMutableDictionary *params = [[[self class] parametersForPayment:payment] mutableCopy];
+    [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
+    [self createTokenWithParameters:params
                          completion:completion];
 }
 

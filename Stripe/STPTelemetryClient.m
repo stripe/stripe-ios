@@ -80,12 +80,18 @@
     return localeID ?: @"";
 }
 
-- (NSString *)platform {
+- (NSString *)deviceAndPlatform {
+    return [@[[self device], [self platform]] componentsJoinedByString:@" "];
+}
+
+- (NSString *)device {
     struct utsname systemInfo;
     uname(&systemInfo);
-    NSString *deviceType = @(systemInfo.machine) ?: @"";
-    NSString *version = [UIDevice currentDevice].systemVersion ?: @"";
-    return [@[deviceType, version] componentsJoinedByString:@" "];
+    return @(systemInfo.machine) ?: @"";
+}
+
+- (NSString *)platform {
+    return [UIDevice currentDevice].systemVersion ?: @"";
 }
 
 - (NSString *)screenSize {
@@ -114,7 +120,7 @@
     NSMutableDictionary *payload = [NSMutableDictionary new];
     NSMutableDictionary *data = [NSMutableDictionary new];
     data[@"c"] = [self encodeValue:[self language]];
-    data[@"d"] = [self encodeValue:[self platform]];
+    data[@"d"] = [self encodeValue:[self deviceAndPlatform]];
     data[@"f"] = [self encodeValue:[self screenSize]];
     data[@"g"] = [self encodeValue:[self timeZoneOffset]];
     payload[@"a"] = [data copy];
@@ -123,6 +129,8 @@
     otherData[@"k"] = [NSBundle stp_applicationName];
     otherData[@"l"] = [NSBundle stp_applicationVersion];
     otherData[@"m"] = @([Stripe deviceSupportsApplePay]);
+    otherData[@"r"] = [self platform];
+    otherData[@"o"] = [self device];
     payload[@"b"] = [otherData copy];
     payload[@"tag"] = STPSDKVersion;
     payload[@"src"] = @"ios-sdk";
