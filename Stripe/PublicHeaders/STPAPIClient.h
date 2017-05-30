@@ -142,32 +142,91 @@ static NSString *const STPSDKVersion = @"10.1.0";
 
 /**
  *  Convenience methods for working with Apple Pay.
+ *  If you're accepting Apple Pay outside the US, be sure to use the variants 
+ *  that accept a country parameter, as a different set of payment networks may
+ *  be available in your country.
  */
 @interface Stripe(ApplePay)
 
 /**
- *  Whether or not this device is capable of using Apple Pay. This checks both whether the user is running an iPhone 6/6+ or later, iPad Air 2 or later, or iPad
- *mini 3 or later, as well as whether or not they have stored any cards in Apple Pay on their device.
+ *  The payment networks that Stripe supports in the given country. 
+ *  You should use this method to set the `supportedNetworks` property of your 
+ *  `PKPaymentRequest`.
  *
- *  @param paymentRequest The return value of this method depends on the `supportedNetworks` property of this payment request, which by default should be
- *`@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover]`.
+ *  @param countryCode  Your two-letter ISO 3166 country code.
+ *  @return an array of supported PKPaymentNetworks for the given country.
+ */
++ (NSArray<NSString *> *)supportedPaymentNetworksForCountry:(NSString *)countryCode;
+
+/**
+ *  Validates the given payment request. This method checks if the payment request 
+ *  is properly configured, and whether or not the device supports Apple Pay.
+ *
+ *  @param paymentRequest The payment request to validate. You should use
+ *  the `supportedPaymentNetworksForCountry:` method to set the `supportedNetworks`
+ *  property of your payment request.
  *
  *  @return whether or not the user is currently able to pay with Apple Pay.
  */
 + (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest NS_AVAILABLE_IOS(8_0);
 
+/**
+ *  Whether or not this device is capable of using Apple Pay. 
+ *  This method checks whether Apple Pay is available on the user's hardware,
+ *  as well as whether or not the device has any saved Apple Pay cards from
+ *  supported payment networks.
+ *
+ *  Note that this method assumes you are accepting Apple Pay within the US.
+ *  If you are accepting Apple Pay payments outside the US, you should use
+ *  `deviceSupportsApplePayInCountry:`.
+ *
+ *  @return whether or not the device supports Apple Pay.
+ */
 + (BOOL)deviceSupportsApplePay;
 
 /**
- *  A convenience method to return a `PKPaymentRequest` with sane default values. You will still need to configure the `paymentSummaryItems` property to indicate
- *what the user is purchasing, as well as the optional `requiredShippingAddressFields`, `requiredBillingAddressFields`, and `shippingMethods` properties to indicate
- *what contact information your application requires.
+ *  Whether or not this device is capable of using Apple Pay in the given country.
+ *  This method checks whether Apple Pay is available on the user's hardware,
+ *  as well as whether or not the device has any saved Apple Pay cards from
+ *  supported payment networks.
  *
- *  @param merchantIdentifier Your Apple Merchant ID, as obtained at https://developer.apple.com/account/ios/identifiers/merchant/merchantCreate.action
+ *  @param countryCode  Your two-letter ISO 3166 country code.
+ *
+ *  @return whether or not the device supports Apple Pay.
+ */
++ (BOOL)deviceSupportsApplePayInCountry:(NSString *)countryCode;
+
+/**
+ *  A convenience method to return a `PKPaymentRequest` with sane default values. 
+ *  You will still need to configure the `paymentSummaryItems` property to indicate
+ *  what the user is purchasing, as well as the optional `requiredShippingAddressFields`, 
+ *  `requiredBillingAddressFields`, and `shippingMethods` properties to indicate
+ *  what contact information your application requires.
+ *
+ *  Note that this method assumes you are accepting Apple Pay within the US.
+ *  If you are accepting Apple Pay payments outside the US, you should use
+ *  `paymentRequestWithMerchantIdentifier:country:`.
+ *
+ *  @param merchantIdentifier Your Apple Merchant ID.
  *
  *  @return a `PKPaymentRequest` with proper default values. Returns nil if running on < iOS8.
  */
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier NS_AVAILABLE_IOS(8_0);
+
+/**
+ *  A convenience method to return a `PKPaymentRequest` with sane default values
+ *  for the given country. The payment request's currency will be set to "USD".
+ *  You will still need to configure the `paymentSummaryItems` property to indicate
+ *  what the user is purchasing, as well as the optional `requiredShippingAddressFields`,
+ *  `requiredBillingAddressFields`, and `shippingMethods` properties to indicate
+ *  what contact information your application requires.
+ *
+ *  @param merchantIdentifier Your Apple Merchant ID.
+ *  @param countryCode        Your two-letter ISO 3166 country code.
+ *
+ *  @return a `PKPaymentRequest` with proper default values. Returns nil if running on < iOS8.
+ */
++ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier country:(NSString *)countryCode NS_AVAILABLE_IOS(8_0);
 
 @end
 
