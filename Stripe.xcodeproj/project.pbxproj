@@ -92,7 +92,7 @@
 		0451CC451C49AE1C003B2CA6 /* STPPaymentResult.h in Headers */ = {isa = PBXBuildFile; fileRef = 0451CC421C49AE1C003B2CA6 /* STPPaymentResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0451CC461C49AE1C003B2CA6 /* STPPaymentResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 0451CC431C49AE1C003B2CA6 /* STPPaymentResult.m */; };
 		0451CC471C49AE1C003B2CA6 /* STPPaymentResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 0451CC431C49AE1C003B2CA6 /* STPPaymentResult.m */; };
-		04533E7D1A6877F400C7E52E /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D5BF9019BF958F009521A5 /* PassKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		04533E7D1A6877F400C7E52E /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D5BF9019BF958F009521A5 /* PassKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		045A62AB1B8E7259000165CE /* STPPaymentCardTextFieldTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 045A62AA1B8E7259000165CE /* STPPaymentCardTextFieldTest.m */; };
 		045D71071CEED3AA00F6CD65 /* STPRememberMeEmailCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 045D71051CEED3AA00F6CD65 /* STPRememberMeEmailCell.h */; };
 		045D71081CEED3AA00F6CD65 /* STPRememberMeEmailCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 045D71051CEED3AA00F6CD65 /* STPRememberMeEmailCell.h */; };
@@ -678,6 +678,7 @@
 		F1D64B2B1D8767FC001CDB7C /* STPWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D64B281D8767FC001CDB7C /* STPWebViewController.m */; };
 		F1D64B2C1D8767FC001CDB7C /* STPWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D64B281D8767FC001CDB7C /* STPWebViewController.m */; };
 		F1D64B2E1D87686E001CDB7C /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D64B2D1D87686E001CDB7C /* WebKit.framework */; };
+		F1D765CE1EDE331500F37005 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1D765CD1EDE331500F37005 /* CoreLocation.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		F1D777C01D81DD520076FA19 /* STPStringUtilsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */; };
 		F1D96F961DC7D82400477E64 /* STPLocalizationUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F1D96F951DC7D82400477E64 /* STPLocalizationUtils.h */; };
 		F1D96F971DC7D82400477E64 /* STPLocalizationUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F1D96F951DC7D82400477E64 /* STPLocalizationUtils.h */; };
@@ -1147,6 +1148,7 @@
 		F1D64B271D8767FC001CDB7C /* STPWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPWebViewController.h; sourceTree = "<group>"; };
 		F1D64B281D8767FC001CDB7C /* STPWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPWebViewController.m; sourceTree = "<group>"; };
 		F1D64B2D1D87686E001CDB7C /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		F1D765CD1EDE331500F37005 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPStringUtilsTest.m; sourceTree = "<group>"; };
 		F1D96F951DC7D82400477E64 /* STPLocalizationUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPLocalizationUtils.h; sourceTree = "<group>"; };
 		F1D96F981DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPLocalizationUtils+STPTestAdditions.h"; sourceTree = "<group>"; };
@@ -1192,6 +1194,7 @@
 			files = (
 				F116E94B1D83404D0026A52A /* AddressBook.framework in Frameworks */,
 				F15232311EA93E6800D65C67 /* Contacts.framework in Frameworks */,
+				F1D765CE1EDE331500F37005 /* CoreLocation.framework in Frameworks */,
 				F116E94C1D83405E0026A52A /* Foundation.framework in Frameworks */,
 				04533E7D1A6877F400C7E52E /* PassKit.framework in Frameworks */,
 				F116E94D1D8340640026A52A /* Security.framework in Frameworks */,
@@ -1404,6 +1407,7 @@
 		11C74B9A164043050071C2CA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F1D765CD1EDE331500F37005 /* CoreLocation.framework */,
 				F15232301EA93E6800D65C67 /* Contacts.framework */,
 				C11B14961E8AE316000F760C /* OCMock.framework */,
 				F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */,

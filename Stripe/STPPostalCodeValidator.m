@@ -16,7 +16,7 @@
                            type:(STPPostalCodeType)postalCodeType {
     switch (postalCodeType) {
         case STPCountryPostalCodeTypeNumericOnly:
-            return [STPCardValidator sanitizedNumericStringForString:string].length > 0;
+            return [STPCardValidator sanitizedNumericStringForString:string].length == 5;
         case STPCountryPostalCodeTypeAlphanumeric:
             return string.length > 0;
         case STPCountryPostalCodeTypeNotRequired:

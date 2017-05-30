@@ -10,6 +10,9 @@
 #import "NSArray+Stripe_BoundSafe.h"
 #import "STPPostalCodeValidator.h"
 
+#import <AddressBook/AddressBook.h>
+#import <CoreLocation/CoreLocation.h>
+
 @interface STPAddressViewModel()<STPAddressFieldTableViewCellDelegate>
 @property(nonatomic)BOOL isBillingAddress;
 @property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
@@ -41,9 +44,9 @@
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeName contents:@"" lastInList:NO delegate:self],
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine1 contents:@"" lastInList:NO delegate:self],
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine2 contents:@"" lastInList:NO delegate:self],
+                                  // Postal code cell will be added here later if necessary
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCity contents:@"" lastInList:NO delegate:self],
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeState contents:@"" lastInList:NO delegate:self],
-                                  // Postal code cell will be added later if necessary
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCountry contents:_addressFieldTableViewCountryCode lastInList:YES delegate:self],
                                   ];
                 break;
@@ -70,9 +73,9 @@
                                              [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeName contents:@"" lastInList:NO delegate:self],
                                              [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine1 contents:@"" lastInList:NO delegate:self],
                                              [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeLine2 contents:@"" lastInList:NO delegate:self],
+                                             // Postal code cell will be added here later if necessary
                                              [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCity contents:@"" lastInList:NO delegate:self],
                                              [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeState contents:@"" lastInList:NO delegate:self],
-                                             // Postal code cell will be added later if necessary
                                              [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCountry contents:_addressFieldTableViewCountryCode lastInList:NO delegate:self],
                                              ] mutableCopy];
             if (requiredShippingAddressFields & PKAddressFieldName) {
@@ -110,13 +113,13 @@
             [self.delegate addressViewModelDidChange:self];
         }
         else if (self.containsStateAndPostalFields) {
-            // Add after STPAddressFieldTypeState
+            // Add before city
             NSUInteger stateFieldIndex = [self.addressCells indexOfObjectPassingTest:^BOOL(STPAddressFieldTableViewCell * _Nonnull obj, NSUInteger __unused idx, BOOL * _Nonnull __unused stop) {
-                return (obj.type == STPAddressFieldTypeState);
+                return (obj.type == STPAddressFieldTypeCity);
             }];
 
             if (stateFieldIndex != NSNotFound) {
-                NSUInteger zipFieldIndex = stateFieldIndex + 1;
+                NSUInteger zipFieldIndex = stateFieldIndex;
 
                 NSMutableArray<STPAddressFieldTableViewCell *> *mutableAddressCells = self.addressCells.mutableCopy;
                 [mutableAddressCells insertObject:[[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeZip contents:@"" lastInList:NO delegate:self]
@@ -165,6 +168,60 @@
 
 - (void)addressFieldTableViewCellDidReturn:(STPAddressFieldTableViewCell *)cell {
     [[self cellAfterCell:cell] becomeFirstResponder];
+}
+
+- (void)addressFieldTableViewCellDidEndEditing:(STPAddressFieldTableViewCell *)cell {
+    if (cell.type == STPAddressFieldTypeZip) {
+        [self updateCityAndStateFromZipCodeCell:cell];
+    }
+}
+
+- (void)updateCityAndStateFromZipCodeCell:(STPAddressFieldTableViewCell *)zipCell {
+
+    if (!zipCell.textField.validText
+        || ![_addressFieldTableViewCountryCode isEqualToString:@"US"]) {
+        return;
+    }
+
+    NSString *zipCode = zipCell.contents;
+    STPAddressFieldTableViewCell *cityCell = nil;
+    STPAddressFieldTableViewCell *stateCell = nil;
+    for (STPAddressFieldTableViewCell *cell in self.addressCells) {
+        if (cell.type == STPAddressFieldTypeCity) {
+            cityCell = cell;
+        }
+        else if (cell.type == STPAddressFieldTypeState) {
+            stateCell = cell;
+        }
+    }
+
+    if ((cityCell == nil && stateCell == nil)
+        || (cityCell.contents.length > 0 || stateCell.contents.length > 0)) {
+        // Don't auto fill if either have text already
+        // Or if neither are non-nil
+        return;
+    }
+    else {
+
+        CLGeocoder *geocoder = [CLGeocoder new];
+        NSString *zipKey = (NSString *) kABPersonAddressZIPKey;
+        NSString *countryCodeKey = (NSString *) kABPersonAddressCountryCodeKey;
+
+        if (zipKey && countryCodeKey) {
+            [geocoder geocodeAddressDictionary:@{zipKey : zipCode,
+                                                 countryCodeKey : _addressFieldTableViewCountryCode}
+                             completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+                                 if (placemarks.count > 0 && error == nil) {
+                                     CLPlacemark *placemark = placemarks.firstObject;
+                                     if (cityCell.contents.length == 0 && stateCell.contents.length == 0) {
+                                         // Check contents again to make sure they're still empty
+                                         cityCell.contents = placemark.locality;
+                                         stateCell.contents = placemark.administrativeArea;
+                                     }
+                                 }
+                             }];
+        }
+    }
 }
 
 - (void)addressFieldTableViewCellDidBackspaceOnEmpty:(STPAddressFieldTableViewCell *)cell {

@@ -290,6 +290,9 @@
 
 - (void)textFieldDidEndEditing:(STPFormTextField *)textField {
     textField.validText = [self validContents];
+    if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCellDidEndEditing:)]) {
+        [self.delegate addressFieldTableViewCellDidEndEditing:self];
+    }
 }
 
 - (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
@@ -350,7 +353,8 @@
             return YES;
         case STPAddressFieldTypeZip: {
             if (self.postalCodeType == STPCountryPostalCodeTypeNumericOnly) {
-                return [STPCardValidator stringIsNumeric:self.contents];
+                return ([STPCardValidator stringIsNumeric:self.contents]
+                        && self.contents.length <= 5);
             }
             else {
                 return YES;
