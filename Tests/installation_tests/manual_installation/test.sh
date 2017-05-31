@@ -22,5 +22,5 @@ mkdir $FRAMEWORKDIR
 cp $BUILDDIR/StripeiOS-Static.zip $FRAMEWORKDIR
 ditto -xk $FRAMEWORKDIR/StripeiOS-Static.zip $FRAMEWORKDIR
 
-xcodebuild clean build-for-testing -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.1' | xcpretty -c
-xcodebuild test-without-building -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.1' | xcpretty -c
+xcodebuild clean build-for-testing -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.3' | xcpretty -c
+xcodebuild test-without-building -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.3' | xcpretty -c
