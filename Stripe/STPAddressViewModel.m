@@ -7,7 +7,9 @@
 //
 
 #import "STPAddressViewModel.h"
+
 #import "NSArray+Stripe_BoundSafe.h"
+#import "STPDispatchFunctions.h"
 #import "STPPostalCodeValidator.h"
 
 #import <AddressBook/AddressBook.h>
@@ -19,6 +21,7 @@
 @property(nonatomic)PKAddressField requiredShippingAddressFields;
 @property(nonatomic)NSArray<STPAddressFieldTableViewCell *> *addressCells;
 @property(nonatomic)BOOL showingPostalCodeCell;
+@property(nonatomic)BOOL geocodeInProgress;
 @end
 
 @implementation STPAddressViewModel
@@ -178,12 +181,15 @@
 
 - (void)updateCityAndStateFromZipCodeCell:(STPAddressFieldTableViewCell *)zipCell {
 
-    if (!zipCell.textField.validText
+    NSString *zipCode = zipCell.contents;
+
+    if (self.geocodeInProgress
+        || zipCode == nil
+        || !zipCell.textField.validText
         || ![_addressFieldTableViewCountryCode isEqualToString:@"US"]) {
         return;
     }
 
-    NSString *zipCode = zipCell.contents;
     STPAddressFieldTableViewCell *cityCell = nil;
     STPAddressFieldTableViewCell *stateCell = nil;
     for (STPAddressFieldTableViewCell *cell in self.addressCells) {
@@ -208,17 +214,24 @@
         NSString *countryCodeKey = (NSString *) kABPersonAddressCountryCodeKey;
 
         if (zipKey && countryCodeKey) {
+            self.geocodeInProgress = YES;
             [geocoder geocodeAddressDictionary:@{zipKey : zipCode,
                                                  countryCodeKey : _addressFieldTableViewCountryCode}
                              completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
-                                 if (placemarks.count > 0 && error == nil) {
-                                     CLPlacemark *placemark = placemarks.firstObject;
-                                     if (cityCell.contents.length == 0 && stateCell.contents.length == 0) {
-                                         // Check contents again to make sure they're still empty
-                                         cityCell.contents = placemark.locality;
-                                         stateCell.contents = placemark.administrativeArea;
+                                 stpDispatchToMainThreadIfNecessary(^{
+                                     if (placemarks.count > 0 && error == nil) {
+                                         CLPlacemark *placemark = placemarks.firstObject;
+                                         if (cityCell.contents.length == 0
+                                             && stateCell.contents.length == 0
+                                             && [zipCell.contents isEqualToString:zipCode]) {
+                                             // Check contents again to make sure they're still empty
+                                             // And that zipcode hasn't changed to something else
+                                             cityCell.contents = placemark.locality;
+                                             stateCell.contents = placemark.administrativeArea;
+                                         }
                                      }
-                                 }
+                                     self.geocodeInProgress = NO;
+                                 });
                              }];
         }
     }
