@@ -86,6 +86,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         _didAppearPromise = [STPVoidPromise new];
         _apiClient = [[STPAPIClient alloc] initWithPublishableKey:configuration.publishableKey];
         _paymentCurrency = @"USD";
+        _paymentCountry = @"US";
         _paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithAmount:0];
         _modalPresentationStyle = UIModalPresentationFullScreen;
         _state = STPPaymentContextStateNone;
@@ -571,7 +572,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     if (!self.configuration.appleMerchantIdentifier || !self.paymentAmount) {
         return nil;
     }
-    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.configuration.appleMerchantIdentifier];
+    PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:self.configuration.appleMerchantIdentifier country:self.paymentCountry currency:self.paymentCurrency];
 
     NSArray<PKPaymentSummaryItem *> *summaryItems = self.paymentSummaryItems;
     paymentRequest.paymentSummaryItems = summaryItems;

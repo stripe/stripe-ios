@@ -1,3 +1,7 @@
+== 11.0.0 2017-XX-XX
+* We've added a `paymentCountry` property to `STPPaymentContext`. This affects the countryCode of Apple Pay payments, and defaults to "US". You should set this to the country your Stripe account is in.
+* `paymentRequestWithMerchantIdentifier:` has been deprecated. See MIGRATING.md
+
 == 10.1.0 2017-05-05
 * Adds STPRedirectContext, a helper class for handling redirect sources.
 * STPAPIClient now supports tokenizing a PII number and uploading images.

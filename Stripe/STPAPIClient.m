@@ -369,12 +369,18 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 }
 
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier {
+    return [self paymentRequestWithMerchantIdentifier:merchantIdentifier country:@"US" currency:@"USD"];
+}
+
++ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier
+                                                   country:(NSString *)countryCode
+                                                  currency:(NSString *)currencyCode {
     PKPaymentRequest *paymentRequest = [PKPaymentRequest new];
     [paymentRequest setMerchantIdentifier:merchantIdentifier];
     [paymentRequest setSupportedNetworks:[self supportedPKPaymentNetworks]];
     [paymentRequest setMerchantCapabilities:PKMerchantCapability3DS];
-    [paymentRequest setCountryCode:@"US"];
-    [paymentRequest setCurrencyCode:@"USD"];
+    [paymentRequest setCountryCode:countryCode];
+    [paymentRequest setCurrencyCode:currencyCode];
     return paymentRequest;
 }
 
