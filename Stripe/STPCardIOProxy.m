@@ -109,12 +109,12 @@
     [viewController presentViewController:cardIOViewController animated:YES completion:nil];
 }
 
-- (void)userDidCancelPaymentViewController:(UIViewController *)scanViewController {
+- (void)userDidCancelPaymentViewController:(UIViewController *)scanViewController { FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
     [scanViewController dismissViewControllerAnimated:YES completion:nil];
     [[STPAnalyticsClient sharedClient] addAdditionalInfo:@"cardio_canceled"];
 }
 
-- (void)userDidProvideCreditCardInfo:(STPCardIOCreditCardInfoProxy *)info inPaymentViewController:(UIViewController *)scanViewController {
+- (void)userDidProvideCreditCardInfo:(STPCardIOCreditCardInfoProxy *)info inPaymentViewController:(UIViewController *)scanViewController { FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
     [scanViewController dismissViewControllerAnimated:YES completion:^{
         STPCardParams *cardParams = [STPCardParams new];
         cardParams.number = info.cardNumber;
