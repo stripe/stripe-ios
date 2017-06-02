@@ -81,11 +81,17 @@
 }
 
 - (NSString *)platform {
+    return [@[[self deviceModel], [self osVersion]] componentsJoinedByString:@" "];
+}
+
+- (NSString *)deviceModel {
     struct utsname systemInfo;
     uname(&systemInfo);
-    NSString *deviceType = @(systemInfo.machine) ?: @"";
-    NSString *version = [UIDevice currentDevice].systemVersion ?: @"";
-    return [@[deviceType, version] componentsJoinedByString:@" "];
+    return @(systemInfo.machine) ?: @"";
+}
+
+- (NSString *)osVersion {
+    return [UIDevice currentDevice].systemVersion ?: @"";
 }
 
 - (NSString *)screenSize {
@@ -123,6 +129,8 @@
     otherData[@"k"] = [NSBundle stp_applicationName];
     otherData[@"l"] = [NSBundle stp_applicationVersion];
     otherData[@"m"] = @([Stripe deviceSupportsApplePay]);
+    otherData[@"o"] = [self osVersion];
+    otherData[@"s"] = [self deviceModel];
     payload[@"b"] = [otherData copy];
     payload[@"tag"] = STPSDKVersion;
     payload[@"src"] = @"ios-sdk";
