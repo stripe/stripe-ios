@@ -92,6 +92,10 @@ static NSInteger STPPaymentMethodNewPaymentsSection = 1;
     [self.delegate internalViewControllerDidCancel];
 }
 
+- (void)handleBackOrCancelTapped:(__unused id)sender {
+    [self.delegate internalViewControllerDidCancel];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
     return 2;
 }
