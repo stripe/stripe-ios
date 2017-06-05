@@ -15,8 +15,10 @@
 + (BOOL)stringIsValidPostalCode:(nullable NSString *)string
                            type:(STPPostalCodeType)postalCodeType {
     switch (postalCodeType) {
-        case STPCountryPostalCodeTypeNumericOnly:
-            return [STPCardValidator sanitizedNumericStringForString:string].length > 0;
+        case STPCountryPostalCodeTypeNumericOnly: {
+            NSInteger length = [STPCardValidator sanitizedNumericStringForString:string].length;
+            return (length == 5 || length == 9);
+        }
         case STPCountryPostalCodeTypeAlphanumeric:
             return string.length > 0;
         case STPCountryPostalCodeTypeNotRequired:

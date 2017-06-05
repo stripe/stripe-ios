@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
 
 @optional
 - (void)addressFieldTableViewCellDidReturn:(STPAddressFieldTableViewCell *)cell;
+- (void)addressFieldTableViewCellDidEndEditing:(STPAddressFieldTableViewCell *)cell;
 @property (nonatomic, copy) NSString *addressFieldTableViewCountryCode;
 
 @end
