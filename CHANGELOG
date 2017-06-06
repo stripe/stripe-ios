@@ -1,3 +1,6 @@
+== 11.0.0 2017-XX-XX
+* We've made some updates to our Apple Pay helper methods. If you're accepting Apple Pay outside the US, be sure to use the methods that accept a country parameter, as a different set of payment networks may be available in your country.
+
 == 10.1.0 2017-05-05
 * Adds STPRedirectContext, a helper class for handling redirect sources.
 * STPAPIClient now supports tokenizing a PII number and uploading images.

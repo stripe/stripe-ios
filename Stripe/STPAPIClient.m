@@ -348,7 +348,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @implementation Stripe (ApplePay)
 
 + (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest {
-    if (![self deviceSupportsApplePay]) {
+    BOOL deviceSupportsApplePay = [self deviceSupportsApplePayInCountry:paymentRequest.countryCode];
+    if (!deviceSupportsApplePay) {
         return NO;
     }
     if (paymentRequest == nil) {
@@ -360,24 +361,33 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     return [[[paymentRequest.paymentSummaryItems lastObject] amount] floatValue] > 0;
 }
 
-+ (NSArray<NSString *> *)supportedPKPaymentNetworks {
++ (NSArray<NSString *> *)supportedPaymentNetworksForCountry:(NSString *)countryCode {
     NSArray *supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa];
-    if ((&PKPaymentNetworkDiscover) != NULL) {
+    if ((&PKPaymentNetworkDiscover) != NULL && [countryCode isEqualToString:@"US"]) {
         supportedNetworks = [supportedNetworks arrayByAddingObject:PKPaymentNetworkDiscover];
     }
     return supportedNetworks;
 }
 
 + (BOOL)deviceSupportsApplePay {
-    return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:[self supportedPKPaymentNetworks]];
+    return [self deviceSupportsApplePayInCountry:@"US"];
+}
+
++ (BOOL)deviceSupportsApplePayInCountry:(NSString *)countryCode {
+    NSArray<NSString *> *supportedNetworks = [self supportedPaymentNetworksForCountry:countryCode];
+    return [PKPaymentAuthorizationViewController class] && [PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:supportedNetworks];
 }
 
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier {
+    return [self paymentRequestWithMerchantIdentifier:merchantIdentifier country:@"US"];
+}
+
++ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier country:(NSString *)countryCode {
     PKPaymentRequest *paymentRequest = [PKPaymentRequest new];
     [paymentRequest setMerchantIdentifier:merchantIdentifier];
-    [paymentRequest setSupportedNetworks:[self supportedPKPaymentNetworks]];
+    [paymentRequest setSupportedNetworks:[self supportedPaymentNetworksForCountry:countryCode]];
     [paymentRequest setMerchantCapabilities:PKMerchantCapability3DS];
-    [paymentRequest setCountryCode:@"US"];
+    [paymentRequest setCountryCode:countryCode];
     [paymentRequest setCurrencyCode:@"USD"];
     return paymentRequest;
 }
