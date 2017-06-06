@@ -8,12 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+#import "STPPaymentCardTextField.h"
+
+#import "NSString+Stripe.h"
 #import "STPFormTextField.h"
 #import "STPImageLibrary.h"
 #import "STPPaymentCardTextFieldViewModel.h"
 #import "STPWeakStrongMacros.h"
 #import "Stripe.h"
 #import "STPLocalizationUtils.h"
+
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -848,12 +852,38 @@ __block STPCardTextFieldState expiryVisibility = STPCardTextFieldStateVisible;
     CGFloat xOffset = hPadding;
     CGFloat width = 0;
 
+    width = [self numberFieldFullWidth]; // Number field is always actually full width, just sometimes clipped off to the left when "compressed"
     if (panVisibility == STPCardTextFieldStateCompressed) {
         // Need to lower xOffset so pan is partially off-screen
-        xOffset -= [self widthForCardNumber:[self.viewModel numberWithoutLastDigits]];
-    }
 
-    width = [self numberFieldFullWidth]; // Number field is always actually full width, just sometimes clipped off to the left when "compressed"
+        NSString *cardNumberToUse = self.cardNumber;
+        if (cardNumberToUse.length == 0) {
+            cardNumberToUse = self.viewModel.defaultPlaceholder;
+        }
+
+        NSUInteger length = [STPCardValidator fragmentLengthForCardBrand:[STPCardValidator brandForNumber:cardNumberToUse]];
+        NSUInteger toIndex = cardNumberToUse.length - length;
+        NSString *cardFragment = nil;
+
+        if (toIndex < cardNumberToUse.length) {
+            cardFragment = [cardNumberToUse stp_safeSubstringFromIndex:toIndex];
+        }
+        else {
+            cardFragment = [self.viewModel.defaultPlaceholder stp_safeSubstringFromIndex:toIndex];
+        }
+        CGFloat visibleWidth = [self widthForText:cardFragment];
+        xOffset -= (width - visibleWidth);
+        UIView *maskView = [[UIView alloc] initWithFrame:CGRectMake((width - visibleWidth),
+                                                                    0,
+                                                                    visibleWidth,
+                                                                    fieldsHeight)];
+        maskView.backgroundColor = [UIColor blackColor];
+        maskView.opaque = YES;
+        self.numberField.maskView = maskView;
+    }
+    else {
+        self.numberField.maskView = nil;
+    }
     self.numberField.frame = CGRectMake(xOffset, 0, width, fieldsHeight);
     xOffset += width + hPadding;
 
@@ -932,23 +962,25 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
     }
 }
 
+- (CGFloat)widthForAttributedText:(NSAttributedString *)attributedText {
+    // UITextField doesn't seem to size correctly here for unknown reasons
+    // But UILabel reliably calculates size correctly using this method
+    self.sizingLabel.attributedText = attributedText;
+    [self.sizingLabel sizeToFit];
+    return stp_ceilCGFloat((CGRectGetWidth(self.sizingLabel.bounds)));
+
+}
+
 - (CGFloat)widthForText:(NSString *)text {
     self.sizingField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
     [self.sizingField setText:text];
-    self.sizingLabel.attributedText = self.sizingField.attributedText;
-    [self.sizingLabel sizeToFit];
-    return stp_ceilCGFloat((CGRectGetWidth(self.sizingLabel.bounds)));
+    return [self widthForAttributedText:self.sizingField.attributedText];
 }
 
 - (CGFloat)widthForCardNumber:(NSString *)cardNumber {
     self.sizingField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorCardNumbers;
     [self.sizingField setText:cardNumber];
-
-    // UITextField doesn't seem to size correctly here for unknown reasons
-    // But UILabel reliably calculates size correctly using this method
-    self.sizingLabel.attributedText = self.sizingField.attributedText;
-    [self.sizingLabel sizeToFit];
-    return stp_ceilCGFloat((CGRectGetWidth(self.sizingLabel.frame)));
+    return [self widthForAttributedText:self.sizingField.attributedText];
 }
 
 #pragma mark STPFormTextFieldDelegate
