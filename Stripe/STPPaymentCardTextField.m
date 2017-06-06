@@ -23,23 +23,18 @@
 
 @interface STPPaymentCardTextField()<STPFormTextFieldDelegate>
 
-@property(nonatomic, readwrite, strong)STPFormTextField *sizingField;
-@property(nonatomic, readwrite, strong)UILabel *sizingLabel;
-
-@property(nonatomic, readwrite, weak)UIImageView *brandImageView;
-@property(nonatomic, readwrite, weak)UIView *fieldsView;
-
-@property(nonatomic, readwrite, weak)STPFormTextField *numberField;
-
-@property(nonatomic, readwrite, weak)STPFormTextField *expirationField;
-
-@property(nonatomic, readwrite, weak)STPFormTextField *cvcField;
-
-@property(nonatomic, readwrite, weak)STPFormTextField *postalCodeField;
-
-@property(nonatomic, readwrite, strong)STPPaymentCardTextFieldViewModel *viewModel;
-
-@property(nonatomic, readonly, weak)UITextField *currentFirstResponderField;
+@property(nonatomic, readwrite, weak) UIImageView *brandImageView;
+@property(nonatomic, readwrite, weak) UIView *fieldsView;
+@property(nonatomic, readwrite, weak) STPFormTextField *numberField;
+@property(nonatomic, readwrite, weak) STPFormTextField *expirationField;
+@property(nonatomic, readwrite, weak) STPFormTextField *cvcField;
+@property(nonatomic, readwrite, weak) STPFormTextField *postalCodeField;
+@property(nonatomic, readwrite, strong) STPPaymentCardTextFieldViewModel *viewModel;
+@property(nonatomic, readonly, weak) UITextField *currentFirstResponderField;
+@property(nonatomic, readwrite, strong) STPCardParams *internalCardParams;
+@property(nonatomic, strong) NSArray<STPFormTextField *> *allFields;
+@property(nonatomic, readwrite, strong) STPFormTextField *sizingField;
+@property(nonatomic, readwrite, strong) UILabel *sizingLabel;
 
 /**
  This is a number-wrapped STPCardFieldType (or nil) that layout uses
@@ -48,9 +43,12 @@
  */
 @property(nonatomic, strong) NSNumber *focusedTextFieldForLayout;
 
-@property(nonatomic, readwrite, strong)STPCardParams *internalCardParams;
-
-@property(nonatomic, strong) NSArray<STPFormTextField *> *allFields;
+/*
+ Creating and measuring the size of attributed strings is expensive so
+ cache the values here.
+ */
+@property(nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *textToWidthCache;
+@property(nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *numberToWidthCache;
 
 @end
 
@@ -152,7 +150,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 //    _postalCodeType = STPCountryPostalCodeTypeNotRequired;
     // TODO: placeholder. Should it change based on type?
 
-
     UIView *fieldsView = [[UIView alloc] init];
     fieldsView.clipsToBounds = YES;
     fieldsView.backgroundColor = [UIColor clearColor];
@@ -183,6 +180,11 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 
 #pragma mark appearance properties
 
+- (void)clearSizingCache {
+    self.textToWidthCache = [NSMutableDictionary new];
+    self.numberToWidthCache = [NSMutableDictionary new];
+}
+
 + (UIColor *)placeholderGrayColor {
     return [UIColor lightGrayColor];
 }
@@ -204,6 +206,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
     }
     
     self.sizingField.font = _font;
+    [self clearSizingCache];
     
     [self setNeedsLayout];
 }
@@ -385,7 +388,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
     else {
         return self.postalCodeField;
     }
-
 }
 
 - (STPFormTextField *)currentFirstResponderField {
@@ -1002,15 +1004,33 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
 }
 
 - (CGFloat)widthForText:(NSString *)text {
-    self.sizingField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
-    [self.sizingField setText:text];
-    return [self widthForAttributedText:self.sizingField.attributedText];
+    if (text.length == 0) {
+        return 0;
+    }
+
+    NSNumber *cachedValue = self.textToWidthCache[text];
+    if (cachedValue == nil) {
+        self.sizingField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
+        [self.sizingField setText:text];
+        cachedValue = @([self widthForAttributedText:self.sizingField.attributedText]);
+        self.textToWidthCache[text] = cachedValue;
+    }
+    return (CGFloat)[cachedValue doubleValue];
 }
 
 - (CGFloat)widthForCardNumber:(NSString *)cardNumber {
-    self.sizingField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorCardNumbers;
-    [self.sizingField setText:cardNumber];
-    return [self widthForAttributedText:self.sizingField.attributedText];
+    if (cardNumber.length == 0) {
+        return 0;
+    }
+
+    NSNumber *cachedValue = self.numberToWidthCache[cardNumber];
+    if (cachedValue == nil) {
+        self.sizingField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorCardNumbers;
+        [self.sizingField setText:cardNumber];
+        cachedValue = @([self widthForAttributedText:self.sizingField.attributedText]);
+        self.numberToWidthCache[cardNumber] = cachedValue;
+    }
+    return (CGFloat)[cachedValue doubleValue];
 }
 
 #pragma mark STPFormTextFieldDelegate
