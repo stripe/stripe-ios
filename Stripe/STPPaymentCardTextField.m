@@ -146,9 +146,10 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 4;
     STPFormTextField *postalCodeField = [self buildTextField];
     postalCodeField.tag = STPCardFieldTypePostalCode;
     postalCodeField.alpha = 0;
-    postalCodeField.placeholder = @"ZIP/Postal";
+    postalCodeField.placeholder = @"12345";
     self.postalCodeField = postalCodeField;
-    _postalCodeType = STPCountryPostalCodeTypeNotRequired;
+    _postalCodeType = STPCountryPostalCodeTypeNumericOnly;
+//    _postalCodeType = STPCountryPostalCodeTypeNotRequired;
     // TODO: placeholder. Should it change based on type?
 
 
@@ -853,7 +854,9 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     CGFloat xOffset = STPPaymentCardTextFieldDefaultInsets;
     CGFloat width = 0;
 
+
     width = [self numberFieldFullWidth]; // Number field is always actually full width, just sometimes clipped off to the left when "compressed"
+
     if (panVisibility == STPCardTextFieldStateCompressed) {
         // Need to lower xOffset so pan is partially off-screen
 
@@ -888,6 +891,11 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
         [UIView performWithoutAnimation:^{
             self.numberField.maskView = nil;
         }];
+
+        if (panVisibility == STPCardTextFieldStateHidden) {
+            // Need to lower xOffset so pan is fully off screen
+            xOffset = xOffset - width - hPadding;
+        }
     }
 
     self.numberField.frame = CGRectMake(xOffset, 0, width, fieldsHeight);
