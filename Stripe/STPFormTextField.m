@@ -185,10 +185,6 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     }
 }
 
-- (CGSize)measureTextSize {
-    return self.attributedText.size;
-}
-
 - (void)setText:(NSString *)text {
     NSString *nonNilText = text ?: @"";
     NSAttributedString *attributed = [[NSAttributedString alloc] initWithString:nonNilText attributes:self.defaultTextAttributes];

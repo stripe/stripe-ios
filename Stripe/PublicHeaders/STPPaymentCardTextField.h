@@ -12,6 +12,12 @@
 
 @class STPPaymentCardTextField;
 
+typedef NS_ENUM(NSInteger, STPPostalCodeType) {
+    STPCountryPostalCodeTypeNumericOnly,
+    STPCountryPostalCodeTypeAlphanumeric,
+    STPCountryPostalCodeTypeNotRequired,
+};
+
 /**
  *  This protocol allows a delegate to be notified when a payment text field's contents change, which can in turn be used to take further actions depending on the validity of its contents.
  */
@@ -109,6 +115,11 @@ IB_DESIGNABLE
 @property(nonatomic, copy, nullable) IBInspectable NSString *cvcPlaceholder;
 
 /**
+ *  The placeholder for the postal code field. Defaults to @"ZIP/Postal".
+ */
+@property(nonatomic, copy, nullable) IBInspectable NSString *postalCodePlaceholder;
+
+/**
  *  The cursor color for the field. This is a proxy for the view's tintColor property, exposed for clarity only (in other words, calling setCursorColor is identical to calling setTintColor).
  */
 @property(nonatomic, copy, null_resettable) UIColor *cursorColor UI_APPEARANCE_SELECTOR;
@@ -188,40 +199,40 @@ IB_DESIGNABLE
  */
 + (nullable UIImage *)errorImageForCardBrand:(STPCardBrand)cardBrand;
 
-/**
- *  Returns the rectangle in which the receiver draws its brand image.
- *  @param bounds The bounding rectangle of the receiver.
- *  @return the rectangle in which the receiver draws its brand image.
- */
-- (CGRect)brandImageRectForBounds:(CGRect)bounds;
-
-/**
- *  Returns the rectangle in which the receiver draws the text fields.
- *  @param bounds The bounding rectangle of the receiver.
- *  @return The rectangle in which the receiver draws the text fields.
- */
-- (CGRect)fieldsRectForBounds:(CGRect)bounds;
-
-/**
- *  Returns the rectangle in which the receiver draws its number field.
- *  @param bounds The bounding rectangle of the receiver.
- *  @return the rectangle in which the receiver draws its number field.
- */
-- (CGRect)numberFieldRectForBounds:(CGRect)bounds;
-
-/**
- *  Returns the rectangle in which the receiver draws its cvc field.
- *  @param bounds The bounding rectangle of the receiver.
- *  @return the rectangle in which the receiver draws its cvc field.
- */
-- (CGRect)cvcFieldRectForBounds:(CGRect)bounds;
-
-/**
- *  Returns the rectangle in which the receiver draws its expiration field.
- *  @param bounds The bounding rectangle of the receiver.
- *  @return the rectangle in which the receiver draws its expiration field.
- */
-- (CGRect)expirationFieldRectForBounds:(CGRect)bounds;
+///**
+// *  Returns the rectangle in which the receiver draws its brand image.
+// *  @param bounds The bounding rectangle of the receiver.
+// *  @return the rectangle in which the receiver draws its brand image.
+// */
+//- (CGRect)brandImageRectForBounds:(CGRect)bounds;
+//
+///**
+// *  Returns the rectangle in which the receiver draws the text fields.
+// *  @param bounds The bounding rectangle of the receiver.
+// *  @return The rectangle in which the receiver draws the text fields.
+// */
+//- (CGRect)fieldsRectForBounds:(CGRect)bounds;
+//
+///**
+// *  Returns the rectangle in which the receiver draws its number field.
+// *  @param bounds The bounding rectangle of the receiver.
+// *  @return the rectangle in which the receiver draws its number field.
+// */
+//- (CGRect)numberFieldRectForBounds:(CGRect)bounds;
+//
+///**
+// *  Returns the rectangle in which the receiver draws its cvc field.
+// *  @param bounds The bounding rectangle of the receiver.
+// *  @return the rectangle in which the receiver draws its cvc field.
+// */
+//- (CGRect)cvcFieldRectForBounds:(CGRect)bounds;
+//
+///**
+// *  Returns the rectangle in which the receiver draws its expiration field.
+// *  @param bounds The bounding rectangle of the receiver.
+// *  @return the rectangle in which the receiver draws its expiration field.
+// */
+//- (CGRect)expirationFieldRectForBounds:(CGRect)bounds;
 
 /**
  *  Whether or not the form currently contains a valid card number, expiration date, and CVC.
@@ -264,6 +275,18 @@ IB_DESIGNABLE
  *  The current card CVC displayed by the field. May or may not be valid, unless isValid is true, in which case it is guaranteed to be valid.
  */
 @property(nonatomic, readonly, nullable) NSString *cvc;
+
+/**
+ *  The current card ZIP or postal code displayed by the field.
+ */
+@property(nonatomic, readonly, nullable) NSString *postalCode;
+
+/**
+ *  Controls if a postal code entry field is displayed, and if so which style.
+ *
+ *  Default is NotRequired (no postal code field displayed).
+ */
+@property(nonatomic, assign) STPPostalCodeType postalCodeType;
 
 /**
  *  Convenience property for creating an STPCardParams from the currently entered information

@@ -79,6 +79,9 @@
         }
         case STPCardFieldTypeCVC:
             return [STPCardValidator validationStateForCVC:self.cvc cardBrand:self.brand];
+        case STPCardFieldTypePostalCode:
+            return STPCardValidationStateValid;
+            // TODO:
     }
 }
 
