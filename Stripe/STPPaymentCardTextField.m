@@ -41,15 +41,12 @@
 
 @property(nonatomic, readonly, weak)UITextField *currentFirstResponderField;
 
-
 /**
  This is a number-wrapped STPCardFieldType (or nil) that layout uses
  to determine how it should move/animate its subviews so that the chosen
  text field is fully visible.
  */
 @property(nonatomic, strong) NSNumber *focusedTextFieldForLayout;
-
-@property(nonatomic, copy) NSDictionary<NSNumber *, NSNumber *> *compressedViewMap;
 
 @property(nonatomic, readwrite, strong)STPCardParams *internalCardParams;
 
@@ -69,6 +66,7 @@
 @dynamic enabled;
 
 CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
+CGFloat const STPPaymentCardTextFieldDefaultInsets = 13;
 CGFloat const STPPaymentCardTextFieldMinimumPadding = 4;
 
 #if CGFLOAT_IS_DOUBLE
@@ -98,8 +96,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 4;
 }
 
 - (void)commonInit {
-    _compressedViewMap = [NSDictionary new];
-
     // We're using ivars here because UIAppearance tracks when setters are
     // called, and won't override properties that have already been customized
     _borderColor = [self.class placeholderGrayColor];
@@ -589,14 +585,16 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 4;
     self.sizingField.text = self.viewModel.defaultPlaceholder;
     [self.sizingField sizeToFit];
     CGFloat textHeight = CGRectGetHeight(self.sizingField.frame);
-    CGFloat imageHeight = imageSize.height + (STPPaymentCardTextFieldDefaultPadding);
+    CGFloat imageHeight = imageSize.height + (STPPaymentCardTextFieldDefaultInsets);
     CGFloat height = stp_ceilCGFloat((MAX(MAX(imageHeight, textHeight), 44)));
 
-    CGFloat width = (STPPaymentCardTextFieldDefaultPadding
+    CGFloat width = (STPPaymentCardTextFieldDefaultInsets
                      + imageSize.width
+                     + STPPaymentCardTextFieldDefaultInsets
                      + [self requiredWidthForSubviewsWithPadding:STPPaymentCardTextFieldDefaultPadding
                                                    compressedPAN:YES
                                                    compressedZip:YES]
+                     + STPPaymentCardTextFieldDefaultInsets
                      );
 
     width = stp_ceilCGFloat(width);
@@ -607,18 +605,16 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 4;
 - (CGFloat)requiredWidthForSubviewsWithPadding:(CGFloat)padding
                                  compressedPAN:(BOOL)compressedPAN
                                  compressedZip:(BOOL)compressedZip {
-    CGFloat requiredWidth = (padding
-                             + (compressedPAN ? [self numberFieldCompressedWidth] : [self numberFieldFullWidth])
+    CGFloat requiredWidth = ((compressedPAN ? [self numberFieldCompressedWidth] : [self numberFieldFullWidth])
                              + padding
                              + [self cvcFieldWidth]
                              + padding
                              + [self expirationFieldWidth]
-                             + padding
                              );
 
     if (self.postalCodeType != STPCountryPostalCodeTypeNotRequired) {
-        requiredWidth += ((compressedZip ? [self postalCodeFieldCompressedWidth] : [self postalCodeFieldFullWidth])
-                          + padding
+        requiredWidth += (padding
+                          + (compressedZip ? [self postalCodeFieldCompressedWidth] : [self postalCodeFieldFullWidth])
                           );
     }
 
@@ -638,7 +634,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
                                     postal:(STPCardTextFieldState)postalVisibility {
 
     CGFloat requiredWidth = 0;
-    CGFloat paddingsRequired = 1;
+    CGFloat paddingsRequired = -1;
 
     if (panVisibility != STPCardTextFieldStateHidden) {
         paddingsRequired += 1;
@@ -661,7 +657,12 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
         requiredWidth += (postalVisibility == STPCardTextFieldStateCompressed) ? [self postalCodeFieldCompressedWidth] : [self postalCodeFieldFullWidth];
     }
 
-    return stp_ceilCGFloat(((width - requiredWidth) / paddingsRequired));
+    if (paddingsRequired > 0) {
+        return stp_ceilCGFloat(((width - requiredWidth) / paddingsRequired));
+    }
+    else {
+        return STPPaymentCardTextFieldMinimumPadding;
+    }
 }
 
 - (CGRect)brandImageRectForBounds:(CGRect)bounds {
@@ -682,14 +683,14 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     CGRect fieldsViewRect = [self fieldsRectForBounds:bounds];
     self.fieldsView.frame = fieldsViewRect;
 
-    CGFloat availableFieldsWidth = CGRectGetWidth(fieldsViewRect);
+    CGFloat availableFieldsWidth = CGRectGetWidth(fieldsViewRect) - (2 * STPPaymentCardTextFieldDefaultInsets);
 
     // These values are filled in via the if statements and then used
     // to do the proper layout at the end
     CGFloat fieldsHeight = CGRectGetHeight(fieldsViewRect);
     CGFloat hPadding = STPPaymentCardTextFieldDefaultPadding;
     __block STPCardTextFieldState panVisibility = STPCardTextFieldStateVisible;
-__block STPCardTextFieldState expiryVisibility = STPCardTextFieldStateVisible;
+    __block STPCardTextFieldState expiryVisibility = STPCardTextFieldStateVisible;
     __block STPCardTextFieldState cvcVisibility = STPCardTextFieldStateVisible;
 
     __block STPCardTextFieldState postalVisibility = [self postalCodeFieldIsEnabled] ? STPCardTextFieldStateVisible : STPCardTextFieldStateHidden;
@@ -849,7 +850,7 @@ __block STPCardTextFieldState expiryVisibility = STPCardTextFieldStateVisible;
     }
 
     // -- Do layout here --
-    CGFloat xOffset = hPadding;
+    CGFloat xOffset = STPPaymentCardTextFieldDefaultInsets;
     CGFloat width = 0;
 
     width = [self numberFieldFullWidth]; // Number field is always actually full width, just sometimes clipped off to the left when "compressed"
@@ -863,27 +864,32 @@ __block STPCardTextFieldState expiryVisibility = STPCardTextFieldStateVisible;
 
         NSUInteger length = [STPCardValidator fragmentLengthForCardBrand:[STPCardValidator brandForNumber:cardNumberToUse]];
         NSUInteger toIndex = cardNumberToUse.length - length;
-        NSString *cardFragment = nil;
 
         if (toIndex < cardNumberToUse.length) {
-            cardFragment = [cardNumberToUse stp_safeSubstringFromIndex:toIndex];
+            cardNumberToUse = [cardNumberToUse stp_safeSubstringToIndex:toIndex];
         }
         else {
-            cardFragment = [self.viewModel.defaultPlaceholder stp_safeSubstringFromIndex:toIndex];
+            cardNumberToUse = [self.viewModel.defaultPlaceholder stp_safeSubstringToIndex:toIndex];
         }
-        CGFloat visibleWidth = [self widthForText:cardFragment];
-        xOffset -= (width - visibleWidth);
-        UIView *maskView = [[UIView alloc] initWithFrame:CGRectMake((width - visibleWidth),
+        CGFloat hiddenWidth = [self widthForCardNumber:cardNumberToUse];
+        xOffset -= hiddenWidth;
+        UIView *maskView = [[UIView alloc] initWithFrame:CGRectMake(hiddenWidth,
                                                                     0,
-                                                                    visibleWidth,
+                                                                    (width - hiddenWidth),
                                                                     fieldsHeight)];
         maskView.backgroundColor = [UIColor blackColor];
         maskView.opaque = YES;
-        self.numberField.maskView = maskView;
+        [UIView performWithoutAnimation:^{
+            self.numberField.maskView = maskView;
+        }];
+
     }
     else {
-        self.numberField.maskView = nil;
+        [UIView performWithoutAnimation:^{
+            self.numberField.maskView = nil;
+        }];
     }
+
     self.numberField.frame = CGRectMake(xOffset, 0, width, fieldsHeight);
     xOffset += width + hPadding;
 
@@ -897,7 +903,7 @@ __block STPCardTextFieldState expiryVisibility = STPCardTextFieldStateVisible;
 
     // Fill postal code field with remaining space if necessary
     if ([self postalCodeFieldIsEnabled]) {
-        width = availableFieldsWidth - hPadding - xOffset;
+        width = CGRectGetWidth(self.fieldsView.frame) - xOffset - STPPaymentCardTextFieldDefaultInsets;
         self.postalCodeField.frame = CGRectMake(xOffset, 0, width, fieldsHeight);
     }
 
