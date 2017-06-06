@@ -7,7 +7,9 @@
 //
 
 #import "STPPaymentCardTextFieldViewModel.h"
+
 #import "NSString+Stripe.h"
+#import "STPPostalCodeValidator.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -80,29 +82,20 @@
         case STPCardFieldTypeCVC:
             return [STPCardValidator validationStateForCVC:self.cvc cardBrand:self.brand];
         case STPCardFieldTypePostalCode:
-            return STPCardValidationStateValid;
-            // TODO:
+            return [STPPostalCodeValidator stringIsValidPostalCode:self.postalCode
+                                                              type:self.postalCodeType];
     }
 }
 
 - (BOOL)isValid {
-    return ([self validationStateForField:STPCardFieldTypeNumber] == STPCardValidationStateValid &&
-            [self validationStateForField:STPCardFieldTypeExpiration] == STPCardValidationStateValid &&
-            [self validationStateForField:STPCardFieldTypeCVC] == STPCardValidationStateValid);
+    return ([self validationStateForField:STPCardFieldTypeNumber] == STPCardValidationStateValid
+            && [self validationStateForField:STPCardFieldTypeExpiration] == STPCardValidationStateValid
+            && [self validationStateForField:STPCardFieldTypeCVC] == STPCardValidationStateValid
+            && [self validationStateForField:STPCardFieldTypePostalCode] == STPCardValidationStateValid);
 }
 
 - (NSString *)defaultPlaceholder {
     return @"4242424242424242";
-}
-
-- (NSString *)numberWithoutLastDigits {
-    NSUInteger length = [STPCardValidator fragmentLengthForCardBrand:[STPCardValidator brandForNumber:self.cardNumber]];
-    NSUInteger toIndex = self.cardNumber.length - length;
-    
-    return (toIndex < self.cardNumber.length) ?
-        [self.cardNumber substringToIndex:toIndex] :
-        [self.defaultPlaceholder stp_safeSubstringToIndex:[self defaultPlaceholder].length - length];
-
 }
 
 + (NSSet<NSString *> *)keyPathsForValuesAffectingValid {

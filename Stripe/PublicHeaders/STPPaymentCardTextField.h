@@ -11,6 +11,7 @@
 #import "STPCard.h"
 
 @class STPPaymentCardTextField;
+@protocol STPPaymentCardTextFieldDelegate;
 
 typedef NS_ENUM(NSInteger, STPPostalCodeType) {
     STPCountryPostalCodeTypeNumericOnly,
@@ -19,57 +20,11 @@ typedef NS_ENUM(NSInteger, STPPostalCodeType) {
 };
 
 /**
- *  This protocol allows a delegate to be notified when a payment text field's contents change, which can in turn be used to take further actions depending on the validity of its contents.
- */
-@protocol STPPaymentCardTextFieldDelegate <NSObject>
-@optional
-/**
- *  Called when either the card number, expiration, or CVC changes. At this point, one can call -isValid on the text field to determine, for example, whether or not to enable a button to submit the form. Example:
- 
- - (void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
-      self.paymentButton.enabled = textField.isValid;
- }
- 
- *
- *  @param textField the text field that has changed
- */
-- (void)paymentCardTextFieldDidChange:(nonnull STPPaymentCardTextField *)textField;
-
-/**
- *  Called when editing begins in the payment card field's number field.
- */
-- (void)paymentCardTextFieldDidBeginEditingNumber:(nonnull STPPaymentCardTextField *)textField;
-
-/**
- *  Called when editing ends in the payment card field's number field.
- */
-- (void)paymentCardTextFieldDidEndEditingNumber:(nonnull STPPaymentCardTextField *)textField;
-
-/**
- *  Called when editing begins in the payment card field's CVC field.
- */
-- (void)paymentCardTextFieldDidBeginEditingCVC:(nonnull STPPaymentCardTextField *)textField;
-
-/**
- *  Called when editing ends in the payment card field's CVC field.
- */
-- (void)paymentCardTextFieldDidEndEditingCVC:(nonnull STPPaymentCardTextField *)textField;
-
-/**
- *  Called when editing begins in the payment card field's expiration field.
- */
-- (void)paymentCardTextFieldDidBeginEditingExpiration:(nonnull STPPaymentCardTextField *)textField;
-
-/**
- *  Called when editing ends in the payment card field's expiration field.
- */
-- (void)paymentCardTextFieldDidEndEditingExpiration:(nonnull STPPaymentCardTextField *)textField;
-
-@end
-
-
-/**
- *  STPPaymentCardTextField is a text field with similar properties to UITextField, but specialized for collecting credit/debit card information. It manages multiple UITextFields under the hood to collect this information. It's designed to fit on a single line, and from a design perspective can be used anywhere a UITextField would be appropriate.
+ *  STPPaymentCardTextField is a text field with similar properties to UITextField, 
+ *  but specialized for collecting credit/debit card information. It manages 
+ *  multiple UITextFields under the hood to collect this information. It's 
+ *  designed to fit on a single line, and from a design perspective can be used 
+ *  anywhere a UITextField would be appropriate.
  */
 IB_DESIGNABLE
 @interface STPPaymentCardTextField : UIControl <UIKeyInput>
@@ -155,91 +110,11 @@ IB_DESIGNABLE
 @property (nonatomic, readonly, nullable) UIImage *brandImage;
 
 /**
- *  Causes the text field to begin editing. Presents the keyboard.
- *
- *  @return Whether or not the text field successfully began editing.
- *  @see UIResponder
- */
-- (BOOL)becomeFirstResponder;
-
-/**
- *  Causes the text field to stop editing. Dismisses the keyboard.
- *
- *  @return Whether or not the field successfully stopped editing.
- *  @see UIResponder
- */
-- (BOOL)resignFirstResponder;
-
-/**
- *  Resets all of the contents of all of the fields. If the field is currently being edited, the number field will become selected.
- */
-- (void)clear;
-
-/**
- *  Returns the cvc image used for a card brand.
- *  Override this method in a subclass if you would like to provide custom images.
- *  @param cardBrand The brand of card entered.
- *  @return The cvc image used for a card brand.
- */
-+ (nullable UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
-
-/**
- *  Returns the brand image used for a card brand.
- *  Override this method in a subclass if you would like to provide custom images.
- *  @param cardBrand The brand of card entered.
- *  @return The brand image used for a card brand.
- */
-+ (nullable UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
-
-/**
- *  Returns the error image used for a card brand.
- *  Override this method in a subclass if you would like to provide custom images.
- *  @param cardBrand The brand of card entered.
- *  @return The error image used for a card brand.
- */
-+ (nullable UIImage *)errorImageForCardBrand:(STPCardBrand)cardBrand;
-
-///**
-// *  Returns the rectangle in which the receiver draws its brand image.
-// *  @param bounds The bounding rectangle of the receiver.
-// *  @return the rectangle in which the receiver draws its brand image.
-// */
-//- (CGRect)brandImageRectForBounds:(CGRect)bounds;
-//
-///**
-// *  Returns the rectangle in which the receiver draws the text fields.
-// *  @param bounds The bounding rectangle of the receiver.
-// *  @return The rectangle in which the receiver draws the text fields.
-// */
-//- (CGRect)fieldsRectForBounds:(CGRect)bounds;
-//
-///**
-// *  Returns the rectangle in which the receiver draws its number field.
-// *  @param bounds The bounding rectangle of the receiver.
-// *  @return the rectangle in which the receiver draws its number field.
-// */
-//- (CGRect)numberFieldRectForBounds:(CGRect)bounds;
-//
-///**
-// *  Returns the rectangle in which the receiver draws its cvc field.
-// *  @param bounds The bounding rectangle of the receiver.
-// *  @return the rectangle in which the receiver draws its cvc field.
-// */
-//- (CGRect)cvcFieldRectForBounds:(CGRect)bounds;
-//
-///**
-// *  Returns the rectangle in which the receiver draws its expiration field.
-// *  @param bounds The bounding rectangle of the receiver.
-// *  @return the rectangle in which the receiver draws its expiration field.
-// */
-//- (CGRect)expirationFieldRectForBounds:(CGRect)bounds;
-
-/**
- *  Whether or not the form currently contains a valid card number, expiration date, and CVC.
+ *  Whether or not the form currently contains a valid card number, 
+ *  expiration date, CVC, and postal code (if required).
  *  @see STPCardValidator
  */
-@property(nonatomic, readonly)BOOL isValid;
-@property(nonatomic, readonly)BOOL valid; // for backwards-compatibility
+@property(nonatomic, readonly) BOOL isValid;
 
 /**
  *  Enable/disable selecting or editing the field. Useful when submitting card details to Stripe.
@@ -296,4 +171,124 @@ IB_DESIGNABLE
  */
 @property(nonatomic, strong, readwrite, nonnull) STPCardParams *cardParams;
 
+/**
+ *  Causes the text field to begin editing. Presents the keyboard.
+ *
+ *  @return Whether or not the text field successfully began editing.
+ *  @see UIResponder
+ */
+- (BOOL)becomeFirstResponder;
+
+/**
+ *  Causes the text field to stop editing. Dismisses the keyboard.
+ *
+ *  @return Whether or not the field successfully stopped editing.
+ *  @see UIResponder
+ */
+- (BOOL)resignFirstResponder;
+
+/**
+ *  Resets all of the contents of all of the fields. If the field is currently being edited, the number field will become selected.
+ */
+- (void)clear;
+
+/**
+ *  Returns the cvc image used for a card brand.
+ *  Override this method in a subclass if you would like to provide custom images.
+ *  @param cardBrand The brand of card entered.
+ *  @return The cvc image used for a card brand.
+ */
++ (nullable UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
+
+/**
+ *  Returns the brand image used for a card brand.
+ *  Override this method in a subclass if you would like to provide custom images.
+ *  @param cardBrand The brand of card entered.
+ *  @return The brand image used for a card brand.
+ */
++ (nullable UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
+
+/**
+ *  Returns the error image used for a card brand.
+ *  Override this method in a subclass if you would like to provide custom images.
+ *  @param cardBrand The brand of card entered.
+ *  @return The error image used for a card brand.
+ */
++ (nullable UIImage *)errorImageForCardBrand:(STPCardBrand)cardBrand;
+
+/**
+ *  Returns the rectangle in which the receiver draws its brand image.
+ *  @param bounds The bounding rectangle of the receiver.
+ *  @return the rectangle in which the receiver draws its brand image.
+ */
+- (CGRect)brandImageRectForBounds:(CGRect)bounds;
+
+/**
+ *  Returns the rectangle in which the receiver draws the text fields.
+ *  @param bounds The bounding rectangle of the receiver.
+ *  @return The rectangle in which the receiver draws the text fields.
+ */
+- (CGRect)fieldsRectForBounds:(CGRect)bounds;
+
+@end
+
+/**
+ *  This protocol allows a delegate to be notified when a payment text field's contents change, which can in turn be used to take further actions depending on the validity of its contents.
+ */
+@protocol STPPaymentCardTextFieldDelegate <NSObject>
+@optional
+/**
+ *  Called when either the card number, expiration, or CVC changes. At this point, one can call -isValid on the text field to determine, for example, whether or not to enable a button to submit the form. Example:
+
+ - (void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
+ self.paymentButton.enabled = textField.isValid;
+ }
+
+ *
+ *  @param textField the text field that has changed
+ */
+- (void)paymentCardTextFieldDidChange:(nonnull STPPaymentCardTextField *)textField;
+
+- (void)paymentCardTextFieldDidBeginEditing:(nonnull STPPaymentCardTextField *)textField;
+- (void)paymentCardTextFieldDidEndEditing:(nonnull STPPaymentCardTextField *)textField;
+
+/**
+ *  Called when editing begins in the payment card field's number field.
+ */
+- (void)paymentCardTextFieldDidBeginEditingNumber:(nonnull STPPaymentCardTextField *)textField;
+
+/**
+ *  Called when editing ends in the payment card field's number field.
+ */
+- (void)paymentCardTextFieldDidEndEditingNumber:(nonnull STPPaymentCardTextField *)textField;
+
+/**
+ *  Called when editing begins in the payment card field's CVC field.
+ */
+- (void)paymentCardTextFieldDidBeginEditingCVC:(nonnull STPPaymentCardTextField *)textField;
+
+/**
+ *  Called when editing ends in the payment card field's CVC field.
+ */
+- (void)paymentCardTextFieldDidEndEditingCVC:(nonnull STPPaymentCardTextField *)textField;
+
+/**
+ *  Called when editing begins in the payment card field's expiration field.
+ */
+- (void)paymentCardTextFieldDidBeginEditingExpiration:(nonnull STPPaymentCardTextField *)textField;
+
+/**
+ *  Called when editing ends in the payment card field's expiration field.
+ */
+- (void)paymentCardTextFieldDidEndEditingExpiration:(nonnull STPPaymentCardTextField *)textField;
+
+/**
+ *  Called when editing begins in the payment card field's ZIP/postal code field.
+ */
+- (void)paymentCardTextFieldDidBeginEditingPostalCode:(nonnull STPPaymentCardTextField *)textField;
+
+/**
+ *  Called when editing ends in the payment card field's ZIP/postal code field.
+ */
+- (void)paymentCardTextFieldDidEndEditingPostalCode:(nonnull STPPaymentCardTextField *)textField;
 @end

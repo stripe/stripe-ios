@@ -74,17 +74,6 @@
     }
 }
 
-- (void)testNumberWithoutLastDigits {
-    self.viewModel.cardNumber = @"4242424242424242";
-    XCTAssertEqualObjects([self.viewModel numberWithoutLastDigits], @"424242424242");
-    
-    self.viewModel.cardNumber = @"378282246310005";
-    XCTAssertEqualObjects([self.viewModel numberWithoutLastDigits], @"3782822463");
-    
-    self.viewModel.cardNumber = @"";
-    XCTAssertEqualObjects([self.viewModel numberWithoutLastDigits], @"424242424242");
-}
-
 - (void)testValidity {
     self.viewModel.cardNumber = @"4242424242424242";
     self.viewModel.rawExpiration = @"12/24";

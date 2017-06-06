@@ -11,6 +11,7 @@
 
 #import "STPCard.h"
 #import "STPCardValidator.h"
+#import "STPPaymentCardTextField.h"
 
 typedef NS_ENUM(NSInteger, STPCardFieldType) {
     STPCardFieldTypeNumber,
@@ -27,11 +28,11 @@ typedef NS_ENUM(NSInteger, STPCardFieldType) {
 @property(nonatomic, readonly, nullable)NSString *expirationYear;
 @property(nonatomic, readwrite, copy, nullable)NSString *cvc;
 @property(nonatomic, readwrite, copy, nullable)NSString *postalCode;
+@property(nonatomic, assign) STPPostalCodeType postalCodeType;
 @property(nonatomic, readonly) STPCardBrand brand;
 @property(nonatomic, readonly) BOOL isValid;
 
 - (nonnull NSString *)defaultPlaceholder;
-- (nullable NSString *)numberWithoutLastDigits;
 
 - (STPCardValidationState)validationStateForField:(STPCardFieldType)fieldType;
 

@@ -18,8 +18,13 @@
 #import "Stripe.h"
 #import "STPLocalizationUtils.h"
 
-
 #define FAUXPAS_IGNORED_IN_METHOD(...)
+
+typedef NS_ENUM(NSInteger, STPEditingTransitionState) {
+    STPEditingTransitionStateFalse,
+    STPEditingTransitionStatePossible,
+    STPEditingTransitionStateTrue
+};
 
 @interface STPPaymentCardTextField()<STPFormTextFieldDelegate>
 
@@ -41,7 +46,7 @@
  to determine how it should move/animate its subviews so that the chosen
  text field is fully visible.
  */
-@property(nonatomic, strong) NSNumber *focusedTextFieldForLayout;
+@property(nonatomic, copy) NSNumber *focusedTextFieldForLayout;
 
 /*
  Creating and measuring the size of attributed strings is expensive so
@@ -49,6 +54,21 @@
  */
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *textToWidthCache;
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *numberToWidthCache;
+
+/**
+ This state lets us track beginEditing and endEditing for payment text field
+ as a whole (instead of on a per-subview basis).
+ 
+ The state transitons in the should/did begin/end editing callbacks for all 
+ our subfields. If we get a shouldEnd AND a shouldBegin before getting either's
+ matching didEnd/didBegin, then we are transitioning focus between our subviews
+ (and so we ourselves should not consider us to have begun or ended editing).
+ 
+ But if we get a should and did called on their own without a matching opposite
+ pair (shouldBegin/didBegin or shouldEnd/didEnd) then we are transitioning
+ into/out of our subviews from/to outside of ourselves
+ */
+@property(nonatomic, assign) STPEditingTransitionState fieldEditingTransitionState;
 
 @end
 
@@ -169,6 +189,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 
     self.focusedTextFieldForLayout = @(STPCardFieldTypeNumber);
     [self updateCVCPlaceholder];
+    self.fieldEditingTransitionState = STPEditingTransitionStateFalse;
 }
 
 - (STPPaymentCardTextFieldViewModel *)viewModel {
@@ -414,9 +435,13 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 }
 
 - (STPFormTextField *)previousField {
-    if (self.currentFirstResponderField == self.cvcField) {
+    if (self.currentFirstResponderField == self.postalCodeField) {
+        return self.cvcField;
+    }
+    else if (self.currentFirstResponderField == self.cvcField) {
         return self.expirationField;
-    } else if (self.currentFirstResponderField == self.expirationField) {
+    }
+    else if (self.currentFirstResponderField == self.expirationField) {
         return self.numberField;
     }
     return nil;
@@ -605,34 +630,15 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
     CGFloat width = (STPPaymentCardTextFieldDefaultInsets
                      + imageSize.width
                      + STPPaymentCardTextFieldDefaultInsets
-                     + [self requiredWidthForSubviewsWithPadding:STPPaymentCardTextFieldDefaultPadding
-                                                   compressedPAN:YES
-                                                   compressedZip:YES]
+                     + [self numberFieldFullWidth]
+                     + STPPaymentCardTextFieldDefaultPadding
+                     + [self expirationFieldWidth]
                      + STPPaymentCardTextFieldDefaultInsets
                      );
 
     width = stp_ceilCGFloat(width);
 
     return CGSizeMake(width, height);
-}
-
-- (CGFloat)requiredWidthForSubviewsWithPadding:(CGFloat)padding
-                                 compressedPAN:(BOOL)compressedPAN
-                                 compressedZip:(BOOL)compressedZip {
-    CGFloat requiredWidth = ((compressedPAN ? [self numberFieldCompressedWidth] : [self numberFieldFullWidth])
-                             + padding
-                             + [self cvcFieldWidth]
-                             + padding
-                             + [self expirationFieldWidth]
-                             );
-
-    if (self.postalCodeType != STPCountryPostalCodeTypeNotRequired) {
-        requiredWidth += (padding
-                          + (compressedZip ? [self postalCodeFieldCompressedWidth] : [self postalCodeFieldFullWidth])
-                          );
-    }
-
-    return stp_ceilCGFloat(requiredWidth);
 }
 
 typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
@@ -706,7 +712,6 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     __block STPCardTextFieldState panVisibility = STPCardTextFieldStateVisible;
     __block STPCardTextFieldState expiryVisibility = STPCardTextFieldStateVisible;
     __block STPCardTextFieldState cvcVisibility = STPCardTextFieldStateVisible;
-
     __block STPCardTextFieldState postalVisibility = [self postalCodeFieldIsEnabled] ? STPCardTextFieldStateVisible : STPCardTextFieldStateHidden;
 
     CGFloat (^calculateMinimumPaddingWithLocalVars)() = ^CGFloat() {
@@ -867,8 +872,8 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     CGFloat xOffset = STPPaymentCardTextFieldDefaultInsets;
     CGFloat width = 0;
 
-    // Make all text fields actually slightly wider than needed so that when the
-    // cursor is at the end position the contents aren't shifted off to the left side
+    // Make pan and postal fields actually slightly wider than needed so that when the
+    // cursor is at the end position the contents aren't clipped off to the left side
     CGFloat additionalWidth = [self widthForText:@"8"];
 
     width = [self numberFieldFullWidth]; // Number field is always actually full width, just sometimes clipped off to the left when "compressed"
@@ -926,7 +931,6 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
 
     if ([self postalCodeFieldIsEnabled]) {
         width = self.fieldsView.frame.size.width - xOffset - STPPaymentCardTextFieldDefaultInsets;
-//        width = [self postalCodeFieldFullWidth];
         self.postalCodeField.frame = CGRectMake(xOffset, 0, width + additionalWidth, fieldsHeight);
     }
 
@@ -1101,10 +1105,34 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
     [self onChange];
 }
 
+- (BOOL)textFieldShouldBeginEditing:(__unused UITextField *)textField {
+    if (self.fieldEditingTransitionState == STPEditingTransitionStateFalse) {
+        self.fieldEditingTransitionState = STPEditingTransitionStatePossible;
+    }
+    else if (self.fieldEditingTransitionState == STPEditingTransitionStatePossible) {
+        self.fieldEditingTransitionState = STPEditingTransitionStateTrue;
+    }
+    return YES;
+}
+
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
+    BOOL paymentTextFieldDidBeginEditing = NO;
+    if (self.fieldEditingTransitionState != STPEditingTransitionStateTrue) {
+        paymentTextFieldDidBeginEditing = YES;
+    }
+    self.fieldEditingTransitionState = STPEditingTransitionStateFalse;
+
     [self layoutViewsToFocusField:@(textField.tag)
                          animated:YES
                        completion:nil];
+
+    if (paymentTextFieldDidBeginEditing) {
+        NSLog(@"Did begin editing payment field");
+        if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidBeginEditing:)]) {
+            [self.delegate paymentCardTextFieldDidBeginEditing:self];
+        }
+    }
+
     switch ((STPCardFieldType)textField.tag) {
         case STPCardFieldTypeNumber:
             if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidBeginEditingNumber:)]) {
@@ -1122,18 +1150,35 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
             }
             break;
         case STPCardFieldTypePostalCode:
-            // TODO
+            if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidBeginEditingPostalCode:)]) {
+                [self.delegate paymentCardTextFieldDidBeginEditingPostalCode:self];
+            }
             break;
     }
     [self updateImageForFieldType:textField.tag];
 }
 
 - (BOOL)textFieldShouldEndEditing:(__unused UITextField *)textField {
+
+    if (self.fieldEditingTransitionState == STPEditingTransitionStateFalse) {
+        self.fieldEditingTransitionState = STPEditingTransitionStatePossible;
+    }
+    else if (self.fieldEditingTransitionState == STPEditingTransitionStatePossible) {
+        self.fieldEditingTransitionState = STPEditingTransitionStateTrue;
+    }
+
     [self updateImageForFieldType:STPCardFieldTypeNumber];
     return YES;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
+
+    BOOL paymentTextFieldDidEndEditing = NO;
+    if (self.fieldEditingTransitionState != STPEditingTransitionStateTrue) {
+        paymentTextFieldDidEndEditing = YES;
+    }
+    self.fieldEditingTransitionState = STPEditingTransitionStateFalse;
+
     switch ((STPCardFieldType)textField.tag) {
         case STPCardFieldTypeNumber:
             if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidEndEditingNumber:)]) {
@@ -1151,15 +1196,20 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
             }
             break;
         case STPCardFieldTypePostalCode:
-            // TODO
+            if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidEndEditingPostalCode:)]) {
+                [self.delegate paymentCardTextFieldDidEndEditingPostalCode:self];
+            }
             break;
     }
 
-    if (!self.isFirstResponder) {
+    if (paymentTextFieldDidEndEditing) {
         [self layoutViewsToFocusField:nil
                              animated:YES
                            completion:nil];
         [self updateImageForFieldType:STPCardFieldTypeNumber];
+        if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidEndEditing:)]) {
+            [self.delegate paymentCardTextFieldDidEndEditing:self];
+        }
     }
 }
 
