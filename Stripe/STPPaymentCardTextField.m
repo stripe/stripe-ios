@@ -164,11 +164,9 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
     STPFormTextField *postalCodeField = [self buildTextField];
     postalCodeField.tag = STPCardFieldTypePostalCode;
     postalCodeField.alpha = 0;
-    postalCodeField.placeholder = @"12345";
+    postalCodeField.placeholder = @"12345"; // TODO: placeholder. Should it change based on type?
     self.postalCodeField = postalCodeField;
-    _postalCodeType = STPCountryPostalCodeTypeNumericOnly;
-//    _postalCodeType = STPCountryPostalCodeTypeNotRequired;
-    // TODO: placeholder. Should it change based on type?
+    self.postalCodeType = STPCountryPostalCodeTypeNumericOnly;
 
     UIView *fieldsView = [[UIView alloc] init];
     fieldsView.clipsToBounds = YES;
@@ -315,6 +313,14 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 - (void)setPostalCodePlaceholder:(NSString *)postalCodePlaceholder {
     _postalCodePlaceholder = postalCodePlaceholder.copy;
     self.postalCodePlaceholder = _postalCodePlaceholder;
+}
+
+- (void)setPostalCodeType:(STPPostalCodeType)postalCodeType {
+    _postalCodeType = postalCodeType;
+    self.viewModel.postalCodeType = postalCodeType;
+
+    // So that it will re-validate
+    [self formTextFieldTextDidChange:self.postalCodeField];
 }
 
 - (void)setCursorColor:(UIColor *)cursorColor {

@@ -82,8 +82,9 @@
         case STPCardFieldTypeCVC:
             return [STPCardValidator validationStateForCVC:self.cvc cardBrand:self.brand];
         case STPCardFieldTypePostalCode:
-            return [STPPostalCodeValidator stringIsValidPostalCode:self.postalCode
-                                                              type:self.postalCodeType];
+            return ([STPPostalCodeValidator stringIsValidPostalCode:self.postalCode
+                                                              type:self.postalCodeType]
+                    ? STPCardValidationStateValid : STPCardValidationStateInvalid);
     }
 }
 
