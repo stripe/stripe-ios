@@ -13,7 +13,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  An `STPCustomer` represents a deserialized Customer object from the Stripe API. You can use `STPCustomerDeserializer` to convert a JSON response from the Stripe API into an `STPCustomer`.
+ *  An `STPCustomer` represents a deserialized Customer object from the Stripe API.
+ *  You shouldn't need to instantiate an `STPCustomer` – you should instead use
+ *  `STPCustomerContext` to manage retrieving and updating a customer.
  */
 @interface STPCustomer : NSObject <STPAPIResponseDecodable>
 
