@@ -38,6 +38,7 @@
         _additionalPaymentMethods = STPPaymentMethodTypeAll;
         _requiredBillingAddressFields = STPBillingAddressFieldsNone;
         _requiredShippingAddressFields = PKAddressFieldNone;
+        _verifyPrefilledShippingAddress = YES;
         _companyName = [NSBundle stp_applicationName];
         _smsAutofillDisabled = NO;
         _shippingType = STPShippingTypeShipping;
@@ -51,6 +52,7 @@
     copy.additionalPaymentMethods = self.additionalPaymentMethods;
     copy.requiredBillingAddressFields = self.requiredBillingAddressFields;
     copy.requiredShippingAddressFields = self.requiredShippingAddressFields;
+    copy.verifyPrefilledShippingAddress = self.verifyPrefilledShippingAddress;
     copy.shippingType = self.shippingType;
     copy.companyName = self.companyName;
     copy.appleMerchantIdentifier = self.appleMerchantIdentifier;

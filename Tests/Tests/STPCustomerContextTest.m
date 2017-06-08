@@ -10,6 +10,7 @@
 #import <OCMock/OCMock.h>
 #import <Stripe/Stripe.h>
 #import "STPAPIClient+Private.h"
+#import "STPCustomerContext+Private.h"
 #import "STPEphemeralKeyManager.h"
 #import "STPFixtures.h"
 
@@ -203,6 +204,45 @@
     XCTestExpectation *exp2 = [self expectationWithDescription:@"selectDefaultSource"];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
     [sut selectDefaultCustomerSource:expectedSource completion:^(NSError *error) {
+        XCTAssertNil(error);
+        [exp2 fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testSetCustomerShippingCallsAPIClientCorrectly {
+    STPAddress *address = [STPFixtures address];
+    STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    id mockAPIClient = OCMClassMock([STPAPIClient class]);
+    XCTestExpectation *exp = [self expectationWithDescription:@"updateCustomer"];
+    NSDictionary *expectedParams = @{
+                                     @"shipping": @{
+                                             @"address": @{
+                                                     @"city": address.city,
+                                                     @"country": address.country,
+                                                     @"line1": address.line1,
+                                                     @"line2": address.line2,
+                                                     @"postal_code": address.postalCode,
+                                                     @"state": address.state
+                                                     },
+                                             @"name": address.name,
+                                             @"phone": address.phone,
+                                             }
+                                     };
+    OCMStub([mockAPIClient updateCustomerWithParameters:[OCMArg isEqual:expectedParams]
+                                               usingKey:[OCMArg isEqual:customerKey]
+                                             completion:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation) {
+        STPCustomerCompletionBlock completion;
+        [invocation getArgument:&completion atIndex:4];
+        completion([STPFixtures customerWithSingleCardTokenSource], nil);
+        [exp fulfill];
+    });
+    XCTestExpectation *exp2 = [self expectationWithDescription:@"updateCustomerWithShipping"];
+    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
+    [sut updateCustomerWithShippingAddress:address completion:^(NSError *error) {
         XCTAssertNil(error);
         [exp2 fulfill];
     }];

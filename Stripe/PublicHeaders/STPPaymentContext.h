@@ -148,6 +148,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  The user's shipping address. May be nil.
+ *  If you've already collected a shipping address from your user, you may
+ *  prefill it by setting a shippingAddress in PaymentContext's prefilledInformation.
+ *  When your user enters a new shipping address, PaymentContext will save it to 
+ *  the current customer object. When PaymentContext loads, if you haven't
+ *  manually set a prefilled value, any shipping information saved on the customer 
+ *  will be used to prefill the shipping address form.
+ *  Note: by default, your user will still be prompted to verify a prefilled 
+ *  shipping address. To change this behavior, you can set 
+ *  `verifyPrefilledShippingAddress` to NO in your `STPPaymentConfiguration`.
  */
 @property(nonatomic, readonly, nullable)STPAddress *shippingAddress;
 

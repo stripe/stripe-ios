@@ -8,20 +8,18 @@
 
 #import "STPCustomer.h"
 
+#import "STPAddress.h"
 #import "STPCard.h"
 #import "STPSource.h"
 #import "StripeError.h"
+#import "NSDictionary+Stripe.h"
 
-/**
- NOTE: STPCustomer has been deprecated. When we remove STPBackendAPIAdapter,
- we should rename STPCustomer with STPLimitedCustomer, to avoid confusion –
- customers retrieved using an ephemeral key have a limited set of fields.
- */
 @interface STPCustomer()
 
 @property(nonatomic, copy)NSString *stripeID;
 @property(nonatomic) id<STPSourceProtocol> defaultSource;
 @property(nonatomic) NSArray<id<STPSourceProtocol>> *sources;
+@property(nonatomic) STPAddress *shippingAddress;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
@@ -62,13 +60,62 @@
     return @[@"id"];
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    STPCustomerDeserializer *deserializer = [[STPCustomerDeserializer alloc] initWithJSONResponse:response];
-    return deserializer.customer;
+    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    if (!dict) {
+        return nil;
+    }
+
+    STPCustomer *customer = [STPCustomer new];
+    customer.stripeID = dict[@"id"];
+    NSString *defaultSourceId;
+    if ([dict[@"default_source"] isKindOfClass:[NSString class]]) {
+        defaultSourceId = dict[@"default_source"];
+    }
+    if ([dict[@"shipping"] isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *shippingDict = dict[@"shipping"];
+        STPAddress *shipping = [STPAddress new];
+        shipping.name = shippingDict[@"name"];
+        shipping.phone = shippingDict[@"phone"];
+        shipping.line1 = shippingDict[@"address"][@"line1"];
+        shipping.line2 = shippingDict[@"address"][@"line2"];
+        shipping.city = shippingDict[@"address"][@"city"];
+        shipping.state = shippingDict[@"address"][@"state"];
+        shipping.postalCode = shippingDict[@"address"][@"postal_code"];
+        shipping.country = shippingDict[@"address"][@"country"];
+        customer.shippingAddress = shipping;
+    }
+    NSMutableArray *sources = [NSMutableArray array];
+    if ([dict[@"sources"] isKindOfClass:[NSDictionary class]] && [dict[@"sources"][@"data"] isKindOfClass:[NSArray class]]) {
+        for (id contents in dict[@"sources"][@"data"]) {
+            if ([contents isKindOfClass:[NSDictionary class]]) {
+                // eventually support other source types
+                if ([contents[@"object"] isEqualToString:@"card"]) {
+                    STPCard *card = [STPCard decodedObjectFromAPIResponse:contents];
+                    // ignore apple pay cards from the response
+                    if (card && !card.isApplePayCard) {
+                        [sources addObject:card];
+                        if (defaultSourceId && [card.stripeID isEqualToString:defaultSourceId]) {
+                            customer.defaultSource = card;
+                        }
+                    }
+                }
+                else if ([contents[@"object"] isEqualToString:@"source"]) {
+                    STPSource *source = [STPSource decodedObjectFromAPIResponse:contents];
+                    if (source) {
+                        [sources addObject:source];
+                        if (defaultSourceId && [source.stripeID isEqualToString:defaultSourceId]) {
+                            customer.defaultSource = source;
+                        }
+                    }
+                }
+            }
+        }
+        customer.sources = sources;
+    }
+    customer.allResponseFields = dict;
+    return customer;
 }
-#pragma clang diagnostic pop
 
 @end
 
@@ -115,45 +162,12 @@
 - (instancetype)initWithJSONResponse:(id)json {
     self = [super init];
     if (self) {
-        if (![json isKindOfClass:[NSDictionary class]] || ![json[@"id"] isKindOfClass:[NSString class]]) {
+        STPCustomer *customer = [STPCustomer decodedObjectFromAPIResponse:json];
+        if (!customer) {
             _error = [NSError stp_genericFailedToParseResponseError];
-            return self;
+        } else {
+            _customer = customer;
         }
-        STPCustomer *customer = [STPCustomer new];
-        customer.stripeID = json[@"id"];
-        NSString *defaultSourceId;
-        if ([json[@"default_source"] isKindOfClass:[NSString class]]) {
-            defaultSourceId = json[@"default_source"];
-        }
-        NSMutableArray *sources = [NSMutableArray array];
-        if ([json[@"sources"] isKindOfClass:[NSDictionary class]] && [json[@"sources"][@"data"] isKindOfClass:[NSArray class]]) {
-            for (id contents in json[@"sources"][@"data"]) {
-                if ([contents isKindOfClass:[NSDictionary class]]) {
-                    // eventually support other source types
-                    if ([contents[@"object"] isEqualToString:@"card"]) {
-                        STPCard *card = [STPCard decodedObjectFromAPIResponse:contents];
-                        // ignore apple pay cards from the response
-                        if (card && !card.isApplePayCard) {
-                            [sources addObject:card];
-                            if (defaultSourceId && [card.stripeID isEqualToString:defaultSourceId]) {
-                                customer.defaultSource = card;
-                            }
-                        }
-                    }
-                    else if ([contents[@"object"] isEqualToString:@"source"]) {
-                        STPSource *source = [STPSource decodedObjectFromAPIResponse:contents];
-                        if (source) {
-                            [sources addObject:source];
-                            if (defaultSourceId && [source.stripeID isEqualToString:defaultSourceId]) {
-                                customer.defaultSource = source;
-                            }
-                        }
-                    }
-                }
-            }
-            customer.sources = sources;
-        }
-        _customer = customer;
     }
     return self;
 }

@@ -136,4 +136,39 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
     }];
 }
 
+- (void)updateCustomerWithShippingAddress:(STPAddress *)shipping completion:(STPErrorBlock)completion {
+    if (!self.keyManager) {
+        stpDispatchToMainThreadIfNecessary(^{
+            completion([NSError stp_customerContextMissingKeyProviderError]);
+        });
+        return;
+    }
+    [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
+        if (retrieveKeyError) {
+            if (completion) {
+                stpDispatchToMainThreadIfNecessary(^{
+                    completion(retrieveKeyError);
+                });
+            }
+            return;
+        }
+        NSDictionary *parameters = @{
+                                     @"shipping": [STPAddress shippingInfoForChargeWithAddress:shipping
+                                                                                shippingMethod:nil]
+                                     };
+        [STPAPIClient updateCustomerWithParameters:parameters
+                                          usingKey:ephemeralKey
+                                        completion:^(STPCustomer *customer, NSError *error) {
+                                            if (customer) {
+                                                self.customer = customer;
+                                            }
+                                            if (completion) {
+                                                stpDispatchToMainThreadIfNecessary(^{
+                                                    completion(error);
+                                                });
+                                            }
+                                        }];
+    }];
+}
+
 @end

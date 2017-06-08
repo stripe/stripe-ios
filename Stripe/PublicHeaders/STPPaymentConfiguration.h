@@ -46,9 +46,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic)STPBillingAddressFields requiredBillingAddressFields;
 
 /**
- *  The billing address fields the user must fill out when prompted for their shipping info.
+ *  The shipping address fields the user must fill out when prompted for their shipping info.
  */
 @property(nonatomic)PKAddressField requiredShippingAddressFields;
+
+/**
+ *  Whether the user should be prompted to verify prefilled shipping information.
+ *  The default value is YES.
+ */
+@property(nonatomic)BOOL verifyPrefilledShippingAddress;
 
 /**
  *  The type of shipping for this purchase. This property sets the labels displayed when the user is prompted for shipping info, and whether they should also be asked to select a shipping method. The default value is STPShippingTypeShipping.
