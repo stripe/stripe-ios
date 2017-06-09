@@ -105,8 +105,7 @@
 }
 
 - (void)updatePostalCodeCellIfNecessary {
-    STPPostalCodeType postalCodeType = [STPPostalCodeValidator postalCodeTypeForCountryCode:_addressFieldTableViewCountryCode];
-    BOOL shouldBeShowingPostalCode = (postalCodeType != STPCountryPostalCodeTypeNotRequired);
+    BOOL shouldBeShowingPostalCode = [STPPostalCodeValidator postalCodeIsRequiredForCountryCode:self.addressFieldTableViewCountryCode];
     if (shouldBeShowingPostalCode && !self.showingPostalCodeCell) {
         if (self.isBillingAddress && self.requiredBillingAddressFields == STPBillingAddressFieldsZip) {
             self.addressCells = @[

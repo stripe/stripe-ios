@@ -22,7 +22,6 @@
 @property(nonatomic, strong) NSArray *countryCodes;
 @property(nonatomic, weak)id<STPAddressFieldTableViewCellDelegate>delegate;
 @property(nonatomic, strong) NSString *ourCountryCode;
-@property(nonatomic, assign) STPPostalCodeType postalCodeType;
 @end
 
 @implementation STPAddressFieldTableViewCell
@@ -231,7 +230,6 @@
     }
     
     self.ourCountryCode = countryCode;
-    _postalCodeType = [STPPostalCodeValidator postalCodeTypeForCountryCode:self.ourCountryCode];
     [self updateTextFieldsAndCaptions];
     [self setNeedsLayout];
 }
@@ -332,8 +330,8 @@
         case STPAddressFieldTypeLine2:
             return YES;
         case STPAddressFieldTypeZip:
-            return [STPPostalCodeValidator stringIsValidPostalCode:self.contents
-                                                              type:self.postalCodeType];
+            return ([STPPostalCodeValidator validationStateForPostalCode:self.contents
+                                                             countryCode:self.ourCountryCode] == STPCardValidationStateValid);
         case STPAddressFieldTypeEmail:
             return [STPEmailAddressValidator stringIsValidEmailAddress:self.contents];
         case STPAddressFieldTypePhone:
@@ -352,12 +350,10 @@
         case STPAddressFieldTypeLine2:
             return YES;
         case STPAddressFieldTypeZip: {
-            if (self.postalCodeType == STPCountryPostalCodeTypeNumericOnly) {
-                return ([STPCardValidator sanitizedNumericStringForString:self.contents].length <= 9);
-            }
-            else {
-                return YES;
-            }
+            STPCardValidationState validationState = [STPPostalCodeValidator validationStateForPostalCode:self.contents
+                                                                                              countryCode:self.ourCountryCode];
+            return (validationState == STPCardValidationStateValid
+                    || validationState == STPCardValidationStateIncomplete);
         }
         case STPAddressFieldTypeEmail:
             return [STPEmailAddressValidator stringIsValidPartialEmailAddress:self.contents];

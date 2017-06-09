@@ -36,7 +36,6 @@ typedef NS_ENUM(NSInteger, STPEditingTransitionState) {
 @property(nonatomic, readwrite, weak) STPFormTextField *cvcField;
 @property(nonatomic, readwrite, weak) STPFormTextField *postalCodeField;
 @property(nonatomic, readwrite, strong) STPPaymentCardTextFieldViewModel *viewModel;
-@property(nonatomic, readonly, weak) UITextField *currentFirstResponderField;
 @property(nonatomic, readwrite, strong) STPCardParams *internalCardParams;
 @property(nonatomic, strong) NSArray<STPFormTextField *> *allFields;
 @property(nonatomic, readwrite, strong) STPFormTextField *sizingField;
@@ -167,7 +166,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
     postalCodeField.alpha = 0;
     postalCodeField.placeholder = @"12345"; // TODO: placeholder. Should it change based on type?
     self.postalCodeField = postalCodeField;
-    self.countryCodeForPostalCodeFormatting = nil;
+    self.countryCodeForPostalCodeFormattingAndValidation = @"US";
 
     UIView *fieldsView = [[UIView alloc] init];
     fieldsView.clipsToBounds = YES;
@@ -316,17 +315,15 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
     self.postalCodePlaceholder = _postalCodePlaceholder;
 }
 
-- (void)setCountryCodeForPostalCodeFormatting:(NSString *)countryCodeForPostalCodeFormatting {
+- (NSString *)countryCodeForPostalCodeFormattingAndValidation {
+    return self.viewModel.postalCodeCountryCode;
+}
 
-    _countryCodeForPostalCodeFormatting = countryCodeForPostalCodeFormatting;
-    STPPostalCodeType newType = [STPPostalCodeValidator postalCodeTypeForCountryCode:countryCodeForPostalCodeFormatting];
-    BOOL changedCode = (newType != self.viewModel.postalCodeType);
-    self.viewModel.postalCodeType = newType;
+- (void)setCountryCodeForPostalCodeFormattingAndValidation:(NSString *)countryCodeForPostalCodeFormattingAndValidation {
+    self.viewModel.postalCodeCountryCode = countryCodeForPostalCodeFormattingAndValidation;
 
-    if (changedCode) {
-        // So that it will re-validate
-        [self formTextFieldTextDidChange:self.postalCodeField];
-    }
+    // This will revalidate and reformat
+    [self setText:self.postalCode inField:STPCardFieldTypePostalCode];
 }
 
 - (void)setCursorColor:(UIColor *)cursorColor {
@@ -408,18 +405,32 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 }
 
 - (STPFormTextField *)nextFirstResponderField {
-    if ([self.viewModel validationStateForField:STPCardFieldTypeNumber] != STPCardValidationStateValid) {
-        return self.numberField;
-    }
-    else if ([self.viewModel validationStateForField:STPCardFieldTypeExpiration] != STPCardValidationStateValid) {
-        return self.expirationField;
-    }
-    else if (([self.viewModel validationStateForField:STPCardFieldTypeCVC] != STPCardValidationStateValid)
-               || ![self postalCodeFieldIsEnabled]) {
-        return self.cvcField;
+    STPFormTextField *currentSubResponder = self.currentFirstResponderField;
+    if (currentSubResponder) {
+        NSUInteger index = [self.allFields indexOfObject:currentSubResponder];
+        if (index != NSNotFound) {
+            index += 1;
+            if (self.allFields.count > index) {
+                return self.allFields[index];
+            }
+        }
+
+        return nil;
     }
     else {
-        return self.postalCodeField;
+        if ([self.viewModel validationStateForField:STPCardFieldTypeNumber] != STPCardValidationStateValid) {
+            return self.numberField;
+        }
+        else if ([self.viewModel validationStateForField:STPCardFieldTypeExpiration] != STPCardValidationStateValid) {
+            return self.expirationField;
+        }
+        else if (([self.viewModel validationStateForField:STPCardFieldTypeCVC] != STPCardValidationStateValid)
+                 || ![self postalCodeFieldIsEnabled]) {
+            return self.cvcField;
+        }
+        else {
+            return self.postalCodeField;
+        }
     }
 }
 
@@ -447,14 +458,13 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 }
 
 - (STPFormTextField *)previousField {
-    if (self.currentFirstResponderField == self.postalCodeField) {
-        return self.cvcField;
-    }
-    else if (self.currentFirstResponderField == self.cvcField) {
-        return self.expirationField;
-    }
-    else if (self.currentFirstResponderField == self.expirationField) {
-        return self.numberField;
+    STPFormTextField *currentSubResponder = self.currentFirstResponderField;
+    if (currentSubResponder) {
+        NSUInteger index = [self.allFields indexOfObject:currentSubResponder];
+        if (index != NSNotFound
+            && index > 0) {
+            return self.allFields[index - 1];
+        }
     }
     return nil;
 }
@@ -627,7 +637,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 }
 
 - (BOOL)postalCodeFieldIsEnabled {
-    return (self.viewModel.postalCodeType != STPCountryPostalCodeTypeNotRequired);
+    return [STPPostalCodeValidator postalCodeIsRequiredForCountryCode:self.countryCodeForPostalCodeFormattingAndValidation];
 }
 
 - (CGSize)intrinsicContentSize {
@@ -1055,7 +1065,9 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
 - (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
     STPFormTextField *previous = [self previousField];
     [previous becomeFirstResponder];
-    [previous deleteBackward];
+    if (previous.hasText) {
+        [previous deleteBackward];
+    }
 }
 
 - (NSAttributedString *)formTextField:(STPFormTextField *)formTextField
@@ -1338,7 +1350,7 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
     return [NSSet setWithArray:@[
                                  [NSString stringWithFormat:@"%@.%@",
                                   NSStringFromSelector(@selector(viewModel)),
-                                  NSStringFromSelector(@selector(valid))]
+                                  NSStringFromSelector(@selector(valid))],
                                  ]];
 }
 

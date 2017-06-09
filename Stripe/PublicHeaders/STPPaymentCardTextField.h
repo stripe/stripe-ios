@@ -159,7 +159,7 @@ IB_DESIGNABLE
  *  displayed (invalid country codes, or countries which do not commonly use
  *  postal codes).
  */
-@property(nonatomic, copy, nullable) NSString *countryCodeForPostalCodeFormatting;
+@property(nonatomic, copy, nullable) NSString *countryCodeForPostalCodeFormattingAndValidation;
 
 /**
  *  Convenience property for creating an STPCardParams from the currently entered information

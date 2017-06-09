@@ -7,20 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-
-typedef NS_ENUM(NSInteger, STPPostalCodeType) {
-    STPCountryPostalCodeTypeNumericOnly,
-    STPCountryPostalCodeTypeAlphanumeric,
-    STPCountryPostalCodeTypeNotRequired,
-};
+#import "STPCardValidationState.h"
 
 @interface STPPostalCodeValidator : NSObject
++ (BOOL)postalCodeIsRequiredForCountryCode:(nullable NSString *)countryCode;
++ (STPCardValidationState)validationStateForPostalCode:(nullable NSString *)postalCode
+                                           countryCode:(nullable NSString *)countryCode;
 
-+ (BOOL)stringIsValidPostalCode:(nullable NSString *)string
-                           type:(STPPostalCodeType)postalCodeType;
-+ (BOOL)stringIsValidPostalCode:(nullable NSString *)string
-                    countryCode:(nullable NSString *)countryCode;
-
-+ (STPPostalCodeType)postalCodeTypeForCountryCode:(nullable NSString *)countryCode;
-
++ (nullable NSString *)formattedSanitizedPostalCodeFromString:(nullable NSString *)postalCode
+                                                  countryCode:(nullable NSString *)countryCode;
 @end

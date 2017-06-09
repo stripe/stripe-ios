@@ -58,6 +58,17 @@
     _cvc = [[STPCardValidator sanitizedNumericStringForString:cvc] stp_safeSubstringToIndex:maxLength];
 }
 
+- (void)setPostalCode:(NSString *)postalCode {
+    _postalCode = [STPPostalCodeValidator formattedSanitizedPostalCodeFromString:postalCode
+                                                                     countryCode:self.postalCodeCountryCode];
+}
+
+- (void)setPostalCodeCountryCode:(NSString *)postalCodeCountryCode {
+    _postalCodeCountryCode = postalCodeCountryCode;
+    _postalCode = [STPPostalCodeValidator formattedSanitizedPostalCodeFromString:self.postalCode
+                                                                     countryCode:postalCodeCountryCode];
+}
+
 - (STPCardBrand)brand {
     return [STPCardValidator brandForNumber:self.cardNumber];
 }
@@ -82,9 +93,8 @@
         case STPCardFieldTypeCVC:
             return [STPCardValidator validationStateForCVC:self.cvc cardBrand:self.brand];
         case STPCardFieldTypePostalCode:
-            return ([STPPostalCodeValidator stringIsValidPostalCode:self.postalCode
-                                                              type:self.postalCodeType]
-                    ? STPCardValidationStateValid : STPCardValidationStateInvalid);
+            return [STPPostalCodeValidator validationStateForPostalCode:self.postalCode
+                                                            countryCode:self.postalCodeCountryCode];
     }
 }
 
@@ -105,7 +115,9 @@
                                  NSStringFromSelector(@selector(expirationMonth)),
                                  NSStringFromSelector(@selector(expirationYear)),
                                  NSStringFromSelector(@selector(cvc)),
-                                 NSStringFromSelector(@selector(brand))
+                                 NSStringFromSelector(@selector(brand)),
+                                 NSStringFromSelector(@selector(postalCode)),
+                                 NSStringFromSelector(@selector(postalCodeCountryCode)),
                                  ]];
 }
 
