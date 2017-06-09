@@ -264,7 +264,7 @@
     payload[@"app_name"] = [NSBundle stp_applicationName];
     payload[@"app_version"] = [NSBundle stp_applicationVersion];
     payload[@"apple_pay_enabled"] = @([Stripe deviceSupportsApplePay]);
-    payload[@"card_io_enabled"] = @([STPCardIOProxy isCardIOAvailable]);
+    payload[@"ocr_type"] = [STPCardIOProxy isCardIOAvailable] ? @"card_io" : @"none";
     
     return payload;
 }
