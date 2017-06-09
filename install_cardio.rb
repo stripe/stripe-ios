@@ -11,11 +11,11 @@ end
 
 require 'xcodeproj'
 
-# puts '▸ Installing card.io – this may take a while'
-# open('Example/Cartfile', 'a') { |f|
-#   f.puts "github \"card-io/card.io-iOS-source\""
-# }
-# system('cd Example; carthage update --platform ios')
+puts '▸ Installing card.io – this may take a while'
+open('Example/Cartfile', 'a') { |f|
+  f.puts "github \"card-io/card.io-iOS-source\""
+}
+system('cd Example; carthage update --platform ios')
 
 project_path = 'Example/Stripe iOS Example (Simple).xcodeproj'
 project = Xcodeproj::Project.open(project_path)
