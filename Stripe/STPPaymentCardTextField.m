@@ -41,6 +41,13 @@ typedef NS_ENUM(NSInteger, STPEditingTransitionState) {
 @property(nonatomic, readwrite, strong) STPFormTextField *sizingField;
 @property(nonatomic, readwrite, strong) UILabel *sizingLabel;
 
+/*
+ These track the input parameters to the brand image setter so that we can
+ later perform proper transition animations when new values are set
+ */
+@property(nonatomic, assign) STPCardFieldType currentBrandImageFieldType;
+@property(nonatomic, assign) STPCardBrand currentBrandImageBrand;
+
 /**
  This is a number-wrapped STPCardFieldType (or nil) that layout uses
  to determine how it should move/animate its subviews so that the chosen
@@ -1290,20 +1297,56 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
     }
 }
 
+- (UIViewAnimationOptions)brandImageAnimationOptionsForNewType:(STPCardFieldType)newType
+                                                      newBrand:(STPCardBrand)newBrand
+                                                       oldType:(STPCardFieldType)oldType
+                                                      oldBrand:(STPCardBrand)oldBrand {
+
+    if (newType == STPCardFieldTypeCVC
+        && oldType != STPCardFieldTypeCVC) {
+        // Transitioning to show CVC
+
+        if (newBrand != STPCardBrandAmex) {
+            // CVC is on the back
+            return (UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionFlipFromRight);
+        }
+    }
+    else if (newType != STPCardFieldTypeCVC
+             && oldType == STPCardFieldTypeCVC) {
+        // Transitioning to stop showing CVC
+
+        if (oldBrand != STPCardBrandAmex) {
+            // CVC was on the back
+            return (UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionFlipFromLeft);
+        }
+    }
+
+    // All other cases just cross dissolve
+    return (UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionCrossDissolve);
+
+}
+
 - (void)updateImageForFieldType:(STPCardFieldType)fieldType {
     STPCardValidationState validationState = [self.viewModel validationStateForField:fieldType];
     UIImage *image = [self brandImageForFieldType:fieldType validationState:validationState];
-    if (image != self.brandImageView.image) {
-        self.brandImageView.image = image;
-        
-        CATransition *transition = [CATransition animation];
-        transition.duration = 0.2f;
-        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-        transition.type = kCATransitionFade;
-        
-        [self.brandImageView.layer addAnimation:transition forKey:nil];
+    if (![image isEqual:self.brandImageView.image]) {
 
-        [self setNeedsLayout];
+        STPCardBrand newBrand = self.viewModel.brand;
+        UIViewAnimationOptions imageAnimationOptions = [self brandImageAnimationOptionsForNewType:fieldType
+                                                                                         newBrand:newBrand
+                                                                                          oldType:self.currentBrandImageFieldType
+                                                                                         oldBrand:self.currentBrandImageBrand];
+
+        self.currentBrandImageFieldType = fieldType;
+        self.currentBrandImageBrand = newBrand;
+
+        [UIView transitionWithView:self.brandImageView
+                          duration:0.2
+                           options:imageAnimationOptions
+                        animations:^{
+                            self.brandImageView.image = image;
+                        }
+                        completion:nil];
     }
 }
 
