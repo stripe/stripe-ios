@@ -26,7 +26,7 @@
 }
 
 + (STPCustomerContext *)staticCustomerContext {
-    return [self staticCustomerContextWithCustomer:[self customerWithSingleCardTokenSource]];
+    return [self staticCustomerContextWithCustomer:[STPFixtures customerWithSingleCardTokenSource]];
 }
 
 + (STPCustomerContext *)staticCustomerContextWithCustomer:(STPCustomer *)customer {
