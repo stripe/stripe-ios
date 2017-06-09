@@ -106,6 +106,9 @@
 /* Label for the switch to enable Remember Me */
 "Save for use in other apps" = "保存供其它应用使用";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "扫一扫银行卡";
+
 /* Title for shipping info form */
 "Shipping" = "配送信息";
 

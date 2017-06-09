@@ -1,4 +1,4 @@
-/* {card brand} ending in {last4} */
+﻿/* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ Ending In %2$@";
 
 /* Title for Add a Card view */
@@ -85,7 +85,7 @@
 /* Button to move to the next text entry field */
 "Next" = "Next";
 
-/* No comment provided by engineer. */
+/* ok button */
 "OK" = "OK";
 
 /* Button to paste a copied SMS code into the verification field. */
@@ -105,6 +105,9 @@
 
 /* Label for the switch to enable Remember Me */
 "Save for use in other apps" = "Save for use in other apps";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Scan Card";
 
 /* Title for shipping info form */
 "Shipping" = "Shipping";
@@ -145,7 +148,7 @@
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Use Billing";
 
-/* Button to fill billing address from delivery address */
+/* Button to fill billing address from delivery address. */
 "Use Delivery" = "Use Delivery";
 
 /* Button to fill billing address from shipping address. */

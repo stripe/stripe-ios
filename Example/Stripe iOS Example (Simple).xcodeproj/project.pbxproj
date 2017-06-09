@@ -131,7 +131,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Stripe iOS Example (Simple)" */;
 			buildPhases = (
-				C186AC351ECD0E1C00497DE3 /* Install Dependencies */,
+				C186AC351ECD0E1C00497DE3 /* Check Dependencies */,
 				04823F741A6849200098400B /* Sources */,
 				04823F751A6849200098400B /* Frameworks */,
 				04823F761A6849200098400B /* Resources */,
@@ -243,19 +243,19 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
-		C186AC351ECD0E1C00497DE3 /* Install Dependencies */ = {
+		C186AC351ECD0E1C00497DE3 /* Check Dependencies */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Install Dependencies";
+			name = "Check Dependencies";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "file=\"$PROJECT_DIR/Cartfile.resolved\";\nif [ ! -f \"$file\" ]; then\n    printf \"error: To build the example app, you'll need to first run the setup script.\\n\";\n    printf \"error: Please run ./setup.sh , and then try building again. \\n\";\n    exit 1;\nfi";
+			shellScript = "alamofire=\"$PROJECT_DIR/Carthage/Build/iOS/Alamofire.framework\";\nif [ ! -d \"$alamofire\" ]; then\n    printf \"error: To build the example app, you'll need to first run the setup script.\\n\";\n    printf \"error: Please run ./setup.sh , and then try building again. \\n\";\n    exit 1;\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
