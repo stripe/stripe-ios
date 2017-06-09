@@ -13,12 +13,6 @@
 @class STPPaymentCardTextField;
 @protocol STPPaymentCardTextFieldDelegate;
 
-typedef NS_ENUM(NSInteger, STPPostalCodeType) {
-    STPCountryPostalCodeTypeNumericOnly,
-    STPCountryPostalCodeTypeAlphanumeric,
-    STPCountryPostalCodeTypeNotRequired,
-};
-
 /**
  *  STPPaymentCardTextField is a text field with similar properties to UITextField, 
  *  but specialized for collecting credit/debit card information. It manages 
@@ -157,11 +151,15 @@ IB_DESIGNABLE
 @property(nonatomic, readonly, nullable) NSString *postalCode;
 
 /**
- *  Controls if a postal code entry field is displayed, and if so which style.
+ *  Controls if a postal code entry field is displayed, and if so how its text
+ *  should be formatted and what input is valid.
  *
- *  Default is NotRequired (no postal code field displayed).
+ *  Default is nil (no postal code entry is displayed).
+ *  Note that some non-nil values will still result in no postal code being
+ *  displayed (invalid country codes, or countries which do not commonly use
+ *  postal codes).
  */
-@property(nonatomic, assign) STPPostalCodeType postalCodeType;
+@property(nonatomic, copy, nullable) NSString *countryCodeForPostalCodeFormatting;
 
 /**
  *  Convenience property for creating an STPCardParams from the currently entered information

@@ -14,6 +14,7 @@
 #import "STPFormTextField.h"
 #import "STPImageLibrary.h"
 #import "STPPaymentCardTextFieldViewModel.h"
+#import "STPPostalCodeValidator.h"
 #import "STPWeakStrongMacros.h"
 #import "Stripe.h"
 #import "STPLocalizationUtils.h"
@@ -166,7 +167,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
     postalCodeField.alpha = 0;
     postalCodeField.placeholder = @"12345"; // TODO: placeholder. Should it change based on type?
     self.postalCodeField = postalCodeField;
-    self.postalCodeType = STPCountryPostalCodeTypeNumericOnly;
+    self.countryCodeForPostalCodeFormatting = nil;
 
     UIView *fieldsView = [[UIView alloc] init];
     fieldsView.clipsToBounds = YES;
@@ -315,12 +316,17 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
     self.postalCodePlaceholder = _postalCodePlaceholder;
 }
 
-- (void)setPostalCodeType:(STPPostalCodeType)postalCodeType {
-    _postalCodeType = postalCodeType;
-    self.viewModel.postalCodeType = postalCodeType;
+- (void)setCountryCodeForPostalCodeFormatting:(NSString *)countryCodeForPostalCodeFormatting {
 
-    // So that it will re-validate
-    [self formTextFieldTextDidChange:self.postalCodeField];
+    _countryCodeForPostalCodeFormatting = countryCodeForPostalCodeFormatting;
+    STPPostalCodeType newType = [STPPostalCodeValidator postalCodeTypeForCountryCode:countryCodeForPostalCodeFormatting];
+    BOOL changedCode = (newType != self.viewModel.postalCodeType);
+    self.viewModel.postalCodeType = newType;
+
+    if (changedCode) {
+        // So that it will re-validate
+        [self formTextFieldTextDidChange:self.postalCodeField];
+    }
 }
 
 - (void)setCursorColor:(UIColor *)cursorColor {
@@ -509,11 +515,12 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 }
 
 - (NSString *)postalCode {
-    if (self.postalCodeType == STPCountryPostalCodeTypeNotRequired) {
-        return nil;
+    if ([self postalCodeFieldIsEnabled]) {
+        return self.viewModel.postalCode;
+
     }
     else {
-        return self.viewModel.postalCode;
+        return nil;
     }
 }
 
@@ -620,7 +627,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 }
 
 - (BOOL)postalCodeFieldIsEnabled {
-    return (self.postalCodeType != STPCountryPostalCodeTypeNotRequired);
+    return (self.viewModel.postalCodeType != STPCountryPostalCodeTypeNotRequired);
 }
 
 - (CGSize)intrinsicContentSize {
@@ -1103,6 +1110,20 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
         case STPCardValidationStateIncomplete:
             break;
         case STPCardValidationStateValid: {
+            if (fieldType == STPCardFieldTypeCVC) {
+                /*
+                 Even though any CVC longer than the min required CVC length 
+                 is valid, we don't want to forward on to the next field
+                 unless it is actually >= the max cvc length (otherwise when
+                 postal code is showing, you can't easily enter CVCs longer than
+                 the minimum.
+                 */
+                NSString *sanitizedCvc = [STPCardValidator sanitizedNumericStringForString:formTextField.text];
+                if (sanitizedCvc.length < [STPCardValidator maxCVCLengthForCardBrand:self.viewModel.brand]) {
+                    break;
+                }
+            }
+
             [[self nextFirstResponderField] becomeFirstResponder];
             break;
         }

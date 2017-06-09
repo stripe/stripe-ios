@@ -11,7 +11,7 @@
 
 #import "STPCard.h"
 #import "STPCardValidator.h"
-#import "STPPaymentCardTextField.h"
+#import "STPPostalCodeValidator.h"
 
 typedef NS_ENUM(NSInteger, STPCardFieldType) {
     STPCardFieldTypeNumber,

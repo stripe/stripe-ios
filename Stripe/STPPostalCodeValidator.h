@@ -8,7 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "STPPaymentCardTextField.h"
+typedef NS_ENUM(NSInteger, STPPostalCodeType) {
+    STPCountryPostalCodeTypeNumericOnly,
+    STPCountryPostalCodeTypeAlphanumeric,
+    STPCountryPostalCodeTypeNotRequired,
+};
 
 @interface STPPostalCodeValidator : NSObject
 
