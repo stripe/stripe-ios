@@ -142,7 +142,17 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
 
 + (NSString *)formattedSanitizedUSZipCodeFromString:(NSString *)zipCode
                                               usage:(__unused STPPostalCodeIntendedUsage)usage {
-    NSString *formattedString = [[STPCardValidator sanitizedNumericStringForString:zipCode] stp_safeSubstringToIndex:9];
+    NSUInteger maxLength = 0;
+    switch (usage) {
+        case STPPostalCodeIntendedUsageBillingAddress:
+            maxLength = 5;
+            break;
+        case STPPostalCodeIntendedUsageShippingAddress:
+            maxLength = 9;
+    }
+
+
+    NSString *formattedString = [[STPCardValidator sanitizedNumericStringForString:zipCode] stp_safeSubstringToIndex:maxLength];
 
     if (formattedString.length > 5
         || (formattedString.length == 5
