@@ -15,49 +15,75 @@
 
 @implementation STPPostalCodeValidatorTest
 
-- (void)testValidNumericPostalCodes {
+- (void)testValidUSPostalCodes {
     NSArray *codes = @[
                        @"10002",
                        @"10002-1234",
+                       @"100021234",
                        @"21218",
                        ];
     for (NSString *code in codes) {
-        XCTAssertTrue([STPPostalCodeValidator stringIsValidPostalCode:code
-                                                                 type:STPCountryPostalCodeTypeNumericOnly]);
+        XCTAssertEqual([STPPostalCodeValidator validationStateForPostalCode:code
+                                                                countryCode:@"US"],
+                       STPCardValidationStateValid,
+                       @"Valid US postal code test failed for code: %@", code);
     }
 }
 
-- (void)testInvalidNumericPostalCodes {
+- (void)testInvalidUSPostalCodes {
     NSArray *codes = @[
-                       @"",
+                       @"100A03",
+                       @"12345-12345",
+                       @"1234512345",
                        @"$$$$$",
                        @"foo",
                        ];
     for (NSString *code in codes) {
-        XCTAssertFalse([STPPostalCodeValidator stringIsValidPostalCode:code
-                                                                  type:STPCountryPostalCodeTypeNumericOnly]);
+        XCTAssertEqual([STPPostalCodeValidator validationStateForPostalCode:code
+                                                                countryCode:@"US"],
+                       STPCardValidationStateInvalid,
+                       @"Invalid US postal code test failed for code: %@", code);
     }   
 }
 
-- (void)testValidAlphanumericPostalCodes {
+- (void)testIncompleteUSPostalCodes {
+    NSArray *codes = @[
+                       @"",
+                       @"123",
+                       @"12345-",
+                       @"12345-12",
+                       ];
+    for (NSString *code in codes) {
+        XCTAssertEqual([STPPostalCodeValidator validationStateForPostalCode:code
+                                                                countryCode:@"US"],
+                       STPCardValidationStateIncomplete,
+                       @"Incomplete US postal code test failed for code: %@", code);
+    }
+}
+
+- (void)testValidGenericPostalCodes {
     NSArray *codes = @[
                        @"ABC10002",
                        @"10002-ABCD",
                        @"ABCDE",
                        ];
     for (NSString *code in codes) {
-        XCTAssertTrue([STPPostalCodeValidator stringIsValidPostalCode:code
-                                                                 type:STPCountryPostalCodeTypeAlphanumeric]);
+        XCTAssertEqual([STPPostalCodeValidator validationStateForPostalCode:code
+                                                                countryCode:@"UK"],
+                       STPCardValidationStateValid,
+                       @"Valid generic postal code test failed for code: %@", code);
     }
 }
 
-- (void)testInvalidAlphanumericPostalCodes {
+- (void)testIncompleteGenericPostalCodes {
     NSArray *codes = @[
                        @"",
                        ];
     for (NSString *code in codes) {
-        XCTAssertFalse([STPPostalCodeValidator stringIsValidPostalCode:code
-                                                                  type:STPCountryPostalCodeTypeAlphanumeric]);
+        XCTAssertEqual([STPPostalCodeValidator validationStateForPostalCode:code
+                                                                countryCode:@"UK"],
+                       STPCardValidationStateIncomplete,
+                       @"Incomplete generic postal code test failed for code: %@", code);
     }   
 }
 

@@ -60,13 +60,15 @@
 
 - (void)setPostalCode:(NSString *)postalCode {
     _postalCode = [STPPostalCodeValidator formattedSanitizedPostalCodeFromString:postalCode
-                                                                     countryCode:self.postalCodeCountryCode];
+                                                                     countryCode:self.postalCodeCountryCode
+                                                                           usage:STPPostalCodeIntendedUsageBillingAddress];
 }
 
 - (void)setPostalCodeCountryCode:(NSString *)postalCodeCountryCode {
     _postalCodeCountryCode = postalCodeCountryCode;
     _postalCode = [STPPostalCodeValidator formattedSanitizedPostalCodeFromString:self.postalCode
-                                                                     countryCode:postalCodeCountryCode];
+                                                                     countryCode:postalCodeCountryCode
+                                                                           usage:STPPostalCodeIntendedUsageBillingAddress];
 }
 
 - (STPCardBrand)brand {

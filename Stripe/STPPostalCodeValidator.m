@@ -10,6 +10,8 @@
 
 #import "STPCardValidator.h"
 #import "STPPhoneNumberValidator.h"
+#import "NSCharacterSet+Stripe.h"
+#import "NSCharacterSet+Stripe.h"
 #import "NSString+Stripe.h"
 
 static NSString *const STPCountryCodeUnitedStates = @"US";
@@ -37,67 +39,100 @@ static NSString *const STPCountryCodeUnitedStates = @"US";
     }
 }
 
-+ (STPCardValidationState)validationStateForUSPostalCode:(NSString *)postalCode {
-    NSUInteger length = postalCode.length;
-    NSUInteger numberOfDigits = [STPCardValidator sanitizedNumericStringForString:postalCode].length;
+static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, NSCharacterSet * _Nonnull cs) {
+    NSRange range = [string rangeOfCharacterFromSet:cs];
+    NSUInteger count = 0;
+    if (range.location != NSNotFound) {
+        NSUInteger lastPosition = NSMaxRange(range);
+        count += range.length;
+        while (lastPosition < string.length) {
+            range = [string rangeOfCharacterFromSet:cs options:(NSStringCompareOptions)kNilOptions range:NSMakeRange(lastPosition, string.length - lastPosition)];
+            if (range.location == NSNotFound) {
+                break;
+            }
+            else {
+                count += range.length;
+                lastPosition = NSMaxRange(range);
+            }
+        }
+    }
 
-    if (numberOfDigits == 5) {
-        if (length == 5) {
-            // Standard 5 digit zip with no extra characters
-            return STPCardValidationStateValid;
-        }
-        else if (length == 6) {
-            // Beginning of 9 digit zip (5 digits plus separator)
-            // We don't currently validate which separators are allowed
-            return STPCardValidationStateIncomplete;
-        }
-        else {
-            return STPCardValidationStateInvalid;
-        }
-    }
-    else if (numberOfDigits == 9) {
-        if (length == 9 || length == 10) {
-            // Standard Zip+4 with or without an extra separator character
-            // (at the moment we don't validate what the separator is)
-            return STPCardValidationStateValid;
-        }
-        else {
-            return STPCardValidationStateInvalid;
-        }
-    }
-    else if (numberOfDigits < 5) {
-        if (length == numberOfDigits) {
-            // On our way to a valid 5 digit
-            return STPCardValidationStateIncomplete;
-        }
-        else {
-            return STPCardValidationStateInvalid;
-        }
-    }
-    else if (numberOfDigits < 9) {
-        if (length == numberOfDigits
-            || (length == numberOfDigits + 1)) {
-            // On our way to a valid 9 digit
-            return STPCardValidationStateIncomplete;
-        }
-        else {
-            return STPCardValidationStateInvalid;
-        }
-    }
-    else {
-        return STPCardValidationStateInvalid;
-    }
+    return count;
 }
 
+
++ (STPCardValidationState)validationStateForUSPostalCode:(NSString *)postalCode {
+    NSString *firstFive = [postalCode stp_safeSubstringToIndex:5];
+    NSUInteger firstFiveLength = firstFive.length;
+    NSUInteger totalLength = postalCode.length;
+
+    BOOL firstFiveIsNumeric = [STPCardValidator stringIsNumeric:firstFive];
+    if (!firstFiveIsNumeric) {
+        // Non-numbers included in first five characters
+        return STPCardValidationStateInvalid;
+    }
+    else if (firstFiveLength < 5) {
+        // Incomplete ZIP with only numbers
+        return STPCardValidationStateIncomplete;
+    }
+    else if (totalLength == 5) {
+        // Valid 5 digit zip
+        return STPCardValidationStateValid;
+    }
+    else {
+        // ZIP+4 territory
+        NSUInteger numberOfDigits = countOfCharactersFromSetInString(postalCode, [NSCharacterSet stp_asciiDigitCharacterSet]);
+
+        if (numberOfDigits > 9) {
+            // Too many digits
+            return STPCardValidationStateInvalid;
+        }
+        else if (numberOfDigits == totalLength) {
+            // All numeric postal code entered
+            if (numberOfDigits == 9) {
+                return STPCardValidationStateValid;
+            }
+            else {
+                return STPCardValidationStateIncomplete;
+            }
+
+        }
+        else if ((numberOfDigits + 1) == totalLength) {
+            // Possibly has a separator character for ZIP+4, check to see if
+            // its in the right place
+
+            NSString *separatorCharacter = [postalCode substringWithRange:NSMakeRange(5, 1)];
+            if (countOfCharactersFromSetInString(separatorCharacter, [NSCharacterSet stp_asciiDigitCharacterSet]) == 0) {
+                // Non-digit is in right position to be separator
+                if (numberOfDigits == 9) {
+                    return STPCardValidationStateValid;
+                }
+                else {
+                    return STPCardValidationStateIncomplete;
+                }
+            }
+            else {
+                // Non-digit is in wrong position to be separator
+                return STPCardValidationStateInvalid;
+            }
+        }
+        else {
+            // Not a valid zip code (too many non-numeric characters)
+            return STPCardValidationStateInvalid;
+        }
+    }
+}
 + (NSString *)formattedSanitizedPostalCodeFromString:(NSString *)postalCode
-                                         countryCode:(NSString *)countryCode {
+                                         countryCode:(NSString *)countryCode
+                                               usage:(STPPostalCodeIntendedUsage)usage {
     if (countryCode == nil) {
         return postalCode;
     }
 
     NSString *sanitizedCountryCode = countryCode.uppercaseString;
     if ([sanitizedCountryCode isEqualToString:STPCountryCodeUnitedStates]) {
-        return [self formattedSanitizedUSZipCodeFromString:postalCode];
+        return [self formattedSanitizedUSZipCodeFromString:postalCode
+                                                     usage:usage];
     }
     else {
         return postalCode;
@@ -105,7 +140,8 @@ static NSString *const STPCountryCodeUnitedStates = @"US";
 
 }
 
-+ (NSString *)formattedSanitizedUSZipCodeFromString:(NSString *)zipCode {
++ (NSString *)formattedSanitizedUSZipCodeFromString:(NSString *)zipCode
+                                              usage:(__unused STPPostalCodeIntendedUsage)usage {
     NSString *formattedString = [[STPCardValidator sanitizedNumericStringForString:zipCode] stp_safeSubstringToIndex:9];
 
     if (formattedString.length > 5

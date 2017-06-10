@@ -7,21 +7,14 @@
 //
 
 #import "STPCardValidator.h"
+
 #import "STPBINRange.h"
+#import "NSCharacterSet+Stripe.h"
 
 @implementation STPCardValidator
 
 + (NSString *)sanitizedNumericStringForString:(NSString *)string {
-    return stringByRemovingCharactersFromSet(string, invertedAsciiDigitCharacterSet());
-}
-
-static NSCharacterSet *invertedAsciiDigitCharacterSet() {
-    static NSCharacterSet *cs;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        cs = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
-    });
-    return cs;
+    return stringByRemovingCharactersFromSet(string, [NSCharacterSet stp_invertedAsciiDigitCharacterSet]);
 }
 
 + (NSString *)stringByRemovingSpacesFromString:(NSString *)string {
@@ -36,7 +29,9 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
         NSUInteger lastPosition = NSMaxRange(range);
         while (lastPosition < string.length) {
             range = [string rangeOfCharacterFromSet:cs options:(NSStringCompareOptions)kNilOptions range:NSMakeRange(lastPosition, string.length - lastPosition)];
-            if (range.location == NSNotFound) break;
+            if (range.location == NSNotFound) {
+                break;
+            }
             if (range.location != lastPosition) {
                 [newString appendString:[string substringWithRange:NSMakeRange(lastPosition, range.location - lastPosition)]];
             }
@@ -52,7 +47,7 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
 }
 
 + (BOOL)stringIsNumeric:(NSString *)string {
-    return [string rangeOfCharacterFromSet:invertedAsciiDigitCharacterSet()].location == NSNotFound;
+    return [string rangeOfCharacterFromSet:[NSCharacterSet stp_invertedAsciiDigitCharacterSet]].location == NSNotFound;
 }
 
 + (STPCardValidationState)validationStateForExpirationMonth:(NSString *)expirationMonth {
