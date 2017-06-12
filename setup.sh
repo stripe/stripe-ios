@@ -3,7 +3,10 @@
 echo '▸ Installing dependencies for Stripe iOS Example (Simple)';
 
 cd Example;
-rm Cartfile.resolved;
+
+if [[ -e Cartfile.resolved ]]; then
+  rm Cartfile.resolved;
+fi
 
 if ! command -v carthage > /dev/null; then
   echo ''
