@@ -39,7 +39,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
         else {
             STPSourceParams *params = [STPSourceParams new];
             params.type = STPSourceTypeCard;
-            params.additionalAPIParameters = @{@"token": token.tokenId};
+            params.token = token.tokenId;
             [self createSourceWithParams:params completion:completion];
         }
     }];
