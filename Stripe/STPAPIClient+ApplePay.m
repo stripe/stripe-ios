@@ -11,7 +11,10 @@
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient+Private.h"
 #import "STPAnalyticsClient.h"
+#import "STPSourceParams.h"
 #import "STPTelemetryClient.h"
+#import "STPToken.h"
+#import "StripeError.h"
 
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
@@ -23,6 +26,23 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
     [self createTokenWithParameters:params
                          completion:completion];
     [[STPTelemetryClient sharedInstance] sendTelemetryData];
+}
+
+- (void)createSourceWithPayment:(PKPayment *)payment completion:(STPSourceCompletionBlock)completion {
+    NSCAssert(payment != nil, @"'payment' is required to create an apple pay source");
+    NSCAssert(completion != nil, @"'completion' is required to use the source that is created");
+    [self createTokenWithPayment:payment completion:^(STPToken * _Nullable token, NSError * _Nullable error) {
+        if (token.tokenId == nil
+            || error != nil) {
+            completion(nil, error ?: [NSError stp_genericConnectionError]);
+        }
+        else {
+            STPSourceParams *params = [STPSourceParams new];
+            params.type = STPSourceTypeCard;
+            params.additionalAPIParameters = @{@"token": token.tokenId};
+            [self createSourceWithParams:params completion:completion];
+        }
+    }];
 }
 
 #pragma clang diagnostic push

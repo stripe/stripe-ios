@@ -25,7 +25,16 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
  *  @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
  */
 - (void)createTokenWithPayment:(nonnull PKPayment *)payment
-                    completion:(nonnull STPTokenCompletionBlock)completion NS_AVAILABLE_IOS(8_0);
+                    completion:(nonnull STPTokenCompletionBlock)completion;
+
+/**
+ *  Converts a PKPayment object into a Stripe source using the Stripe API.
+ *
+ *  @param payment     The user's encrypted payment information as returned from a PKPaymentAuthorizationViewController. Cannot be nil.
+ *  @param completion  The callback to run with the returned Stripe source (and any errors that may have occurred).
+ */
+- (void)createSourceWithPayment:(nonnull PKPayment *)payment
+                     completion:(nonnull STPSourceCompletionBlock)completion;
 
 @end
 
