@@ -63,7 +63,9 @@
 
 - (PKPaymentRequest *)buildPaymentRequest {
     if ([PKPaymentRequest class]) {
-        PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:AppleMerchantId];
+        PKPaymentRequest *paymentRequest = [Stripe paymentRequestWithMerchantIdentifier:AppleMerchantId
+                                                                                country:@"US"
+                                                                               currency:@"USD"];
         [paymentRequest setRequiredShippingAddressFields:PKAddressFieldPostalAddress];
         [paymentRequest setRequiredBillingAddressFields:PKAddressFieldPostalAddress];
         paymentRequest.shippingMethods = [self.shippingManager defaultShippingMethods];

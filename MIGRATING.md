@@ -1,5 +1,9 @@
 ## Migration Guides
 
+### Migrating from versions < 11.0.0
+- `paymentRequestWithMerchantIdentifier:` has been deprecated. You should instead use `paymentRequestWithMerchantIdentifier:country:currency:`. Apple Pay is now available in many countries and currencies, and you should use the appropriate values for your business.
+- We've added a `paymentCountry` property to `STPPaymentContext`. This affects the countryCode of Apple Pay payments, and defaults to "US". You should set this to the country your Stripe account is in.
+
 ### Migrating from versions < 10.1.0
 
 - STPPaymentMethodsViewControllerDelegate now has a separate `paymentMethodsViewControllerDidCancel:` callback, differentiating from successful method selections. You should make sure to also dismiss the view controller in that callback.

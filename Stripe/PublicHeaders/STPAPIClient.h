@@ -159,15 +159,42 @@ static NSString *const STPSDKVersion = @"10.1.0";
 + (BOOL)deviceSupportsApplePay;
 
 /**
- *  A convenience method to return a `PKPaymentRequest` with sane default values. You will still need to configure the `paymentSummaryItems` property to indicate
- *what the user is purchasing, as well as the optional `requiredShippingAddressFields`, `requiredBillingAddressFields`, and `shippingMethods` properties to indicate
- *what contact information your application requires.
+ *  A convenience method to build a `PKPaymentRequest` with sane default values.
+ *  You will still need to configure the `paymentSummaryItems` property to indicate
+ *  what the user is purchasing, as well as the optional `requiredShippingAddressFields`,
+ *  `requiredBillingAddressFields`, and `shippingMethods` properties to indicate
+ *  what contact information your application requires.
+ *  Note that this method sets the payment request's countryCode to "US" and its
+ *  currencyCode to "USD".
  *
- *  @param merchantIdentifier Your Apple Merchant ID, as obtained at https://developer.apple.com/account/ios/identifiers/merchant/merchantCreate.action
+ *  @param merchantIdentifier Your Apple Merchant ID.
+ *
+ *  @return a `PKPaymentRequest` with proper default values. Returns nil if running on < iOS8.
+ *  @deprecated Use `paymentRequestWithMerchantIdentifier:country:currency:` instead.
+ *  Apple Pay is available in many countries and currencies, and you should use
+ *  the appropriate values for your business.
+ */
++ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier NS_AVAILABLE_IOS(8_0) __attribute__((deprecated));
+
+/**
+ *  A convenience method to build a `PKPaymentRequest` with sane default values.
+ *  You will still need to configure the `paymentSummaryItems` property to indicate
+ *  what the user is purchasing, as well as the optional `requiredShippingAddressFields`,
+ *  `requiredBillingAddressFields`, and `shippingMethods` properties to indicate
+ *  what contact information your application requires.
+ *
+ *  @param merchantIdentifier Your Apple Merchant ID.
+ *  @param countryCode        The two-letter code for the country where the payment 
+ *  will be processed. This should be the country of your Stripe account.
+ *  @param currencyCode       The three-letter code for the currency used by this 
+ *  payment request. Apple Pay interprets the amounts provided by the summary items 
+ *  attached to this request as amounts in this currency.
  *
  *  @return a `PKPaymentRequest` with proper default values. Returns nil if running on < iOS8.
  */
-+ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier NS_AVAILABLE_IOS(8_0);
++ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier
+                                                   country:(NSString *)countryCode
+                                                  currency:(NSString *)currencyCode NS_AVAILABLE_IOS(8_0);
 
 @end
 
