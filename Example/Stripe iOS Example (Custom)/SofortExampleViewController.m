@@ -82,6 +82,8 @@
     }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 - (void)pay {
     if (![Stripe defaultPublishableKey]) {
         [self.delegate exampleViewController:self didFinishWithMessage:@"Please set a Stripe Publishable Key in Constants.m"];
@@ -130,5 +132,6 @@
         }
     }];
 }
+#pragma clang diagnostic pop
 
 @end
