@@ -50,11 +50,38 @@
     return mockKeyManager;
 }
 
+- (void)stubRetrieveCustomerUsingKey:(STPEphemeralKey *)key
+                   returningCustomer:(STPCustomer *)customer
+                       expectedCount:(NSInteger)count {
+    id mockAPIClient = OCMClassMock([STPAPIClient class]);
+    [self stubRetrieveCustomerUsingKey:key
+                     returningCustomer:customer
+                         expectedCount:count
+                         mockAPIClient:mockAPIClient];
+}
+
+- (void)stubRetrieveCustomerUsingKey:(STPEphemeralKey *)key
+                   returningCustomer:(STPCustomer *)customer
+                       expectedCount:(NSInteger)count
+                       mockAPIClient:(id)mockAPIClient
+{
+    XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomer"];
+    exp.expectedFulfillmentCount = count;
+    OCMStub([mockAPIClient retrieveCustomerUsingKey:[OCMArg isEqual:key]
+                                         completion:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation) {
+        STPCustomerCompletionBlock completion;
+        [invocation getArgument:&completion atIndex:3];
+        completion(customer, nil);
+        [exp fulfill];
+    });
+}
+
 - (void)testGetCustomerKeyErrorForwardedToRetrieveCustomer {
     NSError *expectedError = [NSError errorWithDomain:@"foo" code:123 userInfo:nil];
-    id mockKeyManager = [self mockKeyManagerWithError:expectedError];
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     OCMReject([mockAPIClient retrieveCustomerUsingKey:[OCMArg any] completion:[OCMArg any]]);
+    id mockKeyManager = [self mockKeyManagerWithError:expectedError];
     XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomer"];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
     [sut retrieveCustomer:^(STPCustomer *customer, NSError *error) {
@@ -68,18 +95,11 @@
 
 - (void)testInitRetrievesResourceKeyAndCustomer {
     STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
-    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
-    id mockAPIClient = OCMClassMock([STPAPIClient class]);
     STPCustomer *expectedCustomer = [STPFixtures customerWithSingleCardTokenSource];
-    XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomer"];
-    OCMStub([mockAPIClient retrieveCustomerUsingKey:[OCMArg isEqual:customerKey]
-                                         completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation) {
-        STPCustomerCompletionBlock completion;
-        [invocation getArgument:&completion atIndex:3];
-        completion(expectedCustomer, nil);
-        [exp fulfill];
-    });
+    [self stubRetrieveCustomerUsingKey:customerKey
+                     returningCustomer:expectedCustomer
+                         expectedCount:1];
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
     XCTAssertNotNil(sut);
 
@@ -88,21 +108,13 @@
 
 - (void)testRetrieveCustomerUsesCachedCustomerIfNotExpired {
     STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
-    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
-    id mockAPIClient = OCMClassMock([STPAPIClient class]);
     STPCustomer *expectedCustomer = [STPFixtures customerWithSingleCardTokenSource];
-    XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomerWithId"];
     // apiClient.retrieveCustomer should be called once, when the context is initialized.
-    // when sut.retrieveCustomer is called below, the cached customer will be used.
-    exp.expectedFulfillmentCount = 1; 
-    OCMStub([mockAPIClient retrieveCustomerUsingKey:[OCMArg isEqual:customerKey]
-                                         completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation) {
-        STPCustomerCompletionBlock completion;
-        [invocation getArgument:&completion atIndex:3];
-        completion(expectedCustomer, nil);
-        [exp fulfill];
-    });
+    // When sut.retrieveCustomer is called below, the cached customer will be used.
+    [self stubRetrieveCustomerUsingKey:customerKey
+                     returningCustomer:expectedCustomer
+                         expectedCount:1];
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
     XCTestExpectation *exp2 = [self expectationWithDescription:@"retrieveCustomer"];
     [sut retrieveCustomer:^(STPCustomer *customer, __unused NSError *error) {
@@ -115,22 +127,14 @@
 
 - (void)testRetrieveCustomerDoesNotUseCachedCustomerIfExpired {
     STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
-    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
-    id mockAPIClient = OCMClassMock([STPAPIClient class]);
     STPCustomer *expectedCustomer = [STPFixtures customerWithSingleCardTokenSource];
-    XCTestExpectation *retrieveCustomerExp = [self expectationWithDescription:@"retrieveCustomer"];
     // apiClient.retrieveCustomer should be called twice:
     // - when the context is initialized,
     // - when sut.retrieveCustomer is called below, as the cached customer has expired.
-    retrieveCustomerExp.expectedFulfillmentCount = 2;
-    OCMStub([mockAPIClient retrieveCustomerUsingKey:[OCMArg isEqual:customerKey]
-                                         completion:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation) {
-        STPCustomerCompletionBlock completion;
-        [invocation getArgument:&completion atIndex:3];
-        completion(expectedCustomer, nil);
-        [retrieveCustomerExp fulfill];
-    });
+    [self stubRetrieveCustomerUsingKey:customerKey
+                     returningCustomer:expectedCustomer
+                         expectedCount:2];
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
     sut.customerRetrievedDate = [NSDate dateWithTimeIntervalSinceNow:-(sut.cachedCustomerMaxAge+10)];
     XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomer"];
@@ -144,8 +148,12 @@
 
 - (void)testAttachSourceToCustomerCallsAPIClientCorrectly {
     STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
-    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomer *expectedCustomer = [STPFixtures customerWithSingleCardTokenSource];
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
+    [self stubRetrieveCustomerUsingKey:customerKey
+                     returningCustomer:expectedCustomer
+                         expectedCount:1
+                         mockAPIClient:mockAPIClient];
     STPSource *expectedSource = [STPFixtures cardSource];
     XCTestExpectation *exp = [self expectationWithDescription:@"addSource"];
     OCMStub([mockAPIClient addSource:[OCMArg isEqual:expectedSource.stripeID]
@@ -157,6 +165,7 @@
         completion([STPFixtures customerWithSingleCardTokenSource], nil);
         [exp fulfill];
     });
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
     sut.customer = [STPFixtures customerWithSingleCardTokenSource];
     XCTestExpectation *exp2 = [self expectationWithDescription:@"attachSource"];
@@ -172,8 +181,12 @@
 
 - (void)testSelectDefaultCustomerSourceCallsAPIClientCorrectly {
     STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
-    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomer *expectedCustomer = [STPFixtures customerWithSingleCardTokenSource];
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
+    [self stubRetrieveCustomerUsingKey:customerKey
+                     returningCustomer:expectedCustomer
+                         expectedCount:1
+                         mockAPIClient:mockAPIClient];
     STPSource *expectedSource = [STPFixtures cardSource];
     XCTestExpectation *exp = [self expectationWithDescription:@"updateCustomer"];
     NSDictionary *expectedParams = @{@"default_source": expectedSource.stripeID};
@@ -186,6 +199,7 @@
         completion([STPFixtures customerWithSingleCardTokenSource], nil);
         [exp fulfill];
     });
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     XCTestExpectation *exp2 = [self expectationWithDescription:@"selectDefaultSource"];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
     [sut selectDefaultCustomerSource:expectedSource completion:^(NSError *error) {
