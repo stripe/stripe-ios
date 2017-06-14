@@ -33,8 +33,30 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
 
 @implementation STPBlockBasedApplePayDelegate
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000 // __IPHONE_11_0
+-(PKPaymentAuthorizationResult * _Nonnull)resultFromStatus:(PKPaymentAuthorizationStatus)status {
+    //TODO: can improve errors from PKPaymentAuthorizationStatus
+    return [[PKPaymentAuthorizationResult alloc] initWithStatus:status errors:nil];
+}
+
+// required iOS 11 API - call through to old method to maintain similar functionality
+// Does not take advantage of providing more granular information
 - (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
-                       didAuthorizePayment:(PKPayment *)payment completion:(STPPaymentAuthorizationStatusCallback)completion {
+                       didAuthorizePayment:(__unused PKPayment *)payment
+                                   handler:(__unused void (^)(PKPaymentAuthorizationResult * _Nonnull))completion {
+    
+    [self paymentAuthorizationViewController:controller
+                         didAuthorizePayment:payment
+                                  completion:^(PKPaymentAuthorizationStatus status) {
+                                      completion([self resultFromStatus:status]);
+                                  }];
+}
+
+#endif
+
+- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
+                       didAuthorizePayment:(PKPayment *)payment
+                                completion:(STPPaymentAuthorizationStatusCallback)completion {
     self.onPaymentAuthorization(payment);
     [self.apiClient createTokenWithPayment:payment completion:^(STPToken * _Nullable token, NSError * _Nullable error) {
         if (error) {
@@ -54,6 +76,21 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
     }];
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000 // __IPHONE_11_0
+// new iOS 11 API - call through to old method to maintain similar functionality
+// Does not take advantage of providing more granular information
+-(void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller
+                  didSelectShippingMethod:(PKShippingMethod *)shippingMethod
+                                  handler:(void (^)(PKPaymentRequestShippingMethodUpdate * _Nonnull))completion {
+    [self paymentAuthorizationViewController:controller didSelectShippingMethod:shippingMethod completion:^(PKPaymentAuthorizationStatus status, NSArray<PKPaymentSummaryItem *> * _Nonnull summaryItems) {
+        PKPaymentRequestShippingMethodUpdate *shippingMethodUpdate = [[PKPaymentRequestShippingMethodUpdate alloc] initWithPaymentSummaryItems:summaryItems];
+        shippingMethodUpdate.status = status;
+        completion(shippingMethodUpdate);
+    }];
+}
+
+#endif
+
 - (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
                    didSelectShippingMethod:(PKShippingMethod *)shippingMethod
                                 completion:(STPApplePayShippingMethodCompletionBlock)completion {
@@ -61,6 +98,22 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
         completion(PKPaymentAuthorizationStatusSuccess, summaryItems);
     });
 }
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000 // __IPHONE_11_0
+// new iOS 11 API - call through to old method to maintain similar functionality
+// Does not take advantage of providing more granular information
+-(void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
+                 didSelectShippingContact:(PKContact *)contact
+                                  handler:(void (^)(PKPaymentRequestShippingContactUpdate * _Nonnull))completion {
+    [self paymentAuthorizationViewController:controller
+                    didSelectShippingContact:contact
+                                  completion:^(PKPaymentAuthorizationStatus status, NSArray<PKShippingMethod *> * _Nonnull shippingMethods, NSArray<PKPaymentSummaryItem *> * _Nonnull summaryItems) {
+                                      PKPaymentRequestShippingContactUpdate *update = [[PKPaymentRequestShippingContactUpdate alloc] initWithErrors:nil paymentSummaryItems:summaryItems shippingMethods:shippingMethods];
+                                      update.status = status;
+                                      completion(update);
+    }];
+}
+#endif
 
 - (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
                   didSelectShippingContact:(PKContact *)contact
