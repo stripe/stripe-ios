@@ -154,7 +154,7 @@ static NSString *const STPSDKVersion = @"10.1.0";
  *
  *  @return whether or not the user is currently able to pay with Apple Pay.
  */
-+ (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest NS_AVAILABLE_IOS(8_0);
++ (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest;
 
 + (BOOL)deviceSupportsApplePay;
 
@@ -174,7 +174,7 @@ static NSString *const STPSDKVersion = @"10.1.0";
  *  Apple Pay is available in many countries and currencies, and you should use
  *  the appropriate values for your business.
  */
-+ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier NS_AVAILABLE_IOS(8_0) __attribute__((deprecated));
++ (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier __attribute__((deprecated));
 
 /**
  *  A convenience method to build a `PKPaymentRequest` with sane default values.
