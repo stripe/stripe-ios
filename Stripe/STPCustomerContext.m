@@ -14,6 +14,7 @@
 #import "STPEphemeralKey.h"
 #import "STPEphemeralKeyManager.h"
 #import "STPWeakStrongMacros.h"
+#import "STPDispatchFunctions.h"
 
 static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 
@@ -77,18 +78,24 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 - (void)retrieveCustomer:(STPCustomerCompletionBlock)completion {
     if ([self shouldUseCachedCustomer]) {
         if (completion) {
-            completion(self.customer, nil);
+            stpDispatchToMainThreadIfNecessary(^{
+                completion(self.customer, nil);
+            });
         }
         return;
     }
     if (!self.keyManager) {
-        completion(nil, [NSError stp_customerContextMissingKeyProviderError]);
+        stpDispatchToMainThreadIfNecessary(^{
+            completion(nil, [NSError stp_customerContextMissingKeyProviderError]);
+        });
         return;
     }
     [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
         if (retrieveKeyError) {
             if (completion) {
-                completion(nil, retrieveKeyError);
+                stpDispatchToMainThreadIfNecessary(^{
+                    completion(nil, retrieveKeyError);
+                });
             }
             return;
         }
@@ -97,7 +104,9 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
                 self.customer = customer;
             }
             if (completion) {
-                completion(customer, error);
+                stpDispatchToMainThreadIfNecessary(^{
+                    completion(customer, error);
+                });
             }
         }];
     }];
@@ -105,13 +114,17 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 
 - (void)attachSourceToCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
     if (!self.keyManager) {
-        completion([NSError stp_customerContextMissingKeyProviderError]);
+        stpDispatchToMainThreadIfNecessary(^{
+            completion([NSError stp_customerContextMissingKeyProviderError]);
+        });
         return;
     }
     [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
         if (retrieveKeyError) {
             if (completion) {
-                completion(retrieveKeyError);
+                stpDispatchToMainThreadIfNecessary(^{
+                    completion(retrieveKeyError);
+                });
             }
             return;
         }
@@ -120,7 +133,9 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
                      completion:^(__unused id<STPSourceProtocol> object, NSError *error) {
                          self.customer = nil;
                          if (completion) {
-                             completion(error);
+                             stpDispatchToMainThreadIfNecessary(^{
+                                 completion(error);
+                             });
                          }
                      }];
     }];
@@ -128,13 +143,17 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 
 - (void)selectDefaultCustomerSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
     if (!self.keyManager) {
-        completion([NSError stp_customerContextMissingKeyProviderError]);
+        stpDispatchToMainThreadIfNecessary(^{
+            completion([NSError stp_customerContextMissingKeyProviderError]);
+        });
         return;
     }
     [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
         if (retrieveKeyError) {
             if (completion) {
-                completion(retrieveKeyError);
+                stpDispatchToMainThreadIfNecessary(^{
+                    completion(retrieveKeyError);
+                });
             }
             return;
         }
@@ -145,7 +164,9 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
                                                 self.customer = customer;
                                             }
                                             if (completion) {
-                                                completion(error);
+                                                stpDispatchToMainThreadIfNecessary(^{
+                                                    completion(error);
+                                                });
                                             }
                                         }];
     }];
