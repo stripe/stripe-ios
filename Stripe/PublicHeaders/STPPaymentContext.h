@@ -152,10 +152,6 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @note You should only set either this or `paymentAmount`, not both. 
  *  The other will be automatically calculated on demand using your `paymentCurrency.`
- *
- *  @warning `PKPaymentSummaryItem` is only available in iOS8+. If you support 
- *  iOS 7 you should do a runtime availability check before accessing or setting 
- *  this property.
  */
 @property(nonatomic, copy)NSArray<PKPaymentSummaryItem *> *paymentSummaryItems;
 
