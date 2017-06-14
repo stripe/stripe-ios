@@ -104,6 +104,8 @@
     self.navigationItem.rightBarButtonItem.enabled = textField.isValid;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 - (void)pay {
     if (![self.paymentTextField isValid]) {
         return;
@@ -169,5 +171,6 @@
         }
     }];
 }
+#pragma clang diagnostic pop
 
 @end
