@@ -67,10 +67,6 @@
 
 @end
 
-/**
- NOTE: STPCustomerDeserializer has been deprecated. When we remove 
- STPBackendAPIAdapter, we should also remove STPCustomerDeserializer.
- */
 @interface STPCustomerDeserializer()
 
 @property(nonatomic, nullable)STPCustomer *customer;

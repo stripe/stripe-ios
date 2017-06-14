@@ -22,8 +22,39 @@
     NSHTTPURLResponse *httpURLResponse = [[NSHTTPURLResponse alloc] init];
     NSDictionary *json = [STPTestUtils jsonNamed:@"CardSource"];
     NSData *body = [NSJSONSerialization dataWithJSONObject:json options:(NSJSONWritingOptions)kNilOptions error:nil];
-    [STPAPIRequest parseResponse:httpURLResponse body:body error:nil serializers:@[[STPCard new], [STPSource new]] completion:^(id<STPAPIResponseDecodable> object, NSHTTPURLResponse *response, NSError *error) {
+    NSArray *serializers = @[[STPCard new], [STPSource new]];
+    [STPAPIRequest parseResponse:httpURLResponse body:body error:nil serializers:serializers completion:^(id<STPAPIResponseDecodable> object, NSHTTPURLResponse *response, NSError *error) {
         XCTAssertEqualObjects(object, [STPSource decodedObjectFromAPIResponse:json]);
+        XCTAssertEqualObjects(response, httpURLResponse);
+        XCTAssertNil(error);
+        [exp fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testParseResponseWithMultipleSerializersNoMatchingObject {
+    XCTestExpectation *exp = [self expectationWithDescription:@"parseResponse"];
+    NSHTTPURLResponse *httpURLResponse = [[NSHTTPURLResponse alloc] init];
+    NSDictionary *json = [STPTestUtils jsonNamed:@"CardSource"];
+    NSData *body = [NSJSONSerialization dataWithJSONObject:json options:(NSJSONWritingOptions)kNilOptions error:nil];
+    NSArray *serializers = @[[STPFile new], [STPBankAccount new]];
+    [STPAPIRequest parseResponse:httpURLResponse body:body error:nil serializers:serializers completion:^(id<STPAPIResponseDecodable> object, NSHTTPURLResponse *response, NSError *error) {
+        XCTAssertNil(object);
+        XCTAssertEqualObjects(response, httpURLResponse);
+        XCTAssertEqualObjects(error, [NSError stp_genericFailedToParseResponseError]);
+        [exp fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:2 handler:nil];   
+}
+
+- (void)testParseResponseWithOneSerializer {
+    XCTestExpectation *exp = [self expectationWithDescription:@"parseResponse"];
+    NSHTTPURLResponse *httpURLResponse = [[NSHTTPURLResponse alloc] init];
+    NSDictionary *json = [STPTestUtils jsonNamed:@"Customer"];
+    NSData *body = [NSJSONSerialization dataWithJSONObject:json options:(NSJSONWritingOptions)kNilOptions error:nil];
+    NSArray *serializers = @[[STPCustomer new]];
+    [STPAPIRequest parseResponse:httpURLResponse body:body error:nil serializers:serializers completion:^(id<STPAPIResponseDecodable> object, NSHTTPURLResponse *response, NSError *error) {
+        XCTAssertEqualObjects(((STPCustomer *)object).stripeID, json[@"id"]);
         XCTAssertEqualObjects(response, httpURLResponse);
         XCTAssertNil(error);
         [exp fulfill];
@@ -34,9 +65,10 @@
 - (void)testParseResponseWithNoSerializers {
     XCTestExpectation *exp = [self expectationWithDescription:@"parseResponse"];
     NSHTTPURLResponse *httpURLResponse = [[NSHTTPURLResponse alloc] init];
-    NSDictionary *json = [STPTestUtils jsonNamed:@"CardSource"];
+    NSDictionary *json = [STPTestUtils jsonNamed:@"EphemeralKey"];
     NSData *body = [NSJSONSerialization dataWithJSONObject:json options:(NSJSONWritingOptions)kNilOptions error:nil];
-    [STPAPIRequest parseResponse:httpURLResponse body:body error:nil serializers:@[] completion:^(id<STPAPIResponseDecodable> object, NSHTTPURLResponse *response, NSError *error) {
+    NSArray *serializers = @[];
+    [STPAPIRequest parseResponse:httpURLResponse body:body error:nil serializers:serializers completion:^(id<STPAPIResponseDecodable> object, NSHTTPURLResponse *response, NSError *error) {
         XCTAssertNil(object);
         XCTAssertEqualObjects(response, httpURLResponse);
         XCTAssertEqualObjects(error, [NSError stp_genericFailedToParseResponseError]);
@@ -57,7 +89,8 @@
                            };
     NSError *expectedError = [NSError stp_errorFromStripeResponse:json];
     NSData *body = [NSJSONSerialization dataWithJSONObject:json options:(NSJSONWritingOptions)kNilOptions error:nil];
-    [STPAPIRequest parseResponse:httpURLResponse body:body error:nil serializers:@[[STPCard new]] completion:^(id<STPAPIResponseDecodable> object, NSHTTPURLResponse *response, NSError *error) {
+    NSArray *serializers = @[[STPCard new]];
+    [STPAPIRequest parseResponse:httpURLResponse body:body error:nil serializers:serializers completion:^(id<STPAPIResponseDecodable> object, NSHTTPURLResponse *response, NSError *error) {
         XCTAssertNil(object);
         XCTAssertEqualObjects(response, httpURLResponse);
         XCTAssertEqualObjects(error, expectedError);

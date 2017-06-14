@@ -93,15 +93,23 @@
     } else {
         NSDictionary *jsonDictionary = body ? [NSJSONSerialization JSONObjectWithData:body options:(NSJSONReadingOptions)kNilOptions error:NULL] : nil;
         NSString *object = jsonDictionary[@"object"];
-        Class serializerClass = [serializers.firstObject class];
-        for (id<STPAPIResponseDecodable> serializer in serializers) {
-            if ([serializer respondsToSelector:@selector(stripeObject)]
-                && [[(id<STPInternalAPIResponseDecodable>)serializer stripeObject] isEqualToString:object]) {
-                serializerClass = [serializer class];
+        Class serializerClass;
+        if (serializers.count == 1) {
+            serializerClass = [serializers.firstObject class];
+        } else {
+            for (id<STPAPIResponseDecodable> serializer in serializers) {
+                if ([serializer respondsToSelector:@selector(stripeObject)]
+                    && [[(id<STPInternalAPIResponseDecodable>)serializer stripeObject] isEqualToString:object]) {
+                    serializerClass = [serializer class];
+                }
             }
         }
-        responseObject = [serializerClass decodedObjectFromAPIResponse:jsonDictionary];
-        returnedError = [NSError stp_errorFromStripeResponse:jsonDictionary] ?: error;
+        if (!serializerClass) {
+            returnedError = [NSError stp_genericFailedToParseResponseError];
+        } else {
+            responseObject = [serializerClass decodedObjectFromAPIResponse:jsonDictionary];
+            returnedError = [NSError stp_errorFromStripeResponse:jsonDictionary] ?: error;
+        }
         if ((!responseObject || ![response isKindOfClass:[NSHTTPURLResponse class]]) && !returnedError) {
             returnedError = [NSError stp_genericFailedToParseResponseError];
         }
