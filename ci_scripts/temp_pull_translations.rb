@@ -7,15 +7,16 @@
 #
 # PhraseApp has been updated with translations for `sources-ui`, so it is
 # currently out of sync with `master`. Until `sources-ui` has been merged,
-# we'll manually add new keys to PhraseApp: https://jira.corp.stripe.com/browse/LOCAL-16
+# we'll manually add new keys to PhraseApp. For an example localizations ask,
+# see: https://jira.corp.stripe.com/browse/LOCAL-16
 #
 # Use this script instead of `pull_translations.sh` to bring in new translations.
 # It will:
 # 1. determine which new keys have been added locally
-# 2. find translations for those keys on PhraseApp
-# 3. rewrite our .strings files, inserting any new translations
-#
-# It will not change or remove any existing translations.
+# 2. pull translations from PhraseApp
+# 3. generate new .strings files:
+#    - any existing translations that have changed on PhraseApp will be updated
+#    - any new local keys that have translations on PhraseApp will be inserted
 
 LOCALIZATIONS_DIR = "Stripe/Resources/Localizations"
 
@@ -64,53 +65,49 @@ current_en_strings = File.readlines(strings_file("en"))
 }.map { |s|
   extract_key(s)
 }
-if @new_keys.count == 0
-  abort("No new keys")
-end
 
-puts "▸ Found new keys: #{@new_keys}"
 puts "▸ Downloading translations from PhraseApp"
 `phraseapp pull -t #{ARGV[0]}`
 
-# If the given tuple matches a new key, returns that key
-def new_key_in_tuple(tuple)
-  for key in @new_keys
-    if tuple[1].include?(key)
-      return key
-    end
-  end
-  return nil
-end
-
 # Generate new .strings files, inserting new translations
 for lang in @langs
-  # Collect translations matching new keys from downloaded .strings file
-  tuples_to_insert = {}
+  # Collect translations in downloaded .strings file
+  key_to_tuple = {}
   tuples = split_tuples(strings_file(lang))
   for tuple in tuples
-    if (new_key = new_key_in_tuple(tuple))
-      tuples_to_insert[new_key] = tuple
-    end
+    key = extract_key(tuple[1])
+    key_to_tuple[key] = tuple
   end
-  # Generate new .strings file, inserting new translations
+  # Generate new .strings file, updating any changed translations,
+  # and inserting new translations
   orig_tuples = split_tuples(orig_strings_file(lang))
   new_tuples = []
   last_cons = []
   for cons in orig_tuples.each_cons(2)
     tuple1 = cons[0]
     tuple2 = cons[1]
-    key1 = extract_key(tuple1[1]).downcase
-    key2 = extract_key(tuple2[1]).downcase
-    new_tuples.push(tuple1)
-    for new_key in tuples_to_insert.keys
-      if new_key.downcase > key1 && new_key.downcase < key2
-        tuple = tuples_to_insert[new_key]
-        new_tuples.push(tuple)
+    key1 = extract_key(tuple1[1])
+    key2 = extract_key(tuple2[1])
+    if (new_tuple = key_to_tuple[key1])
+      new_tuples.push(new_tuple)
+    else
+      new_tuples.push(tuple1)
+    end
+    for new_key in @new_keys
+      if new_key.downcase > key1.downcase && new_key.downcase < key2.downcase &&
+        (new_tuple = key_to_tuple[new_key])
+        new_tuples.push(new_tuple)
       end
     end
     last_cons = cons
   end
-  new_tuples.push(last_cons[1])
+  tuple = last_cons[1]
+  key = extract_key(tuple[1])
+  if (new_tuple = key_to_tuple[key])
+    new_tuples.push(new_tuple)
+  else
+    new_tuples.push(tuple)
+  end
   file = strings_file(lang)
   puts "▸ Updating #{file}"
   write_tuples(new_tuples, file)
