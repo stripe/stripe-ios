@@ -228,9 +228,7 @@
     params.redirect = @{ @"return_url": returnURL };
 
     NSMutableDictionary *owner= @{ @"email": email }.mutableCopy;
-    if (name != nil) {
-        owner[@"name"] = name;
-    }
+    owner[@"name"] = name;
 
     params.owner = owner.copy;
     return params;
