@@ -4,7 +4,6 @@
 * If the card.io framework is present in your app, `STPPaymentContext` and `STPAddCardViewController` will show a "scan card" button.
 * `STPAddCardViewController` will now attempt to auto-fill the users city and state from their entered Zip code (United States only)
 * Polling for source object updates is deprecated. Check https://stripe.com/docs for the latest best practices on how to integrate with the sources API using webhooks.
-* Added P24 to the list of known source types.
 * Fixes a crash in `STPCustomerDeserializer` when both data and error are nil.
 * Updates the example apps to use Alamofire.
 

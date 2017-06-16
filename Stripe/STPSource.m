@@ -48,8 +48,7 @@
              @"ideal": @(STPSourceTypeIDEAL),
              @"sepa_debit": @(STPSourceTypeSEPADebit),
              @"sofort": @(STPSourceTypeSofort),
-             @"three_d_secure": @(STPSourceTypeThreeDSecure),
-             @"p24": @(STPSourceTypeP24),
+             @"three_d_secure": @(STPSourceTypeThreeDSecure)
              };
 }
 
