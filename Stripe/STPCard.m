@@ -97,7 +97,7 @@
     }
 }
 
-+ (NSString *)stringFromFunding:(STPCardFundingType)funding {
++ (NSString *)displayStringFromFunding:(STPCardFundingType)funding {
     switch (funding) {
         case STPCardFundingTypeCredit:
             return @"Credit";
@@ -149,32 +149,31 @@
 }
 
 - (NSString *)description {
-    NSMutableArray *descriptionParts = [[NSMutableArray alloc] init];
+    NSArray *descriptionComponents = @[
+                                       // NSObject
+                                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
 
-    // NSObject
-    [descriptionParts addObject:[NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self]];
+                                       // Card ID
+                                       [NSString stringWithFormat:@"cardId = %@", self.cardId],
 
-    // Card ID
-    [descriptionParts addObject:[NSString stringWithFormat:@"cardId = %@", self.cardId]];
+                                       // Basic card details
+                                       [NSString stringWithFormat:@"brand = %@", [STPCard stringFromBrand:self.brand]],
+                                       [NSString stringWithFormat:@"last4 = %@", self.last4],
+                                       [NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth],
+                                       [NSString stringWithFormat:@"expYear = %lu", (unsigned long)self.expYear],
+                                       [NSString stringWithFormat:@"funding = %@", [STPCard displayStringFromFunding:self.funding]],
 
-    // Basic card details
-    [descriptionParts addObject:[NSString stringWithFormat:@"brand = %@", [STPCard stringFromBrand:self.brand]]];
-    [descriptionParts addObject:[NSString stringWithFormat:@"last4 = %@", self.last4]];
-    [descriptionParts addObject:[NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth]];
-    [descriptionParts addObject:[NSString stringWithFormat:@"expYear = %lu", (unsigned long)self.expYear]];
-    [descriptionParts addObject:[NSString stringWithFormat:@"funding = %@", [STPCard stringFromFunding:self.funding]]];
+                                       // Additional card details
+                                       [NSString stringWithFormat:@"country = %@", self.country],
+                                       [NSString stringWithFormat:@"currency = %@", self.currency],
+                                       [NSString stringWithFormat:@"dynamicLast4 = %@", self.dynamicLast4],
+                                       [NSString stringWithFormat:@"isApplePayCard = %@", (self.isApplePayCard) ? @"YES" : @"NO"],
 
-    // Additional card details
-    [descriptionParts addObject:[NSString stringWithFormat:@"country = %@", self.country]];
-    [descriptionParts addObject:[NSString stringWithFormat:@"currency = %@", self.currency]];
-    [descriptionParts addObject:[NSString stringWithFormat:@"dynamicLast4 = %@", self.dynamicLast4]];
-    [descriptionParts addObject:[NSString stringWithFormat:@"isApplePayCard = %@", (self.isApplePayCard) ? @"YES" : @"NO"]];
-
-    // Cardholder details
-    [descriptionParts addObject:[NSString stringWithFormat:@"name = %@", (self.name.length > 0) ? @"<redacted>" : nil]];
-    [descriptionParts addObject:[NSString stringWithFormat:@"address = %@", (self.address) ? @"<redacted>" : nil]];
-
-    return [NSString stringWithFormat:@"<%@>", [descriptionParts componentsJoinedByString:@"; "]];
+                                       // Cardholder details
+                                       [NSString stringWithFormat:@"name = %@", (self.name.length > 0) ? @"<redacted>" : nil],
+                                       [NSString stringWithFormat:@"address = %@", (self.address) ? @"<redacted>" : nil],
+                                       ];
+    return [NSString stringWithFormat:@"<%@>", [descriptionComponents componentsJoinedByString:@"; "]];
 }
 
 - (STPAddress *)address {
