@@ -97,19 +97,6 @@
     }
 }
 
-+ (NSString *)displayStringFromFunding:(STPCardFundingType)funding {
-    switch (funding) {
-        case STPCardFundingTypeCredit:
-            return @"Credit";
-        case STPCardFundingTypeDebit:
-            return @"Debit";
-        case STPCardFundingTypePrepaid:
-            return @"Prepaid";
-        case STPCardFundingTypeOther:
-            return @"Other";
-    }
-}
-
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -127,6 +114,8 @@
 - (BOOL)isApplePayCard {
     return [self.allResponseFields[@"tokenization_method"] isEqualToString:@"apple_pay"];
 }
+
+#pragma mark - Equality
 
 - (BOOL)isEqual:(id)other {
     return [self isEqualToCard:other];
@@ -148,12 +137,27 @@
     return [self.cardId isEqualToString:other.cardId];
 }
 
+#pragma mark - Description
+
 - (NSString *)description {
+    NSString *fundingDescription;
+
+    switch (self.funding) {
+        case STPCardFundingTypeCredit:
+            fundingDescription = @"credit";
+        case STPCardFundingTypeDebit:
+            fundingDescription = @"debit";
+        case STPCardFundingTypePrepaid:
+            fundingDescription = @"prepaid";
+        case STPCardFundingTypeOther:
+            fundingDescription = @"other";
+    }
+
     NSArray *descriptionComponents = @[
-                                       // NSObject
+                                       // Object
                                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
 
-                                       // Card ID
+                                       // Identifier
                                        [NSString stringWithFormat:@"cardId = %@", self.cardId],
 
                                        // Basic card details
@@ -161,7 +165,7 @@
                                        [NSString stringWithFormat:@"last4 = %@", self.last4],
                                        [NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth],
                                        [NSString stringWithFormat:@"expYear = %lu", (unsigned long)self.expYear],
-                                       [NSString stringWithFormat:@"funding = %@", [STPCard displayStringFromFunding:self.funding]],
+                                       [NSString stringWithFormat:@"funding = %@", fundingDescription],
 
                                        // Additional card details
                                        [NSString stringWithFormat:@"country = %@", self.country],
@@ -170,9 +174,10 @@
                                        [NSString stringWithFormat:@"isApplePayCard = %@", (self.isApplePayCard) ? @"YES" : @"NO"],
 
                                        // Cardholder details
-                                       [NSString stringWithFormat:@"name = %@", (self.name.length > 0) ? @"<redacted>" : nil],
+                                       [NSString stringWithFormat:@"name = %@", (self.name) ? @"<redacted>" : nil],
                                        [NSString stringWithFormat:@"address = %@", (self.address) ? @"<redacted>" : nil],
                                        ];
+
     return [NSString stringWithFormat:@"<%@>", [descriptionComponents componentsJoinedByString:@"; "]];
 }
 
@@ -191,7 +196,8 @@
     return nil;
 }
 
-#pragma mark STPAPIResponseDecodable
+#pragma mark - STPAPIResponseDecodable
+
 + (NSArray *)requiredFields {
     return @[@"id", @"last4", @"brand", @"exp_month", @"exp_year"];
 }
