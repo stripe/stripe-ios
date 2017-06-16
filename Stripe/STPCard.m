@@ -148,6 +148,35 @@
     return [self.cardId isEqualToString:other.cardId];
 }
 
+- (NSString *)description {
+    NSMutableArray *descriptionParts = [[NSMutableArray alloc] init];
+
+    // NSObject
+    [descriptionParts addObject:[NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self]];
+
+    // Card ID
+    [descriptionParts addObject:[NSString stringWithFormat:@"cardId = %@", self.cardId]];
+
+    // Basic card details
+    [descriptionParts addObject:[NSString stringWithFormat:@"brand = %@", [STPCard stringFromBrand:self.brand]]];
+    [descriptionParts addObject:[NSString stringWithFormat:@"last4 = %@", self.last4]];
+    [descriptionParts addObject:[NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth]];
+    [descriptionParts addObject:[NSString stringWithFormat:@"expYear = %lu", (unsigned long)self.expYear]];
+    [descriptionParts addObject:[NSString stringWithFormat:@"funding = %@", [STPCard stringFromFunding:self.funding]]];
+
+    // Additional card details
+    [descriptionParts addObject:[NSString stringWithFormat:@"country = %@", self.country]];
+    [descriptionParts addObject:[NSString stringWithFormat:@"currency = %@", self.currency]];
+    [descriptionParts addObject:[NSString stringWithFormat:@"dynamicLast4 = %@", self.dynamicLast4]];
+    [descriptionParts addObject:[NSString stringWithFormat:@"isApplePayCard = %@", (self.isApplePayCard) ? @"YES" : @"NO"]];
+
+    // Cardholder details
+    [descriptionParts addObject:[NSString stringWithFormat:@"name = %@", (self.name.length > 0) ? @"<redacted>" : nil]];
+    [descriptionParts addObject:[NSString stringWithFormat:@"address = %@", (self.address) ? @"<redacted>" : nil]];
+
+    return [NSString stringWithFormat:@"<%@>", [descriptionParts componentsJoinedByString:@"; "]];
+}
+
 - (STPAddress *)address {
     if (self.name || self.addressLine1 || self.addressLine2 || self.addressZip || self.addressCity || self.addressState || self.addressCountry) {
         STPAddress *address = [STPAddress new];
