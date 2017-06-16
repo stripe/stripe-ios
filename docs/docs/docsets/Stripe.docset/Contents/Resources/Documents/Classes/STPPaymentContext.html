@@ -872,11 +872,21 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The amount of money you&rsquo;re requesting from the user, in the smallest currency unit for the selected currency. For example, to indicate $10 USD, use 1000 (i.e. 1000 cents). For more information see <a href="https://stripe.com/docs/api#charge_object-amount">https://stripe.com/docs/api#charge_object-amount</a> . This value must be present and greater than zero in order for Apple Pay to be automatically enabled.</p>
+                        <p>The amount of money you&rsquo;re requesting from the user, in the smallest currency 
+  unit for the selected currency. For example, to indicate $10 USD, use 1000 
+  (i.e. 1000 cents). For more information, see <a href="https://stripe.com/docs/api#charge_object-amount">https://stripe.com/docs/api#charge_object-amount</a></p>
 
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
-    You should only set either this or <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentSummaryItems">paymentSummaryItems</a></code>, not both. The other will be automatically calculated on demand using your <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentCurrency">paymentCurrency</a></code>.
+    <p>This value must be present and greater than zero in order for Apple Pay
+to be automatically enabled.</p>
+
+</div>
+
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>You should only set either this or <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentSummaryItems">paymentSummaryItems</a></code>, not both.
+The other will be automatically calculated on demand using your <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentCurrency">paymentCurrency</a></code>.</p>
 
 </div>
 
@@ -895,7 +905,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L118">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L124">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -913,11 +923,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The three-letter currency code for the currency of the payment (i.e. USD, GBP, JPY, etc). Defaults to USD.</p>
+                        <p>The three-letter currency code for the currency of the payment (i.e. USD, GBP, 
+  JPY, etc). Defaults to <q>USD</q>.</p>
 
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
-    Changing this property may change the return value of <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code> or <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentSummaryItems">paymentSummaryItems</a></code> (whichever one you didn&rsquo;t directly set yourself).
+    Changing this property may change the return value of <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code> 
+or <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentSummaryItems">paymentSummaryItems</a></code> (whichever one you didn&rsquo;t directly set yourself).
 
 </div>
 
@@ -936,7 +948,56 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L125">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L133">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPPaymentContext(py)paymentCountry"></a>
+                    <a name="//apple_ref/objc/Property/paymentCountry" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentContext(py)paymentCountry">paymentCountry</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The two-letter country code for the country where the payment will be processed.
+  You should set this to the country your Stripe account is in. Defaults to <q>US</q>.</p>
+
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    Changing this property will change the <code>countryCode</code> of your Apple Pay
+payment requests.
+
+</div>
+
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    PKPaymentRequest for more information.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">paymentCountry</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">paymentCountry</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L143">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -954,19 +1015,17 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>If you support Apple Pay, you can optionally set the PKPaymentSummaryItems you want to display here instead of using <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code>. Note that the grand total (the amount of the last summary item) must be greater than zero.
-  If not set, a single summary item will be automatically generated using <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code> and your configuration&rsquo;s <code>companyName</code>.
+                        <p>If you support Apple Pay, you can optionally set the PKPaymentSummaryItems 
+  you want to display here instead of using <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code>. Note that the 
+  grand total (the amount of the last summary item) must be greater than zero.
+  If not set, a single summary item will be automatically generated using 
+  <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code> and your configuration&rsquo;s <code>companyName</code>.
   - see: PKPaymentRequest for more information</p>
 
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
-    <p>You should only set either this or <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code>, not both. The other will be automatically calculated on demand using your <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentCurrency">paymentCurrency.</a></code></p>
-
-</div>
-
-<div class="aside aside-warning">
-    <p class="aside-title">Warning</p>
-    <p><code>PKPaymentSummaryItem</code> is only available in iOS8+. If you support iOS 7 you should do a runtime availability check before accessing or setting this property.</p>
+    You should only set either this or <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code>, not both. 
+The other will be automatically calculated on demand using your <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentCurrency">paymentCurrency.</a></code>
 
 </div>
 
@@ -979,9 +1038,14 @@
     <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">PKPaymentSummaryItem</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">paymentSummaryItems</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">paymentSummaryItems</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L136">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L156">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1020,7 +1084,7 @@ The default value is <code>UIModalPresentationFullScreen</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L144">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L164">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1058,7 +1122,7 @@ will be called again (and you can again call this to keep retrying, etc).</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L152">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L172">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1102,7 +1166,7 @@ when the user is done selecting their payment method.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L162">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L182">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1146,7 +1210,7 @@ when the user is done selecting their payment method.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L172">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L192">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1191,7 +1255,7 @@ when the user is done selecting their payment method.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L183">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L203">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1236,7 +1300,7 @@ when the user is done selecting their payment method.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L194">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L214">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1285,7 +1349,7 @@ when the user is done selecting their payment method.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L209">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L229">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1298,7 +1362,7 @@ when the user is done selecting their payment method.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-05-05)</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-06-16)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

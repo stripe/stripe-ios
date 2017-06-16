@@ -441,6 +441,11 @@ mini 3 or later, as well as whether or not they have stored any cards in Apple P
                           <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">canSubmitPaymentRequest</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">PKPaymentRequest</span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentRequest</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">canSubmitPaymentRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentRequest</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -489,9 +494,13 @@ mini 3 or later, as well as whether or not they have stored any cards in Apple P
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A convenience method to return a <code>PKPaymentRequest</code> with sane default values. You will still need to configure the <code>paymentSummaryItems</code> property to indicate
-what the user is purchasing, as well as the optional <code>requiredShippingAddressFields</code>, <code>requiredBillingAddressFields</code>, and <code>shippingMethods</code> properties to indicate
-what contact information your application requires.</p>
+                        <p>A convenience method to build a <code>PKPaymentRequest</code> with sane default values.
+  You will still need to configure the <code>paymentSummaryItems</code> property to indicate
+  what the user is purchasing, as well as the optional <code>requiredShippingAddressFields</code>,
+  <code>requiredBillingAddressFields</code>, and <code>shippingMethods</code> properties to indicate
+  what contact information your application requires.
+  Note that this method sets the payment request&rsquo;s countryCode to <q>US</q> and its
+  currencyCode to <q>USD</q>.</p>
 
                       </div>
                       <div class="declaration">
@@ -500,6 +509,11 @@ what contact information your application requires.</p>
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">PKPaymentRequest</span> <span class="o">*</span><span class="p">)</span><span class="nf">paymentRequestWithMerchantIdentifier</span><span class="p">:</span>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">merchantIdentifier</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">paymentRequest</span><span class="p">(</span><span class="n">withMerchantIdentifier</span> <span class="nv">merchantIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -515,7 +529,7 @@ what contact information your application requires.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>Your Apple Merchant ID, as obtained at <a href="https://developer.apple.com/account/ios/identifiers/merchant/merchantCreate.action">https://developer.apple.com/account/ios/identifiers/merchant/merchantCreate.action</a></p>
+                                  <p>Your Apple Merchant ID.</p>
 
                                 </div>
                               </td>
@@ -531,7 +545,104 @@ what contact information your application requires.</p>
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L170">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L177">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)Stripe(cm)paymentRequestWithMerchantIdentifier:country:currency:"></a>
+                    <a name="//apple_ref/objc/Method/+paymentRequestWithMerchantIdentifier:country:currency:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)Stripe(cm)paymentRequestWithMerchantIdentifier:country:currency:">+paymentRequestWithMerchantIdentifier:country:currency:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A convenience method to build a <code>PKPaymentRequest</code> with sane default values.
+  You will still need to configure the <code>paymentSummaryItems</code> property to indicate
+  what the user is purchasing, as well as the optional <code>requiredShippingAddressFields</code>,
+  <code>requiredBillingAddressFields</code>, and <code>shippingMethods</code> properties to indicate
+  what contact information your application requires.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">PKPaymentRequest</span> <span class="o">*</span><span class="p">)</span>
+<span class="nf">paymentRequestWithMerchantIdentifier</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">merchantIdentifier</span>
+                             <span class="nf">country</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">countryCode</span>
+                            <span class="nf">currency</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">currencyCode</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>merchantIdentifier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Your Apple Merchant ID.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>countryCode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <pre class="highlight plaintext"><code>  The two-letter code for the country where the payment
+</code></pre>
+
+<p>will be processed. This should be the country of your Stripe account.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>currencyCode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <pre class="highlight plaintext"><code> The three-letter code for the currency used by this
+</code></pre>
+
+<p>payment request. Apple Pay interprets the amounts provided by the summary items
+attached to this request as amounts in this currency.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a <code>PKPaymentRequest</code> with proper default values. Returns nil if running on 
+&lt;
+ iOS8.</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L195-L197">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -544,7 +655,7 @@ what contact information your application requires.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-05-05)</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-06-16)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

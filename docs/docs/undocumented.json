@@ -2,7 +2,7 @@
   "warnings": [
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPAPIClient+ApplePay.h",
-      "line": 32,
+      "line": 41,
       "symbol": "linkSTPAPIClientApplePayCategory",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.function",
       "warning": "undocumented"
@@ -37,7 +37,7 @@
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPAPIClient.h",
-      "line": 229,
+      "line": 256,
       "symbol": "Stripe(STPURLCallbackHandlerAdditions)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
       "warning": "undocumented"
@@ -352,7 +352,7 @@
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPPaymentCardTextField.h",
-      "line": 230,
+      "line": 231,
       "symbol": "STPPaymentCardTextField.valid",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.property",
       "warning": "undocumented"

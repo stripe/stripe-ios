@@ -312,77 +312,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(pl)STPPaymentMethodsViewControllerDelegate(im)paymentMethodsViewController:didSelectPaymentMethod:"></a>
-                    <a name="//apple_ref/objc/Method/-paymentMethodsViewController:didSelectPaymentMethod:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(pl)STPPaymentMethodsViewControllerDelegate(im)paymentMethodsViewController:didSelectPaymentMethod:">-paymentMethodsViewController:didSelectPaymentMethod:</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>This is called when the user either makes a selection, or adds a new card. This will be triggered after the view controller loads with the user&rsquo;s current selection (if they have one) and then subsequently when they change their choice. You should use this callback to update any necessary UI in your app that displays the user&rsquo;s currently selected payment method. You should <em>not</em> dismiss the view controller at this point, instead do this in <code>paymentMethodsViewControllerDidFinish:</code>. <code><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code> will also call the necessary methods on your API adapter, so you don&rsquo;t need to call them directly during this method.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentMethodsViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></span> <span class="o">*</span><span class="p">)</span>
-                                         <span class="n">paymentMethodsViewController</span>
-              <span class="n">didSelectPaymentMethod</span><span class="o">:</span>
-                  <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="o">&gt;</span><span class="p">)</span><span class="n">paymentMethod</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">paymentMethodsViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentMethodsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></span><span class="p">,</span> <span class="n">didSelect</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>paymentMethodsViewController</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the view controller in question</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>paymentMethod</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the selected payment method</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L77-L78">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/c:objc(pl)STPPaymentMethodsViewControllerDelegate(im)paymentMethodsViewController:didFailToLoadWithError:"></a>
                     <a name="//apple_ref/objc/Method/-paymentMethodsViewController:didFailToLoadWithError:" class="dashAnchor"></a>
                     <a class="token" href="#/c:objc(pl)STPPaymentMethodsViewControllerDelegate(im)paymentMethodsViewController:didFailToLoadWithError:">-paymentMethodsViewController:didFailToLoadWithError:</a>
@@ -445,7 +374,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L87-L88">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L77-L78">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -501,7 +430,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L95">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L85">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -558,7 +487,78 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L103">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L93">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)STPPaymentMethodsViewControllerDelegate(im)paymentMethodsViewController:didSelectPaymentMethod:"></a>
+                    <a name="//apple_ref/objc/Method/-paymentMethodsViewController:didSelectPaymentMethod:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)STPPaymentMethodsViewControllerDelegate(im)paymentMethodsViewController:didSelectPaymentMethod:">-paymentMethodsViewController:didSelectPaymentMethod:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is called when the user either makes a selection, or adds a new card. This will be triggered after the view controller loads with the user&rsquo;s current selection (if they have one) and then subsequently when they change their choice. You should use this callback to update any necessary UI in your app that displays the user&rsquo;s currently selected payment method. You should <em>not</em> dismiss the view controller at this point, instead do this in <code>paymentMethodsViewControllerDidFinish:</code>. <code><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code> will also call the necessary methods on your API adapter, so you don&rsquo;t need to call them directly during this method.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentMethodsViewController</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></span> <span class="o">*</span><span class="p">)</span>
+                                         <span class="n">paymentMethodsViewController</span>
+              <span class="n">didSelectPaymentMethod</span><span class="o">:</span>
+                  <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="o">&gt;</span><span class="p">)</span><span class="n">paymentMethod</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentMethodsViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentMethodsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></span><span class="p">,</span> <span class="n">didSelect</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>paymentMethodsViewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the view controller in question</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>paymentMethod</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the selected payment method</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L102-L103">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -571,7 +571,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-05-05)</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-06-16)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
