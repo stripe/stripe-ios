@@ -74,7 +74,6 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
     STPSourceTypeSEPADebit,
     STPSourceTypeSofort,
     STPSourceTypeThreeDSecure,
-    STPSourceTypeP24,
     STPSourceTypeUnknown,
 };
 
