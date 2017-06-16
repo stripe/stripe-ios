@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define FAUXPAS_IGNORED_IN_FILE(...)
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
-static NSString *const STPSDKVersion = @"10.1.0";
+static NSString *const STPSDKVersion = @"10.2.0";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPSourceParams, STPToken, STPPaymentConfiguration;
 
@@ -103,16 +103,16 @@ static NSString *const STPSDKVersion = @"10.1.0";
 
 
 /**
- *  Uses the Stripe file upload API to upload an image. This can be used for 
+ *  Uses the Stripe file upload API to upload an image. This can be used for
  *  identity veritfication and evidence disputes.
  *
- *  @param image The image to be uploaded. The maximum allowed file size is 4MB 
- *         for identity documents and 8MB for evidence disputes. Cannot be nil. 
+ *  @param image The image to be uploaded. The maximum allowed file size is 4MB
+ *         for identity documents and 8MB for evidence disputes. Cannot be nil.
  *         Your image will be automatically resized down if you pass in one that
  *         is too large
- *  @param purpose The purpose of this file. This can be either an identifing 
+ *  @param purpose The purpose of this file. This can be either an identifing
  *         document or an evidence dispute.
- *  @param completion The callback to run with the returned Stripe file 
+ *  @param completion The callback to run with the returned Stripe file
  *         (and any errors that may have occurred).
  *
  *  @see https://stripe.com/docs/file-upload
@@ -184,10 +184,10 @@ static NSString *const STPSDKVersion = @"10.1.0";
  *  what contact information your application requires.
  *
  *  @param merchantIdentifier Your Apple Merchant ID.
- *  @param countryCode        The two-letter code for the country where the payment 
+ *  @param countryCode        The two-letter code for the country where the payment
  *  will be processed. This should be the country of your Stripe account.
- *  @param currencyCode       The three-letter code for the currency used by this 
- *  payment request. Apple Pay interprets the amounts provided by the summary items 
+ *  @param currencyCode       The three-letter code for the currency used by this
+ *  payment request. Apple Pay interprets the amounts provided by the summary items
  *  attached to this request as amounts in this currency.
  *
  *  @return a `PKPaymentRequest` with proper default values. Returns nil if running on < iOS8.
