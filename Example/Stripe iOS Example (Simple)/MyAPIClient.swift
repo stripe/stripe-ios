@@ -21,6 +21,22 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
             fatalError()
         }
     }
+    
+    func login(_ email: String, password: String, completion: @escaping STPErrorBlock) {
+        let url = self.baseURL.appendingPathComponent("customer/login")
+        Alamofire.request(url, method: .post, parameters: [
+            "email": email,
+            "password": password])
+            .validate(statusCode:200..<300)
+            .responseString { response in
+                switch response.result {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
+                    completion(error)
+                }
+        }
+    }
 
     func completeCharge(_ result: STPPaymentResult, amount: Int, completion: @escaping STPErrorBlock) {
         let url = self.baseURL.appendingPathComponent("charge")
