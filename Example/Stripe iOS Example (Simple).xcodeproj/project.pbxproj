@@ -20,6 +20,7 @@
 		C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B83CBC1CCE6C0700F0790B /* Buttons.swift */; };
 		C266E8371EF311A100701C5A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C266E8361EF311A100701C5A /* LoginViewController.swift */; };
 		C266E8391EF3615B00701C5A /* MyConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = C266E8381EF3615B00701C5A /* MyConfig.swift */; };
+		C266E83B1EF45F2100701C5A /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C266E83A1EF45F2100701C5A /* SignupViewController.swift */; };
 		F10C9F6B1DC916BD00A91F7C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F10C9F691DC916BD00A91F7C /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,7 @@
 		C1B83CBC1CCE6C0700F0790B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		C266E8361EF311A100701C5A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		C266E8381EF3615B00701C5A /* MyConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyConfig.swift; sourceTree = "<group>"; };
+		C266E83A1EF45F2100701C5A /* SignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		F10C9F6A1DC916BD00A91F7C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Localizations/de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F10C9F6C1DC916C200A91F7C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F10C9F6D1DC916C800A91F7C /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = Localizations/nl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 				C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */,
 				C1B83CBC1CCE6C0700F0790B /* Buttons.swift */,
 				C266E8361EF311A100701C5A /* LoginViewController.swift */,
+				C266E83A1EF45F2100701C5A /* SignupViewController.swift */,
 				042CA4191A685E8D00D778E7 /* Images.xcassets */,
 				042CA41A1A685E8D00D778E7 /* Info.plist */,
 				04D075D91A69B82B00094431 /* Stripe iOS Example (Simple).entitlements */,
@@ -272,6 +275,7 @@
 			files = (
 				C124A18B1CCACAA1007D42EE /* CheckoutViewController.swift in Sources */,
 				04BC29A01CD81D3900318357 /* BrowseProductsViewController.swift in Sources */,
+				C266E83B1EF45F2100701C5A /* SignupViewController.swift in Sources */,
 				C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */,
 				C266E8391EF3615B00701C5A /* MyConfig.swift in Sources */,
 				C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */,

@@ -38,6 +38,27 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         }
     }
 
+    func createUser(email: String, password: String, firstName: String?, lastName: String?, completion: @escaping STPErrorBlock) {
+        let url = self.baseURL.appendingPathComponent("customer")
+        var parameters: [String: String] = ["email": email, "password": password ]
+        if let firstName = firstName, !firstName.isEmpty {
+            parameters["firstName"] = firstName
+        }
+        if let lastName = lastName, !lastName.isEmpty {
+            parameters["lastName"] = lastName
+        }
+        Alamofire.request(url, method: .post, parameters: parameters)
+            .validate(statusCode:200..<300)
+            .responseString { response in
+                switch response.result {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
+                    completion(error)
+                }
+        }
+    }
+    
     func completeCharge(_ result: STPPaymentResult, amount: Int, completion: @escaping STPErrorBlock) {
         let url = self.baseURL.appendingPathComponent("charge")
         Alamofire.request(url, method: .post, parameters: [
