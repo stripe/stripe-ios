@@ -14,6 +14,7 @@ class LoginViewController: UIViewController {
     let descriptionLabel = UILabel()
     let emailField = UITextField()
     let passwordField = UITextField()
+    let loginButton = BuyButton(enabled: false, theme: STPTheme.default())
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
 
     let rowHeight: CGFloat = 44
@@ -33,10 +34,11 @@ class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let theme = STPTheme.default()
         
-        self.view.backgroundColor = UIColor.white
+        self.view.backgroundColor = theme.primaryBackgroundColor
 
-        self.navigationItem.title = "Login"
+        self.navigationItem.title = MyConfig.sharedConfig.companyName
         
         self.descriptionLabel.text = "Please Login to Continue"
         self.descriptionLabel.backgroundColor = UIColor.clear
@@ -53,11 +55,13 @@ class LoginViewController: UIViewController {
         self.passwordField.isSecureTextEntry = true
         self.view.addSubview(self.passwordField)
         
+        self.loginButton.setTitle("Login", for: UIControlState())
+        self.view.addSubview(self.loginButton)
+        self.loginButton.isEnabled = false
+        self.loginButton.addTarget(self, action: #selector(login), for: .touchUpInside)
+        
         self.view.addSubview(self.activityIndicator)
         self.activityIndicator.alpha = 0
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Login", style: .plain, target: self, action: #selector(login))
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
         
         // listen for textfield edits so we can enable the Login button when there's something in both fields
         emailField.addTarget(self, action: #selector(editingChanged), for: .editingChanged)
@@ -75,14 +79,21 @@ class LoginViewController: UIViewController {
                                         width: width, height: rowHeight)
         self.passwordField.frame = CGRect(x: padding, y: self.emailField.frame.maxY,
                                      width: width, height: rowHeight)
-        self.activityIndicator.center = CGPoint(x: padding, y: self.passwordField.frame.maxY + rowHeight*1.5)
+        self.loginButton.frame = CGRect(x: padding, y: self.passwordField.frame.maxY + rowHeight,
+                                        width: width, height: rowHeight)
+        self.activityIndicator.center = self.loginButton.center
     }
     
     func login() {
+        self.activityIndicator.startAnimating()
+        self.loginButton.alpha = 0.0
         self.activityIndicator.alpha = 1.0
         
         MyAPIClient.sharedClient.login(emailField.text!, password: passwordField.text!, completion: {(error: Error?) in
             self.activityIndicator.alpha = 0.0
+            self.loginButton.alpha = 1.0
+            self.activityIndicator.stopAnimating()
+            
             if let err = error {
                 let alertController = UIAlertController(title: "Error", message: err.localizedDescription, preferredStyle: .alert)
                 let action = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -96,6 +107,6 @@ class LoginViewController: UIViewController {
     }
     
     func editingChanged(_ textField: UITextField) {
-        self.navigationItem.rightBarButtonItem?.isEnabled = (!self.emailField.text!.isEmpty && !self.passwordField.text!.isEmpty)
+        self.loginButton.isEnabled = (!self.emailField.text!.isEmpty && !self.passwordField.text!.isEmpty)
     }
 }
