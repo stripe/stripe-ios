@@ -97,6 +97,19 @@
     }
 }
 
++ (NSString *)stringFromFunding:(STPCardFundingType)funding {
+    switch (funding) {
+        case STPCardFundingTypeCredit:
+            return @"Credit";
+        case STPCardFundingTypeDebit:
+            return @"Debit";
+        case STPCardFundingTypePrepaid:
+            return @"Prepaid";
+        case STPCardFundingTypeOther:
+            return @"Other";
+    }
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {

@@ -78,6 +78,15 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 + (STPCardFundingType)fundingFromString:(NSString *)string;
 
 /**
+ * Returns a string representation for the provided card funding
+ *
+ * @param funding The enum value you want to covert to a string
+ *
+ * @return A string representation of the funding, suitable for displaying to a user
+ */
++ (NSString *)stringFromFunding:(STPCardFundingType)funding;
+
+/**
  *  The last 4 digits of the card.
  */
 @property (nonatomic, readonly) NSString *last4;
