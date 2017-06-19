@@ -1,10 +1,11 @@
-== 10.2.0 2017-XX-XX
+== 10.2.0 2017-06-19
 * We've added a `paymentCountry` property to `STPPaymentContext`. This affects the countryCode of Apple Pay payments, and defaults to "US". You should set this to the country your Stripe account is in.
 * `paymentRequestWithMerchantIdentifier:` has been deprecated. See MIGRATING.md
 * If the card.io framework is present in your app, `STPPaymentContext` and `STPAddCardViewController` will show a "scan card" button.
 * `STPAddCardViewController` will now attempt to auto-fill the users city and state from their entered Zip code (United States only)
 * Polling for source object updates is deprecated. Check https://stripe.com/docs for the latest best practices on how to integrate with the sources API using webhooks.
 * Fixes a crash in `STPCustomerDeserializer` when both data and error are nil.
+* `paymentMethodsViewController:didSelectPaymentMethod:` is now optional.
 * Updates the example apps to use Alamofire.
 
 == 10.1.0 2017-05-05
