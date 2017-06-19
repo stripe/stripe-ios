@@ -1,7 +1,7 @@
 ## Migration Guides
 
-### Migrating from versions < 10.3.0
-
+### Migration from versions < 11.0.0
+- We've simplified the integration for `STPPaymentContext` by introducing a new type of API key, . `STPBackendAPIAdapter` and `STPCustomerDeserializer` are now deprecated. Refer to https://stripe.com/docs/mobile/ios/standard for more information.
 - Fixed nullability annotation for `[STPFile stringFromPurpose:]` which returns `nil` for `STPFilePurposeUnknown`. Will return a non-nil value for all other `STPFilePurpose`.
 
 ### Migrating from versions < 10.2.0
