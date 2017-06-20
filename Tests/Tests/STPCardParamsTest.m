@@ -88,6 +88,25 @@
     XCTAssertEqualObjects(cardParams.addressCountry, @"US");
 }
 
+#pragma mark - Description Tests
+
+- (void)testDescriptionWorks {
+    STPCardParams *cardParams = [[STPCardParams alloc] init];
+    cardParams.number = @"4242424242424242";
+    cardParams.expMonth = 6;
+    cardParams.expYear = 2020;
+    cardParams.cvc = @"123";
+    cardParams.name = @"John Smith";
+    cardParams.addressLine1 = @"55 John St";
+    cardParams.addressLine2 = @"#3B";
+    cardParams.addressCity = @"New York";
+    cardParams.addressState = @"NY";
+    cardParams.addressZip = @"10002";
+    cardParams.addressCountry = @"US";
+    cardParams.currency = @"usd";
+    XCTAssert(cardParams.description);
+}
+
 #pragma mark - STPFormEncodable Tests
 
 - (void)testRootObjectName {

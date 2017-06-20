@@ -54,7 +54,58 @@
     return [self.bankAccountId isEqualToString:bankAccount.bankAccountId];
 }
 
-#pragma mark STPAPIResponseDecodable
+#pragma mark - Description
+
+- (NSString *)description {
+    NSString *statusDescription;
+
+    switch (self.status) {
+        case STPBankAccountStatusNew:
+            statusDescription = @"new";
+        case STPBankAccountStatusValidated:
+            statusDescription = @"validated";
+        case STPBankAccountStatusVerified:
+            statusDescription = @"verified";
+        case STPBankAccountStatusErrored:
+            statusDescription = @"errored";
+    }
+
+    NSString *accountHolderTypeDescription;
+
+    switch (self.accountHolderType) {
+        case STPBankAccountHolderTypeIndividual:
+            accountHolderTypeDescription = @"individual";
+        case STPBankAccountHolderTypeCompany:
+            accountHolderTypeDescription = @"company";
+    }
+
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Identifier
+                       [NSString stringWithFormat:@"bankAccountId = %@", self.bankAccountId],
+
+                       // Basic account details
+                       [NSString stringWithFormat:@"routingNumber = %@", self.routingNumber],
+                       [NSString stringWithFormat:@"last4 = %@", self.last4],
+
+                       // Additional account details (alphabetical)
+                       [NSString stringWithFormat:@"bankName = %@", self.bankName],
+                       [NSString stringWithFormat:@"country = %@", self.country],
+                       [NSString stringWithFormat:@"currency = %@", self.currency],
+                       [NSString stringWithFormat:@"fingerprint = %@", self.fingerprint],
+                       [NSString stringWithFormat:@"status = %@", statusDescription],
+
+                       // Owner details
+                       [NSString stringWithFormat:@"accountHolderName = %@", (self.accountHolderName) ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"accountHolderType = %@", accountHolderTypeDescription],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {
     return @[

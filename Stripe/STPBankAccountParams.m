@@ -43,6 +43,31 @@
     }
 }
 
+#pragma mark - Description
+
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Basic account details
+                       [NSString stringWithFormat:@"routingNumber = %@", self.routingNumber],
+                       [NSString stringWithFormat:@"last4 = %@", self.last4],
+
+                       // Additional account details (alphabetical)
+                       [NSString stringWithFormat:@"country = %@", self.country],
+                       [NSString stringWithFormat:@"currency = %@", self.currency],
+
+                       // Owner details
+                       [NSString stringWithFormat:@"accountHolderName = %@", (self.accountHolderName) ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"accountHolderType = %@", [self accountHolderTypeString]],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPFormEncodable
+
 + (NSString *)rootObjectName {
     return @"bank_account";
 }

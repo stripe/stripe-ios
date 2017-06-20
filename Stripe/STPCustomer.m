@@ -33,7 +33,25 @@
     return customer;
 }
 
-#pragma mark STPAPIResponseDecodable
+#pragma mark - Description
+
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Identifier
+                       [NSString stringWithFormat:@"stripeID = %@", self.stripeID],
+
+                       // Sources
+                       [NSString stringWithFormat:@"defaultSource = %@", self.defaultSource],
+                       [NSString stringWithFormat:@"sources = %@", self.sources],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {
     return @[@"id"];

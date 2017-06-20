@@ -21,7 +21,24 @@
 
 @implementation STPSourceReceiver
 
-#pragma mark STPAPIResponseDecodable
+#pragma mark - Description
+
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Details (alphabetical)
+                       [NSString stringWithFormat:@"address = %@", (self.address) ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"amountCharged = %@", self.amountCharged],
+                       [NSString stringWithFormat:@"amountReceived = %@", self.amountReceived],
+                       [NSString stringWithFormat:@"amountReturned = %@", self.amountReturned],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {
     return @[@"address"];

@@ -61,4 +61,52 @@
     }
 }
 
+#pragma mark - Description
+
+- (NSString *)description {
+    NSString *fundingDescription;
+
+    switch (self.funding) {
+        case STPCardFundingTypeCredit:
+            fundingDescription = @"credit";
+        case STPCardFundingTypeDebit:
+            fundingDescription = @"debit";
+        case STPCardFundingTypePrepaid:
+            fundingDescription = @"prepaid";
+        case STPCardFundingTypeOther:
+            fundingDescription = @"other";
+    }
+
+    NSString *threeDSecureStatusDescription;
+
+    switch (self.threeDSecure) {
+        case STPSourceCard3DSecureStatusRequired:
+            threeDSecureStatusDescription = @"required";
+        case STPSourceCard3DSecureStatusOptional:
+            threeDSecureStatusDescription = @"optional";
+        case STPSourceCard3DSecureStatusNotSupported:
+            threeDSecureStatusDescription = @"not_supported";
+        case STPSourceCard3DSecureStatusUnknown:
+            threeDSecureStatusDescription = @"unknown";
+    }
+
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Basic card details
+                       [NSString stringWithFormat:@"brand = %@", [STPCard stringFromBrand:self.brand]],
+                       [NSString stringWithFormat:@"last4 = %@", self.last4],
+                       [NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth],
+                       [NSString stringWithFormat:@"expYear = %lu", (unsigned long)self.expYear],
+                       [NSString stringWithFormat:@"funding = %@", fundingDescription],
+
+                       // Additional card details (alphabetical)
+                       [NSString stringWithFormat:@"country = %@", self.country],
+                       [NSString stringWithFormat:@"threeDSecure = %@", threeDSecureStatusDescription],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 @end

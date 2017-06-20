@@ -32,7 +32,35 @@
     }
 }
 
-#pragma mark STPAPIResponseDecodable
+#pragma mark - Description
+
+- (NSString *)description {
+    NSString *statusDescription;
+
+    switch (self.status) {
+        case STPSourceVerificationStatusPending:
+            statusDescription = @"pending";
+        case STPSourceVerificationStatusSucceeded:
+            statusDescription = @"succeeded";
+        case STPSourceVerificationStatusFailed:
+            statusDescription = @"failed";
+        case STPSourceVerificationStatusUnknown:
+            statusDescription = @"unknown";
+    }
+
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Details (alphabetical)
+                       [NSString stringWithFormat:@"attemptsRemaining = %@", self.attemptsRemaining],
+                       [NSString stringWithFormat:@"status = %@", statusDescription],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {
     return @[@"status"];

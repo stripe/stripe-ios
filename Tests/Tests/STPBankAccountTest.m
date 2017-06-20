@@ -92,4 +92,12 @@
     XCTAssertEqualObjects(bankAccount1, bankAccount2, @"bank account with equal data should be equal");
 }
 
+#pragma mark - Description Tests
+
+- (void)testDescriptionWorks {
+    STPBankAccount *bankAccount = [STPBankAccount decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    bankAccount.routingNumber = @"123456789";
+    XCTAssert(bankAccount.description);
+}
+
 @end

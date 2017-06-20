@@ -33,7 +33,36 @@
     }
 }
 
-#pragma mark STPAPIResponseDecodable
+#pragma mark - Description
+
+- (NSString *)description {
+    NSString *statusDescription;
+
+    switch (self.status) {
+        case STPSourceRedirectStatusPending:
+            statusDescription = @"pending";
+        case STPSourceRedirectStatusSucceeded:
+            statusDescription = @"succeeded";
+        case STPSourceRedirectStatusFailed:
+            statusDescription = @"failed";
+        case STPSourceRedirectStatusUnknown:
+            statusDescription = @"unknown";
+    }
+
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Details (alphabetical)
+                       [NSString stringWithFormat:@"returnURL = %@", self.returnURL],
+                       [NSString stringWithFormat:@"status = %@", statusDescription],
+                       [NSString stringWithFormat:@"url = %@", self.url],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {
     return @[@"return_url", @"status", @"url"];

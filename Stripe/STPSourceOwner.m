@@ -26,7 +26,7 @@
 
 @implementation STPSourceOwner
 
-#pragma mark STPAPIResponseDecodable
+#pragma mark - STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {
     return @[];

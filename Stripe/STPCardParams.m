@@ -53,6 +53,30 @@
     self.addressCountry = address.country;
 }
 
+#pragma mark - Description
+
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Basic card details
+                       [NSString stringWithFormat:@"last4 = %@", self.last4],
+                       [NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth],
+                       [NSString stringWithFormat:@"expYear = %lu", (unsigned long)self.expYear],
+                       [NSString stringWithFormat:@"cvc = %@", (self.cvc) ? @"<redacted>" : nil],
+
+                       // Additional card details (alphabetical)
+                       [NSString stringWithFormat:@"currency = %@", self.currency],
+
+                       // Cardholder details
+                       [NSString stringWithFormat:@"name = %@", (self.name) ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"address = %@", (self.address) ? @"<redacted>" : nil],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 #pragma mark - STPFormEncodable
 
 + (NSString *)rootObjectName {

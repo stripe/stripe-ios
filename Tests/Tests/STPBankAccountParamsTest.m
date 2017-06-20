@@ -61,6 +61,19 @@
     XCTAssertEqualObjects([bankAccountParams accountHolderTypeString], @"company");
 }
 
+#pragma mark - Description Tests
+
+- (void)testDescriptionWorks {
+    STPBankAccountParams *bankAccountParams = [[STPBankAccountParams alloc] init];
+    bankAccountParams.accountNumber = @"000123456789";
+    bankAccountParams.routingNumber = @"123456789";
+    bankAccountParams.country = @"US";
+    bankAccountParams.currency = @"usd";
+    bankAccountParams.accountHolderName = @"John Doe";
+    bankAccountParams.accountHolderType = STPBankAccountHolderTypeCompany;
+    XCTAssert(bankAccountParams.description);
+}
+
 #pragma mark - STPFormEncodable Tests
 
 - (void)testRootObjectName {

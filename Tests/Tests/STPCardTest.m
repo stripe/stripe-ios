@@ -105,6 +105,15 @@
     XCTAssertEqualObjects(card1, card2, @"cards with equal data should be equal");
 }
 
+#pragma mark - Description Tests
+
+- (void)testDescriptionWorks {
+    STPCard *card = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    XCTAssert(card.description);
+}
+
+#pragma mark -
+
 - (void)testAddress {
     NSMutableDictionary *apiResponse = [[self completeAttributeDictionary] mutableCopy];
     STPCard *card = [STPCard decodedObjectFromAPIResponse:apiResponse];

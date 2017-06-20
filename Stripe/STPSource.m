@@ -149,7 +149,54 @@
     return [self.stripeID isEqualToString:source.stripeID];
 }
 
-#pragma mark STPAPIResponseDecodable
+#pragma mark - Description
+
+- (NSString *)description {
+    NSString *statusDescription;
+
+    switch (self.status) {
+        case STPSourceStatusPending:
+            statusDescription = @"pending";
+        case STPSourceStatusChargeable:
+            statusDescription = @"chargeable";
+        case STPSourceStatusConsumed:
+            statusDescription = @"consumed";
+        case STPSourceStatusCanceled:
+            statusDescription = @"canceled";
+        case STPSourceStatusFailed:
+            statusDescription = @"failed";
+        case STPSourceStatusUnknown:
+            statusDescription = @"unknown";
+    }
+
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Identifier
+                       [NSString stringWithFormat:@"stripeID = %@", self.stripeID],
+
+                       // Source details (alphabetical)
+                       [NSString stringWithFormat:@"amount = %@", self.amount],
+                       [NSString stringWithFormat:@"clientSecret = %@", (self.clientSecret) ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"created = %@", self.created],
+                       [NSString stringWithFormat:@"currency = %@", self.currency],
+                       [NSString stringWithFormat:@"flow = %@", [STPSource stringFromFlow:self.flow]],
+                       [NSString stringWithFormat:@"livemode = %@", (self.livemode) ? @"YES" : @"NO"],
+                       [NSString stringWithFormat:@"metadata = %@", (self.metadata) ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"owner = %@", (self.owner) ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"receiver = %@", self.receiver],
+                       [NSString stringWithFormat:@"redirect = %@", self.redirect],
+                       [NSString stringWithFormat:@"status = %@", statusDescription],
+                       [NSString stringWithFormat:@"type = %@", [STPSource stringFromType:self.type]],
+                       [NSString stringWithFormat:@"usage = %@", [STPSource stringFromUsage:self.usage]],
+                       [NSString stringWithFormat:@"verification = %@", self.verification],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {
     return @[@"id", @"livemode", @"status", @"type"];
