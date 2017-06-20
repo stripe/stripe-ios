@@ -40,12 +40,16 @@
     switch (self.status) {
         case STPSourceVerificationStatusPending:
             statusDescription = @"pending";
+            break;
         case STPSourceVerificationStatusSucceeded:
             statusDescription = @"succeeded";
+            break;
         case STPSourceVerificationStatusFailed:
             statusDescription = @"failed";
+            break;
         case STPSourceVerificationStatusUnknown:
             statusDescription = @"unknown";
+            break;
     }
 
     NSArray *props = @[

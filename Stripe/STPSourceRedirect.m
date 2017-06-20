@@ -41,12 +41,16 @@
     switch (self.status) {
         case STPSourceRedirectStatusPending:
             statusDescription = @"pending";
+            break;
         case STPSourceRedirectStatusSucceeded:
             statusDescription = @"succeeded";
+            break;
         case STPSourceRedirectStatusFailed:
             statusDescription = @"failed";
+            break;
         case STPSourceRedirectStatusUnknown:
             statusDescription = @"unknown";
+            break;
     }
 
     NSArray *props = @[

@@ -145,12 +145,16 @@
     switch (self.funding) {
         case STPCardFundingTypeCredit:
             fundingDescription = @"credit";
+            break;
         case STPCardFundingTypeDebit:
             fundingDescription = @"debit";
+            break;
         case STPCardFundingTypePrepaid:
             fundingDescription = @"prepaid";
+            break;
         case STPCardFundingTypeOther:
             fundingDescription = @"other";
+            break;
     }
 
     NSArray *props = @[

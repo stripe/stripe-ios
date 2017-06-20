@@ -157,16 +157,22 @@
     switch (self.status) {
         case STPSourceStatusPending:
             statusDescription = @"pending";
+            break;
         case STPSourceStatusChargeable:
             statusDescription = @"chargeable";
+            break;
         case STPSourceStatusConsumed:
             statusDescription = @"consumed";
+            break;
         case STPSourceStatusCanceled:
             statusDescription = @"canceled";
+            break;
         case STPSourceStatusFailed:
             statusDescription = @"failed";
+            break;
         case STPSourceStatusUnknown:
             statusDescription = @"unknown";
+            break;
     }
 
     NSArray *props = @[

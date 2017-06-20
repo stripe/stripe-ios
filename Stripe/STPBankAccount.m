@@ -62,12 +62,16 @@
     switch (self.status) {
         case STPBankAccountStatusNew:
             statusDescription = @"new";
+            break;
         case STPBankAccountStatusValidated:
             statusDescription = @"validated";
+            break;
         case STPBankAccountStatusVerified:
             statusDescription = @"verified";
+            break;
         case STPBankAccountStatusErrored:
             statusDescription = @"errored";
+            break;
     }
 
     NSString *accountHolderTypeDescription;
@@ -75,8 +79,10 @@
     switch (self.accountHolderType) {
         case STPBankAccountHolderTypeIndividual:
             accountHolderTypeDescription = @"individual";
+            break;
         case STPBankAccountHolderTypeCompany:
             accountHolderTypeDescription = @"company";
+            break;
     }
 
     NSArray *props = @[

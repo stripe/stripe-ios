@@ -69,12 +69,16 @@
     switch (self.funding) {
         case STPCardFundingTypeCredit:
             fundingDescription = @"credit";
+            break;
         case STPCardFundingTypeDebit:
             fundingDescription = @"debit";
+            break;
         case STPCardFundingTypePrepaid:
             fundingDescription = @"prepaid";
+            break;
         case STPCardFundingTypeOther:
             fundingDescription = @"other";
+            break;
     }
 
     NSString *threeDSecureStatusDescription;
@@ -82,12 +86,16 @@
     switch (self.threeDSecure) {
         case STPSourceCard3DSecureStatusRequired:
             threeDSecureStatusDescription = @"required";
+            break;
         case STPSourceCard3DSecureStatusOptional:
             threeDSecureStatusDescription = @"optional";
+            break;
         case STPSourceCard3DSecureStatusNotSupported:
             threeDSecureStatusDescription = @"not_supported";
+            break;
         case STPSourceCard3DSecureStatusUnknown:
             threeDSecureStatusDescription = @"unknown";
+            break;
     }
 
     NSArray *props = @[
