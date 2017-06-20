@@ -41,7 +41,7 @@ class BrowseProductsViewController: UITableViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let theme = self.settingsVC.settings.theme
+        let theme = Settings.shared.theme
         self.view.backgroundColor = theme.primaryBackgroundColor
         self.navigationController?.navigationBar.barTintColor = theme.secondaryBackgroundColor
         self.navigationController?.navigationBar.tintColor = theme.accentColor
@@ -61,8 +61,7 @@ class BrowseProductsViewController: UITableViewController {
     }
 
     func showSettings() {
-        let navController = UINavigationController(rootViewController: settingsVC)
-        self.present(navController, animated: true, completion: nil)
+        self.navigationController?.pushViewController(self.settingsVC, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -73,7 +72,7 @@ class BrowseProductsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") ?? UITableViewCell(style: .value1, reuseIdentifier: "Cell")
         let product = Array(self.productsAndPrices.keys)[(indexPath as NSIndexPath).row]
         let price = self.productsAndPrices[product]!
-        let theme = self.settingsVC.settings.theme
+        let theme = Settings.shared.theme
         cell.backgroundColor = theme.secondaryBackgroundColor
         cell.textLabel?.text = product
         cell.textLabel?.font = theme.font
@@ -89,7 +88,7 @@ class BrowseProductsViewController: UITableViewController {
         let price = self.productsAndPrices[product]!
         let checkoutViewController = CheckoutViewController(product: product,
                                                             price: price,
-                                                            settings: self.settingsVC.settings)
+                                                            settings: Settings.shared)
         self.navigationController?.pushViewController(checkoutViewController, animated: true)
     }
 }

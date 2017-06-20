@@ -41,36 +41,29 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     }
 
     init(product: String, price: Int, settings: Settings) {
-
-        let stripePublishableKey = MyConfig.sharedConfig.stripePublishableKey
-        let backendBaseURL =  MyConfig.sharedConfig.backendBaseURL
-
-        assert(stripePublishableKey.hasPrefix("pk_"), "You must set your Stripe publishable key at the top of CheckoutViewController.swift to run this app.")
-        assert(backendBaseURL != nil, "You must set your backend base url at the top of CheckoutViewController.swift to run this app.")
-
         self.product = product
         self.productImage.text = product
         self.theme = settings.theme
-        MyAPIClient.sharedClient.baseURLString =  MyConfig.sharedConfig.backendBaseURL
+        MyAPIClient.shared.baseURLString =  Config.shared.backendBaseURL
 
         // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
         let config = STPPaymentConfiguration.shared()
-        config.publishableKey =  MyConfig.sharedConfig.stripePublishableKey
-        config.appleMerchantIdentifier =  MyConfig.sharedConfig.appleMerchantID
-        config.companyName =  MyConfig.sharedConfig.companyName
+        config.publishableKey = Config.shared.stripePublishableKey
+        config.appleMerchantIdentifier = Config.shared.appleMerchantID
+        config.companyName = Config.shared.companyName
         config.requiredBillingAddressFields = settings.requiredBillingAddressFields
         config.requiredShippingAddressFields = settings.requiredShippingAddressFields
         config.shippingType = settings.shippingType
         config.additionalPaymentMethods = settings.additionalPaymentMethods
         config.smsAutofillDisabled = !settings.smsAutofillEnabled
         
-        let paymentContext = STPPaymentContext(apiAdapter: MyAPIClient.sharedClient,
+        let paymentContext = STPPaymentContext(apiAdapter: MyAPIClient.shared,
                                                configuration: config,
                                                theme: settings.theme)
         let userInformation = STPUserInformation()
         paymentContext.prefilledInformation = userInformation
         paymentContext.paymentAmount = price
-        paymentContext.paymentCurrency =  MyConfig.sharedConfig.paymentCurrency
+        paymentContext.paymentCurrency =  Config.shared.paymentCurrency
         self.paymentContext = paymentContext
 
         self.paymentRow = CheckoutRowView(title: "Payment", detail: "Select Payment",
@@ -87,7 +80,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
                                         theme: settings.theme)
         self.buyButton = BuyButton(enabled: true, theme: settings.theme)
         var localeComponents: [String: String] = [
-            NSLocale.Key.currencyCode.rawValue:  MyConfig.sharedConfig.paymentCurrency,
+            NSLocale.Key.currencyCode.rawValue:  Config.shared.paymentCurrency,
         ]
         localeComponents[NSLocale.Key.languageCode.rawValue] = NSLocale.preferredLanguages.first
         let localeID = NSLocale.localeIdentifier(fromComponents: localeComponents)
@@ -156,7 +149,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     // MARK: STPPaymentContextDelegate
     
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
-        MyAPIClient.sharedClient.completeCharge(paymentResult, amount: self.paymentContext.paymentAmount,
+        MyAPIClient.shared.completeCharge(paymentResult, amount: self.paymentContext.paymentAmount,
                                                 completion: completion)
     }
     
