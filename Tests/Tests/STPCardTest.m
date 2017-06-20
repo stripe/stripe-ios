@@ -8,26 +8,32 @@
 
 @import XCTest;
 
-#import "STPFormEncoder.h"
 #import "STPCard.h"
-#import "StripeError.h"
 
 @interface STPCardTest : XCTestCase
-@property (nonatomic) STPCardParams *card;
+
+@property (nonatomic) STPCard *card;
+
 @end
 
 @implementation STPCardTest
 
 - (void)setUp {
-    _card = [[STPCardParams alloc] init];
+    [super setUp];
+    _card = [[STPCard alloc] init];
 }
 
-#pragma mark Helpers
+- (void)tearDown {
+    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    [super tearDown];
+}
+
 - (NSDictionary *)completeAttributeDictionary {
     return @{
         @"id": @"1",
         @"exp_month": @"12",
         @"exp_year": @"2013",
+        @"funding": @"debit",
         @"name": @"Smerlock Smolmes",
         @"address_line1": @"221A Baker Street",
         @"address_city": @"New York",
@@ -42,6 +48,8 @@
     };
 }
 
+#pragma mark - STPAPIResponseDecodable Tests
+
 - (void)testInitializingCardWithAttributeDictionary {
     NSMutableDictionary *apiResponse = [[self completeAttributeDictionary] mutableCopy];
     apiResponse[@"foo"] = @"bar";
@@ -51,6 +59,7 @@
     STPCard *cardWithAttributes = [STPCard decodedObjectFromAPIResponse:apiResponse];
     XCTAssertTrue([cardWithAttributes expMonth] == 12, @"expMonth is set correctly");
     XCTAssertTrue([cardWithAttributes expYear] == 2013, @"expYear is set correctly");
+    XCTAssertEqual([cardWithAttributes funding], STPCardFundingTypeDebit);
     XCTAssertEqualObjects([cardWithAttributes name], @"Smerlock Smolmes", @"name is set correctly");
     XCTAssertEqualObjects([cardWithAttributes addressLine1], @"221A Baker Street", @"addressLine1 is set correctly");
     XCTAssertEqualObjects([cardWithAttributes addressCity], @"New York", @"addressCity is set correctly");
@@ -70,7 +79,8 @@
     XCTAssertNil(allResponseFields[@"baz"]);
 }
 
-#pragma mark - last4 tests
+#pragma mark - Last4 Tests
+
 - (void)testLast4ReturnsCardNumberLast4WhenNotSet {
     self.card.number = @"4242424242424242";
     XCTAssertEqualObjects(self.card.last4, @"4242", @"last4 correctly returns the last 4 digits of the card number");
@@ -84,6 +94,8 @@
     self.card.number = @"123";
     XCTAssertEqualObjects(nil, self.card.last4, @"last4 returns nil when number length is < 3");
 }
+
+#pragma mark - Equality Tests
 
 - (void)testCardEquals {
     STPCard *card1 = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];

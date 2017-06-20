@@ -12,14 +12,24 @@
 #import "STPBankAccount.h"
 
 @interface STPBankAccountTest : XCTestCase
-@property (nonatomic) STPBankAccountParams *bankAccount;
+
+@property (nonatomic) STPBankAccount *bankAccount;
+
 @end
 
 @implementation STPBankAccountTest
 
 - (void)setUp {
+    [super setUp];
     _bankAccount = [[STPBankAccount alloc] init];
 }
+
+- (void)tearDown {
+    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    [super tearDown];
+}
+
+#pragma mark - STPAPIResponseDecodable Tests
 
 - (NSDictionary *)completeAttributeDictionary {
     return @{
@@ -30,6 +40,8 @@
         @"fingerprint": @"something",
         @"currency": @"usd",
         @"status": @"new",
+        @"account_holder_name": @"John Doe",
+        @"account_holder_type": @"company",
     };
 }
 
@@ -44,7 +56,9 @@
     XCTAssertEqualObjects([bankAccountWithAttributes country], @"US", @"country is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes fingerprint], @"something", @"fingerprint is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes currency], @"usd", @"currency is set correctly");
-    XCTAssertEqual(bankAccountWithAttributes.status, STPBankAccountStatusNew);
+    XCTAssertEqual([bankAccountWithAttributes status], STPBankAccountStatusNew);
+    XCTAssertEqualObjects([bankAccountWithAttributes accountHolderName], @"John Doe");
+    XCTAssertEqual([bankAccountWithAttributes accountHolderType], STPBankAccountHolderTypeCompany);
     
     NSDictionary *allResponseFields = bankAccountWithAttributes.allResponseFields;
     XCTAssertEqual(allResponseFields[@"foo"], @"bar");
