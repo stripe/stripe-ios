@@ -33,7 +33,15 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
                 case .success:
                     completion(nil)
                 case .failure(let error):
-                    completion(error)
+                    let responseString = String(data: response.data!, encoding: String.Encoding.utf8)
+                    if let rs = responseString, !rs.isEmpty {
+                        completion(NSError(domain: "RemoteServerErrorDomain",
+                                           code: (response.response?.statusCode)!,
+                                           userInfo: [
+                                            NSLocalizedDescriptionKey: rs]))
+                    } else {
+                        completion(error)
+                    }
                 }
         }
     }
@@ -54,7 +62,15 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
                 case .success:
                     completion(nil)
                 case .failure(let error):
-                    completion(error)
+                    let responseString = String(data: response.data!, encoding: String.Encoding.utf8)
+                    if let rs = responseString, !rs.isEmpty {
+                        completion(NSError(domain: "RemoteServerErrorDomain",
+                                           code: (response.response?.statusCode)!,
+                                           userInfo: [
+                                            NSLocalizedDescriptionKey: rs]))
+                    } else {
+                        completion(error)
+                    }
                 }
         }
     }
