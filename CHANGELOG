@@ -1,4 +1,7 @@
-== 10.3.0 2017-XX-XX
+== 11.0.0 2017-06-22
+* We've greatly simplified the integration for `STPPaymentContext`. See MIGRATING.md
+* We've added a `shippingAddress` property to `STPUserInformation`, which you can use to pre-fill your user's shipping information.
+* `STPPaymentContext` will now save your user's shipping information to their Stripe customer object. Shipping information will automatically be pre-filled from the customer object for subsequent checkouts.
 * Fixed nullability annotation for `[STPFile stringFromPurpose:]`. See MIGRATING.md.
 
 == 10.2.0 2017-06-19
