@@ -7,10 +7,14 @@
 //
 
 #import "STPBankAccountParams.h"
+#import "STPBankAccountParams+Private.h"
+
 #define FAUXPAS_IGNORED_ON_LINE(...)
 
-@interface STPBankAccountParams()
-@property(nonatomic, readonly)NSString *accountHolderTypeString;
+@interface STPBankAccountParams ()
+
+@property (nonatomic, readonly) NSString *accountHolderTypeString;
+
 @end
 
 @implementation STPBankAccountParams
@@ -34,13 +38,27 @@
     }
 }
 
-- (NSString *)accountHolderTypeString { FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
-    switch (self.accountHolderType) {
-        case STPBankAccountHolderTypeCompany:
-            return @"company";
-        case STPBankAccountHolderTypeIndividual:
-            return @"individual";
+#pragma mark - STPBankAccountHolderType
+
++ (NSDictionary<NSString *, NSNumber *> *)stringToAccountHolderTypeMapping {
+    return @{
+             @"individual": @(STPBankAccountHolderTypeIndividual),
+             @"company": @(STPBankAccountHolderTypeCompany),
+             };
+}
+
++ (STPBankAccountHolderType)accountHolderTypeFromString:(NSString *)string {
+    NSNumber *accountHolderTypeNumber = [self stringToAccountHolderTypeMapping][string];
+
+    if (accountHolderTypeNumber) {
+        return (STPBankAccountHolderType)[accountHolderTypeNumber integerValue];
     }
+
+    return STPBankAccountHolderTypeIndividual;
+}
+
++ (NSString *)stringFromAccountHolderType:(STPBankAccountHolderType)accountHolderType {
+    return [[[self stringToAccountHolderTypeMapping] allKeysForObject:@(accountHolderType)] firstObject];
 }
 
 #pragma mark - Description
@@ -60,7 +78,7 @@
 
                        // Owner details
                        [NSString stringWithFormat:@"accountHolderName = %@", (self.accountHolderName) ? @"<redacted>" : nil],
-                       [NSString stringWithFormat:@"accountHolderType = %@", [self accountHolderTypeString]],
+                       [NSString stringWithFormat:@"accountHolderType = %@", [self.class stringFromAccountHolderType:self.accountHolderType]],
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
@@ -81,6 +99,10 @@
              @"accountHolderName": @"account_holder_name",
              @"accountHolderTypeString": @"account_holder_type",
              };
+}
+
+- (NSString *)accountHolderTypeString { FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
+    return [self.class stringFromAccountHolderType:self.accountHolderType];
 }
 
 @end

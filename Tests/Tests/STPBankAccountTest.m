@@ -10,6 +10,7 @@
 
 #import "STPFormEncoder.h"
 #import "STPBankAccount.h"
+#import "STPBankAccount+Private.h"
 
 @interface STPBankAccountTest : XCTestCase
 
@@ -27,6 +28,54 @@
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
+}
+
+#pragma mark - STPBankAccountStatus Tests
+
+- (void)testStatusFromString {
+    XCTAssertEqual([STPBankAccount statusFromString:@"new"], STPBankAccountStatusNew);
+    XCTAssertEqual([STPBankAccount statusFromString:@"NEW"], STPBankAccountStatusNew);
+
+    XCTAssertEqual([STPBankAccount statusFromString:@"validated"], STPBankAccountStatusValidated);
+    XCTAssertEqual([STPBankAccount statusFromString:@"VALIDATED"], STPBankAccountStatusNew);
+
+    XCTAssertEqual([STPBankAccount statusFromString:@"verified"], STPBankAccountStatusVerified);
+    XCTAssertEqual([STPBankAccount statusFromString:@"VERIFIED"], STPBankAccountStatusNew);
+
+    XCTAssertEqual([STPBankAccount statusFromString:@"errored"], STPBankAccountStatusErrored);
+    XCTAssertEqual([STPBankAccount statusFromString:@"ERRORED"], STPBankAccountStatusNew);
+
+    XCTAssertEqual([STPBankAccount statusFromString:@"garbage"], STPBankAccountStatusNew);
+    XCTAssertEqual([STPBankAccount statusFromString:@"GARBAGE"], STPBankAccountStatusNew);
+}
+
+- (void)testStringFromStatus {
+    NSArray<NSNumber *> *values = @[
+                                    @(STPBankAccountStatusNew),
+                                    @(STPBankAccountStatusValidated),
+                                    @(STPBankAccountStatusVerified),
+                                    @(STPBankAccountStatusErrored)
+                                    ];
+
+    for (NSNumber *statusNumber in values) {
+        STPBankAccountStatus status = (STPBankAccountStatus)[statusNumber integerValue];
+        NSString *string = [STPBankAccount stringFromStatus:status];
+
+        switch (status) {
+            case STPBankAccountStatusNew:
+                XCTAssertEqualObjects(string, @"new");
+                break;
+            case STPBankAccountStatusValidated:
+                XCTAssertEqualObjects(string, @"validated");
+                break;
+            case STPBankAccountStatusVerified:
+                XCTAssertEqualObjects(string, @"verified");
+                break;
+            case STPBankAccountStatusErrored:
+                XCTAssertEqualObjects(string, @"errored");
+                break;
+        }
+    }
 }
 
 #pragma mark - STPAPIResponseDecodable Tests

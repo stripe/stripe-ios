@@ -7,6 +7,7 @@
 //
 
 #import "STPCard.h"
+#import "STPCard+Private.h"
 
 #import "NSDictionary+Stripe.h"
 #import "STPImageLibrary+Private.h"
@@ -46,6 +47,8 @@
     return self;
 }
 
+#pragma mark - STPCardBrand
+
 + (STPCardBrand)brandFromString:(NSString *)string {
     NSString *brand = [string lowercaseString];
     if ([brand isEqualToString:@"visa"]) {
@@ -84,18 +87,33 @@
     }
 }
 
-+ (STPCardFundingType)fundingFromString:(NSString *)string {
-    NSString *funding = [string lowercaseString];
-    if ([funding isEqualToString:@"credit"]) {
-        return STPCardFundingTypeCredit;
-    } else if ([funding isEqualToString:@"debit"]) {
-        return STPCardFundingTypeDebit;
-    } else if ([funding isEqualToString:@"prepaid"]) {
-        return STPCardFundingTypePrepaid;
-    } else {
-        return STPCardFundingTypeOther;
-    }
+#pragma mark - STPCardFundingType
+
++ (NSDictionary <NSString *, NSNumber *> *)stringToFundingMapping {
+    return @{
+             @"credit": @(STPCardFundingTypeCredit),
+             @"debit": @(STPCardFundingTypeDebit),
+             @"prepaid": @(STPCardFundingTypePrepaid),
+             @"other": @(STPCardFundingTypeOther),
+             };
 }
+
++ (STPCardFundingType)fundingFromString:(NSString *)string {
+    NSString *key = [string lowercaseString];
+    NSNumber *fundingNumber = [self stringToFundingMapping][key];
+
+    if (fundingNumber) {
+        return (STPCardFundingType)[fundingNumber integerValue];
+    }
+
+    return STPCardFundingTypeOther;
+}
+
++ (NSString *)stringFromFunding:(STPCardFundingType)funding {
+    return [[[self stringToFundingMapping] allKeysForObject:@(funding)] firstObject];
+}
+
+#pragma mark -
 
 - (instancetype)init {
     self = [super init];
@@ -140,23 +158,6 @@
 #pragma mark - Description
 
 - (NSString *)description {
-    NSString *fundingDescription;
-
-    switch (self.funding) {
-        case STPCardFundingTypeCredit:
-            fundingDescription = @"credit";
-            break;
-        case STPCardFundingTypeDebit:
-            fundingDescription = @"debit";
-            break;
-        case STPCardFundingTypePrepaid:
-            fundingDescription = @"prepaid";
-            break;
-        case STPCardFundingTypeOther:
-            fundingDescription = @"other";
-            break;
-    }
-
     NSArray *props = @[
                        // Object
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
@@ -165,11 +166,11 @@
                        [NSString stringWithFormat:@"cardId = %@", self.cardId],
 
                        // Basic card details
-                       [NSString stringWithFormat:@"brand = %@", [STPCard stringFromBrand:self.brand]],
+                       [NSString stringWithFormat:@"brand = %@", [self.class stringFromBrand:self.brand]],
                        [NSString stringWithFormat:@"last4 = %@", self.last4],
                        [NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth],
                        [NSString stringWithFormat:@"expYear = %lu", (unsigned long)self.expYear],
-                       [NSString stringWithFormat:@"funding = %@", fundingDescription],
+                       [NSString stringWithFormat:@"funding = %@", [self.class stringFromFunding:self.funding]],
 
                        // Additional card details (alphabetical)
                        [NSString stringWithFormat:@"country = %@", self.country],

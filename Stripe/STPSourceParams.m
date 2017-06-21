@@ -56,18 +56,18 @@
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
 
                        // Basic source details
-                       [NSString stringWithFormat:@"type = %@", [STPSource stringFromType:self.type]],
+                       [NSString stringWithFormat:@"type = %@", ([STPSource stringFromType:self.type]) ?: @"unknown"],
                        [NSString stringWithFormat:@"rawTypeString = %@", self.rawTypeString],
 
                        // Additional source details (alphabetical)
                        [NSString stringWithFormat:@"amount = %@", self.amount],
                        [NSString stringWithFormat:@"currency = %@", self.currency],
-                       [NSString stringWithFormat:@"flow = %@", [STPSource stringFromFlow:self.flow]],
+                       [NSString stringWithFormat:@"flow = %@", ([STPSource stringFromFlow:self.flow]) ?: @"unknown"],
                        [NSString stringWithFormat:@"metadata = %@", (self.metadata) ? @"<redacted>" : nil],
                        [NSString stringWithFormat:@"owner = %@", (self.owner) ? @"<redacted>" : nil],
                        [NSString stringWithFormat:@"redirect = %@", self.redirect],
                        [NSString stringWithFormat:@"token = %@", self.token],
-                       [NSString stringWithFormat:@"usage = %@", [STPSource stringFromUsage:self.usage]],
+                       [NSString stringWithFormat:@"usage = %@", ([STPSource stringFromUsage:self.usage]) ?: @"unknown"],
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];

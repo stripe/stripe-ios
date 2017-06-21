@@ -6,8 +6,10 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-#import "NSDictionary+Stripe.h"
 #import "STPSourceVerification.h"
+#import "STPSourceVerification+Private.h"
+
+#import "NSDictionary+Stripe.h"
 
 @interface STPSourceVerification ()
 
@@ -19,46 +21,41 @@
 
 @implementation STPSourceVerification
 
+#pragma mark - STPSourceVerificationStatus
+
++ (NSDictionary <NSString *, NSNumber *> *)stringToStatusMapping {
+    return @{
+             @"pending": @(STPSourceVerificationStatusPending),
+             @"succeeded": @(STPSourceVerificationStatusSucceeded),
+             @"failed": @(STPSourceVerificationStatusFailed),
+             };
+}
+
 + (STPSourceVerificationStatus)statusFromString:(NSString *)string {
-    NSString *status = [string lowercaseString];
-    if ([status isEqualToString:@"pending"]) {
-        return STPSourceVerificationStatusPending;
-    } else if ([status isEqualToString:@"succeeded"]) {
-        return STPSourceVerificationStatusSucceeded;
-    } else if ([status isEqualToString:@"failed"]) {
-        return STPSourceVerificationStatusFailed;
-    } else {
-        return STPSourceVerificationStatusUnknown;
+    NSString *key = [string lowercaseString];
+    NSNumber *statusNumber = [self stringToStatusMapping][key];
+
+    if (statusNumber) {
+        return (STPSourceVerificationStatus)[statusNumber integerValue];
     }
+
+    return STPSourceVerificationStatusUnknown;
+}
+
++ (nullable NSString *)stringFromStatus:(STPSourceVerificationStatus)status {
+    return [[[self stringToStatusMapping] allKeysForObject:@(status)] firstObject];
 }
 
 #pragma mark - Description
 
 - (NSString *)description {
-    NSString *statusDescription;
-
-    switch (self.status) {
-        case STPSourceVerificationStatusPending:
-            statusDescription = @"pending";
-            break;
-        case STPSourceVerificationStatusSucceeded:
-            statusDescription = @"succeeded";
-            break;
-        case STPSourceVerificationStatusFailed:
-            statusDescription = @"failed";
-            break;
-        case STPSourceVerificationStatusUnknown:
-            statusDescription = @"unknown";
-            break;
-    }
-
     NSArray *props = @[
                        // Object
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
 
                        // Details (alphabetical)
                        [NSString stringWithFormat:@"attemptsRemaining = %@", self.attemptsRemaining],
-                       [NSString stringWithFormat:@"status = %@", statusDescription],
+                       [NSString stringWithFormat:@"status = %@", ([self.class stringFromStatus:self.status]) ?: @"unknown"],
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];

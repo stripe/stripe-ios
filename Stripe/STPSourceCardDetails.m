@@ -7,16 +7,21 @@
 //
 
 #import "STPSourceCardDetails.h"
+#import "STPSourceCardDetails+Private.h"
 
+#import "STPCard+Private.h"
 #import "NSDictionary+Stripe.h"
 
 @interface STPSourceCardDetails ()
+
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+
 @end
 
 @implementation STPSourceCardDetails
 
-#pragma mark STPAPIResponseDecodable
+#pragma mark - STPAPIResponseDecodable
+
 + (NSArray *)requiredFields {
     return @[];
 }
@@ -48,56 +53,34 @@
 
 }
 
+#pragma mark - STPSourceCard3DSecureStatus
+
++ (NSDictionary <NSString *, NSNumber *> *)stringToThreeDSecureStatusMapping {
+    return @{
+             @"required": @(STPSourceCard3DSecureStatusRequired),
+             @"optional": @(STPSourceCard3DSecureStatusOptional),
+             @"not_supported": @(STPSourceCard3DSecureStatusNotSupported),
+             };
+}
+
 + (STPSourceCard3DSecureStatus)threeDSecureStatusFromString:(NSString *)string {
-    NSString *brand = [string lowercaseString];
-    if ([brand isEqualToString:@"required"]) {
-        return STPSourceCard3DSecureStatusRequired;
-    } else if ([brand isEqualToString:@"optional"]) {
-        return STPSourceCard3DSecureStatusOptional;
-    } else if ([brand isEqualToString:@"not_supported"]) {
-        return STPSourceCard3DSecureStatusNotSupported;
-    } else {
-        return STPSourceCard3DSecureStatusUnknown;
+    NSString *key = [string lowercaseString];
+    NSNumber *threeDSecureStatusNumber = [self stringToThreeDSecureStatusMapping][key];
+
+    if (threeDSecureStatusNumber) {
+        return (STPSourceCard3DSecureStatus)[threeDSecureStatusNumber integerValue];
     }
+
+    return STPSourceCard3DSecureStatusUnknown;
+}
+
++ (nullable NSString *)stringFromThreeDSecureStatus:(STPSourceCard3DSecureStatus)threeDSecureStatus {
+    return [[[self stringToThreeDSecureStatusMapping] allKeysForObject:@(threeDSecureStatus)] firstObject];
 }
 
 #pragma mark - Description
 
 - (NSString *)description {
-    NSString *fundingDescription;
-
-    switch (self.funding) {
-        case STPCardFundingTypeCredit:
-            fundingDescription = @"credit";
-            break;
-        case STPCardFundingTypeDebit:
-            fundingDescription = @"debit";
-            break;
-        case STPCardFundingTypePrepaid:
-            fundingDescription = @"prepaid";
-            break;
-        case STPCardFundingTypeOther:
-            fundingDescription = @"other";
-            break;
-    }
-
-    NSString *threeDSecureStatusDescription;
-
-    switch (self.threeDSecure) {
-        case STPSourceCard3DSecureStatusRequired:
-            threeDSecureStatusDescription = @"required";
-            break;
-        case STPSourceCard3DSecureStatusOptional:
-            threeDSecureStatusDescription = @"optional";
-            break;
-        case STPSourceCard3DSecureStatusNotSupported:
-            threeDSecureStatusDescription = @"not_supported";
-            break;
-        case STPSourceCard3DSecureStatusUnknown:
-            threeDSecureStatusDescription = @"unknown";
-            break;
-    }
-
     NSArray *props = @[
                        // Object
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
@@ -107,11 +90,11 @@
                        [NSString stringWithFormat:@"last4 = %@", self.last4],
                        [NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth],
                        [NSString stringWithFormat:@"expYear = %lu", (unsigned long)self.expYear],
-                       [NSString stringWithFormat:@"funding = %@", fundingDescription],
+                       [NSString stringWithFormat:@"funding = %@", [STPCard stringFromFunding:self.funding]],
 
                        // Additional card details (alphabetical)
                        [NSString stringWithFormat:@"country = %@", self.country],
-                       [NSString stringWithFormat:@"threeDSecure = %@", threeDSecureStatusDescription],
+                       [NSString stringWithFormat:@"threeDSecure = %@", ([self.class stringFromThreeDSecureStatus:self.threeDSecure]) ?: @"unknown"],
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];

@@ -9,6 +9,7 @@
 @import XCTest;
 
 #import "STPFile.h"
+#import "STPFile+Private.h"
 
 @interface STPFileTest : XCTestCase
 
@@ -22,6 +23,49 @@
     _file = [[STPFile alloc] init];
 }
 
+#pragma mark - STPFilePurpose Tests
+
+- (void)testPurposeFromString {
+    XCTAssertEqual([STPFile purposeFromString:@"dispute_evidence"], STPFilePurposeDisputeEvidence);
+    XCTAssertEqual([STPFile purposeFromString:@"DISPUTE_EVIDENCE"], STPFilePurposeDisputeEvidence);
+
+    XCTAssertEqual([STPFile purposeFromString:@"identity_document"], STPFilePurposeIdentityDocument);
+    XCTAssertEqual([STPFile purposeFromString:@"IDENTITY_DOCUMENT"], STPFilePurposeIdentityDocument);
+
+    XCTAssertEqual([STPFile purposeFromString:@"unknown"], STPFilePurposeUnknown);
+    XCTAssertEqual([STPFile purposeFromString:@"UNKNOWN"], STPFilePurposeUnknown);
+
+    XCTAssertEqual([STPFile purposeFromString:@"garbage"], STPFilePurposeUnknown);
+    XCTAssertEqual([STPFile purposeFromString:@"GARBAGE"], STPFilePurposeUnknown);
+}
+
+- (void)testStringFromPurpose {
+    NSArray<NSNumber *> *values = @[
+                                    @(STPFilePurposeDisputeEvidence),
+                                    @(STPFilePurposeIdentityDocument),
+                                    @(STPFilePurposeUnknown),
+                                    ];
+
+    for (NSNumber *purposeNumber in values) {
+        STPFilePurpose purpose = (STPFilePurpose)[purposeNumber integerValue];
+        NSString *string = [STPFile stringFromPurpose:purpose];
+
+        switch (purpose) {
+            case STPFilePurposeDisputeEvidence:
+                XCTAssertEqualObjects(string, @"dispute_evidence");
+                break;
+            case STPFilePurposeIdentityDocument:
+                XCTAssertEqualObjects(string, @"identity_document");
+                break;
+            case STPFilePurposeUnknown:
+                XCTAssertNil(string);
+                break;
+        }
+    }
+}
+
+#pragma mark - STPAPIResponseDecodable Tests
+
 - (NSDictionary *)completeAttributeDictionary {
     return @{
         @"id": @"file_something",
@@ -31,8 +75,6 @@
         @"purpose": @"identity_document",
     };
 }
-
-#pragma mark - Initialization Tests
 
 - (void)testInitializingFileWithAttributeDictionary {
     NSMutableDictionary *apiResponse = [[self completeAttributeDictionary] mutableCopy];

@@ -9,6 +9,7 @@
 @import XCTest;
 
 #import "STPCard.h"
+#import "STPCard+Private.h"
 
 @interface STPCardTest : XCTestCase
 
@@ -27,6 +28,125 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
+
+#pragma mark - STPCardBrand Tests
+
+- (void)testBrandFromString {
+    XCTAssertEqual([STPCard brandFromString:@"visa"], STPCardBrandVisa);
+    XCTAssertEqual([STPCard brandFromString:@"VISA"], STPCardBrandVisa);
+
+    XCTAssertEqual([STPCard brandFromString:@"american express"], STPCardBrandAmex);
+    XCTAssertEqual([STPCard brandFromString:@"AMERICAN EXPRESS"], STPCardBrandAmex);
+
+    XCTAssertEqual([STPCard brandFromString:@"mastercard"], STPCardBrandMasterCard);
+    XCTAssertEqual([STPCard brandFromString:@"MASTERCARD"], STPCardBrandMasterCard);
+
+    XCTAssertEqual([STPCard brandFromString:@"discover"], STPCardBrandDiscover);
+    XCTAssertEqual([STPCard brandFromString:@"DISCOVER"], STPCardBrandDiscover);
+
+    XCTAssertEqual([STPCard brandFromString:@"jcb"], STPCardBrandJCB);
+    XCTAssertEqual([STPCard brandFromString:@"JCB"], STPCardBrandJCB);
+
+    XCTAssertEqual([STPCard brandFromString:@"diners club"], STPCardBrandDinersClub);
+    XCTAssertEqual([STPCard brandFromString:@"DINERS CLUB"], STPCardBrandDinersClub);
+
+    XCTAssertEqual([STPCard brandFromString:@"unknown"], STPCardBrandUnknown);
+    XCTAssertEqual([STPCard brandFromString:@"UNKNOWN"], STPCardBrandUnknown);
+    
+    XCTAssertEqual([STPCard brandFromString:@"garbage"], STPCardBrandUnknown);
+    XCTAssertEqual([STPCard brandFromString:@"GARBAGE"], STPCardBrandUnknown);
+}
+
+- (void)testStringFromBrand {
+    NSArray<NSNumber *> *values = @[
+                                    @(STPCardBrandAmex),
+                                    @(STPCardBrandDinersClub),
+                                    @(STPCardBrandDiscover),
+                                    @(STPCardBrandJCB),
+                                    @(STPCardBrandMasterCard),
+                                    @(STPCardBrandVisa),
+                                    @(STPCardBrandUnknown),
+                                    ];
+
+    for (NSNumber *brandNumber in values) {
+        STPCardBrand brand = (STPCardBrand)[brandNumber integerValue];
+        NSString *string = [STPCard stringFromBrand:brand];
+
+        switch (brand) {
+            case STPCardBrandAmex:
+                XCTAssertEqualObjects(string, @"American Express");
+                break;
+            case STPCardBrandDinersClub:
+                XCTAssertEqualObjects(string, @"Diners Club");
+                break;
+            case STPCardBrandDiscover:
+                XCTAssertEqualObjects(string, @"Discover");
+                break;
+            case STPCardBrandJCB:
+                XCTAssertEqualObjects(string, @"JCB");
+                break;
+            case STPCardBrandMasterCard:
+                XCTAssertEqualObjects(string, @"MasterCard");
+                break;
+            case STPCardBrandVisa:
+                XCTAssertEqualObjects(string, @"Visa");
+                break;
+            case STPCardBrandUnknown:
+                XCTAssertEqualObjects(string, @"Unknown");
+                break;
+        }
+    }
+}
+
+#pragma mark - STPCardFundingType Tests
+
+- (void)testFundingFromString {
+    XCTAssertEqual([STPCard fundingFromString:@"credit"], STPCardFundingTypeCredit);
+    XCTAssertEqual([STPCard fundingFromString:@"CREDIT"], STPCardFundingTypeCredit);
+
+    XCTAssertEqual([STPCard fundingFromString:@"debit"], STPCardFundingTypeDebit);
+    XCTAssertEqual([STPCard fundingFromString:@"DEBIT"], STPCardFundingTypeDebit);
+
+    XCTAssertEqual([STPCard fundingFromString:@"prepaid"], STPCardFundingTypePrepaid);
+    XCTAssertEqual([STPCard fundingFromString:@"PREPAID"], STPCardFundingTypePrepaid);
+
+    XCTAssertEqual([STPCard fundingFromString:@"other"], STPCardFundingTypeOther);
+    XCTAssertEqual([STPCard fundingFromString:@"OTHER"], STPCardFundingTypeOther);
+
+    XCTAssertEqual([STPCard fundingFromString:@"garbage"], STPCardFundingTypeOther);
+    XCTAssertEqual([STPCard fundingFromString:@"GARBAGE"], STPCardFundingTypeOther);
+}
+
+- (void)testStringFromFunding {
+    NSArray<NSNumber *> *values = @[
+                                    @(STPCardFundingTypeCredit),
+                                    @(STPCardFundingTypeDebit),
+                                    @(STPCardFundingTypePrepaid),
+                                    @(STPCardFundingTypeOther),
+                                    ];
+
+    for (NSNumber *fundingNumber in values) {
+        STPCardFundingType funding = (STPCardFundingType)[fundingNumber integerValue];
+        NSString *string = [STPCard stringFromFunding:funding];
+
+        switch (funding) {
+            case STPCardFundingTypeCredit:
+                XCTAssertEqualObjects(string, @"credit");
+                break;
+            case STPCardFundingTypeDebit:
+                XCTAssertEqualObjects(string, @"debit");
+                break;
+            case STPCardFundingTypePrepaid:
+                XCTAssertEqualObjects(string, @"prepaid");
+                break;
+            case STPCardFundingTypeOther:
+                XCTAssertEqualObjects(string, @"other");
+                break;
+        }
+    }
+}
+
+#pragma mark - STPAPIResponseDecodable Tests
 
 - (NSDictionary *)completeAttributeDictionary {
     return @{
@@ -47,8 +167,6 @@
         @"currency": @"usd",
     };
 }
-
-#pragma mark - STPAPIResponseDecodable Tests
 
 - (void)testInitializingCardWithAttributeDictionary {
     NSMutableDictionary *apiResponse = [[self completeAttributeDictionary] mutableCopy];

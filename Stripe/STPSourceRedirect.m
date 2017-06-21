@@ -6,8 +6,10 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-#import "NSDictionary+Stripe.h"
 #import "STPSourceRedirect.h"
+#import "STPSourceRedirect+Private.h"
+
+#import "NSDictionary+Stripe.h"
 
 @interface STPSourceRedirect ()
 
@@ -20,46 +22,41 @@
 
 @implementation STPSourceRedirect
 
+#pragma mark - STPSourceRedirectStatus
+
++ (NSDictionary <NSString *, NSNumber *> *)stringToStatusMapping {
+    return @{
+             @"pending": @(STPSourceRedirectStatusPending),
+             @"succeeded": @(STPSourceRedirectStatusSucceeded),
+             @"failed": @(STPSourceRedirectStatusFailed),
+             };
+}
+
 + (STPSourceRedirectStatus)statusFromString:(NSString *)string {
-    NSString *status = [string lowercaseString];
-    if ([status isEqualToString:@"pending"]) {
-        return STPSourceRedirectStatusPending;
-    } else if ([status isEqualToString:@"succeeded"]) {
-        return STPSourceRedirectStatusSucceeded;
-    } else if ([status isEqualToString:@"failed"]) {
-        return STPSourceRedirectStatusFailed;
-    } else {
-        return STPSourceRedirectStatusUnknown;
+    NSString *key = [string lowercaseString];
+    NSNumber *statusNumber = [self stringToStatusMapping][key];
+
+    if (statusNumber) {
+        return (STPSourceRedirectStatus)[statusNumber integerValue];
     }
+
+    return STPSourceRedirectStatusUnknown;
+}
+
++ (nullable NSString *)stringFromStatus:(STPSourceRedirectStatus)status {
+    return [[[self stringToStatusMapping] allKeysForObject:@(status)] firstObject];
 }
 
 #pragma mark - Description
 
 - (NSString *)description {
-    NSString *statusDescription;
-
-    switch (self.status) {
-        case STPSourceRedirectStatusPending:
-            statusDescription = @"pending";
-            break;
-        case STPSourceRedirectStatusSucceeded:
-            statusDescription = @"succeeded";
-            break;
-        case STPSourceRedirectStatusFailed:
-            statusDescription = @"failed";
-            break;
-        case STPSourceRedirectStatusUnknown:
-            statusDescription = @"unknown";
-            break;
-    }
-
     NSArray *props = @[
                        // Object
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
 
                        // Details (alphabetical)
                        [NSString stringWithFormat:@"returnURL = %@", self.returnURL],
-                       [NSString stringWithFormat:@"status = %@", statusDescription],
+                       [NSString stringWithFormat:@"status = %@", ([self.class stringFromStatus:self.status]) ?: @"unknown"],
                        [NSString stringWithFormat:@"url = %@", self.url],
                        ];
 

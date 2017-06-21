@@ -8,13 +8,258 @@
 
 @import XCTest;
 
-#import "Stripe.h"
+#import "STPSource.h"
+#import "STPSource+Private.h"
 
 @interface STPSourceTest : XCTestCase
 
 @end
 
 @implementation STPSourceTest
+
+- (void)setUp {
+    [super setUp];
+    // Put setup code here. This method is called before the invocation of each test method in the class.
+}
+
+- (void)tearDown {
+    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    [super tearDown];
+}
+
+#pragma mark - STPSourceType Tests
+
+- (void)testTypeFromString {
+    XCTAssertEqual([STPSource typeFromString:@"bancontact"], STPSourceTypeBancontact);
+    XCTAssertEqual([STPSource typeFromString:@"BANCONTACT"], STPSourceTypeBancontact);
+
+    XCTAssertEqual([STPSource typeFromString:@"bitcoin"], STPSourceTypeBitcoin);
+    XCTAssertEqual([STPSource typeFromString:@"BITCOIN"], STPSourceTypeBitcoin);
+
+    XCTAssertEqual([STPSource typeFromString:@"card"], STPSourceTypeCard);
+    XCTAssertEqual([STPSource typeFromString:@"CARD"], STPSourceTypeCard);
+
+    XCTAssertEqual([STPSource typeFromString:@"giropay"], STPSourceTypeGiropay);
+    XCTAssertEqual([STPSource typeFromString:@"GIROPAY"], STPSourceTypeGiropay);
+
+    XCTAssertEqual([STPSource typeFromString:@"ideal"], STPSourceTypeIDEAL);
+    XCTAssertEqual([STPSource typeFromString:@"IDEAL"], STPSourceTypeIDEAL);
+
+    XCTAssertEqual([STPSource typeFromString:@"sepa_debit"], STPSourceTypeSEPADebit);
+    XCTAssertEqual([STPSource typeFromString:@"SEPA_DEBIT"], STPSourceTypeSEPADebit);
+
+    XCTAssertEqual([STPSource typeFromString:@"sofort"], STPSourceTypeSofort);
+    XCTAssertEqual([STPSource typeFromString:@"SOFORT"], STPSourceTypeSofort);
+
+    XCTAssertEqual([STPSource typeFromString:@"three_d_secure"], STPSourceTypeThreeDSecure);
+    XCTAssertEqual([STPSource typeFromString:@"THREE_D_SECURE"], STPSourceTypeThreeDSecure);
+
+    XCTAssertEqual([STPSource typeFromString:@"unknown"], STPSourceTypeUnknown);
+    XCTAssertEqual([STPSource typeFromString:@"UNKNOWN"], STPSourceTypeUnknown);
+
+    XCTAssertEqual([STPSource typeFromString:@"garbage"], STPSourceTypeUnknown);
+    XCTAssertEqual([STPSource typeFromString:@"GARBAGE"], STPSourceTypeUnknown);
+}
+
+- (void)testStringFromType {
+    NSArray<NSNumber *> *values = @[
+                                    @(STPSourceTypeBancontact),
+                                    @(STPSourceTypeBitcoin),
+                                    @(STPSourceTypeCard),
+                                    @(STPSourceTypeGiropay),
+                                    @(STPSourceTypeIDEAL),
+                                    @(STPSourceTypeSEPADebit),
+                                    @(STPSourceTypeSofort),
+                                    @(STPSourceTypeThreeDSecure),
+                                    @(STPSourceTypeUnknown),
+                                    ];
+
+    for (NSNumber *typeNumber in values) {
+        STPSourceType type = (STPSourceType)[typeNumber integerValue];
+        NSString *string = [STPSource stringFromType:type];
+
+        switch (type) {
+            case STPSourceTypeBancontact:
+                XCTAssertEqualObjects(string, @"bancontact");
+                break;
+            case STPSourceTypeBitcoin:
+                XCTAssertEqualObjects(string, @"bitcoin");
+                break;
+            case STPSourceTypeCard:
+                XCTAssertEqualObjects(string, @"card");
+                break;
+            case STPSourceTypeGiropay:
+                XCTAssertEqualObjects(string, @"giropay");
+                break;
+            case STPSourceTypeIDEAL:
+                XCTAssertEqualObjects(string, @"ideal");
+                break;
+            case STPSourceTypeSEPADebit:
+                XCTAssertEqualObjects(string, @"sepa_debit");
+                break;
+            case STPSourceTypeSofort:
+                XCTAssertEqualObjects(string, @"sofort");
+                break;
+            case STPSourceTypeThreeDSecure:
+                XCTAssertEqualObjects(string, @"three_d_secure");
+                break;
+            case STPSourceTypeUnknown:
+                XCTAssertNil(string);
+                break;
+        }
+    }
+}
+
+#pragma mark - STPSourceFlow Tests
+
+- (void)testFlowFromString {
+    XCTAssertEqual([STPSource flowFromString:@"redirect"], STPSourceFlowRedirect);
+    XCTAssertEqual([STPSource flowFromString:@"REDIRECT"], STPSourceFlowRedirect);
+
+    XCTAssertEqual([STPSource flowFromString:@"receiver"], STPSourceFlowReceiver);
+    XCTAssertEqual([STPSource flowFromString:@"RECEIVER"], STPSourceFlowReceiver);
+
+    XCTAssertEqual([STPSource flowFromString:@"code_verification"], STPSourceFlowCodeVerification);
+    XCTAssertEqual([STPSource flowFromString:@"CODE_VERIFICATION"], STPSourceFlowCodeVerification);
+
+    XCTAssertEqual([STPSource flowFromString:@"none"], STPSourceFlowNone);
+    XCTAssertEqual([STPSource flowFromString:@"NONE"], STPSourceFlowNone);
+
+    XCTAssertEqual([STPSource flowFromString:@"garbage"], STPSourceFlowUnknown);
+    XCTAssertEqual([STPSource flowFromString:@"GARBAGE"], STPSourceFlowUnknown);
+}
+
+- (void)testStringFromFlow {
+    NSArray<NSNumber *> *values = @[
+                                    @(STPSourceFlowRedirect),
+                                    @(STPSourceFlowReceiver),
+                                    @(STPSourceFlowCodeVerification),
+                                    @(STPSourceFlowNone),
+                                    @(STPSourceFlowUnknown),
+                                    ];
+
+    for (NSNumber *flowNumber in values) {
+        STPSourceFlow flow = (STPSourceFlow)[flowNumber integerValue];
+        NSString *string = [STPSource stringFromFlow:flow];
+
+        switch (flow) {
+            case STPSourceFlowRedirect:
+                XCTAssertEqualObjects(string, @"redirect");
+                break;
+            case STPSourceFlowReceiver:
+                XCTAssertEqualObjects(string, @"receiver");
+                break;
+            case STPSourceFlowCodeVerification:
+                XCTAssertEqualObjects(string, @"code_verification");
+                break;
+            case STPSourceFlowNone:
+                XCTAssertEqualObjects(string, @"none");
+                break;
+            case STPSourceFlowUnknown:
+                XCTAssertNil(string);
+                break;
+        }
+    }
+}
+
+#pragma mark - STPSourceStatus Tests
+
+- (void)testStatusFromString {
+    XCTAssertEqual([STPSource statusFromString:@"pending"], STPSourceStatusPending);
+    XCTAssertEqual([STPSource statusFromString:@"PENDING"], STPSourceStatusPending);
+
+    XCTAssertEqual([STPSource statusFromString:@"chargeable"], STPSourceStatusChargeable);
+    XCTAssertEqual([STPSource statusFromString:@"CHARGEABLE"], STPSourceStatusChargeable);
+
+    XCTAssertEqual([STPSource statusFromString:@"consumed"], STPSourceStatusConsumed);
+    XCTAssertEqual([STPSource statusFromString:@"CONSUMED"], STPSourceStatusConsumed);
+
+    XCTAssertEqual([STPSource statusFromString:@"canceled"], STPSourceStatusCanceled);
+    XCTAssertEqual([STPSource statusFromString:@"CANCELED"], STPSourceStatusCanceled);
+
+    XCTAssertEqual([STPSource statusFromString:@"failed"], STPSourceStatusFailed);
+    XCTAssertEqual([STPSource statusFromString:@"FAILED"], STPSourceStatusFailed);
+
+    XCTAssertEqual([STPSource statusFromString:@"garbage"], STPSourceStatusUnknown);
+    XCTAssertEqual([STPSource statusFromString:@"GARBAGE"], STPSourceStatusUnknown);
+}
+
+- (void)testStringFromStatus {
+    NSArray<NSNumber *> *values = @[
+                                    @(STPSourceStatusPending),
+                                    @(STPSourceStatusChargeable),
+                                    @(STPSourceStatusConsumed),
+                                    @(STPSourceStatusCanceled),
+                                    @(STPSourceStatusFailed),
+                                    @(STPSourceStatusUnknown),
+                                    ];
+
+    for (NSNumber *statusNumber in values) {
+        STPSourceStatus status = (STPSourceStatus)[statusNumber integerValue];
+        NSString *string = [STPSource stringFromStatus:status];
+
+        switch (status) {
+            case STPSourceStatusPending:
+                XCTAssertEqualObjects(string, @"pending");
+                break;
+            case STPSourceStatusChargeable:
+                XCTAssertEqualObjects(string, @"chargeable");
+                break;
+            case STPSourceStatusConsumed:
+                XCTAssertEqualObjects(string, @"consumed");
+                break;
+            case STPSourceStatusCanceled:
+                XCTAssertEqualObjects(string, @"canceled");
+                break;
+            case STPSourceStatusFailed:
+                XCTAssertEqualObjects(string, @"failed");
+                break;
+            case STPSourceStatusUnknown:
+                XCTAssertNil(string);
+                break;
+        }
+    }
+}
+
+#pragma mark - STPSourceUsage Tests
+
+- (void)testUsageFromString {
+    XCTAssertEqual([STPSource usageFromString:@"reusable"], STPSourceUsageReusable);
+    XCTAssertEqual([STPSource usageFromString:@"REUSABLE"], STPSourceUsageReusable);
+
+    XCTAssertEqual([STPSource usageFromString:@"single_use"], STPSourceUsageSingleUse);
+    XCTAssertEqual([STPSource usageFromString:@"SINGLE_USE"], STPSourceUsageSingleUse);
+
+    XCTAssertEqual([STPSource usageFromString:@"garbage"], STPSourceUsageUnknown);
+    XCTAssertEqual([STPSource usageFromString:@"GARBAGE"], STPSourceUsageUnknown);
+}
+
+- (void)testStringFromUsage {
+    NSArray<NSNumber *> *values = @[
+                                    @(STPSourceUsageReusable),
+                                    @(STPSourceUsageSingleUse),
+                                    @(STPSourceUsageUnknown),
+                                    ];
+
+    for (NSNumber *usageNumber in values) {
+        STPSourceUsage usage = (STPSourceUsage)[usageNumber integerValue];
+        NSString *string = [STPSource stringFromUsage:usage];
+
+        switch (usage) {
+            case STPSourceUsageReusable:
+                XCTAssertEqualObjects(string, @"reusable");
+                break;
+            case STPSourceUsageSingleUse:
+                XCTAssertEqualObjects(string, @"single_use");
+                break;
+            case STPSourceUsageUnknown:
+                XCTAssertNil(string);
+                break;
+        }
+    }
+}
+
+#pragma mark - STPAPIResponseDecodable Tests
 
 - (NSDictionary *)buildTestResponse_ideal {
     NSDictionary *dict = @{

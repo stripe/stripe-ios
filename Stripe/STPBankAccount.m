@@ -7,7 +7,10 @@
 //
 
 #import "STPBankAccount.h"
+#import "STPBankAccount+Private.h"
+
 #import "NSDictionary+Stripe.h"
+#import "STPBankAccountParams+Private.h"
 
 @interface STPBankAccount ()
 
@@ -23,6 +26,33 @@
 @implementation STPBankAccount
 
 @synthesize routingNumber, country, currency, accountHolderName, accountHolderType;
+
+#pragma mark - STPBankAccountStatus
+
++ (NSDictionary<NSString *, NSNumber *> *)stringToStatusMapping {
+    return @{
+             @"new": @(STPBankAccountStatusNew),
+             @"validated": @(STPBankAccountStatusValidated),
+             @"verified": @(STPBankAccountStatusVerified),
+             @"errored": @(STPBankAccountStatusErrored),
+             };
+}
+
++ (STPBankAccountStatus)statusFromString:(NSString *)string {
+    NSNumber *statusNumber = [self stringToStatusMapping][string];
+
+    if (statusNumber) {
+        return (STPBankAccountStatus)[statusNumber integerValue];
+    }
+
+    return STPBankAccountStatusNew;
+}
+
++ (NSString *)stringFromStatus:(STPBankAccountStatus)status {
+    return [[[self stringToStatusMapping] allKeysForObject:@(status)] firstObject];
+}
+
+#pragma mark -
 
 - (void)setAccountNumber:(NSString *)accountNumber {
     [super setAccountNumber:accountNumber];
@@ -57,34 +87,6 @@
 #pragma mark - Description
 
 - (NSString *)description {
-    NSString *statusDescription;
-
-    switch (self.status) {
-        case STPBankAccountStatusNew:
-            statusDescription = @"new";
-            break;
-        case STPBankAccountStatusValidated:
-            statusDescription = @"validated";
-            break;
-        case STPBankAccountStatusVerified:
-            statusDescription = @"verified";
-            break;
-        case STPBankAccountStatusErrored:
-            statusDescription = @"errored";
-            break;
-    }
-
-    NSString *accountHolderTypeDescription;
-
-    switch (self.accountHolderType) {
-        case STPBankAccountHolderTypeIndividual:
-            accountHolderTypeDescription = @"individual";
-            break;
-        case STPBankAccountHolderTypeCompany:
-            accountHolderTypeDescription = @"company";
-            break;
-    }
-
     NSArray *props = @[
                        // Object
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
@@ -101,11 +103,11 @@
                        [NSString stringWithFormat:@"country = %@", self.country],
                        [NSString stringWithFormat:@"currency = %@", self.currency],
                        [NSString stringWithFormat:@"fingerprint = %@", self.fingerprint],
-                       [NSString stringWithFormat:@"status = %@", statusDescription],
+                       [NSString stringWithFormat:@"status = %@", [self.class stringFromStatus:self.status]],
 
                        // Owner details
                        [NSString stringWithFormat:@"accountHolderName = %@", (self.accountHolderName) ? @"<redacted>" : nil],
-                       [NSString stringWithFormat:@"accountHolderType = %@", accountHolderTypeDescription],
+                       [NSString stringWithFormat:@"accountHolderType = %@", [self.class stringFromAccountHolderType:self.accountHolderType]],
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
@@ -138,24 +140,10 @@
     bankAccount.fingerprint = dict[@"fingerprint"];
     bankAccount.currency = dict[@"currency"];
     bankAccount.accountHolderName = dict[@"account_holder_name"];
-    NSString *accountHolderType = dict[@"account_holder_type"];
-    if ([accountHolderType isEqualToString:@"individual"]) {
-        bankAccount.accountHolderType = STPBankAccountHolderTypeIndividual;
-    } else if ([accountHolderType isEqualToString:@"company"]) {
-        bankAccount.accountHolderType = STPBankAccountHolderTypeCompany;
-    }
-    NSString *status = dict[@"status"];
-    if ([status isEqual: @"new"]) {
-        bankAccount.status = STPBankAccountStatusNew;
-    } else if ([status isEqual: @"validated"]) {
-        bankAccount.status = STPBankAccountStatusValidated;
-    } else if ([status isEqual: @"verified"]) {
-        bankAccount.status = STPBankAccountStatusVerified;
-    } else if ([status isEqual: @"errored"]) {
-        bankAccount.status = STPBankAccountStatusErrored;
-    }
-    
+    bankAccount.accountHolderType = [self accountHolderTypeFromString:dict[@"account_holder_type"]];
+    bankAccount.status = [self statusFromString:dict[@"status"]];
     bankAccount.allResponseFields = dict;
+
     return bankAccount;
 }
 

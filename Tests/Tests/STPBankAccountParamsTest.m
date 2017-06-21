@@ -9,12 +9,7 @@
 @import XCTest;
 
 #import "STPBankAccountParams.h"
-
-@interface STPBankAccountParams ()
-
-- (NSString *)accountHolderTypeString;
-
-@end
+#import "STPBankAccountParams+Private.h"
 
 @interface STPBankAccountParamsTest : XCTestCase
 
@@ -51,14 +46,38 @@
     XCTAssertNil(bankAccountParams.last4);
 }
 
-- (void)testAccountHolderTypeString {
-    STPBankAccountParams *bankAccountParams = [[STPBankAccountParams alloc] init];
+#pragma mark - STPBankAccountHolderType Tests
 
-    bankAccountParams.accountHolderType = STPBankAccountHolderTypeIndividual;
-    XCTAssertEqualObjects([bankAccountParams accountHolderTypeString], @"individual");
+- (void)testAccountHolderTypeFromString {
+    XCTAssertEqual([STPBankAccountParams accountHolderTypeFromString:@"individual"], STPBankAccountHolderTypeIndividual);
+    XCTAssertEqual([STPBankAccountParams accountHolderTypeFromString:@"INDIVIDUAL"], STPBankAccountHolderTypeIndividual);
 
-    bankAccountParams.accountHolderType = STPBankAccountHolderTypeCompany;
-    XCTAssertEqualObjects([bankAccountParams accountHolderTypeString], @"company");
+    XCTAssertEqual([STPBankAccountParams accountHolderTypeFromString:@"company"], STPBankAccountHolderTypeCompany);
+    XCTAssertEqual([STPBankAccountParams accountHolderTypeFromString:@"COMPANY"], STPBankAccountHolderTypeIndividual);
+
+    XCTAssertEqual([STPBankAccountParams accountHolderTypeFromString:@"garbage"], STPBankAccountHolderTypeIndividual);
+    XCTAssertEqual([STPBankAccountParams accountHolderTypeFromString:@"GARBAGE"], STPBankAccountHolderTypeIndividual);
+}
+
+- (void)testStringFromAccountHolderType {
+    NSArray<NSNumber *> *values = @[
+                                    @(STPBankAccountHolderTypeIndividual),
+                                    @(STPBankAccountHolderTypeCompany),
+                                    ];
+
+    for (NSNumber *accountHolderTypeNumber in values) {
+        STPBankAccountHolderType accountHolderType = (STPBankAccountHolderType)[accountHolderTypeNumber integerValue];
+        NSString *string = [STPBankAccountParams stringFromAccountHolderType:accountHolderType];
+
+        switch (accountHolderType) {
+            case STPBankAccountHolderTypeIndividual:
+                XCTAssertEqualObjects(string, @"individual");
+                break;
+            case STPBankAccountHolderTypeCompany:
+                XCTAssertEqualObjects(string, @"company");
+                break;
+        }
+    }
 }
 
 #pragma mark - Description Tests
@@ -95,6 +114,16 @@
     }
 
     XCTAssertEqual([[mapping allValues] count], [[NSSet setWithArray:[mapping allValues]] count]);
+}
+
+- (void)testAccountHolderTypeString {
+    STPBankAccountParams *bankAccountParams = [[STPBankAccountParams alloc] init];
+
+    bankAccountParams.accountHolderType = STPBankAccountHolderTypeIndividual;
+    XCTAssertEqualObjects([bankAccountParams accountHolderTypeString], @"individual");
+
+    bankAccountParams.accountHolderType = STPBankAccountHolderTypeCompany;
+    XCTAssertEqualObjects([bankAccountParams accountHolderTypeString], @"company");
 }
 
 @end

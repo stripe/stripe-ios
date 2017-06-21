@@ -8,6 +8,15 @@
 
 #import "STPCard.h"
 
-@interface STPCard (Private)
+NS_ASSUME_NONNULL_BEGIN
+
+@interface STPCard ()
+
++ (STPCardFundingType)fundingFromString:(NSString *)string;
++ (NSString *)stringFromFunding:(STPCardFundingType)funding;
+
 - (nullable STPAddress *)address;
+
 @end
+
+NS_ASSUME_NONNULL_END
