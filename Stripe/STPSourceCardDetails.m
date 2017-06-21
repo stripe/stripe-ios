@@ -90,7 +90,7 @@
                        [NSString stringWithFormat:@"last4 = %@", self.last4],
                        [NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth],
                        [NSString stringWithFormat:@"expYear = %lu", (unsigned long)self.expYear],
-                       [NSString stringWithFormat:@"funding = %@", [STPCard stringFromFunding:self.funding]],
+                       [NSString stringWithFormat:@"funding = %@", ([STPCard stringFromFunding:self.funding]) ?: @"unknown"],
 
                        // Additional card details (alphabetical)
                        [NSString stringWithFormat:@"country = %@", self.country],

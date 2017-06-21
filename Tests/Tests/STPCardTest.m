@@ -113,6 +113,9 @@
     XCTAssertEqual([STPCard fundingFromString:@"other"], STPCardFundingTypeOther);
     XCTAssertEqual([STPCard fundingFromString:@"OTHER"], STPCardFundingTypeOther);
 
+    XCTAssertEqual([STPCard fundingFromString:@"unknown"], STPCardFundingTypeOther);
+    XCTAssertEqual([STPCard fundingFromString:@"UNKNOWN"], STPCardFundingTypeOther);
+
     XCTAssertEqual([STPCard fundingFromString:@"garbage"], STPCardFundingTypeOther);
     XCTAssertEqual([STPCard fundingFromString:@"GARBAGE"], STPCardFundingTypeOther);
 }
@@ -140,7 +143,7 @@
                 XCTAssertEqualObjects(string, @"prepaid");
                 break;
             case STPCardFundingTypeOther:
-                XCTAssertEqualObjects(string, @"other");
+                XCTAssertNil(string);
                 break;
         }
     }

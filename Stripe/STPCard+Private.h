@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPCard ()
 
 + (STPCardFundingType)fundingFromString:(NSString *)string;
-+ (NSString *)stringFromFunding:(STPCardFundingType)funding;
++ (nullable NSString *)stringFromFunding:(STPCardFundingType)funding;
 
 - (nullable STPAddress *)address;
 

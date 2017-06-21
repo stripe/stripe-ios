@@ -94,7 +94,6 @@
              @"credit": @(STPCardFundingTypeCredit),
              @"debit": @(STPCardFundingTypeDebit),
              @"prepaid": @(STPCardFundingTypePrepaid),
-             @"other": @(STPCardFundingTypeOther),
              };
 }
 
@@ -109,7 +108,7 @@
     return STPCardFundingTypeOther;
 }
 
-+ (NSString *)stringFromFunding:(STPCardFundingType)funding {
++ (nullable NSString *)stringFromFunding:(STPCardFundingType)funding {
     return [[[self stringToFundingMapping] allKeysForObject:@(funding)] firstObject];
 }
 
@@ -170,7 +169,7 @@
                        [NSString stringWithFormat:@"last4 = %@", self.last4],
                        [NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth],
                        [NSString stringWithFormat:@"expYear = %lu", (unsigned long)self.expYear],
-                       [NSString stringWithFormat:@"funding = %@", [self.class stringFromFunding:self.funding]],
+                       [NSString stringWithFormat:@"funding = %@", ([self.class stringFromFunding:self.funding]) ?: @"unknown"],
 
                        // Additional card details (alphabetical)
                        [NSString stringWithFormat:@"country = %@", self.country],
