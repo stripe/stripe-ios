@@ -92,42 +92,13 @@
 #pragma mark - STPBackendCharging
 
 - (void)createBackendChargeWithSource:(NSString *)sourceID completion:(STPSourceSubmissionHandler)completion {
-    if (!BackendBaseURL) {
-        NSError *error = [NSError errorWithDomain:StripeDomain
-                                             code:STPInvalidRequestError
-                                         userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to create a charge."}];
-        completion(STPBackendChargeResultFailure, error);
-        return;
-    }
-
-    // This passes the token off to our payment backend, which will then actually complete charging the card using your Stripe account's secret key
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
-
-    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"create_charge"];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    request.HTTPMethod = @"POST";
-    NSString *postBody = [NSString stringWithFormat:@"source=%@&amount=%@", sourceID, @1099];
-    NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
-
-    NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
-                                                               fromData:data
-                                                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                          NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                                                          if (!error && httpResponse.statusCode != 200) {
-                                                              error = [NSError errorWithDomain:StripeDomain
-                                                                                          code:STPInvalidRequestError
-                                                                                      userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
-                                                          }
-                                                          if (error) {
-                                                              completion(STPBackendChargeResultFailure, error);
-                                                          } else {
-                                                              completion(STPBackendChargeResultSuccess, nil);
-                                                          }
-                                                      }];
-
-    [uploadTask resume];
+    // In your app, you should send the source's id to your backend,
+    // along with any information necessary to fulfill your customer's order.
+    // On your backend, once you've fulfilled your customer's order, you can
+    // complete the payment by charging the source using your Stripe account's
+    // secret key.
+    // https://stripe.com/docs/api#create_charge
+    completion(STPBackendChargeResultSuccess)
 }
 
 #pragma mark - ExampleViewControllerDelegate
