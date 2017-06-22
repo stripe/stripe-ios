@@ -13,6 +13,7 @@
 #import "STPPaymentCardTextFieldViewModel.h"
 #import "STPWeakStrongMacros.h"
 #import "Stripe.h"
+#import "STPLocalizationUtils.h"
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
@@ -514,7 +515,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 - (CGRect)cvcFieldRectForBounds:(CGRect)bounds {
     CGRect fieldsRect = [self fieldsRectForBounds:bounds];
 
-    CGFloat cvcWidth = MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"]);
+    CGFloat cvcWidth = MAX([self widthForText:self.cvcField.placeholder], [self widthForText:STPNonLocalizedString(@"8888")]);
     CGFloat cvcX = self.numberFieldShrunk ?
     CGRectGetWidth(fieldsRect) - cvcWidth - STPPaymentCardTextFieldDefaultPadding / 2  :
     CGRectGetWidth(fieldsRect);
@@ -525,7 +526,7 @@ CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
     CGRect numberFieldRect = [self numberFieldRectForBounds:bounds];
     CGRect cvcRect = [self cvcFieldRectForBounds:bounds];
 
-    CGFloat expirationWidth = MAX([self widthForText:self.expirationField.placeholder], [self widthForText:@"88/88"]);
+    CGFloat expirationWidth = MAX([self widthForText:self.expirationField.placeholder], [self widthForText:STPNonLocalizedString(@"88/88")]);
     CGFloat expirationX = (CGRectGetMaxX(numberFieldRect) + CGRectGetMinX(cvcRect) - expirationWidth) / 2;
     return CGRectMake(expirationX, 0, expirationWidth, CGRectGetHeight(bounds));
 }
@@ -789,9 +790,9 @@ typedef void (^STPNumberShrunkCompletionBlock)(BOOL completed);
 
 - (NSString *)defaultCVCPlaceholder {
     if (self.viewModel.brand == STPCardBrandAmex) {
-        return @"CVV";
+        return STPNonLocalizedString(@"CVV");
     } else {
-        return @"CVC";
+        return STPNonLocalizedString(@"CVC");
     }
 }
 
