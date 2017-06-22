@@ -5,13 +5,13 @@
     // Xcode build configuration to check (String)
     "buildConfig": "Release",
     // Rules to apply (Array of strings)
-    "rules": ["APIAvailability","BuildSettingsSetInGUI","DefaultInExhaustiveSwitch","IBOutletsInPublicInterface","ImplicitAtomicProperty","InstanceMethodWritesToStaticVariable","MacroLiteral","MallocCast","MallocWithoutSizeof","NonTypedefBlockDeclaration","ReservedIdentifierNaming","StrongInsteadOfRetain","ThrowingObjCException","UnusedMethod","UnusedResource","UsedVariableMarkedUnused","XIBUnknownClassReference"],
+    "rules": ["APIAvailability","BuildSettingsSetInGUI","DefaultInExhaustiveSwitch","IBOutletsInPublicInterface","IdentifierNaming","ImplicitAtomicProperty","InstanceMethodWritesToStaticVariable","MacroLiteral","MallocCast","MallocWithoutSizeof","NonTypedefBlockDeclaration","ReservedIdentifierNaming","SourceFileHeaderComment","StrongInsteadOfRetain","ThrowingObjCException","UnusedMethod","UnusedResource","UsedVariableMarkedUnused","XIBUnknownClassReference"],
     // Rules to apply only (Array of strings)
     //"onlyRules": [],
     // Rule tags to apply (Array of strings)
     "ruleTags": ["Localization","Recommended"],
     // Rules to exclude (Array of strings)
-    "excludedRules": ["ConstructorReturnType","PrivateCategory","TranslationPunctuation"],
+    "excludedRules": ["PrivateCategory","TranslationPunctuation"],
     // Prefixes of files to exclude (Array of strings)
     //"fileExclusionPrefixes": [],
     // Xcode groups to exclude (Array of strings)
@@ -154,7 +154,7 @@
             "checkInitMethods": true,
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            "ignoredFileRegexes": ["STPPromise.h"]
+            "ignoredFileRegexes": []
         },
         // Options for rule: Copying property of mutable NSCopying type
         "CopyingMutableProperty": {
@@ -304,7 +304,7 @@
         // Options for rule: Implicitly atomic property
         "ImplicitAtomicProperty": {
             // Apply only to UIKit/AppKit subclasses (Boolean)
-            //"applyOnlyToUIClasses": true
+            "applyOnlyToUIClasses": false
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null
@@ -337,7 +337,7 @@
         // Options for rule: Literal string for key path
         "LiteralStringKeyPath": {
             // Ignore -valueForKey: (etc) for collections (Boolean)
-            //"ignoreCollectionsValueForKey": true
+            "ignoreCollectionsValueForKey": false
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null
@@ -397,7 +397,7 @@
         // Options for rule: Missing translation
         "MissingTranslation": {
             // Warn about missing development region translations (Boolean)
-            //"checkDevRegion": false
+            "checkDevRegion": true
             // Ignored key prefixes (Array of strings)
             //"ignoredKeyPrefixes": []
             // Regexes for ignored file paths (Array of regular expression
@@ -423,15 +423,15 @@
         // Options for rule: NSLog() used in release build
         "NSLogUsed": {
             // Allow calling NSLog() via macros (Boolean)
-            //"allowMacros": true,
+            "allowMacros": false,
             // Regexes for ignored file paths (Array of regular expression
             // strings)
-            "ignoredFileRegexes": ["STPAPIClient.m"]
+            "ignoredFileRegexes": []
         },
         // Options for rule: Non-copying property of immutable NSCopying type
         "RetainingImmutableProperty": {
             // Ignore private properties (Boolean)
-            //"ignorePrivateProperties": true
+            "ignorePrivateProperties": false
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null
@@ -445,7 +445,7 @@
         // Options for rule: Observing UIKit object using KVO
         "UIKitKVO": {
             // Allow observing custom UIKit subclasses (Boolean)
-            //"allowSubclasses": true
+            "allowSubclasses": false
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null
@@ -553,14 +553,14 @@
         // Options for rule: Recommended project settings
         "BasicProjectSettings": {
             // The indentation type that should be set ("tabs" / "spaces")
-            //"indentType": null
+            "indentType": "spaces",
             // The ‘tab width’ that should be set (Positive integer)
-            //"tabWidth": null
+            "tabWidth": 4,
             // The ‘indent width’ that should be set (Positive integer)
-            //"indentWidth": null
+            "indentWidth": 4,
             // Whether the ‘wrap lines’ setting should be set or not ("wrap" /
             // "nowrap")
-            //"wrapLines": null
+            "wrapLines": "wrap"
             // Whether the ‘class prefix’ project setting should have a value
             // (Boolean)
             //"expectClassPrefix": true
@@ -571,7 +571,7 @@
         // Options for rule: Redundant inclusion directive
         "RedundantInclude": {
             // Ignore system headers (Boolean)
-            //"ignoreSystemHeaders": true
+            "ignoreSystemHeaders": false
             // Ignore indirect inclusions (Boolean)
             //"ignoreIndirectInclusions": false
             // Regexes for ignored file paths (Array of regular expression
@@ -601,7 +601,7 @@
         // Options for rule: Restricted direct method call
         "RestrictedDirectMethodCall": {
             // Allow direct calls from subclasses (Boolean)
-            //"allowInSubclass": true
+            "allowInSubclass": false
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null
@@ -627,11 +627,11 @@
         // Options for rule: Setter invocation in init or dealloc method
         "SetterInvocationInInitOrDealloc": {
             // Apply to init methods (Boolean)
-            //"applyToInit": true
+            //"applyToInit": true,
             // Apply to dealloc methods (Boolean)
-            //"applyToDealloc": true
+            //"applyToDealloc": true,
             // Warn only if ivar available (Boolean)
-            //"onlyIfIvarAvailable": true
+            "onlyIfIvarAvailable": false
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null
@@ -647,9 +647,9 @@
         // Options for rule: Source file header comment format
         "SourceFileHeaderComment": {
             // Expect comments to start with the file name (Boolean)
-            //"expectCommentToStartWithFilename": true
+            //"expectCommentToStartWithFilename": true,
             // Require header comments in all source files (Boolean)
-            //"requireHeaderComments": false
+            "requireHeaderComments": true
             // Regexes for ignored file paths (Array of regular expression
             // strings)
             //"ignoredFileRegexes": null
