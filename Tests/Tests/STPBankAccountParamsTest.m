@@ -53,7 +53,7 @@
     XCTAssertEqual([STPBankAccountParams accountHolderTypeFromString:@"INDIVIDUAL"], STPBankAccountHolderTypeIndividual);
 
     XCTAssertEqual([STPBankAccountParams accountHolderTypeFromString:@"company"], STPBankAccountHolderTypeCompany);
-    XCTAssertEqual([STPBankAccountParams accountHolderTypeFromString:@"COMPANY"], STPBankAccountHolderTypeIndividual);
+    XCTAssertEqual([STPBankAccountParams accountHolderTypeFromString:@"COMPANY"], STPBankAccountHolderTypeCompany);
 
     XCTAssertEqual([STPBankAccountParams accountHolderTypeFromString:@"garbage"], STPBankAccountHolderTypeIndividual);
     XCTAssertEqual([STPBankAccountParams accountHolderTypeFromString:@"GARBAGE"], STPBankAccountHolderTypeIndividual);

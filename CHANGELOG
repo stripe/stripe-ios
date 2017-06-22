@@ -1,3 +1,6 @@
+== 10.3.0 2017-XX-XX
+* Fixed nullability annotation for `[STPFile stringFromPurpose:]`. See MIGRATING.md.
+
 == 10.2.0 2017-06-19
 * We've added a `paymentCountry` property to `STPPaymentContext`. This affects the countryCode of Apple Pay payments, and defaults to "US". You should set this to the country your Stripe account is in.
 * `paymentRequestWithMerchantIdentifier:` has been deprecated. See MIGRATING.md

@@ -39,7 +39,8 @@
 }
 
 + (STPBankAccountStatus)statusFromString:(NSString *)string {
-    NSNumber *statusNumber = [self stringToStatusMapping][string];
+    NSString *key = [string lowercaseString];
+    NSNumber *statusNumber = [self stringToStatusMapping][key];
 
     if (statusNumber) {
         return (STPBankAccountStatus)[statusNumber integerValue];

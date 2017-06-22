@@ -1,5 +1,9 @@
 ## Migration Guides
 
+### Migrating from versions < 10.3.0
+
+- Fixed nullability annotation for `[STPFile stringFromPurpose:]` which returns `nil` for `STPFilePurposeUnknown`. Will return a non-nil value for all other `STPFilePurpose`.
+
 ### Migrating from versions < 10.2.0
 - `paymentRequestWithMerchantIdentifier:` has been deprecated. You should instead use `paymentRequestWithMerchantIdentifier:country:currency:`. Apple Pay is now available in many countries and currencies, and you should use the appropriate values for your business.
 - We've added a `paymentCountry` property to `STPPaymentContext`. This affects the countryCode of Apple Pay payments, and defaults to "US". You should set this to the country your Stripe account is in.

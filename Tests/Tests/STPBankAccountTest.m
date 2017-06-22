@@ -37,13 +37,13 @@
     XCTAssertEqual([STPBankAccount statusFromString:@"NEW"], STPBankAccountStatusNew);
 
     XCTAssertEqual([STPBankAccount statusFromString:@"validated"], STPBankAccountStatusValidated);
-    XCTAssertEqual([STPBankAccount statusFromString:@"VALIDATED"], STPBankAccountStatusNew);
+    XCTAssertEqual([STPBankAccount statusFromString:@"VALIDATED"], STPBankAccountStatusValidated);
 
     XCTAssertEqual([STPBankAccount statusFromString:@"verified"], STPBankAccountStatusVerified);
-    XCTAssertEqual([STPBankAccount statusFromString:@"VERIFIED"], STPBankAccountStatusNew);
+    XCTAssertEqual([STPBankAccount statusFromString:@"VERIFIED"], STPBankAccountStatusVerified);
 
     XCTAssertEqual([STPBankAccount statusFromString:@"errored"], STPBankAccountStatusErrored);
-    XCTAssertEqual([STPBankAccount statusFromString:@"ERRORED"], STPBankAccountStatusNew);
+    XCTAssertEqual([STPBankAccount statusFromString:@"ERRORED"], STPBankAccountStatusErrored);
 
     XCTAssertEqual([STPBankAccount statusFromString:@"garbage"], STPBankAccountStatusNew);
     XCTAssertEqual([STPBankAccount statusFromString:@"GARBAGE"], STPBankAccountStatusNew);
