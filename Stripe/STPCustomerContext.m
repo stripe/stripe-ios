@@ -137,12 +137,6 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 }
 
 - (void)updateCustomerWithShippingAddress:(STPAddress *)shipping completion:(STPErrorBlock)completion {
-    if (!self.keyManager) {
-        stpDispatchToMainThreadIfNecessary(^{
-            completion([NSError stp_customerContextMissingKeyProviderError]);
-        });
-        return;
-    }
     [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
         if (retrieveKeyError) {
             if (completion) {
