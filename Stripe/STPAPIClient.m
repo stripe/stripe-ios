@@ -515,7 +515,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                                endpoint:endpoint
                                              parameters:@{@"source": sourceID}
                                             serializers:@[[STPCard new], [STPSource new]]
-                                             completion:^(STPCard *object, __unused NSHTTPURLResponse *response, NSError *error) {
+                                             completion:^(id object, __unused NSHTTPURLResponse *response, NSError *error) {
                                                  completion(object, error);
                                              }];
 }

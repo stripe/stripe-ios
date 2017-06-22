@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSError (STPCustomerContext)
+@interface NSError (StripePrivate)
 
 + (NSError *)stp_customerContextMissingKeyProviderError;
 
 @end
+
+void linkNSErrorPrivateCategory(void);

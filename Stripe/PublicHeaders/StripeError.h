@@ -94,5 +94,7 @@ FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectCVC;
 + (nonnull NSString *)stp_cardErrorProcessingErrorUserMessage;
 + (nonnull NSString *)stp_unexpectedErrorMessage;
 
-
 @end
+
+void linkNSErrorCategory(void);
+

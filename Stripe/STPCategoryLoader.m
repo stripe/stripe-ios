@@ -41,6 +41,8 @@
     linkNSBundleAppNameCategory();
     linkNSDecimalNumberCurrencyCategory();
     linkNSDictionaryCategory();
+    linkNSErrorCategory();
+    linkNSErrorPrivateCategory();
     linkNSMutableURLRequestCategory();
     linkNSStringCategory();
     linkNSURLComponentsCategory();
