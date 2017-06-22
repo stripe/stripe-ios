@@ -17,7 +17,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  An `STPCustomerContext` retrieves and updates a Stripe customer using
- an ephemeral key, a short-lived API key scoped to a specific Customer object.
+ an ephemeral key, a short-lived API key scoped to a specific customer object.
+ If your current user logs out of your app and a new user logs in, be sure to
+ either create a new instance of `STPCustomerContext` or clear the current
+ instance's cached customer. On your backend, be sure to create and return a
+ new ephemeral key for the Customer object associated with the new user.
  */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
@@ -25,16 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma clang diagnostic pop
 
 /**
- Whenever the customer context retrieves a customer, it will return a cached
- value if it was retrieved less than this number of seconds ago.
- The default value is 60 seconds.
- */
-@property (nonatomic, assign) NSTimeInterval cachedCustomerMaxAge;
-
-/**
  Initializes a new `STPCustomerContext` with the specified key provider.
  Upon initialization, a CustomerContext will fetch a new ephemeral key from
- your backend and use it to prefetch the Customer object specified in the key.
+ your backend and use it to prefetch the customer object specified in the key.
  Subsequent customer retrievals (e.g. by `STPPaymentContext`) will return the
  prefetched customer immediately if its age does not exceed `cachedCustomerMaxAge`.
 
@@ -42,6 +39,15 @@ NS_ASSUME_NONNULL_BEGIN
  @return the newly-instantiated customer context.
  */
 - (instancetype)initWithKeyProvider:(id<STPEphemeralKeyProvider>)keyProvider;
+
+/**
+ `STPCustomerContext` will cache its customer object for up to 60 seconds.
+ If your current user logs out of your app and a new user logs in, be sure
+ to either call this method or create a new instance of `STPCustomerContext`.
+ On your backend, be sure to create and return a new ephemeral key for the
+ customer object associated with the new user.
+ */
+- (void)clearCachedCustomer;
 
 @end
 

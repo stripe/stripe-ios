@@ -54,12 +54,14 @@ static NSTimeInterval const MinEagerRefreshInterval = 60*60;
     return self.customerKey && self.customerKey.expires.timeIntervalSinceNow > self.expirationInterval;
 }
 
-// Eager key refreshes on app foreground are throttled to once per hour
 - (BOOL)shouldPerformEagerRefresh {
     return !self.lastEagerKeyRefresh || self.lastEagerKeyRefresh.timeIntervalSinceNow > MinEagerRefreshInterval;
 }
 
 - (void)handleWillForegroundNotification {
+    // To make sure we don't end up hitting the ephemeral keys endpoint on every
+    // foreground (e.g. if there's an issue decoding the ephemeral key), throttle
+    // eager refreshses to once per hour.
     if (!self.currentKeyIsUnexpired && self.shouldPerformEagerRefresh) {
         self.lastEagerKeyRefresh = [NSDate date];
         [self.keyProvider createCustomerKeyWithAPIVersion:self.apiVersion completion:^(NSDictionary *jsonResponse, __unused NSError *error) {

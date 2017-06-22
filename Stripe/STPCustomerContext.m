@@ -15,7 +15,7 @@
 #import "STPWeakStrongMacros.h"
 #import "STPDispatchFunctions.h"
 
-static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
+static NSTimeInterval const CachedCustomerMaxAge = 60;
 
 @interface STPCustomerContext ()
 
@@ -37,11 +37,14 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 - (instancetype)initWithKeyManager:(nonnull STPEphemeralKeyManager *)keyManager {
     self = [self init];
     if (self) {
-        _cachedCustomerMaxAge = DefaultCachedCustomerMaxAge;
         _keyManager = keyManager;
         [self retrieveCustomer:nil];
     }
     return self;
+}
+
+- (void)clearCachedCustomer {
+    self.customer = nil;
 }
 
 - (void)setCustomer:(STPCustomer *)customer {
@@ -54,7 +57,7 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
         return NO;
     }
     NSDate *now = [NSDate date];
-    return [now timeIntervalSinceDate:self.customerRetrievedDate] < self.cachedCustomerMaxAge;
+    return [now timeIntervalSinceDate:self.customerRetrievedDate] < CachedCustomerMaxAge;
 }
 
 - (void)retrieveCustomer:(STPCustomerCompletionBlock)completion {
