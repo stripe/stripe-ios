@@ -7,7 +7,10 @@
 //
 
 #import "STPBankAccount.h"
+#import "STPBankAccount+Private.h"
+
 #import "NSDictionary+Stripe.h"
+#import "STPBankAccountParams+Private.h"
 
 @interface STPBankAccount ()
 
@@ -23,6 +26,34 @@
 @implementation STPBankAccount
 
 @synthesize routingNumber, country, currency, accountHolderName, accountHolderType;
+
+#pragma mark - STPBankAccountStatus
+
++ (NSDictionary<NSString *, NSNumber *> *)stringToStatusMapping {
+    return @{
+             @"new": @(STPBankAccountStatusNew),
+             @"validated": @(STPBankAccountStatusValidated),
+             @"verified": @(STPBankAccountStatusVerified),
+             @"errored": @(STPBankAccountStatusErrored),
+             };
+}
+
++ (STPBankAccountStatus)statusFromString:(NSString *)string {
+    NSString *key = [string lowercaseString];
+    NSNumber *statusNumber = [self stringToStatusMapping][key];
+
+    if (statusNumber) {
+        return (STPBankAccountStatus)[statusNumber integerValue];
+    }
+
+    return STPBankAccountStatusNew;
+}
+
++ (NSString *)stringFromStatus:(STPBankAccountStatus)status {
+    return [[[self stringToStatusMapping] allKeysForObject:@(status)] firstObject];
+}
+
+#pragma mark -
 
 - (void)setAccountNumber:(NSString *)accountNumber {
     [super setAccountNumber:accountNumber];
@@ -54,7 +85,36 @@
     return [self.bankAccountId isEqualToString:bankAccount.bankAccountId];
 }
 
-#pragma mark STPAPIResponseDecodable
+#pragma mark - Description
+
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Identifier
+                       [NSString stringWithFormat:@"bankAccountId = %@", self.bankAccountId],
+
+                       // Basic account details
+                       [NSString stringWithFormat:@"routingNumber = %@", self.routingNumber],
+                       [NSString stringWithFormat:@"last4 = %@", self.last4],
+
+                       // Additional account details (alphabetical)
+                       [NSString stringWithFormat:@"bankName = %@", self.bankName],
+                       [NSString stringWithFormat:@"country = %@", self.country],
+                       [NSString stringWithFormat:@"currency = %@", self.currency],
+                       [NSString stringWithFormat:@"fingerprint = %@", self.fingerprint],
+                       [NSString stringWithFormat:@"status = %@", [self.class stringFromStatus:self.status]],
+
+                       // Owner details
+                       [NSString stringWithFormat:@"accountHolderName = %@", (self.accountHolderName) ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"accountHolderType = %@", [self.class stringFromAccountHolderType:self.accountHolderType]],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {
     return @[
@@ -81,24 +141,10 @@
     bankAccount.fingerprint = dict[@"fingerprint"];
     bankAccount.currency = dict[@"currency"];
     bankAccount.accountHolderName = dict[@"account_holder_name"];
-    NSString *accountHolderType = dict[@"account_holder_type"];
-    if ([accountHolderType isEqualToString:@"individual"]) {
-        bankAccount.accountHolderType = STPBankAccountHolderTypeIndividual;
-    } else if ([accountHolderType isEqualToString:@"company"]) {
-        bankAccount.accountHolderType = STPBankAccountHolderTypeCompany;
-    }
-    NSString *status = dict[@"status"];
-    if ([status isEqual: @"new"]) {
-        bankAccount.status = STPBankAccountStatusNew;
-    } else if ([status isEqual: @"validated"]) {
-        bankAccount.status = STPBankAccountStatusValidated;
-    } else if ([status isEqual: @"verified"]) {
-        bankAccount.status = STPBankAccountStatusVerified;
-    } else if ([status isEqual: @"errored"]) {
-        bankAccount.status = STPBankAccountStatusErrored;
-    }
-    
+    bankAccount.accountHolderType = [self accountHolderTypeFromString:dict[@"account_holder_type"]];
+    bankAccount.status = [self statusFromString:dict[@"status"]];
     bankAccount.allResponseFields = dict;
+
     return bankAccount;
 }
 

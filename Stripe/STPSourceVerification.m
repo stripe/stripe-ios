@@ -6,8 +6,10 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-#import "NSDictionary+Stripe.h"
 #import "STPSourceVerification.h"
+#import "STPSourceVerification+Private.h"
+
+#import "NSDictionary+Stripe.h"
 
 @interface STPSourceVerification ()
 
@@ -19,20 +21,47 @@
 
 @implementation STPSourceVerification
 
-+ (STPSourceVerificationStatus)statusFromString:(NSString *)string {
-    NSString *status = [string lowercaseString];
-    if ([status isEqualToString:@"pending"]) {
-        return STPSourceVerificationStatusPending;
-    } else if ([status isEqualToString:@"succeeded"]) {
-        return STPSourceVerificationStatusSucceeded;
-    } else if ([status isEqualToString:@"failed"]) {
-        return STPSourceVerificationStatusFailed;
-    } else {
-        return STPSourceVerificationStatusUnknown;
-    }
+#pragma mark - STPSourceVerificationStatus
+
++ (NSDictionary <NSString *, NSNumber *> *)stringToStatusMapping {
+    return @{
+             @"pending": @(STPSourceVerificationStatusPending),
+             @"succeeded": @(STPSourceVerificationStatusSucceeded),
+             @"failed": @(STPSourceVerificationStatusFailed),
+             };
 }
 
-#pragma mark STPAPIResponseDecodable
++ (STPSourceVerificationStatus)statusFromString:(NSString *)string {
+    NSString *key = [string lowercaseString];
+    NSNumber *statusNumber = [self stringToStatusMapping][key];
+
+    if (statusNumber) {
+        return (STPSourceVerificationStatus)[statusNumber integerValue];
+    }
+
+    return STPSourceVerificationStatusUnknown;
+}
+
++ (nullable NSString *)stringFromStatus:(STPSourceVerificationStatus)status {
+    return [[[self stringToStatusMapping] allKeysForObject:@(status)] firstObject];
+}
+
+#pragma mark - Description
+
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Details (alphabetical)
+                       [NSString stringWithFormat:@"attemptsRemaining = %@", self.attemptsRemaining],
+                       [NSString stringWithFormat:@"status = %@", ([self.class stringFromStatus:self.status]) ?: @"unknown"],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {
     return @[@"status"];

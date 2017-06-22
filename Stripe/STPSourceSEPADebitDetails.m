@@ -16,6 +16,29 @@
 
 @implementation STPSourceSEPADebitDetails
 
+#pragma mark - Description
+
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Basic SEPA debit details
+                       [NSString stringWithFormat:@"last4 = %@", self.last4],
+
+                       // Additional SEPA debit details (alphabetical)
+                       [NSString stringWithFormat:@"bankCode = %@", self.bankCode],
+                       [NSString stringWithFormat:@"country = %@", self.country],
+                       [NSString stringWithFormat:@"fingerprint = %@", self.fingerprint],
+                       [NSString stringWithFormat:@"mandateReference = %@", self.mandateReference],
+                       [NSString stringWithFormat:@"mandateURL = %@", self.mandateURL],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPAPIResponseDecodable
+
 + (NSArray *)requiredFields {
     return @[];
 }

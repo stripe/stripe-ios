@@ -10,16 +10,75 @@
 
 #import "STPFormEncoder.h"
 #import "STPBankAccount.h"
+#import "STPBankAccount+Private.h"
 
 @interface STPBankAccountTest : XCTestCase
-@property (nonatomic) STPBankAccountParams *bankAccount;
+
+@property (nonatomic) STPBankAccount *bankAccount;
+
 @end
 
 @implementation STPBankAccountTest
 
 - (void)setUp {
+    [super setUp];
     _bankAccount = [[STPBankAccount alloc] init];
 }
+
+- (void)tearDown {
+    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    [super tearDown];
+}
+
+#pragma mark - STPBankAccountStatus Tests
+
+- (void)testStatusFromString {
+    XCTAssertEqual([STPBankAccount statusFromString:@"new"], STPBankAccountStatusNew);
+    XCTAssertEqual([STPBankAccount statusFromString:@"NEW"], STPBankAccountStatusNew);
+
+    XCTAssertEqual([STPBankAccount statusFromString:@"validated"], STPBankAccountStatusValidated);
+    XCTAssertEqual([STPBankAccount statusFromString:@"VALIDATED"], STPBankAccountStatusValidated);
+
+    XCTAssertEqual([STPBankAccount statusFromString:@"verified"], STPBankAccountStatusVerified);
+    XCTAssertEqual([STPBankAccount statusFromString:@"VERIFIED"], STPBankAccountStatusVerified);
+
+    XCTAssertEqual([STPBankAccount statusFromString:@"errored"], STPBankAccountStatusErrored);
+    XCTAssertEqual([STPBankAccount statusFromString:@"ERRORED"], STPBankAccountStatusErrored);
+
+    XCTAssertEqual([STPBankAccount statusFromString:@"garbage"], STPBankAccountStatusNew);
+    XCTAssertEqual([STPBankAccount statusFromString:@"GARBAGE"], STPBankAccountStatusNew);
+}
+
+- (void)testStringFromStatus {
+    NSArray<NSNumber *> *values = @[
+                                    @(STPBankAccountStatusNew),
+                                    @(STPBankAccountStatusValidated),
+                                    @(STPBankAccountStatusVerified),
+                                    @(STPBankAccountStatusErrored)
+                                    ];
+
+    for (NSNumber *statusNumber in values) {
+        STPBankAccountStatus status = (STPBankAccountStatus)[statusNumber integerValue];
+        NSString *string = [STPBankAccount stringFromStatus:status];
+
+        switch (status) {
+            case STPBankAccountStatusNew:
+                XCTAssertEqualObjects(string, @"new");
+                break;
+            case STPBankAccountStatusValidated:
+                XCTAssertEqualObjects(string, @"validated");
+                break;
+            case STPBankAccountStatusVerified:
+                XCTAssertEqualObjects(string, @"verified");
+                break;
+            case STPBankAccountStatusErrored:
+                XCTAssertEqualObjects(string, @"errored");
+                break;
+        }
+    }
+}
+
+#pragma mark - STPAPIResponseDecodable Tests
 
 - (NSDictionary *)completeAttributeDictionary {
     return @{
@@ -30,6 +89,8 @@
         @"fingerprint": @"something",
         @"currency": @"usd",
         @"status": @"new",
+        @"account_holder_name": @"John Doe",
+        @"account_holder_type": @"company",
     };
 }
 
@@ -44,7 +105,9 @@
     XCTAssertEqualObjects([bankAccountWithAttributes country], @"US", @"country is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes fingerprint], @"something", @"fingerprint is set correctly");
     XCTAssertEqualObjects([bankAccountWithAttributes currency], @"usd", @"currency is set correctly");
-    XCTAssertEqual(bankAccountWithAttributes.status, STPBankAccountStatusNew);
+    XCTAssertEqual([bankAccountWithAttributes status], STPBankAccountStatusNew);
+    XCTAssertEqualObjects([bankAccountWithAttributes accountHolderName], @"John Doe");
+    XCTAssertEqual([bankAccountWithAttributes accountHolderType], STPBankAccountHolderTypeCompany);
     
     NSDictionary *allResponseFields = bankAccountWithAttributes.allResponseFields;
     XCTAssertEqual(allResponseFields[@"foo"], @"bar");
@@ -76,6 +139,14 @@
 
     XCTAssertEqualObjects(bankAccount1, bankAccount1, @"bank account should equal itself");
     XCTAssertEqualObjects(bankAccount1, bankAccount2, @"bank account with equal data should be equal");
+}
+
+#pragma mark - Description Tests
+
+- (void)testDescriptionWorks {
+    STPBankAccount *bankAccount = [STPBankAccount decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    bankAccount.routingNumber = @"123456789";
+    XCTAssert(bankAccount.description);
 }
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "STPCard.h"
+#import "STPCard+Private.h"
 
 #import "NSDictionary+Stripe.h"
 #import "STPImageLibrary+Private.h"
@@ -46,6 +47,8 @@
     return self;
 }
 
+#pragma mark - STPCardBrand
+
 + (STPCardBrand)brandFromString:(NSString *)string {
     NSString *brand = [string lowercaseString];
     if ([brand isEqualToString:@"visa"]) {
@@ -84,18 +87,32 @@
     }
 }
 
-+ (STPCardFundingType)fundingFromString:(NSString *)string {
-    NSString *funding = [string lowercaseString];
-    if ([funding isEqualToString:@"credit"]) {
-        return STPCardFundingTypeCredit;
-    } else if ([funding isEqualToString:@"debit"]) {
-        return STPCardFundingTypeDebit;
-    } else if ([funding isEqualToString:@"prepaid"]) {
-        return STPCardFundingTypePrepaid;
-    } else {
-        return STPCardFundingTypeOther;
-    }
+#pragma mark - STPCardFundingType
+
++ (NSDictionary <NSString *, NSNumber *> *)stringToFundingMapping {
+    return @{
+             @"credit": @(STPCardFundingTypeCredit),
+             @"debit": @(STPCardFundingTypeDebit),
+             @"prepaid": @(STPCardFundingTypePrepaid),
+             };
 }
+
++ (STPCardFundingType)fundingFromString:(NSString *)string {
+    NSString *key = [string lowercaseString];
+    NSNumber *fundingNumber = [self stringToFundingMapping][key];
+
+    if (fundingNumber) {
+        return (STPCardFundingType)[fundingNumber integerValue];
+    }
+
+    return STPCardFundingTypeOther;
+}
+
++ (nullable NSString *)stringFromFunding:(STPCardFundingType)funding {
+    return [[[self stringToFundingMapping] allKeysForObject:@(funding)] firstObject];
+}
+
+#pragma mark -
 
 - (instancetype)init {
     self = [super init];
@@ -114,6 +131,8 @@
 - (BOOL)isApplePayCard {
     return [self.allResponseFields[@"tokenization_method"] isEqualToString:@"apple_pay"];
 }
+
+#pragma mark - Equality
 
 - (BOOL)isEqual:(id)other {
     return [self isEqualToCard:other];
@@ -135,6 +154,37 @@
     return [self.cardId isEqualToString:other.cardId];
 }
 
+#pragma mark - Description
+
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Identifier
+                       [NSString stringWithFormat:@"cardId = %@", self.cardId],
+
+                       // Basic card details
+                       [NSString stringWithFormat:@"brand = %@", [self.class stringFromBrand:self.brand]],
+                       [NSString stringWithFormat:@"last4 = %@", self.last4],
+                       [NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth],
+                       [NSString stringWithFormat:@"expYear = %lu", (unsigned long)self.expYear],
+                       [NSString stringWithFormat:@"funding = %@", ([self.class stringFromFunding:self.funding]) ?: @"unknown"],
+
+                       // Additional card details (alphabetical)
+                       [NSString stringWithFormat:@"country = %@", self.country],
+                       [NSString stringWithFormat:@"currency = %@", self.currency],
+                       [NSString stringWithFormat:@"dynamicLast4 = %@", self.dynamicLast4],
+                       [NSString stringWithFormat:@"isApplePayCard = %@", (self.isApplePayCard) ? @"YES" : @"NO"],
+
+                       // Cardholder details
+                       [NSString stringWithFormat:@"name = %@", (self.name) ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"address = %@", (self.address) ? @"<redacted>" : nil],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 - (STPAddress *)address {
     if (self.name || self.addressLine1 || self.addressLine2 || self.addressZip || self.addressCity || self.addressState || self.addressCountry) {
         STPAddress *address = [STPAddress new];
@@ -150,7 +200,8 @@
     return nil;
 }
 
-#pragma mark STPAPIResponseDecodable
+#pragma mark - STPAPIResponseDecodable
+
 + (NSArray *)requiredFields {
     return @[@"id", @"last4", @"brand", @"exp_month", @"exp_year"];
 }
@@ -185,7 +236,7 @@
     return card;
 }
 
-#pragma mark - STPSource
+#pragma mark - STPSourceProtocol
 
 - (NSString *)stripeID {
     return self.cardId;

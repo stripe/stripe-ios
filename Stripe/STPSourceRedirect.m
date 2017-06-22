@@ -6,8 +6,10 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-#import "NSDictionary+Stripe.h"
 #import "STPSourceRedirect.h"
+#import "STPSourceRedirect+Private.h"
+
+#import "NSDictionary+Stripe.h"
 
 @interface STPSourceRedirect ()
 
@@ -20,20 +22,48 @@
 
 @implementation STPSourceRedirect
 
-+ (STPSourceRedirectStatus)statusFromString:(NSString *)string {
-    NSString *status = [string lowercaseString];
-    if ([status isEqualToString:@"pending"]) {
-        return STPSourceRedirectStatusPending;
-    } else if ([status isEqualToString:@"succeeded"]) {
-        return STPSourceRedirectStatusSucceeded;
-    } else if ([status isEqualToString:@"failed"]) {
-        return STPSourceRedirectStatusFailed;
-    } else {
-        return STPSourceRedirectStatusUnknown;
-    }
+#pragma mark - STPSourceRedirectStatus
+
++ (NSDictionary <NSString *, NSNumber *> *)stringToStatusMapping {
+    return @{
+             @"pending": @(STPSourceRedirectStatusPending),
+             @"succeeded": @(STPSourceRedirectStatusSucceeded),
+             @"failed": @(STPSourceRedirectStatusFailed),
+             };
 }
 
-#pragma mark STPAPIResponseDecodable
++ (STPSourceRedirectStatus)statusFromString:(NSString *)string {
+    NSString *key = [string lowercaseString];
+    NSNumber *statusNumber = [self stringToStatusMapping][key];
+
+    if (statusNumber) {
+        return (STPSourceRedirectStatus)[statusNumber integerValue];
+    }
+
+    return STPSourceRedirectStatusUnknown;
+}
+
++ (nullable NSString *)stringFromStatus:(STPSourceRedirectStatus)status {
+    return [[[self stringToStatusMapping] allKeysForObject:@(status)] firstObject];
+}
+
+#pragma mark - Description
+
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Details (alphabetical)
+                       [NSString stringWithFormat:@"returnURL = %@", self.returnURL],
+                       [NSString stringWithFormat:@"status = %@", ([self.class stringFromStatus:self.status]) ?: @"unknown"],
+                       [NSString stringWithFormat:@"url = %@", self.url],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPAPIResponseDecodable
 
 + (NSArray *)requiredFields {
     return @[@"return_url", @"status", @"url"];

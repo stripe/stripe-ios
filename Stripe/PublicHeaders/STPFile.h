@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, STPFilePurpose) {
 /**
  * Returns the string value for a purpose.
  */
-+ (NSString *)stringFromPurpose:(STPFilePurpose)purpose;
++ (nullable NSString *)stringFromPurpose:(STPFilePurpose)purpose;
 
 @end
 
