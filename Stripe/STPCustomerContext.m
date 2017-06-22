@@ -8,7 +8,6 @@
 
 #import "STPCustomerContext.h"
 
-#import "StripeError+Private.h"
 #import "STPAPIClient+Private.h"
 #import "STPCustomer.h"
 #import "STPEphemeralKey.h"
@@ -29,37 +28,20 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 
 @implementation STPCustomerContext
 
-+ (instancetype)sharedInstance {
-    static STPCustomerContext *sharedInstance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] initWithKeyManager:nil];
-    });
-    return sharedInstance;
-}
-
 - (instancetype)initWithKeyProvider:(nonnull id<STPEphemeralKeyProvider>)keyProvider {
     STPEphemeralKeyManager *keyManager = [[STPEphemeralKeyManager alloc] initWithKeyProvider:keyProvider
                                                                                   apiVersion:[STPAPIClient apiVersion]];
     return [self initWithKeyManager:keyManager];
 }
 
-- (instancetype)initWithKeyManager:(STPEphemeralKeyManager *)keyManager {
+- (instancetype)initWithKeyManager:(nonnull STPEphemeralKeyManager *)keyManager {
     self = [self init];
     if (self) {
         _cachedCustomerMaxAge = DefaultCachedCustomerMaxAge;
         _keyManager = keyManager;
-        if (keyManager) {
-            [self retrieveCustomer:nil];
-        }
+        [self retrieveCustomer:nil];
     }
     return self;
-}
-
-- (void)setKeyProvider:(id<STPEphemeralKeyProvider>)keyProvider {
-    _keyManager = [[STPEphemeralKeyManager alloc] initWithKeyProvider:keyProvider
-                                                           apiVersion:[STPAPIClient apiVersion]];
-    [self retrieveCustomer:nil];
 }
 
 - (void)setCustomer:(STPCustomer *)customer {
@@ -82,12 +64,6 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
                 completion(self.customer, nil);
             });
         }
-        return;
-    }
-    if (!self.keyManager) {
-        stpDispatchToMainThreadIfNecessary(^{
-            completion(nil, [NSError stp_customerContextMissingKeyProviderError]);
-        });
         return;
     }
     [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
@@ -113,12 +89,6 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 }
 
 - (void)attachSourceToCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
-    if (!self.keyManager) {
-        stpDispatchToMainThreadIfNecessary(^{
-            completion([NSError stp_customerContextMissingKeyProviderError]);
-        });
-        return;
-    }
     [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
         if (retrieveKeyError) {
             if (completion) {
@@ -142,12 +112,6 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
 }
 
 - (void)selectDefaultCustomerSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
-    if (!self.keyManager) {
-        stpDispatchToMainThreadIfNecessary(^{
-            completion([NSError stp_customerContextMissingKeyProviderError]);
-        });
-        return;
-    }
     [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
         if (retrieveKeyError) {
             if (completion) {

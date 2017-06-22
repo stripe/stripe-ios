@@ -25,12 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma clang diagnostic pop
 
 /**
- This is a convenience singleton CustomerContext. Before using the singleton
- instance, you'll need to give it a key provider using `setKeyProvider`.
- */
-+ (instancetype)sharedInstance;
-
-/**
  Whenever the customer context retrieves a customer, it will return a cached
  value if it was retrieved less than this number of seconds ago.
  The default value is 60 seconds.
@@ -48,19 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
  @return the newly-instantiated customer context.
  */
 - (instancetype)initWithKeyProvider:(id<STPEphemeralKeyProvider>)keyProvider;
-
-/**
- Sets the CustomerContext's key provider. If you're using the singleton
- CustomerContext instance, be sure to set its keyProvider using this method.
- Upon setting a keyProvider, the customer context will request a new ephemeral key
- from your backend, and use this key to prefetch the Customer specified in
- the key. Subsequent customer retrievals (e.g. by `STPPaymentContext` or
- `STPPaymentMethodsViewController) will return the prefetched customer immediately
- if its age does not exceed `cachedCustomerMaxAge`.
-
- @param keyProvider  The key provider the customer context will use.
- */
-- (void)setKeyProvider:(id<STPEphemeralKeyProvider>)keyProvider;
 
 @end
 
