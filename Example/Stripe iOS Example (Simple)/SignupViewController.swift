@@ -28,7 +28,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
 
         self.view.backgroundColor = Settings.shared.theme.primaryBackgroundColor
-        self.navigationItem.title = "Create Account"
+        self.navigationItem.title = "Signup"
 
         self.emailField.placeholder = "Email"
         self.emailField.autocapitalizationType = .none
@@ -43,7 +43,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         self.passwordField.delegate = self
         self.view.addSubview(self.passwordField)
         
-        self.signupButton.setTitle("Create Account", for: UIControlState())
+        self.signupButton.setTitle("Create account", for: UIControlState())
         self.signupButton.addTarget(self, action: #selector(createAccount), for: .touchUpInside)
         self.view.addSubview(self.signupButton)
 

@@ -29,7 +29,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
 
         self.view.backgroundColor = Settings.shared.theme.primaryBackgroundColor
-        self.navigationItem.title = "Log In"
+        self.navigationItem.title = "Login"
 
         self.emailField.placeholder = "Email"
         self.emailField.autocapitalizationType = .none
@@ -44,7 +44,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.passwordField.delegate = self
         self.view.addSubview(self.passwordField)
 
-        self.loginButton.setTitle("Login", for: UIControlState())
+        self.loginButton.setTitle("Log in", for: UIControlState())
         self.loginButton.addTarget(self, action: #selector(login), for: .touchUpInside)
         self.view.addSubview(loginButton)
 
@@ -58,7 +58,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.updateLoginButton()
         self.emailField.becomeFirstResponder()
     }
 
@@ -106,6 +105,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 } else {
                     self.emailField.text = nil
                     self.passwordField.text = nil
+                    self.updateLoginButton()
                     let rootVC = BrowseProductsViewController()
                     let navController = UINavigationController(rootViewController: rootVC)
                     self.present(navController, animated: true, completion: nil)
