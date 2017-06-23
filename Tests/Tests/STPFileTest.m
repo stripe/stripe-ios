@@ -64,6 +64,16 @@
     }
 }
 
+#pragma mark - Equality Tests
+
+- (void)testFileEquals {
+    STPFile *file1 = [STPFile decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPFile *file2 = [STPFile decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+
+    XCTAssertEqualObjects(file1, file1, @"file should equal itself");
+    XCTAssertEqualObjects(file1, file2, @"file with equal data should be equal");
+}
+
 #pragma mark - STPAPIResponseDecodable Tests
 
 - (NSDictionary *)completeAttributeDictionary {
@@ -100,16 +110,6 @@
     apiResponse[@"id"] = nil;
     STPFile *fileWithAttributes = [STPFile decodedObjectFromAPIResponse:apiResponse];
     XCTAssertNil(fileWithAttributes);
-}
-
-#pragma mark - Equality Tests
-
-- (void)testFileEquals {
-    STPFile *file1 = [STPFile decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
-    STPFile *file2 = [STPFile decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
-    
-    XCTAssertEqualObjects(file1, file1, @"file should equal itself");
-    XCTAssertEqualObjects(file1, file2, @"file with equal data should be equal");
 }
 
 @end

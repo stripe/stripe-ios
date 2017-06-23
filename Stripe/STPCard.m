@@ -29,24 +29,6 @@
 
 @dynamic number, cvc, expMonth, expYear, currency, name, address, addressLine1, addressLine2, addressCity, addressState, addressZip, addressCountry;
 
-- (instancetype)initWithID:(NSString *)stripeID
-                     brand:(STPCardBrand)brand
-                     last4:(NSString *)last4
-                  expMonth:(NSUInteger)expMonth
-                   expYear:(NSUInteger)expYear
-                   funding:(STPCardFundingType)funding {
-    self = [super init];
-    if (self) {
-        _cardId = stripeID;
-        _brand = brand;
-        _last4 = last4;
-        self.expMonth = expMonth;
-        self.expYear = expYear;
-        _funding = funding;
-    }
-    return self;
-}
-
 #pragma mark - STPCardBrand
 
 + (STPCardBrand)brandFromString:(NSString *)string {
@@ -114,6 +96,24 @@
 
 #pragma mark -
 
+- (instancetype)initWithID:(NSString *)stripeID
+                     brand:(STPCardBrand)brand
+                     last4:(NSString *)last4
+                  expMonth:(NSUInteger)expMonth
+                   expYear:(NSUInteger)expYear
+                   funding:(STPCardFundingType)funding {
+    self = [super init];
+    if (self) {
+        _cardId = stripeID;
+        _brand = brand;
+        _last4 = last4;
+        self.expMonth = expMonth;
+        self.expYear = expYear;
+        _funding = funding;
+    }
+    return self;
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -130,6 +130,21 @@
 
 - (BOOL)isApplePayCard {
     return [self.allResponseFields[@"tokenization_method"] isEqualToString:@"apple_pay"];
+}
+
+- (STPAddress *)address {
+    if (self.name || self.addressLine1 || self.addressLine2 || self.addressZip || self.addressCity || self.addressState || self.addressCountry) {
+        STPAddress *address = [STPAddress new];
+        address.name = self.name;
+        address.line1 = self.addressLine1;
+        address.line2 = self.addressLine2;
+        address.postalCode = self.addressZip;
+        address.city = self.addressCity;
+        address.state = self.addressState;
+        address.country = self.addressCountry;
+        return address;
+    }
+    return nil;
 }
 
 #pragma mark - Equality
@@ -183,21 +198,6 @@
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
-}
-
-- (STPAddress *)address {
-    if (self.name || self.addressLine1 || self.addressLine2 || self.addressZip || self.addressCity || self.addressState || self.addressCountry) {
-        STPAddress *address = [STPAddress new];
-        address.name = self.name;
-        address.line1 = self.addressLine1;
-        address.line2 = self.addressLine2;
-        address.postalCode = self.addressZip;
-        address.city = self.addressCity;
-        address.state = self.addressState;
-        address.country = self.addressCountry;
-        return address;
-    }
-    return nil;
 }
 
 #pragma mark - STPAPIResponseDecodable
