@@ -162,7 +162,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     [STPAPIRequest<STPToken *> postWithAPIClient:self
                                         endpoint:tokenEndpoint
                                       parameters:parameters
-                                      serializer:[STPToken new]
+                                    deserializer:[STPToken new]
                                       completion:^(STPToken *object, NSHTTPURLResponse *response, NSError *error) {
                                           NSDate *end = [NSDate date];
                                           [[STPAnalyticsClient sharedClient] logRUMWithToken:object configuration:self.configuration response:response start:start end:end];
@@ -420,7 +420,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     [STPAPIRequest<STPSource *> postWithAPIClient:self
                                          endpoint:sourcesEndpoint
                                        parameters:params
-                                       serializer:[STPSource new]
+                                     deserializer:[STPSource new]
                                        completion:^(STPSource *object, __unused NSHTTPURLResponse *response, NSError *error) {
                                            completion(object, error);
                                        }];
@@ -442,7 +442,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     return [STPAPIRequest<STPSource *> getWithAPIClient:self
                                                endpoint:endpoint
                                              parameters:parameters
-                                             serializer:[STPSource new]
+                                           deserializer:[STPSource new]
                                              completion:completion];
 }
 
@@ -486,7 +486,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     [STPAPIRequest<STPCustomer *> getWithAPIClient:client
                                           endpoint:endpoint
                                         parameters:nil
-                                        serializer:[STPCustomer new]
+                                      deserializer:[STPCustomer new]
                                         completion:^(STPCustomer *object, __unused NSHTTPURLResponse *response, NSError *error) {
                                             completion(object, error);
                                         }];
@@ -500,7 +500,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     [STPAPIRequest<STPCustomer *> postWithAPIClient:client
                                            endpoint:endpoint
                                          parameters:parameters
-                                         serializer:[STPCustomer new]
+                                       deserializer:[STPCustomer new]
                                          completion:^(STPCustomer *object, __unused NSHTTPURLResponse *response, NSError *error) {
                                              completion(object, error);
                                          }];
@@ -514,7 +514,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
     [STPAPIRequest<STPSourceProtocol> postWithAPIClient:client
                                                endpoint:endpoint
                                              parameters:@{@"source": sourceID}
-                                            serializers:@[[STPCard new], [STPSource new]]
+                                          deserializers:@[[STPCard new], [STPSource new]]
                                              completion:^(id object, __unused NSHTTPURLResponse *response, NSError *error) {
                                                  completion(object, error);
                                              }];

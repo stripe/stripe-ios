@@ -23,19 +23,19 @@
 + (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
                                    endpoint:(NSString *)endpoint
                                  parameters:(NSDictionary *)parameters
-                                 serializer:(id<STPAPIResponseDecodable>)serializer
+                               deserializer:(id<STPAPIResponseDecodable>)deserializer
                                  completion:(STPAPIResponseBlock)completion {
     return [self postWithAPIClient:apiClient
                           endpoint:endpoint
                         parameters:parameters
-                       serializers:@[serializer]
+                     deserializers:@[deserializer]
                         completion:completion];
 }
 
 + (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
                                    endpoint:(NSString *)endpoint
                                  parameters:(NSDictionary *)parameters
-                                serializers:(NSArray<id<STPAPIResponseDecodable>>*)serializers
+                              deserializers:(NSArray<id<STPAPIResponseDecodable>>*)deserializers
                                  completion:(STPAPIResponseBlock)completion {
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
@@ -47,7 +47,7 @@
         [[self class] parseResponse:response
                                body:body
                               error:error
-                         serializers:serializers
+                      deserializers:deserializers
                          completion:completion];
     }];
     [task resume];
@@ -57,7 +57,7 @@
 + (NSURLSessionDataTask *)getWithAPIClient:(STPAPIClient *)apiClient
                                   endpoint:(NSString *)endpoint
                                 parameters:(NSDictionary *)parameters
-                                serializer:(id<STPAPIResponseDecodable>)serializer
+                              deserializer:(id<STPAPIResponseDecodable>)deserializer
                                 completion:(STPAPIResponseBlock)completion {
 
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
@@ -69,7 +69,7 @@
         [[self class] parseResponse:response
                                body:body
                               error:error
-                        serializers:@[serializer]
+                      deserializers:@[deserializer]
                          completion:completion];
     }];
     [task resume];
@@ -79,7 +79,7 @@
 + (void)parseResponse:(NSURLResponse *)response
                  body:(NSData *)body
                 error:(NSError *)error
-          serializers:(NSArray<id<STPAPIResponseDecodable>>*)serializers
+        deserializers:(NSArray<id<STPAPIResponseDecodable>>*)deserializers
            completion:(STPAPIResponseBlock)completion {
     id<STPAPIResponseDecodable> responseObject;
     NSError *returnedError;
@@ -88,26 +88,26 @@
         httpResponse = (NSHTTPURLResponse *)response;
     }
 
-    if (serializers.count == 0) {
+    if (deserializers.count == 0) {
         returnedError = [NSError stp_genericFailedToParseResponseError];
     } else {
         NSDictionary *jsonDictionary = body ? [NSJSONSerialization JSONObjectWithData:body options:(NSJSONReadingOptions)kNilOptions error:NULL] : nil;
         NSString *object = jsonDictionary[@"object"];
-        Class serializerClass;
-        if (serializers.count == 1) {
-            serializerClass = [serializers.firstObject class];
+        Class deserializerClass;
+        if (deserializers.count == 1) {
+            deserializerClass = [deserializers.firstObject class];
         } else {
-            for (id<STPAPIResponseDecodable> serializer in serializers) {
-                if ([serializer respondsToSelector:@selector(stripeObject)]
-                    && [[(id<STPInternalAPIResponseDecodable>)serializer stripeObject] isEqualToString:object]) {
-                    serializerClass = [serializer class];
+            for (id<STPAPIResponseDecodable> deserializer in deserializers) {
+                if ([deserializer respondsToSelector:@selector(stripeObject)]
+                    && [[(id<STPInternalAPIResponseDecodable>)deserializer stripeObject] isEqualToString:object]) {
+                    deserializerClass = [deserializer class];
                 }
             }
         }
-        if (!serializerClass) {
+        if (!deserializerClass) {
             returnedError = [NSError stp_genericFailedToParseResponseError];
         } else {
-            responseObject = [serializerClass decodedObjectFromAPIResponse:jsonDictionary];
+            responseObject = [deserializerClass decodedObjectFromAPIResponse:jsonDictionary];
             returnedError = [NSError stp_errorFromStripeResponse:jsonDictionary] ?: error;
         }
         if ((!responseObject || ![response isKindOfClass:[NSHTTPURLResponse class]]) && !returnedError) {

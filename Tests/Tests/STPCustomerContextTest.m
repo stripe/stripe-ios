@@ -136,7 +136,28 @@
                          expectedCount:2];
     id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
-    sut.customerRetrievedDate = [NSDate dateWithTimeIntervalSinceNow:-(sut.cachedCustomerMaxAge+10)];
+    sut.customerRetrievedDate = [NSDate dateWithTimeIntervalSinceNow:-70];
+    XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomer"];
+    [sut retrieveCustomer:^(STPCustomer *customer, __unused NSError *error) {
+        XCTAssertEqualObjects(customer, expectedCustomer);
+        [exp fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testRetrieveCustomerDoesNotUseCachedCustomerAfterClearingCache {
+    STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
+    STPCustomer *expectedCustomer = [STPFixtures customerWithSingleCardTokenSource];
+    // apiClient.retrieveCustomer should be called twice:
+    // - when the context is initialized,
+    // - when sut.retrieveCustomer is called below, as the cached customer has been cleared
+    [self stubRetrieveCustomerUsingKey:customerKey
+                     returningCustomer:expectedCustomer
+                         expectedCount:2];
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
+    [sut clearCachedCustomer];
     XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomer"];
     [sut retrieveCustomer:^(STPCustomer *customer, __unused NSError *error) {
         XCTAssertEqualObjects(customer, expectedCustomer);
