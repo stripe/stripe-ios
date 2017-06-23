@@ -56,6 +56,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.view.addSubview(self.activityIndicator)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.updateLoginButton()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.emailField.becomeFirstResponder()
@@ -105,7 +110,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 } else {
                     self.emailField.text = nil
                     self.passwordField.text = nil
-                    self.updateLoginButton()
                     let rootVC = BrowseProductsViewController()
                     let navController = UINavigationController(rootViewController: rootVC)
                     self.present(navController, animated: true, completion: nil)
