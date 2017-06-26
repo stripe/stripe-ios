@@ -12,7 +12,7 @@ import Alamofire
 
 class MyAPIClient: NSObject, STPBackendAPIAdapter {
 
-    static let sharedClient = MyAPIClient()
+    static let shared = MyAPIClient()
     var baseURLString: String? = nil
     var baseURL: URL {
         if let urlString = self.baseURLString, let url = URL(string: urlString) {
@@ -22,6 +22,69 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
         }
     }
 
+    func parseError(response: Alamofire.DataResponse<String>) -> NSError? {
+        if let data = response.data,
+            let responseString = String(data: data, encoding: String.Encoding.utf8) {
+            return NSError(domain: "MyAPIClientError",
+                           code: 0,
+                           userInfo: [NSLocalizedDescriptionKey : responseString])
+        }
+        return nil
+    }
+    
+    func login(email: String, password: String, completion: @escaping STPErrorBlock) {
+        let url = self.baseURL.appendingPathComponent("customer/login")
+        Alamofire.request(url, method: .post, parameters: [
+            "email": email,
+            "password": password])
+            .validate(statusCode:200..<300)
+            .responseString { response in
+                switch response.result {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
+                    if let responseError = self.parseError(response: response) {
+                        completion(responseError)
+                    } else {
+                        completion(error)
+                    }
+                }
+        }
+    }
+
+    func logout(completion: @escaping STPErrorBlock) {
+        let url = self.baseURL.appendingPathComponent("customer/logout")
+        Alamofire.request(url)
+            .validate(statusCode: 200..<300)
+            .responseString { response in
+                switch response.result {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
+                    completion(error)
+                }
+        }
+    }
+
+    func createUser(email: String, password: String, completion: @escaping STPErrorBlock) {
+        let url = self.baseURL.appendingPathComponent("customer")
+        let parameters: [String: String] = ["email": email, "password": password]
+        Alamofire.request(url, method: .post, parameters: parameters)
+            .validate(statusCode:200..<300)
+            .responseString { response in
+                switch response.result {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
+                    if let responseError = self.parseError(response: response) {
+                        completion(responseError)
+                    } else {
+                        completion(error)
+                    }
+                }
+        }
+    }
+    
     func completeCharge(_ result: STPPaymentResult, amount: Int, completion: @escaping STPErrorBlock) {
         let url = self.baseURL.appendingPathComponent("charge")
         Alamofire.request(url, method: .post, parameters: [

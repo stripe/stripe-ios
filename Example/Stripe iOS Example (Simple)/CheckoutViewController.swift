@@ -10,25 +10,6 @@ import UIKit
 import Stripe
 
 class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
-
-    // 1) To get started with this demo, first head to https://dashboard.stripe.com/account/apikeys
-    // and copy your "Test Publishable Key" (it looks like pk_test_abcdef) into the line below.
-    let stripePublishableKey = ""
-    
-    // 2) Next, optionally, to have this demo save your user's payment details, head to
-    // https://github.com/stripe/example-ios-backend , click "Deploy to Heroku", and follow
-    // the instructions (don't worry, it's free). Replace nil on the line below with your
-    // Heroku URL (it looks like https://blazing-sunrise-1234.herokuapp.com ).
-    let backendBaseURL: String? = nil
-
-    // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/mobile/apple-pay
-    // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
-    let appleMerchantID: String? = nil
-    
-    // These values will be shown to the user when they purchase with Apple Pay.
-    let companyName = "Emoji Apparel"
-    let paymentCurrency = "usd"
-
     let paymentContext: STPPaymentContext
 
     let theme: STPTheme
@@ -60,36 +41,29 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     }
 
     init(product: String, price: Int, settings: Settings) {
-
-        let stripePublishableKey = self.stripePublishableKey
-        let backendBaseURL = self.backendBaseURL
-
-        assert(stripePublishableKey.hasPrefix("pk_"), "You must set your Stripe publishable key at the top of CheckoutViewController.swift to run this app.")
-        assert(backendBaseURL != nil, "You must set your backend base url at the top of CheckoutViewController.swift to run this app.")
-
         self.product = product
         self.productImage.text = product
         self.theme = settings.theme
-        MyAPIClient.sharedClient.baseURLString = self.backendBaseURL
+        MyAPIClient.shared.baseURLString =  Config.shared.backendBaseURL
 
         // This code is included here for the sake of readability, but in your application you should set up your configuration and theme earlier, preferably in your App Delegate.
         let config = STPPaymentConfiguration.shared()
-        config.publishableKey = self.stripePublishableKey
-        config.appleMerchantIdentifier = self.appleMerchantID
-        config.companyName = self.companyName
+        config.publishableKey = Config.shared.stripePublishableKey
+        config.appleMerchantIdentifier = Config.shared.appleMerchantID
+        config.companyName = Config.shared.companyName
         config.requiredBillingAddressFields = settings.requiredBillingAddressFields
         config.requiredShippingAddressFields = settings.requiredShippingAddressFields
         config.shippingType = settings.shippingType
         config.additionalPaymentMethods = settings.additionalPaymentMethods
         config.smsAutofillDisabled = !settings.smsAutofillEnabled
         
-        let paymentContext = STPPaymentContext(apiAdapter: MyAPIClient.sharedClient,
+        let paymentContext = STPPaymentContext(apiAdapter: MyAPIClient.shared,
                                                configuration: config,
                                                theme: settings.theme)
         let userInformation = STPUserInformation()
         paymentContext.prefilledInformation = userInformation
         paymentContext.paymentAmount = price
-        paymentContext.paymentCurrency = self.paymentCurrency
+        paymentContext.paymentCurrency =  Config.shared.paymentCurrency
         self.paymentContext = paymentContext
 
         self.paymentRow = CheckoutRowView(title: "Payment", detail: "Select Payment",
@@ -106,7 +80,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
                                         theme: settings.theme)
         self.buyButton = BuyButton(enabled: true, theme: settings.theme)
         var localeComponents: [String: String] = [
-            NSLocale.Key.currencyCode.rawValue: self.paymentCurrency,
+            NSLocale.Key.currencyCode.rawValue:  Config.shared.paymentCurrency,
         ]
         localeComponents[NSLocale.Key.languageCode.rawValue] = NSLocale.preferredLanguages.first
         let localeID = NSLocale.localeIdentifier(fromComponents: localeComponents)
@@ -175,7 +149,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     // MARK: STPPaymentContextDelegate
     
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
-        MyAPIClient.sharedClient.completeCharge(paymentResult, amount: self.paymentContext.paymentAmount,
+        MyAPIClient.shared.completeCharge(paymentResult, amount: self.paymentContext.paymentAmount,
                                                 completion: completion)
     }
     

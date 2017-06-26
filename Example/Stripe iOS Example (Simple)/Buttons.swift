@@ -19,7 +19,7 @@ class HighlightingButton: UIButton {
 
     override var isHighlighted: Bool {
         didSet {
-            if isHighlighted {
+            if self.isHighlighted {
                 self.backgroundColor = self.highlightColor
             } else {
                 self.backgroundColor = UIColor.clear
@@ -34,7 +34,7 @@ class BuyButton: HighlightingButton {
 
     override var isEnabled: Bool {
         didSet {
-            let color = isEnabled ? enabledColor : disabledColor
+            let color = self.isEnabled ? self.enabledColor : self.disabledColor
             self.setTitleColor(color, for: UIControlState())
             self.layer.borderColor = color.cgColor
             self.highlightColor = color.withAlphaComponent(0.5)

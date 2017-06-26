@@ -14,7 +14,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        let rootVC = BrowseProductsViewController()
+        let stripePublishableKey = Config.shared.stripePublishableKey
+        let backendBaseURL = Config.shared.backendBaseURL
+
+        assert(stripePublishableKey.hasPrefix("pk_"), "You must set your Stripe publishable key in Config.swift to run this app.")
+        assert(backendBaseURL != nil, "You must set your backend base url in Config.swift to run this app.")
+
+        MyAPIClient.shared.baseURLString = Config.shared.backendBaseURL
+
+        let rootVC = LoginViewController()
         let navigationController = UINavigationController(rootViewController: rootVC)
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.rootViewController = navigationController;

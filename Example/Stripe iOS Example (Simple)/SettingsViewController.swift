@@ -9,33 +9,35 @@
 import UIKit
 import Stripe
 
-struct Settings {
-    let theme: STPTheme
-    let additionalPaymentMethods: STPPaymentMethodType
-    let requiredBillingAddressFields: STPBillingAddressFields
-    let requiredShippingAddressFields: PKAddressField
-    let shippingType: STPShippingType
-    let smsAutofillEnabled: Bool
+class Settings {
+    static let shared = Settings()
+
+    var theme: STPTheme = STPTheme.default()
+    var additionalPaymentMethods: STPPaymentMethodType = .all
+    var requiredBillingAddressFields: STPBillingAddressFields = .none
+    var requiredShippingAddressFields: PKAddressField = []
+    var shippingType: STPShippingType = .shipping
+    var smsAutofillEnabled: Bool = false
 }
 
 class SettingsViewController: UITableViewController {
-    var settings: Settings {
-        return Settings(theme: self.theme.stpTheme,
-                        additionalPaymentMethods: self.applePay.enabled ? .all : STPPaymentMethodType(),
-                        requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
-                        requiredShippingAddressFields: self.requiredShippingAddressFields.pkAddressFields,
-                        shippingType: self.shippingType.stpShippingType,
-                        smsAutofillEnabled: self.smsAutofill.enabled)
+    func updateSettings() {
+        Settings.shared.theme = self.theme.stpTheme
+        Settings.shared.additionalPaymentMethods = self.applePay.enabled ? .all : STPPaymentMethodType()
+        Settings.shared.requiredBillingAddressFields = self.requiredBillingAddressFields.stpBillingAddressFields
+        Settings.shared.requiredShippingAddressFields = self.requiredShippingAddressFields.pkAddressFields
+        Settings.shared.shippingType = self.shippingType.stpShippingType
+        Settings.shared.smsAutofillEnabled = self.smsAutofill.enabled
     }
 
-    private var theme: Theme = .Default
-    private var applePay: Switch = .Enabled
-    private var requiredBillingAddressFields: RequiredBillingAddressFields = .None
-    private var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
-    private var shippingType: ShippingType = .Shipping
-    private var smsAutofill: Switch = .Enabled
+    var theme: Theme = .Default
+    var applePay: Switch = .Enabled
+    var requiredBillingAddressFields: RequiredBillingAddressFields = .None
+    var requiredShippingAddressFields: RequiredShippingAddressFields = .PostalAddressPhone
+    var shippingType: ShippingType = .Shipping
+    var smsAutofill: Switch = .Enabled
 
-    fileprivate enum Section: String {
+    enum Section: String {
         case Theme = "Theme"
         case ApplePay = "Apple Pay"
         case RequiredBillingAddressFields = "Required Billing Address Fields"
@@ -57,7 +59,7 @@ class SettingsViewController: UITableViewController {
         }
     }
 
-    fileprivate enum Theme: String {
+    enum Theme: String {
         case Default = "Default"
         case CustomLight = "Custom – Light"
         case CustomDark = "Custom – Dark"
@@ -100,7 +102,7 @@ class SettingsViewController: UITableViewController {
         }
     }
 
-    fileprivate enum Switch: String {
+    enum Switch: String {
         case Enabled = "Enabled"
         case Disabled = "Disabled"
 
@@ -113,7 +115,7 @@ class SettingsViewController: UITableViewController {
         }
     }
 
-    fileprivate enum RequiredBillingAddressFields: String {
+    enum RequiredBillingAddressFields: String {
         case None = "None"
         case Zip = "Zip"
         case Full = "Full"
@@ -135,7 +137,7 @@ class SettingsViewController: UITableViewController {
         }
     }
 
-    private enum RequiredShippingAddressFields: String {
+    enum RequiredShippingAddressFields: String {
         case None = "None"
         case Email = "Email"
         case PostalAddressPhone = "(PostalAddress|Phone)"
@@ -160,7 +162,7 @@ class SettingsViewController: UITableViewController {
         }
     }
 
-    private enum ShippingType: String {
+    enum ShippingType: String {
         case Shipping = "Shipping"
         case Delivery = "Delivery"
 
@@ -186,11 +188,6 @@ class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Settings"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismiss as (Void) -> Void))
-    }
-
-    func dismiss() {
-        self.dismiss(animated: true, completion: nil)
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -263,11 +260,13 @@ class SettingsViewController: UITableViewController {
         case .SMSAutofill:
             self.smsAutofill = Switch(row: (indexPath as NSIndexPath).row)
         case .Session:
-            let cookieStore = HTTPCookieStorage.shared
-            for cookie in cookieStore.cookies ?? [] {
-                cookieStore.deleteCookie(cookie)
+            MyAPIClient.shared.logout { error in
+                if error == nil {
+                    self.navigationController?.dismiss(animated: true, completion: nil)
+                }
             }
         }
+        self.updateSettings()
         tableView.reloadSections(IndexSet(integer: (indexPath as NSIndexPath).section), with: .automatic)
     }
 }
