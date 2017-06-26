@@ -10,7 +10,7 @@ import Foundation
 import Stripe
 import Alamofire
 
-class MyAPIClient: NSObject, STPBackendAPIAdapter {
+class MyAPIClient: NSObject, STPEphemeralKeyProvider {
 
     static let sharedClient = MyAPIClient()
     var baseURLString: String? = nil
@@ -38,62 +38,21 @@ class MyAPIClient: NSObject, STPBackendAPIAdapter {
                 }
         }
     }
-    
-    @objc func retrieveCustomer(_ completion: @escaping STPCustomerCompletionBlock) {
-        let url = self.baseURL.appendingPathComponent("customer")
-        Alamofire.request(url)
+
+    func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock) {
+        let url = self.baseURL.appendingPathComponent("ephemeral_keys")
+        Alamofire.request(url, method: .post, parameters: [
+            "api_version": apiVersion
+            ])
             .validate(statusCode: 200..<300)
-            .responseJSON { response in
-                switch response.result {
-                case .success(let result):
-                    if let customer = STPCustomer.decodedObject(fromAPIResponse: result as? [String: AnyObject]) {
-                        completion(customer, nil)
-                    } else {
-                        completion(nil, NSError.customerDecodingError)
-                    }
+            .responseJSON { responseJSON in
+                switch responseJSON.result {
+                case .success(let json):
+                    completion(json as? [String: AnyObject], nil)
                 case .failure(let error):
                     completion(nil, error)
                 }
         }
     }
-    
-    @objc func selectDefaultCustomerSource(_ source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
-        let url = self.baseURL.appendingPathComponent("customer/default_source")
-        Alamofire.request(url, method: .post, parameters: [
-            "source": source.stripeID,
-            ])
-            .validate(statusCode: 200..<300)
-            .responseString { response in
-                switch response.result {
-                case .success:
-                    completion(nil)
-                case .failure(let error):
-                    completion(error)
-                }
-        }
-    }
-    
-    @objc func attachSource(toCustomer source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
-        let url = self.baseURL.appendingPathComponent("customer/sources")
-        Alamofire.request(url, method: .post, parameters: [
-            "source": source.stripeID,
-            ])
-            .validate(statusCode: 200..<300)
-            .responseString { response in
-                switch response.result {
-                case .success:
-                    completion(nil)
-                case .failure(let error):
-                    completion(error)
-                }
-        }
-    }
-}
 
-extension NSError {
-    static var customerDecodingError: NSError {
-        return NSError(domain: StripeDomain, code: 50, userInfo: [
-            NSLocalizedDescriptionKey: "Failed to decode the Stripe customer. Have you modified the example backend?"
-            ])
-    }
 }

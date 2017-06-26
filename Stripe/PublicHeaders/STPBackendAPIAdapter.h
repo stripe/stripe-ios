@@ -19,16 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPCard, STPToken;
 
 /**
- *  Call this block after you're done fetching a customer on your server. You can use the `STPCustomerDeserializer` class to convert a JSON response into an `STPCustomer` object.
- *
- *  @param customer     a deserialized `STPCustomer` object obtained from your backend API, or nil if an error occurred.
- *  @param error        any error that occurred while communicating with your server, or nil if your call succeeded
- */
-typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NSError * __nullable error);
-
-/**
  *  You should make your application's API client conform to this interface in order to use it with an `STPPaymentContext`. It provides a "bridge" from the prebuilt UI we expose (such as `STPPaymentMethodsViewController`) to your backend to fetch the information it needs to power those views. To read about how to implement this protocol, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api . To see examples of implementing these APIs, see MyAPIClient.swift in our example project and https://github.com/stripe/example-ios-backend .
+ *
+ *  @deprecated Use `STPCustomerContext`.
+ *  Instead of providing your own backend API adapter, you can now create an
+ *  `STPCustomerContext`, which will manage retrieving and updating a
+ *  Stripe customer for you. @see STPCustomerContext.h
  */
+__attribute__((deprecated))
 @protocol STPBackendAPIAdapter<NSObject>
 
 /**
@@ -37,7 +35,7 @@ typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NS
  *  @see STPCard
  *  @param completion call this callback when you're done fetching and parsing the above information from your backend. For example, `completion(customer, nil)` (if your call succeeds) or `completion(nil, error)` if an error is returned.
  */
-- (void)retrieveCustomer:(STPCustomerCompletionBlock)completion;
+- (void)retrieveCustomer:(nullable STPCustomerCompletionBlock)completion;
 
 /**
  *  Adds a payment source to a customer. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Update Customer method on that customer as described at https://stripe.com/docs/api#update_customer (for an example Ruby implementation of this API, see https://github.com/stripe/example-ios-backend/blob/master/web.rb#L60 ). If this API call succeeds, call `completion(nil)`. Otherwise, call `completion(error)` with the error that occurred.

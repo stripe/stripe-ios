@@ -21,6 +21,7 @@
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPAspects.h"
+#import "StripeError.h"
 #import "UIBarButtonItem+Stripe.h"
 #import "UIImage+Stripe.h"
 #import "UINavigationBar+Stripe_Theme.h"
@@ -41,6 +42,7 @@
     linkNSBundleAppNameCategory();
     linkNSDecimalNumberCurrencyCategory();
     linkNSDictionaryCategory();
+    linkNSErrorCategory();
     linkNSMutableURLRequestCategory();
     linkNSStringCategory();
     linkNSURLComponentsCategory();

@@ -148,3 +148,5 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
 }
 
 @end
+
+void linkNSErrorCategory(void) {}

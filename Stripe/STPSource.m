@@ -204,6 +204,10 @@
 
 #pragma mark - STPAPIResponseDecodable
 
+- (NSString *)stripeObject {
+    return @"source";
+}
+
 + (NSArray *)requiredFields {
     return @[@"id", @"livemode", @"status", @"type"];
 }

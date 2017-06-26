@@ -57,10 +57,13 @@
     return @[@"id"];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
     STPCustomerDeserializer *deserializer = [[STPCustomerDeserializer alloc] initWithJSONResponse:response];
     return deserializer.customer;
 }
+#pragma clang diagnostic pop
 
 @end
 

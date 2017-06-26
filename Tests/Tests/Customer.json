@@ -1,29 +1,26 @@
 {
-  "id": "cus_123",
-  "object": "customer",
-  "account_balance": 0,
-  "created": 1463413795,
-  "currency": "usd",
-  "default_source": "card_123",
-  "delinquent": false,
-  "description": "Jack F",
-  "discount": null,
-  "email": "jack@stripe.com",
-  "livemode": false,
-  "metadata": {},
-  "shipping": null,
-  "sources": {
-    "object": "list",
-    "data": [],
-    "has_more": false,
-    "total_count": 0,
-    "url": "/v1/customers/cus_8SjRZeRUyWjiBz/sources"
-  },
-  "subscriptions": {
-     "object": "list",
-     "data": [],
-     "has_more": false,
-     "total_count": 0,
-     "url": "/v1/customers/cus_8aftLb8GuMM4dW/subscriptions"
-  }
+    "id": "cus_123",
+    "object": "customer",
+    "created": 1463413795,
+    "default_source": "card_123",
+    "livemode": false,
+    "shipping": {
+        "address": {
+            "city": "Baltimore",
+            "country": "AF",
+            "line1": "67 Ave C",
+            "line2": "3A",
+            "postal_code": "10002",
+            "state": "MD"
+        },
+        "name": "Ben Guo",
+        "phone": "(555) 555-5555"
+    },
+    "sources": {
+        "object": "list",
+        "data": [],
+        "has_more": false,
+        "total_count": 0,
+        "url": "/v1/customers/cus_8SjRZeRUyWjiBz/sources"
+    },
 }

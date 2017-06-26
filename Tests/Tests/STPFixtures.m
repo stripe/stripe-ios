@@ -8,6 +8,7 @@
 
 #import "STPFixtures.h"
 #import "STPTestUtils.h"
+#import "STPEphemeralKey.h"
 
 @implementation STPFixtures
 
@@ -45,8 +46,7 @@
     customer[@"default_source"] = card1[@"id"];
     customer[@"sources"] = sources;
 
-    STPCustomerDeserializer *deserializer = [[STPCustomerDeserializer alloc] initWithJSONResponse:customer];
-    return deserializer.customer;
+    return [STPCustomer decodedObjectFromAPIResponse:customer];
 }
 
 + (STPSource *)iDEALSource {
@@ -57,6 +57,20 @@
     STPPaymentConfiguration *config = [STPPaymentConfiguration new];
     config.publishableKey = @"pk_fake_publishable_key";
     return config;
+}
+
++ (STPEphemeralKey *)ephemeralKey {
+    NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"EphemeralKey"] mutableCopy];
+    NSTimeInterval interval = 100;
+    response[@"expires"] = @([[NSDate dateWithTimeIntervalSinceNow:interval] timeIntervalSince1970]);
+    return [STPEphemeralKey decodedObjectFromAPIResponse:response];
+}
+
++ (STPEphemeralKey *)expiringEphemeralKey {
+    NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"EphemeralKey"] mutableCopy];
+    NSTimeInterval interval = 10;
+    response[@"expires"] = @([[NSDate dateWithTimeIntervalSinceNow:interval] timeIntervalSince1970]);
+    return [STPEphemeralKey decodedObjectFromAPIResponse:response];
 }
 
 + (PKPayment *)applePayPayment {
