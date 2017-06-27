@@ -149,7 +149,6 @@ static NSTimeInterval const DefaultCachedCustomerMaxAge = 60;
         NSMutableDictionary *params = [NSMutableDictionary new];
         params[@"shipping"] = [STPAddress shippingInfoForChargeWithAddress:shipping
                                                             shippingMethod:nil];
-        params[@"email"] = shipping.email;
         [STPAPIClient updateCustomerWithParameters:[params copy]
                                           usingKey:ephemeralKey
                                         completion:^(STPCustomer *customer, NSError *error) {

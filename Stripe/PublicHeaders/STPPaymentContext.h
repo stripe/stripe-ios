@@ -153,7 +153,10 @@ NS_ASSUME_NONNULL_BEGIN
  *  When your user enters a new shipping address, PaymentContext will save it to 
  *  the current customer object. When PaymentContext loads, if you haven't
  *  manually set a prefilled value, any shipping information saved on the customer 
- *  will be used to prefill the shipping address form.
+ *  will be used to prefill the shipping address form. Note that because your
+ *  customer's email may not be the same as the email provided with their shipping
+ *  info, PaymentContext will not prefill the shipping form's email using your 
+ *  customer's email.
  *
  *  You should not rely on the shipping information stored on the Stripe customer 
  *  for order fulfillment, as your user may change this information if they make 
