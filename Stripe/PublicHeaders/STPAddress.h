@@ -105,8 +105,8 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
  *  @param address  The user's shipping address. If nil, this method will return nil.
  *  @param method   The user's selected shipping method. May be nil.
  */
-+ (NSDictionary *)shippingInfoForChargeWithAddress:(nullable STPAddress *)address
-                                    shippingMethod:(nullable PKShippingMethod *)method;
++ (nullable NSDictionary *)shippingInfoForChargeWithAddress:(nullable STPAddress *)address
+                                             shippingMethod:(nullable PKShippingMethod *)method;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
