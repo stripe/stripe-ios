@@ -158,7 +158,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  You should not rely on the shipping information stored on the Stripe customer 
  *  for order fulfillment, as your user may change this information if they make 
  *  multiple purchases. We recommend adding shipping information when you create
- *  a chart (which can also help prevent fraud), or saving it to your own
+ *  a charge (which can also help prevent fraud), or saving it to your own
  *  database. https://stripe.com/docs/api#create_charge-shipping
  *
  *  Note: by default, your user will still be prompted to verify a prefilled 
