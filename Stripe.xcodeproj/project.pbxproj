@@ -338,6 +338,9 @@
 		8B429ADC1EF9E18400F95F34 /* STPBankAccount+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B429ADA1EF9E15900F95F34 /* STPBankAccount+Private.h */; };
 		8B429ADE1EF9EFF900F95F34 /* STPFile+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B429ADD1EF9EFF600F95F34 /* STPFile+Private.h */; };
 		8B429ADF1EF9EFFA00F95F34 /* STPFile+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B429ADD1EF9EFF600F95F34 /* STPFile+Private.h */; };
+		8B5B4B441EFDD925005CF475 /* STPSourceOwnerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5B4B431EFDD925005CF475 /* STPSourceOwnerTest.m */; };
+		8B6DC9751F0171D20025E811 /* STPSourceReceiverTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DC9741F0171D20025E811 /* STPSourceReceiverTest.m */; };
+		8B6DC9771F0172640025E811 /* STPSourceSEPADebitDetailsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DC9761F0172640025E811 /* STPSourceSEPADebitDetailsTest.m */; };
 		8B8DDBB31EF887A4004B141F /* STPBankAccountParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B8DDBB21EF887A4004B141F /* STPBankAccountParamsTest.m */; };
 		8BD87B881EFB131700269C2B /* STPSourceCardDetails+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BD87B871EFB131400269C2B /* STPSourceCardDetails+Private.h */; };
 		8BD87B891EFB131800269C2B /* STPSourceCardDetails+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BD87B871EFB131400269C2B /* STPSourceCardDetails+Private.h */; };
@@ -967,6 +970,9 @@
 		8B429AD71EF9D4A300F95F34 /* STPBankAccountParams+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPBankAccountParams+Private.h"; sourceTree = "<group>"; };
 		8B429ADA1EF9E15900F95F34 /* STPBankAccount+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPBankAccount+Private.h"; sourceTree = "<group>"; };
 		8B429ADD1EF9EFF600F95F34 /* STPFile+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPFile+Private.h"; sourceTree = "<group>"; };
+		8B5B4B431EFDD925005CF475 /* STPSourceOwnerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceOwnerTest.m; sourceTree = "<group>"; };
+		8B6DC9741F0171D20025E811 /* STPSourceReceiverTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceReceiverTest.m; sourceTree = "<group>"; };
+		8B6DC9761F0172640025E811 /* STPSourceSEPADebitDetailsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceSEPADebitDetailsTest.m; sourceTree = "<group>"; };
 		8B8DDBB21EF887A4004B141F /* STPBankAccountParamsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBankAccountParamsTest.m; sourceTree = "<group>"; };
 		8BD87B871EFB131400269C2B /* STPSourceCardDetails+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPSourceCardDetails+Private.h"; sourceTree = "<group>"; };
 		8BD87B8A1EFB136F00269C2B /* STPSourceCardDetailsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceCardDetailsTest.m; sourceTree = "<group>"; };
@@ -1499,8 +1505,11 @@
 				C1FEE5981CBFF24000A7632B /* STPPostalCodeValidatorTest.m */,
 				F152321A1EA92F9D00D65C67 /* STPRedirectContextTest.m */,
 				8BD87B8A1EFB136F00269C2B /* STPSourceCardDetailsTest.m */,
+				8B5B4B431EFDD925005CF475 /* STPSourceOwnerTest.m */,
 				C1BD9B1E1E390A2700CEE925 /* STPSourceParamsTest.m */,
+				8B6DC9741F0171D20025E811 /* STPSourceReceiverTest.m */,
 				8BD87B8F1EFB17AA00269C2B /* STPSourceRedirectTest.m */,
+				8B6DC9761F0172640025E811 /* STPSourceSEPADebitDetailsTest.m */,
 				C17D24ED1E37DBAC005CB188 /* STPSourceTest.m */,
 				8BD87B941EFB1CB100269C2B /* STPSourceVerificationTest.m */,
 				F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */,
@@ -2611,12 +2620,15 @@
 				04415C681A6605B5001225ED /* STPFormEncoderTest.m in Sources */,
 				C1CFCB751ED5E12400BE45DF /* STPFileTest.m in Sources */,
 				C11810991CC6D46D0022FB55 /* NSDecimalNumber+StripeTest.m in Sources */,
+				8B5B4B441EFDD925005CF475 /* STPSourceOwnerTest.m in Sources */,
 				C1EEDCC81CA2172700A54582 /* NSString+StripeTest.m in Sources */,
 				8BD87B901EFB17AA00269C2B /* STPSourceRedirectTest.m in Sources */,
 				04415C6A1A6605B5001225ED /* STPApplePayFunctionalTest.m in Sources */,
 				8BE5AE8B1EF8905B0081A33C /* STPCardParamsTest.m in Sources */,
 				F1D3A25F1EB015B30095BFA9 /* UIImage+StripeTests.m in Sources */,
 				04415C6B1A6605B5001225ED /* STPBankAccountFunctionalTest.m in Sources */,
+				8B6DC9751F0171D20025E811 /* STPSourceReceiverTest.m in Sources */,
+				8B6DC9771F0172640025E811 /* STPSourceSEPADebitDetailsTest.m in Sources */,
 				04415C6C1A6605B5001225ED /* STPBankAccountTest.m in Sources */,
 				C19D09931EAEAE5E00A4AB3E /* STPTelemetryClientTest.m in Sources */,
 				F152321B1EA92F9D00D65C67 /* STPRedirectContextTest.m in Sources */,

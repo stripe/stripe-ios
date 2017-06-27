@@ -13,8 +13,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPCard () <STPInternalAPIResponseDecodable>
 
+@property (nonatomic, readwrite) NSString *last4;
+@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+
 + (STPCardFundingType)fundingFromString:(NSString *)string;
 + (nullable NSString *)stringFromFunding:(STPCardFundingType)funding;
+
+- (instancetype)init;
 - (nullable STPAddress *)address;
 
 @end

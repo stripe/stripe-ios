@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "STPAPIResponseDecodable.h"
 #import "STPBankAccountParams.h"
+#import "STPAPIResponseDecodable.h"
 
 typedef NS_ENUM(NSInteger, STPBankAccountStatus) {
     STPBankAccountStatusNew,
@@ -19,7 +19,9 @@ typedef NS_ENUM(NSInteger, STPBankAccountStatus) {
 };
 
 /**
- *  Representation of a user's bank account details that have been tokenized with the Stripe API. @see https://stripe.com/docs/api#cards
+ *  Representation of a user's bank account details that have been tokenized with the Stripe API
+ *
+ *  @see https://stripe.com/docs/api#bank_accounts
  */
 @interface STPBankAccount : STPBankAccountParams<STPAPIResponseDecodable>
 

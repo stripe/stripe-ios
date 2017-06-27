@@ -8,13 +8,12 @@
 
 @import XCTest;
 
-#import "STPFormEncoder.h"
 #import "STPBankAccount.h"
 #import "STPBankAccount+Private.h"
 
-@interface STPBankAccountTest : XCTestCase
+#import "STPFormEncoder.h"
 
-@property (nonatomic) STPBankAccount *bankAccount;
+@interface STPBankAccountTest : XCTestCase
 
 @end
 
@@ -22,7 +21,7 @@
 
 - (void)setUp {
     [super setUp];
-    _bankAccount = [[STPBankAccount alloc] init];
+    // Put setup code here. This method is called before the invocation of each test method in the class.
 }
 
 - (void)tearDown {
@@ -80,18 +79,36 @@
 
 #pragma mark -
 
+- (void)testSetAccountNumber {
+    STPBankAccount *bankAccount = [[STPBankAccount alloc] init];
+    XCTAssertNil(bankAccount.accountNumber);
+
+    bankAccount.accountNumber = @"000123456789";
+    XCTAssertEqualObjects(bankAccount.accountNumber, @"000123456789");
+}
+
 - (void)testLast4ReturnsAccountNumberLast4WhenNotSet {
-    self.bankAccount.accountNumber = @"000123456789";
-    XCTAssertEqualObjects(self.bankAccount.last4, @"6789", @"last4 correctly returns the last 4 digits of the bank account number");
+    STPBankAccount *bankAccount = [[STPBankAccount alloc] init];
+    bankAccount.accountNumber = @"000123456789";
+    XCTAssertEqualObjects(bankAccount.last4, @"6789");
 }
 
-- (void)testLast4ReturnsNullWhenNoAccountNumberSet {
-    XCTAssertEqualObjects(nil, self.bankAccount.last4, @"last4 returns nil when nothing is set");
+- (void)testLast4ReturnsNilWhenNoAccountNumberSet {
+    STPBankAccount *bankAccount = [[STPBankAccount alloc] init];
+    XCTAssertNil(bankAccount.last4);
 }
 
-- (void)testLast4ReturnsNullWhenAccountNumberIsLessThanLength4 {
-    self.bankAccount.accountNumber = @"123";
-    XCTAssertEqualObjects(nil, self.bankAccount.last4, @"last4 returns nil when number length is < 4");
+- (void)testLast4ReturnsNilWhenAccountNumberIsLessThanLength4 {
+    STPBankAccount *bankAccount = [[STPBankAccount alloc] init];
+    bankAccount.accountNumber = @"123";
+    XCTAssertNil(bankAccount.last4);
+}
+
+- (void)testLast4ReturnsValueOverAccountNumberDerivation {
+    STPBankAccount *bankAccount = [[STPBankAccount alloc] init];
+    bankAccount.accountNumber = nil;
+    bankAccount.last4 = @"1234";
+    XCTAssertEqualObjects(bankAccount.last4, @"1234");
 }
 
 #pragma mark - Equality Tests
@@ -100,53 +117,82 @@
     STPBankAccount *bankAccount1 = [STPBankAccount decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
     STPBankAccount *bankAccount2 = [STPBankAccount decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
 
-    XCTAssertEqualObjects(bankAccount1, bankAccount1, @"bank account should equal itself");
-    XCTAssertEqualObjects(bankAccount1, bankAccount2, @"bank account with equal data should be equal");
+    XCTAssertNotEqual(bankAccount1, bankAccount2);
+
+    XCTAssertEqualObjects(bankAccount1, bankAccount1);
+    XCTAssertEqualObjects(bankAccount1, bankAccount2);
+
+    XCTAssertEqual(bankAccount1.hash, bankAccount1.hash);
+    XCTAssertEqual(bankAccount1.hash, bankAccount2.hash);
 }
 
 #pragma mark - Description Tests
 
-- (void)testDescriptionWorks {
+- (void)testDescription {
     STPBankAccount *bankAccount = [STPBankAccount decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
-    bankAccount.routingNumber = @"123456789";
     XCTAssert(bankAccount.description);
 }
 
 #pragma mark - STPAPIResponseDecodable Tests
 
 - (NSDictionary *)completeAttributeDictionary {
+    // Source: https://stripe.com/docs/api#customer_bank_account_object
     return @{
-             @"id": @"something",
-             @"last4": @"6789",
+             @"id": @"ba_1AXvnKEOD54MuFwSotKc6xq0",
+             @"object": @"bank_account",
+             @"account": @"acct_1AHMhqEOD54MuFwS",
+             @"account_holder_name": @"Jane Austen",
+             @"account_holder_type": @"individual",
              @"bank_name": @"STRIPE TEST BANK",
              @"country": @"US",
-             @"fingerprint": @"something",
              @"currency": @"usd",
+             @"default_for_currency": @(NO),
+             @"fingerprint": @"C5fW7AwE3of8bHvV",
+             @"last4": @"6789",
+             @"metadata": @{},
+             @"routing_number": @"110000000",
              @"status": @"new",
-             @"account_holder_name": @"John Doe",
-             @"account_holder_type": @"company",
+             @"customer": @"cus_AtMGi1QH6GlMP4",
              };
 }
 
-- (void)testInitializingBankAccountWithAttributeDictionary {
-    NSMutableDictionary *apiResponse = [[self completeAttributeDictionary] mutableCopy];
-    apiResponse[@"foo"] = @"bar";
-    STPBankAccount *bankAccountWithAttributes = [STPBankAccount decodedObjectFromAPIResponse:apiResponse];
+- (void)testDecodedObjectFromAPIResponseRequiredFields {
+    NSArray<NSString *> *requiredFields = @[
+                                            @"id",
+                                            @"last4",
+                                            @"bank_name",
+                                            @"country",
+                                            @"currency",
+                                            @"status",
+                                            ];
 
-    XCTAssertEqualObjects([bankAccountWithAttributes bankAccountId], @"something", @"bankAccountId is set correctly");
-    XCTAssertEqualObjects([bankAccountWithAttributes last4], @"6789", @"last4 is set correctly");
-    XCTAssertEqualObjects([bankAccountWithAttributes bankName], @"STRIPE TEST BANK", @"bankName is set correctly");
-    XCTAssertEqualObjects([bankAccountWithAttributes country], @"US", @"country is set correctly");
-    XCTAssertEqualObjects([bankAccountWithAttributes fingerprint], @"something", @"fingerprint is set correctly");
-    XCTAssertEqualObjects([bankAccountWithAttributes currency], @"usd", @"currency is set correctly");
-    XCTAssertEqual([bankAccountWithAttributes status], STPBankAccountStatusNew);
-    XCTAssertEqualObjects([bankAccountWithAttributes accountHolderName], @"John Doe");
-    XCTAssertEqual([bankAccountWithAttributes accountHolderType], STPBankAccountHolderTypeCompany);
+    for (NSString *field in requiredFields) {
+        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        [response removeObjectForKey:field];
 
-    NSDictionary *allResponseFields = bankAccountWithAttributes.allResponseFields;
-    XCTAssertEqual(allResponseFields[@"foo"], @"bar");
-    XCTAssertEqual(allResponseFields[@"last4"], @"6789");
-    XCTAssertNil(allResponseFields[@"baz"]);
+        XCTAssertNil([STPBankAccount decodedObjectFromAPIResponse:response]);
+    }
+
+    XCTAssert([STPBankAccount decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+}
+
+- (void)testDecodedObjectFromAPIResponseMapping {
+    NSDictionary *response = [self completeAttributeDictionary];
+    STPBankAccount *bankAccount = [STPBankAccount decodedObjectFromAPIResponse:response];
+
+    XCTAssertEqualObjects(bankAccount.bankAccountId, @"ba_1AXvnKEOD54MuFwSotKc6xq0");
+    XCTAssertEqualObjects(bankAccount.accountHolderName, @"Jane Austen");
+    XCTAssertEqual(bankAccount.accountHolderType, STPBankAccountHolderTypeIndividual);
+    XCTAssertEqualObjects(bankAccount.bankName, @"STRIPE TEST BANK");
+    XCTAssertEqualObjects(bankAccount.country, @"US");
+    XCTAssertEqualObjects(bankAccount.currency, @"usd");
+    XCTAssertEqualObjects(bankAccount.fingerprint, @"C5fW7AwE3of8bHvV");
+    XCTAssertEqualObjects(bankAccount.last4, @"6789");
+    XCTAssertNil(bankAccount.routingNumber);
+    XCTAssertEqual(bankAccount.status, STPBankAccountStatusNew);
+
+    XCTAssertNotEqual(bankAccount.allResponseFields, response);
+    XCTAssertEqualObjects(bankAccount.allResponseFields, response);
 }
 
 @end

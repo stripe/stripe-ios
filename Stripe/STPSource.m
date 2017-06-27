@@ -39,6 +39,8 @@
 @property (nonatomic, nullable) STPSourceSEPADebitDetails *sepaDebitDetails;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
+// See STPSource+Private.h
+
 @end
 
 @implementation STPSource

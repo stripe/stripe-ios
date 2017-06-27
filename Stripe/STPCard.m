@@ -16,12 +16,12 @@
 @interface STPCard ()
 
 @property (nonatomic, readwrite) NSString *cardId;
-@property (nonatomic, readwrite) NSString *last4;
 @property (nonatomic, readwrite) NSString *dynamicLast4;
 @property (nonatomic, readwrite) STPCardBrand brand;
 @property (nonatomic, readwrite) STPCardFundingType funding;
 @property (nonatomic, readwrite) NSString *country;
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+
+// See STPCard+Private.h
 
 @end
 

@@ -13,7 +13,7 @@
 
 @interface STPBankAccountParams ()
 
-@property (nonatomic, readonly) NSString *accountHolderTypeString;
+// See STPBankAccountParams+Private.h
 
 @end
 

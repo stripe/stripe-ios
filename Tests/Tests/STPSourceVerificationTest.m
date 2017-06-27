@@ -75,4 +75,47 @@
     }
 }
 
+#pragma mark - Description Tests
+
+- (void)testDescription {
+    STPSourceVerification *verification = [STPSourceVerification decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    XCTAssert(verification.description);
+}
+
+#pragma mark - STPAPIResponseDecodable Tests
+
+- (NSDictionary *)completeAttributeDictionary {
+    // Source: https://stripe.com/docs/sources/sepa-debit
+    return @{
+             @"attempts_remaining": @(5),
+             @"status": @"pending",
+             };
+}
+
+- (void)testDecodedObjectFromAPIResponseRequiredFields {
+    NSArray<NSString *> *requiredFields = @[
+                                            @"status",
+                                            ];
+
+    for (NSString *field in requiredFields) {
+        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        [response removeObjectForKey:field];
+
+        XCTAssertNil([STPSourceVerification decodedObjectFromAPIResponse:response]);
+    }
+
+    XCTAssert([STPSourceVerification decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+}
+
+- (void)testDecodedObjectFromAPIResponseMapping {
+    NSDictionary *response = [self completeAttributeDictionary];
+    STPSourceVerification *verification = [STPSourceVerification decodedObjectFromAPIResponse:response];
+
+    XCTAssertEqualObjects(verification.attemptsRemaining, @5);
+    XCTAssertEqual(verification.status, STPSourceVerificationStatusPending);
+
+    XCTAssertNotEqual(verification.allResponseFields, response);
+    XCTAssertEqualObjects(verification.allResponseFields, response);
+}
+
 @end

@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPBankAccount ()
 
+@property (nonatomic, readwrite) NSString *last4;
+
 + (STPBankAccountStatus)statusFromString:(NSString *)string;
 + (NSString *)stringFromStatus:(STPBankAccountStatus)status;
 

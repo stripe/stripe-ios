@@ -27,7 +27,6 @@
     [super tearDown];
 }
 
-
 #pragma mark - STPSourceCard3DSecureStatus Tests
 
 - (void)testThreeDSecureStatusFromString {
@@ -74,6 +73,56 @@
                 break;
         }
     }
+}
+
+#pragma mark - Description Tests
+
+- (void)testDescription {
+    STPSourceCardDetails *cardDetails = [STPSourceCardDetails decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    XCTAssert(cardDetails.description);
+}
+
+#pragma mark - STPAPIResponseDecodable Tests
+
+- (NSDictionary *)completeAttributeDictionary {
+    return @{
+             @"brand": @"Visa",
+             @"country": @"US",
+             @"exp_month": @(12),
+             @"exp_year": @(2034),
+             @"funding": @"debit",
+             @"last4": @"5556",
+             @"three_d_secure": @"not_supported",
+             };
+}
+
+- (void)testDecodedObjectFromAPIResponseRequiredFields {
+    NSArray<NSString *> *requiredFields = @[];
+
+    for (NSString *field in requiredFields) {
+        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        [response removeObjectForKey:field];
+
+        XCTAssertNil([STPSourceCardDetails decodedObjectFromAPIResponse:response]);
+    }
+
+    XCTAssert([STPSourceCardDetails decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+}
+
+- (void)testDecodedObjectFromAPIResponseMapping {
+    NSDictionary *response = [self completeAttributeDictionary];
+    STPSourceCardDetails *cardDetails = [STPSourceCardDetails decodedObjectFromAPIResponse:response];
+
+    XCTAssertEqual(cardDetails.brand, STPCardBrandVisa);
+    XCTAssertEqualObjects(cardDetails.country, @"US");
+    XCTAssertEqual(cardDetails.expMonth, (NSUInteger)12);
+    XCTAssertEqual(cardDetails.expYear, (NSUInteger)2034);
+    XCTAssertEqual(cardDetails.funding, STPCardFundingTypeDebit);
+    XCTAssertEqualObjects(cardDetails.last4, @"5556");
+    XCTAssertEqual(cardDetails.threeDSecure, STPSourceCard3DSecureStatusNotSupported);
+
+    XCTAssertNotEqual(cardDetails.allResponseFields, response);
+    XCTAssertEqualObjects(cardDetails.allResponseFields, response);
 }
 
 @end

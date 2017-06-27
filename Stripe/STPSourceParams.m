@@ -13,6 +13,12 @@
 #import "STPFormEncoder.h"
 #import "STPSource+Private.h"
 
+@interface STPSourceParams ()
+
+// See STPSourceParams+Private.h
+
+@end
+
 @implementation STPSourceParams
 
 @synthesize additionalAPIParameters = _additionalAPIParameters;
@@ -33,7 +39,6 @@
 }
 
 - (void)setType:(STPSourceType)type {
-
     // If setting unknown and we're already unknown, don't want to override raw value
     if (type != self.type) {
         self.rawTypeString = [STPSource stringFromType:type];
@@ -243,8 +248,7 @@
     return params;
 }
 
-#pragma mark - Redirect url
-
+#pragma mark - Redirect Dictionary
 
 /**
  Private setter allows for setting the name of the app in the returnURL so
@@ -293,7 +297,6 @@
     return self.redirect;
 
 }
-
 
 #pragma mark - STPFormEncodable
 
