@@ -83,6 +83,9 @@
         shipping.state = shippingDict[@"address"][@"state"];
         shipping.postalCode = shippingDict[@"address"][@"postal_code"];
         shipping.country = shippingDict[@"address"][@"country"];
+        // Note: email is currently one level above in the customer API,
+        // but the SDK stores it in customer.shippingAddress
+        shipping.email = dict[@"email"];
         customer.shippingAddress = shipping;
     }
     NSMutableArray *sources = [NSMutableArray array];
