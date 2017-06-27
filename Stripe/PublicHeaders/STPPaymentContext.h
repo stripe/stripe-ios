@@ -154,6 +154,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  the current customer object. When PaymentContext loads, if you haven't
  *  manually set a prefilled value, any shipping information saved on the customer 
  *  will be used to prefill the shipping address form.
+ *
+ *  You should not rely on the shipping information stored on the Stripe customer 
+ *  for order fulfillment, as your user may change this information if they make 
+ *  multiple purchases. We recommend adding shipping information when you create
+ *  a chart (which can also help prevent fraud), or saving it to your own
+ *  database. https://stripe.com/docs/api#create_charge-shipping
+ *
  *  Note: by default, your user will still be prompted to verify a prefilled 
  *  shipping address. To change this behavior, you can set 
  *  `verifyPrefilledShippingAddress` to NO in your `STPPaymentConfiguration`.
