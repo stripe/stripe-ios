@@ -235,6 +235,9 @@
                 <a class="nav-group-task-link" href="Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/STPEphemeralKeyProvider.html">STPEphemeralKeyProvider</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Protocols/STPFormEncodable.html">STPFormEncodable</a>
               </li>
               <li class="nav-group-task">
@@ -261,13 +264,16 @@
             <a class="nav-group-name-link" href="Type Definitions.html">Type Definitions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBackendAPIAdapter.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextCompletionBlock">STPRedirectContextCompletionBlock</a>
@@ -277,6 +283,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPSourceProtocolCompletionBlock">STPSourceProtocolCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a>
@@ -449,7 +458,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddress.h#L50-L114">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAddress.h#L50-L127">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -834,7 +843,9 @@ Stripe view controllers.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>An <code>STPCustomer</code> represents a deserialized Customer object from the Stripe API. You can use <code><a href="Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a></code> to convert a JSON response from the Stripe API into an <code>STPCustomer</code>.</p>
+                        <p>An <code>STPCustomer</code> represents a deserialized Customer object from the Stripe API.
+You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you should instead use
+<code>STPCustomerContext</code> to manage retrieving and updating a customer.</p>
 
                         <a href="Classes/STPCustomer.html" class="slightly-smaller">See more</a>
                       </div>
@@ -852,7 +863,7 @@ Stripe view controllers.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L18-L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L22-L60">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -888,7 +899,7 @@ Stripe view controllers.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L53-L85">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L65-L101">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1054,7 +1065,7 @@ is specific to a single particular payment instance.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentConfiguration.h#L25-L73">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentConfiguration.h#L25-L79">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1080,7 +1091,7 @@ is specific to a single particular payment instance.</p>
 
 <p><code>STPPaymentContext</code> also provides a unified interface to multiple payment methods - for example, you can write a single integration to accept both credit card payments and Apple Pay.</p>
 
-<p><code>STPPaymentContext</code> requires an <q>API Adapter</q> to communicate with your backend API to retrieve and modify a customer&rsquo;s payment methods - see <a href="https://stripe.com/docs/mobile/ios/standard#prepare-your-api">https://stripe.com/docs/mobile/ios/standard#prepare-your-api</a> for how to implement this. You can also look at CheckoutViewController.swift in our example app to see <code>STPPaymentContext</code> in action.</p>
+<p><code>STPPaymentContext</code> saves information about a user&rsquo;s payment methods to a Stripe customer object, and requires an <code>STPCustomerContext</code> to manage retrieving and modifying the customer.</p>
 
                         <a href="Classes/STPPaymentContext.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1098,7 +1109,7 @@ is specific to a single particular payment instance.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L32-L232">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L32-L292">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1138,7 +1149,7 @@ is specific to a single particular payment instance.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L25-L64">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L25-L84">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1704,7 +1715,10 @@ dictionary for SEPA Debit sources.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>You can use this class to specify information that you&rsquo;ve already collected from your user. You can then set the <code>prefilledInformation</code> property on <code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code>, <code><a href="Classes/STPAddCardViewController.html">STPAddCardViewController</a></code>, etc and it will pre-fill this information whenever possible.</p>
+                        <p>You can use this class to specify information that you&rsquo;ve already collected 
+from your user. You can then set the <code>prefilledInformation</code> property on 
+<code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code>, <code><a href="Classes/STPAddCardViewController.html">STPAddCardViewController</a></code>, etc and it will pre-fill 
+this information whenever possible.</p>
 
                         <a href="Classes/STPUserInformation.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1722,7 +1736,7 @@ dictionary for SEPA Debit sources.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPUserInformation.h#L17-L35">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPUserInformation.h#L20-L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1735,7 +1749,7 @@ dictionary for SEPA Debit sources.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-06-16)</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-06-27)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

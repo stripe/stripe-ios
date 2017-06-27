@@ -51,56 +51,56 @@
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPAddress.h",
-      "line": 100,
+      "line": 113,
       "symbol": "STPAddress.-initWithABRecord:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPAddress.h",
-      "line": 101,
+      "line": 114,
       "symbol": "STPAddress.-ABRecordValue",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPAddress.h",
-      "line": 104,
+      "line": 117,
       "symbol": "STPAddress.-initWithPKContact:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPAddress.h",
-      "line": 105,
+      "line": 118,
       "symbol": "STPAddress.-PKContactValue",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPAddress.h",
-      "line": 107,
+      "line": 120,
       "symbol": "STPAddress.-initWithCNContact:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPAddress.h",
-      "line": 109,
+      "line": 122,
       "symbol": "STPAddress.-containsRequiredFields:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPAddress.h",
-      "line": 110,
+      "line": 123,
       "symbol": "STPAddress.-containsRequiredShippingAddressFields:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPAddress.h",
-      "line": 112,
+      "line": 125,
       "symbol": "STPAddress.+applePayAddressFieldsFromBillingAddressFields:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
       "warning": "undocumented"
@@ -327,6 +327,13 @@
       "line": 112,
       "symbol": "STPCardValidator.+validationStateForCard:inCurrentYear:currentMonth:",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCustomerContext.h",
+      "line": 28,
+      "symbol": "STPCustomerContext",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
       "warning": "undocumented"
     },
     {
@@ -639,114 +646,121 @@
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 38,
+      "line": 39,
       "symbol": "STPErrorMessageKey",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 41,
+      "line": 42,
       "symbol": "STPCardErrorCodeKey",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 45,
+      "line": 46,
       "symbol": "STPErrorParameterKey",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 49,
+      "line": 50,
       "symbol": "STPStripeErrorCodeKey",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 53,
+      "line": 54,
       "symbol": "STPStripeErrorTypeKey",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 57,
+      "line": 58,
       "symbol": "STPCardErrorCode",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 64,
+      "line": 65,
       "symbol": "STPInvalidNumber",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 65,
+      "line": 66,
       "symbol": "STPInvalidExpMonth",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 66,
+      "line": 67,
       "symbol": "STPInvalidExpYear",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 67,
+      "line": 68,
       "symbol": "STPInvalidCVC",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 70,
+      "line": 71,
       "symbol": "STPIncorrectNumber",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 71,
+      "line": 72,
       "symbol": "STPExpiredCard",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 72,
+      "line": 73,
       "symbol": "STPCardDeclined",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 73,
+      "line": 74,
       "symbol": "STPProcessingError",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 74,
+      "line": 75,
       "symbol": "STPIncorrectCVC",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
-      "line": 77,
+      "line": 78,
       "symbol": "NSError(Stripe)",
       "symbol_kind": "sourcekitten.source.lang.objc.decl.category",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/StripeError.h",
+      "line": 99,
+      "symbol": "linkNSErrorCategory",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.function",
       "warning": "undocumented"
     },
     {
