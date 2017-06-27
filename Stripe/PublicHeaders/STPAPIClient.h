@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define FAUXPAS_IGNORED_IN_FILE(...)
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
-static NSString *const STPSDKVersion = @"10.2.0";
+static NSString *const STPSDKVersion = @"11.0.0";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPSourceParams, STPToken, STPPaymentConfiguration;
 
