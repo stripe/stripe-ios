@@ -66,7 +66,7 @@
         return nil;
     }
 
-    STPCustomer *customer = [STPCustomer new];
+    STPCustomer *customer = [[self class] new];
     customer.stripeID = dict[@"id"];
     NSString *defaultSourceId;
     if ([dict[@"default_source"] isKindOfClass:[NSString class]]) {
