@@ -89,16 +89,8 @@
         if (shippingAddress != nil) {
             _addressViewModel.address = shippingAddress;
         }
-        else if (prefilledInformation != nil) {
-            STPAddress *prefilledAddress = [STPAddress new];
-            prefilledAddress.country = _addressViewModel.address.country;
-            if (self.configuration.requiredShippingAddressFields & PKAddressFieldEmail) {
-                prefilledAddress.email = prefilledInformation.email;
-            }
-            if (self.configuration.requiredShippingAddressFields & PKAddressFieldPhone) {
-                prefilledAddress.phone = prefilledInformation.phone;
-            }
-            _addressViewModel.address = prefilledAddress;
+        else if (prefilledInformation.shippingAddress != nil) {
+            _addressViewModel.address = prefilledInformation.shippingAddress;
         }
         self.title = [self titleForShippingType:self.configuration.shippingType];
     }

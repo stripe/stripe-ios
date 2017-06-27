@@ -12,6 +12,7 @@
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "STPAddCardViewController+Private.h"
 #import "STPCardTuple.h"
+#import "STPCustomerContext+Private.h"
 #import "STPDispatchFunctions.h"
 #import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentContext+Private.h"
@@ -65,7 +66,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 @property(nonatomic, assign) STPPaymentContextState state;
 
 @property(nonatomic)STPPaymentContextAmountModel *paymentAmountModel;
-
+@property(nonatomic)BOOL shippingAddressNeedsVerification;
 
 @end
 
@@ -146,6 +147,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                 [self.loadingPromise fail:error];
                 return;
             }
+            if (!self.shippingAddress && customer.shippingAddress) {
+                self.shippingAddress = customer.shippingAddress;
+                self.shippingAddressNeedsVerification = YES;
+            }
             STPCard *selectedCard;
             NSMutableArray<STPCard *> *cards = [NSMutableArray array];
             for (id<STPSourceProtocol> source in customer.sources) {
@@ -194,6 +199,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         return [STPPaymentMethodTuple tupleWithPaymentMethods:self.paymentMethods
                                         selectedPaymentMethod:self.selectedPaymentMethod];
     }];
+}
+
+- (void)setPrefilledInformation:(STPUserInformation *)prefilledInformation {
+    _prefilledInformation = prefilledInformation;
+    if (prefilledInformation.shippingAddress && !self.shippingAddress) {
+        self.shippingAddress = prefilledInformation.shippingAddress;
+        self.shippingAddressNeedsVerification = YES;
+    }
 }
 
 - (void)setPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods {
@@ -439,8 +452,13 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                  didFinishWithAddress:(STPAddress *)address
                        shippingMethod:(PKShippingMethod *)method {
     self.shippingAddress = address;
+    self.shippingAddressNeedsVerification = NO;
     self.selectedShippingMethod = method;
     [self.delegate paymentContextDidChange:self];
+    if ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) {
+        STPCustomerContext *customerContext = (STPCustomerContext *)self.apiAdapter;
+        [customerContext updateCustomerWithShippingAddress:self.shippingAddress completion:nil];
+    }
     [self appropriatelyDismissViewController:addressViewController completion:^{
         if (self.state == STPPaymentContextStateRequestingPayment) {
             self.state = STPPaymentContextStateNone;
@@ -472,6 +490,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 #pragma mark - Request Payment
 
+- (BOOL)requestPaymentShouldPresentShippingViewController {
+    BOOL shippingAddressRequired = self.configuration.requiredShippingAddressFields != STPBillingAddressFieldsNone;
+    BOOL shippingAddressIncomplete = ![self.shippingAddress containsRequiredShippingAddressFields:self.configuration.requiredShippingAddressFields];
+    BOOL shippingMethodRequired = ([self.delegate respondsToSelector:@selector(paymentContext:didUpdateShippingAddress:completion:)] && !self.selectedShippingMethod);
+    BOOL verificationRequired = self.configuration.verifyPrefilledShippingAddress && self.shippingAddressNeedsVerification;
+    return (shippingAddressRequired && (shippingAddressIncomplete || shippingMethodRequired || verificationRequired));
+}
+
 - (void)requestPayment {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     WEAK(self);
@@ -491,9 +517,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         if (!self.selectedPaymentMethod) {
             [self presentPaymentMethodsViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
         }
-        else if (self.configuration.requiredShippingAddressFields != STPBillingAddressFieldsNone &&
-                 !self.shippingAddress)
-        {
+        else if ([self requestPaymentShouldPresentShippingViewController]) {
             [self presentShippingViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
         }
         else if ([self.selectedPaymentMethod isKindOfClass:[STPCard class]]) {
@@ -532,7 +556,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             STPPaymentAuthorizationBlock paymentHandler = ^(PKPayment *payment) {
                 self.selectedShippingMethod = payment.shippingMethod;
                 self.shippingAddress = [[STPAddress alloc] initWithABRecord:payment.shippingAddress];
+                self.shippingAddressNeedsVerification = NO;
                 [self.delegate paymentContextDidChange:self];
+                if ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) {
+                    STPCustomerContext *customerContext = (STPCustomerContext *)self.apiAdapter;
+                    [customerContext updateCustomerWithShippingAddress:self.shippingAddress completion:nil];
+                }
             };
             STPApplePayTokenHandlerBlock applePayTokenHandler = ^(STPToken *token, STPErrorBlock tokenCompletion) {
                 [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *tokenError) {

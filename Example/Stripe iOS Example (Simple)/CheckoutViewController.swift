@@ -176,7 +176,10 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     // MARK: STPPaymentContextDelegate
     
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
-        MyAPIClient.sharedClient.completeCharge(paymentResult, amount: self.paymentContext.paymentAmount,
+        MyAPIClient.sharedClient.completeCharge(paymentResult,
+                                                amount: self.paymentContext.paymentAmount,
+                                                shippingAddress: self.paymentContext.shippingAddress,
+                                                shippingMethod: self.paymentContext.selectedShippingMethod,
                                                 completion: completion)
     }
     

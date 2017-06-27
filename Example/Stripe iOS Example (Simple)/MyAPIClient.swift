@@ -22,12 +22,18 @@ class MyAPIClient: NSObject, STPEphemeralKeyProvider {
         }
     }
 
-    func completeCharge(_ result: STPPaymentResult, amount: Int, completion: @escaping STPErrorBlock) {
+    func completeCharge(_ result: STPPaymentResult,
+                        amount: Int,
+                        shippingAddress: STPAddress?,
+                        shippingMethod: PKShippingMethod?,
+                        completion: @escaping STPErrorBlock) {
         let url = self.baseURL.appendingPathComponent("charge")
-        Alamofire.request(url, method: .post, parameters: [
+        var params: [String: Any] = [
             "source": result.source.stripeID,
             "amount": amount
-            ])
+        ]
+        params["shipping"] = STPAddress.shippingInfoForCharge(with: shippingAddress, shippingMethod: shippingMethod)
+        Alamofire.request(url, method: .post, parameters: params)
             .validate(statusCode: 200..<300)
             .responseString { response in
                 switch response.result {
@@ -42,7 +48,7 @@ class MyAPIClient: NSObject, STPEphemeralKeyProvider {
     func createCustomerKey(withAPIVersion apiVersion: String, completion: @escaping STPJSONResponseCompletionBlock) {
         let url = self.baseURL.appendingPathComponent("ephemeral_keys")
         Alamofire.request(url, method: .post, parameters: [
-            "api_version": apiVersion
+            "api_version": apiVersion,
             ])
             .validate(statusCode: 200..<300)
             .responseJSON { responseJSON in

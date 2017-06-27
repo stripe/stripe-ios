@@ -29,6 +29,26 @@ NSString *stringIfHasContentsElseNil(NSString *string);
 
 @implementation STPAddress
 
++ (NSDictionary *)shippingInfoForChargeWithAddress:(nullable STPAddress *)address
+                                    shippingMethod:(nullable PKShippingMethod *)method {
+    if (!address) {
+        return nil;
+    }
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    params[@"name"] = address.name;
+    params[@"phone"] = address.phone;
+    params[@"carrier"] = method.label;
+    NSMutableDictionary *addressDict = [NSMutableDictionary new];
+    addressDict[@"line1"] = address.line1;
+    addressDict[@"line2"] = address.line2;
+    addressDict[@"city"] = address.city;
+    addressDict[@"state"] = address.state;
+    addressDict[@"postal_code"] = address.postalCode;
+    addressDict[@"country"] = address.country;
+    params[@"address"] = [addressDict copy];
+    return [params copy];
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 

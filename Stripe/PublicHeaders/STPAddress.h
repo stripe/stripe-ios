@@ -94,6 +94,19 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
  */
 @property (nonatomic, copy, nullable) NSString *email;
 
+/**
+ *  When creating a charge on your backend, you can attach shipping information
+ *  to prevent fraud on a physical good. You can use this method to turn your user's
+ *  shipping address and selected shipping method into a hash suitable for attaching 
+ *  to a charge. You should pass this to your backend, and use it as the `shipping`
+ *  parameter when creating a charge.
+ *  @see https://stripe.com/docs/api#create_charge-shipping
+ *
+ *  @param address  The user's shipping address. If nil, this method will return nil.
+ *  @param method   The user's selected shipping method. May be nil.
+ */
++ (NSDictionary *)shippingInfoForChargeWithAddress:(nullable STPAddress *)address
+                                    shippingMethod:(nullable PKShippingMethod *)method;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"

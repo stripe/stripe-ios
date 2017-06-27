@@ -148,6 +148,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  The user's shipping address. May be nil.
+ *  If you've already collected a shipping address from your user, you may
+ *  prefill it by setting a shippingAddress in PaymentContext's prefilledInformation.
+ *  When your user enters a new shipping address, PaymentContext will save it to 
+ *  the current customer object. When PaymentContext loads, if you haven't
+ *  manually set a prefilled value, any shipping information saved on the customer 
+ *  will be used to prefill the shipping address form. Note that because your
+ *  customer's email may not be the same as the email provided with their shipping
+ *  info, PaymentContext will not prefill the shipping form's email using your 
+ *  customer's email.
+ *
+ *  You should not rely on the shipping information stored on the Stripe customer 
+ *  for order fulfillment, as your user may change this information if they make 
+ *  multiple purchases. We recommend adding shipping information when you create
+ *  a charge (which can also help prevent fraud), or saving it to your own
+ *  database. https://stripe.com/docs/api#create_charge-shipping
+ *
+ *  Note: by default, your user will still be prompted to verify a prefilled 
+ *  shipping address. To change this behavior, you can set 
+ *  `verifyPrefilledShippingAddress` to NO in your `STPPaymentConfiguration`.
  */
 @property(nonatomic, readonly, nullable)STPAddress *shippingAddress;
 

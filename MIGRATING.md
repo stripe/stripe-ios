@@ -8,6 +8,7 @@
   4. Instead of using the initializers for `STPPaymentContext` or `STPPaymentMethodsViewController` that take an `STPBackendAPIAdapter` parameter, you should use the new initializers that take an `STPCustomerContext` parameter. You'll need to set up your instance of `STPCustomerContext` using the key provider you set up in (2).
 - For a more detailed overview of the new integration, you can refer to our tutorial at https://stripe.com/docs/mobile/ios/standard
 - Fixed nullability annotation for `[STPFile stringFromPurpose:]` which returns `nil` for `STPFilePurposeUnknown`. Will return a non-nil value for all other `STPFilePurpose`.
+- We've removed the `email` and `phone` properties in `STPUserInformation`. You can now pre-fill this information in the shipping form using the new `shippingAddress` property.
 
 ### Migrating from versions < 10.2.0
 - `paymentRequestWithMerchantIdentifier:` has been deprecated. You should instead use `paymentRequestWithMerchantIdentifier:country:currency:`. Apple Pay is now available in many countries and currencies, and you should use the appropriate values for your business.

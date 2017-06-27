@@ -10,6 +10,8 @@
 #import "STPAPIResponseDecodable.h"
 #import "STPSourceProtocol.h"
 
+@class STPAddress;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -49,6 +51,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  The available payment sources the customer has (this may be an empty array).
  */
 @property(nonatomic, readonly) NSArray<id<STPSourceProtocol>> *sources;
+
+/**
+ *  The customer's shipping address.
+ */
+@property(nonatomic, readonly) STPAddress *shippingAddress;
 
 @end
 

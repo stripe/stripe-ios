@@ -12,6 +12,20 @@
 
 @implementation STPFixtures
 
++ (STPAddress *)address {
+    STPAddress *address = [STPAddress new];
+    address.name = @"Jenny Rosen";
+    address.phone = @"5555555555";
+    address.email = @"jrosen@example.com";
+    address.line1 = @"27 Smith St";
+    address.line2 = @"Apt 2";
+    address.postalCode = @"10001";
+    address.city = @"New York";
+    address.state = @"NY";
+    address.country = @"US";
+    return address;
+}
+
 + (STPBankAccountParams *)bankAccountParams {
     STPBankAccountParams *bankParams = [STPBankAccountParams new];
     // https://stripe.com/docs/testing#account-numbers

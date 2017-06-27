@@ -11,6 +11,7 @@
 #import <PassKit/PassKit.h>
 #import <Contacts/Contacts.h>
 #import "STPAddress.h"
+#import "STPFixtures.h"
 
 @interface STPAddressTests : XCTestCase
 
@@ -429,6 +430,28 @@
     address.state = @"NY";
     address.postalCode = @"12345";
     XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldAll]);
+}
+
+- (void)testShippingInfoForCharge {
+    STPAddress *address = [STPFixtures address];
+    PKShippingMethod *method = [[PKShippingMethod alloc] init];
+    method.label = @"UPS Ground";
+    NSDictionary *info = [STPAddress shippingInfoForChargeWithAddress:address
+                                                       shippingMethod:method];
+    NSDictionary *expected = @{
+                               @"address": @{
+                                       @"city": address.city,
+                                       @"country": address.country,
+                                       @"line1": address.line1,
+                                       @"line2": address.line2,
+                                       @"postal_code": address.postalCode,
+                                       @"state": address.state
+                                       },
+                               @"name": address.name,
+                               @"phone": address.phone,
+                               @"carrier": method.label,
+                               };
+    XCTAssertEqualObjects(expected, info);
 }
 
 @end

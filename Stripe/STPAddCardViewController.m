@@ -135,10 +135,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     self.cardImageView = cardImageView;
     self.tableView.tableHeaderView = cardImageView;
     self.emailCell = [[STPRememberMeEmailCell alloc] initWithDelegate:self];
-    if ([STPEmailAddressValidator stringIsValidEmailAddress:self.prefilledInformation.email]) {
-        self.emailCell.contents = self.prefilledInformation.email;
-    }
-    
+
     STPRememberMePaymentCell *paymentCell = [[STPRememberMePaymentCell alloc] init];
     paymentCell.paymentField.delegate = self;
     self.paymentCell = paymentCell;
@@ -154,7 +151,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     
     self.rememberMePhoneCell = [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypePhone contents:nil lastInList:YES delegate:self];
     self.rememberMePhoneCell.caption = STPLocalizedString(@"Phone", nil);
-    self.rememberMePhoneCell.contents = self.prefilledInformation.phone;
     
     self.rememberMeTermsView = [STPRememberMeTermsView new];
     self.rememberMeTermsView.textView.alpha = 0;
