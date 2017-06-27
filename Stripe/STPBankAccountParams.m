@@ -93,12 +93,12 @@
 
 + (NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
-             @"accountNumber": @"account_number",
-             @"routingNumber": @"routing_number",
-             @"country": @"country",
-             @"currency": @"currency",
-             @"accountHolderName": @"account_holder_name",
-             @"accountHolderTypeString": @"account_holder_type",
+             NSStringFromSelector(@selector(accountNumber)): @"account_number",
+             NSStringFromSelector(@selector(routingNumber)): @"routing_number",
+             NSStringFromSelector(@selector(country)): @"country",
+             NSStringFromSelector(@selector(currency)): @"currency",
+             NSStringFromSelector(@selector(accountHolderName)): @"account_holder_name",
+             NSStringFromSelector(@selector(accountHolderTypeString)): @"account_holder_type",
              };
 }
 
