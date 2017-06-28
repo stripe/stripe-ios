@@ -188,7 +188,7 @@
     XCTAssertEqualObjects(bankAccount.currency, @"usd");
     XCTAssertEqualObjects(bankAccount.fingerprint, @"C5fW7AwE3of8bHvV");
     XCTAssertEqualObjects(bankAccount.last4, @"6789");
-    XCTAssertNil(bankAccount.routingNumber);
+    XCTAssertEqualObjects(bankAccount.routingNumber, @"110000000");
     XCTAssertEqual(bankAccount.status, STPBankAccountStatusNew);
 
     XCTAssertNotEqual(bankAccount.allResponseFields, response);

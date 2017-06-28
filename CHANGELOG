@@ -1,3 +1,6 @@
+== X.X.X 2017-XX-XX
+* Fixed the `routingNumber` property of `STPBankAccount` so that it is populated when the information is available
+
 == 11.0.0 2017-06-27
 * We've greatly simplified the integration for `STPPaymentContext`. See MIGRATING.md.
 * As part of this new integration, we've added a new class, `STPCustomerContext`, which will automatically prefetch your customer and cache it for a brief interval. We recommend initializing your `STPCustomerContext` before your user enters your checkout flow so their payment methods are loaded in advance. If in addition to using `STPPaymentContext`, you create a separate `STPPaymentMethodsViewController` to let your customer manage their payment methods outside of your checkout flow, you can use the same instance of `STPCustomerContext` for both.
