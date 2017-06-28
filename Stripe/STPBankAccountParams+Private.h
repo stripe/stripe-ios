@@ -15,7 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (STPBankAccountHolderType)accountHolderTypeFromString:(NSString *)string;
 + (NSString *)stringFromAccountHolderType:(STPBankAccountHolderType)accountHolderType;
 
-- (instancetype)init;
 - (NSString *)accountHolderTypeString;
 
 @end
