@@ -330,13 +330,6 @@
       "warning": "undocumented"
     },
     {
-      "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPCustomerContext.h",
-      "line": 28,
-      "symbol": "STPCustomerContext",
-      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
-      "warning": "undocumented"
-    },
-    {
       "file": "/Users/bg/stripe/stripe-ios/Stripe/PublicHeaders/STPFile.h",
       "line": 14,
       "symbol": "STPFilePurpose",

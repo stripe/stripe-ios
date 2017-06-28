@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>STPCoreViewController Class Reference</title>
+    <title>STPCustomerContext Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset="utf-8">
@@ -14,9 +14,9 @@
   </head>
   <body>
 
-    <a name="//apple_ref/objc/Class/STPCoreViewController" class="dashAnchor"></a>
+    <a name="//apple_ref/objc/Class/STPCustomerContext" class="dashAnchor"></a>
 
-    <a title="STPCoreViewController Class Reference"></a>
+    <a title="STPCustomerContext Class Reference"></a>
 
     <header class="header">
       <p class="header-col header-col--primary">
@@ -44,7 +44,7 @@
     <p class="breadcrumbs">
       <a class="breadcrumb" href="../index.html">Stripe Reference</a>
       <img class="carat" src="../img/carat.png" />
-      STPCoreViewController Class Reference
+      STPCustomerContext Class Reference
     </p>
 
     <div class="content-wrapper">
@@ -305,18 +305,19 @@
 
         <section class="section">
           <div class="section-content">
-            <h1>STPCoreViewController</h1>
+            <h1>STPCustomerContext</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPCoreViewController</span> <span class="p">:</span> <span class="nc">UIViewController</span></code></pre>
+                  <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPCustomerContext</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="o">&gt;</span></code></pre>
 
                 </div>
               </div>
-            <p>This is the base class for all Stripe view controllers. It is intended for use
-only by Stripe classes, you should not subclass it yourself in your app.</p>
-
-<p>It theming, back/cancel button management, and other shared logic for
-Stripe view controllers.</p>
+            <p>An <code>STPCustomerContext</code> retrieves and updates a Stripe customer using
+an ephemeral key, a short-lived API key scoped to a specific customer object.
+If your current user logs out of your app and a new user logs in, be sure to
+either create a new instance of <code>STPCustomerContext</code> or clear the current
+instance&rsquo;s cached customer. On your backend, be sure to create and return a
+new ephemeral key for the Customer object associated with the new user.</p>
 
           </div>
         </section>
@@ -328,9 +329,9 @@ Stripe view controllers.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPCoreViewController(im)init"></a>
-                    <a name="//apple_ref/objc/Method/-init" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPCoreViewController(im)init">-init</a>
+                    <a name="/c:objc(cs)STPCustomerContext(im)initWithKeyProvider:"></a>
+                    <a name="//apple_ref/objc/Method/-initWithKeyProvider:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCustomerContext(im)initWithKeyProvider:">-initWithKeyProvider:</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -338,54 +339,19 @@ Stripe view controllers.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A convenience initializer; equivalent to calling <code>initWithTheme:[STPTheme defaultTheme]</code>.</p>
+                        <p>Initializes a new <code>STPCustomerContext</code> with the specified key provider.
+Upon initialization, a CustomerContext will fetch a new ephemeral key from
+your backend and use it to prefetch the customer object specified in the key.
+Subsequent customer retrievals (e.g. by <code><a href="../Classes/STPPaymentContext.html">STPPaymentContext</a></code>) will return the
+prefetched customer immediately if its age does not exceed <code>cachedCustomerMaxAge</code>.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="n">init</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="o">!</span><span class="p">()</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCoreViewController.h#L27">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)STPCoreViewController(im)initWithTheme:"></a>
-                    <a name="//apple_ref/objc/Method/-initWithTheme:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPCoreViewController(im)initWithTheme:">-initWithTheme:</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Initializes a new view controller with the specified theme</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithTheme</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">theme</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="o">!</span><span class="p">(</span><span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="o">!</span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithKeyProvider</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPEphemeralKeyProvider.html">STPEphemeralKeyProvider</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">keyProvider</span><span class="p">;</span></code></pre>
 
                         </div>
                       </div>
@@ -396,12 +362,12 @@ Stripe view controllers.</p>
                             <tr>
                               <td>
                                 <code>
-                                <em>theme</em>
+                                <em>keyProvider</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>The theme to use to inform the view controller&rsquo;s visual appearance. </p>
+                                  <p>The key provider the customer context will use.</p>
 
                                 </div>
                               </td>
@@ -409,8 +375,13 @@ Stripe view controllers.</p>
                           </tbody>
                         </table>
                       </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the newly-instantiated customer context.</p>
+
+                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCoreViewController.h#L35">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomerContext.h#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -418,9 +389,9 @@ Stripe view controllers.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/c:objc(cs)STPCoreViewController(im)initWithNibName:bundle:"></a>
-                    <a name="//apple_ref/objc/Method/-initWithNibName:bundle:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPCoreViewController(im)initWithNibName:bundle:">-initWithNibName:bundle:</a>
+                    <a name="/c:objc(cs)STPCustomerContext(im)clearCachedCustomer"></a>
+                    <a name="//apple_ref/objc/Method/-clearCachedCustomer" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPCustomerContext(im)clearCachedCustomer">-clearCachedCustomer</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -428,62 +399,28 @@ Stripe view controllers.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Passes through to the default UIViewController behavior for this initializer,
-and then also sets the default theme as in <code>init</code></p>
+                        <p><code>STPCustomerContext</code> will cache its customer object for up to 60 seconds.
+If your current user logs out of your app and a new user logs in, be sure
+to either call this method or create a new instance of <code>STPCustomerContext</code>.
+On your backend, be sure to create and return a new ephemeral key for the
+customer object associated with the new user.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithNibName</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">nibNameOrNil</span>
-                                 <span class="nf">bundle</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSBundle</span> <span class="o">*</span><span class="p">)</span><span class="nv">nibBundleOrNil</span><span class="p">;</span></code></pre>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">clearCachedCustomer</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="o">!</span><span class="p">(</span><span class="n">nibName</span> <span class="nv">nibNameOrNil</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">,</span> <span class="n">bundle</span> <span class="nv">nibBundleOrNil</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">clearCachedCustomer</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCoreViewController.h#L42-L43">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)STPCoreViewController(im)initWithCoder:"></a>
-                    <a name="//apple_ref/objc/Method/-initWithCoder:" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPCoreViewController(im)initWithCoder:">-initWithCoder:</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Passes through to the default UIViewController behavior for this initializer,
-and then also sets the default theme as in <code>init</code></p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithCoder</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSCoder</span> <span class="o">*</span><span class="p">)</span><span class="nv">aDecoder</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCoreViewController.h#L49">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomerContext.h#L47">Show on GitHub</a>
                       </div>
                     </section>
                   </div>

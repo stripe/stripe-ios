@@ -101,6 +101,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPCustomer.html">STPCustomer</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCustomerContext.html">STPCustomerContext</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
@@ -313,7 +316,7 @@
 
 <p><code>STPPaymentContext</code> also provides a unified interface to multiple payment methods - for example, you can write a single integration to accept both credit card payments and Apple Pay.</p>
 
-<p><code>STPPaymentContext</code> saves information about a user&rsquo;s payment methods to a Stripe customer object, and requires an <code>STPCustomerContext</code> to manage retrieving and modifying the customer.</p>
+<p><code>STPPaymentContext</code> saves information about a user&rsquo;s payment methods to a Stripe customer object, and requires an <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code> to manage retrieving and modifying the customer.</p>
 
           </div>
         </section>
@@ -346,12 +349,12 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithCustomerContext</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPCustomerContext</span> <span class="o">*</span><span class="p">)</span><span class="nv">customerContext</span><span class="p">;</span></code></pre>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">customerContext</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt">STPCustomerContext</span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -410,14 +413,14 @@ and theme. After this class is initialized, you should also make sure to set its
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span>
-<span class="nf">initWithCustomerContext</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">STPCustomerContext</span> <span class="o">*</span><span class="p">)</span><span class="nv">customerContext</span>
+<span class="nf">initWithCustomerContext</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">customerContext</span>
           <span class="nf">configuration</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span>
                   <span class="nf">theme</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">theme</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt">STPCustomerContext</span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -496,7 +499,7 @@ and modify its Stripe customer. </p>
 
 <p>@deprecated Use <code>initWithCustomerContext:</code>.
   Instead of providing your own backend API adapter, you can now create an
-  <code>STPCustomerContext</code>, which will manage retrieving and updating a
+  <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
   Stripe customer for you. - see: STPCustomerContext.h</p>
 
                       </div>
@@ -537,7 +540,7 @@ and modify its Stripe customer. </p>
 
 <p>@deprecated Use <code>initWithCustomerContext:configuration:theme:</code>.
   Instead of providing your own backend API adapter, you can now create an
-  <code>STPCustomerContext</code>, which will manage retrieving and updating a
+  <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
   Stripe customer for you. - see: STPCustomerContext.h</p>
 
                       </div>
@@ -631,7 +634,7 @@ and modify its Stripe customer. </p>
 
 <p>@deprecated Use <code>customerContext</code>.
   Instead of providing your own backend API adapter, you can now  create an
-  <code>STPCustomerContext</code>, which will manage retrieving and updating a
+  <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
   Stripe customer for you. - see: STPCustomerContext.h</p>
 
                       </div>
@@ -1562,7 +1565,7 @@ when the user is done selecting their payment method.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-06-27)</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-06-28)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
