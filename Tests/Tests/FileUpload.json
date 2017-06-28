@@ -1,0 +1,10 @@
+// Source: https://stripe.com/docs/api#file_upload_object
+{
+    "id": "file_1AZl0o2eZvKYlo2CoIkwLzfd",
+    "object": "file_upload",
+    "created": 1498674938,
+    "purpose": "dispute_evidence",
+    "size": 34478,
+    "type": "jpg",
+    "url": "https://stripe-upload-api.s3.amazonaws.com/uploads/file_1AXyapEOD54MuFwSnhlqqvsX?AWSAccessKeyId=KEY_ID&Expires=TIMESTAMP&Signature=SIGNATURE"
+}

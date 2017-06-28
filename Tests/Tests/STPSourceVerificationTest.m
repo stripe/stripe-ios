@@ -11,6 +11,8 @@
 #import "STPSourceVerification.h"
 #import "STPSourceVerification+Private.h"
 
+#import "STPTestUtils.h"
+
 @interface STPSourceVerificationTest : XCTestCase
 
 @end
@@ -78,19 +80,11 @@
 #pragma mark - Description Tests
 
 - (void)testDescription {
-    STPSourceVerification *verification = [STPSourceVerification decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPSourceVerification *verification = [STPSourceVerification decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"SEPADebitSource"][@"verification"]];
     XCTAssert(verification.description);
 }
 
 #pragma mark - STPAPIResponseDecodable Tests
-
-- (NSDictionary *)completeAttributeDictionary {
-    // Source: https://stripe.com/docs/sources/sepa-debit
-    return @{
-             @"attempts_remaining": @(5),
-             @"status": @"pending",
-             };
-}
 
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
     NSArray<NSString *> *requiredFields = @[
@@ -98,17 +92,17 @@
                                             ];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"SEPADebitSource"][@"verification"] mutableCopy];
         [response removeObjectForKey:field];
 
         XCTAssertNil([STPSourceVerification decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssert([STPSourceVerification decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+    XCTAssert([STPSourceVerification decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"SEPADebitSource"][@"verification"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [self completeAttributeDictionary];
+    NSDictionary *response = [STPTestUtils jsonNamed:@"SEPADebitSource"][@"verification"];
     STPSourceVerification *verification = [STPSourceVerification decodedObjectFromAPIResponse:response];
 
     XCTAssertEqualObjects(verification.attemptsRemaining, @5);

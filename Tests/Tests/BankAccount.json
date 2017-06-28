@@ -1,0 +1,17 @@
+// Source: https://stripe.com/docs/api/curl#bank_accounts
+{
+    "id": "ba_1AZmya2eZvKYlo2CQzt7Fwnz",
+    "object": "bank_account",
+    "account": "acct_1032D82eZvKYlo2C",
+    "account_holder_name": "Jane Austen",
+    "account_holder_type": "individual",
+    "bank_name": "STRIPE TEST BANK",
+    "country": "US",
+    "currency": "usd",
+    "default_for_currency": false,
+    "fingerprint": "1JWtPxqbdX5Gamtc",
+    "last4": "6789",
+    "metadata": {},
+    "routing_number": "110000000",
+    "status": "new"
+}

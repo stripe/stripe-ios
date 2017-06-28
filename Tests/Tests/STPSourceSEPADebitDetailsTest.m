@@ -10,6 +10,8 @@
 
 #import "STPSourceSEPADebitDetails.h"
 
+#import "STPTestUtils.h"
+
 @interface STPSourceSEPADebitDetailsTest : XCTestCase
 
 @end
@@ -29,39 +31,27 @@
 #pragma mark - Description Tests
 
 - (void)testDescription {
-    STPSourceSEPADebitDetails *sepaDebitDetails = [STPSourceSEPADebitDetails decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPSourceSEPADebitDetails *sepaDebitDetails = [STPSourceSEPADebitDetails decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"SEPADebitSource"][@"sepa_debit"]];
     XCTAssert(sepaDebitDetails.description);
 }
 
 #pragma mark - STPAPIResponseDecodable Tests
 
-- (NSDictionary *)completeAttributeDictionary {
-    // Source: https://stripe.com/docs/sources/sepa-debit
-    return @{
-             @"bank_code": @"37040044",
-             @"country": @"DE",
-             @"fingerprint": @"NxdSyRegc9PsMkWy",
-             @"last4": @"3001",
-             @"mandate_reference": @"NXDSYREGC9PSMKWY",
-             @"mandate_url": @"https://hooks.stripe.com/adapter/sepa_debit/file/src_18HgGjHNCLa1Vra6Y9TIP6tU/src_client_secret_XcBmS94nTg5o0xc9MSliSlDW",
-             };
-}
-
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
     NSArray<NSString *> *requiredFields = @[];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"SEPADebitSource"][@"sepa_debit"] mutableCopy];
         [response removeObjectForKey:field];
 
         XCTAssertNil([STPSourceSEPADebitDetails decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssert([STPSourceSEPADebitDetails decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+    XCTAssert([STPSourceSEPADebitDetails decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"SEPADebitSource"][@"sepa_debit"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [self completeAttributeDictionary];
+    NSDictionary *response = [STPTestUtils jsonNamed:@"SEPADebitSource"][@"sepa_debit"];
     STPSourceSEPADebitDetails *sepaDebitDetails = [STPSourceSEPADebitDetails decodedObjectFromAPIResponse:response];
 
     XCTAssertEqualObjects(sepaDebitDetails.bankCode, @"37040044");

@@ -11,6 +11,8 @@
 #import "STPSourceCardDetails.h"
 #import "STPSourceCardDetails+Private.h"
 
+#import "STPTestUtils.h"
+
 @interface STPSourceCardDetailsTest : XCTestCase
 
 @end
@@ -78,39 +80,27 @@
 #pragma mark - Description Tests
 
 - (void)testDescription {
-    STPSourceCardDetails *cardDetails = [STPSourceCardDetails decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPSourceCardDetails *cardDetails = [STPSourceCardDetails decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"][@"card"]];
     XCTAssert(cardDetails.description);
 }
 
 #pragma mark - STPAPIResponseDecodable Tests
 
-- (NSDictionary *)completeAttributeDictionary {
-    return @{
-             @"brand": @"Visa",
-             @"country": @"US",
-             @"exp_month": @(12),
-             @"exp_year": @(2034),
-             @"funding": @"debit",
-             @"last4": @"5556",
-             @"three_d_secure": @"not_supported",
-             };
-}
-
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
     NSArray<NSString *> *requiredFields = @[];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"CardSource"][@"card"] mutableCopy];
         [response removeObjectForKey:field];
 
         XCTAssertNil([STPSourceCardDetails decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssert([STPSourceCardDetails decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+    XCTAssert([STPSourceCardDetails decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"][@"card"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [self completeAttributeDictionary];
+    NSDictionary *response = [STPTestUtils jsonNamed:@"CardSource"][@"card"];
     STPSourceCardDetails *cardDetails = [STPSourceCardDetails decodedObjectFromAPIResponse:response];
 
     XCTAssertEqual(cardDetails.brand, STPCardBrandVisa);

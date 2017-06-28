@@ -11,6 +11,8 @@
 #import "STPSourceRedirect.h"
 #import "STPSourceRedirect+Private.h"
 
+#import "STPTestUtils.h"
+
 @interface STPSourceRedirectTest : XCTestCase
 
 @end
@@ -78,20 +80,11 @@
 #pragma mark - Description Tests
 
 - (void)testDescription {
-    STPSourceRedirect *redirect = [STPSourceRedirect decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPSourceRedirect *redirect = [STPSourceRedirect decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"3DSSource"][@"redirect"]];
     XCTAssert(redirect.description);
 }
 
 #pragma mark - STPAPIResponseDecodable Tests
-
-- (NSDictionary *)completeAttributeDictionary {
-    // Source: https://stripe.com/docs/sources/three-d-secure
-    return @{
-             @"return_url": @"https://shop.example.com/crtA6B28E1",
-             @"status": @"pending",
-             @"url": @"https://hooks.stripe.com/redirect/authenticate/src_19YlvWAHEMiOZZp1QQlOD79v?client_secret=src_client_secret_kBwCSm6Xz5MQETiJ43hUH8qv",
-             };
-}
 
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
     NSArray<NSString *> *requiredFields = @[
@@ -101,20 +94,20 @@
                                             ];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"3DSSource"][@"redirect"] mutableCopy];
         [response removeObjectForKey:field];
 
         XCTAssertNil([STPSourceRedirect decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssert([STPSourceRedirect decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+    XCTAssert([STPSourceRedirect decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"3DSSource"][@"redirect"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [self completeAttributeDictionary];
+    NSDictionary *response = [STPTestUtils jsonNamed:@"3DSSource"][@"redirect"];
     STPSourceRedirect *redirect = [STPSourceRedirect decodedObjectFromAPIResponse:response];
 
-    XCTAssertEqualObjects(redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtA6B28E1"]);
+    XCTAssertEqualObjects(redirect.returnURL, [NSURL URLWithString:@"exampleappschema://stripe_callback"]);
     XCTAssertEqual(redirect.status, STPSourceRedirectStatusPending);
     XCTAssertEqualObjects(redirect.url, [NSURL URLWithString:@"https://hooks.stripe.com/redirect/authenticate/src_19YlvWAHEMiOZZp1QQlOD79v?client_secret=src_client_secret_kBwCSm6Xz5MQETiJ43hUH8qv"]);
 

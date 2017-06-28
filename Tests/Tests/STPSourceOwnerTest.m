@@ -11,6 +11,8 @@
 #import "STPSourceOwner.h"
 #import "STPAddress.h"
 
+#import "STPTestUtils.h"
+
 @interface STPSourceOwnerTest : XCTestCase
 
 @end
@@ -29,49 +31,21 @@
 
 #pragma mark - STPAPIResponseDecodable Tests
 
-- (NSDictionary *)completeAttributeDictionary {
-    // Source: https://stripe.com/docs/api#source_object
-    return @{
-             @"address": @{
-                     @"city": @"Pittsburgh",
-                     @"country": @"US",
-                     @"line1": @"123 Fake St",
-                     @"line2": @"Apt 1",
-                     @"postal_code": @"19219",
-                     @"state": @"PA",
-                     },
-             @"email": @"jenny.rosen@example.com",
-             @"name": @"Jenny Rosen",
-             @"phone": @"555-867-5309",
-             @"verified_address": @{
-                     @"city": @"Pittsburgh",
-                     @"country": @"US",
-                     @"line1": @"123 Fake St",
-                     @"line2": @"Apt 1",
-                     @"postal_code": @"19219",
-                     @"state": @"PA",
-                     },
-             @"verified_email": @"jenny.rosen@example.com",
-             @"verified_name": @"Jenny Rosen",
-             @"verified_phone": @"555-867-5309",
-             };
-}
-
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
     NSArray<NSString *> *requiredFields = @[];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"BitcoinSource"][@"owner"] mutableCopy];
         [response removeObjectForKey:field];
 
         XCTAssertNil([STPSourceOwner decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssert([STPSourceOwner decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+    XCTAssert([STPSourceOwner decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"][@"owner"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [self completeAttributeDictionary];
+    NSDictionary *response = [STPTestUtils jsonNamed:@"BitcoinSource"][@"owner"];
     STPSourceOwner *owner = [STPSourceOwner decodedObjectFromAPIResponse:response];
 
     XCTAssertEqualObjects(owner.address.city, @"Pittsburgh");

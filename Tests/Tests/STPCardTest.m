@@ -11,6 +11,9 @@
 #import "STPCard.h"
 #import "STPCard+Private.h"
 
+#import "NSDictionary+Stripe.h"
+#import "STPTestUtils.h"
+
 @interface STPCardTest : XCTestCase
 
 @end
@@ -216,7 +219,7 @@
 }
 
 - (void)testAddressPopulated {
-    STPCard *card = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
     XCTAssertEqualObjects(card.address.name, @"Jane Austen");
     XCTAssertEqualObjects(card.address.line1, @"123 Fake St");
     XCTAssertEqualObjects(card.address.line2, @"Apt 1");
@@ -234,8 +237,8 @@
 #pragma mark - Equality Tests
 
 - (void)testCardEquals {
-    STPCard *card1 = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
-    STPCard *card2 = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPCard *card1 = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
+    STPCard *card2 = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
 
     XCTAssertNotEqual(card1, card2);
 
@@ -249,41 +252,11 @@
 #pragma mark - Description Tests
 
 - (void)testDescription {
-    STPCard *card = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
     XCTAssert(card.description);
 }
 
 #pragma mark - STPAPIResponseDecodable Tests
-
-- (NSDictionary *)completeAttributeDictionary {
-    // Source: https://stripe.com/docs/api#card_object
-    return @{
-             @"id": @"card_1AVRojEOD54MuFwSxr93QJSx",
-             @"object": @"card",
-             @"address_city": @"Pittsburgh",
-             @"address_country": @"US",
-             @"address_line1": @"123 Fake St",
-             @"address_line1_check": @"pass",
-             @"address_line2": @"Apt 1",
-             @"address_state": @"PA",
-             @"address_zip": @"19219",
-             @"address_zip_check": @"pass",
-             @"brand": @"Visa",
-             @"country": @"US",
-             @"currency": @"usd",
-             @"customer": @"cus_Apzu98qCHnHJNJ",
-             @"cvc_check": @"pass",
-             @"dynamic_last4": @"5678",
-             @"exp_month": @(12),
-             @"exp_year": @(2034),
-             @"fingerprint": @"A7041YccE8Z6m5Cm",
-             @"funding": @"debit",
-             @"last4": @"5556",
-             @"metadata": @{},
-             @"name": @"Jane Austen",
-             @"tokenization_method": @"apple_pay",
-             };
-}
 
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
     NSArray<NSString *> *requiredFields = @[
@@ -295,20 +268,20 @@
                                             ];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"Card"] mutableCopy];
         [response removeObjectForKey:field];
 
         XCTAssertNil([STPCard decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssert([STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+    XCTAssert([STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [self completeAttributeDictionary];
+    NSDictionary *response = [STPTestUtils jsonNamed:@"Card"];
     STPCard *card = [STPCard decodedObjectFromAPIResponse:response];
 
-    XCTAssertEqualObjects(card.cardId, @"card_1AVRojEOD54MuFwSxr93QJSx");
+    XCTAssertEqualObjects(card.cardId, @"card_103kbR2eZvKYlo2CDczLmw4K");
     XCTAssertEqualObjects(card.addressCity, @"Pittsburgh");
     XCTAssertEqualObjects(card.addressCountry, @"US");
     XCTAssertEqualObjects(card.addressLine1, @"123 Fake St");
@@ -319,35 +292,35 @@
     XCTAssertEqualObjects(card.country, @"US");
     XCTAssertEqualObjects(card.currency, @"usd");
     XCTAssertEqualObjects(card.dynamicLast4, @"5678");
-    XCTAssertEqual(card.expMonth, (NSUInteger)12);
-    XCTAssertEqual(card.expYear, (NSUInteger)2034);
-    XCTAssertEqual(card.funding, STPCardFundingTypeDebit);
-    XCTAssertEqualObjects(card.last4, @"5556");
+    XCTAssertEqual(card.expMonth, (NSUInteger)5);
+    XCTAssertEqual(card.expYear, (NSUInteger)2017);
+    XCTAssertEqual(card.funding, STPCardFundingTypeCredit);
+    XCTAssertEqualObjects(card.last4, @"4242");
     XCTAssertEqualObjects(card.name, @"Jane Austen");
 
     XCTAssertNotEqual(card.allResponseFields, response);
-    XCTAssertEqualObjects(card.allResponseFields, response);
+    XCTAssertEqualObjects(card.allResponseFields, [response stp_dictionaryByRemovingNullsValidatingRequiredFields:@[]]);
 }
 
 #pragma mark - STPSourceProtocol Tests
 
 - (void)testStripeID {
-    STPCard *card = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
-    XCTAssertEqualObjects(card.stripeID, @"card_1AVRojEOD54MuFwSxr93QJSx");
+    STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
+    XCTAssertEqualObjects(card.stripeID, @"card_103kbR2eZvKYlo2CDczLmw4K");
 }
 
 - (void)testLabel {
-    STPCard *card = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
-    XCTAssertEqualObjects(card.label, @"Visa 5556");
+    STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
+    XCTAssertEqualObjects(card.label, @"Visa 4242");
 }
 
 - (void)testImage {
-    STPCard *card = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
     XCTAssert(card.image);
 }
 
 - (void)testTemplateImage {
-    STPCard *card = [STPCard decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
     XCTAssert(card.templateImage);
 }
 

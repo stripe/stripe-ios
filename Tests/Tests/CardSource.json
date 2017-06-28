@@ -22,15 +22,12 @@
     "type": "card",
     "usage": "reusable",
     "card": {
-        "exp_month": 12,
-        "exp_year": 2018,
         "brand": "Visa",
         "country": "US",
-        "cvc_check": "unchecked",
-        "funding": "credit",
-        "last4": "4242",
-        "three_d_secure": "not_supported",
-        "address_line1_check": null,
-        "address_zip_check": null
+        "exp_month": 12,
+        "exp_year": 2034,
+        "funding": "debit",
+        "last4": "5556",
+        "three_d_secure": "not_supported"
     }
 }

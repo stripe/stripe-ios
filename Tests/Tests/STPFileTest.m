@@ -11,6 +11,8 @@
 #import "STPFile.h"
 #import "STPFile+Private.h"
 
+#import "STPTestUtils.h"
+
 @interface STPFileTest : XCTestCase
 
 @end
@@ -71,8 +73,8 @@
 #pragma mark - Equality Tests
 
 - (void)testFileEquals {
-    STPFile *file1 = [STPFile decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
-    STPFile *file2 = [STPFile decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPFile *file1 = [STPFile decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"FileUpload"]];
+    STPFile *file2 = [STPFile decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"FileUpload"]];
 
     XCTAssertNotEqual(file1, file2);
 
@@ -85,19 +87,6 @@
 
 #pragma mark - STPAPIResponseDecodable Tests
 
-- (NSDictionary *)completeAttributeDictionary {
-    // Source: https://stripe.com/docs/api#file_upload_object
-    return @{
-        @"id": @"file_1AXyapEOD54MuFwSnhlqqvsX",
-        @"object": @"file_upload",
-        @"created": @(1498250487),
-        @"purpose": @"dispute_evidence",
-        @"size": @9863,
-        @"type": @"png",
-        @"url": @"https://stripe-upload-api.s3.amazonaws.com/uploads/file_1AXyapEOD54MuFwSnhlqqvsX?AWSAccessKeyId=KEY_ID&Expires=TIMESTAMP&Signature=SIGNATURE"
-    };
-}
-
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
     NSArray<NSString *> *requiredFields = @[
                                             @"id",
@@ -108,24 +97,24 @@
                                             ];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"FileUpload"] mutableCopy];
         [response removeObjectForKey:field];
 
         XCTAssertNil([STPFile decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssert([STPFile decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+    XCTAssert([STPFile decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"FileUpload"]]);
 }
 
 - (void)testInitializingFileWithAttributeDictionary {
-    NSDictionary *response = [self completeAttributeDictionary];
+    NSDictionary *response = [STPTestUtils jsonNamed:@"FileUpload"];
     STPFile *file = [STPFile decodedObjectFromAPIResponse:response];
 
-    XCTAssertEqualObjects(file.fileId, @"file_1AXyapEOD54MuFwSnhlqqvsX");
-    XCTAssertEqualObjects(file.created, [NSDate dateWithTimeIntervalSince1970:1498250487]);
+    XCTAssertEqualObjects(file.fileId, @"file_1AZl0o2eZvKYlo2CoIkwLzfd");
+    XCTAssertEqualObjects(file.created, [NSDate dateWithTimeIntervalSince1970:1498674938]);
     XCTAssertEqual(file.purpose, STPFilePurposeDisputeEvidence);
-    XCTAssertEqualObjects(file.size, @9863);
-    XCTAssertEqualObjects(file.type, @"png");
+    XCTAssertEqualObjects(file.size, @34478);
+    XCTAssertEqualObjects(file.type, @"jpg");
 
     XCTAssertNotEqual(file.allResponseFields, response);
     XCTAssertEqualObjects(file.allResponseFields, response);

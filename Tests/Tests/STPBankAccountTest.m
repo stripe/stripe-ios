@@ -12,6 +12,7 @@
 #import "STPBankAccount+Private.h"
 
 #import "STPFormEncoder.h"
+#import "STPTestUtils.h"
 
 @interface STPBankAccountTest : XCTestCase
 
@@ -114,8 +115,8 @@
 #pragma mark - Equality Tests
 
 - (void)testBankAccountEquals {
-    STPBankAccount *bankAccount1 = [STPBankAccount decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
-    STPBankAccount *bankAccount2 = [STPBankAccount decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPBankAccount *bankAccount1 = [STPBankAccount decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BankAccount"]];
+    STPBankAccount *bankAccount2 = [STPBankAccount decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BankAccount"]];
 
     XCTAssertNotEqual(bankAccount1, bankAccount2);
 
@@ -129,32 +130,11 @@
 #pragma mark - Description Tests
 
 - (void)testDescription {
-    STPBankAccount *bankAccount = [STPBankAccount decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPBankAccount *bankAccount = [STPBankAccount decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BankAccount"]];
     XCTAssert(bankAccount.description);
 }
 
 #pragma mark - STPAPIResponseDecodable Tests
-
-- (NSDictionary *)completeAttributeDictionary {
-    // Source: https://stripe.com/docs/api#customer_bank_account_object
-    return @{
-             @"id": @"ba_1AXvnKEOD54MuFwSotKc6xq0",
-             @"object": @"bank_account",
-             @"account": @"acct_1AHMhqEOD54MuFwS",
-             @"account_holder_name": @"Jane Austen",
-             @"account_holder_type": @"individual",
-             @"bank_name": @"STRIPE TEST BANK",
-             @"country": @"US",
-             @"currency": @"usd",
-             @"default_for_currency": @(NO),
-             @"fingerprint": @"C5fW7AwE3of8bHvV",
-             @"last4": @"6789",
-             @"metadata": @{},
-             @"routing_number": @"110000000",
-             @"status": @"new",
-             @"customer": @"cus_AtMGi1QH6GlMP4",
-             };
-}
 
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
     NSArray<NSString *> *requiredFields = @[
@@ -167,26 +147,26 @@
                                             ];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"BankAccount"] mutableCopy];
         [response removeObjectForKey:field];
 
         XCTAssertNil([STPBankAccount decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssert([STPBankAccount decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+    XCTAssert([STPBankAccount decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BankAccount"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [self completeAttributeDictionary];
+    NSDictionary *response = [STPTestUtils jsonNamed:@"BankAccount"];
     STPBankAccount *bankAccount = [STPBankAccount decodedObjectFromAPIResponse:response];
 
-    XCTAssertEqualObjects(bankAccount.bankAccountId, @"ba_1AXvnKEOD54MuFwSotKc6xq0");
+    XCTAssertEqualObjects(bankAccount.bankAccountId, @"ba_1AZmya2eZvKYlo2CQzt7Fwnz");
     XCTAssertEqualObjects(bankAccount.accountHolderName, @"Jane Austen");
     XCTAssertEqual(bankAccount.accountHolderType, STPBankAccountHolderTypeIndividual);
     XCTAssertEqualObjects(bankAccount.bankName, @"STRIPE TEST BANK");
     XCTAssertEqualObjects(bankAccount.country, @"US");
     XCTAssertEqualObjects(bankAccount.currency, @"usd");
-    XCTAssertEqualObjects(bankAccount.fingerprint, @"C5fW7AwE3of8bHvV");
+    XCTAssertEqualObjects(bankAccount.fingerprint, @"1JWtPxqbdX5Gamtc");
     XCTAssertEqualObjects(bankAccount.last4, @"6789");
     XCTAssertEqualObjects(bankAccount.routingNumber, @"110000000");
     XCTAssertEqual(bankAccount.status, STPBankAccountStatusNew);

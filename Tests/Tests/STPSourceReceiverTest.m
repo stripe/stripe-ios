@@ -10,6 +10,8 @@
 
 #import "STPSourceReceiver.h"
 
+#import "STPTestUtils.h"
+
 @interface STPSourceReceiverTest : XCTestCase
 
 @end
@@ -29,23 +31,11 @@
 #pragma mark - Description Tests
 
 - (void)testDescription {
-    STPSourceReceiver *receiver = [STPSourceReceiver decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPSourceReceiver *receiver = [STPSourceReceiver decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"][@"receiver"]];
     XCTAssert(receiver.description);
 }
 
 #pragma mark - STPAPIResponseDecodable Tests
-
-- (NSDictionary *)completeAttributeDictionary {
-    // Source: https://stripe.com/docs/api#source_object
-    return @{
-             @"address": @"test_1MBhWS3uv4ynCfQXF3xQjJkzFPukr4K56N",
-             @"amount_charged": @(300),
-             @"amount_received": @(200),
-             @"amount_returned": @(100),
-             @"refund_attributes_method": @"email",
-             @"refund_attributes_status": @"missing",
-             };
-}
 
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
     NSArray<NSString *> *requiredFields = @[
@@ -53,17 +43,17 @@
                                             ];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"BitcoinSource"][@"receiver"] mutableCopy];
         [response removeObjectForKey:field];
 
         XCTAssertNil([STPSourceReceiver decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssert([STPSourceReceiver decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+    XCTAssert([STPSourceReceiver decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"][@"receiver"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [self completeAttributeDictionary];
+    NSDictionary *response = [STPTestUtils jsonNamed:@"BitcoinSource"][@"receiver"];
     STPSourceReceiver *receiver = [STPSourceReceiver decodedObjectFromAPIResponse:response];
 
     XCTAssertEqualObjects(receiver.address, @"test_1MBhWS3uv4ynCfQXF3xQjJkzFPukr4K56N");

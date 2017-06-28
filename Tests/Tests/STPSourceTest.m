@@ -11,6 +11,8 @@
 #import "STPSource.h"
 #import "STPSource+Private.h"
 
+#import "STPTestUtils.h"
+
 @interface STPSourceTest : XCTestCase
 
 @end
@@ -262,8 +264,8 @@
 #pragma mark - Equality Tests
 
 - (void)testSourceEquals {
-    STPSource *source1 = [STPSource decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
-    STPSource *source2 = [STPSource decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPSource *source1 = [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"]];
+    STPSource *source2 = [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"]];
 
     XCTAssertNotEqual(source1, source2);
 
@@ -277,55 +279,11 @@
 #pragma mark - Description Tests
 
 - (void)testDescription {
-    STPSource *source = [STPSource decodedObjectFromAPIResponse:[self completeAttributeDictionary]];
+    STPSource *source = [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"]];
     XCTAssert(source.description);
 }
 
 #pragma mark - STPAPIResponseDecodable Tests
-
-- (NSDictionary *)completeAttributeDictionary {
-    // Source: https://stripe.com/docs/api#source_object
-    return @{
-             @"id": @"src_1AXyapEOD54MuFwSGpIHn8NM",
-             @"object": @"source",
-             @"amount": @(1000),
-             @"client_secret": @"src_client_secret_Eh47vJB9AUNENJi0pfObKtCM",
-             @"created": @(1498250487),
-             @"currency": @"usd",
-             @"flow": @"receiver",
-             @"livemode": @NO,
-             @"metadata": @{},
-             @"owner": @{
-                     @"address": [NSNull null],
-                     @"email": @"jenny.rosen@example.com",
-                     @"name": [NSNull null],
-                     @"phone": [NSNull null],
-                     @"verified_address": [NSNull null],
-                     @"verified_email": [NSNull null],
-                     @"verified_name": [NSNull null],
-                     @"verified_phone": [NSNull null],
-                     },
-             @"receiver": @{
-                     @"address": @"test_1MBhWS3uv4ynCfQXF3xQjJkzFPukr4K56N",
-                     @"amount_charged": @(0),
-                     @"amount_received": @(0),
-                     @"amount_returned": @(0),
-                     @"refund_attributes_method": @"email",
-                     @"refund_attributes_status": @"missing",
-                     },
-             @"status": @"pending",
-             @"type": @"bitcoin",
-             @"usage": @"single_use",
-             @"bitcoin": @{
-                     @"address": @"test_1MBhWS3uv4ynCfQXF3xQjJkzFPukr4K56N",
-                     @"amount": @(2371000),
-                     @"amount_charged": @(0),
-                     @"amount_received": @(0),
-                     @"amount_returned": @(0),
-                     @"uri": @"bitcoin:test_1MBhWS3uv4ynCfQXF3xQjJkzFPukr4K56N?amount=0.02371000",
-                     },
-             };
-}
 
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
     NSArray<NSString *> *requiredFields = @[
@@ -336,38 +294,28 @@
                                             ];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[self completeAttributeDictionary] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"BitcoinSource"] mutableCopy];
         [response removeObjectForKey:field];
 
         XCTAssertNil([STPSource decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssert([STPSource decodedObjectFromAPIResponse:[self completeAttributeDictionary]]);
+    XCTAssert([STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [self completeAttributeDictionary];
+    NSDictionary *response = [STPTestUtils jsonNamed:@"BitcoinSource"];
     STPSource *source = [STPSource decodedObjectFromAPIResponse:response];
 
-    XCTAssertEqualObjects(source.stripeID, @"src_1AXyapEOD54MuFwSGpIHn8NM");
+    XCTAssertEqualObjects(source.stripeID, @"src_1AZnr12eZvKYlo2Cl6OACPB1");
     XCTAssertEqualObjects(source.amount, @(1000));
-    XCTAssertEqualObjects(source.clientSecret, @"src_client_secret_Eh47vJB9AUNENJi0pfObKtCM");
-    XCTAssertEqualObjects(source.created, [NSDate dateWithTimeIntervalSince1970:1498250487]);
+    XCTAssertEqualObjects(source.clientSecret, @"src_client_secret_rAzjPq1N4nWJ1iVqxAzGZzix");
+    XCTAssertEqualObjects(source.created, [NSDate dateWithTimeIntervalSince1970:1498685863]);
     XCTAssertEqualObjects(source.currency, @"usd");
     XCTAssertEqual(source.flow, STPSourceFlowReceiver);
     XCTAssertFalse(source.livemode);
-    XCTAssertNil(source.owner.address);
-    XCTAssertEqualObjects(source.owner.email, @"jenny.rosen@example.com");
-    XCTAssertNil(source.owner.name);
-    XCTAssertNil(source.owner.phone);
-    XCTAssertNil(source.owner.verifiedAddress);
-    XCTAssertNil(source.owner.verifiedEmail);
-    XCTAssertNil(source.owner.verifiedName);
-    XCTAssertNil(source.owner.verifiedPhone);
-    XCTAssertEqualObjects(source.receiver.address, @"test_1MBhWS3uv4ynCfQXF3xQjJkzFPukr4K56N");
-    XCTAssertEqualObjects(source.receiver.amountCharged, @(0));
-    XCTAssertEqualObjects(source.receiver.amountReceived, @(0));
-    XCTAssertEqualObjects(source.receiver.amountReturned, @(0));
+    XCTAssert(source.owner);  // STPSourceOwnerTest
+    XCTAssert(source.receiver);  // STPSourceReceiverTest
     XCTAssertEqual(source.status, STPSourceStatusPending);
     XCTAssertEqual(source.type, STPSourceTypeBitcoin);
     XCTAssertEqual(source.usage, STPSourceUsageSingleUse);
