@@ -1,5 +1,5 @@
 //
-//  STPRememberMePaymentCell.h
+//  STPPaymentCardTextFieldCell.h
 //  Stripe
 //
 //  Created by Jack Flintermann on 6/16/16.
@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPRememberMePaymentCell : UITableViewCell
+@interface STPPaymentCardTextFieldCell : UITableViewCell
 
 @property(nonatomic, weak, readonly)STPPaymentCardTextField *paymentField;
 @property(nonatomic, copy)STPTheme *theme;

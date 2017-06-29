@@ -11,10 +11,10 @@
 #import <Stripe/Stripe.h>
 #import "STPCard.h"
 #import "STPFixtures.h"
-#import "STPRememberMePaymentCell.h"
+#import "STPPaymentCardTextFieldCell.h"
 
 @interface STPAddCardViewController (Testing)
-@property(nonatomic)STPRememberMePaymentCell *paymentCell;
+@property(nonatomic)STPPaymentCardTextFieldCell *paymentCell;
 @property(nonatomic)STPAPIClient *apiClient;
 @property(nonatomic)BOOL loading;
 @end

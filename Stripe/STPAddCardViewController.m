@@ -24,8 +24,7 @@
 #import "STPPaymentCardTextField.h"
 #import "STPPaymentConfiguration+Private.h"
 #import "STPPhoneNumberValidator.h"
-#import "STPRememberMeEmailCell.h"
-#import "STPRememberMePaymentCell.h"
+#import "STPPaymentCardTextFieldCell.h"
 #import "STPSectionHeaderView.h"
 #import "STPToken.h"
 #import "STPWeakStrongMacros.h"
@@ -56,14 +55,13 @@
 @property(nonatomic)STPSectionHeaderView *cardHeaderView;
 @property(nonatomic)STPCardIOProxy *cardIOProxy;
 @property(nonatomic)STPSectionHeaderView *addressHeaderView;
-@property(nonatomic)STPRememberMePaymentCell *paymentCell;
+@property(nonatomic)STPPaymentCardTextFieldCell *paymentCell;
 @property(nonatomic)BOOL loading;
 @property(nonatomic)STPPaymentActivityIndicatorView *activityIndicator;
 @property(nonatomic, weak)STPPaymentActivityIndicatorView *lookupActivityIndicator;
 @property(nonatomic)STPAddressViewModel *addressViewModel;
 @property(nonatomic)UIToolbar *inputAccessoryToolbar;
 @property(nonatomic)BOOL lookupSucceeded;
-@property(nonatomic)BOOL showingRememberMePhoneAndTerms;
 @end
 
 static NSString *const STPPaymentCardCellReuseIdentifier = @"STPPaymentCardCellReuseIdentifier";
@@ -112,7 +110,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     self.cardImageView = cardImageView;
     self.tableView.tableHeaderView = cardImageView;
 
-    STPRememberMePaymentCell *paymentCell = [[STPRememberMePaymentCell alloc] init];
+    STPPaymentCardTextFieldCell *paymentCell = [[STPPaymentCardTextFieldCell alloc] init];
     paymentCell.paymentField.delegate = self;
     self.paymentCell = paymentCell;
 
