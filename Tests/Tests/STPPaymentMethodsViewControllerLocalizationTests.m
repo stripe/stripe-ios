@@ -30,7 +30,6 @@
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
     config.additionalPaymentMethods = STPPaymentMethodTypeAll;
-    config.smsAutofillDisabled = NO;
     STPTheme *theme = [STPTheme defaultTheme];
     id customerContext = [STPMocks staticCustomerContext];
     id delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));

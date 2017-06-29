@@ -113,14 +113,7 @@ static NSInteger STPPaymentMethodAddCardSection = 1;
         [tableView reloadSections:[NSIndexSet indexSetWithIndex:STPPaymentMethodCardListSection] withRowAnimation:UITableViewRowAnimationFade];
         [self.delegate internalViewControllerDidSelectPaymentMethod:paymentMethod];
     } else if (indexPath.section == STPPaymentMethodAddCardSection) {
-        STPPaymentConfiguration *config = [self.configuration copy];
-        NSArray *cardPaymentMethods = [self.paymentMethods filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id<STPPaymentMethod> paymentMethod, __unused NSDictionary<NSString *,id> * _Nullable bindings) {
-            return [paymentMethod isKindOfClass:[STPCard class]];
-        }]];
-        // Disable SMS autofill if we already have a card on file
-        config.ineligibleForSmsAutofill = (cardPaymentMethods.count > 0);
-        
-        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:config theme:self.theme];
+        STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
         paymentCardViewController.delegate = self;
         paymentCardViewController.prefilledInformation = self.prefilledInformation;
         paymentCardViewController.shippingAddress = self.shippingAddress;
