@@ -133,7 +133,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self unsubscribeFromNotifications];
 
     if (shouldDismissViewController) {
-        [self dimissPresentedViewController];
+        [self dismissPresentedViewController];
     }
 
     self.completion(self.source.stripeID, self.source.clientSecret, error);
@@ -150,7 +150,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)unsubscribeFromNotificationsAndDismissPresentedViewControllers {
     [self unsubscribeFromNotifications];
-    [self dimissPresentedViewController];
+    [self dismissPresentedViewController];
 }
 
 - (void)unsubscribeFromNotifications {
@@ -160,7 +160,7 @@ NS_ASSUME_NONNULL_BEGIN
     [[STPURLCallbackHandler shared] unregisterListener:self];
 }
 
-- (void)dimissPresentedViewController {
+- (void)dismissPresentedViewController {
     if (self.safariVC) {
         [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
                                                                    completion:nil];

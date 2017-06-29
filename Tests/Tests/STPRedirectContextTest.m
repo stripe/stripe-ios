@@ -14,7 +14,8 @@
 #import "STPURLCallbackHandler.h"
 
 @interface STPRedirectContext (Testing)
-- (void)unsubscribeFromNotificationsAndDismissPresentedViewControllers;
+- (void)unsubscribeFromNotifications;
+- (void)dismissPresentedViewController;
 @end
 
 @interface STPRedirectContextTest : XCTestCase
@@ -64,7 +65,8 @@
     OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
                                    animated:YES
                                  completion:[OCMArg any]]);
-    OCMVerify([sut unsubscribeFromNotificationsAndDismissPresentedViewControllers]);
+    OCMVerify([sut unsubscribeFromNotifications]);
+    OCMVerify([sut dismissPresentedViewController]);
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
@@ -95,13 +97,14 @@
     OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
                                    animated:YES
                                  completion:[OCMArg any]]);
-    OCMReject([sut unsubscribeFromNotificationsAndDismissPresentedViewControllers]);
+    OCMReject([sut unsubscribeFromNotifications]);
+    OCMReject([sut dismissPresentedViewController]);
 }
 
 /**
  After starting a SafariViewController redirect flow,
  when SafariViewController finishes, RedirectContext's completion block
- and dismiss method should be called.
+ should be called.
  */
 - (void)testSafariViewControllerRedirectFlow_didFinish {
     id mockVC = OCMClassMock([UIViewController class]);
@@ -128,7 +131,9 @@
     OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
                                    animated:YES
                                  completion:[OCMArg any]]);
-    OCMVerify([sut unsubscribeFromNotificationsAndDismissPresentedViewControllers]);
+    OCMVerify([sut unsubscribeFromNotifications]);
+    // dismiss should not be called – SafariVC dismisses itself when Done is tapped
+    OCMReject([sut dismissPresentedViewController]);
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
@@ -164,7 +169,8 @@
     OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
                                    animated:YES
                                  completion:[OCMArg any]]);
-    OCMVerify([sut unsubscribeFromNotificationsAndDismissPresentedViewControllers]);
+    OCMVerify([sut unsubscribeFromNotifications]);
+    OCMVerify([sut dismissPresentedViewController]);
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
@@ -187,7 +193,8 @@
     OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]]
                                    animated:YES
                                  completion:[OCMArg any]]);
-    OCMVerify([sut unsubscribeFromNotificationsAndDismissPresentedViewControllers]);
+    OCMVerify([sut unsubscribeFromNotifications]);
+    OCMVerify([sut dismissPresentedViewController]);
 }
 
 /**
@@ -208,7 +215,8 @@
     OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]]
                                    animated:YES
                                  completion:[OCMArg any]]);
-    OCMVerify([sut unsubscribeFromNotificationsAndDismissPresentedViewControllers]);
+    OCMVerify([sut unsubscribeFromNotifications]);
+    OCMVerify([sut dismissPresentedViewController]);
 }
 
 /**
@@ -228,7 +236,8 @@
     OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]]
                                    animated:YES
                                  completion:[OCMArg any]]);
-    OCMReject([sut unsubscribeFromNotificationsAndDismissPresentedViewControllers]);
+    OCMReject([sut unsubscribeFromNotifications]);
+    OCMReject([sut dismissPresentedViewController]);
 }
 
 /**
@@ -250,7 +259,8 @@
     [sut startSafariAppRedirectFlow];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
 
-    OCMVerify([sut unsubscribeFromNotificationsAndDismissPresentedViewControllers]);
+    OCMVerify([sut unsubscribeFromNotifications]);
+    OCMVerify([sut dismissPresentedViewController]);
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
@@ -267,7 +277,8 @@
 
     [sut startSafariAppRedirectFlow];
 
-    OCMReject([sut unsubscribeFromNotificationsAndDismissPresentedViewControllers]);
+    OCMReject([sut unsubscribeFromNotifications]);
+    OCMReject([sut dismissPresentedViewController]);
 }
 
 @end
