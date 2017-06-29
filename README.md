@@ -9,6 +9,8 @@ The Stripe iOS SDK make it easy to collect your users' credit card details insid
 
 We also offer [seamless integration](https://stripe.com/apple-pay) with [Apple Pay](https://www.apple.com/apple-pay/) that will allow you to securely collect payments from your customers in a way that prevents them from having to re-enter their credit card information.
 
+> Note: we've greatly simplified the integration for `STPPaymentContext` in [v11.0.0](https://github.com/stripe/stripe-ios/releases/v11.0.0). If you integrated `STPPaymentContext` prior to this and you're interested in migrating, we've written a [migration guide](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migration-from-versions--1100).
+
 ## Requirements
 Our SDK is compatible with iOS apps supporting iOS 8.0 and above. It requires Xcode 8.0+ to build the source.
 
