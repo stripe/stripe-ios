@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPFile ()
 
-+ (STPFilePurpose)purposeFromString:(NSString *)string;
+//
 
 @end
 

@@ -14,6 +14,13 @@
 #import "NSDictionary+Stripe.h"
 #import "STPTestUtils.h"
 
+@interface STPCard ()
+
+- (void)setLast4:(NSString *)last4;
+- (void)setAllResponseFields:(NSDictionary *)allResponseFields;
+
+@end
+
 @interface STPCardTest : XCTestCase
 
 @end

@@ -13,6 +13,13 @@
 
 #import "STPTestUtils.h"
 
+@interface STPSourceCardDetails ()
+
++ (STPSourceCard3DSecureStatus)threeDSecureStatusFromString:(NSString *)string;
++ (NSString *)stringFromThreeDSecureStatus:(STPSourceCard3DSecureStatus)threeDSecureStatus;
+
+@end
+
 @interface STPSourceCardDetailsTest : XCTestCase
 
 @end

@@ -13,6 +13,12 @@
 
 #import "STPTestUtils.h"
 
+@interface STPFile ()
+
++ (STPFilePurpose)purposeFromString:(NSString *)string;
+
+@end
+
 @interface STPFileTest : XCTestCase
 
 @end

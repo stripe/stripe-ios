@@ -16,13 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (STPSourceType)typeFromString:(NSString *)string;
 + (nullable NSString *)stringFromType:(STPSourceType)type;
 
-+ (STPSourceFlow)flowFromString:(NSString *)string;
 + (nullable NSString *)stringFromFlow:(STPSourceFlow)flow;
 
-+ (STPSourceStatus)statusFromString:(NSString *)string;
-+ (nullable NSString *)stringFromStatus:(STPSourceStatus)status;
-
-+ (STPSourceUsage)usageFromString:(NSString *)string;
 + (nullable NSString *)stringFromUsage:(STPSourceUsage)usage;
 
 @end

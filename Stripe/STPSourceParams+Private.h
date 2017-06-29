@@ -14,8 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, nullable, strong) NSString *redirectMerchantName;
 
-- (NSString *)flowString;
-- (NSString *)usageString;
+//
 
 @end
 

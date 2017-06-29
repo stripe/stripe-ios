@@ -13,6 +13,17 @@
 
 #import "STPTestUtils.h"
 
+@interface STPSource ()
+
++ (STPSourceFlow)flowFromString:(NSString *)string;
+
++ (STPSourceStatus)statusFromString:(NSString *)string;
++ (NSString *)stringFromStatus:(STPSourceStatus)status;
+
++ (STPSourceUsage)usageFromString:(NSString *)string;
+
+@end
+
 @interface STPSourceTest : XCTestCase
 
 @end

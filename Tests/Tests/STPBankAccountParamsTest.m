@@ -11,6 +11,12 @@
 #import "STPBankAccountParams.h"
 #import "STPBankAccountParams+Private.h"
 
+@interface STPBankAccountParams ()
+
+- (NSString *)accountHolderTypeString;
+
+@end
+
 @interface STPBankAccountParamsTest : XCTestCase
 
 @end

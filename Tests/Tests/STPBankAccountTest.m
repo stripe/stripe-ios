@@ -14,6 +14,15 @@
 #import "STPFormEncoder.h"
 #import "STPTestUtils.h"
 
+@interface STPBankAccount ()
+
++ (STPBankAccountStatus)statusFromString:(NSString *)string;
++ (NSString *)stringFromStatus:(STPBankAccountStatus)status;
+
+- (void)setLast4:(NSString *)last4;
+
+@end
+
 @interface STPBankAccountTest : XCTestCase
 
 @end

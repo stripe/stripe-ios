@@ -14,6 +14,13 @@
 #import "Stripe.h"
 #import "STPFormEncoder.h"
 
+@interface STPSourceParams ()
+
+- (NSString *)flowString;
+- (NSString *)usageString;
+
+@end
+
 @interface STPSourceParamsTest : XCTestCase
 
 @end

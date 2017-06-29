@@ -15,6 +15,7 @@
 @interface STPBankAccount ()
 
 @property (nonatomic, readwrite) NSString *bankAccountId;
+@property (nonatomic, readwrite) NSString *last4;
 @property (nonatomic, readwrite) NSString *bankName;
 @property (nonatomic, readwrite) NSString *fingerprint;
 @property (nonatomic) STPBankAccountStatus status;

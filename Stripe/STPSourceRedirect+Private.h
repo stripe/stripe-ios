@@ -12,8 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPSourceRedirect ()
 
-+ (STPSourceRedirectStatus)statusFromString:(NSString *)string;
-+ (nullable NSString *)stringFromStatus:(STPSourceRedirectStatus)status;
+//
 
 @end
 

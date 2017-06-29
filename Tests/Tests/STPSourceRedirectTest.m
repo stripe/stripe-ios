@@ -13,6 +13,13 @@
 
 #import "STPTestUtils.h"
 
+@interface STPSourceRedirect ()
+
++ (STPSourceRedirectStatus)statusFromString:(NSString *)string;
++ (NSString *)stringFromStatus:(STPSourceRedirectStatus)status;
+
+@end
+
 @interface STPSourceRedirectTest : XCTestCase
 
 @end

@@ -13,6 +13,13 @@
 
 #import "STPTestUtils.h"
 
+@interface STPSourceVerification ()
+
++ (STPSourceVerificationStatus)statusFromString:(NSString *)string;
++ (NSString *)stringFromStatus:(STPSourceVerificationStatus)status;
+
+@end
+
 @interface STPSourceVerificationTest : XCTestCase
 
 @end
