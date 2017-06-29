@@ -46,32 +46,14 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Bezorgadres";
 
-/* Button on SMS verification screen if the user did not receive the SMS code. */
-"Didn't receive the code?" = "Code niet ontvangen?";
-
 /* Caption for Email field on address form */
 "Email" = "E-mailadres";
-
-/* No comment provided by engineer. */
-"Enter card details manually" = "Voer kaartgegevens handmatig in";
-
-/* No comment provided by engineer. */
-"Enter the verification code to use the payment info you stored with Stripe." = "Voer de verificatiecode in om de betalingsgegevens te gebruiken die u bij Stripe hebt opgeslagen.";
 
 /* accessibility label for text field */
 "expiration date" = "vervaldatum";
 
-/* Error message for checkout account api call */
-"Failed to parse account response" = "Kan accountreactie niet parseren";
-
-/* Cancel button for Remember Me SMS verification screen. */
-"Fill in your card details manually" = "Vul uw kaartgegevens handmatig in";
-
 /* Label for free shipping method */
 "Free" = "Gratis";
-
-/* Message shown when the user enters an incorrect SMS verification code. */
-"Invalid Code" = "Ongeldige code";
 
 /* Shipping form error message */
 "Invalid Shipping Address" = "Ongeldig verzendadres";
@@ -88,9 +70,6 @@
 /* No comment provided by engineer. */
 "OK" = "OK";
 
-/* Button to paste a copied SMS code into the verification field. */
-"Paste copied code?" = "Gekopieerde code plakken?";
-
 /* Title for Payment Method screen */
 "Payment Method" = "Betalingsmethode";
 
@@ -102,9 +81,6 @@
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provincie";
-
-/* Label for the switch to enable Remember Me */
-"Save for use in other apps" = "Opslaan voor gebruik in andere apps";
 
 /* Text for button to scan a credit card */
 "Scan Card" = "Kaart scannen";
@@ -118,53 +94,26 @@
 /* Label for shipping method form */
 "Shipping Method" = "Verzendmethode";
 
-/* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
-"Something went wrong with Remember Me: %@" = "Er is iets fout gegaan bij Mij onthouden: %@";
-
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Staat";
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
 "State / Province / Region" = "Staat/provincie/regio";
 
-/* Footer shown when the user enables Remember Me that shows additional info. The html-style tags control which parts of the text link to the Stripe Privacy Policy, Terms of Service, and Remember Me More Info pages, and can be moved around as needed in the translation (although they CANNOT overlap). */
-"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Stripe kan mijn betalingsgegevens en telefoonnummer opslaan voor gebruik in deze app en andere apps, en mijn nummer voor verificatie doeleinden gebruiken, krachtens het <pplink>Privacy Beleid</pplink> en de <termslink>Voorwaarden</termslink>. <infolink>Meer info</infolink>";
-
-/* Error message for network request being cancelled. */
-"The operation was cancelled" = "De bewerking is geannuleerd";
-
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Er is een fout met de verwerking van uw kaart - Probeer het over enkele seconden opnieuw";
-
-/* No comment provided by engineer. */
-"There was an error submitting your autofilled card details." = "Er is een fout met het indienen van uw automatisch ingevulde kaartgegevens.";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Er is een onverwachte fout opgetreden -- Probeer het over enkele seconden opnieuw";
 
-/* Error message when failing to type in SMS code for Remember me too many times. */
-"Too many incorrect attempts" = "Te veel onjuiste pogingen";
-
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Gebruik factureringsadres";
 
-/* Button to fill billing address from delivery address */
+/* Button to fill billing address from delivery address. */
 "Use Delivery" = "Gebruik bezorgadres";
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Gebruik verzendadres";
-
-/* Title for SMS verification code screen */
-"Verification Code" = "Verificatiecode";
-
-/* Message shown after sending SMS verification code. The substitution is a phone number. */
-"We just sent a text message to: %@" = "We hebben zojuist een sms-bericht verzonden naar: %@";
-
-/* Placeholder text for non-Amex CVC field (3 digits) */
-"XXX" = "XXX";
-
-/* Placeholder text for Amex CVC field (4 digits) */
-"XXXX" = "XXXX";
 
 /* Error when the card has already expired */
 "Your card has expired" = "Uw kaart is vervallen";
