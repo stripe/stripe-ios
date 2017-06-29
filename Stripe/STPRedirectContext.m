@@ -90,14 +90,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)safariViewControllerDidFinish:(__unused SFSafariViewController *)controller { FAUXPAS_IGNORED_ON_LINE(APIAvailability)
     stpDispatchToMainThreadIfNecessary(^{
-        [self handleRedirectCompletionWithError:nil];
+        [self handleRedirectCompletionWithError:nil
+                    shouldDismissViewController:NO];
     });
 }
 
 - (void)safariViewController:(__unused SFSafariViewController *)controller didCompleteInitialLoad:(BOOL)didLoadSuccessfully { FAUXPAS_IGNORED_ON_LINE(APIAvailability)
     if (didLoadSuccessfully == NO) {
         stpDispatchToMainThreadIfNecessary(^{
-            [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]];
+            [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]
+                        shouldDismissViewController:YES];
         });
     }
 }
@@ -106,24 +108,33 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)handleWillForegroundNotification {
     stpDispatchToMainThreadIfNecessary(^{
-        [self handleRedirectCompletionWithError:nil];
+        [self handleRedirectCompletionWithError:nil
+                    shouldDismissViewController:YES];
     });
 }
 
 - (BOOL)handleURLCallback:(__unused NSURL *)url {
     stpDispatchToMainThreadIfNecessary(^{
-        [self handleRedirectCompletionWithError:nil];
+        [self handleRedirectCompletionWithError:nil
+                    shouldDismissViewController:YES];
     });
     // We handle all returned urls that match what we registered for
     return YES;
 }
 
-- (void)handleRedirectCompletionWithError:(nullable NSError *)error {
+- (void)handleRedirectCompletionWithError:(nullable NSError *)error
+              shouldDismissViewController:(BOOL)shouldDismissViewController {
     if (self.state != STPRedirectContextStateInProgress) {
         return;
     }
-    [self unsubscribeFromNotificationsAndDismissPresentedViewControllers];
+
     _state = STPRedirectContextStateCompleted;
+
+    [self unsubscribeFromNotifications];
+
+    if (shouldDismissViewController) {
+        [self dismissPresentedViewController];
+    }
 
     self.completion(self.source.stripeID, self.source.clientSecret, error);
 }
@@ -138,18 +149,21 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)unsubscribeFromNotificationsAndDismissPresentedViewControllers {
+    [self unsubscribeFromNotifications];
+    [self dismissPresentedViewController];
+}
+
+- (void)unsubscribeFromNotifications {
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIApplicationWillEnterForegroundNotification
                                                   object:nil];
     [[STPURLCallbackHandler shared] unregisterListener:self];
+}
 
+- (void)dismissPresentedViewController {
     if (self.safariVC) {
         [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
-                                                                   completion:^{
-                                                                       stpDispatchToMainThreadIfNecessary(^{
-                                                                           [self handleRedirectCompletionWithError:nil];
-                                                                       });
-                                                                   }];
+                                                                   completion:nil];
     }
 }
 
