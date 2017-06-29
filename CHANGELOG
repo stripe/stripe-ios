@@ -4,6 +4,7 @@
 * We've added a `shippingAddress` property to `STPUserInformation`, which you can use to pre-fill your user's shipping information.
 * `STPPaymentContext` will now save your user's shipping information to their Stripe customer object. Shipping information will automatically be pre-filled from the customer object for subsequent checkouts.
 * Fixed nullability annotation for `[STPFile stringFromPurpose:]`. See MIGRATING.md.
+* The card autofill via SMS feature of `STPPaymentContext` has been removed. See MIGRATING.md.
 
 == 10.2.0 2017-06-19
 * We've added a `paymentCountry` property to `STPPaymentContext`. This affects the countryCode of Apple Pay payments, and defaults to "US". You should set this to the country your Stripe account is in.
