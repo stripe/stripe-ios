@@ -46,32 +46,14 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "递送地址";
 
-/* Button on SMS verification screen if the user did not receive the SMS code. */
-"Didn't receive the code?" = "尚未收到验证码？";
-
 /* Caption for Email field on address form */
 "Email" = "电子邮件";
-
-/* No comment provided by engineer. */
-"Enter card details manually" = "手动输入银行卡详情";
-
-/* No comment provided by engineer. */
-"Enter the verification code to use the payment info you stored with Stripe." = "输入验证码以便使用您储存在 Stripe 中的支付信息。";
 
 /* accessibility label for text field */
 "expiration date" = "有效日期";
 
-/* Error message for checkout account api call */
-"Failed to parse account response" = "分析帐户响应失败";
-
-/* Cancel button for Remember Me SMS verification screen. */
-"Fill in your card details manually" = "手动填写您的银行卡详情";
-
 /* Label for free shipping method */
 "Free" = "免费";
-
-/* Message shown when the user enters an incorrect SMS verification code. */
-"Invalid Code" = "验证码无效";
 
 /* Shipping form error message */
 "Invalid Shipping Address" = "无效配送地址";
@@ -88,9 +70,6 @@
 /* No comment provided by engineer. */
 "OK" = "确定";
 
-/* Button to paste a copied SMS code into the verification field. */
-"Paste copied code?" = "粘贴已复制的验证码？";
-
 /* Title for Payment Method screen */
 "Payment Method" = "支付方式";
 
@@ -102,9 +81,6 @@
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "省";
-
-/* Label for the switch to enable Remember Me */
-"Save for use in other apps" = "保存供其它应用使用";
 
 /* Text for button to scan a credit card */
 "Scan Card" = "扫一扫银行卡";
@@ -118,53 +94,26 @@
 /* Label for shipping method form */
 "Shipping Method" = "配送方式";
 
-/* Error message for Remember Me network error. More detailed cause of the error will be filled into the substitution. */
-"Something went wrong with Remember Me: %@" = "“保存我的信息”出错：%@";
-
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "州";
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
 "State / Province / Region" = "州/省/地区";
 
-/* Footer shown when the user enables Remember Me that shows additional info. The html-style tags control which parts of the text link to the Stripe Privacy Policy, Terms of Service, and Remember Me More Info pages, and can be moved around as needed in the translation (although they CANNOT overlap). */
-"Stripe may store my payment info and phone number for use in this app and other apps, and use my number for verification, subject to Stripe's <pplink>Privacy Policy</pplink> and <termslink>Terms</termslink>. <infolink>More Info</infolink>" = "Stripe 可存储我的支付信息和电话号码，供此应用及其它应用所使用，并使用我的号码用于进行验证，受到 Stripe <pplink>隐私政策</pplink>和<termslink>条款</termslink>的制约。<infolink>更多信息</infolink>";
-
-/* Error message for network request being cancelled. */
-"The operation was cancelled" = "操作已取消";
-
 /* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "处理您的银行卡时发生错误 —— 请过几秒钟再试";
-
-/* No comment provided by engineer. */
-"There was an error submitting your autofilled card details." = "提交您自动填充的银行卡详情时发生错误。";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "发生意外错误 —— 请过几秒钟再试";
 
-/* Error message when failing to type in SMS code for Remember me too many times. */
-"Too many incorrect attempts" = "过多错误的尝试";
-
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "使用帐单地址";
 
-/* Button to fill billing address from delivery address */
+/* Button to fill billing address from delivery address. */
 "Use Delivery" = "使用递送地址";
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "使用送货地址";
-
-/* Title for SMS verification code screen */
-"Verification Code" = "验证码";
-
-/* Message shown after sending SMS verification code. The substitution is a phone number. */
-"We just sent a text message to: %@" = "我们刚发送了一条短信到：%@";
-
-/* Placeholder text for non-Amex CVC field (3 digits) */
-"XXX" = "XXX";
-
-/* Placeholder text for Amex CVC field (4 digits) */
-"XXXX" = "XXXX";
 
 /* Error when the card has already expired */
 "Your card has expired" = "您的银行卡已过期";

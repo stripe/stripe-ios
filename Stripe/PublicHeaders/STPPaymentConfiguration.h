@@ -70,12 +70,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  The Apple Merchant Identifier to use during Apple Pay transactions. To create one of these, see our guide at https://stripe.com/docs/mobile/apple-pay . You must set this to a valid identifier in order to automatically enable Apple Pay.
  */
 @property(nonatomic, nullable, copy)NSString *appleMerchantIdentifier;
-
-/**
- *  When entering their payment information, users who have a saved card with Stripe will be prompted to autofill it by entering an SMS code. Set this property to `YES` to disable this feature. The user won't receive an SMS code even if they have their payment information stored with Stripe, and won't be prompted to save it if they don't.
- */
-@property(nonatomic)BOOL smsAutofillDisabled;
-
 @end
 
 NS_ASSUME_NONNULL_END

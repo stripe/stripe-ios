@@ -66,6 +66,13 @@ current_en_strings = File.readlines(strings_file("en"))
   extract_key(s)
 }
 
+@orig_keys = []
+orig_tuples = split_tuples(strings_file("en"))
+for tuple in orig_tuples
+  key = extract_key(tuple[1])
+  @orig_keys.push(key)
+end
+
 puts "▸ Downloading translations from PhraseApp"
 `phraseapp pull -t #{ARGV[0]}`
 
@@ -91,7 +98,9 @@ for lang in @langs
     if (new_tuple = key_to_tuple[key1])
       new_tuples.push(new_tuple)
     else
-      new_tuples.push(tuple1)
+      if @orig_keys.include?(key1)
+        new_tuples.push(tuple1)
+      end
     end
     for new_key in @new_keys
       if new_key.downcase > key1.downcase && new_key.downcase < key2.downcase &&
