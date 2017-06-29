@@ -275,8 +275,6 @@
 		04E39F551CECF7A100AF3B96 /* STPPaymentMethodTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E39F511CECF7A100AF3B96 /* STPPaymentMethodTuple.m */; };
 		04E39F581CECF9A800AF3B96 /* STPPaymentMethodsViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E39F561CECF9A800AF3B96 /* STPPaymentMethodsViewController+Private.h */; };
 		04E39F5C1CECFAFD00AF3B96 /* STPPaymentContext+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E39F5A1CECFAFD00AF3B96 /* STPPaymentContext+Private.h */; };
-		04E39F661CED3B0100AF3B96 /* stp_icon_chevron_right_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F631CED3B0100AF3B96 /* stp_icon_chevron_right_small@2x.png */; };
-		04E39F671CED3B0100AF3B96 /* stp_icon_chevron_right_small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F641CED3B0100AF3B96 /* stp_icon_chevron_right_small@3x.png */; };
 		04E39F6A1CED48D500AF3B96 /* UIBarButtonItem+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E39F681CED48D500AF3B96 /* UIBarButtonItem+Stripe.h */; };
 		04E39F6B1CED48D500AF3B96 /* UIBarButtonItem+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E39F691CED48D500AF3B96 /* UIBarButtonItem+Stripe.m */; };
 		04E39F6F1CED4C7700AF3B96 /* stp_icon_chevron_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F6C1CED4C7700AF3B96 /* stp_icon_chevron_left.png */; };
@@ -572,7 +570,6 @@
 		F1343BE91D652CAB00F102D8 /* Card.json in Resources */ = {isa = PBXBuildFile; fileRef = C1D23FB31D37FE0B002FD83C /* Card.json */; };
 		F1343BEA1D652CAD00F102D8 /* Customer.json in Resources */ = {isa = PBXBuildFile; fileRef = C1D23FB41D37FE0B002FD83C /* Customer.json */; };
 		F1343BEB1D652CE100F102D8 /* stp_card_form_back.png in Resources */ = {isa = PBXBuildFile; fileRef = C11810B81CC7DA290022FB55 /* stp_card_form_back.png */; };
-		F1343BEE1D652CF300F102D8 /* stp_icon_chevron_right_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F621CED3B0100AF3B96 /* stp_icon_chevron_right_small.png */; };
 		F148ABC81D5D334B0014FD92 /* STPLocalizationUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F148ABC31D5D334B0014FD92 /* STPLocalizationUtils.m */; };
 		F148ABCA1D5D334B0014FD92 /* STPLocalizationUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F148ABC31D5D334B0014FD92 /* STPLocalizationUtils.m */; };
 		F148ABE81D5E805A0014FD92 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F148ABE61D5E805A0014FD92 /* Localizable.strings */; };
@@ -607,7 +604,6 @@
 		F1510B261D5A4C93000731AD /* stp_card_visa_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510B091D5A4C93000731AD /* stp_card_visa_template@2x.png */; };
 		F1510B271D5A4C93000731AD /* stp_card_visa_template@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510B0A1D5A4C93000731AD /* stp_card_visa_template@3x.png */; };
 		F1510B281D5A4C93000731AD /* stp_card_visa_template@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510B0A1D5A4C93000731AD /* stp_card_visa_template@3x.png */; };
-		F1510B2A1D5A4CC3000731AD /* stp_icon_chevron_right_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F621CED3B0100AF3B96 /* stp_icon_chevron_right_small.png */; };
 		F1510B4F1D5A4CC4000731AD /* stp_card_form_back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C11810B91CC7DA290022FB55 /* stp_card_form_back@2x.png */; };
 		F1510B501D5A4CC4000731AD /* stp_card_form_back@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C11810BA1CC7DA290022FB55 /* stp_card_form_back@3x.png */; };
 		F1510B511D5A4CC4000731AD /* stp_card_form_front.png in Resources */ = {isa = PBXBuildFile; fileRef = C11810BB1CC7DA290022FB55 /* stp_card_form_front.png */; };
@@ -619,8 +615,6 @@
 		F1510B5D1D5A4CC4000731AD /* stp_icon_chevron_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F6C1CED4C7700AF3B96 /* stp_icon_chevron_left.png */; };
 		F1510B5E1D5A4CC4000731AD /* stp_icon_chevron_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F6D1CED4C7700AF3B96 /* stp_icon_chevron_left@2x.png */; };
 		F1510B5F1D5A4CC4000731AD /* stp_icon_chevron_left@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F6E1CED4C7700AF3B96 /* stp_icon_chevron_left@3x.png */; };
-		F1510B601D5A4CC4000731AD /* stp_icon_chevron_right_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F631CED3B0100AF3B96 /* stp_icon_chevron_right_small@2x.png */; };
-		F1510B611D5A4CC4000731AD /* stp_icon_chevron_right_small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F641CED3B0100AF3B96 /* stp_icon_chevron_right_small@3x.png */; };
 		F1510BA71D5A77F6000731AD /* stp_card_diners_template.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510BA41D5A77F6000731AD /* stp_card_diners_template.png */; };
 		F1510BAA1D5A77F6000731AD /* stp_card_diners_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510BA51D5A77F6000731AD /* stp_card_diners_template@2x.png */; };
 		F1510BAD1D5A77F6000731AD /* stp_card_diners_template@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510BA61D5A77F6000731AD /* stp_card_diners_template@3x.png */; };
@@ -943,9 +937,6 @@
 		04E39F511CECF7A100AF3B96 /* STPPaymentMethodTuple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodTuple.m; sourceTree = "<group>"; };
 		04E39F561CECF9A800AF3B96 /* STPPaymentMethodsViewController+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPPaymentMethodsViewController+Private.h"; sourceTree = "<group>"; };
 		04E39F5A1CECFAFD00AF3B96 /* STPPaymentContext+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPPaymentContext+Private.h"; sourceTree = "<group>"; };
-		04E39F621CED3B0100AF3B96 /* stp_icon_chevron_right_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_icon_chevron_right_small.png; sourceTree = "<group>"; };
-		04E39F631CED3B0100AF3B96 /* stp_icon_chevron_right_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_chevron_right_small@2x.png"; sourceTree = "<group>"; };
-		04E39F641CED3B0100AF3B96 /* stp_icon_chevron_right_small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_chevron_right_small@3x.png"; sourceTree = "<group>"; };
 		04E39F681CED48D500AF3B96 /* UIBarButtonItem+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+Stripe.h"; sourceTree = "<group>"; };
 		04E39F691CED48D500AF3B96 /* UIBarButtonItem+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+Stripe.m"; sourceTree = "<group>"; };
 		04E39F6C1CED4C7700AF3B96 /* stp_icon_chevron_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_icon_chevron_left.png; sourceTree = "<group>"; };
@@ -1315,9 +1306,6 @@
 				04E39F6C1CED4C7700AF3B96 /* stp_icon_chevron_left.png */,
 				04E39F6D1CED4C7700AF3B96 /* stp_icon_chevron_left@2x.png */,
 				04E39F6E1CED4C7700AF3B96 /* stp_icon_chevron_left@3x.png */,
-				04E39F621CED3B0100AF3B96 /* stp_icon_chevron_right_small.png */,
-				04E39F631CED3B0100AF3B96 /* stp_icon_chevron_right_small@2x.png */,
-				04E39F641CED3B0100AF3B96 /* stp_icon_chevron_right_small@3x.png */,
 				C15993201D8807930047950D /* stp_shipping_form.png */,
 				C15993211D8807930047950D /* stp_shipping_form@2x.png */,
 				C15993221D8807930047950D /* stp_shipping_form@3x.png */,
@@ -2393,7 +2381,6 @@
 				F1510BC51D5A8146000731AD /* stp_card_jcb_template@3x.png in Resources */,
 				049A3FA11CC8006800F57DE7 /* stp_icon_add@3x.png in Resources */,
 				F1510B271D5A4C93000731AD /* stp_card_visa_template@3x.png in Resources */,
-				F1510B2A1D5A4CC3000731AD /* stp_icon_chevron_right_small.png in Resources */,
 				F1510BAD1D5A77F6000731AD /* stp_card_diners_template@3x.png in Resources */,
 				0438EFB21B741C2800D506CC /* stp_card_cvc_amex@2x.png in Resources */,
 				F1510B1F1D5A4C93000731AD /* stp_card_mastercard_template@2x.png in Resources */,
@@ -2419,7 +2406,6 @@
 				0438EFBE1B741C2800D506CC /* stp_card_discover@2x.png in Resources */,
 				C1300D2B1EB8D3AB0080AF7B /* stp_card_error_amex@3x.png in Resources */,
 				0438EFC01B741C2800D506CC /* stp_card_discover@3x.png in Resources */,
-				04E39F671CED3B0100AF3B96 /* stp_icon_chevron_right_small@3x.png in Resources */,
 				C1300D2E1EB8D3AB0080AF7B /* stp_card_error@3x.png in Resources */,
 				F148ABE81D5E805A0014FD92 /* Localizable.strings in Resources */,
 				0438EFB41B741C2800D506CC /* stp_card_cvc_amex@3x.png in Resources */,
@@ -2446,7 +2432,6 @@
 				F1510B211D5A4C93000731AD /* stp_card_mastercard_template@3x.png in Resources */,
 				C15993231D8807930047950D /* stp_shipping_form.png in Resources */,
 				0438EFC81B741C2800D506CC /* stp_card_mastercard.png in Resources */,
-				04E39F661CED3B0100AF3B96 /* stp_icon_chevron_right_small@2x.png in Resources */,
 				0438EFBC1B741C2800D506CC /* stp_card_discover.png in Resources */,
 				0438EFA61B741C2800D506CC /* stp_card_amex@2x.png in Resources */,
 				0438EFD41B741C2800D506CC /* stp_card_visa.png in Resources */,
@@ -2470,7 +2455,6 @@
 				F1510B581D5A4CC4000731AD /* stp_card_applepay@2x.png in Resources */,
 				C1B630BF1D1D860100A05285 /* stp_card_cvc@2x.png in Resources */,
 				C1363BB41D76337900EB82B4 /* stp_icon_checkmark@3x.png in Resources */,
-				F1510B601D5A4CC4000731AD /* stp_icon_chevron_right_small@2x.png in Resources */,
 				C1B630C01D1D860100A05285 /* stp_card_cvc@3x.png in Resources */,
 				C1B630C11D1D860100A05285 /* stp_card_cvc_amex.png in Resources */,
 				F1510B4F1D5A4CC4000731AD /* stp_card_form_back@2x.png in Resources */,
@@ -2498,7 +2482,6 @@
 				F148ABE91D5E805A0014FD92 /* Localizable.strings in Resources */,
 				C1B630C81D1D860100A05285 /* stp_card_discover@2x.png in Resources */,
 				C1B630C91D1D860100A05285 /* stp_card_discover@3x.png in Resources */,
-				F1510B611D5A4CC4000731AD /* stp_icon_chevron_right_small@3x.png in Resources */,
 				F1510B241D5A4C93000731AD /* stp_card_visa_template.png in Resources */,
 				F1510B0C1D5A4C93000731AD /* stp_card_amex_template.png in Resources */,
 				C1300D2F1EB8F16B0080AF7B /* stp_card_error_amex.png in Resources */,
@@ -2521,7 +2504,6 @@
 				F1510B591D5A4CC4000731AD /* stp_card_applepay@3x.png in Resources */,
 				F1510B5B1D5A4CC4000731AD /* stp_icon_add@2x.png in Resources */,
 				F1510B181D5A4C93000731AD /* stp_card_discover_template.png in Resources */,
-				F1343BEE1D652CF300F102D8 /* stp_icon_chevron_right_small.png in Resources */,
 				C1300D361EB8F1780080AF7B /* stp_card_unknown@2x.png in Resources */,
 				F1510B201D5A4C93000731AD /* stp_card_mastercard_template@2x.png in Resources */,
 				C12057501D676DD400CFBCB8 /* stp_card_jcb_template.png in Resources */,
