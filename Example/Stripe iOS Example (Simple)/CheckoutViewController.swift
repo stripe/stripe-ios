@@ -81,7 +81,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         config.requiredShippingAddressFields = settings.requiredShippingAddressFields
         config.shippingType = settings.shippingType
         config.additionalPaymentMethods = settings.additionalPaymentMethods
-        config.smsAutofillDisabled = !settings.smsAutofillEnabled
 
         let customerContext = STPCustomerContext(keyProvider: MyAPIClient.sharedClient)
         let paymentContext = STPPaymentContext(customerContext: customerContext,
