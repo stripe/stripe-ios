@@ -11,6 +11,12 @@ We also offer [seamless integration](https://stripe.com/apple-pay) with [Apple P
 
 > Note: we've greatly simplified the integration for `STPPaymentContext` in [v11.0.0](https://github.com/stripe/stripe-ios/releases/v11.0.0). If you integrated `STPPaymentContext` prior to this and you're interested in migrating, we've written a [migration guide](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migration-from-versions--1100).
 
+## Releases
+
+We recommend you only use official versioned releases of the sdk (accessible from Github's [Releases](https://github.com/stripe/stripe-ios/releases) page) as the master branch is considered unstable.
+
+If you're reading this on github.com, make sure you are looking at the version that matches the release you have installed, otherwise the instructions and example code may be mismatched. You can read the latest released version of this readme and browse the associated code on Github via [this link](https://github.com/stripe/stripe-ios/tree/v11.0.0).
+
 ## Requirements
 Our SDK is compatible with iOS apps supporting iOS 8.0 and above. It requires Xcode 8.0+ to build the source.
 
@@ -38,7 +44,7 @@ Before you can run the apps, you need to provide them with your Stripe publishab
 
 1. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds). Then go to https://dashboard.stripe.com/account/apikeys.
 2. Replace the `stripePublishableKey` constant in CheckoutViewController.swift (for the Simple app) or Constants.m (for the Custom app) with your Test Publishable Key.
-3. Head to https://github.com/stripe/example-ios-backend and click "Deploy to Heroku" (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under 'Env'. Click "Deploy for Free".
+3. Head to https://github.com/stripe/example-ios-backend/tree/v11.0.0 and click "Deploy to Heroku" (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under 'Env'. Click "Deploy for Free".
 4. Replace the `backendBaseURL` variable in the example iOS app with the app URL Heroku provides you with (e.g. "https://my-example-app.herokuapp.com")
 
 After this is done, you can make test payments through the app and see them in your Stripe dashboard. Head to https://stripe.com/docs/testing#cards for a list of test card numbers.
