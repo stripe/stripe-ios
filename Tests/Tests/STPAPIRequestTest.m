@@ -168,6 +168,74 @@
     }];
 }
 
+- (void)testDeleteWithAPIClient {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"expectation"];
+
+    // Setup mocks
+    NSURLSessionDataTask *dataTaskMock = OCMClassMock([NSURLSessionDataTask class]);
+
+    NSURLSession *urlSessionMock = OCMClassMock([NSURLSession class]);
+    OCMStub([urlSessionMock dataTaskWithRequest:[OCMArg any]
+                              completionHandler:[OCMArg checkWithBlock:^BOOL(void (^completionHandler)(NSData *, NSURLResponse *, NSError *)) {
+        completionHandler((NSData *)@"body", (NSURLResponse *)@"response", (NSError *)@"error");
+        return YES;
+    }]]).andReturn(dataTaskMock);
+
+    STPAPIClient *apiClientMock = OCMClassMock([STPAPIClient class]);
+    OCMStub([apiClientMock apiURL]).andReturn([NSURL URLWithString:@"https://api.stripe.com"]);
+    OCMStub([apiClientMock urlSession]).andReturn(urlSessionMock);
+
+    id apiRequestMock = OCMClassMock([STPAPIRequest class]);
+    OCMStub([apiRequestMock parseResponse:[OCMArg any]
+                                     body:[OCMArg any]
+                                    error:[OCMArg any]
+                            deserializers:[OCMArg any]
+                               completion:[OCMArg checkWithBlock:^BOOL(STPAPIResponseBlock completion) {
+        completion((STPCard *)@"card", (NSHTTPURLResponse *)@"httpURLResponse", (NSError *)@"error");
+        return YES;
+    }]]);
+
+    // Perform request
+    NSString *endpoint = @"endpoint";
+    NSDictionary *parameters = @{@"key": @"value"};
+    STPCard *deserializer = [[STPCard alloc] init];
+
+    NSURLSessionDataTask *task = [STPAPIRequest deleteWithAPIClient:apiClientMock
+                                                           endpoint:endpoint
+                                                         parameters:parameters
+                                                       deserializer:deserializer
+                                                         completion:^(id<STPAPIResponseDecodable> object, NSHTTPURLResponse *response, NSError *error) {
+                                                             XCTAssertEqualObjects(object, (STPCard *)@"card");
+                                                             XCTAssertEqualObjects(response, (NSHTTPURLResponse *)@"httpURLResponse");
+                                                             XCTAssertEqualObjects(error, (NSError *)@"error");
+                                                             [expectation fulfill];
+                                                         }];
+    XCTAssertEqualObjects(task, dataTaskMock);
+
+    [self waitForExpectationsWithTimeout:2.0 handler:^(NSError *error) {
+        XCTAssertNil(error);
+
+        // Verify mocks
+        OCMVerify([dataTaskMock resume]);
+
+        OCMVerify([urlSessionMock dataTaskWithRequest:[OCMArg checkWithBlock:^BOOL(NSURLRequest *request) {
+            XCTAssertEqualObjects(request.URL, [NSURL URLWithString:@"https://api.stripe.com/endpoint?key=value"]);
+            XCTAssertEqualObjects(request.HTTPMethod, @"DELETE");
+            XCTAssertEqualObjects([[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding], @"");
+            return YES;
+        }] completionHandler:[OCMArg any]]);
+
+        OCMVerify([apiRequestMock parseResponse:[OCMArg isEqual:@"response"]
+                                           body:[OCMArg isEqual:@"body"]
+                                          error:[OCMArg isEqual:@"error"]
+                                  deserializers:[OCMArg checkWithBlock:^BOOL(NSArray *deserializers) {
+            XCTAssert([deserializers.firstObject isKindOfClass:[STPCard class]]);
+            XCTAssertEqual(deserializers.count, (NSUInteger)1);
+            return YES;
+        }] completion:[OCMArg any]]);
+    }];
+}
+
 #pragma mark -
 
 - (void)testParseResponseWithMultipleDeserializers {

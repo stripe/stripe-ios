@@ -9,27 +9,22 @@
 #import "STPAPIRequest.h"
 
 #import "NSMutableURLRequest+Stripe.h"
-#import "STPInternalAPIResponseDecodable.h"
-#import "STPAPIClient+Private.h"
 #import "STPAPIClient.h"
-#import "STPCard+Private.h"
+#import "STPAPIClient+Private.h"
 #import "STPDispatchFunctions.h"
-#import "STPFormEncoder.h"
-#import "STPSource+Private.h"
+#import "STPInternalAPIResponseDecodable.h"
 #import "StripeError.h"
 
 @implementation STPAPIRequest
+
+#pragma mark - POST
 
 + (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
                                    endpoint:(NSString *)endpoint
                                  parameters:(NSDictionary *)parameters
                                deserializer:(id<STPAPIResponseDecodable>)deserializer
                                  completion:(STPAPIResponseBlock)completion {
-    return [self postWithAPIClient:apiClient
-                          endpoint:endpoint
-                        parameters:parameters
-                     deserializers:@[deserializer]
-                        completion:completion];
+    return [self postWithAPIClient:apiClient endpoint:endpoint parameters:parameters deserializers:@[deserializer] completion:completion];
 }
 
 + (NSURLSessionDataTask *)postWithAPIClient:(STPAPIClient *)apiClient
@@ -37,44 +32,80 @@
                                  parameters:(NSDictionary *)parameters
                               deserializers:(NSArray<id<STPAPIResponseDecodable>>*)deserializers
                                  completion:(STPAPIResponseBlock)completion {
+    // Build url
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
+
+    // Setup request
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
-    NSString *query = [STPFormEncoder queryStringFromParameters:parameters];
-    request.HTTPBody = [query dataUsingEncoding:NSUTF8StringEncoding];
+    [request stp_setFormPayload:parameters];
 
-    NSURLSessionDataTask *task = [apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        [[self class] parseResponse:response
-                               body:body
-                              error:error
-                      deserializers:deserializers
-                         completion:completion];
+    // Perform request
+    NSURLSessionDataTask *task = [apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData *body, NSURLResponse *response, NSError *error) {
+        [[self class] parseResponse:response body:body error:error deserializers:deserializers completion:completion];
     }];
     [task resume];
+
     return task;
 }
+
+#pragma mark - GET
 
 + (NSURLSessionDataTask *)getWithAPIClient:(STPAPIClient *)apiClient
                                   endpoint:(NSString *)endpoint
                                 parameters:(NSDictionary *)parameters
                               deserializer:(id<STPAPIResponseDecodable>)deserializer
                                 completion:(STPAPIResponseBlock)completion {
-
+    // Build url
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
+
+    // Setup request
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     [request stp_addParametersToURL:parameters];
     request.HTTPMethod = @"GET";
 
-    NSURLSessionDataTask *task = [apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable body, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        [[self class] parseResponse:response
-                               body:body
-                              error:error
-                      deserializers:@[deserializer]
-                         completion:completion];
+    // Perform request
+    NSURLSessionDataTask *task = [apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData *body, NSURLResponse *response, NSError *error) {
+        [[self class] parseResponse:response body:body error:error deserializers:@[deserializer] completion:completion];
     }];
     [task resume];
+
     return task;
 }
+
+#pragma mark - DELETE
+
++ (NSURLSessionDataTask *)deleteWithAPIClient:(STPAPIClient *)apiClient
+                                     endpoint:(NSString *)endpoint
+                                   parameters:(NSDictionary *)parameters
+                                 deserializer:(id<STPAPIResponseDecodable>)deserializer
+                                   completion:(STPAPIResponseBlock)completion {
+    return [self deleteWithAPIClient:apiClient endpoint:endpoint parameters:parameters deserializers:@[deserializer] completion:completion];
+}
+
++ (NSURLSessionDataTask *)deleteWithAPIClient:(STPAPIClient *)apiClient
+                                     endpoint:(NSString *)endpoint
+                                   parameters:(NSDictionary *)parameters
+                                deserializers:(NSArray<id<STPAPIResponseDecodable>> *)deserializers
+                                   completion:(STPAPIResponseBlock)completion {
+    // Build url
+    NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
+
+    // Setup request
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    [request stp_addParametersToURL:parameters];
+    request.HTTPMethod = @"DELETE";
+
+    // Perform request
+    NSURLSessionDataTask *task = [apiClient.urlSession dataTaskWithRequest:request completionHandler:^(NSData *body, NSURLResponse *response, NSError *error) {
+        [[self class] parseResponse:response body:body error:error deserializers:deserializers completion:completion];
+    }];
+    [task resume];
+
+    return task;
+}
+
+#pragma mark -
 
 + (void)parseResponse:(NSURLResponse *)response
                  body:(NSData *)body
