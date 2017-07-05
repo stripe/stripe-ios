@@ -21,6 +21,7 @@
 		C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */; };
 		C1CACE8F1E5E0F94002D0821 /* ThreeDSExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE8E1E5E0F94002D0821 /* ThreeDSExampleViewController.m */; };
 		C1CACE941E5E3DF6002D0821 /* SofortExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */; };
+		C1D40B4B1F0D1AF300D76081 /* AlipayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D40B4A1F0D1AF300D76081 /* AlipayExampleViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,6 +62,8 @@
 		C1CACE8E1E5E0F94002D0821 /* ThreeDSExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreeDSExampleViewController.m; sourceTree = "<group>"; };
 		C1CACE921E5E3DF6002D0821 /* SofortExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SofortExampleViewController.h; sourceTree = "<group>"; };
 		C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SofortExampleViewController.m; sourceTree = "<group>"; };
+		C1D40B491F0D1AF300D76081 /* AlipayExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlipayExampleViewController.h; sourceTree = "<group>"; };
+		C1D40B4A1F0D1AF300D76081 /* AlipayExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlipayExampleViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +116,8 @@
 				C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */,
 				C1CACE921E5E3DF6002D0821 /* SofortExampleViewController.h */,
 				C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */,
+				C1D40B491F0D1AF300D76081 /* AlipayExampleViewController.h */,
+				C1D40B4A1F0D1AF300D76081 /* AlipayExampleViewController.m */,
 				04533E971A687F5D00C7E52E /* Images.xcassets */,
 				04533E8A1A687F5D00C7E52E /* Supporting Files */,
 			);
@@ -213,6 +218,7 @@
 				C1CACE861E5DE6C3002D0821 /* CardExampleViewController.m in Sources */,
 				04533EB21A68802E00C7E52E /* ShippingManager.m in Sources */,
 				04533E901A687F5D00C7E52E /* AppDelegate.m in Sources */,
+				C1D40B4B1F0D1AF300D76081 /* AlipayExampleViewController.m in Sources */,
 				C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */,
 				04533E8D1A687F5D00C7E52E /* main.m in Sources */,
 				C1CACE8F1E5E0F94002D0821 /* ThreeDSExampleViewController.m in Sources */,
