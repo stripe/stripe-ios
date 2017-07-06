@@ -11,21 +11,24 @@
 #import "STPSource.h"
 #import "STPSource+Private.h"
 
+#import "STPTestUtils.h"
+
+@interface STPSource ()
+
++ (STPSourceFlow)flowFromString:(NSString *)string;
+
++ (STPSourceStatus)statusFromString:(NSString *)string;
++ (NSString *)stringFromStatus:(STPSourceStatus)status;
+
++ (STPSourceUsage)usageFromString:(NSString *)string;
+
+@end
+
 @interface STPSourceTest : XCTestCase
 
 @end
 
 @implementation STPSourceTest
-
-- (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
-
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
-}
 
 #pragma mark - STPSourceType Tests
 
@@ -259,9 +262,72 @@
     }
 }
 
+#pragma mark - Equality Tests
+
+- (void)testSourceEquals {
+    STPSource *source1 = [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"]];
+    STPSource *source2 = [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"]];
+
+    XCTAssertNotEqual(source1, source2);
+
+    XCTAssertEqualObjects(source1, source1);
+    XCTAssertEqualObjects(source1, source2);
+
+    XCTAssertEqual(source1.hash, source1.hash);
+    XCTAssertEqual(source1.hash, source2.hash);
+}
+
+#pragma mark - Description Tests
+
+- (void)testDescription {
+    STPSource *source = [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"]];
+    XCTAssert(source.description);
+}
+
 #pragma mark - STPAPIResponseDecodable Tests
 
+- (void)testDecodedObjectFromAPIResponseRequiredFields {
+    NSArray<NSString *> *requiredFields = @[
+                                            @"id",
+                                            @"livemode",
+                                            @"status",
+                                            @"type",
+                                            ];
+
+    for (NSString *field in requiredFields) {
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"BitcoinSource"] mutableCopy];
+        [response removeObjectForKey:field];
+
+        XCTAssertNil([STPSource decodedObjectFromAPIResponse:response]);
+    }
+
+    XCTAssert([STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"]]);
+}
+
+- (void)testDecodedObjectFromAPIResponseMapping {
+    NSDictionary *response = [STPTestUtils jsonNamed:@"BitcoinSource"];
+    STPSource *source = [STPSource decodedObjectFromAPIResponse:response];
+
+    XCTAssertEqualObjects(source.stripeID, @"src_1AZnr12eZvKYlo2Cl6OACPB1");
+    XCTAssertEqualObjects(source.amount, @(1000));
+    XCTAssertEqualObjects(source.clientSecret, @"src_client_secret_rAzjPq1N4nWJ1iVqxAzGZzix");
+    XCTAssertEqualObjects(source.created, [NSDate dateWithTimeIntervalSince1970:1498685863]);
+    XCTAssertEqualObjects(source.currency, @"usd");
+    XCTAssertEqual(source.flow, STPSourceFlowReceiver);
+    XCTAssertFalse(source.livemode);
+    XCTAssert(source.owner);  // STPSourceOwnerTest
+    XCTAssert(source.receiver);  // STPSourceReceiverTest
+    XCTAssertEqual(source.status, STPSourceStatusPending);
+    XCTAssertEqual(source.type, STPSourceTypeBitcoin);
+    XCTAssertEqual(source.usage, STPSourceUsageSingleUse);
+    XCTAssertEqualObjects(source.details, response[@"bitcoin"]);
+
+    XCTAssertNotEqual(source.allResponseFields, response);
+    XCTAssertEqualObjects(source.allResponseFields, response);
+}
+
 - (NSDictionary *)buildTestResponse_ideal {
+    // Source: https://stripe.com/docs/sources/ideal
     NSDictionary *dict = @{
                            @"id": @"src_123",
                            @"object": @"source",
@@ -297,6 +363,7 @@
 }
 
 - (NSDictionary *)buildTestResponse_sepa_debit {
+    // Source: https://stripe.com/docs/sources/sepa-debit
     NSDictionary *dict = @{
                            @"id": @"src_123",
                            @"object": @"source",

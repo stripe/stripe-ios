@@ -12,8 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPBankAccount ()
 
-+ (STPBankAccountStatus)statusFromString:(NSString *)string;
-+ (NSString *)stringFromStatus:(STPBankAccountStatus)status;
+//
 
 @end
 

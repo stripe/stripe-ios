@@ -22,6 +22,8 @@
 
 - (BOOL)isEqualToFile:(STPFile *)file;
 
+// See STPFile+Private.h
+
 @end
 
 @implementation STPFile

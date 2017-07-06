@@ -8,8 +8,14 @@
 
 #import <Stripe/Stripe.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STPSourceParams ()
 
 @property (nonatomic, nullable, strong) NSString *redirectMerchantName;
 
+//
+
 @end
+
+NS_ASSUME_NONNULL_END
