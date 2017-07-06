@@ -10,8 +10,10 @@
 
 @protocol ExampleViewControllerDelegate;
 
-@interface AlipayExampleViewController : UIViewController
+@interface AlipayExampleViewController : UIViewController <NSURLConnectionDataDelegate>
 
 @property (nonatomic, weak) id<ExampleViewControllerDelegate> delegate;
+
+- (void)completeRedirect;
 
 @end

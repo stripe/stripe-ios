@@ -14,7 +14,7 @@
 @property (nonatomic, weak) UIButton *payButton;
 @property (nonatomic, weak) UILabel *waitingLabel;
 @property (nonatomic, weak) UIActivityIndicatorView *activityIndicator;
-@property (nonatomic) STPRedirectContext *redirectContext;
+@property (nonatomic) STPSource *source;
 @end
 
 @implementation AlipayExampleViewController
@@ -72,6 +72,39 @@
     }
 }
 
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response {
+    if (!request) return request;
+
+    NSURL *url = request.URL;
+    if ([url.host containsString:@"alipay.com"] ||
+         ([url.host isEqualToString:@"stripe.com"] && [url.path isEqualToString:@"/sources/test_redirect"])) {
+        [[UIApplication sharedApplication] openURL:url];
+        return nil;
+    }
+
+    return request;
+}
+
+- (void)completeRedirect {
+    [self updateUIForPaymentInProgress:NO];
+
+    switch (self.source.status) {
+        case STPSourceStatusChargeable:
+        case STPSourceStatusConsumed:
+            [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+            break;
+        case STPSourceStatusCanceled:
+            [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
+            break;
+        case STPSourceStatusPending:
+        case STPSourceStatusFailed:
+        case STPSourceStatusUnknown:
+            [self.delegate exampleViewController:self didFinishWithMessage:@"Order received"];
+            break;
+    }
+
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 - (void)pay {
@@ -85,7 +118,7 @@
     sourceParams.redirect = @{
                               @"return_url": @"payments-example://stripe-redirect"
                               };
-    sourceParams.currency = @"usd";
+    sourceParams.currency = @"jpy";
     sourceParams.amount = @(1099);
     [[STPAPIClient sharedClient] createSourceWithParams:sourceParams completion:^(STPSource *source, NSError *error) {
         if (error) {
@@ -94,33 +127,9 @@
             // In order to use STPRedirectContext, you'll need to set up
             // your app delegate to forward URLs to the Stripe SDK.
             // See `[Stripe handleStripeURLCallback:]`
-            self.redirectContext = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
-                [[STPAPIClient sharedClient] retrieveSourceWithId:sourceID
-                                                     clientSecret:clientSecret
-                                                       completion:^(STPSource *source, NSError *error) {
-                                                           [self updateUIForPaymentInProgress:NO];
-                                                           if (error) {
-                                                               [self.delegate exampleViewController:self didFinishWithError:error];
-                                                           } else {
-                                                               switch (source.status) {
-                                                                   case STPSourceStatusChargeable:
-                                                                   case STPSourceStatusConsumed:
-                                                                       [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-                                                                       break;
-                                                                   case STPSourceStatusCanceled:
-                                                                       [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
-                                                                       break;
-                                                                   case STPSourceStatusPending:
-                                                                   case STPSourceStatusFailed:
-                                                                   case STPSourceStatusUnknown:
-                                                                       [self.delegate exampleViewController:self didFinishWithMessage:@"Order received"];
-                                                                       break;
-                                                               }
-                                                           }
-                                                           self.redirectContext = nil;
-                                                       }];
-            }];
-            [self.redirectContext startRedirectFlowFromViewController:self];
+            self.source = source;
+            NSURLRequest *request = [NSURLRequest requestWithURL:source.redirect.url];
+            [NSURLConnection connectionWithRequest:request delegate:self];
         }
     }];
 }

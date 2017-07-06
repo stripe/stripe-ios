@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "Constants.h"
 #import "BrowseExamplesViewController.h"
+#import "AlipayExampleViewController.h"
 
 @implementation AppDelegate
 
@@ -33,6 +34,10 @@
     } else {
         // This was not a stripe url – do whatever url handling your app
         // normally does, if any.
+        UIViewController *vc = [(UINavigationController *)self.window.rootViewController topViewController];
+        if ([vc isKindOfClass:[AlipayExampleViewController class]]) {
+            [(AlipayExampleViewController *)vc completeRedirect];
+        }
     }
     return NO;
 }
