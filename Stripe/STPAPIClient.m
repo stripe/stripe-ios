@@ -114,11 +114,12 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     }
     self = [super init];
     if (self) {
+        _apiKey = publishableKey;
         _apiURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]];
+        _urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
         _configuration = configuration;
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
-        self.apiKey = publishableKey;
     }
     return self;
 }
@@ -145,6 +146,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 - (void)setApiKey:(NSString *)apiKey {
     _apiKey = apiKey;
+
+    // Regenerate url session configuration
     self.urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
 }
 
@@ -159,6 +162,8 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 - (void)setStripeAccount:(NSString *)stripeAccount {
     _stripeAccount = stripeAccount;
+
+    // Regenerate url session configuration
     self.urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
 }
 
