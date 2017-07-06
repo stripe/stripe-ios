@@ -86,7 +86,7 @@ static NSString *const STPSDKVersion = @"11.0.0";
  create a source on a connected account, set this property to the ID of the 
  account for which this request is being made.
 
- @see https://stripe.com/docs/sources/connect#creating-direct-charges
+ @see https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header
  */
 @property (nonatomic, copy, nullable) NSString *stripeAccount;
 
@@ -239,6 +239,9 @@ static NSString *const STPSDKVersion = @"11.0.0";
 
 /**
  Creates a Source object using the provided details.
+ Note: in order to create a source on a connected account, you can set your
+ API client's `stripeAccount` property to the ID of the account.
+ @see https://stripe.com/docs/sources/connect#creating-direct-charges
 
  @param params      The details of the source to create. Cannot be nil. @see https://stripe.com/docs/api#create_source
  @param completion  The callback to run with the returned Source object, or an error.
