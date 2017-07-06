@@ -73,6 +73,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @property (nonatomic, readwrite) NSURLSession *urlSession;
 @property (nonatomic, readwrite) NSMutableDictionary<NSString *,NSObject *>*sourcePollers;
 @property (nonatomic, readwrite) dispatch_queue_t sourcePollersQueue;
+@property (nonatomic, readwrite) NSString *apiKey;
 @end
 
 @implementation STPAPIClient
@@ -131,15 +132,20 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     return self;
 }
 
-- (void)setApiKey:(NSString *)apiKey {
+- (NSURLSessionConfiguration *)sessionConfiguration {
+    NSMutableDictionary *additionalHeaders = [NSMutableDictionary new];
+    additionalHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetails];
+    additionalHeaders[@"Stripe-Version"] = stripeAPIVersion;
+    additionalHeaders[@"Authorization"] = [@"Bearer " stringByAppendingString:self.apiKey ?: @""];
+    additionalHeaders[@"Stripe-Account"] = self.stripeAccount;
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSString *auth = [@"Bearer " stringByAppendingString:apiKey ?: @""];
-    sessionConfiguration.HTTPAdditionalHeaders = @{
-                                                   @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
-                                                   @"Stripe-Version": stripeAPIVersion,
-                                                   @"Authorization": auth,
-                                                   };
-    self.urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
+    sessionConfiguration.HTTPAdditionalHeaders = additionalHeaders;
+    return sessionConfiguration;
+}
+
+- (void)setApiKey:(NSString *)apiKey {
+    _apiKey = apiKey;
+    self.urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
 }
 
 - (void)setPublishableKey:(NSString *)publishableKey {
@@ -149,6 +155,11 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 - (NSString *)publishableKey {
     return self.configuration.publishableKey;
+}
+
+- (void)setStripeAccount:(NSString *)stripeAccount {
+    _stripeAccount = stripeAccount;
+    self.urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
 }
 
 - (void)createTokenWithParameters:(NSDictionary *)parameters

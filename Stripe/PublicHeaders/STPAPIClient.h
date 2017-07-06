@@ -60,6 +60,16 @@ static NSString *const STPSDKVersion = @"11.0.0";
  */
 @property (nonatomic, copy) STPPaymentConfiguration *configuration;
 
+
+/**
+ In order to perform API requests on behalf of a connected account, e.g. to
+ create a source on a connected account, set this property to the ID of the 
+ account for which this request is being made.
+
+ @see https://stripe.com/docs/sources/connect#creating-direct-charges
+ */
+@property (nonatomic, copy, nullable) NSString *stripeAccount;
+
 @end
 
 #pragma mark Bank Accounts
