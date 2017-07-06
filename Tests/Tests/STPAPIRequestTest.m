@@ -411,7 +411,7 @@
     NSDictionary *json = [STPTestUtils jsonNamed:@"CardSource"];
     NSData *body = [NSJSONSerialization dataWithJSONObject:json options:(NSJSONWritingOptions)kNilOptions error:nil];
     NSError *errorParameter = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorUnknown userInfo:nil];
-    NSArray *deserializers = @[[STPCard new]];
+    NSArray *deserializers = @[[STPCard new], [STPSource new]];
 
     [STPAPIRequest parseResponse:httpURLResponse
                             body:body

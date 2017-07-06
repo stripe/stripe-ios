@@ -131,6 +131,11 @@ static NSString * const JSONKeyObject = @"object";
         });
     };
 
+    if (error) {
+        // Forward NSURLSession error
+        return safeCompletion(nil, error);
+    }
+
     if (deserializers.count == 0) {
         // Missing deserializers
         return safeCompletion(nil, [NSError stp_genericFailedToParseResponseError]);
@@ -147,7 +152,7 @@ static NSString * const JSONKeyObject = @"object";
 
     Class deserializerClass = nil;
     if (deserializers.count == 1) {
-        // Legacy deserializers don't always define `stripeObject` method
+        // Some deserializers don't conform to STPInternalAPIResponseDecodable
         deserializerClass = [deserializers.firstObject class];
     }
     else {
@@ -174,11 +179,6 @@ static NSString * const JSONKeyObject = @"object";
         if (parsedError) {
             // Use response body error
             return safeCompletion(nil, parsedError);
-        }
-
-        if (error) {
-            // Use NSURLSession error
-            return safeCompletion(nil, error);
         }
 
         // Use generic error
