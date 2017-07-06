@@ -171,9 +171,8 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
     STPFormTextField *postalCodeField = [self buildTextField];
     postalCodeField.tag = STPCardFieldTypePostalCode;
     postalCodeField.alpha = 0;
-    postalCodeField.placeholder = @"12345"; // TODO: placeholder. Should it change based on type?
     self.postalCodeField = postalCodeField;
-    self.countryCodeForPostalCodeFormattingAndValidation = @"US";
+    // Placeholder is set by country code setter
 
     UIView *fieldsView = [[UIView alloc] init];
     fieldsView.clipsToBounds = YES;
@@ -319,15 +318,34 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 
 - (void)setPostalCodePlaceholder:(NSString *)postalCodePlaceholder {
     _postalCodePlaceholder = postalCodePlaceholder.copy;
-    self.postalCodePlaceholder = _postalCodePlaceholder;
+    [self updatePostalFieldPlaceholderIfNecessary];
 }
 
 - (NSString *)countryCodeForPostalCodeFormattingAndValidation {
     return self.viewModel.postalCodeCountryCode;
 }
 
+- (void)updatePostalFieldPlaceholderIfNecessary {
+    if (self.postalCodePlaceholder == nil) {
+        self.postalCodeField.placeholder = [self defaultPostalFieldPlaceholderForCountryCode:self.countryCodeForPostalCodeFormattingAndValidation];
+    }
+    else {
+        self.postalCodeField.placeholder = _postalCodePlaceholder;
+    }
+}
+
+- (NSString *)defaultPostalFieldPlaceholderForCountryCode:(NSString *)countryCode {
+    if ([countryCode.uppercaseString isEqualToString:@"US"]) {
+        return NSLocalizedString(@"ZIP", @"Short string for zip code (United States only)");
+    }
+    else {
+        return NSLocalizedString(@"Postal", @"Short string for postal code (text used in non-US countries)");
+    }
+}
+
 - (void)setCountryCodeForPostalCodeFormattingAndValidation:(NSString *)countryCodeForPostalCodeFormattingAndValidation {
     self.viewModel.postalCodeCountryCode = countryCodeForPostalCodeFormattingAndValidation;
+    [self updatePostalFieldPlaceholderIfNecessary];
 
     // This will revalidate and reformat
     [self setText:self.postalCode inField:STPCardFieldTypePostalCode];
@@ -630,17 +648,31 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 }
 
 - (CGFloat)postalCodeFieldFullWidth {
-    if (self.viewModel.postalCode.length <= 5) {
-        return [self widthForText:@"88888"];
+    CGFloat compressedWidth = [self postalCodeFieldCompressedWidth];
+    CGFloat currentTextWidth = [self widthForText:self.viewModel.postalCode];
+
+    if (currentTextWidth <= compressedWidth) {
+        return compressedWidth;
     }
     else {
         return [self widthForText:@"88888-8888"];
     }
 }
 
-
 - (CGFloat)postalCodeFieldCompressedWidth {
-    return [self widthForText:@"88888"];
+
+
+    CGFloat maxTextWidth = 0;
+    if ([self.countryCodeForPostalCodeFormattingAndValidation.uppercaseString isEqualToString:@"US"]) {
+        maxTextWidth = [self widthForText:@"88888"];
+    }
+    else {
+        // This format more closely matches the typical UK/Canadian size which is our most common non-US market currently
+        maxTextWidth = [self widthForText:@"888 8888"];
+    }
+
+    CGFloat placeholderWidth = [self widthForText:[self defaultPostalFieldPlaceholderForCountryCode:self.countryCodeForPostalCodeFormattingAndValidation]];
+    return MAX(maxTextWidth, placeholderWidth);
 }
 
 - (BOOL)postalCodeFieldIsEnabled {
