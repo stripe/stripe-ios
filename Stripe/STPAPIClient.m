@@ -73,6 +73,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @property (nonatomic, readwrite) NSURLSession *urlSession;
 @property (nonatomic, readwrite) NSMutableDictionary<NSString *,NSObject *>*sourcePollers;
 @property (nonatomic, readwrite) dispatch_queue_t sourcePollersQueue;
+@property (nonatomic, readwrite) NSString *apiKey;
 @end
 
 @implementation STPAPIClient
@@ -113,11 +114,12 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     }
     self = [super init];
     if (self) {
+        _apiKey = publishableKey;
         _apiURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]];
+        _urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
         _configuration = configuration;
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
-        self.apiKey = publishableKey;
     }
     return self;
 }
@@ -131,15 +133,22 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     return self;
 }
 
-- (void)setApiKey:(NSString *)apiKey {
+- (NSURLSessionConfiguration *)sessionConfiguration {
+    NSMutableDictionary *additionalHeaders = [NSMutableDictionary new];
+    additionalHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetails];
+    additionalHeaders[@"Stripe-Version"] = stripeAPIVersion;
+    additionalHeaders[@"Authorization"] = [@"Bearer " stringByAppendingString:self.apiKey ?: @""];
+    additionalHeaders[@"Stripe-Account"] = self.stripeAccount;
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSString *auth = [@"Bearer " stringByAppendingString:apiKey ?: @""];
-    sessionConfiguration.HTTPAdditionalHeaders = @{
-                                                   @"X-Stripe-User-Agent": [self.class stripeUserAgentDetails],
-                                                   @"Stripe-Version": stripeAPIVersion,
-                                                   @"Authorization": auth,
-                                                   };
-    self.urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration];
+    sessionConfiguration.HTTPAdditionalHeaders = additionalHeaders;
+    return sessionConfiguration;
+}
+
+- (void)setApiKey:(NSString *)apiKey {
+    _apiKey = apiKey;
+
+    // Regenerate url session configuration
+    self.urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
 }
 
 - (void)setPublishableKey:(NSString *)publishableKey {
@@ -149,6 +158,13 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 - (NSString *)publishableKey {
     return self.configuration.publishableKey;
+}
+
+- (void)setStripeAccount:(NSString *)stripeAccount {
+    _stripeAccount = stripeAccount;
+
+    // Regenerate url session configuration
+    self.urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
 }
 
 - (void)createTokenWithParameters:(NSDictionary *)parameters
