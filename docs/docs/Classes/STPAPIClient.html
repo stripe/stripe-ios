@@ -351,7 +351,130 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L49">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L53">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPAPIClient(im)initWithConfiguration:"></a>
+                    <a name="//apple_ref/objc/Method/-initWithConfiguration:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)initWithConfiguration:">-initWithConfiguration:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializes an API client with the given configuration. Its API key will be 
+set to the configuration&rsquo;s publishable key.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithConfiguration</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The configuration to use.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An instance of STPAPIClient.</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L63">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPAPIClient(im)initWithPublishableKey:"></a>
+                    <a name="//apple_ref/objc/Method/-initWithPublishableKey:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(im)initWithPublishableKey:">-initWithPublishableKey:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializes an API client with the given publishable key.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithPublishableKey</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">publishableKey</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">publishableKey</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>publishableKey</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The publishable key to use.</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An instance of STPAPIClient.</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L71">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -369,11 +492,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <div class="aside aside-see">
-    <p class="aside-title">See</p>
-    [Stripe setDefaultPublishableKey:]
-
-</div>
+                        <p>The client&rsquo;s publishable key.</p>
 
                       </div>
                       <div class="declaration">
@@ -390,7 +509,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L76">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -408,11 +527,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <div class="aside aside-see">
-    <p class="aside-title">See</p>
-    -initWithConfiguration
-
-</div>
+                        <p>The client&rsquo;s configuration.</p>
 
                       </div>
                       <div class="declaration">
@@ -430,7 +545,50 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L61">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L81">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPAPIClient(py)stripeAccount"></a>
+                    <a name="//apple_ref/objc/Property/stripeAccount" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPAPIClient(py)stripeAccount">stripeAccount</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>In order to perform API requests on behalf of a connected account, e.g. to
+create a source on a connected account, set this property to the ID of the 
+account for which this request is being made.</p>
+
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header">https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header</a>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">stripeAccount</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">stripeAccount</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L91">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -660,7 +818,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L78">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L108">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -741,7 +899,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L95">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L125">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -771,7 +929,7 @@
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Uses the Stripe file upload API to upload an image. This can be used for
-  identity veritfication and evidence disputes.</p>
+identity veritfication and evidence disputes.</p>
 
 <div class="aside aside-see">
     <p class="aside-title">See</p>
@@ -808,9 +966,9 @@
                               <td>
                                 <div>
                                   <p>The image to be uploaded. The maximum allowed file size is 4MB
-        for identity documents and 8MB for evidence disputes. Cannot be nil.
-        Your image will be automatically resized down if you pass in one that
-        is too large</p>
+       for identity documents and 8MB for evidence disputes. Cannot be nil.
+       Your image will be automatically resized down if you pass in one that
+       is too large</p>
 
                                 </div>
                               </td>
@@ -824,7 +982,7 @@
                               <td>
                                 <div>
                                   <p>The purpose of this file. This can be either an identifing
-        document or an evidence dispute.</p>
+       document or an evidence dispute.</p>
 
                                 </div>
                               </td>
@@ -838,7 +996,7 @@
                               <td>
                                 <div>
                                   <p>The callback to run with the returned Stripe file
-        (and any errors that may have occurred).</p>
+       (and any errors that may have occurred).</p>
 
                                 </div>
                               </td>
@@ -847,7 +1005,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L120-L122">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L150-L152">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -927,7 +1085,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L139">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L169">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -956,7 +1114,10 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Creates a Source object using the provided details.</p>
+                        <p>Creates a Source object using the provided details.
+Note: in order to create a source on a connected account, you can set your
+API client&rsquo;s <code><a href="../Classes/STPAPIClient.html#/c:objc(cs)STPAPIClient(py)stripeAccount">stripeAccount</a></code> property to the ID of the account.
+- see: <a href="https://stripe.com/docs/sources/connect#creating-direct-charges">https://stripe.com/docs/sources/connect#creating-direct-charges</a></p>
 
                       </div>
                       <div class="declaration">
@@ -1007,7 +1168,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L214">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L249">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1090,7 +1251,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L223">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L258">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1109,15 +1270,15 @@
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Starts polling the Source object with the given ID. For payment methods that require
-  additional customer action (e.g. authorizing a payment with their bank), polling
-  allows you to determine if the action was successful. Polling will stop and the
-  provided callback will be called once the source&rsquo;s status is no longer <code>pending</code>,
-  or if the given timeout is reached and the source is still <code>pending</code>. If polling
-  stops due to an error, the callback will be fired with the latest retrieved
-  source and the error.</p>
+additional customer action (e.g. authorizing a payment with their bank), polling
+allows you to determine if the action was successful. Polling will stop and the
+provided callback will be called once the source&rsquo;s status is no longer <code>pending</code>,
+or if the given timeout is reached and the source is still <code>pending</code>. If polling
+stops due to an error, the callback will be fired with the latest retrieved
+source and the error.</p>
 
 <p>Note that if a poll is already running for a source, subsequent calls to <code>startPolling</code>
-  with the same source ID will do nothing.</p>
+with the same source ID will do nothing.</p>
 
                       </div>
                       <div class="declaration">
@@ -1196,7 +1357,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L242">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L277">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1215,7 +1376,7 @@
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Stops polling the Source object with the given ID. Note that the completion block passed to
-  <code>startPolling</code> will not be fired when <code>stopPolling</code> is called.</p>
+<code>startPolling</code> will not be fired when <code>stopPolling</code> is called.</p>
 
                       </div>
                       <div class="declaration">
@@ -1252,7 +1413,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L250">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L285">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1265,7 +1426,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-06-28)</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-07)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
