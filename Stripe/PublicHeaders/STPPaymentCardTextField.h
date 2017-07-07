@@ -64,7 +64,8 @@ IB_DESIGNABLE
 @property(nonatomic, copy, nullable) IBInspectable NSString *cvcPlaceholder;
 
 /**
- *  The placeholder for the postal code field. Defaults to @"ZIP/Postal".
+ *  The placeholder for the postal code field. Defaults to @"ZIP" for United States
+ *  or @"Postal" for all other country codes.
  */
 @property(nonatomic, copy, nullable) IBInspectable NSString *postalCodePlaceholder;
 

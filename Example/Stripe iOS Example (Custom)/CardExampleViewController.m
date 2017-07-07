@@ -37,6 +37,7 @@
     STPPaymentCardTextField *paymentTextField = [[STPPaymentCardTextField alloc] init];
     paymentTextField.delegate = self;
     paymentTextField.cursorColor = [UIColor purpleColor];
+    paymentTextField.countryCodeForPostalCodeFormattingAndValidation = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
     self.paymentTextField = paymentTextField;
     [self.view addSubview:paymentTextField];
 

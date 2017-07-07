@@ -172,7 +172,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
     postalCodeField.tag = STPCardFieldTypePostalCode;
     postalCodeField.alpha = 0;
     self.postalCodeField = postalCodeField;
-    // Placeholder is set by country code setter
+    // Placeholder and appropriate keyboard typeare set by country code setter
 
     UIView *fieldsView = [[UIView alloc] init];
     fieldsView.clipsToBounds = YES;
@@ -346,6 +346,13 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 - (void)setCountryCodeForPostalCodeFormattingAndValidation:(NSString *)countryCodeForPostalCodeFormattingAndValidation {
     self.viewModel.postalCodeCountryCode = countryCodeForPostalCodeFormattingAndValidation;
     [self updatePostalFieldPlaceholderIfNecessary];
+
+    if ([countryCodeForPostalCodeFormattingAndValidation isEqualToString:@"US"]) {
+        self.postalCodeField.keyboardType = UIKeyboardTypePhonePad;
+    }
+    else {
+        self.postalCodeField.keyboardType = UIKeyboardTypeDefault;
+    }
 
     // This will revalidate and reformat
     [self setText:self.postalCode inField:STPCardFieldTypePostalCode];
@@ -552,7 +559,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 - (NSString *)postalCode {
     if ([self postalCodeFieldIsEnabled]) {
         return self.viewModel.postalCode;
-
     }
     else {
         return nil;
@@ -622,7 +628,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
     textField.text = nonNilText;
 }
 
-// TODO: cache these values
 - (CGFloat)numberFieldFullWidth {
     // Current longest possible pan is 16 digits which our standard sample fits
     if ([self.viewModel validationStateForField:STPCardFieldTypeNumber] == STPCardValidationStateValid) {
@@ -660,8 +665,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 }
 
 - (CGFloat)postalCodeFieldCompressedWidth {
-
-
     CGFloat maxTextWidth = 0;
     if ([self.countryCodeForPostalCodeFormattingAndValidation.uppercaseString isEqualToString:@"US"]) {
         maxTextWidth = [self widthForText:@"88888"];
