@@ -63,8 +63,12 @@ typedef NS_ENUM(NSInteger, STPEditingTransitionState) {
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *numberToWidthCache;
 
 /**
- This state lets us track beginEditing and endEditing for payment text field
+ These bits lets us track beginEditing and endEditing for payment text field
  as a whole (instead of on a per-subview basis).
+ 
+ DO NOT read this values directly. Use the return value from
+ `getAndUpdateSubviewEditingTransitionStateFromCall:` which updates them all
+ and returns you the correct current state for the method you are in.
  
  The state transitons in the should/did begin/end editing callbacks for all 
  our subfields. If we get a shouldEnd AND a shouldBegin before getting either's
@@ -75,7 +79,9 @@ typedef NS_ENUM(NSInteger, STPEditingTransitionState) {
  pair (shouldBegin/didBegin or shouldEnd/didEnd) then we are transitioning
  into/out of our subviews from/to outside of ourselves
  */
-@property(nonatomic, assign) STPEditingTransitionState fieldEditingTransitionState;
+@property(nonatomic, assign) BOOL isMidSubviewEditingTransitionInternal;
+@property(nonatomic, assign) BOOL receivedUnmatchedShouldBeginEditing;
+@property(nonatomic, assign) BOOL receivedUnmatchedShouldEndEditing;
 
 @end
 
@@ -193,7 +199,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 
     self.focusedTextFieldForLayout = @(STPCardFieldTypeNumber);
     [self updateCVCPlaceholder];
-    self.fieldEditingTransitionState = STPEditingTransitionStateFalse;
+    [self resetSubviewEditingTransitionState];
 }
 
 - (STPPaymentCardTextFieldViewModel *)viewModel {
@@ -999,11 +1005,11 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
         self.postalCodeField.frame = CGRectMake(xOffset, 0, width + additionalWidth, fieldsHeight);
     }
 
-    self.numberField.alpha = (panVisibility == STPCardTextFieldStateHidden) ? 0.0:  1.0;
-    self.expirationField.alpha = (expiryVisibility == STPCardTextFieldStateHidden) ? 0.0:  1.0;
-    self.cvcField.alpha = (cvcVisibility == STPCardTextFieldStateHidden) ? 0.0:  1.0;
-    self.postalCodeField.alpha = ((postalVisibility == STPCardTextFieldStateHidden)
-                                  || ![self postalCodeFieldIsEnabled]) ? 0.0:  1.0;
+    self.numberField.alpha = (CGFloat) ((panVisibility == STPCardTextFieldStateHidden) ? 0.0:  1.0);
+    self.expirationField.alpha = (CGFloat) ((expiryVisibility == STPCardTextFieldStateHidden) ? 0.0:  1.0);
+    self.cvcField.alpha = (CGFloat) ((cvcVisibility == STPCardTextFieldStateHidden) ? 0.0:  1.0);
+    self.postalCodeField.alpha = (CGFloat) (((postalVisibility == STPCardTextFieldStateHidden)
+                                  || ![self postalCodeFieldIsEnabled]) ? 0.0:  1.0);
 }
 
 #pragma mark - private helper methods
@@ -1186,29 +1192,74 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
     [self onChange];
 }
 
+
+typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
+    STPFieldEditingTransitionCallSiteShouldBegin,
+    STPFieldEditingTransitionCallSiteShouldEnd,
+    STPFieldEditingTransitionCallSiteDidBegin,
+    STPFieldEditingTransitionCallSiteDidEnd,
+};
+
+// Explanation of the logic here is with the definition of these properties
+// at the top of this file
+- (BOOL)getAndUpdateSubviewEditingTransitionStateFromCall:(STPFieldEditingTransitionCallSite)sendingMethod {
+    BOOL stateToReturn;
+    switch (sendingMethod) {
+        case STPFieldEditingTransitionCallSiteShouldBegin:
+            self.receivedUnmatchedShouldBeginEditing = YES;
+            if (self.receivedUnmatchedShouldEndEditing) {
+                self.isMidSubviewEditingTransitionInternal = YES;
+            }
+            stateToReturn = self.isMidSubviewEditingTransitionInternal;
+            break;
+        case STPFieldEditingTransitionCallSiteShouldEnd:
+            self.receivedUnmatchedShouldEndEditing = YES;
+            if (self.receivedUnmatchedShouldBeginEditing) {
+                self.isMidSubviewEditingTransitionInternal = YES;
+            }
+            stateToReturn = self.isMidSubviewEditingTransitionInternal;
+            break;
+        case STPFieldEditingTransitionCallSiteDidBegin:
+            stateToReturn = self.isMidSubviewEditingTransitionInternal;
+            self.receivedUnmatchedShouldBeginEditing = NO;
+
+            if (self.receivedUnmatchedShouldEndEditing == NO) {
+                self.isMidSubviewEditingTransitionInternal = NO;
+            }
+            break;
+        case STPFieldEditingTransitionCallSiteDidEnd:
+            stateToReturn = self.isMidSubviewEditingTransitionInternal;
+            self.receivedUnmatchedShouldEndEditing = NO;
+
+            if (self.receivedUnmatchedShouldBeginEditing == NO) {
+                self.isMidSubviewEditingTransitionInternal = NO;
+            }
+            break;
+    }
+
+    return stateToReturn;
+}
+
+
+- (void)resetSubviewEditingTransitionState {
+    self.isMidSubviewEditingTransitionInternal = NO;
+    self.receivedUnmatchedShouldBeginEditing = NO;
+    self.receivedUnmatchedShouldEndEditing = NO;
+}
+
 - (BOOL)textFieldShouldBeginEditing:(__unused UITextField *)textField {
-    if (self.fieldEditingTransitionState == STPEditingTransitionStateFalse) {
-        self.fieldEditingTransitionState = STPEditingTransitionStatePossible;
-    }
-    else if (self.fieldEditingTransitionState == STPEditingTransitionStatePossible) {
-        self.fieldEditingTransitionState = STPEditingTransitionStateTrue;
-    }
+    [self getAndUpdateSubviewEditingTransitionStateFromCall:STPFieldEditingTransitionCallSiteShouldBegin];
     return YES;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-    BOOL paymentTextFieldDidBeginEditing = NO;
-    if (self.fieldEditingTransitionState != STPEditingTransitionStateTrue) {
-        paymentTextFieldDidBeginEditing = YES;
-    }
-    self.fieldEditingTransitionState = STPEditingTransitionStateFalse;
+    BOOL isMidSubviewEditingTransition = [self getAndUpdateSubviewEditingTransitionStateFromCall:STPFieldEditingTransitionCallSiteDidBegin];
 
     [self layoutViewsToFocusField:@(textField.tag)
                          animated:YES
                        completion:nil];
 
-    if (paymentTextFieldDidBeginEditing) {
-        NSLog(@"Did begin editing payment field");
+    if (!isMidSubviewEditingTransition) {
         if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldDidBeginEditing:)]) {
             [self.delegate paymentCardTextFieldDidBeginEditing:self];
         }
@@ -1240,25 +1291,13 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
 }
 
 - (BOOL)textFieldShouldEndEditing:(__unused UITextField *)textField {
-
-    if (self.fieldEditingTransitionState == STPEditingTransitionStateFalse) {
-        self.fieldEditingTransitionState = STPEditingTransitionStatePossible;
-    }
-    else if (self.fieldEditingTransitionState == STPEditingTransitionStatePossible) {
-        self.fieldEditingTransitionState = STPEditingTransitionStateTrue;
-    }
-
+    [self getAndUpdateSubviewEditingTransitionStateFromCall:STPFieldEditingTransitionCallSiteShouldEnd];
     [self updateImageForFieldType:STPCardFieldTypeNumber];
     return YES;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-
-    BOOL paymentTextFieldDidEndEditing = NO;
-    if (self.fieldEditingTransitionState != STPEditingTransitionStateTrue) {
-        paymentTextFieldDidEndEditing = YES;
-    }
-    self.fieldEditingTransitionState = STPEditingTransitionStateFalse;
+    BOOL isMidSubviewEditingTransition = [self getAndUpdateSubviewEditingTransitionStateFromCall:STPFieldEditingTransitionCallSiteDidEnd];
 
     switch ((STPCardFieldType)textField.tag) {
         case STPCardFieldTypeNumber:
@@ -1283,7 +1322,7 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
             break;
     }
 
-    if (paymentTextFieldDidEndEditing) {
+    if (!isMidSubviewEditingTransition) {
         [self layoutViewsToFocusField:nil
                              animated:YES
                            completion:nil];
