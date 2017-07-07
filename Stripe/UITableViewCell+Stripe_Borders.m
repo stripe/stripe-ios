@@ -15,7 +15,7 @@ static NSInteger const STPTableViewCellFakeSeparatorTag = 787475;
 @implementation UITableViewCell (Stripe_Borders)
 
 - (UIView *)stp_topBorderView {
-    UIView *view = [self.contentView viewWithTag:STPTableViewCellTopBorderTag];
+    UIView *view = [self viewWithTag:STPTableViewCellTopBorderTag];
     if (!view) {
         view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 0.5f)];
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
@@ -23,13 +23,13 @@ static NSInteger const STPTableViewCellFakeSeparatorTag = 787475;
         view.backgroundColor = self.backgroundColor;
         view.hidden = YES;
         view.accessibilityIdentifier = @"stp_topBorderView";
-        [self.contentView addSubview:view];
+        [self addSubview:view];
     }
     return view;
 }
 
 - (UIView *)stp_bottomBorderView {
-    UIView *view = [self.contentView viewWithTag:STPTableViewCellBottomBorderTag];
+    UIView *view = [self viewWithTag:STPTableViewCellBottomBorderTag];
     if (!view) {
         view = [[UIView alloc] initWithFrame:CGRectMake(0, self.bounds.size.height - 0.5f, self.bounds.size.width, 0.5f)];
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
@@ -37,20 +37,20 @@ static NSInteger const STPTableViewCellFakeSeparatorTag = 787475;
         view.backgroundColor = self.backgroundColor;
         view.hidden = YES;
         view.accessibilityIdentifier = @"stp_bottomBorderView";
-        [self.contentView addSubview:view];
+        [self addSubview:view];
     }
     return view;
 }
 
 - (UIView *)stp_fakeSeparatorView {
-    UIView *view = [self.contentView viewWithTag:STPTableViewCellFakeSeparatorTag];
+    UIView *view = [self viewWithTag:STPTableViewCellFakeSeparatorTag];
     if (!view) {
         view = [[UIView alloc] initWithFrame:CGRectMake(0, self.bounds.size.height - 0.5f, self.bounds.size.width, 0.5f)];
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
         view.tag = STPTableViewCellFakeSeparatorTag;
         view.backgroundColor = self.backgroundColor;
         view.accessibilityIdentifier = @"stp_fakeSeparatorView";
-        [self.contentView addSubview:view];
+        [self addSubview:view];
     }
     return view;
 }

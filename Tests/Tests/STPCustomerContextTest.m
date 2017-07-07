@@ -271,4 +271,37 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
+- (void)testDetachSourceFromCustomerCallsAPIClientCorrectly {
+    STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
+    STPCustomer *expectedCustomer = [STPFixtures customerWithSingleCardTokenSource];
+    id mockAPIClient = OCMClassMock([STPAPIClient class]);
+    [self stubRetrieveCustomerUsingKey:customerKey
+                     returningCustomer:expectedCustomer
+                         expectedCount:1
+                         mockAPIClient:mockAPIClient];
+    STPSource *expectedSource = [STPFixtures cardSource];
+    XCTestExpectation *exp = [self expectationWithDescription:@"deleteSource"];
+    OCMStub([mockAPIClient deleteSource:[OCMArg isEqual:expectedSource.stripeID]
+                   fromCustomerUsingKey:[OCMArg isEqual:customerKey]
+                             completion:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation) {
+        STPCustomerCompletionBlock completion;
+        [invocation getArgument:&completion atIndex:4];
+        completion([STPFixtures customerWithSingleCardTokenSource], nil);
+        [exp fulfill];
+    });
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
+    sut.customer = [STPFixtures customerWithSingleCardTokenSource];
+    XCTestExpectation *exp2 = [self expectationWithDescription:@"detachSource"];
+    [sut detachSourceFromCustomer:expectedSource completion:^(NSError *error) {
+        // detaching a source should clear the cached customer
+        XCTAssertNil(sut.customer);
+        XCTAssertNil(error);
+        [exp2 fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
 @end

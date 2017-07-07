@@ -75,6 +75,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable)STPUserInformation *prefilledInformation;
 
 /**
+ Determines whether or not the user is able to delete payment methods using this view controller
+
+ The user can tap the "Edit" button or swipe left on a payment method to delete it if enabled.
+
+ Currently, the user is not allowed to delete the selected payment method but this may change in the future.
+
+ Default is NO.
+ */
+@property (nonatomic, assign, readwrite) BOOL canDeletePaymentMethods;
+
+/**
  *  If you're pushing `STPPaymentMethodsViewController` onto an existing `UINavigationController`'s stack, you should use this method to dismiss it, since it may have pushed an additional add card view controller onto the navigation controller's stack.
  *
  *  @param completion The callback to run after the view controller is dismissed. You may specify nil for this parameter.

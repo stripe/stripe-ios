@@ -1,7 +1,10 @@
+== X.X.X 2017-XX-XX
+* Adds an option to allow users to delete payment methods from the `STPPaymentMethodsViewController`. Disabled by default but can enabled using the `canDeletePaymentMethods` property.
+
 == 11.1.0 2017-07-12
-* Added stripeAccount property to `STPAPIClient`, set this to perform API requests on behalf of a connected account
-* Fixed the `routingNumber` property of `STPBankAccount` so that it is populated when the information is available
-* Added iOS Objective-C Style Guide
+* Adds stripeAccount property to `STPAPIClient`, set this to perform API requests on behalf of a connected account
+* Fixes the `routingNumber` property of `STPBankAccount` so that it is populated when the information is available
+* Adds iOS Objective-C Style Guide
 
 == 11.0.0 2017-06-27
 * We've greatly simplified the integration for `STPPaymentContext`. See MIGRATING.md.
