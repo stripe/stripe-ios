@@ -15,15 +15,23 @@
  using card information collected with STPPaymentCardTextField, and then sends the token
  to our example backend to create the charge request.
  */
-@interface CardExampleViewController () <STPPaymentCardTextFieldDelegate>
+@interface CardExampleViewController () <STPPaymentCardTextFieldDelegate, UIScrollViewDelegate>
 @property (weak, nonatomic) STPPaymentCardTextField *paymentTextField;
 @property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) UIScrollView *scrollView;
 @end
 
 @implementation CardExampleViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+    scrollView.delegate = self;
+    scrollView.alwaysBounceVertical = YES;
+    scrollView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:scrollView];
+    self.scrollView = scrollView;
+
     self.view.backgroundColor = [UIColor whiteColor];
     self.title = @"Card";
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
@@ -39,16 +47,17 @@
     paymentTextField.cursorColor = [UIColor purpleColor];
     paymentTextField.countryCodeForPostalCodeFormattingAndValidation = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
     self.paymentTextField = paymentTextField;
-    [self.view addSubview:paymentTextField];
+    [scrollView addSubview:paymentTextField];
 
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityIndicator.hidesWhenStopped = YES;
     self.activityIndicator = activityIndicator;
-    [self.view addSubview:activityIndicator];
+    [scrollView addSubview:activityIndicator];
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
+    self.scrollView.bounds = self.view.bounds;
     CGFloat padding = 15;
     CGFloat width = CGRectGetWidth(self.view.frame) - (padding*2);
     CGRect bounds = self.view.bounds;
@@ -88,6 +97,10 @@
                                                   [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
                                               }];
                                           }];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.view endEditing:NO];
 }
 
 @end
