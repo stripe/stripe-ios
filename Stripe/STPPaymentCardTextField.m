@@ -98,7 +98,7 @@ typedef NS_ENUM(NSInteger, STPEditingTransitionState) {
 
 CGFloat const STPPaymentCardTextFieldDefaultPadding = 13;
 CGFloat const STPPaymentCardTextFieldDefaultInsets = 13;
-CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
+CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 
 #if CGFLOAT_IS_DOUBLE
 #define stp_roundCGFloat(x) round(x)
@@ -651,11 +651,35 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 8;
 }
 
 - (CGFloat)cvcFieldWidth {
-    return MAX([self widthForText:self.cvcField.placeholder], [self widthForText:@"8888"]);
+    if (self.focusedTextFieldForLayout == nil
+        && [self.viewModel validationStateForField:STPCardFieldTypeCVC] == STPCardValidationStateValid) {
+        // If we're not focused and have valid text, size exactly to what is entered
+        return [self widthForText:self.viewModel.cvc];
+    }
+    else {
+        // Otherwise size to fit our placeholder or what is likely to be the
+        // largest possible string enterable (whichever is larger)
+        NSInteger maxCvcLength = [STPCardValidator maxCVCLengthForCardBrand:self.viewModel.brand];
+        NSString *longestCvc = @"888";
+        if (maxCvcLength == 4) {
+            longestCvc = @"8888";
+        }
+
+        return MAX([self widthForText:self.cvcField.placeholder], [self widthForText:longestCvc]);
+    }
 }
 
 - (CGFloat)expirationFieldWidth {
-    return MAX([self widthForText:self.expirationField.placeholder], [self widthForText:@"88/88"]);
+    if (self.focusedTextFieldForLayout == nil
+        && [self.viewModel validationStateForField:STPCardFieldTypeExpiration] == STPCardValidationStateValid) {
+        // If we're not focused and have valid text, size exactly to what is entered
+        return [self widthForText:self.viewModel.rawExpiration];
+    }
+    else {
+        // Otherwise size to fit our placeholder or what is likely to be the
+        // largest possible string enterable (whichever is larger)
+        return MAX([self widthForText:self.expirationField.placeholder], [self widthForText:@"88/88"]);
+    }
 }
 
 - (CGFloat)postalCodeFieldFullWidth {
@@ -767,6 +791,10 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    [self recalculateSubviewLayout];
+}
+
+- (void)recalculateSubviewLayout {
 
     CGRect bounds = self.bounds;
 
@@ -872,8 +900,8 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
                         else if (postalVisibility == STPCardTextFieldStateVisible) {
                             postalVisibility = STPCardTextFieldStateCompressed;
                         }
-                        else if (panVisibility == STPCardTextFieldStateCompressed) {
-                            panVisibility = STPCardTextFieldStateHidden;
+                        else if (postalVisibility == STPCardTextFieldStateCompressed) {
+                            postalVisibility = STPCardTextFieldStateHidden;
                         }
                         else {
                             hPadding = STPPaymentCardTextFieldMinimumPadding;
@@ -899,8 +927,8 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
                         else if (postalVisibility == STPCardTextFieldStateVisible) {
                             postalVisibility = STPCardTextFieldStateCompressed;
                         }
-                        else if (postalVisibility == STPCardTextFieldStateCompressed) {
-                            postalVisibility = STPCardTextFieldStateHidden;
+                        else if (panVisibility == STPCardTextFieldStateCompressed) {
+                            panVisibility = STPCardTextFieldStateHidden;
                         }
                         else {
                             hPadding = STPPaymentCardTextFieldMinimumPadding;
@@ -924,8 +952,8 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
                         else if (panVisibility == STPCardTextFieldStateCompressed) {
                             panVisibility = STPCardTextFieldStateHidden;
                         }
-                        else if (cvcVisibility == STPCardTextFieldStateVisible) {
-                            cvcVisibility = STPCardTextFieldStateHidden;
+                        else if (expiryVisibility == STPCardTextFieldStateVisible) {
+                            expiryVisibility = STPCardTextFieldStateHidden;
                         }
                         else {
                             hPadding = STPPaymentCardTextFieldMinimumPadding;
@@ -943,7 +971,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     CGFloat xOffset = STPPaymentCardTextFieldDefaultInsets;
     CGFloat width = 0;
 
-    // Make pan and postal fields actually slightly wider than needed so that when the
+    // Make all fields actually slightly wider than needed so that when the
     // cursor is at the end position the contents aren't clipped off to the left side
     CGFloat additionalWidth = [self widthForText:@"8"];
 
@@ -993,11 +1021,11 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     xOffset += width + hPadding;
 
     width = [self expirationFieldWidth];
-    self.expirationField.frame = CGRectMake(xOffset, 0, width, fieldsHeight);
+    self.expirationField.frame = CGRectMake(xOffset, 0, width + additionalWidth, fieldsHeight);
     xOffset += width + hPadding;
 
     width = [self cvcFieldWidth];
-    self.cvcField.frame = CGRectMake(xOffset, 0, width, fieldsHeight);
+    self.cvcField.frame = CGRectMake(xOffset, 0, width + additionalWidth, fieldsHeight);
     xOffset += width + hPadding;
 
     if ([self postalCodeFieldIsEnabled]) {
@@ -1050,8 +1078,7 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
     self.focusedTextFieldForLayout = focusedField;
 
     void (^animations)() = ^void() {
-        [self setNeedsLayout];
-        [self layoutIfNeeded];
+        [self recalculateSubviewLayout];
     };
 
     if (animated) {
