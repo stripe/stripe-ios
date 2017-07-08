@@ -21,12 +21,6 @@
 
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
-typedef NS_ENUM(NSInteger, STPEditingTransitionState) {
-    STPEditingTransitionStateFalse,
-    STPEditingTransitionStatePossible,
-    STPEditingTransitionStateTrue
-};
-
 @interface STPPaymentCardTextField()<STPFormTextFieldDelegate>
 
 @property(nonatomic, readwrite, weak) UIImageView *brandImageView;
@@ -324,16 +318,43 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 
 - (void)setPostalCodePlaceholder:(NSString *)postalCodePlaceholder {
     _postalCodePlaceholder = postalCodePlaceholder.copy;
-    [self updatePostalFieldPlaceholderIfNecessary];
+    [self updatePostalFieldPlaceholder];
 }
 
-- (NSString *)countryCodeForPostalCodeFormattingAndValidation {
+- (void)setPostalCodeEntryEnabled:(BOOL)postalCodeEntryEnabled {
+    _postalCodeEntryEnabled = postalCodeEntryEnabled;
+    if (postalCodeEntryEnabled
+        && !self.countryCode) {
+        self.countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
+    }
+}
+
+- (NSString *)countryCode {
     return self.viewModel.postalCodeCountryCode;
 }
 
-- (void)updatePostalFieldPlaceholderIfNecessary {
+- (void)setCountryCode:(NSString *)countryCode {
+    if (countryCode == nil) {
+        countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
+    }
+
+    self.viewModel.postalCodeCountryCode = countryCode;
+    [self updatePostalFieldPlaceholder];
+
+    if ([countryCode isEqualToString:@"US"]) {
+        self.postalCodeField.keyboardType = UIKeyboardTypePhonePad;
+    }
+    else {
+        self.postalCodeField.keyboardType = UIKeyboardTypeDefault;
+    }
+
+    // This will revalidate and reformat
+    [self setText:self.postalCode inField:STPCardFieldTypePostalCode];
+}
+
+- (void)updatePostalFieldPlaceholder {
     if (self.postalCodePlaceholder == nil) {
-        self.postalCodeField.placeholder = [self defaultPostalFieldPlaceholderForCountryCode:self.countryCodeForPostalCodeFormattingAndValidation];
+        self.postalCodeField.placeholder = [self defaultPostalFieldPlaceholderForCountryCode:self.countryCode];
     }
     else {
         self.postalCodeField.placeholder = _postalCodePlaceholder;
@@ -347,21 +368,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     else {
         return NSLocalizedString(@"Postal", @"Short string for postal code (text used in non-US countries)");
     }
-}
-
-- (void)setCountryCodeForPostalCodeFormattingAndValidation:(NSString *)countryCodeForPostalCodeFormattingAndValidation {
-    self.viewModel.postalCodeCountryCode = countryCodeForPostalCodeFormattingAndValidation;
-    [self updatePostalFieldPlaceholderIfNecessary];
-
-    if ([countryCodeForPostalCodeFormattingAndValidation isEqualToString:@"US"]) {
-        self.postalCodeField.keyboardType = UIKeyboardTypePhonePad;
-    }
-    else {
-        self.postalCodeField.keyboardType = UIKeyboardTypeDefault;
-    }
-
-    // This will revalidate and reformat
-    [self setText:self.postalCode inField:STPCardFieldTypePostalCode];
 }
 
 - (void)setCursorColor:(UIColor *)cursorColor {
@@ -463,7 +469,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
             return self.expirationField;
         }
         else if (([self.viewModel validationStateForField:STPCardFieldTypeCVC] != STPCardValidationStateValid)
-                 || ![self postalCodeFieldIsEnabled]) {
+                 || !self.postalCodeEntryEnabled) {
             return self.cvcField;
         }
         else {
@@ -563,7 +569,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 - (NSString *)postalCode {
-    if ([self postalCodeFieldIsEnabled]) {
+    if (self.postalCodeEntryEnabled) {
         return self.viewModel.postalCode;
     }
     else {
@@ -696,7 +702,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 
 - (CGFloat)postalCodeFieldCompressedWidth {
     CGFloat maxTextWidth = 0;
-    if ([self.countryCodeForPostalCodeFormattingAndValidation.uppercaseString isEqualToString:@"US"]) {
+    if ([self.countryCode.uppercaseString isEqualToString:@"US"]) {
         maxTextWidth = [self widthForText:@"88888"];
     }
     else {
@@ -704,12 +710,8 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
         maxTextWidth = [self widthForText:@"888 8888"];
     }
 
-    CGFloat placeholderWidth = [self widthForText:[self defaultPostalFieldPlaceholderForCountryCode:self.countryCodeForPostalCodeFormattingAndValidation]];
+    CGFloat placeholderWidth = [self widthForText:[self defaultPostalFieldPlaceholderForCountryCode:self.countryCode]];
     return MAX(maxTextWidth, placeholderWidth);
-}
-
-- (BOOL)postalCodeFieldIsEnabled {
-    return [STPPostalCodeValidator postalCodeIsRequiredForCountryCode:self.countryCodeForPostalCodeFormattingAndValidation];
 }
 
 - (CGSize)intrinsicContentSize {
@@ -767,7 +769,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     }
 
     if (postalVisibility != STPCardTextFieldStateHidden
-        && [self postalCodeFieldIsEnabled]) {
+        && self.postalCodeEntryEnabled) {
         paddingsRequired += 1;
         requiredWidth += (postalVisibility == STPCardTextFieldStateCompressed) ? [self postalCodeFieldCompressedWidth] : [self postalCodeFieldFullWidth];
     }
@@ -811,7 +813,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     __block STPCardTextFieldState panVisibility = STPCardTextFieldStateVisible;
     __block STPCardTextFieldState expiryVisibility = STPCardTextFieldStateVisible;
     __block STPCardTextFieldState cvcVisibility = STPCardTextFieldStateVisible;
-    __block STPCardTextFieldState postalVisibility = [self postalCodeFieldIsEnabled] ? STPCardTextFieldStateVisible : STPCardTextFieldStateHidden;
+    __block STPCardTextFieldState postalVisibility = self.postalCodeEntryEnabled ? STPCardTextFieldStateVisible : STPCardTextFieldStateHidden;
 
     CGFloat (^calculateMinimumPaddingWithLocalVars)() = ^CGFloat() {
         return [self minimumPaddingForViewsWithWidth:availableFieldsWidth
@@ -1028,7 +1030,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     self.cvcField.frame = CGRectMake(xOffset, 0, width + additionalWidth, fieldsHeight);
     xOffset += width + hPadding;
 
-    if ([self postalCodeFieldIsEnabled]) {
+    if (self.postalCodeEntryEnabled) {
         width = self.fieldsView.frame.size.width - xOffset - STPPaymentCardTextFieldDefaultInsets;
         self.postalCodeField.frame = CGRectMake(xOffset, 0, width + additionalWidth, fieldsHeight);
     }
@@ -1037,7 +1039,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     self.expirationField.alpha = (CGFloat) ((expiryVisibility == STPCardTextFieldStateHidden) ? 0.0:  1.0);
     self.cvcField.alpha = (CGFloat) ((cvcVisibility == STPCardTextFieldStateHidden) ? 0.0:  1.0);
     self.postalCodeField.alpha = (CGFloat) (((postalVisibility == STPCardTextFieldStateHidden)
-                                  || ![self postalCodeFieldIsEnabled]) ? 0.0:  1.0);
+                                  || !self.postalCodeEntryEnabled) ? 0.0:  1.0);
 }
 
 #pragma mark - private helper methods

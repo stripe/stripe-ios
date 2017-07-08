@@ -45,7 +45,7 @@
     STPPaymentCardTextField *paymentTextField = [[STPPaymentCardTextField alloc] init];
     paymentTextField.delegate = self;
     paymentTextField.cursorColor = [UIColor purpleColor];
-    paymentTextField.countryCodeForPostalCodeFormattingAndValidation = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
+    paymentTextField.postalCodeEntryEnabled = YES;
     self.paymentTextField = paymentTextField;
     [scrollView addSubview:paymentTextField];
 
@@ -57,7 +57,7 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.scrollView.bounds = self.view.bounds;
+    self.scrollView.frame = self.view.bounds;
     CGFloat padding = 15;
     CGFloat width = CGRectGetWidth(self.view.frame) - (padding*2);
     CGRect bounds = self.view.bounds;

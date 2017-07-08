@@ -152,15 +152,29 @@ IB_DESIGNABLE
 @property(nonatomic, readonly, nullable) NSString *postalCode;
 
 /**
- *  Controls if a postal code entry field is displayed, and if so how its text
- *  should be formatted and what input is valid.
- *
- *  Default is nil (no postal code entry is displayed).
- *  Note that some non-nil values will still result in no postal code being
- *  displayed (invalid country codes, or countries which do not commonly use
- *  postal codes).
+ Controls if a postal code entry field can be displayed to the user.
+ 
+ Default is NO (no postal code entry will ever be displayed).
+ 
+ If YES, the type of code entry shown is controlled by the set `countryCode` 
+ value. Some country codes may result in no postal code entry being shown if
+ those countries do not commonly use postal codes.
  */
-@property(nonatomic, copy, nullable) NSString *countryCodeForPostalCodeFormattingAndValidation;
+@property(nonatomic, assign, readwrite) BOOL postalCodeEntryEnabled;
+
+
+/**
+ The two-letter ISO country code that corresponds to the user's billing address.
+
+ If `postalCodeEntryEnabled` is YES, this controls which type of entry is allowed.
+ If `postalCodeEntryEnabled` is NO, this property currently has no effect.
+
+ If set to nil and postal code entry is enabled, the country from the user's current
+ locale will be filled in. Otherwise the specific country code set will be used.
+
+ By default this will fetch the user's current country code from NSLocale.
+ */
+@property(nonatomic, copy, nullable) NSString *countryCode;
 
 /**
  *  Convenience property for creating an STPCardParams from the currently entered information
