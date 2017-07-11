@@ -44,13 +44,12 @@
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
-static NSString *const apiURLBase = @"api.stripe.com/v1";
-static NSString *const tokenEndpoint = @"tokens";
-static NSString *const sourcesEndpoint = @"sources";
-static NSString *const customersEndpoint = @"customers";
-static NSString *const fileUploadPath = @"https://uploads.stripe.com/v1/files";
-static NSString *const stripeAPIVersion = @"2015-10-12";
-
+static NSString * const APIVersion = @"2015-10-12";
+static NSString * const APIBaseURL = @"https://api.stripe.com/v1";
+static NSString * const APIEndpointToken = @"tokens";
+static NSString * const APIEndpointSources = @"sources";
+static NSString * const APIEndpointCustomers = @"customers";
+static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 
 @implementation Stripe
 
@@ -79,7 +78,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 @implementation STPAPIClient
 
 + (NSString *)apiVersion {
-    return stripeAPIVersion;
+    return APIVersion;
 }
 
 + (void)initialize {
@@ -115,7 +114,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     self = [super init];
     if (self) {
         _apiKey = publishableKey;
-        _apiURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", apiURLBase]];
+        _apiURL = [NSURL URLWithString:APIBaseURL];
         _urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
         _configuration = configuration;
         _sourcePollers = [NSMutableDictionary dictionary];
@@ -127,7 +126,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 - (NSURLSessionConfiguration *)sessionConfiguration {
     NSMutableDictionary *additionalHeaders = [NSMutableDictionary new];
     additionalHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetails];
-    additionalHeaders[@"Stripe-Version"] = stripeAPIVersion;
+    additionalHeaders[@"Stripe-Version"] = APIVersion;
     additionalHeaders[@"Authorization"] = [@"Bearer " stringByAppendingString:self.apiKey ?: @""];
     additionalHeaders[@"Stripe-Account"] = self.stripeAccount;
     NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -167,7 +166,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     [[STPAnalyticsClient sharedClient] logTokenCreationAttemptWithConfiguration:self.configuration
                                                                       tokenType:tokenType];
     [STPAPIRequest<STPToken *> postWithAPIClient:self
-                                        endpoint:tokenEndpoint
+                                        endpoint:APIEndpointToken
                                       parameters:parameters
                                     deserializer:[STPToken new]
                                       completion:^(STPToken *object, NSHTTPURLResponse *response, NSError *error) {
@@ -325,7 +324,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     NSString *boundary = [STPMultipartFormDataEncoder generateBoundary];
     NSData *data = [STPMultipartFormDataEncoder multipartFormDataForParts:@[purposePart, imagePart] boundary:boundary];
 
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:fileUploadPath]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:FileUploadURL]];
     [request setHTTPMethod:@"POST"];
     [request stp_setMultipartFormData:data boundary:boundary];
 
@@ -425,7 +424,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:sourceParams] mutableCopy];
     [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
     [STPAPIRequest<STPSource *> postWithAPIClient:self
-                                         endpoint:sourcesEndpoint
+                                         endpoint:APIEndpointSources
                                        parameters:params
                                      deserializer:[STPSource new]
                                        completion:^(STPSource *object, __unused NSHTTPURLResponse *response, NSError *error) {
@@ -444,7 +443,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 }
 
 - (NSURLSessionDataTask *)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret responseCompletion:(STPAPIResponseBlock)completion {
-    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", sourcesEndpoint, identifier];
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointSources, identifier];
     NSDictionary *parameters = @{@"client_secret": secret};
     return [STPAPIRequest<STPSource *> getWithAPIClient:self
                                                endpoint:endpoint
@@ -489,7 +488,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 
 + (void)retrieveCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPCustomerCompletionBlock)completion {
     STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
-    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", customersEndpoint, ephemeralKey.customerID];
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointCustomers, ephemeralKey.customerID];
     [STPAPIRequest<STPCustomer *> getWithAPIClient:client
                                           endpoint:endpoint
                                         parameters:nil
@@ -503,7 +502,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
                             usingKey:(STPEphemeralKey *)ephemeralKey
                           completion:(STPCustomerCompletionBlock)completion {
     STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
-    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", customersEndpoint, ephemeralKey.customerID];
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointCustomers, ephemeralKey.customerID];
     [STPAPIRequest<STPCustomer *> postWithAPIClient:client
                                            endpoint:endpoint
                                          parameters:parameters
@@ -517,7 +516,7 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
 toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
        completion:(STPSourceProtocolCompletionBlock)completion {
     STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
-    NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@", customersEndpoint, ephemeralKey.customerID, sourcesEndpoint];
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@", APIEndpointCustomers, ephemeralKey.customerID, APIEndpointSources];
     [STPAPIRequest<STPSourceProtocol> postWithAPIClient:client
                                                endpoint:endpoint
                                              parameters:@{@"source": sourceID}
