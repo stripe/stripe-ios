@@ -67,7 +67,7 @@
 /* Button to move to the next text entry field */
 "Next" = "Next";
 
-/* No comment provided by engineer. */
+/* ok button */
 "OK" = "OK";
 
 /* Title for Payment Method screen */
@@ -75,6 +75,9 @@
 
 /* Caption for Phone field on address form */
 "Phone" = "Phone";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal" = "Postal";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postal Code";
@@ -132,6 +135,9 @@
 
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "Your card's security code is invalid";
+
+/* Short string for zip code (United States only) */
+"ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "ZIP Code";

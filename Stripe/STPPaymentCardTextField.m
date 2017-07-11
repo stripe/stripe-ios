@@ -751,8 +751,14 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     if (currentTextWidth <= compressedWidth) {
         return compressedWidth;
     }
-    else {
+    else if ([self.countryCode.uppercaseString isEqualToString:@"US"]) {
+        // This format matches ZIP+4 which is currently disabled since it is
+        // not used for billing, but could be useful for future shipping addr purposes
         return [self widthForText:@"88888-8888"];
+    }
+    else {
+        // This format more closely matches the typical max UK/Canadian size which is our most common non-US market currently
+        return [self widthForText:@"888 8888"];
     }
 }
 
@@ -762,7 +768,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
         maxTextWidth = [self widthForText:@"88888"];
     }
     else {
-        // This format more closely matches the typical UK/Canadian size which is our most common non-US market currently
+        // This format more closely matches the typical max UK/Canadian size which is our most common non-US market currently
         maxTextWidth = [self widthForText:@"888 8888"];
     }
 
