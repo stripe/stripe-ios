@@ -19,9 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)apiVersion;
 
-- (instancetype)initWithPublishableKey:(NSString *)publishableKey
-                               baseURL:(NSString *)baseURL;
-
 - (void)createTokenWithParameters:(NSDictionary *)parameters
                        completion:(STPTokenCompletionBlock)completion;
 

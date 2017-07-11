@@ -124,15 +124,6 @@ static NSString *const stripeAPIVersion = @"2015-10-12";
     return self;
 }
 
-- (instancetype)initWithPublishableKey:(NSString *)publishableKey
-                               baseURL:(NSString *)baseURL {
-    self = [self initWithPublishableKey:publishableKey];
-    if (self) {
-        _apiURL = [NSURL URLWithString:baseURL];
-    }
-    return self;
-}
-
 - (NSURLSessionConfiguration *)sessionConfiguration {
     NSMutableDictionary *additionalHeaders = [NSMutableDictionary new];
     additionalHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetails];
