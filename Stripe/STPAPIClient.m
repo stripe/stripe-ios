@@ -53,6 +53,8 @@ static NSString * const APIEndpointSources = @"sources";
 static NSString * const APIEndpointCustomers = @"customers";
 static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 
+#pragma mark - Stripe
+
 @implementation Stripe
 
 + (void)setDefaultPublishableKey:(NSString *)publishableKey {
@@ -64,6 +66,8 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 }
 
 @end
+
+#pragma mark - STPAPIClient
 
 #if __has_include("Fabric.h")
 @interface STPAPIClient ()<FABKit>
@@ -180,7 +184,7 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
                                       }];
 }
 
-#pragma mark - private helpers
+#pragma mark Helpers
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-variable"
@@ -201,8 +205,6 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 #endif
 }
 #pragma clang diagnostic pop
-
-#pragma mark Utility methods -
 
 + (NSString *)stripeUserAgentDetails {
     NSMutableDictionary *details = [@{
@@ -233,6 +235,7 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 }
 
 #pragma mark Fabric
+
 #if __has_include("Fabric.h")
 
 + (NSString *)bundleIdentifier {
@@ -265,6 +268,7 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 @end
 
 #pragma mark - Bank Accounts
+
 @implementation STPAPIClient (BankAccounts)
 
 - (void)createTokenWithBankAccount:(STPBankAccountParams *)bankAccount
@@ -278,6 +282,7 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 @end
 
 #pragma mark - Personally Identifiable Information
+
 @implementation STPAPIClient (PII)
 
 - (void)createTokenWithPersonalIDNumber:(NSString *)pii completion:(__nullable STPTokenCompletionBlock)completion {
@@ -288,6 +293,8 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 }
 
 @end
+
+#pragma mark - Upload
 
 @implementation STPAPIClient (Upload)
 
@@ -358,6 +365,7 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 @end
 
 #pragma mark - Credit Cards
+
 @implementation STPAPIClient (CreditCards)
 
 - (void)createTokenWithCard:(STPCard *)card completion:(STPTokenCompletionBlock)completion {
@@ -368,6 +376,8 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 }
 
 @end
+
+#pragma mark - Apple Pay
 
 @implementation Stripe (ApplePay)
 
