@@ -25,7 +25,7 @@
 @property(nonatomic, readwrite, weak)STPFormTextField *cvcField;
 @property(nonatomic, readonly, weak)STPFormTextField *currentFirstResponderField;
 @property(nonatomic, readwrite, strong)STPPaymentCardTextFieldViewModel *viewModel;
-@property(nonatomic, assign)BOOL numberFieldShrunk;
+@property(nonatomic, copy) NSNumber *focusedTextFieldForLayout;
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
 @end
@@ -41,18 +41,16 @@
     UIFont *iOS8SystemFont = [UIFont fontWithName:@"HelveticaNeue" size:18];
     textField.font = iOS8SystemFont;
     XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 44, 0.1);
-    XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 266, 0.1);
-    
-    UIFont *iOS9SystemFont = [UIFont fontWithName:@".SFUIText-Regular" size:18];
-    if (iOS9SystemFont) {
-        textField.font = iOS9SystemFont;
-        XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 44, 0.1);
-        XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 279, 0.1);
-    }
-    
+    XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 247, 0.1);
+
+    UIFont *iOS9SystemFont = [UIFont systemFontOfSize:18];;
+    textField.font = iOS9SystemFont;
+    XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 44, 0.1);
+    XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 259, 0.1);
+
     textField.font = [UIFont fontWithName:@"Avenir" size:44];
-    XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 60, 0.1);
-    XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 497, 0.1);
+    XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 61, 0.1);
+    XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 478, 0.1);
 }
 
 - (void)testSetCard_numberUnknown {
@@ -64,7 +62,8 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField errorImageForCardBrand:STPCardBrandUnknown]);
 
-    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
@@ -81,7 +80,8 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
 
-    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
@@ -99,7 +99,8 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
 
-    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
     XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
@@ -117,7 +118,8 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
 
-    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
@@ -148,7 +150,8 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandAmex]);
 
-    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqual(sut.cvcField.text.length, (NSUInteger)0);
@@ -166,6 +169,8 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField errorImageForCardBrand:STPCardBrandAmex]);
 
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
 }
 
@@ -180,7 +185,7 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
 
-    XCTAssertTrue(sut.numberFieldShrunk);
+    XCTAssertNil(sut.focusedTextFieldForLayout);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
@@ -200,7 +205,8 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
 
-    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
@@ -220,7 +226,7 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandAmex]);
 
-    XCTAssertTrue(sut.numberFieldShrunk);
+    XCTAssertNil(sut.focusedTextFieldForLayout);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
@@ -240,7 +246,8 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
 
-    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
@@ -262,7 +269,7 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
 
-    XCTAssertTrue(sut.numberFieldShrunk);
+    XCTAssertNil(sut.focusedTextFieldForLayout);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(sut.numberField.text, number);
     XCTAssertEqualObjects(sut.expirationField.text, @"10/99");
@@ -281,7 +288,8 @@
     NSData *imgData = UIImagePNGRepresentation(sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
 
-    XCTAssertFalse(sut.numberFieldShrunk);
+    XCTAssertNotNil(sut.focusedTextFieldForLayout);
+    XCTAssertTrue(sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqual(sut.numberField.text.length, (NSUInteger)0);
     XCTAssertEqual(sut.expirationField.text.length, (NSUInteger)0);
@@ -374,14 +382,14 @@
     card.cvc = cvc;
     [self.sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
-    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField cvcImageForCardBrand:STPCardBrandVisa]);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
     
-    XCTAssertTrue(self.sut.numberFieldShrunk);
+    XCTAssertNil(self.sut.focusedTextFieldForLayout);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(self.sut.numberField.text, number);
     XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
     XCTAssertEqualObjects(self.sut.cvcField.text, cvc);
-    XCTAssertTrue([self.sut.cvcField isFirstResponder]);
+    XCTAssertFalse([self.sut isFirstResponder]);
     XCTAssertTrue(self.sut.isValid);
 }
 
@@ -395,8 +403,9 @@
     [self.sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
-    
-    XCTAssertFalse(self.sut.numberFieldShrunk);
+
+    XCTAssertNotNil(self.sut.focusedTextFieldForLayout);
+    XCTAssertTrue(self.sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(self.sut.numberField.text, number);
     XCTAssertEqualObjects(self.sut.expirationField.text, @"10/99");
@@ -412,28 +421,30 @@
     card.number = number;
     [self.sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
-    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandVisa]);
-    
-    XCTAssertTrue(self.sut.numberFieldShrunk);
+    NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField cvcImageForCardBrand:STPCardBrandVisa]);
+
+    XCTAssertNotNil(self.sut.focusedTextFieldForLayout);
+    XCTAssertTrue(self.sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeCVC);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqualObjects(self.sut.numberField.text, number);
     XCTAssertEqual(self.sut.expirationField.text.length, (NSUInteger)0);
     XCTAssertEqual(self.sut.cvcField.text.length, (NSUInteger)0);
-    XCTAssertTrue([self.sut.expirationField isFirstResponder]);
+    XCTAssertTrue([self.sut.cvcField isFirstResponder]);
     XCTAssertFalse(self.sut.isValid);
 }
 
 - (void)testSetCard_empty_whileEditingNumber {
-    XCTAssertTrue([self.sut.numberField becomeFirstResponder], @"text field is not first responder");
     self.sut.numberField.text = @"4242424242424242";
     self.sut.cvcField.text = @"123";
     self.sut.expirationField.text = @"10/99";
+    XCTAssertTrue([self.sut.numberField becomeFirstResponder], @"text field is not first responder");
     STPCardParams *card = [STPCardParams new];
     [self.sut setCardParams:card];
     NSData *imgData = UIImagePNGRepresentation(self.sut.brandImageView.image);
     NSData *expectedImgData = UIImagePNGRepresentation([STPPaymentCardTextField brandImageForCardBrand:STPCardBrandUnknown]);
-    
-    XCTAssertFalse(self.sut.numberFieldShrunk);
+
+    XCTAssertNotNil(self.sut.focusedTextFieldForLayout);
+    XCTAssertTrue(self.sut.focusedTextFieldForLayout.integerValue == STPCardFieldTypeNumber);
     XCTAssertTrue([expectedImgData isEqualToData:imgData]);
     XCTAssertEqual(self.sut.numberField.text.length, (NSUInteger)0);
     XCTAssertEqual(self.sut.expirationField.text.length, (NSUInteger)0);

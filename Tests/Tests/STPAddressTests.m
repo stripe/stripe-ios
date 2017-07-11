@@ -335,6 +335,7 @@
 - (void)testContainsRequiredFieldsZip {
     STPAddress *address = [STPAddress new];
 
+    // nil country is treated as generic postal requirement
     XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsZip]);
     address.country = @"IE"; //should pass for country which doesn't require zip/postal
     XCTAssertTrue([address containsRequiredFields:STPBillingAddressFieldsZip]);

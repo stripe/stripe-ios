@@ -104,7 +104,8 @@
     return ([self validationStateForField:STPCardFieldTypeNumber] == STPCardValidationStateValid
             && [self validationStateForField:STPCardFieldTypeExpiration] == STPCardValidationStateValid
             && [self validationStateForField:STPCardFieldTypeCVC] == STPCardValidationStateValid
-            && [self validationStateForField:STPCardFieldTypePostalCode] == STPCardValidationStateValid);
+            && (!self.postalCodeRequired
+                || [self validationStateForField:STPCardFieldTypePostalCode] == STPCardValidationStateValid));
 }
 
 - (NSString *)defaultPlaceholder {
@@ -119,6 +120,7 @@
                                  NSStringFromSelector(@selector(cvc)),
                                  NSStringFromSelector(@selector(brand)),
                                  NSStringFromSelector(@selector(postalCode)),
+                                 NSStringFromSelector(@selector(postalCodeRequired)),
                                  NSStringFromSelector(@selector(postalCodeCountryCode)),
                                  ]];
 }

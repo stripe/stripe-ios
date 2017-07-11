@@ -168,7 +168,7 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
 
 + (BOOL)postalCodeIsRequiredForCountryCode:(NSString *)countryCode {
     if (countryCode == nil) {
-        return NO;
+        return YES;
     }
     else {
         return (![[self countriesWithNoPostalCodes] containsObject:countryCode.uppercaseString]);

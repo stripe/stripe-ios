@@ -322,11 +322,15 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 - (void)setPostalCodeEntryEnabled:(BOOL)postalCodeEntryEnabled {
-    _postalCodeEntryEnabled = postalCodeEntryEnabled;
+    self.viewModel.postalCodeRequired = postalCodeEntryEnabled;
     if (postalCodeEntryEnabled
         && !self.countryCode) {
         self.countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
     }
+}
+
+- (BOOL)postalCodeEntryEnabled {
+    return self.viewModel.postalCodeRequired;
 }
 
 - (NSString *)countryCode {
@@ -455,26 +459,39 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
         if (index != NSNotFound) {
             index += 1;
             if (self.allFields.count > index) {
-                return self.allFields[index];
+                STPFormTextField *nextField = self.allFields[index];
+                if (nextField == self.postalCodeField
+                    && !self.postalCodeEntryEnabled) {
+                    return [self firstInvalidSubField];
+                }
+                else {
+                    return nextField;
+                }
             }
         }
-
-        return nil;
+        return [self firstInvalidSubField];
     }
     else {
-        if ([self.viewModel validationStateForField:STPCardFieldTypeNumber] != STPCardValidationStateValid) {
-            return self.numberField;
-        }
-        else if ([self.viewModel validationStateForField:STPCardFieldTypeExpiration] != STPCardValidationStateValid) {
-            return self.expirationField;
-        }
-        else if (([self.viewModel validationStateForField:STPCardFieldTypeCVC] != STPCardValidationStateValid)
-                 || !self.postalCodeEntryEnabled) {
-            return self.cvcField;
-        }
-        else {
-            return self.postalCodeField;
-        }
+        return [self firstInvalidSubField];
+    }
+}
+
+- (STPFormTextField *)firstInvalidSubField {
+    if ([self.viewModel validationStateForField:STPCardFieldTypeNumber] != STPCardValidationStateValid) {
+        return self.numberField;
+    }
+    else if ([self.viewModel validationStateForField:STPCardFieldTypeExpiration] != STPCardValidationStateValid) {
+        return self.expirationField;
+    }
+    else if ([self.viewModel validationStateForField:STPCardFieldTypeCVC] != STPCardValidationStateValid) {
+        return self.cvcField;
+    }
+    else if (self.postalCodeEntryEnabled
+             && [self.viewModel validationStateForField:STPCardFieldTypePostalCode] != STPCardValidationStateValid) {
+        return self.postalCodeField;
+    }
+    else {
+        return nil;
     }
 }
 
@@ -582,11 +599,31 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     self.internalCardParams.expMonth = self.expirationMonth;
     self.internalCardParams.expYear = self.expirationYear;
     self.internalCardParams.cvc = self.cvc;
-    self.internalCardParams.addressZip = self.postalCode;
+    if (self.postalCodeEntryEnabled) {
+        // We don't clobber any manually set address zip code that was on our params
+        // if we are not showing the postal code entry field.
+        self.internalCardParams.addressZip = self.postalCode;
+    }
     return self.internalCardParams;
 }
 
 - (void)setCardParams:(STPCardParams *)cardParams {
+    /*
+     Due to the way this class is written, programmatically setting field text
+     behaves identically to user entering text (and will have the same forwarding 
+     on to next responder logic).
+
+     We have some custom logic here in the main accesible programmatic setter
+     to dance around this a bit. First we save what is the current responder
+     at the time this method was called. Later logic after text setting should be:
+     1. If we were not first responder, we should still not be first responder
+        (but layout might need updating depending on PAN validity)
+     2. If original field is still not valid, it is still first responder
+        (manually reset it back to first responder)
+     3. Otherwise the first subfield with invalid text should now be first responder
+     */
+    STPFormTextField *originalSubResponder = self.currentFirstResponderField;
+
     self.internalCardParams = cardParams;
     [self setText:cardParams.number inField:STPCardFieldTypeNumber];
     BOOL expirationPresent = cardParams.expMonth && cardParams.expYear;
@@ -604,7 +641,26 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     [self setText:cardParams.addressZip inField:STPCardFieldTypePostalCode];
 
     if ([self isFirstResponder]) {
-        [[self nextFirstResponderField] becomeFirstResponder];
+        STPCardFieldType fieldType = originalSubResponder.tag;
+        STPCardValidationState state = [self.viewModel validationStateForField:fieldType];
+
+        if (state == STPCardValidationStateValid) {
+            STPFormTextField *nextField = [self firstInvalidSubField];
+            if (nextField) {
+                [nextField becomeFirstResponder];
+            }
+            else {
+                [self resignFirstResponder];
+            }
+        }
+        else {
+            [originalSubResponder becomeFirstResponder];
+        }
+    }
+    else {
+        [self layoutViewsToFocusField:nil
+                             animated:NO
+                           completion:nil];
     }
 
     // update the card image, falling back to the number field image if not editing
@@ -728,8 +784,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
                      + imageSize.width
                      + STPPaymentCardTextFieldDefaultInsets
                      + [self numberFieldFullWidth]
-                     + STPPaymentCardTextFieldDefaultPadding
-                     + [self expirationFieldWidth]
                      + STPPaymentCardTextFieldDefaultInsets
                      );
 
@@ -866,8 +920,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
                     /*
                      The user is entering PAN
                      
-                     It must be fully visible, and the next field must be visible
-                     so it can be tapped over to. Everything else is optional
+                     It must be fully visible. Everything else is optional
                      */
 
                     while (hPadding < STPPaymentCardTextFieldMinimumPadding) {
@@ -879,6 +932,9 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
                         }
                         else if (cvcVisibility == STPCardTextFieldStateVisible) {
                             cvcVisibility = STPCardTextFieldStateHidden;
+                        }
+                        else if (expiryVisibility == STPCardTextFieldStateVisible) {
+                            expiryVisibility = STPCardTextFieldStateHidden;
                         }
                         else {
                             hPadding = STPPaymentCardTextFieldMinimumPadding;

@@ -268,7 +268,7 @@ NSString *stringIfHasContentsElseNil(NSString *string);
             return YES;
         case STPBillingAddressFieldsZip:
             return ([STPPostalCodeValidator validationStateForPostalCode:self.postalCode
-                                                            countryCode:self.country] == STPCardValidationStateValid);
+                                                             countryCode:self.country] == STPCardValidationStateValid);
         case STPBillingAddressFieldsFull:
             return [self hasValidPostalAddress];
     }
