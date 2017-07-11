@@ -23,16 +23,18 @@
 
 @implementation CardExampleViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+- (void)loadView {
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
     scrollView.delegate = self;
     scrollView.alwaysBounceVertical = YES;
     scrollView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:scrollView];
+    self.view = scrollView;
     self.scrollView = scrollView;
+}
 
-    self.view.backgroundColor = [UIColor whiteColor];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
     self.title = @"Card";
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -47,17 +49,16 @@
     paymentTextField.cursorColor = [UIColor purpleColor];
     paymentTextField.postalCodeEntryEnabled = YES;
     self.paymentTextField = paymentTextField;
-    [scrollView addSubview:paymentTextField];
+    [self.view addSubview:paymentTextField];
 
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityIndicator.hidesWhenStopped = YES;
     self.activityIndicator = activityIndicator;
-    [scrollView addSubview:activityIndicator];
+    [self.view addSubview:activityIndicator];
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    self.scrollView.frame = self.view.bounds;
     CGFloat padding = 15;
     CGFloat width = CGRectGetWidth(self.view.frame) - (padding*2);
     CGRect bounds = self.view.bounds;
