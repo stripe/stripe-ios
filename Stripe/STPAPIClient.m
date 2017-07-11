@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
 
-#import "NSBundle+Stripe_AppName.h"
-#import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient.h"
+#import "STPAPIClient+ApplePay.h"
+#import "STPAPIClient+Private.h"
+
+#import "NSBundle+Stripe_AppName.h"
 #import "STPAPIRequest.h"
 #import "STPAnalyticsClient.h"
 #import "STPBankAccount.h"
@@ -68,11 +70,13 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 #else
 @interface STPAPIClient()
 #endif
-@property (nonatomic, readwrite) NSURL *apiURL;
-@property (nonatomic, readwrite) NSURLSession *urlSession;
-@property (nonatomic, readwrite) NSMutableDictionary<NSString *,NSObject *>*sourcePollers;
-@property (nonatomic, readwrite) dispatch_queue_t sourcePollersQueue;
-@property (nonatomic, readwrite) NSString *apiKey;
+
+@property (nonatomic, strong, readwrite) NSMutableDictionary<NSString *,NSObject *> *sourcePollers;
+@property (nonatomic, strong, readwrite) dispatch_queue_t sourcePollersQueue;
+@property (nonatomic, strong, readwrite) NSString *apiKey;
+
+// See STPAPIClient+Private.h
+
 @end
 
 @implementation STPAPIClient
