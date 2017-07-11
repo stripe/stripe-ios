@@ -11,7 +11,6 @@
 #import "STPCardValidator.h"
 #import "STPPhoneNumberValidator.h"
 #import "NSCharacterSet+Stripe.h"
-#import "NSCharacterSet+Stripe.h"
 #import "NSString+Stripe.h"
 
 static NSString *const STPCountryCodeUnitedStates = @"US";
@@ -154,6 +153,10 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
 
     NSString *formattedString = [[STPCardValidator sanitizedNumericStringForString:zipCode] stp_safeSubstringToIndex:maxLength];
 
+    /* 
+     If the string is >5 numbers or == 5 and the last char of the unformatted
+     string was already a hyphen, insert a hyphen at position 6 for ZIP+4
+     */
     if (formattedString.length > 5
         || (formattedString.length == 5
             && [[zipCode substringFromIndex:(zipCode.length - 1)] isEqualToString:@"-"])) {

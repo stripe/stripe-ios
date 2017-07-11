@@ -149,7 +149,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     STPFormTextField *numberField = [self buildTextField];
     numberField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorCardNumbers;
     numberField.tag = STPCardFieldTypeNumber;
-    numberField.accessibilityLabel = NSLocalizedString(@"card number", @"accessibility label for text field");
+    numberField.accessibilityLabel = STPLocalizedString(@"card number", @"accessibility label for text field");
     self.numberField = numberField;
     self.numberPlaceholder = [self.viewModel defaultPlaceholder];
 
@@ -157,7 +157,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     expirationField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorExpiration;
     expirationField.tag = STPCardFieldTypeExpiration;
     expirationField.alpha = 0;
-    expirationField.accessibilityLabel = NSLocalizedString(@"expiration date", @"accessibility label for text field");
+    expirationField.accessibilityLabel = STPLocalizedString(@"expiration date", @"accessibility label for text field");
     self.expirationField = expirationField;
     self.expirationPlaceholder = @"MM/YY";
         
@@ -367,10 +367,10 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 
 - (NSString *)defaultPostalFieldPlaceholderForCountryCode:(NSString *)countryCode {
     if ([countryCode.uppercaseString isEqualToString:@"US"]) {
-        return NSLocalizedString(@"ZIP", @"Short string for zip code (United States only)");
+        return STPLocalizedString(@"ZIP", @"Short string for zip code (United States only)");
     }
     else {
-        return NSLocalizedString(@"Postal", @"Short string for postal code (text used in non-US countries)");
+        return STPLocalizedString(@"Postal", @"Short string for postal code (text used in non-US countries)");
     }
 }
 
