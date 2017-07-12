@@ -100,9 +100,6 @@
                 <a class="nav-group-task-link" href="Classes/STPCustomer.html">STPCustomer</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Classes/STPCustomerContext.html">STPCustomerContext</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
@@ -527,7 +524,6 @@
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Representation of a user&rsquo;s bank account details that have been tokenized with the Stripe API</p>
-
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     <a href="https://stripe.com/docs/api#bank_accounts">https://stripe.com/docs/api#bank_accounts</a>
@@ -574,7 +570,6 @@
                       <div class="abstract">
                         <p>Representation of a user&rsquo;s bank account details. You can assemble these with information that your user enters and
   then create Stripe tokens with them using an STPAPIClient.</p>
-
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     <a href="https://stripe.com/docs/api#create_bank_account_token">https://stripe.com/docs/api#create_bank_account_token</a>
@@ -620,7 +615,6 @@
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Representation of a user&rsquo;s credit card details that have been tokenized with the Stripe API</p>
-
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     <a href="https://stripe.com/docs/api#cards">https://stripe.com/docs/api#cards</a>
@@ -668,7 +662,6 @@
                       <div class="abstract">
                         <p>Representation of a user&rsquo;s credit card details. You can assemble these with information that your user enters and
   then create Stripe tokens with them using an STPAPIClient.</p>
-
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     <a href="https://stripe.com/docs/api#cards">https://stripe.com/docs/api#cards</a>
@@ -764,6 +757,11 @@ for use only by Stripe classes, you should not subclass it yourself in your app.
                           <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPCoreScrollViewController</span> <span class="p">:</span> <span class="nc"><a href="Classes/STPCoreViewController.html">STPCoreViewController</a></span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPCoreScrollViewController</span> <span class="p">:</span> <span class="kt"><a href="Classes/STPCoreViewController.html">STPCoreViewController</a></span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCoreScrollViewController.h#L17-L19">Show on GitHub</a>
@@ -800,6 +798,11 @@ created scroll view to UITableView, as well as other shared table view logic.</p
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPCoreTableViewController</span> <span class="p">:</span> <span class="nc"><a href="Classes.html#/c:objc(cs)STPCoreScrollViewController">STPCoreScrollViewController</a></span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPCoreTableViewController</span> <span class="p">:</span> <span class="kt"><a href="Classes.html#/c:objc(cs)STPCoreScrollViewController">STPCoreScrollViewController</a></span></code></pre>
 
                         </div>
                       </div>
@@ -843,7 +846,7 @@ Stripe view controllers.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPCoreViewController</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPCoreViewController</span> <span class="p">:</span> <span class="kt">UIViewController</span></code></pre>
 
                         </div>
                       </div>
@@ -872,7 +875,7 @@ Stripe view controllers.</p>
                       <div class="abstract">
                         <p>An <code>STPCustomer</code> represents a deserialized Customer object from the Stripe API.
 You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you should instead use
-<code><a href="Classes/STPCustomerContext.html">STPCustomerContext</a></code> to manage retrieving and updating a customer.</p>
+<code>STPCustomerContext</code> to manage retrieving and updating a customer.</p>
 
                         <a href="Classes/STPCustomer.html" class="slightly-smaller">See more</a>
                       </div>
@@ -927,51 +930,6 @@ You shouldn&rsquo;t need to instantiate an <code>STPCustomer</code> – you shou
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomer.h#L65-L101">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:objc(cs)STPCustomerContext"></a>
-                    <a name="//apple_ref/objc/Class/STPCustomerContext" class="dashAnchor"></a>
-                    <a class="token" href="#/c:objc(cs)STPCustomerContext">STPCustomerContext</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>An <code>STPCustomerContext</code> retrieves and updates a Stripe customer using
-an ephemeral key, a short-lived API key scoped to a specific customer object.
-If your current user logs out of your app and a new user logs in, be sure to
-either create a new instance of <code>STPCustomerContext</code> or clear the current
-instance&rsquo;s cached customer. On your backend, be sure to create and return a
-new ephemeral key for the Customer object associated with the new user.</p>
-
-                        <a href="Classes/STPCustomerContext.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPCustomerContext</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n"><a href="Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="o">&gt;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPCustomerContext</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCustomerContext.h#L26-L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1046,7 +1004,7 @@ new ephemeral key for the Customer object associated with the new user.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPPaymentActivityIndicatorView</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPPaymentActivityIndicatorView</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
 
                         </div>
                       </div>
@@ -1086,7 +1044,7 @@ new ephemeral key for the Customer object associated with the new user.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPPaymentCardTextField</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPPaymentCardTextField</span> <span class="p">:</span> <span class="kt">UIControl</span><span class="p">,</span> <span class="kt">UIKeyInput</span></code></pre>
 
                         </div>
                       </div>
@@ -1163,7 +1121,7 @@ is specific to a single particular payment instance.</p>
 
 <p><code>STPPaymentContext</code> also provides a unified interface to multiple payment methods - for example, you can write a single integration to accept both credit card payments and Apple Pay.</p>
 
-<p><code>STPPaymentContext</code> saves information about a user&rsquo;s payment methods to a Stripe customer object, and requires an <code><a href="Classes/STPCustomerContext.html">STPCustomerContext</a></code> to manage retrieving and modifying the customer.</p>
+<p><code>STPPaymentContext</code> saves information about a user&rsquo;s payment methods to a Stripe customer object, and requires an <code>STPCustomerContext</code> to manage retrieving and modifying the customer.</p>
 
                         <a href="Classes/STPPaymentContext.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1298,8 +1256,12 @@ is specific to a single particular payment instance.</p>
   have not actually completed the necessary actions to authorize the charge.</p>
 
 <p>You can use <code><a href="Classes/STPAPIClient.html">STPAPIClient</a></code> to listen for state changes on the source
-  object as a way to identify whether the user action succeeded or not.
-  - see: <code>[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]</code></p>
+  object as a way to identify whether the user action succeeded or not.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <code>[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]</code>
+
+</div>
 
 <p>You should not use either this class, nor <code><a href="Classes/STPAPIClient.html">STPAPIClient</a></code>, as a way
   to determine when you should charge the source. Use Stripe webhooks on your
@@ -1357,7 +1319,7 @@ is specific to a single particular payment instance.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPShippingAddressViewController</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPShippingAddressViewController</span> <span class="p">:</span> <span class="kt"><a href="Classes.html#/c:objc(cs)STPCoreTableViewController">STPCoreTableViewController</a></span></code></pre>
 
                         </div>
                       </div>
@@ -1505,8 +1467,12 @@ dictionary for card sources.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>An object representing parameters used to create a Source object. 
-- see: <a href="https://stripe.com/docs/api#create_source">https://stripe.com/docs/api#create_source</a></p>
+                        <p>An object representing parameters used to create a Source object. </p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://stripe.com/docs/api#create_source">https://stripe.com/docs/api#create_source</a>
+
+</div>
 
                         <a href="Classes/STPSourceParams.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1720,7 +1686,7 @@ dictionary for SEPA Debit sources.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPTheme</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kt">STPTheme</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSCopying</span></code></pre>
 
                         </div>
                       </div>
@@ -1821,8 +1787,8 @@ this information whenever possible.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-07)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-12)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

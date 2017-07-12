@@ -101,9 +101,6 @@
                 <a class="nav-group-task-link" href="../Classes/STPCustomer.html">STPCustomer</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Classes/STPCustomerContext.html">STPCustomerContext</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
@@ -316,7 +313,7 @@
 
 <p><code>STPPaymentContext</code> also provides a unified interface to multiple payment methods - for example, you can write a single integration to accept both credit card payments and Apple Pay.</p>
 
-<p><code>STPPaymentContext</code> saves information about a user&rsquo;s payment methods to a Stripe customer object, and requires an <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code> to manage retrieving and modifying the customer.</p>
+<p><code>STPPaymentContext</code> saves information about a user&rsquo;s payment methods to a Stripe customer object, and requires an <code>STPCustomerContext</code> to manage retrieving and modifying the customer.</p>
 
           </div>
         </section>
@@ -349,12 +346,12 @@
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithCustomerContext</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">customerContext</span><span class="p">;</span></code></pre>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPCustomerContext</span> <span class="o">*</span><span class="p">)</span><span class="nv">customerContext</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt">STPCustomerContext</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -371,8 +368,7 @@
                               <td>
                                 <div>
                                   <p>The customer context the payment context will use to fetch
-and modify its Stripe customer. </p>
-
+and modify its Stripe customer. - see: STPCustomerContext.h</p>
                                 </div>
                               </td>
                             </tr>
@@ -382,7 +378,6 @@ and modify its Stripe customer. </p>
                       <div>
                         <h4>Return Value</h4>
                         <p>the newly-instantiated payment context</p>
-
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L44">Show on GitHub</a>
@@ -413,14 +408,14 @@ and theme. After this class is initialized, you should also make sure to set its
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span>
-<span class="nf">initWithCustomerContext</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">customerContext</span>
+<span class="nf">initWithCustomerContext</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">STPCustomerContext</span> <span class="o">*</span><span class="p">)</span><span class="nv">customerContext</span>
           <span class="nf">configuration</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span>
                   <span class="nf">theme</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">theme</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt">STPCustomerContext</span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -437,8 +432,7 @@ and theme. After this class is initialized, you should also make sure to set its
                               <td>
                                 <div>
                                   <p>The customer context the payment context will use to fetch
-and modify its Stripe customer. </p>
-
+and modify its Stripe customer. - see: STPCustomerContext.h</p>
                                 </div>
                               </td>
                             </tr>
@@ -450,8 +444,7 @@ and modify its Stripe customer. </p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The configuration for the payment context to use. This lets you set your Stripe publishable API key, required billing address fields, etc. </p>
-
+                                  <p>The configuration for the payment context to use. This lets you set your Stripe publishable API key, required billing address fields, etc. - see: STPPaymentConfiguration.h</p>
                                 </div>
                               </td>
                             </tr>
@@ -463,8 +456,7 @@ and modify its Stripe customer. </p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The theme describing the visual appearance of all UI that the payment context automatically creates for you. </p>
-
+                                  <p>The theme describing the visual appearance of all UI that the payment context automatically creates for you. - see: STPTheme.h</p>
                                 </div>
                               </td>
                             </tr>
@@ -474,7 +466,6 @@ and modify its Stripe customer. </p>
                       <div>
                         <h4>Return Value</h4>
                         <p>the newly-instantiated payment context</p>
-
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L57-L59">Show on GitHub</a>
@@ -499,7 +490,7 @@ and modify its Stripe customer. </p>
 
 <p>@deprecated Use <code>initWithCustomerContext:</code>.
   Instead of providing your own backend API adapter, you can now create an
-  <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
+  <code>STPCustomerContext</code>, which will manage retrieving and updating a
   Stripe customer for you. - see: STPCustomerContext.h</p>
 
                       </div>
@@ -540,7 +531,7 @@ and modify its Stripe customer. </p>
 
 <p>@deprecated Use <code>initWithCustomerContext:configuration:theme:</code>.
   Instead of providing your own backend API adapter, you can now create an
-  <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
+  <code>STPCustomerContext</code>, which will manage retrieving and updating a
   Stripe customer for you. - see: STPCustomerContext.h</p>
 
                       </div>
@@ -572,8 +563,7 @@ and modify its Stripe customer. </p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The API adapter the payment context will use to fetch and modify its contents. You need to make a class conforming to this protocol that talks to your server. </p>
-
+                                  <p>The API adapter the payment context will use to fetch and modify its contents. You need to make a class conforming to this protocol that talks to your server. - see: STPBackendAPIAdapter.h</p>
                                 </div>
                               </td>
                             </tr>
@@ -585,8 +575,7 @@ and modify its Stripe customer. </p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The configuration for the payment context to use. This lets you set your Stripe publishable API key, required billing address fields, etc. </p>
-
+                                  <p>The configuration for the payment context to use. This lets you set your Stripe publishable API key, required billing address fields, etc. - see: STPPaymentConfiguration.h</p>
                                 </div>
                               </td>
                             </tr>
@@ -598,8 +587,7 @@ and modify its Stripe customer. </p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The theme describing the visual appearance of all UI that the payment context automatically creates for you. </p>
-
+                                  <p>The theme describing the visual appearance of all UI that the payment context automatically creates for you. - see: STPTheme.h</p>
                                 </div>
                               </td>
                             </tr>
@@ -609,7 +597,6 @@ and modify its Stripe customer. </p>
                       <div>
                         <h4>Return Value</h4>
                         <p>the newly-instantiated payment context</p>
-
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentContext.h#L85-L87">Show on GitHub</a>
@@ -634,7 +621,7 @@ and modify its Stripe customer. </p>
 
 <p>@deprecated Use <code>customerContext</code>.
   Instead of providing your own backend API adapter, you can now  create an
-  <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
+  <code>STPCustomerContext</code>, which will manage retrieving and updating a
   Stripe customer for you. - see: STPCustomerContext.h</p>
 
                       </div>
@@ -784,6 +771,11 @@ and modify its Stripe customer. </p>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="n">hostViewController</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">weak</span> <span class="k">var</span> <span class="nv">hostViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -962,7 +954,7 @@ and modify its Stripe customer. </p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">selectedShippingMethod</span><span class="p">:</span> <span class="kt">UnsafeMutablePointer</span></code></pre>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">selectedShippingMethod</span><span class="p">:</span> <span class="kt">PKShippingMethod</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -998,7 +990,7 @@ and modify its Stripe customer. </p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">shippingMethods</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">shippingMethods</span><span class="p">:</span> <span class="p">[</span><span class="kt">PKShippingMethod</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -1078,14 +1070,12 @@ and modify its Stripe customer. </p>
                         <p>The amount of money you&rsquo;re requesting from the user, in the smallest currency 
   unit for the selected currency. For example, to indicate $10 USD, use 1000 
   (i.e. 1000 cents). For more information, see <a href="https://stripe.com/docs/api#charge_object-amount">https://stripe.com/docs/api#charge_object-amount</a></p>
-
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     <p>This value must be present and greater than zero in order for Apple Pay
 to be automatically enabled.</p>
 
 </div>
-
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     <p>You should only set either this or <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentSummaryItems">paymentSummaryItems</a></code>, not both.
@@ -1128,7 +1118,6 @@ The other will be automatically calculated on demand using your <code><a href=".
                       <div class="abstract">
                         <p>The three-letter currency code for the currency of the payment (i.e. USD, GBP, 
   JPY, etc). Defaults to <q>USD</q>.</p>
-
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     Changing this property may change the return value of <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code> 
@@ -1171,14 +1160,12 @@ or <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext
                       <div class="abstract">
                         <p>The two-letter country code for the country where the payment will be processed.
   You should set this to the country your Stripe account is in. Defaults to <q>US</q>.</p>
-
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     Changing this property will change the <code>countryCode</code> of your Apple Pay
 payment requests.
 
 </div>
-
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     PKPaymentRequest for more information.
@@ -1222,13 +1209,16 @@ payment requests.
   you want to display here instead of using <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code>. Note that the 
   grand total (the amount of the last summary item) must be greater than zero.
   If not set, a single summary item will be automatically generated using 
-  <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code> and your configuration&rsquo;s <code>companyName</code>.
-  - see: PKPaymentRequest for more information</p>
+  <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code> and your configuration&rsquo;s <code>companyName</code>.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p>PKPaymentRequest for more information</p>
 
+</div>
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
-    You should only set either this or <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code>, not both. 
-The other will be automatically calculated on demand using your <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentCurrency">paymentCurrency.</a></code>
+    <p>You should only set either this or <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentAmount">paymentAmount</a></code>, not both. 
+The other will be automatically calculated on demand using your <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)paymentCurrency">paymentCurrency.</a></code></p>
 
 </div>
 
@@ -1243,7 +1233,7 @@ The other will be automatically calculated on demand using your <code><a href=".
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">paymentSummaryItems</span><span class="p">:</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">paymentSummaryItems</span><span class="p">:</span> <span class="p">[</span><span class="kt">PKPaymentSummaryItem</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -1282,7 +1272,7 @@ The default value is <code>UIModalPresentationFullScreen</code>.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">modalPresentationStyle</span><span class="p">:</span> <span class="kt">Int32</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">modalPresentationStyle</span><span class="p">:</span> <span class="kt">UIModalPresentationStyle</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -1346,7 +1336,6 @@ will be called again (and you can again call this to keep retrying, etc).</p>
                         <p>This creates, configures, and appropriately presents an <code><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code> 
 on top of the payment context&rsquo;s <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code>. It&rsquo;ll be dismissed automatically 
 when the user is done selecting their payment method.</p>
-
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     This method will do nothing if it is called while STPPaymentContext is 
@@ -1390,7 +1379,6 @@ when the user is done selecting their payment method.</p>
                         <p>This creates, configures, and appropriately pushes an <code><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code> 
   onto the navigation stack of the context&rsquo;s <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code>. It&rsquo;ll be popped 
   automatically when the user is done selecting their payment method.</p>
-
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     This method will do nothing if it is called while STPPaymentContext is
@@ -1435,7 +1423,6 @@ when the user is done selecting their payment method.</p>
   collecting shipping address and shipping method on top of the payment context&rsquo;s 
   <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code>. It&rsquo;ll be dismissed automatically when the user is done 
   entering their shipping info.</p>
-
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     This method will do nothing if it is called while STPPaymentContext is
@@ -1480,7 +1467,6 @@ when the user is done selecting their payment method.</p>
   collecting shipping address and shipping method onto the navigation stack of 
   the context&rsquo;s <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code>. It&rsquo;ll be popped automatically when the 
   user is done entering their shipping info.</p>
-
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     This method will do nothing if it is called while STPPaymentContext is
@@ -1529,7 +1515,6 @@ when the user is done selecting their payment method.</p>
   After this is called, the <code>paymentContext:didCreatePaymentResult:completion:</code> 
   and <code>paymentContext:didFinishWithStatus:error:</code> methods will be called on the
   context&rsquo;s <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)delegate">delegate</a></code>.</p>
-
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     This method will do nothing if it is called while STPPaymentContext is
@@ -1565,8 +1550,8 @@ when the user is done selecting their payment method.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-07)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-12)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

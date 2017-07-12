@@ -101,9 +101,6 @@
                 <a class="nav-group-task-link" href="../Classes/STPCustomer.html">STPCustomer</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Classes/STPCustomerContext.html">STPCustomerContext</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
@@ -314,9 +311,9 @@
               </div>
             <p>You should make your application&rsquo;s API client conform to this interface in order to use it with an <code><a href="../Classes/STPPaymentContext.html">STPPaymentContext</a></code>. It provides a <q>bridge</q> from the prebuilt UI we expose (such as <code><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code>) to your backend to fetch the information it needs to power those views. To read about how to implement this protocol, see <a href="https://stripe.com/docs/mobile/ios/standard#prepare-your-api">https://stripe.com/docs/mobile/ios/standard#prepare-your-api</a> . To see examples of implementing these APIs, see MyAPIClient.swift in our example project and <a href="https://github.com/stripe/example-ios-backend">https://github.com/stripe/example-ios-backend</a> .</p>
 
-<p>@deprecated Use <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>.
+<p>@deprecated Use <code>STPCustomerContext</code>.
   Instead of providing your own backend API adapter, you can now create an
-  <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
+  <code>STPCustomerContext</code>, which will manage retrieving and updating a
   Stripe customer for you. - see: STPCustomerContext.h</p>
 
           </div>
@@ -340,7 +337,6 @@
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Retrieve the cards to be displayed inside a payment context. On your backend, retrieve the Stripe customer associated with your currently logged-in user (see <a href="https://stripe.com/docs/api#retrieve_customer">https://stripe.com/docs/api#retrieve_customer</a> ), and return the raw JSON response from the Stripe API. (For an example Ruby implementation of this API, see <a href="https://github.com/stripe/example-ios-backend/blob/master/web.rb#L40">https://github.com/stripe/example-ios-backend/blob/master/web.rb#L40</a> ). Back in your iOS app, after you&rsquo;ve called this API, deserialize your API response into an <code><a href="../Classes/STPCustomer.html">STPCustomer</a></code> object (you can use the <code><a href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a></code> class to do this). See MyAPIClient.swift in our example project to see this in action.</p>
-
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     STPCard
@@ -374,7 +370,6 @@
                               <td>
                                 <div>
                                   <p>call this callback when you&rsquo;re done fetching and parsing the above information from your backend. For example, <code>completion(customer, nil)</code> (if your call succeeds) or <code>completion(nil, error)</code> if an error is returned.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -430,7 +425,6 @@
                               <td>
                                 <div>
                                   <p>a valid payment source, such as a card token.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -443,7 +437,6 @@
                               <td>
                                 <div>
                                   <p>call this callback when you&rsquo;re done adding the token to the customer on your backend. For example, <code>completion(nil)</code> (if your call succeeds) or <code>completion(error)</code> if an error is returned.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -499,7 +492,6 @@
                               <td>
                                 <div>
                                   <p>The newly-selected default source for the user.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -512,7 +504,6 @@
                               <td>
                                 <div>
                                   <p>call this callback when you&rsquo;re done selecting the new default source for the customer on your backend. For example, <code>completion(nil)</code> (if your call succeeds) or <code>completion(error)</code> if an error is returned.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -533,8 +524,8 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-07)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-12)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
