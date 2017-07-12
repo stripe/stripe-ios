@@ -60,6 +60,7 @@
     linkUIViewControllerParentViewControllerCategory();
     linkUIViewControllerPromisesCategory();
     linkUIViewFirstResponderCategory();
+    linkNSCharacterSetCategory();
 }
 
 @end

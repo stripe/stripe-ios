@@ -29,3 +29,5 @@
 }
 
 @end
+
+void linkNSCharacterSetCategory(void){}

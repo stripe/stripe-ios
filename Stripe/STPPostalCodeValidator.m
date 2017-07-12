@@ -140,7 +140,7 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
 }
 
 + (NSString *)formattedSanitizedUSZipCodeFromString:(NSString *)zipCode
-                                              usage:(__unused STPPostalCodeIntendedUsage)usage {
+                                              usage:(STPPostalCodeIntendedUsage)usage {
     NSUInteger maxLength = 0;
     switch (usage) {
         case STPPostalCodeIntendedUsageBillingAddress:
