@@ -11,24 +11,26 @@
 #import "STPAPIClient.h"
 #import "STPAPIRequest.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
 @class STPEphemeralKey;
 
-@interface STPAPIClient()
+NS_ASSUME_NONNULL_BEGIN
+
+@interface STPAPIClient ()
 
 + (NSString *)apiVersion;
-
-- (instancetype)initWithPublishableKey:(NSString *)publishableKey
-                               baseURL:(NSString *)baseURL;
 
 - (void)createTokenWithParameters:(NSDictionary *)parameters
                        completion:(STPTokenCompletionBlock)completion;
 
-- (NSURLSessionDataTask *)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret responseCompletion:(STPAPIResponseBlock)completion;
 
-@property (nonatomic, readwrite) NSURL *apiURL;
-@property (nonatomic, readwrite) NSURLSession *urlSession;
+@property (nonatomic, strong, readwrite) NSURL *apiURL;
+@property (nonatomic, strong, readwrite) NSURLSession *urlSession;
+
+@end
+
+@interface STPAPIClient (SourcesPrivate)
+
+- (NSURLSessionDataTask *)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret responseCompletion:(STPAPIResponseBlock)completion;
 
 @end
 
