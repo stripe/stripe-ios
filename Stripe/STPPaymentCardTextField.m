@@ -337,10 +337,8 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     return self.viewModel.postalCodeCountryCode;
 }
 
-- (void)setCountryCode:(NSString *)countryCode {
-    if (countryCode == nil) {
-        countryCode = [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
-    }
+- (void)setCountryCode:(NSString *)cCode {
+    NSString *countryCode = cCode ?: [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode];
 
     self.viewModel.postalCodeCountryCode = countryCode;
     [self updatePostalFieldPlaceholder];
@@ -1125,13 +1123,15 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
                        animated:(BOOL)animated
                      completion:(STPLayoutAnimationCompletionBlock)completion {
 
-    if (focusedField == nil
+    NSNumber *fieldtoFocus = focusedField;
+
+    if (fieldtoFocus == nil
         && ([self.viewModel validationStateForField:STPCardFieldTypeNumber] != STPCardValidationStateValid)) {
-        focusedField = @(STPCardFieldTypeNumber);
+        fieldtoFocus = @(STPCardFieldTypeNumber);
     }
 
-    if ((focusedField == nil && self.focusedTextFieldForLayout == nil)
-        || (focusedField != nil && [self.focusedTextFieldForLayout isEqualToNumber:focusedField])
+    if ((fieldtoFocus == nil && self.focusedTextFieldForLayout == nil)
+        || (fieldtoFocus != nil && [self.focusedTextFieldForLayout isEqualToNumber:fieldtoFocus])
         ) {
         if (completion) {
             completion(YES);
@@ -1139,7 +1139,7 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
         return;
     }
 
-    self.focusedTextFieldForLayout = focusedField;
+    self.focusedTextFieldForLayout = fieldtoFocus;
 
     void (^animations)() = ^void() {
         [self recalculateSubviewLayout];
