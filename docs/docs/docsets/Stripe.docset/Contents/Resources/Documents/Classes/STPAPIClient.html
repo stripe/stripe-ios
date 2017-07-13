@@ -101,9 +101,6 @@
                 <a class="nav-group-task-link" href="../Classes/STPCustomer.html">STPCustomer</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Classes/STPCustomerContext.html">STPCustomerContext</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a>
               </li>
               <li class="nav-group-task">
@@ -400,7 +397,6 @@ set to the configuration&rsquo;s publishable key.</p>
                               <td>
                                 <div>
                                   <p>The configuration to use.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -410,7 +406,6 @@ set to the configuration&rsquo;s publishable key.</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>An instance of STPAPIClient.</p>
-
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L63">Show on GitHub</a>
@@ -461,7 +456,6 @@ set to the configuration&rsquo;s publishable key.</p>
                               <td>
                                 <div>
                                   <p>The publishable key to use.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -471,7 +465,6 @@ set to the configuration&rsquo;s publishable key.</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>An instance of STPAPIClient.</p>
-
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L71">Show on GitHub</a>
@@ -566,7 +559,6 @@ set to the configuration&rsquo;s publishable key.</p>
                         <p>In order to perform API requests on behalf of a connected account, e.g. to
 create a source on a connected account, set this property to the ID of the 
 account for which this request is being made.</p>
-
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     <a href="https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header">https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header</a>
@@ -630,7 +622,7 @@ account for which this request is being made.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">createToken</span><span class="p">(</span><span class="n">withPayment</span> <span class="nv">payment</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">createToken</span><span class="p">(</span><span class="n">with</span> <span class="nv">payment</span><span class="p">:</span> <span class="kt">PKPayment</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPTokenCompletionBlock">STPTokenCompletionBlock</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -647,7 +639,6 @@ account for which this request is being made.</p>
                               <td>
                                 <div>
                                   <p>The user&rsquo;s encrypted payment information as returned from a PKPaymentAuthorizationViewController. Cannot be nil.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -660,7 +651,6 @@ account for which this request is being made.</p>
                               <td>
                                 <div>
                                   <p>The callback to run with the returned Stripe token (and any errors that may have occurred).</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -699,7 +689,7 @@ account for which this request is being made.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">createSource</span><span class="p">(</span><span class="n">withPayment</span> <span class="nv">payment</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">createSource</span><span class="p">(</span><span class="n">with</span> <span class="nv">payment</span><span class="p">:</span> <span class="kt">PKPayment</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPSourceCompletionBlock">STPSourceCompletionBlock</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -716,7 +706,6 @@ account for which this request is being made.</p>
                               <td>
                                 <div>
                                   <p>The user&rsquo;s encrypted payment information as returned from a PKPaymentAuthorizationViewController. Cannot be nil.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -729,7 +718,6 @@ account for which this request is being made.</p>
                               <td>
                                 <div>
                                   <p>The callback to run with the returned Stripe source (and any errors that may have occurred).</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -796,8 +784,7 @@ account for which this request is being made.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The user&rsquo;s bank account details. Cannot be nil. </p>
-
+                                  <p>The user&rsquo;s bank account details. Cannot be nil. - see: <a href="https://stripe.com/docs/api#create_bank_account_token">https://stripe.com/docs/api#create_bank_account_token</a></p>
                                 </div>
                               </td>
                             </tr>
@@ -810,7 +797,6 @@ account for which this request is being made.</p>
                               <td>
                                 <div>
                                   <p>The callback to run with the returned Stripe token (and any errors that may have occurred).</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -877,8 +863,7 @@ account for which this request is being made.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The user&rsquo;s personal identification number. Cannot be nil. </p>
-
+                                  <p>The user&rsquo;s personal identification number. Cannot be nil. - see: <a href="https://stripe.com/docs/api#create_pii_token">https://stripe.com/docs/api#create_pii_token</a></p>
                                 </div>
                               </td>
                             </tr>
@@ -891,7 +876,6 @@ account for which this request is being made.</p>
                               <td>
                                 <div>
                                   <p>The callback to run with the returned Stripe token (and any errors that may have occurred).</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -930,7 +914,6 @@ account for which this request is being made.</p>
                       <div class="abstract">
                         <p>Uses the Stripe file upload API to upload an image. This can be used for
 identity veritfication and evidence disputes.</p>
-
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     <p><a href="https://stripe.com/docs/file-upload">https://stripe.com/docs/file-upload</a></p>
@@ -949,7 +932,7 @@ identity veritfication and evidence disputes.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">uploadImage</span><span class="p">(</span><span class="n">_</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">,</span> <span class="nv">purpose</span><span class="p">:</span> <span class="kt">STPFilePurpose</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">uploadImage</span><span class="p">(</span><span class="n">_</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">,</span> <span class="nv">purpose</span><span class="p">:</span> <span class="kt">STPFilePurpose</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPFileCompletionBlock">STPFileCompletionBlock</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -966,10 +949,9 @@ identity veritfication and evidence disputes.</p>
                               <td>
                                 <div>
                                   <p>The image to be uploaded. The maximum allowed file size is 4MB
-       for identity documents and 8MB for evidence disputes. Cannot be nil.
-       Your image will be automatically resized down if you pass in one that
-       is too large</p>
-
+   for identity documents and 8MB for evidence disputes. Cannot be nil.
+   Your image will be automatically resized down if you pass in one that
+   is too large</p>
                                 </div>
                               </td>
                             </tr>
@@ -982,8 +964,7 @@ identity veritfication and evidence disputes.</p>
                               <td>
                                 <div>
                                   <p>The purpose of this file. This can be either an identifing
-       document or an evidence dispute.</p>
-
+   document or an evidence dispute.</p>
                                 </div>
                               </td>
                             </tr>
@@ -996,8 +977,7 @@ identity veritfication and evidence disputes.</p>
                               <td>
                                 <div>
                                   <p>The callback to run with the returned Stripe file
-       (and any errors that may have occurred).</p>
-
+   (and any errors that may have occurred).</p>
                                 </div>
                               </td>
                             </tr>
@@ -1063,8 +1043,7 @@ identity veritfication and evidence disputes.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The user&rsquo;s card details. Cannot be nil. </p>
-
+                                  <p>The user&rsquo;s card details. Cannot be nil. - see: <a href="https://stripe.com/docs/api#create_card_token">https://stripe.com/docs/api#create_card_token</a></p>
                                 </div>
                               </td>
                             </tr>
@@ -1077,7 +1056,6 @@ identity veritfication and evidence disputes.</p>
                               <td>
                                 <div>
                                   <p>The callback to run with the returned Stripe token (and any errors that may have occurred).</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1116,8 +1094,12 @@ identity veritfication and evidence disputes.</p>
                       <div class="abstract">
                         <p>Creates a Source object using the provided details.
 Note: in order to create a source on a connected account, you can set your
-API client&rsquo;s <code><a href="../Classes/STPAPIClient.html#/c:objc(cs)STPAPIClient(py)stripeAccount">stripeAccount</a></code> property to the ID of the account.
-- see: <a href="https://stripe.com/docs/sources/connect#creating-direct-charges">https://stripe.com/docs/sources/connect#creating-direct-charges</a></p>
+API client&rsquo;s <code><a href="../Classes/STPAPIClient.html#/c:objc(cs)STPAPIClient(py)stripeAccount">stripeAccount</a></code> property to the ID of the account.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://stripe.com/docs/sources/connect#creating-direct-charges">https://stripe.com/docs/sources/connect#creating-direct-charges</a></p>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -1146,8 +1128,7 @@ API client&rsquo;s <code><a href="../Classes/STPAPIClient.html#/c:objc(cs)STPAPI
                               </td>
                               <td>
                                 <div>
-                                  <p>The details of the source to create. Cannot be nil. </p>
-
+                                  <p>The details of the source to create. Cannot be nil. - see: <a href="https://stripe.com/docs/api#create_source">https://stripe.com/docs/api#create_source</a></p>
                                 </div>
                               </td>
                             </tr>
@@ -1160,7 +1141,6 @@ API client&rsquo;s <code><a href="../Classes/STPAPIClient.html#/c:objc(cs)STPAPI
                               <td>
                                 <div>
                                   <p>The callback to run with the returned Source object, or an error.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1217,7 +1197,6 @@ API client&rsquo;s <code><a href="../Classes/STPAPIClient.html#/c:objc(cs)STPAPI
                               <td>
                                 <div>
                                   <p>The identifier of the source to be retrieved. Cannot be nil.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1230,7 +1209,6 @@ API client&rsquo;s <code><a href="../Classes/STPAPIClient.html#/c:objc(cs)STPAPI
                               <td>
                                 <div>
                                   <p>The client secret of the source. Cannot be nil.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1243,7 +1221,6 @@ API client&rsquo;s <code><a href="../Classes/STPAPIClient.html#/c:objc(cs)STPAPI
                               <td>
                                 <div>
                                   <p>The callback to run with the returned Source object, or an error.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1310,7 +1287,6 @@ with the same source ID will do nothing.</p>
                               <td>
                                 <div>
                                   <p>The identifier of the source to be retrieved. Cannot be nil.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1323,7 +1299,6 @@ with the same source ID will do nothing.</p>
                               <td>
                                 <div>
                                   <p>The client secret of the source. Cannot be nil.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1336,7 +1311,6 @@ with the same source ID will do nothing.</p>
                               <td>
                                 <div>
                                   <p>The timeout for the polling operation, in seconds. Timeouts are capped at 5 minutes.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1349,7 +1323,6 @@ with the same source ID will do nothing.</p>
                               <td>
                                 <div>
                                   <p>The callback to run with the returned Source object, or an error.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1405,7 +1378,6 @@ with the same source ID will do nothing.</p>
                               <td>
                                 <div>
                                   <p>The identifier of the source to be retrieved. Cannot be nil.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1426,8 +1398,8 @@ with the same source ID will do nothing.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-07)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-12)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
