@@ -134,6 +134,11 @@ IB_DESIGNABLE
 @property(nonatomic, assign) UIKeyboardAppearance keyboardAppearance UI_APPEARANCE_SELECTOR;
 
 /**
+ *  This behaves identically to setting the inputView for each child text field.
+ */
+@property(nonatomic, strong, nullable) UIView *inputView;
+
+/**
  *  This behaves identically to setting the inputAccessoryView for each child text field.
  */
 @property(nonatomic, strong, nullable) UIView *inputAccessoryView;
