@@ -26,8 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPaymentMethodsInternalViewController : STPCoreTableViewController
 
-@property (nonatomic, assign, readwrite) BOOL canDeletePaymentMethods;
-
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                       customerContext:(nullable STPCustomerContext *)customerContext
                                 theme:(STPTheme *)theme

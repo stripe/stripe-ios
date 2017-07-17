@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPaymentMethodTableViewCell : UITableViewCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(nullable NSString *)reuseIdentifier;
-
 - (void)configureForNewCardRowWithTheme:(STPTheme *)theme;
 - (void)configureWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod theme:(STPTheme *)theme selected:(BOOL)selected;
 

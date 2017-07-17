@@ -1,5 +1,6 @@
 == X.X.X 2017-XX-XX
-* Adds an option to allow users to delete payment methods from the `STPPaymentMethodsViewController`. Disabled by default but can enabled using the `canDeletePaymentMethods` property.
+* Adds an option to allow users to delete payment methods from the `STPPaymentMethodsViewController`. Enabled by default but can disabled using the `canDeletePaymentMethods` property of `STPPaymentConfiguration`.
+  * Screenshots: https://user-images.githubusercontent.com/28276156/28131357-7a353474-66ee-11e7-846c-b38277d111fd.png
 
 == 11.1.0 2017-07-12
 * Adds stripeAccount property to `STPAPIClient`, set this to perform API requests on behalf of a connected account

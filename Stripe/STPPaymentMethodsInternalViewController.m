@@ -123,7 +123,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 }
 
 - (BOOL)isPaymentMethodDetachable:(id<STPPaymentMethod>)paymentMethod {
-    if (!self.canDeletePaymentMethods) {
+    if (!self.configuration.canDeletePaymentMethods) {
         // Feature is disabled
         return NO;
     }
@@ -164,14 +164,6 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     // Reload card list section
     NSMutableIndexSet *sections = [NSMutableIndexSet indexSetWithIndex:PaymentMethodSectionCardList];
     [self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationAutomatic];
-}
-
-- (void)setCanDeletePaymentMethods:(BOOL)canDeletePaymentMethods {
-    _canDeletePaymentMethods = canDeletePaymentMethods;
-
-    // Reload related components
-    [self reloadRightBarButtonItemWithTableViewIsEditing:self.tableView.isEditing animated:NO];
-    [self.tableView reloadData];
 }
 
 #pragma mark - Button Handlers
@@ -346,7 +338,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     [self reloadRightBarButtonItemWithTableViewIsEditing:YES animated:YES];
 }
 
-- (void)tableView:(__unused UITableView *)tableView didEndEditingRowAtIndexPath:(__unused NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(__unused NSIndexPath *)indexPath {
     [self reloadRightBarButtonItemWithTableViewIsEditing:tableView.isEditing animated:YES];
 }
 

@@ -39,6 +39,7 @@
         _verifyPrefilledShippingAddress = YES;
         _companyName = [NSBundle stp_applicationName];
         _shippingType = STPShippingTypeShipping;
+        _canDeletePaymentMethods = YES;
     }
     return self;
 }
@@ -53,6 +54,7 @@
     copy.shippingType = self.shippingType;
     copy.companyName = self.companyName;
     copy.appleMerchantIdentifier = self.appleMerchantIdentifier;
+    copy.canDeletePaymentMethods = self.canDeletePaymentMethods;
     return copy;
 }
 

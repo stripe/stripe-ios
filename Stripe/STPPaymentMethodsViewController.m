@@ -128,15 +128,13 @@
         if (tuple.paymentMethods.count > 0) {
             STPCustomerContext *customerContext = ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) ? (STPCustomerContext *)self.apiAdapter : nil;
 
-            STPPaymentMethodsInternalViewController *paymentMethodsInternalViewController = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:self.configuration
-                                                                                                                                                   customerContext:customerContext
-                                                                                                                                                             theme:self.theme
-                                                                                                                                              prefilledInformation:self.prefilledInformation
-                                                                                                                                                   shippingAddress:self.shippingAddress
-                                                                                                                                                paymentMethodTuple:tuple
-                                                                                                                                                          delegate:self];
-            paymentMethodsInternalViewController.canDeletePaymentMethods = self.canDeletePaymentMethods;
-            internal = paymentMethodsInternalViewController;
+            internal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:self.configuration
+                                                                              customerContext:customerContext
+                                                                                        theme:self.theme
+                                                                         prefilledInformation:self.prefilledInformation
+                                                                              shippingAddress:self.shippingAddress
+                                                                           paymentMethodTuple:tuple
+                                                                                     delegate:self];
         } else {
             STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
             addCardViewController.delegate = self;
@@ -176,16 +174,6 @@
     [super updateAppearance];
 
     self.activityIndicator.tintColor = self.theme.accentColor;
-}
-
-- (void)setCanDeletePaymentMethods:(BOOL)canDeletePaymentMethods {
-    _canDeletePaymentMethods = canDeletePaymentMethods;
-
-    // Forward change if needed
-    if ([self.internalViewController isKindOfClass:[STPPaymentMethodsInternalViewController class]]) {
-        STPPaymentMethodsInternalViewController *paymentMethodsVC = (STPPaymentMethodsInternalViewController *)self.internalViewController;
-        paymentMethodsVC.canDeletePaymentMethods = canDeletePaymentMethods;
-    }
 }
 
 - (void)finishWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
