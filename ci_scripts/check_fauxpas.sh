@@ -11,7 +11,7 @@ if which fauxpas ; then
     echo "FausPas already installed; skipping installation"
 else
 	echo "Installing FauxPas..."
-  brew cask update
+  brew update
 	brew cask install fauxpas
 
 	/Applications/FauxPas.app/Contents/Resources/install-cli-tools
