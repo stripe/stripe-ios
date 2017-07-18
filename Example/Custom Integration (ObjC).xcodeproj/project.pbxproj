@@ -38,7 +38,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		04533E871A687F5D00C7E52E /* Stripe iOS Example (Custom).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example (Custom).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04533E871A687F5D00C7E52E /* Custom Integration (ObjC).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Custom Integration (ObjC).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04533E8B1A687F5D00C7E52E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04533E8C1A687F5D00C7E52E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		04533E8E1A687F5D00C7E52E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -81,7 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				04533F0E1A68813100C7E52E /* Frameworks */,
-				04533E891A687F5D00C7E52E /* Stripe iOS Example (Custom) */,
+				04533E891A687F5D00C7E52E /* Custom Integration (ObjC) */,
 				04533E881A687F5D00C7E52E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -89,12 +89,12 @@
 		04533E881A687F5D00C7E52E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04533E871A687F5D00C7E52E /* Stripe iOS Example (Custom).app */,
+				04533E871A687F5D00C7E52E /* Custom Integration (ObjC).app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		04533E891A687F5D00C7E52E /* Stripe iOS Example (Custom) */ = {
+		04533E891A687F5D00C7E52E /* Custom Integration (ObjC) */ = {
 			isa = PBXGroup;
 			children = (
 				04533EB01A68802E00C7E52E /* ShippingManager.h */,
@@ -116,7 +116,7 @@
 				04533E971A687F5D00C7E52E /* Images.xcassets */,
 				04533E8A1A687F5D00C7E52E /* Supporting Files */,
 			);
-			path = "Stripe iOS Example (Custom)";
+			path = "Custom Integration (ObjC)";
 			sourceTree = "<group>";
 		};
 		04533E8A1A687F5D00C7E52E /* Supporting Files */ = {
@@ -141,9 +141,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04533E861A687F5D00C7E52E /* Stripe iOS Example (Custom) */ = {
+		04533E861A687F5D00C7E52E /* Custom Integration (ObjC) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Stripe iOS Example (Custom)" */;
+			buildConfigurationList = 04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Custom Integration (ObjC)" */;
 			buildPhases = (
 				04533E831A687F5D00C7E52E /* Sources */,
 				04533E841A687F5D00C7E52E /* Frameworks */,
@@ -154,9 +154,9 @@
 			);
 			dependencies = (
 			);
-			name = "Stripe iOS Example (Custom)";
+			name = "Custom Integration (ObjC)";
 			productName = "Stripe iOS Example (Custom)";
-			productReference = 04533E871A687F5D00C7E52E /* Stripe iOS Example (Custom).app */;
+			productReference = 04533E871A687F5D00C7E52E /* Custom Integration (ObjC).app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -174,7 +174,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Stripe iOS Example (Custom)" */;
+			buildConfigurationList = 04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Custom Integration (ObjC)" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -187,7 +187,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				04533E861A687F5D00C7E52E /* Stripe iOS Example (Custom) */,
+				04533E861A687F5D00C7E52E /* Custom Integration (ObjC) */,
 			);
 		};
 /* End PBXProject section */
@@ -338,9 +338,9 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
 				);
-				INFOPLIST_FILE = "Stripe iOS Example (Custom)/Info.plist";
+				INFOPLIST_FILE = "Custom Integration (ObjC)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.customexample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -362,9 +362,9 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
 				);
-				INFOPLIST_FILE = "Stripe iOS Example (Custom)/Info.plist";
+				INFOPLIST_FILE = "Custom Integration (ObjC)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.customexample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -373,7 +373,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Stripe iOS Example (Custom)" */ = {
+		04533E821A687F5D00C7E52E /* Build configuration list for PBXProject "Custom Integration (ObjC)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04533EA81A687F5E00C7E52E /* Debug */,
@@ -382,7 +382,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Stripe iOS Example (Custom)" */ = {
+		04533EAA1A687F5E00C7E52E /* Build configuration list for PBXNativeTarget "Custom Integration (ObjC)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04533EAB1A687F5E00C7E52E /* Debug */,

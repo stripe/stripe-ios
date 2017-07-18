@@ -1,6 +1,6 @@
 //
 //  AppDelegate.h
-//  Stripe iOS Example (Custom)
+//  Custom Integration (ObjC)
 //
 //  Created by Jack Flintermann on 1/15/15.
 //  Copyright (c) 2015 Stripe. All rights reserved.

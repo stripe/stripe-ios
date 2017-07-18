@@ -1,6 +1,6 @@
 //
 //  BrowseExamplesViewController.h
-//  Stripe iOS Example (Custom)
+//  Custom Integration (ObjC)
 //
 //  Created by Ben Guo on 2/17/17.
 //  Copyright © 2017 Stripe. All rights reserved.
