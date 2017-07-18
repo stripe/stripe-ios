@@ -70,6 +70,20 @@ NS_ASSUME_NONNULL_BEGIN
  *  The Apple Merchant Identifier to use during Apple Pay transactions. To create one of these, see our guide at https://stripe.com/docs/mobile/apple-pay . You must set this to a valid identifier in order to automatically enable Apple Pay.
  */
 @property(nonatomic, nullable, copy)NSString *appleMerchantIdentifier;
+
+/**
+ Determines whether or not the user is able to delete payment methods
+ 
+ This is only relevant to the `STPPaymentMethodsViewController` which, if enabled, will allow the
+ user to delete payment methods by tapping the "Edit" button in the navigation bar or by swiping
+ left on a payment method and tapping "Delete". Currently, the user is not allowed to delete the
+ selected payment method but this may change in the future.
+
+ Default value is YES but will only work if `STPPaymentMethodsViewController` is initialized with
+ a `STPCustomerContext` either through the `STPPaymentContext` or directly as an init parameter.
+ */
+@property (nonatomic, assign, readwrite) BOOL canDeletePaymentMethods;
+
 @end
 
 NS_ASSUME_NONNULL_END
