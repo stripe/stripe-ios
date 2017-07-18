@@ -53,6 +53,7 @@
 		04533F181A688A0A00C7E52E /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		C12C50DB1E57B3C800EC6D58 /* BrowseExamplesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseExamplesViewController.h; sourceTree = "<group>"; };
 		C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowseExamplesViewController.m; sourceTree = "<group>"; };
+		C18A6EE31F1EB7A6005600CC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Custom Integration (ObjC)/README.md"; sourceTree = "<group>"; };
 		C1CACE841E5DE6C3002D0821 /* CardExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardExampleViewController.h; sourceTree = "<group>"; };
 		C1CACE851E5DE6C3002D0821 /* CardExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CardExampleViewController.m; sourceTree = "<group>"; };
 		C1CACE871E5DF7A9002D0821 /* ApplePayExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplePayExampleViewController.h; sourceTree = "<group>"; };
@@ -80,8 +81,9 @@
 		04533E7E1A687F5D00C7E52E = {
 			isa = PBXGroup;
 			children = (
-				04533F0E1A68813100C7E52E /* Frameworks */,
+				C18A6EE31F1EB7A6005600CC /* README.md */,
 				04533E891A687F5D00C7E52E /* Custom Integration (ObjC) */,
+				04533F0E1A68813100C7E52E /* Frameworks */,
 				04533E881A687F5D00C7E52E /* Products */,
 			);
 			sourceTree = "<group>";
