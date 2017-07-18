@@ -18,7 +18,6 @@
 		C186AC341ECD0DDD00497DE3 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C186AC331ECD0DDD00497DE3 /* Alamofire.framework */; };
 		C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188F2A51CC1A338003A524B /* MyAPIClient.swift */; };
 		C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B83CBC1CCE6C0700F0790B /* Buttons.swift */; };
-		F10C9F6B1DC916BD00A91F7C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F10C9F691DC916BD00A91F7C /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,14 +48,6 @@
 		C186AC331ECD0DDD00497DE3 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		C188F2A51CC1A338003A524B /* MyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
 		C1B83CBC1CCE6C0700F0790B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
-		F10C9F6A1DC916BD00A91F7C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Localizations/de.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F10C9F6C1DC916C200A91F7C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F10C9F6D1DC916C800A91F7C /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = Localizations/nl.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F10C9F6E1DC916CD00A91F7C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "Localizations/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		F1F3832B1DC917110006DA86 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Localizations/ja.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F1F3832C1DC917170006DA86 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = Localizations/it.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F1F3832D1DC9171C0006DA86 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = Localizations/fr.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F1F3832E1DC917260006DA86 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizations/es.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,7 +66,6 @@
 		042CA4131A685E8D00D778E7 /* Standard Integration (Swift) */ = {
 			isa = PBXGroup;
 			children = (
-				F11726811DC913D30058F2A0 /* Localizations */,
 				042CA4141A685E8D00D778E7 /* AppDelegate.swift */,
 				C188F2A51CC1A338003A524B /* MyAPIClient.swift */,
 				C13C24211D14438700F3765E /* SettingsViewController.swift */,
@@ -114,14 +104,6 @@
 				04D076191A69C14700094431 /* Stripe.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		F11726811DC913D30058F2A0 /* Localizations */ = {
-			isa = PBXGroup;
-			children = (
-				F10C9F691DC916BD00A91F7C /* Localizable.strings */,
-			);
-			name = Localizations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -183,13 +165,6 @@
 			knownRegions = (
 				en,
 				Base,
-				de,
-				nl,
-				"zh-Hans",
-				ja,
-				it,
-				fr,
-				es,
 			);
 			mainGroup = 04823F6F1A6849200098400B;
 			productRefGroup = 04823F791A6849200098400B /* Products */;
@@ -207,7 +182,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				042CA4201A685E8D00D778E7 /* Images.xcassets in Resources */,
-				F10C9F6B1DC916BD00A91F7C /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,24 +249,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		F10C9F691DC916BD00A91F7C /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F10C9F6A1DC916BD00A91F7C /* de */,
-				F10C9F6C1DC916C200A91F7C /* en */,
-				F10C9F6D1DC916C800A91F7C /* nl */,
-				F10C9F6E1DC916CD00A91F7C /* zh-Hans */,
-				F1F3832B1DC917110006DA86 /* ja */,
-				F1F3832C1DC917170006DA86 /* it */,
-				F1F3832D1DC9171C0006DA86 /* fr */,
-				F1F3832E1DC917260006DA86 /* es */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		04823F951A6849200098400B /* Debug */ = {
