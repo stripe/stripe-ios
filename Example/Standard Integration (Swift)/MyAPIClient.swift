@@ -1,6 +1,6 @@
 //
 //  BackendAPIAdapter.swift
-//  Stripe iOS Example (Simple)
+//  Standard Integration (Swift)
 //
 //  Created by Ben Guo on 4/15/16.
 //  Copyright © 2016 Stripe. All rights reserved.

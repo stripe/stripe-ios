@@ -5,7 +5,7 @@
       location = "group:Stripe.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Example/Stripe iOS Example (Simple).xcodeproj">
+      location = "group:/Users/bg/stripe/stripe-ios/Example/Standard Integration (Swift).xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Example/Stripe iOS Example (Custom).xcodeproj">

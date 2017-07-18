@@ -39,9 +39,9 @@
 		042CA4141A685E8D00D778E7 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		042CA4191A685E8D00D778E7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		042CA41A1A685E8D00D778E7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		04823F781A6849200098400B /* Stripe iOS Example (Simple).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe iOS Example (Simple).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04823F781A6849200098400B /* Standard Integration (Swift).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Standard Integration (Swift).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowseProductsViewController.swift; sourceTree = "<group>"; };
-		04D075D91A69B82B00094431 /* Stripe iOS Example (Simple).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Stripe iOS Example (Simple).entitlements"; sourceTree = "<group>"; };
+		04D075D91A69B82B00094431 /* Standard Integration (Swift).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Standard Integration (Swift).entitlements"; sourceTree = "<group>"; };
 		04D076191A69C14700094431 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C124A18A1CCACAA1007D42EE /* CheckoutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutViewController.swift; sourceTree = "<group>"; };
 		C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutRowView.swift; sourceTree = "<group>"; };
@@ -72,7 +72,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		042CA4131A685E8D00D778E7 /* Stripe iOS Example (Simple) */ = {
+		042CA4131A685E8D00D778E7 /* Standard Integration (Swift) */ = {
 			isa = PBXGroup;
 			children = (
 				F11726811DC913D30058F2A0 /* Localizations */,
@@ -85,15 +85,15 @@
 				C1B83CBC1CCE6C0700F0790B /* Buttons.swift */,
 				042CA4191A685E8D00D778E7 /* Images.xcassets */,
 				042CA41A1A685E8D00D778E7 /* Info.plist */,
-				04D075D91A69B82B00094431 /* Stripe iOS Example (Simple).entitlements */,
+				04D075D91A69B82B00094431 /* Standard Integration (Swift).entitlements */,
 			);
-			path = "Stripe iOS Example (Simple)";
+			path = "Standard Integration (Swift)";
 			sourceTree = "<group>";
 		};
 		04823F6F1A6849200098400B = {
 			isa = PBXGroup;
 			children = (
-				042CA4131A685E8D00D778E7 /* Stripe iOS Example (Simple) */,
+				042CA4131A685E8D00D778E7 /* Standard Integration (Swift) */,
 				04823F9F1A6849850098400B /* Frameworks */,
 				04823F791A6849200098400B /* Products */,
 			);
@@ -102,7 +102,7 @@
 		04823F791A6849200098400B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04823F781A6849200098400B /* Stripe iOS Example (Simple).app */,
+				04823F781A6849200098400B /* Standard Integration (Swift).app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -127,9 +127,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04823F771A6849200098400B /* Stripe iOS Example (Simple) */ = {
+		04823F771A6849200098400B /* Standard Integration (Swift) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Stripe iOS Example (Simple)" */;
+			buildConfigurationList = 04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration (Swift)" */;
 			buildPhases = (
 				C186AC351ECD0E1C00497DE3 /* Check Dependencies */,
 				04823F741A6849200098400B /* Sources */,
@@ -143,9 +143,9 @@
 			);
 			dependencies = (
 			);
-			name = "Stripe iOS Example (Simple)";
+			name = "Standard Integration (Swift)";
 			productName = "Stripe iOS Exampe (Simple)";
-			productReference = 04823F781A6849200098400B /* Stripe iOS Example (Simple).app */;
+			productReference = 04823F781A6849200098400B /* Standard Integration (Swift).app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -155,7 +155,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0800;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = Stripe;
 				TargetAttributes = {
 					04823F771A6849200098400B = {
@@ -176,7 +176,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 04823F731A6849200098400B /* Build configuration list for PBXProject "Stripe iOS Example (Simple)" */;
+			buildConfigurationList = 04823F731A6849200098400B /* Build configuration list for PBXProject "Standard Integration (Swift)" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -196,7 +196,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				04823F771A6849200098400B /* Stripe iOS Example (Simple) */,
+				04823F771A6849200098400B /* Standard Integration (Swift) */,
 			);
 		};
 /* End PBXProject section */
@@ -337,7 +337,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple)-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Standard Integration (Swift)/Standard Integration (Swift)-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -376,7 +376,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OBJC_BRIDGING_HEADER = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple)-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Standard Integration (Swift)/Standard Integration (Swift)-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -387,7 +387,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple).entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Standard Integration (Swift)/Standard Integration (Swift).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
@@ -398,11 +398,11 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
+				INFOPLIST_FILE = "Standard Integration (Swift)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
-				PRODUCT_NAME = "Stripe iOS Example (Simple)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.standardexample;
+				PRODUCT_NAME = "Standard Integration (Swift)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -417,7 +417,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Stripe iOS Example (Simple)/Stripe iOS Example (Simple).entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Standard Integration (Swift)/Standard Integration (Swift).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
@@ -428,11 +428,11 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				INFOPLIST_FILE = "Stripe iOS Example (Simple)/Info.plist";
+				INFOPLIST_FILE = "Standard Integration (Swift)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
-				PRODUCT_NAME = "Stripe iOS Example (Simple)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.standardexample;
+				PRODUCT_NAME = "Standard Integration (Swift)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
@@ -443,7 +443,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		04823F731A6849200098400B /* Build configuration list for PBXProject "Stripe iOS Example (Simple)" */ = {
+		04823F731A6849200098400B /* Build configuration list for PBXProject "Standard Integration (Swift)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04823F951A6849200098400B /* Debug */,
@@ -452,7 +452,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Stripe iOS Example (Simple)" */ = {
+		04823F971A6849200098400B /* Build configuration list for PBXNativeTarget "Standard Integration (Swift)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				04823F981A6849200098400B /* Debug */,

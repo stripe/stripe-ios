@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "04823F771A6849200098400B"
-               BuildableName = "Stripe iOS Example (Simple).app"
-               BlueprintName = "Stripe iOS Example (Simple)"
-               ReferencedContainer = "container:Stripe iOS Example (Simple).xcodeproj">
+               BuildableName = "Standard Integration (Swift).app"
+               BlueprintName = "Standard Integration (Swift)"
+               ReferencedContainer = "container:Standard Integration (Swift).xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,24 +28,14 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C11745D21C456C730029936F"
-               BuildableName = "Stripe iOS Application Tests.xctest"
-               BlueprintName = "Stripe iOS Application Tests"
-               ReferencedContainer = "container:Stripe iOS Example (Simple).xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04823F771A6849200098400B"
-            BuildableName = "Stripe iOS Example (Simple).app"
-            BlueprintName = "Stripe iOS Example (Simple)"
-            ReferencedContainer = "container:Stripe iOS Example (Simple).xcodeproj">
+            BuildableName = "Standard Integration (Swift).app"
+            BlueprintName = "Standard Integration (Swift)"
+            ReferencedContainer = "container:Standard Integration (Swift).xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -66,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04823F771A6849200098400B"
-            BuildableName = "Stripe iOS Example (Simple).app"
-            BlueprintName = "Stripe iOS Example (Simple)"
-            ReferencedContainer = "container:Stripe iOS Example (Simple).xcodeproj">
+            BuildableName = "Standard Integration (Swift).app"
+            BlueprintName = "Standard Integration (Swift)"
+            ReferencedContainer = "container:Standard Integration (Swift).xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -85,9 +75,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "04823F771A6849200098400B"
-            BuildableName = "Stripe iOS Example (Simple).app"
-            BlueprintName = "Stripe iOS Example (Simple)"
-            ReferencedContainer = "container:Stripe iOS Example (Simple).xcodeproj">
+            BuildableName = "Standard Integration (Swift).app"
+            BlueprintName = "Standard Integration (Swift)"
+            ReferencedContainer = "container:Standard Integration (Swift).xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
