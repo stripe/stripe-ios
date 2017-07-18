@@ -66,6 +66,8 @@ type = dictionary[@"type"] ?: @"default";
 - (void)title;
 ```
 
+- Header documentation should wrap lines to 80 characters
+
 ### Literals
 
 - Use literals to create immutable instances of `NSString`, `NSDictionary`, `NSArray`, `NSNumber`:
