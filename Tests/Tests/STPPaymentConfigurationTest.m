@@ -12,6 +12,7 @@
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentConfiguration+Private.h"
 
+#import "NSBundle+Stripe_AppName.h"
 #import "Stripe.h"
 
 @interface STPPaymentConfigurationTest : XCTestCase
@@ -25,6 +26,9 @@
 }
 
 - (void)testInit {
+    id bundleMock = OCMClassMock([NSBundle class]);
+    OCMStub([bundleMock stp_applicationName]).andReturn(@"applicationName");
+
     STPPaymentConfiguration *paymentConfiguration = [[STPPaymentConfiguration alloc] init];
 
     XCTAssertNil(paymentConfiguration.publishableKey);
@@ -33,7 +37,7 @@
     XCTAssertEqual(paymentConfiguration.requiredShippingAddressFields, PKAddressFieldNone);
     XCTAssert(paymentConfiguration.verifyPrefilledShippingAddress);
     XCTAssertEqual(paymentConfiguration.shippingType, STPShippingTypeShipping);
-    XCTAssertNil(paymentConfiguration.companyName); // Defaults to nil for test target
+    XCTAssertEqualObjects(paymentConfiguration.companyName, @"applicationName");
     XCTAssertNil(paymentConfiguration.appleMerchantIdentifier);
     XCTAssert(paymentConfiguration.canDeletePaymentMethods);
 }

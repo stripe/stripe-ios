@@ -90,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
  one of these, see our guide at https://stripe.com/docs/mobile/apple-pay . You 
  must set this to a valid identifier in order to automatically enable Apple Pay.
  */
-@property (nonatomic, nullable, copy, readwrite) NSString *appleMerchantIdentifier;
+@property (nonatomic, copy, nullable, readwrite) NSString *appleMerchantIdentifier;
 
 /**
  Determines whether or not the user is able to delete payment methods
