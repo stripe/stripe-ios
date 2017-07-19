@@ -31,8 +31,8 @@ For more fine-grained information on all of the classes and methods in our SDK, 
 ## Example apps
 
 There are 2 example apps included in the repository:
-- Stripe iOS Example (Simple) shows an integration using our prebuilt UI components [Swift]
-- Stripe iOS Example (Custom) shows how to use our low-level methods to accept payments using several different payment methods [Objective-C].
+- Standard Integration (Swift) shows an integration using our prebuilt UI components.
+- Custom Integration (ObjC) shows how to use our low-level methods to accept payments using several different payment methods.
 
 To build the example apps, you'll need to first run `./setup.sh`. Then, open `Stripe.xcworkspace` and choose the appropriate scheme.
 
@@ -43,7 +43,7 @@ Note: all the example apps require Xcode 8.0 to build and run.
 Before you can run the apps, you need to provide them with your Stripe publishable key.
 
 1. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds). Then go to https://dashboard.stripe.com/account/apikeys.
-2. Replace the `stripePublishableKey` constant in CheckoutViewController.swift (for the Simple app) or Constants.m (for the Custom app) with your Test Publishable Key.
+2. Replace the `stripePublishableKey` constant in CheckoutViewController.swift (for the Standard Integration app) or Constants.m (for the Custom Integration app) with your Test Publishable Key.
 3. Head to https://github.com/stripe/example-ios-backend/tree/v11.0.0 and click "Deploy to Heroku" (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under 'Env'. Click "Deploy for Free".
 4. Replace the `backendBaseURL` variable in the example iOS app with the app URL Heroku provides you with (e.g. "https://my-example-app.herokuapp.com")
 
@@ -53,7 +53,7 @@ After this is done, you can make test payments through the app and see them in y
 
 To add card scanning capabilities to our prebuilt UI components, you can simply [install card.io](https://github.com/card-io/card.io-iOS-SDK#setup) alongside our SDK. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards").
 
-To try this out, you can run `./install_cardio.rb`, which will download and install card.io in Stripe iOS Example (Simple). Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
+To try this out, you can run `./install_cardio.rb`, which will download and install card.io in Standard Integration (Swift). Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
 
 ## Running the tests
 

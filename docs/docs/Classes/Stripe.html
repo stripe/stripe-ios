@@ -336,6 +336,7 @@
                       <div class="abstract">
                         <p>Set your Stripe API key with this method. New instances of STPAPIClient will be initialized with this value. You should call this method as early as
 possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.</p>
+
 <div class="aside aside-warning">
     <p class="aside-title">Warning</p>
     Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.
@@ -369,6 +370,7 @@ possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.<
                               <td>
                                 <div>
                                   <p>Your publishable key, obtained from <a href="https://stripe.com/account/apikeys">https://stripe.com/account/apikeys</a></p>
+
                                 </div>
                               </td>
                             </tr>
@@ -454,7 +456,7 @@ stored Apple Pay cards on their device.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">canSubmitPaymentRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentRequest</span><span class="p">:</span> <span class="kt">PKPaymentRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">canSubmitPaymentRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentRequest</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -471,8 +473,11 @@ stored Apple Pay cards on their device.</p>
                               <td>
                                 <div>
                                   <p>The return value of this method depends on the
-<code>supportedNetworks</code> property of this payment request, which by default should be
-<code>@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover]</code>.</p>
+ <code>supportedNetworks</code> property of this payment request, which by default should be
+ <code>
+@
+[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover]</code>.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -482,6 +487,7 @@ stored Apple Pay cards on their device.</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>whether or not the user is currently able to pay with Apple Pay.</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L189">Show on GitHub</a>
@@ -521,7 +527,7 @@ currencyCode to <q>USD</q>.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">paymentRequest</span><span class="p">(</span><span class="n">withMerchantIdentifier</span> <span class="nv">merchantIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PKPaymentRequest</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">paymentRequest</span><span class="p">(</span><span class="n">withMerchantIdentifier</span> <span class="nv">merchantIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="o">!</span></code></pre>
 
                         </div>
                       </div>
@@ -538,6 +544,7 @@ currencyCode to <q>USD</q>.</p>
                               <td>
                                 <div>
                                   <p>Your Apple Merchant ID.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -546,10 +553,10 @@ currencyCode to <q>USD</q>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>a <code>PKPaymentRequest</code> with proper default values. Returns nil if running on &lt; iOS8.
-@deprecated Use <code>paymentRequestWithMerchantIdentifier:country:currency:</code> instead.
-Apple Pay is available in many countries and currencies, and you should use
-the appropriate values for your business.</p>
+                        <p>a <code>PKPaymentRequest</code> with proper default values. Returns nil if running on 
+&lt;
+ iOS8.</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L209">Show on GitHub</a>
@@ -587,11 +594,6 @@ what contact information your application requires.</p>
                             <span class="nf">currency</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">currencyCode</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">paymentRequest</span><span class="p">(</span><span class="n">withMerchantIdentifier</span> <span class="nv">merchantIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">country</span> <span class="nv">countryCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">currency</span> <span class="nv">currencyCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PKPaymentRequest</span></code></pre>
-
-                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -606,6 +608,7 @@ what contact information your application requires.</p>
                               <td>
                                 <div>
                                   <p>Your Apple Merchant ID.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -617,8 +620,11 @@ what contact information your application requires.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The two-letter code for the country where the payment
-will be processed. This should be the country of your Stripe account.</p>
+                                  <pre class="highlight plaintext"><code>   The two-letter code for the country where the payment
+</code></pre>
+
+<p>will be processed. This should be the country of your Stripe account.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -630,9 +636,12 @@ will be processed. This should be the country of your Stripe account.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The three-letter code for the currency used by this
-payment request. Apple Pay interprets the amounts provided by the summary items
+                                  <pre class="highlight plaintext"><code>  The three-letter code for the currency used by this
+</code></pre>
+
+<p>payment request. Apple Pay interprets the amounts provided by the summary items
 attached to this request as amounts in this currency.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -641,7 +650,10 @@ attached to this request as amounts in this currency.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>a <code>PKPaymentRequest</code> with proper default values. Returns nil if running on &lt; iOS8.</p>
+                        <p>a <code>PKPaymentRequest</code> with proper default values. Returns nil if running on 
+&lt;
+ iOS8.</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L227-L229">Show on GitHub</a>
@@ -657,8 +669,8 @@ attached to this request as amounts in this currency.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-19)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

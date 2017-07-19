@@ -334,20 +334,16 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
-<ul>
+                        <ul>
 <li>Called when the payment context encounters an error when fetching its initial set of data. A few ways to handle this are:</li>
 <li>If you&rsquo;re showing the user a checkout page, dismiss the checkout page when this is called and present the error to the user.</li>
 <li>Present the error to the user using a <code>UIAlertController</code> with two buttons: Retry and Cancel. If they cancel, dismiss your UI. If they Retry, call <code>retryLoading</code> on the payment context.</li>
 </ul>
 
 <p>To make it harder to get your UI into a bad state, this won&rsquo;t be called until the context&rsquo;s <code>hostViewController</code> has finished appearing.
-*</p>
-
-<ul>
-<li>- parameter: paymentContext the payment context that encountered the error</li>
-<li>- parameter: error          the error that was encountered</li>
-</ul>
+*
+*  - parameter: paymentContext the payment context that encountered the error
+*  - parameter: error          the error that was encountered</p>
 
                       </div>
                       <div class="declaration">
@@ -376,7 +372,8 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>the payment context that encountered the error</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -388,7 +385,8 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>the error that was encountered</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -443,6 +441,7 @@
                               <td>
                                 <div>
                                   <p>the payment context that changed</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -499,6 +498,7 @@
                               <td>
                                 <div>
                                   <p>The context that succeeded</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -510,7 +510,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and make a charge to complete the payment, passing <code>paymentResult.source.stripeID</code> as the <code>source</code> parameter to the create charge method and your customer&rsquo;s ID as the <code>customer</code> parameter (see stripe.com/docs/api#charge_create for more info). Once that&rsquo;s done call the <code>completion</code> block with any error that occurred (or none, if the charge succeeded). - see: STPPaymentResult.h</p>
+                                  <p>Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and make a charge to complete the payment, passing <code>paymentResult.source.stripeID</code> as the <code>source</code> parameter to the create charge method and your customer&rsquo;s ID as the <code>customer</code> parameter (see stripe.com/docs/api#charge_create for more info). Once that&rsquo;s done call the <code>completion</code> block with any error that occurred (or none, if the charge succeeded). </p>
+
                                 </div>
                               </td>
                             </tr>
@@ -523,6 +524,7 @@
                               <td>
                                 <div>
                                   <p>Call this block when you&rsquo;re done creating a charge (or subscription, etc) on your backend. If it succeeded, call <code>completion(nil)</code>. If it failed with an error, call <code>completion(error)</code>.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -579,6 +581,7 @@
                               <td>
                                 <div>
                                   <p>The payment context that finished</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -591,6 +594,7 @@
                               <td>
                                 <div>
                                   <p>The status of the payment - <code>STPPaymentStatusSuccess</code> if it succeeded, <code>STPPaymentStatusError</code> if it failed with an error (in which case the <code>error</code> parameter will be non-nil), <code>STPPaymentStatusUserCanceled</code> if the user canceled the payment.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -603,6 +607,7 @@
                               <td>
                                 <div>
                                   <p>An error that occurred, if any.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -633,6 +638,7 @@
   and the available shipping methods for the given address. If you don&rsquo;t implement
   this method, the user won&rsquo;t be prompted to select a shipping method and all
   addresses will be valid.</p>
+
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     <p>If a user updates their shipping address within the Apple Pay dialog,
@@ -673,6 +679,7 @@ called.</p>
                               <td>
                                 <div>
                                   <p>The context that updated its shipping address</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -685,6 +692,7 @@ called.</p>
                               <td>
                                 <div>
                                   <p>The current shipping address</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -697,6 +705,7 @@ called.</p>
                               <td>
                                 <div>
                                   <p>Call this block when you&rsquo;re done validating the shipping address and calculating available shipping methods.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -717,8 +726,8 @@ called.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-19)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

@@ -106,8 +106,8 @@ static NSString * const STPSDKVersion = @"11.0.0";
 - Save files to the appropriate root level folder. Typical folders include:
   - `stripe-ios/Stripe/`
   - `stripe-ios/Tests/Tests/`
-  - `stripe-ios/Example/Stripe iOS Example (Simple)/`
-  - `stripe-ios/Example/Stripe iOS Example (Custom)/`
+  - `stripe-ios/Example/Standard Integration (Swift)/`
+  - `stripe-ios/Example/Custom Integration (ObjC)/`
 
 - Save public header files in `stripe-ios/Stripe/PublicHeaders/` for Cocoapods compatibility
 

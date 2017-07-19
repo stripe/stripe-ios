@@ -328,12 +328,8 @@
   have not actually completed the necessary actions to authorize the charge.</p>
 
 <p>You can use <code><a href="../Classes/STPAPIClient.html">STPAPIClient</a></code> to listen for state changes on the source
-  object as a way to identify whether the user action succeeded or not.</p>
-<div class="aside aside-see">
-    <p class="aside-title">See</p>
-    <code>[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]</code>
-
-</div>
+  object as a way to identify whether the user action succeeded or not.
+  - see: <code>[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]</code></p>
 
 <p>You should not use either this class, nor <code><a href="../Classes/STPAPIClient.html">STPAPIClient</a></code>, as a way
   to determine when you should charge the source. Use Stripe webhooks on your
@@ -395,6 +391,7 @@
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Initializer for context.</p>
+
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     <p>You must ensure that the returnURL set up in the created source
@@ -402,6 +399,7 @@ correctly goes to your app so that users can be returned once
 they complete the redirect in the web broswer.</p>
 
 </div>
+
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     <p>Firing of the completion block does not necessarily mean the user successfully
@@ -410,6 +408,7 @@ its id and clientSecret, and poll for status updates on it to determine if
 the source was sucessfully made chargeable.</p>
 
 </div>
+
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     <p><code>[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]</code></p>
@@ -445,6 +444,7 @@ the source was sucessfully made chargeable.</p>
                               <td>
                                 <div>
                                   <p>The source that needs user redirect action to be taken.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -457,6 +457,7 @@ the source was sucessfully made chargeable.</p>
                               <td>
                                 <div>
                                   <p>A block to fire when the action is believed to have been completed.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -466,6 +467,7 @@ the source was sucessfully made chargeable.</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>Nil if the specified source is not a redirect-flow source. Otherwise a new context object.</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPRedirectContext.h#L93-L94">Show on GitHub</a>
@@ -533,6 +535,7 @@ the source was sucessfully made chargeable.</p>
   bouncing the user out to the Safari app. If you want more manual control 
   over the redirect method, you can use <code>startSafariViewControllerRedirectFlowFromViewController</code>
   or <code>startSafariAppRedirectFlow</code></p>
+
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     <p>This method does nothing if the context is not in the <code>STPRedirectContextStateNotStarted</code> state.</p>
@@ -550,7 +553,7 @@ the source was sucessfully made chargeable.</p>
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">startRedirectFlow</span><span class="p">(</span><span class="n">from</span> <span class="nv">presentingViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">startRedirectFlow</span><span class="p">(</span><span class="n">fromViewController</span> <span class="nv">presentingViewController</span><span class="p">:</span> <span class="kt">Any</span><span class="o">!</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -567,6 +570,7 @@ the source was sucessfully made chargeable.</p>
                               <td>
                                 <div>
                                   <p>The view controller to present the Safari view controller from.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -603,6 +607,7 @@ the source was sucessfully made chargeable.</p>
 <p>The context will listen for both received URLs and app open notifications 
   and fire its completion block when either the URL is received, or the next
   time the app is foregrounded.</p>
+
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     <p>This method does nothing if the context is not in the <code>STPRedirectContextStateNotStarted</code> state.</p>
@@ -616,11 +621,6 @@ the source was sucessfully made chargeable.</p>
                           <p class="aside-title">Objective-C</p>
                           <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">startSafariViewControllerRedirectFlowFromViewController</span><span class="p">:</span>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="p">)</span><span class="nv">presentingViewController</span><span class="p">;</span></code></pre>
-
-                        </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">startSafariViewControllerRedirectFlow</span><span class="p">(</span><span class="n">from</span> <span class="nv">presentingViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -637,6 +637,7 @@ the source was sucessfully made chargeable.</p>
                               <td>
                                 <div>
                                   <p>The view controller to present the Safari view controller from.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -667,6 +668,7 @@ the source was sucessfully made chargeable.</p>
 
 <p>The context will listen for app open notifications and fire its completion
   block the next time the user re-opens the app (either manually or via url)</p>
+
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     This method does nothing if the context is not in the <code>STPRedirectContextStateNotStarted</code> state.
@@ -737,8 +739,8 @@ app opens or callbacks. The completion block will not be fired.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-19)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
