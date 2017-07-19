@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  UI Demo
+//  UI Examples
 //
 //  Created by Ben Guo on 7/18/17.
 //  Copyright © 2017 Stripe. All rights reserved.

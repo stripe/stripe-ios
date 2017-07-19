@@ -1,6 +1,6 @@
 //
 //  MockCustomerContext.swift
-//  UI Demo
+//  UI Examples
 //
 //  Created by Ben Guo on 7/18/17.
 //  Copyright © 2017 Stripe. All rights reserved.
@@ -25,7 +25,6 @@ class MockCustomer: STPCustomer {
         ]
         if let card = STPCard.decodedObject(fromAPIResponse: visa) {
             self.mockSources.append(card)
-            self.mockDefaultSource = card
         }
         let masterCard = [
             "id": "preloaded_mastercard",

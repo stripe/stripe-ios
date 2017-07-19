@@ -1,6 +1,6 @@
 //
 //  BrowseViewController.swift
-//  UI Demo
+//  UI Examples
 //
 //  Created by Ben Guo on 7/18/17.
 //  Copyright © 2017 Stripe. All rights reserved.
@@ -12,12 +12,11 @@ import Stripe
 class BrowseViewController: UITableViewController, STPPaymentMethodsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
 
     enum Demo: String {
-        static let count = 5
+        static let count = 4
         case STPPaymentCardTextField = "Card Field"
         case STPAddCardViewController = "Card Form"
         case STPPaymentMethodsViewController = "Payment Methods"
         case STPShippingInfoViewController = "Shipping"
-        case ApplePay = "Apple Pay"
 
         init?(row: Int) {
             switch row {
@@ -25,7 +24,6 @@ class BrowseViewController: UITableViewController, STPPaymentMethodsViewControll
             case 1: self = .STPAddCardViewController
             case 2: self = .STPPaymentMethodsViewController
             case 3: self = .STPShippingInfoViewController
-            case 4: self = .ApplePay
             default: return nil
             }
         }
@@ -36,7 +34,7 @@ class BrowseViewController: UITableViewController, STPPaymentMethodsViewControll
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Stripe iOS SDK – UI Demo"
+        self.title = "Stripe iOS UI Examples"
         self.tableView.tableFooterView = UIView()
     }
 
@@ -67,8 +65,9 @@ class BrowseViewController: UITableViewController, STPPaymentMethodsViewControll
         case .STPAddCardViewController: return
         case .STPPaymentMethodsViewController:
             let config = STPPaymentConfiguration()
-            config.additionalPaymentMethods = []
+            config.additionalPaymentMethods = .all
             config.requiredBillingAddressFields = .none
+            config.appleMerchantIdentifier = "dummy-merchant-id"
             let viewController = STPPaymentMethodsViewController(configuration: config,
                                                                  theme: self.theme,
                                                                  customerContext: self.customerContext,
@@ -87,7 +86,6 @@ class BrowseViewController: UITableViewController, STPPaymentMethodsViewControll
             viewController.delegate = self
             let navigationController = UINavigationController(rootViewController: viewController)
             self.present(navigationController, animated: true, completion: nil)
-        case .ApplePay: return
         }
     }
 

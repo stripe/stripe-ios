@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C1140CBC1F1EC0FC002084AB"
-               BuildableName = "UI Demo.app"
-               BlueprintName = "UI Demo"
-               ReferencedContainer = "container:UI Demo.xcodeproj">
+               BuildableName = "UI Examples.app"
+               BlueprintName = "UI Examples"
+               ReferencedContainer = "container:UI Examples.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C1140CBC1F1EC0FC002084AB"
-            BuildableName = "UI Demo.app"
-            BlueprintName = "UI Demo"
-            ReferencedContainer = "container:UI Demo.xcodeproj">
+            BuildableName = "UI Examples.app"
+            BlueprintName = "UI Examples"
+            ReferencedContainer = "container:UI Examples.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -56,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C1140CBC1F1EC0FC002084AB"
-            BuildableName = "UI Demo.app"
-            BlueprintName = "UI Demo"
-            ReferencedContainer = "container:UI Demo.xcodeproj">
+            BuildableName = "UI Examples.app"
+            BlueprintName = "UI Examples"
+            ReferencedContainer = "container:UI Examples.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -75,9 +75,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C1140CBC1F1EC0FC002084AB"
-            BuildableName = "UI Demo.app"
-            BlueprintName = "UI Demo"
-            ReferencedContainer = "container:UI Demo.xcodeproj">
+            BuildableName = "UI Examples.app"
+            BlueprintName = "UI Examples"
+            ReferencedContainer = "container:UI Examples.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
