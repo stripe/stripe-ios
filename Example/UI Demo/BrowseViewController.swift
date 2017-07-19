@@ -9,14 +9,14 @@
 import UIKit
 import Stripe
 
-class BrowseViewController: UITableViewController, STPPaymentMethodsViewControllerDelegate {
+class BrowseViewController: UITableViewController, STPPaymentMethodsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
 
     enum Demo: String {
         static let count = 5
         case STPPaymentCardTextField = "Card Field"
-        case STPAddCardViewController = "Add Card Form"
-        case STPPaymentMethodsViewController = "Payment Methods Page"
-        case STPShippingInfoViewController = "Shipping Form"
+        case STPAddCardViewController = "Card Form"
+        case STPPaymentMethodsViewController = "Payment Methods"
+        case STPShippingInfoViewController = "Shipping"
         case ApplePay = "Apple Pay"
 
         init?(row: Int) {
@@ -32,16 +32,12 @@ class BrowseViewController: UITableViewController, STPPaymentMethodsViewControll
     }
 
     let customerContext = MockCustomerContext()
-    let configuration = STPPaymentConfiguration.shared()
-    let theme = STPTheme.default()
+    var theme = STPTheme.default()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "UI Sampler"
+        self.title = "Stripe iOS SDK – UI Demo"
         self.tableView.tableFooterView = UIView()
-
-        self.configuration.requiredShippingAddressFields = [.postalAddress, .phone]
-        self.configuration.shippingType = .shipping
     }
 
     // MARK: UITableViewDelegate
@@ -73,16 +69,24 @@ class BrowseViewController: UITableViewController, STPPaymentMethodsViewControll
             let config = STPPaymentConfiguration()
             config.additionalPaymentMethods = []
             config.requiredBillingAddressFields = .none
-            let theme = STPTheme.default()
             let viewController = STPPaymentMethodsViewController(configuration: config,
-                                                                 theme: theme,
+                                                                 theme: self.theme,
                                                                  customerContext: self.customerContext,
                                                                  delegate: self)
             let navigationController = UINavigationController(rootViewController: viewController)
             self.present(navigationController, animated: true, completion: nil)
         case .STPShippingInfoViewController:
-            return
-//            self.paymentContext?.presentShippingViewController()
+            let config = STPPaymentConfiguration()
+            config.requiredShippingAddressFields = [.postalAddress]
+            let viewController = STPShippingAddressViewController(configuration: config,
+                                                                  theme: self.theme,
+                                                                  currency: "usd",
+                                                                  shippingAddress: nil,
+                                                                  selectedShippingMethod: nil,
+                                                                  prefilledInformation: nil)
+            viewController.delegate = self
+            let navigationController = UINavigationController(rootViewController: viewController)
+            self.present(navigationController, animated: true, completion: nil)
         case .ApplePay: return
         }
     }
@@ -95,16 +99,24 @@ class BrowseViewController: UITableViewController, STPPaymentMethodsViewControll
 
     func paymentMethodsViewControllerDidFinish(_ paymentMethodsViewController: STPPaymentMethodsViewController) {
         paymentMethodsViewController.navigationController?.popViewController(animated: true)
-//        self.dismiss(animated: true, completion: nil)
     }
 
     func paymentMethodsViewController(_ paymentMethodsViewController: STPPaymentMethodsViewController, didFailToLoadWithError error: Error) {
         self.dismiss(animated: true, completion: nil)
     }
 
-    // MARK: STPPaymentContextDelegate
+    // MARK: STPShippingAddressViewControllerDelegate
 
-    func paymentContext(_ paymentContext: STPPaymentContext, didUpdateShippingAddress address: STPAddress, completion: @escaping STPShippingMethodsCompletionBlock) {
+    func shippingAddressViewControllerDidCancel(_ addressViewController: STPShippingAddressViewController) {
+        self.dismiss(animated: true, completion: nil)
+    }
+
+    func shippingAddressViewController(_ addressViewController: STPShippingAddressViewController, didFinishWith address: STPAddress, shippingMethod method: PKShippingMethod?) {
+        self.customerContext.updateCustomer(withShippingAddress: address, completion: nil)
+        self.dismiss(animated: true, completion: nil)
+    }
+
+    func shippingAddressViewController(_ addressViewController: STPShippingAddressViewController, didEnter address: STPAddress, completion: @escaping STPShippingMethodsCompletionBlock) {
         let upsGround = PKShippingMethod()
         upsGround.amount = 0
         upsGround.label = "UPS Ground"
@@ -121,7 +133,7 @@ class BrowseViewController: UITableViewController, STPPaymentMethodsViewControll
         fedEx.detail = "Arrives tomorrow"
         fedEx.identifier = "fedex"
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
             if address.country == nil || address.country == "US" {
                 completion(.valid, nil, [upsGround, fedEx], fedEx)
             }
@@ -134,9 +146,8 @@ class BrowseViewController: UITableViewController, STPPaymentMethodsViewControll
                 fedEx.amount = 20.99
                 completion(.valid, nil, [upsWorldwide, fedEx], fedEx)
             }
-        }
+        }       
     }
-
 
 }
 

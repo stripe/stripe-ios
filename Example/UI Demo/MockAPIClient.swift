@@ -67,6 +67,8 @@ class MockAPIClient: STPAPIClient {
             "card": cardJSON,
         ]
         let token = STPToken.decodedObject(fromAPIResponse: tokenJSON)
-        completion(token, nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            completion(token, nil)
+        }
     }
 }

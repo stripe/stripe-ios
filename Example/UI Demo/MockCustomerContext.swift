@@ -14,6 +14,41 @@ class MockCustomer: STPCustomer {
     var mockDefaultSource: STPSourceProtocol? = nil
     var mockShippingAddress: STPAddress?
 
+    override init() {
+        // Preload the mock customer with saved cards
+        let visa = [
+            "id": "preloaded_visa",
+            "exp_month": "10",
+            "exp_year": "2020",
+            "last4": "1881",
+            "brand": "visa",
+        ]
+        if let card = STPCard.decodedObject(fromAPIResponse: visa) {
+            self.mockSources.append(card)
+            self.mockDefaultSource = card
+        }
+        let masterCard = [
+            "id": "preloaded_mastercard",
+            "exp_month": "10",
+            "exp_year": "2020",
+            "last4": "8210",
+            "brand": "mastercard",
+        ]
+        if let card = STPCard.decodedObject(fromAPIResponse: masterCard) {
+            self.mockSources.append(card)
+        }
+        let amex = [
+            "id": "preloaded_amex",
+            "exp_month": "10",
+            "exp_year": "2020",
+            "last4": "0005",
+            "brand": "american express",
+        ]
+        if let card = STPCard.decodedObject(fromAPIResponse: amex) {
+            self.mockSources.append(card)
+        }
+    }
+
     override var sources: [STPSourceProtocol] {
         get {
             return self.mockSources
@@ -66,15 +101,19 @@ class MockCustomerContext: STPCustomerContext {
         completion(nil)
     }
 
-    func updateCustomer(withShippingAddress shipping: STPAddress, completion: @escaping STPErrorBlock) {
+    func updateCustomer(withShippingAddress shipping: STPAddress, completion: STPErrorBlock?) {
         self.customer.shippingAddress = shipping
-        completion(nil)
+        if let completion = completion {
+            completion(nil)
+        }
     }
 
-    func detachSource(fromCustomer source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
+    func detachSource(fromCustomer source: STPSourceProtocol, completion: STPErrorBlock?) {
         if let index = self.customer.sources.index(where: { $0.stripeID == source.stripeID }) {
             self.customer.sources.remove(at: index)
         }
-        completion(nil)
+        if let completion = completion {
+            completion(nil)
+        }
     }
 }
