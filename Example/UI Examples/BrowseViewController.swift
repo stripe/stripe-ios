@@ -36,7 +36,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Stripe iOS UI Examples"
+        self.title = "UI Examples"
         self.tableView.tableFooterView = UIView()
         self.navigationController?.navigationBar.isTranslucent = false
         STPAddCardViewController.startMockingAPIClient()
