@@ -314,6 +314,7 @@
                 </div>
               </div>
             <p>Representation of a user&rsquo;s credit card details that have been tokenized with the Stripe API</p>
+
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     <a href="https://stripe.com/docs/api#cards">https://stripe.com/docs/api#cards</a>
@@ -374,6 +375,7 @@
                               <td>
                                 <div>
                                   <p>The Stripe ID of the card, e.g. <code>card_185iQx4JYtv6MPZKfcuXwkOx</code></p>
+
                                 </div>
                               </td>
                             </tr>
@@ -386,6 +388,7 @@
                               <td>
                                 <div>
                                   <p>The brand of the card (e.g. <q>Visa</q>. To obtain this enum value from a string, use <code>[STPCardBrand brandFromString:string]</code>;</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -398,6 +401,7 @@
                               <td>
                                 <div>
                                   <p>The last 4 digits of the card, e.g. 4242</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -410,6 +414,7 @@
                               <td>
                                 <div>
                                   <p>The card&rsquo;s expiration month, 1-indexed (i.e. 1 = January)</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -422,6 +427,7 @@
                               <td>
                                 <div>
                                   <p>The card&rsquo;s expiration year</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -434,6 +440,7 @@
                               <td>
                                 <div>
                                   <p>The card&rsquo;s funding type (credit, debit, or prepaid). To obtain this enum value from a string, use <code>[STPCardBrand fundingFromString:string]</code>.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -443,6 +450,7 @@
                       <div>
                         <h4>Return Value</h4>
                         <p>an STPCard instance populated with the provided values.</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L48-L53">Show on GitHub</a>
@@ -492,6 +500,7 @@
                               <td>
                                 <div>
                                   <p>a string representing the card&rsquo;s brand as returned from the Stripe API</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -501,6 +510,7 @@
                       <div>
                         <h4>Return Value</h4>
                         <p>an enum value mapped to that string. If the string is unrecognized, returns STPCardBrandUnknown.</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L62">Show on GitHub</a>
@@ -550,6 +560,7 @@
                               <td>
                                 <div>
                                   <p>the brand you want to convert to a string</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -559,6 +570,7 @@
                       <div>
                         <h4>Return Value</h4>
                         <p>A string representing the brand, suitable for displaying to a user.</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L71">Show on GitHub</a>
@@ -608,6 +620,7 @@
                               <td>
                                 <div>
                                   <p>a string representing the card&rsquo;s funding type as returned from the Stripe API</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -617,6 +630,7 @@
                       <div>
                         <h4>Return Value</h4>
                         <p>an enum value mapped to that string. If the string is unrecognized, returns <code>STPCardFundingTypeOther</code>.</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L80">Show on GitHub</a>
@@ -852,11 +866,6 @@
                           <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="n">address</span><span class="p">;</span></code></pre>
 
                         </div>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@NSCopying</span> <span class="k">var</span> <span class="nv">address</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCard.h#L115">Show on GitHub</a>
@@ -1082,8 +1091,8 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-19)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

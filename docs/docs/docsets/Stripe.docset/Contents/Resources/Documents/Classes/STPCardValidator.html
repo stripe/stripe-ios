@@ -435,7 +435,10 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The card number to validate. Ex. @<q>4242424242424242</q></p>
+                                  <p>The card number to validate. Ex. 
+<q>
+4242424242424242</q></p>
+
                                 </div>
                               </td>
                             </tr>
@@ -448,6 +451,7 @@
                               <td>
                                 <div>
                                   <p>Whether or not to enforce that the number appears to be issued by a major card brand (or could be). For example, no issuing card network currently issues card numbers beginning with the digit 9; if an otherwise correct-length and luhn-valid card number beginning with 9 (example: 9999999999999995) were passed to this method, it would return STPCardValidationStateInvalid if this parameter were YES and STPCardValidationStateValid if this parameter were NO. If unsure, you should use YES for this value.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -456,7 +460,10 @@
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>STPCardValidationStateValid if the number is valid, STPCardValidationStateInvalid if the number is invalid, or STPCardValidationStateIncomplete if the number is a substring of a valid card (e.g. @<q>4242</q>).</p>
+                        <p>STPCardValidationStateValid if the number is valid, STPCardValidationStateInvalid if the number is invalid, or STPCardValidationStateIncomplete if the number is a substring of a valid card (e.g. 
+<q>
+4242</q>).</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L40-L41">Show on GitHub</a>
@@ -505,7 +512,14 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>A card number, or partial card number. For example, @<q>4242</q>, @<q>5555555555554444</q>, or @<q>123</q>.</p>
+                                  <p>A card number, or partial card number. For example, 
+<q>
+4242</q>, 
+<q>
+5555555555554444</q>, or 
+<q>
+123</q>.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -515,6 +529,7 @@
                       <div>
                         <h4>Return Value</h4>
                         <p>The brand for that card number. The example parameters would return STPCardBrandVisa, STPCardBrandMasterCard, and STPCardBrandUnknown, respectively.</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L50">Show on GitHub</a>
@@ -635,6 +650,7 @@
                               <td>
                                 <div>
                                   <p>A string representing a 2-digit expiration month for a payment card.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -643,7 +659,12 @@
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>STPCardValidationStateValid if the month is valid, STPCardValidationStateInvalid if the month is invalid, or STPCardValidationStateIncomplete if the month is a substring of a valid month (e.g. @<q>0</q> or @<q>1</q>).</p>
+                        <p>STPCardValidationStateValid if the month is valid, STPCardValidationStateInvalid if the month is invalid, or STPCardValidationStateIncomplete if the month is a substring of a valid month (e.g. 
+<q>
+0</q> or 
+<q>
+1</q>).</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L70">Show on GitHub</a>
@@ -695,6 +716,7 @@
                               <td>
                                 <div>
                                   <p>A string representing a 2-digit expiration year for a payment card.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -707,6 +729,7 @@
                               <td>
                                 <div>
                                   <p>A string representing a valid 2-digit expiration month for a payment card. If the month is invalid (see -validationStateForExpirationMonth), this will return STPCardValidationStateInvalid.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -715,7 +738,12 @@
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>STPCardValidationStateValid if the year is valid, STPCardValidationStateInvalid if the year is invalid, or STPCardValidationStateIncomplete if the year is a substring of a valid year (e.g. @<q>1</q> or @<q>2</q>).</p>
+                        <p>STPCardValidationStateValid if the year is valid, STPCardValidationStateInvalid if the year is invalid, or STPCardValidationStateIncomplete if the year is a substring of a valid year (e.g. 
+<q>
+1</q> or 
+<q>
+2</q>).</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L80-L81">Show on GitHub</a>
@@ -801,6 +829,7 @@
                               <td>
                                 <div>
                                   <p>the CVC to validate</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -813,6 +842,7 @@
                               <td>
                                 <div>
                                   <p>the card brand (can be determined from the card&rsquo;s number using +brandForNumber)</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -821,7 +851,16 @@
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Whether the CVC represents a valid CVC for that card brand. For example, would return STPCardValidationStateValid for @<q>123</q> and STPCardBrandVisa, STPCardValidationStateValid for @<q>1234</q> and STPCardBrandAmericanExpress, STPCardValidationStateIncomplete for @<q>12</q> and STPCardBrandVisa, and STPCardValidationStateInvalid for @<q>12345</q> and any brand.</p>
+                        <p>Whether the CVC represents a valid CVC for that card brand. For example, would return STPCardValidationStateValid for 
+<q>
+123</q> and STPCardBrandVisa, STPCardValidationStateValid for 
+<q>
+1234</q> and STPCardBrandAmericanExpress, STPCardValidationStateIncomplete for 
+<q>
+12</q> and STPCardBrandVisa, and STPCardValidationStateInvalid for 
+<q>
+12345</q> and any brand.</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L96">Show on GitHub</a>
@@ -871,6 +910,7 @@
                               <td>
                                 <div>
                                   <p>the card details to validate.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -880,6 +920,7 @@
                       <div>
                         <h4>Return Value</h4>
                         <p>STPCardValidationStateValid if all fields are valid, STPCardValidationStateInvalid if any field is invalid, or STPCardValidationStateIncomplete if all fields are either incomplete or valid.</p>
+
                       </div>
                       <div class="slightly-smaller">
                         <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPCardValidator.h#L105">Show on GitHub</a>
@@ -895,8 +936,8 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-19)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

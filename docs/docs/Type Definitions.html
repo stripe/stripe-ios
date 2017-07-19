@@ -391,6 +391,7 @@
                               <td>
                                 <div>
                                   <p>The error that occurred, if any.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -446,6 +447,7 @@
                               <td>
                                 <div>
                                   <p>The JSON response, or nil if an error occured.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -458,6 +460,7 @@
                               <td>
                                 <div>
                                   <p>The error that occurred, if any.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -511,7 +514,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The Stripe token from the response. Will be nil if an error occurs. - see: STPToken</p>
+                                  <p>The Stripe token from the response. Will be nil if an error occurs. </p>
+
                                 </div>
                               </td>
                             </tr>
@@ -523,7 +527,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The error returned from the response, or nil in one occurs. - see: StripeError.h for possible values.</p>
+                                  <p>The error returned from the response, or nil in one occurs. </p>
+
                                 </div>
                               </td>
                             </tr>
@@ -578,7 +583,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The Stripe source from the response. Will be nil if an error occurs. - see: STPSource</p>
+                                  <p>The Stripe source from the response. Will be nil if an error occurs. </p>
+
                                 </div>
                               </td>
                             </tr>
@@ -590,7 +596,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The error returned from the response, or nil in one occurs. - see: StripeError.h for possible values.</p>
+                                  <p>The error returned from the response, or nil in one occurs. </p>
+
                                 </div>
                               </td>
                             </tr>
@@ -640,7 +647,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The Stripe source from the response. Will be nil if an error occurs. - see: STPSourceProtocol</p>
+                                  <p>The Stripe source from the response. Will be nil if an error occurs. </p>
+
                                 </div>
                               </td>
                             </tr>
@@ -652,7 +660,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The error returned from the response, or nil in one occurs. - see: StripeError.h for possible values.</p>
+                                  <p>The error returned from the response, or nil in one occurs. </p>
+
                                 </div>
                               </td>
                             </tr>
@@ -693,7 +702,7 @@
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">typealias</span> <span class="kt">STPShippingMethodsCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Enums/STPShippingStatus.html">STPShippingStatus</a></span><span class="p">,</span> <span class="kt">Error</span><span class="p">?,</span> <span class="p">[</span><span class="kt">PKShippingMethod</span><span class="p">]?,</span> <span class="kt">PKShippingMethod</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">typealias</span> <span class="kt">STPShippingMethodsCompletionBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kt"><a href="Enums/STPShippingStatus.html">STPShippingStatus</a></span><span class="p">,</span> <span class="kt">Error</span><span class="p">?,</span> <span class="p">[</span><span class="kt">Any</span><span class="p">]?,</span> <span class="kt">UnsafeMutablePointer</span></code></pre>
 
                         </div>
                       </div>
@@ -710,6 +719,7 @@
                               <td>
                                 <div>
                                   <p>An enum representing whether the shipping address is valid.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -722,6 +732,7 @@
                               <td>
                                 <div>
                                   <p>If the shipping address is invalid, an error describing the issue with the address. If no error is given and the address is invalid, the default error message will be used.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -734,6 +745,7 @@
                               <td>
                                 <div>
                                   <p>The shipping methods available for the address.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -746,6 +758,7 @@
                               <td>
                                 <div>
                                   <p>The default selected shipping method for the address.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -799,7 +812,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The Stripe file from the response. Will be nil if an error occurs. - see: STPFile</p>
+                                  <p>The Stripe file from the response. Will be nil if an error occurs. </p>
+
                                 </div>
                               </td>
                             </tr>
@@ -811,7 +825,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The error returned from the response, or nil in none occurs. - see: StripeError.h for possible values.</p>
+                                  <p>The error returned from the response, or nil in none occurs. </p>
+
                                 </div>
                               </td>
                             </tr>
@@ -866,7 +881,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The Stripe customer from the response, or nil if an error occurred. - see: STPCustomer</p>
+                                  <p>The Stripe customer from the response, or nil if an error occurred. </p>
+
                                 </div>
                               </td>
                             </tr>
@@ -879,6 +895,7 @@
                               <td>
                                 <div>
                                   <p>The error returned from the response, or nil in none occurs.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -909,17 +926,20 @@
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>A callback run when the context believes the redirect action has been completed.</p>
+
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
     <p>you can use the id and client secret to fetch the source from Stripe&rsquo;s servers
 and check its status. </p>
 
 </div>
+
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     <p><code>[STPAPIClient retrieveSourceWithId:clientSecret:completion]</code></p>
 
 </div>
+
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     <p><code>[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]</code></p>
@@ -955,6 +975,7 @@ and check its status. </p>
                               <td>
                                 <div>
                                   <p>The stripe id of the source.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -967,6 +988,7 @@ and check its status. </p>
                               <td>
                                 <div>
                                   <p>The client secret of the source.</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -980,6 +1002,7 @@ and check its status. </p>
                                 <div>
                                   <p>An error if one occured. Note that a lack of an error does not mean that the action was completed successfully, the presence of one confirms that it was not.
 Currently the only possible error the context can know about is if SFSafariViewController fails its initial load (like the user has no internet connection, or servers are down).</p>
+
                                 </div>
                               </td>
                             </tr>
@@ -1000,8 +1023,8 @@ Currently the only possible error the context can know about is if SFSafariViewC
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-19)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
