@@ -17,7 +17,8 @@ open('Example/Cartfile', 'a') { |f|
 }
 system('cd Example; carthage update --platform ios')
 
-project_path = 'Example/Standard Integration (Simple).xcodeproj'
+project_name = 'Standard Integration (Swift)'
+project_path = "Example/#{project_name}.xcodeproj"
 project = Xcodeproj::Project.open(project_path)
 
 # add framework
@@ -39,5 +40,5 @@ carthage_buildphase.input_paths = [
 
 project.save();
 
-puts '▸ Updated Standard Integration (Simple) to use card.io.'
+puts "▸ Updated #{project_name} to use card.io."
 puts "▸ If you run the example app on a device, you'll see a 'Scan Card' option when adding a new card."
