@@ -5,7 +5,14 @@
       location = "group:Stripe.xcodeproj">
    </FileRef>
    <FileRef
+<<<<<<< HEAD
       location = "group:Example/Standard Integration (Swift).xcodeproj">
+=======
+      location = "group:Example/UI Demo.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Example/Stripe iOS Example (Simple).xcodeproj">
+>>>>>>> add UI Demo project
    </FileRef>
    <FileRef
       location = "group:Example/Custom Integration (ObjC).xcodeproj">
