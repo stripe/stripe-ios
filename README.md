@@ -31,8 +31,8 @@ For more fine-grained information on all of the classes and methods in our SDK, 
 ## Example apps
 
 There are 2 example apps included in the repository:
-- Stripe iOS Example (Simple) shows an integration using our prebuilt UI components [Swift]
-- Stripe iOS Example (Custom) shows how to use our low-level methods to accept payments using several different payment methods [Objective-C].
+- Standard Integration (Swift) shows an integration using our prebuilt UI components.
+- Custom Integration (ObjC) shows how to use our low-level methods to accept payments using several different payment methods.
 
 To build the example apps, you'll need to first run `./setup.sh`. Then, open `Stripe.xcworkspace` and choose the appropriate scheme.
 
@@ -53,7 +53,7 @@ After this is done, you can make test payments through the app and see them in y
 
 To add card scanning capabilities to our prebuilt UI components, you can simply [install card.io](https://github.com/card-io/card.io-iOS-SDK#setup) alongside our SDK. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards").
 
-To try this out, you can run `./install_cardio.rb`, which will download and install card.io in Stripe iOS Example (Simple). Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
+To try this out, you can run `./install_cardio.rb`, which will download and install card.io in Standard Integration (Swift). Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
 
 ## Running the tests
 

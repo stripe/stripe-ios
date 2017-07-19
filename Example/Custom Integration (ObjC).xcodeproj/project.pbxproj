@@ -157,7 +157,7 @@
 			dependencies = (
 			);
 			name = "Custom Integration (ObjC)";
-			productName = "Stripe iOS Example (Custom)";
+			productName = "Custom Integration (ObjC)";
 			productReference = 04533E871A687F5D00C7E52E /* Custom Integration (ObjC).app */;
 			productType = "com.apple.product-type.application";
 		};
