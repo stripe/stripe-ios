@@ -21,8 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window.rootViewController = navController
         window.makeKeyAndVisible()
         self.window = window
-
-        STPAddCardViewController.startMockingAPIClient()
         return true
     }
 

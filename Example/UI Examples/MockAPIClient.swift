@@ -18,7 +18,8 @@ private let swizzle: (AnyClass, Selector, Selector) -> () = { forClass, original
 
 extension STPAddCardViewController {
 
-    // We can't swizzle in initialize because it's been deprecated in Swift 3.1
+    // We can't swizzle in initialize because it's been deprecated in Swift 3.1.
+    // Instead, we have to call this method before STPAddCardViewController appears.
     static func startMockingAPIClient() {
         let originalSelector = #selector(apiClient)
         let swizzledSelector = #selector(swizzled_apiClient)
