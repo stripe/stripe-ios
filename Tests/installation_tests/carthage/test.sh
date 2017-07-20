@@ -1,24 +1,57 @@
-#!/bin/sh
+#!/bin/bash
 
-# This causes the script to fail if any subscript fails
-set -e
-set -o pipefail
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "Checking test Carthage app..."
+# Install xcpretty
+if ! command -v xcpretty > /dev/null; then
+  echo "Installing xcpretty..."
+  gem install xcpretty --no-ri --no-rdoc
+fi
 
-gem install xcpretty --no-ri --no-rdoc
+# Clean carthage artifacts
+echo "Cleaning carthage artifacts..."
 
-TESTDIR="$(cd $(dirname $0); pwd)"
-cd $TESTDIR
+rm -f "${script_dir}/Cartfile"
+rm -f "${script_dir}/Cartfile.resolved"
+rm -rf "${script_dir}/Carthage"
 
-GIT_REPO=`cd "../../.."; pwd`
-cd $TESTDIR
+# Generate new Cartfile
+echo "Generating new Cartfile..."
 
-GIT_BRANCH=${TRAVIS_COMMIT-`git branch | sed -n '/\* /s///p'`}
+git_repo="$(cd "${script_dir}/../../../" && pwd)"
+git_hash="$(git rev-parse HEAD)"
 
-rm -f "$TESTDIR/Cartfile*"
-echo "git \"$GIT_REPO\" \"$GIT_BRANCH\"" > "$TESTDIR/Cartfile"
+echo "git \"${git_repo}\" \"${git_hash}\"" > "${script_dir}/Cartfile"
+
+# Execute carthage bootstrap
+echo "Executing carthage bootstrap..."
+
+cd "${script_dir}"
 
 carthage bootstrap --platform ios --configuration Debug --no-use-binaries
 
-xcodebuild build -project "${TESTDIR}/CarthageTest.xcodeproj" -scheme CarthageTest -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.3.1' | xcpretty -c
+carthage_exit_code="$?"
+
+if [[ "${carthage_exit_code}" != 0 ]]; then
+  echo "ERROR: Executing carthage bootstrap failed with status code: ${carthage_exit_code}"
+  exit 1
+fi
+
+# Execute xcodebuild
+echo "Executing xcodebuild..."
+
+xcodebuild build \
+  -project "${script_dir}/CarthageTest.xcodeproj" \
+  -scheme "CarthageTest" \
+  -sdk "iphonesimulator" \
+  -destination "platform=iOS Simulator,name=iPhone 6,OS=10.3.1" \
+  | xcpretty
+
+xcodebuild_exit_code="${PIPESTATUS[0]}"
+
+if [[ "${xcodebuild_exit_code}" != 0 ]]; then
+  echo "ERROR: Executing xcodebuild failed with status code: ${xcodebuild_exit_code}"
+  exit 1
+fi
+
+echo "All good!"
