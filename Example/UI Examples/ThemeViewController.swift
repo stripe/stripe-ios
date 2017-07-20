@@ -12,14 +12,16 @@ import Stripe
 class ThemeViewController: UITableViewController {
 
     enum Theme: String {
-        static let count = 2
+        static let count = 3
         case Default = "Default"
-        case CustomDark = "Custom"
+        case CustomDark = "Custom - Dark"
+        case CustomLight = "Custom - Light"
 
         init?(row: Int) {
             switch row {
             case 0: self = .Default
             case 1: self = .CustomDark
+            case 2: self = .CustomLight
             default: return nil
             }
         }
@@ -30,14 +32,21 @@ class ThemeViewController: UITableViewController {
                 return STPTheme.default()
             case .CustomDark:
                 let theme = STPTheme.default()
-                theme.primaryBackgroundColor = UIColor(red:0.16, green:0.23, blue:0.31, alpha:1.00)
-                theme.secondaryBackgroundColor = UIColor(red:0.22, green:0.29, blue:0.38, alpha:1.00)
-                theme.primaryForegroundColor = UIColor(red:1.00, green:1.00, blue:1.00, alpha:1.00)
-                theme.secondaryForegroundColor = UIColor(red:0.60, green:0.64, blue:0.71, alpha:1.00)
-                theme.accentColor = UIColor(red:0.98, green:0.80, blue:0.00, alpha:1.00)
-                theme.errorColor = UIColor(red:0.85, green:0.48, blue:0.48, alpha:1.00)
-                theme.font = UIFont(name: "GillSans", size: 17)
-                theme.emphasisFont = UIFont(name: "GillSans", size: 17)
+                theme.primaryBackgroundColor = UIColor(red:66.0/255.0, green:69.0/255.0, blue:112.0/255.0, alpha:255.0/255.0)
+                theme.secondaryBackgroundColor = theme.primaryBackgroundColor
+                theme.primaryForegroundColor = UIColor.white
+                theme.secondaryForegroundColor = UIColor(red:130.0/255.0, green:147.0/255.0, blue:168.0/255.0, alpha:255.0/255.0)
+                theme.accentColor = UIColor(red:14.0/255.0, green:211.0/255.0, blue:140.0/255.0, alpha:255.0/255.0)
+                theme.errorColor = UIColor(red:237.0/255.0, green:83.0/255.0, blue:69.0/255.0, alpha:255.0/255.0)
+                return theme
+            case .CustomLight:
+                let theme = STPTheme.default()
+                theme.primaryBackgroundColor = UIColor(red:230.0/255.0, green:235.0/255.0, blue:241.0/255.0, alpha:255.0/255.0)
+                theme.secondaryBackgroundColor = UIColor.white
+                theme.primaryForegroundColor = UIColor(red:55.0/255.0, green:53.0/255.0, blue:100.0/255.0, alpha:255.0/255.0)
+                theme.secondaryForegroundColor = UIColor(red:148.0/255.0, green:163.0/255.0, blue:179.0/255.0, alpha:255.0/255.0)
+                theme.accentColor = UIColor(red:101.0/255.0, green:101.0/255.0, blue:232.0/255.0, alpha:255.0/255.0)
+                theme.errorColor = UIColor(red:240.0/255.0, green:2.0/255.0, blue:36.0/255.0, alpha:255.0/255.0)
                 return theme
             }
         }
