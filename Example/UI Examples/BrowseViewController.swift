@@ -36,9 +36,9 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "UI Examples"
-        self.tableView.tableFooterView = UIView()
-        self.navigationController?.navigationBar.isTranslucent = false
+        title = "UI Examples"
+        tableView.tableFooterView = UIView()
+        navigationController?.navigationBar.isTranslucent = false
         STPAddCardViewController.startMockingAPIClient()
     }
 
@@ -63,12 +63,12 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         guard let example = Demo(row: indexPath.row) else { return }
-        let theme = self.themeViewController.theme.stpTheme
+        let theme = themeViewController.theme.stpTheme
 
         switch example {
         case .STPPaymentCardTextField:
             let viewController = CardFieldViewController()
-            self.navigationController?.pushViewController(viewController, animated: true)
+            navigationController?.pushViewController(viewController, animated: true)
         case .STPAddCardViewController:
             let config = STPPaymentConfiguration()
             config.requiredBillingAddressFields = .full
@@ -76,7 +76,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             viewController.delegate = self
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
-            self.present(navigationController, animated: true, completion: nil)
+            present(navigationController, animated: true, completion: nil)
         case .STPPaymentMethodsViewController:
             let config = STPPaymentConfiguration()
             config.additionalPaymentMethods = .all
@@ -88,7 +88,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                                                                  delegate: self)
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
-            self.present(navigationController, animated: true, completion: nil)
+            present(navigationController, animated: true, completion: nil)
         case .STPShippingInfoViewController:
             let config = STPPaymentConfiguration()
             config.requiredShippingAddressFields = [.postalAddress]
@@ -101,7 +101,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             viewController.delegate = self
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
-            self.present(navigationController, animated: true, completion: nil)
+            present(navigationController, animated: true, completion: nil)
         case .ChangeTheme:
             self.navigationController?.pushViewController(self.themeViewController, animated: true)
         }
@@ -110,17 +110,17 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
     // MARK: STPAddCardViewControllerDelegate
 
     func addCardViewControllerDidCancel(_ addCardViewController: STPAddCardViewController) {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     func addCardViewController(_ addCardViewController: STPAddCardViewController, didCreateToken token: STPToken, completion: @escaping STPErrorBlock) {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     // MARK: STPPaymentMethodsViewControllerDelegate
 
     func paymentMethodsViewControllerDidCancel(_ paymentMethodsViewController: STPPaymentMethodsViewController) {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     func paymentMethodsViewControllerDidFinish(_ paymentMethodsViewController: STPPaymentMethodsViewController) {
@@ -128,18 +128,18 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
     }
 
     func paymentMethodsViewController(_ paymentMethodsViewController: STPPaymentMethodsViewController, didFailToLoadWithError error: Error) {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     // MARK: STPShippingAddressViewControllerDelegate
 
     func shippingAddressViewControllerDidCancel(_ addressViewController: STPShippingAddressViewController) {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     func shippingAddressViewController(_ addressViewController: STPShippingAddressViewController, didFinishWith address: STPAddress, shippingMethod method: PKShippingMethod?) {
         self.customerContext.updateCustomer(withShippingAddress: address, completion: nil)
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     func shippingAddressViewController(_ addressViewController: STPShippingAddressViewController, didEnter address: STPAddress, completion: @escaping STPShippingMethodsCompletionBlock) {

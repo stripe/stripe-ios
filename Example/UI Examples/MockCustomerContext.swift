@@ -24,7 +24,7 @@ class MockCustomer: STPCustomer {
             "brand": "visa",
         ]
         if let card = STPCard.decodedObject(fromAPIResponse: visa) {
-            self.mockSources.append(card)
+            mockSources.append(card)
         }
         let masterCard = [
             "id": "preloaded_mastercard",
@@ -34,7 +34,7 @@ class MockCustomer: STPCustomer {
             "brand": "mastercard",
         ]
         if let card = STPCard.decodedObject(fromAPIResponse: masterCard) {
-            self.mockSources.append(card)
+            mockSources.append(card)
         }
         let amex = [
             "id": "preloaded_amex",
@@ -44,34 +44,34 @@ class MockCustomer: STPCustomer {
             "brand": "american express",
         ]
         if let card = STPCard.decodedObject(fromAPIResponse: amex) {
-            self.mockSources.append(card)
+            mockSources.append(card)
         }
     }
 
     override var sources: [STPSourceProtocol] {
         get {
-            return self.mockSources
+            return mockSources
         }
         set {
-            self.mockSources = newValue
+            mockSources = newValue
         }
     }
 
     override var defaultSource: STPSourceProtocol? {
         get {
-            return self.mockDefaultSource
+            return mockDefaultSource
         }
         set {
-            self.mockDefaultSource = newValue
+            mockDefaultSource = newValue
         }
     }
 
     override var shippingAddress: STPAddress? {
         get {
-            return self.mockShippingAddress
+            return mockShippingAddress
         }
         set {
-            self.mockShippingAddress = newValue
+            mockShippingAddress = newValue
         }
     }
 }
@@ -82,34 +82,34 @@ class MockCustomerContext: STPCustomerContext {
 
     override func retrieveCustomer(_ completion: STPCustomerCompletionBlock? = nil) {
         if let completion = completion {
-            completion(self.customer, nil)
+            completion(customer, nil)
         }
     }
 
     override func attachSource(toCustomer source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
         if let token = source as? STPToken, let card = token.card {
-            self.customer.sources.append(card)
+            customer.sources.append(card)
         }
         completion(nil)
     }
 
     override func selectDefaultCustomerSource(_ source: STPSourceProtocol, completion: @escaping STPErrorBlock) {
-        if self.customer.sources.contains(where: { $0.stripeID == source.stripeID }) {
-            self.customer.defaultSource = source
+        if customer.sources.contains(where: { $0.stripeID == source.stripeID }) {
+            customer.defaultSource = source
         }
         completion(nil)
     }
 
     func updateCustomer(withShippingAddress shipping: STPAddress, completion: STPErrorBlock?) {
-        self.customer.shippingAddress = shipping
+        customer.shippingAddress = shipping
         if let completion = completion {
             completion(nil)
         }
     }
 
     func detachSource(fromCustomer source: STPSourceProtocol, completion: STPErrorBlock?) {
-        if let index = self.customer.sources.index(where: { $0.stripeID == source.stripeID }) {
-            self.customer.sources.remove(at: index)
+        if let index = customer.sources.index(where: { $0.stripeID == source.stripeID }) {
+            customer.sources.remove(at: index)
         }
         if let completion = completion {
             completion(nil)

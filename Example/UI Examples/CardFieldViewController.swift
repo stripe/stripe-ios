@@ -15,24 +15,24 @@ class CardFieldViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Card Field"
-        self.view.backgroundColor = UIColor.white
-        self.view.addSubview(self.cardField)
-        self.edgesForExtendedLayout = []
+        title = "Card Field"
+        view.backgroundColor = UIColor.white
+        view.addSubview(cardField)
+        edgesForExtendedLayout = []
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.cardField.becomeFirstResponder()
+        cardField.becomeFirstResponder()
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let padding: CGFloat = 15
-        self.cardField.frame = CGRect(x: padding,
-                                      y: padding,
-                                      width: self.view.bounds.width - (padding * 2),
-                                      height: 50)
+        cardField.frame = CGRect(x: padding,
+                                 y: padding,
+                                 width: view.bounds.width - (padding * 2),
+                                 height: 50)
     }
 
 }

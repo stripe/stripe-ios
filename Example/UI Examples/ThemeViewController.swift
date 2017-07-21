@@ -56,8 +56,8 @@ class ThemeViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Change Theme"
-        self.tableView.tableFooterView = UIView()
+        title = "Change Theme"
+        tableView.tableFooterView = UIView()
     }
 
     // MARK: - Table view data source
