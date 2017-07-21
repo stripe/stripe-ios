@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C1140CBC1F1EC0FC002084AB"
-               BuildableName = "UI Examples.app"
+               BuildableName = "Stripe UI Examples.app"
                BlueprintName = "UI Examples"
                ReferencedContainer = "container:UI Examples.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C1140CBC1F1EC0FC002084AB"
-            BuildableName = "UI Examples.app"
+            BuildableName = "Stripe UI Examples.app"
             BlueprintName = "UI Examples"
             ReferencedContainer = "container:UI Examples.xcodeproj">
          </BuildableReference>
@@ -56,7 +56,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C1140CBC1F1EC0FC002084AB"
-            BuildableName = "UI Examples.app"
+            BuildableName = "Stripe UI Examples.app"
             BlueprintName = "UI Examples"
             ReferencedContainer = "container:UI Examples.xcodeproj">
          </BuildableReference>
@@ -75,7 +75,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C1140CBC1F1EC0FC002084AB"
-            BuildableName = "UI Examples.app"
+            BuildableName = "Stripe UI Examples.app"
             BlueprintName = "UI Examples"
             ReferencedContainer = "container:UI Examples.xcodeproj">
          </BuildableReference>
