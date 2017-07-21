@@ -169,7 +169,6 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
                        completion:(STPTokenCompletionBlock)completion {
     NSCAssert(parameters != nil, @"'parameters' is required to create a token");
     NSCAssert(completion != nil, @"'completion' is required to use the token that is created");
-    NSDate *start = [NSDate date];
     NSString *tokenType = [STPAnalyticsClient tokenTypeFromParameters:parameters];
     [[STPAnalyticsClient sharedClient] logTokenCreationAttemptWithConfiguration:self.configuration
                                                                       tokenType:tokenType];
@@ -177,9 +176,7 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
                                         endpoint:APIEndpointToken
                                       parameters:parameters
                                     deserializer:[STPToken new]
-                                      completion:^(STPToken *object, NSHTTPURLResponse *response, NSError *error) {
-                                          NSDate *end = [NSDate date];
-                                          [[STPAnalyticsClient sharedClient] logRUMWithToken:object configuration:self.configuration response:response start:start end:end];
+                                      completion:^(STPToken *object, __unused NSHTTPURLResponse *response, NSError *error) {
                                           completion(object, error);
                                       }];
 }
