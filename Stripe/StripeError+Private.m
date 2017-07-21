@@ -11,12 +11,12 @@
 
 @implementation NSError (StripePrivate)
 
-+ (NSError *)stp_customerContextMissingKeyProviderError {
++ (NSError *)stp_ephemeralKeyDecodingError {
     NSDictionary *userInfo = @{
                                NSLocalizedDescriptionKey: [self stp_unexpectedErrorMessage],
-                               STPErrorMessageKey: @"STPCustomerContext is missing a key provider. Did you forget to set the singleton instance's key provider?"
+                               STPErrorMessageKey: @"Failed to decode the ephemeral key. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app."
                                };
-    return [[self alloc] initWithDomain:StripeDomain code:STPCustomerContextMissingKeyProviderError userInfo:userInfo];
+    return [[self alloc] initWithDomain:StripeDomain code:STPEphemeralKeyDecodingError userInfo:userInfo];
 }
 
 @end

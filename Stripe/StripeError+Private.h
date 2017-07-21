@@ -10,7 +10,7 @@
 
 @interface NSError (StripePrivate)
 
-+ (NSError *)stp_customerContextMissingKeyProviderError;
++ (NSError *)stp_ephemeralKeyDecodingError;
 
 @end
 

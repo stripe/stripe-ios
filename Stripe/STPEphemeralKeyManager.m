@@ -12,6 +12,7 @@
 #import "STPEphemeralKey.h"
 #import "STPPromise.h"
 #import "StripeError.h"
+#import "StripeError+Private.h"
 
 static NSTimeInterval const DefaultExpirationInterval = 60;
 static NSTimeInterval const MinEagerRefreshInterval = 60*60;
@@ -96,7 +97,15 @@ static NSTimeInterval const MinEagerRefreshInterval = 60*60;
                 if (key) {
                     [self.createKeyPromise succeed:key];
                 } else {
-                    NSError *err = error ?: [NSError stp_genericConnectionError];
+                    NSError *err;
+                    // the API request failed
+                    if (error) {
+                        err = error;
+                    }
+                    // the ephemeral key could not be decoded
+                    else {
+                        err = [NSError stp_ephemeralKeyDecodingError];
+                    }
                     [self.createKeyPromise fail:err];
                 }
                 self.createKeyPromise = nil;
