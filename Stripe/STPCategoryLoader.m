@@ -22,6 +22,7 @@
 #import "STPAPIClient+ApplePay.h"
 #import "STPAspects.h"
 #import "StripeError.h"
+#import "StripeError+Internal.h"
 #import "UIBarButtonItem+Stripe.h"
 #import "UIImage+Stripe.h"
 #import "UINavigationBar+Stripe_Theme.h"
@@ -43,7 +44,7 @@
     linkNSDecimalNumberCurrencyCategory();
     linkNSDictionaryCategory();
     linkNSErrorCategory();
-    linkNSErrorPrivateCategory();
+    linkNSErrorInternalCategory();
     linkNSMutableURLRequestCategory();
     linkNSStringCategory();
     linkNSURLComponentsCategory();

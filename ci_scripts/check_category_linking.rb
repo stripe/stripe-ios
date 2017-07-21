@@ -22,9 +22,17 @@ end).sort
 all_headers = (Dir.glob("Stripe/PublicHeaders/*.h") + Dir.glob("Stripe/*.h")).map do |h|
   filename = File.basename(h)
 end
-categories = (all_headers.select do |h|
-  h.include?("+") && !h.include?("Private") && !h.include?("Fabric")
-end).sort
+
+def is_category(h)
+  if h.include?("+")
+    return !h.include?("Private") && !h.include?("Fabric")
+  else
+    other_categories = ["StripeError.h", "STPAspects.h"]
+    return other_categories.include?(h)
+  end
+end
+
+categories = (all_headers.select {|h| is_category(h) }).sort
 
 missing_categories = categories - loaded_categories
 if missing_categories.count > 0

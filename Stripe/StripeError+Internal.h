@@ -1,5 +1,5 @@
 //
-//  StripeError+Private.h
+//  NSError+StripeInternal.h
 //  Stripe
 //
 //  Created by Ben Guo on 5/22/17.
@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSError (StripePrivate)
+@interface NSError (StripeInternal)
 
 + (NSError *)stp_ephemeralKeyDecodingError;
 
 @end
 
-void linkNSErrorPrivateCategory(void);
+void linkNSErrorInternalCategory(void);

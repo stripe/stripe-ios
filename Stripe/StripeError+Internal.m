@@ -1,15 +1,15 @@
 //
-//  StripeError+Private.m
+//  NSError+StripeInternal.m
 //  Stripe
 //
 //  Created by Ben Guo on 6/22/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-#import "StripeError+Private.h"
+#import "StripeError+Internal.h"
 #import "StripeError.h"
 
-@implementation NSError (StripePrivate)
+@implementation NSError (StripeInternal)
 
 + (NSError *)stp_ephemeralKeyDecodingError {
     NSDictionary *userInfo = @{
@@ -21,4 +21,4 @@
 
 @end
 
-void linkNSErrorPrivateCategory(void) {}
+void linkNSErrorInternalCategory(void) {}

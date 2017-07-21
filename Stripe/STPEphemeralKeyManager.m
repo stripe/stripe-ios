@@ -8,11 +8,10 @@
 
 #import "STPEphemeralKeyManager.h"
 
+#import "StripeError+Internal.h"
 #import "STPCustomerContext.h"
 #import "STPEphemeralKey.h"
 #import "STPPromise.h"
-#import "StripeError.h"
-#import "StripeError+Private.h"
 
 static NSTimeInterval const DefaultExpirationInterval = 60;
 static NSTimeInterval const MinEagerRefreshInterval = 60*60;
