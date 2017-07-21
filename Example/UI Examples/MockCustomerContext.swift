@@ -15,7 +15,12 @@ class MockCustomer: STPCustomer {
     var mockShippingAddress: STPAddress?
 
     override init() {
-        // Preload the mock customer with saved cards
+        /** 
+         Preload the mock customer with saved cards.
+         last4 values are from test cards: https://stripe.com/docs/testing#cards
+         Not using the "4242" and "4444" numbers, since those are the easiest 
+         to remember and fill.
+        */
         let visa = [
             "id": "preloaded_visa",
             "exp_month": "10",

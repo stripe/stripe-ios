@@ -34,7 +34,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		C1140CBD1F1EC0FC002084AB /* UI Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "UI Examples.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1140CBD1F1EC0FC002084AB /* Stripe UI Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe UI Examples.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1140CC01F1EC0FC002084AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C1140CC21F1EC0FC002084AB /* BrowseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseViewController.swift; sourceTree = "<group>"; };
 		C1140CC71F1EC0FC002084AB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -73,7 +73,7 @@
 		C1140CBE1F1EC0FC002084AB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C1140CBD1F1EC0FC002084AB /* UI Examples.app */,
+				C1140CBD1F1EC0FC002084AB /* Stripe UI Examples.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -121,7 +121,7 @@
 			);
 			name = "UI Examples";
 			productName = "UI Examples";
-			productReference = C1140CBD1F1EC0FC002084AB /* UI Examples.app */;
+			productReference = C1140CBD1F1EC0FC002084AB /* Stripe UI Examples.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -308,7 +308,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Stripe UI Examples";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -322,7 +322,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.uiexamples;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Stripe UI Examples";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

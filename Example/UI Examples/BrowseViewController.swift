@@ -11,22 +11,31 @@ import Stripe
 
 class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate, STPPaymentMethodsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
 
-    enum Demo: String {
+    enum Demo: Int {
         static let count = 5
-        case STPPaymentCardTextField = "Card Field"
-        case STPAddCardViewController = "Card Form"
-        case STPPaymentMethodsViewController = "Payment Methods"
-        case STPShippingInfoViewController = "Shipping Info"
-        case ChangeTheme = "Change Theme"
+        case STPPaymentCardTextField
+        case STPAddCardViewController
+        case STPPaymentMethodsViewController
+        case STPShippingInfoViewController
+        case ChangeTheme
 
-        init?(row: Int) {
-            switch row {
-            case 0: self = .STPPaymentCardTextField
-            case 1: self = .STPAddCardViewController
-            case 2: self = .STPPaymentMethodsViewController
-            case 3: self = .STPShippingInfoViewController
-            case 4: self = .ChangeTheme
-            default: return nil
+        var title: String {
+            switch self {
+            case .STPPaymentCardTextField: return "Card Field"
+            case .STPAddCardViewController: return "Card Form"
+            case .STPPaymentMethodsViewController: return "Payment Methods"
+            case .STPShippingInfoViewController: return "Shipping Info"
+            case .ChangeTheme: return "Change Theme"
+            }
+        }
+
+        var detail: String {
+            switch self {
+            case .STPPaymentCardTextField: return "STPPaymentCardTextField"
+            case .STPAddCardViewController: return "STPAddCardViewController"
+            case .STPPaymentMethodsViewController: return "STPPaymentMethodsViewController"
+            case .STPShippingInfoViewController: return "STPShippingInfoViewController"
+            case .ChangeTheme: return ""
             }
         }
     }
@@ -36,8 +45,9 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "UI Examples"
+        title = "Stripe UI Examples"
         tableView.tableFooterView = UIView()
+        tableView.rowHeight = 60
         navigationController?.navigationBar.isTranslucent = false
         STPAddCardViewController.startMockingAPIClient()
     }
@@ -53,22 +63,26 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-        if let example = Demo(row: indexPath.row) {
-            cell.textLabel?.text = example.rawValue
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+        if let example = Demo(rawValue: indexPath.row) {
+            cell.textLabel?.text = example.title
+            cell.detailTextLabel?.text = example.detail
         }
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard let example = Demo(row: indexPath.row) else { return }
+        guard let example = Demo(rawValue: indexPath.row) else { return }
         let theme = themeViewController.theme.stpTheme
 
         switch example {
         case .STPPaymentCardTextField:
             let viewController = CardFieldViewController()
-            navigationController?.pushViewController(viewController, animated: true)
+            viewController.theme = theme
+            let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.navigationBar.stp_theme = theme
+            present(navigationController, animated: true, completion: nil)
         case .STPAddCardViewController:
             let config = STPPaymentConfiguration()
             config.requiredBillingAddressFields = .full
@@ -87,7 +101,6 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                                                                  customerContext: self.customerContext,
                                                                  delegate: self)
             let navigationController = UINavigationController(rootViewController: viewController)
-            navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
         case .STPShippingInfoViewController:
             let config = STPPaymentConfiguration()
@@ -103,7 +116,8 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
         case .ChangeTheme:
-            self.navigationController?.pushViewController(self.themeViewController, animated: true)
+            let navigationController = UINavigationController(rootViewController: self.themeViewController)
+            present(navigationController, animated: true, completion: nil)
         }
     }
 

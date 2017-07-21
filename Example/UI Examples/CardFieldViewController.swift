@@ -12,6 +12,7 @@ import Stripe
 class CardFieldViewController: UIViewController {
 
     let cardField = STPPaymentCardTextField()
+    var theme = STPTheme.default()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,6 +20,19 @@ class CardFieldViewController: UIViewController {
         view.backgroundColor = UIColor.white
         view.addSubview(cardField)
         edgesForExtendedLayout = []
+        view.backgroundColor = theme.primaryBackgroundColor
+        cardField.backgroundColor = theme.secondaryBackgroundColor
+        cardField.textColor = theme.primaryForegroundColor
+        cardField.placeholderColor = theme.secondaryForegroundColor
+        cardField.borderColor = theme.accentColor
+        cardField.borderWidth = 1.0
+        cardField.textErrorColor = theme.errorColor
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        navigationController?.navigationBar.stp_theme = theme
+    }
+
+    func done() {
+        dismiss(animated: true, completion: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {

@@ -58,6 +58,11 @@ class ThemeViewController: UITableViewController {
         super.viewDidLoad()
         title = "Change Theme"
         tableView.tableFooterView = UIView()
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
+    }
+
+    func cancel() {
+        dismiss(animated: true, completion: nil)
     }
 
     // MARK: - Table view data source
@@ -83,6 +88,7 @@ class ThemeViewController: UITableViewController {
         guard let theme = Theme(row: indexPath.row) else { return }
         self.theme = theme
         tableView.reloadSections(IndexSet(integer: (indexPath as NSIndexPath).section), with: .automatic)
+        dismiss(animated: true, completion: nil)
     }
 
 
