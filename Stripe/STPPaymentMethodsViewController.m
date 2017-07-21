@@ -178,7 +178,18 @@
 
 - (void)finishWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
     if ([paymentMethod isKindOfClass:[STPCard class]]) {
+        // Make this payment method the default source
         [self.apiAdapter selectDefaultCustomerSource:(STPCard *)paymentMethod completion:^(__unused NSError *error) {
+            // Reload the internal payment methods view controller with the updated customer
+            STPPromise<STPPaymentMethodTuple *> *promise = [self retrieveCustomerWithConfiguration:self.configuration apiAdapter:self.apiAdapter];
+            [promise onSuccess:^(STPPaymentMethodTuple *tuple) {
+                stpDispatchToMainThreadIfNecessary(^{
+                    if ([self.internalViewController isKindOfClass:[STPPaymentMethodsInternalViewController class]]) {
+                        STPPaymentMethodsInternalViewController *paymentMethodsVC = (STPPaymentMethodsInternalViewController *)self.internalViewController;
+                        [paymentMethodsVC updateWithPaymentMethodTuple:tuple];
+                    }
+                });
+            }];
         }];
     }
     if ([self.delegate respondsToSelector:@selector(paymentMethodsViewController:didSelectPaymentMethod:)]) {
@@ -201,16 +212,6 @@
 
 - (void)internalViewControllerDidCreateToken:(STPToken *)token completion:(STPErrorBlock)completion {
     [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *error) {
-        STPPromise<STPPaymentMethodTuple *> *promise = [self retrieveCustomerWithConfiguration:self.configuration apiAdapter:self.apiAdapter];
-        [promise onSuccess:^(STPPaymentMethodTuple *tuple) {
-            stpDispatchToMainThreadIfNecessary(^{
-                if ([self.internalViewController isKindOfClass:[STPPaymentMethodsInternalViewController class]]) {
-                    STPPaymentMethodsInternalViewController *paymentMethodsVC = (STPPaymentMethodsInternalViewController *)self.internalViewController;
-                    [paymentMethodsVC updateWithPaymentMethodTuple:tuple];
-                }
-            });
-        }];
-
         stpDispatchToMainThreadIfNecessary(^{
             completion(error);
             if (!error) {
