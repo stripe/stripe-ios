@@ -101,6 +101,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                                                                  customerContext: self.customerContext,
                                                                  delegate: self)
             let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
         case .STPShippingInfoViewController:
             let config = STPPaymentConfiguration()
