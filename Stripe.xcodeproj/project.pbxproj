@@ -450,6 +450,8 @@
 		C15993461D8829C00047950D /* stp_shipping_form@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993211D8807930047950D /* stp_shipping_form@2x.png */; };
 		C15993471D8829C00047950D /* stp_shipping_form@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C15993221D8807930047950D /* stp_shipping_form@3x.png */; };
 		C15B02731EA176090026E606 /* StripeErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C15B02721EA176090026E606 /* StripeErrorTest.m */; };
+		C16A47481F227E7300E2C7E0 /* StripeError+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = C16A47471F227E7300E2C7E0 /* StripeError+Private.m */; };
+		C16A47491F227E7300E2C7E0 /* StripeError+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = C16A47471F227E7300E2C7E0 /* StripeError+Private.m */; };
 		C16F66AB1CA21BAC006A21B5 /* STPFormTextFieldTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */; };
 		C16FC79D1EEB39C3001CBD3A /* STPCustomerContext+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = C16FC79C1EEB39C3001CBD3A /* STPCustomerContext+Private.h */; };
 		C16FC79E1EEB39C3001CBD3A /* STPCustomerContext+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = C16FC79C1EEB39C3001CBD3A /* STPCustomerContext+Private.h */; };
@@ -1045,6 +1047,7 @@
 		C15993311D8808680047950D /* STPShippingMethodTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPShippingMethodTableViewCell.h; sourceTree = "<group>"; };
 		C15993321D8808680047950D /* STPShippingMethodTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPShippingMethodTableViewCell.m; sourceTree = "<group>"; };
 		C15B02721EA176090026E606 /* StripeErrorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StripeErrorTest.m; sourceTree = "<group>"; };
+		C16A47471F227E7300E2C7E0 /* StripeError+Private.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "StripeError+Private.m"; sourceTree = "<group>"; };
 		C16F66AA1CA21BAC006A21B5 /* STPFormTextFieldTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPFormTextFieldTest.m; sourceTree = "<group>"; };
 		C16FC79C1EEB39C3001CBD3A /* STPCustomerContext+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPCustomerContext+Private.h"; sourceTree = "<group>"; };
 		C1785F5A1EC60B5E00E9CFAC /* STPCardIOProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPCardIOProxy.h; sourceTree = "<group>"; };
@@ -1643,6 +1646,7 @@
 				045D711E1CEFA57000F6CD65 /* UIViewController+Stripe_Promises.h */,
 				045D711F1CEFA57000F6CD65 /* UIViewController+Stripe_Promises.m */,
 				C1A5E5F31ED3A71C00C79B0F /* StripeError+Private.h */,
+				C16A47471F227E7300E2C7E0 /* StripeError+Private.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -2733,6 +2737,7 @@
 				F12C8DC51D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m in Sources */,
 				04633B011CD129CB009D4FB5 /* STPPhoneNumberValidator.m in Sources */,
 				F152322D1EA9306100D65C67 /* NSURLComponents+Stripe.m in Sources */,
+				C16A47491F227E7300E2C7E0 /* StripeError+Private.m in Sources */,
 				C159933F1D88089B0047950D /* STPShippingMethodsViewController.m in Sources */,
 				04A488451CA3580700506E53 /* UINavigationController+Stripe_Completion.m in Sources */,
 				049E84CF1A605DE0000B66CD /* STPBankAccount.m in Sources */,
@@ -2788,6 +2793,7 @@
 				049A3F921CC740FF00F57DE7 /* NSDecimalNumber+Stripe_Currency.m in Sources */,
 				C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */,
 				04B31DE81D09D25F00EF1631 /* STPPaymentMethodsInternalViewController.m in Sources */,
+				C16A47481F227E7300E2C7E0 /* StripeError+Private.m in Sources */,
 				F1D3A25C1EB014BD0095BFA9 /* UIImage+Stripe.m in Sources */,
 				F1DEB8921E2052150066B8E8 /* STPCoreScrollViewController.m in Sources */,
 				0438EF2F1B7416BB00D506CC /* STPFormTextField.m in Sources */,

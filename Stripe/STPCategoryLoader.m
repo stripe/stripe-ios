@@ -43,6 +43,7 @@
     linkNSDecimalNumberCurrencyCategory();
     linkNSDictionaryCategory();
     linkNSErrorCategory();
+    linkNSErrorPrivateCategory();
     linkNSMutableURLRequestCategory();
     linkNSStringCategory();
     linkNSURLComponentsCategory();
