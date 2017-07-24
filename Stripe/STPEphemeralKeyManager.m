@@ -96,17 +96,15 @@ static NSTimeInterval const MinEagerRefreshInterval = 60*60;
                 if (key) {
                     [self.createKeyPromise succeed:key];
                 } else {
-                    NSError *err;
                     // the API request failed
                     if (error) {
-                        err = error;
+                        [self.createKeyPromise fail:error];
                     }
                     // the ephemeral key could not be decoded
                     else {
+                        [self.createKeyPromise fail:[NSError stp_ephemeralKeyDecodingError]];
                         NSAssert(NO, @"Could not parse the ephemeral key response. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api");
-                        err = [NSError stp_ephemeralKeyDecodingError];
                     }
-                    [self.createKeyPromise fail:err];
                 }
                 self.createKeyPromise = nil;
             }];
