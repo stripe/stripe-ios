@@ -13,5 +13,3 @@
 + (NSError *)stp_ephemeralKeyDecodingError;
 
 @end
-
-void linkNSErrorInternalCategory(void);
