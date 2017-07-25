@@ -1,5 +1,5 @@
 //
-//  STPNSArrayStripeBoundSafeTests.m
+//  NSArray+StripeTest.m
 //  Stripe
 //
 //  Created by Jack Flintermann on 1/19/16.
@@ -7,13 +7,14 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "NSArray+Stripe_BoundSafe.h"
 
-@interface NSArray_StripeBoundSafeTests : XCTestCase
+#import "NSArray+Stripe.h"
+
+@interface NSArray_StripeTest : XCTestCase
 
 @end
 
-@implementation NSArray_StripeBoundSafeTests
+@implementation NSArray_StripeTest
 
 - (void)testEmptyArray {
     XCTAssertNil([@[] stp_boundSafeObjectAtIndex:5]);

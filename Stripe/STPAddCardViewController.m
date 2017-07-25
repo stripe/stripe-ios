@@ -8,7 +8,7 @@
 
 #import "STPAddCardViewController.h"
 
-#import "NSArray+Stripe_BoundSafe.h"
+#import "NSArray+Stripe.h"
 #import "STPAddressFieldTableViewCell.h"
 #import "STPAddressViewModel.h"
 #import "STPAnalyticsClient.h"

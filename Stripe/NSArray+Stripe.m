@@ -6,9 +6,9 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "NSArray+Stripe_BoundSafe.h"
+#import "NSArray+Stripe.h"
 
-@implementation NSArray (Stripe_BoundSafe)
+@implementation NSArray (Stripe)
 
 - (nullable id)stp_boundSafeObjectAtIndex:(NSInteger)index {
     if (index + 1 > (NSInteger)self.count || index < 0) {
@@ -19,4 +19,4 @@
 
 @end
 
-void linkNSArrayBoundSafeCategory(void){}
+void linkNSArrayCategory(void){}

@@ -10,7 +10,7 @@
 
 #import "STPCategoryLoader.h"
 
-#import "NSArray+Stripe_BoundSafe.h"
+#import "NSArray+Stripe.h"
 #import "NSBundle+Stripe_AppName.h"
 #import "NSCharacterSet+Stripe.h"
 #import "NSDecimalNumber+Stripe_Currency.h"
@@ -39,7 +39,7 @@
 
 + (void)loadCategories {
     linkAspectsCategory();
-    linkNSArrayBoundSafeCategory();
+    linkNSArrayCategory();
     linkNSBundleAppNameCategory();
     linkNSDecimalNumberCurrencyCategory();
     linkNSDictionaryCategory();
