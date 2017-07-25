@@ -1,5 +1,5 @@
 //
-//  StripeError+Private.h
+//  NSError+StripePrivate.h
 //  Stripe
 //
 //  Created by Ben Guo on 5/22/17.
@@ -10,8 +10,6 @@
 
 @interface NSError (StripePrivate)
 
-+ (NSError *)stp_customerContextMissingKeyProviderError;
++ (NSError *)stp_ephemeralKeyDecodingError;
 
 @end
-
-void linkNSErrorPrivateCategory(void);

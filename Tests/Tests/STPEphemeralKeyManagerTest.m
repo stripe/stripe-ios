@@ -12,6 +12,7 @@
 #import "STPEphemeralKey.h"
 #import "STPEphemeralKeyManager.h"
 #import "STPFixtures.h"
+#import "StripeError+Private.h"
 
 @interface STPEphemeralKeyManager (Testing)
 @property (nonatomic) STPEphemeralKey *customerKey;
@@ -98,7 +99,7 @@
     OCMStub([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg isEqual:self.apiVersion]
                                                   completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
-            STPJSONResponseCompletionBlock completion;
+        STPJSONResponseCompletionBlock completion;
         [invocation getArgument:&completion atIndex:3];
         [createExp fulfill];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1*NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -119,6 +120,28 @@
         [getExp2 fulfill];
     }];
 
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testGetCustomerKeyThrowsExceptionWhenDecodingFails {
+    XCTestExpectation *exp1 = [self expectationWithDescription:@"createCustomerKey"];
+    NSDictionary *invalidKeyResponse = @{@"foo": @"bar"};
+    id mockKeyProvider = OCMProtocolMock(@protocol(STPEphemeralKeyProvider));
+    OCMStub([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg isEqual:self.apiVersion]
+                                                  completion:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation) {
+        STPJSONResponseCompletionBlock completion;
+        [invocation getArgument:&completion atIndex:3];
+        XCTAssertThrows(completion(invalidKeyResponse, nil));
+        [exp1 fulfill];
+    });
+    STPEphemeralKeyManager *sut = [[STPEphemeralKeyManager alloc] initWithKeyProvider:mockKeyProvider apiVersion:self.apiVersion];
+    XCTestExpectation *exp2 = [self expectationWithDescription:@"retrieve"];
+    [sut getCustomerKey:^(STPEphemeralKey *resourceKey, NSError *error) {
+        XCTAssertNil(resourceKey);
+        XCTAssertEqualObjects(error, [NSError stp_ephemeralKeyDecodingError]);
+        [exp2 fulfill];
+    }];
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
