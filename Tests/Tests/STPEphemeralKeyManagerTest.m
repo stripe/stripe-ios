@@ -12,7 +12,7 @@
 #import "STPEphemeralKey.h"
 #import "STPEphemeralKeyManager.h"
 #import "STPFixtures.h"
-#import "StripeError+Internal.h"
+#import "StripeError+Private.h"
 
 @interface STPEphemeralKeyManager (Testing)
 @property (nonatomic) STPEphemeralKey *customerKey;
