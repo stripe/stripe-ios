@@ -76,6 +76,9 @@
 /* Caption for Phone field on address form */
 "Phone" = "电话";
 
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "邮政";
+
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "邮政编码";
 
@@ -92,7 +95,7 @@
 "Shipping Address" = "送货地址";
 
 /* Label for shipping method form */
-"Shipping Method" = "配送方式";
+"Shipping Method" = "送货方式";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "州";
@@ -132,6 +135,9 @@
 
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "您的银行卡安全码无效";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "邮政编码";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "邮政编码";
