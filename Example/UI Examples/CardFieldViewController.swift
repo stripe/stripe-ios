@@ -27,6 +27,7 @@ class CardFieldViewController: UIViewController {
         cardField.borderColor = theme.accentColor
         cardField.borderWidth = 1.0
         cardField.textErrorColor = theme.errorColor
+        cardField.postalCodeEntryEnabled = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
         navigationController?.navigationBar.stp_theme = theme
     }
