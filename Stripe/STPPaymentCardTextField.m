@@ -1185,7 +1185,7 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
     NSNumber *cachedValue = self.textToWidthCache[text];
     if (cachedValue == nil) {
         self.sizingField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
-        [self.sizingField setText:text];
+        [self.sizingField setText:STPNonLocalizedString(text)];
         cachedValue = @([self widthForAttributedText:self.sizingField.attributedText]);
         self.textToWidthCache[text] = cachedValue;
     }
