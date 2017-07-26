@@ -297,8 +297,8 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 
 - (void)testCreateSource_alipay {
     STPSourceParams *params = [STPSourceParams alipayParamsWithAmount:1099
-                                                                   currency:@"usd"
-                                                                  returnURL:@"https://shop.example.com/crtABC"];
+                                                             currency:@"usd"
+                                                            returnURL:@"https://shop.example.com/crtABC"];
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Alipay Source creation"];
