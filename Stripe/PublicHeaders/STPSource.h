@@ -74,6 +74,7 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
     STPSourceTypeSEPADebit,
     STPSourceTypeSofort,
     STPSourceTypeThreeDSecure,
+    STPSourceTypeAlipay,
     STPSourceTypeUnknown,
 };
 

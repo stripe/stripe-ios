@@ -248,6 +248,17 @@
     return params;
 }
 
++ (STPSourceParams *)alipayParamsWithAmount:(NSUInteger)amount
+                                   currency:(NSString *)currency
+                                  returnURL:(NSString *)returnURL {
+    STPSourceParams *params = [self new];
+    params.type = STPSourceTypeAlipay;
+    params.amount = @(amount);
+    params.currency = currency;
+    params.redirect = @{ @"return_url": returnURL };
+    return params;
+}
+
 #pragma mark - Redirect Dictionary
 
 /**

@@ -57,6 +57,7 @@
              @"sepa_debit": @(STPSourceTypeSEPADebit),
              @"sofort": @(STPSourceTypeSofort),
              @"three_d_secure": @(STPSourceTypeThreeDSecure),
+             @"alipay": @(STPSourceTypeAlipay),
              };
 }
 
