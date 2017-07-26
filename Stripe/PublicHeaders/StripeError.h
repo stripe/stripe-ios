@@ -22,14 +22,22 @@ STP_ERROR_ENUM(NSInteger, STPErrorCode, StripeDomain) {
 #else
 typedef NS_ENUM(NSInteger, STPErrorCode) {
 #endif
-    STPConnectionError = 40,     // Trouble connecting to Stripe.
-    STPInvalidRequestError = 50, // Your request had invalid parameters.
-    STPAPIError = 60,            // General-purpose API error.
-    STPCardError = 70,           // Something was wrong with the given card details.
-    STPCancellationError = 80,   // The operation was cancelled.
-    STPCheckoutUnknownError = 5000,   // Checkout failed
-    STPCheckoutTooManyAttemptsError = 5001,   // Too many incorrect code attempts
-    STPCustomerContextMissingKeyProviderError = 30000,  // STPCustomerContext is missing a key provider.
+    // Trouble connecting to Stripe.
+    STPConnectionError = 40,
+    // Your request had invalid parameters.
+    STPInvalidRequestError = 50,
+    // General-purpose API error.
+    STPAPIError = 60,
+    // Something was wrong with the given card details.
+    STPCardError = 70,
+    // The operation was cancelled.
+    STPCancellationError = 80,
+    /**
+     The ephemeral key could not be decoded. Make sure your backend is sending
+     the unmodified JSON of the ephemeral key to your app.
+     https://stripe.com/docs/mobile/ios/standard#prepare-your-api
+     */
+    STPEphemeralKeyDecodingError = 1000,
 };
 
 #pragma mark userInfo keys
@@ -80,8 +88,6 @@ FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectCVC;
 + (nullable NSError *)stp_errorFromStripeResponse:(nullable NSDictionary *)jsonDictionary;
 + (nonnull NSError *)stp_genericConnectionError;
 + (nonnull NSError *)stp_genericFailedToParseResponseError;
-- (BOOL)stp_isUnknownCheckoutError;
-- (BOOL)stp_isURLSessionCancellationError;
 
 #pragma mark Strings
 

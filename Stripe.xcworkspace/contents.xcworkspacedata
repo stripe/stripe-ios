@@ -5,9 +5,12 @@
       location = "group:Stripe.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Example/Stripe iOS Example (Simple).xcodeproj">
+      location = "group:Example/UI Examples.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Example/Stripe iOS Example (Custom).xcodeproj">
+      location = "group:Example/Standard Integration (Swift).xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Example/Custom Integration (ObjC).xcodeproj">
    </FileRef>
 </Workspace>

@@ -27,7 +27,7 @@ NSString *const STPCardDeclined = @"com.stripe.lib:CardDeclined";
 NSString *const STPProcessingError = @"com.stripe.lib:ProcessingError";
 NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
 
-@implementation NSError(Stripe)
+@implementation NSError (Stripe)
 
 + (NSError *)stp_errorFromStripeResponse:(NSDictionary *)jsonDictionary {
     NSDictionary *errorDictionary = jsonDictionary[@"error"];
@@ -105,14 +105,6 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
     return [[self alloc] initWithDomain:StripeDomain code:STPConnectionError userInfo:userInfo];
 }
 
-- (BOOL)stp_isUnknownCheckoutError {
-    return self.code == STPCheckoutUnknownError;
-}
-
-- (BOOL)stp_isURLSessionCancellationError {
-    return [self.domain isEqualToString:NSURLErrorDomain] && self.code == NSURLErrorCancelled;
-}
-
 #pragma mark Strings
 
 + (nonnull NSString *)stp_cardErrorInvalidNumberUserMessage {
@@ -145,6 +137,18 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
 
 + (nonnull NSString *)stp_cardErrorProcessingErrorUserMessage {
     return STPLocalizedString(@"There was an error processing your card -- try again in a few seconds", @"Error when there is a problem processing the credit card");
+}
+
+@end
+
+@implementation NSError (StripeInternal)
+
++ (NSError *)stp_ephemeralKeyDecodingError {
+    NSDictionary *userInfo = @{
+                               NSLocalizedDescriptionKey: [self stp_unexpectedErrorMessage],
+                               STPErrorMessageKey: @"Failed to decode the ephemeral key. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app."
+                               };
+    return [[self alloc] initWithDomain:StripeDomain code:STPEphemeralKeyDecodingError userInfo:userInfo];
 }
 
 @end

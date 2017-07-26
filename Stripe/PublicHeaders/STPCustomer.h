@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The customer's shipping address.
  */
-@property(nonatomic, readonly) STPAddress *shippingAddress;
+@property(nonatomic, readonly, nullable) STPAddress *shippingAddress;
 
 @end
 

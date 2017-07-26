@@ -316,6 +316,15 @@
 <p>The Stripe iOS SDK make it easy to collect your users&rsquo; credit card details inside your iOS app. By creating <a href="https://stripe.com/docs/api#tokens">tokens</a>, Stripe handles the bulk of PCI compliance by preventing sensitive card data from hitting your server (for more, see <a href="https://support.stripe.com/questions/do-i-need-to-be-pci-compliant-what-do-i-have-to-do">our article about PCI compliance</a>).</p>
 
 <p>We also offer <a href="https://stripe.com/apple-pay">seamless integration</a> with <a href="https://www.apple.com/apple-pay/">Apple Pay</a> that will allow you to securely collect payments from your customers in a way that prevents them from having to re-enter their credit card information.</p>
+
+<blockquote>
+<p>Note: we&rsquo;ve greatly simplified the integration for <code>STPPaymentContext</code> in <a href="https://github.com/stripe/stripe-ios/releases/v11.0.0">v11.0.0</a>. If you integrated <code>STPPaymentContext</code> prior to this and you&rsquo;re interested in migrating, we&rsquo;ve written a <a href="https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migration-from-versions--1100">migration guide</a>.</p>
+</blockquote>
+<a href='#releases' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='releases'>Releases</h2>
+
+<p>We recommend you only use official versioned releases of the sdk (accessible from Github&rsquo;s <a href="https://github.com/stripe/stripe-ios/releases">Releases</a> page) as the master branch is considered unstable.</p>
+
+<p>If you&rsquo;re reading this on github.com, make sure you are looking at the version that matches the release you have installed, otherwise the instructions and example code may be mismatched. You can read the latest released version of this readme and browse the associated code on Github via <a href="https://github.com/stripe/stripe-ios/tree/v11.1.0">this link</a>.</p>
 <a href='#requirements' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='requirements'>Requirements</h2>
 
 <p>Our SDK is compatible with iOS apps supporting iOS 8.0 and above. It requires Xcode 8.0+ to build the source.</p>
@@ -329,8 +338,8 @@
 <a href='#example-apps' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='example-apps'>Example apps</h2>
 
 <p>There are 2 example apps included in the repository:
-- Stripe iOS Example (Simple) shows an integration using our prebuilt UI components [Swift]
-- Stripe iOS Example (Custom) shows how to use our low-level methods to accept payments using several different payment methods [Objective-C].</p>
+- Standard Integration (Swift) shows an integration using our prebuilt UI components.
+- Custom Integration (ObjC) shows how to use our low-level methods to accept payments using several different payment methods.</p>
 
 <p>To build the example apps, you&rsquo;ll need to first run <code>./setup.sh</code>. Then, open <code>Stripe.xcworkspace</code> and choose the appropriate scheme.</p>
 <a href='#getting-started-with-the-ios-example-apps' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='getting-started-with-the-ios-example-apps'>Getting started with the iOS example apps</h3>
@@ -341,8 +350,8 @@
 
 <ol>
 <li>If you haven&rsquo;t already, sign up for a <a href="https://dashboard.stripe.com/register">Stripe account</a> (it takes seconds). Then go to <a href="https://dashboard.stripe.com/account/apikeys">https://dashboard.stripe.com/account/apikeys</a>.</li>
-<li>Replace the <code>stripePublishableKey</code> constant in CheckoutViewController.swift (for the Simple app) or Constants.m (for the Custom app) with your Test Publishable Key.</li>
-<li>Head to <a href="https://github.com/stripe/example-ios-backend">https://github.com/stripe/example-ios-backend</a> and click <q>Deploy to Heroku</q> (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under &lsquo;Env&rsquo;. Click <q>Deploy for Free</q>.</li>
+<li>Replace the <code>stripePublishableKey</code> constant in CheckoutViewController.swift (for the Standard Integration app) or Constants.m (for the Custom Integration app) with your Test Publishable Key.</li>
+<li>Head to <a href="https://github.com/stripe/example-ios-backend/tree/v11.0.0">https://github.com/stripe/example-ios-backend/tree/v11.0.0</a> and click <q>Deploy to Heroku</q> (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under &lsquo;Env&rsquo;. Click <q>Deploy for Free</q>.</li>
 <li>Replace the <code>backendBaseURL</code> variable in the example iOS app with the app URL Heroku provides you with (e.g. <q>https://my-example-app.herokuapp.com</q>)</li>
 </ol>
 
@@ -351,7 +360,7 @@
 
 <p>To add card scanning capabilities to our prebuilt UI components, you can simply <a href="https://github.com/card-io/card.io-iOS-SDK#setup">install card.io</a> alongside our SDK. You&rsquo;ll also need to set <code>NSCameraUsageDescription</code> in your application&rsquo;s plist, and provide a reason for accessing the camera (e.g. <q>To scan cards</q>).</p>
 
-<p>To try this out, you can run <code>./install_cardio.rb</code>, which will download and install card.io in Stripe iOS Example (Simple). Now, when you run the example app on a device, you&rsquo;ll see a <q>Scan Card</q> button when adding a new card.</p>
+<p>To try this out, you can run <code>./install_cardio.rb</code>, which will download and install card.io in Standard Integration (Swift). Now, when you run the example app on a device, you&rsquo;ll see a <q>Scan Card</q> button when adding a new card.</p>
 <a href='#running-the-tests' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='running-the-tests'>Running the tests</h2>
 
 <ol>
@@ -372,7 +381,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-06-28)</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-19)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

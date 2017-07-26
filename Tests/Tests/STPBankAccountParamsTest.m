@@ -11,21 +11,17 @@
 #import "STPBankAccountParams.h"
 #import "STPBankAccountParams+Private.h"
 
+@interface STPBankAccountParams ()
+
+- (NSString *)accountHolderTypeString;
+
+@end
+
 @interface STPBankAccountParamsTest : XCTestCase
 
 @end
 
 @implementation STPBankAccountParamsTest
-
-- (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
-
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
-}
 
 #pragma mark -
 
@@ -82,14 +78,8 @@
 
 #pragma mark - Description Tests
 
-- (void)testDescriptionWorks {
+- (void)testDescription {
     STPBankAccountParams *bankAccountParams = [[STPBankAccountParams alloc] init];
-    bankAccountParams.accountNumber = @"000123456789";
-    bankAccountParams.routingNumber = @"123456789";
-    bankAccountParams.country = @"US";
-    bankAccountParams.currency = @"usd";
-    bankAccountParams.accountHolderName = @"John Doe";
-    bankAccountParams.accountHolderType = STPBankAccountHolderTypeCompany;
     XCTAssert(bankAccountParams.description);
 }
 
@@ -105,6 +95,7 @@
     NSDictionary *mapping = [STPBankAccountParams propertyNamesToFormFieldNamesMapping];
 
     for (NSString *propertyName in [mapping allKeys]) {
+        XCTAssertFalse([propertyName containsString:@":"]);
         XCTAssert([bankAccountParams respondsToSelector:NSSelectorFromString(propertyName)]);
     }
 

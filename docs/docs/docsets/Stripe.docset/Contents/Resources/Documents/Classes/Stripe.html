@@ -335,7 +335,7 @@
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Set your Stripe API key with this method. New instances of STPAPIClient will be initialized with this value. You should call this method as early as
-  possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.</p>
+possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.</p>
 
 <div class="aside aside-warning">
     <p class="aside-title">Warning</p>
@@ -413,7 +413,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L39">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L41">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -442,8 +442,9 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Whether or not this device is capable of using Apple Pay. This checks both whether the user is running an iPhone 6/6+ or later, iPad Air 2 or later, or iPad
-mini 3 or later, as well as whether or not they have stored any cards in Apple Pay on their device.</p>
+                        <p>Whether or not this device is capable of using Apple Pay. This checks both 
+whether the device supports Apple Pay, as well as whether or not they have 
+stored Apple Pay cards on their device.</p>
 
                       </div>
                       <div class="declaration">
@@ -471,8 +472,9 @@ mini 3 or later, as well as whether or not they have stored any cards in Apple P
                               </td>
                               <td>
                                 <div>
-                                  <p>The return value of this method depends on the <code>supportedNetworks</code> property of this payment request, which by default should be
-<code>
+                                  <p>The return value of this method depends on the
+ <code>supportedNetworks</code> property of this payment request, which by default should be
+ <code>
 @
 [PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa, PKPaymentNetworkDiscover]</code>.</p>
 
@@ -488,7 +490,7 @@ mini 3 or later, as well as whether or not they have stored any cards in Apple P
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L157">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L189">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -507,12 +509,12 @@ mini 3 or later, as well as whether or not they have stored any cards in Apple P
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>A convenience method to build a <code>PKPaymentRequest</code> with sane default values.
-  You will still need to configure the <code>paymentSummaryItems</code> property to indicate
-  what the user is purchasing, as well as the optional <code>requiredShippingAddressFields</code>,
-  <code>requiredBillingAddressFields</code>, and <code>shippingMethods</code> properties to indicate
-  what contact information your application requires.
-  Note that this method sets the payment request&rsquo;s countryCode to <q>US</q> and its
-  currencyCode to <q>USD</q>.</p>
+You will still need to configure the <code>paymentSummaryItems</code> property to indicate
+what the user is purchasing, as well as the optional <code>requiredShippingAddressFields</code>,
+<code>requiredBillingAddressFields</code>, and <code>shippingMethods</code> properties to indicate
+what contact information your application requires.
+Note that this method sets the payment request&rsquo;s countryCode to <q>US</q> and its
+currencyCode to <q>USD</q>.</p>
 
                       </div>
                       <div class="declaration">
@@ -557,7 +559,7 @@ mini 3 or later, as well as whether or not they have stored any cards in Apple P
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L177">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L209">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -576,10 +578,10 @@ mini 3 or later, as well as whether or not they have stored any cards in Apple P
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>A convenience method to build a <code>PKPaymentRequest</code> with sane default values.
-  You will still need to configure the <code>paymentSummaryItems</code> property to indicate
-  what the user is purchasing, as well as the optional <code>requiredShippingAddressFields</code>,
-  <code>requiredBillingAddressFields</code>, and <code>shippingMethods</code> properties to indicate
-  what contact information your application requires.</p>
+You will still need to configure the <code>paymentSummaryItems</code> property to indicate
+what the user is purchasing, as well as the optional <code>requiredShippingAddressFields</code>,
+<code>requiredBillingAddressFields</code>, and <code>shippingMethods</code> properties to indicate
+what contact information your application requires.</p>
 
                       </div>
                       <div class="declaration">
@@ -618,7 +620,7 @@ mini 3 or later, as well as whether or not they have stored any cards in Apple P
                               </td>
                               <td>
                                 <div>
-                                  <pre class="highlight plaintext"><code>  The two-letter code for the country where the payment
+                                  <pre class="highlight plaintext"><code>   The two-letter code for the country where the payment
 </code></pre>
 
 <p>will be processed. This should be the country of your Stripe account.</p>
@@ -634,7 +636,7 @@ mini 3 or later, as well as whether or not they have stored any cards in Apple P
                               </td>
                               <td>
                                 <div>
-                                  <pre class="highlight plaintext"><code> The three-letter code for the currency used by this
+                                  <pre class="highlight plaintext"><code>  The three-letter code for the currency used by this
 </code></pre>
 
 <p>payment request. Apple Pay interprets the amounts provided by the summary items
@@ -654,7 +656,7 @@ attached to this request as amounts in this currency.</p>
 
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L195-L197">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPAPIClient.h#L227-L229">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -667,7 +669,7 @@ attached to this request as amounts in this currency.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-06-28)</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-19)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

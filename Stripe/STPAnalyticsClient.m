@@ -115,10 +115,6 @@
 #endif
 }
 
-+ (NSNumber *)timestampWithDate:(NSDate *)date {
-    return @((NSInteger)([date timeIntervalSince1970]*1000));
-}
-
 + (NSString *)tokenTypeFromParameters:(NSDictionary *)parameters {
     if ([parameters.allKeys count] == 1) {
         NSArray *validTypes = @[@"bank_account", @"card", @"pii"];
@@ -212,36 +208,6 @@
                                         }];
     [payload addEntriesFromDictionary:[self productUsageDictionary]];
     [payload addEntriesFromDictionary:configurationDictionary];
-    [self logPayload:payload];
-}
-
-- (void)logRUMWithToken:(STPToken *)token
-          configuration:(STPPaymentConfiguration *)configuration
-               response:(NSHTTPURLResponse *)response
-                  start:(NSDate *)startTime
-                    end:(NSDate *)endTime {
-    NSString *tokenTypeString = @"unknown";
-    if (token.bankAccount) {
-        tokenTypeString = @"bank_account";
-    } else if (token.card) {
-        if (token.card.isApplePayCard) {
-            tokenTypeString = @"apple_pay";
-        } else {
-            tokenTypeString = @"card";
-        }
-    }
-    NSNumber *start = [[self class] timestampWithDate:startTime];
-    NSNumber *end = [[self class] timestampWithDate:endTime];
-    NSMutableDictionary *payload = [self.class commonPayload];
-    [payload addEntriesFromDictionary:@{
-                                        @"event": @"rum.stripeios",
-                                        @"tokenType": tokenTypeString,
-                                        @"url": response.URL.absoluteString ?: @"unknown",
-                                        @"status": @(response.statusCode),
-                                        @"publishable_key": configuration.publishableKey ?: @"unknown",
-                                        @"start": start,
-                                        @"end": end,
-                                        }];
     [self logPayload:payload];
 }
 

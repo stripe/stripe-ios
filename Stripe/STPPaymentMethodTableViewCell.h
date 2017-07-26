@@ -7,12 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "STPPaymentMethod.h"
-#import "STPTheme.h"
+
+@class STPTheme;
+
+@protocol STPPaymentMethod;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPaymentMethodTableViewCell : UITableViewCell
 
-- (void)configureWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod selected:(BOOL)selected theme:(STPTheme *)theme;
 - (void)configureForNewCardRowWithTheme:(STPTheme *)theme;
+- (void)configureWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod theme:(STPTheme *)theme selected:(BOOL)selected;
 
 @end
+
+NS_ASSUME_NONNULL_END

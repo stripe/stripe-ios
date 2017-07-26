@@ -21,6 +21,8 @@
 @property (nonatomic) STPBankAccountStatus status;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
+// See STPBankAccount+Private.h
+
 @end
 
 @implementation STPBankAccount
@@ -134,15 +136,25 @@
     }
     
     STPBankAccount *bankAccount = [self new];
+
+    // Identifier
     bankAccount.bankAccountId = dict[@"id"];
+
+    // Basic account details
+    bankAccount.routingNumber = dict[@"routing_number"];
     bankAccount.last4 = dict[@"last4"];
+
+    // Additional account details (alphabetical)
     bankAccount.bankName = dict[@"bank_name"];
     bankAccount.country = dict[@"country"];
-    bankAccount.fingerprint = dict[@"fingerprint"];
     bankAccount.currency = dict[@"currency"];
+    bankAccount.fingerprint = dict[@"fingerprint"];
+    bankAccount.status = [self statusFromString:dict[@"status"]];
+
+    // Owner details
     bankAccount.accountHolderName = dict[@"account_holder_name"];
     bankAccount.accountHolderType = [self accountHolderTypeFromString:dict[@"account_holder_type"]];
-    bankAccount.status = [self statusFromString:dict[@"status"]];
+
     bankAccount.allResponseFields = dict;
 
     return bankAccount;

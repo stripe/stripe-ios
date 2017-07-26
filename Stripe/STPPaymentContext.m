@@ -272,6 +272,18 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }
 }
 
+- (void)removePaymentMethod:(id<STPPaymentMethod>)paymentMethodToRemove {
+    // Remove payment method from cached representation
+    NSMutableArray *paymentMethods = [self.paymentMethods mutableCopy];
+    [paymentMethods removeObject:paymentMethodToRemove];
+    self.paymentMethods = paymentMethods;
+
+    // Elect new selected payment method if needed
+    if ([self.selectedPaymentMethod isEqual:paymentMethodToRemove]) {
+        self.selectedPaymentMethod = self.paymentMethods.firstObject;
+    }
+}
+
 #pragma mark - Payment Methods
 
 - (void)presentPaymentMethodsViewController {

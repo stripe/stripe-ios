@@ -23,6 +23,8 @@
 @property (nonatomic, readwrite) NSString *country;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
+// See STPCard+Private.h
+
 @end
 
 @implementation STPCard

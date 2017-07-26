@@ -11,22 +11,20 @@
 #import "STPSourceCardDetails.h"
 #import "STPSourceCardDetails+Private.h"
 
+#import "STPTestUtils.h"
+
+@interface STPSourceCardDetails ()
+
++ (STPSourceCard3DSecureStatus)threeDSecureStatusFromString:(NSString *)string;
++ (NSString *)stringFromThreeDSecureStatus:(STPSourceCard3DSecureStatus)threeDSecureStatus;
+
+@end
+
 @interface STPSourceCardDetailsTest : XCTestCase
 
 @end
 
 @implementation STPSourceCardDetailsTest
-
-- (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
-
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
-}
-
 
 #pragma mark - STPSourceCard3DSecureStatus Tests
 
@@ -74,6 +72,44 @@
                 break;
         }
     }
+}
+
+#pragma mark - Description Tests
+
+- (void)testDescription {
+    STPSourceCardDetails *cardDetails = [STPSourceCardDetails decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"][@"card"]];
+    XCTAssert(cardDetails.description);
+}
+
+#pragma mark - STPAPIResponseDecodable Tests
+
+- (void)testDecodedObjectFromAPIResponseRequiredFields {
+    NSArray<NSString *> *requiredFields = @[];
+
+    for (NSString *field in requiredFields) {
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"CardSource"][@"card"] mutableCopy];
+        [response removeObjectForKey:field];
+
+        XCTAssertNil([STPSourceCardDetails decodedObjectFromAPIResponse:response]);
+    }
+
+    XCTAssert([STPSourceCardDetails decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"][@"card"]]);
+}
+
+- (void)testDecodedObjectFromAPIResponseMapping {
+    NSDictionary *response = [STPTestUtils jsonNamed:@"CardSource"][@"card"];
+    STPSourceCardDetails *cardDetails = [STPSourceCardDetails decodedObjectFromAPIResponse:response];
+
+    XCTAssertEqual(cardDetails.brand, STPCardBrandVisa);
+    XCTAssertEqualObjects(cardDetails.country, @"US");
+    XCTAssertEqual(cardDetails.expMonth, (NSUInteger)12);
+    XCTAssertEqual(cardDetails.expYear, (NSUInteger)2034);
+    XCTAssertEqual(cardDetails.funding, STPCardFundingTypeDebit);
+    XCTAssertEqualObjects(cardDetails.last4, @"5556");
+    XCTAssertEqual(cardDetails.threeDSecure, STPSourceCard3DSecureStatusNotSupported);
+
+    XCTAssertNotEqual(cardDetails.allResponseFields, response);
+    XCTAssertEqualObjects(cardDetails.allResponseFields, response);
 }
 
 @end

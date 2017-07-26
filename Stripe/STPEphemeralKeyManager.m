@@ -8,10 +8,10 @@
 
 #import "STPEphemeralKeyManager.h"
 
+#import "StripeError+Private.h"
 #import "STPCustomerContext.h"
 #import "STPEphemeralKey.h"
 #import "STPPromise.h"
-#import "StripeError.h"
 
 static NSTimeInterval const DefaultExpirationInterval = 60;
 static NSTimeInterval const MinEagerRefreshInterval = 60*60;
@@ -96,8 +96,15 @@ static NSTimeInterval const MinEagerRefreshInterval = 60*60;
                 if (key) {
                     [self.createKeyPromise succeed:key];
                 } else {
-                    NSError *err = error ?: [NSError stp_genericConnectionError];
-                    [self.createKeyPromise fail:err];
+                    // the API request failed
+                    if (error) {
+                        [self.createKeyPromise fail:error];
+                    }
+                    // the ephemeral key could not be decoded
+                    else {
+                        [self.createKeyPromise fail:[NSError stp_ephemeralKeyDecodingError]];
+                        NSAssert(NO, @"Could not parse the ephemeral key response. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api");
+                    }
                 }
                 self.createKeyPromise = nil;
             }];

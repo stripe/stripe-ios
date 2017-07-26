@@ -11,21 +11,20 @@
 #import "STPSourceVerification.h"
 #import "STPSourceVerification+Private.h"
 
+#import "STPTestUtils.h"
+
+@interface STPSourceVerification ()
+
++ (STPSourceVerificationStatus)statusFromString:(NSString *)string;
++ (NSString *)stringFromStatus:(STPSourceVerificationStatus)status;
+
+@end
+
 @interface STPSourceVerificationTest : XCTestCase
 
 @end
 
 @implementation STPSourceVerificationTest
-
-- (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
-
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
-}
 
 #pragma mark - STPSourceVerificationStatus Tests
 
@@ -73,6 +72,41 @@
                 break;
         }
     }
+}
+
+#pragma mark - Description Tests
+
+- (void)testDescription {
+    STPSourceVerification *verification = [STPSourceVerification decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"SEPADebitSource"][@"verification"]];
+    XCTAssert(verification.description);
+}
+
+#pragma mark - STPAPIResponseDecodable Tests
+
+- (void)testDecodedObjectFromAPIResponseRequiredFields {
+    NSArray<NSString *> *requiredFields = @[
+                                            @"status",
+                                            ];
+
+    for (NSString *field in requiredFields) {
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"SEPADebitSource"][@"verification"] mutableCopy];
+        [response removeObjectForKey:field];
+
+        XCTAssertNil([STPSourceVerification decodedObjectFromAPIResponse:response]);
+    }
+
+    XCTAssert([STPSourceVerification decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"SEPADebitSource"][@"verification"]]);
+}
+
+- (void)testDecodedObjectFromAPIResponseMapping {
+    NSDictionary *response = [STPTestUtils jsonNamed:@"SEPADebitSource"][@"verification"];
+    STPSourceVerification *verification = [STPSourceVerification decodedObjectFromAPIResponse:response];
+
+    XCTAssertEqualObjects(verification.attemptsRemaining, @5);
+    XCTAssertEqual(verification.status, STPSourceVerificationStatusPending);
+
+    XCTAssertNotEqual(verification.allResponseFields, response);
+    XCTAssertEqualObjects(verification.allResponseFields, response);
 }
 
 @end

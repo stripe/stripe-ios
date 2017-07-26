@@ -419,6 +419,14 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     }
 }
 
+- (void)setInputView:(UIView *)inputView {
+    _inputView = inputView;
+
+    for (STPFormTextField *field in [self allFields]) {
+        field.inputView = inputView;
+    }
+}
+
 - (void)setInputAccessoryView:(UIView *)inputAccessoryView {
     _inputAccessoryView = inputAccessoryView;
     

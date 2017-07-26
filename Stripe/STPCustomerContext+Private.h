@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPCustomerContext (Private)
 
 - (void)updateCustomerWithShippingAddress:(STPAddress *)shipping completion:(nullable STPErrorBlock)completion;
+- (void)detachSourceFromCustomer:(id<STPSourceProtocol>)source completion:(nullable STPErrorBlock)completion;
 
 @end
 

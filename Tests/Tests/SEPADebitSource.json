@@ -1,0 +1,36 @@
+// Source: https://stripe.com/docs/sources/sepa-debit
+{
+    "id": "src_18HgGjHNCLa1Vra6Y9TIP6tU",
+    "object": "source",
+    "amount": null,
+    "client_secret": "src_client_secret_XcBmS94nTg5o0xc9MSliSlDW",
+    "created": 1464803577,
+    "currency": "eur",
+    "flow": "none",
+    "livemode": false,
+    "owner": {
+        "address": null,
+        "email": null,
+        "name": "Jenny Rosen",
+        "phone": null,
+        "verified_address": null,
+        "verified_email": null,
+        "verified_name": null,
+        "verified_phone": null
+    },
+    "status": "chargeable",
+    "type": "sepa_debit",
+    "usage": "reusable",
+    "sepa_debit": {
+        "bank_code": "37040044",
+        "country": "DE",
+        "fingerprint": "NxdSyRegc9PsMkWy",
+        "last4": "3001",
+        "mandate_reference": "NXDSYREGC9PSMKWY",
+        "mandate_url": "https://hooks.stripe.com/adapter/sepa_debit/file/src_18HgGjHNCLa1Vra6Y9TIP6tU/src_client_secret_XcBmS94nTg5o0xc9MSliSlDW"
+    },
+    "verification": {
+        "attempts_remaining": 5,
+        "status": "pending"
+    }
+}

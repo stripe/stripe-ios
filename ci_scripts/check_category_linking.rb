@@ -19,14 +19,22 @@ end.compact.map do |match|
   match.captures.first
 end).sort
 
-all_headers = (Dir.glob("Stripe/PublicHeaders/*.h") + Dir.glob("Stripe/*.h")).map do |h|
-  filename = File.basename(h)
+def needs_category_loading(file)
+  implementations = File.readlines(file).select {|l| /\@implementation/.match(l)}
+  class_implementations = implementations.select {|l| !(/\(.*\)/.match(l)) }
+  category_implementations = implementations.select {|l| /\(.*\)/.match(l) }
+  category_implementations.count > 0 && class_implementations.count == 0
 end
-categories = (all_headers.select do |h|
-  h.include?("+") && !h.include?("Private") && !h.include?("Fabric")
-end).sort
+
+all_mfiles = Dir.glob("Stripe/*.m")
+categories = all_mfiles.select do |file|
+  needs_category_loading(file)
+end.map do |file|
+  File.basename(file).gsub(".m", ".h")
+end.sort
 
 missing_categories = categories - loaded_categories
+
 if missing_categories.count > 0
   abort("Found categories not linked in STPCategoryLoader:\n#{missing_categories}")
 end

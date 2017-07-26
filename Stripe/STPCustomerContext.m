@@ -104,7 +104,8 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
         [STPAPIClient addSource:source.stripeID
              toCustomerUsingKey:ephemeralKey
                      completion:^(__unused id<STPSourceProtocol> object, NSError *error) {
-                         self.customer = nil;
+                         [self clearCachedCustomer];
+
                          if (completion) {
                              stpDispatchToMainThreadIfNecessary(^{
                                  completion(error);
@@ -164,6 +165,31 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
                                                 });
                                             }
                                         }];
+    }];
+}
+
+- (void)detachSourceFromCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
+    [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
+        if (retrieveKeyError) {
+            if (completion) {
+                stpDispatchToMainThreadIfNecessary(^{
+                    completion(retrieveKeyError);
+                });
+            }
+            return;
+        }
+
+        [STPAPIClient deleteSource:source.stripeID
+              fromCustomerUsingKey:ephemeralKey
+                        completion:^(__unused id<STPSourceProtocol> obj, NSError *error) {
+                            [self clearCachedCustomer];
+
+                            if (completion) {
+                                stpDispatchToMainThreadIfNecessary(^{
+                                    completion(error);
+                                });
+                            }
+                        }];
     }];
 }
 

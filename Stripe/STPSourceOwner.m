@@ -6,9 +6,10 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
+#import "STPSourceOwner.h"
+
 #import "NSDictionary+Stripe.h"
 #import "STPAddress.h"
-#import "STPSourceOwner.h"
 
 @interface STPSourceOwner ()
 

@@ -46,4 +46,13 @@
     XCTAssertEqualObjects(authHeader, @"Bearer pk_bar");
 }
 
+- (void)testSetStripeAccount {
+    STPAPIClient *sut = [[STPAPIClient alloc] initWithPublishableKey:@"pk_foo"];
+    NSString *accountHeader = sut.urlSession.configuration.HTTPAdditionalHeaders[@"Stripe-Account"];
+    XCTAssertNil(accountHeader);
+    sut.stripeAccount = @"acct_123";
+    accountHeader = sut.urlSession.configuration.HTTPAdditionalHeaders[@"Stripe-Account"];
+    XCTAssertEqualObjects(accountHeader, @"acct_123");
+}
+
 @end

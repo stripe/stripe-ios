@@ -16,6 +16,8 @@
 
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
+// See STPSourceCardDetails+Private.h
+
 @end
 
 @implementation STPSourceCardDetails
