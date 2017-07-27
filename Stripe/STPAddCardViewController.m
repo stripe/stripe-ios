@@ -314,7 +314,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 
 - (void)paymentCardTextFieldDidBeginEditingCVC:(__unused STPPaymentCardTextField *)textField {
     [UIView transitionWithView:self.cardImageView
-                      duration:0.25
+                      duration:0.2
                        options:UIViewAnimationOptionTransitionFlipFromRight
                     animations:^{
                         self.cardImageView.image = [STPImageLibrary largeCardBackImage];
@@ -323,7 +323,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 
 - (void)paymentCardTextFieldDidEndEditingCVC:(__unused STPPaymentCardTextField *)textField {
     [UIView transitionWithView:self.cardImageView
-                      duration:0.25
+                      duration:0.2
                        options:UIViewAnimationOptionTransitionFlipFromLeft
                     animations:^{
                         self.cardImageView.image = [STPImageLibrary largeCardFrontImage];

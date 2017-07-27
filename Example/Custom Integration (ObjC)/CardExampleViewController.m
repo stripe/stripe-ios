@@ -15,16 +15,26 @@
  using card information collected with STPPaymentCardTextField, and then sends the token
  to our example backend to create the charge request.
  */
-@interface CardExampleViewController () <STPPaymentCardTextFieldDelegate>
+@interface CardExampleViewController () <STPPaymentCardTextFieldDelegate, UIScrollViewDelegate>
 @property (weak, nonatomic) STPPaymentCardTextField *paymentTextField;
 @property (weak, nonatomic) UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) UIScrollView *scrollView;
 @end
 
 @implementation CardExampleViewController
 
+- (void)loadView {
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
+    scrollView.delegate = self;
+    scrollView.alwaysBounceVertical = YES;
+    scrollView.backgroundColor = [UIColor whiteColor];
+    self.view = scrollView;
+    self.scrollView = scrollView;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+
     self.title = @"Card";
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -37,6 +47,7 @@
     STPPaymentCardTextField *paymentTextField = [[STPPaymentCardTextField alloc] init];
     paymentTextField.delegate = self;
     paymentTextField.cursorColor = [UIColor purpleColor];
+    paymentTextField.postalCodeEntryEnabled = YES;
     self.paymentTextField = paymentTextField;
     [self.view addSubview:paymentTextField];
 
@@ -87,6 +98,10 @@
                                                   [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
                                               }];
                                           }];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.view endEditing:NO];
 }
 
 @end

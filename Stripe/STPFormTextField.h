@@ -37,6 +37,4 @@ typedef NS_ENUM(NSInteger, STPFormTextFieldAutoFormattingBehavior) {
 @property(nonatomic, readwrite, assign)BOOL validText;
 @property(nonatomic, readwrite, weak, nullable)id<STPFormTextFieldDelegate>formDelegate;
 
-- (CGSize)measureTextSize;
-
 @end

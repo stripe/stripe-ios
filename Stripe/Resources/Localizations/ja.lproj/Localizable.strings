@@ -5,7 +5,7 @@
 "Add a Card" = "カードを追加";
 
 /* Button to add a new credit card. */
-"Add New Card…" = "新しいカードの追加...";
+"Add New Card…" = "新しいカードを追加...";
 
 /* Caption for Address field on address form */
 "Address" = "住所";
@@ -76,6 +76,9 @@
 /* Caption for Phone field on address form */
 "Phone" = "電話";
 
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "郵便番号";
+
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "郵便番号";
 
@@ -132,6 +135,9 @@
 
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "指定したカードのセキュリティコードが無効です";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "郵便番号";

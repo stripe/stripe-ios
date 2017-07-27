@@ -12,6 +12,7 @@
 
 #import "NSArray+Stripe_BoundSafe.h"
 #import "NSBundle+Stripe_AppName.h"
+#import "NSCharacterSet+Stripe.h"
 #import "NSDecimalNumber+Stripe_Currency.h"
 #import "NSDictionary+Stripe.h"
 #import "NSMutableURLRequest+Stripe.h"
@@ -60,6 +61,7 @@
     linkUIViewControllerParentViewControllerCategory();
     linkUIViewControllerPromisesCategory();
     linkUIViewFirstResponderCategory();
+    linkNSCharacterSetCategory();
 }
 
 @end

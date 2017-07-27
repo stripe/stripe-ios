@@ -20,7 +20,7 @@
 "Back" = "Terug";
 
 /* Title for billing address entry section */
-"Billing Address" = "Factureringsadres";
+"Billing Address" = "Factuuradres";
 
 /* Title for credit card number entry field */
 "Card" = "Kaart";
@@ -44,7 +44,7 @@
 "Delivery" = "Levering";
 
 /* Title for delivery address entry section */
-"Delivery Address" = "Bezorgadres";
+"Delivery Address" = "Afleveradres";
 
 /* Caption for Email field on address form */
 "Email" = "E-mailadres";
@@ -75,6 +75,9 @@
 
 /* Caption for Phone field on address form */
 "Phone" = "Telefoon";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "Postcode";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postcode";
@@ -132,6 +135,9 @@
 
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "De beveiligingscode van uw kaart is ongeldig";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Postcode";
