@@ -65,6 +65,9 @@
     sourceParams.rawTypeString = @"three_d_secure";
     XCTAssertEqual(sourceParams.type, STPSourceTypeThreeDSecure);
 
+    sourceParams.rawTypeString = @"alipay";
+    XCTAssertEqual(sourceParams.type, STPSourceTypeAlipay);
+
     sourceParams.rawTypeString = @"unknown";
     XCTAssertEqual(sourceParams.type, STPSourceTypeUnknown);
 
@@ -99,6 +102,9 @@
 
     sourceParams.type = STPSourceTypeThreeDSecure;
     XCTAssertEqualObjects(sourceParams.rawTypeString, @"three_d_secure");
+
+    sourceParams.type = STPSourceTypeAlipay;
+    XCTAssertEqualObjects(sourceParams.rawTypeString, @"alipay");
 
     sourceParams.type = STPSourceTypeUnknown;
     XCTAssertNil(sourceParams.rawTypeString);

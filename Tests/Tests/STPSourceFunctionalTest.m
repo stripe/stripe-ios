@@ -295,6 +295,31 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
+- (void)testCreateSource_alipay {
+    STPSourceParams *params = [STPSourceParams alipayParamsWithAmount:1099
+                                                             currency:@"usd"
+                                                            returnURL:@"https://shop.example.com/crtABC"];
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Alipay Source creation"];
+
+    params.metadata = @{ @"foo": @"bar" };
+    [client createSourceWithParams:params completion:^(STPSource *source, NSError *error2) {
+        XCTAssertNil(error2);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeAlipay);
+        XCTAssertEqualObjects(source.amount, params.amount);
+        XCTAssertEqualObjects(source.currency, params.currency);
+        XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertNotNil(source.redirect.url);
+        XCTAssertEqualObjects(source.metadata, params.metadata);
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
 - (void)testRetrieveSource_sofort {
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
     STPSourceParams *params = [STPSourceParams new];
