@@ -15,7 +15,7 @@ We also offer [seamless integration](https://stripe.com/apple-pay) with [Apple P
 
 We recommend you only use official versioned releases of the sdk (accessible from Github's [Releases](https://github.com/stripe/stripe-ios/releases) page) as the master branch is considered unstable.
 
-If you're reading this on github.com, make sure you are looking at the version that matches the release you have installed, otherwise the instructions and example code may be mismatched. You can read the latest released version of this readme and browse the associated code on Github via [this link](https://github.com/stripe/stripe-ios/tree/v11.1.0).
+If you're reading this on github.com, make sure you are looking at the version that matches the release you have installed, otherwise the instructions and example code may be mismatched. You can read the latest released version of this readme and browse the associated code on Github via [this link](https://github.com/stripe/stripe-ios/tree/v11.2.0).
 
 ## Requirements
 Our SDK is compatible with iOS apps supporting iOS 8.0 and above. It requires Xcode 8.0+ to build the source.
