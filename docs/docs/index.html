@@ -305,7 +305,7 @@
         <section class="section">
           <div class="section-content">
             
-            <a href='#stripe-ios-sdk' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h1 id='stripe-ios-sdk'>Stripe iOS SDK</h1>
+            <h1 id='stripe-ios-sdk' class='heading'>Stripe iOS SDK</h1>
 
 <p><a href="https://travis-ci.org/stripe/stripe-ios"><img src="https://img.shields.io/travis/stripe/stripe-ios/master.svg?style=flat" alt="Travis"></a>
 <a href="http://cocoapods.org/?q=author%3Astripe%20name%3Astripe"><img src="https://img.shields.io/cocoapods/v/Stripe.svg?style=flat" alt="CocoaPods"></a>
@@ -320,29 +320,32 @@
 <blockquote>
 <p>Note: we&rsquo;ve greatly simplified the integration for <code>STPPaymentContext</code> in <a href="https://github.com/stripe/stripe-ios/releases/v11.0.0">v11.0.0</a>. If you integrated <code>STPPaymentContext</code> prior to this and you&rsquo;re interested in migrating, we&rsquo;ve written a <a href="https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md#migration-from-versions--1100">migration guide</a>.</p>
 </blockquote>
-<a href='#releases' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='releases'>Releases</h2>
+<h2 id='releases' class='heading'>Releases</h2>
 
 <p>We recommend you only use official versioned releases of the sdk (accessible from Github&rsquo;s <a href="https://github.com/stripe/stripe-ios/releases">Releases</a> page) as the master branch is considered unstable.</p>
 
-<p>If you&rsquo;re reading this on github.com, make sure you are looking at the version that matches the release you have installed, otherwise the instructions and example code may be mismatched. You can read the latest released version of this readme and browse the associated code on Github via <a href="https://github.com/stripe/stripe-ios/tree/v11.1.0">this link</a>.</p>
-<a href='#requirements' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='requirements'>Requirements</h2>
+<p>If you&rsquo;re reading this on github.com, make sure you are looking at the version that matches the release you have installed, otherwise the instructions and example code may be mismatched. You can read the latest released version of this readme and browse the associated code on Github via <a href="https://github.com/stripe/stripe-ios/tree/v11.2.0">this link</a>.</p>
+<h2 id='requirements' class='heading'>Requirements</h2>
 
 <p>Our SDK is compatible with iOS apps supporting iOS 8.0 and above. It requires Xcode 8.0+ to build the source.</p>
 
 <p>If you need iOS 7 or Xcode 7 compatibility, the last supported SDK release is version 8.0.7.</p>
-<a href='#integration' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='integration'>Integration</h2>
+<h2 id='integration' class='heading'>Integration</h2>
 
 <p>We&rsquo;ve written a <a href="https://stripe.com/docs/mobile/ios">guide</a> that explains everything from installation, to creating payment tokens, to Apple Pay integration and more.</p>
 
 <p>For more fine-grained information on all of the classes and methods in our SDK, consult our <a href="http://stripe.github.io/stripe-ios/docs/index.html">full SDK reference</a>.</p>
-<a href='#example-apps' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='example-apps'>Example apps</h2>
+<h2 id='example-apps' class='heading'>Example apps</h2>
 
-<p>There are 2 example apps included in the repository:
-- Standard Integration (Swift) shows an integration using our prebuilt UI components.
-- Custom Integration (ObjC) shows how to use our low-level methods to accept payments using several different payment methods.</p>
+<p>There are 2 example apps included in the repository:</p>
+
+<ul>
+<li>Standard Integration (Swift) shows an integration using our prebuilt UI components.</li>
+<li>Custom Integration (ObjC) shows how to use our low-level methods to accept payments using several different payment methods.</li>
+</ul>
 
 <p>To build the example apps, you&rsquo;ll need to first run <code>./setup.sh</code>. Then, open <code>Stripe.xcworkspace</code> and choose the appropriate scheme.</p>
-<a href='#getting-started-with-the-ios-example-apps' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='getting-started-with-the-ios-example-apps'>Getting started with the iOS example apps</h3>
+<h3 id='getting-started-with-the-ios-example-apps' class='heading'>Getting started with the iOS example apps</h3>
 
 <p>Note: all the example apps require Xcode 8.0 to build and run.</p>
 
@@ -356,12 +359,12 @@
 </ol>
 
 <p>After this is done, you can make test payments through the app and see them in your Stripe dashboard. Head to <a href="https://stripe.com/docs/testing#cards">https://stripe.com/docs/testing#cards</a> for a list of test card numbers.</p>
-<a href='#card-io' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='card-io'>card.io</h2>
+<h2 id='card-io' class='heading'>card.io</h2>
 
 <p>To add card scanning capabilities to our prebuilt UI components, you can simply <a href="https://github.com/card-io/card.io-iOS-SDK#setup">install card.io</a> alongside our SDK. You&rsquo;ll also need to set <code>NSCameraUsageDescription</code> in your application&rsquo;s plist, and provide a reason for accessing the camera (e.g. <q>To scan cards</q>).</p>
 
 <p>To try this out, you can run <code>./install_cardio.rb</code>, which will download and install card.io in Standard Integration (Swift). Now, when you run the example app on a device, you&rsquo;ll see a <q>Scan Card</q> button when adding a new card.</p>
-<a href='#running-the-tests' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='running-the-tests'>Running the tests</h2>
+<h2 id='running-the-tests' class='heading'>Running the tests</h2>
 
 <ol>
 <li>Install Carthage (if you have homebrew installed, <code>brew install carthage</code>)</li>
@@ -370,7 +373,7 @@
 <li>Choose the <q>StripeiOS</q> scheme with the iPhone 6, iOS 10.3 simulator (required for snapshot tests to pass)</li>
 <li>Run Product -&gt; Test</li>
 </ol>
-<a href='#migrating-from-older-versions' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h2 id='migrating-from-older-versions'>Migrating from older versions</h2>
+<h2 id='migrating-from-older-versions' class='heading'>Migrating from older versions</h2>
 
 <p>See <code>MIGRATING.md</code></p>
 
@@ -381,8 +384,8 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-19)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-27)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

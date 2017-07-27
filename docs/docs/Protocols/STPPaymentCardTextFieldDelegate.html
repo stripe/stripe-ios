@@ -312,7 +312,9 @@
 
                 </div>
               </div>
-            <p>This protocol allows a delegate to be notified when a payment text field&rsquo;s contents change, which can in turn be used to take further actions depending on the validity of its contents.</p>
+            <p>This protocol allows a delegate to be notified when a payment text field&rsquo;s 
+contents change, which can in turn be used to take further actions depending 
+on the validity of its contents.</p>
 
           </div>
         </section>
@@ -334,15 +336,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <ul>
-<li><p>Called when either the card number, expiration, or CVC changes. At this point, one can call -isValid on the text field to determine, for example, whether or not to enable a button to submit the form. Example:</p></li>
+                        <p>Called when either the card number, expiration, or CVC changes. At this point, 
+one can call <code>isValid</code> on the text field to determine, for example, 
+whether or not to enable a button to submit the form. Example:</p>
+
+<ul>
 <li><p>(void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
- self.paymentButton.enabled = textField.isValid;
+self.paymentButton.enabled = textField.isValid;
 }</p></li>
 </ul>
-
-<p>*
-*  - parameter: textField the text field that has changed</p>
 
                       </div>
                       <div class="declaration">
@@ -372,7 +374,6 @@
                               <td>
                                 <div>
                                   <p>the text field that has changed</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -380,7 +381,85 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L30">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L320">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditing:"></a>
+                    <a name="//apple_ref/objc/Method/-paymentCardTextFieldDidBeginEditing:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditing:">-paymentCardTextFieldDidBeginEditing:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing begins in the text field as a whole. </p>
+
+<p>After receiving this callback, you will always also receive a callback for which
+specific subfield of the view began editing.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentCardTextFieldDidBeginEditing</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditing</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L329">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditing:"></a>
+                    <a name="//apple_ref/objc/Method/-paymentCardTextFieldDidEndEditing:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditing:">-paymentCardTextFieldDidEndEditing:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing ends in the text field as a whole.</p>
+
+<p>This callback is always preceded by an callback for which
+specific subfield of the view ended its editing.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentCardTextFieldDidEndEditing</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditing</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L338">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -416,7 +495,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L35">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L343">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -452,7 +531,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L40">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L348">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -488,7 +567,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L45">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L353">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -524,7 +603,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L358">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -560,7 +639,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L363">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -596,7 +675,79 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L60">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L368">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingPostalCode:"></a>
+                    <a name="//apple_ref/objc/Method/-paymentCardTextFieldDidBeginEditingPostalCode:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidBeginEditingPostalCode:">-paymentCardTextFieldDidBeginEditingPostalCode:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing begins in the payment card field&rsquo;s ZIP/postal code field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentCardTextFieldDidBeginEditingPostalCode</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditingPostalCode</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L373">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingPostalCode:"></a>
+                    <a name="//apple_ref/objc/Method/-paymentCardTextFieldDidEndEditingPostalCode:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)STPPaymentCardTextFieldDelegate(im)paymentCardTextFieldDidEndEditingPostalCode:">-paymentCardTextFieldDidEndEditingPostalCode:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when editing ends in the payment card field&rsquo;s ZIP/postal code field.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">paymentCardTextFieldDidEndEditingPostalCode</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditingPostalCode</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPPaymentCardTextField.h#L378">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -609,8 +760,8 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-19)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-27)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

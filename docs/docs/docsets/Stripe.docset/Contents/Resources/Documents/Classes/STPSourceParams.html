@@ -312,8 +312,12 @@
 
                 </div>
               </div>
-            <p>An object representing parameters used to create a Source object. 
-- see: <a href="https://stripe.com/docs/api#create_source">https://stripe.com/docs/api#create_source</a></p>
+            <p>An object representing parameters used to create a Source object. </p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <a href="https://stripe.com/docs/api#create_source">https://stripe.com/docs/api#create_source</a>
+
+</div>
 
           </div>
         </section>
@@ -373,11 +377,11 @@
                         <p>The raw underlying type string sent to the server.</p>
 
 <p>Generally you should use <code><a href="../Classes/STPSourceParams.html#/c:objc(cs)STPSourceParams(py)type">type</a></code> instead unless you have a reason not to.
-  You can use this if you want to create a param of a type not yet supported
-  by the current version of the SDK&rsquo;s <code><a href="../Enums.html#/c:@E@STPSourceType">STPSourceType</a></code> enum.</p>
+You can use this if you want to create a param of a type not yet supported
+by the current version of the SDK&rsquo;s <code><a href="../Enums.html#/c:@E@STPSourceType">STPSourceType</a></code> enum.</p>
 
 <p>Setting this to a value not known by the SDK causes <code><a href="../Classes/STPSourceParams.html#/c:objc(cs)STPSourceParams(py)type">type</a></code> to 
-  return <code>STPSourceTypeUnknown</code></p>
+return <code>STPSourceTypeUnknown</code></p>
 
                       </div>
                       <div class="declaration">
@@ -702,8 +706,17 @@ option at creation.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Creates params for a Bancontact source.
-  - see: <a href="https://stripe.com/docs/bancontact#create-source">https://stripe.com/docs/bancontact#create-source</a></p>
+                        <p>Creates params for a Bancontact source.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://stripe.com/docs/bancontact#create-source">https://stripe.com/docs/bancontact#create-source</a></p>
+
+</div>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>The currency for Bancontact must be <q>eur</q>. This will be set automatically for you.</p>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -735,8 +748,7 @@ option at creation.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The amount to charge the customer.</p>
-
+                                  <p>The amount to charge the customer in EUR.</p>
                                 </div>
                               </td>
                             </tr>
@@ -749,7 +761,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The full name of the account holder.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -762,7 +773,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The URL the customer should be redirected to after they have successfully verified the payment.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -775,7 +785,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>(Optional) A custom statement descriptor for the payment.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -785,10 +794,9 @@ option at creation.</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>an STPSourceParams object populated with the provided values.</p>
-
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L102-L105">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L104-L107">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -806,8 +814,12 @@ option at creation.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Creates params for a Bitcoin source.
-  - see: <a href="https://stripe.com/docs/bitcoin#creating-and-displaying-a-source-object">https://stripe.com/docs/bitcoin#creating-and-displaying-a-source-object</a></p>
+                        <p>Creates params for a Bitcoin source.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://stripe.com/docs/bitcoin#creating-and-displaying-a-source-object">https://stripe.com/docs/bitcoin#creating-and-displaying-a-source-object</a></p>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -839,7 +851,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The amount to charge the customer.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -852,7 +863,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The currency the payment is being created in.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -865,7 +875,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The customer&rsquo;s email address.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -875,10 +884,9 @@ option at creation.</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>an STPSourceParams object populated with the provided values.</p>
-
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L117-L119">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L119-L121">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -896,8 +904,12 @@ option at creation.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Creates params for a Card source.
-  - see: <a href="https://stripe.com/docs/sources/cards#create-source">https://stripe.com/docs/sources/cards#create-source</a></p>
+                        <p>Creates params for a Card source.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://stripe.com/docs/sources/cards#create-source">https://stripe.com/docs/sources/cards#create-source</a></p>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -926,7 +938,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>An object containing the user&rsquo;s card details</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -936,10 +947,9 @@ option at creation.</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>an STPSourceParams object populated with the provided card details.</p>
-
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L129">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L131">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -957,8 +967,17 @@ option at creation.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Creates params for a Giropay source.
-  - see: <a href="https://stripe.com/docs/sources/giropay#create-source">https://stripe.com/docs/sources/giropay#create-source</a></p>
+                        <p>Creates params for a Giropay source.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://stripe.com/docs/sources/giropay#create-source">https://stripe.com/docs/sources/giropay#create-source</a></p>
+
+</div>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>The currency for Giropay must be <q>eur</q>. This will be set automatically for you.</p>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -990,8 +1009,7 @@ option at creation.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The amount to charge the customer.</p>
-
+                                  <p>The amount to charge the customer in EUR.</p>
                                 </div>
                               </td>
                             </tr>
@@ -1004,7 +1022,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The full name of the account holder.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1017,7 +1034,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The URL the customer should be redirected to after they have successfully verified the payment.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1030,7 +1046,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>(Optional) A custom statement descriptor for the payment.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1040,10 +1055,9 @@ option at creation.</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>an STPSourceParams object populated with the provided values.</p>
-
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L142-L145">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L146-L149">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1061,8 +1075,17 @@ option at creation.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Creates params for an iDEAL source.
-  - see: <a href="https://stripe.com/docs/sources/ideal#create-source">https://stripe.com/docs/sources/ideal#create-source</a></p>
+                        <p>Creates params for an iDEAL source.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://stripe.com/docs/sources/ideal#create-source">https://stripe.com/docs/sources/ideal#create-source</a></p>
+
+</div>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>The currency for iDEAL must be <q>eur</q>. This will be set automatically for you.</p>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -1095,8 +1118,7 @@ option at creation.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The amount to charge the customer.</p>
-
+                                  <p>The amount to charge the customer in EUR.</p>
                                 </div>
                               </td>
                             </tr>
@@ -1109,7 +1131,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The full name of the account holder.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1122,7 +1143,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The URL the customer should be redirected to after they have successfully verified the payment.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1135,7 +1155,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>(Optional) A custom statement descriptor for the payment.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1148,7 +1167,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>(Optional) The customer&rsquo;s bank.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1158,10 +1176,9 @@ option at creation.</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>an STPSourceParams object populated with the provided values.</p>
-
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L159-L163">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L165-L169">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1179,8 +1196,17 @@ option at creation.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Creates params for a SEPA Debit source.
-  - see: <a href="https://stripe.com/docs/sources/sepa-debit#create-source">https://stripe.com/docs/sources/sepa-debit#create-source</a></p>
+                        <p>Creates params for a SEPA Debit source.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://stripe.com/docs/sources/sepa-debit#create-source">https://stripe.com/docs/sources/sepa-debit#create-source</a></p>
+
+</div>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>The currency for SEPA Debit must be <q>eur</q>. This will be set automatically for you.</p>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -1215,7 +1241,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The full name of the account holder.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1228,7 +1253,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The IBAN number for the bank account you wish to debit.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1241,7 +1265,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The bank account holder&rsquo;s first address line (optional).</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1254,7 +1277,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The bank account holder&rsquo;s city.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1267,7 +1289,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The bank account holder&rsquo;s postal code.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1280,7 +1301,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The bank account holder&rsquo;s two-letter country code.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1290,10 +1310,9 @@ option at creation.</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>an STPSourceParams object populated with the provided values.</p>
-
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L178-L183">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L186-L191">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1311,8 +1330,17 @@ option at creation.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Creates params for a Sofort source.
-  - see: <a href="https://stripe.com/docs/sources/sofort#create-source">https://stripe.com/docs/sources/sofort#create-source</a></p>
+                        <p>Creates params for a Sofort source.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://stripe.com/docs/sources/sofort#create-source">https://stripe.com/docs/sources/sofort#create-source</a></p>
+
+</div>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>The currency for Sofort must be <q>eur</q>. This will be set automatically for you.</p>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -1344,8 +1372,7 @@ option at creation.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The amount to charge the customer.</p>
-
+                                  <p>The amount to charge the customer in EUR.</p>
                                 </div>
                               </td>
                             </tr>
@@ -1358,7 +1385,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The URL the customer should be redirected to after they have successfully verified the payment.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1371,7 +1397,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The country code of the customer&rsquo;s bank.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1384,7 +1409,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>(Optional) A custom statement descriptor for the payment.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1394,10 +1418,9 @@ option at creation.</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>an STPSourceParams object populated with the provided values.</p>
-
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L196-L199">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L206-L209">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1415,8 +1438,12 @@ option at creation.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Creates params for a 3DS source.
-  - see: <a href="https://stripe.com/docs/sources/three-d-secure#create-3ds-source">https://stripe.com/docs/sources/three-d-secure#create-3ds-source</a></p>
+                        <p>Creates params for a 3DS source.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://stripe.com/docs/sources/three-d-secure#create-3ds-source">https://stripe.com/docs/sources/three-d-secure#create-3ds-source</a></p>
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -1449,7 +1476,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The amount to charge the customer.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1462,7 +1488,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The currency the payment is being created in.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1475,7 +1500,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The URL the customer should be redirected to after they have successfully verified the payment.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1488,7 +1512,6 @@ option at creation.</p>
                               <td>
                                 <div>
                                   <p>The ID of the card source.</p>
-
                                 </div>
                               </td>
                             </tr>
@@ -1498,10 +1521,99 @@ option at creation.</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>an STPSourceParams object populated with the provided card details.</p>
-
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L212-L215">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L222-L225">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPSourceParams(cm)alipayParamsWithAmount:currency:returnURL:"></a>
+                    <a name="//apple_ref/objc/Method/+alipayParamsWithAmount:currency:returnURL:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPSourceParams(cm)alipayParamsWithAmount:currency:returnURL:">+alipayParamsWithAmount:currency:returnURL:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates params for a single-use Alipay source</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://stripe.com/docs/sources/alipay#create-source">https://stripe.com/docs/sources/alipay#create-source</a></p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">STPSourceParams</span> <span class="o">*</span><span class="p">)</span><span class="nf">alipayParamsWithAmount</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">amount</span>
+                                           <span class="nf">currency</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">currency</span>
+                                          <span class="nf">returnURL</span><span class="p">:</span>
+                                              <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">returnURL</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">alipayParams</span><span class="p">(</span><span class="n">withAmount</span> <span class="nv">amount</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">,</span> <span class="nv">currency</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">STPSourceParams</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>amount</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The amount to charge the customer.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>currency</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The currency the payment is being created in.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>returnURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The URL the customer should be redirected to after they have successfully verified the payment.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an STPSourceParams object populated with the provided values</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/master/Stripe/PublicHeaders/STPSourceParams.h#L237-L239">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1514,8 +1626,8 @@ option at creation.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-19)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-07-27)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
