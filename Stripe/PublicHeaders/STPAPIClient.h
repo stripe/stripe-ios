@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define FAUXPAS_IGNORED_IN_FILE(...)
 FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
-static NSString *const STPSDKVersion = @"11.1.0";
+static NSString *const STPSDKVersion = @"11.2.0";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPSourceParams, STPToken, STPPaymentConfiguration;
 
@@ -54,7 +54,7 @@ static NSString *const STPSDKVersion = @"11.1.0";
 
 
 /**
- Initializes an API client with the given configuration. Its API key will be 
+ Initializes an API client with the given configuration. Its API key will be
  set to the configuration's publishable key.
 
  @param configuration The configuration to use.
@@ -83,7 +83,7 @@ static NSString *const STPSDKVersion = @"11.1.0";
 
 /**
  In order to perform API requests on behalf of a connected account, e.g. to
- create a source on a connected account, set this property to the ID of the 
+ create a source on a connected account, set this property to the ID of the
  account for which this request is being made.
 
  @see https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header
@@ -176,8 +176,8 @@ static NSString *const STPSDKVersion = @"11.1.0";
 @interface Stripe(ApplePay)
 
 /**
- Whether or not this device is capable of using Apple Pay. This checks both 
- whether the device supports Apple Pay, as well as whether or not they have 
+ Whether or not this device is capable of using Apple Pay. This checks both
+ whether the device supports Apple Pay, as well as whether or not they have
  stored Apple Pay cards on their device.
 
  @param paymentRequest The return value of this method depends on the

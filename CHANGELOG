@@ -1,6 +1,7 @@
-== X.X.X 2017-XX-XX
+== 11.2.0 2017-07-27
 * Adds an option to allow users to delete payment methods from the `STPPaymentMethodsViewController`. Enabled by default but can disabled using the `canDeletePaymentMethods` property of `STPPaymentConfiguration`.
   * Screenshots: https://user-images.githubusercontent.com/28276156/28131357-7a353474-66ee-11e7-846c-b38277d111fd.png
+* Adds a postal code field to `STPPaymentCardTextField`, configurable with `postalCodeEntryEnabled` and `postalCodePlaceholder`. Disabled by default.
 * `STPCustomer`'s `shippingAddress` property is now correctly annotated as nullable.
 * Removed `STPCheckoutUnknownError`, `STPCheckoutTooManyAttemptsError`, and `STPCustomerContextMissingKeyProviderError`. These errors will no longer occur.
 
