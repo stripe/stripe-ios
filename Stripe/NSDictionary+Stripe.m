@@ -8,21 +8,46 @@
 
 #import "NSDictionary+Stripe.h"
 
+#import "NSArray+Stripe.h"
+
 @implementation NSDictionary (Stripe)
 
-- (nullable NSDictionary *)stp_dictionaryByRemovingNullsValidatingRequiredFields:(nonnull NSArray *)requiredFields {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
-        if (obj != [NSNull null]) {
-            dict[key] = obj;
-        }
-    }];
+- (nullable NSDictionary *)stp_dictionaryByRemovingNullsValidatingRequiredFields:(NSArray *)requiredFields {
+    NSDictionary *result = [self stp_dictionaryByRemovingNulls];
+
     for (NSString *key in requiredFields) {
-        if (![[dict allKeys] containsObject:key]) {
+        if (![[result allKeys] containsObject:key]) {
+            // Result missing required field
             return nil;
         }
     }
-    return [dict copy];
+
+    return result;
+}
+
+- (NSDictionary *)stp_dictionaryByRemovingNulls {
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
+        if ([obj isKindOfClass:[NSArray class]]) {
+            // Save array after removing any null values
+            result[key] = [(NSArray *)obj stp_arrayByRemovingNulls];
+        }
+        else if ([obj isKindOfClass:[NSDictionary class]]) {
+            // Save dictionary after removing any null values
+            result[key] = [(NSDictionary *)obj stp_dictionaryByRemovingNulls];
+        }
+        else if ([obj isKindOfClass:[NSNull class]]) {
+            // Skip null value
+        }
+        else {
+            // Save other value
+            result[key] = obj;
+        }
+    }];
+
+    // Make immutable copy
+    return [result copy];
 }
 
 @end

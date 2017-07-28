@@ -8,10 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSArray (Stripe)
 
 - (nullable id)stp_boundSafeObjectAtIndex:(NSInteger)index;
+- (NSArray *)stp_arrayByRemovingNulls;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 void linkNSArrayCategory(void);
