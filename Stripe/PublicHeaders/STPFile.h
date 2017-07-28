@@ -20,33 +20,33 @@ typedef NS_ENUM(NSInteger, STPFilePurpose) {
 @interface STPFile : NSObject <STPAPIResponseDecodable>
 
 /**
- *  The token for this file.
+ The token for this file.
  */
 @property (nonatomic, readonly) NSString *fileId;
 
 /**
- * The date this file was created.
+ The date this file was created.
  */
 @property (nonatomic, readonly) NSDate *created;
 
 /**
- * The purpose of this file. This can be either an identifing document or an evidence dispute. 
- * @see https://stripe.com/docs/file-upload
+ The purpose of this file. This can be either an identifing document or an evidence dispute. 
+ @see https://stripe.com/docs/file-upload
  */
 @property (nonatomic, readonly) STPFilePurpose purpose;
 
 /**
- * The file size in bytes.
+ The file size in bytes.
  */
 @property (nonatomic, readonly) NSNumber *size;
 
 /**
- * The file type. This can be "jpg", "png", or "pdf".
+ The file type. This can be "jpg", "png", or "pdf".
  */
 @property (nonatomic, readonly) NSString *type;
 
 /**
- * Returns the string value for a purpose.
+ Returns the string value for a purpose.
  */
 + (nullable NSString *)stringFromPurpose:(STPFilePurpose)purpose;
 

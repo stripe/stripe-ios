@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 /**
- *  The various card brands to which a payment card can belong.
+ The various card brands to which a payment card can belong.
  */
 typedef NS_ENUM(NSInteger, STPCardBrand) {
     STPCardBrandVisa,

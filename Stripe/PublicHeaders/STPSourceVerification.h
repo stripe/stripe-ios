@@ -10,7 +10,7 @@
 #import "STPAPIResponseDecodable.h"
 
 /**
- *  Verification status types for a Source
+ Verification status types for a Source
  */
 typedef NS_ENUM(NSInteger, STPSourceVerificationStatus) {
     STPSourceVerificationStatusPending,
@@ -20,22 +20,22 @@ typedef NS_ENUM(NSInteger, STPSourceVerificationStatus) {
 };
 
 /**
- *  Information related to a source's verification flow.
+ Information related to a source's verification flow.
  */
 @interface STPSourceVerification : NSObject<STPAPIResponseDecodable>
 
 /**
- *  You cannot directly instantiate an `STPSourceVerification`. You should only use one that is part of an existing `STPSource` object.
+ You cannot directly instantiate an `STPSourceVerification`. You should only use one that is part of an existing `STPSource` object.
  */
 - (nonnull instancetype) init __attribute__((unavailable("You cannot directly instantiate an STPSourceVerification. You should only use one that is part of an existing STPSource object.")));
 
 /**
- *  The number of attempts remaining to authenticate the source object with a verification code.
+ The number of attempts remaining to authenticate the source object with a verification code.
  */
 @property (nonatomic, readonly, nullable) NSNumber *attemptsRemaining;
 
 /**
- *  The status of the verification.
+ The status of the verification.
  */
 @property (nonatomic, readonly) STPSourceVerificationStatus status;
 

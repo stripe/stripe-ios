@@ -354,8 +354,8 @@
     STPAddress *address = [STPAddress new];
     
     /**
-     *  Required fields for full are:
-     *  line1, city, country, state (US only) and a valid postal code (based on country)
+     Required fields for full are:
+     line1, city, country, state (US only) and a valid postal code (based on country)
      */
     
     XCTAssertFalse([address containsRequiredFields:STPBillingAddressFieldsFull]);

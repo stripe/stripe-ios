@@ -9,8 +9,8 @@
 #import "STPBundleLocator.h"
 
 /**
- * Using a private class to ensure that it can't be subclassed, which may
- * change the result of `bundleForClass`
+ Using a private class to ensure that it can't be subclassed, which may
+ change the result of `bundleForClass`
  */
 @interface STPBundleLocatorInternal : NSObject
 @end

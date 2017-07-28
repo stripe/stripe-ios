@@ -7,8 +7,8 @@
 //
 
 /*
- * Based on @weakify() and @strongify() from
- * https://github.com/jspahrsummers/libextc
+ Based on @weakify() and @strongify() from
+ https://github.com/jspahrsummers/libextc
  */
 
 #define WEAK(var) __weak typeof(var) weak_##var = var;
