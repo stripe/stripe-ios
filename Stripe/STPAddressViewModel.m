@@ -8,7 +8,7 @@
 
 #import "STPAddressViewModel.h"
 
-#import "NSArray+Stripe_BoundSafe.h"
+#import "NSArray+Stripe.h"
 #import "STPDispatchFunctions.h"
 #import "STPPostalCodeValidator.h"
 

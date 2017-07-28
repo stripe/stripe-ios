@@ -8,7 +8,7 @@
 
 #import "STPShippingMethodsViewController.h"
 
-#import "NSArray+Stripe_BoundSafe.h"
+#import "NSArray+Stripe.h"
 #import "STPColorUtils.h"
 #import "STPCoreTableViewController+Private.h"
 #import "STPImageLibrary+Private.h"
