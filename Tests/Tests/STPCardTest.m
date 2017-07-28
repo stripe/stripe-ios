@@ -16,6 +16,8 @@
 
 @interface STPCard ()
 
+@property (nonatomic, assign, readwrite) STPCardBrand brand;
+
 - (void)setLast4:(NSString *)last4;
 - (void)setAllResponseFields:(NSDictionary *)allResponseFields;
 
@@ -56,18 +58,7 @@
 }
 
 - (void)testStringFromBrand {
-    NSArray<NSNumber *> *values = @[
-                                    @(STPCardBrandAmex),
-                                    @(STPCardBrandDinersClub),
-                                    @(STPCardBrandDiscover),
-                                    @(STPCardBrandJCB),
-                                    @(STPCardBrandMasterCard),
-                                    @(STPCardBrandVisa),
-                                    @(STPCardBrandUnknown),
-                                    ];
-
-    for (NSNumber *brandNumber in values) {
-        STPCardBrand brand = (STPCardBrand)[brandNumber integerValue];
+    [self forEachBrand:^(STPCardBrand brand) {
         NSString *string = [STPCard stringFromBrand:brand];
 
         switch (brand) {
@@ -93,7 +84,7 @@
                 XCTAssertEqualObjects(string, @"Unknown");
                 break;
         }
-    }
+    }];
 }
 
 #pragma mark - STPCardFundingType Tests
@@ -306,19 +297,47 @@
     XCTAssertEqualObjects(card.stripeID, @"card_103kbR2eZvKYlo2CDczLmw4K");
 }
 
+#pragma mark - STPPaymentMethod Tests
+
+- (void)testImage {
+    [self forEachBrand:^(STPCardBrand brand) {
+        STPCard *card = [[STPCard alloc] init];
+        card.brand = brand;
+
+        XCTAssert([card image]);
+    }];
+}
+
+- (void)testTemplateImage {
+    [self forEachBrand:^(STPCardBrand brand) {
+        STPCard *card = [[STPCard alloc] init];
+        card.brand = brand;
+
+        XCTAssert([card templateImage]);
+    }];
+}
+
 - (void)testLabel {
     STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
     XCTAssertEqualObjects(card.label, @"Visa 4242");
 }
 
-- (void)testImage {
-    STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
-    XCTAssert(card.image);
-}
+#pragma mark -
 
-- (void)testTemplateImage {
-    STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
-    XCTAssert(card.templateImage);
+- (void)forEachBrand:(void (^)(STPCardBrand brand))block {
+    NSArray<NSNumber *> *values = @[
+                                    @(STPCardBrandAmex),
+                                    @(STPCardBrandDinersClub),
+                                    @(STPCardBrandDiscover),
+                                    @(STPCardBrandJCB),
+                                    @(STPCardBrandMasterCard),
+                                    @(STPCardBrandVisa),
+                                    @(STPCardBrandUnknown),
+                                    ];
+
+    for (NSNumber *brandNumber in values) {
+        block((STPCardBrand)[brandNumber integerValue]);
+    }
 }
 
 @end
