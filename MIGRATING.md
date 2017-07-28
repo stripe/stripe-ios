@@ -1,6 +1,9 @@
 ## Migration Guides
 
-### Migrating from versions < X.X.X
+### Migration from versions < X.Y.Z
+* The value of `[STPAPIResponseDecodable allResponseFields]` is now completely (deeply) filtered to not contain any instances of `[NSNull null]`. Previously, only `[NSNull null]` one level deep (shallow) were removed.
+
+### Migrating from versions < 11.2.0
 * `STPCustomer`'s `shippingAddress` property is now correctly annotated as nullable. Its type is an optional (`STPAddress?`) in Swift.
 
 ### Migration from versions < 11.0.0
