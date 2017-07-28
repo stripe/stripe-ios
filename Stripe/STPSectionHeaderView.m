@@ -9,8 +9,8 @@
 #import "STPSectionHeaderView.h"
 
 @interface STPSectionHeaderView()
-@property(nonatomic, weak)UILabel *label;
-@property(nonatomic)UIEdgeInsets buttonInsets;
+@property (nonatomic, weak) UILabel *label;
+@property (nonatomic) UIEdgeInsets buttonInsets;
 @end
 
 @implementation STPSectionHeaderView

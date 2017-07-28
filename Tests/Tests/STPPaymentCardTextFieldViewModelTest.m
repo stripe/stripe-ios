@@ -12,7 +12,7 @@
 #import "STPPaymentCardTextFieldViewModel.h"
 
 @interface STPPaymentCardTextFieldViewModelTest : XCTestCase
-@property(nonatomic)STPPaymentCardTextFieldViewModel *viewModel;
+@property (nonatomic) STPPaymentCardTextFieldViewModel *viewModel;
 @end
 
 @implementation STPPaymentCardTextFieldViewModelTest

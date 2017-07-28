@@ -23,6 +23,6 @@
 /**
  The raw JSON response used to create the object. This can be useful for using beta features that haven't yet been made into properties in the SDK.
  */
-@property(nonatomic, readonly, nonnull, copy)NSDictionary *allResponseFields;
+@property (nonatomic, readonly, nonnull, copy) NSDictionary *allResponseFields;
 
 @end

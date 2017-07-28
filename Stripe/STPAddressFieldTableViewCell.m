@@ -16,12 +16,12 @@
 
 @interface STPAddressFieldTableViewCell() <STPFormTextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
-@property(nonatomic, weak) STPFormTextField *textField;
-@property(nonatomic) UIToolbar *inputAccessoryToolbar;
-@property(nonatomic) UIPickerView *countryPickerView;
-@property(nonatomic, strong) NSArray *countryCodes;
-@property(nonatomic, weak)id<STPAddressFieldTableViewCellDelegate>delegate;
-@property(nonatomic, strong) NSString *ourCountryCode;
+@property (nonatomic, weak) STPFormTextField *textField;
+@property (nonatomic) UIToolbar *inputAccessoryToolbar;
+@property (nonatomic) UIPickerView *countryPickerView;
+@property (nonatomic, strong) NSArray *countryCodes;
+@property (nonatomic, weak) id<STPAddressFieldTableViewCellDelegate>delegate;
+@property (nonatomic, strong) NSString *ourCountryCode;
 @end
 
 @implementation STPAddressFieldTableViewCell

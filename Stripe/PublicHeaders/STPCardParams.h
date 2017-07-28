@@ -54,7 +54,7 @@
 /**
  The cardholder's address.
  */
-@property(nonatomic, copy, nonnull) STPAddress *address;
+@property (nonatomic, copy, nonnull) STPAddress *address;
 
 @property (nonatomic, copy, nullable) NSString *addressLine1;
 @property (nonatomic, copy, nullable) NSString *addressLine2;

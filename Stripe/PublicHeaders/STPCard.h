@@ -112,7 +112,7 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 /**
  The cardholder's address.
  */
-@property(nonatomic, copy, nullable) STPAddress *address;
+@property (nonatomic, copy, nullable) STPAddress *address;
 
 /**
  The cardholder's address.

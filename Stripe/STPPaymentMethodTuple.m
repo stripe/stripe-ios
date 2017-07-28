@@ -12,8 +12,8 @@
 
 @interface STPPaymentMethodTuple()
 
-@property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
-@property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
+@property (nonatomic) id<STPPaymentMethod> selectedPaymentMethod;
+@property (nonatomic) NSArray<id<STPPaymentMethod>> *paymentMethods;
 
 @end
 

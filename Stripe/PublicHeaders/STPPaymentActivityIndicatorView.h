@@ -22,11 +22,11 @@
 /**
  Whether or not the view is animating.
  */
-@property(nonatomic)BOOL animating;
+@property (nonatomic) BOOL animating;
 
 /**
  If true, the view will hide when it is not spinning. Default is true.
  */
-@property(nonatomic)BOOL hidesWhenStopped;
+@property (nonatomic) BOOL hidesWhenStopped;
 
 @end

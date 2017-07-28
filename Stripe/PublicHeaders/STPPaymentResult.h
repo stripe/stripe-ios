@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The returned source that the user has selected. This may come from a variety of different payment methods, such as an Apple Pay payment or a stored credit card. @see STPSource.h
  */
-@property(nonatomic, readonly)id<STPSourceProtocol> source;
+@property (nonatomic, readonly) id<STPSourceProtocol> source;
 
 /**
  Initializes the payment result with a given source. This is invoked by `STPPaymentContext` internally; you shouldn't have to call it directly.

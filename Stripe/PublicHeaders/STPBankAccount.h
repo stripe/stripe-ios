@@ -63,12 +63,12 @@ typedef NS_ENUM(NSInteger, STPBankAccountStatus) {
 /**
  The name of the person or business that owns the bank account.
  */
-@property(nonatomic, copy, nullable) NSString *accountHolderName;
+@property (nonatomic, copy, nullable) NSString *accountHolderName;
 
 /**
  The type of entity that holds the account.
  */
-@property(nonatomic) STPBankAccountHolderType accountHolderType;
+@property (nonatomic) STPBankAccountHolderType accountHolderType;
 
 /**
  A proxy for the account number, this uniquely identifies the account and can be used to compare equality of different bank accounts.

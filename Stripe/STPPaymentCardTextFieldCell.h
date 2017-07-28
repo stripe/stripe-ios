@@ -15,9 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPaymentCardTextFieldCell : UITableViewCell
 
-@property(nonatomic, weak, readonly)STPPaymentCardTextField *paymentField;
-@property(nonatomic, copy)STPTheme *theme;
-@property(nonatomic, weak)UIView *inputAccessoryView;
+@property (nonatomic, weak, readonly) STPPaymentCardTextField *paymentField;
+@property (nonatomic, copy) STPTheme *theme;
+@property (nonatomic, weak) UIView *inputAccessoryView;
 
 - (BOOL)isEmpty;
 

@@ -10,7 +10,7 @@
 
 @interface STPPaymentActivityIndicatorView()
 
-@property(nonatomic, weak)CAShapeLayer *indicatorLayer;
+@property (nonatomic, weak) CAShapeLayer *indicatorLayer;
 
 @end
 

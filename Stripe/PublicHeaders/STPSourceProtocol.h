@@ -18,6 +18,6 @@
 /**
  The stripe ID of the source.
  */
-@property(nonatomic, readonly, copy, nonnull)NSString *stripeID;
+@property (nonatomic, readonly, copy, nonnull) NSString *stripeID;
 
 @end

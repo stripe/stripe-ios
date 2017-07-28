@@ -10,7 +10,7 @@
 
 @interface UIViewController (Stripe_NavigationItemProxy)
 
-@property(nonatomic)UINavigationItem *stp_navigationItemProxy;
+@property (nonatomic) UINavigationItem *stp_navigationItemProxy;
 
 @end
 

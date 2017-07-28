@@ -21,8 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPCoreViewController ()
 
 @property (nonatomic) STPTheme *theme;
-@property(nonatomic) UIBarButtonItem *cancelItem;
-@property(nonatomic) UIBarButtonItem *backItem;
+@property (nonatomic) UIBarButtonItem *cancelItem;
+@property (nonatomic) UIBarButtonItem *backItem;
 
 /**
  All designated initializers funnel through this method to do their setup

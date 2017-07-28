@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The view controller's delegate. This must be set before showing the view controller in order for it to work properly. @see STPShippingAddressViewControllerDelegate
  */
-@property(nonatomic, weak) id<STPShippingAddressViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<STPShippingAddressViewControllerDelegate> delegate;
 
 /**
  If you're pushing `STPShippingAddressViewController` onto an existing `UINavigationController`'s stack, you should use this method to dismiss it, since it may have pushed an additional shipping method view controller onto the navigation controller's stack.

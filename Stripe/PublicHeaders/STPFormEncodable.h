@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
     cardParams.additionalAPIParameters = @{@"test_field": @"example_value"};
     [[STPAPIClient sharedClient] createTokenWithCard:cardParams completion:...];
  */
-@property(nonatomic, readwrite, copy)NSDictionary *additionalAPIParameters;
+@property (nonatomic, readwrite, copy) NSDictionary *additionalAPIParameters;
 
 @end
 

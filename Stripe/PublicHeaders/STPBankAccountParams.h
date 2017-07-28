@@ -51,11 +51,11 @@ typedef NS_ENUM(NSInteger, STPBankAccountHolderType) {
 /**
  The name of the person or business that owns the bank account.
  */
-@property(nonatomic, copy, nullable) NSString *accountHolderName;
+@property (nonatomic, copy, nullable) NSString *accountHolderName;
 
 /**
  The type of entity that holds the account. Defaults to STPBankAccountHolderTypeIndividual.
  */
-@property(nonatomic) STPBankAccountHolderType accountHolderType;
+@property (nonatomic) STPBankAccountHolderType accountHolderType;
 
 @end

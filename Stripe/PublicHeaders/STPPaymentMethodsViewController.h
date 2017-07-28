@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface STPPaymentMethodsViewController : STPCoreViewController
 
-@property(nonatomic, weak, readonly)id<STPPaymentMethodsViewControllerDelegate>delegate;
+@property (nonatomic, weak, readonly) id<STPPaymentMethodsViewControllerDelegate>delegate;
 
 /**
  Creates a new payment methods view controller.
@@ -72,7 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 *  If you've already collected some information from your user, you can set it here and it'll be automatically filled out when possible/appropriate in any UI that the payment context creates.
 */
-@property(nonatomic, strong, nullable)STPUserInformation *prefilledInformation;
+@property (nonatomic, strong, nullable) STPUserInformation *prefilledInformation;
 
 /**
  If you're pushing `STPPaymentMethodsViewController` onto an existing `UINavigationController`'s stack, you should use this method to dismiss it, since it may have pushed an additional add card view controller onto the navigation controller's stack.

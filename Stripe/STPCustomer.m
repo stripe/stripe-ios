@@ -16,10 +16,10 @@
 
 @interface STPCustomer()
 
-@property(nonatomic, copy)NSString *stripeID;
-@property(nonatomic) id<STPSourceProtocol> defaultSource;
-@property(nonatomic) NSArray<id<STPSourceProtocol>> *sources;
-@property(nonatomic) STPAddress *shippingAddress;
+@property (nonatomic, copy) NSString *stripeID;
+@property (nonatomic) id<STPSourceProtocol> defaultSource;
+@property (nonatomic) NSArray<id<STPSourceProtocol>> *sources;
+@property (nonatomic) STPAddress *shippingAddress;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
@@ -125,8 +125,8 @@
  */
 @interface STPCustomerDeserializer()
 
-@property(nonatomic, nullable)STPCustomer *customer;
-@property(nonatomic, nullable)NSError *error;
+@property (nonatomic, nullable) STPCustomer *customer;
+@property (nonatomic, nullable) NSError *error;
 
 @end
 

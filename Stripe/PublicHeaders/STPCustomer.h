@@ -40,22 +40,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The Stripe ID of the customer, e.g. `cus_1234`
  */
-@property(nonatomic, readonly, copy)NSString *stripeID;
+@property (nonatomic, readonly, copy) NSString *stripeID;
 
 /**
  The default source used to charge the customer.
  */
-@property(nonatomic, readonly, nullable) id<STPSourceProtocol> defaultSource;
+@property (nonatomic, readonly, nullable) id<STPSourceProtocol> defaultSource;
 
 /**
  The available payment sources the customer has (this may be an empty array).
  */
-@property(nonatomic, readonly) NSArray<id<STPSourceProtocol>> *sources;
+@property (nonatomic, readonly) NSArray<id<STPSourceProtocol>> *sources;
 
 /**
  The customer's shipping address.
  */
-@property(nonatomic, readonly, nullable) STPAddress *shippingAddress;
+@property (nonatomic, readonly, nullable) STPAddress *shippingAddress;
 
 @end
 
@@ -91,12 +91,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  If a customer was successfully parsed from the response, it will be set here. Otherwise, this value wil be nil (and the `error` property will explain what went wrong).
  */
-@property(nonatomic, readonly, nullable)STPCustomer *customer;
+@property (nonatomic, readonly, nullable) STPCustomer *customer;
 
 /**
  If the deserializer failed to parse a customer, this property will explain why (and the `customer` property will be nil).
  */
-@property(nonatomic, readonly, nullable)NSError *error;
+@property (nonatomic, readonly, nullable) NSError *error;
 
 @end
 

@@ -24,14 +24,14 @@ NS_ASSUME_NONNULL_BEGIN
  this address. The user will also have the option to fill their shipping address 
  using this address.
  */
-@property(nonatomic, strong, nullable)STPAddress *billingAddress;
+@property (nonatomic, strong, nullable) STPAddress *billingAddress;
 
 /**
  The user's shipping address. When set, the shipping address form will be filled
  with this address. The user will also have the option to fill their billing
  address using this address.
  */
-@property(nonatomic, strong, nullable)STPAddress *shippingAddress;
+@property (nonatomic, strong, nullable) STPAddress *shippingAddress;
 
 @end
 

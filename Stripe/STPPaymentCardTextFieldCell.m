@@ -10,7 +10,7 @@
 
 @interface STPPaymentCardTextFieldCell()
 
-@property(nonatomic, weak)STPPaymentCardTextField *paymentField;
+@property (nonatomic, weak) STPPaymentCardTextField *paymentField;
 
 @end
 

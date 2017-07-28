@@ -23,5 +23,5 @@
  This points to the same object as `STPCoreScrollViewController`'s `scrollView`
  property but with the type cast to `UITableView`
  */
-@property(nonatomic, nullable, readonly) UITableView *tableView;
+@property (nonatomic, nullable, readonly) UITableView *tableView;
 @end

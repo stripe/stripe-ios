@@ -94,57 +94,57 @@ NS_ASSUME_NONNULL_BEGIN
  `STPCustomerContext`, which will manage retrieving and updating a
  Stripe customer for you. @see STPCustomerContext.h
  */
-@property(nonatomic, readonly)id<STPBackendAPIAdapter> apiAdapter __attribute__((deprecated));
+@property (nonatomic, readonly) id<STPBackendAPIAdapter> apiAdapter __attribute__((deprecated));
 
 /**
  The configuration for the payment context to use internally. @see STPPaymentConfiguration.h
  */
-@property(nonatomic, readonly)STPPaymentConfiguration *configuration;
+@property (nonatomic, readonly) STPPaymentConfiguration *configuration;
 
 /**
  The visual appearance that will be used by any views that the context generates. @see STPTheme.h
  */
-@property(nonatomic, readonly)STPTheme *theme;
+@property (nonatomic, readonly) STPTheme *theme;
 
 /**
  If you've already collected some information from your user, you can set it here and it'll be automatically filled out when possible/appropriate in any UI that the payment context creates.
  */
-@property(nonatomic, strong, nullable)STPUserInformation *prefilledInformation;
+@property (nonatomic, strong, nullable) STPUserInformation *prefilledInformation;
 
 /**
  The view controller that any additional UI will be presented on. If you have a "checkout view controller" in your app, that should be used as the host view controller.
  */
-@property(nonatomic, weak, nullable)UIViewController *hostViewController;
+@property (nonatomic, weak, nullable) UIViewController *hostViewController;
 
 /**
  This delegate will be notified when the payment context's contents change. @see STPPaymentContextDelegate
  */
-@property(nonatomic, weak, nullable)id<STPPaymentContextDelegate> delegate;
+@property (nonatomic, weak, nullable) id<STPPaymentContextDelegate> delegate;
 
 /**
  Whether or not the payment context is currently loading information from the network.
  */
-@property(nonatomic, readonly)BOOL loading;
+@property (nonatomic, readonly) BOOL loading;
 
 /**
  The user's currently selected payment method. May be nil.
  */
-@property(nonatomic, readonly, nullable)id<STPPaymentMethod> selectedPaymentMethod;
+@property (nonatomic, readonly, nullable) id<STPPaymentMethod> selectedPaymentMethod;
 
 /**
  The available payment methods the user can choose between. May be nil.
  */
-@property(nonatomic, readonly, nullable)NSArray<id<STPPaymentMethod>> *paymentMethods;
+@property (nonatomic, readonly, nullable) NSArray<id<STPPaymentMethod>> *paymentMethods;
 
 /**
  The user's currently selected shipping method. May be nil.
  */
-@property(nonatomic, readonly, nullable)PKShippingMethod *selectedShippingMethod;
+@property (nonatomic, readonly, nullable) PKShippingMethod *selectedShippingMethod;
 
 /**
  An array of STPShippingMethod objects that describe the supported shipping methods. May be nil.
  */
-@property(nonatomic, readonly, nullable)NSArray<PKShippingMethod *> *shippingMethods;
+@property (nonatomic, readonly, nullable) NSArray<PKShippingMethod *> *shippingMethods;
 
 /**
  The user's shipping address. May be nil.
@@ -168,7 +168,7 @@ NS_ASSUME_NONNULL_BEGIN
  shipping address. To change this behavior, you can set 
  `verifyPrefilledShippingAddress` to NO in your `STPPaymentConfiguration`.
  */
-@property(nonatomic, readonly, nullable)STPAddress *shippingAddress;
+@property (nonatomic, readonly, nullable) STPAddress *shippingAddress;
 
 /**
  The amount of money you're requesting from the user, in the smallest currency 
@@ -181,7 +181,7 @@ NS_ASSUME_NONNULL_BEGIN
  @note You should only set either this or `paymentSummaryItems`, not both.
  The other will be automatically calculated on demand using your `paymentCurrency`.
  */
-@property(nonatomic)NSInteger paymentAmount;
+@property (nonatomic) NSInteger paymentAmount;
 
 /**
  The three-letter currency code for the currency of the payment (i.e. USD, GBP, 
@@ -190,7 +190,7 @@ NS_ASSUME_NONNULL_BEGIN
  @note Changing this property may change the return value of `paymentAmount` 
  or `paymentSummaryItems` (whichever one you didn't directly set yourself).
  */
-@property(nonatomic, copy)NSString *paymentCurrency;
+@property (nonatomic, copy) NSString *paymentCurrency;
 
 /**
  The two-letter country code for the country where the payment will be processed.
@@ -200,7 +200,7 @@ NS_ASSUME_NONNULL_BEGIN
  payment requests.
  @see PKPaymentRequest for more information.
  */
-@property(nonatomic, copy)NSString *paymentCountry;
+@property (nonatomic, copy) NSString *paymentCountry;
 
 /**
  If you support Apple Pay, you can optionally set the PKPaymentSummaryItems 
@@ -213,7 +213,7 @@ NS_ASSUME_NONNULL_BEGIN
  @note You should only set either this or `paymentAmount`, not both. 
  The other will be automatically calculated on demand using your `paymentCurrency.`
  */
-@property(nonatomic, copy)NSArray<PKPaymentSummaryItem *> *paymentSummaryItems;
+@property (nonatomic, copy) NSArray<PKPaymentSummaryItem *> *paymentSummaryItems;
 
 /**
  The presentation style used for all view controllers presented modally by the context.
@@ -221,7 +221,7 @@ NS_ASSUME_NONNULL_BEGIN
  `UIModalPresentationFullScreen`, `UIModalPresentationPageSheet`, or `UIModalPresentationFormSheet`.
  The default value is `UIModalPresentationFullScreen`.
  */
-@property(nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
+@property (nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
 
 /**
  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you
