@@ -22,16 +22,16 @@ typedef NS_ENUM(NSInteger, STPCardFieldType) {
 
 @interface STPPaymentCardTextFieldViewModel : NSObject
 
-@property(nonatomic, readwrite, copy, nullable) NSString *cardNumber;
-@property(nonatomic, readwrite, copy, nullable)NSString *rawExpiration;
-@property(nonatomic, readonly, nullable) NSString *expirationMonth;
-@property(nonatomic, readonly, nullable) NSString *expirationYear;
-@property(nonatomic, readwrite, copy, nullable) NSString *cvc;
-@property(nonatomic, readwrite, assign) BOOL postalCodeRequired;
-@property(nonatomic, readwrite, copy, nullable) NSString *postalCode;
-@property(nonatomic, readwrite, copy, nullable) NSString *postalCodeCountryCode;
-@property(nonatomic, readonly) STPCardBrand brand;
-@property(nonatomic, readonly) BOOL isValid;
+@property (nonatomic, readwrite, copy, nullable) NSString *cardNumber;
+@property (nonatomic, readwrite, copy, nullable) NSString *rawExpiration;
+@property (nonatomic, readonly, nullable) NSString *expirationMonth;
+@property (nonatomic, readonly, nullable) NSString *expirationYear;
+@property (nonatomic, readwrite, copy, nullable) NSString *cvc;
+@property (nonatomic, readwrite, assign) BOOL postalCodeRequired;
+@property (nonatomic, readwrite, copy, nullable) NSString *postalCode;
+@property (nonatomic, readwrite, copy, nullable) NSString *postalCodeCountryCode;
+@property (nonatomic, readonly) STPCardBrand brand;
+@property (nonatomic, readonly) BOOL isValid;
 
 - (nonnull NSString *)defaultPlaceholder;
 

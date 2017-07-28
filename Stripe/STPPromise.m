@@ -13,10 +13,10 @@
 
 @interface STPPromise<T>()
 
-@property(atomic)T value;
-@property(atomic)NSError *error;
-@property(atomic)NSArray<STPPromiseValueBlock> *successCallbacks;
-@property(atomic)NSArray<STPPromiseErrorBlock> *errorCallbacks;
+@property (atomic) T value;
+@property (atomic) NSError *error;
+@property (atomic) NSArray<STPPromiseValueBlock> *successCallbacks;
+@property (atomic) NSArray<STPPromiseErrorBlock> *errorCallbacks;
 
 @end
 

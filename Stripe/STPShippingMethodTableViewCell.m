@@ -13,12 +13,12 @@
 #import "STPLocalizationUtils.h"
 
 @interface STPShippingMethodTableViewCell ()
-@property(nonatomic, weak) UILabel *titleLabel;
-@property(nonatomic, weak) UILabel *subtitleLabel;
-@property(nonatomic, weak) UILabel *amountLabel;
-@property(nonatomic, weak) UIImageView *checkmarkIcon;
-@property(nonatomic)PKShippingMethod *shippingMethod;
-@property(nonatomic) NSNumberFormatter *numberFormatter;
+@property (nonatomic, weak) UILabel *titleLabel;
+@property (nonatomic, weak) UILabel *subtitleLabel;
+@property (nonatomic, weak) UILabel *amountLabel;
+@property (nonatomic, weak) UIImageView *checkmarkIcon;
+@property (nonatomic) PKShippingMethod *shippingMethod;
+@property (nonatomic) NSNumberFormatter *numberFormatter;
 @end
 
 @implementation STPShippingMethodTableViewCell

@@ -43,30 +43,30 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 @interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate, STPShippingAddressViewControllerDelegate>
 
-@property(nonatomic)STPPaymentConfiguration *configuration;
-@property(nonatomic)STPTheme *theme;
+@property (nonatomic) STPPaymentConfiguration *configuration;
+@property (nonatomic) STPTheme *theme;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-@property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
+@property (nonatomic) id<STPBackendAPIAdapter> apiAdapter;
 #pragma clang diagnostic pop
-@property(nonatomic)STPAPIClient *apiClient;
-@property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
+@property (nonatomic) STPAPIClient *apiClient;
+@property (nonatomic) STPPromise<STPPaymentMethodTuple *> *loadingPromise;
 
 // these wrap hostViewController's promises because the hostVC is nil at init-time
-@property(nonatomic)STPVoidPromise *willAppearPromise;
-@property(nonatomic)STPVoidPromise *didAppearPromise;
+@property (nonatomic) STPVoidPromise *willAppearPromise;
+@property (nonatomic) STPVoidPromise *didAppearPromise;
 
-@property(nonatomic, weak)STPPaymentMethodsViewController *paymentMethodsViewController;
-@property(nonatomic)id<STPPaymentMethod> selectedPaymentMethod;
-@property(nonatomic)NSArray<id<STPPaymentMethod>> *paymentMethods;
-@property(nonatomic)STPAddress *shippingAddress;
-@property(nonatomic)PKShippingMethod *selectedShippingMethod;
-@property(nonatomic)NSArray<PKShippingMethod *> *shippingMethods;
+@property (nonatomic, weak) STPPaymentMethodsViewController *paymentMethodsViewController;
+@property (nonatomic) id<STPPaymentMethod> selectedPaymentMethod;
+@property (nonatomic) NSArray<id<STPPaymentMethod>> *paymentMethods;
+@property (nonatomic) STPAddress *shippingAddress;
+@property (nonatomic) PKShippingMethod *selectedShippingMethod;
+@property (nonatomic) NSArray<PKShippingMethod *> *shippingMethods;
 
-@property(nonatomic, assign) STPPaymentContextState state;
+@property (nonatomic, assign) STPPaymentContextState state;
 
-@property(nonatomic)STPPaymentContextAmountModel *paymentAmountModel;
-@property(nonatomic)BOOL shippingAddressNeedsVerification;
+@property (nonatomic) STPPaymentContextAmountModel *paymentAmountModel;
+@property (nonatomic) BOOL shippingAddressNeedsVerification;
 
 @end
 

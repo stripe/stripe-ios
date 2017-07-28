@@ -13,52 +13,52 @@
 @class STPAddress;
 
 /**
- *  Information about a source's owner.
+ Information about a source's owner.
  */
 @interface STPSourceOwner : NSObject<STPAPIResponseDecodable>
 
 /**
- *  You cannot directly instantiate an `STPSourceOwner`. You should only use one that is part of an existing `STPSource` object.
+ You cannot directly instantiate an `STPSourceOwner`. You should only use one that is part of an existing `STPSource` object.
  */
 - (nonnull instancetype) init __attribute__((unavailable("You cannot directly instantiate an STPSourceOwner. You should only use one that is part of an existing STPSource object.")));
 
 /**
- *  Owner's address.
+ Owner's address.
  */
 @property (nonatomic, readonly, nullable) STPAddress *address;
 
 /**
- *  Owner's email address.
+ Owner's email address.
  */
 @property (nonatomic, readonly, nullable) NSString *email;
 
 /**
- *  Owner's full name.
+ Owner's full name.
  */
 @property (nonatomic, readonly, nullable) NSString *name;
 
 /**
- *  Owner's phone number.
+ Owner's phone number.
  */
 @property (nonatomic, readonly, nullable) NSString *phone;
 
 /**
- *  Verified owner's address.
+ Verified owner's address.
  */
 @property (nonatomic, readonly, nullable) STPAddress *verifiedAddress;
 
 /**
- *  Verified owner's email address.
+ Verified owner's email address.
  */
 @property (nonatomic, readonly, nullable) NSString *verifiedEmail;
 
 /**
- *  Verified owner's full name.
+ Verified owner's full name.
  */
 @property (nonatomic, readonly, nullable) NSString *verifiedName;
 
 /**
- *  Verified owner's phone number.
+ Verified owner's phone number.
  */
 @property (nonatomic, readonly, nullable) NSString *verifiedPhone;
 

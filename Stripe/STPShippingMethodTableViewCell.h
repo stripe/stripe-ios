@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface STPShippingMethodTableViewCell : UITableViewCell
-@property(nonatomic)STPTheme *theme;
+@property (nonatomic) STPTheme *theme;
 - (void)setShippingMethod:(PKShippingMethod *)method currency:(NSString *)currency;
 @end
 

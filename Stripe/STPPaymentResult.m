@@ -9,7 +9,7 @@
 #import "STPPaymentResult.h"
 
 @interface STPPaymentResult()
-@property(nonatomic)id<STPSourceProtocol> source;
+@property (nonatomic) id<STPSourceProtocol> source;
 @end
 
 @implementation STPPaymentResult

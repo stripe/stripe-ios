@@ -10,14 +10,14 @@
 #import <UIKit/UIKit.h>
 
 /**
- *  Objects conforming to this protocol can be attached to a Stripe Customer object as a payment source.
- *  @see https://stripe.com/docs/api#customer_object-sources
+ Objects conforming to this protocol can be attached to a Stripe Customer object as a payment source.
+ @see https://stripe.com/docs/api#customer_object-sources
  */
 @protocol STPSourceProtocol <NSObject>
 
 /**
- *  The stripe ID of the source.
+ The stripe ID of the source.
  */
-@property(nonatomic, readonly, copy, nonnull)NSString *stripeID;
+@property (nonatomic, readonly, copy, nonnull) NSString *stripeID;
 
 @end

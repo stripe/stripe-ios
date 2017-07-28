@@ -17,8 +17,8 @@
 #import "STPLocalizationUtils+STPTestAdditions.h"
 
 @interface STPShippingAddressViewController (TestsPrivate)
-@property(nonatomic) UITableView *tableView;
-@property(nonatomic) STPAddressViewModel<STPAddressFieldTableViewCellDelegate> *addressViewModel;
+@property (nonatomic) UITableView *tableView;
+@property (nonatomic) STPAddressViewModel<STPAddressFieldTableViewCellDelegate> *addressViewModel;
 @end
 
 @interface STPShippingAddressViewControllerLocalizationTests : FBSnapshotTestCase

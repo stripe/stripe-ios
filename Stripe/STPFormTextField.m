@@ -18,8 +18,8 @@
 #define FAUXPAS_IGNORED_ON_LINE(...)
 
 @interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate>
-@property(nonatomic, assign)STPFormTextFieldAutoFormattingBehavior autoformattingBehavior;
-@property(nonatomic, assign)BOOL selectionEnabled;
+@property (nonatomic, assign) STPFormTextFieldAutoFormattingBehavior autoformattingBehavior;
+@property (nonatomic, assign) BOOL selectionEnabled;
 @end
 
 @implementation STPTextFieldDelegateProxy
@@ -74,10 +74,10 @@
 typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString *inputText);
 
 @interface STPFormTextField()
-@property(nonatomic)STPTextFieldDelegateProxy *delegateProxy;
-@property(nonatomic, copy)STPFormTextTransformationBlock textFormattingBlock;
+@property (nonatomic) STPTextFieldDelegateProxy *delegateProxy;
+@property (nonatomic, copy) STPFormTextTransformationBlock textFormattingBlock;
 // This property only exists to disable keyboard loading in Travis CI due to a crash that occurs while trying to load the keyboard. Don't use it outside of tests.
-@property(nonatomic)BOOL skipsReloadingInputViews;
+@property (nonatomic) BOOL skipsReloadingInputViews;
 @end
 
 @implementation STPFormTextField

@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPBINRange : NSObject
 
-@property(nonatomic, readonly)NSUInteger length;
-@property(nonatomic, readonly)STPCardBrand brand;
+@property (nonatomic, readonly) NSUInteger length;
+@property (nonatomic, readonly) STPCardBrand brand;
 
 + (NSArray<STPBINRange *> *)allRanges;
 + (NSArray<STPBINRange *> *)binRangesForNumber:(NSString *)number;

@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
                                currency:(NSString *)currency
                                   theme:(STPTheme *)theme;
 
-@property(nonatomic, weak) id<STPShippingMethodsViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<STPShippingMethodsViewControllerDelegate> delegate;
 
 @end
 

@@ -11,9 +11,9 @@
 
 @interface STPSectionHeaderView : UIView
 
-@property(nonatomic, nonnull)STPTheme *theme;
-@property(nonatomic, copy, nullable)NSString *title;
-@property(nonatomic, nullable, weak)UIButton *button;
-@property(nonatomic)BOOL buttonHidden;
+@property (nonatomic, nonnull) STPTheme *theme;
+@property (nonatomic, copy, nullable) NSString *title;
+@property (nonatomic, nullable, weak) UIButton *button;
+@property (nonatomic) BOOL buttonHidden;
 
 @end

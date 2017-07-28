@@ -28,17 +28,17 @@
 #import "UIViewController+Stripe_ParentViewController.h"
 
 @interface STPShippingAddressViewController ()<STPAddressViewModelDelegate, UITableViewDelegate, UITableViewDataSource, STPShippingMethodsViewControllerDelegate>
-@property(nonatomic)STPPaymentConfiguration *configuration;
-@property(nonatomic)NSString *currency;
-@property(nonatomic)PKShippingMethod *selectedShippingMethod;
-@property(nonatomic, weak)UIImageView *imageView;
-@property(nonatomic)UIBarButtonItem *nextItem;
-@property(nonatomic)BOOL loading;
-@property(nonatomic)STPPaymentActivityIndicatorView *activityIndicator;
-@property(nonatomic)STPAddressViewModel *addressViewModel;
-@property(nonatomic)STPAddress *billingAddress;
-@property(nonatomic)BOOL hasUsedBillingAddress;
-@property(nonatomic)STPSectionHeaderView *addressHeaderView;
+@property (nonatomic) STPPaymentConfiguration *configuration;
+@property (nonatomic) NSString *currency;
+@property (nonatomic) PKShippingMethod *selectedShippingMethod;
+@property (nonatomic, weak) UIImageView *imageView;
+@property (nonatomic) UIBarButtonItem *nextItem;
+@property (nonatomic) BOOL loading;
+@property (nonatomic) STPPaymentActivityIndicatorView *activityIndicator;
+@property (nonatomic) STPAddressViewModel *addressViewModel;
+@property (nonatomic) STPAddress *billingAddress;
+@property (nonatomic) BOOL hasUsedBillingAddress;
+@property (nonatomic) STPSectionHeaderView *addressHeaderView;
 @end
 
 @implementation STPShippingAddressViewController

@@ -11,11 +11,11 @@
 #import "STPFormEncodable.h"
 
 @interface STPTestFormEncodableObject : NSObject<STPFormEncodable>
-@property(nonatomic) NSString *testProperty;
-@property(nonatomic) NSString *testIgnoredProperty;
-@property(nonatomic) NSArray *testArrayProperty;
-@property(nonatomic) NSDictionary *testDictionaryProperty;
-@property(nonatomic) STPTestFormEncodableObject *testNestedObjectProperty;
+@property (nonatomic) NSString *testProperty;
+@property (nonatomic) NSString *testIgnoredProperty;
+@property (nonatomic) NSArray *testArrayProperty;
+@property (nonatomic) NSDictionary *testDictionaryProperty;
+@property (nonatomic) STPTestFormEncodableObject *testNestedObjectProperty;
 @end
 
 @implementation STPTestFormEncodableObject

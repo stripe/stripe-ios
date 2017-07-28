@@ -15,17 +15,17 @@
 #import "STPPaymentCardTextFieldViewModel.h"
 
 @interface STPFormTextField(Testing)
-@property(nonatomic)BOOL skipsReloadingInputViews;
+@property (nonatomic) BOOL skipsReloadingInputViews;
 @end
 
 @interface STPPaymentCardTextField (Testing)
-@property(nonatomic, readwrite, weak)UIImageView *brandImageView;
-@property(nonatomic, readwrite, weak)STPFormTextField *numberField;
-@property(nonatomic, readwrite, weak)STPFormTextField *expirationField;
-@property(nonatomic, readwrite, weak)STPFormTextField *cvcField;
-@property(nonatomic, readonly, weak)STPFormTextField *currentFirstResponderField;
-@property(nonatomic, readwrite, strong)STPPaymentCardTextFieldViewModel *viewModel;
-@property(nonatomic, copy) NSNumber *focusedTextFieldForLayout;
+@property (nonatomic, readwrite, weak) UIImageView *brandImageView;
+@property (nonatomic, readwrite, weak) STPFormTextField *numberField;
+@property (nonatomic, readwrite, weak) STPFormTextField *expirationField;
+@property (nonatomic, readwrite, weak) STPFormTextField *cvcField;
+@property (nonatomic, readonly, weak) STPFormTextField *currentFirstResponderField;
+@property (nonatomic, readwrite, strong) STPPaymentCardTextFieldViewModel *viewModel;
+@property (nonatomic, copy) NSNumber *focusedTextFieldForLayout;
 + (UIImage *)cvcImageForCardBrand:(STPCardBrand)cardBrand;
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)cardBrand;
 @end
@@ -351,8 +351,8 @@
 @end
 
 @interface STPPaymentCardTextFieldUITests : XCTestCase
-@property(nonatomic)UIWindow *window;
-@property(nonatomic)STPPaymentCardTextField *sut;
+@property (nonatomic) UIWindow *window;
+@property (nonatomic) STPPaymentCardTextField *sut;
 @end
 
 @implementation STPPaymentCardTextFieldUITests

@@ -27,14 +27,14 @@ typedef NS_ENUM(NSInteger, STPFormTextFieldAutoFormattingBehavior) {
 
 @interface STPFormTextField : UITextField
 
-@property(nonatomic, readwrite, nullable) UIColor *defaultColor;
-@property(nonatomic, readwrite, nullable) UIColor *errorColor;
-@property(nonatomic, readwrite, nullable) UIColor *placeholderColor;
+@property (nonatomic, readwrite, nullable) UIColor *defaultColor;
+@property (nonatomic, readwrite, nullable) UIColor *errorColor;
+@property (nonatomic, readwrite, nullable) UIColor *placeholderColor;
 
-@property(nonatomic, readwrite, assign)BOOL selectionEnabled; // defaults to NO
-@property(nonatomic, readwrite, assign)BOOL preservesContentsOnPaste; // defaults to NO
-@property(nonatomic, readwrite, assign)STPFormTextFieldAutoFormattingBehavior autoFormattingBehavior;
-@property(nonatomic, readwrite, assign)BOOL validText;
-@property(nonatomic, readwrite, weak, nullable)id<STPFormTextFieldDelegate>formDelegate;
+@property (nonatomic, readwrite, assign) BOOL selectionEnabled; // defaults to NO
+@property (nonatomic, readwrite, assign) BOOL preservesContentsOnPaste; // defaults to NO
+@property (nonatomic, readwrite, assign) STPFormTextFieldAutoFormattingBehavior autoFormattingBehavior;
+@property (nonatomic, readwrite, assign) BOOL validText;
+@property (nonatomic, readwrite, weak, nullable) id<STPFormTextFieldDelegate>formDelegate;
 
 @end

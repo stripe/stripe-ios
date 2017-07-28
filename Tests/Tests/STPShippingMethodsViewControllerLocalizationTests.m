@@ -17,7 +17,7 @@
 #import "STPShippingMethodsViewController.h"
 
 @interface STPShippingMethodsViewController (TestsPrivate)
-@property(nonatomic) UITableView *tableView;
+@property (nonatomic) UITableView *tableView;
 @end
 
 @interface STPShippingMethodsViewControllerLocalizationTests : FBSnapshotTestCase

@@ -26,21 +26,21 @@ IB_DESIGNABLE
 /**
  @see STPPaymentCardTextFieldDelegate
  */
-@property(nonatomic, weak, nullable) IBOutlet id<STPPaymentCardTextFieldDelegate> delegate;
+@property (nonatomic, weak, nullable) IBOutlet id<STPPaymentCardTextFieldDelegate> delegate;
 
 /**
  The font used in each child field. Default is [UIFont systemFontOfSize:18]. 
  
  Set this property to nil to reset to the default.
  */
-@property(nonatomic, copy, null_resettable) UIFont *font UI_APPEARANCE_SELECTOR;
+@property (nonatomic, copy, null_resettable) UIFont *font UI_APPEARANCE_SELECTOR;
 
 /**
  The text color to be used when entering valid text. Default is [UIColor blackColor]. 
  
  Set this property to nil to reset to the default.
  */
-@property(nonatomic, copy, null_resettable) UIColor *textColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, copy, null_resettable) UIColor *textColor UI_APPEARANCE_SELECTOR;
 
 /**
  The text color to be used when the user has entered invalid information, 
@@ -48,7 +48,7 @@ IB_DESIGNABLE
  
  Default is [UIColor redColor]. Set this property to nil to reset to the default.
  */
-@property(nonatomic, copy, null_resettable) UIColor *textErrorColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, copy, null_resettable) UIColor *textErrorColor UI_APPEARANCE_SELECTOR;
 
 /**
  The text placeholder color used in each child field.
@@ -57,7 +57,7 @@ IB_DESIGNABLE
 
  Default is [UIColor lightGreyColor]. Set this property to nil to reset to the default. 
  */
-@property(nonatomic, copy, null_resettable) UIColor *placeholderColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, copy, null_resettable) UIColor *placeholderColor UI_APPEARANCE_SELECTOR;
 
 /**
  The placeholder for the card number field. 
@@ -67,23 +67,23 @@ IB_DESIGNABLE
  If this is set to something that resembles a card number, it will automatically 
  format it as such (in other words, you don't need to add spaces to this string).
  */
-@property(nonatomic, copy, nullable) IBInspectable NSString *numberPlaceholder;
+@property (nonatomic, copy, nullable) IBInspectable NSString *numberPlaceholder;
 
 /**
  The placeholder for the expiration field. Defaults to @"MM/YY".
  */
-@property(nonatomic, copy, nullable) IBInspectable NSString *expirationPlaceholder;
+@property (nonatomic, copy, nullable) IBInspectable NSString *expirationPlaceholder;
 
 /**
  The placeholder for the cvc field. Defaults to @"CVC".
  */
-@property(nonatomic, copy, nullable) IBInspectable NSString *cvcPlaceholder;
+@property (nonatomic, copy, nullable) IBInspectable NSString *cvcPlaceholder;
 
 /**
  The placeholder for the postal code field. Defaults to @"ZIP" for United States
  or @"Postal" for all other country codes.
  */
-@property(nonatomic, copy, nullable) IBInspectable NSString *postalCodePlaceholder;
+@property (nonatomic, copy, nullable) IBInspectable NSString *postalCodePlaceholder;
 
 /**
  The cursor color for the field. 
@@ -91,7 +91,7 @@ IB_DESIGNABLE
  This is a proxy for the view's tintColor property, exposed for clarity only 
  (in other words, calling setCursorColor is identical to calling setTintColor).
  */
-@property(nonatomic, copy, null_resettable) UIColor *cursorColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, copy, null_resettable) UIColor *cursorColor UI_APPEARANCE_SELECTOR;
 
 /**
  The border color for the field.
@@ -100,38 +100,38 @@ IB_DESIGNABLE
 
  Default is [UIColor lightGreyColor].
  */
-@property(nonatomic, copy, nullable) UIColor *borderColor UI_APPEARANCE_SELECTOR;
+@property (nonatomic, copy, nullable) UIColor *borderColor UI_APPEARANCE_SELECTOR;
 
 /**
  The width of the field's border. 
  
  Default is 1.0.
  */
-@property(nonatomic, assign) CGFloat borderWidth UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) CGFloat borderWidth UI_APPEARANCE_SELECTOR;
 
 /**
  The corner radius for the field's border.
  
  Default is 5.0.
  */
-@property(nonatomic, assign) CGFloat cornerRadius UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) CGFloat cornerRadius UI_APPEARANCE_SELECTOR;
 
 /**
  The keyboard appearance for the field.
  
  Default is UIKeyboardAppearanceDefault.
  */
-@property(nonatomic, assign) UIKeyboardAppearance keyboardAppearance UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIKeyboardAppearance keyboardAppearance UI_APPEARANCE_SELECTOR;
 
 /**
  This behaves identically to setting the inputView for each child text field.
  */
-@property(nonatomic, strong, nullable) UIView *inputView;
+@property (nonatomic, strong, nullable) UIView *inputView;
 
 /**
  This behaves identically to setting the inputAccessoryView for each child text field.
  */
-@property(nonatomic, strong, nullable) UIView *inputAccessoryView;
+@property (nonatomic, strong, nullable) UIView *inputAccessoryView;
 
 /**
 The curent brand image displayed in the receiver.
@@ -144,7 +144,7 @@ The curent brand image displayed in the receiver.
 
  @see STPCardValidator
  */
-@property(nonatomic, readonly) BOOL isValid;
+@property (nonatomic, readonly) BOOL isValid;
 
 /**
  Enable/disable selecting or editing the field. Useful when submitting card details to Stripe.
@@ -157,7 +157,7 @@ The curent brand image displayed in the receiver.
  May or may not be valid, unless `isValid` is true, in which case it is guaranteed
  to be valid.
  */
-@property(nonatomic, readonly, nullable) NSString *cardNumber;
+@property (nonatomic, readonly, nullable) NSString *cardNumber;
 
 /**
  The current expiration month displayed by the field (1 = January, etc). 
@@ -165,7 +165,7 @@ The curent brand image displayed in the receiver.
  May or may not be valid, unless `isValid` is true, in which case it is
  guaranteed to be valid.
  */
-@property(nonatomic, readonly) NSUInteger expirationMonth;
+@property (nonatomic, readonly) NSUInteger expirationMonth;
 
 /**
  The current expiration month displayed by the field, as a string. T
@@ -173,7 +173,7 @@ The curent brand image displayed in the receiver.
  This may or may not be a valid entry (i.e. "0") unless `isValid` is true. 
  It may be also 0-prefixed (i.e. "01" for January).
  */
-@property(nonatomic, readonly, nullable) NSString *formattedExpirationMonth;
+@property (nonatomic, readonly, nullable) NSString *formattedExpirationMonth;
 
 /**
  The current expiration year displayed by the field, modulo 100 
@@ -182,7 +182,7 @@ The curent brand image displayed in the receiver.
  May or may not be valid, unless `isValid` is true, in which case it is 
  guaranteed to be valid.
  */
-@property(nonatomic, readonly) NSUInteger expirationYear;
+@property (nonatomic, readonly) NSUInteger expirationYear;
 
 /**
  The current expiration year displayed by the field, as a string. 
@@ -190,7 +190,7 @@ The curent brand image displayed in the receiver.
  This is a 2-digit year (i.e. "15"), and may or may not be a valid entry
  unless `isValid` is true.
  */
-@property(nonatomic, readonly, nullable) NSString *formattedExpirationYear;
+@property (nonatomic, readonly, nullable) NSString *formattedExpirationYear;
 
 /**
  The current card CVC displayed by the field. 
@@ -198,12 +198,12 @@ The curent brand image displayed in the receiver.
  May or may not be valid, unless `isValid` is true, in which case it 
  is guaranteed to be valid.
  */
-@property(nonatomic, readonly, nullable) NSString *cvc;
+@property (nonatomic, readonly, nullable) NSString *cvc;
 
 /**
  The current card ZIP or postal code displayed by the field.
  */
-@property(nonatomic, readonly, nullable) NSString *postalCode;
+@property (nonatomic, readonly, nullable) NSString *postalCode;
 
 /**
  Controls if a postal code entry field can be displayed to the user.
@@ -214,7 +214,7 @@ The curent brand image displayed in the receiver.
  value. Some country codes may result in no postal code entry being shown if
  those countries do not commonly use postal codes.
  */
-@property(nonatomic, assign, readwrite) BOOL postalCodeEntryEnabled;
+@property (nonatomic, assign, readwrite) BOOL postalCodeEntryEnabled;
 
 
 /**
@@ -228,7 +228,7 @@ The curent brand image displayed in the receiver.
 
  By default this will fetch the user's current country code from NSLocale.
  */
-@property(nonatomic, copy, nullable) NSString *countryCode;
+@property (nonatomic, copy, nullable) NSString *countryCode;
 
 /**
  Convenience property for creating an STPCardParams from the currently entered information
@@ -236,7 +236,7 @@ The curent brand image displayed in the receiver.
  to scan your user's credit card with a camera, you can assemble that data into an STPCardParams
  object and set this property to that object to prefill the fields you've collected.
  */
-@property(nonatomic, strong, readwrite, nonnull) STPCardParams *cardParams;
+@property (nonatomic, strong, readwrite, nonnull) STPCardParams *cardParams;
 
 /**
  Causes the text field to begin editing. Presents the keyboard.

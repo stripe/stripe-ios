@@ -13,7 +13,7 @@
 
 @interface STPAddCardViewController (Private)
 
-@property(nonatomic)STPAddress *shippingAddress;
+@property (nonatomic) STPAddress *shippingAddress;
 
 - (void)commonInitWithConfiguration:(STPPaymentConfiguration *)configuration;
 

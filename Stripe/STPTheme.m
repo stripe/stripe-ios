@@ -10,7 +10,7 @@
 #import "STPColorUtils.h"
 
 @interface STPTheme()
-@property(nonatomic)NSNumber *internalBarStyle;
+@property (nonatomic) NSNumber *internalBarStyle;
 @end
 
 static UIColor *STPThemeDefaultPrimaryBackgroundColor;

@@ -10,8 +10,8 @@
 
 @interface STPCardTuple()
 
-@property(nonatomic, nullable)STPCard *selectedCard;
-@property(nonatomic)NSArray<STPCard *> *cards;
+@property (nonatomic, nullable) STPCard *selectedCard;
+@property (nonatomic) NSArray<STPCard *> *cards;
 
 @end
 

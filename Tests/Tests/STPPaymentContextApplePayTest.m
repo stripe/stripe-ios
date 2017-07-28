@@ -15,7 +15,7 @@
 #import "STPPaymentContext.h"
 
 @interface STPPaymentContext (Testing)
-@property(nonatomic) PKShippingMethod *selectedShippingMethod;
+@property (nonatomic) PKShippingMethod *selectedShippingMethod;
 - (PKPaymentRequest *)buildPaymentRequest;
 @end
 

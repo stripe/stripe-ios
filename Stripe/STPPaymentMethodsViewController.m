@@ -33,17 +33,17 @@
 
 @interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
 
-@property(nonatomic)STPPaymentConfiguration *configuration;
-@property(nonatomic)STPAddress *shippingAddress;
+@property (nonatomic) STPPaymentConfiguration *configuration;
+@property (nonatomic) STPAddress *shippingAddress;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-@property(nonatomic)id<STPBackendAPIAdapter> apiAdapter;
+@property (nonatomic) id<STPBackendAPIAdapter> apiAdapter;
 #pragma clang diagnostic pop
-@property(nonatomic)STPAPIClient *apiClient;
-@property(nonatomic)STPPromise<STPPaymentMethodTuple *> *loadingPromise;
-@property(nonatomic, weak)STPPaymentActivityIndicatorView *activityIndicator;
-@property(nonatomic, weak)UIViewController *internalViewController;
-@property(nonatomic)BOOL loading;
+@property (nonatomic) STPAPIClient *apiClient;
+@property (nonatomic) STPPromise<STPPaymentMethodTuple *> *loadingPromise;
+@property (nonatomic, weak) STPPaymentActivityIndicatorView *activityIndicator;
+@property (nonatomic, weak) UIViewController *internalViewController;
+@property (nonatomic) BOOL loading;
 
 @end
 

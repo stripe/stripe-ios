@@ -14,11 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 // This is a private class that is only a UIViewController subclass by virtue of the fact
 // that that makes it easier to attach to another UIViewController as a child.
 @interface STPKeyboardDetectingViewController : UIViewController
-@property(nonatomic, assign)CGRect lastKeyboardFrame;
-@property(nonatomic, weak)UIView *lastResponder;
-@property(nonatomic, nullable, copy)STPKeyboardFrameBlock keyboardFrameBlock;
-@property(nonatomic, weak)UIScrollView *managedScrollView;
-@property(nonatomic, assign)CGFloat currentBottomInsetChange;
+@property (nonatomic, assign) CGRect lastKeyboardFrame;
+@property (nonatomic, weak) UIView *lastResponder;
+@property (nonatomic, nullable, copy) STPKeyboardFrameBlock keyboardFrameBlock;
+@property (nonatomic, weak) UIScrollView *managedScrollView;
+@property (nonatomic, assign) CGFloat currentBottomInsetChange;
 @end
 
 @implementation STPKeyboardDetectingViewController

@@ -15,47 +15,47 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  An `STPCustomer` represents a deserialized Customer object from the Stripe API.
- *  You shouldn't need to instantiate an `STPCustomer` – you should instead use
- *  `STPCustomerContext` to manage retrieving and updating a customer.
+ An `STPCustomer` represents a deserialized Customer object from the Stripe API.
+ You shouldn't need to instantiate an `STPCustomer` – you should instead use
+ `STPCustomerContext` to manage retrieving and updating a customer.
  */
 @interface STPCustomer : NSObject <STPAPIResponseDecodable>
 
 /**
- *  Initialize a customer object with the provided values.
- *
- *  @param stripeID      The ID of the customer, e.g. `cus_abc`
- *  @param defaultSource The default source of the customer, such as an `STPCard` object. Can be nil.
- *  @param sources       All of the customer's payment sources. This might be an empty array.
- *
- *  @return an instance of STPCustomer
- *
- *  @deprecated Use `STPCustomerContext` to manage retrieving and updating a 
- *  Customer. You will no longer need to initialize an `STPCustomer`.
+ Initialize a customer object with the provided values.
+
+ @param stripeID      The ID of the customer, e.g. `cus_abc`
+ @param defaultSource The default source of the customer, such as an `STPCard` object. Can be nil.
+ @param sources       All of the customer's payment sources. This might be an empty array.
+
+ @return an instance of STPCustomer
+
+ @deprecated Use `STPCustomerContext` to manage retrieving and updating a 
+ Customer. You will no longer need to initialize an `STPCustomer`.
  */
 + (instancetype)customerWithStripeID:(NSString *)stripeID
                        defaultSource:(nullable id<STPSourceProtocol>)defaultSource
                              sources:(NSArray<id<STPSourceProtocol>> *)sources __attribute__((deprecated));
 
 /**
- *  The Stripe ID of the customer, e.g. `cus_1234`
+ The Stripe ID of the customer, e.g. `cus_1234`
  */
-@property(nonatomic, readonly, copy)NSString *stripeID;
+@property (nonatomic, readonly, copy) NSString *stripeID;
 
 /**
- *  The default source used to charge the customer.
+ The default source used to charge the customer.
  */
-@property(nonatomic, readonly, nullable) id<STPSourceProtocol> defaultSource;
+@property (nonatomic, readonly, nullable) id<STPSourceProtocol> defaultSource;
 
 /**
- *  The available payment sources the customer has (this may be an empty array).
+ The available payment sources the customer has (this may be an empty array).
  */
-@property(nonatomic, readonly) NSArray<id<STPSourceProtocol>> *sources;
+@property (nonatomic, readonly) NSArray<id<STPSourceProtocol>> *sources;
 
 /**
- *  The customer's shipping address.
+ The customer's shipping address.
  */
-@property(nonatomic, readonly, nullable) STPAddress *shippingAddress;
+@property (nonatomic, readonly, nullable) STPAddress *shippingAddress;
 
 @end
 
@@ -65,38 +65,38 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPCustomerDeserializer : NSObject
 
 /**
- *  Initialize a customer deserializer. The `data`, `urlResponse`, and `error` parameters are intended to be passed from an `NSURLSessionDataTask` callback. After it has been initialized, you can inspect the `error` and `customer` properties to see if the deserialization was successful. If `error` is nil, `customer` will be non-nil (and vice versa).
- *
- *  @param data        An `NSData` object representing encoded JSON for a Customer object
- *  @param urlResponse The URL response obtained from the `NSURLSessionTask`
- *  @param error       Any error that occurred from the URL session task (if this is non-nil, the `error` property will be set to this value after initialization).
- *
- *  @deprecated Use `STPCustomerContext` to manage retrieving and updating a
- *  Customer. You will no longer need to deserialize an `STPCustomer`.
+ Initialize a customer deserializer. The `data`, `urlResponse`, and `error` parameters are intended to be passed from an `NSURLSessionDataTask` callback. After it has been initialized, you can inspect the `error` and `customer` properties to see if the deserialization was successful. If `error` is nil, `customer` will be non-nil (and vice versa).
+
+ @param data        An `NSData` object representing encoded JSON for a Customer object
+ @param urlResponse The URL response obtained from the `NSURLSessionTask`
+ @param error       Any error that occurred from the URL session task (if this is non-nil, the `error` property will be set to this value after initialization).
+
+ @deprecated Use `STPCustomerContext` to manage retrieving and updating a
+ Customer. You will no longer need to deserialize an `STPCustomer`.
  */
 - (instancetype)initWithData:(nullable NSData *)data
                  urlResponse:(nullable NSURLResponse *)urlResponse
                        error:(nullable NSError *)error __attribute__((deprecated));
 
 /**
- *  Initializes a customer deserializer with a JSON dictionary. This JSON should be in the exact same format as what the Stripe API returns. If it's successfully parsed, the `customer` parameter will be present after initialization; otherwise `error` will be present.
- *
- *  @param json a JSON dictionary.
- *
- *  @deprecated Use `STPCustomerContext` to manage retrieving and updating a
- *  Customer. You will no longer need to deserialize an `STPCustomer`.
+ Initializes a customer deserializer with a JSON dictionary. This JSON should be in the exact same format as what the Stripe API returns. If it's successfully parsed, the `customer` parameter will be present after initialization; otherwise `error` will be present.
+
+ @param json a JSON dictionary.
+
+ @deprecated Use `STPCustomerContext` to manage retrieving and updating a
+ Customer. You will no longer need to deserialize an `STPCustomer`.
  */
 - (instancetype)initWithJSONResponse:(id)json __attribute__((deprecated));
 
 /**
- *  If a customer was successfully parsed from the response, it will be set here. Otherwise, this value wil be nil (and the `error` property will explain what went wrong).
+ If a customer was successfully parsed from the response, it will be set here. Otherwise, this value wil be nil (and the `error` property will explain what went wrong).
  */
-@property(nonatomic, readonly, nullable)STPCustomer *customer;
+@property (nonatomic, readonly, nullable) STPCustomer *customer;
 
 /**
- *  If the deserializer failed to parse a customer, this property will explain why (and the `customer` property will be nil).
+ If the deserializer failed to parse a customer, this property will explain why (and the `customer` property will be nil).
  */
-@property(nonatomic, readonly, nullable)NSError *error;
+@property (nonatomic, readonly, nullable) NSError *error;
 
 @end
 

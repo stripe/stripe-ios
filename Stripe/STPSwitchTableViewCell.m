@@ -11,9 +11,9 @@
 
 @interface STPSwitchTableViewCell()
 
-@property(nonatomic, weak)UILabel *captionLabel;
-@property(nonatomic, weak)UISwitch *switchView;
-@property(nonatomic, weak)id<STPSwitchTableViewCellDelegate> delegate;
+@property (nonatomic, weak) UILabel *captionLabel;
+@property (nonatomic, weak) UISwitch *switchView;
+@property (nonatomic, weak) id<STPSwitchTableViewCellDelegate> delegate;
 
 @end
 
