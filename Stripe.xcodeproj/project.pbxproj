@@ -342,6 +342,7 @@
 		8B5B4B441EFDD925005CF475 /* STPSourceOwnerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5B4B431EFDD925005CF475 /* STPSourceOwnerTest.m */; };
 		8B6DC9751F0171D20025E811 /* STPSourceReceiverTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DC9741F0171D20025E811 /* STPSourceReceiverTest.m */; };
 		8B6DC9771F0172640025E811 /* STPSourceSEPADebitDetailsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B6DC9761F0172640025E811 /* STPSourceSEPADebitDetailsTest.m */; };
+		8B82C5CA1F2BC78F009639F7 /* STPApplePayPaymentMethodTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B82C5C91F2BC78F009639F7 /* STPApplePayPaymentMethodTest.m */; };
 		8B8DDBB31EF887A4004B141F /* STPBankAccountParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B8DDBB21EF887A4004B141F /* STPBankAccountParamsTest.m */; };
 		8BB97F081F26645B0095122A /* NSDictionary+StripeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BB97F071F26645B0095122A /* NSDictionary+StripeTest.m */; };
 		8BD213371F044B57007F6FD1 /* BankAccount.json in Resources */ = {isa = PBXBuildFile; fileRef = 8BD213361F044B57007F6FD1 /* BankAccount.json */; };
@@ -984,6 +985,7 @@
 		8B5B4B431EFDD925005CF475 /* STPSourceOwnerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceOwnerTest.m; sourceTree = "<group>"; };
 		8B6DC9741F0171D20025E811 /* STPSourceReceiverTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceReceiverTest.m; sourceTree = "<group>"; };
 		8B6DC9761F0172640025E811 /* STPSourceSEPADebitDetailsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceSEPADebitDetailsTest.m; sourceTree = "<group>"; };
+		8B82C5C91F2BC78F009639F7 /* STPApplePayPaymentMethodTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPApplePayPaymentMethodTest.m; sourceTree = "<group>"; };
 		8B8DDBB21EF887A4004B141F /* STPBankAccountParamsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBankAccountParamsTest.m; sourceTree = "<group>"; };
 		8BB97F071F26645B0095122A /* NSDictionary+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+StripeTest.m"; sourceTree = "<group>"; };
 		8BD213361F044B57007F6FD1 /* BankAccount.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BankAccount.json; sourceTree = "<group>"; };
@@ -1551,6 +1553,7 @@
 				C15B02721EA176090026E606 /* StripeErrorTest.m */,
 				F1D3A25E1EB015B30095BFA9 /* UIImage+StripeTests.m */,
 				F1122A7D1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m */,
+				8B82C5C91F2BC78F009639F7 /* STPApplePayPaymentMethodTest.m */,
 			);
 			name = Unit;
 			sourceTree = "<group>";
@@ -2662,6 +2665,7 @@
 				C1CFCB751ED5E12400BE45DF /* STPFileTest.m in Sources */,
 				C11810991CC6D46D0022FB55 /* NSDecimalNumber+StripeTest.m in Sources */,
 				8B5B4B441EFDD925005CF475 /* STPSourceOwnerTest.m in Sources */,
+				8B82C5CA1F2BC78F009639F7 /* STPApplePayPaymentMethodTest.m in Sources */,
 				8B013C891F1E784A00DD831B /* STPPaymentConfigurationTest.m in Sources */,
 				C1EEDCC81CA2172700A54582 /* NSString+StripeTest.m in Sources */,
 				8BD87B901EFB17AA00269C2B /* STPSourceRedirectTest.m in Sources */,

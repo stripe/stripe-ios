@@ -8,11 +8,13 @@
 
 #import "STPApplePayPaymentMethod.h"
 
-#import "STPImageLibrary+Private.h"
 #import "STPImageLibrary.h"
+#import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
 
 @implementation STPApplePayPaymentMethod
+
+#pragma mark - STPPaymentMethod
 
 - (UIImage *)image {
     return [STPImageLibrary applePayCardImage];
@@ -26,6 +28,8 @@
 - (NSString *)label {
     return STPLocalizedString(@"Apple Pay", @"Text for Apple Pay payment method");
 }
+
+#pragma mark - Equality
 
 - (BOOL)isEqual:(id)object {
     return [object isKindOfClass:[STPApplePayPaymentMethod class]];

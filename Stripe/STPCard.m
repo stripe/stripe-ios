@@ -248,10 +248,7 @@
     return self.cardId;
 }
 
-- (NSString *)label {
-    NSString *brand = [self.class stringFromBrand:self.brand];
-    return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
-}
+#pragma mark - STPPaymentMethod
 
 - (UIImage *)image {
     return [STPImageLibrary brandImageForCardBrand:self.brand];
@@ -259,6 +256,11 @@
 
 - (UIImage *)templateImage {
     return [STPImageLibrary templatedBrandImageForCardBrand:self.brand];
+}
+
+- (NSString *)label {
+    NSString *brand = [self.class stringFromBrand:self.brand];
+    return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
 }
 
 @end
