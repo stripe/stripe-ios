@@ -8,7 +8,7 @@
 
 #import "STPPaymentMethodsInternalViewController.h"
 
-#import "NSArray+Stripe_BoundSafe.h"
+#import "NSArray+Stripe.h"
 #import "STPAddCardViewController.h"
 #import "STPAddCardViewController+Private.h"
 #import "STPCoreTableViewController.h"

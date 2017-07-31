@@ -1,5 +1,6 @@
 == X.Y.Z 2017-XX-YY
 * Adds nullability annotations to `STPPaymentMethod` protocol
+* Improves the `[STPAPIResponseDecodable allResponseFields]` by removing all instances of `[NSNull null]` including ones that are nested. See MIGRATING.md.
 
 == 11.2.0 2017-07-27
 * Adds an option to allow users to delete payment methods from the `STPPaymentMethodsViewController`. Enabled by default but can disabled using the `canDeletePaymentMethods` property of `STPPaymentConfiguration`.
