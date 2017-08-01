@@ -10,8 +10,8 @@ if ! command -v jazzy > /dev/null; then
 fi
 
 # Verify jazzy is up to date
-jazzy_version_local="$(gem search ^jazzy$ --local --no-verbose)"
-jazzy_version_remote="$(gem search ^jazzy$ --remote --no-verbose)"
+jazzy_version_local="$(jazzy --version | grep --only-matching --extended-regexp "[0-9\.]+")"
+jazzy_version_remote="$(gem search ^jazzy$ --remote --no-verbose | grep --only-matching --extended-regexp "[0-9\.]+")"
 
 if [[ "${jazzy_version_local}" != "${jazzy_version_remote}" ]]; then
   echo "ERROR: Please update jazzy before running build_documentation.sh:"
