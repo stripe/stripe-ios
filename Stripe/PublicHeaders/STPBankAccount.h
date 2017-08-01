@@ -11,10 +11,21 @@
 #import "STPBankAccountParams.h"
 #import "STPAPIResponseDecodable.h"
 
+
+/**
+ Possible validation states for a bank account.
+
+ - STPBankAccountStatusNew: The account has had no activity or validation performed
+ - STPBankAccountStatusValidated: Stripe has determined this bank account exists.
+ - STPBankAccountStatusVerified: Bank account verification has succeeded.
+ - STPBankAccountStatusVerificationFailed: Verification for this bank account has failed.
+ - STPBankAccountStatusErrored: A transfer sent to this bank account has failed.
+ */
 typedef NS_ENUM(NSInteger, STPBankAccountStatus) {
     STPBankAccountStatusNew,
     STPBankAccountStatusValidated,
     STPBankAccountStatusVerified,
+    STPBankAccountStatusVerificationFailed,
     STPBankAccountStatusErrored,
 };
 
