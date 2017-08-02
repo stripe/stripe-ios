@@ -27,16 +27,18 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 };
 
 /**
- Representation of a user's credit card details that have been tokenized with the Stripe API
+ Representation of a user's credit card details that have been tokenized with 
+ the Stripe API
 
  @see https://stripe.com/docs/api#cards
  */
 @interface STPCard : NSObject<STPAPIResponseDecodable, STPPaymentMethod, STPSourceProtocol>
 
 /**
- You cannot directly instantiate an `STPCard`. You should only use one that has been returned from an `STPAPIClient` callback.
+ You cannot directly instantiate an `STPCard`. You should only use one that has 
+ been returned from an `STPAPIClient` callback.
  */
-- (nonnull instancetype) init __attribute__((unavailable("You cannot directly instantiate an STPCard. You should only use one that has been returned from an STPAPIClient callback.")));
+- (instancetype) init __attribute__((unavailable("You cannot directly instantiate an STPCard. You should only use one that has been returned from an STPAPIClient callback.")));
 
 /**
  The last 4 digits of the card.
@@ -44,9 +46,11 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 @property (nonatomic, readonly) NSString *last4;
 
 /**
- For cards made with Apple Pay, this refers to the last 4 digits of the "Device Account Number" for the tokenized card. For regular cards, it will be nil.
+ For cards made with Apple Pay, this refers to the last 4 digits of the 
+ "Device Account Number" for the tokenized card. For regular cards, it will
+ be nil.
  */
-@property (nonatomic, readonly, nullable) NSString *dynamicLast4;
+@property (nonatomic, nullable, readonly) NSString *dynamicLast4;
 
 /**
  Whether or not the card originated from Apple Pay.
@@ -66,12 +70,12 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 /**
  The cardholder's name.
  */
-@property (nonatomic, copy, nullable, readonly) NSString *name;
+@property (nonatomic, nullable, readonly) NSString *name;
 
 /**
  The cardholder's address.
  */
-@property (nonatomic, nonnull, readonly) STPAddress *address;
+@property (nonatomic, readonly) STPAddress *address;
 
 /**
  The issuer of the card.
@@ -89,12 +93,15 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 @property (nonatomic, nullable, readonly) NSString *country;
 
 /**
- This is only applicable when tokenizing debit cards to issue payouts to managed accounts. You should not set it otherwise. The card can then be used as a transfer destination for funds in this currency.
+ This is only applicable when tokenizing debit cards to issue payouts to managed
+ accounts. You should not set it otherwise. The card can then be used as a 
+ transfer destination for funds in this currency.
  */
 @property (nonatomic, nullable, readonly) NSString *currency;
 
 /**
- Returns a string representation for the provided card brand; i.e. `[NSString stringFromBrand:STPCardBrandVisa] ==  @"Visa"`.
+ Returns a string representation for the provided card brand; 
+ i.e. `[NSString stringFromBrand:STPCardBrandVisa] ==  @"Visa"`.
 
  @param brand the brand you want to convert to a string
 
@@ -108,47 +115,49 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 /**
  The Stripe ID for the card.
  */
-@property (nonatomic, nullable, readonly) NSString *cardId DEPRECATED_MSG_ATTRIBUTE("Use stripeID (defined in STPSourceProtocol)");
+@property (nonatomic, readonly) NSString *cardId DEPRECATED_MSG_ATTRIBUTE("Use stripeID (defined in STPSourceProtocol)");
 
 /**
  The first line of the cardholder's address
  */
-@property (nonatomic, copy, nullable, readonly) NSString *addressLine1 DEPRECATED_MSG_ATTRIBUTE("Use address.line1");
+@property (nonatomic, nullable, readonly) NSString *addressLine1 DEPRECATED_MSG_ATTRIBUTE("Use address.line1");
 
 /**
  The second line of the cardholder's address
  */
-@property (nonatomic, copy, nullable, readonly) NSString *addressLine2 DEPRECATED_MSG_ATTRIBUTE("Use address.line2");
+@property (nonatomic, nullable, readonly) NSString *addressLine2 DEPRECATED_MSG_ATTRIBUTE("Use address.line2");
 
 /**
  The city of the cardholder's address
  */
-@property (nonatomic, copy, nullable, readonly) NSString *addressCity DEPRECATED_MSG_ATTRIBUTE("Use address.city");
+@property (nonatomic, nullable, readonly) NSString *addressCity DEPRECATED_MSG_ATTRIBUTE("Use address.city");
 
 /**
  The state of the cardholder's address
  */
-@property (nonatomic, copy, nullable, readonly) NSString *addressState DEPRECATED_MSG_ATTRIBUTE("Use address.state");
+@property (nonatomic, nullable, readonly) NSString *addressState DEPRECATED_MSG_ATTRIBUTE("Use address.state");
 
 /**
  The zip code of the cardholder's address
  */
-@property (nonatomic, copy, nullable, readonly) NSString *addressZip DEPRECATED_MSG_ATTRIBUTE("Use address.postalCode");
+@property (nonatomic, nullable, readonly) NSString *addressZip DEPRECATED_MSG_ATTRIBUTE("Use address.postalCode");
 
 /**
  The country of the cardholder's address
  */
-@property (nonatomic, copy, nullable, readonly) NSString *addressCountry DEPRECATED_MSG_ATTRIBUTE("Use address.country");
+@property (nonatomic, nullable, readonly) NSString *addressCountry DEPRECATED_MSG_ATTRIBUTE("Use address.country");
 
 /**
  Create an STPCard from a Stripe API response.
 
  @param cardID   The Stripe ID of the card, e.g. `card_185iQx4JYtv6MPZKfcuXwkOx`
- @param brand    The brand of the card (e.g. "Visa". To obtain this enum value from a string, use `[STPCardBrand brandFromString:string]`;
+ @param brand    The brand of the card (e.g. "Visa". To obtain this enum value 
+ from a string, use `[STPCardBrand brandFromString:string]`;
  @param last4    The last 4 digits of the card, e.g. 4242
  @param expMonth The card's expiration month, 1-indexed (i.e. 1 = January)
  @param expYear  The card's expiration year
- @param funding  The card's funding type (credit, debit, or prepaid). To obtain this enum value from a string, use `[STPCardBrand fundingFromString:string]`.
+ @param funding  The card's funding type (credit, debit, or prepaid). To obtain 
+ this enum value from a string, use `[STPCardBrand fundingFromString:string]`.
 
  @return an STPCard instance populated with the provided values.
  */
@@ -160,20 +169,28 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
                    funding:(STPCardFundingType)funding DEPRECATED_MSG_ATTRIBUTE("You cannot directly instantiate an STPCard. You should only use one that has been returned from an STPAPIClient callback.");
 
 /**
- This parses a string representing a card's funding type into the appropriate `STPCardFundingType` enum value, i.e. `[STPCard fundingFromString:@"prepaid"] == STPCardFundingTypePrepaid`.
+ This parses a string representing a card's funding type into the appropriate 
+ `STPCardFundingType` enum value, 
+ i.e. `[STPCard fundingFromString:@"prepaid"] == STPCardFundingTypePrepaid`.
 
- @param string a string representing the card's funding type as returned from the Stripe API
+ @param string a string representing the card's funding type as returned from 
+ the Stripe API
 
- @return an enum value mapped to that string. If the string is unrecognized, returns `STPCardFundingTypeOther`.
+ @return an enum value mapped to that string. If the string is unrecognized, 
+ returns `STPCardFundingTypeOther`.
  */
 + (STPCardFundingType)fundingFromString:(NSString *)string DEPRECATED_ATTRIBUTE;
 
 /**
- This parses a string representing a card's brand into the appropriate STPCardBrand enum value, i.e. `[STPCard brandFromString:@"American Express"] == STPCardBrandAmex`
+ This parses a string representing a card's brand into the appropriate 
+ STPCardBrand enum value, 
+ i.e. `[STPCard brandFromString:@"American Express"] == STPCardBrandAmex`
 
- @param string a string representing the card's brand as returned from the Stripe API
+ @param string a string representing the card's brand as returned from 
+ the Stripe API
 
- @return an enum value mapped to that string. If the string is unrecognized, returns STPCardBrandUnknown.
+ @return an enum value mapped to that string. If the string is unrecognized, 
+ returns STPCardBrandUnknown.
  */
 + (STPCardBrand)brandFromString:(NSString *)string DEPRECATED_ATTRIBUTE;
 

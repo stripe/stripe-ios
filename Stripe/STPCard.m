@@ -13,20 +13,23 @@
 #import "STPImageLibrary+Private.h"
 #import "STPImageLibrary.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STPCard ()
 
-@property (nonatomic, nonnull) NSString *stripeID;
-@property (nonatomic, readwrite) NSString *name;
-@property (nonatomic, readwrite) NSString *last4;
-@property (nonatomic, readwrite) NSString *dynamicLast4;
-@property (nonatomic, readwrite) STPCardBrand brand;
-@property (nonatomic, readwrite) STPCardFundingType funding;
-@property (nonatomic, readwrite) NSString *country;
-@property (nonatomic, readwrite) NSString *currency;
-@property (nonatomic, readwrite) NSUInteger expMonth;
-@property (nonatomic, readwrite) NSUInteger expYear;
-@property (nonatomic, readwrite, nonnull, strong) STPAddress *address;
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, copy) NSString *stripeID;
+
+@property (nonatomic, copy, nullable, readwrite) NSString *name;
+@property (nonatomic, copy, readwrite) NSString *last4;
+@property (nonatomic, copy, nullable, readwrite) NSString *dynamicLast4;
+@property (nonatomic, assign, readwrite) STPCardBrand brand;
+@property (nonatomic, assign, readwrite) STPCardFundingType funding;
+@property (nonatomic, copy, nullable, readwrite) NSString *country;
+@property (nonatomic, copy, nullable, readwrite) NSString *currency;
+@property (nonatomic, assign, readwrite) NSUInteger expMonth;
+@property (nonatomic, assign, readwrite) NSUInteger expYear;
+@property (nonatomic, strong, readwrite) STPAddress *address;
+@property (nonatomic, copy, readwrite) NSDictionary *allResponseFields;
 
 // See STPCard+Private.h
 
@@ -107,7 +110,7 @@
 
 #pragma mark - Equality
 
-- (BOOL)isEqual:(id)other {
+- (BOOL)isEqual:(nullable id)other {
     return [self isEqualToCard:other];
 }
 
@@ -115,7 +118,7 @@
     return [self.stripeID hash];
 }
 
-- (BOOL)isEqualToCard:(STPCard *)other {
+- (BOOL)isEqualToCard:(nullable STPCard *)other {
     if (self == other) {
         return YES;
     }
@@ -168,7 +171,7 @@
     return @[@"id", @"last4", @"brand", @"exp_month", @"exp_year"];
 }
 
-+ (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
++ (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
     NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
     if (!dict) {
         return nil;
@@ -247,28 +250,30 @@
     return self.stripeID;
 }
 
-- (NSString *)addressLine1 {
+- (nullable NSString *)addressLine1 {
     return self.address.line1;
 }
 
-- (NSString *)addressLine2 {
+- (nullable NSString *)addressLine2 {
     return self.address.line2;
 }
 
-- (NSString *)addressZip {
+- (nullable NSString *)addressZip {
     return self.address.postalCode;
 }
 
-- (NSString *)addressCity {
+- (nullable NSString *)addressCity {
     return self.address.city;
 }
 
-- (NSString *)addressState {
+- (nullable NSString *)addressState {
     return self.address.state;
 }
 
-- (NSString *)addressCountry {
+- (nullable NSString *)addressCountry {
     return self.address.country;
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
