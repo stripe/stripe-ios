@@ -14,8 +14,9 @@
 #endif
 
 /**
- Representation of a user's credit card details. You can assemble these with information that your user enters and
- then create Stripe tokens with them using an STPAPIClient.
+ Representation of a user's credit card details. You can assemble these with
+ information that your user enters and then create Stripe tokens with them using 
+ an STPAPIClient.
 
  @see https://stripe.com/docs/api#cards
  */
@@ -48,24 +49,60 @@
 
 /**
  The cardholder's name.
+ 
+ @note Changing this property will also changing the name of the 
+ param's `address` property.
  */
 @property (nonatomic, copy, nullable) NSString *name;
 
 /**
  The cardholder's address.
+ 
+ @note Changing this property will also changing the name of the 
+ param's `name` property
  */
-@property (nonatomic, copy, nonnull) STPAddress *address;
-
-@property (nonatomic, copy, nullable) NSString *addressLine1;
-@property (nonatomic, copy, nullable) NSString *addressLine2;
-@property (nonatomic, copy, nullable) NSString *addressCity;
-@property (nonatomic, copy, nullable) NSString *addressState;
-@property (nonatomic, copy, nullable) NSString *addressZip;
-@property (nonatomic, copy, nullable) NSString *addressCountry;
+@property (nonatomic, strong, nonnull) STPAddress *address;
 
 /**
- Three-letter ISO currency code representing the currency paid out to the bank account. This is only applicable when tokenizing debit cards to issue payouts to managed accounts. You should not set it otherwise. The card can then be used as a transfer destination for funds in this currency.
+ Three-letter ISO currency code representing the currency paid out to the bank 
+ account. This is only applicable when tokenizing debit cards to issue payouts 
+ to managed accounts. You should not set it otherwise. The card can then be 
+ used as a transfer destination for funds in this currency.
  */
 @property (nonatomic, copy, nullable) NSString *currency;
+
+
+#pragma mark - Deprecated methods
+
+/**
+ The first line of the cardholder's address
+ */
+@property (nonatomic, copy, nullable) NSString *addressLine1 DEPRECATED_MSG_ATTRIBUTE("Use address.line1");
+
+/**
+ The second line of the cardholder's address
+ */
+@property (nonatomic, copy, nullable) NSString *addressLine2 DEPRECATED_MSG_ATTRIBUTE("Use address.line2");
+
+/**
+ The city of the cardholder's address
+ */
+@property (nonatomic, copy, nullable) NSString *addressCity DEPRECATED_MSG_ATTRIBUTE("Use address.city");
+
+/**
+ The state of the cardholder's address
+ */
+@property (nonatomic, copy, nullable) NSString *addressState DEPRECATED_MSG_ATTRIBUTE("Use address.state");
+
+/**
+ The zip code of the cardholder's address
+ */
+@property (nonatomic, copy, nullable) NSString *addressZip DEPRECATED_MSG_ATTRIBUTE("Use address.postalCode");
+
+/**
+ The country of the cardholder's address
+ */
+@property (nonatomic, copy, nullable) NSString *addressCountry DEPRECATED_MSG_ATTRIBUTE("Use address.country");
+
 
 @end

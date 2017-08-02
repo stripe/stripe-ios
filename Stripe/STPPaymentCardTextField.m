@@ -608,7 +608,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     if (self.postalCodeEntryEnabled) {
         // We don't clobber any manually set address zip code that was on our params
         // if we are not showing the postal code entry field.
-        self.internalCardParams.addressZip = self.postalCode;
+        self.internalCardParams.address.postalCode = self.postalCode;
     }
     return self.internalCardParams;
 }
@@ -644,7 +644,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     }
     [self setText:cardParams.cvc inField:STPCardFieldTypeCVC];
 
-    [self setText:cardParams.addressZip inField:STPCardFieldTypePostalCode];
+    [self setText:cardParams.address.postalCode inField:STPCardFieldTypePostalCode];
 
     if ([self isFirstResponder]) {
         STPCardFieldType fieldType = originalSubResponder.tag;

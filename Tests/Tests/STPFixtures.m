@@ -46,6 +46,10 @@
     return cardParams;
 }
 
++ (STPCard *)card {
+    return [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
+}
+
 + (STPSource *)cardSource {
     return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"]];
 }

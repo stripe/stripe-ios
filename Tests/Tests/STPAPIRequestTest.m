@@ -62,7 +62,7 @@
     // Perform request
     NSString *endpoint = @"endpoint";
     NSDictionary *parameters = @{@"key": @"value"};
-    STPCard *deserializer = [[STPCard alloc] init];
+    STPCard *deserializer = [STPCard new];
 
     NSURLSessionDataTask *task = [STPAPIRequest postWithAPIClient:apiClientMock
                                                          endpoint:endpoint
@@ -130,7 +130,7 @@
     // Perform request
     NSString *endpoint = @"endpoint";
     NSDictionary *parameters = @{@"key": @"value"};
-    STPCard *deserializer = [[STPCard alloc] init];
+    STPCard *deserializer = [STPCard new];
 
     NSURLSessionDataTask *task = [STPAPIRequest getWithAPIClient:apiClientMock
                                                         endpoint:endpoint
@@ -198,7 +198,7 @@
     // Perform request
     NSString *endpoint = @"endpoint";
     NSDictionary *parameters = @{@"key": @"value"};
-    STPCard *deserializer = [[STPCard alloc] init];
+    STPCard *deserializer = [STPCard new];
 
     NSURLSessionDataTask *task = [STPAPIRequest deleteWithAPIClient:apiClientMock
                                                            endpoint:endpoint

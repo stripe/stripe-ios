@@ -298,6 +298,9 @@
     XCTAssertFalse(sut.isValid);
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+
 - (void)testSetCard_addressFields {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
 
@@ -319,6 +322,8 @@
     XCTAssertEqualObjects(sut.cardParams.addressZip, @"12345");
     XCTAssertEqualObjects(sut.cardParams.addressCountry, @"US");
 }
+
+#pragma clang diagnostic pop
 
 - (void)testSettingTextUpdatesViewModelText {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];

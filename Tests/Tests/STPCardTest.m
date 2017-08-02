@@ -12,6 +12,7 @@
 #import "STPCard+Private.h"
 
 #import "NSDictionary+Stripe.h"
+#import "STPFixtures.h"
 #import "STPTestUtils.h"
 
 @interface STPCard ()
@@ -31,6 +32,10 @@
 
 #pragma mark - STPCardBrand Tests
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+// These are only intended to be deprecated publicly.
+// When removed from public header, can remove these pragmas
 - (void)testBrandFromString {
     XCTAssertEqual([STPCard brandFromString:@"visa"], STPCardBrandVisa);
     XCTAssertEqual([STPCard brandFromString:@"VISA"], STPCardBrandVisa);
@@ -56,6 +61,7 @@
     XCTAssertEqual([STPCard brandFromString:@"garbage"], STPCardBrandUnknown);
     XCTAssertEqual([STPCard brandFromString:@"GARBAGE"], STPCardBrandUnknown);
 }
+#pragma clang diagnostic pop
 
 - (void)testStringFromBrand {
     [self forEachBrand:^(STPCardBrand brand) {
@@ -89,6 +95,11 @@
 
 #pragma mark - STPCardFundingType Tests
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+// These are only intended to be deprecated publicly.
+// When removed from public header, can remove these pragmas
+
 - (void)testFundingFromString {
     XCTAssertEqual([STPCard fundingFromString:@"credit"], STPCardFundingTypeCredit);
     XCTAssertEqual([STPCard fundingFromString:@"CREDIT"], STPCardFundingTypeCredit);
@@ -108,6 +119,8 @@
     XCTAssertEqual([STPCard fundingFromString:@"garbage"], STPCardFundingTypeOther);
     XCTAssertEqual([STPCard fundingFromString:@"GARBAGE"], STPCardFundingTypeOther);
 }
+
+#pragma clang diagnostic pop
 
 - (void)testStringFromFunding {
     NSArray<NSNumber *> *values = @[
@@ -139,6 +152,10 @@
 }
 
 #pragma mark -
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+// These tests can ber removed in the future, they should be covered by
+// the equivalent response decodeable tests
 
 - (void)testInitWithIDBrandLast4ExpMonthExpYearFunding {
     STPCard *card = [[STPCard alloc] initWithID:@"card_1AVRojEOD54MuFwSxr93QJSx"
@@ -147,7 +164,7 @@
                                        expMonth:12
                                         expYear:2034
                                         funding:STPCardFundingTypeDebit];
-    XCTAssertEqualObjects(card.cardId, @"card_1AVRojEOD54MuFwSxr93QJSx");
+    XCTAssertEqualObjects(card.stripeID, @"card_1AVRojEOD54MuFwSxr93QJSx");
     XCTAssertEqual(card.brand, STPCardBrandVisa);
     XCTAssertEqualObjects(card.last4, @"5556");
     XCTAssertEqual(card.expMonth, (NSUInteger)12);
@@ -155,38 +172,10 @@
     XCTAssertEqual(card.funding, STPCardFundingTypeDebit);
 }
 
-- (void)testInit {
-    STPCard *card = [[STPCard alloc] init];
-    XCTAssertEqual(card.brand, STPCardBrandUnknown);
-    XCTAssertEqual(card.funding, STPCardFundingTypeOther);
-}
-
-- (void)testLast4ReturnsCardNumberLast4WhenNotSet {
-    STPCard *card = [[STPCard alloc] init];
-    card.number = @"4242424242424242";
-    XCTAssertEqualObjects(card.last4, @"4242");
-}
-
-- (void)testLast4ReturnsNilWhenNoCardNumberSet {
-    STPCard *card = [[STPCard alloc] init];
-    XCTAssertNil(card.last4);
-}
-
-- (void)testLast4ReturnsNilWhenCardNumberIsLessThanLength4 {
-    STPCard *card = [[STPCard alloc] init];
-    card.number = @"123";
-    XCTAssertNil(card.last4);
-}
-
-- (void)testLast4ReturnsValueOverCardNumberDerivation {
-    STPCard *card = [[STPCard alloc] init];
-    card.number = nil;
-    card.last4 = @"1234";
-    XCTAssertEqualObjects(card.last4, @"1234");
-}
+#pragma clang diagnostic pop
 
 - (void)testIsApplePayCard {
-    STPCard *card = [[STPCard alloc] init];
+    STPCard *card = [STPFixtures card];
 
     card.allResponseFields = @{};
     XCTAssertFalse(card.isApplePayCard);
@@ -207,7 +196,7 @@
 }
 
 - (void)testAddressPopulated {
-    STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
+    STPCard *card = [STPFixtures card];
     XCTAssertEqualObjects(card.address.name, @"Jane Austen");
     XCTAssertEqualObjects(card.address.line1, @"123 Fake St");
     XCTAssertEqualObjects(card.address.line2, @"Apt 1");
@@ -217,16 +206,11 @@
     XCTAssertEqualObjects(card.address.country, @"US");
 }
 
-- (void)testAddressEmpty {
-    STPCard *card = [[STPCard alloc] init];
-    XCTAssertNil(card.address);
-}
-
 #pragma mark - Equality Tests
 
 - (void)testCardEquals {
-    STPCard *card1 = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
-    STPCard *card2 = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
+    STPCard *card1 = [STPFixtures card];
+    STPCard *card2 = [STPFixtures card];
 
     XCTAssertNotEqual(card1, card2);
 
@@ -240,7 +224,7 @@
 #pragma mark - Description Tests
 
 - (void)testDescription {
-    STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
+    STPCard *card = [STPFixtures card];
     XCTAssert(card.description);
 }
 
@@ -265,17 +249,35 @@
     XCTAssert([STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]]);
 }
 
+
+
 - (void)testDecodedObjectFromAPIResponseMapping {
     NSDictionary *response = [STPTestUtils jsonNamed:@"Card"];
     STPCard *card = [STPCard decodedObjectFromAPIResponse:response];
 
+    XCTAssertEqualObjects(card.stripeID, @"card_103kbR2eZvKYlo2CDczLmw4K");
+
+    XCTAssertEqualObjects(card.address.city, @"Pittsburgh");
+    XCTAssertEqualObjects(card.address.country, @"US");
+    XCTAssertEqualObjects(card.address.line1, @"123 Fake St");
+    XCTAssertEqualObjects(card.address.line2, @"Apt 1");
+    XCTAssertEqualObjects(card.address.state, @"PA");
+    XCTAssertEqualObjects(card.address.postalCode, @"19219");
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+
     XCTAssertEqualObjects(card.cardId, @"card_103kbR2eZvKYlo2CDczLmw4K");
+
     XCTAssertEqualObjects(card.addressCity, @"Pittsburgh");
     XCTAssertEqualObjects(card.addressCountry, @"US");
     XCTAssertEqualObjects(card.addressLine1, @"123 Fake St");
     XCTAssertEqualObjects(card.addressLine2, @"Apt 1");
     XCTAssertEqualObjects(card.addressState, @"PA");
     XCTAssertEqualObjects(card.addressZip, @"19219");
+
+#pragma clang diagnostic pop
+
     XCTAssertEqual(card.brand, STPCardBrandVisa);
     XCTAssertEqualObjects(card.country, @"US");
     XCTAssertEqualObjects(card.currency, @"usd");
@@ -290,27 +292,28 @@
     XCTAssertEqualObjects(card.allResponseFields, [response stp_dictionaryByRemovingNullsValidatingRequiredFields:@[]]);
 }
 
+
+
 #pragma mark - STPSourceProtocol Tests
 
 - (void)testStripeID {
-    STPCard *card = [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
+    STPCard *card = [STPFixtures card];
     XCTAssertEqualObjects(card.stripeID, @"card_103kbR2eZvKYlo2CDczLmw4K");
 }
 
 #pragma mark - STPPaymentMethod Tests
 
 - (void)testImage {
+    STPCard *card = [STPFixtures card];
     [self forEachBrand:^(STPCardBrand brand) {
-        STPCard *card = [[STPCard alloc] init];
         card.brand = brand;
-
         XCTAssert([card image]);
     }];
 }
 
 - (void)testTemplateImage {
+    STPCard *card = [STPFixtures card];
     [self forEachBrand:^(STPCardBrand brand) {
-        STPCard *card = [[STPCard alloc] init];
         card.brand = brand;
 
         XCTAssert([card templateImage]);
