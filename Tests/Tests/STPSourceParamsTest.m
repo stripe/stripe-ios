@@ -193,8 +193,8 @@
     XCTAssertEqualObjects(sourceAddress[@"line2"], card.address.line2);
     XCTAssertEqualObjects(sourceAddress[@"city"], card.address.city);
     XCTAssertEqualObjects(sourceAddress[@"state"], card.address.state);
-    XCTAssertEqualObjects(sourceAddress[@"postal_code"], card.address.country);
-    XCTAssertEqualObjects(sourceAddress[@"country"], card.address.postalCode);
+    XCTAssertEqualObjects(sourceAddress[@"postal_code"], card.address.postalCode);
+    XCTAssertEqualObjects(sourceAddress[@"country"], card.address.country);
 }
 
 
