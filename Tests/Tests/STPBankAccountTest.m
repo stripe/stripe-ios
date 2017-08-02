@@ -9,7 +9,6 @@
 @import XCTest;
 
 #import "STPBankAccount.h"
-#import "STPBankAccount+Private.h"
 
 #import "STPFormEncoder.h"
 #import "STPTestUtils.h"
