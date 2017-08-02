@@ -1,26 +1,74 @@
-#!/bin/sh
+#!/bin/bash
 
-# This causes the script to fail if any subscript fails
-set -e
-set -o pipefail
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../" && pwd)"
 
-echo "Checking test manual installation app..."
+function info {
+  echo "[$(basename ${0})] [INFO] ${1}"
+}
 
-gem install xcpretty --no-ri --no-rdoc
+function die {
+  echo "[$(basename ${0})] [ERROR] ${1}"
+  exit 1
+}
 
-PROJECTDIR="$(cd $(dirname $0)/../../..; pwd)"
-TESTDIR="$(cd $(dirname $0); pwd)"
-BUILDDIR=$PROJECTDIR/build
-FRAMEWORKDIR=$TESTDIR/ManualInstallationTest/Frameworks
+# Verify xcpretty is installed
+if ! command -v xcpretty > /dev/null; then
+  if [[ "${CI}" != "true" ]]; then
+    die "Please install xcpretty: https://github.com/supermarin/xcpretty#installation"
+  fi
 
-sh $PROJECTDIR/ci_scripts/export_builds.sh --only-static
+  info "Installing xcpretty..."
+  gem install xcpretty --no-ri --no-rdoc || die "Executing \`gem install xcpretty\` failed"
+fi
 
-sh $PROJECTDIR/ci_scripts/validate_zip.sh $BUILDDIR/StripeiOS-Static.zip
+# Build and verify static library
+info "Building and verifying static library..."
 
-rm -rf $FRAMEWORKDIR
-mkdir $FRAMEWORKDIR
-cp $BUILDDIR/StripeiOS-Static.zip $FRAMEWORKDIR
-ditto -xk $FRAMEWORKDIR/StripeiOS-Static.zip $FRAMEWORKDIR
+sh "${root_dir}/ci_scripts/export_builds.sh" --only-static || die "Executing export_builds.sh failed"
 
-xcodebuild clean build-for-testing -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.3.1' | xcpretty -c
-xcodebuild test-without-building -project "${TESTDIR}/ManualInstallationTest.xcodeproj" -scheme ManualInstallationTest -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.3.1' | xcpretty -c
+sh "${root_dir}/ci_scripts/validate_zip.sh" "${root_dir}/build/StripeiOS-Static.zip" || die "Validating zip failed"
+
+# Perform manual installation
+framework_dir="${script_dir}/ManualInstallationTest/Frameworks"
+
+info "Performing manual installation..."
+
+rm -rf "${framework_dir}"
+
+mkdir -p "${framework_dir}"
+
+ditto -xk \
+  "${root_dir}/build/StripeiOS-Static.zip" \
+  "${framework_dir}"
+
+# Execute xcodebuild
+info "Executing xcodebuild..."
+
+xcodebuild clean build-for-testing \
+  -project "${script_dir}/ManualInstallationTest.xcodeproj" \
+  -scheme "ManualInstallationTest" \
+  -sdk "iphonesimulator" \
+  -destination "platform=iOS Simulator,name=iPhone 6,OS=10.3.1" \
+  | xcpretty
+
+xcodebuild_build_exit_code="${PIPESTATUS[0]}"
+
+if [[ "${xcodebuild_build_exit_code}" != 0 ]]; then
+  die "Executing xcodebuild failed with status code: ${xcodebuild_build_exit_code}"
+fi
+
+xcodebuild test-without-building \
+  -project "${script_dir}/ManualInstallationTest.xcodeproj" \
+  -scheme "ManualInstallationTest" \
+  -sdk "iphonesimulator" \
+  -destination "platform=iOS Simulator,name=iPhone 6,OS=10.3.1" \
+  | xcpretty
+
+xcodebuild_test_exit_code="${PIPESTATUS[0]}"
+
+if [[ "${xcodebuild_test_exit_code}" != 0 ]]; then
+  die "Executing xcodebuild failed with status code: ${xcodebuild_test_exit_code}"
+fi
+
+info "All good!"
