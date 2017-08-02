@@ -9,7 +9,6 @@
 @import XCTest;
 
 #import "STPBankAccount.h"
-#import "STPBankAccount+Private.h"
 
 #import "STPFormEncoder.h"
 #import "STPTestUtils.h"
@@ -41,6 +40,9 @@
     XCTAssertEqual([STPBankAccount statusFromString:@"verified"], STPBankAccountStatusVerified);
     XCTAssertEqual([STPBankAccount statusFromString:@"VERIFIED"], STPBankAccountStatusVerified);
 
+    XCTAssertEqual([STPBankAccount statusFromString:@"verification_failed"], STPBankAccountStatusVerificationFailed);
+    XCTAssertEqual([STPBankAccount statusFromString:@"VERIFICATION_FAILED"], STPBankAccountStatusVerificationFailed);
+
     XCTAssertEqual([STPBankAccount statusFromString:@"errored"], STPBankAccountStatusErrored);
     XCTAssertEqual([STPBankAccount statusFromString:@"ERRORED"], STPBankAccountStatusErrored);
 
@@ -53,6 +55,7 @@
                                     @(STPBankAccountStatusNew),
                                     @(STPBankAccountStatusValidated),
                                     @(STPBankAccountStatusVerified),
+                                    @(STPBankAccountStatusVerificationFailed),
                                     @(STPBankAccountStatusErrored)
                                     ];
 
@@ -69,6 +72,9 @@
                 break;
             case STPBankAccountStatusVerified:
                 XCTAssertEqualObjects(string, @"verified");
+                break;
+            case STPBankAccountStatusVerificationFailed:
+                XCTAssertEqualObjects(string, @"verification_failed");
                 break;
             case STPBankAccountStatusErrored:
                 XCTAssertEqualObjects(string, @"errored");

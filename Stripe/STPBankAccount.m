@@ -7,7 +7,6 @@
 //
 
 #import "STPBankAccount.h"
-#import "STPBankAccount+Private.h"
 
 #import "NSDictionary+Stripe.h"
 #import "STPBankAccountParams+Private.h"
@@ -20,8 +19,6 @@
 @property (nonatomic, readwrite) NSString *fingerprint;
 @property (nonatomic) STPBankAccountStatus status;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
-
-// See STPBankAccount+Private.h
 
 @end
 
@@ -36,6 +33,7 @@
              @"new": @(STPBankAccountStatusNew),
              @"validated": @(STPBankAccountStatusValidated),
              @"verified": @(STPBankAccountStatusVerified),
+             @"verification_failed": @(STPBankAccountStatusVerificationFailed),
              @"errored": @(STPBankAccountStatusErrored),
              };
 }
