@@ -11,14 +11,21 @@
 #import "NSDictionary+Stripe.h"
 #import "STPBankAccountParams+Private.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STPBankAccount ()
 
-@property (nonatomic, readwrite) NSString *bankAccountId;
-@property (nonatomic, readwrite) NSString *last4;
-@property (nonatomic, readwrite) NSString *bankName;
-@property (nonatomic, readwrite) NSString *fingerprint;
-@property (nonatomic) STPBankAccountStatus status;
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, copy, readwrite) NSString *stripeID;
+@property (nonatomic, copy, nullable, readwrite) NSString *routingNumber;
+@property (nonatomic, copy, readwrite) NSString *country;
+@property (nonatomic, copy, readwrite) NSString *currency;
+@property (nonatomic, copy, readwrite) NSString *last4;
+@property (nonatomic, copy, readwrite) NSString *bankName;
+@property (nonatomic, copy, nullable, readwrite) NSString *accountHolderName;
+@property (nonatomic, assign, readwrite) STPBankAccountHolderType accountHolderType;
+@property (nonatomic, copy, readwrite) NSString *fingerprint;
+@property (nonatomic, assign, readwrite) STPBankAccountStatus status;
+@property (nonatomic, copy, readwrite) NSDictionary *allResponseFields;
 
 @end
 
@@ -49,31 +56,21 @@
     return STPBankAccountStatusNew;
 }
 
-+ (NSString *)stringFromStatus:(STPBankAccountStatus)status {
++ (nullable NSString *)stringFromStatus:(STPBankAccountStatus)status {
     return [[[self stringToStatusMapping] allKeysForObject:@(status)] firstObject];
-}
-
-#pragma mark -
-
-- (void)setAccountNumber:(NSString *)accountNumber {
-    [super setAccountNumber:accountNumber];
-}
-
-- (NSString *)last4 {
-    return _last4 ?: [super last4];
 }
 
 #pragma mark - Equality
 
-- (BOOL)isEqual:(STPBankAccount *)bankAccount {
+- (BOOL)isEqual:(nullable id)bankAccount {
     return [self isEqualToBankAccount:bankAccount];
 }
 
 - (NSUInteger)hash {
-    return [self.bankAccountId hash];
+    return [self.stripeID hash];
 }
 
-- (BOOL)isEqualToBankAccount:(STPBankAccount *)bankAccount {
+- (BOOL)isEqualToBankAccount:(nullable STPBankAccount *)bankAccount {
     if (self == bankAccount) {
         return YES;
     }
@@ -82,7 +79,7 @@
         return NO;
     }
     
-    return [self.bankAccountId isEqualToString:bankAccount.bankAccountId];
+    return [self.stripeID isEqualToString:bankAccount.stripeID];
 }
 
 #pragma mark - Description
@@ -93,7 +90,7 @@
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
 
                        // Identifier
-                       [NSString stringWithFormat:@"bankAccountId = %@", self.bankAccountId],
+                       [NSString stringWithFormat:@"stripeID = %@", self.stripeID],
 
                        // Basic account details
                        [NSString stringWithFormat:@"routingNumber = %@", self.routingNumber],
@@ -127,7 +124,7 @@
              ];
 }
 
-+ (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
++ (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
     NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
     if (!dict) {
         return nil;
@@ -136,7 +133,7 @@
     STPBankAccount *bankAccount = [self new];
 
     // Identifier
-    bankAccount.bankAccountId = dict[@"id"];
+    bankAccount.stripeID = dict[@"id"];
 
     // Basic account details
     bankAccount.routingNumber = dict[@"routing_number"];
@@ -151,11 +148,19 @@
 
     // Owner details
     bankAccount.accountHolderName = dict[@"account_holder_name"];
-    bankAccount.accountHolderType = [self accountHolderTypeFromString:dict[@"account_holder_type"]];
+    bankAccount.accountHolderType = [STPBankAccountParams accountHolderTypeFromString:dict[@"account_holder_type"]];
 
     bankAccount.allResponseFields = dict;
 
     return bankAccount;
 }
 
+#pragma mark - Deprecated methods
+
+- (NSString *)bankAccountId {
+    return self.stripeID;
+}
+
 @end
+
+NS_ASSUME_NONNULL_END

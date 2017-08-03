@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPBankAccountParams ()
 
 + (STPBankAccountHolderType)accountHolderTypeFromString:(NSString *)string;
-+ (NSString *)stringFromAccountHolderType:(STPBankAccountHolderType)accountHolderType;
++ (nullable NSString *)stringFromAccountHolderType:(STPBankAccountHolderType)accountHolderType;
 
 @end
 
