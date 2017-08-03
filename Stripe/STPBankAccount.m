@@ -105,7 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
 
                        // Owner details
                        [NSString stringWithFormat:@"accountHolderName = %@", (self.accountHolderName) ? @"<redacted>" : nil],
-                       [NSString stringWithFormat:@"accountHolderType = %@", [self.class stringFromAccountHolderType:self.accountHolderType]],
+                       [NSString stringWithFormat:@"accountHolderType = %@", [STPBankAccountParams stringFromAccountHolderType:self.accountHolderType]],
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];

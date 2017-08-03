@@ -56,7 +56,7 @@ typedef NS_ENUM(NSInteger, STPBankAccountStatus) {
  You cannot directly instantiate an `STPBankAccount`. You should only use one 
  that has been returned from an `STPAPIClient` callback.
  */
-- (nonnull instancetype) init __attribute__((unavailable("You cannot directly instantiate an STPBankAccount. You should only use one that has been returned from an STPAPIClient callback.")));
+- (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPBankAccount. You should only use one that has been returned from an STPAPIClient callback.")));
 
 /**
  The routing number for the bank account. This should be the ACH routing number,
