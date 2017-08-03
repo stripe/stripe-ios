@@ -10,14 +10,25 @@
 
 #import "STPFormEncodable.h"
 
+/**
+ The type of entity that holds a bank account.
+ */
 typedef NS_ENUM(NSInteger, STPBankAccountHolderType) {
+    /**
+     An individual holds this bank account.
+     */
     STPBankAccountHolderTypeIndividual,
+
+    /**
+     A company holds this bank account.
+     */
     STPBankAccountHolderTypeCompany,
 };
 
 /**
- Representation of a user's bank account details. You can assemble these with information that your user enters and
- then create Stripe tokens with them using an STPAPIClient.
+ Representation of a user's bank account details. You can assemble these with 
+ information that your user enters and then create Stripe tokens with them using
+ an STPAPIClient.
 
  @see https://stripe.com/docs/api#create_bank_account_token
  */
@@ -29,12 +40,14 @@ typedef NS_ENUM(NSInteger, STPBankAccountHolderType) {
 @property (nonatomic, copy, nullable) NSString *accountNumber;
 
 /**
- The last 4 digits of the bank account's account number, if it's been set, otherwise nil.
+ The last 4 digits of the bank account's account number, if it's been set, 
+ otherwise nil.
  */
-- (nullable NSString *)last4;
+@property (nonatomic, nullable, readonly) NSString *last4;
 
 /**
- The routing number for the bank account. This should be the ACH routing number, not the wire routing number.
+ The routing number for the bank account. This should be the ACH routing number, 
+ not the wire routing number.
  */
 @property (nonatomic, copy, nullable) NSString *routingNumber;
 
@@ -54,8 +67,10 @@ typedef NS_ENUM(NSInteger, STPBankAccountHolderType) {
 @property (nonatomic, copy, nullable) NSString *accountHolderName;
 
 /**
- The type of entity that holds the account. Defaults to STPBankAccountHolderTypeIndividual.
+ The type of entity that holds the account. 
+ 
+ Defaults to STPBankAccountHolderTypeIndividual.
  */
-@property (nonatomic) STPBankAccountHolderType accountHolderType;
+@property (nonatomic, assign) STPBankAccountHolderType accountHolderType;
 
 @end

@@ -36,7 +36,7 @@
                                 XCTAssertNotNil(token, @"token should not be nil");
 
                                 XCTAssertNotNil(token.tokenId);
-                                XCTAssertNotNil(token.bankAccount.bankAccountId);
+                                XCTAssertNotNil(token.bankAccount.stripeID);
                                 XCTAssertEqualObjects(@"STRIPE TEST BANK", token.bankAccount.bankName);
                                 XCTAssertEqualObjects(@"6789", token.bankAccount.last4);
                                 XCTAssertEqualObjects(@"Jimmy bob", token.bankAccount.accountHolderName);
