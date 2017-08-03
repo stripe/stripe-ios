@@ -13,23 +13,29 @@
 #import "STPImageLibrary+Private.h"
 #import "STPImageLibrary.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STPCard ()
 
-@property (nonatomic, readwrite) NSString *cardId;
-@property (nonatomic, readwrite) NSString *last4;
-@property (nonatomic, readwrite) NSString *dynamicLast4;
-@property (nonatomic, readwrite) STPCardBrand brand;
-@property (nonatomic, readwrite) STPCardFundingType funding;
-@property (nonatomic, readwrite) NSString *country;
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, copy) NSString *stripeID;
+
+@property (nonatomic, copy, nullable, readwrite) NSString *name;
+@property (nonatomic, copy, readwrite) NSString *last4;
+@property (nonatomic, copy, nullable, readwrite) NSString *dynamicLast4;
+@property (nonatomic, assign, readwrite) STPCardBrand brand;
+@property (nonatomic, assign, readwrite) STPCardFundingType funding;
+@property (nonatomic, copy, nullable, readwrite) NSString *country;
+@property (nonatomic, copy, nullable, readwrite) NSString *currency;
+@property (nonatomic, assign, readwrite) NSUInteger expMonth;
+@property (nonatomic, assign, readwrite) NSUInteger expYear;
+@property (nonatomic, strong, readwrite) STPAddress *address;
+@property (nonatomic, copy, readwrite) NSDictionary *allResponseFields;
 
 // See STPCard+Private.h
 
 @end
 
 @implementation STPCard
-
-@dynamic number, cvc, expMonth, expYear, currency, name, address, addressLine1, addressLine2, addressCity, addressState, addressZip, addressCountry;
 
 #pragma mark - STPCardBrand
 
@@ -98,68 +104,21 @@
 
 #pragma mark -
 
-- (instancetype)initWithID:(NSString *)stripeID
-                     brand:(STPCardBrand)brand
-                     last4:(NSString *)last4
-                  expMonth:(NSUInteger)expMonth
-                   expYear:(NSUInteger)expYear
-                   funding:(STPCardFundingType)funding {
-    self = [super init];
-    if (self) {
-        _cardId = stripeID;
-        _brand = brand;
-        _last4 = last4;
-        self.expMonth = expMonth;
-        self.expYear = expYear;
-        _funding = funding;
-    }
-    return self;
-}
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _brand = STPCardBrandUnknown;
-        _funding = STPCardFundingTypeOther;
-    }
-
-    return self;
-}
-
-- (NSString *)last4 {
-    return _last4 ?: [super last4];
-}
-
 - (BOOL)isApplePayCard {
     return [self.allResponseFields[@"tokenization_method"] isEqualToString:@"apple_pay"];
 }
 
-- (STPAddress *)address {
-    if (self.name || self.addressLine1 || self.addressLine2 || self.addressZip || self.addressCity || self.addressState || self.addressCountry) {
-        STPAddress *address = [STPAddress new];
-        address.name = self.name;
-        address.line1 = self.addressLine1;
-        address.line2 = self.addressLine2;
-        address.postalCode = self.addressZip;
-        address.city = self.addressCity;
-        address.state = self.addressState;
-        address.country = self.addressCountry;
-        return address;
-    }
-    return nil;
-}
-
 #pragma mark - Equality
 
-- (BOOL)isEqual:(id)other {
+- (BOOL)isEqual:(nullable id)other {
     return [self isEqualToCard:other];
 }
 
 - (NSUInteger)hash {
-    return [self.cardId hash];
+    return [self.stripeID hash];
 }
 
-- (BOOL)isEqualToCard:(STPCard *)other {
+- (BOOL)isEqualToCard:(nullable STPCard *)other {
     if (self == other) {
         return YES;
     }
@@ -168,7 +127,7 @@
         return NO;
     }
     
-    return [self.cardId isEqualToString:other.cardId];
+    return [self.stripeID isEqualToString:other.stripeID];
 }
 
 #pragma mark - Description
@@ -179,7 +138,7 @@
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
 
                        // Identifier
-                       [NSString stringWithFormat:@"cardId = %@", self.cardId],
+                       [NSString stringWithFormat:@"stripeID = %@", self.stripeID],
 
                        // Basic card details
                        [NSString stringWithFormat:@"brand = %@", [self.class stringFromBrand:self.brand]],
@@ -212,40 +171,43 @@
     return @[@"id", @"last4", @"brand", @"exp_month", @"exp_year"];
 }
 
-+ (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
++ (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
     NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
     if (!dict) {
         return nil;
     }
-    
+
     STPCard *card = [self new];
-    card.cardId = dict[@"id"];
+    card.address = [STPAddress new];
+
+    card.stripeID = dict[@"id"];
     card.name = dict[@"name"];
     card.last4 = dict[@"last4"];
     card.dynamicLast4 = dict[@"dynamic_last4"];
-    NSString *brand = [dict[@"brand"] lowercaseString];
-    card.brand = [self.class brandFromString:brand];
-    NSString *funding = dict[@"funding"];
-    card.funding = [self.class fundingFromString:funding];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    // These are only intended to be deprecated publicly.
+    // When removed from public header, can remove these pragmas
+
+    card.brand = [self.class brandFromString:dict[@"brand"]];
+    card.funding = [self.class fundingFromString:dict[@"funding"]];
+#pragma clang diagnostic pop
+
     card.country = dict[@"country"];
     card.currency = dict[@"currency"];
     card.expMonth = [dict[@"exp_month"] intValue];
     card.expYear = [dict[@"exp_year"] intValue];
-    card.addressLine1 = dict[@"address_line1"];
-    card.addressLine2 = dict[@"address_line2"];
-    card.addressCity = dict[@"address_city"];
-    card.addressState = dict[@"address_state"];
-    card.addressZip = dict[@"address_zip"];
-    card.addressCountry = dict[@"address_country"];
+
+    card.address.name = card.name;
+    card.address.line1 = dict[@"address_line1"];
+    card.address.line2 = dict[@"address_line2"];
+    card.address.city = dict[@"address_city"];
+    card.address.state = dict[@"address_state"];
+    card.address.postalCode = dict[@"address_zip"];
+    card.address.country = dict[@"address_country"];
     
     card.allResponseFields = dict;
     return card;
-}
-
-#pragma mark - STPSourceProtocol
-
-- (NSString *)stripeID {
-    return self.cardId;
 }
 
 #pragma mark - STPPaymentMethod
@@ -263,4 +225,55 @@
     return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
 }
 
+#pragma mark - Deprecated methods
+
+- (instancetype)initWithID:(NSString *)stripeID
+                     brand:(STPCardBrand)brand
+                     last4:(NSString *)last4
+                  expMonth:(NSUInteger)expMonth
+                   expYear:(NSUInteger)expYear
+                   funding:(STPCardFundingType)funding {
+    self = [super init];
+    if (self) {
+        _stripeID = stripeID.copy;
+        _brand = brand;
+        _last4 = last4.copy;
+        _expMonth = expMonth;
+        _expYear = expYear;
+        _funding = funding;
+        _address = [STPAddress new];
+    }
+    return self;
+}
+
+- (NSString *)cardId {
+    return self.stripeID;
+}
+
+- (nullable NSString *)addressLine1 {
+    return self.address.line1;
+}
+
+- (nullable NSString *)addressLine2 {
+    return self.address.line2;
+}
+
+- (nullable NSString *)addressZip {
+    return self.address.postalCode;
+}
+
+- (nullable NSString *)addressCity {
+    return self.address.city;
+}
+
+- (nullable NSString *)addressState {
+    return self.address.state;
+}
+
+- (nullable NSString *)addressCountry {
+    return self.address.country;
+}
+
 @end
+
+NS_ASSUME_NONNULL_END

@@ -174,12 +174,12 @@
     card.expYear = 2018;
     card.currency = @"usd";
     card.name = @"Jenny Rosen";
-    card.addressLine1 = @"123 Fake Street";
-    card.addressLine2 = @"Apartment 4";
-    card.addressCity = @"New York";
-    card.addressState = @"NY";
-    card.addressCountry = @"USA";
-    card.addressZip = @"10002";
+    card.address.line1 = @"123 Fake Street";
+    card.address.line2 = @"Apartment 4";
+    card.address.city = @"New York";
+    card.address.state = @"NY";
+    card.address.country = @"USA";
+    card.address.postalCode = @"10002";
 
     STPSourceParams *source = [STPSourceParams cardParamsWithCard:card];
     NSDictionary *sourceCard = source.additionalAPIParameters[@"card"];
@@ -189,13 +189,14 @@
     XCTAssertEqualObjects(sourceCard[@"exp_year"], @(card.expYear));
     XCTAssertEqualObjects(source.owner[@"name"], card.name);
     NSDictionary *sourceAddress = source.owner[@"address"];
-    XCTAssertEqualObjects(sourceAddress[@"line1"], card.addressLine1);
-    XCTAssertEqualObjects(sourceAddress[@"line2"], card.addressLine2);
-    XCTAssertEqualObjects(sourceAddress[@"city"], card.addressCity);
-    XCTAssertEqualObjects(sourceAddress[@"state"], card.addressState);
-    XCTAssertEqualObjects(sourceAddress[@"postal_code"], card.addressZip);
-    XCTAssertEqualObjects(sourceAddress[@"country"], card.addressCountry);
+    XCTAssertEqualObjects(sourceAddress[@"line1"], card.address.line1);
+    XCTAssertEqualObjects(sourceAddress[@"line2"], card.address.line2);
+    XCTAssertEqualObjects(sourceAddress[@"city"], card.address.city);
+    XCTAssertEqualObjects(sourceAddress[@"state"], card.address.state);
+    XCTAssertEqualObjects(sourceAddress[@"postal_code"], card.address.postalCode);
+    XCTAssertEqualObjects(sourceAddress[@"country"], card.address.country);
 }
+
 
 #pragma mark - Redirect Dictionary Tests
 

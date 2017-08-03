@@ -35,6 +35,9 @@
     XCTAssertNil(cardParams.last4);
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+
 - (void)testAddress {
     STPCardParams *cardParams = [[STPCardParams alloc] init];
     cardParams.name = @"John Smith";
@@ -77,6 +80,8 @@
     XCTAssertEqualObjects(cardParams.addressZip, @"10002");
     XCTAssertEqualObjects(cardParams.addressCountry, @"US");
 }
+
+#pragma clang diagnostic pop
 
 #pragma mark - Description Tests
 

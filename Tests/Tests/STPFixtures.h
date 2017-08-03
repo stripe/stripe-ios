@@ -34,6 +34,11 @@
 + (STPCardParams *)cardParams;
 
 /**
+ A valid card object
+ */
++ (STPCard *)card;
+
+/**
  A Source object with type card
  */
 + (STPSource *)cardSource;

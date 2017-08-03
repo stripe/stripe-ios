@@ -22,12 +22,12 @@
     card.expMonth = 6;
     card.expYear = 2018;
     card.currency = @"usd";
-    card.addressLine1 = @"123 Fake Street";
-    card.addressLine2 = @"Apartment 4";
-    card.addressCity = @"New York";
-    card.addressState = @"NY";
-    card.addressCountry = @"USA";
-    card.addressZip = @"10002";
+    card.address.line1 = @"123 Fake Street";
+    card.address.line2 = @"Apartment 4";
+    card.address.city = @"New York";
+    card.address.state = @"NY";
+    card.address.country = @"USA";
+    card.address.postalCode = @"10002";
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
 
