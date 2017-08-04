@@ -8,8 +8,8 @@
 
 #import "StripeError.h"
 
+#import "NSError+Stripe.h"
 #import "STPFormEncoder.h"
-#import "STPLocalizationUtils.h"
 
 NSString *const StripeDomain = @"com.stripe.lib";
 NSString *const STPCardErrorCodeKey = @"com.stripe.lib:CardErrorCodeKey";
@@ -87,68 +87,6 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
     }
 
     return [[self alloc] initWithDomain:StripeDomain code:code userInfo:userInfo];
-}
-
-+ (nonnull NSError *)stp_genericFailedToParseResponseError {
-    NSDictionary *userInfo = @{
-                               NSLocalizedDescriptionKey: [self stp_unexpectedErrorMessage],
-                               STPErrorMessageKey: @"The response from Stripe failed to get parsed into valid JSON."
-                               };
-    return [[self alloc] initWithDomain:StripeDomain code:STPAPIError userInfo:userInfo];
-}
-
-+ (nonnull NSError *)stp_genericConnectionError {
-    NSDictionary *userInfo = @{
-                               NSLocalizedDescriptionKey: [self stp_unexpectedErrorMessage],
-                               STPErrorMessageKey: @"There was an error connecting to Stripe."
-                               };
-    return [[self alloc] initWithDomain:StripeDomain code:STPConnectionError userInfo:userInfo];
-}
-
-#pragma mark Strings
-
-+ (nonnull NSString *)stp_cardErrorInvalidNumberUserMessage {
-    return STPLocalizedString(@"Your card's number is invalid", @"Error when the card number is not valid");
-}
-
-+ (nonnull NSString *)stp_cardInvalidCVCUserMessage {
-    return STPLocalizedString(@"Your card's security code is invalid", @"Error when the card's CVC is not valid");
-}
-
-+ (nonnull NSString *)stp_cardErrorInvalidExpMonthUserMessage {
-    return STPLocalizedString(@"Your card's expiration month is invalid", @"Error when the card's expiration month is not valid");
-}
-
-+ (nonnull NSString *)stp_cardErrorInvalidExpYearUserMessage {
-    return STPLocalizedString(@"Your card's expiration year is invalid", @"Error when the card's expiration year is not valid");
-}
-
-+ (nonnull NSString *)stp_cardErrorExpiredCardUserMessage {
-    return STPLocalizedString(@"Your card has expired", @"Error when the card has already expired");
-}
-
-+ (nonnull NSString *)stp_cardErrorDeclinedUserMessage {
-    return STPLocalizedString(@"Your card was declined", @"Error when the card was declined by the credit card networks");
-}
-
-+ (nonnull NSString *)stp_unexpectedErrorMessage {
-    return STPLocalizedString(@"There was an unexpected error -- try again in a few seconds", @"Unexpected error, such as a 500 from Stripe or a JSON parse error");
-}
-
-+ (nonnull NSString *)stp_cardErrorProcessingErrorUserMessage {
-    return STPLocalizedString(@"There was an error processing your card -- try again in a few seconds", @"Error when there is a problem processing the credit card");
-}
-
-@end
-
-@implementation NSError (StripeInternal)
-
-+ (NSError *)stp_ephemeralKeyDecodingError {
-    NSDictionary *userInfo = @{
-                               NSLocalizedDescriptionKey: [self stp_unexpectedErrorMessage],
-                               STPErrorMessageKey: @"Failed to decode the ephemeral key. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app."
-                               };
-    return [[self alloc] initWithDomain:StripeDomain code:STPEphemeralKeyDecodingError userInfo:userInfo];
 }
 
 @end

@@ -11,7 +11,7 @@
 #import "STPDispatchFunctions.h"
 #import "STPSource.h"
 #import "STPURLCallbackHandler.h"
-#import "StripeError.h"
+#import "NSError+Stripe.h"
 
 #import <SafariServices/SafariServices.h>
 

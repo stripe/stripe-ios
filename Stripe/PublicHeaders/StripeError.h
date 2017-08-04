@@ -90,42 +90,74 @@ FOUNDATION_EXPORT NSString * __nonnull const STPStripeErrorTypeKey;
 
 #pragma mark STPCardErrorCodeKeys
 
+/**
+ Possible string values you may receive when there was an error tokenzing
+ a card. These values will come back in the error `userInfo` dictionary
+ under the `STPCardErrorCodeKey` key.
+ */
 typedef NSString * STPCardErrorCode
 #ifdef NS_STRING_ENUM
 NS_STRING_ENUM
 #endif
 ;
 
-// (Usually determined locally:)
+/**
+ The card number is not a valid credit card number.
+ */
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPInvalidNumber;
+
+/**
+ The card has an invalid expiration month.
+ */
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPInvalidExpMonth;
+
+/**
+ The card has an invalid expiration year.
+ */
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPInvalidExpYear;
+
+/**
+ The card has an invalid CVC.
+ */
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPInvalidCVC;
 
-// (Usually sent from the server:)
+/**
+ The card number is incorrect.
+ */
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectNumber;
+
+/**
+ The card is expired.
+ */
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPExpiredCard;
+
+/**
+ The card was declined.
+ */
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPCardDeclined;
-FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPProcessingError;
+
+/**
+ The card has na incorrect CVC.
+ */
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectCVC;
+
+/**
+ An error occured while processing this card.
+ */
+FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPProcessingError;
 
 
 @interface NSError(Stripe)
 
+/**
+ Creates an NSError object from a given Stripe API json response.
+
+ @param jsonDictionary The root dictionary from the JSON response.
+
+ @return An NSError object with the error information from the JSON response,
+ or nil if there was no error information included in the JSON dictionary.
+ */
 + (nullable NSError *)stp_errorFromStripeResponse:(nullable NSDictionary *)jsonDictionary;
-+ (nonnull NSError *)stp_genericConnectionError;
-+ (nonnull NSError *)stp_genericFailedToParseResponseError;
-
-#pragma mark Strings
-
-+ (nonnull NSString *)stp_cardErrorInvalidNumberUserMessage;
-+ (nonnull NSString *)stp_cardInvalidCVCUserMessage;
-+ (nonnull NSString *)stp_cardErrorInvalidExpMonthUserMessage;
-+ (nonnull NSString *)stp_cardErrorInvalidExpYearUserMessage;
-+ (nonnull NSString *)stp_cardErrorExpiredCardUserMessage;
-+ (nonnull NSString *)stp_cardErrorDeclinedUserMessage;
-+ (nonnull NSString *)stp_cardErrorProcessingErrorUserMessage;
-+ (nonnull NSString *)stp_unexpectedErrorMessage;
 
 @end
 
