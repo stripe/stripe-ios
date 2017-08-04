@@ -1,12 +1,12 @@
 ## Migration Guides
 
 ### Migration from versions < X.Y.Z
-* Changes to `STPCard` and `STPCardParams`
+* Changes to  `STPCard`, `STPCardParams`, `STPBankAccount`, and `STPBankAccountParams`
   * `STPCard` no longer subclasses from `STPCardParams`. You must now specifically create `STPCardParams` objects to create new tokens.
+  * `STPBankAccount` no longer subclasses from `STPBankAccountParams`.
   * You can no longer directly create `STPCard` objects, you should only use ones that have been decoded from Stripe API responses via `STPAPIClient`.
-  * All `STPCard` properties have been made readonly.
+  * All `STPCard` and `STPBankAccount` properties have been made readonly.
   * Broken out individual address properties on `STPCard` and `STPCardParams` have been deprecated in favor of the grouped `address` property.
-
 * The value of `[STPAPIResponseDecodable allResponseFields]` is now completely (deeply) filtered to not contain any instances of `[NSNull null]`. Previously, only `[NSNull null]` one level deep (shallow) were removed.
 
 ### Migrating from versions < 11.2.0
