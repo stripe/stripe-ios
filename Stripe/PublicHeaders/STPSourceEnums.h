@@ -6,9 +6,6 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 
-#ifndef STPSourceEnums_h
-#define STPSourceEnums_h
-
 /**
  Authentication flows for a Source
  */
@@ -154,6 +151,3 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
      */
     STPSourceTypeUnknown,
 };
-
-
-#endif /* STPSourceEnums_h */

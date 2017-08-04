@@ -72,7 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
  example, Discover card numbers contain 16 characters, while American Express
  cards contain 15 characters.
 
- @param brand The brand to receive lengths for.
+ @param brand The brand to return lengths for.
 
  @return The set of possible lengths cards associated with that brand can be.
  */
@@ -80,13 +80,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- The possible maxmimum length the number of a card associated with the specified
+ The maximum possible length the number of a card associated with the specified
  brand could be. 
  
  For example, Visa cards could be either 13 or 16 characters, so this method
- would return 13 for the that card brand.
+ would return 16 for the that card brand.
 
- @param brand The brand to receive the max length for.
+ @param brand The brand to return the max length for.
 
  @return The maximum length card numbers associated with that brand could be.
  */
@@ -100,7 +100,7 @@ NS_ASSUME_NONNULL_BEGIN
  American Express cards display their final 5 digits, e.g. "10005".
  
 
- @param brand The brand to receive the fragment length for.
+ @param brand The brand to return the fragment length for.
 
  @return The final fragment length card numbers associated with that brand use.
  */
@@ -154,7 +154,7 @@ NS_ASSUME_NONNULL_BEGIN
  The max CVC length for a card brand (for example, American Express CVCs are
  4 digits, while all others are 3).
 
- @param brand The brand to receive the max CVC length for.
+ @param brand The brand to return the max CVC length for.
 
  @return The maximum length of CVC numbers for cards associated with that brand.
  */

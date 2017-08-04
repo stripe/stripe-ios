@@ -96,7 +96,7 @@ FOUNDATION_EXPORT NSString * __nonnull const STPStripeErrorTypeKey;
 #pragma mark STPCardErrorCodeKeys
 
 /**
- Possible string values you may receive when there was an error tokenzing
+ Possible string values you may receive when there was an error tokenizing
  a card. These values will come back in the error `userInfo` dictionary
  under the `STPCardErrorCodeKey` key.
  */
@@ -142,7 +142,7 @@ FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPExpiredCard;
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPCardDeclined;
 
 /**
- The card has na incorrect CVC.
+ The card has an incorrect CVC.
  */
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectCVC;
 

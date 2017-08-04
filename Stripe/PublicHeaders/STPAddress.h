@@ -130,17 +130,17 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 #pragma clang diagnostic pop
 
 /**
- Initializes a new STPAddress with data from an Pass Kit contact.
+ Initializes a new STPAddress with data from an PassKit contact.
 
- @param contact The Pass Kit contact you want to populate the STPAddress from.
+ @param contact The PassKit contact you want to populate the STPAddress from.
  @return A new STPAddress instance with data copied from the passed in contact.
  */
 - (instancetype)initWithPKContact:(PKContact *)contact NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);
 
 /**
- Generates a Pas Kit contact representation of this STPAddress.
+ Generates a PassKit contact representation of this STPAddress.
 
- @return A new Pass Kit contact with data copied from this STPAddress instance.
+ @return A new PassKit contact with data copied from this STPAddress instance.
  */
 - (PKContact *)PKContactValue NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);
 
