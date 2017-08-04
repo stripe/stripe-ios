@@ -13,16 +13,21 @@
  */
 FOUNDATION_EXPORT NSString * __nonnull const StripeDomain;
 
-#define STP_ERROR_ENUM(_type, _name, _domain) \
-typedef enum _name: _type _name; \
-enum __attribute__((ns_error_domain(_domain))) _name: _type
-
+// ObjC <-> Swift error bridging code from https://gist.github.com/bdash/bf29e26c429b78cc155f1a2e1d851f8b
 #if __has_attribute(ns_error_domain)
-STP_ERROR_ENUM(NSInteger, STPErrorCode, StripeDomain)
+#define STP_ERROR_ENUM(type, name, domain) \
+_Pragma("clang diagnostic push") \
+_Pragma("clang diagnostic ignored \"-Wignored-attributes\"") \
+NS_ENUM(type, __attribute__((ns_error_domain(domain))) name) \
+_Pragma("clang diagnostic pop")
 #else
-typedef NS_ENUM(NSInteger, STPErrorCode)
+#define STP_ERROR_ENUM(type, name, domain) NS_ENUM(type, name)
 #endif
-{
+
+/**
+ Possible error code values for NSError's with the `StripeDomain` domain
+ */
+typedef STP_ERROR_ENUM(NSInteger, STPErrorCode, StripeDomain) {
     /**
      Trouble connecting to Stripe.
      */
@@ -43,7 +48,7 @@ typedef NS_ENUM(NSInteger, STPErrorCode)
      */
     STPCardError = 70,
 
-    /** 
+    /**
      The operation was cancelled.
      */
     STPCancellationError = 80,
@@ -146,7 +151,9 @@ FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPIncorrectCVC;
  */
 FOUNDATION_EXPORT STPCardErrorCode __nonnull const STPProcessingError;
 
-
+/**
+ NSError extensions for creating error objects from Stripe API responses.
+ */
 @interface NSError(Stripe)
 
 /**
