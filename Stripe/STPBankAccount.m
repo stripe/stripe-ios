@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readwrite) NSString *bankName;
 @property (nonatomic, copy, nullable, readwrite) NSString *accountHolderName;
 @property (nonatomic, assign, readwrite) STPBankAccountHolderType accountHolderType;
-@property (nonatomic, copy, readwrite) NSString *fingerprint;
+@property (nonatomic, copy, nullable, readwrite) NSString *fingerprint;
 @property (nonatomic, assign, readwrite) STPBankAccountStatus status;
 @property (nonatomic, copy, readwrite) NSDictionary *allResponseFields;
 

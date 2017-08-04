@@ -13,16 +13,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Possible states for the redirect context to be in
-
- - STPRedirectContextStateNotStarted: Initialized, but redirect not started
- - STPRedirectContextStateInProgress: Redirect is in progress
- - STPRedirectContextStateCancelled: Redirect has been cancelled programmatically before completing
- - STPRedirectContextStateCompleted: Redirect has completed.
  */
 typedef NS_ENUM(NSUInteger, STPRedirectContextState) {
+    /**
+     Initialized, but redirect not started.
+     */
     STPRedirectContextStateNotStarted,
+
+    /**
+      Redirect is in progress.
+     */
     STPRedirectContextStateInProgress,
+
+    /**
+     Redirect has been cancelled programmatically before completing.
+     */
     STPRedirectContextStateCancelled,
+
+    /**
+     Redirect has completed.
+     */
     STPRedirectContextStateCompleted
 };
 
@@ -31,13 +41,11 @@ typedef NS_ENUM(NSUInteger, STPRedirectContextState) {
 
  @param sourceID The stripe id of the source.
  @param clientSecret The client secret of the source.
- @param error An error if one occured. Note that a lack of an error does not mean that the action was completed successfully, the presence of one confirms that it was not.
- Currently the only possible error the context can know about is if SFSafariViewController fails its initial load (like the user has no internet connection, or servers are down).
- 
- @note you can use the id and client secret to fetch the source from Stripe's servers
- and check its status. 
- @see `[STPAPIClient retrieveSourceWithId:clientSecret:completion]`
- @see `[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]`
+ @param error An error if one occured. Note that a lack of an error does not 
+ mean that the action was completed successfully, the presence of one confirms 
+ that it was not. Currently the only possible error the context can know about 
+ is if SFSafariViewController fails its initial load (like the user has no 
+ internet connection, or servers are down).
  */
 typedef void (^STPRedirectContextCompletionBlock)(NSString *sourceID, NSString *clientSecret, NSError *error);
 
@@ -63,7 +71,6 @@ typedef void (^STPRedirectContextCompletionBlock)(NSString *sourceID, NSString *
  You should not use either this class, nor `STPAPIClient`, as a way
  to determine when you should charge the source. Use Stripe webhooks on your
  backend server to listen for source state changes and to make the charge.
-
  */
 NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions")
 @interface STPRedirectContext : NSObject
@@ -81,24 +88,23 @@ NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions
  they complete the redirect in the web broswer.
 
  @param source The source that needs user redirect action to be taken.
- @param completion A block to fire when the action is believed to have been completed.
- @return Nil if the specified source is not a redirect-flow source. Otherwise a new context object.
+ @param completion A block to fire when the action is believed to have 
+ been completed.
 
- @note Firing of the completion block does not necessarily mean the user successfully
- performed the redirect action. You can re-fetch the source object using
- its id and clientSecret, and poll for status updates on it to determine if
- the source was sucessfully made chargeable.
- @see `[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]`
+ @return Nil if the specified source is not a redirect-flow source. Otherwise 
+ a new context object.
+
+ @note Firing of the completion block does not necessarily mean the user 
+ successfully performed the redirect action. You should listen for source status
+ change webhooks on your backend to determine the result of a redirect.
  */
 - (nullable instancetype)initWithSource:(STPSource *)source
                              completion:(STPRedirectContextCompletionBlock)completion;
-
 
 /**
  Use `initWithSource:completion:`
  */
 - (instancetype)init NS_UNAVAILABLE;
-
 
 /**
  Starts a redirect flow.
@@ -116,12 +122,15 @@ NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions
  a SFSafariViewController instance from the pass in view controller.
  Otherwise, if the app is running on iOS 8 it will initiate the flow by
  bouncing the user out to the Safari app. If you want more manual control 
- over the redirect method, you can use `startSafariViewControllerRedirectFlowFromViewController`
+ over the redirect method, you can use 
+ `startSafariViewControllerRedirectFlowFromViewController` 
  or `startSafariAppRedirectFlow`
 
- @note This method does nothing if the context is not in the `STPRedirectContextStateNotStarted` state.
+ @note This method does nothing if the context is not in the 
+ `STPRedirectContextStateNotStarted` state.
 
- @param presentingViewController The view controller to present the Safari view controller from.
+ @param presentingViewController The view controller to present the Safari
+ view controller from.
  */
 - (void)startRedirectFlowFromViewController:(UIViewController *)presentingViewController;
 
@@ -138,9 +147,11 @@ NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions
  and fire its completion block when either the URL is received, or the next
  time the app is foregrounded.
 
- @note This method does nothing if the context is not in the `STPRedirectContextStateNotStarted` state.
+ @note This method does nothing if the context is not in the 
+ `STPRedirectContextStateNotStarted` state.
 
- @param presentingViewController The view controller to present the Safari view controller from.
+ @param presentingViewController The view controller to present the Safari 
+ view controller from.
  */
 - (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController NS_AVAILABLE_IOS(9_0);
 
@@ -151,7 +162,8 @@ NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions
  The context will listen for app open notifications and fire its completion
  block the next time the user re-opens the app (either manually or via url)
 
- @note This method does nothing if the context is not in the `STPRedirectContextStateNotStarted` state.
+ @note This method does nothing if the context is not in the 
+  `STPRedirectContextStateNotStarted` state.
  */
 - (void)startSafariAppRedirectFlow;
 
