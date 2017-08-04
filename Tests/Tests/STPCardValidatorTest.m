@@ -12,6 +12,19 @@
 #import "STPCardValidationState.h"
 #import "STPCardValidator.h"
 
+@interface STPCardValidator (Testing)
+
++ (STPCardValidationState)validationStateForExpirationYear:(NSString *)expirationYear
+                                                   inMonth:(NSString *)expirationMonth
+                                             inCurrentYear:(NSInteger)currentYear
+                                              currentMonth:(NSInteger)currentMonth;
+
++ (STPCardValidationState)validationStateForCard:(STPCardParams *)card
+                                   inCurrentYear:(NSInteger)currentYear
+                                    currentMonth:(NSInteger)currentMonth;
+
+@end
+
 @interface STPCardValidatorTest : XCTestCase
 @end
 
