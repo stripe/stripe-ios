@@ -34,6 +34,29 @@
     XCTAssertEqual([STPFile purposeFromString:@"identity_document"], STPFilePurposeIdentityDocument);
     XCTAssertEqual([STPFile purposeFromString:@"IDENTITY_DOCUMENT"], STPFilePurposeIdentityDocument);
 
+
+    XCTAssertEqual([STPFile purposeFromString:@"business_logo"], STPFilePurposeBusinessLogo);
+    XCTAssertEqual([STPFile purposeFromString:@"BUSINESS_LOGO"], STPFilePurposeBusinessLogo);
+
+
+    XCTAssertEqual([STPFile purposeFromString:@"incorporation_document"], STPFilePurposeIncorporationDocument);
+    XCTAssertEqual([STPFile purposeFromString:@"INCORPORATION_DOCUMENT"], STPFilePurposeIncorporationDocument);
+
+
+    XCTAssertEqual([STPFile purposeFromString:@"incorporation_article"], STPFilePurposeIncorporationArticle);
+    XCTAssertEqual([STPFile purposeFromString:@"INCORPORATION_ARTICLE"], STPFilePurposeIncorporationArticle);
+
+
+    XCTAssertEqual([STPFile purposeFromString:@"invoice_statement"], STPFilePurposeInvoiceStatement);
+    XCTAssertEqual([STPFile purposeFromString:@"INVOICE_STATEMENT"], STPFilePurposeInvoiceStatement);
+
+
+    XCTAssertEqual([STPFile purposeFromString:@"payment_provider_transfer"], STPFilePurposePaymentProviderTransfer);
+    XCTAssertEqual([STPFile purposeFromString:@"PAYMENT_PROVIDER_TRANSFER"], STPFilePurposePaymentProviderTransfer);
+
+    XCTAssertEqual([STPFile purposeFromString:@"product_feed"], STPFilePurposeProductFeed);
+    XCTAssertEqual([STPFile purposeFromString:@"PRODUCT_FEED"], STPFilePurposeProductFeed);
+
     XCTAssertEqual([STPFile purposeFromString:@"unknown"], STPFilePurposeUnknown);
     XCTAssertEqual([STPFile purposeFromString:@"UNKNOWN"], STPFilePurposeUnknown);
 
@@ -45,12 +68,24 @@
     NSArray<NSNumber *> *values = @[
                                     @(STPFilePurposeDisputeEvidence),
                                     @(STPFilePurposeIdentityDocument),
+                                    @(STPFilePurposeBusinessLogo),
+                                    @(STPFilePurposeIncorporationDocument),
+                                    @(STPFilePurposeIncorporationArticle),
+                                    @(STPFilePurposeInvoiceStatement),
+                                    @(STPFilePurposePaymentProviderTransfer),
+                                    @(STPFilePurposeProductFeed),
                                     @(STPFilePurposeUnknown),
                                     ];
 
     for (NSNumber *purposeNumber in values) {
         STPFilePurpose purpose = (STPFilePurpose)[purposeNumber integerValue];
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+        // Only deprecated publicly. Can remove pragma and move to +Private
+        // in future release
         NSString *string = [STPFile stringFromPurpose:purpose];
+#pragma clang diagnostic pop
 
         switch (purpose) {
             case STPFilePurposeDisputeEvidence:
@@ -58,6 +93,24 @@
                 break;
             case STPFilePurposeIdentityDocument:
                 XCTAssertEqualObjects(string, @"identity_document");
+                break;
+            case STPFilePurposeBusinessLogo:
+                XCTAssertEqualObjects(string, @"business_logo");
+                break;
+            case STPFilePurposeIncorporationDocument:
+                XCTAssertEqualObjects(string, @"incorporation_document");
+                break;
+            case STPFilePurposeIncorporationArticle:
+                XCTAssertEqualObjects(string, @"incorporation_article");
+                break;
+            case STPFilePurposeInvoiceStatement:
+                XCTAssertEqualObjects(string, @"invoice_statement");
+                break;
+            case STPFilePurposePaymentProviderTransfer:
+                XCTAssertEqualObjects(string, @"payment_provider_transfer");
+                break;
+            case STPFilePurposeProductFeed:
+                XCTAssertEqualObjects(string, @"product_feed");
                 break;
             case STPFilePurposeUnknown:
                 XCTAssertNil(string);

@@ -306,6 +306,11 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
         case STPFilePurposeDisputeEvidence:
             maxBytes = 8 * 1000000;
             break;
+        default:
+            // TODO: Docs don't state max file size for other types
+            // using same as identity document for now
+            maxBytes = 4 * 1000000;
+            break;
         case STPFilePurposeUnknown:
             maxBytes = 0;
             break;
@@ -319,7 +324,12 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 
     STPMultipartFormDataPart *purposePart = [[STPMultipartFormDataPart alloc] init];
     purposePart.name = @"purpose";
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    // Only deprecated publicly. Can remove pragma and move to +Private
+    // in future release
     purposePart.data = [[STPFile stringFromPurpose:purpose] dataUsingEncoding:NSUTF8StringEncoding];
+#pragma clang diagnostic pop
 
     STPMultipartFormDataPart *imagePart = [[STPMultipartFormDataPart alloc] init];
     imagePart.name = @"file";

@@ -11,16 +11,18 @@
 
 #import "NSDictionary+Stripe.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STPFile ()
 
-@property (nonatomic, readwrite) NSString *fileId;
-@property (nonatomic, readwrite) NSDate *created;
-@property (nonatomic, readwrite) STPFilePurpose purpose;
-@property (nonatomic, readwrite) NSNumber *size;
-@property (nonatomic, readwrite) NSString *type;
-@property (nonatomic, readwrite, copy) NSDictionary *allResponseFields;
+@property (nonatomic, copy, readwrite) NSString *fileId;
+@property (nonatomic, copy, readwrite) NSDate *created;
+@property (nonatomic, assign, readwrite) STPFilePurpose purpose;
+@property (nonatomic, copy, readwrite) NSNumber *size;
+@property (nonatomic, copy, readwrite) NSString *type;
+@property (nonatomic, copy, readwrite, copy) NSDictionary *allResponseFields;
 
-- (BOOL)isEqualToFile:(STPFile *)file;
+- (BOOL)isEqualToFile:(nullable STPFile *)file;
 
 // See STPFile+Private.h
 
@@ -32,8 +34,14 @@
 
 + (NSDictionary<NSString *,NSNumber *> *)stringToPurposeMapping {
     return @{
+             @"business_logo": @(STPFilePurposeBusinessLogo),
              @"dispute_evidence": @(STPFilePurposeDisputeEvidence),
              @"identity_document": @(STPFilePurposeIdentityDocument),
+             @"incorporation_article": @(STPFilePurposeIncorporationArticle),
+             @"incorporation_document": @(STPFilePurposeIncorporationDocument),
+             @"invoice_statement": @(STPFilePurposeInvoiceStatement),
+             @"payment_provider_transfer": @(STPFilePurposePaymentProviderTransfer),
+             @"product_feed": @(STPFilePurposeProductFeed),
              };
 }
 
@@ -54,15 +62,15 @@
 
 #pragma mark - Equality
 
-- (BOOL)isEqual:(STPFile *)file {
-    return [self isEqualToFile:file];
+- (BOOL)isEqual:(nullable id)object {
+    return [self isEqualToFile:object];
 }
 
 - (NSUInteger)hash {
     return [self.fileId hash];
 }
 
-- (BOOL)isEqualToFile:(STPFile *)file {
+- (BOOL)isEqualToFile:(nullable STPFile *)file {
     if (self == file) {
         return YES;
     }
@@ -80,7 +88,7 @@
     return @[@"id", @"created", @"size", @"purpose", @"type"];
 }
 
-+ (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
++ (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
     NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
     if (!dict) {
         return nil;
@@ -100,3 +108,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

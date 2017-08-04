@@ -11,12 +11,64 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ The purpose of the uploaded file.
+ 
+ @see https://stripe.com/docs/file-upload
+ */
 typedef NS_ENUM(NSInteger, STPFilePurpose) {
+
+    /**
+     Identity document file
+     */
     STPFilePurposeIdentityDocument,
+
+    /**
+     Dispute evidence file
+     */
     STPFilePurposeDisputeEvidence,
+
+    /**
+     Business logo file
+     */
+    STPFilePurposeBusinessLogo,
+
+    /**
+     Incorporation document file
+     */
+    STPFilePurposeIncorporationDocument,
+
+    /**
+     Incorporation article file
+     */
+    STPFilePurposeIncorporationArticle,
+
+    /**
+     Invoice statement file
+     */
+    STPFilePurposeInvoiceStatement,
+
+    /**
+     Payment provider transfer file
+     */
+    STPFilePurposePaymentProviderTransfer,
+
+    /**
+     Product feed file
+     */
+    STPFilePurposeProductFeed,
+
+    /**
+     A file of unknown purpose type
+     */
     STPFilePurposeUnknown,
 };
 
+/**
+ Representation of a file upload object in the Stripe API.
+ 
+ @see https://stripe.com/docs/api#file_uploads
+ */
 @interface STPFile : NSObject <STPAPIResponseDecodable>
 
 /**
@@ -30,7 +82,8 @@ typedef NS_ENUM(NSInteger, STPFilePurpose) {
 @property (nonatomic, readonly) NSDate *created;
 
 /**
- The purpose of this file. This can be either an identifing document or an evidence dispute. 
+ The purpose of this file.
+
  @see https://stripe.com/docs/file-upload
  */
 @property (nonatomic, readonly) STPFilePurpose purpose;
@@ -45,10 +98,12 @@ typedef NS_ENUM(NSInteger, STPFilePurpose) {
  */
 @property (nonatomic, readonly) NSString *type;
 
+#pragma mark - Deprecated methods
+
 /**
  Returns the string value for a purpose.
  */
-+ (nullable NSString *)stringFromPurpose:(STPFilePurpose)purpose;
++ (nullable NSString *)stringFromPurpose:(STPFilePurpose)purpose DEPRECATED_ATTRIBUTE;
 
 @end
 
