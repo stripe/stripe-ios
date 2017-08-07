@@ -667,7 +667,7 @@
 		F1BA241E1E57BE5E00E4A1CF /* CardSource.json in Resources */ = {isa = PBXBuildFile; fileRef = F1BA241C1E57BE5700E4A1CF /* CardSource.json */; };
 		F1BA24211E57BECA00E4A1CF /* 3DSSource.json in Resources */ = {isa = PBXBuildFile; fileRef = F1BA241F1E57BEC600E4A1CF /* 3DSSource.json */; };
 		F1BEB2F91F34F2250043F48C /* STPSourceEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = F1BEB2F81F34F2250043F48C /* STPSourceEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F1BEB2FA1F34F2250043F48C /* STPSourceEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = F1BEB2F81F34F2250043F48C /* STPSourceEnums.h */; };
+		F1BEB2FA1F34F2250043F48C /* STPSourceEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = F1BEB2F81F34F2250043F48C /* STPSourceEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F1BEB2FD1F3508BB0043F48C /* NSError+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = F1BEB2FB1F3508BB0043F48C /* NSError+Stripe.h */; };
 		F1BEB2FE1F3508BB0043F48C /* NSError+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = F1BEB2FB1F3508BB0043F48C /* NSError+Stripe.h */; };
 		F1BEB2FF1F3508BB0043F48C /* NSError+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = F1BEB2FC1F3508BB0043F48C /* NSError+Stripe.m */; };

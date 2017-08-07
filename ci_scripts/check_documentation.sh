@@ -41,7 +41,7 @@ if [[ "${jazzy_exit_code}" != 0 ]]; then
   exit 1
 fi
 
-# Search for warnings in log file
+# Search for coverage in log file
 echo "Searching for coverage status..."
 grep "100% documentation coverage" "${log_file}" > "/dev/null"
 
