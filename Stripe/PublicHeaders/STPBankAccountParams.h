@@ -13,9 +13,6 @@
 
 /**
  The type of entity that holds a bank account.
-
- - STPBankAccountHolderTypeIndividual: An individual holds this bank account.
- - STPBankAccountHolderTypeCompany: A company holds this bank account.
  */
 typedef NS_ENUM(NSInteger, STPBankAccountHolderType) {
     /**
