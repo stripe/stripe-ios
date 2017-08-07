@@ -1,28 +1,35 @@
 #!/bin/bash
 
+function info {
+  echo "[$(basename ${0})] [INFO] ${1}"
+}
+
+function die {
+  echo "[$(basename ${0})] [ERROR] ${1}"
+  exit 1
+}
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 log_file="${TMPDIR}/jazzy_status.log"
 
 if ! command -v jazzy > /dev/null; then
   if [[ "${CI}" != "true" ]]; then
-    echo "ERROR: Please install jazzy:"
-    echo "https://github.com/realm/jazzy"
-    exit 1
+    die "ERROR: Please install jazzy: https://github.com/realm/jazzy"
   fi
 
-  echo "Installing jazzy..."
+  info "Installing jazzy..."
 
   gem install jazzy || die "Executing \`gem install jazzy\` failed"
 
 fi
 
-echo "Log is going to ${log_file}"
+info "Log is going to ${log_file}"
 
 # Reset log file
-echo "Resetting log file..."
+info "Resetting log file..."
 rm -f "${log_file}"
 
-echo "Executing jazzy..."
+info "Executing jazzy..."
 jazzy \
   --no-clean \
   --output "${script_dir}/../docs/docs" \
@@ -37,18 +44,16 @@ jazzy \
 jazzy_exit_code="$?"
 
 if [[ "${jazzy_exit_code}" != 0 ]]; then
-  echo "ERROR: Executing jazzy failed with status code: ${jazzy_exit_code}"
-  exit 1
+  die "Executing jazzy failed with status code: ${jazzy_exit_code}"
 fi
 
 # Search for coverage in log file
-echo "Searching for coverage status..."
+info "Searching for coverage status..."
 grep "100% documentation coverage" "${log_file}" > "/dev/null"
 
 if [[ "$?" != 0 ]]; then
-  echo "ERROR: Less than 100% documentation coverage!"
-  echo "See docs/docs/undocumented.json"
+  die "Less than 100% documentation coverage! See docs/docs/undocumented.json"
   exit 1
 fi
 
-echo "All good!"
+info "All good!"
