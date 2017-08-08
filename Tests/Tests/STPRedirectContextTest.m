@@ -8,6 +8,7 @@
 
 #import <SafariServices/SafariServices.h>
 #import <XCTest/XCTest.h>
+#import "NSError+Stripe.h"
 #import "NSURLComponents+Stripe.h"
 #import "STPFixtures.h"
 #import "STPRedirectContext.h"

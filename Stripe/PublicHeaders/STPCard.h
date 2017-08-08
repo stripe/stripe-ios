@@ -20,9 +20,24 @@ NS_ASSUME_NONNULL_BEGIN
  The various funding sources for a payment card.
  */
 typedef NS_ENUM(NSInteger, STPCardFundingType) {
+    /**
+     Debit card funding
+     */
     STPCardFundingTypeDebit,
+
+    /**
+     Credit card funding
+     */
     STPCardFundingTypeCredit,
+
+    /**
+     Prepaid card funding
+     */
     STPCardFundingTypePrepaid,
+
+    /**
+     An other or unknown type of funding source.
+     */
     STPCardFundingTypeOther,
 };
 

@@ -70,21 +70,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSDictionary *owner;
 
 /**
- Parameters required for the redirect flow. Required if the source is authenticated by 
- a redirect (`flow` is "redirect").
+ Parameters required for the redirect flow. Required if the source is 
+ authenticated by a redirect (`flow` is "redirect").
  */
 @property (nonatomic, copy, nullable) NSDictionary *redirect;
 
 /**
- An optional token used to create the source. When passed, token properties will override 
- source parameters.
+ An optional token used to create the source. When passed, token properties will 
+ override source parameters.
  */
 @property (nonatomic, copy, nullable) NSString *token;
 
 /**
- Whether this source should be reusable or not. `usage` may be "reusable" or "single_use".
- Some source types may or may not be reusable by construction, while other may leave the
- option at creation.
+ Whether this source should be reusable or not. `usage` may be "reusable" or 
+ "single_use". Some source types may or may not be reusable by construction, 
+ while other may leave the option at creation.
  */
 @property (nonatomic, assign) STPSourceUsage usage;
 
@@ -94,10 +94,13 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param amount               The amount to charge the customer in EUR.
  @param name                 The full name of the account holder.
- @param returnURL            The URL the customer should be redirected to after they have successfully verified the payment.
- @param statementDescriptor  (Optional) A custom statement descriptor for the payment.
+ @param returnURL            The URL the customer should be redirected to after 
+ they have successfully verified the payment.
+ @param statementDescriptor  (Optional) A custom statement descriptor for 
+ the payment.
 
- @note The currency for Bancontact must be "eur". This will be set automatically for you.
+ @note The currency for Bancontact must be "eur". This will be set automatically 
+ for you.
 
  @return an STPSourceParams object populated with the provided values.
  */
@@ -136,10 +139,13 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param amount               The amount to charge the customer in EUR.
  @param name                 The full name of the account holder.
- @param returnURL            The URL the customer should be redirected to after they have successfully verified the payment.
- @param statementDescriptor  (Optional) A custom statement descriptor for the payment.
+ @param returnURL            The URL the customer should be redirected to after 
+ they have successfully verified the payment.
+ @param statementDescriptor  (Optional) A custom statement descriptor for
+ the payment.
  
- @note The currency for Giropay must be "eur". This will be set automatically for you.
+ @note The currency for Giropay must be "eur". This will be set automatically 
+ for you.
 
  @return an STPSourceParams object populated with the provided values.
  */
@@ -154,11 +160,14 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param amount               The amount to charge the customer in EUR.
  @param name                 The full name of the account holder.
- @param returnURL            The URL the customer should be redirected to after they have successfully verified the payment.
- @param statementDescriptor  (Optional) A custom statement descriptor for the payment.
+ @param returnURL            The URL the customer should be redirected to after
+ they have successfully verified the payment.
+ @param statementDescriptor  (Optional) A custom statement descriptor for t
+ he payment.
  @param bank                 (Optional) The customer's bank.
  
- @note The currency for iDEAL must be "eur". This will be set automatically for you.
+ @note The currency for iDEAL must be "eur". This will be set automatically 
+ for you.
 
  @return an STPSourceParams object populated with the provided values.
  */
@@ -174,12 +183,14 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param name         The full name of the account holder.
  @param iban         The IBAN number for the bank account you wish to debit.
- @param addressLine1 The bank account holder's first address line (optional).
- @param city         The bank account holder's city.
- @param postalCode   The bank account holder's postal code.
- @param country      The bank account holder's two-letter country code.
+ @param addressLine1 (Optional) The bank account holder's first address line.
+ @param city         (Optional) The bank account holder's city.
+ @param postalCode   (Optional) The bank account holder's postal code.
+ @param country      (Optional) The bank account holder's two-letter
+ country code.
 
- @note The currency for SEPA Debit must be "eur". This will be set automatically for you.
+ @note The currency for SEPA Debit must be "eur". This will be set automatically
+ for you.
 
  @return an STPSourceParams object populated with the provided values.
  */
@@ -193,13 +204,16 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Creates params for a Sofort source.
  @see https://stripe.com/docs/sources/sofort#create-source
- 
+
  @param amount               The amount to charge the customer in EUR.
- @param returnURL            The URL the customer should be redirected to after they have successfully verified the payment.
+ @param returnURL            The URL the customer should be redirected to after
+ they have successfully verified the payment.
  @param country              The country code of the customer's bank.
- @param statementDescriptor  (Optional) A custom statement descriptor for the payment.
+ @param statementDescriptor  (Optional) A custom statement descriptor for
+ the payment.
  
- @note The currency for Sofort must be "eur". This will be set automatically for you.
+ @note The currency for Sofort must be "eur". This will be set automatically 
+ for you.
 
  @return an STPSourceParams object populated with the provided values.
  */
@@ -214,7 +228,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param amount      The amount to charge the customer.
  @param currency    The currency the payment is being created in.
- @param returnURL   The URL the customer should be redirected to after they have successfully verified the payment.
+ @param returnURL   The URL the customer should be redirected to after they have
+ successfully verified the payment.
  @param card        The ID of the card source.
  
  @return an STPSourceParams object populated with the provided card details.
@@ -230,7 +245,8 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param amount      The amount to charge the customer.
  @param currency    The currency the payment is being created in.
- @param returnURL   The URL the customer should be redirected to after they have successfully verified the payment.
+ @param returnURL   The URL the customer should be redirected to after they have
+ successfully verified the payment.
 
  @return an STPSourceParams object populated with the provided values
  */

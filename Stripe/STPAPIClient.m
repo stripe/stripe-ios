@@ -14,6 +14,7 @@
 #import "STPAPIClient+Private.h"
 
 #import "NSBundle+Stripe_AppName.h"
+#import "NSError+Stripe.h"
 #import "STPAPIRequest.h"
 #import "STPAnalyticsClient.h"
 #import "STPBankAccount.h"
@@ -31,7 +32,6 @@
 #import "STPSourcePoller.h"
 #import "STPTelemetryClient.h"
 #import "STPToken.h"
-#import "StripeError.h"
 #import "UIImage+Stripe.h"
 
 #if __has_include("Fabric.h")

@@ -8,11 +8,11 @@
 
 #import "STPCustomer.h"
 
+#import "NSDictionary+Stripe.h"
+#import "NSError+Stripe.h"
 #import "STPAddress.h"
 #import "STPCard.h"
 #import "STPSource.h"
-#import "StripeError.h"
-#import "NSDictionary+Stripe.h"
 
 @interface STPCustomer()
 

@@ -15,6 +15,7 @@
 #import "NSCharacterSet+Stripe.h"
 #import "NSDecimalNumber+Stripe_Currency.h"
 #import "NSDictionary+Stripe.h"
+#import "NSError+Stripe.h"
 #import "NSMutableURLRequest+Stripe.h"
 #import "NSString+Stripe.h"
 #import "NSURLComponents+Stripe.h"
@@ -44,6 +45,7 @@
     linkNSDecimalNumberCurrencyCategory();
     linkNSDictionaryCategory();
     linkNSErrorCategory();
+    linkNSErrorPrivateCategory();
     linkNSMutableURLRequestCategory();
     linkNSStringCategory();
     linkNSURLComponentsCategory();

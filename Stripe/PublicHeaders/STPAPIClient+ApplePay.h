@@ -38,4 +38,11 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 @end
 
+/**
+ This function should not be called directly.
+ 
+ It is used by the SDK when it is built as a static library to force the
+ compiler to link in category methods regardless of the integrating
+ app's compiler flags.
+ */
 void linkSTPAPIClientApplePayCategory(void);

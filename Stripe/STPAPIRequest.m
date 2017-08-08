@@ -8,12 +8,12 @@
 
 #import "STPAPIRequest.h"
 
+#import "NSError+Stripe.h"
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPAPIClient.h"
 #import "STPAPIClient+Private.h"
 #import "STPDispatchFunctions.h"
 #import "STPInternalAPIResponseDecodable.h"
-#import "StripeError.h"
 
 @implementation STPAPIRequest
 

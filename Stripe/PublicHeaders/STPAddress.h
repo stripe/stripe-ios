@@ -110,18 +110,81 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
+
+/**
+ Initializes a new STPAddress with data from an Address Book record.
+
+ @param record The Address Book record you want to populate the STPAddress from.
+ @return A new STPAddress instance with data copied from the passed in record.
+ */
 - (instancetype)initWithABRecord:(ABRecordRef)record;
+
+
+/**
+ Generates an Address Book record representation of this STPAddress.
+
+ @return A new autoreleased Address Book record with data copied from this 
+ STPAddress instance.
+ */
 - (ABRecordRef)ABRecordValue;
 #pragma clang diagnostic pop
 
+/**
+ Initializes a new STPAddress with data from an PassKit contact.
+
+ @param contact The PassKit contact you want to populate the STPAddress from.
+ @return A new STPAddress instance with data copied from the passed in contact.
+ */
 - (instancetype)initWithPKContact:(PKContact *)contact NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);
+
+/**
+ Generates a PassKit contact representation of this STPAddress.
+
+ @return A new PassKit contact with data copied from this STPAddress instance.
+ */
 - (PKContact *)PKContactValue NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);
 
+/**
+ Initializes a new STPAddress with a contact from the Contacts framework.
+
+ @param contact The CNContact you want to populate the STPAddress from.
+
+ @return A new STPAddress instance with data copied from the passed in contact.
+ */
 - (instancetype)initWithCNContact:(CNContact *)contact NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);
 
+
+/**
+ Checks if this STPAddress has the level of valid address information
+ required by the passed in setting.
+
+ @param requiredFields The required level of billing address information to 
+ check against.
+
+ @return YES if this address contains at least the necessary information,
+ NO otherwise.
+ */
 - (BOOL)containsRequiredFields:(STPBillingAddressFields)requiredFields;
+
+/**
+ Checks if this STPAddress has the level of valid address information
+ required by the passed in setting.
+
+ @param requiredFields The required shipping address information to check against.
+
+ @return YES if this address contains at least the necessary information,
+ NO otherwise.
+ */
 - (BOOL)containsRequiredShippingAddressFields:(PKAddressField)requiredFields;
 
+/**
+ Converts an STPBillingAddressFields enum value into the closest equivalent
+ representation of PKAddressField options
+
+ @param billingAddressFields Stripe billing address fields enum value to convert.
+ @return The closest represenation of the billing address requirement as 
+ a PKAddressField value.
+ */
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields;
 
 @end

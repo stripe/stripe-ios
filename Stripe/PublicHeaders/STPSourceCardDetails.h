@@ -13,10 +13,31 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+/**
+ The status of this card's 3D Secure support.
+ */
 typedef NS_ENUM(NSInteger, STPSourceCard3DSecureStatus) {
+    /**
+     3D Secure is required. This card must be converted into a 3D Secure
+     source for a charge on it to be successful.
+     */
     STPSourceCard3DSecureStatusRequired,
+
+    /**
+     3D Secure is optional. It is not required for successful charging,
+     but can be performed to help reduce the likelihood of fraud.
+     */
     STPSourceCard3DSecureStatusOptional,
+
+    /**
+     3D Secure is not supported on this card.
+     */
     STPSourceCard3DSecureStatusNotSupported,
+
+    /**
+     The status of 3D Secure support on this card is unknown.
+     */
     STPSourceCard3DSecureStatusUnknown
 };
 
@@ -30,12 +51,12 @@ typedef NS_ENUM(NSInteger, STPSourceCard3DSecureStatus) {
  You cannot directly instantiate an `STPSourceCardDetails`. You should only 
  use one that is part of an existing `STPSource` object.
  */
-- (nonnull instancetype) init __attribute__((unavailable("You cannot directly instantiate an STPSourceCardDetails. You should only use one that is part of an existing STPSource object.")));
+- (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPSourceCardDetails. You should only use one that is part of an existing STPSource object.")));
 
 /**
  The last 4 digits of the card.
  */
-@property (nonatomic, readonly, nullable) NSString *last4;
+@property (nonatomic, nullable, readonly) NSString *last4;
 
 /**
  The card's expiration month. 1-indexed (i.e. 1 == January)
@@ -60,7 +81,7 @@ typedef NS_ENUM(NSInteger, STPSourceCard3DSecureStatus) {
 /**
  Two-letter ISO code representing the issuing country of the card.
  */
-@property (nonatomic, readonly, nullable) NSString *country;
+@property (nonatomic, nullable, readonly) NSString *country;
 
 /**
  Whether 3D Secure is supported or required by the card.

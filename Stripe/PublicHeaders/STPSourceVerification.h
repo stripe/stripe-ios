@@ -9,13 +9,31 @@
 #import <Foundation/Foundation.h>
 #import "STPAPIResponseDecodable.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
- Verification status types for a Source
+ Verification status types for a Source.
  */
 typedef NS_ENUM(NSInteger, STPSourceVerificationStatus) {
+
+    /**
+     The verification is pending.
+     */
     STPSourceVerificationStatusPending,
+
+    /**
+     The verification has succeeeded.
+     */
     STPSourceVerificationStatusSucceeded,
+
+    /**
+     The verification has failed.
+     */
     STPSourceVerificationStatusFailed,
+
+    /**
+     The state of the verification is unknown.
+     */
     STPSourceVerificationStatusUnknown
 };
 
@@ -25,14 +43,16 @@ typedef NS_ENUM(NSInteger, STPSourceVerificationStatus) {
 @interface STPSourceVerification : NSObject<STPAPIResponseDecodable>
 
 /**
- You cannot directly instantiate an `STPSourceVerification`. You should only use one that is part of an existing `STPSource` object.
+ You cannot directly instantiate an `STPSourceVerification`. You should only use 
+ one that is part of an existing `STPSource` object.
  */
-- (nonnull instancetype) init __attribute__((unavailable("You cannot directly instantiate an STPSourceVerification. You should only use one that is part of an existing STPSource object.")));
+- (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPSourceVerification. You should only use one that is part of an existing STPSource object.")));
 
 /**
- The number of attempts remaining to authenticate the source object with a verification code.
+ The number of attempts remaining to authenticate the source object with a 
+ verification code.
  */
-@property (nonatomic, readonly, nullable) NSNumber *attemptsRemaining;
+@property (nonatomic, nullable, readonly) NSNumber *attemptsRemaining;
 
 /**
  The status of the verification.
@@ -40,3 +60,5 @@ typedef NS_ENUM(NSInteger, STPSourceVerificationStatus) {
 @property (nonatomic, readonly) STPSourceVerificationStatus status;
 
 @end
+
+NS_ASSUME_NONNULL_END

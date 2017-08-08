@@ -12,6 +12,7 @@
 #import "STPAPIRequest.h"
 #import "STPSource.h"
 #import "StripeError.h"
+#import "NSError+Stripe.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

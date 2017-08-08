@@ -11,12 +11,34 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ The purpose of the uploaded file.
+
+ @see https://stripe.com/docs/file-upload
+ */
 typedef NS_ENUM(NSInteger, STPFilePurpose) {
+
+    /**
+     Identity document file
+     */
     STPFilePurposeIdentityDocument,
+
+    /**
+     Dispute evidence file
+     */
     STPFilePurposeDisputeEvidence,
+
+    /**
+     A file of unknown purpose type
+     */
     STPFilePurposeUnknown,
 };
 
+/**
+ Representation of a file upload object in the Stripe API.
+
+ @see https://stripe.com/docs/api#file_uploads
+ */
 @interface STPFile : NSObject <STPAPIResponseDecodable>
 
 /**
