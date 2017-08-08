@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 #import <Stripe/Stripe.h>
+#import "NSError+Stripe.h"
 #import "STPCard.h"
 #import "STPFixtures.h"
 #import "STPPaymentCardTextFieldCell.h"

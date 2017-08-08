@@ -7,6 +7,8 @@
 //
 
 #import <XCTest/XCTest.h>
+
+#import "NSError+Stripe.h"
 #import "StripeError.h"
 
 @interface StripeErrorTest : XCTestCase

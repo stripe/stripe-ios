@@ -12,6 +12,7 @@
 
 #import "STPAPIRequest.h"
 
+#import "NSError+Stripe.h"
 #import "STPAPIClient.h"
 #import "STPAPIClient+Private.h"
 #import "STPTestUtils.h"
