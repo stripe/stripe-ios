@@ -30,22 +30,24 @@ For more fine-grained information on all of the classes and methods in our SDK, 
 
 ## Example apps
 
-There are 2 example apps included in the repository:
+There are 3 example apps included in the repository:
+- UI Examples shows off the various premade UI components the SDK includes, but is not a functional app and makes no network calls.
 - Standard Integration (Swift) shows an integration using our prebuilt UI components.
 - Custom Integration (ObjC) shows how to use our low-level methods to accept payments using several different payment methods.
 
-To build the example apps, you'll need to first run `./setup.sh`. Then, open `Stripe.xcworkspace` and choose the appropriate scheme.
+To run the examples, open `Stripe.xcworkspace` and choose the appropriate scheme. The "UI Examples" app can be run without any extra work necessary. In order to build the "integration" examples you must take some actions first, described in the next section.
 
-### Getting started with the iOS example apps
+### Getting started with the iOS example integration apps
 
-Note: all the example apps require Xcode 8.0 to build and run.
+Note: all the example apps require Xcode 8.0+ to build and run.
 
 Before you can run the apps, you need to provide them with your Stripe publishable key.
 
-1. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds). Then go to https://dashboard.stripe.com/account/apikeys.
-2. Replace the `stripePublishableKey` constant in CheckoutViewController.swift (for the Standard Integration app) or Constants.m (for the Custom Integration app) with your Test Publishable Key.
-3. Head to https://github.com/stripe/example-ios-backend/tree/v11.0.0 and click "Deploy to Heroku" (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under 'Env'. Click "Deploy for Free".
-4. Replace the `backendBaseURL` variable in the example iOS app with the app URL Heroku provides you with (e.g. "https://my-example-app.herokuapp.com")
+1. First run `./setup.sh` from the root of the repository to build the necessary dependencies.
+2. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds). Then go to https://dashboard.stripe.com/account/apikeys.
+3. Replace the `stripePublishableKey` constant in CheckoutViewController.swift (for the Standard Integration app) or Constants.m (for the Custom Integration app) with your Test Publishable Key.
+4. Head to https://github.com/stripe/example-ios-backend/tree/v11.0.0 and click "Deploy to Heroku" (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under 'Env'. Click "Deploy for Free".
+5. Replace the `backendBaseURL` variable in the example iOS app with the app URL Heroku provides you with (e.g. "https://my-example-app.herokuapp.com")
 
 After this is done, you can make test payments through the app and see them in your Stripe dashboard. Head to https://stripe.com/docs/testing#cards for a list of test card numbers.
 
