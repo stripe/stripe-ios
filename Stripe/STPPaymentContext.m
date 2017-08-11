@@ -365,6 +365,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     // we'll handle this ourselves when the loading promise fails.
 }
 
+- (UIView *)paymentMethodsViewController:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController
+                      footerViewForWidth:(CGFloat)width {
+    return [self.customFooterViewProvider sizedFooterViewForWidth:width];
+}
+
 - (void)appropriatelyDismissPaymentMethodsViewController:(STPPaymentMethodsViewController *)viewController
                                               completion:(STPVoidBlock)completion {
     if ([viewController stp_isAtRootOfNavigationController]) {
