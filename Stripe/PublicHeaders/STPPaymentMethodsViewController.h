@@ -170,6 +170,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)paymentMethodsViewController:(STPPaymentMethodsViewController *)paymentMethodsViewController
               didSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
 
+/**
+ This is called when the payment methods view controller is ready to ask its
+ delegate if it would like to provide a custom footer view or not. The delegate
+ should use the provided width argument to set its footer view’s frame, which 
+ must be populated before returning it from this method.
+ 
+ @param paymentMethodsViewController the view controller in question
+ @param width                        the width that the footer view should be sized using
+ */
+- (UIView *)paymentMethodsViewController:(STPPaymentMethodsViewController *)paymentMethodsViewController
+                     footerViewForWidth:(CGFloat)width;
+
 @end
 
 NS_ASSUME_NONNULL_END
