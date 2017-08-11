@@ -357,8 +357,8 @@
 		8BD87B931EFB1C1E00269C2B /* STPSourceVerification+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BD87B911EFB1C1E00269C2B /* STPSourceVerification+Private.h */; };
 		8BD87B951EFB1CB100269C2B /* STPSourceVerificationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD87B941EFB1CB100269C2B /* STPSourceVerificationTest.m */; };
 		8BE5AE8B1EF8905B0081A33C /* STPCardParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BE5AE8A1EF8905B0081A33C /* STPCardParamsTest.m */; };
-		93A3FCC01F3E35CC0010400E /* STPFooterViewSupporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3FCBF1F3E350C0010400E /* STPFooterViewSupporting.h */; };
-		93A3FCC11F3E35CD0010400E /* STPFooterViewSupporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3FCBF1F3E350C0010400E /* STPFooterViewSupporting.h */; };
+		93A3FCC01F3E35CC0010400E /* STPFooterViewSupporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3FCBF1F3E350C0010400E /* STPFooterViewSupporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		93A3FCC11F3E35CD0010400E /* STPFooterViewSupporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3FCBF1F3E350C0010400E /* STPFooterViewSupporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = C1080F481CBECF7B007B2D89 /* STPAddress.m */; };
 		C1080F4C1CBED48A007B2D89 /* STPAddressTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C1080F4B1CBED48A007B2D89 /* STPAddressTests.m */; };
