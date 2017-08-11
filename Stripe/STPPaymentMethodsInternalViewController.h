@@ -37,11 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateWithPaymentMethodTuple:(STPPaymentMethodTuple *)tuple;
 
-/**
- Provide this view controller with a footer view. This view should already have a frame.
- */
-- (void)setFooterView:(UIView *)footerView;
-
 @end
 
 NS_ASSUME_NONNULL_END
