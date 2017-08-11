@@ -13,6 +13,7 @@
 #import "STPBlocks.h"
 #import "STPCardParams.h"
 #import "STPCoreTableViewController.h"
+#import "STPFooterViewSupporting.h"
 #import "STPPaymentConfiguration.h"
 #import "STPTheme.h"
 #import "STPUserInformation.h"
@@ -24,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user's card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`.
  */
-@interface STPAddCardViewController : STPCoreTableViewController
+@interface STPAddCardViewController : STPCoreTableViewController <STPFooterViewSupporting>
 
 /**
  A convenience initializer; equivalent to calling `initWithConfiguration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]`.
@@ -54,6 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
  If you're using the token generated from STPAddCardViewController to make a Managed Account, you should set this property to the currency that account will use. Otherwise, you should leave it empty. For more information, see https://stripe.com/docs/api#create_card_token-card-currency
  */
 @property (nonatomic, copy, nullable) NSString *managedAccountCurrency;
+
 
 @end
 

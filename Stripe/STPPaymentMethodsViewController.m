@@ -124,7 +124,7 @@
         if (!self) {
             return;
         }
-        UIViewController *internal;
+        UIViewController<STPFooterViewSupporting> *internal;
         if (tuple.paymentMethods.count > 0) {
             STPCustomerContext *customerContext = ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) ? (STPCustomerContext *)self.apiAdapter : nil;
 
@@ -143,6 +143,14 @@
             internal = addCardViewController;
             
         }
+        
+        BOOL delegateSuppliesFooterView = [self.delegate respondsToSelector:@selector(paymentMethodsViewController:footerViewForWidth:)];
+        
+        if (delegateSuppliesFooterView) {
+            UIView *footerView = [self.delegate paymentMethodsViewController:self footerViewForWidth:internal.view.bounds.size.width];
+            [internal setFooterView:footerView];
+        }
+        
         internal.stp_navigationItemProxy = self.navigationItem;
         [self addChildViewController:internal];
         internal.view.alpha = 0;

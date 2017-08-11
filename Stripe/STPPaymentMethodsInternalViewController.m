@@ -166,6 +166,10 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     [self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
+- (void)setFooterView:(UIView *)footerView {
+    self.tableView.tableFooterView = footerView;
+}
+
 #pragma mark - Button Handlers
 
 - (void)handleBackOrCancelTapped:(__unused id)sender {

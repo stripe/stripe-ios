@@ -301,6 +301,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
                                                                );
 }
 
+- (void)setFooterView:(UIView *)footerView {
+    self.tableView.tableFooterView = footerView;
+}
+
 #pragma mark - STPPaymentCardTextField
 
 - (void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
