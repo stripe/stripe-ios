@@ -15,6 +15,7 @@
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentResult.h"
+#import "STPSizedFooterViewProvider.h"
 #import "STPUserInformation.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -222,6 +223,8 @@ NS_ASSUME_NONNULL_BEGIN
  The default value is `UIModalPresentationFullScreen`.
  */
 @property (nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
+
+@property (nonatomic) id<STPSizedFooterViewProvider> customFooterViewProvider;
 
 /**
  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you
