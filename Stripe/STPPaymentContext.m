@@ -367,7 +367,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 - (UIView *)paymentMethodsViewController:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController
                       footerViewForWidth:(CGFloat)width {
-    return [self.customFooterViewProvider sizedFooterViewForWidth:width];
+    return [self.customFooterViewProvider sizedViewForWidth:width];
 }
 
 - (void)appropriatelyDismissPaymentMethodsViewController:(STPPaymentMethodsViewController *)viewController

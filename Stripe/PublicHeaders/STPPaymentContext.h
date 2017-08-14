@@ -15,7 +15,7 @@
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentResult.h"
-#import "STPSizedFooterViewProvider.h"
+#import "STPSizedViewProvider.h"
 #import "STPUserInformation.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -224,7 +224,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
 
-@property (nonatomic) id<STPSizedFooterViewProvider> customFooterViewProvider;
+/**
+ An optional object that vends custom footer views. If present, the context will retrieve a footer 
+ view from this object and add it to the view controllers that it manages.
+ */
+@property (nonatomic) id<STPSizedViewProvider> customFooterViewProvider;
 
 /**
  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you
