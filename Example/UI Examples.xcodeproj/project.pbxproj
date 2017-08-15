@@ -35,6 +35,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B3134FD41F44E3FA00127EBC /* Examples.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Examples.playground; sourceTree = "<group>"; };
 		C1140CBD1F1EC0FC002084AB /* Stripe UI Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe UI Examples.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1140CC01F1EC0FC002084AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C1140CC21F1EC0FC002084AB /* BrowseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseViewController.swift; sourceTree = "<group>"; };
@@ -72,6 +73,7 @@
 		C1140CB41F1EC0FC002084AB = {
 			isa = PBXGroup;
 			children = (
+				B3134FD41F44E3FA00127EBC /* Examples.playground */,
 				C13A00541F1FF7A800825683 /* README.md */,
 				C1140CBF1F1EC0FC002084AB /* UI Examples */,
 				C19A55A71F1EC18600C8AABE /* Frameworks */,
