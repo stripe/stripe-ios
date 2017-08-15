@@ -26,8 +26,7 @@ rm -rf "${script_dir}/../docs/docs/"
 # Execute jazzy
 echo "Executing jazzy..."
 jazzy \
-  --config "${script_dir}/../.jazzy.yaml" \
-  --output "${script_dir}/../docs/docs"
+  --config "${script_dir}/../.jazzy.yaml"
 
 # Verify jazzy exit code
 jazzy_exit_code="$?"

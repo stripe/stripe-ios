@@ -1,13 +1,16 @@
-objc: true
+# Ordered by output of `jazzy --help config`
+
+output: docs/docs
 clean: true
-author: Stripe
-author_url: https://stripe.com
-github_url: https://github.com/stripe/stripe-ios
-github_file_prefix: https://github.com/stripe/stripe-ios/tree/master
+objc: true
 umbrella_header: Stripe/PublicHeaders/Stripe.h
 framework_root: .
+sdk: iphonesimulator
+author: Stripe
+author_url: https://stripe.com
 module: Stripe
+github_url: https://github.com/stripe/stripe-ios
+github_file_prefix: https://github.com/stripe/stripe-ios/tree/master
 skip_undocumented: true
 hide_documentation_coverage: true
 theme: fullwidth
-sdk: iphonesimulator
