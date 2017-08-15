@@ -2,11 +2,23 @@
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+function info {
+  echo "[$(basename "${0}")] [INFO] ${1}"
+}
+
+function die {
+  echo "[$(basename "${0}")] [ERROR] ${1}"
+  exit 1
+}
+
 # Verify jazzy is installed
 if ! command -v jazzy > /dev/null; then
-  echo "ERROR: Please install jazzy before running build_documentation.sh:"
-  echo "https://github.com/realm/jazzy#installation"
-  exit 1
+  if [[ "${CI}" != "true" ]]; then
+    die "Please install jazzy: https://github.com/realm/jazzy#installation"
+  fi
+
+  info "Installing jazzy..."
+  gem install jazzy --no-ri --no-rdoc || die "Executing \`gem install jazzy\` failed"
 fi
 
 # Verify jazzy is up to date
@@ -14,27 +26,22 @@ jazzy_version_local="$(jazzy --version | grep --only-matching --extended-regexp 
 jazzy_version_remote="$(gem search ^jazzy$ --remote --no-verbose | grep --only-matching --extended-regexp "[0-9\.]+")"
 
 if [[ "${jazzy_version_local}" != "${jazzy_version_remote}" ]]; then
-  echo "ERROR: Please update jazzy before running build_documentation.sh:"
-  echo "\`gem update jazzy\`"
-  exit 1
+  die "Please update jazzy: \`gem update jazzy\`"
 fi
 
-# Clean destination `stripe-ios/docs/docs/` directory
-echo "Cleaning stripe-ios/docs/docs/ directory..."
-rm -rf "${script_dir}/../docs/docs/"
-
 # Execute jazzy
-echo "Executing jazzy..."
+release_version="$(cat "${script_dir}/../VERSION")"
+
+info "Executing jazzy..."
 jazzy \
   --config "${script_dir}/../.jazzy.yaml" \
-  --output "${script_dir}/../docs/docs"
+  --github_file_prefix "https://github.com/stripe/stripe-ios/tree/v${release_version}"
 
 # Verify jazzy exit code
 jazzy_exit_code="$?"
 
 if [[ "${jazzy_exit_code}" != 0 ]]; then
-  echo "ERROR: Executing jazzy failed with status code: ${jazzy_exit_code}"
-  exit 1
+  die "Executing jazzy failed with status code: ${jazzy_exit_code}"
 fi
 
-echo "Successfully built documentation"
+info "All good!"
