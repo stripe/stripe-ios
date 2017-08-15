@@ -4,6 +4,7 @@
 require 'optparse'
 
 require_relative 'rules/property_rule'
+require_relative 'utils/logger'
 
 usage = 'Usage: linter_tests.rb [--force] [directory]'
 
@@ -16,6 +17,10 @@ OptionParser.new do |opts|
   opts.on('-f', '--force', 'Force linter to write changes. Will perform dry run by default.') do |force|
     options[:force] = force
   end
+
+  opts.on('-v', '--verbose', 'Enable logging debug messages.') do |verbose|
+    options[:verbose] = verbose
+  end
 end.parse!
 
 # Parse directory argument
@@ -24,6 +29,10 @@ if ARGV.length != 1
   exit 1
 end
 
+# Configure logger
+Utils::Logger.verbose_mode = options[:verbose]
+
+# Load file paths
 file_paths = []
 
 Dir.glob(ARGV[0] + '/**/*.h') do |file_path|

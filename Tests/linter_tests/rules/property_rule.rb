@@ -9,6 +9,10 @@ module Rules
       file_lines
     end
 
+    # Applies proper property definition spacing up to the type name
+    #
+    # Ex: `@property (nonatomic, strong) NSString *string;`
+    #      ^                             ^
     def self.apply_property_spacing_rule(file_name, file_lines)
       file_lines_corrected = []
 
@@ -42,7 +46,10 @@ module Rules
       file_lines_corrected
     end
 
-    # Lint property attributes ordering
+    # Applies proper property attribute ordering
+    #
+    # Ex:  `@property (strong, nonatomic) NSString *string;`
+    #   => `@property (nonatomic, strong) NSString *string;`
     @ideal_ordering = %w[
       nonatomic
       atomic
@@ -105,6 +112,16 @@ module Rules
       file_lines_corrected
     end
 
+    # Verifies that immutable classes with mutable counterparts are marked with copy
+    @mutable_counterparts_list = %w[
+      NSString
+      NSArray
+      NSDictionary
+    ]
+    def self.apply_property_copy_rule(file_name, file_lines)
+
+    end
+
     # Parse property line into attributes and definition
     #
     # `@property (nonatomic, readwrite) NSString *type;  // Type of transaction`
@@ -116,11 +133,17 @@ module Rules
       matches = /^@property\s*\(([\w,\s]+)\)\s*(.*)$/.match(line)
 
       if matches && matches.length == 3
+        Utils::Logger.log_debug("Property matches: #{matches.inspect}")
+
         {
           attributes: matches[1].strip.split(/\s*,\s*/),
           definition: matches[2],
         }
       else
+        if line.include?('@property')
+          Utils::Logger.log_debug("Skipped property: #{line}")
+        end
+
         nil
       end
     end

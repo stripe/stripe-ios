@@ -1,9 +1,11 @@
 module Utils
   class Logger
     @test_mode = false
+    @verbose_mode = false
 
     class << self
       attr_accessor :test_mode
+      attr_accessor :verbose_mode
     end
 
     def self.log_lint(message, file_name, line_number, context_hash)
@@ -29,6 +31,10 @@ module Utils
       end
 
       log "\n"
+    end
+
+    def self.log_debug(line)
+      print "[DEBUG] #{line}\n" if @verbose_mode
     end
 
     def self.log(line)
