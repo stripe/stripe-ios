@@ -24,9 +24,12 @@ echo "Cleaning stripe-ios/docs/docs/ directory..."
 rm -rf "${script_dir}/../docs/docs/"
 
 # Execute jazzy
+release_version="$(cat "${script_dir}/../VERSION")"
+
 echo "Executing jazzy..."
 jazzy \
-  --config "${script_dir}/../.jazzy.yaml"
+  --config "${script_dir}/../.jazzy.yaml" \
+  --github_file_prefix "https://github.com/stripe/stripe-ios/tree/v${release_version}"
 
 # Verify jazzy exit code
 jazzy_exit_code="$?"

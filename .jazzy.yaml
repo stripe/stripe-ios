@@ -10,7 +10,6 @@ author: Stripe
 author_url: https://stripe.com
 module: Stripe
 github_url: https://github.com/stripe/stripe-ios
-github_file_prefix: https://github.com/stripe/stripe-ios/tree/master
 skip_undocumented: true
 hide_documentation_coverage: true
 theme: fullwidth
