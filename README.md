@@ -14,7 +14,7 @@ The Stripe iOS SDK makes it quick and easy to build an excellent payment experie
 
 **PCI Compliance**: We provide improved PCI compliance by [tokenizing payment information](https://stripe.com/docs/quickstart#collecting-payment-information) which means sensitive data is sent directly to Stripe instead of passing through your server. For more information, please see our [Integration Security Guide](https://stripe.com/docs/security).
 
-**Apple Pay**: We have seamless integration with [Apple Pay](https://www.apple.com/apple-pay) that will allow your customers to pay using their saved payment information. For more information, please see our [Apple Pay](https://stripe.com/apple-pay) page. We also have a tutorial for our [Apple Pay Utilities](https://stripe.com/docs/mobile/ios/custom#apple-pay).
+**Apple Pay**: We have seamless integration with Apple Pay that will allow your customers to pay using their saved payment information. For more information, please see our [Apple Pay](https://stripe.com/apple-pay) page. We also have a tutorial for our [Apple Pay Utilities](https://stripe.com/docs/mobile/ios/custom#apple-pay).
 
 **Card Scanning**: We support card scanning capabilities using card.io. See our [card.io](#cardio) section.
 
@@ -22,13 +22,13 @@ The Stripe iOS SDK makes it quick and easy to build an excellent payment experie
 
 We recommend that you install the Stripe iOS SDK using a package manager such as [Cocoapods or Carthage](https://stripe.com/docs/mobile/ios#getting-started). If you prefer to link the library manually, please use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page because we consider the master branch to be unstable.
 
-If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that matches the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using [this link](https://github.com/stripe/stripe-ios/tree/v11.2.0).
+If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using [this link](https://github.com/stripe/stripe-ios/tree/v11.2.0).
 
 ## Requirements
 
 The Stripe iOS SDK is compatible with apps supporting iOS 8 and above and requires Xcode 8 to build from source.
 
-If you need iOS 7 or Xcode 7 compatibility, please use our last supported release for those requirements  [v8.0.7](https://github.com/stripe/stripe-ios/releases/tag/v8.0.7).
+If you need iOS 7 or Xcode 7 compatibility, please use our last supported release for those requirements [v8.0.7](https://github.com/stripe/stripe-ios/releases/tag/v8.0.7).
 
 ## Getting Started
 
