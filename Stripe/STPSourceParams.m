@@ -259,6 +259,25 @@
     return params;
 }
 
++ (STPSourceParams *)p24ParamsWithAmount:(NSUInteger)amount
+                                currency:(NSString *)currency
+                                   email:(NSString *)email
+                               returnURL:(NSString *)returnURL
+                                    name:(nullable NSString *)name {
+    STPSourceParams *params = [self new];
+    params.type = STPSourceTypeP24;
+    params.amount = @(amount);
+    params.currency = currency;
+
+    NSMutableDictionary *ownerDict = @{ @"email" : email }.mutableCopy;
+    if (name) {
+        ownerDict[@"name"] = name;
+    }
+    params.owner = ownerDict.copy;
+    params.redirect = @{ @"return_url": returnURL };
+    return params;
+}
+
 #pragma mark - Redirect Dictionary
 
 /**

@@ -248,11 +248,31 @@ NS_ASSUME_NONNULL_BEGIN
  @param returnURL   The URL the customer should be redirected to after they have
  successfully verified the payment.
 
- @return an STPSourceParams object populated with the provided values
+ @return An STPSourceParams object populated with the provided values
  */
 + (STPSourceParams *)alipayParamsWithAmount:(NSUInteger)amount
                                    currency:(NSString *)currency
                                   returnURL:(NSString *)returnURL;
+
+
+/**
+ Creates params for a P24 source
+ @see https://stripe.com/docs/sources/p24#create-source
+
+ @param amount      The amount to charge the customer.
+ @param currency    The currency the payment is being created in (this must be 
+ EUR or PLN)
+ @param email       The email address of the account holder.
+ @param returnURL   The URL the customer should be redirected to after they have
+ @param name        The full name of the account holder (optional).
+
+ @return An STPSourceParams object populated with the provided values.
+ */
++ (STPSourceParams *)p24ParamsWithAmount:(NSUInteger)amount
+                                currency:(NSString *)currency
+                                   email:(NSString *)email
+                               returnURL:(NSString *)returnURL
+                                    name:(nullable NSString *)name;
 
 @end
 

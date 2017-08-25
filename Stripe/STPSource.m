@@ -58,6 +58,7 @@
              @"sofort": @(STPSourceTypeSofort),
              @"three_d_secure": @(STPSourceTypeThreeDSecure),
              @"alipay": @(STPSourceTypeAlipay),
+             @"p24": @(STPSourceTypeP24),
              };
 }
 

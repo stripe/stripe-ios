@@ -142,9 +142,14 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
     STPSourceTypeThreeDSecure,
 
     /**
-     An Alipay card source. @see https://stripe.com/docs/sources/alipay
+     An Alipay source. @see https://stripe.com/docs/sources/alipay
      */
     STPSourceTypeAlipay,
+
+    /**
+     A P24 source. @see https://stripe.com/docs/sources/p24
+     */
+    STPSourceTypeP24,
 
     /**
      An unknown type of source.

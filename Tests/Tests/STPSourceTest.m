@@ -60,6 +60,9 @@
     XCTAssertEqual([STPSource typeFromString:@"alipay"], STPSourceTypeAlipay);
     XCTAssertEqual([STPSource typeFromString:@"ALIPAY"], STPSourceTypeAlipay);
 
+    XCTAssertEqual([STPSource typeFromString:@"p24"], STPSourceTypeP24);
+    XCTAssertEqual([STPSource typeFromString:@"P24"], STPSourceTypeP24);
+
     XCTAssertEqual([STPSource typeFromString:@"unknown"], STPSourceTypeUnknown);
     XCTAssertEqual([STPSource typeFromString:@"UNKNOWN"], STPSourceTypeUnknown);
 
@@ -78,6 +81,7 @@
                                     @(STPSourceTypeSofort),
                                     @(STPSourceTypeThreeDSecure),
                                     @(STPSourceTypeAlipay),
+                                    @(STPSourceTypeP24),
                                     @(STPSourceTypeUnknown),
                                     ];
 
@@ -112,6 +116,9 @@
                 break;
             case STPSourceTypeAlipay:
                 XCTAssertEqualObjects(string, @"alipay");
+                break;
+            case STPSourceTypeP24:
+                XCTAssertEqualObjects(string, @"p24");
                 break;
             case STPSourceTypeUnknown:
                 XCTAssertNil(string);
