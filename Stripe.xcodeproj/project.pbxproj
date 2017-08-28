@@ -1432,6 +1432,7 @@
 				C1B630B41D1D817900A05285 /* StripeiOSResources */,
 				11C74B9A164043050071C2CA /* Frameworks */,
 				11C74B99164043050071C2CA /* Products */,
+				F1CD9E451F549BCA00827B60 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1928,6 +1929,14 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		F1CD9E451F549BCA00827B60 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				04F3BB3B1BA89B1200DE235E /* PKPayment+Stripe.h */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		F1DEB8871E20445C0066B8E8 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -2346,7 +2355,7 @@
 				CLASSPREFIX = STP;
 				LastSwiftUpdateCheck = 0730;
 				LastTestingUpgradeCheck = 0510;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Stripe, Inc";
 				TargetAttributes = {
 					045E7C021A5F41DE004751EF = {
@@ -3009,6 +3018,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0A1AEF2AFE005B926E /* Project-Debug.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				ENABLE_TESTABILITY = YES;
 				ONLY_ACTIVE_ARCH = YES;
 			};
@@ -3018,6 +3031,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04F39F0B1AEF2AFE005B926E /* Project-Release.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 			};
 			name = Release;
 		};

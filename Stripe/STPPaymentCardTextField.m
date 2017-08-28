@@ -881,7 +881,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     __block STPCardTextFieldState cvcVisibility = STPCardTextFieldStateVisible;
     __block STPCardTextFieldState postalVisibility = self.postalCodeEntryEnabled ? STPCardTextFieldStateVisible : STPCardTextFieldStateHidden;
 
-    CGFloat (^calculateMinimumPaddingWithLocalVars)() = ^CGFloat() {
+    CGFloat (^calculateMinimumPaddingWithLocalVars)(void) = ^CGFloat() {
         return [self minimumPaddingForViewsWithWidth:availableFieldsWidth
                                                  pan:panVisibility
                                               expiry:expiryVisibility
@@ -1149,7 +1149,7 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
 
     self.focusedTextFieldForLayout = fieldtoFocus;
 
-    void (^animations)() = ^void() {
+    void (^animations)(void) = ^void() {
         [self recalculateSubviewLayout];
     };
 
