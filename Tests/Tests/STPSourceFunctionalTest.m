@@ -324,8 +324,8 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     STPSourceParams *params = [STPSourceParams p24ParamsWithAmount:1099
                                                           currency:@"eur"
                                                              email:@"user@example.com"
-                                                         returnURL:@"https://shop.example.com/crtABC"
-                                                              name:@"Jenny Rosen"];
+                                                              name:@"Jenny Rosen"
+                                                         returnURL:@"https://shop.example.com/crtABC"];
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
     XCTestExpectation *expectation = [self expectationWithDescription:@"P24 Source creation"];

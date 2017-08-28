@@ -262,8 +262,8 @@
 + (STPSourceParams *)p24ParamsWithAmount:(NSUInteger)amount
                                 currency:(NSString *)currency
                                    email:(NSString *)email
-                               returnURL:(NSString *)returnURL
-                                    name:(nullable NSString *)name {
+                                    name:(nullable NSString *)name
+                               returnURL:(NSString *)returnURL {
     STPSourceParams *params = [self new];
     params.type = STPSourceTypeP24;
     params.amount = @(amount);
