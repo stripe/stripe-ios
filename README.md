@@ -14,7 +14,7 @@ The Stripe iOS SDK makes it quick and easy to build an excellent payment experie
 
 **Simplified Security**: We make it simple for you to collect sensitive data such as credit card numbers by [tokenizing payment information](https://stripe.com/docs/quickstart#collecting-payment-information). This means the sensitive data is sent directly to Stripe instead of passing through your server. For more information, please see our [Integration Security Guide](https://stripe.com/docs/security).
 
-**Apple Pay**: We have seamless integration with Apple Pay that will allow your customers to pay using their saved payment information. For more information, please see our [Apple Pay](https://stripe.com/apple-pay) page. We also have a tutorial for our [Apple Pay Utilities](https://stripe.com/docs/mobile/ios/custom#apple-pay).
+**Apple Pay**: We provide a seamless integration with Apple Pay that will allow your customers to pay using payment methods from their Wallet. For more information, please see our [Apple Pay](https://stripe.com/apple-pay) page. We also have a tutorial for our [Apple Pay Utilities](https://stripe.com/docs/mobile/ios/custom#apple-pay).
 
 **Native UI**: We provide out-of-the-box native screens and elements so that you can get started quickly without having to think about designing the right interfaces. See our [Standard Integration Guide](https://stripe.com/docs/mobile/ios/standard) for the most hands off approach. Please see our [Custom Integration Guide](https://stripe.com/docs/mobile/ios/custom) if you want a little more control.
 
