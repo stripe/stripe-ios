@@ -12,9 +12,11 @@ The Stripe iOS SDK makes it quick and easy to build an excellent payment experie
 
 ### Features
 
-**PCI Compliance**: We provide improved PCI compliance by [tokenizing payment information](https://stripe.com/docs/quickstart#collecting-payment-information) which means sensitive data is sent directly to Stripe instead of passing through your server. For more information, please see our [Integration Security Guide](https://stripe.com/docs/security).
+**Simplified Security**: We make it simple for you to collect sensitive data such as credit card numbers by [tokenizing payment information](https://stripe.com/docs/quickstart#collecting-payment-information). This means the sensitive data is sent directly to Stripe instead of passing through your server. For more information, please see our [Integration Security Guide](https://stripe.com/docs/security).
 
 **Apple Pay**: We have seamless integration with Apple Pay that will allow your customers to pay using their saved payment information. For more information, please see our [Apple Pay](https://stripe.com/apple-pay) page. We also have a tutorial for our [Apple Pay Utilities](https://stripe.com/docs/mobile/ios/custom#apple-pay).
+
+**Native UI**: We provide out-of-the-box native screens and elements so that you can get started quickly without having to think about designing the right interfaces. See our [Standard Integration Guide](https://stripe.com/docs/mobile/ios/standard) for the most hands off approach. Please see our [Custom Integration Guide](https://stripe.com/docs/mobile/ios/custom) if you want a little more control.
 
 **Card Scanning**: We support card scanning capabilities using card.io. See our [card.io](#cardio) section.
 
@@ -27,8 +29,6 @@ If you're reading this on GitHub.com, please make sure you are looking at the [t
 ## Requirements
 
 The Stripe iOS SDK is compatible with apps supporting iOS 8 and above and requires Xcode 8 to build from source.
-
-If you need iOS 7 or Xcode 7 compatibility, please use our last supported release for those requirements [v8.0.7](https://github.com/stripe/stripe-ios/releases/tag/v8.0.7).
 
 ## Getting Started
 
@@ -43,8 +43,6 @@ There are 3 example apps included in the repository:
 - **UI Examples**: Shows off the various premade UI components the SDK includes, but is not a functional app and makes no network calls.
 - **Standard Integration (Swift)**: shows an integration using our prebuilt UI components.
 - **Custom Integration (ObjC)**: shows how to use our low-level methods to accept payments using several different payment methods.
-
-> Note: All the example apps require Xcode 8 to build and run.
 
 To try out any of these examples, clone this repository, open `Stripe.xcworkspace` with Xcode, and run the appropriate scheme. The **UI Examples** app can be run without any extra work necessary. In order to run the **Standard Integration (Swift)** or **Custom Integration (ObjC)** example, you must perform these setup steps:
 
@@ -63,6 +61,8 @@ To add card scanning capabilities to our prebuilt UI components, you can simply 
 To try this out, you can run `./install_cardio.rb`, which will download and install card.io in Standard Integration (Swift). Now, when you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
 
 ## Contributing
+
+We welcome contributions of any kind including new features, bug fixes, and documentation improvements. Please first open an issue describing what you want to build if it is a major change so that we can discuss how to move forward. Otherwise, go ahead and open a pull request for minor changes such as typo fixes and one liners.
 
 ### Running Tests
 
