@@ -307,6 +307,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
             self.paymentMethodsViewController = paymentMethodsViewController;
             paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
+            [paymentMethodsViewController setFooterView:self.customFooterView];
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
             navigationController.navigationBar.stp_theme = self.theme;
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
@@ -333,6 +334,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
             self.paymentMethodsViewController = paymentMethodsViewController;
             paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
+            [paymentMethodsViewController setFooterView:self.customFooterView];
             [navigationController pushViewController:paymentMethodsViewController animated:YES];
         }
     }];
@@ -370,10 +372,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 - (void)paymentMethodsViewController:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController
               didFailToLoadWithError:(__unused NSError *)error {
     // we'll handle this ourselves when the loading promise fails.
-}
-
-- (UIView *)paymentMethodsViewControllerCustomFooterView:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController {
-    return self.customFooterView;
 }
 
 - (void)appropriatelyDismissPaymentMethodsViewController:(STPPaymentMethodsViewController *)viewController

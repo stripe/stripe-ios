@@ -10,6 +10,7 @@
 
 #import "STPBackendAPIAdapter.h"
 #import "STPCoreViewController.h"
+#import "STPFooterViewSupporting.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentMethod.h"
 #import "STPUserInformation.h"
@@ -31,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
  for you automatically, by calling `presentPaymentMethodsViewController` 
  or `pushPaymentMethodsViewController` on it.
  */
-@interface STPPaymentMethodsViewController : STPCoreViewController
+@interface STPPaymentMethodsViewController : STPCoreViewController <STPFooterViewSupporting>
 
 
 /**
@@ -169,15 +170,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)paymentMethodsViewController:(STPPaymentMethodsViewController *)paymentMethodsViewController
               didSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
-
-/**
- This is called when the payment methods view controller is ready to ask its
- delegate if it would like to provide a custom footer view or not. The view should 
- be able to size itself when `sizeThatFits:` is called.
- 
- @param paymentMethodsViewController the view controller in question
- */
-- (UIView *)paymentMethodsViewControllerCustomFooterView:(STPPaymentMethodsViewController *)paymentMethodsViewController;
 
 @end
 

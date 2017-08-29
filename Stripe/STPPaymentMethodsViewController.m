@@ -44,6 +44,7 @@
 @property (nonatomic, weak) STPPaymentActivityIndicatorView *activityIndicator;
 @property (nonatomic, weak) UIViewController *internalViewController;
 @property (nonatomic) BOOL loading;
+@property (nonatomic) UIView *customFooterView;
 
 @end
 
@@ -143,12 +144,9 @@
             internal = addCardViewController;
             
         }
-        
-        BOOL delegateSuppliesFooterView = [self.delegate respondsToSelector:@selector(paymentMethodsViewControllerCustomFooterView:)];
-        
-        if (delegateSuppliesFooterView) {
-            UIView *footerView = [self.delegate paymentMethodsViewControllerCustomFooterView:self];
-            [internal setFooterView:footerView];
+
+        if (self.customFooterView) {
+            [internal setFooterView:self.customFooterView];
         }
         
         internal.stp_navigationItemProxy = self.navigationItem;
@@ -259,6 +257,12 @@
         }
         [self.navigationController stp_popToViewController:previous animated:YES completion:completion];
     }
+}
+
+#pragma mark - STPFooterViewSupporting
+
+- (void)setFooterView:(UIView *)footerView {
+    self.customFooterView = footerView;
 }
 
 @end
