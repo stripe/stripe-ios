@@ -55,7 +55,7 @@ IB_DESIGNABLE
 
  This will also set the color of the card placeholder icon.
 
- Default is [UIColor lightGreyColor]. Set this property to nil to reset to the default. 
+ Default is [UIColor lightGrayColor]. Set this property to nil to reset to the default.
  */
 @property (nonatomic, copy, null_resettable) UIColor *placeholderColor UI_APPEARANCE_SELECTOR;
 
@@ -98,7 +98,7 @@ IB_DESIGNABLE
  
  Can be nil (in which case no border will be drawn).
 
- Default is [UIColor lightGreyColor].
+ Default is [UIColor lightGrayColor].
  */
 @property (nonatomic, copy, nullable) UIColor *borderColor UI_APPEARANCE_SELECTOR;
 
