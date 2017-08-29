@@ -20,21 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPPaymentContext, STPPaymentMethodsViewController, STPCustomerContext;
 
 /**
- The various funding sources for a payment card.
- */
-typedef NS_ENUM(NSInteger, STPPaymentMethodsScreen) {
-    /**
-     Manage existing payment methods
-     */
-    STPPaymentMethodsScreenManage,
-    
-    /**
-     Add a new payment method
-     */
-    STPPaymentMethodsScreenAdd
-};
-
-/**
  This view controller presents a list of payment method options to the user, 
  which they can select between. They can also add credit cards to the list. 
  
