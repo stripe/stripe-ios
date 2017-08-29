@@ -12,10 +12,10 @@
 
 #import "STPAddress.h"
 #import "STPBlocks.h"
+#import "STPFooterViewSupporting.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentResult.h"
-#import "STPSizedViewProvider.h"
 #import "STPUserInformation.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  `STPPaymentContext` saves information about a user's payment methods to a Stripe customer object, and requires an `STPCustomerContext` to manage retrieving and modifying the customer.
  */
-@interface STPPaymentContext : NSObject
+@interface STPPaymentContext : NSObject <STPFooterViewSupporting>
 
 /**
  This is a convenience initializer; it is equivalent to calling 
@@ -223,13 +223,6 @@ NS_ASSUME_NONNULL_BEGIN
  The default value is `UIModalPresentationFullScreen`.
  */
 @property (nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
-
-/**
- An optional object that vends custom footer views. If present, the context will retrieve a footer 
- view from this object and add it to the view controllers that it manages. This view should be able 
- to size itself when `sizeThatFits:` is called.
- */
-@property (nonatomic) UIView *customFooterView;
 
 /**
  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you

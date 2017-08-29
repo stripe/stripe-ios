@@ -67,6 +67,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 @property (nonatomic) STPPaymentContextAmountModel *paymentAmountModel;
 @property (nonatomic) BOOL shippingAddressNeedsVerification;
+@property (nonatomic) UIView *customFooterView;
 
 @end
 
@@ -282,6 +283,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     if ([self.selectedPaymentMethod isEqual:paymentMethodToRemove]) {
         self.selectedPaymentMethod = self.paymentMethods.firstObject;
     }
+}
+
+#pragma mark - STPFooterViewSupporting
+
+- (void)setFooterView:(UIView *)footerView {
+    self.customFooterView = footerView;
 }
 
 #pragma mark - Payment Methods
