@@ -14,7 +14,8 @@
 @protocol STPFooterViewSupporting
 
 /**
- Provide this view controller with a footer view. This view should already have a frame.
+ Provide this view controller with a footer view. This view should
+ be able to size itself when `sizeThatFits:` is called.
  */
 - (void)setFooterView:(UIView *)footerView;
 
