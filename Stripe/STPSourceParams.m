@@ -196,7 +196,7 @@
 
     NSMutableDictionary<NSString *,NSString *> *address = [NSMutableDictionary new];
     address[@"city"] = city;
-    address[@"postal_code"] = postalCode,
+    address[@"postal_code"] = postalCode;
     address[@"country"] = country;
     address[@"line1"] = addressLine1;
 

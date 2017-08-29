@@ -43,7 +43,7 @@ typedef STPPromise* _Nonnull (^STPPromiseFlatMapBlock)(T value);
 
 @end
 
-typedef STPPromise* _Nonnull (^STPVoidPromiseFlatMapBlock)();
+typedef STPPromise* _Nonnull (^STPVoidPromiseFlatMapBlock)(void);
 
 @interface STPVoidPromise : STPPromise
 

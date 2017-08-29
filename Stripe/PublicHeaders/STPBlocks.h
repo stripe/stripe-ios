@@ -65,7 +65,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentStatus) {
 /**
  An empty block, called with no arguments, returning nothing.
  */
-typedef void (^STPVoidBlock)();
+typedef void (^STPVoidBlock)(void);
 
 /**
  A block that may optionally be called with an error.
