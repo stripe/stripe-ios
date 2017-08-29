@@ -226,9 +226,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  An optional object that vends custom footer views. If present, the context will retrieve a footer 
- view from this object and add it to the view controllers that it manages.
+ view from this object and add it to the view controllers that it manages. This view should be able 
+ to size itself when `sizeThatFits:` is called.
  */
-@property (nonatomic) id<STPSizedViewProvider> customFooterViewProvider;
+@property (nonatomic) UIView *customFooterView;
 
 /**
  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you

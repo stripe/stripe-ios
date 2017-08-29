@@ -144,10 +144,10 @@
             
         }
         
-        BOOL delegateSuppliesFooterView = [self.delegate respondsToSelector:@selector(paymentMethodsViewController:footerViewForWidth:)];
+        BOOL delegateSuppliesFooterView = [self.delegate respondsToSelector:@selector(paymentMethodsViewControllerCustomFooterView:)];
         
         if (delegateSuppliesFooterView) {
-            UIView *footerView = [self.delegate paymentMethodsViewController:self footerViewForWidth:internal.view.bounds.size.width];
+            UIView *footerView = [self.delegate paymentMethodsViewControllerCustomFooterView:self];
             [internal setFooterView:footerView];
         }
         

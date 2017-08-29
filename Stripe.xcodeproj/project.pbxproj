@@ -358,9 +358,7 @@
 		8BD87B951EFB1CB100269C2B /* STPSourceVerificationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BD87B941EFB1CB100269C2B /* STPSourceVerificationTest.m */; };
 		8BE5AE8B1EF8905B0081A33C /* STPCardParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BE5AE8A1EF8905B0081A33C /* STPCardParamsTest.m */; };
 		93A3FCC61F3E46410010400E /* STPFooterViewSupporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3FCC51F3E46410010400E /* STPFooterViewSupporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		93A3FCC81F3E465B0010400E /* STPSizedViewProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3FCC71F3E465B0010400E /* STPSizedViewProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		93A3FCC91F3E46620010400E /* STPFooterViewSupporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3FCC51F3E46410010400E /* STPFooterViewSupporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		93A3FCCA1F3E466B0010400E /* STPSizedViewProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3FCC71F3E465B0010400E /* STPSizedViewProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = C1080F481CBECF7B007B2D89 /* STPAddress.m */; };
 		C1080F4C1CBED48A007B2D89 /* STPAddressTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C1080F4B1CBED48A007B2D89 /* STPAddressTests.m */; };
@@ -1005,7 +1003,6 @@
 		8BD87B941EFB1CB100269C2B /* STPSourceVerificationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceVerificationTest.m; sourceTree = "<group>"; };
 		8BE5AE8A1EF8905B0081A33C /* STPCardParamsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPCardParamsTest.m; sourceTree = "<group>"; };
 		93A3FCC51F3E46410010400E /* STPFooterViewSupporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPFooterViewSupporting.h; path = PublicHeaders/STPFooterViewSupporting.h; sourceTree = "<group>"; };
-		93A3FCC71F3E465B0010400E /* STPSizedViewProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPSizedViewProvider.h; path = PublicHeaders/STPSizedViewProvider.h; sourceTree = "<group>"; };
 		C1080F471CBECF7B007B2D89 /* STPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPAddress.h; path = PublicHeaders/STPAddress.h; sourceTree = "<group>"; };
 		C1080F481CBECF7B007B2D89 /* STPAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddress.m; sourceTree = "<group>"; };
 		C1080F4B1CBED48A007B2D89 /* STPAddressTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddressTests.m; sourceTree = "<group>"; };
@@ -1684,7 +1681,6 @@
 			isa = PBXGroup;
 			children = (
 				93A3FCC51F3E46410010400E /* STPFooterViewSupporting.h */,
-				93A3FCC71F3E465B0010400E /* STPSizedViewProvider.h */,
 				04BC29A21CD8697900318357 /* STPTheme.h */,
 				04BC29A31CD8697900318357 /* STPTheme.m */,
 				04B31DF71D11AC6400EF1631 /* STPUserInformation.h */,
@@ -2124,7 +2120,6 @@
 				04F213371BCECB1C001D6F22 /* STPAPIResponseDecodable.h in Headers */,
 				045D712D1CF4ED7600F6CD65 /* STPBINRange.h in Headers */,
 				049E84E71A605EF0000B66CD /* STPFormEncoder.h in Headers */,
-				93A3FCCA1F3E466B0010400E /* STPSizedViewProvider.h in Headers */,
 				C1D7B51B1E36B8B9002181F5 /* STPSourceParams.h in Headers */,
 				04B31DFA1D11AC6400EF1631 /* STPUserInformation.h in Headers */,
 				C1CFCB681ED4E38900BE45DF /* STPInternalAPIResponseDecodable.h in Headers */,
@@ -2163,7 +2158,6 @@
 				C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */,
 				0438EF2C1B7416BB00D506CC /* STPFormTextField.h in Headers */,
 				8B429ADE1EF9EFF900F95F34 /* STPFile+Private.h in Headers */,
-				93A3FCC81F3E465B0010400E /* STPSizedViewProvider.h in Headers */,
 				93A3FCC61F3E46410010400E /* STPFooterViewSupporting.h in Headers */,
 				C180211A1E3A58710089D712 /* STPSourcePoller.h in Headers */,
 				04E39F5C1CECFAFD00AF3B96 /* STPPaymentContext+Private.h in Headers */,

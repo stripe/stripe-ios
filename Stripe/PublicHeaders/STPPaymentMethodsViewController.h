@@ -20,6 +20,21 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPPaymentContext, STPPaymentMethodsViewController, STPCustomerContext;
 
 /**
+ The various funding sources for a payment card.
+ */
+typedef NS_ENUM(NSInteger, STPPaymentMethodsScreen) {
+    /**
+     Manage existing payment methods
+     */
+    STPPaymentMethodsScreenManage,
+    
+    /**
+     Add a new payment method
+     */
+    STPPaymentMethodsScreenAdd
+};
+
+/**
  This view controller presents a list of payment method options to the user, 
  which they can select between. They can also add credit cards to the list. 
  
@@ -172,15 +187,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  This is called when the payment methods view controller is ready to ask its
- delegate if it would like to provide a custom footer view or not. The delegate
- should use the provided width argument to set its footer view’s frame, which 
- must be populated before returning it from this method.
+ delegate if it would like to provide a custom footer view or not. The view should 
+ be able to size itself when `sizeThatFits:` is called.
  
  @param paymentMethodsViewController the view controller in question
- @param width                        the width that the footer view should be sized using
  */
-- (UIView *)paymentMethodsViewController:(STPPaymentMethodsViewController *)paymentMethodsViewController
-                     footerViewForWidth:(CGFloat)width;
+- (UIView *)paymentMethodsViewControllerCustomFooterView:(STPPaymentMethodsViewController *)paymentMethodsViewController;
 
 @end
 
