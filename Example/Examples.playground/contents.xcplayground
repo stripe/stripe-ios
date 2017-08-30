@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='ios' display-mode='rendered'>
+    <pages>
+        <page name='1. STPAddCardViewController'/>
+        <page name='2. STPPaymentCardTextField'/>
+        <page name='3. Using Standard Integration'/>
+    </pages>
+</playground>
