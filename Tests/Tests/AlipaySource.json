@@ -1,0 +1,33 @@
+{
+    "id": "src_123",
+    "object": "source",
+    "amount": 1099,
+    "client_secret": "src_client_secret_123",
+    "created": 1445277809,
+    "currency": "usd",
+    "flow": "redirect",
+    "livemode": true,
+    "owner": {
+	       "address": null,
+	       "email": null,
+	       "name": null,
+	       "phone": null,
+	       "verified_address": null,
+	       "verified_email": null,
+	       "verified_name": null,
+	       "verified_phone": null,
+    },
+    "redirect": {
+	       "return_url": "https://shop.foo.com/crtABC",
+	       "status": "pending",
+	       "url": "https://pay.stripe.com/redirect/src_123?client_secret=src_client_secret_123"
+    },
+    "statement_descriptor": null,
+    "status": "pending",
+    "type": "alipay",
+    "usage": "single_use",
+    "alipay": {
+        "statement_descriptor": null,
+        "native_url": null
+    }
+}

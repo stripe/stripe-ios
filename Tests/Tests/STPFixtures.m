@@ -71,6 +71,18 @@
     return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"iDEALSource"]];
 }
 
++ (STPSource *)alipaySource {
+    return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"AlipaySource"]];
+}
+
++ (STPSource *)alipaySourceWithNativeUrl {
+    NSMutableDictionary *dictionary = [STPTestUtils jsonNamed:@"AlipaySource"].mutableCopy;
+    NSMutableDictionary *detailsDictionary = ((NSDictionary *)dictionary[@"alipay"]).mutableCopy;
+    detailsDictionary[@"native_url"] = @"alipay://test";
+    dictionary[@"alipay"] = detailsDictionary;
+    return [STPSource decodedObjectFromAPIResponse:dictionary];
+}
+
 + (STPPaymentConfiguration *)paymentConfiguration {
     STPPaymentConfiguration *config = [STPPaymentConfiguration new];
     config.publishableKey = @"pk_fake_publishable_key";

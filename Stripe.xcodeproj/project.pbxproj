@@ -644,6 +644,7 @@
 		F15675401DB544D3004468E3 /* STPAddCardViewControllerLocalizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F156753F1DB544D3004468E3 /* STPAddCardViewControllerLocalizationTests.m */; };
 		F15AC18E1DBA9CA90009EADE /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */; };
 		F15AC1901DBA9CC60009EADE /* FBSnapshotTestCase.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F16AA26F1F5A0F1700207FFF /* AlipaySource.json in Resources */ = {isa = PBXBuildFile; fileRef = F16AA26D1F5A05A100207FFF /* AlipaySource.json */; };
 		F1852F931D80B6EC00367C86 /* STPStringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F1852F911D80B6EC00367C86 /* STPStringUtils.h */; };
 		F1852F941D80B6EC00367C86 /* STPStringUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F1852F911D80B6EC00367C86 /* STPStringUtils.h */; };
 		F1852F951D80B6EC00367C86 /* STPStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F1852F921D80B6EC00367C86 /* STPStringUtils.m */; };
@@ -1159,6 +1160,7 @@
 		F15232301EA93E6800D65C67 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		F156753F1DB544D3004468E3 /* STPAddCardViewControllerLocalizationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddCardViewControllerLocalizationTests.m; sourceTree = "<group>"; };
 		F15AC18D1DBA9CA90009EADE /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSnapshotTestCase.framework; path = Carthage/Build/iOS/FBSnapshotTestCase.framework; sourceTree = "<group>"; };
+		F16AA26D1F5A05A100207FFF /* AlipaySource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = AlipaySource.json; sourceTree = "<group>"; };
 		F1852F911D80B6EC00367C86 /* STPStringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPStringUtils.h; sourceTree = "<group>"; };
 		F1852F921D80B6EC00367C86 /* STPStringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPStringUtils.m; sourceTree = "<group>"; };
 		F19491D81E5F606F001E1FC2 /* STPSourceCardDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceCardDetails.m; sourceTree = "<group>"; };
@@ -1471,6 +1473,7 @@
 				F1BA241C1E57BE5700E4A1CF /* CardSource.json */,
 				F152322E1EA9344000D65C67 /* iDEALSource.json */,
 				8BD2133D1F045D31007F6FD1 /* SEPADebitSource.json */,
+				F16AA26D1F5A05A100207FFF /* AlipaySource.json */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -2406,6 +2409,7 @@
 				8BD213391F0457A1007F6FD1 /* FileUpload.json in Resources */,
 				C1CFCB7A1ED5F88D00BE45DF /* stp_test_upload_image.jpeg in Resources */,
 				F152322F1EA9344600D65C67 /* iDEALSource.json in Resources */,
+				F16AA26F1F5A0F1700207FFF /* AlipaySource.json in Resources */,
 				8BD2133C1F0458F5007F6FD1 /* BitcoinSource.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

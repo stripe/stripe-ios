@@ -282,4 +282,58 @@
     OCMReject([sut dismissPresentedViewController]);
 }
 
+/**
+ If a source type that supports native redirect is used and it contains a native
+ url, an app to app redirect should attempt to be initiated.
+ */
+- (void)testNativeRedirectSupportingSourceFlow_validNativeURL {
+    STPSource *source = [STPFixtures alipaySourceWithNativeUrl];
+
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
+                                                                  completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
+        XCTFail(@"completion called");
+    }];
+    id sut = OCMPartialMock(context);
+
+    id applicationMock = OCMClassMock([UIApplication class]);
+    OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
+
+    id mockVC = OCMClassMock([UIViewController class]);
+    [context startRedirectFlowFromViewController:mockVC];
+
+    OCMReject([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
+    OCMReject([sut startSafariAppRedirectFlow]);
+    OCMVerify([applicationMock openURL:[OCMArg any]
+                               options:[OCMArg any]
+                     completionHandler:[OCMArg any]]);
+}
+
+/**
+ If a source type that supports native redirect is used and it does not
+ contain a native url, standard web view redirect should be attempted
+ */
+- (void)testNativeRedirectSupportingSourceFlow_invalidNativeURL {
+    STPSource *source = [STPFixtures alipaySource];
+
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
+                                                                  completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
+                                                                      XCTFail(@"completion called");
+                                                                  }];
+    id sut = OCMPartialMock(context);
+
+    id applicationMock = OCMClassMock([UIApplication class]);
+    OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
+
+    id mockVC = OCMClassMock([UIViewController class]);
+    [context startRedirectFlowFromViewController:mockVC];
+
+    OCMVerify([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
+    OCMReject([applicationMock openURL:[OCMArg any]
+                               options:[OCMArg any]
+                     completionHandler:[OCMArg any]]);
+    OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]]
+                                   animated:YES
+                                 completion:[OCMArg any]]);
+}
+
 @end

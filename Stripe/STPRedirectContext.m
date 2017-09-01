@@ -30,12 +30,29 @@ typedef void (^STPNativeRedirectCompletionBlock)(BOOL success);
 
 @implementation STPRedirectContext
 
+
+- (nullable NSURL *)nativeRedirectURLForSource:(STPSource *)source {
+    NSString *nativeUrlString = nil;
+    switch (source.type) {
+        case STPSourceTypeAlipay:
+            nativeUrlString = source.details[@"native_url"];
+            break;
+        default:
+            // All other sources have no native url support
+            break;
+    }
+
+    NSURL *nativeUrl = nativeUrlString ? [NSURL URLWithString:nativeUrlString] : nil;
+    return nativeUrl;
+}
+
 - (nullable instancetype)initWithSource:(STPSource *)source
                              completion:(STPRedirectContextCompletionBlock)completion {
 
     if (source.flow != STPSourceFlowRedirect
-        || source.redirect.url == nil
-        || source.redirect.returnURL == nil) {
+        || source.redirect.returnURL == nil
+        || (source.redirect.url == nil
+            && [self nativeRedirectURLForSource:source] == nil)) {
         return nil;
     }
 
@@ -55,17 +72,7 @@ typedef void (^STPNativeRedirectCompletionBlock)(BOOL success);
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
 
     if (self.state == STPRedirectContextStateNotStarted) {
-        NSString *nativeUrlString = nil;
-        switch (self.source.type) {
-            case STPSourceTypeAlipay:
-                nativeUrlString = self.source.details[@"native_url"];
-                break;
-            default:
-                // All other sources have no native url support
-                break;
-        }
-
-        NSURL *nativeUrl = nativeUrlString ? [NSURL URLWithString:nativeUrlString] : nil;
+        NSURL *nativeUrl = [self nativeRedirectURLForSource:self.source];
         if (!nativeUrl) {
             onCompletion(NO);
             return;

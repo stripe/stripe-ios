@@ -55,6 +55,16 @@
 + (STPSource *)iDEALSource;
 
 /**
+ A Source object with type Alipay
+ */
++ (STPSource *)alipaySource;
+
+/**
+ A Source object with type Alipay
+ */
++ (STPSource *)alipaySourceWithNativeUrl;
+
+/**
  A PaymentConfiguration object with a fake publishable key. Use this to avoid
  triggering our asserts when publishable key is nil or invalid. All other values
  are at their original defaults.
