@@ -11,6 +11,7 @@
 #import "STPDispatchFunctions.h"
 #import "STPSource.h"
 #import "STPURLCallbackHandler.h"
+#import "STPWeakStrongMacros.h"
 #import "NSError+Stripe.h"
 
 #import <SafariServices/SafariServices.h>
@@ -18,6 +19,8 @@
 #define FAUXPAS_IGNORED_IN_METHOD(...)
 
 NS_ASSUME_NONNULL_BEGIN
+
+typedef void (^STPNativeRedirectCompletionBlock)(BOOL success);
 
 @interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener>
 @property (nonatomic, copy) STPRedirectContextCompletionBlock completion;
@@ -48,14 +51,72 @@ NS_ASSUME_NONNULL_BEGIN
     [self unsubscribeFromNotificationsAndDismissPresentedViewControllers];
 }
 
-- (void)startRedirectFlowFromViewController:(UIViewController *)presentingViewController {
+- (void)performAppRedirectIfPossibleWithCompletion:(STPNativeRedirectCompletionBlock)onCompletion {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
-    if ([SFSafariViewController class] != nil) {
-        [self startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
+
+    if (self.state == STPRedirectContextStateNotStarted) {
+        NSString *nativeUrlString = nil;
+        switch (self.source.type) {
+            case STPSourceTypeAlipay:
+                nativeUrlString = self.source.details[@"native_url"];
+                break;
+            default:
+                // All other sources have no native url support
+                break;
+        }
+
+        NSURL *nativeUrl = nativeUrlString ? [NSURL URLWithString:nativeUrlString] : nil;
+        if (!nativeUrl) {
+            onCompletion(NO);
+            return;
+        }
+
+        // Optimistically start listening in case we get app switched away.
+        // If the app switch fails we'll undo this later
+        _state = STPRedirectContextStateInProgress;
+        [self subscribeToUrlAndForegroundNotifications];
+
+        UIApplication *application = [UIApplication sharedApplication];
+        if ([application respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+
+            WEAK(self);
+            [application openURL:nativeUrl options:@{} completionHandler:^(BOOL success) {
+                if (!success) {
+                    STRONG(self);
+                    self->_state = STPRedirectContextStateNotStarted;
+                    [self unsubscribeFromNotifications];
+                }
+                onCompletion(success);
+            }];
+        }
+        else {
+            _state = STPRedirectContextStateInProgress;
+            BOOL opened = [application openURL:nativeUrl];
+            if (!opened) {
+                _state = STPRedirectContextStateNotStarted;
+                [self unsubscribeFromNotifications];
+            }
+            onCompletion(opened);
+        }
     }
     else {
-        [self startSafariAppRedirectFlow];
+        onCompletion(NO);
     }
+}
+
+- (void)startRedirectFlowFromViewController:(UIViewController *)presentingViewController {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
+
+    [self performAppRedirectIfPossibleWithCompletion:^(BOOL success) {
+        if (!success) {
+            if ([SFSafariViewController class] != nil) {
+                [self startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
+            }
+            else {
+                [self startSafariAppRedirectFlow];
+            }
+        }
+    }];
 }
 
 - (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController {

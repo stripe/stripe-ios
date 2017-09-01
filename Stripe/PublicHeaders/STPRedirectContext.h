@@ -125,6 +125,10 @@ NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions
  over the redirect method, you can use 
  `startSafariViewControllerRedirectFlowFromViewController` 
  or `startSafariAppRedirectFlow`
+ 
+ If the source supports a native app, and that app is is installed on the user's
+ device, this call will do a direct app-to-app redirect instead of showing
+ a web url. 
 
  @note This method does nothing if the context is not in the 
  `STPRedirectContextStateNotStarted` state.
