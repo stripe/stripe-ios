@@ -238,6 +238,8 @@ NS_ASSUME_NON_NULL_END
 
 - Declare `@synthesize` and `@dynamic` on separate lines for shorter diffs
 
+- Use properties (`self.foo`) instead of their corresponding instance variables (`_foo`). Instance variables should only be accessed directly in initializer methods (`init`, `initWithCoder:`, etc…), `dealloc` methods, and within custom getters and setters. For more information, see [Apple’s docs on using accessor methods in initializer methods and dealloc.](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmPractical.html#//apple_ref/doc/uid/TP40004447-SW6).
+
 ### Init
 
 ```objc
