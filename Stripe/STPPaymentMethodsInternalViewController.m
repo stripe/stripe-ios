@@ -91,6 +91,15 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     [self reloadRightBarButtonItemWithTableViewIsEditing:self.tableView.isEditing animated:NO];
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    // Resetting it re-calculates the size based on new view width
+    // UITableView requires us to call setter again to actually pick up frame
+    // change on footers
+    [self setStripeViewControllerFooterView:self.tableView.tableFooterView];
+}
+
 - (void)reloadRightBarButtonItemWithTableViewIsEditing:(BOOL)tableViewIsEditing animated:(BOOL)animated {
     UIBarButtonItem *barButtonItem;
 
@@ -166,7 +175,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     [self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
-- (void)setFooterView:(UIView *)footerView {
+- (void)setStripeViewControllerFooterView:(UIView *)footerView {
     CGSize size = [footerView sizeThatFits:CGSizeMake(self.view.bounds.size.width, CGFLOAT_MAX)];
     footerView.frame = CGRectMake(0, 0, size.width, size.height);
     

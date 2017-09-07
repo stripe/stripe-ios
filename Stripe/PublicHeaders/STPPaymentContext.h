@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  `STPPaymentContext` saves information about a user's payment methods to a Stripe customer object, and requires an `STPCustomerContext` to manage retrieving and modifying the customer.
  */
-@interface STPPaymentContext : NSObject <STPFooterViewSupporting>
+@interface STPPaymentContext : NSObject
 
 /**
  This is a convenience initializer; it is equivalent to calling 
@@ -225,6 +225,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
 
 /**
+ A view that will be placed as the footer of the payment methods selection 
+ view controller and the add card view controller.
+
+ When the footer view needs to be resized, it will be sent a
+ `sizeThatFits:` call. The view should respond correctly to this method in order
+ to be sized and positioned properly.
+ */
+@property (nonatomic, strong) UIView *paymentMethodsViewControllerFooterView;
+
+/**
  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you
  can in turn call this method to try loading again (if that hasn't been called, 
  calling this will do nothing). If retrying in turn fails, `paymentContext:didFailToLoadWithError:` 
@@ -288,7 +298,6 @@ NS_ASSUME_NONNULL_BEGIN
        already showing a view controller, or in the middle of requesting a payment.
  */
 - (void)requestPayment;
-
 
 @end
 

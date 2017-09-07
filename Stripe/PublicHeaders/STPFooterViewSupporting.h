@@ -14,9 +14,12 @@
 @protocol STPFooterViewSupporting
 
 /**
- Provide this view controller with a footer view. This view should
- be able to size itself when `sizeThatFits:` is called.
+ Provide this view controller with a footer view.
+ 
+ When the footer view needs to be resized, it will be sent a 
+ `sizeThatFits:` call. The view should respond correctly to this method in order
+ to be sized and positioned properly.
  */
-- (void)setFooterView:(UIView *)footerView;
+- (void)setStripeViewControllerFooterView:(UIView *)footerView;
 
 @end

@@ -67,7 +67,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 @property (nonatomic) STPPaymentContextAmountModel *paymentAmountModel;
 @property (nonatomic) BOOL shippingAddressNeedsVerification;
-@property (nonatomic) UIView *customFooterView;
 
 // If hostViewController was set to a nav controller, the original VC on top of the stack
 @property (nonatomic, weak) UIViewController *originalTopViewController;
@@ -291,12 +290,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }
 }
 
-#pragma mark - STPFooterViewSupporting
-
-- (void)setFooterView:(UIView *)footerView {
-    self.customFooterView = footerView;
-}
-
 #pragma mark - Payment Methods
 
 - (void)presentPaymentMethodsViewController {
@@ -313,7 +306,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
             self.paymentMethodsViewController = paymentMethodsViewController;
             paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
-            [paymentMethodsViewController setFooterView:self.customFooterView];
+            [paymentMethodsViewController setStripeViewControllerFooterView:self.paymentMethodsViewControllerFooterView];
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
             navigationController.navigationBar.stp_theme = self.theme;
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
@@ -340,7 +333,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
             self.paymentMethodsViewController = paymentMethodsViewController;
             paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
-            [paymentMethodsViewController setFooterView:self.customFooterView];
+            [paymentMethodsViewController setStripeViewControllerFooterView:self.paymentMethodsViewControllerFooterView];
             [navigationController pushViewController:paymentMethodsViewController animated:YES];
         }
     }];

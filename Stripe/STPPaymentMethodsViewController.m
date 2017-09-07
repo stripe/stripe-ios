@@ -146,7 +146,7 @@
         }
 
         if (self.customFooterView) {
-            [internal setFooterView:self.customFooterView];
+            [internal setStripeViewControllerFooterView:self.customFooterView];
         }
         
         internal.stp_navigationItemProxy = self.navigationItem;
@@ -261,7 +261,7 @@
 
 #pragma mark - STPFooterViewSupporting
 
-- (void)setFooterView:(UIView *)footerView {
+- (void)setStripeViewControllerFooterView:(UIView *)footerView {
     self.customFooterView = footerView;
 }
 
