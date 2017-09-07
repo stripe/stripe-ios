@@ -284,11 +284,11 @@
     XCTAssertNil(lastName);
     XCTAssertNil(email);
     XCTAssertNil(phone);
-    XCTAssertNil(line1);
-    XCTAssertNil(city);
+    XCTAssertTrue((line1.length == 0));
+    XCTAssertTrue((city.length == 0));
     XCTAssertEqualObjects(state, @"VA");
-    XCTAssertNil(country);
-    XCTAssertNil(postalCode);
+    XCTAssertTrue((country.length == 0));
+    XCTAssertTrue((postalCode.length == 0));
 }
 
 - (void)testPKContactValue {
