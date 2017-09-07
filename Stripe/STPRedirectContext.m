@@ -20,12 +20,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^STPNativeRedirectCompletionBlock)(BOOL success);
+typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 @interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener>
 @property (nonatomic, copy) STPRedirectContextCompletionBlock completion;
 @property (nonatomic, strong) STPSource *source;
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
+@property (nonatomic, assign, readwrite) STPRedirectContextState state;
 @end
 
 @implementation STPRedirectContext
@@ -68,7 +69,7 @@ typedef void (^STPNativeRedirectCompletionBlock)(BOOL success);
     [self unsubscribeFromNotificationsAndDismissPresentedViewControllers];
 }
 
-- (void)performAppRedirectIfPossibleWithCompletion:(STPNativeRedirectCompletionBlock)onCompletion {
+- (void)performAppRedirectIfPossibleWithCompletion:(STPBoolCompletionBlock)onCompletion {
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
 
     if (self.state == STPRedirectContextStateNotStarted) {
@@ -80,7 +81,7 @@ typedef void (^STPNativeRedirectCompletionBlock)(BOOL success);
 
         // Optimistically start listening in case we get app switched away.
         // If the app switch fails we'll undo this later
-        _state = STPRedirectContextStateInProgress;
+        self.state = STPRedirectContextStateInProgress;
         [self subscribeToUrlAndForegroundNotifications];
 
         UIApplication *application = [UIApplication sharedApplication];
@@ -90,7 +91,7 @@ typedef void (^STPNativeRedirectCompletionBlock)(BOOL success);
             [application openURL:nativeUrl options:@{} completionHandler:^(BOOL success) {
                 if (!success) {
                     STRONG(self);
-                    self->_state = STPRedirectContextStateNotStarted;
+                    self.state = STPRedirectContextStateNotStarted;
                     [self unsubscribeFromNotifications];
                 }
                 onCompletion(success);
@@ -100,7 +101,7 @@ typedef void (^STPNativeRedirectCompletionBlock)(BOOL success);
             _state = STPRedirectContextStateInProgress;
             BOOL opened = [application openURL:nativeUrl];
             if (!opened) {
-                _state = STPRedirectContextStateNotStarted;
+                self.state = STPRedirectContextStateNotStarted;
                 [self unsubscribeFromNotifications];
             }
             onCompletion(opened);
@@ -141,7 +142,7 @@ typedef void (^STPNativeRedirectCompletionBlock)(BOOL success);
 
 - (void)startSafariAppRedirectFlow {
     if (self.state == STPRedirectContextStateNotStarted) {
-        _state = STPRedirectContextStateInProgress;
+        self.state = STPRedirectContextStateInProgress;
         [self subscribeToUrlAndForegroundNotifications];
         [[UIApplication sharedApplication] openURL:self.source.redirect.url];
     }
@@ -149,7 +150,7 @@ typedef void (^STPNativeRedirectCompletionBlock)(BOOL success);
 
 - (void)cancel {
     if (self.state == STPRedirectContextStateInProgress) {
-        _state = STPRedirectContextStateCancelled;
+        self.state = STPRedirectContextStateCancelled;
         [self unsubscribeFromNotificationsAndDismissPresentedViewControllers];
     }
 }
@@ -196,7 +197,7 @@ typedef void (^STPNativeRedirectCompletionBlock)(BOOL success);
         return;
     }
 
-    _state = STPRedirectContextStateCompleted;
+    self.state = STPRedirectContextStateCompleted;
 
     [self unsubscribeFromNotifications];
 

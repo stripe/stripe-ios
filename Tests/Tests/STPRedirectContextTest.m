@@ -288,6 +288,7 @@
  */
 - (void)testNativeRedirectSupportingSourceFlow_validNativeURL {
     STPSource *source = [STPFixtures alipaySourceWithNativeUrl];
+    NSURL *sourceURL = [NSURL URLWithString:source.details[@"native_url"]];
 
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
                                                                   completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
@@ -297,15 +298,18 @@
 
     id applicationMock = OCMClassMock([UIApplication class]);
     OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
+    OCMStub([applicationMock openURL:[OCMArg any]
+                             options:[OCMArg any]
+                   completionHandler:([OCMArg invokeBlockWithArgs:@YES, nil])]);
 
     id mockVC = OCMClassMock([UIViewController class]);
     [context startRedirectFlowFromViewController:mockVC];
 
     OCMReject([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
     OCMReject([sut startSafariAppRedirectFlow]);
-    OCMVerify([applicationMock openURL:[OCMArg any]
-                               options:[OCMArg any]
-                     completionHandler:[OCMArg any]]);
+    OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
+                               options:[OCMArg isEqual:@{}]
+                     completionHandler:[OCMArg isNotNil]]);
 }
 
 /**
@@ -327,13 +331,13 @@
     id mockVC = OCMClassMock([UIViewController class]);
     [context startRedirectFlowFromViewController:mockVC];
 
-    OCMVerify([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
+    OCMVerify([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg isEqual:mockVC]]);
     OCMReject([applicationMock openURL:[OCMArg any]
                                options:[OCMArg any]
                      completionHandler:[OCMArg any]]);
     OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]]
                                    animated:YES
-                                 completion:[OCMArg any]]);
+                                 completion:[OCMArg isNil]]);
 }
 
 @end

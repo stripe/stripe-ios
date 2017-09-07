@@ -60,7 +60,7 @@
 + (STPSource *)alipaySource;
 
 /**
- A Source object with type Alipay
+ A Source object with type Alipay and a native redirect url
  */
 + (STPSource *)alipaySourceWithNativeUrl;
 
