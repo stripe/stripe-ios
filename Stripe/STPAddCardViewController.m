@@ -301,6 +301,13 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
                                                                );
 }
 
+- (void)setFooterView:(UIView *)footerView {
+    CGSize size = [footerView sizeThatFits:CGSizeMake(self.view.bounds.size.width, CGFLOAT_MAX)];
+    footerView.frame = CGRectMake(0, 0, size.width, size.height);
+
+    self.tableView.tableFooterView = footerView;
+}
+
 #pragma mark - STPPaymentCardTextField
 
 - (void)paymentCardTextFieldDidChange:(STPPaymentCardTextField *)textField {
