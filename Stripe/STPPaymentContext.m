@@ -68,6 +68,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 @property (nonatomic) STPPaymentContextAmountModel *paymentAmountModel;
 @property (nonatomic) BOOL shippingAddressNeedsVerification;
 
+// If hostViewController was set to a nav controller, the original VC on top of the stack
+@property (nonatomic, weak) UIViewController *originalTopViewController;
+
 @end
 
 @implementation STPPaymentContext
@@ -176,6 +179,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 - (void)setHostViewController:(UIViewController *)hostViewController {
     NSCAssert(_hostViewController == nil, @"You cannot change the hostViewController on an STPPaymentContext after it's already been set.");
     _hostViewController = hostViewController;
+    if ([hostViewController isKindOfClass:[UINavigationController class]]) {
+        self.originalTopViewController = ((UINavigationController *)hostViewController).topViewController;
+    }
     [self artificiallyRetain:hostViewController];
     [self.willAppearPromise voidCompleteWith:hostViewController.stp_willAppearPromise];
     [self.didAppearPromise voidCompleteWith:hostViewController.stp_didAppearPromise];
@@ -377,7 +383,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         }];
     } else {
         // otherwise, we've been pushed onto the stack.
-        [viewController.navigationController stp_popToViewController:self.hostViewController animated:YES completion:^{
+        UIViewController *destinationViewController = self.hostViewController;
+        // If hostViewController is a nav controller, pop to the original VC on top of the stack.
+        if ([self.hostViewController isKindOfClass:[UINavigationController class]]) {
+            destinationViewController = self.originalTopViewController;
+        }
+        [viewController.navigationController stp_popToViewController:destinationViewController animated:YES completion:^{
             self.paymentMethodsViewController = nil;
             if (completion) {
                 completion();
@@ -492,7 +503,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         }];
     } else {
         // otherwise, we've been pushed onto the stack.
-        [viewController.navigationController stp_popToViewController:self.hostViewController animated:YES completion:^{
+        UIViewController *destinationViewController = self.hostViewController;
+        // If hostViewController is a nav controller, pop to the original VC on top of the stack.
+        if ([self.hostViewController isKindOfClass:[UINavigationController class]]) {
+            destinationViewController = self.originalTopViewController;
+        }
+        [viewController.navigationController stp_popToViewController:destinationViewController animated:YES completion:^{
             if (completion) {
                 completion();
             }
