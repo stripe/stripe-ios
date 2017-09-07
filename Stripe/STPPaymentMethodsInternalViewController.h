@@ -8,6 +8,7 @@
 
 #import "STPCoreTableViewController.h"
 #import "STPBlocks.h"
+#import "STPFooterViewSupporting.h"
 
 @class STPAddress, STPCustomerContext, STPPaymentConfiguration, STPPaymentMethodTuple, STPToken, STPUserInformation;
 
@@ -24,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface STPPaymentMethodsInternalViewController : STPCoreTableViewController
+@interface STPPaymentMethodsInternalViewController : STPCoreTableViewController <STPFooterViewSupporting>
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                       customerContext:(nullable STPCustomerContext *)customerContext

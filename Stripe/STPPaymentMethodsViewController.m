@@ -44,6 +44,7 @@
 @property (nonatomic, weak) STPPaymentActivityIndicatorView *activityIndicator;
 @property (nonatomic, weak) UIViewController *internalViewController;
 @property (nonatomic) BOOL loading;
+@property (nonatomic) UIView *customFooterView;
 
 @end
 
@@ -124,7 +125,7 @@
         if (!self) {
             return;
         }
-        UIViewController *internal;
+        UIViewController<STPFooterViewSupporting> *internal;
         if (tuple.paymentMethods.count > 0) {
             STPCustomerContext *customerContext = ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) ? (STPCustomerContext *)self.apiAdapter : nil;
 
@@ -143,6 +144,11 @@
             internal = addCardViewController;
             
         }
+
+        if (self.customFooterView) {
+            [internal setFooterView:self.customFooterView];
+        }
+        
         internal.stp_navigationItemProxy = self.navigationItem;
         [self addChildViewController:internal];
         internal.view.alpha = 0;
@@ -251,6 +257,12 @@
         }
         [self.navigationController stp_popToViewController:previous animated:YES completion:completion];
     }
+}
+
+#pragma mark - STPFooterViewSupporting
+
+- (void)setFooterView:(UIView *)footerView {
+    self.customFooterView = footerView;
 }
 
 @end

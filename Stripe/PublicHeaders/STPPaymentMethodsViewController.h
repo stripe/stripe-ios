@@ -10,6 +10,7 @@
 
 #import "STPBackendAPIAdapter.h"
 #import "STPCoreViewController.h"
+#import "STPFooterViewSupporting.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentMethod.h"
 #import "STPUserInformation.h"
@@ -31,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
  for you automatically, by calling `presentPaymentMethodsViewController` 
  or `pushPaymentMethodsViewController` on it.
  */
-@interface STPPaymentMethodsViewController : STPCoreViewController
+@interface STPPaymentMethodsViewController : STPCoreViewController <STPFooterViewSupporting>
 
 
 /**

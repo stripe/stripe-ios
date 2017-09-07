@@ -12,6 +12,7 @@
 
 #import "STPAddress.h"
 #import "STPBlocks.h"
+#import "STPFooterViewSupporting.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentResult.h"
@@ -29,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  `STPPaymentContext` saves information about a user's payment methods to a Stripe customer object, and requires an `STPCustomerContext` to manage retrieving and modifying the customer.
  */
-@interface STPPaymentContext : NSObject
+@interface STPPaymentContext : NSObject <STPFooterViewSupporting>
 
 /**
  This is a convenience initializer; it is equivalent to calling 
