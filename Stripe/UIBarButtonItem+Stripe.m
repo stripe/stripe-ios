@@ -14,22 +14,6 @@
 
 @implementation UIBarButtonItem (Stripe)
 
-+ (instancetype)stp_backButtonItemWithTitle:(NSString *)title
-                                      style:(UIBarButtonItemStyle)style
-                                     target:(id)target
-                                     action:(SEL)action {
-    UIBarButtonItem *item = [[self alloc] initWithTitle:title
-                                                             style:style
-                                                            target:target
-                                                            action:action];
-    UIImage *chevron = [STPImageLibrary leftChevronIcon];
-    CGFloat yPadding = (30 - chevron.size.height) / 2;
-    UIImage *paddedChevron = [STPImageLibrary paddedImageWithInsets:UIEdgeInsetsMake(yPadding, 0, yPadding, 30)
-                                                           forImage:chevron];
-    [item setBackgroundImage:paddedChevron forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    return item;
-}
-
 - (void)stp_setTheme:(STPTheme *)theme {
     UIImage *image = [self backgroundImageForState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     if (image) {

@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) STPTheme *theme;
 @property (nonatomic) UIBarButtonItem *cancelItem;
-@property (nonatomic) UIBarButtonItem *backItem;
 
 /**
  All designated initializers funnel through this method to do their setup
@@ -39,8 +38,18 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param sender Sender of the target action, if applicable.
  */
-- (void)handleBackOrCancelTapped:(nullable id)sender;
+- (void)handleCancelTapped:(nullable id)sender;
 
+/**
+ If you override this and return YES, then your CoreVC implementation will not
+ create and set up a cancel and instead just use the default
+ UIViewController back button behavior.
+
+ You won't receive calls to `handleCancelTapped` if this is YES.
+
+ Defaults to NO.
+ */
+- (BOOL)useSystemBackButton;
 
 /**
  Called in viewDidLoad after doing base implementation, before

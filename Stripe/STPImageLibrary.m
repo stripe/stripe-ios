@@ -80,10 +80,6 @@
     return [self safeImageNamed:@"stp_icon_add" templateIfAvailable:YES];
 }
 
-+ (UIImage *)leftChevronIcon {
-    return [self safeImageNamed:@"stp_icon_chevron_left" templateIfAvailable:YES];
-}
-
 + (UIImage *)checkmarkIcon {
     return [self safeImageNamed:@"stp_icon_checkmark" templateIfAvailable:YES];
 }

@@ -354,7 +354,7 @@
 				);
 				INFOPLIST_FILE = "Custom Integration (ObjC)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.customexample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -378,7 +378,7 @@
 				);
 				INFOPLIST_FILE = "Custom Integration (ObjC)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.customexample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CustomSDKExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

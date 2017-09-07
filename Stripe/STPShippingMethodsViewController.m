@@ -88,6 +88,10 @@ static NSString *const STPShippingMethodCellReuseIdentifier = @"STPShippingMetho
     [self.delegate shippingMethodsViewController:self didFinishWithShippingMethod:self.selectedShippingMethod];
 }
 
+- (BOOL)useSystemBackButton {
+    return YES;
+}
+
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(__unused UITableView *)tableView {
