@@ -567,10 +567,8 @@
 		F12829DC1D7747E4008B10D6 /* STPBundleLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = F12829D91D7747E4008B10D6 /* STPBundleLocator.m */; };
 		F12829DD1D7747E4008B10D6 /* STPBundleLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = F12829D91D7747E4008B10D6 /* STPBundleLocator.m */; };
 		F12C8DC01D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */ = {isa = PBXBuildFile; fileRef = F12C8DBE1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h */; };
-		F12C8DC11D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */ = {isa = PBXBuildFile; fileRef = F12C8DBE1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h */; };
 		F12C8DC21D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */ = {isa = PBXBuildFile; fileRef = F12C8DBE1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h */; };
 		F12C8DC31D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F12C8DBF1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m */; };
-		F12C8DC41D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F12C8DBF1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m */; };
 		F12C8DC51D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F12C8DBF1D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m */; };
 		F1343BE91D652CAB00F102D8 /* Card.json in Resources */ = {isa = PBXBuildFile; fileRef = C1D23FB31D37FE0B002FD83C /* Card.json */; };
 		F1343BEA1D652CAD00F102D8 /* Customer.json in Resources */ = {isa = PBXBuildFile; fileRef = C1D23FB41D37FE0B002FD83C /* Customer.json */; };
@@ -1982,7 +1980,6 @@
 				F148ABFA1D5E88C40014FD92 /* STPTestUtils.h in Headers */,
 				C1CFCB6D1ED5E0F800BE45DF /* STPMocks.h in Headers */,
 				C18867DB1E8B0C4100A77634 /* STPFixtures.h in Headers */,
-				F12C8DC11D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2645,7 +2642,6 @@
 				C127110A1DBA7E490087840D /* STPAddressViewModelTest.m in Sources */,
 				C17D24EE1E37DBAC005CB188 /* STPSourceTest.m in Sources */,
 				C1E4F8061EBBEB0F00E611F5 /* STPCustomerContextTest.m in Sources */,
-				F12C8DC41D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.m in Sources */,
 				F14C872F1D4FCDBA00C7CC6A /* STPPaymentContextApplePayTest.m in Sources */,
 				C1BD9B1F1E390A2700CEE925 /* STPSourceParamsTest.m in Sources */,
 				C1D7B5251E36C70D002181F5 /* STPSourceFunctionalTest.m in Sources */,
