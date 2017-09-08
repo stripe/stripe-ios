@@ -16,9 +16,6 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Int.";
 
-/* Text for back button */
-"Back" = "Indietro";
-
 /* Title for billing address entry section */
 "Billing Address" = "Indirizzo di fatturazione";
 

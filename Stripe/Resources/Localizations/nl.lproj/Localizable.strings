@@ -16,9 +16,6 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Adresregel 2";
 
-/* Text for back button */
-"Back" = "Terug";
-
 /* Title for billing address entry section */
 "Billing Address" = "Factuuradres";
 

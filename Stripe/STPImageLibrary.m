@@ -158,17 +158,4 @@
     return newImage;
 }
 
-+ (UIImage *)paddedImageWithInsets:(UIEdgeInsets)insets
-                          forImage:(UIImage *)image {
-    CGSize size = CGSizeMake(image.size.width + insets.left + insets.right,
-                             image.size.height + insets.top + insets.bottom);
-    UIGraphicsBeginImageContextWithOptions(size, NO, image.scale);
-    CGPoint origin = CGPointMake(insets.left, insets.top);
-    [image drawAtPoint:origin];
-    UIImage *imageWithInsets = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    imageWithInsets = [imageWithInsets imageWithRenderingMode:image.renderingMode];
-    return imageWithInsets;
-}
-
 @end
