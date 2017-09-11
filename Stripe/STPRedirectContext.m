@@ -31,22 +31,6 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 @implementation STPRedirectContext
 
-
-- (nullable NSURL *)nativeRedirectURLForSource:(STPSource *)source {
-    NSString *nativeUrlString = nil;
-    switch (source.type) {
-        case STPSourceTypeAlipay:
-            nativeUrlString = source.details[@"native_url"];
-            break;
-        default:
-            // All other sources have no native url support
-            break;
-    }
-
-    NSURL *nativeUrl = nativeUrlString ? [NSURL URLWithString:nativeUrlString] : nil;
-    return nativeUrl;
-}
-
 - (nullable instancetype)initWithSource:(STPSource *)source
                              completion:(STPRedirectContextCompletionBlock)completion {
 
@@ -234,6 +218,21 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
                                                                    completion:nil];
     }
+}
+
+- (nullable NSURL *)nativeRedirectURLForSource:(STPSource *)source {
+    NSString *nativeUrlString = nil;
+    switch (source.type) {
+        case STPSourceTypeAlipay:
+            nativeUrlString = source.details[@"native_url"];
+            break;
+        default:
+            // All other sources have no native url support
+            break;
+    }
+
+    NSURL *nativeUrl = nativeUrlString ? [NSURL URLWithString:nativeUrlString] : nil;
+    return nativeUrl;
 }
 
 @end
