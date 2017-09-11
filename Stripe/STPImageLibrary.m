@@ -80,10 +80,6 @@
     return [self safeImageNamed:@"stp_icon_add" templateIfAvailable:YES];
 }
 
-+ (UIImage *)leftChevronIcon {
-    return [self safeImageNamed:@"stp_icon_chevron_left" templateIfAvailable:YES];
-}
-
 + (UIImage *)checkmarkIcon {
     return [self safeImageNamed:@"stp_icon_checkmark" templateIfAvailable:YES];
 }
@@ -160,19 +156,6 @@
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
-}
-
-+ (UIImage *)paddedImageWithInsets:(UIEdgeInsets)insets
-                          forImage:(UIImage *)image {
-    CGSize size = CGSizeMake(image.size.width + insets.left + insets.right,
-                             image.size.height + insets.top + insets.bottom);
-    UIGraphicsBeginImageContextWithOptions(size, NO, image.scale);
-    CGPoint origin = CGPointMake(insets.left, insets.top);
-    [image drawAtPoint:origin];
-    UIImage *imageWithInsets = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    imageWithInsets = [imageWithInsets imageWithRenderingMode:image.renderingMode];
-    return imageWithInsets;
 }
 
 @end

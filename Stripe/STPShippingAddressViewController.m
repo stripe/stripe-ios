@@ -204,7 +204,7 @@
     }
 }
 
-- (void)handleBackOrCancelTapped:(__unused id)sender {
+- (void)handleCancelTapped:(__unused id)sender {
     [self.delegate shippingAddressViewControllerDidCancel:self];
 }
 

@@ -16,9 +16,6 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "建物名";
 
-/* Text for back button */
-"Back" = "戻る";
-
 /* Title for billing address entry section */
 "Billing Address" = "請求先住所";
 

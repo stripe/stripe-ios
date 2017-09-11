@@ -409,7 +409,7 @@
 				INFOPLIST_FILE = "Standard Integration (Swift)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.standardexample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
 				PRODUCT_NAME = "Standard Integration (Swift)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -439,7 +439,7 @@
 				INFOPLIST_FILE = "Standard Integration (Swift)/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.standardexample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
 				PRODUCT_NAME = "Standard Integration (Swift)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";

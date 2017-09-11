@@ -277,9 +277,6 @@
 		04E39F5C1CECFAFD00AF3B96 /* STPPaymentContext+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E39F5A1CECFAFD00AF3B96 /* STPPaymentContext+Private.h */; };
 		04E39F6A1CED48D500AF3B96 /* UIBarButtonItem+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E39F681CED48D500AF3B96 /* UIBarButtonItem+Stripe.h */; };
 		04E39F6B1CED48D500AF3B96 /* UIBarButtonItem+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E39F691CED48D500AF3B96 /* UIBarButtonItem+Stripe.m */; };
-		04E39F6F1CED4C7700AF3B96 /* stp_icon_chevron_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F6C1CED4C7700AF3B96 /* stp_icon_chevron_left.png */; };
-		04E39F701CED4C7700AF3B96 /* stp_icon_chevron_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F6D1CED4C7700AF3B96 /* stp_icon_chevron_left@2x.png */; };
-		04E39F711CED4C7700AF3B96 /* stp_icon_chevron_left@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F6E1CED4C7700AF3B96 /* stp_icon_chevron_left@3x.png */; };
 		04EBC7531B7533C300A0E6AE /* STPCardValidationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04EBC7561B7533C300A0E6AE /* STPCardValidationState.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04EBC7571B7533C300A0E6AE /* STPCardValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 04EBC7521B7533C300A0E6AE /* STPCardValidator.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -615,9 +612,6 @@
 		F1510B591D5A4CC4000731AD /* stp_card_applepay@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 049A3FA41CC8071100F57DE7 /* stp_card_applepay@3x.png */; };
 		F1510B5B1D5A4CC4000731AD /* stp_icon_add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 049A3F9D1CC8006800F57DE7 /* stp_icon_add@2x.png */; };
 		F1510B5C1D5A4CC4000731AD /* stp_icon_add@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 049A3F9E1CC8006800F57DE7 /* stp_icon_add@3x.png */; };
-		F1510B5D1D5A4CC4000731AD /* stp_icon_chevron_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F6C1CED4C7700AF3B96 /* stp_icon_chevron_left.png */; };
-		F1510B5E1D5A4CC4000731AD /* stp_icon_chevron_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F6D1CED4C7700AF3B96 /* stp_icon_chevron_left@2x.png */; };
-		F1510B5F1D5A4CC4000731AD /* stp_icon_chevron_left@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E39F6E1CED4C7700AF3B96 /* stp_icon_chevron_left@3x.png */; };
 		F1510BA71D5A77F6000731AD /* stp_card_diners_template.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510BA41D5A77F6000731AD /* stp_card_diners_template.png */; };
 		F1510BAA1D5A77F6000731AD /* stp_card_diners_template@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510BA51D5A77F6000731AD /* stp_card_diners_template@2x.png */; };
 		F1510BAD1D5A77F6000731AD /* stp_card_diners_template@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1510BA61D5A77F6000731AD /* stp_card_diners_template@3x.png */; };
@@ -952,9 +946,6 @@
 		04E39F5A1CECFAFD00AF3B96 /* STPPaymentContext+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STPPaymentContext+Private.h"; sourceTree = "<group>"; };
 		04E39F681CED48D500AF3B96 /* UIBarButtonItem+Stripe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+Stripe.h"; sourceTree = "<group>"; };
 		04E39F691CED48D500AF3B96 /* UIBarButtonItem+Stripe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+Stripe.m"; sourceTree = "<group>"; };
-		04E39F6C1CED4C7700AF3B96 /* stp_icon_chevron_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stp_icon_chevron_left.png; sourceTree = "<group>"; };
-		04E39F6D1CED4C7700AF3B96 /* stp_icon_chevron_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_chevron_left@2x.png"; sourceTree = "<group>"; };
-		04E39F6E1CED4C7700AF3B96 /* stp_icon_chevron_left@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_icon_chevron_left@3x.png"; sourceTree = "<group>"; };
 		04EBC7511B7533C300A0E6AE /* STPCardValidationState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCardValidationState.h; path = PublicHeaders/STPCardValidationState.h; sourceTree = "<group>"; };
 		04EBC7521B7533C300A0E6AE /* STPCardValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPCardValidator.h; path = PublicHeaders/STPCardValidator.h; sourceTree = "<group>"; };
 		04F213301BCEAB61001D6F22 /* STPFormEncodable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPFormEncodable.h; path = PublicHeaders/STPFormEncodable.h; sourceTree = "<group>"; };
@@ -1120,7 +1111,7 @@
 		F132DFE21D51372A002FF5B7 /* STPWeakStrongMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPWeakStrongMacros.h; sourceTree = "<group>"; };
 		F148ABC31D5D334B0014FD92 /* STPLocalizationUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPLocalizationUtils.m; sourceTree = "<group>"; };
 		F148ABE71D5E805A0014FD92 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F148ABEA1D5E80790014FD92 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "Localizations/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		F148ABEA1D5E80790014FD92 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "Localizations/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F148ABEC1D5E80860014FD92 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = Localizations/de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F148ABED1D5E808B0014FD92 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = Localizations/es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F148ABEE1D5E80990014FD92 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = Localizations/it.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1328,9 +1319,6 @@
 				049A3F9C1CC8006800F57DE7 /* stp_icon_add.png */,
 				049A3F9D1CC8006800F57DE7 /* stp_icon_add@2x.png */,
 				049A3F9E1CC8006800F57DE7 /* stp_icon_add@3x.png */,
-				04E39F6C1CED4C7700AF3B96 /* stp_icon_chevron_left.png */,
-				04E39F6D1CED4C7700AF3B96 /* stp_icon_chevron_left@2x.png */,
-				04E39F6E1CED4C7700AF3B96 /* stp_icon_chevron_left@3x.png */,
 				C15993201D8807930047950D /* stp_shipping_form.png */,
 				C15993211D8807930047950D /* stp_shipping_form@2x.png */,
 				C15993221D8807930047950D /* stp_shipping_form@3x.png */,
@@ -2416,13 +2404,11 @@
 				0438EFC61B741C2800D506CC /* stp_card_jcb@3x.png in Resources */,
 				0438EFC21B741C2800D506CC /* stp_card_jcb.png in Resources */,
 				F1C578F11D651AB200912EAE /* stp_card_applepay.png in Resources */,
-				04E39F6F1CED4C7700AF3B96 /* stp_icon_chevron_left.png in Resources */,
 				C1300D211EB8D38A0080AF7B /* stp_card_unknown@2x.png in Resources */,
 				C1300D2D1EB8D3AB0080AF7B /* stp_card_error@2x.png in Resources */,
 				F1510BC21D5A8146000731AD /* stp_card_jcb_template@2x.png in Resources */,
 				F1510B1B1D5A4C93000731AD /* stp_card_discover_template@3x.png in Resources */,
 				0438EFD61B741C2800D506CC /* stp_card_visa@2x.png in Resources */,
-				04E39F701CED4C7700AF3B96 /* stp_icon_chevron_left@2x.png in Resources */,
 				F148ABFD1D5E8DF20014FD92 /* stp_card_form_back.png in Resources */,
 				C11810C21CC7DA290022FB55 /* stp_card_form_front@2x.png in Resources */,
 				C11810C01CC7DA290022FB55 /* stp_card_form_back@3x.png in Resources */,
@@ -2459,7 +2445,6 @@
 				C1300D2E1EB8D3AB0080AF7B /* stp_card_error@3x.png in Resources */,
 				F148ABE81D5E805A0014FD92 /* Localizable.strings in Resources */,
 				0438EFB41B741C2800D506CC /* stp_card_cvc_amex@3x.png in Resources */,
-				04E39F711CED4C7700AF3B96 /* stp_icon_chevron_left@3x.png in Resources */,
 				C1300D2C1EB8D3AB0080AF7B /* stp_card_error.png in Resources */,
 				0438EFB81B741C2800D506CC /* stp_card_diners@2x.png in Resources */,
 				C11810C31CC7DA290022FB55 /* stp_card_form_front@3x.png in Resources */,
@@ -2497,7 +2482,6 @@
 				C15993471D8829C00047950D /* stp_shipping_form@3x.png in Resources */,
 				C1363BB31D76337900EB82B4 /* stp_icon_checkmark@2x.png in Resources */,
 				F148AC031D5E8DF30014FD92 /* stp_card_form_front@3x.png in Resources */,
-				F1510B5E1D5A4CC4000731AD /* stp_icon_chevron_left@2x.png in Resources */,
 				C1B630BD1D1D860100A05285 /* stp_card_amex@3x.png in Resources */,
 				F1510B101D5A4C93000731AD /* stp_card_amex_template@3x.png in Resources */,
 				C1B630BE1D1D860100A05285 /* stp_card_cvc.png in Resources */,
@@ -2515,7 +2499,6 @@
 				C1B630C31D1D860100A05285 /* stp_card_cvc_amex@3x.png in Resources */,
 				C1300D311EB8F16B0080AF7B /* stp_card_error_amex@3x.png in Resources */,
 				C1B630C41D1D860100A05285 /* stp_card_diners.png in Resources */,
-				F1510B5D1D5A4CC4000731AD /* stp_icon_chevron_left.png in Resources */,
 				C1B630C51D1D860100A05285 /* stp_card_diners@2x.png in Resources */,
 				C12057521D676DD400CFBCB8 /* stp_card_jcb_template@3x.png in Resources */,
 				F1510B1A1D5A4C93000731AD /* stp_card_discover_template@2x.png in Resources */,
@@ -2557,7 +2540,6 @@
 				C1300D361EB8F1780080AF7B /* stp_card_unknown@2x.png in Resources */,
 				F1510B201D5A4C93000731AD /* stp_card_mastercard_template@2x.png in Resources */,
 				C12057501D676DD400CFBCB8 /* stp_card_jcb_template.png in Resources */,
-				F1510B5F1D5A4CC4000731AD /* stp_icon_chevron_left@3x.png in Resources */,
 				C1B630D61D1D860100A05285 /* stp_card_visa.png in Resources */,
 				C12057511D676DD400CFBCB8 /* stp_card_jcb_template@2x.png in Resources */,
 				C1B630D71D1D860100A05285 /* stp_card_visa@2x.png in Resources */,

@@ -168,7 +168,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 
 #pragma mark - Button Handlers
 
-- (void)handleBackOrCancelTapped:(__unused id)sender {
+- (void)handleCancelTapped:(__unused id)sender {
     [self.delegate internalViewControllerDidCancel];
 }
 

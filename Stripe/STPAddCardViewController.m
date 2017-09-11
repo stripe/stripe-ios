@@ -250,7 +250,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     return nil;
 }
 
-- (void)handleBackOrCancelTapped:(__unused id)sender {
+- (void)handleCancelTapped:(__unused id)sender {
     [self.delegate addCardViewControllerDidCancel:self];
 }
 

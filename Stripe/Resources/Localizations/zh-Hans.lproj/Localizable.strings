@@ -16,9 +16,6 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "第二行地址";
 
-/* Text for back button */
-"Back" = "返回";
-
 /* Title for billing address entry section */
 "Billing Address" = "帐单地址";
 
@@ -141,4 +138,3 @@
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "邮政编码";
-
