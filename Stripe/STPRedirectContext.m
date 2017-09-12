@@ -35,6 +35,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
                              completion:(STPRedirectContextCompletionBlock)completion {
 
     if (source.flow != STPSourceFlowRedirect
+        || source.status != STPSourceStatusPending
         || source.redirect.returnURL == nil
         || (source.redirect.url == nil
             && [self nativeRedirectURLForSource:source] == nil)) {
@@ -227,7 +228,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
             nativeUrlString = source.details[@"native_url"];
             break;
         default:
-            // All other sources have no native url support
+            // All other sources currently have no native url support
             break;
     }
 
