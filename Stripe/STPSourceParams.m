@@ -271,6 +271,17 @@
     return params;
 }
 
++ (STPSourceParams *)alipayReusableParamsWithCurrency:(NSString *)currency
+                                           returnURL:(NSString *)returnURL {
+    STPSourceParams *params = [self new];
+    params.type = STPSourceTypeAlipay;
+    params.usage = STPSourceUsageReusable;
+    params.currency = currency;
+    params.redirect = @{ @"return_url": returnURL };
+
+    return params;
+}
+
 + (STPSourceParams *)p24ParamsWithAmount:(NSUInteger)amount
                                 currency:(NSString *)currency
                                    email:(NSString *)email
