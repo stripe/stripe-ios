@@ -1,4 +1,5 @@
-## X.Y.Z 2017-XX-YY
+## 11.3.0 2017-09-13
+* Improved support and compatibility with iOS 11
 * Changes and fixes methods on `STPCard`, `STPCardParams`, `STPBankAccount`, and `STPBankAccountParams` to bring card objects more in line with the rest of the API. See MIGRATING for further details.
 * Adds nullability annotations to `STPPaymentMethod` protocol
 * Improves the `[STPAPIResponseDecodable allResponseFields]` by removing all instances of `[NSNull null]` including ones that are nested. See MIGRATING.md.
