@@ -1,7 +1,15 @@
-## X.Y.Z 2017-XX-YY
+## 11.3.0 2017-09-13
+* Adds support for creating `STPSourceParams` for P24 source [#779](https://github.com/stripe/stripe-ios/pull/779)
+* Adds support for native app-to-app Alipay redirects [#783](https://github.com/stripe/stripe-ios/pull/783)
+* Fixes crash when `paymentContext.hostViewController` is set to a `UINavigationController` [#786](https://github.com/stripe/stripe-ios/pull/786)
+* Improves support and compatibility with iOS 11
+  * Explicitly disable code coverage generation for compatibility with Carthage in Xcode 9 [#795](https://github.com/stripe/stripe-ios/pull/795)
+  * Restore use of native "Back" buttons [#789](https://github.com/stripe/stripe-ios/pull/789)
 * Changes and fixes methods on `STPCard`, `STPCardParams`, `STPBankAccount`, and `STPBankAccountParams` to bring card objects more in line with the rest of the API. See MIGRATING for further details.
-* Adds nullability annotations to `STPPaymentMethod` protocol
-* Improves the `[STPAPIResponseDecodable allResponseFields]` by removing all instances of `[NSNull null]` including ones that are nested. See MIGRATING.md.
+  * `STPCard` and `STPCardParams` [#760](https://github.com/stripe/stripe-ios/pull/760)
+  * `STPBankAccount` and `STPBankAccountParams` [#761](https://github.com/stripe/stripe-ios/pull/761)
+* Adds nullability annotations to `STPPaymentMethod` protocol [#753](https://github.com/stripe/stripe-ios/pull/753)
+* Improves the `[STPAPIResponseDecodable allResponseFields]` by removing all instances of `[NSNull null]` including ones that are nested. See MIGRATING.md. [#747](https://github.com/stripe/stripe-ios/pull/747)
 
 ## 11.2.0 2017-07-27
 * Adds an option to allow users to delete payment methods from the `STPPaymentMethodsViewController`. Enabled by default but can disabled using the `canDeletePaymentMethods` property of `STPPaymentConfiguration`.

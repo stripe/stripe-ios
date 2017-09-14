@@ -1,6 +1,6 @@
 ## Migration Guides
 
-### Migration from versions < X.Y.Z
+### Migration from versions < 11.3.0
 * Changes to  `STPCard`, `STPCardParams`, `STPBankAccount`, and `STPBankAccountParams`
   * `STPCard` no longer subclasses from `STPCardParams`. You must now specifically create `STPCardParams` objects to create new tokens.
   * `STPBankAccount` no longer subclasses from `STPBankAccountParams`.

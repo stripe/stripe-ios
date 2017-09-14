@@ -20,7 +20,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 /**
  The current version of this library.
  */
-static NSString *const STPSDKVersion = @"11.2.0";
+static NSString *const STPSDKVersion = @"11.3.0";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPSourceParams, STPToken, STPPaymentConfiguration;
 
@@ -192,14 +192,14 @@ static NSString *const STPSDKVersion = @"11.2.0";
 + (BOOL)canSubmitPaymentRequest:(PKPaymentRequest *)paymentRequest;
 
 /**
- Whether or not this can make Apple Pay payments via a card network supported 
+ Whether or not this can make Apple Pay payments via a card network supported
  by Stripe.
- 
- The Stripe supported Apple Pay card networks are: 
+
+ The Stripe supported Apple Pay card networks are:
  American Express, Visa, Mastercard, Discover.
 
- @return YES if the device is currently able to make Apple Pay payments via one 
- of the supported networks. NO if the user does not have a saved card of a 
+ @return YES if the device is currently able to make Apple Pay payments via one
+ of the supported networks. NO if the user does not have a saved card of a
  supported type, or other restrictions prevent payment (such as parental controls).
  */
 + (BOOL)deviceSupportsApplePay;
