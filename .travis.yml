@@ -1,5 +1,7 @@
 language: objective-c
-osx_image: xcode8.3
+osx_image:
+  - xcode8.3
+  - xcode9
 branches:
   only:
     - master
