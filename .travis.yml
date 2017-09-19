@@ -10,8 +10,7 @@ branches:
 
 matrix:
   include:
-    ## Xcode 8, iOS 10. No static analyzer or docs
-  - osx_image: xcode8.3
+  - osx_image: xcode8.3 ## Xcode 8, iOS 10. No static analyzer or docs
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_manual
@@ -27,16 +26,15 @@ matrix:
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_cocoapods_frameworks
-- osx_image: xcode8.3
-  env:
-    - SIMULATOR_NAME='iPhone 6 (10.3)'
-    - TEST_TYPE=tests
+  - osx_image: xcode8.3
+    env:
+      - SIMULATOR_NAME='iPhone 6 (10.3)'
+      - TEST_TYPE=tests
   - osx_image: xcode8.3 ## TODO: Move fauxpas to Xcode11 image when it updates
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=lint
-    ## Xcode 9, iOS 10. No analyzer, docs, or linting
-  - osx_image: xcode9
+  - osx_image: xcode9 ## Xcode 9, iOS 10. No analyzer, docs, or linting
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_manual
@@ -52,13 +50,11 @@ matrix:
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_cocoapods_frameworks
-- osx_image: xcode9
-  env:
-    - SIMULATOR_NAME='iPhone 6 (10.3)'
-    - TEST_TYPE=tests
-
-    ## Xcode 9, iOS 11. No linting (fauxpas currently only does xcode 8.3 linting)
   - osx_image: xcode9
+    env:
+      - SIMULATOR_NAME='iPhone 6 (10.3)'
+      - TEST_TYPE=tests
+  - osx_image: xcode9 ## Xcode 9, iOS 11. No linting (fauxpas currently only does xcode 8.3 linting)
     env:
       - SIMULATOR_NAME='iPhone 6 (11.0)'
       - TEST_TYPE=installation_manual
