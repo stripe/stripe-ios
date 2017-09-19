@@ -10,36 +10,78 @@ branches:
 
 matrix:
   include:
+    ## Xcode 8, iOS 10. No static analyzer or docs
   - osx_image: xcode8.3
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_manual
+  - osx_image: xcode8.3
+    env:
+      - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_carthage
+  - osx_image: xcode8.3
+    env:
+      - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_cocoapods
+  - osx_image: xcode8.3
+    env:
+      - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_cocoapods_frameworks
+- osx_image: xcode8.3
+  env:
+    - SIMULATOR_NAME='iPhone 6 (10.3)'
+    - TEST_TYPE=tests
+  - osx_image: xcode8.3 ## TODO: Move fauxpas to Xcode11 image when it updates
+    env:
+      - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=lint
-      - TEST_TYPE=tests
-      - TEST_TYPE=analyzer
-      - TEST_TYPE=documentation
+    ## Xcode 9, iOS 10. No analyzer, docs, or linting
   - osx_image: xcode9
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_manual
+  - osx_image: xcode9
+    env:
+      - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_carthage
+  - osx_image: xcode9
+    env:
+      - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_cocoapods
+  - osx_image: xcode9
+    env:
+      - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_cocoapods_frameworks
-      - TEST_TYPE=tests
+- osx_image: xcode9
+  env:
+    - SIMULATOR_NAME='iPhone 6 (10.3)'
+    - TEST_TYPE=tests
+
+    ## Xcode 9, iOS 11. No linting (fauxpas currently only does xcode 8.3 linting)
   - osx_image: xcode9
     env:
       - SIMULATOR_NAME='iPhone 6 (11.0)'
       - TEST_TYPE=installation_manual
+  - osx_image: xcode9
+    env:
+      - SIMULATOR_NAME='iPhone 6 (11.0)'
       - TEST_TYPE=installation_carthage
+  - osx_image: xcode9
+    env:
+      - SIMULATOR_NAME='iPhone 6 (11.0)'
       - TEST_TYPE=installation_cocoapods
+  - osx_image: xcode9
+    env:
+      - SIMULATOR_NAME='iPhone 6 (11.0)'
       - TEST_TYPE=installation_cocoapods_frameworks
-      - TEST_TYPE=lint
+  - osx_image: xcode9
+    env:
+      - SIMULATOR_NAME='iPhone 6 (11.0)'
       - TEST_TYPE=tests
+  - osx_image: xcode9
+    env:
+      - SIMULATOR_NAME='iPhone 6 (11.0)'
       - TEST_TYPE=analyzer
-      - TEST_TYPE=documentation
 
 before_install:
 - SIMULATOR_ID=$(xcrun instruments -s | grep -o $SIMULATOR_NAME \[.*\]" | grep -o
