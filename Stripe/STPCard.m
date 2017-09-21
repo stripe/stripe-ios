@@ -184,12 +184,11 @@ NS_ASSUME_NONNULL_BEGIN
     card.name = dict[@"name"];
     card.last4 = dict[@"last4"];
     card.dynamicLast4 = dict[@"dynamic_last4"];
+    card.brand = [self.class brandFromString:dict[@"brand"]];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-    // These are only intended to be deprecated publicly.
+    // This is only intended to be deprecated publicly.
     // When removed from public header, can remove these pragmas
-
-    card.brand = [self.class brandFromString:dict[@"brand"]];
     card.funding = [self.class fundingFromString:dict[@"funding"]];
 #pragma clang diagnostic pop
 
