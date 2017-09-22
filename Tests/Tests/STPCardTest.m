@@ -32,8 +32,6 @@
 
 #pragma mark - STPCardBrand Tests
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 // These are only intended to be deprecated publicly.
 // When removed from public header, can remove these pragmas
 - (void)testBrandFromString {
@@ -61,7 +59,6 @@
     XCTAssertEqual([STPCard brandFromString:@"garbage"], STPCardBrandUnknown);
     XCTAssertEqual([STPCard brandFromString:@"GARBAGE"], STPCardBrandUnknown);
 }
-#pragma clang diagnostic pop
 
 - (void)testStringFromBrand {
     [self forEachBrand:^(STPCardBrand brand) {
