@@ -14,9 +14,35 @@
 #import "STPRedirectContext.h"
 #import "STPURLCallbackHandler.h"
 
+@interface STPSource (Testing)
+
+//@property (nonatomic, nonnull) NSString *stripeID;
+//@property (nonatomic, nullable) NSNumber *amount;
+//@property (nonatomic, nullable) NSString *clientSecret;
+//@property (nonatomic, nullable) NSDate *created;
+//@property (nonatomic, nullable) NSString *currency;
+@property (nonatomic, readwrite) STPSourceFlow flow;
+//@property (nonatomic) BOOL livemode;
+//@property (nonatomic, nullable) NSDictionary *metadata;
+//@property (nonatomic, nullable) STPSourceOwner *owner;
+//@property (nonatomic, nullable) STPSourceReceiver *receiver;
+//@property (nonatomic, nullable) STPSourceRedirect *redirect;
+@property (nonatomic, readwrite) STPSourceStatus status;
+//@property (nonatomic) STPSourceType type;
+//@property (nonatomic) STPSourceUsage usage;
+//@property (nonatomic, nullable) STPSourceVerification *verification;
+//@property (nonatomic, nullable) NSDictionary *details;
+//@property (nonatomic, nullable) STPSourceCardDetails *cardDetails;
+//@property (nonatomic, nullable) STPSourceSEPADebitDetails *sepaDebitDetails;
+//@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+
+@end
+
 @interface STPRedirectContext (Testing)
+
 - (void)unsubscribeFromNotifications;
 - (void)dismissPresentedViewController;
+
 @end
 
 @interface STPRedirectContextTest : XCTestCase
@@ -25,12 +51,66 @@
 
 @implementation STPRedirectContextTest
 
-- (void)testInitWithNonRedirectSourceReturnsNil {
+- (void)testInitWithSourceCompletion_nonRedirectSource {
+    // Should return `nil` for non-redirect source
     STPSource *source = [STPFixtures cardSource];
-    STPRedirectContext *sut = [[STPRedirectContext alloc] initWithSource:source completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
-        XCTFail(@"completion was called");
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
+    XCTAssertNil(context);
+}
+
+- (void)testInitWithSourceCompletion_nonRedirectFlow {
+    // Should return `nil` for source with non-redirect flow
+    NSArray *sourceFlows = @[
+                             @(STPSourceFlowNone),
+                             @(STPSourceFlowCodeVerification),
+                             @(STPSourceFlowReceiver),
+                             @(STPSourceFlowUnknown)
+                             ];
+
+    for (NSNumber *flowNumber in sourceFlows) {
+        STPSource *source = [STPFixtures iDEALSource];
+        source.flow = flowNumber.integerValue;
+
+        STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
+        XCTAssertNil(context);
+    }
+}
+
+- (void)testInitWithSourceCompletion_statusNotPending {
+    // Should return `nil` for source with non-pending status
+    NSArray *sourceStatuses = @[
+                                @(STPSourceStatusChargeable),
+                                @(STPSourceStatusConsumed),
+                                @(STPSourceStatusCanceled),
+                                @(STPSourceStatusFailed),
+                                @(STPSourceStatusUnknown)
+                                ];
+
+    for (NSNumber *statusNumber in sourceStatuses) {
+        STPSource *source = [STPFixtures iDEALSource];
+        source.status = statusNumber.integerValue;
+
+        STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
+        XCTAssertNil(context);
+    }
+}
+
+- (void)testInitWithSourceCompletion_missingReturnURL {
+    // Should return `nil` for source with missing return URL
+    STPSource *source = [STPFixtures iDEALSource];
+    source.redirect.returnURL = nil;
+
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
+    XCTAssertNil(context);
+}
+
+- (void)testInitWithSourceCompletion_validRedirectSource {
+    // Should return object for valid redirect source
+    STPSource *source = [STPFixtures iDEALSource];
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
+        XCTFail("Should not have called completion: sourceID=%@, clientSecret=%@, error=%@", sourceID, clientSecret, error);
     }];
-    XCTAssertNil(sut);
+    XCTAssert(context);
 }
 
 /**
@@ -338,6 +418,14 @@
     OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]]
                                    animated:YES
                                  completion:[OCMArg isNil]]);
+}
+
+#pragma mark - Helpers
+
+- (STPRedirectContextCompletionBlock)failingCompletionBlock {
+    return ^(NSString *sourceID, NSString *clientSecret, NSError *error) {
+        XCTFail("Should not have called completion: sourceID=%@, clientSecret=%@, error=%@", sourceID, clientSecret, error);
+    };
 }
 
 @end
