@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, STPRedirectContextState) {
     STPRedirectContextStateNotStarted,
 
     /**
-      Redirect is in progress.
+     Redirect is in progress.
      */
     STPRedirectContextStateInProgress,
 
@@ -71,6 +71,9 @@ typedef void (^STPRedirectContextCompletionBlock)(NSString *sourceID, NSString *
  You should not use either this class, nor `STPAPIClient`, as a way
  to determine when you should charge the source. Use Stripe webhooks on your
  backend server to listen for source state changes and to make the charge.
+
+ Make sure to maintain a strong reference to `STPRedirectContext`. Otherwise, it
+ will be deallocated.
  */
 NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions")
 @interface STPRedirectContext : NSObject

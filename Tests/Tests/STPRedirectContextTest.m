@@ -17,14 +17,16 @@
 @interface STPSource ()
 @property (nonatomic, readwrite) STPSourceFlow flow;
 @property (nonatomic, readwrite) STPSourceStatus status;
+@property (nonatomic, nullable, readwrite) NSDictionary *details;
 @end
 
 @interface STPSourceRedirect ()
 @property (nonatomic, nullable) NSURL *returnURL;
+@property (nonatomic, nullable) NSURL *url;
 @end
 
 @interface STPRedirectContext ()
-- (void)unsubscribeFromNotifications;
+- (void)unsubscribeFromUrlAndForegroundNotifications;
 - (void)dismissPresentedViewController;
 @end
 
@@ -53,7 +55,6 @@
     for (NSNumber *flowNumber in sourceFlows) {
         STPSource *source = [STPFixtures iDEALSource];
         source.flow = flowNumber.integerValue;
-
         STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
         XCTAssertNil(context);
     }
@@ -70,7 +71,6 @@
     for (NSNumber *statusNumber in sourceStatuses) {
         STPSource *source = [STPFixtures iDEALSource];
         source.status = statusNumber.integerValue;
-
         STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
         XCTAssertNil(context);
     }
@@ -80,14 +80,30 @@
     // Should return `nil` for source with missing return URL
     STPSource *source = [STPFixtures iDEALSource];
     source.redirect.returnURL = nil;
-
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
     XCTAssertNil(context);
 }
 
-- (void)testInitWithSourceCompletion_validNativeSource {
+- (void)testInitWithSourceCompletion_missingRedirectURL {
+    // Should return `nil` for source with missing redirect url
+    STPSource *source = [STPFixtures iDEALSource];
+    source.redirect.url = nil;
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
+    XCTAssertNil(context);
+}
+
+- (void)testInitWithSourceCompletion_validWebRedirectSource {
     // Should return object for valid redirect source
     STPSource *source = [STPFixtures iDEALSource];
+    XCTAssert(source.redirect.url);  // Required field for redirect
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
+    XCTAssert(context);
+}
+
+- (void)testInitWithSourceCompletion_validNativeRedirectSource {
+    // Should return object for valid native redirect source
+    STPSource *source = [STPFixtures alipaySourceWithNativeUrl];
+    source.redirect.url = nil;  // Force native url only
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
     XCTAssert(context);
 }
@@ -100,15 +116,18 @@
  should execute STPRedirectContext completion block and dismiss SFSafariViewController.
  */
 - (void)testSafariViewControllerRedirectFlow_callbackHandlerCalledValidURL {
+    if ([SFSafariViewController class] == nil) {
+        // Method not supported by iOS version
+        return;
+    }
+
     XCTestExpectation *expectation = [self expectationWithDescription:@"completion"];
 
     STPSource *source = [STPFixtures iDEALSource];
     id mockVC = OCMClassMock([UIViewController class]);
     BOOL (^checker)(id) = ^BOOL (id viewController) {
         if ([viewController isKindOfClass:[SFSafariViewController class]]) {
-            NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:source.redirect.returnURL resolvingAgainstBaseURL:NO];
-            [urlComponents setStp_queryItemsDictionary:@{@"source": source.stripeID, @"client_secret": source.clientSecret}];
-            [[STPURLCallbackHandler shared] handleURLCallback:urlComponents.URL];
+            [self notifyURLCallbackHandlerWithSource:source];
             return YES;
         }
         return NO;
@@ -125,7 +144,7 @@
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
 
     OCMVerify([mockVC presentViewController:[OCMArg any] animated:[OCMArg any] completion:[OCMArg any]]);
-    OCMVerify([sut unsubscribeFromNotifications]);
+    OCMVerify([sut unsubscribeFromUrlAndForegroundNotifications]);
     OCMVerify([sut dismissPresentedViewController]);
 
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -137,6 +156,11 @@
  should not execute STPRedirectContext completion block nor dismiss SFSafariViewController.
  */
 - (void)testSafariViewControllerRedirectFlow_callbackHandlerCalledInvalidURL {
+    if ([SFSafariViewController class] == nil) {
+        // Method not supported by iOS version
+        return;
+    }
+
     STPSource *source = [STPFixtures iDEALSource];
     id mockVC = OCMClassMock([UIViewController class]);
     BOOL(^checker)(id) = ^BOOL(id viewController) {
@@ -149,7 +173,7 @@
     OCMStub([mockVC presentViewController:[OCMArg checkWithBlock:checker] animated:[OCMArg any] completion:[OCMArg any]]);
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
     id sut = OCMPartialMock(context);
-    OCMReject([sut unsubscribeFromNotifications]);
+    OCMReject([sut unsubscribeFromUrlAndForegroundNotifications]);
     OCMReject([sut dismissPresentedViewController]);
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
@@ -163,6 +187,11 @@
  should execute STPRedirectContext completion block.
  */
 - (void)testSafariViewControllerRedirectFlow_didFinish {
+    if ([SFSafariViewController class] == nil) {
+        // Method not supported by iOS version
+        return;
+    }
+
     XCTestExpectation *expectation = [self expectationWithDescription:@"completion"];
 
     STPSource *source = [STPFixtures iDEALSource];
@@ -188,7 +217,7 @@
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
 
     OCMVerify([mockVC presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]);
-    OCMVerify([sut unsubscribeFromNotifications]);
+    OCMVerify([sut unsubscribeFromUrlAndForegroundNotifications]);
 
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
@@ -199,6 +228,11 @@
  should execute STPRedirectContext completion block with error object and dismiss SFSafariViewController.
  */
 - (void)testSafariViewControllerRedirectFlow_failedToLoad {
+    if ([SFSafariViewController class] == nil) {
+        // Method not supported by iOS version
+        return;
+    }
+
     XCTestExpectation *expectation = [self expectationWithDescription:@"completion"];
 
     STPSource *source = [STPFixtures iDEALSource];
@@ -223,7 +257,7 @@
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
 
     OCMVerify([mockVC presentViewController:[OCMArg any] animated:YES completion:[OCMArg any]]);
-    OCMVerify([sut unsubscribeFromNotifications]);
+    OCMVerify([sut unsubscribeFromUrlAndForegroundNotifications]);
     OCMVerify([sut dismissPresentedViewController]);
 
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -235,6 +269,11 @@
  should dismiss SFSafariViewController.
  */
 - (void)testSafariViewControllerRedirectFlow_cancel {
+    if ([SFSafariViewController class] == nil) {
+        // Method not supported by iOS version
+        return;
+    }
+
     STPSource *source = [STPFixtures iDEALSource];
     id mockVC = OCMClassMock([UIViewController class]);
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
@@ -244,7 +283,7 @@
     [sut cancel];
 
     OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]] animated:YES completion:[OCMArg any]]);
-    OCMVerify([sut unsubscribeFromNotifications]);
+    OCMVerify([sut unsubscribeFromUrlAndForegroundNotifications]);
     OCMVerify([sut dismissPresentedViewController]);
 }
 
@@ -254,6 +293,11 @@
  should stop listening to callbacks (and dismiss SFSafariViewController but not tested due to complexity).
  */
 - (void)testSafariViewControllerRedirectFlow_dealloc {
+    if ([SFSafariViewController class] == nil) {
+        // Method not supported by iOS version
+        return;
+    }
+
     STPSource *source = [STPFixtures iDEALSource];
     UIViewController *viewController = [[UIViewController alloc] init];
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
@@ -261,9 +305,7 @@
     [context startSafariViewControllerRedirectFlowFromViewController:viewController];
     context = nil;
 
-    NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:source.redirect.returnURL resolvingAgainstBaseURL:NO];
-    [urlComponents setStp_queryItemsDictionary:@{@"source": source.stripeID, @"client_secret": source.clientSecret}];
-    [[STPURLCallbackHandler shared] handleURLCallback:urlComponents.URL];  // Should do nothing!
+    [self notifyURLCallbackHandlerWithSource:source];  // Should do nothing!
 }
 
 /**
@@ -272,11 +314,16 @@
  nothing should be called.
  */
 - (void)testSafariViewControllerRedirectFlow_noAction {
+    if ([SFSafariViewController class] == nil) {
+        // Method not supported by iOS version
+        return;
+    }
+
     STPSource *source = [STPFixtures iDEALSource];
     id mockVC = OCMClassMock([UIViewController class]);
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
     id sut = OCMPartialMock(context);
-    OCMReject([sut unsubscribeFromNotifications]);
+    OCMReject([sut unsubscribeFromUrlAndForegroundNotifications]);
     OCMReject([sut dismissPresentedViewController]);
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
@@ -306,7 +353,7 @@
     [sut startSafariAppRedirectFlow];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
 
-    OCMVerify([sut unsubscribeFromNotifications]);
+    OCMVerify([sut unsubscribeFromUrlAndForegroundNotifications]);
     OCMVerify([sut dismissPresentedViewController]);
 
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
@@ -321,7 +368,7 @@
     STPSource *source = [STPFixtures iDEALSource];
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:[self failingCompletionBlock]];
     id sut = OCMPartialMock(context);
-    OCMReject([sut unsubscribeFromNotifications]);
+    OCMReject([sut unsubscribeFromUrlAndForegroundNotifications]);
     OCMReject([sut dismissPresentedViewController]);
 
     [sut startSafariAppRedirectFlow];
@@ -377,18 +424,24 @@
 
     id applicationMock = OCMClassMock([UIApplication class]);
     OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
-
-    id mockVC = OCMClassMock([UIViewController class]);
-    [context startRedirectFlowFromViewController:mockVC];
-
-    OCMVerify([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg isEqual:mockVC]]);
     if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
         OCMReject([applicationMock openURL:[OCMArg any] options:[OCMArg any] completionHandler:[OCMArg any]]);
     }
     else {
-        OCMReject([applicationMock openURL:[OCMArg any]]);
+        OCMReject([applicationMock openURL:source.details[@"native_url"]]);
     }
-    OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]] animated:YES completion:[OCMArg isNil]]);
+
+    id mockVC = OCMClassMock([UIViewController class]);
+    [context startRedirectFlowFromViewController:mockVC];
+
+    if ([SFSafariViewController class] != nil) {
+        OCMVerify([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg isEqual:mockVC]]);
+        OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]] animated:YES completion:[OCMArg isNil]]);
+    }
+    else {
+        OCMVerify([sut startSafariAppRedirectFlow]);
+        OCMVerify([applicationMock openURL:[OCMArg isEqual:source.redirect.url]]);
+    }
 }
 
 #pragma mark - Helpers
@@ -397,6 +450,15 @@
     return ^(NSString *sourceID, NSString *clientSecret, NSError *error) {
         XCTFail("Should not have called completion: sourceID=%@, clientSecret=%@, error=%@", sourceID, clientSecret, error);
     };
+}
+
+- (void)notifyURLCallbackHandlerWithSource:(STPSource *)source {
+    NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:source.redirect.returnURL resolvingAgainstBaseURL:NO];
+
+    // Add typical `source` and `client_secret` query parameters
+    [urlComponents setStp_queryItemsDictionary:@{@"source": source.stripeID, @"client_secret": source.clientSecret}];
+
+    [[STPURLCallbackHandler shared] handleURLCallback:urlComponents.URL];
 }
 
 @end

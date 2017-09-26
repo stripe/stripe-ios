@@ -23,22 +23,18 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 @interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener>
+
 @property (nonatomic, copy) STPRedirectContextCompletionBlock completion;
 @property (nonatomic, strong) STPSource *source;
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
 @property (nonatomic, assign, readwrite) STPRedirectContextState state;
+
 @end
 
 @implementation STPRedirectContext
 
-- (nullable instancetype)initWithSource:(STPSource *)source
-                             completion:(STPRedirectContextCompletionBlock)completion {
-
-    if (source.flow != STPSourceFlowRedirect
-        || source.status != STPSourceStatusPending
-        || source.redirect.returnURL == nil
-        || (source.redirect.url == nil
-            && [self nativeRedirectURLForSource:source] == nil)) {
+- (nullable instancetype)initWithSource:(STPSource *)source completion:(STPRedirectContextCompletionBlock)completion {
+    if (![self shouldInitWithSource:source]) {
         return nil;
     }
 
@@ -50,64 +46,97 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     return self;
 }
 
-- (void)dealloc {
-    [self unsubscribeFromNotificationsAndDismissPresentedViewControllers];
+- (BOOL)shouldInitWithSource:(STPSource *)source {
+    if (source.flow != STPSourceFlowRedirect) {
+        // Source flow does not require a redirect
+        return NO;
+    }
+
+    if (source.status != STPSourceStatusPending) {
+        // Source status is not awaiting a redirect
+        return NO;
+    }
+
+    if (source.redirect.returnURL == nil) {
+        // Source redirect is missing `returnURL` for host app
+        return NO;
+    }
+
+    if (source.redirect.url == nil && [self nativeRedirectURLForSource:source] == nil) {
+        // Source does not have destination redirect url
+        return NO;
+    }
+
+    return YES;
 }
 
-- (void)performAppRedirectIfPossibleWithCompletion:(STPBoolCompletionBlock)onCompletion {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
+- (void)dealloc {
+    [self unsubscribeFromUrlAndForegroundNotificationsAndDismissPresentedViewControllers];
+}
 
-    if (self.state == STPRedirectContextStateNotStarted) {
-        NSURL *nativeUrl = [self nativeRedirectURLForSource:self.source];
-        if (!nativeUrl) {
-            onCompletion(NO);
-            return;
-        }
+- (void)startNativeAppRedirectFlowIfPossibleWithCompletion:(STPBoolCompletionBlock)onCompletion {
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)  // Ignore reference to new app redirect API
 
-        // Optimistically start listening in case we get app switched away.
-        // If the app switch fails we'll undo this later
-        self.state = STPRedirectContextStateInProgress;
-        [self subscribeToUrlAndForegroundNotifications];
+    if (self.state != STPRedirectContextStateNotStarted) {
+        // Redirect already in progress, cancelled, completed, etc
+        onCompletion(NO);
+        return;
+    }
 
-        UIApplication *application = [UIApplication sharedApplication];
-        if ([application respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+    NSURL *nativeUrl = [self nativeRedirectURLForSource:self.source];
+    if (!nativeUrl) {
+        // Source does not support native app redirects
+        onCompletion(NO);
+        return;
+    }
 
-            WEAK(self);
-            [application openURL:nativeUrl options:@{} completionHandler:^(BOOL success) {
-                if (!success) {
-                    STRONG(self);
-                    self.state = STPRedirectContextStateNotStarted;
-                    [self unsubscribeFromNotifications];
-                }
-                onCompletion(success);
-            }];
-        }
-        else {
-            _state = STPRedirectContextStateInProgress;
-            BOOL opened = [application openURL:nativeUrl];
-            if (!opened) {
+    // Switch to in progress state to prevent multiple redirect flow starts
+    self.state = STPRedirectContextStateInProgress;
+
+    // Start listening before performing the app switch in case execution stops and undo if it fails
+    [self subscribeToUrlAndForegroundNotifications];
+
+    UIApplication *application = [UIApplication sharedApplication];
+
+    if ([application respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+        // Use new iOS 10+ app open url API
+        WEAK(self);
+        [application openURL:nativeUrl options:@{} completionHandler:^(BOOL success) {
+            STRONG(self);
+            if (!success) {
+                // Reset state and stop listening
                 self.state = STPRedirectContextStateNotStarted;
-                [self unsubscribeFromNotifications];
+                [self unsubscribeFromUrlAndForegroundNotifications];
             }
-            onCompletion(opened);
-        }
+            onCompletion(success);
+        }];
     }
     else {
-        onCompletion(NO);
+        // Use legacy app open url API
+        BOOL opened = [application openURL:nativeUrl];
+        if (!opened) {
+            // Reset state and stop listening
+            self.state = STPRedirectContextStateNotStarted;
+            [self unsubscribeFromUrlAndForegroundNotifications];
+        }
+        onCompletion(opened);
     }
 }
 
 - (void)startRedirectFlowFromViewController:(UIViewController *)presentingViewController {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)  // Ignore reference to `SFSafariViewController`
 
+    // Try native app redirect
     WEAK(self);
-    [self performAppRedirectIfPossibleWithCompletion:^(BOOL success) {
+    [self startNativeAppRedirectFlowIfPossibleWithCompletion:^(BOOL success) {
+        STRONG(self);
         if (!success) {
-            STRONG(self);
             if ([SFSafariViewController class] != nil) {
+                // Fallback to new `SFSafariViewController` redirect
                 [self startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
             }
             else {
+                // Fallback to legacy Safari app redirect
                 [self startSafariAppRedirectFlow];
             }
         }
@@ -115,78 +144,98 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 
 - (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
-    if (self.state == STPRedirectContextStateNotStarted) {
-        _state = STPRedirectContextStateInProgress;
-        [self subscribeToUrlAndForegroundNotifications];
-        self.safariVC = [[SFSafariViewController alloc] initWithURL:self.source.redirect.url];
-        self.safariVC.delegate = self;
-        [presentingViewController presentViewController:self.safariVC
-                                               animated:YES
-                                             completion:nil];
+    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)  // Ignore reference to `SFSafariViewController`
+
+    if (self.state != STPRedirectContextStateNotStarted) {
+        // Redirect already in progress, cancelled, completed, etc
+        return;
     }
+
+    // Switch to in progress state to prevent multiple redirect flow starts
+    self.state = STPRedirectContextStateInProgress;
+
+    // Start listening before presenting the `SFSafariViewController` in case it causes an app switch due to universal link handling
+    [self subscribeToUrlAndForegroundNotifications];
+
+    // Present `SFSafariViewController` with source redirect url
+    self.safariVC = [[SFSafariViewController alloc] initWithURL:self.source.redirect.url];
+    self.safariVC.delegate = self;
+    [presentingViewController presentViewController:self.safariVC animated:YES completion:nil];
 }
 
 - (void)startSafariAppRedirectFlow {
-    if (self.state == STPRedirectContextStateNotStarted) {
-        self.state = STPRedirectContextStateInProgress;
-        [self subscribeToUrlAndForegroundNotifications];
-        [[UIApplication sharedApplication] openURL:self.source.redirect.url];
+    if (self.state != STPRedirectContextStateNotStarted) {
+        // Redirect already in progress, cancelled, completed, etc
+        return;
     }
+
+    // Switch to in progress state to prevent multiple redirect flow starts
+    self.state = STPRedirectContextStateInProgress;
+
+    // Start listening before performing the app open url in case execution stops
+    [self subscribeToUrlAndForegroundNotifications];
+
+    // Perform app open url to Safari app or trigger universal link handling
+    [[UIApplication sharedApplication] openURL:self.source.redirect.url];
 }
 
 - (void)cancel {
-    if (self.state == STPRedirectContextStateInProgress) {
-        self.state = STPRedirectContextStateCancelled;
-        [self unsubscribeFromNotificationsAndDismissPresentedViewControllers];
+    if (self.state != STPRedirectContextStateInProgress) {
+        // Redirect in a state that does not need to be cancelled
+        return;
     }
+
+    // Switch to cancelled state to prevent completion block activation
+    self.state = STPRedirectContextStateCancelled;
+
+    // Stop listening and dismiss any view controllers
+    [self unsubscribeFromUrlAndForegroundNotificationsAndDismissPresentedViewControllers];
 }
 
 #pragma mark - SFSafariViewControllerDelegate -
 
 - (void)safariViewControllerDidFinish:(__unused SFSafariViewController *)controller { FAUXPAS_IGNORED_ON_LINE(APIAvailability)
     stpDispatchToMainThreadIfNecessary(^{
-        [self handleRedirectCompletionWithError:nil
-                    shouldDismissViewController:NO];
+        // User tapped "Done" in `SFSafariViewController`
+        [self handleRedirectCompletionWithError:nil shouldDismissViewController:NO];
     });
 }
 
 - (void)safariViewController:(__unused SFSafariViewController *)controller didCompleteInitialLoad:(BOOL)didLoadSuccessfully { FAUXPAS_IGNORED_ON_LINE(APIAvailability)
     if (didLoadSuccessfully == NO) {
         stpDispatchToMainThreadIfNecessary(^{
-            [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]
-                        shouldDismissViewController:YES];
+            // Common connection error while loading the destination url
+            NSError *error = [NSError stp_genericConnectionError];
+            [self handleRedirectCompletionWithError:error shouldDismissViewController:YES];
         });
     }
 }
 
-#pragma mark - Private methods -
+#pragma mark - Private Methods -
 
-- (void)handleWillForegroundNotification {
+- (void)handleApplicationWillEnterForegroundNotification {
     stpDispatchToMainThreadIfNecessary(^{
-        [self handleRedirectCompletionWithError:nil
-                    shouldDismissViewController:YES];
+        [self handleRedirectCompletionWithError:nil shouldDismissViewController:YES];
     });
 }
 
 - (BOOL)handleURLCallback:(__unused NSURL *)url {
     stpDispatchToMainThreadIfNecessary(^{
-        [self handleRedirectCompletionWithError:nil
-                    shouldDismissViewController:YES];
+        [self handleRedirectCompletionWithError:nil shouldDismissViewController:YES];
     });
+
     // We handle all returned urls that match what we registered for
     return YES;
 }
 
-- (void)handleRedirectCompletionWithError:(nullable NSError *)error
-              shouldDismissViewController:(BOOL)shouldDismissViewController {
+- (void)handleRedirectCompletionWithError:(nullable NSError *)error shouldDismissViewController:(BOOL)shouldDismissViewController {
     if (self.state != STPRedirectContextStateInProgress) {
         return;
     }
 
     self.state = STPRedirectContextStateCompleted;
 
-    [self unsubscribeFromNotifications];
+    [self unsubscribeFromUrlAndForegroundNotifications];
 
     if (shouldDismissViewController) {
         [self dismissPresentedViewController];
@@ -196,30 +245,23 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 
 - (void)subscribeToUrlAndForegroundNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleWillForegroundNotification)
-                                                 name:UIApplicationWillEnterForegroundNotification
-                                               object:nil];
-    [[STPURLCallbackHandler shared] registerListener:self
-                                              forURL:self.source.redirect.returnURL];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleApplicationWillEnterForegroundNotification) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[STPURLCallbackHandler shared] registerListener:self forURL:self.source.redirect.returnURL];
 }
 
-- (void)unsubscribeFromNotificationsAndDismissPresentedViewControllers {
-    [self unsubscribeFromNotifications];
+- (void)unsubscribeFromUrlAndForegroundNotificationsAndDismissPresentedViewControllers {
+    [self unsubscribeFromUrlAndForegroundNotifications];
     [self dismissPresentedViewController];
 }
 
-- (void)unsubscribeFromNotifications {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIApplicationWillEnterForegroundNotification
-                                                  object:nil];
+- (void)unsubscribeFromUrlAndForegroundNotifications {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
     [[STPURLCallbackHandler shared] unregisterListener:self];
 }
 
 - (void)dismissPresentedViewController {
     if (self.safariVC) {
-        [self.safariVC.presentingViewController dismissViewControllerAnimated:YES
-                                                                   completion:nil];
+        [self.safariVC.presentingViewController dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
