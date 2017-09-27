@@ -20,6 +20,11 @@
 @implementation STPAddressTests
 
 - (void)testInitWithPKContact_complete {
+    if ([PKContact class] == nil) {
+        // Method not supported by iOS version
+        return;
+    }
+
     PKContact *contact = [PKContact new];
     {
         NSPersonNameComponents *name = [NSPersonNameComponents new];
@@ -52,6 +57,11 @@
 }
 
 - (void)testInitWithPKContact_partial {
+    if ([PKContact class] == nil) {
+        // Method not supported by iOS version
+        return;
+    }
+
     PKContact *contact = [PKContact new];
     {
         NSPersonNameComponents *name = [NSPersonNameComponents new];
@@ -75,6 +85,11 @@
 }
 
 - (void)testInitWithCNContact_complete {
+    if ([CNContact class] == nil) {
+        // Method not supported by iOS version
+        return;
+    }
+
     CNMutableContact *contact = [CNMutableContact new];
     {
         contact.givenName = @"John";
@@ -123,6 +138,11 @@
 }
 
 - (void)testInitWithCNContact_partial {
+    if ([CNContact class] == nil) {
+        // Method not supported by iOS version
+        return;
+    }
+
     CNMutableContact *contact = [CNMutableContact new];
     {
         contact.givenName = @"John";
@@ -292,6 +312,11 @@
 }
 
 - (void)testPKContactValue {
+    if ([PKContact class] == nil || [CNPostalAddress class] == nil) {
+        // Method not supported by iOS version
+        return;
+    }
+
     STPAddress *address = [STPAddress new];
     address.name = @"John Smith Doe";
     address.phone = @"8885551212";
