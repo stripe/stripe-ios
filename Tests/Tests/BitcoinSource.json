@@ -8,7 +8,9 @@
     "currency": "usd",
     "flow": "receiver",
     "livemode": false,
-    "metadata": {},
+    "metadata": {
+        "order_id": "6735"
+    },
     "owner": {
         "address": {
             "city": "Pittsburgh",

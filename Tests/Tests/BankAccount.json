@@ -11,7 +11,9 @@
     "default_for_currency": false,
     "fingerprint": "1JWtPxqbdX5Gamtc",
     "last4": "6789",
-    "metadata": {},
+    "metadata": {
+        "order_id": "6735"
+    },
     "routing_number": "110000000",
     "status": "new"
 }
