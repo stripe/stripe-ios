@@ -353,7 +353,7 @@
     [self waitForExpectationsWithTimeout:2.0 handler:nil];
 }
 
-- (void)testParseResponseWithReturnedError {
+- (void)testParseResponseWithReturnedErrorOneDeserializer {
     XCTestExpectation *expectation = [self expectationWithDescription:@"parseResponse"];
 
     NSHTTPURLResponse *httpURLResponse = [[NSHTTPURLResponse alloc] init];
@@ -367,6 +367,35 @@
     NSData *body = [NSJSONSerialization dataWithJSONObject:json options:(NSJSONWritingOptions)kNilOptions error:nil];
     NSError *errorParameter = nil;
     NSArray *deserializers = @[[STPCard new]];
+
+    [STPAPIRequest parseResponse:httpURLResponse
+                            body:body
+                           error:errorParameter
+                   deserializers:deserializers
+                      completion:^(id<STPAPIResponseDecodable> object, NSHTTPURLResponse *response, NSError *error) {
+                          XCTAssertNil(object);
+                          XCTAssertEqualObjects(response, httpURLResponse);
+                          XCTAssertEqualObjects(error, [NSError stp_errorFromStripeResponse:json]);
+                          [expectation fulfill];
+                      }];
+
+    [self waitForExpectationsWithTimeout:2.0 handler:nil];
+}
+
+- (void)testParseResponseWithReturnedErrorMultipleDeserializers {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"parseResponse"];
+
+    NSHTTPURLResponse *httpURLResponse = [[NSHTTPURLResponse alloc] init];
+    NSDictionary *json = @{
+                           @"error": @{
+                                   @"type": @"invalid_request_error",
+                                   @"message": @"Your card number is incorrect.",
+                                   @"code": @"incorrect_number",
+                                   }
+                           };
+    NSData *body = [NSJSONSerialization dataWithJSONObject:json options:(NSJSONWritingOptions)kNilOptions error:nil];
+    NSError *errorParameter = nil;
+    NSArray *deserializers = @[[STPCard new], [STPSource new]];
 
     [STPAPIRequest parseResponse:httpURLResponse
                             body:body
