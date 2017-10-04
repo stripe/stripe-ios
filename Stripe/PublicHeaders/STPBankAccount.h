@@ -101,6 +101,13 @@ typedef NS_ENUM(NSInteger, STPBankAccountStatus) {
 @property (nonatomic, nullable, readonly) NSString *fingerprint;
 
 /**
+ A set of key/value pairs associated with the bank account object.
+
+ @see https://stripe.com/docs/api#metadata
+ */
+@property (nonatomic, copy, nullable, readonly) NSDictionary<NSString *, NSString *> *metadata;
+
+/**
  The validation status of the bank account. @see STPBankAccountStatus
  */
 @property (nonatomic, readonly) STPBankAccountStatus status;

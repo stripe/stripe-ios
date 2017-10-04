@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSDictionary *)stp_dictionaryByRemovingNulls;
 
+- (NSDictionary<NSString *, NSString *> *)stp_dictionaryByRemovingNonStrings;
+
 @end
 
 NS_ASSUME_NONNULL_END

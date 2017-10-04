@@ -16,6 +16,8 @@
 
 @implementation NSDictionary_StripeTest
 
+#pragma mark - dictionaryByRemovingNullsValidatingRequiredFields
+
 - (void)test_dictionaryByRemovingNullsValidatingRequiredFields_removesNullsDeeply {
     NSDictionary *dictionary = @{
                                  @"id": @"card_123",
@@ -102,5 +104,64 @@
     XCTAssertNil([dictionary stp_dictionaryByRemovingNullsValidatingRequiredFields:requiredFields]);
 }
 
+#pragma mark - dictionaryByRemovingNonStrings
+
+- (void)test_dictionaryByRemovingNonStrings_basicCases {
+    NSDictionary *dictionary;
+    NSDictionary *expected;
+    NSDictionary *result;
+
+    // Empty dictionary
+    dictionary = @{};
+    expected = @{};
+    result = [dictionary stp_dictionaryByRemovingNonStrings];
+    XCTAssertEqualObjects(result, expected);
+
+    // Regular case
+    dictionary = @{
+                   @"user": @"user_123",
+                   @"nicknames": @"John, Johnny",
+                   };
+    expected = @{
+                 @"user": @"user_123",
+                 @"nicknames": @"John, Johnny",
+                 };
+    result = [dictionary stp_dictionaryByRemovingNonStrings];
+    XCTAssertEqualObjects(result, expected);
+
+    // Strips non-NSString keys and values
+    dictionary = @{
+                   @"user": @"user_123",
+                   @"nicknames": @"John, Johnny",
+                   @"profiles": [NSNull null],
+                   [NSNull null]: @"San Francisco, CA",
+                   [NSNull null]: [NSNull null],
+                   @"age": @(21),
+                   @(21): @"age",
+                   @(21): @(21),
+                   @"fees": @{
+                           @"plan": @"monthly",
+                           },
+                   @"visits": @[
+                           @"january",
+                           @"february",
+                           ],
+                   };
+    expected = @{
+                 @"user": @"user_123",
+                 @"nicknames": @"John, Johnny",
+                 };
+    result = [dictionary stp_dictionaryByRemovingNonStrings];
+    XCTAssertEqualObjects(result, expected);
+}
+
+- (void)test_dictionaryByRemovingNonStrings_returnsImmutableCopy {
+    NSDictionary *dictionary = @{@"user": @"user_123"};
+    NSDictionary *result = [dictionary stp_dictionaryByRemovingNonStrings];
+
+    XCTAssert(result);
+    XCTAssertNotEqual(result, dictionary);
+    XCTAssertFalse([result isKindOfClass:[NSMutableDictionary class]]);
+}
 
 @end

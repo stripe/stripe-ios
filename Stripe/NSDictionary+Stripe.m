@@ -10,6 +10,8 @@
 
 #import "NSArray+Stripe.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation NSDictionary (Stripe)
 
 - (nullable NSDictionary *)stp_dictionaryByRemovingNullsValidatingRequiredFields:(NSArray *)requiredFields {
@@ -50,6 +52,22 @@
     return [result copy];
 }
 
+- (NSDictionary<NSString *, NSString *> *)stp_dictionaryByRemovingNonStrings {
+    NSMutableDictionary<NSString *, NSString *> *result = [[NSMutableDictionary alloc] init];
+
+    [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, __unused BOOL *stop) {
+        if ([key isKindOfClass:[NSString class]] && [obj isKindOfClass:[NSString class]]) {
+            // Save valid key/value pair
+            result[key] = obj;
+        }
+    }];
+
+    // Make immutable copy
+    return [result copy];
+}
+
 @end
 
 void linkNSDictionaryCategory(void){}
+
+NS_ASSUME_NONNULL_END

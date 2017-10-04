@@ -329,6 +329,7 @@
     XCTAssertEqualObjects(source.currency, @"usd");
     XCTAssertEqual(source.flow, STPSourceFlowReceiver);
     XCTAssertFalse(source.livemode);
+    XCTAssertEqualObjects(source.metadata, @{@"order_id": @"6735"});
     XCTAssert(source.owner);  // STPSourceOwnerTest
     XCTAssert(source.receiver);  // STPSourceReceiverTest
     XCTAssertEqual(source.status, STPSourceStatusPending);

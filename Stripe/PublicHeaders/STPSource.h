@@ -66,8 +66,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  A set of key/value pairs associated with the source object.
+
+ @see https://stripe.com/docs/api#metadata
  */
-@property (nonatomic, nullable, readonly) NSDictionary *metadata;
+@property (nonatomic, copy, nullable, readonly) NSDictionary<NSString *, NSString *> *metadata;
 
 /**
  Information about the owner of the payment instrument.

@@ -26,7 +26,7 @@
 @property (nonatomic, nullable) NSString *currency;
 @property (nonatomic) STPSourceFlow flow;
 @property (nonatomic) BOOL livemode;
-@property (nonatomic, nullable) NSDictionary *metadata;
+@property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString *, NSString *> *metadata;
 @property (nonatomic, nullable) STPSourceOwner *owner;
 @property (nonatomic, nullable) STPSourceReceiver *receiver;
 @property (nonatomic, nullable) STPSourceRedirect *redirect;
@@ -230,7 +230,7 @@
     source.currency = dict[@"currency"];
     source.flow = [[self class] flowFromString:dict[@"flow"]];
     source.livemode = [dict[@"livemode"] boolValue];
-    source.metadata = dict[@"metadata"];
+    source.metadata = [dict[@"metadata"] stp_dictionaryByRemovingNonStrings];
     source.owner = [STPSourceOwner decodedObjectFromAPIResponse:dict[@"owner"]];
     source.receiver = [STPSourceReceiver decodedObjectFromAPIResponse:dict[@"receiver"]];
     source.redirect = [STPSourceRedirect decodedObjectFromAPIResponse:dict[@"redirect"]];

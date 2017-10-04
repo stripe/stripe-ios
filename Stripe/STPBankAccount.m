@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readwrite) NSString *bankName;
 @property (nonatomic, copy, nullable, readwrite) NSString *accountHolderName;
 @property (nonatomic, assign, readwrite) STPBankAccountHolderType accountHolderType;
+@property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString *, NSString *> *metadata;
 @property (nonatomic, copy, nullable, readwrite) NSString *fingerprint;
 @property (nonatomic, assign, readwrite) STPBankAccountStatus status;
 @property (nonatomic, copy, readwrite) NSDictionary *allResponseFields;
@@ -101,6 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
                        [NSString stringWithFormat:@"country = %@", self.country],
                        [NSString stringWithFormat:@"currency = %@", self.currency],
                        [NSString stringWithFormat:@"fingerprint = %@", self.fingerprint],
+                       [NSString stringWithFormat:@"metadata = %@", (self.metadata) ? @"<redacted>" : nil],
                        [NSString stringWithFormat:@"status = %@", [self.class stringFromStatus:self.status]],
 
                        // Owner details
@@ -144,6 +146,7 @@ NS_ASSUME_NONNULL_BEGIN
     bankAccount.country = dict[@"country"];
     bankAccount.currency = dict[@"currency"];
     bankAccount.fingerprint = dict[@"fingerprint"];
+    bankAccount.metadata = [dict[@"metadata"] stp_dictionaryByRemovingNonStrings];
     bankAccount.status = [self statusFromString:dict[@"status"]];
 
     // Owner details

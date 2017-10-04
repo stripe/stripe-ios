@@ -115,6 +115,13 @@ typedef NS_ENUM(NSInteger, STPCardFundingType) {
 @property (nonatomic, nullable, readonly) NSString *currency;
 
 /**
+ A set of key/value pairs associated with the card object.
+
+ @see https://stripe.com/docs/api#metadata
+ */
+@property (nonatomic, copy, nullable, readonly) NSDictionary<NSString *, NSString *> *metadata;
+
+/**
  Returns a string representation for the provided card brand; 
  i.e. `[NSString stringFromBrand:STPCardBrandVisa] ==  @"Visa"`.
 
