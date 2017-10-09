@@ -67,6 +67,23 @@
     return [STPCustomer decodedObjectFromAPIResponse:customer];
 }
 
++ (STPCustomer *)customerWithCardTokenAndSourceSources {
+    NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:@"Card"] mutableCopy];
+    card1[@"id"] = @"card_123";
+
+    NSMutableDictionary *card2 = [[STPTestUtils jsonNamed:@"CardSource"] mutableCopy];
+    card2[@"id"] = @"src_456";
+
+    NSMutableDictionary *customer = [[STPTestUtils jsonNamed:@"Customer"] mutableCopy];
+    NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
+    sources[@"data"] = @[card1, card2];
+    customer[@"default_source"] = card1[@"id"];
+    customer[@"sources"] = sources;
+
+    return [STPCustomer decodedObjectFromAPIResponse:customer];
+
+}
+
 + (STPSource *)iDEALSource {
     return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"iDEALSource"]];
 }

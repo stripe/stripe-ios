@@ -31,7 +31,7 @@
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
     config.additionalPaymentMethods = STPPaymentMethodTypeAll;
     STPTheme *theme = [STPTheme defaultTheme];
-    id customerContext = [STPMocks staticCustomerContext];
+    id customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources]];
     id delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
     [STPLocalizationUtils overrideLanguageTo:language];
     STPPaymentMethodsViewController *paymentMethodsVC = [[STPPaymentMethodsViewController alloc] initWithConfiguration:config
@@ -39,19 +39,17 @@
                                                                                                        customerContext:customerContext
                                                                                                               delegate:delegate];
 
-    UIViewController *rootVC = [UIViewController new];
-
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsVC];
-
     UIWindow *testWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    testWindow.rootViewController = navController;
+    testWindow.hidden = NO;
 
-    testWindow.rootViewController = rootVC;
-    [rootVC presentViewController:navController animated:NO completion:^{
+    // Test that loaded properly + loads them on first call
+    XCTAssertNotNil(navController.view);
+    XCTAssertNotNil(paymentMethodsVC.view);
 
-        FBSnapshotVerifyView(testWindow, nil)
-
-        [STPLocalizationUtils overrideLanguageTo:nil];
-    }];
+    FBSnapshotVerifyView(testWindow, nil);
+    [STPLocalizationUtils overrideLanguageTo:nil];
 
 }
 

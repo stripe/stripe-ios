@@ -50,6 +50,13 @@
 + (STPCustomer *)customerWithSingleCardTokenSource;
 
 /**
+ A Customer object with two cards in its sources array, 
+ one a token/card type and one a source object type.
+ default_source is set to the card token.
+ */
++ (STPCustomer *)customerWithCardTokenAndSourceSources;
+
+/**
  A Source object with type iDEAL
  */
 + (STPSource *)iDEALSource;
