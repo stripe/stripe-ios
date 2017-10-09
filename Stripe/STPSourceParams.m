@@ -271,8 +271,8 @@
     return params;
 }
 
-+ (STPSourceParams *)alipayParamsWithCurrency:(NSString *)currency
-                                    returnURL:(NSString *)returnURL {
++ (STPSourceParams *)alipayReusableParamsWithCurrency:(NSString *)currency
+                                            returnURL:(NSString *)returnURL {
     STPSourceParams *params = [self new];
     params.type = STPSourceTypeAlipay;
     params.currency = currency;
