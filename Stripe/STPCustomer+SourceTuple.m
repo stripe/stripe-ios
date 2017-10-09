@@ -44,3 +44,5 @@
 }
 
 @end
+
+void linkSTPCustomerSourceTupleCategory(void){}

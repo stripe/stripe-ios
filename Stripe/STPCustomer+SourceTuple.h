@@ -23,3 +23,5 @@
 - (STPPaymentMethodTuple *)filteredSourceTupleForUIWithConfiguration:(STPPaymentConfiguration *)configuration;
 
 @end
+
+void linkSTPCustomerSourceTupleCategory(void);
