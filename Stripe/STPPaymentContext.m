@@ -11,7 +11,7 @@
 
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "STPAddCardViewController+Private.h"
-#import "STPCardTuple.h"
+#import "STPCustomer+SourceTuple.h"
 #import "STPCustomerContext+Private.h"
 #import "STPDispatchFunctions.h"
 #import "STPPaymentConfiguration+Private.h"
@@ -154,19 +154,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                 self.shippingAddress = customer.shippingAddress;
                 self.shippingAddressNeedsVerification = YES;
             }
-            STPCard *selectedCard;
-            NSMutableArray<STPCard *> *cards = [NSMutableArray array];
-            for (id<STPSourceProtocol> source in customer.sources) {
-                if ([source isKindOfClass:[STPCard class]]) {
-                    STPCard *card = (STPCard *)source;
-                    [cards addObject:card];
-                    if ([card.stripeID isEqualToString:customer.defaultSource.stripeID]) {
-                        selectedCard = card;
-                    }
-                }
-            }
-            STPCardTuple *tuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
-            STPPaymentMethodTuple *paymentTuple = [STPPaymentMethodTuple tupleWithCardTuple:tuple applePayEnabled:self.configuration.applePayEnabled];
+
+            STPPaymentMethodTuple *paymentTuple = [customer filteredSourceTupleForUIWithConfiguration:self.configuration];
+
             [self.loadingPromise succeed:paymentTuple];
         });
     }];

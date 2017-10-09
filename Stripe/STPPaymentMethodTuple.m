@@ -27,22 +27,23 @@
     return tuple;
 }
 
-+ (instancetype)tupleWithCardTuple:(STPCardTuple *)cardTuple
-                   applePayEnabled:(BOOL)applePayEnabled {
-    NSMutableArray *paymentMethods = [NSMutableArray array];
-    for (STPCard *card in cardTuple.cards) {
-        [paymentMethods addObject:card];
-    }
++ (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods
+                  selectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod
+                      addApplePayMethod:(BOOL)applePayEnabled {
+    NSMutableArray *mutablePaymentMethods = paymentMethods.mutableCopy;
+    id<STPPaymentMethod> selected = selectedPaymentMethod;
+
     if (applePayEnabled) {
-        [paymentMethods addObject:[STPApplePayPaymentMethod new]];
+        STPApplePayPaymentMethod *applePay = [STPApplePayPaymentMethod new];
+        [mutablePaymentMethods addObject:applePay];
+
+        if (!selected) {
+            selected = applePay;
+        }
     }
-    id<STPPaymentMethod> paymentMethod;
-    if (cardTuple.selectedCard) {
-        paymentMethod = cardTuple.selectedCard;
-    } else if (applePayEnabled) {
-        paymentMethod = [STPApplePayPaymentMethod new];
-    }
-    return [self tupleWithPaymentMethods:paymentMethods selectedPaymentMethod:paymentMethod];
+
+    return [self tupleWithPaymentMethods:mutablePaymentMethods.copy
+                   selectedPaymentMethod:selected];
 }
 
 @end

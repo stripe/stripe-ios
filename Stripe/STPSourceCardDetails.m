@@ -51,6 +51,7 @@
         _expMonth = [dict[@"exp_month"] intValue];
         _expYear = [dict[@"exp_year"] intValue];
         _threeDSecure = [self.class threeDSecureStatusFromString:dict[@"three_d_secure"]];
+        _isApplePayCard = [dict[@"tokenization_method"] isEqual:@"apple_pay"];
 
         _allResponseFields = dict.copy;
     }
