@@ -255,6 +255,19 @@ NS_ASSUME_NONNULL_BEGIN
                                   returnURL:(NSString *)returnURL;
 
 /**
+ Creates params for a reusable Alipay source
+ @see https://stripe.com/docs/sources/alipay#create-source
+
+ @param currency    The currency the payment is being created in.
+ @param returnURL   The URL the customer should be redirected to after they have
+ successfully verified the payment.
+
+ @return An STPSourceParams object populated with the provided values
+ */
++ (STPSourceParams *)alipayReusableParamsWithCurrency:(NSString *)currency
+                                            returnURL:(NSString *)returnURL;
+
+/**
  Creates params for a P24 source
  @see https://stripe.com/docs/sources/p24#create-source
 
