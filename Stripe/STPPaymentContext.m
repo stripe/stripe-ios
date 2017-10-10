@@ -306,7 +306,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
             self.paymentMethodsViewController = paymentMethodsViewController;
             paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
-            [paymentMethodsViewController setStripeViewControllerFooterView:self.paymentMethodsViewControllerFooterView];
+            paymentMethodsViewController.paymentMethodsViewControllerFooterView = self.paymentMethodsViewControllerFooterView;
+            paymentMethodsViewController.addCardViewControllerFooterView = self.addCardViewControllerFooterView;
+
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
             navigationController.navigationBar.stp_theme = self.theme;
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
@@ -333,7 +335,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
             self.paymentMethodsViewController = paymentMethodsViewController;
             paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
-            [paymentMethodsViewController setStripeViewControllerFooterView:self.paymentMethodsViewControllerFooterView];
+            paymentMethodsViewController.paymentMethodsViewControllerFooterView = self.paymentMethodsViewControllerFooterView;
+            paymentMethodsViewController.addCardViewControllerFooterView = self.addCardViewControllerFooterView;
+            
             [navigationController pushViewController:paymentMethodsViewController animated:YES];
         }
     }];

@@ -44,7 +44,6 @@
 @property (nonatomic, weak) STPPaymentActivityIndicatorView *activityIndicator;
 @property (nonatomic, weak) UIViewController *internalViewController;
 @property (nonatomic) BOOL loading;
-@property (nonatomic) UIView *customFooterView;
 
 @end
 
@@ -125,28 +124,32 @@
         if (!self) {
             return;
         }
-        UIViewController<STPFooterViewSupporting> *internal;
+        UIViewController *internal;
         if (tuple.paymentMethods.count > 0) {
             STPCustomerContext *customerContext = ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) ? (STPCustomerContext *)self.apiAdapter : nil;
 
-            internal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:self.configuration
-                                                                              customerContext:customerContext
-                                                                                        theme:self.theme
-                                                                         prefilledInformation:self.prefilledInformation
-                                                                              shippingAddress:self.shippingAddress
-                                                                           paymentMethodTuple:tuple
-                                                                                     delegate:self];
+            STPPaymentMethodsInternalViewController *payMethodsInternal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:self.configuration
+                                                                                                                                 customerContext:customerContext
+                                                                                                                                           theme:self.theme
+                                                                                                                            prefilledInformation:self.prefilledInformation
+                                                                                                                                 shippingAddress:self.shippingAddress
+                                                                                                                              paymentMethodTuple:tuple
+                                                                                                                                        delegate:self];
+            if (self.paymentMethodsViewControllerFooterView) {
+                payMethodsInternal.customFooterView = self.paymentMethodsViewControllerFooterView;
+
+            }
         } else {
             STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
             addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
             addCardViewController.shippingAddress = self.shippingAddress;
             internal = addCardViewController;
-            
-        }
 
-        if (self.customFooterView) {
-            [internal setStripeViewControllerFooterView:self.customFooterView];
+            if (self.addCardViewControllerFooterView) {
+                addCardViewController.customFooterView = self.addCardViewControllerFooterView;
+
+            }
         }
         
         internal.stp_navigationItemProxy = self.navigationItem;
@@ -257,12 +260,6 @@
         }
         [self.navigationController stp_popToViewController:previous animated:YES completion:completion];
     }
-}
-
-#pragma mark - STPFooterViewSupporting
-
-- (void)setStripeViewControllerFooterView:(UIView *)footerView {
-    self.customFooterView = footerView;
 }
 
 @end

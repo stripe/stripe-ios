@@ -20,9 +20,11 @@
 #import "STPLocalizationUtils.h"
 #import "STPPaymentMethodTableViewCell.h"
 #import "STPPaymentMethodTuple.h"
+#import "STPPromise.h"
 #import "STPSourceProtocol.h"
 #import "UITableViewCell+Stripe_Borders.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
+#import "UIViewController+Stripe_Promises.h"
 
 static NSString * const PaymentMethodCellReuseIdentifier = @"PaymentMethodCellReuseIdentifier";
 
@@ -97,7 +99,9 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     // Resetting it re-calculates the size based on new view width
     // UITableView requires us to call setter again to actually pick up frame
     // change on footers
-    [self setStripeViewControllerFooterView:self.tableView.tableFooterView];
+    if (self.tableView.tableFooterView) {
+        self.customFooterView = self.tableView.tableFooterView;
+    }
 }
 
 - (void)reloadRightBarButtonItemWithTableViewIsEditing:(BOOL)tableViewIsEditing animated:(BOOL)animated {
@@ -175,11 +179,14 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     [self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
-- (void)setStripeViewControllerFooterView:(UIView *)footerView {
-    CGSize size = [footerView sizeThatFits:CGSizeMake(self.view.bounds.size.width, CGFLOAT_MAX)];
-    footerView.frame = CGRectMake(0, 0, size.width, size.height);
-    
-    self.tableView.tableFooterView = footerView;
+- (void)setCustomFooterView:(UIView *)footerView {
+    _customFooterView = footerView;
+    [self.stp_willAppearPromise voidOnSuccess:^{
+        CGSize size = [footerView sizeThatFits:CGSizeMake(self.view.bounds.size.width, CGFLOAT_MAX)];
+        footerView.frame = CGRectMake(0, 0, size.width, size.height);
+
+        self.tableView.tableFooterView = footerView;
+    }];
 }
 
 #pragma mark - Button Handlers

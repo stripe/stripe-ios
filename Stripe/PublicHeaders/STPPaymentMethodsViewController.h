@@ -10,7 +10,6 @@
 
 #import "STPBackendAPIAdapter.h"
 #import "STPCoreViewController.h"
-#import "STPFooterViewSupporting.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentMethod.h"
 #import "STPUserInformation.h"
@@ -32,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
  for you automatically, by calling `presentPaymentMethodsViewController` 
  or `pushPaymentMethodsViewController` on it.
  */
-@interface STPPaymentMethodsViewController : STPCoreViewController <STPFooterViewSupporting>
+@interface STPPaymentMethodsViewController : STPCoreViewController
 
 /**
  The delegate for the view controller.
@@ -102,6 +101,26 @@ NS_ASSUME_NONNULL_BEGIN
  that the payment context creates.
 */
 @property (nonatomic, strong, nullable) STPUserInformation *prefilledInformation;
+
+/**
+ A view that will be placed as the footer of the view controller when it is
+ showing a list of saved payment methods to select from.
+
+ When the footer view needs to be resized, it will be sent a
+ `sizeThatFits:` call. The view should respond correctly to this method in order
+ to be sized and positioned properly.
+ */
+@property (nonatomic, strong) UIView *paymentMethodsViewControllerFooterView;
+
+/**
+ A view that will be placed as the footer of the view controller when it is
+ showing the add card view.
+
+ When the footer view needs to be resized, it will be sent a
+ `sizeThatFits:` call. The view should respond correctly to this method in order
+ to be sized and positioned properly.
+ */
+@property (nonatomic, strong) UIView *addCardViewControllerFooterView;
 
 /**
  If you're pushing `STPPaymentMethodsViewController` onto an existing 

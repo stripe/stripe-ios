@@ -12,7 +12,6 @@
 
 #import "STPAddress.h"
 #import "STPBlocks.h"
-#import "STPFooterViewSupporting.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentResult.h"
@@ -226,13 +225,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  A view that will be placed as the footer of the payment methods selection 
- view controller and the add card view controller.
+ view controller.
 
  When the footer view needs to be resized, it will be sent a
  `sizeThatFits:` call. The view should respond correctly to this method in order
  to be sized and positioned properly.
  */
 @property (nonatomic, strong) UIView *paymentMethodsViewControllerFooterView;
+
+/**
+ A view that will be placed as the footer of the add card view controller.
+
+ When the footer view needs to be resized, it will be sent a
+ `sizeThatFits:` call. The view should respond correctly to this method in order
+ to be sized and positioned properly.
+ */
+@property (nonatomic, strong) UIView *addCardViewControllerFooterView;
 
 /**
  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you

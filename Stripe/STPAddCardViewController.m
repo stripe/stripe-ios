@@ -25,6 +25,7 @@
 #import "STPPaymentConfiguration+Private.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPPaymentCardTextFieldCell.h"
+#import "STPPromise.h"
 #import "STPSectionHeaderView.h"
 #import "STPToken.h"
 #import "STPWeakStrongMacros.h"
@@ -168,7 +169,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     // Resetting it re-calculates the size based on new view width
     // UITableView requires us to call setter again to actually pick up frame
     // change on footers
-    [self setStripeViewControllerFooterView:self.tableView.tableFooterView];
+    if (self.tableView.tableFooterView) {
+        self.customFooterView = self.tableView.tableFooterView;
+    }
 }
 
 - (void)setUpCardScanningIfAvailable {
@@ -310,11 +313,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
                                                                );
 }
 
-- (void)setStripeViewControllerFooterView:(UIView *)footerView {
-    CGSize size = [footerView sizeThatFits:CGSizeMake(self.view.bounds.size.width, CGFLOAT_MAX)];
-    footerView.frame = CGRectMake(0, 0, size.width, size.height);
+- (void)setCustomFooterView:(UIView *)footerView {
+    _customFooterView = footerView;
+    [self.stp_willAppearPromise voidOnSuccess:^{
+        CGSize size = [footerView sizeThatFits:CGSizeMake(self.view.bounds.size.width, CGFLOAT_MAX)];
+        footerView.frame = CGRectMake(0, 0, size.width, size.height);
 
-    self.tableView.tableFooterView = footerView;
+        self.tableView.tableFooterView = footerView;
+    }];
 }
 
 #pragma mark - STPPaymentCardTextField
