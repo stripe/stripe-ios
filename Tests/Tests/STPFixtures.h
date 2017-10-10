@@ -44,10 +44,26 @@
 + (STPSource *)cardSource;
 
 /**
+ A Token for a card
+ */
++ (STPToken *)cardToken;
+
+/**
+ A Customer object with an empty sources array.
+ */
++ (STPCustomer *)customerWithNoSources;
+
+/**
  A Customer object with a single card token in its sources array, and
  default_source set to that card token.
  */
 + (STPCustomer *)customerWithSingleCardTokenSource;
+
+/**
+ A Customer object with a single card source in its sources array, and
+ default_source set to that card source.
+ */
++ (STPCustomer *)customerWithSingleCardSourceSource;
 
 /**
  A Customer object with two cards in its sources array, 

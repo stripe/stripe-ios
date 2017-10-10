@@ -54,8 +54,38 @@
     return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"]];
 }
 
++ (STPToken *)cardToken {
+    NSDictionary *cardDict = [STPTestUtils jsonNamed:@"Card"];
+    NSDictionary *tokenDict = @{
+                                @"id": @"id_for_token",
+                                @"object": @"token",
+                                @"livemode": @NO,
+                                @"created": @1353025450.0,
+                                @"used": @NO,
+                                @"card": cardDict
+                                };
+    return [STPToken decodedObjectFromAPIResponse:tokenDict];
+}
+
++ (STPCustomer *)customerWithNoSources {
+    return [STPCustomer decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Customer"]];
+}
+
 + (STPCustomer *)customerWithSingleCardTokenSource {
     NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:@"Card"] mutableCopy];
+    card1[@"id"] = @"card_123";
+
+    NSMutableDictionary *customer = [[STPTestUtils jsonNamed:@"Customer"] mutableCopy];
+    NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
+    sources[@"data"] = @[card1];
+    customer[@"default_source"] = card1[@"id"];
+    customer[@"sources"] = sources;
+
+    return [STPCustomer decodedObjectFromAPIResponse:customer];
+}
+
++ (STPCustomer *)customerWithSingleCardSourceSource {
+    NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:@"CardSource"] mutableCopy];
     card1[@"id"] = @"card_123";
 
     NSMutableDictionary *customer = [[STPTestUtils jsonNamed:@"Customer"] mutableCopy];
