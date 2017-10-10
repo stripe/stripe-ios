@@ -10,6 +10,8 @@
 
 #import "STPPaymentMethodTuple.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STPCustomer (SourceTuple)
 
 /**
@@ -23,5 +25,7 @@
 - (STPPaymentMethodTuple *)filteredSourceTupleForUIWithConfiguration:(STPPaymentConfiguration *)configuration;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 void linkSTPCustomerSourceTupleCategory(void);

@@ -10,9 +10,11 @@
 #import "STPApplePayPaymentMethod.h"
 #import "STPCard.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STPPaymentMethodTuple()
 
-@property (nonatomic) id<STPPaymentMethod> selectedPaymentMethod;
+@property (nonatomic, nullable) id<STPPaymentMethod> selectedPaymentMethod;
 @property (nonatomic) NSArray<id<STPPaymentMethod>> *paymentMethods;
 
 @end
@@ -20,7 +22,7 @@
 @implementation STPPaymentMethodTuple
 
 + (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods
-                  selectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod {
+                  selectedPaymentMethod:(nullable id<STPPaymentMethod>)selectedPaymentMethod {
     STPPaymentMethodTuple *tuple = [self new];
     tuple.paymentMethods = paymentMethods ?: @[];
     tuple.selectedPaymentMethod = selectedPaymentMethod;
@@ -28,10 +30,10 @@
 }
 
 + (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods
-                  selectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod
+                  selectedPaymentMethod:(nullable id<STPPaymentMethod>)selectedPaymentMethod
                       addApplePayMethod:(BOOL)applePayEnabled {
     NSMutableArray *mutablePaymentMethods = paymentMethods.mutableCopy;
-    id<STPPaymentMethod> selected = selectedPaymentMethod;
+     id<STPPaymentMethod> _Nullable selected = selectedPaymentMethod;
 
     if (applePayEnabled) {
         STPApplePayPaymentMethod *applePay = [STPApplePayPaymentMethod new];
@@ -47,3 +49,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

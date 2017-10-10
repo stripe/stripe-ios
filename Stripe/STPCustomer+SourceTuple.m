@@ -13,10 +13,12 @@
 #import "STPPaymentMethodTuple.h"
 #import "STPSource+Private.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation STPCustomer (SourceTuple)
 
 - (STPPaymentMethodTuple *)filteredSourceTupleForUIWithConfiguration:(STPPaymentConfiguration *)configuration {
-    id<STPPaymentMethod> selectedMethod = nil;
+    id<STPPaymentMethod> _Nullable selectedMethod = nil;
     NSMutableArray<id<STPPaymentMethod>> *methods = [NSMutableArray array];
     for (id<STPSourceProtocol> customerSource in self.sources) {
         if ([customerSource isKindOfClass:[STPCard class]]) {
@@ -44,5 +46,7 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 void linkSTPCustomerSourceTupleCategory(void){}
