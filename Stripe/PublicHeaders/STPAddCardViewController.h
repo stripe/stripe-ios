@@ -62,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
  `sizeThatFits:` call. The view should respond correctly to this method in order
  to be sized and positioned properly.
  */
-@property (nonatomic, retain, nullable) UIView *customFooterView;
+@property (nonatomic, strong, nullable) UIView *customFooterView;
 
 @end
 

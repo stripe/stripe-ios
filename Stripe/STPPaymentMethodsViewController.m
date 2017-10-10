@@ -137,9 +137,10 @@
                                                                                                                                         delegate:self];
             if (self.paymentMethodsViewControllerFooterView) {
                 payMethodsInternal.customFooterView = self.paymentMethodsViewControllerFooterView;
-
             }
-        } else {
+            internal = payMethodsInternal;
+        }
+        else {
             STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
             addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
