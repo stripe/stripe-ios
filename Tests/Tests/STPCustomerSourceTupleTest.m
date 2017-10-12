@@ -30,7 +30,8 @@
  @param sut The customer to test
  @param applePayEnabled Whether or not apple pay should be added as a method
  @param expectedSourceCount The expected final valid sources count, including apple pay if you enabled it.
- @param expectedSelectedSource The expected selected source. Should be first valid source, or apple pay, or nil.
+ @param expectedSelectedSource The expected selected source. Should be customer's
+ default source if it is valid, or apple pay, or nil.
  */
 - (void)performSourceTupleTestWithCustomer:(STPCustomer *)sut
                            applePayEnabled:(BOOL)applePayEnabled
@@ -56,7 +57,7 @@
 
 /**
  This helper calls the matching above helper twice, once with and once without
- apple pay enabled and modified the expected outcome accordingly.
+ apple pay enabled and modifies the expected outcome accordingly.
 
  See that method for parameter documentation
  */
@@ -96,50 +97,50 @@
                       expectedSelectedSource:customer.defaultSource];
 }
 
-- (void)testSourceTupleCreationMixedCardSourceCustomer {
+- (void)testSourceTupleCreationMixedCardSources {
     STPCustomer *customer = [STPFixtures customerWithCardTokenAndSourceSources];
     [self performSourceTupleTestWithCustomer:customer
                         expectedValidSources:2
                       expectedSelectedSource:customer.defaultSource];
 }
 
-- (void)testSourceTupleCreationInvalidSourcesOnlyCustomer {
-    STPCustomer *customer = [STPFixtures customerWithSourcesFromJSONKeys:@[STPJSONKeySource3DS,
-                                                                           STPJSONKeySourceAlipay,
-                                                                           STPJSONKeySourceiDEAL,
-                                                                           STPJSONKeySourceSEPADebit,
-                                                                           STPJSONKeySourceBitcoin]
-                                                           defaultSource:STPJSONKeySourceiDEAL];
+- (void)testSourceTupleCreationInvalidSourcesOnly {
+    STPCustomer *customer = [STPFixtures customerWithSourcesFromJSONKeys:@[STPTestJSONSource3DS,
+                                                                           STPTestJSONSourceAlipay,
+                                                                           STPTestJSONSourceiDEAL,
+                                                                           STPTestJSONSourceSEPADebit,
+                                                                           STPTestJSONSourceBitcoin]
+                                                           defaultSource:STPTestJSONSourceiDEAL];
     [self performSourceTupleTestWithCustomer:customer
                         expectedValidSources:0
                       expectedSelectedSource:nil];
 }
 
 
-- (void)testSourceTupleCreationMixedValidAndInvalidSourcesWithInvalidDefaultCustomer {
-    STPCustomer *customer = [STPFixtures customerWithSourcesFromJSONKeys:@[STPJSONKeySource3DS,
-                                                                           STPJSONKeySourceAlipay,
-                                                                           STPJSONKeySourceCard,
-                                                                           STPJSONKeySourceiDEAL,
-                                                                           STPJSONKeySourceSEPADebit,
-                                                                           STPJSONKeyCard,
-                                                                           STPJSONKeySourceBitcoin]
-                                                           defaultSource:STPJSONKeySourceiDEAL];
+- (void)testSourceTupleCreationMixedValidAndInvalidSourcesWithInvalidDefaultSource {
+    STPCustomer *customer = [STPFixtures customerWithSourcesFromJSONKeys:@[STPTestJSONSource3DS,
+                                                                           STPTestJSONSourceAlipay,
+                                                                           STPTestJSONSourceCard,
+                                                                           STPTestJSONSourceiDEAL,
+                                                                           STPTestJSONSourceSEPADebit,
+                                                                           STPTestJSONCard,
+                                                                           STPTestJSONSourceBitcoin]
+                                                           defaultSource:STPTestJSONSourceiDEAL];
 
     [self performSourceTupleTestWithCustomer:customer
                         expectedValidSources:2
                       expectedSelectedSource:nil];
 }
 
-- (void)testSourceTupleCreationMixedValidAndInvalidSourcesWithValidDefaultCustomer {
-    STPCustomer *customer = [STPFixtures customerWithSourcesFromJSONKeys:@[STPJSONKeySource3DS,
-                                                                           STPJSONKeySourceAlipay,
-                                                                           STPJSONKeySourceCard,
-                                                                           STPJSONKeySourceiDEAL,
-                                                                           STPJSONKeySourceSEPADebit,
-                                                                           STPJSONKeyCard,
-                                                                           STPJSONKeySourceBitcoin]
-                                                           defaultSource:STPJSONKeyCard];
+- (void)testSourceTupleCreationMixedValidAndInvalidSourcesWithValidDefaultSource {
+    STPCustomer *customer = [STPFixtures customerWithSourcesFromJSONKeys:@[STPTestJSONSource3DS,
+                                                                           STPTestJSONSourceAlipay,
+                                                                           STPTestJSONSourceCard,
+                                                                           STPTestJSONSourceiDEAL,
+                                                                           STPTestJSONSourceSEPADebit,
+                                                                           STPTestJSONCard,
+                                                                           STPTestJSONSourceBitcoin]
+                                                           defaultSource:STPTestJSONCard];
     [self performSourceTupleTestWithCustomer:customer
                         expectedValidSources:2
                       expectedSelectedSource:customer.sources[5]];

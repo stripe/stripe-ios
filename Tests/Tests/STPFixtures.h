@@ -11,16 +11,16 @@
 #import <PassKit/PassKit.h>
 #import <Stripe/Stripe.h>
 
-extern NSString *const STPJSONKeyCustomer;
+extern NSString *const STPTestJSONCustomer;
 
-extern NSString *const STPJSONKeyCard;
+extern NSString *const STPTestJSONCard;
 
-extern NSString *const STPJSONKeySourceAlipay;
-extern NSString *const STPJSONKeySourceBitcoin;
-extern NSString *const STPJSONKeySourceCard;
-extern NSString *const STPJSONKeySource3DS;
-extern NSString *const STPJSONKeySourceiDEAL;
-extern NSString *const STPJSONKeySourceSEPADebit;
+extern NSString *const STPTestJSONSourceAlipay;
+extern NSString *const STPTestJSONSourceBitcoin;
+extern NSString *const STPTestJSONSourceCard;
+extern NSString *const STPTestJSONSource3DS;
+extern NSString *const STPTestJSONSourceiDEAL;
+extern NSString *const STPTestJSONSourceSEPADebit;
 
 @interface STPFixtures : NSObject
 
@@ -87,7 +87,7 @@ extern NSString *const STPJSONKeySourceSEPADebit;
  A customer object with a sources array that includes the listed json sources
  in the order they are listed in the array.
  
- Valid keys are any STPJSONKeySource constants and the STPJSONKeyCard constant.
+ Valid keys are any STPTestJSONSource constants and the STPTestJSONCard constant.
  
  Ids for the sources will be automatically generated and will be equal to a
  string that is the index of the array of that source.
