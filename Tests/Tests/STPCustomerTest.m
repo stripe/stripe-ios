@@ -8,10 +8,11 @@
 
 #import <XCTest/XCTest.h>
 #import "STPCustomer.h"
+
 #import "StripeError.h"
 #import "STPAddress.h"
-#import "STPTestUtils.h"
 #import "STPSourceProtocol.h"
+#import "STPTestUtils.h"
 
 @interface STPCustomerTest : XCTestCase
 @end
