@@ -9,6 +9,7 @@
 #import "STPMocks.h"
 
 #import "STPFixtures.h"
+#import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentContext+Private.h"
 #import "UIViewController+Stripe_Promises.h"
 
@@ -40,5 +41,19 @@
     OCMStub([mock attachSourceToCustomer:[OCMArg any] completion:[OCMArg invokeBlock]]);
     return mock;
 }
+
++ (STPPaymentConfiguration *)paymentConfigurationWithApplePaySupportingDevice {
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.appleMerchantIdentifier = @"fake_apple_merchant_id";
+    id partialMock = OCMPartialMock(config);
+    OCMStub([partialMock applePayEnabled]).andReturn(YES);
+//    .andDo(^(NSInvocation *invocation) {
+//        STPPaymentConfiguration *selfConfig = invocation.target;
+//        BOOL enabled = (selfConfig.additionalPaymentMethods & STPPaymentMethodTypeApplePay);
+//        NSValue *returnValue = [NSValue valueWithBytes:&enabled objCType:@encode(BOOL)];
+//        [invocation setReturnValue:&returnValue];
+//    });
+}
+
 
 @end

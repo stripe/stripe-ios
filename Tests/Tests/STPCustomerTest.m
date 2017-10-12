@@ -8,10 +8,17 @@
 
 #import <XCTest/XCTest.h>
 #import "STPCustomer.h"
+
 #import "StripeError.h"
 #import "STPAddress.h"
-#import "STPTestUtils.h"
+#import "STPCustomer+SourceTuple.h"
+#import "STPFixtures.h"
+#import "STPMocks.h"
+#import "STPPaymentConfiguration.h"
 #import "STPSourceProtocol.h"
+#import "STPTestUtils.h"
+
+
 
 @interface STPCustomerTest : XCTestCase
 @end
@@ -64,6 +71,30 @@
     XCTAssertEqualObjects(sut.shippingAddress.line2, customer[@"shipping"][@"address"][@"line2"]);
     XCTAssertEqualObjects(sut.shippingAddress.postalCode, customer[@"shipping"][@"address"][@"postal_code"]);
     XCTAssertEqualObjects(sut.shippingAddress.state, customer[@"shipping"][@"address"][@"state"]);
+}
+
+- (void)testSourceTupleCreationNoSourcesNoApplePay {
+    STPCustomer *sut = [STPFixtures customerWithNoSources];
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.additionalPaymentMethods = STPPaymentMethodTypeNone;
+
+    STPPaymentMethodTuple *tuple = [sut filteredSourceTupleForUIWithConfiguration:config];
+    XCTAssertNotNil(tuple);
+    XCTAssertNil(tuple.selectedPaymentMethod);
+    XCTAssertNotNil(tuple.paymentMethods);
+    XCTAssertTrue(tuple.paymentMethods.count == 0);
+}
+
+- (void)testSourceTupleCreationNoSourcesWithApplePay {
+    STPCustomer *sut = [STPFixtures customerWithNoSources];
+    STPPaymentConfiguration *config = [STPMocks paymentConfigurationWithApplePaySupportingDevice];
+    config.additionalPaymentMethods = STPPaymentMethodTypeAll;
+
+    STPPaymentMethodTuple *tuple = [sut filteredSourceTupleForUIWithConfiguration:config];
+    XCTAssertNotNil(tuple);
+    XCTAssertTrue([tuple.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]);
+    XCTAssertNotNil(tuple.paymentMethods);
+    XCTAssertTrue(tuple.paymentMethods.count == 1);
 }
 
 @end
