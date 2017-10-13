@@ -90,6 +90,15 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         paymentContext.prefilledInformation = userInformation
         paymentContext.paymentAmount = price
         paymentContext.paymentCurrency = self.paymentCurrency
+
+        let paymentSelectionFooter = PaymentContextFooterView(text: "You can add custom footer views to the payment selection screen.")
+        paymentSelectionFooter.theme = settings.theme
+        paymentContext.paymentMethodsViewControllerFooterView = paymentSelectionFooter
+
+        let addCardFooter = PaymentContextFooterView(text: "You can add custom footer views to the add card screen.")
+        addCardFooter.theme = settings.theme
+        paymentContext.addCardViewControllerFooterView = addCardFooter
+
         self.paymentContext = paymentContext
 
         self.paymentRow = CheckoutRowView(title: "Payment", detail: "Select Payment",

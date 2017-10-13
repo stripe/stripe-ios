@@ -19,6 +19,7 @@
 		C186AC341ECD0DDD00497DE3 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C186AC331ECD0DDD00497DE3 /* Alamofire.framework */; };
 		C188F2A61CC1A338003A524B /* MyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188F2A51CC1A338003A524B /* MyAPIClient.swift */; };
 		C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B83CBC1CCE6C0700F0790B /* Buttons.swift */; };
+		F1D12FE71F91721600CE68A7 /* PaymentContextFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -58,6 +59,7 @@
 		C188F2A51CC1A338003A524B /* MyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
 		C18A6EE11F1EB78B005600CC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Standard Integration (Swift)/README.md"; sourceTree = "<group>"; };
 		C1B83CBC1CCE6C0700F0790B /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
+		F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentContextFooterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 				04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */,
 				C124A18C1CCACC92007D42EE /* CheckoutRowView.swift */,
 				C1B83CBC1CCE6C0700F0790B /* Buttons.swift */,
+				F1D12FE61F91721600CE68A7 /* PaymentContextFooterView.swift */,
 				042CA4191A685E8D00D778E7 /* Images.xcassets */,
 				042CA41A1A685E8D00D778E7 /* Info.plist */,
 				04D075D91A69B82B00094431 /* Standard Integration (Swift).entitlements */,
@@ -264,6 +267,7 @@
 				C1B83CBD1CCE6C0700F0790B /* Buttons.swift in Sources */,
 				C124A18D1CCACC92007D42EE /* CheckoutRowView.swift in Sources */,
 				042CA41D1A685E8D00D778E7 /* AppDelegate.swift in Sources */,
+				F1D12FE71F91721600CE68A7 /* PaymentContextFooterView.swift in Sources */,
 				C13C24221D14438700F3765E /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
