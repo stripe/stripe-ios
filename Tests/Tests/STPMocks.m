@@ -9,8 +9,22 @@
 #import "STPMocks.h"
 
 #import "STPFixtures.h"
+#import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentContext+Private.h"
 #import "UIViewController+Stripe_Promises.h"
+
+@interface STPPaymentConfiguration (STPMocks)
+
+/**
+ Mock apple pay enabled response to just be based on setting and not hardware
+ capability.
+
+ `paymentConfigurationWithApplePaySupportingDevice` forwards calls to the
+ real method to this stub
+ */
+- (BOOL)stpmock_applePayEnabled;
+
+@end
 
 @implementation STPMocks
 
@@ -41,4 +55,21 @@
     return mock;
 }
 
++ (STPPaymentConfiguration *)paymentConfigurationWithApplePaySupportingDevice {
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.appleMerchantIdentifier = @"fake_apple_merchant_id";
+    id partialMock = OCMPartialMock(config);
+    OCMStub([partialMock applePayEnabled]).andCall(partialMock, @selector(stpmock_applePayEnabled));
+    return partialMock;
+}
+
 @end
+
+@implementation STPPaymentConfiguration (STPMocks)
+
+- (BOOL)stpmock_applePayEnabled {
+    return (self.additionalPaymentMethods & STPPaymentMethodTypeApplePay);
+}
+
+@end
+

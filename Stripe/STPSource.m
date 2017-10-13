@@ -10,6 +10,8 @@
 #import "STPSource.h"
 #import "STPSource+Private.h"
 
+#import "STPImageLibrary.h"
+#import "STPLocalizationUtils.h"
 #import "STPSourceOwner.h"
 #import "STPSourceReceiver.h"
 #import "STPSourceRedirect.h"
@@ -251,5 +253,39 @@
 
     return source;
 }
+
+#pragma mark - STPPaymentMethod
+
+- (UIImage *)image {
+    if (self.type == STPSourceTypeCard
+        && self.cardDetails != nil) {
+        return [STPImageLibrary brandImageForCardBrand:self.cardDetails.brand];
+    }
+    else {
+        return [STPImageLibrary brandImageForCardBrand:STPCardBrandUnknown];
+    }
+}
+
+- (UIImage *)templateImage {
+    if (self.type == STPSourceTypeCard
+        && self.cardDetails != nil) {
+        return [STPImageLibrary templatedBrandImageForCardBrand:self.cardDetails.brand];
+    }
+    else {
+        return [STPImageLibrary templatedBrandImageForCardBrand:STPCardBrandUnknown];
+    }
+}
+
+- (NSString *)label {
+    if (self.type == STPSourceTypeCard
+        && self.cardDetails != nil) {
+        NSString *brand = [STPCard stringFromBrand:self.cardDetails.brand];
+        return [NSString stringWithFormat:@"%@ %@", brand, self.cardDetails.last4];;
+    }
+    else {
+        return [STPCard stringFromBrand:STPCardBrandUnknown];
+    }
+}
+
 
 @end

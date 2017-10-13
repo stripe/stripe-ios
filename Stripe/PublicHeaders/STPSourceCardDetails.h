@@ -88,6 +88,11 @@ typedef NS_ENUM(NSInteger, STPSourceCard3DSecureStatus) {
  */
 @property (nonatomic, readonly) STPSourceCard3DSecureStatus threeDSecure;
 
+/**
+ True if this card was created through Apple Pay, false otherwise.
+ */
+@property (nonatomic, readonly) BOOL isApplePayCard;
+
 @end
 
 NS_ASSUME_NONNULL_END

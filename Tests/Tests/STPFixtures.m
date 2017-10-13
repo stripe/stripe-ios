@@ -10,6 +10,17 @@
 #import "STPTestUtils.h"
 #import "STPEphemeralKey.h"
 
+NSString *const STPTestJSONCustomer = @"Customer";
+
+NSString *const STPTestJSONCard = @"Card";
+
+NSString *const STPTestJSONSourceAlipay = @"AlipaySource";
+NSString *const STPTestJSONSourceBitcoin = @"BitcoinSource";
+NSString *const STPTestJSONSourceCard = @"CardSource";
+NSString *const STPTestJSONSource3DS = @"3DSSource";
+NSString *const STPTestJSONSourceiDEAL = @"iDEALSource";
+NSString *const STPTestJSONSourceSEPADebit = @"SEPADebitSource";
+
 @implementation STPFixtures
 
 + (STPAddress *)address {
@@ -47,18 +58,35 @@
 }
 
 + (STPCard *)card {
-    return [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"Card"]];
+    return [STPCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONCard]];
 }
 
 + (STPSource *)cardSource {
-    return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"CardSource"]];
+    return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONSourceCard]];
+}
+
++ (STPToken *)cardToken {
+    NSDictionary *cardDict = [STPTestUtils jsonNamed:STPTestJSONCard];
+    NSDictionary *tokenDict = @{
+                                @"id": @"id_for_token",
+                                @"object": @"token",
+                                @"livemode": @NO,
+                                @"created": @1353025450.0,
+                                @"used": @NO,
+                                @"card": cardDict
+                                };
+    return [STPToken decodedObjectFromAPIResponse:tokenDict];
+}
+
++ (STPCustomer *)customerWithNoSources {
+    return [STPCustomer decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONCustomer]];
 }
 
 + (STPCustomer *)customerWithSingleCardTokenSource {
-    NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:@"Card"] mutableCopy];
+    NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:STPTestJSONCard] mutableCopy];
     card1[@"id"] = @"card_123";
 
-    NSMutableDictionary *customer = [[STPTestUtils jsonNamed:@"Customer"] mutableCopy];
+    NSMutableDictionary *customer = [[STPTestUtils jsonNamed:STPTestJSONCustomer] mutableCopy];
     NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
     sources[@"data"] = @[card1];
     customer[@"default_source"] = card1[@"id"];
@@ -67,16 +95,70 @@
     return [STPCustomer decodedObjectFromAPIResponse:customer];
 }
 
++ (STPCustomer *)customerWithSingleCardSourceSource {
+    NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:STPTestJSONSourceCard] mutableCopy];
+    card1[@"id"] = @"card_123";
+
+    NSMutableDictionary *customer = [[STPTestUtils jsonNamed:STPTestJSONCustomer] mutableCopy];
+    NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
+    sources[@"data"] = @[card1];
+    customer[@"default_source"] = card1[@"id"];
+    customer[@"sources"] = sources;
+
+    return [STPCustomer decodedObjectFromAPIResponse:customer];
+}
+
++ (STPCustomer *)customerWithCardTokenAndSourceSources {
+    NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:STPTestJSONCard] mutableCopy];
+    card1[@"id"] = @"card_123";
+
+    NSMutableDictionary *card2 = [[STPTestUtils jsonNamed:STPTestJSONSourceCard] mutableCopy];
+    card2[@"id"] = @"src_456";
+
+    NSMutableDictionary *customer = [[STPTestUtils jsonNamed:STPTestJSONCustomer] mutableCopy];
+    NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
+    sources[@"data"] = @[card1, card2];
+    customer[@"default_source"] = card1[@"id"];
+    customer[@"sources"] = sources;
+
+    return [STPCustomer decodedObjectFromAPIResponse:customer];
+
+}
+
++ (STPCustomer *)customerWithSourcesFromJSONKeys:(NSArray<NSString *> *)jsonSourceKeys
+                                   defaultSource:(NSString *)jsonKeyForDefaultSource {
+    NSMutableArray *sourceJSONDicts = [NSMutableArray new];
+    NSString *defaultSourceID = nil;
+    NSUInteger sourceCount = 0;
+    for (NSString *jsonKey in jsonSourceKeys) {
+        NSMutableDictionary *sourceDict = [[STPTestUtils jsonNamed:jsonKey] mutableCopy];
+        sourceDict[@"id"] = [NSString stringWithFormat:@"%@", @(sourceCount)];
+        if ([jsonKeyForDefaultSource isEqualToString:jsonKey]) {
+            defaultSourceID = sourceDict[@"id"];
+        }
+        sourceCount += 1;
+        [sourceJSONDicts addObject:sourceDict.copy];
+    }
+
+    NSMutableDictionary *customer = [[STPTestUtils jsonNamed:STPTestJSONCustomer] mutableCopy];
+    NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
+    sources[@"data"] = sourceJSONDicts.copy;
+    customer[@"default_source"] = defaultSourceID ?: @"";
+    customer[@"sources"] = sources;
+
+    return [STPCustomer decodedObjectFromAPIResponse:customer];
+}
+
 + (STPSource *)iDEALSource {
-    return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"iDEALSource"]];
+    return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONSourceiDEAL]];
 }
 
 + (STPSource *)alipaySource {
-    return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"AlipaySource"]];
+    return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONSourceAlipay]];
 }
 
 + (STPSource *)alipaySourceWithNativeUrl {
-    NSMutableDictionary *dictionary = [STPTestUtils jsonNamed:@"AlipaySource"].mutableCopy;
+    NSMutableDictionary *dictionary = [STPTestUtils jsonNamed:STPTestJSONSourceAlipay].mutableCopy;
     NSMutableDictionary *detailsDictionary = ((NSDictionary *)dictionary[@"alipay"]).mutableCopy;
     detailsDictionary[@"native_url"] = @"alipay://test";
     dictionary[@"alipay"] = detailsDictionary;

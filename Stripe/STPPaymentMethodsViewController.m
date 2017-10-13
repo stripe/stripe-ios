@@ -13,6 +13,7 @@
 #import "STPCard.h"
 #import "STPColorUtils.h"
 #import "STPCoreViewController+Private.h"
+#import "STPCustomer+SourceTuple.h"
 #import "STPDispatchFunctions.h"
 #import "STPLocalizationUtils.h"
 #import "STPPaymentActivityIndicatorView.h"
@@ -88,21 +89,8 @@
             if (error) {
                 [promise fail:error];
             } else {
-                STPCard *selectedCard;
-                NSMutableArray<STPCard *> *cards = [NSMutableArray array];
-                for (id<STPSourceProtocol> source in customer.sources) {
-                    if ([source isKindOfClass:[STPCard class]]) {
-                        STPCard *card = (STPCard *)source;
-                        [cards addObject:card];
-                        if ([card.stripeID isEqualToString:customer.defaultSource.stripeID]) {
-                            selectedCard = card;
-                        }
-                    }
-                }
-                STPCardTuple *cardTuple = [STPCardTuple tupleWithSelectedCard:selectedCard cards:cards];
-                STPPaymentMethodTuple *tuple = [STPPaymentMethodTuple tupleWithCardTuple:cardTuple
-                                                                         applePayEnabled:configuration.applePayEnabled];
-                [promise succeed:tuple];
+                STPPaymentMethodTuple *paymentTuple = [customer filteredSourceTupleForUIWithConfiguration:configuration];
+                [promise succeed:paymentTuple];
             }
         });
     }];

@@ -11,6 +11,17 @@
 #import <PassKit/PassKit.h>
 #import <Stripe/Stripe.h>
 
+extern NSString *const STPTestJSONCustomer;
+
+extern NSString *const STPTestJSONCard;
+
+extern NSString *const STPTestJSONSourceAlipay;
+extern NSString *const STPTestJSONSourceBitcoin;
+extern NSString *const STPTestJSONSourceCard;
+extern NSString *const STPTestJSONSource3DS;
+extern NSString *const STPTestJSONSourceiDEAL;
+extern NSString *const STPTestJSONSourceSEPADebit;
+
 @interface STPFixtures : NSObject
 
 /**
@@ -44,10 +55,45 @@
 + (STPSource *)cardSource;
 
 /**
+ A Token for a card
+ */
++ (STPToken *)cardToken;
+
+/**
+ A Customer object with an empty sources array.
+ */
++ (STPCustomer *)customerWithNoSources;
+
+/**
  A Customer object with a single card token in its sources array, and
  default_source set to that card token.
  */
 + (STPCustomer *)customerWithSingleCardTokenSource;
+
+/**
+ A Customer object with a single card source in its sources array, and
+ default_source set to that card source.
+ */
++ (STPCustomer *)customerWithSingleCardSourceSource;
+
+/**
+ A Customer object with two cards in its sources array, 
+ one a token/card type and one a source object type.
+ default_source is set to the card token.
+ */
++ (STPCustomer *)customerWithCardTokenAndSourceSources;
+
+/**
+ A customer object with a sources array that includes the listed json sources
+ in the order they are listed in the array.
+ 
+ Valid keys are any STPTestJSONSource constants and the STPTestJSONCard constant.
+ 
+ Ids for the sources will be automatically generated and will be equal to a
+ string that is the index of the array of that source.
+ */
++ (STPCustomer *)customerWithSourcesFromJSONKeys:(NSArray<NSString *> *)jsonSourceKeys
+                                   defaultSource:(NSString *)jsonKeyForDefaultSource;
 
 /**
  A Source object with type iDEAL
@@ -82,3 +128,8 @@
 + (STPEphemeralKey *)expiringEphemeralKey;
 
 @end
+
+@interface STPJsonSources : NSObject
+
+@end
+

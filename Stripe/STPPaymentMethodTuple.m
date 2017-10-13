@@ -10,9 +10,11 @@
 #import "STPApplePayPaymentMethod.h"
 #import "STPCard.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STPPaymentMethodTuple()
 
-@property (nonatomic) id<STPPaymentMethod> selectedPaymentMethod;
+@property (nonatomic, nullable) id<STPPaymentMethod> selectedPaymentMethod;
 @property (nonatomic) NSArray<id<STPPaymentMethod>> *paymentMethods;
 
 @end
@@ -20,29 +22,32 @@
 @implementation STPPaymentMethodTuple
 
 + (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods
-                  selectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod {
+                  selectedPaymentMethod:(nullable id<STPPaymentMethod>)selectedPaymentMethod {
     STPPaymentMethodTuple *tuple = [self new];
     tuple.paymentMethods = paymentMethods ?: @[];
     tuple.selectedPaymentMethod = selectedPaymentMethod;
     return tuple;
 }
 
-+ (instancetype)tupleWithCardTuple:(STPCardTuple *)cardTuple
-                   applePayEnabled:(BOOL)applePayEnabled {
-    NSMutableArray *paymentMethods = [NSMutableArray array];
-    for (STPCard *card in cardTuple.cards) {
-        [paymentMethods addObject:card];
-    }
++ (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods
+                  selectedPaymentMethod:(nullable id<STPPaymentMethod>)selectedPaymentMethod
+                      addApplePayMethod:(BOOL)applePayEnabled {
+    NSMutableArray *mutablePaymentMethods = paymentMethods.mutableCopy;
+     id<STPPaymentMethod> _Nullable selected = selectedPaymentMethod;
+
     if (applePayEnabled) {
-        [paymentMethods addObject:[STPApplePayPaymentMethod new]];
+        STPApplePayPaymentMethod *applePay = [STPApplePayPaymentMethod new];
+        [mutablePaymentMethods addObject:applePay];
+
+        if (!selected) {
+            selected = applePay;
+        }
     }
-    id<STPPaymentMethod> paymentMethod;
-    if (cardTuple.selectedCard) {
-        paymentMethod = cardTuple.selectedCard;
-    } else if (applePayEnabled) {
-        paymentMethod = [STPApplePayPaymentMethod new];
-    }
-    return [self tupleWithPaymentMethods:paymentMethods selectedPaymentMethod:paymentMethod];
+
+    return [self tupleWithPaymentMethods:mutablePaymentMethods.copy
+                   selectedPaymentMethod:selected];
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
