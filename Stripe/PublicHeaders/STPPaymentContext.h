@@ -224,6 +224,25 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
 
 /**
+ A view that will be placed as the footer of the payment methods selection 
+ view controller.
+
+ When the footer view needs to be resized, it will be sent a
+ `sizeThatFits:` call. The view should respond correctly to this method in order
+ to be sized and positioned properly.
+ */
+@property (nonatomic, strong) UIView *paymentMethodsViewControllerFooterView;
+
+/**
+ A view that will be placed as the footer of the add card view controller.
+
+ When the footer view needs to be resized, it will be sent a
+ `sizeThatFits:` call. The view should respond correctly to this method in order
+ to be sized and positioned properly.
+ */
+@property (nonatomic, strong) UIView *addCardViewControllerFooterView;
+
+/**
  If `paymentContext:didFailToLoadWithError:` is called on your delegate, you
  can in turn call this method to try loading again (if that hasn't been called, 
  calling this will do nothing). If retrying in turn fails, `paymentContext:didFailToLoadWithError:` 
@@ -287,7 +306,6 @@ NS_ASSUME_NONNULL_BEGIN
        already showing a view controller, or in the middle of requesting a payment.
  */
 - (void)requestPayment;
-
 
 @end
 

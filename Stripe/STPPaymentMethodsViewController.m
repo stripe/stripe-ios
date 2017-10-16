@@ -116,21 +116,31 @@
         if (tuple.paymentMethods.count > 0) {
             STPCustomerContext *customerContext = ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) ? (STPCustomerContext *)self.apiAdapter : nil;
 
-            internal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:self.configuration
-                                                                              customerContext:customerContext
-                                                                                        theme:self.theme
-                                                                         prefilledInformation:self.prefilledInformation
-                                                                              shippingAddress:self.shippingAddress
-                                                                           paymentMethodTuple:tuple
-                                                                                     delegate:self];
-        } else {
+            STPPaymentMethodsInternalViewController *payMethodsInternal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:self.configuration
+                                                                                                                                 customerContext:customerContext
+                                                                                                                                           theme:self.theme
+                                                                                                                            prefilledInformation:self.prefilledInformation
+                                                                                                                                 shippingAddress:self.shippingAddress
+                                                                                                                              paymentMethodTuple:tuple
+                                                                                                                                        delegate:self];
+            if (self.paymentMethodsViewControllerFooterView) {
+                payMethodsInternal.customFooterView = self.paymentMethodsViewControllerFooterView;
+            }
+            internal = payMethodsInternal;
+        }
+        else {
             STPAddCardViewController *addCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
             addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
             addCardViewController.shippingAddress = self.shippingAddress;
             internal = addCardViewController;
-            
+
+            if (self.addCardViewControllerFooterView) {
+                addCardViewController.customFooterView = self.addCardViewControllerFooterView;
+
+            }
         }
+        
         internal.stp_navigationItemProxy = self.navigationItem;
         [self addChildViewController:internal];
         internal.view.alpha = 0;

@@ -55,6 +55,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) NSString *managedAccountCurrency;
 
+/**
+ Provide this view controller with a footer view.
+
+ When the footer view needs to be resized, it will be sent a
+ `sizeThatFits:` call. The view should respond correctly to this method in order
+ to be sized and positioned properly.
+ */
+@property (nonatomic, strong, nullable) UIView *customFooterView;
+
 @end
 
 /**
