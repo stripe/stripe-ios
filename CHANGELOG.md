@@ -2,6 +2,7 @@
 
 * Restores `[STPCard brandFromString:]` method which was marked as deprecated in a recent version [#801](https://github.com/stripe/stripe-ios/pull/801)
 * Adds `[STPBankAccount metadata]` and `[STPCard metadata]` read-only accessors and improves annotation for `[STPSource metadata]` [#808](https://github.com/stripe/stripe-ios/pull/808)
+* Un-deprecates `STPBackendAPIAdapter` and all associated methods.
 
 ## 11.3.0 2017-09-13
 * Adds support for creating `STPSourceParams` for P24 source [#779](https://github.com/stripe/stripe-ios/pull/779)
