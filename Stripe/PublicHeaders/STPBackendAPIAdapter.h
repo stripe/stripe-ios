@@ -19,20 +19,17 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPCard, STPToken;
 
 /**
- Note: Instead of providing your own backend API adapter, you can now create an
- `STPCustomerContext`, which conforms to this protocol, and will manage retrieving 
- and updating a Stripe customer for you. @see STPCustomerContext.h
+ Typically, you will not need to implement this protocol yourself. You
+ should instead use `STPCustomerContext`, which implements <STPBackendAPIAdapter>
+ and manages retrieving and updating a Stripe customer for you.
+ @see STPCustomerContext.h
 
  If you would prefer retrieving and updating your Stripe customer object via
  your own backend instead of using `STPCustomerContext`, you should make your 
  application's API client conform to this interface. It provides a "bridge" from 
  the prebuilt UI we expose (such as `STPPaymentMethodsViewController`) to your
  backend to fetch the information it needs to power those views.
-
- @deprecated Use `STPCustomerContext`.
-
  */
-__attribute__((deprecated))
 @protocol STPBackendAPIAdapter<NSObject>
 
 /**
@@ -53,7 +50,7 @@ __attribute__((deprecated))
 /**
  Adds a payment source to a customer. 
 
- If you are not using STPCustomerContext:
+ If you are implementing your own <STPBackendAPIAdapter>:
  On your backend, retrieve the Stripe customer associated with your logged-in user. 
  Then, call the Update Customer method on that customer
  ( https://stripe.com/docs/api#update_customer ). If this API call succeeds,
@@ -70,8 +67,8 @@ __attribute__((deprecated))
 /**
  Change a customer's `default_source` to be the provided card. 
 
- If you are not using STPCustomerContext:
- On your backend, retrieve the Stripe customer associated with your logged-in user. 
+ If you are implementing your own <STPBackendAPIAdapter>:
+ On your backend, retrieve the Stripe customer associated with your logged-in user.
  Then, call the Customer Update method ( https://stripe.com/docs/api#update_customer )
  specifying default_source to be the value of source.stripeID. If this API call 
  succeeds, call `completion(nil)`. Otherwise, call `completion(error)` with the 
@@ -88,18 +85,29 @@ __attribute__((deprecated))
 
 /**
  Deletes the given source from the customer.
+ 
+ If you are implementing your own <STPBackendAPIAdapter>:
+ On your backend, retrieve the Stripe customer associated with your logged-in user.
+ Then, call the Delete Card method ( https://stripe.com/docs/api#delete_card )
+ specifying id to be the value of source.stripeID. If this API call
+ succeeds, call `completion(nil)`. Otherwise, call `completion(error)` with the
+ error that occurred.
 
  @param source    The source to delete from the customer
  @param completion call this callback when you're done deleting the source from
  the customer on your backend. For example, `completion(nil)` (if your call
  succeeds) or `completion(error)` if an error is returned.
-
- @see https://stripe.com/docs/api#delete_card
  */
 - (void)detachSourceFromCustomer:(id<STPSourceProtocol>)source completion:(nullable STPErrorBlock)completion;
 
 /**
  Sets the given shipping address on the customer.
+ 
+ If you are implementing your own <STPBackendAPIAdapter>:
+ On your backend, retrieve the Stripe customer associated with your logged-in user.
+ Then, call the Customer Update method ( https://stripe.com/docs/api#update_customer )
+ specifying shipping to be the given shipping address. If this API call succeeds, 
+ call `completion(nil)`. Otherwise, call `completion(error)` with the error that occurred.
 
  @param shipping   The shipping address to set on the customer
  @param completion call this callback when you're done updating the customer on

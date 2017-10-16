@@ -36,10 +36,7 @@
 
 @property (nonatomic) STPPaymentConfiguration *configuration;
 @property (nonatomic) STPAddress *shippingAddress;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 @property (nonatomic) id<STPBackendAPIAdapter> apiAdapter;
-#pragma clang diagnostic pop
 @property (nonatomic) STPAPIClient *apiClient;
 @property (nonatomic) STPPromise<STPPaymentMethodTuple *> *loadingPromise;
 @property (nonatomic, weak) STPPaymentActivityIndicatorView *activityIndicator;
@@ -50,8 +47,6 @@
 
 @implementation STPPaymentMethodsViewController
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext {
     return [self initWithConfiguration:paymentContext.configuration
                             apiAdapter:paymentContext.apiAdapter
@@ -96,7 +91,6 @@
     }];
     return promise;
 }
-#pragma clang diagnostic pop
 
 - (void)createAndSetupViews {
     [super createAndSetupViews];
@@ -245,8 +239,6 @@
 
 @implementation STPPaymentMethodsViewController (Private)
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                        loadingPromise:(STPPromise<STPPaymentMethodTuple *> *)loadingPromise
@@ -290,6 +282,5 @@
     }
     return self;
 }
-#pragma clang diagnostic pop
 
 @end

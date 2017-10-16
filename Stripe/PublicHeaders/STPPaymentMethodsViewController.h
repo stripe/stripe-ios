@@ -75,6 +75,10 @@ NS_ASSUME_NONNULL_BEGIN
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
 
 /**
+ Note: Instead of providing your own backend API adapter, we recommend using
+ `STPCustomerContext`, which will manage retrieving and updating a
+ Stripe customer for you. @see STPCustomerContext.h
+ 
  Initializes a new payment methods view controller without using 
  a payment context.
 
@@ -85,16 +89,11 @@ NS_ASSUME_NONNULL_BEGIN
  payment methods and save new ones.
  @param delegate      A delegate that will be notified when the payment methods 
  view controller's selection changes.
-
- @deprecated Use `initWithConfiguration:theme:customerContext:delegate:`.
- Instead of providing your own backend API adapter, you can now create an
- `STPCustomerContext`, which will manage retrieving and updating a
- Stripe customer for you. @see STPCustomerContext.h
  */
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                                 theme:(STPTheme *)theme
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                             delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate DEPRECATED_MSG_ATTRIBUTE("Use `initWithConfiguration:theme:customerContext:delegate:` instead");
+                             delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
 
 /**
  If you've already collected some information from your user, you can set it

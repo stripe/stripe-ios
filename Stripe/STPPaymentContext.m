@@ -45,10 +45,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 @property (nonatomic) STPPaymentConfiguration *configuration;
 @property (nonatomic) STPTheme *theme;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 @property (nonatomic) id<STPBackendAPIAdapter> apiAdapter;
-#pragma clang diagnostic pop
 @property (nonatomic) STPAPIClient *apiClient;
 @property (nonatomic) STPPromise<STPPaymentMethodTuple *> *loadingPromise;
 
@@ -75,8 +72,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 @implementation STPPaymentContext
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 - (instancetype)initWithCustomerContext:(STPCustomerContext *)customerContext {
     return [self initWithAPIAdapter:customerContext];
 }
@@ -88,7 +83,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                       configuration:configuration
                               theme:theme];
 }
-#pragma clang diagnostic pop
 
 - (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
     return [self initWithAPIAdapter:apiAdapter

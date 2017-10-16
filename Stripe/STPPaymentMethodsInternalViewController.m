@@ -31,10 +31,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 @interface STPPaymentMethodsInternalViewController () <UITableViewDataSource, UITableViewDelegate, STPAddCardViewControllerDelegate>
 
 @property (nonatomic, strong, readwrite) STPPaymentConfiguration *configuration;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 @property (nonatomic, strong, nullable, readwrite) id<STPBackendAPIAdapter> apiAdapter;
-#pragma clang diagnostic pop
 @property (nonatomic, strong, nullable, readwrite) STPUserInformation *prefilledInformation;
 @property (nonatomic, strong, nullable, readwrite) STPAddress *shippingAddress;
 @property (nonatomic, strong, readwrite) NSArray<id<STPPaymentMethod>> *paymentMethods;
@@ -139,6 +136,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     if (![self.apiAdapter respondsToSelector:@selector(detachSourceFromCustomer:completion:)]) {
         // Cannot detach payment methods if customerContext is an apiAdapter
         // that doesn't implement detachSource
+        return NO;
     }
 
     if (!paymentMethod) {
