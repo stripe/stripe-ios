@@ -468,9 +468,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     self.shippingAddressNeedsVerification = NO;
     self.selectedShippingMethod = method;
     [self.delegate paymentContextDidChange:self];
-    if ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) {
-        STPCustomerContext *customerContext = (STPCustomerContext *)self.apiAdapter;
-        [customerContext updateCustomerWithShippingAddress:self.shippingAddress completion:nil];
+    if ([self.apiAdapter respondsToSelector:@selector(updateCustomerWithShippingAddress:completion:)]) {
+        [self.apiAdapter updateCustomerWithShippingAddress:self.shippingAddress completion:nil];
     }
     [self appropriatelyDismissViewController:addressViewController completion:^{
         if (self.state == STPPaymentContextStateRequestingPayment) {

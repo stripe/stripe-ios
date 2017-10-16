@@ -53,6 +53,32 @@ __attribute__((deprecated))
  */
 - (void)selectDefaultCustomerSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion;
 
+@optional
+
+/**
+ Deletes the given source from the customer.
+
+ @param source    The source to delete from the customer
+ @param completion call this callback when you're done deleting the source from
+ the customer on your backend. For example, `completion(nil)` (if your call
+ succeeds) or `completion(error)` if an error is returned.
+
+ @see https://stripe.com/docs/api#delete_card
+ */
+- (void)detachSourceFromCustomer:(id<STPSourceProtocol>)source completion:(nullable STPErrorBlock)completion;
+
+/**
+ Sets the given shipping address on the customer.
+
+ @param shipping   The shipping address to set on the customer
+ @param completion call this callback when you're done updating the customer on
+ your backend. For example, `completion(nil)` (if your call succeeds) or
+ `completion(error)` if an error is returned.
+
+ @see https://stripe.com/docs/api#update_customer
+ */
+- (void)updateCustomerWithShippingAddress:(STPAddress *)shipping completion:(nullable STPErrorBlock)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
