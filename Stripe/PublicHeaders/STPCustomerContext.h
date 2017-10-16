@@ -49,6 +49,22 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)clearCachedCustomer;
 
+/**
+ Deletes the given source from the customer object specified in the context's
+ ephemeral key.
+
+ @see https://stripe.com/docs/api#delete_card
+ */
+- (void)detachSourceFromCustomer:(id<STPSourceProtocol>)source completion:(nullable STPErrorBlock)completion;
+
+/**
+ Sets the given shipping address on the customer object specified in the context's
+ ephemeral key.
+
+ @see https://stripe.com/docs/api#update_customer
+ */
+- (void)updateCustomerWithShippingAddress:(STPAddress *)shipping completion:(nullable STPErrorBlock)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -14,7 +14,6 @@
 #import "STPCoreTableViewController.h"
 #import "STPCoreTableViewController+Private.h"
 #import "STPCustomerContext.h"
-#import "STPCustomerContext+Private.h"
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
