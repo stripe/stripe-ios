@@ -12,7 +12,7 @@
 #import "PKPaymentAuthorizationViewController+Stripe_Blocks.h"
 #import "STPAddCardViewController+Private.h"
 #import "STPCustomer+SourceTuple.h"
-#import "STPCustomerContext+Private.h"
+#import "STPCustomerContext.h"
 #import "STPDispatchFunctions.h"
 #import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentContext+Private.h"
@@ -45,10 +45,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 @property (nonatomic) STPPaymentConfiguration *configuration;
 @property (nonatomic) STPTheme *theme;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 @property (nonatomic) id<STPBackendAPIAdapter> apiAdapter;
-#pragma clang diagnostic pop
 @property (nonatomic) STPAPIClient *apiClient;
 @property (nonatomic) STPPromise<STPPaymentMethodTuple *> *loadingPromise;
 
@@ -75,8 +72,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 @implementation STPPaymentContext
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
 - (instancetype)initWithCustomerContext:(STPCustomerContext *)customerContext {
     return [self initWithAPIAdapter:customerContext];
 }
@@ -88,7 +83,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                       configuration:configuration
                               theme:theme];
 }
-#pragma clang diagnostic pop
 
 - (instancetype)initWithAPIAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
     return [self initWithAPIAdapter:apiAdapter
@@ -474,9 +468,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     self.shippingAddressNeedsVerification = NO;
     self.selectedShippingMethod = method;
     [self.delegate paymentContextDidChange:self];
-    if ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) {
-        STPCustomerContext *customerContext = (STPCustomerContext *)self.apiAdapter;
-        [customerContext updateCustomerWithShippingAddress:self.shippingAddress completion:nil];
+    if ([self.apiAdapter respondsToSelector:@selector(updateCustomerWithShippingAddress:completion:)]) {
+        [self.apiAdapter updateCustomerWithShippingAddress:self.shippingAddress completion:nil];
     }
     [self appropriatelyDismissViewController:addressViewController completion:^{
         if (self.state == STPPaymentContextStateRequestingPayment) {

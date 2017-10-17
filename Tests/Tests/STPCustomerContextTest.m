@@ -10,7 +10,7 @@
 #import <OCMock/OCMock.h>
 #import <Stripe/Stripe.h>
 #import "STPAPIClient+Private.h"
-#import "STPCustomerContext+Private.h"
+#import "STPCustomerContext.h"
 #import "STPEphemeralKeyManager.h"
 #import "STPFixtures.h"
 

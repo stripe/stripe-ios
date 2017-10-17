@@ -29,13 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
  @param sources       All of the customer's payment sources. This might be an empty array.
 
  @return an instance of STPCustomer
-
- @deprecated Use `STPCustomerContext` to manage retrieving and updating a 
- Customer. You will no longer need to initialize an `STPCustomer`.
  */
 + (instancetype)customerWithStripeID:(NSString *)stripeID
                        defaultSource:(nullable id<STPSourceProtocol>)defaultSource
-                             sources:(NSArray<id<STPSourceProtocol>> *)sources __attribute__((deprecated));
+                             sources:(NSArray<id<STPSourceProtocol>> *)sources;
 
 /**
  The Stripe ID of the customer, e.g. `cus_1234`
@@ -65,28 +62,30 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPCustomerDeserializer : NSObject
 
 /**
- Initialize a customer deserializer. The `data`, `urlResponse`, and `error` parameters are intended to be passed from an `NSURLSessionDataTask` callback. After it has been initialized, you can inspect the `error` and `customer` properties to see if the deserialization was successful. If `error` is nil, `customer` will be non-nil (and vice versa).
+ Initialize a customer deserializer. The `data`, `urlResponse`, and `error` 
+ parameters are intended to be passed from an `NSURLSessionDataTask` callback. 
+ After it has been initialized, you can inspect the `error` and `customer` 
+ properties to see if the deserialization was successful. If `error` is nil, 
+ `customer` will be non-nil (and vice versa).
 
  @param data        An `NSData` object representing encoded JSON for a Customer object
  @param urlResponse The URL response obtained from the `NSURLSessionTask`
- @param error       Any error that occurred from the URL session task (if this is non-nil, the `error` property will be set to this value after initialization).
-
- @deprecated Use `STPCustomerContext` to manage retrieving and updating a
- Customer. You will no longer need to deserialize an `STPCustomer`.
+ @param error       Any error that occurred from the URL session task (if this 
+ is non-nil, the `error` property will be set to this value after initialization).
  */
 - (instancetype)initWithData:(nullable NSData *)data
                  urlResponse:(nullable NSURLResponse *)urlResponse
-                       error:(nullable NSError *)error __attribute__((deprecated));
+                       error:(nullable NSError *)error;
 
 /**
- Initializes a customer deserializer with a JSON dictionary. This JSON should be in the exact same format as what the Stripe API returns. If it's successfully parsed, the `customer` parameter will be present after initialization; otherwise `error` will be present.
+ Initializes a customer deserializer with a JSON dictionary. This JSON should be 
+ in the exact same format as what the Stripe API returns. If it's successfully 
+ parsed, the `customer` parameter will be present after initialization; 
+ otherwise `error` will be present.
 
  @param json a JSON dictionary.
-
- @deprecated Use `STPCustomerContext` to manage retrieving and updating a
- Customer. You will no longer need to deserialize an `STPCustomer`.
  */
-- (instancetype)initWithJSONResponse:(id)json __attribute__((deprecated));
+- (instancetype)initWithJSONResponse:(id)json;
 
 /**
  If a customer was successfully parsed from the response, it will be set here. Otherwise, this value wil be nil (and the `error` property will explain what went wrong).
