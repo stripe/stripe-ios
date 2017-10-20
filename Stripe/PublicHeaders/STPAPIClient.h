@@ -20,7 +20,7 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 /**
  The current version of this library.
  */
-static NSString *const STPSDKVersion = @"11.3.0";
+static NSString *const STPSDKVersion = @"11.4.0";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPSourceParams, STPToken, STPPaymentConfiguration;
 

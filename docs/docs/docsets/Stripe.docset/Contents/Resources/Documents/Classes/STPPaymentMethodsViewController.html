@@ -231,7 +231,7 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="../Enums.html">Enums</a>
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
@@ -452,7 +452,7 @@ it is finished.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L43">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -513,7 +513,7 @@ information it needs from your application.</p>
                         <p>an initialized view controller.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L55">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L54">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -616,7 +616,7 @@ methods view controller&rsquo;s selection changes.</p>
                         <p>an initialized view controller.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L72-L75">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L71-L74">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -634,13 +634,12 @@ methods view controller&rsquo;s selection changes.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initializes a new payment methods view controller without using 
-a payment context.</p>
-
-<p>@deprecated Use <code>initWithConfiguration:theme:customerContext:delegate:</code>.
-Instead of providing your own backend API adapter, you can now create an
+                        <p>Note: Instead of providing your own backend API adapter, we recommend using
 <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
 Stripe customer for you. - see: STPCustomerContext.h</p>
+
+<p>Initializes a new payment methods view controller without using 
+a payment context.</p>
 
                       </div>
                       <div class="declaration">
@@ -720,7 +719,7 @@ view controller&rsquo;s selection changes.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L94-L97">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L92-L95">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -758,7 +757,89 @@ that the payment context creates.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L104">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L102">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPPaymentMethodsViewController(py)paymentMethodsViewControllerFooterView"></a>
+                    <a name="//apple_ref/objc/Property/paymentMethodsViewControllerFooterView" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentMethodsViewController(py)paymentMethodsViewControllerFooterView">paymentMethodsViewControllerFooterView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A view that will be placed as the footer of the view controller when it is
+showing a list of saved payment methods to select from.</p>
+
+<p>When the footer view needs to be resized, it will be sent a
+<code>sizeThatFits:</code> call. The view should respond correctly to this method in order
+to be sized and positioned properly.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
+    <span class="n">UIView</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">paymentMethodsViewControllerFooterView</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">paymentMethodsViewControllerFooterView</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L112">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPPaymentMethodsViewController(py)addCardViewControllerFooterView"></a>
+                    <a name="//apple_ref/objc/Property/addCardViewControllerFooterView" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentMethodsViewController(py)addCardViewControllerFooterView">addCardViewControllerFooterView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A view that will be placed as the footer of the view controller when it is
+showing the add card view.</p>
+
+<p>When the footer view needs to be resized, it will be sent a
+<code>sizeThatFits:</code> call. The view should respond correctly to this method in order
+to be sized and positioned properly.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
+    <span class="n">UIView</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">addCardViewControllerFooterView</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">addCardViewControllerFooterView</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L122">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -816,7 +897,7 @@ You may specify nil for this parameter.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L115">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L133">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -829,8 +910,8 @@ You may specify nil for this parameter.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-09-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-10-20)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

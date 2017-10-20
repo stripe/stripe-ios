@@ -231,7 +231,7 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="../Enums.html">Enums</a>
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
@@ -420,10 +420,11 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initialize a customer deserializer. The <code>data</code>, <code>urlResponse</code>, and <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> parameters are intended to be passed from an <code>NSURLSessionDataTask</code> callback. After it has been initialized, you can inspect the <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> and <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)customer">customer</a></code> properties to see if the deserialization was successful. If <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> is nil, <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)customer">customer</a></code> will be non-nil (and vice versa).</p>
-
-<p>@deprecated Use <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code> to manage retrieving and updating a
-Customer. You will no longer need to deserialize an <code><a href="../Classes/STPCustomer.html">STPCustomer</a></code>.</p>
+                        <p>Initialize a customer deserializer. The <code>data</code>, <code>urlResponse</code>, and <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> 
+parameters are intended to be passed from an <code>NSURLSessionDataTask</code> callback. 
+After it has been initialized, you can inspect the <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> and <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)customer">customer</a></code> 
+properties to see if the deserialization was successful. If <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> is nil, 
+<code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)customer">customer</a></code> will be non-nil (and vice versa).</p>
 
                       </div>
                       <div class="declaration">
@@ -477,7 +478,8 @@ Customer. You will no longer need to deserialize an <code><a href="../Classes/ST
                               </td>
                               <td>
                                 <div>
-                                  <p>Any error that occurred from the URL session task (if this is non-nil, the <code>error</code> property will be set to this value after initialization).</p>
+                                  <p>Any error that occurred from the URL session task (if this 
+is non-nil, the <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> property will be set to this value after initialization).</p>
                                 </div>
                               </td>
                             </tr>
@@ -485,7 +487,7 @@ Customer. You will no longer need to deserialize an <code><a href="../Classes/ST
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPCustomer.h#L77-L79">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPCustomer.h#L76-L78">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -503,10 +505,10 @@ Customer. You will no longer need to deserialize an <code><a href="../Classes/ST
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initializes a customer deserializer with a JSON dictionary. This JSON should be in the exact same format as what the Stripe API returns. If it&rsquo;s successfully parsed, the <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)customer">customer</a></code> parameter will be present after initialization; otherwise <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> will be present.</p>
-
-<p>@deprecated Use <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code> to manage retrieving and updating a
-Customer. You will no longer need to deserialize an <code><a href="../Classes/STPCustomer.html">STPCustomer</a></code>.</p>
+                        <p>Initializes a customer deserializer with a JSON dictionary. This JSON should be 
+in the exact same format as what the Stripe API returns. If it&rsquo;s successfully 
+parsed, the <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)customer">customer</a></code> parameter will be present after initialization; 
+otherwise <code><a href="../Classes/STPCustomerDeserializer.html#/c:objc(cs)STPCustomerDeserializer(py)error">error</a></code> will be present.</p>
 
                       </div>
                       <div class="declaration">
@@ -542,7 +544,7 @@ Customer. You will no longer need to deserialize an <code><a href="../Classes/ST
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPCustomer.h#L89">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPCustomer.h#L88">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -577,7 +579,7 @@ Customer. You will no longer need to deserialize an <code><a href="../Classes/ST
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPCustomer.h#L94">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPCustomer.h#L93">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -612,7 +614,7 @@ Customer. You will no longer need to deserialize an <code><a href="../Classes/ST
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPCustomer.h#L99">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPCustomer.h#L98">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -625,8 +627,8 @@ Customer. You will no longer need to deserialize an <code><a href="../Classes/ST
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-09-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-10-20)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
