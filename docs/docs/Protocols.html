@@ -230,7 +230,7 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="Enums.html">Enums</a>
+            <a class="nav-group-name-link" href="Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
@@ -432,7 +432,7 @@ from a JSON dictionary that was returned from the Stripe API.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPAPIResponseDecodable.h#L15-L40">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPAPIResponseDecodable.h#L15-L40">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -472,7 +472,7 @@ from a JSON dictionary that was returned from the Stripe API.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPAddCardViewController.h#L63-L83">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPAddCardViewController.h#L72-L92">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -494,12 +494,20 @@ from a JSON dictionary that was returned from the Stripe API.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>You should make your application&rsquo;s API client conform to this interface in order to use it with an <code><a href="Classes/STPPaymentContext.html">STPPaymentContext</a></code>. It provides a <q>bridge</q> from the prebuilt UI we expose (such as <code><a href="Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code>) to your backend to fetch the information it needs to power those views. To read about how to implement this protocol, see <a href="https://stripe.com/docs/mobile/ios/standard#prepare-your-api">https://stripe.com/docs/mobile/ios/standard#prepare-your-api</a> . To see examples of implementing these APIs, see MyAPIClient.swift in our example project and <a href="https://github.com/stripe/example-ios-backend">https://github.com/stripe/example-ios-backend</a> .</p>
+                        <p>Typically, you will not need to implement this protocol yourself. You
+should instead use <code><a href="Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which implements <STPBackendAPIAdapter>
+and manages retrieving and updating a Stripe customer for you.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    STPCustomerContext.h
 
-<p>@deprecated Use <code><a href="Classes/STPCustomerContext.html">STPCustomerContext</a></code>.
-Instead of providing your own backend API adapter, you can now create an
-<code><a href="Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
-Stripe customer for you. - see: STPCustomerContext.h</p>
+</div>
+
+<p>If you would prefer retrieving and updating your Stripe customer object via
+your own backend instead of using <code><a href="Classes/STPCustomerContext.html">STPCustomerContext</a></code>, you should make your 
+application&rsquo;s API client conform to this interface. It provides a <q>bridge</q> from 
+the prebuilt UI we expose (such as <code><a href="Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code>) to your
+backend to fetch the information it needs to power those views.</p>
 
                         <a href="Protocols/STPBackendAPIAdapter.html" class="slightly-smaller">See more</a>
                       </div>
@@ -517,7 +525,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L30-L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L33-L121">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -559,7 +567,7 @@ your backend, which it will use to retrieve and update a Stripe customer.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L22-L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPEphemeralKeyProvider.h#L22-L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -599,7 +607,7 @@ your backend, which it will use to retrieve and update a Stripe customer.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPFormEncodable.h#L16-L37">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPFormEncodable.h#L16-L37">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -641,7 +649,7 @@ on the validity of its contents.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L307-L379">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L307-L379">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -681,7 +689,7 @@ on the validity of its contents.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L297-L362">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L325-L390">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -725,7 +733,7 @@ Apple Pay.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentMethod.h#L43-L62">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentMethod.h#L43-L62">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -768,7 +776,7 @@ it off the navigation stack, or dismissing it).</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L125-L173">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L143-L191">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -808,7 +816,7 @@ it off the navigation stack, or dismissing it).</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L69-L100">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPShippingAddressViewController.h#L69-L100">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -854,7 +862,7 @@ as a payment source.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPSourceProtocol.h#L20-L27">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPSourceProtocol.h#L20-L27">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -867,8 +875,8 @@ as a payment source.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-09-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-10-20)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

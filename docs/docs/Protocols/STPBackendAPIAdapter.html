@@ -231,7 +231,7 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="../Enums.html">Enums</a>
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
@@ -398,12 +398,20 @@
 
                 </div>
               </div>
-            <p>You should make your application&rsquo;s API client conform to this interface in order to use it with an <code><a href="../Classes/STPPaymentContext.html">STPPaymentContext</a></code>. It provides a <q>bridge</q> from the prebuilt UI we expose (such as <code><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code>) to your backend to fetch the information it needs to power those views. To read about how to implement this protocol, see <a href="https://stripe.com/docs/mobile/ios/standard#prepare-your-api">https://stripe.com/docs/mobile/ios/standard#prepare-your-api</a> . To see examples of implementing these APIs, see MyAPIClient.swift in our example project and <a href="https://github.com/stripe/example-ios-backend">https://github.com/stripe/example-ios-backend</a> .</p>
+            <p>Typically, you will not need to implement this protocol yourself. You
+should instead use <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which implements <STPBackendAPIAdapter>
+and manages retrieving and updating a Stripe customer for you.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    STPCustomerContext.h
 
-<p>@deprecated Use <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>.
-Instead of providing your own backend API adapter, you can now create an
-<code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
-Stripe customer for you. - see: STPCustomerContext.h</p>
+</div>
+
+<p>If you would prefer retrieving and updating your Stripe customer object via
+your own backend instead of using <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, you should make your 
+application&rsquo;s API client conform to this interface. It provides a <q>bridge</q> from 
+the prebuilt UI we expose (such as <code><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></code>) to your
+backend to fetch the information it needs to power those views.</p>
 
           </div>
         </section>
@@ -425,7 +433,14 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Retrieve the cards to be displayed inside a payment context. On your backend, retrieve the Stripe customer associated with your currently logged-in user (see <a href="https://stripe.com/docs/api#retrieve_customer">https://stripe.com/docs/api#retrieve_customer</a> ), and return the raw JSON response from the Stripe API. (For an example Ruby implementation of this API, see <a href="https://github.com/stripe/example-ios-backend/blob/master/web.rb#L40">https://github.com/stripe/example-ios-backend/blob/master/web.rb#L40</a> ). Back in your iOS app, after you&rsquo;ve called this API, deserialize your API response into an <code><a href="../Classes/STPCustomer.html">STPCustomer</a></code> object (you can use the <code><a href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a></code> class to do this). See MyAPIClient.swift in our example project to see this in action.</p>
+                        <p>Retrieve the cards to be displayed inside a payment context. </p>
+
+<p>If you are not using STPCustomerContext:
+On your backend, retrieve the Stripe customer associated with your currently 
+logged-in user ( <a href="https://stripe.com/docs/api#retrieve_customer">https://stripe.com/docs/api#retrieve_customer</a> ), and return
+the raw JSON response from the Stripe API. Back in your iOS app, after you&rsquo;ve 
+called this API, deserialize your API response into an <code><a href="../Classes/STPCustomer.html">STPCustomer</a></code> object
+(you can use the <code><a href="../Classes/STPCustomerDeserializer.html">STPCustomerDeserializer</a></code> class to do this).</p>
 <div class="aside aside-see">
     <p class="aside-title">See</p>
     STPCard
@@ -466,7 +481,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L48">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -484,7 +499,14 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Adds a payment source to a customer. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Update Customer method on that customer as described at <a href="https://stripe.com/docs/api#update_customer">https://stripe.com/docs/api#update_customer</a> (for an example Ruby implementation of this API, see <a href="https://github.com/stripe/example-ios-backend/blob/master/web.rb#L60">https://github.com/stripe/example-ios-backend/blob/master/web.rb#L60</a> ). If this API call succeeds, call <code>completion(nil)</code>. Otherwise, call <code>completion(error)</code> with the error that occurred.</p>
+                        <p>Adds a payment source to a customer. </p>
+
+<p>If you are implementing your own <STPBackendAPIAdapter>:
+On your backend, retrieve the Stripe customer associated with your logged-in user. 
+Then, call the Update Customer method on that customer
+( <a href="https://stripe.com/docs/api#update_customer">https://stripe.com/docs/api#update_customer</a> ). If this API call succeeds,
+call <code>completion(nil)</code>. Otherwise, call <code>completion(error)</code> with the error that
+occurred.</p>
 
                       </div>
                       <div class="declaration">
@@ -525,7 +547,9 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>call this callback when you&rsquo;re done adding the token to the customer on your backend. For example, <code>completion(nil)</code> (if your call succeeds) or <code>completion(error)</code> if an error is returned.</p>
+                                  <p>call this callback when you&rsquo;re done adding the token to the 
+customer on your backend. For example, <code>completion(nil)</code> (if your call succeeds) 
+or <code>completion(error)</code> if an error is returned.</p>
                                 </div>
                               </td>
                             </tr>
@@ -533,7 +557,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L46">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L65">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -551,7 +575,14 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Change a customer&rsquo;s <code>default_source</code> to be the provided card. On your backend, retrieve the Stripe customer associated with your logged-in user. Then, call the Customer Update method as described at <a href="https://stripe.com/docs/api#update_customer">https://stripe.com/docs/api#update_customer</a> , specifying default_source to be the value of source.stripeID (for an example Ruby implementation of this API, see <a href="https://github.com/stripe/example-ios-backend/blob/master/web.rb#L82">https://github.com/stripe/example-ios-backend/blob/master/web.rb#L82</a> ). If this API call succeeds, call <code>completion(nil)</code>. Otherwise, call <code>completion(error)</code> with the error that occurred.</p>
+                        <p>Change a customer&rsquo;s <code>default_source</code> to be the provided card. </p>
+
+<p>If you are implementing your own <STPBackendAPIAdapter>:
+On your backend, retrieve the Stripe customer associated with your logged-in user.
+Then, call the Customer Update method ( <a href="https://stripe.com/docs/api#update_customer">https://stripe.com/docs/api#update_customer</a> )
+specifying default_source to be the value of source.stripeID. If this API call 
+succeeds, call <code>completion(nil)</code>. Otherwise, call <code>completion(error)</code> with the 
+error that occurred.</p>
 
                       </div>
                       <div class="declaration">
@@ -592,7 +623,9 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>call this callback when you&rsquo;re done selecting the new default source for the customer on your backend. For example, <code>completion(nil)</code> (if your call succeeds) or <code>completion(error)</code> if an error is returned.</p>
+                                  <p>call this callback when you&rsquo;re done selecting the new default 
+source for the customer on your backend. For example, <code>completion(nil)</code> (if 
+your call succeeds) or <code>completion(error)</code> if an error is returned.</p>
                                 </div>
                               </td>
                             </tr>
@@ -600,7 +633,163 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L54">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L82">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)STPBackendAPIAdapter(im)detachSourceFromCustomer:completion:"></a>
+                    <a name="//apple_ref/objc/Method/-detachSourceFromCustomer:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)detachSourceFromCustomer:completion:">-detachSourceFromCustomer:completion:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Deletes the given source from the customer.</p>
+
+<p>If you are implementing your own <STPBackendAPIAdapter>:
+On your backend, retrieve the Stripe customer associated with your logged-in user.
+Then, call the Delete Card method ( <a href="https://stripe.com/docs/api#delete_card">https://stripe.com/docs/api#delete_card</a> )
+specifying id to be the value of source.stripeID. If this API call
+succeeds, call <code>completion(nil)</code>. Otherwise, call <code>completion(error)</code> with the
+error that occurred.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">detachSourceFromCustomer</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">source</span>
+                      <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">detachSource</span><span class="p">(</span><span class="n">fromCustomer</span> <span class="nv">source</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPSourceProtocol.html">STPSourceProtocol</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>source</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The source to delete from the customer</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>call this callback when you&rsquo;re done deleting the source from
+the customer on your backend. For example, <code>completion(nil)</code> (if your call
+succeeds) or <code>completion(error)</code> if an error is returned.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L101">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)STPBackendAPIAdapter(im)updateCustomerWithShippingAddress:completion:"></a>
+                    <a name="//apple_ref/objc/Method/-updateCustomerWithShippingAddress:completion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)STPBackendAPIAdapter(im)updateCustomerWithShippingAddress:completion:">-updateCustomerWithShippingAddress:completion:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sets the given shipping address on the customer.</p>
+
+<p>If you are implementing your own <STPBackendAPIAdapter>:
+On your backend, retrieve the Stripe customer associated with your logged-in user.
+Then, call the Customer Update method ( <a href="https://stripe.com/docs/api#update_customer">https://stripe.com/docs/api#update_customer</a> )
+specifying shipping to be the given shipping address. If this API call succeeds, 
+call <code>completion(nil)</code>. Otherwise, call <code>completion(error)</code> with the error that occurred.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    <p><a href="https://stripe.com/docs/api#update_customer">https://stripe.com/docs/api#update_customer</a></p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">updateCustomerWithShippingAddress</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">shipping</span>
+                               <span class="nf">completion</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a></span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">updateCustomer</span><span class="p">(</span><span class="n">withShippingAddress</span> <span class="nv">shipping</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kt"><a href="../Type Definitions.html#/c:STPBlocks.h@T@STPErrorBlock">STPErrorBlock</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>shipping</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The shipping address to set on the customer</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>call this callback when you&rsquo;re done updating the customer on
+your backend. For example, <code>completion(nil)</code> (if your call succeeds) or
+<code>completion(error)</code> if an error is returned.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPBackendAPIAdapter.h#L119">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -613,8 +802,8 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-09-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-10-20)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

@@ -231,7 +231,7 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="../Enums.html">Enums</a>
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPBankAccountHolderType.html">STPBankAccountHolderType</a>
@@ -469,7 +469,7 @@ and modify its Stripe customer. - see: STPCustomerContext.h</p>
                         <p>the newly-instantiated payment context</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -490,6 +490,11 @@ and modify its Stripe customer. - see: STPCustomerContext.h</p>
                         <p>Initializes a new Payment Context with the provided customer context, configuration,
 and theme. After this class is initialized, you should also make sure to set its 
 <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)delegate">delegate</a></code> and <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code> properties.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    STPPaymentConfiguration.h
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -533,7 +538,8 @@ and modify its Stripe customer. - see: STPCustomerContext.h</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The configuration for the payment context to use. This lets you set your Stripe publishable API key, required billing address fields, etc. - see: STPPaymentConfiguration.h</p>
+                                  <p>The configuration for the payment context to use. This 
+lets you set your Stripe publishable API key, required billing address fields, etc.</p>
                                 </div>
                               </td>
                             </tr>
@@ -545,7 +551,8 @@ and modify its Stripe customer. - see: STPCustomerContext.h</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The theme describing the visual appearance of all UI that the payment context automatically creates for you. - see: STPTheme.h</p>
+                                  <p>The theme describing the visual appearance of all UI 
+that the payment context automatically creates for you. - see: STPTheme.h</p>
                                 </div>
                               </td>
                             </tr>
@@ -557,7 +564,7 @@ and modify its Stripe customer. - see: STPCustomerContext.h</p>
                         <p>the newly-instantiated payment context</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L57-L59">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L60-L62">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -575,12 +582,12 @@ and modify its Stripe customer. - see: STPCustomerContext.h</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This is a convenience initializer; it is equivalent to calling <code>initWithAPIAdapter:apiAdapter configuration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]</code>.</p>
-
-<p>@deprecated Use <code>initWithCustomerContext:</code>.
-Instead of providing your own backend API adapter, you can now create an
+                        <p>Note: Instead of providing your own backend API adapter, we recommend using
 <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
 Stripe customer for you. - see: STPCustomerContext.h</p>
+
+<p>This is a convenience initializer; it is equivalent to calling 
+<code>initWithAPIAdapter:apiAdapter configuration:[STPPaymentConfiguration sharedConfiguration] theme:[STPTheme defaultTheme]</code>.</p>
 
                       </div>
                       <div class="declaration">
@@ -598,7 +605,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L69">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L72">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -616,12 +623,18 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initializes a new Payment Context with the provided API adapter and configuration. After this class is initialized, you should also make sure to set its <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)delegate">delegate</a></code> and <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code> properties.</p>
-
-<p>@deprecated Use <code>initWithCustomerContext:configuration:theme:</code>.
-Instead of providing your own backend API adapter, you can now create an
+                        <p>Note: Instead of providing your own backend API adapter, we recommend using
 <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
 Stripe customer for you. - see: STPCustomerContext.h</p>
+
+<p>Initializes a new Payment Context with the provided API adapter and configuration. 
+After this class is initialized, you should also make sure to set its <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)delegate">delegate</a></code> 
+and <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code> properties.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    STPPaymentConfiguration.h
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -652,7 +665,9 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The API adapter the payment context will use to fetch and modify its contents. You need to make a class conforming to this protocol that talks to your server. - see: STPBackendAPIAdapter.h</p>
+                                  <p>The API adapter the payment context will use to fetch and 
+modify its contents. You need to make a class conforming to this protocol that 
+talks to your server. - see: STPBackendAPIAdapter.h</p>
                                 </div>
                               </td>
                             </tr>
@@ -664,7 +679,8 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The configuration for the payment context to use. This lets you set your Stripe publishable API key, required billing address fields, etc. - see: STPPaymentConfiguration.h</p>
+                                  <p>The configuration for the payment context to use. This lets 
+you set your Stripe publishable API key, required billing address fields, etc.</p>
                                 </div>
                               </td>
                             </tr>
@@ -676,7 +692,8 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The theme describing the visual appearance of all UI that the payment context automatically creates for you. - see: STPTheme.h</p>
+                                  <p>The theme describing the visual appearance of all UI that 
+the payment context automatically creates for you. - see: STPTheme.h</p>
                                 </div>
                               </td>
                             </tr>
@@ -688,7 +705,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         <p>the newly-instantiated payment context</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L85-L87">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L94-L96">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -706,12 +723,17 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The API adapter the payment context will use to fetch and modify its contents. You need to make a class conforming to this protocol that talks to your server. - see: STPBackendAPIAdapter.h</p>
-
-<p>@deprecated Use <code>customerContext</code>.
-Instead of providing your own backend API adapter, you can now  create an
+                        <p>Note: Instead of providing your own backend API adapter, we recommend using
 <code><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></code>, which will manage retrieving and updating a
 Stripe customer for you. - see: STPCustomerContext.h</p>
+
+<p>The API adapter the payment context will use to fetch and modify its contents. 
+You need to make a class conforming to this protocol that talks to your server. </p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    STPBackendAPIAdapter.h
+
+</div>
 
                       </div>
                       <div class="declaration">
@@ -728,7 +750,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L97">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L107">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -763,7 +785,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L102">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L112">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -798,7 +820,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L107">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L117">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -834,7 +856,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L112">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L122">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -869,7 +891,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L117">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L127">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -905,7 +927,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L122">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L132">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -940,7 +962,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L127">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L137">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -976,7 +998,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L132">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L142">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1012,7 +1034,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L137">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L147">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1048,7 +1070,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L142">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L152">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1084,7 +1106,7 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L147">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L157">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1138,7 +1160,7 @@ shipping address. To change this behavior, you can set
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L171">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L181">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1187,7 +1209,7 @@ The other will be automatically calculated on demand using your <code><a href=".
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L184">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L194">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1229,7 +1251,7 @@ or <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L193">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L203">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1276,7 +1298,7 @@ payment requests.
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L203">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L213">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1327,7 +1349,7 @@ The other will be automatically calculated on demand using your <code><a href=".
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L216">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L226">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1366,7 +1388,88 @@ The default value is <code>UIModalPresentationFullScreen</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L224">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L234">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPPaymentContext(py)paymentMethodsViewControllerFooterView"></a>
+                    <a name="//apple_ref/objc/Property/paymentMethodsViewControllerFooterView" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentContext(py)paymentMethodsViewControllerFooterView">paymentMethodsViewControllerFooterView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A view that will be placed as the footer of the payment methods selection 
+view controller.</p>
+
+<p>When the footer view needs to be resized, it will be sent a
+<code>sizeThatFits:</code> call. The view should respond correctly to this method in order
+to be sized and positioned properly.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
+    <span class="n">UIView</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">paymentMethodsViewControllerFooterView</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">paymentMethodsViewControllerFooterView</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L244">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPPaymentContext(py)addCardViewControllerFooterView"></a>
+                    <a name="//apple_ref/objc/Property/addCardViewControllerFooterView" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentContext(py)addCardViewControllerFooterView">addCardViewControllerFooterView</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A view that will be placed as the footer of the add card view controller.</p>
+
+<p>When the footer view needs to be resized, it will be sent a
+<code>sizeThatFits:</code> call. The view should respond correctly to this method in order
+to be sized and positioned properly.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
+    <span class="n">UIView</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">addCardViewControllerFooterView</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">addCardViewControllerFooterView</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L253">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1404,7 +1507,7 @@ will be called again (and you can again call this to keep retrying, etc).</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L232">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L261">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1447,7 +1550,7 @@ when the user is done selecting their payment method.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L242">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L271">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1490,7 +1593,7 @@ automatically when the user is done selecting their payment method.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L252">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L281">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1534,7 +1637,7 @@ entering their shipping info.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L263">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L292">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1578,7 +1681,7 @@ user is done entering their shipping info.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L274">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L303">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1626,7 +1729,7 @@ context&rsquo;s <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPP
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.3.0/Stripe/PublicHeaders/STPPaymentContext.h#L289">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v11.4.0/Stripe/PublicHeaders/STPPaymentContext.h#L318">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1639,8 +1742,8 @@ context&rsquo;s <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPP
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-09-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-10-20)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
