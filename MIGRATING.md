@@ -1,6 +1,9 @@
 ## Migration Guides
 
-### Migration from versions < 11.3.0
+### Migrating from versions < 11.4.0
+* The `STPBackendAPIAdapter` protocol and all associated methods are no longer deprecated. We still recommend using `STPCustomerContext` to update a Stripe customer object on your behalf, rather than using your own implementation of `STPBackendAPIAdapter`.
+
+### Migrating from versions < 11.3.0
 * Changes to  `STPCard`, `STPCardParams`, `STPBankAccount`, and `STPBankAccountParams`
   * `STPCard` no longer subclasses from `STPCardParams`. You must now specifically create `STPCardParams` objects to create new tokens.
   * `STPBankAccount` no longer subclasses from `STPBankAccountParams`.
@@ -12,7 +15,7 @@
 ### Migrating from versions < 11.2.0
 * `STPCustomer`'s `shippingAddress` property is now correctly annotated as nullable. Its type is an optional (`STPAddress?`) in Swift.
 
-### Migration from versions < 11.0.0
+### Migrating from versions < 11.0.0
 - We've greatly simplified the integration for `STPPaymentContext`. In order to migrate to the new `STPPaymentContext` integration using ephemeral keys, you'll need to:
   1. On your backend, add a new endpoint that creates an ephemeral key for the Stripe customer associated with your user, and returns its raw JSON. Note that you should _not_ remove the 3 endpoints you added for your initial PaymentContext integration until you're ready to drop support for previous versions of your app.
   2. In your app, make your API client class conform to `STPEphemeralKeyProvider` by adding a method that requests an ephemeral key from the endpoint you added in (1).

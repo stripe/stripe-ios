@@ -1,8 +1,10 @@
-## 11.x.x 2017-XX-XX
-
+## 11.4.4 2017-10-20
 * Restores `[STPCard brandFromString:]` method which was marked as deprecated in a recent version [#801](https://github.com/stripe/stripe-ios/pull/801)
 * Adds `[STPBankAccount metadata]` and `[STPCard metadata]` read-only accessors and improves annotation for `[STPSource metadata]` [#808](https://github.com/stripe/stripe-ios/pull/808)
-* Un-deprecates `STPBackendAPIAdapter` and all associated methods.
+* Un-deprecates `STPBackendAPIAdapter` and all associated methods. [#813](https://github.com/stripe/stripe-ios/pull/813)
+* The `STPBackendAPIAdapter` protocol now includes two optional methods, `detachSourceFromCustomer` and `updateCustomerWithShipping`. If you've implemented a class conforming to `STPBackendAPIAdapter`, you may add implementations of these methods to support deleting cards from a customer and saving shipping info to a customer. [#813](https://github.com/stripe/stripe-ios/pull/813)
+* Adds the ability to set custom footers on view controllers managed by the SDK. [#792](https://github.com/stripe/stripe-ios/pull/792)
+* `STPPaymentMethodsViewController` will now display saved card sources in addition to saved card tokens. [#810](https://github.com/stripe/stripe-ios/pull/810)
 
 ## 11.3.0 2017-09-13
 * Adds support for creating `STPSourceParams` for P24 source [#779](https://github.com/stripe/stripe-ios/pull/779)
