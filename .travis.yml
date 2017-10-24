@@ -80,7 +80,7 @@ matrix:
       - TEST_TYPE=analyzer
 
 before_install:
-- SIMULATOR_ID=$(xcrun instruments -s | grep -o $SIMULATOR_NAME \[.*\]" | grep -o
+- SIMULATOR_ID=$(xcrun instruments -s | grep -o "$SIMULATOR_NAME \[.*\]" | grep -o
   "\[.*\]" | sed "s/^\[\(.*\)\]$/\1/")
 script:
 - open -a "simulator" --args -CurrentDeviceUDID $SIMULATOR_ID
