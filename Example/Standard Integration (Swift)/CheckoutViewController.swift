@@ -247,6 +247,8 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.present(alertController, animated: true, completion: nil)
     }
 
+    // Note: this delegate method is optional. If you do not need to collect a
+    // shipping method from your user, you should not implement this method.
     func paymentContext(_ paymentContext: STPPaymentContext, didUpdateShippingAddress address: STPAddress, completion: @escaping STPShippingMethodsCompletionBlock) {
         let upsGround = PKShippingMethod()
         upsGround.amount = 0
