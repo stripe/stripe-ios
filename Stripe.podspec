@@ -14,4 +14,5 @@ Pod::Spec.new do |s|
   s.public_header_files            = 'Stripe/PublicHeaders/*.h'
   s.source_files                   = 'Stripe/PublicHeaders/*.h', 'Stripe/*.{h,m}'
   s.ios.resource_bundle            = { 'Stripe' => 'Stripe/Resources/**/*' }
+  s.compiler_flags                 = '-Wno-unguarded-availability'
 end
