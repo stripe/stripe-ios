@@ -1,6 +1,7 @@
 use_frameworks!
 
 target 'CocoapodsTest' do
+	platform :ios, '8.0'
 	use_frameworks!
 	pod 'Stripe', path: '../../../..'
 end
