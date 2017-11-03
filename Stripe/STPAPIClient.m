@@ -414,8 +414,8 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
     [paymentRequest setMerchantIdentifier:merchantIdentifier];
     [paymentRequest setSupportedNetworks:[self supportedPKPaymentNetworks]];
     [paymentRequest setMerchantCapabilities:PKMerchantCapability3DS];
-    [paymentRequest setCountryCode:countryCode];
-    [paymentRequest setCurrencyCode:currencyCode];
+    [paymentRequest setCountryCode:countryCode.uppercaseString];
+    [paymentRequest setCurrencyCode:currencyCode.uppercaseString];
     return paymentRequest;
 }
 
