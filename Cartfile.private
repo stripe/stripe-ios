@@ -1,1 +1,2 @@
 github "facebook/ios-snapshot-test-case"
+github "erikdoe/ocmock"
