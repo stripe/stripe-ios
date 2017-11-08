@@ -182,7 +182,7 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
  @parameter desiredFields The billing address information the caller is interested in.
  @return YES if there is any data in this STPAddress that's relevant for those fields.
  */
-- (BOOL)containsContentForFields:(STPBillingAddressFields)desiredFields;
+- (BOOL)containsContentForBillingAddressFields:(STPBillingAddressFields)desiredFields;
 
 /**
  Checks if this STPAddress has the level of valid address information

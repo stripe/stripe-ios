@@ -275,7 +275,7 @@ NSString *stringIfHasContentsElseNil(NSString *string);
     return containsFields;
 }
 
-- (BOOL)containsContentForFields:(STPBillingAddressFields)desiredFields {
+- (BOOL)containsContentForBillingAddressFields:(STPBillingAddressFields)desiredFields {
     switch (desiredFields) {
         case STPBillingAddressFieldsNone:
             return NO;

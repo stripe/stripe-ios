@@ -148,7 +148,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     BOOL requiredFields = self.configuration.requiredBillingAddressFields;
     BOOL needsAddress = requiredFields != STPBillingAddressFieldsNone && !self.addressViewModel.isValid;
     BOOL buttonVisible = (needsAddress &&
-                          [self.shippingAddress containsContentForFields:requiredFields]
+                          [self.shippingAddress containsContentForBillingAddressFields:requiredFields]
                           && !self.hasUsedShippingAddress);
     addressHeaderView.buttonHidden = !buttonVisible;
     [addressHeaderView setNeedsLayout];
