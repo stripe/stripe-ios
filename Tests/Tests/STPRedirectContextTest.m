@@ -27,9 +27,18 @@
 /*
  NOTE:
 
- If you are adding a test unsubscribe from notifications is called before your
- test ends. Otherwise notifications fired from other tests can cause a reaction
- in an earlier, completed test and cause strange failures.
+ If you are adding a test make sure your context unsubscribes from notifications
+ before your test ends. Otherwise notifications fired from other tests can cause
+ a reaction in an earlier, completed test and cause strange failures.
+
+ Possible ways to do this:
+ 1. Your sut should already be calling unsubscribe, verified by OCMVerify
+     - you're good
+ 2. Your sut doesn't call unsubscribe as part of the test but it's not explicitly
+     disallowed - call [sut unsubscribeFromNotifications] at the end of your test
+ 3. Your sut doesn't call unsubscribe and you explicitly OCMReject it firing
+     - call [self unsubscribeContext:context] at the end of your test (use
+     the original context object here and _NOT_ the sut or it will not work).
  */
 @implementation STPRedirectContextTest
 
