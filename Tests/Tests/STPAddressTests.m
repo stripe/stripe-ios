@@ -571,8 +571,8 @@
     XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldEmail]);
     XCTAssertTrue([address containsContentForShippingAddressFields:PKAddressFieldPostalAddress]);
 
-    XCTAssertTrue([address containsContentForShippingAddressFields:PKAddressFieldName | PKAddressFieldEmail]);
-    XCTAssertTrue([address containsContentForShippingAddressFields:PKAddressFieldPhone | PKAddressFieldEmail]);
+    XCTAssertTrue([address containsContentForShippingAddressFields:(PKAddressField)(PKAddressFieldName|PKAddressFieldEmail)]);
+    XCTAssertTrue([address containsContentForShippingAddressFields:(PKAddressField)(PKAddressFieldPhone|PKAddressFieldEmail)]);
     XCTAssertTrue([address containsContentForShippingAddressFields:PKAddressFieldAll]);
 
 }
