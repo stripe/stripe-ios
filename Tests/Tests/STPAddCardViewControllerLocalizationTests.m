@@ -51,6 +51,7 @@
     STPAddCardViewController *addCardVC = [[STPAddCardViewController alloc] initWithConfiguration:config
                                                                                             theme:[STPTheme defaultTheme]];
     addCardVC.shippingAddress = [STPAddress new];
+    addCardVC.shippingAddress.line1 = @"1"; // trigger "use shipping address" button
     
     UINavigationController *navController = [UINavigationController new];
     navController.view.frame = CGRectMake(0, 0, 320, 750);

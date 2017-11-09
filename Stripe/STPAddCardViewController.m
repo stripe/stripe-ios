@@ -145,7 +145,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     }
     [addressHeaderView.button addTarget:self action:@selector(useShippingAddress:)
                        forControlEvents:UIControlEventTouchUpInside];
-    BOOL requiredFields = self.configuration.requiredBillingAddressFields;
+    STPBillingAddressFields requiredFields = self.configuration.requiredBillingAddressFields;
     BOOL needsAddress = requiredFields != STPBillingAddressFieldsNone && !self.addressViewModel.isValid;
     BOOL buttonVisible = (needsAddress &&
                           [self.shippingAddress containsContentForBillingAddressFields:requiredFields]
