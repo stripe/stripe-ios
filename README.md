@@ -28,7 +28,7 @@ If you're reading this on GitHub.com, please make sure you are looking at the [t
 
 ## Requirements
 
-The Stripe iOS SDK is compatible with apps supporting iOS 8 and above and requires Xcode 8 to build from source.
+The Stripe iOS SDK is compatible with apps supporting iOS 8 and above and requires Xcode 8 or Xcode 9 to build from source.
 
 ## Getting Started
 
@@ -49,7 +49,7 @@ To try out any of these examples, clone this repository, open `Stripe.xcworkspac
 1. Execute `./setup.sh` from the root of the repository to build the necessary dependencies.
 2. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds). Then go to https://dashboard.stripe.com/account/apikeys.
 3. Replace the `stripePublishableKey` constant in CheckoutViewController.swift (for the Standard Integration app) or Constants.m (for the Custom Integration app) with your Test Publishable Key.
-4. Head to https://github.com/stripe/example-ios-backend/tree/v11.0.0 and click "Deploy to Heroku" (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under 'Env'. Click "Deploy for Free".
+4. Head to https://github.com/stripe/example-ios-backend and click "Deploy to Heroku" (you may have to sign up for a Heroku account as part of this process). Provide your Stripe test secret key for the STRIPE_TEST_SECRET_KEY field under 'Env'. Click "Deploy for Free".
 5. Replace the `backendBaseURL` variable in the example iOS app with the app URL Heroku provides you with (e.g. "https://my-example-app.herokuapp.com")
 
 After this is done, you can make test payments through the app and see them in your Stripe dashboard. Head to https://stripe.com/docs/testing#cards for a list of test card numbers.

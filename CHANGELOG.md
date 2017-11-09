@@ -1,3 +1,10 @@
+## 11.5.0 2017-11-09
+* Adds a new helper method to `STPSourceParams` for creating reusable Alipay sources. [#811](https://github.com/stripe/stripe-ios/pull/811)
+* Silences spurious availability warnings when using Xcode9 [#823](https://github.com/stripe/stripe-ios/pull/823)
+* Auto capitalizes currency code when using `paymentRequestWithMerchantIdentifier ` to improve compatibility with iOS 11 `PKPaymentAuthorizationViewController` [#829](https://github.com/stripe/stripe-ios/pull/829)
+* Fixes a bug in `STPRedirectContext` which caused `SFSafariViewController`-based redirects to incorrectly dismiss when switching apps. [#833](https://github.com/stripe/stripe-ios/pull/833)
+* Fixes a bug that incorrectly offered users the option to "Use Billing Address" on the shipping address screen when there was no existing billing address to fill in. [#834](https://github.com/stripe/stripe-ios/pull/834)
+
 ## 11.4.0 2017-10-20
 * Restores `[STPCard brandFromString:]` method which was marked as deprecated in a recent version [#801](https://github.com/stripe/stripe-ios/pull/801)
 * Adds `[STPBankAccount metadata]` and `[STPCard metadata]` read-only accessors and improves annotation for `[STPSource metadata]` [#808](https://github.com/stripe/stripe-ios/pull/808)
