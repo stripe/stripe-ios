@@ -275,6 +275,19 @@ NSString *stringIfHasContentsElseNil(NSString *string);
     return containsFields;
 }
 
+- (BOOL)containsContentForBillingAddressFields:(STPBillingAddressFields)desiredFields {
+    switch (desiredFields) {
+        case STPBillingAddressFieldsNone:
+            return NO;
+        case STPBillingAddressFieldsZip:
+            return self.postalCode.length > 0;
+        case STPBillingAddressFieldsFull:
+            return [self hasPartialPostalAddress];
+    }
+
+    return NO;
+}
+
 - (BOOL)containsRequiredShippingAddressFields:(PKAddressField)requiredFields {
     BOOL containsFields = YES;
     if (requiredFields & PKAddressFieldName) {
@@ -292,6 +305,13 @@ NSString *stringIfHasContentsElseNil(NSString *string);
     return containsFields;
 }
 
+- (BOOL)containsContentForShippingAddressFields:(PKAddressField)desiredFields {
+    return (((desiredFields & PKAddressFieldName) && self.name.length > 0)
+            || ((desiredFields & PKAddressFieldEmail) && self.email.length > 0)
+            || ((desiredFields & PKAddressFieldPhone) && self.phone.length > 0)
+            || ((desiredFields & PKAddressFieldPostalAddress) && [self hasPartialPostalAddress]));
+}
+
 - (BOOL)hasValidPostalAddress {
     return (self.line1.length > 0 
             && self.city.length > 0 
@@ -299,6 +319,21 @@ NSString *stringIfHasContentsElseNil(NSString *string);
             && (self.state.length > 0 || ![self.country isEqualToString:@"US"])  
             && ([STPPostalCodeValidator validationStateForPostalCode:self.postalCode
                                                          countryCode:self.country] == STPCardValidationStateValid));
+}
+
+/**
+ Does this STPAddress contain any data in the postal address fields?
+
+ If they are all empty or nil, returns NO. Even a single character in a
+ single field will return YES.
+ */
+- (BOOL)hasPartialPostalAddress {
+    return (self.line1.length > 0
+            || self.line2.length > 0
+            || self.city.length > 0
+            || self.country.length > 0
+            || self.state.length > 0
+            || self.postalCode.length > 0);
 }
 
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields {

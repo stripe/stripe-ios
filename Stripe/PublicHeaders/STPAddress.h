@@ -167,6 +167,24 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
 - (BOOL)containsRequiredFields:(STPBillingAddressFields)requiredFields;
 
 /**
+ Checks if this STPAddress has any content (possibly invalid) in any of the
+ desired billing address fields.
+
+ Where `containsRequiredFields:` validates that this STPAddress contains valid data in
+ all of the required fields, this method checks for the existence of *any* data.
+
+ For example, if `desiredFields` is `STPBillingAddressFieldsZip`, this will check
+ if the postalCode is empty.
+
+ Note: When `desiredFields == STPBillingAddressFieldsNone`, this method always returns
+ NO.
+
+ @parameter desiredFields The billing address information the caller is interested in.
+ @return YES if there is any data in this STPAddress that's relevant for those fields.
+ */
+- (BOOL)containsContentForBillingAddressFields:(STPBillingAddressFields)desiredFields;
+
+/**
  Checks if this STPAddress has the level of valid address information
  required by the passed in setting.
 
@@ -176,6 +194,22 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
  NO otherwise.
  */
 - (BOOL)containsRequiredShippingAddressFields:(PKAddressField)requiredFields;
+
+/**
+ Checks if this STPAddress has any content (possibly invalid) in any of the
+ desired shipping address fields.
+
+ Where `containsRequiredShippingAddressFields:` validates that this STPAddress
+ contains valid data in all of the required fields, this method checks for the
+ existence of *any* data.
+
+ Note: When `desiredFields == PKAddressFieldNone`, this method always returns
+ NO.
+
+ @parameter desiredFields The shipping address information the caller is interested in.
+ @return YES if there is any data in this STPAddress that's relevant for those fields.
+ */
+- (BOOL)containsContentForShippingAddressFields:(PKAddressField)desiredFields;
 
 /**
  Converts an STPBillingAddressFields enum value into the closest equivalent

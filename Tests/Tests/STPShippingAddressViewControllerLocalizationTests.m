@@ -47,6 +47,7 @@
     [STPLocalizationUtils overrideLanguageTo:language];
     STPUserInformation *info = [STPUserInformation new];
     info.billingAddress = [STPAddress new];
+    info.billingAddress.email = @"@"; // trigger "use billing address" button
 
     STPShippingAddressViewController *shippingVC = [[STPShippingAddressViewController alloc] initWithConfiguration:config
                                                                                                              theme:[STPTheme defaultTheme]

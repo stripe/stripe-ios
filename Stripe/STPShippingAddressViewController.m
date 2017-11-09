@@ -137,8 +137,11 @@
                        forState:UIControlStateNormal];
     [headerView.button addTarget:self action:@selector(useBillingAddress:)
                 forControlEvents:UIControlEventTouchUpInside];
-    BOOL needsAddress = self.configuration.requiredShippingAddressFields & PKAddressFieldPostalAddress && !self.addressViewModel.isValid;
-    BOOL buttonVisible = (needsAddress && self.billingAddress != nil && !self.hasUsedBillingAddress);
+    PKAddressField requiredFields = self.configuration.requiredShippingAddressFields;
+    BOOL needsAddress = (requiredFields & PKAddressFieldPostalAddress) && !self.addressViewModel.isValid;
+    BOOL buttonVisible = (needsAddress
+                          && [self.billingAddress containsContentForShippingAddressFields:requiredFields]
+                          && !self.hasUsedBillingAddress);
     headerView.button.alpha = buttonVisible ? 1 : 0;
     [headerView setNeedsLayout];
     _addressHeaderView = headerView;
