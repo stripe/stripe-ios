@@ -27,6 +27,9 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 @property (nonatomic, strong) STPSource *source;
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
 @property (nonatomic, assign, readwrite) STPRedirectContextState state;
+
+@property (nonatomic, assign) BOOL subscribedToURLNotifications;
+@property (nonatomic, assign) BOOL subscribedToForegroundNotifications;
 @end
 
 @implementation STPRedirectContext
@@ -46,6 +49,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     if (self) {
         _source = source;
         _completion = [completion copy];
+        _subscribedToURLNotifications = NO;
+        _subscribedToForegroundNotifications = NO;
     }
     return self;
 }
@@ -116,7 +121,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
     if (self.state == STPRedirectContextStateNotStarted) {
         _state = STPRedirectContextStateInProgress;
-        [self subscribeToUrlAndForegroundNotifications];
+        [self subscribeToUrlNotifications];
         self.safariVC = [[SFSafariViewController alloc] initWithURL:self.source.redirect.url];
         self.safariVC.delegate = self;
         [presentingViewController presentViewController:self.safariVC
@@ -193,13 +198,23 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     self.completion(self.source.stripeID, self.source.clientSecret, error);
 }
 
+- (void)subscribeToUrlNotifications {
+    if (!self.subscribedToURLNotifications) {
+        self.subscribedToURLNotifications = YES;
+        [[STPURLCallbackHandler shared] registerListener:self
+                                                  forURL:self.source.redirect.returnURL];
+    }
+}
+
 - (void)subscribeToUrlAndForegroundNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleWillForegroundNotification)
-                                                 name:UIApplicationWillEnterForegroundNotification
-                                               object:nil];
-    [[STPURLCallbackHandler shared] registerListener:self
-                                              forURL:self.source.redirect.returnURL];
+    [self subscribeToUrlNotifications];
+    if (!self.subscribedToForegroundNotifications) {
+        self.subscribedToForegroundNotifications = YES;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleWillForegroundNotification)
+                                                     name:UIApplicationWillEnterForegroundNotification
+                                                   object:nil];
+    }
 }
 
 - (void)unsubscribeFromNotificationsAndDismissPresentedViewControllers {
@@ -212,6 +227,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
                                                     name:UIApplicationWillEnterForegroundNotification
                                                   object:nil];
     [[STPURLCallbackHandler shared] unregisterListener:self];
+    self.subscribedToURLNotifications = NO;
+    self.subscribedToForegroundNotifications = NO;
 }
 
 - (void)dismissPresentedViewController {

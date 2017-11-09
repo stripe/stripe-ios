@@ -152,11 +152,11 @@
         [exp fulfill];
     }];
 
-    BOOL (^tokenChecker)() = ^BOOL(id obj) {
+    BOOL (^tokenChecker)(id) = ^BOOL(id obj) {
         STPToken *token = (STPToken *)obj;
         return token.stripeID == expectedToken.stripeID;
     };
-    BOOL (^cardChecker)() = ^BOOL(id obj) {
+    BOOL (^cardChecker)(id) = ^BOOL(id obj) {
         STPCard *card = (STPCard *)obj;
         return card.stripeID == expectedToken.card.stripeID;
     };

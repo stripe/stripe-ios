@@ -13,6 +13,7 @@
 #import "STPFixtures.h"
 #import "STPRedirectContext.h"
 #import "STPURLCallbackHandler.h"
+#import "STPWeakStrongMacros.h"
 
 @interface STPRedirectContext (Testing)
 - (void)unsubscribeFromNotifications;
@@ -20,10 +21,42 @@
 @end
 
 @interface STPRedirectContextTest : XCTestCase
-
+@property (nonatomic, weak) STPRedirectContext *weak_sut;
 @end
 
+/*
+ NOTE:
+
+ If you are adding a test make sure your context unsubscribes from notifications
+ before your test ends. Otherwise notifications fired from other tests can cause
+ a reaction in an earlier, completed test and cause strange failures.
+
+ Possible ways to do this:
+ 1. Your sut should already be calling unsubscribe, verified by OCMVerify
+     - you're good
+ 2. Your sut doesn't call unsubscribe as part of the test but it's not explicitly
+     disallowed - call [sut unsubscribeFromNotifications] at the end of your test
+ 3. Your sut doesn't call unsubscribe and you explicitly OCMReject it firing
+     - call [self unsubscribeContext:context] at the end of your test (use
+     the original context object here and _NOT_ the sut or it will not work).
+ */
 @implementation STPRedirectContextTest
+
+
+/**
+ Use this to unsubscribe a context from notifications without calling
+ `sut.unsubscrbeFromNotifications` if you have OCMReject'd that method and thus
+ can't call it.
+
+ Note: You MUST pass in the actual context object here and not the mock or the
+ unsubscibe will silently fail.
+ */
+- (void)unsubscribeContext:(STPRedirectContext *)context {
+    [[NSNotificationCenter defaultCenter] removeObserver:context
+                                                    name:UIApplicationWillEnterForegroundNotification
+                                                  object:nil];
+    [[STPURLCallbackHandler shared] unregisterListener:(id<STPURLCallbackListener>)context];
+}
 
 - (void)testInitWithNonRedirectSourceReturnsNil {
     STPSource *source = [STPFixtures cardSource];
@@ -32,6 +65,39 @@
     }];
     XCTAssertNil(sut);
 }
+
+/**
+ After starting a SafariViewController redirect flow,
+ when a WillEnterForeground notification is posted, RedirectContext's completion
+ block and dismiss method should _NOT_ be called.
+ */
+- (void)testSafariViewControllerRedirectFlow_foregroundNotification {
+    id mockVC = OCMClassMock([UIViewController class]);
+    STPSource *source = [STPFixtures iDEALSource];
+
+    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
+         XCTFail(@"completion called");
+    }];
+    id sut = OCMPartialMock(context);
+
+    OCMReject([sut unsubscribeFromNotifications]);
+    OCMReject([sut dismissPresentedViewController]);
+
+    [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
+
+    BOOL(^checker)(id) = ^BOOL(id vc) {
+        if ([vc isKindOfClass:[SFSafariViewController class]]) {
+            return YES;
+        }
+        return NO;
+    };
+
+    OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
+                                   animated:YES
+                                 completion:[OCMArg any]]);
+}
+
 
 /**
  After starting a SafariViewController redirect flow,
@@ -75,7 +141,7 @@
 /**
  After starting a SafariViewController redirect flow,
  when the shared URLCallbackHandler is called with an invalid URL,
- RedirectContext's completion block and dismiss method should be called.
+ RedirectContext's completion block and dismiss method should not be called.
  */
 - (void)testSafariViewControllerRedirectFlow_callbackHandlerCalledInvalidURL {
     id mockVC = OCMClassMock([UIViewController class]);
@@ -84,6 +150,9 @@
         XCTFail(@"completion called");
     }];
     id sut = OCMPartialMock(context);
+
+    OCMReject([sut unsubscribeFromNotifications]);
+    OCMReject([sut dismissPresentedViewController]);
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
 
@@ -98,8 +167,9 @@
     OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
                                    animated:YES
                                  completion:[OCMArg any]]);
-    OCMReject([sut unsubscribeFromNotifications]);
-    OCMReject([sut dismissPresentedViewController]);
+
+
+    [self unsubscribeContext:context];
 }
 
 /**
@@ -119,6 +189,9 @@
     }];
     id sut = OCMPartialMock(context);
 
+    // dismiss should not be called – SafariVC dismisses itself when Done is tapped
+    OCMReject([sut dismissPresentedViewController]);
+
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
 
     BOOL(^checker)(id) = ^BOOL(id vc) {
@@ -133,8 +206,6 @@
                                    animated:YES
                                  completion:[OCMArg any]]);
     OCMVerify([sut unsubscribeFromNotifications]);
-    // dismiss should not be called – SafariVC dismisses itself when Done is tapped
-    OCMReject([sut dismissPresentedViewController]);
 
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
@@ -200,28 +271,6 @@
 
 /**
  After starting a SafariViewController redirect flow,
- when the RedirectContext is dealloc'd, its dismiss method should be called.
- */
-- (void)testSafariViewControllerRedirectFlow_dealloc {
-    id mockVC = OCMClassMock([UIViewController class]);
-    STPSource *source = [STPFixtures iDEALSource];
-    STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
-        XCTFail(@"completion called");
-    }];
-    id sut = OCMPartialMock(context);
-
-    [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
-    sut = nil;
-
-    OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]]
-                                   animated:YES
-                                 completion:[OCMArg any]]);
-    OCMVerify([sut unsubscribeFromNotifications]);
-    OCMVerify([sut dismissPresentedViewController]);
-}
-
-/**
- After starting a SafariViewController redirect flow,
  if no action is taken, nothing should be called.
  */
 - (void)testSafariViewControllerRedirectFlow_noAction {
@@ -232,13 +281,16 @@
     }];
     id sut = OCMPartialMock(context);
 
+    OCMReject([sut unsubscribeFromNotifications]);
+    OCMReject([sut dismissPresentedViewController]);
+
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
 
     OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]]
                                    animated:YES
                                  completion:[OCMArg any]]);
-    OCMReject([sut unsubscribeFromNotifications]);
-    OCMReject([sut dismissPresentedViewController]);
+
+    [self unsubscribeContext:context];
 }
 
 /**
@@ -276,10 +328,12 @@
     }];
     id sut = OCMPartialMock(context);
 
-    [sut startSafariAppRedirectFlow];
-
     OCMReject([sut unsubscribeFromNotifications]);
     OCMReject([sut dismissPresentedViewController]);
+
+    [sut startSafariAppRedirectFlow];
+
+    [self unsubscribeContext:context];
 }
 
 /**
@@ -302,14 +356,17 @@
                              options:[OCMArg any]
                    completionHandler:([OCMArg invokeBlockWithArgs:@YES, nil])]);
 
-    id mockVC = OCMClassMock([UIViewController class]);
-    [context startRedirectFlowFromViewController:mockVC];
-
     OCMReject([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg any]]);
     OCMReject([sut startSafariAppRedirectFlow]);
+
+    id mockVC = OCMClassMock([UIViewController class]);
+    [sut startRedirectFlowFromViewController:mockVC];
+
     OCMVerify([applicationMock openURL:[OCMArg isEqual:sourceURL]
                                options:[OCMArg isEqual:@{}]
                      completionHandler:[OCMArg isNotNil]]);
+
+    [sut unsubscribeFromNotifications];
 }
 
 /**
@@ -328,16 +385,20 @@
     id applicationMock = OCMClassMock([UIApplication class]);
     OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
 
-    id mockVC = OCMClassMock([UIViewController class]);
-    [context startRedirectFlowFromViewController:mockVC];
-
-    OCMVerify([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg isEqual:mockVC]]);
     OCMReject([applicationMock openURL:[OCMArg any]
                                options:[OCMArg any]
                      completionHandler:[OCMArg any]]);
+
+    id mockVC = OCMClassMock([UIViewController class]);
+    [sut startRedirectFlowFromViewController:mockVC];
+
+    OCMVerify([sut startSafariViewControllerRedirectFlowFromViewController:[OCMArg isEqual:mockVC]]);
+
     OCMVerify([mockVC presentViewController:[OCMArg isKindOfClass:[SFSafariViewController class]]
                                    animated:YES
                                  completion:[OCMArg isNil]]);
+
+    [sut unsubscribeFromNotifications];
 }
 
 @end
