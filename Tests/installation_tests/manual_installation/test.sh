@@ -42,33 +42,31 @@ ditto -xk \
   "${root_dir}/build/StripeiOS-Static.zip" \
   "${framework_dir}"
 
+# Determine xcodebuild simulator destination
+destination=(
+  -destination "platform=iOS Simulator,name=iPhone 6,OS=10.3.1"
+)
+
+if xcodebuild -version | grep -q "Xcode 9"; then
+  destination=(
+    -destination "platform=iOS Simulator,name=iPhone 6,OS=11.0"
+  )
+fi
+
 # Execute xcodebuild
 info "Executing xcodebuild..."
 
-xcodebuild clean build-for-testing \
+xcodebuild clean test \
   -project "${script_dir}/ManualInstallationTest.xcodeproj" \
   -scheme "ManualInstallationTest" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 6,OS=10.3.1" \
+  "${destination[@]}" \
   | xcpretty
 
 xcodebuild_build_exit_code="${PIPESTATUS[0]}"
 
 if [[ "${xcodebuild_build_exit_code}" != 0 ]]; then
   die "Executing xcodebuild failed with status code: ${xcodebuild_build_exit_code}"
-fi
-
-xcodebuild test-without-building \
-  -project "${script_dir}/ManualInstallationTest.xcodeproj" \
-  -scheme "ManualInstallationTest" \
-  -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 6,OS=10.3.1" \
-  | xcpretty
-
-xcodebuild_test_exit_code="${PIPESTATUS[0]}"
-
-if [[ "${xcodebuild_test_exit_code}" != 0 ]]; then
-  die "Executing xcodebuild failed with status code: ${xcodebuild_test_exit_code}"
 fi
 
 info "All good!"

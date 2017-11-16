@@ -21,6 +21,16 @@ if ! command -v xcpretty > /dev/null; then
   gem install xcpretty --no-ri --no-rdoc || die "Executing \`gem install xcpretty\` failed"
 fi
 
+# Verify carthage is installed
+if ! command -v carthage > /dev/null; then
+  if [[ "${CI}" != "true" ]]; then
+    die "Please install carthage: https://github.com/Carthage/Carthage#installing-carthage"
+  fi
+
+  info "Installing carthage..."
+  brew install carthage || die "Executing \`brew install carthage\` failed"
+fi
+
 # Clean carthage artifacts
 info "Cleaning carthage artifacts..."
 
@@ -56,7 +66,6 @@ xcodebuild clean build \
   -project "${script_dir}/CarthageTest.xcodeproj" \
   -scheme "CarthageTest" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 6,OS=10.3.1" \
   | xcpretty
 
 xcodebuild_exit_code="${PIPESTATUS[0]}"
