@@ -34,54 +34,53 @@ matrix:
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=lint
-  - osx_image: xcode9 ## Xcode 9, iOS 10. No analyzer, docs, or linting
+  - osx_image: xcode9.2 ## Xcode 9, iOS 10. No analyzer, docs, or linting
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_manual
-  - osx_image: xcode9
+  - osx_image: xcode9.2
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_carthage
-  - osx_image: xcode9
+  - osx_image: xcode9.2
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_cocoapods
-  - osx_image: xcode9
+  - osx_image: xcode9.2
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=installation_cocoapods_frameworks
-  - osx_image: xcode9
+  - osx_image: xcode9.2
     env:
       - SIMULATOR_NAME='iPhone 6 (10.3)'
       - TEST_TYPE=tests
-  - osx_image: xcode9 ## Xcode 9, iOS 11. No linting (fauxpas currently only does xcode 8.3 linting)
+  - osx_image: xcode9.2 ## Xcode 9, iOS 11. No linting (fauxpas currently only does xcode 8.3 linting)
     env:
-      - SIMULATOR_NAME='iPhone 6 (11.0)'
+      - SIMULATOR_NAME='iPhone 6 (11.2)'
       - TEST_TYPE=installation_manual
-  - osx_image: xcode9
+  - osx_image: xcode9.2
     env:
-      - SIMULATOR_NAME='iPhone 6 (11.0)'
+      - SIMULATOR_NAME='iPhone 6 (11.2)'
       - TEST_TYPE=installation_carthage
-  - osx_image: xcode9
+  - osx_image: xcode9.2
     env:
-      - SIMULATOR_NAME='iPhone 6 (11.0)'
+      - SIMULATOR_NAME='iPhone 6 (11.2)'
       - TEST_TYPE=installation_cocoapods
-  - osx_image: xcode9
+  - osx_image: xcode9.2
     env:
-      - SIMULATOR_NAME='iPhone 6 (11.0)'
+      - SIMULATOR_NAME='iPhone 6 (11.2)'
       - TEST_TYPE=installation_cocoapods_frameworks
-  - osx_image: xcode9
+  - osx_image: xcode9.2
     env:
-      - SIMULATOR_NAME='iPhone 6 (11.0)'
+      - SIMULATOR_NAME='iPhone 6 (11.2)'
       - TEST_TYPE=tests
-  - osx_image: xcode9
+  - osx_image: xcode9.2
     env:
-      - SIMULATOR_NAME='iPhone 6 (11.0)'
+      - SIMULATOR_NAME='iPhone 6 (11.2)'
       - TEST_TYPE=analyzer
 
 before_install:
-- SIMULATOR_ID=$(xcrun instruments -s | grep -o "$SIMULATOR_NAME \[.*\]" | grep -o
-  "\[.*\]" | sed "s/^\[\(.*\)\]$/\1/")
+- SIMULATOR_ID=$(xcrun instruments -s | grep -o "$SIMULATOR_NAME \[.*\]" | grep -o "\[.*\]" | sed "s/^\[\(.*\)\]$/\1/")
 script:
 - open -a "simulator" --args -CurrentDeviceUDID $SIMULATOR_ID
 - "./ci_scripts/check_version.rb"
@@ -89,10 +88,10 @@ script:
 - "./ci_scripts/check_category_linking.rb"
 - "./ci_scripts/check_resource_bundle.rb"
 - '[ "$TEST_TYPE" != lint ] || ./ci_scripts/check_fauxpas.sh'
-- '[ "$TEST_TYPE" != tests ] || travis_retry ./ci_scripts/run_tests.sh "$SIMULATOR_ID"'
+- '[ "$TEST_TYPE" != tests ] || travis_retry ./ci_scripts/run_tests.sh' "$SIMULATOR_ID"
 - '[ "$TEST_TYPE" != analyzer ] || ./ci_scripts/run_analyzer.sh'
-- '[ "$TEST_TYPE" != installation_cocoapods ] || ./Tests/installation_tests/cocoapods/without_frameworks/test.sh "$SIMULATOR_ID"'
-- '[ "$TEST_TYPE" != installation_cocoapods_frameworks ] || ./Tests/installation_tests/cocoapods/with_frameworks/test.sh "$SIMULATOR_ID"'
-- '[ "$TEST_TYPE" != installation_manual ] || travis_retry ./Tests/installation_tests/manual_installation/test.sh "$SIMULATOR_ID"'
-- '[ "$TEST_TYPE" != installation_carthage ] || ./Tests/installation_tests/carthage/test.sh "$SIMULATOR_ID"'
+- '[ "$TEST_TYPE" != installation_cocoapods ] || ./Tests/installation_tests/cocoapods/without_frameworks/test.sh' "$SIMULATOR_ID"
+- '[ "$TEST_TYPE" != installation_cocoapods_frameworks ] || ./Tests/installation_tests/cocoapods/with_frameworks/test.sh' "$SIMULATOR_ID"
+- '[ "$TEST_TYPE" != installation_manual ] || travis_retry ./Tests/installation_tests/manual_installation/test.sh' "$SIMULATOR_ID"
+- '[ "$TEST_TYPE" != installation_carthage ] || ./Tests/installation_tests/carthage/test.sh' "$SIMULATOR_ID"
 - '[ "$TEST_TYPE" != documentation ] || ./ci_scripts/check_documentation.sh'
