@@ -9,7 +9,8 @@ env:
   - TEST_TYPE=installation_carthage
   - TEST_TYPE=installation_cocoapods
   - TEST_TYPE=installation_cocoapods_frameworks
-  - TEST_TYPE=lint
+# Fauxpas 1.7.2 does not build our project correctly https://bitbucket.org/ali_rantakari/faux-pas/issues/117/unrecoverable-compiler-error-translation
+#  - TEST_TYPE=lint
   - TEST_TYPE=tests
   - TEST_TYPE=analyzer
   - TEST_TYPE=documentation
