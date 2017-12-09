@@ -1,3 +1,7 @@
+## 12.0.0 2017-12-XX
+* `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmap. See MIGRATING.md for more information on converting your existing code for this change.
+
+
 ## 11.5.0 2017-11-09
 * Adds a new helper method to `STPSourceParams` for creating reusable Alipay sources. [#811](https://github.com/stripe/stripe-ios/pull/811)
 * Silences spurious availability warnings when using Xcode9 [#823](https://github.com/stripe/stripe-ios/pull/823)

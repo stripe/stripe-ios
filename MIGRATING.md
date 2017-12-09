@@ -1,5 +1,13 @@
 ## Migration Guides
 
+### Migrating from versions < 12.0.0
+* `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmap.
+  * Most of the previous `PKAddressField` constants have matching `STPContactField` constants. To convert your code, switch to passing in a set of the matching constants
+    * Example: `(PKAddressField)(PKAddressFieldName|PKAddressFieldPostalAddress)` becomes `[NSSet setwithArray:@[STPContactFieldName, STPContactFieldPostalAddress]]`)
+  * Anywhere you were using `PKAddressFieldNone` you can now simply pass in `nil`
+  * If you were using `PKAddressFieldAll`, you must switch to manually listing all the fields that you want.
+  * The new constants also correspond to and work similarly to Apple's new `PKContactField` values.
+
 ### Migrating from versions < 11.4.0
 * The `STPBackendAPIAdapter` protocol and all associated methods are no longer deprecated. We still recommend using `STPCustomerContext` to update a Stripe customer object on your behalf, rather than using your own implementation of `STPBackendAPIAdapter`.
 

@@ -20,6 +20,12 @@ FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 NSString *stringIfHasContentsElseNil(NSString *string);
 
+
+STPContactField const STPContactFieldPostalAddress = @"STPContactFieldPostalAddress";
+STPContactField const STPContactFieldEmailAddress = @"STPContactFieldEmailAddress";
+STPContactField const STPContactFieldPhoneNumber = @"STPContactFieldPhoneNumber";
+STPContactField const STPContactFieldName = @"STPContactFieldName";
+
 @interface STPAddress ()
 
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
@@ -288,28 +294,29 @@ NSString *stringIfHasContentsElseNil(NSString *string);
     return NO;
 }
 
-- (BOOL)containsRequiredShippingAddressFields:(PKAddressField)requiredFields {
+- (BOOL)containsRequiredShippingAddressFields:(NSSet<STPContactField> *)requiredFields {
     BOOL containsFields = YES;
-    if (requiredFields & PKAddressFieldName) {
+
+    if ([requiredFields containsObject:STPContactFieldName]) {
         containsFields = containsFields && [self.name length] > 0;
     }
-    if (requiredFields & PKAddressFieldEmail) {
+    if ([requiredFields containsObject:STPContactFieldEmailAddress]) {
         containsFields = containsFields && [STPEmailAddressValidator stringIsValidEmailAddress:self.email];
     }
-    if (requiredFields & PKAddressFieldPhone) {
+    if ([requiredFields containsObject:STPContactFieldPhoneNumber]) {
         containsFields = containsFields && [STPPhoneNumberValidator stringIsValidPhoneNumber:self.phone forCountryCode:self.country];
     }
-    if (requiredFields & PKAddressFieldPostalAddress) {
+    if ([requiredFields containsObject:STPContactFieldPostalAddress]) {
         containsFields = containsFields && [self hasValidPostalAddress];
     }
     return containsFields;
 }
 
-- (BOOL)containsContentForShippingAddressFields:(PKAddressField)desiredFields {
-    return (((desiredFields & PKAddressFieldName) && self.name.length > 0)
-            || ((desiredFields & PKAddressFieldEmail) && self.email.length > 0)
-            || ((desiredFields & PKAddressFieldPhone) && self.phone.length > 0)
-            || ((desiredFields & PKAddressFieldPostalAddress) && [self hasPartialPostalAddress]));
+- (BOOL)containsContentForShippingAddressFields:(NSSet<STPContactField> *)desiredFields {
+    return (([desiredFields containsObject:STPContactFieldName] && self.name.length > 0)
+            || ([desiredFields containsObject:STPContactFieldEmailAddress] && self.email.length > 0)
+            || ([desiredFields containsObject:STPContactFieldPhoneNumber] && self.phone.length > 0)
+            || ([desiredFields containsObject:STPContactFieldPostalAddress] && [self hasPartialPostalAddress]));
 }
 
 - (BOOL)hasValidPostalAddress {
@@ -345,6 +352,48 @@ NSString *stringIfHasContentsElseNil(NSString *string);
         case STPBillingAddressFieldsFull:
             return PKAddressFieldPostalAddress;
     }
+}
+
++ (PKAddressField)pkAddressFieldsFromStripeContactFields:(NSSet<STPContactField> *)contactFields {
+    PKAddressField addressFields = PKAddressFieldNone;
+    NSDictionary<STPContactField, NSNumber *> *contactToAddressFieldMap
+    = @{
+        STPContactFieldPostalAddress: @(PKAddressFieldPostalAddress),
+        STPContactFieldEmailAddress: @(PKAddressFieldEmail),
+        STPContactFieldPhoneNumber: @(PKAddressFieldPhone),
+        STPContactFieldName: @(PKAddressFieldName),
+        };
+
+    for (STPContactField contactField in contactFields) {
+        NSNumber *boxedConvertedField = contactToAddressFieldMap[contactField];
+        if (boxedConvertedField) {
+            addressFields = (PKAddressField) (addressFields | [boxedConvertedField unsignedIntegerValue]);
+        }
+    }
+    return addressFields;
+}
+
++ (NSSet<PKContactField> *)pkContactFieldsFromStripeContactFields:(NSSet<STPContactField> *)contactFields API_AVAILABLE(ios(11.0)) {
+    if (contactFields == nil) {
+        return nil;
+    }
+
+    NSMutableSet<PKContactField> *pkFields = [NSMutableSet new];
+    NSDictionary<STPContactField, PKContactField> *stripeToPayKitContactMap
+    = @{
+        STPContactFieldPostalAddress: PKContactFieldPostalAddress,
+        STPContactFieldEmailAddress: PKContactFieldEmailAddress,
+        STPContactFieldPhoneNumber: PKContactFieldPhoneNumber,
+        STPContactFieldName: PKContactFieldName,
+        };
+
+    for (STPContactField contactField in contactFields) {
+        PKContactField convertedField = stripeToPayKitContactMap[contactField];
+        if (convertedField != nil) {
+            [pkFields addObject:convertedField];
+        }
+    }
+    return pkFields.copy;
 }
 
 #pragma mark STPAPIResponseDecodable

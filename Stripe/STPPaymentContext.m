@@ -508,7 +508,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 #pragma mark - Request Payment
 
 - (BOOL)requestPaymentShouldPresentShippingViewController {
-    BOOL shippingAddressRequired = self.configuration.requiredShippingAddressFields != STPBillingAddressFieldsNone;
+    BOOL shippingAddressRequired = self.configuration.requiredShippingAddressFields.count > 0;
     BOOL shippingAddressIncomplete = ![self.shippingAddress containsRequiredShippingAddressFields:self.configuration.requiredShippingAddressFields];
     BOOL shippingMethodRequired = ([self.delegate respondsToSelector:@selector(paymentContext:didUpdateShippingAddress:completion:)] && !self.selectedShippingMethod);
     BOOL verificationRequired = self.configuration.verifyPrefilledShippingAddress && self.shippingAddressNeedsVerification;
@@ -641,7 +641,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     NSArray<PKPaymentSummaryItem *> *summaryItems = self.paymentSummaryItems;
     paymentRequest.paymentSummaryItems = summaryItems;
     paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
-    paymentRequest.requiredShippingAddressFields = self.configuration.requiredShippingAddressFields;
+
+    if ([paymentRequest respondsToSelector:@selector(requiredShippingContactFields)]) {
+        paymentRequest.requiredShippingContactFields = [STPAddress pkContactFieldsFromStripeContactFields:self.configuration.requiredShippingAddressFields];
+    }
+    else {
+        paymentRequest.requiredShippingAddressFields = [STPAddress pkAddressFieldsFromStripeContactFields:self.configuration.requiredShippingAddressFields];
+    }
+
     paymentRequest.currencyCode = self.paymentCurrency.uppercaseString;
     if (self.selectedShippingMethod != nil) {
         NSMutableArray<PKShippingMethod *>* orderedShippingMethods = [self.shippingMethods mutableCopy];

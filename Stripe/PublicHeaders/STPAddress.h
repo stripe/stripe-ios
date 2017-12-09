@@ -44,6 +44,32 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
     STPBillingAddressFieldsFull,
 };
 
+
+/**
+ Constants that represent different parts of a users contact/address information.
+ */
+typedef NSString * STPContactField NS_STRING_ENUM;
+
+/**
+ The contact's full physical address.
+ */
+extern STPContactField const STPContactFieldPostalAddress;
+
+/**
+ The contact's email address.
+ */
+extern STPContactField const STPContactFieldEmailAddress;
+
+/**
+ The contact's phone number.
+ */
+extern STPContactField const STPContactFieldPhoneNumber;
+
+/**
+ The contact's name.
+ */
+extern STPContactField const STPContactFieldName;
+
 /**
  STPAddress Contains an address as represented by the Stripe API.
  */
@@ -193,7 +219,7 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
  @return YES if this address contains at least the necessary information,
  NO otherwise.
  */
-- (BOOL)containsRequiredShippingAddressFields:(PKAddressField)requiredFields;
+- (BOOL)containsRequiredShippingAddressFields:(nullable NSSet<STPContactField> *)requiredFields;
 
 /**
  Checks if this STPAddress has any content (possibly invalid) in any of the
@@ -203,13 +229,13 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
  contains valid data in all of the required fields, this method checks for the
  existence of *any* data.
 
- Note: When `desiredFields == PKAddressFieldNone`, this method always returns
+ Note: When `desiredFields == nil`, this method always returns
  NO.
 
  @parameter desiredFields The shipping address information the caller is interested in.
  @return YES if there is any data in this STPAddress that's relevant for those fields.
  */
-- (BOOL)containsContentForShippingAddressFields:(PKAddressField)desiredFields;
+- (BOOL)containsContentForShippingAddressFields:(nullable NSSet<STPContactField> *)desiredFields;
 
 /**
  Converts an STPBillingAddressFields enum value into the closest equivalent
@@ -220,6 +246,26 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
  a PKAddressField value.
  */
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields;
+
+/**
+ Converts a set of STPContactField values into the closest equivalent
+ representation of PKAddressField options
+
+ @param contactFields Stripe contact fields values to convert.
+ @return The closest represenation of the contact fields as
+ a PKAddressField value.
+ */
++ (PKAddressField)pkAddressFieldsFromStripeContactFields:(nullable NSSet<STPContactField> *)contactFields;
+
+/**
+ Converts a set of STPContactField values into the closest equivalent
+ representation of PKContactField options
+
+ @param contactFields Stripe contact fields values to convert.
+ @return The closest represenation of the contact fields as
+ a PKContactField value.
+ */
++ (NSSet<PKContactField> *)pkContactFieldsFromStripeContactFields:(nullable NSSet<STPContactField> *)contactFields API_AVAILABLE(ios(11.0));
 
 @end
 

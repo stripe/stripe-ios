@@ -475,24 +475,28 @@
 
 - (void)testContainsRequiredShippingAddressFields {
     STPAddress *address = [STPAddress new];
-    XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldNone]);
-    XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldAll]);
+    XCTAssertTrue([address containsRequiredShippingAddressFields:nil]);
+    NSSet<STPContactField> *allFields = [NSSet setWithArray:@[STPContactFieldPostalAddress,
+                                                              STPContactFieldEmailAddress,
+                                                              STPContactFieldPhoneNumber,
+                                                              STPContactFieldName]];
+    XCTAssertFalse([address containsRequiredShippingAddressFields:allFields]);
 
     address.name = @"John Smith";
-    XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldName]);
-    XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldEmail]);
+    XCTAssertTrue(([address containsRequiredShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName]]]));
+    XCTAssertFalse(([address containsRequiredShippingAddressFields:[NSSet setWithArray:@[STPContactFieldEmailAddress]]]));
 
     address.email = @"john@example.com";
-    XCTAssertTrue([address containsRequiredShippingAddressFields:(PKAddressField)(PKAddressFieldEmail|PKAddressFieldName)]);
-    XCTAssertFalse([address containsRequiredShippingAddressFields:PKAddressFieldAll]);
+    XCTAssertTrue(([address containsRequiredShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName, STPContactFieldEmailAddress]]]));
+    XCTAssertFalse(([address containsRequiredShippingAddressFields:allFields]));
 
     address.phone = @"5555555555";
-    XCTAssertTrue([address containsRequiredShippingAddressFields:(PKAddressField)(PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone)]);
+    XCTAssertTrue(([address containsRequiredShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName, STPContactFieldEmailAddress, STPContactFieldPhoneNumber]]]));
     address.phone = @"555";
-    XCTAssertFalse([address containsRequiredShippingAddressFields:(PKAddressField)(PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone)]);
-    XCTAssertFalse([address containsRequiredShippingAddressFields:(PKAddressField)(PKAddressFieldAll)]);
+    XCTAssertFalse(([address containsRequiredShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName, STPContactFieldEmailAddress, STPContactFieldPhoneNumber]]]));
+    XCTAssertFalse(([address containsRequiredShippingAddressFields:allFields]));
     address.country = @"GB";
-    XCTAssertTrue([address containsRequiredShippingAddressFields:(PKAddressField)(PKAddressFieldEmail|PKAddressFieldName|PKAddressFieldPhone)]);
+    XCTAssertTrue(([address containsRequiredShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName, STPContactFieldEmailAddress, STPContactFieldPhoneNumber]]]));
 
     address.country = @"US";
     address.phone = @"5555555555";
@@ -500,44 +504,44 @@
     address.city = @"New York";
     address.state = @"NY";
     address.postalCode = @"12345";
-    XCTAssertTrue([address containsRequiredShippingAddressFields:PKAddressFieldAll]);
+    XCTAssertTrue([address containsRequiredShippingAddressFields:allFields]);
 }
 
 - (void)testContainsContentForShippingAddressFields {
     STPAddress *address = [STPAddress new];
 
     // Empty address should return false for everything
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldNone]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldName]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldPhone]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldEmail]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldPostalAddress]);
+    XCTAssertFalse(([address containsContentForShippingAddressFields:nil]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPhoneNumber]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldEmailAddress]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPostalAddress]]]));
 
     // Name
     address.name = @"Smith";
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldNone]);
-    XCTAssertTrue([address containsContentForShippingAddressFields:PKAddressFieldName]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldPhone]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldEmail]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldPostalAddress]);
+    XCTAssertFalse(([address containsContentForShippingAddressFields:nil]));
+    XCTAssertTrue(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPhoneNumber]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldEmailAddress]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPostalAddress]]]));
     address.name = @"";
 
     // Phone
     address.phone = @"1";
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldNone]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldName]);
-    XCTAssertTrue([address containsContentForShippingAddressFields:PKAddressFieldPhone]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldEmail]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldPostalAddress]);
+    XCTAssertFalse(([address containsContentForShippingAddressFields:nil]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName]]]));
+    XCTAssertTrue(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPhoneNumber]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldEmailAddress]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPostalAddress]]]));
     address.phone = @"";
 
     // Email
     address.email = @"f";
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldNone]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldName]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldPhone]);
-    XCTAssertTrue([address containsContentForShippingAddressFields:PKAddressFieldEmail]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldPostalAddress]);
+    XCTAssertFalse(([address containsContentForShippingAddressFields:nil]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPhoneNumber]]]));
+    XCTAssertTrue(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldEmailAddress]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPostalAddress]]]));
     address.email = @"";
 
     // Test every property that contributes to the full address
@@ -545,35 +549,38 @@
     for (NSString *propertyName in @[@"line1", @"line2", @"city", @"state", @"postalCode", @"country"]) {
         for (NSString *testValue in @[@"a", @"0", @"Foo Bar"]) {
             [address setValue:testValue forKey:propertyName];
-            XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldNone]);
-            XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldName]);
-            XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldPhone]);
-            XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldEmail]);
-            XCTAssertTrue([address containsContentForShippingAddressFields:PKAddressFieldPostalAddress]);
+            XCTAssertFalse(([address containsContentForShippingAddressFields:nil]));
+            XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName]]]));
+            XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPhoneNumber]]]));
+            XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldEmailAddress]]]));
+            XCTAssertTrue(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPostalAddress]]]));
             [address setValue:@"" forKey:propertyName];
         }
     }
 
     // ensure it still returns false for everything with empty strings
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldNone]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldName]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldPhone]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldEmail]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldPostalAddress]);
+    XCTAssertFalse(([address containsContentForShippingAddressFields:nil]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPhoneNumber]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldEmailAddress]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPostalAddress]]]));
 
     // Try a hybrid address, and make sure some bitwise combinations work
     address.name = @"a";
     address.phone = @"1";
     address.line1 = @"_";
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldNone]);
-    XCTAssertTrue([address containsContentForShippingAddressFields:PKAddressFieldName]);
-    XCTAssertTrue([address containsContentForShippingAddressFields:PKAddressFieldPhone]);
-    XCTAssertFalse([address containsContentForShippingAddressFields:PKAddressFieldEmail]);
-    XCTAssertTrue([address containsContentForShippingAddressFields:PKAddressFieldPostalAddress]);
+    XCTAssertFalse(([address containsContentForShippingAddressFields:nil]));
+    XCTAssertTrue(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName]]]));
+    XCTAssertTrue(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPhoneNumber]]]));
+    XCTAssertFalse(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldEmailAddress]]]));
+    XCTAssertTrue(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPostalAddress]]]));
 
-    XCTAssertTrue([address containsContentForShippingAddressFields:(PKAddressField)(PKAddressFieldName|PKAddressFieldEmail)]);
-    XCTAssertTrue([address containsContentForShippingAddressFields:(PKAddressField)(PKAddressFieldPhone|PKAddressFieldEmail)]);
-    XCTAssertTrue([address containsContentForShippingAddressFields:PKAddressFieldAll]);
+    XCTAssertTrue(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldName, STPContactFieldEmailAddress]]]));
+    XCTAssertTrue(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPhoneNumber, STPContactFieldEmailAddress]]]));
+    XCTAssertTrue(([address containsContentForShippingAddressFields:[NSSet setWithArray:@[STPContactFieldPostalAddress,
+                                                                                          STPContactFieldEmailAddress,
+                                                                                          STPContactFieldPhoneNumber,
+                                                                                          STPContactFieldName]]]));
 
 }
 

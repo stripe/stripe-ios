@@ -41,15 +41,15 @@
 }
 
 - (void)testInitWithRequiredShippingFields {
-    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:PKAddressFieldNone];
+    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:nil];
     XCTAssertTrue([sut.addressCells count] == 0);
 
-    sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:PKAddressFieldName];
+    sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:[NSSet setWithArray:@[STPContactFieldName]]];
     XCTAssertTrue([sut.addressCells count] == 1);
     STPAddressFieldTableViewCell *cell1 = sut.addressCells[0];
     XCTAssertEqual(cell1.type, STPAddressFieldTypeName);
 
-    sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:(PKAddressField)(PKAddressFieldName|PKAddressFieldEmail)];
+    sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:[NSSet setWithArray:@[STPContactFieldName, STPContactFieldEmailAddress]]];
     XCTAssertTrue([sut.addressCells count] == 2);
     NSArray *types = @[
                        @(STPAddressFieldTypeName),
@@ -59,7 +59,7 @@
         XCTAssertEqual(sut.addressCells[i].type, [types[i] integerValue]);
     }
 
-    sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:(PKAddressField)(PKAddressFieldPostalAddress|PKAddressFieldEmail|PKAddressFieldPhone)];
+    sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:[NSSet setWithArray:@[STPContactFieldPostalAddress, STPContactFieldEmailAddress, STPContactFieldPhoneNumber]]];
     XCTAssertTrue([sut.addressCells count] == 9);
     types = @[
               @(STPAddressFieldTypeEmail),
@@ -78,7 +78,7 @@
 }
 
 - (void)testGetAddress {
-    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:(PKAddressField)(PKAddressFieldPostalAddress|PKAddressFieldEmail|PKAddressFieldPhone)];
+    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:[NSSet setWithArray:@[STPContactFieldPostalAddress, STPContactFieldEmailAddress, STPContactFieldPhoneNumber]]];
     sut.addressCells[0].contents = @"foo@example.com";
     sut.addressCells[1].contents = @"John Smith";
     sut.addressCells[2].contents = @"55 John St";
@@ -112,7 +112,7 @@
     address.country = @"US";
     address.phone = @"555-555-5555";
 
-    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:(PKAddressField)(PKAddressFieldPostalAddress|PKAddressFieldEmail|PKAddressFieldPhone)];
+    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredShippingFields:[NSSet setWithArray:@[STPContactFieldPostalAddress, STPContactFieldEmailAddress, STPContactFieldPhoneNumber]]];
     sut.address = address;
     XCTAssertEqualObjects(sut.addressCells[0].contents, @"foo@example.com");
     XCTAssertEqualObjects(sut.addressCells[1].contents, @"John Smith");
