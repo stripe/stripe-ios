@@ -510,7 +510,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 - (BOOL)requestPaymentShouldPresentShippingViewController {
     BOOL shippingAddressRequired = self.configuration.requiredShippingAddressFields != STPBillingAddressFieldsNone;
     BOOL shippingAddressIncomplete = ![self.shippingAddress containsRequiredShippingAddressFields:self.configuration.requiredShippingAddressFields];
-    BOOL shippingMethodRequired = ([self.delegate respondsToSelector:@selector(paymentContext:didUpdateShippingAddress:completion:)] && !self.selectedShippingMethod);
+    BOOL shippingMethodRequired = (self.configuration.shippingType == STPShippingTypeShipping &&
+                                   [self.delegate respondsToSelector:@selector(paymentContext:didUpdateShippingAddress:completion:)] &&
+                                   !self.selectedShippingMethod);
     BOOL verificationRequired = self.configuration.verifyPrefilledShippingAddress && self.shippingAddressNeedsVerification;
     return (shippingAddressRequired && (shippingAddressIncomplete || shippingMethodRequired || verificationRequired));
 }
