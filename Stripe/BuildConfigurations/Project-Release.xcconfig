@@ -31,12 +31,3 @@ GCC_PREPROCESSOR_DEFINITIONS = NDEBUG $(STP_EXTRA_PREPROCESSOR_MACROS)
 
 VALIDATE_PRODUCT = YES
 
-// iOS Deployment Target
-//
-// Code will load on this and later versions of iOS.  Framework APIs that are unavailable
-// in earlier versions will be weak-linked; your code should check for null function
-// pointers or specific system versions before calling newer APIs.
-//
-
-IPHONEOS_DEPLOYMENT_TARGET = 8.0
-

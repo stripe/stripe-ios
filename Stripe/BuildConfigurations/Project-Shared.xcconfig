@@ -150,3 +150,13 @@ SDKROOT = iphoneos
 
 
 WARNING_CFLAGS = -Wall -Wextra -Wundef -Wfloat-equal
+
+// iOS Deployment Target
+//
+// Code will load on this and later versions of iOS.  Framework APIs that are unavailable
+// in earlier versions will be weak-linked; your code should check for null function
+// pointers or specific system versions before calling newer APIs.
+//
+
+IPHONEOS_DEPLOYMENT_TARGET = 9.0
+
