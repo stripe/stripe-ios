@@ -6,17 +6,15 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "NSDictionary+Stripe.h"
 #import "STPAddress.h"
+
+#import <Contacts/Contacts.h>
+
+#import "NSDictionary+Stripe.h"
 #import "STPCardValidator.h"
 #import "STPEmailAddressValidator.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPPostalCodeValidator.h"
-
-#import <Contacts/Contacts.h>
-
-#define FAUXPAS_IGNORED_IN_FILE(...)
-FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 NSString *stringIfHasContentsElseNil(NSString *string);
 
@@ -235,7 +233,6 @@ NSString *stringIfHasContentsElseNil(NSString *string);
 }
 
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     switch (billingAddressFields) {
         case STPBillingAddressFieldsNone:
             return PKAddressFieldNone;

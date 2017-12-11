@@ -6,9 +6,6 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-#define FAUXPAS_IGNORED_ON_LINE(...)
-
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
 #import "STPAPIResponseDecodable.h"

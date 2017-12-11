@@ -239,12 +239,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)setPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
     self.paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithPaymentSummaryItems:paymentSummaryItems];
 }
 
 - (NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
     return [self.paymentAmountModel paymentSummaryItemsWithCurrency:self.paymentCurrency
                                                         companyName:self.configuration.companyName
                                                      shippingMethod:self.selectedShippingMethod];
@@ -516,7 +514,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)requestPayment {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     WEAK(self);
     [[[self.didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
         STRONG(self);
@@ -632,7 +629,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (PKPaymentRequest *)buildPaymentRequest {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     if (!self.configuration.appleMerchantIdentifier || !self.paymentAmount) {
         return nil;
     }
@@ -652,9 +648,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     else {
         paymentRequest.shippingMethods = self.shippingMethods;
     }
-    if ([paymentRequest respondsToSelector:@selector(shippingType)]) {
-        paymentRequest.shippingType = [[self class] pkShippingType:self.configuration.shippingType];;
-    }
+
+    paymentRequest.shippingType = [[self class] pkShippingType:self.configuration.shippingType];;
+
     if (self.shippingAddress != nil) {
         paymentRequest.shippingContact = [self.shippingAddress PKContactValue];
     }
@@ -662,7 +658,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 + (PKShippingType)pkShippingType:(STPShippingType)shippingType {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     switch (shippingType) {
         case STPShippingTypeShipping:
             return PKShippingTypeShipping;

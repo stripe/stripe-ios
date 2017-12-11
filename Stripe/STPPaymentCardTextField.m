@@ -141,9 +141,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     UIImageView *brandImageView = [[UIImageView alloc] initWithImage:self.brandImage];
     brandImageView.contentMode = UIViewContentModeCenter;
     brandImageView.backgroundColor = [UIColor clearColor];
-    if ([brandImageView respondsToSelector:@selector(setTintColor:)]) {
-        brandImageView.tintColor = self.placeholderColor;
-    }
+    brandImageView.tintColor = self.placeholderColor;
     self.brandImageView = brandImageView;
     
     STPFormTextField *numberField = [self buildTextField];
@@ -287,10 +285,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 
 - (void)setPlaceholderColor:(UIColor *)placeholderColor {
     _placeholderColor = [placeholderColor copy];
-    
-    if ([self.brandImageView respondsToSelector:@selector(setTintColor:)]) {
-        self.brandImageView.tintColor = placeholderColor;
-    }
+    self.brandImageView.tintColor = placeholderColor;
     
     for (STPFormTextField *field in [self allFields]) {
         field.placeholderColor = _placeholderColor;

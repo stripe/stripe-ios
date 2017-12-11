@@ -14,8 +14,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 #define FAUXPAS_IGNORED_ON_LINE(...)
-#define FAUXPAS_IGNORED_IN_FILE(...)
-FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 /**
  The current version of this library.

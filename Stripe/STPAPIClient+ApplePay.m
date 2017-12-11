@@ -15,8 +15,6 @@
 #import "STPTelemetryClient.h"
 #import "STPToken.h"
 
-FAUXPAS_IGNORED_IN_FILE(APIAvailability)
-
 @implementation STPAPIClient (ApplePay)
 
 - (void)createTokenWithPayment:(PKPayment *)payment completion:(STPTokenCompletionBlock)completion {

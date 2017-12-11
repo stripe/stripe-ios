@@ -60,7 +60,6 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 
 - (void)performAppRedirectIfPossibleWithCompletion:(STPBoolCompletionBlock)onCompletion {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
 
     if (self.state == STPRedirectContextStateNotStarted) {
         NSURL *nativeUrl = [self nativeRedirectURLForSource:self.source];
@@ -75,7 +74,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         [self subscribeToUrlAndForegroundNotifications];
 
         UIApplication *application = [UIApplication sharedApplication];
-        if ([application respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+        if (@available(iOS 10, *)) {
 
             WEAK(self);
             [application openURL:nativeUrl options:@{} completionHandler:^(BOOL success) {
@@ -103,7 +102,6 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 
 - (void)startRedirectFlowFromViewController:(UIViewController *)presentingViewController {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
 
     [self performAppRedirectIfPossibleWithCompletion:^(BOOL success) {
         if (!success) {
@@ -118,7 +116,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 
 - (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
+
     if (self.state == STPRedirectContextStateNotStarted) {
         _state = STPRedirectContextStateInProgress;
         [self subscribeToUrlNotifications];
@@ -147,14 +145,14 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 #pragma mark - SFSafariViewControllerDelegate -
 
-- (void)safariViewControllerDidFinish:(__unused SFSafariViewController *)controller { FAUXPAS_IGNORED_ON_LINE(APIAvailability)
+- (void)safariViewControllerDidFinish:(__unused SFSafariViewController *)controller {
     stpDispatchToMainThreadIfNecessary(^{
         [self handleRedirectCompletionWithError:nil
                     shouldDismissViewController:NO];
     });
 }
 
-- (void)safariViewController:(__unused SFSafariViewController *)controller didCompleteInitialLoad:(BOOL)didLoadSuccessfully { FAUXPAS_IGNORED_ON_LINE(APIAvailability)
+- (void)safariViewController:(__unused SFSafariViewController *)controller didCompleteInitialLoad:(BOOL)didLoadSuccessfully {
     if (didLoadSuccessfully == NO) {
         stpDispatchToMainThreadIfNecessary(^{
             [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]
