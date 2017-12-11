@@ -265,7 +265,7 @@ extern STPContactField const STPContactFieldName;
  representation of PKContactField options
 
  @param contactFields Stripe contact fields values to convert.
- @return The closest represenation of the contact fields as
+ @return The closest representation of the contact fields as
  a PKContactField value.
  */
 + (NSSet<PKContactField> *)pkContactFieldsFromStripeContactFields:(nullable NSSet<STPContactField> *)contactFields API_AVAILABLE(ios(11.0));
