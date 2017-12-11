@@ -206,30 +206,37 @@
         return;
     }
     else {
-        
-        CLGeocoder *geocoder = [CLGeocoder new];
-        CNMutablePostalAddress *address = [CNMutablePostalAddress new];
-        address.postalCode = zipCode;
-        address.ISOCountryCode = _addressFieldTableViewCountryCode;
-        
         self.geocodeInProgress = YES;
-        [geocoder geocodePostalAddress:address.copy
-                     completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
-                         stpDispatchToMainThreadIfNecessary(^{
-                             if (placemarks.count > 0 && error == nil) {
-                                 CLPlacemark *placemark = placemarks.firstObject;
-                                 if (cityCell.contents.length == 0
-                                     && stateCell.contents.length == 0
-                                     && [zipCell.contents isEqualToString:zipCode]) {
-                                     // Check contents again to make sure they're still empty
-                                     // And that zipcode hasn't changed to something else
-                                     cityCell.contents = placemark.locality;
-                                     stateCell.contents = placemark.administrativeArea;
-                                 }
-                             }
-                             self.geocodeInProgress = NO;
-                         });
-                     }];
+        CLGeocoder *geocoder = [CLGeocoder new];
+
+        CLGeocodeCompletionHandler onCompletion = ^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+            stpDispatchToMainThreadIfNecessary(^{
+                if (placemarks.count > 0 && error == nil) {
+                    CLPlacemark *placemark = placemarks.firstObject;
+                    if (cityCell.contents.length == 0
+                        && stateCell.contents.length == 0
+                        && [zipCell.contents isEqualToString:zipCode]) {
+                        // Check contents again to make sure they're still empty
+                        // And that zipcode hasn't changed to something else
+                        cityCell.contents = placemark.locality;
+                        stateCell.contents = placemark.administrativeArea;
+                    }
+                }
+                self.geocodeInProgress = NO;
+            });
+        };
+
+        if (@available(iOS 11, *)) {
+            CNMutablePostalAddress *address = [CNMutablePostalAddress new];
+            address.postalCode = zipCode;
+            address.ISOCountryCode = _addressFieldTableViewCountryCode;
+
+            [geocoder geocodePostalAddress:address.copy
+                         completionHandler:onCompletion];
+        } else {
+            [geocoder geocodeAddressString:[NSString stringWithFormat:@"%@, %@", zipCode, _addressFieldTableViewCountryCode]
+                         completionHandler:onCompletion];
+        }
     }
 }
 
