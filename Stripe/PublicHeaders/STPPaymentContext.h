@@ -234,6 +234,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
 
 /**
+ The mode to use when displaying the title of the navigation bar in all view
+ controllers presented by the context. The default value is `automatic`,
+ which causes the title to use the same styling as the previously displayed
+ navigation item.
+ */
+@property (nonatomic, assign) UINavigationItemLargeTitleDisplayMode largeTitleDisplayMode;
+
+/**
  A view that will be placed as the footer of the payment methods selection 
  view controller.
 
