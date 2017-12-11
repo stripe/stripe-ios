@@ -76,23 +76,6 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
     });
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
-                  didSelectShippingAddress:(ABRecordRef)address
-                                completion:(STPApplePayShippingAddressCompletionBlock)completion {
-    STPAddress *stpAddress = [[STPAddress alloc] initWithABRecord:address];
-    self.onShippingAddressSelection(stpAddress, ^(STPShippingStatus status, NSArray<PKShippingMethod *>* shippingMethods, NSArray<PKPaymentSummaryItem*> *summaryItems) {
-        if (status == STPShippingStatusInvalid) {
-            completion(PKPaymentAuthorizationStatusInvalidShippingPostalAddress, shippingMethods, summaryItems);
-        }
-        else {
-            completion(PKPaymentAuthorizationStatusSuccess, shippingMethods, summaryItems);
-        }
-    });
-}
-#pragma clang diagnostic pop
-
 - (void)paymentAuthorizationViewControllerDidFinish:(__unused PKPaymentAuthorizationViewController *)controller {
     if (self.didSucceed) {
         self.onFinish(STPPaymentStatusSuccess, nil);

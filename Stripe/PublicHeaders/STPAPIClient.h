@@ -240,7 +240,7 @@ static NSString *const STPSDKVersion = @"11.5.0";
  */
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier
                                                    country:(NSString *)countryCode
-                                                  currency:(NSString *)currencyCode NS_AVAILABLE_IOS(8_0);
+                                                  currency:(NSString *)currencyCode;
 
 @end
 

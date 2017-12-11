@@ -12,7 +12,6 @@
 #import "STPDispatchFunctions.h"
 #import "STPPostalCodeValidator.h"
 
-#import <AddressBook/AddressBook.h>
 #import <CoreLocation/CoreLocation.h>
 
 @interface STPAddressViewModel()<STPAddressFieldTableViewCellDelegate>
@@ -207,32 +206,30 @@
         return;
     }
     else {
-
+        
         CLGeocoder *geocoder = [CLGeocoder new];
-        NSString *zipKey = (NSString *) kABPersonAddressZIPKey;
-        NSString *countryCodeKey = (NSString *) kABPersonAddressCountryCodeKey;
-
-        if (zipKey && countryCodeKey) {
-            self.geocodeInProgress = YES;
-            [geocoder geocodeAddressDictionary:@{zipKey : zipCode,
-                                                 countryCodeKey : _addressFieldTableViewCountryCode}
-                             completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
-                                 stpDispatchToMainThreadIfNecessary(^{
-                                     if (placemarks.count > 0 && error == nil) {
-                                         CLPlacemark *placemark = placemarks.firstObject;
-                                         if (cityCell.contents.length == 0
-                                             && stateCell.contents.length == 0
-                                             && [zipCell.contents isEqualToString:zipCode]) {
-                                             // Check contents again to make sure they're still empty
-                                             // And that zipcode hasn't changed to something else
-                                             cityCell.contents = placemark.locality;
-                                             stateCell.contents = placemark.administrativeArea;
-                                         }
-                                     }
-                                     self.geocodeInProgress = NO;
-                                 });
-                             }];
-        }
+        CNMutablePostalAddress *address = [CNMutablePostalAddress new];
+        address.postalCode = zipCode;
+        address.ISOCountryCode = _addressFieldTableViewCountryCode;
+        
+        self.geocodeInProgress = YES;
+        [geocoder geocodePostalAddress:address.copy
+                     completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+                         stpDispatchToMainThreadIfNecessary(^{
+                             if (placemarks.count > 0 && error == nil) {
+                                 CLPlacemark *placemark = placemarks.firstObject;
+                                 if (cityCell.contents.length == 0
+                                     && stateCell.contents.length == 0
+                                     && [zipCell.contents isEqualToString:zipCode]) {
+                                     // Check contents again to make sure they're still empty
+                                     // And that zipcode hasn't changed to something else
+                                     cityCell.contents = placemark.locality;
+                                     stateCell.contents = placemark.administrativeArea;
+                                 }
+                             }
+                             self.geocodeInProgress = NO;
+                         });
+                     }];
     }
 }
 
@@ -270,7 +267,7 @@
 
 - (void)setAddress:(STPAddress *)address {
     self.addressFieldTableViewCountryCode = address.country;
-    
+
     for (STPAddressFieldTableViewCell *cell in self.addressCells) {
         switch (cell.type) {
             case STPAddressFieldTypeName:
@@ -307,7 +304,7 @@
 - (STPAddress *)address {
     STPAddress *address = [STPAddress new];
     for (STPAddressFieldTableViewCell *cell in self.addressCells) {
-        
+
         switch (cell.type) {
             case STPAddressFieldTypeName:
                 address.name = cell.contents;
