@@ -1,5 +1,5 @@
 ## 12.0.0 2017-12-XX
-* `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmap. See MIGRATING.md for more information on converting your existing code for this change.
+* `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmask. See MIGRATING.md for more information on converting your existing code for this change.
 
 
 ## 11.5.0 2017-11-09

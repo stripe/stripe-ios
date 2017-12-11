@@ -1,7 +1,7 @@
 ## Migration Guides
 
 ### Migrating from versions < 12.0.0
-* `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmap.
+* `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmask.
   * Most of the previous `PKAddressField` constants have matching `STPContactField` constants. To convert your code, switch to passing in a set of the matching constants
     * Example: `(PKAddressField)(PKAddressFieldName|PKAddressFieldPostalAddress)` becomes `[NSSet setwithArray:@[STPContactFieldName, STPContactFieldPostalAddress]]`)
   * Anywhere you were using `PKAddressFieldNone` you can now simply pass in `nil`

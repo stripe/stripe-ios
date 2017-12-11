@@ -214,6 +214,9 @@ extern STPContactField const STPContactFieldName;
  Checks if this STPAddress has the level of valid address information
  required by the passed in setting.
 
+ Note: When `requiredFields == nil`, this method always returns
+ YES.
+
  @param requiredFields The required shipping address information to check against.
 
  @return YES if this address contains at least the necessary information,
@@ -242,7 +245,7 @@ extern STPContactField const STPContactFieldName;
  representation of PKAddressField options
 
  @param billingAddressFields Stripe billing address fields enum value to convert.
- @return The closest represenation of the billing address requirement as 
+ @return The closest representation of the billing address requirement as
  a PKAddressField value.
  */
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields;
@@ -252,7 +255,7 @@ extern STPContactField const STPContactFieldName;
  representation of PKAddressField options
 
  @param contactFields Stripe contact fields values to convert.
- @return The closest represenation of the contact fields as
+ @return The closest representation of the contact fields as
  a PKAddressField value.
  */
 + (PKAddressField)pkAddressFieldsFromStripeContactFields:(nullable NSSet<STPContactField> *)contactFields;
