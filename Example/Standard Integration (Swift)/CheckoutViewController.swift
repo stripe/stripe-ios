@@ -151,10 +151,10 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.activityIndicator.alpha = 0
         self.buyButton.addTarget(self, action: #selector(didTapBuy), for: .touchUpInside)
         self.totalRow.detail = self.numberFormatter.string(from: NSNumber(value: Float(self.paymentContext.paymentAmount)/100))!
-        self.paymentRow.onTap = { [weak self] _ in
+        self.paymentRow.onTap = { [weak self] in
             self?.paymentContext.pushPaymentMethodsViewController()
         }
-        self.shippingRow.onTap = { [weak self] _ in
+        self.shippingRow.onTap = { [weak self]  in
             self?.paymentContext.pushShippingViewController()
         }
     }
@@ -176,7 +176,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
         self.activityIndicator.center = self.buyButton.center
     }
 
-    func didTapBuy() {
+    @objc func didTapBuy() {
         self.paymentInProgress = true
         self.paymentContext.requestPayment()
     }
