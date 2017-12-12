@@ -160,3 +160,4 @@ WARNING_CFLAGS = -Wall -Wextra -Wundef -Wfloat-equal
 
 IPHONEOS_DEPLOYMENT_TARGET = 9.0
 
+PRODUCT_BUNDLE_IDENTIFIER = com.stripe.stripe-ios
