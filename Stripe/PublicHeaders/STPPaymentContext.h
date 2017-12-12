@@ -237,7 +237,14 @@ NS_ASSUME_NONNULL_BEGIN
  The mode to use when displaying the title of the navigation bar in all view
  controllers presented by the context. The default value is `automatic`,
  which causes the title to use the same styling as the previously displayed
- navigation item.
+ navigation item (if the view controller is pushed onto the `hostViewController`).
+
+ If the `prefersLargeTitles` property of the `hostViewController`'s navigation bar
+ is false, this property has no effect and the navigation item's title is always
+ displayed as a small title.
+
+ If the view controller is presented modally, `automatic` and
+ `never` always result in a navigation bar with a small title.
  */
 @property (nonatomic, assign) UINavigationItemLargeTitleDisplayMode largeTitleDisplayMode;
 
