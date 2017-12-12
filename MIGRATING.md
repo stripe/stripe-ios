@@ -1,5 +1,9 @@
 ## Migration Guides
 
+### Migrating from versions < 12.0.0
+* The SDK now requires iOS 9+ andXcode version is now 9+. If you need to support iOS 8 or Xcode 8, the last supported version is [11.5.0](https://github.com/stripe/stripe-ios/releases/tag/v11.5.0)
+
+
 ### Migrating from versions < 11.4.0
 * The `STPBackendAPIAdapter` protocol and all associated methods are no longer deprecated. We still recommend using `STPCustomerContext` to update a Stripe customer object on your behalf, rather than using your own implementation of `STPBackendAPIAdapter`.
 
