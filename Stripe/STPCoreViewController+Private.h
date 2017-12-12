@@ -8,6 +8,8 @@
 
 #import "STPCoreViewController.h"
 
+#import "FauxPasAnnotations.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -66,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // These methods have significant code done in the base class and super must
 // be called if they are overidden
-- (void)viewDidLoad NS_REQUIRES_SUPER;
+- (void)viewDidLoad NS_REQUIRES_SUPER; FAUXPAS_IGNORED_ON_LINE(UnusedMethod)
 - (void)viewWillAppear:(BOOL)animated NS_REQUIRES_SUPER;
 - (void)viewWillDisappear:(BOOL)animated NS_REQUIRES_SUPER;
 @end
