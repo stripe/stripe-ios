@@ -103,8 +103,10 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 - (void)startRedirectFlowFromViewController:(UIViewController *)presentingViewController {
 
+    WEAK(self)
     [self performAppRedirectIfPossibleWithCompletion:^(BOOL success) {
         if (!success) {
+            STRONG(self)
             if ([SFSafariViewController class] != nil) {
                 [self startSafariViewControllerRedirectFlowFromViewController:presentingViewController];
             }
