@@ -74,7 +74,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.automaticallyAdjustsScrollViewInsets = NO;
+
+    self.automaticallyAdjustsScrollViewInsets = YES;
+
     [self createAndSetupViews];
     [self updateAppearance];
 }

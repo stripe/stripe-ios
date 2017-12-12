@@ -156,7 +156,7 @@ NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions
  @param presentingViewController The view controller to present the Safari 
  view controller from.
  */
-- (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController NS_AVAILABLE_IOS(9_0);
+- (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController;
 
 /**
  Starts a redirect flow by calling `openURL` to bounce the user out to

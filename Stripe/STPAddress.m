@@ -6,17 +6,15 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "NSDictionary+Stripe.h"
 #import "STPAddress.h"
+
+#import <Contacts/Contacts.h>
+
+#import "NSDictionary+Stripe.h"
 #import "STPCardValidator.h"
 #import "STPEmailAddressValidator.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPPostalCodeValidator.h"
-
-#import <Contacts/Contacts.h>
-
-#define FAUXPAS_IGNORED_IN_FILE(...)
-FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 NSString *stringIfHasContentsElseNil(NSString *string);
 
@@ -48,108 +46,6 @@ NSString *stringIfHasContentsElseNil(NSString *string);
     params[@"address"] = [addressDict copy];
     return [params copy];
 }
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-
-- (instancetype)initWithABRecord:(ABRecordRef)record {
-    self = [super init];
-    if (self) {
-        NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(record, kABPersonFirstNameProperty);
-        NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(record, kABPersonLastNameProperty);
-        NSString *first = firstName ?: @"";
-        NSString *last = lastName ?: @"";
-        NSString *name = [@[first, last] componentsJoinedByString:@" "];
-        _name = [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-
-        ABMultiValueRef emailValues = ABRecordCopyValue(record, kABPersonEmailProperty);
-        _email = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(emailValues, 0));
-        if (emailValues != NULL) {
-            CFRelease(emailValues);
-        }
-        
-        ABMultiValueRef phoneValues = ABRecordCopyValue(record, kABPersonPhoneProperty);
-        NSString *phone = (__bridge_transfer NSString *)(ABMultiValueCopyValueAtIndex(phoneValues, 0));
-        if (phoneValues != NULL) {
-            CFRelease(phoneValues);
-        }
-        phone = [STPCardValidator sanitizedNumericStringForString:phone];
-        if ([phone length] > 0) {
-            _phone = phone;
-        }
-
-        ABMultiValueRef addressValues = ABRecordCopyValue(record, kABPersonAddressProperty);
-        if (addressValues != NULL) {
-            if (ABMultiValueGetCount(addressValues) > 0) {
-                CFDictionaryRef dict = ABMultiValueCopyValueAtIndex(addressValues, 0);
-                NSString *street = CFDictionaryGetValue(dict, kABPersonAddressStreetKey);
-                if (street.length > 0) {
-                    _line1 = street;
-                }
-                NSString *city = CFDictionaryGetValue(dict, kABPersonAddressCityKey);
-                if (city.length > 0) {
-                    _city = city;
-                }
-                NSString *state = CFDictionaryGetValue(dict, kABPersonAddressStateKey);
-                if (state.length > 0) {
-                    _state = state;
-                }
-                NSString *zip = CFDictionaryGetValue(dict, kABPersonAddressZIPKey);
-                if (zip.length > 0) {
-                    _postalCode = zip;
-                }
-                NSString *country = CFDictionaryGetValue(dict, kABPersonAddressCountryCodeKey);
-                if (country.length > 0) {
-                    _country = [country uppercaseString];
-                }
-                if (dict != NULL) {
-                    CFRelease(dict);
-                }
-            }
-            CFRelease(addressValues);
-        }
-    }
-    return self;
-}
-
-- (ABRecordRef)ABRecordValue {
-    ABRecordRef record = ABPersonCreate();
-    if ([self firstName] != nil) {
-        CFStringRef firstNameRef = (__bridge CFStringRef)[self firstName];
-        ABRecordSetValue(record, kABPersonFirstNameProperty, firstNameRef, nil);
-    }
-    if ([self lastName] != nil) {
-        CFStringRef lastNameRef = (__bridge CFStringRef)[self lastName];
-        ABRecordSetValue(record, kABPersonLastNameProperty, lastNameRef, nil);
-    }
-    if (self.phone != nil) {
-        ABMutableMultiValueRef phonesRef = ABMultiValueCreateMutable(kABMultiStringPropertyType);
-        ABMultiValueAddValueAndLabel(phonesRef, (__bridge CFStringRef)self.phone,
-                                     kABPersonPhoneMainLabel, NULL);
-        ABRecordSetValue(record, kABPersonPhoneProperty, phonesRef, nil);
-        CFRelease(phonesRef);
-    }
-    if (self.email != nil) {
-        ABMutableMultiValueRef emailsRef = ABMultiValueCreateMutable(kABMultiStringPropertyType);
-        ABMultiValueAddValueAndLabel(emailsRef, (__bridge CFStringRef)self.email,
-                                     kABHomeLabel, NULL);
-        ABRecordSetValue(record, kABPersonEmailProperty, emailsRef, nil);
-        CFRelease(emailsRef);
-    }
-    ABMutableMultiValueRef addressRef = ABMultiValueCreateMutable(kABMultiDictionaryPropertyType);
-    NSMutableDictionary *addressDict = [NSMutableDictionary dictionary];
-    addressDict[(NSString *)kABPersonAddressStreetKey] = [self street];
-    addressDict[(NSString *)kABPersonAddressCityKey] = self.city;
-    addressDict[(NSString *)kABPersonAddressStateKey] = self.state;
-    addressDict[(NSString *)kABPersonAddressZIPKey] = self.postalCode;
-    addressDict[(NSString *)kABPersonAddressCountryCodeKey] = self.country;
-    ABMultiValueAddValueAndLabel(addressRef, (__bridge CFTypeRef)[addressDict copy], kABWorkLabel, NULL);
-    ABRecordSetValue(record, kABPersonAddressProperty, addressRef, nil);
-    CFRelease(addressRef);
-    return CFAutorelease(record);
-}
-
-#pragma clang diagnostic pop
 
 - (NSString *)sanitizedPhoneStringFromCNPhoneNumber:(CNPhoneNumber *)phoneNumber {
     NSString *phone = phoneNumber.stringValue;
@@ -337,7 +233,6 @@ NSString *stringIfHasContentsElseNil(NSString *string);
 }
 
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     switch (billingAddressFields) {
         case STPBillingAddressFieldsNone:
             return PKAddressFieldNone;

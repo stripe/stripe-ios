@@ -9,6 +9,8 @@
 #import <XCTest/XCTest.h>
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import <Stripe/Stripe.h>
+
+#import "FBSnapshotTestCase+STPViewControllerLoading.h"
 #import "STPAddressViewModel.h"
 #import "STPAddressFieldTableViewCell.h"
 #import "STPLocalizationUtils.h"
@@ -45,16 +47,10 @@
     method2.detail = @"Arrives tomorrow";
     method2.amount = [NSDecimalNumber decimalNumberWithString:@"5.99"];
     method2.identifier = @"fedex";
+
     STPShippingMethodsViewController *shippingVC = [[STPShippingMethodsViewController alloc]  initWithShippingMethods:@[method1, method2] selectedShippingMethod:method1 currency:@"usd" theme:[STPTheme defaultTheme]];
-
-    UINavigationController *navController = [UINavigationController new];
-    navController.view.frame = CGRectMake(0, 0, 320, 750);
-    [navController pushViewController:shippingVC animated:NO];
-    [navController.view layoutIfNeeded];
-    navController.view.frame = CGRectMake(0, 0, 320, shippingVC.tableView.contentSize.height);
-
-    FBSnapshotVerifyView(navController.view, nil);
-
+    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:shippingVC];
+    FBSnapshotVerifyView(viewToTest, nil);
     [STPLocalizationUtils overrideLanguageTo:nil];
 }
 

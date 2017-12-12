@@ -9,6 +9,8 @@
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import <OCMock/OCMock.h>
 #import <Stripe/Stripe.h>
+
+#import "FBSnapshotTestCase+STPViewControllerLoading.h"
 #import "STPSwitchTableViewCell.h"
 #import "STPAddCardViewController+Private.h"
 #import "STPAddressViewModel.h"
@@ -20,7 +22,6 @@
 #import "STPLocalizationUtils+STPTestAdditions.h"
 
 @interface STPAddCardViewControllerLocalizationTests : FBSnapshotTestCase
-
 @end
 
 @interface STPAddCardViewController (TestsPrivate)
@@ -52,16 +53,12 @@
                                                                                             theme:[STPTheme defaultTheme]];
     addCardVC.shippingAddress = [STPAddress new];
     addCardVC.shippingAddress.line1 = @"1"; // trigger "use shipping address" button
-    
-    UINavigationController *navController = [UINavigationController new];
-    navController.view.frame = CGRectMake(0, 0, 320, 750);
-    [navController pushViewController:addCardVC animated:NO];
-    [navController.view layoutIfNeeded];
-    navController.view.frame = CGRectMake(0, 0, 320, addCardVC.tableView.contentSize.height);
+
+    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:addCardVC];
 
     if (delivery) {
         addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"INVALID";
-        FBSnapshotVerifyView(navController.view, @"delivery");
+        FBSnapshotVerifyView(viewToTest, @"delivery");
     } else {
         /**
          This method rejects nil or empty country codes to stop strange looking behavior
@@ -69,19 +66,19 @@
          an invalid country code instead to test seeing the "Country" placeholder
          */
         addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"INVALID";
-        FBSnapshotVerifyView(navController.view, @"no_country");
+        FBSnapshotVerifyView(viewToTest, @"no_country");
 
         addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"US";
-        FBSnapshotVerifyView(navController.view, @"US");
+        FBSnapshotVerifyView(viewToTest, @"US");
 
         addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"GB";
-        FBSnapshotVerifyView(navController.view, @"GB");
+        FBSnapshotVerifyView(viewToTest, @"GB");
 
         addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"CA";
-        FBSnapshotVerifyView(navController.view, @"CA");
+        FBSnapshotVerifyView(viewToTest, @"CA");
 
         addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"MX";
-        FBSnapshotVerifyView(navController.view, @"MX");
+        FBSnapshotVerifyView(viewToTest, @"MX");
     }
 
     [STPLocalizationUtils overrideLanguageTo:nil];

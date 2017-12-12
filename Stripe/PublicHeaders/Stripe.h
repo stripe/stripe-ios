@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Stripe. All rights reserved.
 //
 
+#import "FauxPasAnnotations.h"
 #import "STPAddCardViewController.h"
 #import "STPAddress.h"
 #import "STPAPIClient+ApplePay.h"

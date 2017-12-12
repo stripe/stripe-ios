@@ -11,8 +11,6 @@
 #import "NSString+Stripe.h"
 #import "STPPostalCodeValidator.h"
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-
 @implementation STPPaymentCardTextFieldViewModel
 
 - (void)setCardNumber:(NSString *)cardNumber {

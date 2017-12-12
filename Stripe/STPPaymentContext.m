@@ -25,9 +25,6 @@
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "UIViewController+Stripe_Promises.h"
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-
-
 /**
  The current state of the payment context
 
@@ -239,12 +236,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)setPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
     self.paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithPaymentSummaryItems:paymentSummaryItems];
 }
 
 - (NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability)
     return [self.paymentAmountModel paymentSummaryItemsWithCurrency:self.paymentCurrency
                                                         companyName:self.configuration.companyName
                                                      shippingMethod:self.selectedShippingMethod];
@@ -516,7 +511,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)requestPayment {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     WEAK(self);
     [[[self.didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
         STRONG(self);
@@ -572,7 +566,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             };
             STPPaymentAuthorizationBlock paymentHandler = ^(PKPayment *payment) {
                 self.selectedShippingMethod = payment.shippingMethod;
-                self.shippingAddress = [[STPAddress alloc] initWithABRecord:payment.shippingAddress];
+                self.shippingAddress = [[STPAddress alloc] initWithPKContact:payment.shippingContact];
                 self.shippingAddressNeedsVerification = NO;
                 [self.delegate paymentContextDidChange:self];
                 if ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) {
@@ -632,7 +626,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (PKPaymentRequest *)buildPaymentRequest {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     if (!self.configuration.appleMerchantIdentifier || !self.paymentAmount) {
         return nil;
     }
@@ -652,27 +645,16 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     else {
         paymentRequest.shippingMethods = self.shippingMethods;
     }
-    if ([paymentRequest respondsToSelector:@selector(shippingType)]) {
-        paymentRequest.shippingType = [[self class] pkShippingType:self.configuration.shippingType];;
-    }
+
+    paymentRequest.shippingType = [[self class] pkShippingType:self.configuration.shippingType];;
+
     if (self.shippingAddress != nil) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-        // Using shippingContact if available to work around an iOS10 bug:
-        // https://openradar.appspot.com/radar?id=5518219632705536
-        if ([paymentRequest respondsToSelector:@selector(shippingContact)]) {
-            paymentRequest.shippingContact = [self.shippingAddress PKContactValue];
-        }
-        else {
-            paymentRequest.shippingAddress = [self.shippingAddress ABRecordValue];
-        }
-#pragma clang diagnostic pop
+        paymentRequest.shippingContact = [self.shippingAddress PKContactValue];
     }
     return paymentRequest;
 }
 
 + (PKShippingType)pkShippingType:(STPShippingType)shippingType {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     switch (shippingType) {
         case STPShippingTypeShipping:
             return PKShippingTypeShipping;

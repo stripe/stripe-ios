@@ -162,16 +162,6 @@ INFOPLIST_FILE = StripeiOSResources/Info.plist
 
 INSTALL_PATH = $(LOCAL_LIBRARY_DIR)/Bundles
 
-IPHONEOS_DEPLOYMENT_TARGET = 8.0
-
-// OS X Deployment Target
-// 
-// Code will load on this and later versions of OS X.  Framework APIs that are
-// unavailable in earlier versions will be weak-linked; your code should check for null
-// function pointers or specific system versions before calling newer APIs.
-
-MACOSX_DEPLOYMENT_TARGET = 10.11
-
 
 
 PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeiOSResources

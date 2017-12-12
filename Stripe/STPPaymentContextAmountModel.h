@@ -9,14 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
 
-#define FAUXPAS_IGNORED_IN_CLASS(...)
-
 /**
  Internal model for STPPaymentContext's `paymentAmount` and 
  `paymentSummaryItems` properties.
  */
 @interface STPPaymentContextAmountModel : NSObject
-FAUXPAS_IGNORED_IN_CLASS(APIAvailability)
 
 - (instancetype)initWithAmount:(NSInteger)paymentAmount;
 - (instancetype)initWithPaymentSummaryItems:(NSArray<PKPaymentSummaryItem *> *)paymentSummaryItems;

@@ -43,9 +43,6 @@
 #import "STPCategoryLoader.h"
 #endif
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-FAUXPAS_IGNORED_IN_FILE(APIAvailability)
-
 static NSString * const APIVersion = @"2015-10-12";
 static NSString * const APIBaseURL = @"https://api.stripe.com/v1";
 static NSString * const APIEndpointToken = @"tokens";
@@ -222,11 +219,10 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
     if (model) {
         details[@"model"] = model;
     }
-    if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
-        NSString *vendorIdentifier = [[[UIDevice currentDevice] performSelector:@selector(identifierForVendor)] performSelector:@selector(UUIDString)];
-        if (vendorIdentifier) {
-            details[@"vendor_identifier"] = vendorIdentifier;
-        }
+
+    NSString *vendorIdentifier = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    if (vendorIdentifier) {
+        details[@"vendor_identifier"] = vendorIdentifier;
     }
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[details copy] options:(NSJSONWritingOptions)kNilOptions error:NULL] encoding:NSUTF8StringEncoding];
 }

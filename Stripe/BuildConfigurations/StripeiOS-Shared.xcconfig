@@ -25,7 +25,7 @@ CLANG_WARN_INFINITE_RECURSION = YES
 CLANG_WARN_SUSPICIOUS_MOVE = YES
 CLANG_WARN_ASSIGN_ENUM = YES
 CLANG_WARN_DOCUMENTATION_COMMENTS = YES
-CLANG_WARN_UNGUARDED_AVAILABILITY = NO
+CLANG_WARN_UNGUARDED_AVAILABILITY = YES
 
 // Code Signing Identity
 // 
@@ -113,16 +113,6 @@ INFOPLIST_FILE = Stripe/Info.plist
 // 'Installation Build Products Location' (i.e., $(DSTROOT)).
 
 INSTALL_PATH = $(LOCAL_LIBRARY_DIR)/Frameworks
-
-
-// iOS Deployment Target
-// 
-// Code will load on this and later versions of iOS.  Framework APIs that are unavailable
-// in earlier versions will be weak-linked; your code should check for null function
-// pointers or specific system versions before calling newer APIs.
-//
-
-IPHONEOS_DEPLOYMENT_TARGET = 8.0
 
 
 // Runpath Search Paths

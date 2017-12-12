@@ -36,9 +36,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     self.title = @"Card + 3DS";
-    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-    }
+    self.edgesForExtendedLayout = UIRectEdgeNone;
 
     STPPaymentCardTextField *paymentTextField = [[STPPaymentCardTextField alloc] init];
     STPCardParams *cardParams = [STPCardParams new];

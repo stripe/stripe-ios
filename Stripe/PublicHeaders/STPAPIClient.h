@@ -8,14 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
+
+#import "FauxPasAnnotations.h"
 #import "STPBlocks.h"
 #import "STPFile.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-#define FAUXPAS_IGNORED_ON_LINE(...)
-#define FAUXPAS_IGNORED_IN_FILE(...)
-FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 /**
  The current version of this library.
@@ -240,7 +238,7 @@ static NSString *const STPSDKVersion = @"11.5.0";
  */
 + (PKPaymentRequest *)paymentRequestWithMerchantIdentifier:(NSString *)merchantIdentifier
                                                    country:(NSString *)countryCode
-                                                  currency:(NSString *)currencyCode NS_AVAILABLE_IOS(8_0);
+                                                  currency:(NSString *)currencyCode;
 
 @end
 

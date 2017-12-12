@@ -55,10 +55,11 @@ min_severity="Concern"
 
 set -ex
 
-fauxpas check "${xcodeproj_path}" \
-  --target "StripeiOS" \
-  --configFile "${config_path}" \
-  --minErrorStatusSeverity "${min_severity}"
+# Fauxpas 1.7.2 does not build our framework target correctly https://bitbucket.org/ali_rantakari/faux-pas/issues/117/unrecoverable-compiler-error-translation
+# fauxpas check "${xcodeproj_path}" \
+#   --target "StripeiOS" \
+#   --configFile "${config_path}" \
+#   --minErrorStatusSeverity "${min_severity}"
 
 fauxpas check "${xcodeproj_path}" \
   --target "StripeiOSStatic" \

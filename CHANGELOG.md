@@ -1,5 +1,10 @@
 ## 12.0.0 2017-12-XX
+* Minimum supported iOS version is now 9.0.
+  * If you need to support iOS 8, the last supported version is [11.5.0](https://github.com/stripe/stripe-ios/releases/tag/v11.5.0)
+* Minimum supported Xcode version is now 9.0
+* `AddressBook` framework support has been removed.
 * `STPRedirectContext` will no longer retain itself for the duration of the redirect, you must explicitly maintain a reference to it yourself.
+* See MIGRATING.md for more information on any of the previously mentioned breaking API changes.
 
 ## 11.5.0 2017-11-09
 * Adds a new helper method to `STPSourceParams` for creating reusable Alipay sources. [#811](https://github.com/stripe/stripe-ios/pull/811)
