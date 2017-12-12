@@ -286,6 +286,36 @@ NS_ASSUME_NONNULL_BEGIN
                                     name:(nullable NSString *)name
                                returnURL:(NSString *)returnURL;
 
+
+/**
+ Creates params for a card source created from Visa Checkout.
+
+ // TODO: Link to docs.stripe.com Visa Checkout docs
+
+ @note Creating an STPSource with these params will give you a
+ source with type == STPSourceTypeCard
+
+ @param callId The callId property from a `VisaCheckoutResult` object.
+ @return An STPSourceParams object populated with the provided values.
+ */
++ (STPSourceParams *)visaCheckoutParamsWithCallId:(NSString *)callId;
+
+
+/**
+ Creates params for a card source created from Masterpass.
+
+ // TODO: Link to docs.stripe.com Masterpass docs
+
+ @note Creating an STPSource with these params will give you a
+ source with type == STPSourceTypeCard
+
+ @param cartId The cartId from a `MCCCheckoutResponse` object.
+ @param transactionId The transactionid from a `MCCCheckoutResponse` object.
+ @return An STPSourceParams object populated with the provided values.
+ */
++ (STPSourceParams *)masterpassParamsWithCartId:(NSString *)cartId
+                                  transactionId:(NSString *)transactionId;
+
 @end
 
 NS_ASSUME_NONNULL_END

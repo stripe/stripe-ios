@@ -301,6 +301,25 @@
     return params;
 }
 
++ (STPSourceParams *)visaCheckoutParamsWithCallId:(NSString *)callId {
+    STPSourceParams *params = [self new];
+    params.type = STPSourceTypeCard;
+    params.additionalAPIParameters = @{@"visa_checkout": @{ @"callid": callId} };
+    return params;
+}
+
++ (STPSourceParams *)masterpassParamsWithCartId:(NSString *)cartId
+                                  transactionId:(NSString *)transactionId {
+    STPSourceParams *params = [self new];
+    params.type = STPSourceTypeCard;
+    params.additionalAPIParameters = @{@"masterpass": @{
+                                               @"cart_id": cartId,
+                                               @"transaction_id": transactionId,
+                                               }
+                                       };
+    return params;
+}
+
 #pragma mark - Redirect Dictionary
 
 /**
