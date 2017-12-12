@@ -162,6 +162,7 @@
             }];
         } else {
             [self.delegate createBackendChargeWithSource:source.stripeID completion:^(STPBackendChargeResult status, NSError *error) {
+                [self updateUIForPaymentInProgress:NO];
                 if (error) {
                     [self.delegate exampleViewController:self didFinishWithError:error];
                     return;
