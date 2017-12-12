@@ -505,9 +505,20 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 - (BOOL)requestPaymentShouldPresentShippingViewController {
     BOOL shippingAddressRequired = self.configuration.requiredShippingAddressFields != STPBillingAddressFieldsNone;
     BOOL shippingAddressIncomplete = ![self.shippingAddress containsRequiredShippingAddressFields:self.configuration.requiredShippingAddressFields];
-    BOOL shippingMethodRequired = ([self.delegate respondsToSelector:@selector(paymentContext:didUpdateShippingAddress:completion:)] && !self.selectedShippingMethod);
+    BOOL shippingMethodRequired = (self.configuration.shippingType == STPShippingTypeShipping &&
+                                   [self.delegate respondsToSelector:@selector(paymentContext:didUpdateShippingAddress:completion:)] &&
+                                   !self.selectedShippingMethod);
     BOOL verificationRequired = self.configuration.verifyPrefilledShippingAddress && self.shippingAddressNeedsVerification;
-    return (shippingAddressRequired && (shippingAddressIncomplete || shippingMethodRequired || verificationRequired));
+    // true if STPShippingVC should be presented to collect or verify a shipping address
+    BOOL shouldPresentShippingAddress = (shippingAddressRequired && (shippingAddressIncomplete || verificationRequired));
+    // this handles a corner case where STPShippingVC should be presented because:
+    // - shipping address has been pre-filled
+    // - no verification is required, but the user still needs to enter a shipping method
+    BOOL shouldPresentShippingMethods = (shippingAddressRequired &&
+                                         !shippingAddressIncomplete &&
+                                         !verificationRequired &&
+                                         shippingMethodRequired);
+    return (shouldPresentShippingAddress || shouldPresentShippingMethods);
 }
 
 - (void)requestPayment {
