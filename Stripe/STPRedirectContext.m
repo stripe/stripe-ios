@@ -16,8 +16,6 @@
 
 #import <SafariServices/SafariServices.h>
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^STPBoolCompletionBlock)(BOOL success);

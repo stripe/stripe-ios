@@ -14,9 +14,6 @@
 #import "STPPhoneNumberValidator.h"
 #import "STPWeakStrongMacros.h"
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-#define FAUXPAS_IGNORED_ON_LINE(...)
-
 @interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate>
 @property (nonatomic, assign) STPFormTextFieldAutoFormattingBehavior autoformattingBehavior;
 @property (nonatomic, assign) BOOL selectionEnabled;

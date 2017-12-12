@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
+
+#import "FauxPasAnnotations.h"
 #import "STPBlocks.h"
 #import "STPFile.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-#define FAUXPAS_IGNORED_ON_LINE(...)
 
 /**
  The current version of this library.

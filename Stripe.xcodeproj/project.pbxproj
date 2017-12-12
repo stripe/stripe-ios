@@ -653,6 +653,8 @@
 		F1A2F92D1EEB6A70006B0456 /* NSCharacterSet+Stripe.h in Headers */ = {isa = PBXBuildFile; fileRef = F1A2F92A1EEB6A70006B0456 /* NSCharacterSet+Stripe.h */; };
 		F1A2F92E1EEB6A70006B0456 /* NSCharacterSet+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = F1A2F92B1EEB6A70006B0456 /* NSCharacterSet+Stripe.m */; };
 		F1A2F92F1EEB6A70006B0456 /* NSCharacterSet+Stripe.m in Sources */ = {isa = PBXBuildFile; fileRef = F1A2F92B1EEB6A70006B0456 /* NSCharacterSet+Stripe.m */; };
+		F1A7A0531FE053CE00B47D4A /* FauxPasAnnotations.h in Headers */ = {isa = PBXBuildFile; fileRef = F10239381FDF4144006273B5 /* FauxPasAnnotations.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F1A7A0541FE053D900B47D4A /* FauxPasAnnotations.h in Headers */ = {isa = PBXBuildFile; fileRef = F10239381FDF4144006273B5 /* FauxPasAnnotations.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F1B8534F1FDF544B0065A49E /* FBSnapshotTestCase+STPViewControllerLoading.h in Headers */ = {isa = PBXBuildFile; fileRef = F1B8534D1FDF544B0065A49E /* FBSnapshotTestCase+STPViewControllerLoading.h */; };
 		F1B853501FDF544B0065A49E /* FBSnapshotTestCase+STPViewControllerLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B8534E1FDF544B0065A49E /* FBSnapshotTestCase+STPViewControllerLoading.m */; };
 		F1B980941DB550E60075332E /* STPPaymentMethodsViewControllerLocalizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B980931DB550E60075332E /* STPPaymentMethodsViewControllerLocalizationTests.m */; };
@@ -2099,6 +2101,7 @@
 				04F94DA31D229F18004FC826 /* STPAddressViewModel.h in Headers */,
 				0438EF3A1B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h in Headers */,
 				04B31DF31D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.h in Headers */,
+				F1A7A0541FE053D900B47D4A /* FauxPasAnnotations.h in Headers */,
 				8B429ADF1EF9EFFA00F95F34 /* STPFile+Private.h in Headers */,
 				0426B9771CEBD001006AC8DD /* UINavigationBar+Stripe_Theme.h in Headers */,
 				04CDE5BE1BC1F21500548833 /* STPCardParams.h in Headers */,
@@ -2201,6 +2204,7 @@
 				04E39F541CECF7A100AF3B96 /* STPPaymentMethodTuple.h in Headers */,
 				F15232241EA9303800D65C67 /* STPURLCallbackHandler.h in Headers */,
 				C18410761EC2529400178149 /* STPEphemeralKeyManager.h in Headers */,
+				F1A7A0531FE053CE00B47D4A /* FauxPasAnnotations.h in Headers */,
 				04F416261CA3639500486FB5 /* STPAddCardViewController.h in Headers */,
 				049880FC1CED5A2300EA4FFD /* STPPaymentConfiguration.h in Headers */,
 				F1852F931D80B6EC00367C86 /* STPStringUtils.h in Headers */,

@@ -11,10 +11,7 @@
 #import "STPBundleLocator.h"
 #import "STPImageLibrary+Private.h"
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-
 // Dummy class for locating the framework bundle
-
 
 @implementation STPImageLibrary
 

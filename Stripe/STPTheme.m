@@ -22,8 +22,6 @@ static UIColor *STPThemeDefaultErrorColor;
 static UIFont  *STPThemeDefaultFont;
 static UIFont  *STPThemeDefaultMediumFont;
 
-#define FAUXPAS_IGNORED_ON_LINE(...)
-
 @implementation STPTheme
 
 + (void)initialize {

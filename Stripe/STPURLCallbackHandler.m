@@ -8,12 +8,10 @@
 
 #import "STPURLCallbackHandler.h"
 
+#import "FauxPasAnnotations.h"
+#import "NSURLComponents+Stripe.h"
 #import "STPAPIClient.h"
 
-#import "NSURLComponents+Stripe.h"
-
-
-#define FAUXPAS_IGNORED_ON_LINE(...)
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation Stripe (STPURLCallbackHandlerAdditions)

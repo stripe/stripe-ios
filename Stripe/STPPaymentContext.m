@@ -25,9 +25,6 @@
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "UIViewController+Stripe_Promises.h"
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-
-
 /**
  The current state of the payment context
 

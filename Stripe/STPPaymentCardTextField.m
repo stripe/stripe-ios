@@ -19,8 +19,6 @@
 #import "Stripe.h"
 #import "STPLocalizationUtils.h"
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-
 @interface STPPaymentCardTextField()<STPFormTextFieldDelegate>
 
 @property (nonatomic, readwrite, weak) UIImageView *brandImageView;
