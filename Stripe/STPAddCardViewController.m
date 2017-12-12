@@ -408,8 +408,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
         default:
             return [UITableViewCell new]; // won't be called; exists to make the static analyzer happy
     }
-    cell.backgroundColor = [UIColor clearColor];
-    cell.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
+    cell.backgroundColor = self.theme.secondaryBackgroundColor;
     return cell;
 }
 

@@ -80,8 +80,7 @@
 }
 
 - (void)updateAppearance {
-    self.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
-    self.backgroundColor = [UIColor clearColor];
+    self.backgroundColor = self.theme.secondaryBackgroundColor;
     self.titleLabel.font = self.theme.font;
     self.subtitleLabel.font = self.theme.smallFont;
     self.amountLabel.font = self.theme.font;
