@@ -338,6 +338,9 @@
                 break;
         }
     }
+    // Prefer to use the contents of STPAddressFieldTypeCountry, but fallback to
+    // `addressFieldTableViewCountryCode` if nil (important for STPBillingAddressFieldsZip)
+    address.country = address.country ?: self.addressFieldTableViewCountryCode;
     return address;
 }
 
