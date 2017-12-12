@@ -13,6 +13,7 @@
 #import "STPLocalizationUtils.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPPostalCodeValidator.h"
+#import "UIView+Stripe_SafeAreaBounds.h"
 
 @interface STPAddressFieldTableViewCell() <STPFormTextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
@@ -235,8 +236,7 @@
 }
 
 - (void)updateAppearance {
-    self.contentView.backgroundColor = self.theme.secondaryBackgroundColor;
-    self.backgroundColor = [UIColor clearColor];
+    self.backgroundColor = self.theme.secondaryBackgroundColor;
     self.textField.placeholderColor = self.theme.tertiaryForegroundColor;
     self.textField.defaultColor = self.theme.primaryForegroundColor;
     self.textField.errorColor = self.theme.errorColor;
@@ -250,9 +250,10 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    CGRect bounds = [self boundsWithHorizontalSafeAreaInsets];
     CGFloat textFieldX = 15;
-    self.textField.frame = CGRectMake(textFieldX, 1, self.bounds.size.width - textFieldX, self.bounds.size.height - 1);
-    self.inputAccessoryToolbar.frame = CGRectMake(0, 0, self.bounds.size.width, 44);
+    self.textField.frame = CGRectMake(textFieldX, 1, bounds.size.width - textFieldX, bounds.size.height - 1);
+    self.inputAccessoryToolbar.frame = CGRectMake(0, 0, bounds.size.width, 44);
 }
 
 - (BOOL)becomeFirstResponder {
