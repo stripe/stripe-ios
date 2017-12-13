@@ -1,5 +1,11 @@
 ## 12.0.0 2017-12-XX
-* `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmask. See MIGRATING.md for more information on converting your existing code for this change.
+* Minimum supported iOS version is now 9.0.
+  * If you need to support iOS 8, the last supported version is [11.5.0](https://github.com/stripe/stripe-ios/releases/tag/v11.5.0)
+* Minimum supported Xcode version is now 9.0
+* `AddressBook` framework support has been removed.
+* `STPRedirectContext` will no longer retain itself for the duration of the redirect, you must explicitly maintain a reference to it yourself.
+* `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmask. 
+* See MIGRATING.md for more information on any of the previously mentioned breaking API changes.
 
 
 ## 11.5.0 2017-11-09

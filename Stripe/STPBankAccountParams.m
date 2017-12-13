@@ -9,7 +9,7 @@
 #import "STPBankAccountParams.h"
 #import "STPBankAccountParams+Private.h"
 
-#define FAUXPAS_IGNORED_ON_LINE(...)
+#import "FauxPasAnnotations.h"
 
 @interface STPBankAccountParams ()
 

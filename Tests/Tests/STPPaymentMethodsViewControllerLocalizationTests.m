@@ -9,19 +9,19 @@
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import <Stripe/Stripe.h>
 
+#import "FBSnapshotTestCase+STPViewControllerLoading.h"
 #import "STPFixtures.h"
 #import "STPMocks.h"
 #import "STPLocalizationUtils+STPTestAdditions.h"
 
 @interface STPPaymentMethodsViewControllerLocalizationTests : FBSnapshotTestCase
-
 @end
 
 @implementation STPPaymentMethodsViewControllerLocalizationTests
 
 //- (void)setUp {
 //    [super setUp];
-//    
+//
 //    self.recordMode = YES;
 //}
 
@@ -39,18 +39,11 @@
                                                                                                        customerContext:customerContext
                                                                                                               delegate:delegate];
 
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsVC];
-    UIWindow *testWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-    testWindow.rootViewController = navController;
-    testWindow.hidden = NO;
 
-    // Test that loaded properly + loads them on first call
-    XCTAssertNotNil(navController.view);
-    XCTAssertNotNil(paymentMethodsVC.view);
+    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:paymentMethodsVC];
 
-    FBSnapshotVerifyView(testWindow, nil);
+    FBSnapshotVerifyView(viewToTest, nil);
     [STPLocalizationUtils overrideLanguageTo:nil];
-
 }
 
 - (void)testGerman {

@@ -11,8 +11,6 @@
 #import "STPAPIClient.h"
 #import "STPPaymentContext.h"
 
-#define FAUXPAS_IGNORED_IN_FILE(...)
-FAUXPAS_IGNORED_IN_FILE(APIAvailability)
 
 NS_ASSUME_NONNULL_BEGIN
 

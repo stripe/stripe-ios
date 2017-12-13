@@ -22,8 +22,6 @@ static UIColor *STPThemeDefaultErrorColor;
 static UIFont  *STPThemeDefaultFont;
 static UIFont  *STPThemeDefaultMediumFont;
 
-#define FAUXPAS_IGNORED_ON_LINE(...)
-
 @implementation STPTheme
 
 + (void)initialize {
@@ -34,12 +32,8 @@ static UIFont  *STPThemeDefaultMediumFont;
     STPThemeDefaultAccentColor = [UIColor colorWithRed:0 green:122.0f/255.0f blue:1 alpha:1];
     STPThemeDefaultErrorColor = [UIColor colorWithRed:1 green:72.0f/255.0f blue:68.0f/255.0f alpha:1];
     STPThemeDefaultFont = [UIFont systemFontOfSize:17];
-    
-    if ([UIFont respondsToSelector:@selector(systemFontOfSize:weight:)]) {
-        STPThemeDefaultMediumFont = [UIFont systemFontOfSize:17.0f weight:0.2f] ?: [UIFont boldSystemFontOfSize:17]; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
-    } else {
-        STPThemeDefaultMediumFont = [UIFont boldSystemFontOfSize:17];
-    }
+
+    STPThemeDefaultMediumFont = [UIFont systemFontOfSize:17.0f weight:0.2f] ?: [UIFont boldSystemFontOfSize:17];
 }
 
 + (STPTheme *)defaultTheme {

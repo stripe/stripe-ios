@@ -11,10 +11,7 @@
 #import "STPBundleLocator.h"
 #import "STPImageLibrary+Private.h"
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-
 // Dummy class for locating the framework bundle
-
 
 @implementation STPImageLibrary
 
@@ -98,11 +95,9 @@
 
 + (UIImage *)safeImageNamed:(NSString *)imageName
         templateIfAvailable:(BOOL)templateIfAvailable {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
-    UIImage *image = nil;
-    if ([UIImage respondsToSelector:@selector(imageNamed:inBundle:compatibleWithTraitCollection:)]) {
-        image = [UIImage imageNamed:imageName inBundle:[STPBundleLocator stripeResourcesBundle] compatibleWithTraitCollection:nil];
-    }
+
+    UIImage *image = [UIImage imageNamed:imageName inBundle:[STPBundleLocator stripeResourcesBundle] compatibleWithTraitCollection:nil];
+
     if (image == nil) {
         image = [UIImage imageNamed:imageName];
     }
@@ -115,7 +110,6 @@
 + (UIImage *)brandImageForCardBrand:(STPCardBrand)brand 
                            template:(BOOL)isTemplate {
     BOOL shouldUseTemplate = isTemplate;
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     NSString *imageName;
     switch (brand) {
             case STPCardBrandAmex:

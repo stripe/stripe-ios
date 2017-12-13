@@ -14,9 +14,6 @@
 #import "STPPhoneNumberValidator.h"
 #import "STPWeakStrongMacros.h"
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-#define FAUXPAS_IGNORED_ON_LINE(...)
-
 @interface STPTextFieldDelegateProxy : STPDelegateProxy<UITextFieldDelegate>
 @property (nonatomic, assign) STPFormTextFieldAutoFormattingBehavior autoformattingBehavior;
 @property (nonatomic, assign) BOOL selectionEnabled;
@@ -110,11 +107,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
         case STPFormTextFieldAutoFormattingBehaviorNone:
         case STPFormTextFieldAutoFormattingBehaviorExpiration:
             self.textFormattingBlock = nil;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-            if ([self respondsToSelector:@selector(setTextContentType:)]) {
-                self.textContentType = nil; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
+            if (@available(iOS 10, *)) {
+                self.textContentType = nil;
             }
-#endif
             break;
         case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
             self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
@@ -140,11 +135,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                 }
                 return [attributedString copy];
             };
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-            if ([self respondsToSelector:@selector(setTextContentType:)]) {
-                self.textContentType = UITextContentTypeCreditCardNumber; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
+            if (@available(iOS 10, *)) {
+                self.textContentType = UITextContentTypeCreditCardNumber;
             }
-#endif
             break;
         case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers: {
             WEAK(self);
@@ -157,11 +150,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                 NSDictionary *attributes = [[self class] attributesForAttributedString:inputString];
                 return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
             };
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-            if ([self respondsToSelector:@selector(setTextContentType:)]) {
-                self.textContentType = UITextContentTypeTelephoneNumber; FAUXPAS_IGNORED_ON_LINE(APIAvailability);
+            if (@available(iOS 10, *)) {
+                self.textContentType = UITextContentTypeTelephoneNumber;
             }
-#endif
             break;
         }
     }
@@ -269,7 +260,6 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 
 // Fixes a weird issue related to our custom override of deleteBackwards. This only affects the simulator and iPads with custom keyboards.
 - (NSArray *)keyCommands {
-    FAUXPAS_IGNORED_IN_METHOD(APIAvailability);
     return @[[UIKeyCommand keyCommandWithInput:@"\b" modifierFlags:UIKeyModifierCommand action:@selector(commandDeleteBackwards)]];
 }
 

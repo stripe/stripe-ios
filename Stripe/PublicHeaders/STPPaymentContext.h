@@ -371,7 +371,9 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
  You should call the completion block with the results of your validation
  and the available shipping methods for the given address. If you don't implement
  this method, the user won't be prompted to select a shipping method and all
- addresses will be valid.
+ addresses will be valid. If you call the completion block with nil or an
+ empty array of shipping methods, the user won't be prompted to select a
+ shipping method.
 
  @note If a user updates their shipping address within the Apple Pay dialog,
  this address will be anonymized. For example, in the US, it will only include the
@@ -381,7 +383,10 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
 
  @param paymentContext  The context that updated its shipping address
  @param address The current shipping address
- @param completion      Call this block when you're done validating the shipping address and calculating available shipping methods.
+ @param completion      Call this block when you're done validating the shipping
+ address and calculating available shipping methods. If you call the completion
+ block with nil or an empty array of shipping methods, the user won't be prompted
+ to select a shipping method.
  */
 - (void)paymentContext:(STPPaymentContext *)paymentContext
 didUpdateShippingAddress:(STPAddress *)address

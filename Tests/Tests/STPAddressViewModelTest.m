@@ -18,6 +18,7 @@
 - (void)testInitWithRequiredBillingFields {
     STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredBillingFields:STPBillingAddressFieldsNone];
     XCTAssertTrue([sut.addressCells count] == 0);
+    XCTAssertTrue(sut.isValid);
 
     sut = [[STPAddressViewModel alloc] initWithRequiredBillingFields:STPBillingAddressFieldsZip];
     XCTAssertTrue([sut.addressCells count] == 1);
@@ -126,7 +127,29 @@
     XCTAssertEqualObjects(sut.addressCells[8].contents, @"555-555-5555");
 }
 
-- (void)testIsValid {
+- (void)testIsValid_Zip {
+    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredBillingFields:STPBillingAddressFieldsZip];
+
+    STPAddress *address = [STPAddress new];
+
+    address.country = @"US";
+    sut.address = address;
+    XCTAssertEqual(sut.addressCells.count, 1ul);
+    XCTAssertFalse(sut.isValid, @"US addresses have postalCode, require it when requiredBillingFields is .Zip");
+
+    address.postalCode = @"94016";
+    sut.address = address;
+    XCTAssertTrue(sut.isValid);
+
+    address.country = @"MO"; // in Macao, postalCode is optional
+    address.postalCode = nil;
+    sut.address = address;
+    XCTAssertEqual(sut.addressCells.count, 0ul);
+    XCTAssertTrue(sut.isValid, @"in Macao, postalCode is optional, valid without one");
+}
+
+
+- (void)testIsValid_Full {
     STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredBillingFields:STPBillingAddressFieldsFull];
     XCTAssertFalse(sut.isValid);
     sut.addressCells[0].contents = @"John Smith";

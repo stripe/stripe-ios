@@ -52,7 +52,7 @@ typedef void (^STPRedirectContextCompletionBlock)(NSString *sourceID, NSString *
 /**
  This is a helper class for handling redirect sources.
 
- Init an instance with the redirect flow source you want to handle,
+ Init and retain an instance with the redirect flow source you want to handle,
  then choose a redirect method. The context will fire the completion handler
  when the redirect completes.
 
@@ -64,13 +64,12 @@ typedef void (^STPRedirectContextCompletionBlock)(NSString *sourceID, NSString *
  However, it is possible the when the redirect is "completed", the user may
  have not actually completed the necessary actions to authorize the charge.
 
- You can use `STPAPIClient` to listen for state changes on the source
- object as a way to identify whether the user action succeeded or not.
- @see `[STPAPIClient startPollingSourceWithId:clientSecret:timeout:completion:]`
-
  You should not use either this class, nor `STPAPIClient`, as a way
- to determine when you should charge the source. Use Stripe webhooks on your
- backend server to listen for source state changes and to make the charge.
+ to determine when you should charge the source or to determine if the redirect
+ was successful. Use Stripe webhooks on your backend server to listen for source
+ state changes and to make the charge.
+ 
+ See https://stripe.com/docs/sources/best-practices
  */
 NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions")
 @interface STPRedirectContext : NSObject
@@ -157,7 +156,7 @@ NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions
  @param presentingViewController The view controller to present the Safari 
  view controller from.
  */
-- (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController NS_AVAILABLE_IOS(9_0);
+- (void)startSafariViewControllerRedirectFlowFromViewController:(UIViewController *)presentingViewController;
 
 /**
  Starts a redirect flow by calling `openURL` to bounce the user out to

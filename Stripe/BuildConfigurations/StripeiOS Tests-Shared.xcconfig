@@ -21,9 +21,6 @@ CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR
 CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR
 
 
-IPHONEOS_DEPLOYMENT_TARGET = 8.0
-
-
 // Code Signing Identity
 // 
 // The name ("common name") of a valid code-signing certificate in a keychain within your

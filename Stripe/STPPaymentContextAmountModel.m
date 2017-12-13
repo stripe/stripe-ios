@@ -15,8 +15,6 @@
     NSArray<PKPaymentSummaryItem *> *_paymentSummaryItems;
 }
 
-FAUXPAS_IGNORED_IN_CLASS(APIAvailability)
-
 - (instancetype)initWithAmount:(NSInteger)paymentAmount {
     self = [super init];
     if (self) {

@@ -9,6 +9,8 @@
 #import <XCTest/XCTest.h>
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import <Stripe/Stripe.h>
+
+#import "FBSnapshotTestCase+STPViewControllerLoading.h"
 #import "STPAddressViewModel.h"
 #import "STPAddressFieldTableViewCell.h"
 #import "STPBundleLocator.h"
@@ -59,19 +61,16 @@
                                                                                             selectedShippingMethod:nil
                                                                                               prefilledInformation:info];
 
-    UINavigationController *navController = [UINavigationController new];
-    navController.view.frame = CGRectMake(0, 0, 320, 750);
-    [navController pushViewController:shippingVC animated:NO];
-    [navController.view layoutIfNeeded];
-    navController.view.frame = CGRectMake(0, 0, 320, shippingVC.tableView.contentSize.height);
-
     /**
      This method rejects nil or empty country codes to stop strange looking behavior
      when scrolling to the top "unset" position in the picker, so put in
      an invalid country code instead to test seeing the "Country" placeholder
      */
     shippingVC.addressViewModel.addressFieldTableViewCountryCode = @"INVALID";
-    FBSnapshotVerifyView(navController.view, identifier);
+
+    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:shippingVC];
+
+    FBSnapshotVerifyView(viewToTest, identifier);
 
     [STPLocalizationUtils overrideLanguageTo:nil];
 }

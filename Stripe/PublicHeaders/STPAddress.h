@@ -6,17 +6,8 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#define FAUXPAS_IGNORED_IN_METHOD(...)
-#define FAUXPAS_IGNORED_ON_LINE(...)
-
 #import <Foundation/Foundation.h>
 #import <PassKit/PassKit.h>
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-#import <AddressBook/AddressBook.h>
-#pragma clang diagnostic pop
-
 #import "STPAPIResponseDecodable.h"
 
 @class CNContact;
@@ -134,41 +125,20 @@ extern STPContactField const STPContactFieldName;
 + (nullable NSDictionary *)shippingInfoForChargeWithAddress:(nullable STPAddress *)address
                                              shippingMethod:(nullable PKShippingMethod *)method;
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-
-/**
- Initializes a new STPAddress with data from an Address Book record.
-
- @param record The Address Book record you want to populate the STPAddress from.
- @return A new STPAddress instance with data copied from the passed in record.
- */
-- (instancetype)initWithABRecord:(ABRecordRef)record;
-
-
-/**
- Generates an Address Book record representation of this STPAddress.
-
- @return A new autoreleased Address Book record with data copied from this 
- STPAddress instance.
- */
-- (ABRecordRef)ABRecordValue;
-#pragma clang diagnostic pop
-
 /**
  Initializes a new STPAddress with data from an PassKit contact.
 
  @param contact The PassKit contact you want to populate the STPAddress from.
  @return A new STPAddress instance with data copied from the passed in contact.
  */
-- (instancetype)initWithPKContact:(PKContact *)contact NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);
+- (instancetype)initWithPKContact:(PKContact *)contact;
 
 /**
  Generates a PassKit contact representation of this STPAddress.
 
  @return A new PassKit contact with data copied from this STPAddress instance.
  */
-- (PKContact *)PKContactValue NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);
+- (PKContact *)PKContactValue;
 
 /**
  Initializes a new STPAddress with a contact from the Contacts framework.
@@ -177,7 +147,7 @@ extern STPContactField const STPContactFieldName;
 
  @return A new STPAddress instance with data copied from the passed in contact.
  */
-- (instancetype)initWithCNContact:(CNContact *)contact NS_AVAILABLE_IOS(9_0); FAUXPAS_IGNORED_ON_LINE(APIAvailability);
+- (instancetype)initWithCNContact:(CNContact *)contact;
 
 
 /**

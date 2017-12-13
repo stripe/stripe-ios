@@ -76,7 +76,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)shippingAddressViewControllerDidCancel:(STPShippingAddressViewController *)addressViewController;
 
 /**
- This is called when the user enters a shipping address and taps next. You should validate the address and determine what shipping methods are available, and call the `completion` block when finished. If an error occurrs, call the `completion` block with the error. Otherwise, call the `completion` block with a nil error and an array of available shipping methods. If you don't need to collect a shipping method, you may pass an empty array.
+ This is called when the user enters a shipping address and taps next. You
+ should validate the address and determine what shipping methods are available,
+ and call the `completion` block when finished. If an error occurrs, call
+ the `completion` block with the error. Otherwise, call the `completion`
+ block with a nil error and an array of available shipping methods. If you don't
+ need to collect a shipping method, you may pass an empty array or nil.
 
  @param addressViewController the view controller where the address was entered
  @param address               the address that was entered. @see STPAddress
