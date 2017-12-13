@@ -117,12 +117,9 @@ NS_EXTENSION_UNAVAILABLE("Redirect based sources are not available in extensions
  and fire its completion block when either the URL is received, or the next
  time the app is foregrounded.
 
- If the app is running on iOS 9+ it will initiate the flow by presenting
- a SFSafariViewController instance from the pass in view controller.
- Otherwise, if the app is running on iOS 8 it will initiate the flow by
- bouncing the user out to the Safari app. If you want more manual control 
- over the redirect method, you can use 
- `startSafariViewControllerRedirectFlowFromViewController` 
+ The context will initiate the flow by presenting a SFSafariViewController
+ instance from the passsed in view controller. If you want more manual control
+ over the redirect method, you can use `startSafariViewControllerRedirectFlowFromViewController` 
  or `startSafariAppRedirectFlow`
  
  If the source supports a native app, and that app is is installed on the user's
