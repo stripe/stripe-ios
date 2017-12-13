@@ -500,22 +500,22 @@
 
     self.sut.numberField.text = @"4242" "4242" "4242" "4242";
 
-    XCTAssertTrue([self.sut becomeFirstResponder]);
     XCTAssertEqual(self.sut.expirationField, self.sut.currentFirstResponderField,
-                   @"Once numberField is valid, becomeFirstResponder should move to the next field (expiration)");
+                   @"Once numberField is valid, firstResponder should move to the next field (expiration)");
 
     XCTAssertTrue([self.sut.cvcField becomeFirstResponder]);
     XCTAssertEqual(self.sut.cvcField, self.sut.currentFirstResponderField,
                    @"We don't block other fields from becoming firstResponder");
 
     XCTAssertTrue([self.sut becomeFirstResponder]);
-    XCTAssertEqual(self.sut.expirationField, self.sut.currentFirstResponderField,
-                   @"Moves firstResponder back to expiration, because it's not valid yet");
+    XCTAssertEqual(self.sut.cvcField, self.sut.currentFirstResponderField,
+                   @"Calling becomeFirstResponder does not change the currentFirstResponder");
 
     self.sut.expirationField.text = @"10/99";
     self.sut.cvcField.text = @"123";
 
     XCTAssertTrue(self.sut.isValid);
+    [self.sut resignFirstResponder];
     XCTAssertTrue([self.sut canBecomeFirstResponder]);
     XCTAssertTrue([self.sut becomeFirstResponder]);
 
@@ -525,11 +525,13 @@
     self.sut.postalCodeEntryEnabled = YES;
     XCTAssertFalse(self.sut.isValid);
 
+    [self.sut resignFirstResponder];
     XCTAssertTrue([self.sut becomeFirstResponder]);
     XCTAssertEqual(self.sut.postalCodeField, self.sut.currentFirstResponderField,
                    @"When postalCodeEntryEnabled=YES, it should become firstResponder after other fields are valid");
 
     self.sut.expirationField.text = @"";
+    [self.sut resignFirstResponder];
     XCTAssertTrue([self.sut becomeFirstResponder]);
     XCTAssertEqual(self.sut.expirationField, self.sut.currentFirstResponderField,
                    @"Moves firstResponder back to expiration, because it's not valid anymore");
@@ -538,6 +540,7 @@
     self.sut.postalCodeField.text = @"90210";
 
     XCTAssertTrue(self.sut.isValid);
+    [self.sut resignFirstResponder];
     XCTAssertTrue([self.sut becomeFirstResponder]);
     XCTAssertEqual(self.sut.postalCodeField, self.sut.currentFirstResponderField,
                    @"When all fields are valid, the last one should be the preferred firstResponder");

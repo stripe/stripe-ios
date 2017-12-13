@@ -10,6 +10,7 @@
 
 #import "STPPaymentCardTextField.h"
 
+#import "NSArray+Stripe.h"
 #import "NSString+Stripe.h"
 #import "STPFormTextField.h"
 #import "STPImageLibrary.h"
@@ -451,14 +452,27 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 - (BOOL)canBecomeFirstResponder {
-    return [[self nextFirstResponderField] canBecomeFirstResponder];
+    STPFormTextField *firstResponder = [self currentFirstResponderField] ?: [self nextFirstResponderField];
+    return [firstResponder canBecomeFirstResponder];
 }
 
 - (BOOL)becomeFirstResponder {
-    return [[self nextFirstResponderField] becomeFirstResponder];
+    STPFormTextField *firstResponder = [self currentFirstResponderField] ?: [self nextFirstResponderField];
+    return [firstResponder becomeFirstResponder];
 }
 
 - (nonnull STPFormTextField *)nextFirstResponderField {
+    STPFormTextField *currentFirstResponder = [self currentFirstResponderField];
+    if (currentFirstResponder) {
+        NSUInteger index = [self.allFields indexOfObject:currentFirstResponder];
+        if (index != NSNotFound) {
+            STPFormTextField *nextField = [self.allFields stp_boundSafeObjectAtIndex:index + 1];
+            if (self.postalCodeEntryEnabled || nextField != self.postalCodeField) {
+                return nextField;
+            }
+        }
+    }
+
     return [self firstInvalidSubField] ?: [self lastSubField];
 }
 
@@ -1267,7 +1281,7 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
                 }
             }
 
-            // This is a no-op if this is the last field
+            // This is a no-op if this is the last field & they're all valid
             [[self nextFirstResponderField] becomeFirstResponder];
             break;
         }
