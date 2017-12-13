@@ -29,7 +29,7 @@ If you're reading this on GitHub.com, please make sure you are looking at the [t
 
 ## Requirements
 
-The Stripe iOS SDK is compatible with apps supporting iOS 8 and above and requires Xcode 8 or Xcode 9 to build from source.
+The Stripe iOS SDK is compatible with apps supporting iOS 9 and above and requires Xcode 9 to build from source.
 
 ## Getting Started
 
