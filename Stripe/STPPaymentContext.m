@@ -102,7 +102,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         _paymentCountry = @"US";
         _paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithAmount:0];
         _modalPresentationStyle = UIModalPresentationFullScreen;
-        _largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeAutomatic;
+        if (@available(iOS 11, *)) {
+            _largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeAutomatic;
+        }
         _state = STPPaymentContextStateNone;
         [self retryLoading];
     }
@@ -288,11 +290,15 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
             paymentMethodsViewController.paymentMethodsViewControllerFooterView = self.paymentMethodsViewControllerFooterView;
             paymentMethodsViewController.addCardViewControllerFooterView = self.addCardViewControllerFooterView;
-            paymentMethodsViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
+            if (@available(iOS 11, *)) {
+                paymentMethodsViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
+            }
 
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
             navigationController.navigationBar.stp_theme = self.theme;
-            navigationController.navigationBar.prefersLargeTitles = YES;
+            if (@available(iOS 11, *)) {
+                navigationController.navigationBar.prefersLargeTitles = YES;
+            }
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
             [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
         }
@@ -319,7 +325,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
             paymentMethodsViewController.paymentMethodsViewControllerFooterView = self.paymentMethodsViewControllerFooterView;
             paymentMethodsViewController.addCardViewControllerFooterView = self.addCardViewControllerFooterView;
-            paymentMethodsViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
+            if (@available(iOS 11, *)) {
+                paymentMethodsViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
+            }
             
             [navigationController pushViewController:paymentMethodsViewController animated:YES];
         }
@@ -401,10 +409,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             self.state = state;
 
             STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:self];
-            addressViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
+            if (@available(iOS 11, *)) {
+                addressViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
+            }
             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addressViewController];
             navigationController.navigationBar.stp_theme = self.theme;
-            navigationController.navigationBar.prefersLargeTitles = YES;
+            if (@available(iOS 11, *)) {
+                navigationController.navigationBar.prefersLargeTitles = YES;
+            }
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
             [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
         }
@@ -427,7 +439,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             self.state = STPPaymentContextStateShowingRequestedViewController;
 
             STPShippingAddressViewController *addressViewController = [[STPShippingAddressViewController alloc] initWithPaymentContext:self];
-            addressViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
+            if (@available(iOS 11, *)) {
+                addressViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
+            }
             [navigationController pushViewController:addressViewController animated:YES];
         }
     }];

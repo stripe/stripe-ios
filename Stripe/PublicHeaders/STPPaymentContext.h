@@ -246,7 +246,7 @@ NS_ASSUME_NONNULL_BEGIN
  If the view controller is presented modally, `automatic` and
  `never` always result in a navigation bar with a small title.
  */
-@property (nonatomic, assign) UINavigationItemLargeTitleDisplayMode largeTitleDisplayMode;
+@property (nonatomic, assign) UINavigationItemLargeTitleDisplayMode largeTitleDisplayMode NS_AVAILABLE_IOS(11_0);
 
 /**
  A view that will be placed as the footer of the payment methods selection 
