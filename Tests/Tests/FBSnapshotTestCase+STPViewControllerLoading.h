@@ -9,5 +9,18 @@
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 
 @interface FBSnapshotTestCase (STPViewControllerLoading)
-- (UIView *)stp_preparedAndSizedViewForSnapshotTestFromViewController:(UIViewController *)viewController;
+
+/**
+ Returns a navigation controller initialized with the given root view controller
+ and prepares it for snapshot testing (adding it to a UIWindow and loading views)
+ */
+- (UINavigationController *)stp_navigationControllerForSnapshotTestWithRootVC:(UIViewController *)viewController;
+
+/**
+ Returns a view for snapshot testing from the topViewController of the given
+ navigation controller, making necessary layout adjustments for
+ `STPCoreScrollViewController`.
+ */
+- (UIView *)stp_preparedAndSizedViewForSnapshotTestFromNavigationController:(UINavigationController *)navController;
+
 @end

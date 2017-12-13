@@ -40,7 +40,8 @@
                                                                                                               delegate:delegate];
 
 
-    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:paymentMethodsVC];
+    UINavigationController *navController = [self stp_navigationControllerForSnapshotTestWithRootVC:paymentMethodsVC];
+    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:navController];
 
     FBSnapshotVerifyView(viewToTest, nil);
     [STPLocalizationUtils overrideLanguageTo:nil];

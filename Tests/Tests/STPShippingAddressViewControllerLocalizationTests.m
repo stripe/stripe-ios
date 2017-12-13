@@ -68,7 +68,8 @@
      */
     shippingVC.addressViewModel.addressFieldTableViewCountryCode = @"INVALID";
 
-    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:shippingVC];
+    UINavigationController *navController = [self stp_navigationControllerForSnapshotTestWithRootVC:shippingVC];
+    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:navController];
 
     FBSnapshotVerifyView(viewToTest, identifier);
 

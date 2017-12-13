@@ -160,6 +160,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     return !self.loadingPromise.completed;
 }
 
+// Disable transition animations in tests
+- (BOOL)transitionAnimationsEnabled {
+    return NSClassFromString(@"XCTest") == nil;
+}
+
 - (void)setHostViewController:(UIViewController *)hostViewController {
     NSCAssert(_hostViewController == nil, @"You cannot change the hostViewController on an STPPaymentContext after it's already been set.");
     _hostViewController = hostViewController;
@@ -300,7 +305,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                 navigationController.navigationBar.prefersLargeTitles = YES;
             }
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
-            [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
+            [self.hostViewController presentViewController:navigationController
+                                                  animated:[self transitionAnimationsEnabled]
+                                                completion:nil];
         }
     }];
 }
@@ -328,8 +335,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             if (@available(iOS 11, *)) {
                 paymentMethodsViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
             }
-            
-            [navigationController pushViewController:paymentMethodsViewController animated:YES];
+
+            [navigationController pushViewController:paymentMethodsViewController
+                                            animated:[self transitionAnimationsEnabled]];
         }
     }];
 }
@@ -372,7 +380,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                                               completion:(STPVoidBlock)completion {
     if ([viewController stp_isAtRootOfNavigationController]) {
         // if we're the root of the navigation controller, we've been presented modally.
-        [viewController.presentingViewController dismissViewControllerAnimated:YES completion:^{
+        [viewController.presentingViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]
+                                                                    completion:^{
             self.paymentMethodsViewController = nil;
             if (completion) {
                 completion();
@@ -385,7 +394,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         if ([self.hostViewController isKindOfClass:[UINavigationController class]]) {
             destinationViewController = self.originalTopViewController;
         }
-        [viewController.navigationController stp_popToViewController:destinationViewController animated:YES completion:^{
+        [viewController.navigationController stp_popToViewController:destinationViewController
+                                                            animated:[self transitionAnimationsEnabled]
+                                                          completion:^{
             self.paymentMethodsViewController = nil;
             if (completion) {
                 completion();
@@ -418,7 +429,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                 navigationController.navigationBar.prefersLargeTitles = YES;
             }
             navigationController.modalPresentationStyle = self.modalPresentationStyle;
-            [self.hostViewController presentViewController:navigationController animated:YES completion:nil];
+            [self.hostViewController presentViewController:navigationController
+                                                  animated:[self transitionAnimationsEnabled]
+                                                completion:nil];
         }
     }];
 }
@@ -442,7 +455,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             if (@available(iOS 11, *)) {
                 addressViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
             }
-            [navigationController pushViewController:addressViewController animated:YES];
+            [navigationController pushViewController:addressViewController
+                                            animated:[self transitionAnimationsEnabled]];
         }
     }];
 }
@@ -501,7 +515,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                                 completion:(STPVoidBlock)completion {
     if ([viewController stp_isAtRootOfNavigationController]) {
         // if we're the root of the navigation controller, we've been presented modally.
-        [viewController.presentingViewController dismissViewControllerAnimated:YES completion:^{
+        [viewController.presentingViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]
+                                                                    completion:^{
             if (completion) {
                 completion();
             }
@@ -513,7 +528,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         if ([self.hostViewController isKindOfClass:[UINavigationController class]]) {
             destinationViewController = self.originalTopViewController;
         }
-        [viewController.navigationController stp_popToViewController:destinationViewController animated:YES completion:^{
+        [viewController.navigationController stp_popToViewController:destinationViewController
+                                                            animated:[self transitionAnimationsEnabled]
+                                                          completion:^{
             if (completion) {
                 completion();
             }
@@ -634,13 +651,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                              onPaymentAuthorization:paymentHandler
                              onTokenCreation:applePayTokenHandler
                              onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
-                                 [self.hostViewController dismissViewControllerAnimated:YES completion:^{
+                                 [self.hostViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]
+                                                                             completion:^{
                                      [self didFinishWithStatus:status
                                                          error:error];
                                  }];
                              }];
             [self.hostViewController presentViewController:paymentAuthVC
-                                                  animated:YES
+                                                  animated:[self transitionAnimationsEnabled]
                                                 completion:nil];
         }
     }] onFailure:^(NSError *error) {

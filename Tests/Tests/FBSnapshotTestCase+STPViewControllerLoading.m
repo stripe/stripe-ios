@@ -10,13 +10,24 @@
 #import "STPCoreScrollViewController+Private.h"
 
 @implementation FBSnapshotTestCase (STPViewControllerLoading)
-- (UIView *)stp_preparedAndSizedViewForSnapshotTestFromViewController:(UIViewController *)viewController {
+
+- (UINavigationController *)stp_navigationControllerForSnapshotTestWithRootVC:(UIViewController *)viewController {
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
     UIWindow *testWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
     testWindow.rootViewController = navController;
     testWindow.hidden = NO;
 
-    // Test that loaded properly + loads them on first call
+    // Test that views loaded properly + loads them on first call
+    XCTAssertNotNil(navController.view);
+    XCTAssertNotNil(viewController.view);
+
+    return navController;
+}
+
+- (UIView *)stp_preparedAndSizedViewForSnapshotTestFromNavigationController:(UINavigationController *)navController {
+    UIViewController *viewController = [navController topViewController];
+
+    // Test that views loaded properly + loads them on first call
     XCTAssertNotNil(navController.view);
     XCTAssertNotNil(viewController.view);
 
