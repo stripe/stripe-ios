@@ -96,7 +96,7 @@ class CheckoutRowView: UIView {
                                                   width: height, height: height)
     }
 
-    func didTap() {
+    @objc func didTap() {
         self.onTap()
     }
 
