@@ -73,20 +73,11 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 @interface STPFormTextField()
 @property (nonatomic) STPTextFieldDelegateProxy *delegateProxy;
 @property (nonatomic, copy) STPFormTextTransformationBlock textFormattingBlock;
-// This property only exists to disable keyboard loading in Travis CI due to a crash that occurs while trying to load the keyboard. Don't use it outside of tests.
-@property (nonatomic) BOOL skipsReloadingInputViews;
 @end
 
 @implementation STPFormTextField
 
 @synthesize placeholderColor = _placeholderColor;
-
-- (void)reloadInputViews {
-    if (self.skipsReloadingInputViews) {
-        return;
-    }
-    [super reloadInputViews];
-}
 
 + (NSDictionary *)attributesForAttributedString:(NSAttributedString *)attributedString {
     if (attributedString.length == 0) {
