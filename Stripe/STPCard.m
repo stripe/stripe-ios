@@ -198,7 +198,8 @@ NS_ASSUME_NONNULL_BEGIN
     card.currency = dict[@"currency"];
     card.expMonth = [dict[@"exp_month"] intValue];
     card.expYear = [dict[@"exp_year"] intValue];
-    card.metadata = [dict[@"metadata"] stp_dictionaryByRemovingNonStrings];
+    if ([dict[@"metadata"] isKindOfClass: [NSDictionary class]])
+        card.metadata = [dict[@"metadata"] stp_dictionaryByRemovingNonStrings];
 
     card.address.name = card.name;
     card.address.line1 = dict[@"address_line1"];
