@@ -137,8 +137,8 @@
                        forState:UIControlStateNormal];
     [headerView.button addTarget:self action:@selector(useBillingAddress:)
                 forControlEvents:UIControlEventTouchUpInside];
-    PKAddressField requiredFields = self.configuration.requiredShippingAddressFields;
-    BOOL needsAddress = (requiredFields & PKAddressFieldPostalAddress) && !self.addressViewModel.isValid;
+    NSSet<STPContactField> *requiredFields = self.configuration.requiredShippingAddressFields;
+    BOOL needsAddress = [requiredFields containsObject:STPContactFieldPostalAddress] && !self.addressViewModel.isValid;
     BOOL buttonVisible = (needsAddress
                           && [self.billingAddress containsContentForShippingAddressFields:requiredFields]
                           && !self.hasUsedBillingAddress);
@@ -357,7 +357,7 @@
 }
 
 - (NSString *)titleForShippingType:(STPShippingType)type {
-    if (self.configuration.requiredShippingAddressFields & PKAddressFieldPostalAddress) {
+    if ([self.configuration.requiredShippingAddressFields containsObject:STPContactFieldPostalAddress]) {
         switch (type) {
             case STPShippingTypeShipping:
                 return STPLocalizedString(@"Shipping", @"Title for shipping info form");
@@ -373,7 +373,7 @@
 }
 
 - (NSString *)headerTitleForShippingType:(STPShippingType)type {
-     if (self.configuration.requiredShippingAddressFields & PKAddressFieldPostalAddress) {
+     if ([self.configuration.requiredShippingAddressFields containsObject:STPContactFieldPostalAddress]) {
         switch (type) {
             case STPShippingTypeShipping:
                 return STPLocalizedString(@"Shipping Address", @"Title for shipping address entry section");

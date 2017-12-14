@@ -55,9 +55,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  The shipping address fields the user must fill out when prompted for their
- shipping info.
+ shipping info. Set to nil if shipping address is not required.
+
+ The default value is nil.
  */
-@property (nonatomic, assign, readwrite) PKAddressField requiredShippingAddressFields;
+@property (nonatomic, copy, nullable, readwrite) NSSet<STPContactField> *requiredShippingAddressFields;
 
 /**
  Whether the user should be prompted to verify prefilled shipping information.

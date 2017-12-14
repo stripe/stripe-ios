@@ -34,7 +34,7 @@
     XCTAssertNil(paymentConfiguration.publishableKey);
     XCTAssertEqual(paymentConfiguration.additionalPaymentMethods, STPPaymentMethodTypeAll);
     XCTAssertEqual(paymentConfiguration.requiredBillingAddressFields, STPBillingAddressFieldsNone);
-    XCTAssertEqual(paymentConfiguration.requiredShippingAddressFields, PKAddressFieldNone);
+    XCTAssertNil(paymentConfiguration.requiredShippingAddressFields);
     XCTAssert(paymentConfiguration.verifyPrefilledShippingAddress);
     XCTAssertEqual(paymentConfiguration.shippingType, STPShippingTypeShipping);
     XCTAssertEqualObjects(paymentConfiguration.companyName, @"applicationName");
@@ -96,11 +96,16 @@
 #pragma mark - NSCopying
 
 - (void)testCopyWithZone {
+    NSSet<STPContactField> *allFields = [NSSet setWithArray:@[STPContactFieldPostalAddress,
+                                                              STPContactFieldEmailAddress,
+                                                              STPContactFieldPhoneNumber,
+                                                              STPContactFieldName]];
+
     STPPaymentConfiguration *paymentConfigurationA = [[STPPaymentConfiguration alloc] init];
     paymentConfigurationA.publishableKey = @"publishableKey";
     paymentConfigurationA.additionalPaymentMethods = STPPaymentMethodTypeApplePay;
     paymentConfigurationA.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    paymentConfigurationA.requiredShippingAddressFields = PKAddressFieldAll;
+    paymentConfigurationA.requiredShippingAddressFields = allFields;
     paymentConfigurationA.verifyPrefilledShippingAddress = NO;
     paymentConfigurationA.shippingType = STPShippingTypeDelivery;
     paymentConfigurationA.companyName = @"companyName";
@@ -113,7 +118,7 @@
     XCTAssertEqualObjects(paymentConfigurationB.publishableKey, @"publishableKey");
     XCTAssertEqual(paymentConfigurationB.additionalPaymentMethods, STPPaymentMethodTypeApplePay);
     XCTAssertEqual(paymentConfigurationB.requiredBillingAddressFields, STPBillingAddressFieldsFull);
-    XCTAssertEqual(paymentConfigurationB.requiredShippingAddressFields, PKAddressFieldAll);
+    XCTAssertEqualObjects(paymentConfigurationB.requiredShippingAddressFields, allFields);
     XCTAssertFalse(paymentConfigurationB.verifyPrefilledShippingAddress);
     XCTAssertEqual(paymentConfigurationB.shippingType, STPShippingTypeDelivery);
     XCTAssertEqualObjects(paymentConfigurationB.companyName, @"companyName");

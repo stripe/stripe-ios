@@ -39,9 +39,12 @@
     NSString *identifier = (shippingType == STPShippingTypeShipping) ? @"shipping" : @"delivery";
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
-    config.requiredShippingAddressFields = PKAddressFieldAll;
+    config.requiredShippingAddressFields = [NSSet setWithArray:@[STPContactFieldPostalAddress,
+                                                                 STPContactFieldEmailAddress,
+                                                                 STPContactFieldPhoneNumber,
+                                                                 STPContactFieldName]];
     if (contact) {
-        config.requiredShippingAddressFields = PKAddressFieldEmail;
+        config.requiredShippingAddressFields = [NSSet setWithArray:@[STPContactFieldEmailAddress]];
         identifier = @"contact";
     }
     config.shippingType = shippingType;

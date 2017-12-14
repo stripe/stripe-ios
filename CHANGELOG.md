@@ -4,7 +4,9 @@
 * Minimum supported Xcode version is now 9.0
 * `AddressBook` framework support has been removed.
 * `STPRedirectContext` will no longer retain itself for the duration of the redirect, you must explicitly maintain a reference to it yourself.
+* `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmask. 
 * See MIGRATING.md for more information on any of the previously mentioned breaking API changes.
+
 
 ## 11.5.0 2017-11-09
 * Adds a new helper method to `STPSourceParams` for creating reusable Alipay sources. [#811](https://github.com/stripe/stripe-ios/pull/811)
