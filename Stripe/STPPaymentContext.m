@@ -647,7 +647,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     paymentRequest.requiredBillingAddressFields = [STPAddress applePayAddressFieldsFromBillingAddressFields:self.configuration.requiredBillingAddressFields];
 
     if (@available(iOS 11, *)) {
-        paymentRequest.requiredShippingContactFields = [STPAddress pkContactFieldsFromStripeContactFields:self.configuration.requiredShippingAddressFields];
+        NSSet<PKContactField> *requiredFields = [STPAddress pkContactFieldsFromStripeContactFields:self.configuration.requiredShippingAddressFields];
+        if (requiredFields) {
+            paymentRequest.requiredShippingContactFields = requiredFields;
+        }
     }
     else {
         paymentRequest.requiredShippingAddressFields = [STPAddress pkAddressFieldsFromStripeContactFields:self.configuration.requiredShippingAddressFields];

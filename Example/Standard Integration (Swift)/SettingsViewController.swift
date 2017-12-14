@@ -13,7 +13,7 @@ struct Settings {
     let theme: STPTheme
     let additionalPaymentMethods: STPPaymentMethodType
     let requiredBillingAddressFields: STPBillingAddressFields
-    let requiredShippingAddressFields: PKAddressField
+    let requiredShippingAddressFields: Set<STPContactField>
     let shippingType: STPShippingType
 }
 
@@ -22,7 +22,7 @@ class SettingsViewController: UITableViewController {
         return Settings(theme: self.theme.stpTheme,
                         additionalPaymentMethods: self.applePay.enabled ? .all : STPPaymentMethodType(),
                         requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
-                        requiredShippingAddressFields: self.requiredShippingAddressFields.pkAddressFields,
+                        requiredShippingAddressFields: self.requiredShippingAddressFields.stpContactFields,
                         shippingType: self.shippingType.stpShippingType)
     }
 
@@ -145,12 +145,12 @@ class SettingsViewController: UITableViewController {
             }
         }
 
-        var pkAddressFields: PKAddressField {
+        var stpContactFields: Set<STPContactField> {
             switch self {
             case .None: return []
-            case .Email: return .email
-            case .PostalAddressPhone: return [.postalAddress, .phone]
-            case .All: return .all
+            case .Email: return [.emailAddress]
+            case .PostalAddressPhone: return [.postalAddress, .phoneNumber]
+            case .All: return [.postalAddress, .phoneNumber, .emailAddress, .name]
             }
         }
     }

@@ -238,7 +238,7 @@ extern STPContactField const STPContactFieldName;
  @return The closest representation of the contact fields as
  a PKContactField value.
  */
-+ (NSSet<PKContactField> *)pkContactFieldsFromStripeContactFields:(nullable NSSet<STPContactField> *)contactFields API_AVAILABLE(ios(11.0));
++ (nullable NSSet<PKContactField> *)pkContactFieldsFromStripeContactFields:(nullable NSSet<STPContactField> *)contactFields API_AVAILABLE(ios(11.0));
 
 @end
 
