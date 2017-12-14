@@ -14,10 +14,6 @@
 #import "STPFormTextField.h"
 #import "STPPaymentCardTextFieldViewModel.h"
 
-@interface STPFormTextField(Testing)
-@property (nonatomic) BOOL skipsReloadingInputViews;
-@end
-
 @interface STPPaymentCardTextField (Testing)
 @property (nonatomic, readwrite, weak) UIImageView *brandImageView;
 @property (nonatomic, readwrite, weak) STPFormTextField *numberField;
@@ -366,9 +362,6 @@
     [super setUp];
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     STPPaymentCardTextField *textField = [[STPPaymentCardTextField alloc] initWithFrame:self.window.bounds];
-    textField.numberField.skipsReloadingInputViews = YES;
-    textField.expirationField.skipsReloadingInputViews = YES;
-    textField.cvcField.skipsReloadingInputViews = YES;
     [self.window addSubview:textField];
     XCTAssertTrue([textField.numberField canBecomeFirstResponder], @"text field cannot become first responder");
     self.sut = textField;
