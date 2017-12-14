@@ -18,7 +18,6 @@
 #import "STPWeakStrongMacros.h"
 #import "Stripe.h"
 #import "STPLocalizationUtils.h"
-#import "UIView+Stripe_SafeAreaBounds.h"
 
 @interface STPPaymentCardTextField()<STPFormTextFieldDelegate>
 
@@ -857,7 +856,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
 }
 
 - (void)recalculateSubviewLayout {
-    CGRect bounds = [self stp_boundsWithHorizontalSafeAreaInsets];
+    CGRect bounds = self.bounds;
 
     self.brandImageView.frame = [self brandImageRectForBounds:bounds];
     CGRect fieldsViewRect = [self fieldsRectForBounds:bounds];
