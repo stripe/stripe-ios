@@ -857,7 +857,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
 }
 
 - (void)recalculateSubviewLayout {
-    CGRect bounds = [self boundsWithHorizontalSafeAreaInsets];
+    CGRect bounds = [self stp_boundsWithHorizontalSafeAreaInsets];
 
     self.brandImageView.frame = [self brandImageRectForBounds:bounds];
     CGRect fieldsViewRect = [self fieldsRectForBounds:bounds];

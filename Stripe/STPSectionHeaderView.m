@@ -75,7 +75,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    CGRect bounds = [self boundsWithHorizontalSafeAreaInsets];
+    CGRect bounds = [self stp_boundsWithHorizontalSafeAreaInsets];
     if (self.buttonHidden) {
         self.label.frame = bounds;
     } else {

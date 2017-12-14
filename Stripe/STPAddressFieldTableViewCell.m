@@ -250,7 +250,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    CGRect bounds = [self boundsWithHorizontalSafeAreaInsets];
+    CGRect bounds = [self stp_boundsWithHorizontalSafeAreaInsets];
     CGFloat textFieldX = 15;
     self.textField.frame = CGRectMake(textFieldX, 1, bounds.size.width - textFieldX, bounds.size.height - 1);
     self.inputAccessoryToolbar.frame = CGRectMake(0, 0, bounds.size.width, 44);

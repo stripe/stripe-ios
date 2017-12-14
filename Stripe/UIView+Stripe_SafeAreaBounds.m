@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation UIView (Stripe_SafeAreaBounds)
 
-- (CGRect)boundsWithHorizontalSafeAreaInsets {
+- (CGRect)stp_boundsWithHorizontalSafeAreaInsets {
     if (@available(iOS 11.0, *)) {
         UIView *view = self;
         UIEdgeInsets insets = UIEdgeInsetsZero;

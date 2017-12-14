@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  this view's bounds inset to `safeAreaInsets.left` and `safeAreaInsets.right`.
  Top and bottom safe area insets are ignored. On iOS <11, this returns self.bounds.
  */
-- (CGRect)boundsWithHorizontalSafeAreaInsets;
+- (CGRect)stp_boundsWithHorizontalSafeAreaInsets;
 
 @end
 
