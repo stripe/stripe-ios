@@ -234,19 +234,10 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 
 // Workaround for http://www.openradar.appspot.com/19374610
 - (CGRect)editingRectForBounds:(CGRect)bounds {
-    if (UIDevice.currentDevice.systemVersion.integerValue != 8) {
-        return [self textRectForBounds:bounds];
-    }
-    
-    CGFloat const scale = UIScreen.mainScreen.scale;
-    CGFloat const preferred = self.attributedText.size.height;
-    CGFloat const delta = (CGFloat)ceil(preferred) - preferred;
-    CGFloat const adjustment = (CGFloat)floor(delta * scale) / scale;
-    
-    CGRect const textRect = [self textRectForBounds:bounds];
-    CGRect const editingRect = CGRectOffset(textRect, 0.0, adjustment);
-    
-    return editingRect;
+    // danj: I still see a small vertical jump between the editingRect & textRect for text fields in
+    // iOS 10.0-10.3 (but not 9.0 or 11.0-11.2). By using the textRect as the editingRect, this prevents
+    // mismatches causing vertical mis-alignments
+    return [self textRectForBounds:bounds];
 }
 
 // Fixes a weird issue related to our custom override of deleteBackwards. This only affects the simulator and iPads with custom keyboards.
