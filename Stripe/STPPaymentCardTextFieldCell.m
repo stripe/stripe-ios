@@ -49,7 +49,6 @@
     self.paymentField.textErrorColor = self.theme.errorColor;
     self.paymentField.font = self.theme.font;
     self.backgroundColor = self.theme.secondaryBackgroundColor;
-    self.contentView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)setInputAccessoryView:(UIView *)inputAccessoryView {

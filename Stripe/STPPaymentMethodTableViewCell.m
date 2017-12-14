@@ -75,7 +75,6 @@
     self.theme = theme;
 
     self.backgroundColor = theme.secondaryBackgroundColor;
-    self.contentView.backgroundColor = [UIColor clearColor];
 
     // Left icon
     self.leftIcon.image = [STPImageLibrary addIcon];
@@ -97,7 +96,6 @@
     self.theme = theme;
 
     self.backgroundColor = theme.secondaryBackgroundColor;
-    self.contentView.backgroundColor = [UIColor clearColor];
 
     // Left icon
     self.leftIcon.image = paymentMethod.templateImage;
