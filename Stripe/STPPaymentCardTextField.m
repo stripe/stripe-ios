@@ -10,6 +10,7 @@
 
 #import "STPPaymentCardTextField.h"
 
+#import "NSArray+Stripe.h"
 #import "NSString+Stripe.h"
 #import "STPFormTextField.h"
 #import "STPImageLibrary.h"
@@ -440,42 +441,35 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 #pragma mark UIResponder & related methods
 
 - (BOOL)isFirstResponder {
-    return [self.currentFirstResponderField isFirstResponder];
+    return self.currentFirstResponderField != nil;
 }
 
 - (BOOL)canBecomeFirstResponder {
-    return [[self nextFirstResponderField] canBecomeFirstResponder];
+    STPFormTextField *firstResponder = [self currentFirstResponderField] ?: [self nextFirstResponderField];
+    return [firstResponder canBecomeFirstResponder];
 }
 
 - (BOOL)becomeFirstResponder {
-    return [[self nextFirstResponderField] becomeFirstResponder];
+    STPFormTextField *firstResponder = [self currentFirstResponderField] ?: [self nextFirstResponderField];
+    return [firstResponder becomeFirstResponder];
 }
 
-- (STPFormTextField *)nextFirstResponderField {
-    STPFormTextField *currentSubResponder = self.currentFirstResponderField;
-    if (currentSubResponder) {
-        NSUInteger index = [self.allFields indexOfObject:currentSubResponder];
+- (nonnull STPFormTextField *)nextFirstResponderField {
+    STPFormTextField *currentFirstResponder = [self currentFirstResponderField];
+    if (currentFirstResponder) {
+        NSUInteger index = [self.allFields indexOfObject:currentFirstResponder];
         if (index != NSNotFound) {
-            index += 1;
-            if (self.allFields.count > index) {
-                STPFormTextField *nextField = self.allFields[index];
-                if (nextField == self.postalCodeField
-                    && !self.postalCodeEntryEnabled) {
-                    return [self firstInvalidSubField];
-                }
-                else {
-                    return nextField;
-                }
+            STPFormTextField *nextField = [self.allFields stp_boundSafeObjectAtIndex:index + 1];
+            if (self.postalCodeEntryEnabled || nextField != self.postalCodeField) {
+                return nextField;
             }
         }
-        return [self firstInvalidSubField];
     }
-    else {
-        return [self firstInvalidSubField];
-    }
+
+    return [self firstInvalidSubField] ?: [self lastSubField];
 }
 
-- (STPFormTextField *)firstInvalidSubField {
+- (nullable STPFormTextField *)firstInvalidSubField {
     if ([self.viewModel validationStateForField:STPCardFieldTypeNumber] != STPCardValidationStateValid) {
         return self.numberField;
     }
@@ -492,6 +486,10 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     else {
         return nil;
     }
+}
+
+- (nonnull STPFormTextField *)lastSubField {
+    return self.postalCodeEntryEnabled ? self.postalCodeField : self.cvcField;
 }
 
 - (STPFormTextField *)currentFirstResponderField {
@@ -1276,6 +1274,7 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
                 }
             }
 
+            // This is a no-op if this is the last field & they're all valid
             [[self nextFirstResponderField] becomeFirstResponder];
             break;
         }
