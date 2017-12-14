@@ -14,12 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (CGRect)stp_boundsWithHorizontalSafeAreaInsets {
     if (@available(iOS 11.0, *)) {
-        UIView *view = self;
-        UIEdgeInsets insets = UIEdgeInsetsZero;
-        while (view.superview != nil || UIEdgeInsetsEqualToEdgeInsets(insets, UIEdgeInsetsZero)) {
-            view = view.superview;
-            insets = view.safeAreaInsets;
-        }
+        UIEdgeInsets insets = self.safeAreaInsets;
         CGRect safeBounds = CGRectMake(self.bounds.origin.x + insets.left,
                                        self.bounds.origin.y,
                                        self.bounds.size.width - (insets.left + insets.right),
