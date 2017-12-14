@@ -237,6 +237,7 @@
 
 - (void)updateAppearance {
     self.backgroundColor = self.theme.secondaryBackgroundColor;
+    self.contentView.backgroundColor = [UIColor clearColor];
     self.textField.placeholderColor = self.theme.tertiaryForegroundColor;
     self.textField.defaultColor = self.theme.primaryForegroundColor;
     self.textField.errorColor = self.theme.errorColor;

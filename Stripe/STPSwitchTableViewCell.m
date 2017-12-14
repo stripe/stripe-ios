@@ -65,6 +65,7 @@
     self.switchView.onTintColor = self.theme.accentColor;
     self.captionLabel.font = self.theme.font;
     self.backgroundColor = self.theme.secondaryBackgroundColor;
+    self.contentView.backgroundColor = [UIColor clearColor];
 	self.captionLabel.textColor = self.theme.primaryForegroundColor;
 }
 

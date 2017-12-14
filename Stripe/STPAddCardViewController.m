@@ -409,6 +409,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
             return [UITableViewCell new]; // won't be called; exists to make the static analyzer happy
     }
     cell.backgroundColor = self.theme.secondaryBackgroundColor;
+    cell.contentView.backgroundColor = [UIColor clearColor];
     return cell;
 }
 

@@ -314,6 +314,7 @@
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self.addressViewModel.addressCells stp_boundSafeObjectAtIndex:indexPath.row];
     cell.backgroundColor = self.theme.secondaryBackgroundColor;
+    cell.contentView.backgroundColor = [UIColor clearColor];
     return cell;
 }
 
