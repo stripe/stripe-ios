@@ -112,6 +112,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)retryLoading {
+    // Clear any cached customer object before refetching
+    if ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) {
+        STPCustomerContext *customerContext = (STPCustomerContext *)self.apiAdapter;
+        [customerContext clearCachedCustomer];
+    }
     WEAK(self);
     self.loadingPromise = [[[STPPromise<STPPaymentMethodTuple *> new] onSuccess:^(STPPaymentMethodTuple *tuple) {
         STRONG(self);
