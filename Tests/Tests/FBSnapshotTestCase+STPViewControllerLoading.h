@@ -14,7 +14,7 @@
  Embeds the given controller in a navigation controller, prepares it for
  snapshot testing and returns the view controller's view.
  */
-- (UIView *)stp_preparedAndSizedViewForSnapshotTestFromViewController:(UIViewController *viewController)viewController;
+- (UIView *)stp_preparedAndSizedViewForSnapshotTestFromViewController:(UIViewController *)viewController;
 
 /**
  Returns a navigation controller initialized with the given root view controller
