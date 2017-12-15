@@ -49,8 +49,7 @@
     method2.identifier = @"fedex";
 
     STPShippingMethodsViewController *shippingVC = [[STPShippingMethodsViewController alloc]  initWithShippingMethods:@[method1, method2] selectedShippingMethod:method1 currency:@"usd" theme:[STPTheme defaultTheme]];
-    UINavigationController *navController = [self stp_navigationControllerForSnapshotTestWithRootVC:shippingVC];
-    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:navController];
+    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:shippingVC];
     FBSnapshotVerifyView(viewToTest, nil);
     [STPLocalizationUtils overrideLanguageTo:nil];
 }

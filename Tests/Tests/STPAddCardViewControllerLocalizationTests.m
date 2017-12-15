@@ -54,8 +54,7 @@
     addCardVC.shippingAddress = [STPAddress new];
     addCardVC.shippingAddress.line1 = @"1"; // trigger "use shipping address" button
 
-    UINavigationController *navController = [self stp_navigationControllerForSnapshotTestWithRootVC:addCardVC];
-    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:navController];
+    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:addCardVC];
 
     if (delivery) {
         addCardVC.addressViewModel.addressFieldTableViewCountryCode = @"INVALID";

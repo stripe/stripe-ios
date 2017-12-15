@@ -11,6 +11,12 @@
 @interface FBSnapshotTestCase (STPViewControllerLoading)
 
 /**
+ Embeds the given controller in a navigation controller, prepares it for
+ snapshot testing and returns the view controller's view.
+ */
+- (UIView *)stp_preparedAndSizedViewForSnapshotTestFromViewController:(UIViewController *viewController)viewController;
+
+/**
  Returns a navigation controller initialized with the given root view controller
  and prepares it for snapshot testing (adding it to a UIWindow and loading views)
  */

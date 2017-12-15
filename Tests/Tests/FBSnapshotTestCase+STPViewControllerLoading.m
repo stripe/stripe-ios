@@ -11,6 +11,11 @@
 
 @implementation FBSnapshotTestCase (STPViewControllerLoading)
 
+- (UIView *)stp_preparedAndSizedViewForSnapshotTestFromViewController:(UIViewController *)viewController {
+    UINavigationController *navController = [self stp_navigationControllerForSnapshotTestWithRootVC:viewController];
+    return [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:navController];
+}
+
 - (UINavigationController *)stp_navigationControllerForSnapshotTestWithRootVC:(UIViewController *)viewController {
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
     UIWindow *testWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
