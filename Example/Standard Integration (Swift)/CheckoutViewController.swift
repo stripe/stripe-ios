@@ -161,17 +161,21 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let width = self.view.bounds.width
+        var insets = UIEdgeInsets.zero
+        if #available(iOS 11.0, *) {
+            insets = view.safeAreaInsets
+        }
+        let width = self.view.bounds.width - (insets.left + insets.right)
         self.productImage.sizeToFit()
         self.productImage.center = CGPoint(x: width/2.0,
                                            y: self.productImage.bounds.height/2.0 + rowHeight)
-        self.paymentRow.frame = CGRect(x: 0, y: self.productImage.frame.maxY + rowHeight,
+        self.paymentRow.frame = CGRect(x: insets.left, y: self.productImage.frame.maxY + rowHeight,
                                        width: width, height: rowHeight)
-        self.shippingRow.frame = CGRect(x: 0, y: self.paymentRow.frame.maxY,
+        self.shippingRow.frame = CGRect(x: insets.left, y: self.paymentRow.frame.maxY,
                                         width: width, height: rowHeight)
-        self.totalRow.frame = CGRect(x: 0, y: self.shippingRow.frame.maxY,
+        self.totalRow.frame = CGRect(x: insets.left, y: self.shippingRow.frame.maxY,
                                      width: width, height: rowHeight)
-        self.buyButton.frame = CGRect(x: 0, y: 0, width: 88, height: 44)
+        self.buyButton.frame = CGRect(x: insets.left, y: 0, width: 88, height: 44)
         self.buyButton.center = CGPoint(x: width/2.0, y: self.totalRow.frame.maxY + rowHeight*1.5)
         self.activityIndicator.center = self.buyButton.center
     }

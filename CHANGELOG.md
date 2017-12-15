@@ -6,6 +6,7 @@
 * `STPRedirectContext` will no longer retain itself for the duration of the redirect, you must explicitly maintain a reference to it yourself.
 * `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmask. 
 * See MIGRATING.md for more information on any of the previously mentioned breaking API changes.
+* Pre-built view controllers now layout properly on iPhone X in landscape orientation, respecting `safeAreaInsets`.
 
 
 ## 11.5.0 2017-11-09

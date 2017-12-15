@@ -32,6 +32,7 @@
 #import "UITableViewCell+Stripe_Borders.h"
 #import "UIToolbar+Stripe_InputAccessory.h"
 #import "UIView+Stripe_FirstResponder.h"
+#import "UIView+Stripe_SafeAreaBounds.h"
 #import "UIViewController+Stripe_KeyboardAvoiding.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "UIViewController+Stripe_ParentViewController.h"
@@ -65,6 +66,7 @@
     linkUIViewControllerParentViewControllerCategory();
     linkUIViewControllerPromisesCategory();
     linkUIViewFirstResponderCategory();
+    linkUIViewSafeAreaBoundsCategory();
     linkNSCharacterSetCategory();
 }
 
