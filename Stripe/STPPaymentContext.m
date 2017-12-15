@@ -112,9 +112,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)retryLoading {
-    if (self.loadingPromise && self.loadingPromise.value) {
-        return;
-    }
     WEAK(self);
     self.loadingPromise = [[[STPPromise<STPPaymentMethodTuple *> new] onSuccess:^(STPPaymentMethodTuple *tuple) {
         STRONG(self);
