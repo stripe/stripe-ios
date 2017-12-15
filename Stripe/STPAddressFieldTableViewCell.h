@@ -29,7 +29,6 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
 @protocol STPAddressFieldTableViewCellDelegate <NSObject>
 
 - (void)addressFieldTableViewCellDidUpdateText:(STPAddressFieldTableViewCell *)cell;
-- (void)addressFieldTableViewCellDidBackspaceOnEmpty:(STPAddressFieldTableViewCell *)cell;
 
 @optional
 - (void)addressFieldTableViewCellDidReturn:(STPAddressFieldTableViewCell *)cell;

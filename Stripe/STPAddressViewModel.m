@@ -240,14 +240,6 @@
     }
 }
 
-- (void)addressFieldTableViewCellDidBackspaceOnEmpty:(STPAddressFieldTableViewCell *)cell {
-    if ([self.addressCells indexOfObject:cell] == 0) {
-        [self.previousField becomeFirstResponder];
-    } else {
-        [[self cellBeforeCell:cell] becomeFirstResponder];
-    }
-}
-
 - (void)addressFieldTableViewCellDidUpdateText:(__unused STPAddressFieldTableViewCell *)cell {
     [self.delegate addressViewModelDidChange:self];
 }

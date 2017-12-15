@@ -295,10 +295,6 @@
     }
 }
 
-- (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
-    [self.delegate addressFieldTableViewCellDidBackspaceOnEmpty:self];
-}
-
 - (void)setCaption:(NSString *)caption {
     self.textField.placeholder = caption;
 }
