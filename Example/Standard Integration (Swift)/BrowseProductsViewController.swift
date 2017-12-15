@@ -35,6 +35,7 @@ class BrowseProductsViewController: UITableViewController {
         super.viewDidLoad()
         self.navigationItem.title = "Emoji Apparel"
         self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.view.backgroundColor = .white
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Products", style: .plain, target: nil, action: nil)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(showSettings))
     }
