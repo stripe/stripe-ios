@@ -7,6 +7,8 @@
 * `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmask. 
 * See MIGRATING.md for more information on any of the previously mentioned breaking API changes.
 * Pre-built view controllers now layout properly on iPhone X in landscape orientation, respecting `safeAreaInsets`.
+* Fixes a bug in `STPAddCardViewController` that prevented users in countries without postal codes from adding a card when `requiredBillingFields = .Zip`. [#853](https://github.com/stripe/stripe-ios/pull/853)
+* Fixes a bug in `STPPaymentCardTextField`. When completely filled out, it ignored calls to `becomeFirstResponder`. [#855](https://github.com/stripe/stripe-ios/pull/855)
 
 
 ## 11.5.0 2017-11-09
