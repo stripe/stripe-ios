@@ -4,12 +4,12 @@
 * Minimum supported Xcode version is now 9.0
 * `AddressBook` framework support has been removed.
 * `STPRedirectContext` will no longer retain itself for the duration of the redirect, you must explicitly maintain a reference to it yourself.
-* `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmask. 
+* `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmask.
 * See MIGRATING.md for more information on any of the previously mentioned breaking API changes.
 * Pre-built view controllers now layout properly on iPhone X in landscape orientation, respecting `safeAreaInsets`.
 * Fixes a bug in `STPAddCardViewController` that prevented users in countries without postal codes from adding a card when `requiredBillingFields = .Zip`. [#853](https://github.com/stripe/stripe-ios/pull/853)
 * Fixes a bug in `STPPaymentCardTextField`. When completely filled out, it ignored calls to `becomeFirstResponder`. [#855](https://github.com/stripe/stripe-ios/pull/855)
-
+* `STPPaymentContext` now has a `largeTitleDisplayMode` property, which you can use to control the title display mode in the navigation bar of our pre-built view controllers.
 
 ## 11.5.0 2017-11-09
 * Adds a new helper method to `STPSourceParams` for creating reusable Alipay sources. [#811](https://github.com/stripe/stripe-ios/pull/811)
