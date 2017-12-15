@@ -15,7 +15,7 @@
 #import "STPPostalCodeValidator.h"
 #import "UIView+Stripe_SafeAreaBounds.h"
 
-@interface STPAddressFieldTableViewCell() <STPFormTextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
+@interface STPAddressFieldTableViewCell() <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (nonatomic, weak) STPFormTextField *textField;
 @property (nonatomic) UIToolbar *inputAccessoryToolbar;
@@ -38,10 +38,13 @@
         _contents = contents;
         
         STPFormTextField *textField = [[STPFormTextField alloc] init];
-        textField.formDelegate = self;
+        textField.delegate = self;
         textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
         textField.selectionEnabled = YES;
         textField.preservesContentsOnPaste = YES;
+        [textField addTarget:self
+                      action:@selector(textFieldTextDidChange:)
+            forControlEvents:UIControlEventEditingChanged];
         _textField = textField;
         [self.contentView addSubview:textField];
         
@@ -267,9 +270,9 @@
     }
 }
 
-#pragma mark - STPFormTextFieldDelegate
+#pragma mark - UITextFieldDelegate
 
-- (void)formTextFieldTextDidChange:(STPFormTextField *)textField {
+- (void)textFieldTextDidChange:(STPValidatedTextField *)textField {
     if (self.type != STPAddressFieldTypeCountry) {
         _contents = textField.text;
         if ([textField isFirstResponder]) {
@@ -367,6 +370,7 @@
     self.ourCountryCode = self.countryCodes[row];
     self.contents = self.ourCountryCode;
     self.textField.text = [self pickerView:pickerView titleForRow:row forComponent:component];
+    [self textFieldTextDidChange:self.textField]; // UIControlEvent not fired for programmatic changes
     if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCountryCode)]) {
         self.delegate.addressFieldTableViewCountryCode = self.ourCountryCode;
     }
