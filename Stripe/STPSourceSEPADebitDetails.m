@@ -39,12 +39,8 @@
 
 #pragma mark - STPAPIResponseDecodable
 
-+ (NSArray *)requiredFields {
-    return @[];
-}
-
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
         return nil;
     }
@@ -54,15 +50,12 @@
 - (instancetype)initWithDictionary:(NSDictionary *)dict {
     self = [super init];
     if (self) {
-        _last4 = dict[@"last4"];
-        _bankCode = dict[@"bank_code"];
-        _country = dict[@"country"];
-        _fingerprint = dict[@"fingerprint"];
-        _mandateReference = dict[@"mandate_reference"];
-        NSString *urlString = dict[@"mandate_url"];
-        if (urlString) {
-            _mandateURL = [NSURL URLWithString:urlString];
-        }
+        _last4 = [dict stp_stringForKey:@"last4"];
+        _bankCode = [dict stp_stringForKey:@"bank_code"];
+        _country = [dict stp_stringForKey:@"country"];
+        _fingerprint = [dict stp_stringForKey:@"fingerprint"];
+        _mandateReference = [dict stp_stringForKey:@"mandate_reference"];
+        _mandateURL = [dict stp_urlForKey:@"mandate_url"];
 
         _allResponseFields = dict.copy;
     }

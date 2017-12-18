@@ -58,29 +58,34 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - STPAPIResponseDecodable
 
-+ (NSArray *)requiredFields {
-    return @[@"id"];
-}
-
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
         return nil;
     }
 
+    // required fields
+    NSString *stripeId = [dict stp_stringForKey:@"id"];
+    if (!stripeId) {
+        return nil;
+    }
+
     STPCustomer *customer = [[self class] new];
-    customer.stripeID = dict[@"id"];
-    if ([dict[@"shipping"] isKindOfClass:[NSDictionary class]]) {
-        NSDictionary *shippingDict = dict[@"shipping"];
+    customer.stripeID = stripeId;
+    NSDictionary *shippingDict = [dict stp_dictionaryForKey:@"shipping"];
+    if (shippingDict) {
         STPAddress *shipping = [STPAddress new];
-        shipping.name = shippingDict[@"name"];
-        shipping.phone = shippingDict[@"phone"];
-        shipping.line1 = shippingDict[@"address"][@"line1"];
-        shipping.line2 = shippingDict[@"address"][@"line2"];
-        shipping.city = shippingDict[@"address"][@"city"];
-        shipping.state = shippingDict[@"address"][@"state"];
-        shipping.postalCode = shippingDict[@"address"][@"postal_code"];
-        shipping.country = shippingDict[@"address"][@"country"];
+        shipping.name = [shippingDict stp_stringForKey:@"name"];
+        shipping.phone = [shippingDict stp_stringForKey:@"phone"];
+        NSDictionary *addressDict = [shippingDict stp_dictionaryForKey:@"address"];
+        if (addressDict) {
+            shipping.line1 = [addressDict stp_stringForKey:@"line1"];
+            shipping.line2 = [addressDict stp_stringForKey:@"line2"];
+            shipping.city = [addressDict stp_stringForKey:@"city"];
+            shipping.state = [addressDict stp_stringForKey:@"state"];
+            shipping.postalCode = [addressDict stp_stringForKey:@"postal_code"];
+            shipping.country = [addressDict stp_stringForKey:@"country"];
+        }
         customer.shippingAddress = shipping;
     }
     customer.sources = @[];
@@ -93,21 +98,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateSourcesWithResponse:(NSDictionary *)response
                 filteringApplePay:(BOOL)filterApplePay {
     NSArray *data;
-    if ([response[@"sources"] isKindOfClass:[NSDictionary class]]) {
-        data = response[@"sources"][@"data"];
+    NSDictionary *sourcesDict = [response stp_dictionaryForKey:@"sources"];
+    if (sourcesDict) {
+        data = [sourcesDict stp_arrayForKey:@"data"];
     }
-    if (![data isKindOfClass:[NSArray class]]) {
+    if (!data) {
         return;
     }
     self.defaultSource = nil;
-    NSString *defaultSourceId;
-    if ([response[@"default_source"] isKindOfClass:[NSString class]]) {
-        defaultSourceId = response[@"default_source"];
-    }
+    NSString *defaultSourceId = [response stp_stringForKey:@"default_source"];
     NSMutableArray *sources = [NSMutableArray new];
     for (id contents in data) {
         if ([contents isKindOfClass:[NSDictionary class]]) {
-            if ([contents[@"object"] isEqual:@"card"]) {
+            NSString *object = [contents stp_stringForKey:@"object"];
+            if ([object isEqualToString:@"card"]) {
                 STPCard *card = [STPCard decodedObjectFromAPIResponse:contents];
                 BOOL includeCard = card != nil;
                 // ignore apple pay cards from the response
@@ -121,7 +125,7 @@ NS_ASSUME_NONNULL_BEGIN
                     }
                 }
             }
-            else if ([contents[@"object"] isEqualToString:@"source"]) {
+            else if ([object isEqualToString:@"source"]) {
                 STPSource *source = [STPSource decodedObjectFromAPIResponse:contents];
                 BOOL includeSource = source != nil;
                 // ignore apple pay cards from the response

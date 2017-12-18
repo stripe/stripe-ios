@@ -18,7 +18,7 @@
 
 #pragma mark - dictionaryByRemovingNullsValidatingRequiredFields
 
-- (void)test_dictionaryByRemovingNullsValidatingRequiredFields_removesNullsDeeply {
+- (void)test_dictionaryByRemovingNulls_removesNullsDeeply {
     NSDictionary *dictionary = @{
                                  @"id": @"card_123",
                                  @"tokenization_method": [NSNull null], // null in root
@@ -70,38 +70,25 @@
                                        ],
                                };
 
-    NSDictionary *result = [dictionary stp_dictionaryByRemovingNullsValidatingRequiredFields:@[]];
+    NSDictionary *result = [dictionary stp_dictionaryByRemovingNulls];
 
     XCTAssertEqualObjects(result, expected);
 }
 
 - (void)test_dictionaryByRemovingNullsValidatingRequiredFields_keepsEmptyLeaves {
     NSDictionary *dictionary = @{@"id": [NSNull null]};
-    NSDictionary *result = [dictionary stp_dictionaryByRemovingNullsValidatingRequiredFields:@[]];
+    NSDictionary *result = [dictionary stp_dictionaryByRemovingNulls];
 
     XCTAssertEqualObjects(result, @{});
 }
 
 - (void)test_dictionaryByRemovingNullsValidatingRequiredFields_returnsImmutableCopy {
     NSDictionary *dictionary = @{@"id": @"card_123"};
-    NSDictionary *result = [dictionary stp_dictionaryByRemovingNullsValidatingRequiredFields:@[]];
+    NSDictionary *result = [dictionary stp_dictionaryByRemovingNulls];
 
     XCTAssert(result);
     XCTAssertNotEqual(result, dictionary);
     XCTAssertFalse([result isKindOfClass:[NSMutableDictionary class]]);
-}
-
-- (void)test_dictionaryByRemovingNullsValidatingRequiredFields_missingRequiredFieldReturnsNil {
-    NSDictionary *dictionary = @{
-                                 @"id": @"card_123",
-                                 @"metadata": @{
-                                         @"user": @"user_123",
-                                         },
-                                 };
-
-    NSArray *requiredFields = @[@"id", @"object"];
-
-    XCTAssertNil([dictionary stp_dictionaryByRemovingNullsValidatingRequiredFields:requiredFields]);
 }
 
 #pragma mark - dictionaryByRemovingNonStrings
@@ -225,6 +212,7 @@
 
     XCTAssertEqualObjects([dict stp_dateForKey:@"a"], expectedDate);
     XCTAssertEqualObjects([dict stp_dateForKey:@"b"], expectedDate);
+    XCTAssertNil([dict stp_dateForKey:@"c"]);
 }
 
 - (void)testDictionaryForKey {
@@ -236,10 +224,29 @@
     XCTAssertNil([dict stp_dictionaryForKey:@"b"]);
 }
 
+- (void)testNumberForKey {
+    NSDictionary *dict = @{
+                           @"a": @1,
+                           };
+
+    XCTAssertEqualObjects([dict stp_numberForKey:@"a"], @1);
+    XCTAssertNil([dict stp_numberForKey:@"b"]);
+}
+
 - (void)testStringForKey {
     NSDictionary *dict = @{@"a": @"foo"};
     XCTAssertEqualObjects([dict stp_stringForKey:@"a"], @"foo");
     XCTAssertNil([dict stp_stringForKey:@"b"]);
+}
+
+- (void)testURLForKey {
+    NSDictionary *dict = @{
+                           @"a": @"https://example.com",
+                           @"b": @"not a url"
+                           };
+    XCTAssertEqualObjects([dict stp_urlForKey:@"a"], [NSURL URLWithString:@"https://example.com"]);
+    XCTAssertNil([dict stp_urlForKey:@"b"]);
+    XCTAssertNil([dict stp_urlForKey:@"c"]);
 }
 
 @end

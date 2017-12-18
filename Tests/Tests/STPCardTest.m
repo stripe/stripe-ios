@@ -287,7 +287,7 @@
     XCTAssertEqualObjects(card.name, @"Jane Austen");
 
     XCTAssertNotEqual(card.allResponseFields, response);
-    XCTAssertEqualObjects(card.allResponseFields, [response stp_dictionaryByRemovingNullsValidatingRequiredFields:@[]]);
+    XCTAssertEqualObjects(card.allResponseFields, [response stp_dictionaryByRemovingNulls]);
 }
 
 

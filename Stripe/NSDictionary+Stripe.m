@@ -14,19 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSDictionary (Stripe)
 
-- (nullable NSDictionary *)stp_dictionaryByRemovingNullsValidatingRequiredFields:(NSArray *)requiredFields {
-    NSDictionary *result = [self stp_dictionaryByRemovingNulls];
-
-    for (NSString *key in requiredFields) {
-        if (![[result allKeys] containsObject:key]) {
-            // Result missing required field
-            return nil;
-        }
-    }
-
-    return result;
-}
-
 - (NSDictionary *)stp_dictionaryByRemovingNulls {
     NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
 
@@ -123,6 +110,14 @@ NS_ASSUME_NONNULL_BEGIN
     return defaultValue;
 }
 
+- (nullable NSDictionary *)stp_numberForKey:(NSString *)key {
+    id value = self[key];
+    if (value && [value isKindOfClass:[NSNumber class]]) {
+        return value;
+    }
+    return nil;
+}
+
 - (nullable NSString *)stp_stringForKey:(NSString *)key {
     id value = self[key];
     if (value && [value isKindOfClass:[NSString class]]) {
@@ -131,8 +126,15 @@ NS_ASSUME_NONNULL_BEGIN
     return nil;
 }
 
-@end
+- (nullable NSURL *)stp_urlForKey:(NSString *)key {
+    id value = self[key];
+    if (value && [value isKindOfClass:[NSString class]]) {
+        return [NSURL URLWithString:value];
+    }
+    return nil;
+}
 
+@end
 void linkNSDictionaryCategory(void){}
 
 NS_ASSUME_NONNULL_END
