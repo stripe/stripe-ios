@@ -7,6 +7,8 @@
 * `STPPaymentConfiguration.requiredShippingAddress` now is a set of `STPContactField` objects instead of a `PKAddressField` bitmask.
 * See MIGRATING.md for more information on any of the previously mentioned breaking API changes.
 * Pre-built view controllers now layout properly on iPhone X in landscape orientation, respecting `safeAreaInsets`.
+* Fixes a bug in `STPAddCardViewController` that prevented users in countries without postal codes from adding a card when `requiredBillingFields = .Zip`. [#853](https://github.com/stripe/stripe-ios/pull/853)
+* Fixes a bug in `STPPaymentCardTextField`. When completely filled out, it ignored calls to `becomeFirstResponder`. [#855](https://github.com/stripe/stripe-ios/pull/855)
 * `STPPaymentContext` now has a `largeTitleDisplayMode` property, which you can use to control the title display mode in the navigation bar of our pre-built view controllers.
 * Fixes a bug where `STPPaymentContext`'s `retryLoading` method would not re-retrieve the customer object, even after calling `STPCustomerContext`'s `clearCachedCustomer` method.
 * `STPPaymentContext`'s `retryLoading` method will now always attempt to retrieve a new customer object, regardless of whether a cached customer object is available. Previously, this method was only intended for recovery from a loading error; if a customer had already been retrieved, `retryLoading` would do nothing.
