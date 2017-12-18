@@ -105,14 +105,14 @@ class MockCustomerContext: STPCustomerContext {
         completion(nil)
     }
 
-    func updateCustomer(withShippingAddress shipping: STPAddress, completion: STPErrorBlock?) {
+    override func updateCustomer(withShippingAddress shipping: STPAddress, completion: STPErrorBlock?) {
         customer.shippingAddress = shipping
         if let completion = completion {
             completion(nil)
         }
     }
 
-    func detachSource(fromCustomer source: STPSourceProtocol, completion: STPErrorBlock?) {
+    override func detachSource(fromCustomer source: STPSourceProtocol, completion: STPErrorBlock?) {
         if let index = customer.sources.index(where: { $0.stripeID == source.stripeID }) {
             customer.sources.remove(at: index)
         }
