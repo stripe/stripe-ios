@@ -298,19 +298,20 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
 }
 
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
         return nil;
     }
 
     STPAddress *address = [self new];
     address.allResponseFields = dict;
-    address.city = dict[@"city"];
-    address.country = dict[@"country"];
-    address.line1 = dict[@"line1"];
-    address.line2 = dict[@"line2"];
-    address.postalCode = dict[@"postal_code"];
-    address.state = dict[@"state"];
+    /// all properties are nullable
+    address.city = [dict stp_stringForKey:@"city"];
+    address.country = [dict stp_stringForKey:@"country"];
+    address.line1 = [dict stp_stringForKey:@"line1"];
+    address.line2 = [dict stp_stringForKey:@"line2"];
+    address.postalCode = [dict stp_stringForKey:@"postal_code"];
+    address.state = [dict stp_stringForKey:@"state"];
     return address;
 }
 
