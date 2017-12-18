@@ -66,6 +66,71 @@ NS_ASSUME_NONNULL_BEGIN
     return [result copy];
 }
 
+#pragma mark - Getters
+
+- (nullable NSArray *)stp_arrayForKey:(NSString *)key {
+    id value = self[key];
+    if (value && [value isKindOfClass:[NSArray class]]) {
+        return value;
+    }
+    return nil;
+}
+
+- (BOOL)stp_boolForKey:(NSString *)key or:(BOOL)defaultValue {
+    id value = self[key];
+    if (value) {
+        if ([value isKindOfClass:[NSNumber class]]) {
+            return [value boolValue];
+        }
+        if ([value isKindOfClass:[NSString class]]) {
+            NSString *string = [(NSString *)value lowercaseString];
+            // boolValue on NSString is true for "Y", "y", "T", "t", or 1-9
+            if ([string isEqualToString:@"true"] || [string boolValue]) {
+                return YES;
+            }
+            else {
+                return NO;
+            }
+        }
+    }
+    return defaultValue;
+}
+
+- (nullable NSDate *)stp_dateForKey:(NSString *)key {
+    id value = self[key];
+    if (value &&
+        ([value isKindOfClass:[NSNumber class]] || [value isKindOfClass:[NSString class]])) {
+        double timeInterval = [value doubleValue];
+        return [NSDate dateWithTimeIntervalSince1970:timeInterval];
+    }
+    return nil;
+}
+
+- (nullable NSDictionary *)stp_dictionaryForKey:(NSString *)key {
+    id value = self[key];
+    if (value && [value isKindOfClass:[NSDictionary class]]) {
+        return value;
+    }
+    return nil;
+}
+
+- (NSInteger)stp_intForKey:(NSString *)key or:(NSInteger)defaultValue {
+    id value = self[key];
+    if (value &&
+        ([value isKindOfClass:[NSNumber class]] || [value isKindOfClass:[NSString class]])) {
+        return [value integerValue];
+    }
+    return defaultValue;
+}
+
+- (nullable NSString *)stp_stringForKey:(NSString *)key {
+    id value = self[key];
+    if (value && [value isKindOfClass:[NSString class]]) {
+        return value;
+    }
+    return nil;
+}
+
 @end
 
 void linkNSDictionaryCategory(void){}

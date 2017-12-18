@@ -18,6 +18,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSDictionary<NSString *, NSString *> *)stp_dictionaryByRemovingNonStrings;
 
+// Getters
+
+- (nullable NSArray *)stp_arrayForKey:(NSString *)key;
+
+- (BOOL)stp_boolForKey:(NSString *)key or:(BOOL)defaultValue;
+
+- (nullable NSDate *)stp_dateForKey:(NSString *)key;
+
+- (nullable NSDictionary *)stp_dictionaryForKey:(NSString *)key;
+
+- (NSInteger)stp_intForKey:(NSString *)key or:(NSInteger)defaultValue;
+
+- (nullable NSString *)stp_stringForKey:(NSString *)key;
+
+
 @end
 
 NS_ASSUME_NONNULL_END
