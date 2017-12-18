@@ -83,6 +83,8 @@ NS_ASSUME_NONNULL_BEGIN
         shipping.country = shippingDict[@"address"][@"country"];
         customer.shippingAddress = shipping;
     }
+    customer.sources = @[];
+    customer.defaultSource = nil;
     [customer updateSourcesWithResponse:dict filteringApplePay:YES];
     customer.allResponseFields = dict;
     return customer;
