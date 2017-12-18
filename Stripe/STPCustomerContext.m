@@ -9,7 +9,7 @@
 #import "STPCustomerContext.h"
 
 #import "STPAPIClient+Private.h"
-#import "STPCustomer.h"
+#import "STPCustomer+Private.h"
 #import "STPEphemeralKey.h"
 #import "STPEphemeralKeyManager.h"
 #import "STPWeakStrongMacros.h"
@@ -38,6 +38,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
     self = [self init];
     if (self) {
         _keyManager = keyManager;
+        _includeApplePaySources = NO;
         [self retrieveCustomer:nil];
     }
     return self;
@@ -48,6 +49,10 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
 }
 
 - (void)setCustomer:(STPCustomer *)customer {
+    if (self.includeApplePaySources) {
+        [customer updateSourcesWithResponse:customer.allResponseFields
+                          filteringApplePay:NO];
+    }
     _customer = customer;
     _customerRetrievedDate = (customer) ? [NSDate date] : nil;
 }
@@ -84,7 +89,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
             }
             if (completion) {
                 stpDispatchToMainThreadIfNecessary(^{
-                    completion(customer, error);
+                    completion(self.customer, error);
                 });
             }
         }];

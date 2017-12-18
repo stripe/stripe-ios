@@ -84,6 +84,12 @@ extern NSString *const STPTestJSONSourceSEPADebit;
 + (STPCustomer *)customerWithCardTokenAndSourceSources;
 
 /**
+ A Customer object with a card source, and apple pay card source, and
+ default_source set to the apple pay source.
+ */
++ (STPCustomer *)customerWithCardAndApplePaySources;
+
+/**
  A customer object with a sources array that includes the listed json sources
  in the order they are listed in the array.
  

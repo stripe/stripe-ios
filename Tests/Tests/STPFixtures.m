@@ -125,6 +125,25 @@ NSString *const STPTestJSONSourceSEPADebit = @"SEPADebitSource";
 
 }
 
++ (STPCustomer *)customerWithCardAndApplePaySources {
+    NSMutableDictionary *card1 = [[STPTestUtils jsonNamed:STPTestJSONSourceCard] mutableCopy];
+    card1[@"id"] = @"src_apple_pay_123";
+    NSMutableDictionary *cardDict = [card1[@"card"] mutableCopy];
+    cardDict[@"tokenization_method"] = @"apple_pay";
+    card1[@"card"] = cardDict;
+
+    NSMutableDictionary *card2 = [[STPTestUtils jsonNamed:STPTestJSONSourceCard] mutableCopy];
+    card2[@"id"] = @"src_card_456";
+
+    NSMutableDictionary *customer = [[STPTestUtils jsonNamed:STPTestJSONCustomer] mutableCopy];
+    NSMutableDictionary *sources = [customer[@"sources"] mutableCopy];
+    sources[@"data"] = @[card1, card2];
+    customer[@"default_source"] = card1[@"id"];
+    customer[@"sources"] = sources;
+
+    return [STPCustomer decodedObjectFromAPIResponse:customer];
+}
+
 + (STPCustomer *)customerWithSourcesFromJSONKeys:(NSArray<NSString *> *)jsonSourceKeys
                                    defaultSource:(NSString *)jsonKeyForDefaultSource {
     NSMutableArray *sourceJSONDicts = [NSMutableArray new];

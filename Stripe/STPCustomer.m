@@ -14,6 +14,8 @@
 #import "STPCard.h"
 #import "STPSource.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STPCustomer()
 
 @property (nonatomic, copy) NSString *stripeID;
@@ -27,7 +29,7 @@
 @implementation STPCustomer
 
 + (instancetype)customerWithStripeID:(NSString *)stripeID
-                       defaultSource:(id<STPSourceProtocol>)defaultSource
+                       defaultSource:(nullable id<STPSourceProtocol>)defaultSource
                              sources:(NSArray<id<STPSourceProtocol>> *)sources {
     STPCustomer *customer = [self new];
     customer.stripeID = stripeID;
@@ -60,7 +62,7 @@
     return @[@"id"];
 }
 
-+ (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
++ (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
     NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
     if (!dict) {
         return nil;
@@ -68,10 +70,6 @@
 
     STPCustomer *customer = [[self class] new];
     customer.stripeID = dict[@"id"];
-    NSString *defaultSourceId;
-    if ([dict[@"default_source"] isKindOfClass:[NSString class]]) {
-        defaultSourceId = dict[@"default_source"];
-    }
     if ([dict[@"shipping"] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *shippingDict = dict[@"shipping"];
         STPAddress *shipping = [STPAddress new];
@@ -85,43 +83,60 @@
         shipping.country = shippingDict[@"address"][@"country"];
         customer.shippingAddress = shipping;
     }
-    NSMutableArray *sources = [NSMutableArray array];
-    if ([dict[@"sources"] isKindOfClass:[NSDictionary class]] && [dict[@"sources"][@"data"] isKindOfClass:[NSArray class]]) {
-        for (id contents in dict[@"sources"][@"data"]) {
-            if ([contents isKindOfClass:[NSDictionary class]]) {
-                if ([contents[@"object"] isEqualToString:@"card"]) {
-                    STPCard *card = [STPCard decodedObjectFromAPIResponse:contents];
-                    // ignore apple pay cards from the response
-                    if (card && !card.isApplePayCard) {
-                        [sources addObject:card];
-                        if (defaultSourceId && [card.stripeID isEqualToString:defaultSourceId]) {
-                            customer.defaultSource = card;
-                        }
+    [customer updateSourcesWithResponse:dict filteringApplePay:YES];
+    customer.allResponseFields = dict;
+    return customer;
+}
+
+- (void)updateSourcesWithResponse:(NSDictionary *)response
+                filteringApplePay:(BOOL)filterApplePay {
+    NSArray *data;
+    if ([response[@"sources"] isKindOfClass:[NSDictionary class]]) {
+        data = response[@"sources"][@"data"];
+    }
+    if (![data isKindOfClass:[NSArray class]]) {
+        return;
+    }
+    NSString *defaultSourceId;
+    if ([response[@"default_source"] isKindOfClass:[NSString class]]) {
+        defaultSourceId = response[@"default_source"];
+    }
+    NSMutableArray *sources = [NSMutableArray new];
+    for (id contents in data) {
+        if ([contents isKindOfClass:[NSDictionary class]]) {
+            if ([contents[@"object"] isEqualToString:@"card"]) {
+                STPCard *card = [STPCard decodedObjectFromAPIResponse:contents];
+                BOOL includeCard = card != nil;
+                // ignore apple pay cards from the response
+                if (filterApplePay && card.isApplePayCard) {
+                    includeCard = NO;
+                }
+                if (includeCard) {
+                    [sources addObject:card];
+                    if (defaultSourceId && [card.stripeID isEqualToString:defaultSourceId]) {
+                        self.defaultSource = card;
                     }
                 }
-                else if ([contents[@"object"] isEqualToString:@"source"]) {
-                    STPSource *source = [STPSource decodedObjectFromAPIResponse:contents];
-                    if (source) {
-                        if (source.type == STPSourceTypeCard
-                            && source.cardDetails != nil
-                            && source.cardDetails.isApplePayCard) {
-                            // do nothing
-                            // ignore apple pay cards from the response
-                        }
-                        else {
-                            [sources addObject:source];
-                            if (defaultSourceId && [source.stripeID isEqualToString:defaultSourceId]) {
-                                customer.defaultSource = source;
-                            }
-                        }
+            }
+            else if ([contents[@"object"] isEqualToString:@"source"]) {
+                STPSource *source = [STPSource decodedObjectFromAPIResponse:contents];
+                BOOL includeSource = source != nil;
+                // ignore apple pay cards from the response
+                if (filterApplePay && (source.type == STPSourceTypeCard &&
+                                       source.cardDetails != nil &&
+                                       source.cardDetails.isApplePayCard)) {
+                    includeSource = NO;
+                }
+                if (includeSource) {
+                    [sources addObject:source];
+                    if (defaultSourceId && [source.stripeID isEqualToString:defaultSourceId]) {
+                        self.defaultSource = source;
                     }
                 }
             }
         }
-        customer.sources = sources;
     }
-    customer.allResponseFields = dict;
-    return customer;
+    self.sources = sources;
 }
 
 @end
@@ -176,3 +191,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

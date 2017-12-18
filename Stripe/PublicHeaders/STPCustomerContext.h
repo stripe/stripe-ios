@@ -46,6 +46,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)clearCachedCustomer;
 
+/**
+ By default, `STPCustomerContext` will filter Apple Pay sources when it retrieves
+ a Customer object. If you are using `STPCustomerContext` to back your own UI and
+ would like to disable Apple Pay filtering, set this property to YES.
+
+ Note: If you are using `STPPaymentContext`, you should not change this property.
+ */
+@property (nonatomic, assign) BOOL includeApplePaySources;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -304,4 +304,45 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
+#pragma mark - includeApplePaySources
+
+- (void)testFiltersApplePaySourcesByDefault {
+    STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
+    STPCustomer *expectedCustomer = [STPFixtures customerWithCardAndApplePaySources];
+    [self stubRetrieveCustomerUsingKey:customerKey
+                     returningCustomer:expectedCustomer
+                         expectedCount:2];
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
+    [sut clearCachedCustomer];
+    XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomer"];
+    [sut retrieveCustomer:^(STPCustomer *customer, __unused NSError *error) {
+        XCTAssertEqual(customer.sources.count, (unsigned int)1);
+        XCTAssertNil(customer.defaultSource);
+        [exp fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void)testIncludeApplePaySources {
+    STPEphemeralKey *customerKey = [STPFixtures ephemeralKey];
+    STPCustomer *expectedCustomer = [STPFixtures customerWithCardAndApplePaySources];
+    [self stubRetrieveCustomerUsingKey:customerKey
+                     returningCustomer:expectedCustomer
+                         expectedCount:2];
+    id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
+    STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
+    sut.includeApplePaySources = YES;
+    [sut clearCachedCustomer];
+    XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomer"];
+    [sut retrieveCustomer:^(STPCustomer *customer, __unused NSError *error) {
+        XCTAssertEqual(customer.sources.count, (unsigned int)2);
+        XCTAssertNotNil(customer.defaultSource);
+        [exp fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
 @end
