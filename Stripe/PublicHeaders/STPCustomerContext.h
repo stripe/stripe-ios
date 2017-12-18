@@ -48,8 +48,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  By default, `STPCustomerContext` will filter Apple Pay sources when it retrieves
- a Customer object. If you are using `STPCustomerContext` to back your own UI and
- would like to disable Apple Pay filtering, set this property to YES.
+ a Customer object. Apple Pay sources should generally not be re-used and
+ shouldn't be offered to customers as a new payment source (Apple Pay sources may
+ only be re-used for subscriptions).
+
+ If you are using `STPCustomerContext` to back your own UI and would like to
+ disable Apple Pay filtering, set this property to YES.
 
  Note: If you are using `STPPaymentContext`, you should not change this property.
  */
