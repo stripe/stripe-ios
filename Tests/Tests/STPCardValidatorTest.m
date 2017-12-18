@@ -39,6 +39,7 @@
              @[@(STPCardBrandMasterCard), @"5555555555554444", @(STPCardValidationStateValid)],
              @[@(STPCardBrandMasterCard), @"5200828282828210", @(STPCardValidationStateValid)],
              @[@(STPCardBrandMasterCard), @"5105105105105100", @(STPCardValidationStateValid)],
+             @[@(STPCardBrandMasterCard), @"2223000010089800", @(STPCardValidationStateValid)],
              @[@(STPCardBrandAmex), @"378282246310005", @(STPCardValidationStateValid)],
              @[@(STPCardBrandAmex), @"371449635398431", @(STPCardValidationStateValid)],
              @[@(STPCardBrandDiscover), @"6011111111111117", @(STPCardValidationStateValid)],
