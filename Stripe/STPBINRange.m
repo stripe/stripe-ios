@@ -37,15 +37,15 @@
                             @[@"30", @"30", @14, @(STPCardBrandDinersClub)],
                             @[@"36", @"36", @14, @(STPCardBrandDinersClub)],
                             @[@"38", @"39", @14, @(STPCardBrandDinersClub)],
-                            @[@"6011", @"6011", @16, @(STPCardBrandDiscover)],
-                            @[@"622", @"622",   @16, @(STPCardBrandDiscover)],
-                            @[@"64", @"65",     @16, @(STPCardBrandDiscover)],
+                            @[@"60", @"60", @16, @(STPCardBrandDiscover)],
+                            @[@"62", @"62", @16, @(STPCardBrandDiscover)],
+                            @[@"64", @"65", @16, @(STPCardBrandDiscover)],
                             @[@"35", @"35", @16, @(STPCardBrandJCB)],
-                            @[@"5", @"5", @16, @(STPCardBrandMasterCard)],
-                            @[@"4", @"4", @16, @(STPCardBrandVisa)],
+                            @[@"50", @"59", @16, @(STPCardBrandMasterCard)],
+                            @[@"22", @"27", @16, @(STPCardBrandMasterCard)],
+                            @[@"67", @"67", @16, @(STPCardBrandMasterCard)], // Maestro
+                            @[@"40", @"49", @16, @(STPCardBrandVisa)],
                             // Specific known BIN ranges
-                            @[@"222100", @"272099", @16, @(STPCardBrandMasterCard)],
-                            
                             @[@"413600", @"413600", @13, @(STPCardBrandVisa)],
                             @[@"444509", @"444509", @13, @(STPCardBrandVisa)],
                             @[@"444509", @"444509", @13, @(STPCardBrandVisa)],
