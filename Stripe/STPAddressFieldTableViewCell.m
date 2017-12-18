@@ -139,9 +139,7 @@
             } else {
                 self.textField.keyboardType = UIKeyboardTypeASCIICapable;
             }
-            
-            self.textField.preservesContentsOnPaste = NO;
-            self.textField.selectionEnabled = NO;
+
             if (!self.lastInList) {
                 self.textField.inputAccessoryView = self.inputAccessoryToolbar;
             }
