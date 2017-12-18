@@ -12,7 +12,7 @@ import Stripe
 private let swizzle: (AnyClass, Selector, Selector) -> () = { forClass, originalSelector, swizzledSelector in
     let originalMethod = class_getInstanceMethod(forClass, originalSelector)
     let swizzledMethod = class_getInstanceMethod(forClass, swizzledSelector)
-    method_exchangeImplementations(originalMethod, swizzledMethod)
+    method_exchangeImplementations(originalMethod!, swizzledMethod!)
 }
 
 
@@ -27,11 +27,11 @@ extension STPAddCardViewController {
     }
 
     // Expose the private `apiClient` property as a method
-    func apiClient() -> STPAPIClient? {
+    @objc func apiClient() -> STPAPIClient? {
         return nil
     }
 
-    func swizzled_apiClient() -> STPAPIClient? {
+    @objc func swizzled_apiClient() -> STPAPIClient? {
         return MockAPIClient()
     }
 }
