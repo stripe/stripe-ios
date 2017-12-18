@@ -18,11 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPCustomer()
 
-@property (nonatomic, copy) NSString *stripeID;
-@property (nonatomic) id<STPSourceProtocol> defaultSource;
-@property (nonatomic) NSArray<id<STPSourceProtocol>> *sources;
-@property (nonatomic) STPAddress *shippingAddress;
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, copy, readwrite) NSString *stripeID;
+@property (nonatomic, strong, nullable, readwrite) id<STPSourceProtocol> defaultSource;
+@property (nonatomic, strong, readwrite) NSArray<id<STPSourceProtocol>> *sources;
+@property (nonatomic, strong, nullable, readwrite) STPAddress *shippingAddress;
+@property (nonatomic, copy, readwrite) NSDictionary *allResponseFields;
 
 @end
 
@@ -97,6 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (![data isKindOfClass:[NSArray class]]) {
         return;
     }
+    self.defaultSource = nil;
     NSString *defaultSourceId;
     if ([response[@"default_source"] isKindOfClass:[NSString class]]) {
         defaultSourceId = response[@"default_source"];
@@ -104,7 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableArray *sources = [NSMutableArray new];
     for (id contents in data) {
         if ([contents isKindOfClass:[NSDictionary class]]) {
-            if ([contents[@"object"] isEqualToString:@"card"]) {
+            if ([contents[@"object"] isEqual:@"card"]) {
                 STPCard *card = [STPCard decodedObjectFromAPIResponse:contents];
                 BOOL includeCard = card != nil;
                 // ignore apple pay cards from the response

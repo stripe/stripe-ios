@@ -311,10 +311,9 @@
     STPCustomer *expectedCustomer = [STPFixtures customerWithCardAndApplePaySources];
     [self stubRetrieveCustomerUsingKey:customerKey
                      returningCustomer:expectedCustomer
-                         expectedCount:2];
+                         expectedCount:1];
     id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
-    [sut clearCachedCustomer];
     XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomer"];
     [sut retrieveCustomer:^(STPCustomer *customer, __unused NSError *error) {
         XCTAssertEqual(customer.sources.count, (unsigned int)1);
@@ -330,11 +329,10 @@
     STPCustomer *expectedCustomer = [STPFixtures customerWithCardAndApplePaySources];
     [self stubRetrieveCustomerUsingKey:customerKey
                      returningCustomer:expectedCustomer
-                         expectedCount:2];
+                         expectedCount:1];
     id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
     STPCustomerContext *sut = [[STPCustomerContext alloc] initWithKeyManager:mockKeyManager];
     sut.includeApplePaySources = YES;
-    [sut clearCachedCustomer];
     XCTestExpectation *exp = [self expectationWithDescription:@"retrieveCustomer"];
     [sut retrieveCustomer:^(STPCustomer *customer, __unused NSError *error) {
         XCTAssertEqual(customer.sources.count, (unsigned int)2);
