@@ -79,12 +79,13 @@ NS_ASSUME_NONNULL_BEGIN
         shipping.phone = [shippingDict stp_stringForKey:@"phone"];
         NSDictionary *addressDict = [shippingDict stp_dictionaryForKey:@"address"];
         if (addressDict) {
-            shipping.line1 = [addressDict stp_stringForKey:@"line1"];
-            shipping.line2 = [addressDict stp_stringForKey:@"line2"];
-            shipping.city = [addressDict stp_stringForKey:@"city"];
-            shipping.state = [addressDict stp_stringForKey:@"state"];
-            shipping.postalCode = [addressDict stp_stringForKey:@"postal_code"];
-            shipping.country = [addressDict stp_stringForKey:@"country"];
+            STPAddress *address = [STPAddress decodedObjectFromAPIResponse:addressDict];
+            shipping.line1 = address.line1;
+            shipping.line2 = address.line2;
+            shipping.city = address.city;
+            shipping.state = address.state;
+            shipping.postalCode = address.postalCode;
+            shipping.country = address.country;
         }
         customer.shippingAddress = shipping;
     }

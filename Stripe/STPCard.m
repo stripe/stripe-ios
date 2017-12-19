@@ -197,7 +197,8 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma clang diagnostic ignored "-Wdeprecated"
     // This is only intended to be deprecated publicly.
     // When removed from public header, can remove these pragmas
-    card.funding = [self.class fundingFromString:dict[@"funding"]];
+    NSString *rawFunding = [dict stp_stringForKey:@"funding"];
+    card.funding = [self.class fundingFromString:rawFunding];
 #pragma clang diagnostic pop
 
     card.country = [dict stp_stringForKey:@"country"];

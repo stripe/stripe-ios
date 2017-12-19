@@ -236,7 +236,7 @@
     source.currency = [dict stp_stringForKey:@"currency"];
     NSString *rawFlow = [dict stp_stringForKey:@"flow"];
     source.flow = [[self class] flowFromString:rawFlow];
-    source.livemode = [dict stp_boolForKey:@"livemode" or:NO];
+    source.livemode = [dict stp_boolForKey:@"livemode" or:YES];
     source.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     NSDictionary *rawOwner = [dict stp_dictionaryForKey:@"owner"];
     if (rawOwner) {

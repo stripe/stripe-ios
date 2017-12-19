@@ -196,6 +196,7 @@
     XCTAssertEqual([dict stp_intForKey:@"a" or:0], 1);
     XCTAssertEqual([dict stp_intForKey:@"b" or:0], -1);
     XCTAssertEqual([dict stp_intForKey:@"c" or:0], 1);
+    XCTAssertEqual([dict stp_intForKey:@"d" or:0], -1);
     XCTAssertEqual([dict stp_intForKey:@"e" or:0], 10);
     XCTAssertEqual([dict stp_intForKey:@"f" or:0], 10);
     XCTAssertEqual([dict stp_intForKey:@"g" or:0], 10);
