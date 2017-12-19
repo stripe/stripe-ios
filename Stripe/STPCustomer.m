@@ -58,7 +58,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - STPAPIResponseDecodable
 
-// DELETE
 + (NSArray *)requiredFields {
     return @[@"id"];
 }

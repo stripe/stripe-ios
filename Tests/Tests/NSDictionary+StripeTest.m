@@ -212,6 +212,7 @@
 
     XCTAssertEqualObjects([dict stp_dateForKey:@"a"], expectedDate);
     XCTAssertEqualObjects([dict stp_dateForKey:@"b"], expectedDate);
+    XCTAssertNil([dict stp_dateForKey:@"c"]);
 }
 
 - (void)testDictionaryForKey {
@@ -241,10 +242,11 @@
 - (void)testURLForKey {
     NSDictionary *dict = @{
                            @"a": @"https://example.com",
-                           @"b": @"foo",
+                           @"b": @"not a url"
                            };
     XCTAssertEqualObjects([dict stp_urlForKey:@"a"], [NSURL URLWithString:@"https://example.com"]);
     XCTAssertNil([dict stp_urlForKey:@"b"]);
+    XCTAssertNil([dict stp_urlForKey:@"c"]);
 }
 
 @end

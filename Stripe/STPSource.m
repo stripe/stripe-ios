@@ -224,7 +224,7 @@
     NSString *stripeId = [dict stp_stringForKey:@"id"];
     NSString *rawStatus = [dict stp_stringForKey:@"status"];
     NSString *rawType = [dict stp_stringForKey:@"type"];
-    if (!stripeId || !rawStatus || !rawType) {
+    if (!stripeId || !rawStatus || !rawType || !dict[@"livemode"]) {
         return nil;
     }
 

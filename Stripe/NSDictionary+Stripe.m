@@ -129,7 +129,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSURL *)stp_urlForKey:(NSString *)key {
     id value = self[key];
     if (value && [value isKindOfClass:[NSString class]]) {
-        return [NSURL URLWithString:value];
+        NSURL *url = [NSURL URLWithString:value];
+        if (![url isEqual:[NSNull null]]) {
+            return url;
+        }
     }
     return nil;
 }
