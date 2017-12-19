@@ -74,19 +74,10 @@ NS_ASSUME_NONNULL_BEGIN
     customer.stripeID = stripeId;
     NSDictionary *shippingDict = [dict stp_dictionaryForKey:@"shipping"];
     if (shippingDict) {
-        STPAddress *shipping = [STPAddress new];
+        NSDictionary *addressDict = [shippingDict stp_dictionaryForKey:@"address"];
+        STPAddress *shipping = [STPAddress decodedObjectFromAPIResponse:addressDict] ?: [STPAddress new];
         shipping.name = [shippingDict stp_stringForKey:@"name"];
         shipping.phone = [shippingDict stp_stringForKey:@"phone"];
-        NSDictionary *addressDict = [shippingDict stp_dictionaryForKey:@"address"];
-        STPAddress *address = [STPAddress decodedObjectFromAPIResponse:addressDict];
-        if (address) {
-            shipping.line1 = address.line1;
-            shipping.line2 = address.line2;
-            shipping.city = address.city;
-            shipping.state = address.state;
-            shipping.postalCode = address.postalCode;
-            shipping.country = address.country;
-        }
         customer.shippingAddress = shipping;
     }
     customer.sources = @[];
