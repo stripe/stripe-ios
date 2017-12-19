@@ -340,11 +340,6 @@
     return address;
 }
 
-- (STPAddressFieldTableViewCell *)cellBeforeCell:(STPAddressFieldTableViewCell *)cell {
-    NSInteger index = [self.addressCells indexOfObject:cell];
-    return [self.addressCells stp_boundSafeObjectAtIndex:index - 1];
-}
-
 - (STPAddressFieldTableViewCell *)cellAfterCell:(STPAddressFieldTableViewCell *)cell {
     NSInteger index = [self.addressCells indexOfObject:cell];
     return [self.addressCells stp_boundSafeObjectAtIndex:index + 1];
