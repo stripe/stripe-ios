@@ -27,6 +27,8 @@
 
 @implementation STPAddressFieldTableViewCell
 
+@synthesize contents = _contents;
+
 - (instancetype)initWithType:(STPAddressFieldType)type
                     contents:(NSString *)contents
                   lastInList:(BOOL)lastInList
@@ -332,6 +334,13 @@
 
 - (NSString *)caption {
     return self.textField.placeholder;
+}
+
+- (NSString *)contents {
+    // iOS 11 QuickType completions from textContentType have a space at the end.
+    // This *keeps* that space in the `textField`, but removes leading/trailing spaces from
+    // the logical contents of this field, so they're ignored for validation and persisting
+    return [_contents stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 }
 
 - (void)setContents:(NSString *)contents {
