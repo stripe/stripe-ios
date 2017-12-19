@@ -214,12 +214,8 @@
     return @"source";
 }
 
-+ (NSArray *)requiredFields {
-    return @[@"id", @"livemode", @"status", @"type"];
-}
-
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
         return nil;
     }
@@ -239,9 +235,7 @@
     source.created = [dict stp_dateForKey:@"created"];
     source.currency = [dict stp_stringForKey:@"currency"];
     NSString *rawFlow = [dict stp_stringForKey:@"flow"];
-    if (rawFlow) {
-        source.flow = [[self class] flowFromString:rawFlow];
-    }
+    source.flow = [[self class] flowFromString:rawFlow];
     source.livemode = [dict stp_boolForKey:@"livemode" or:NO];
     source.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     NSDictionary *rawOwner = [dict stp_dictionaryForKey:@"owner"];
@@ -260,7 +254,7 @@
     source.type = [[self class] typeFromString:rawType];
     NSString *rawUsage = [dict stp_stringForKey:@"usage"];
     source.usage = [[self class] usageFromString:rawUsage];
-    NSString *rawVerification = [dict stp_dictionaryForKey:@"verification"];
+    NSDictionary *rawVerification = [dict stp_dictionaryForKey:@"verification"];
     if (rawVerification) {
         source.verification = [STPSourceVerification decodedObjectFromAPIResponse:rawVerification];
     }

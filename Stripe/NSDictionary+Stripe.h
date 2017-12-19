@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSDictionary (Stripe)
 
-- (nullable NSDictionary *)stp_dictionaryByRemovingNullsValidatingRequiredFields:(NSArray *)requiredFields;
-
 - (NSDictionary *)stp_dictionaryByRemovingNulls;
 
 - (NSDictionary<NSString *, NSString *> *)stp_dictionaryByRemovingNonStrings;
@@ -34,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable NSString *)stp_stringForKey:(NSString *)key;
 
+- (nullable NSURL *)stp_urlForKey:(NSString *)key;
 
 @end
 

@@ -58,12 +58,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - STPAPIResponseDecodable
 
+// DELETE
 + (NSArray *)requiredFields {
     return @[@"id"];
 }
 
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
         return nil;
     }
