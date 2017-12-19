@@ -178,7 +178,10 @@ NS_ASSUME_NONNULL_BEGIN
     // required fields
     NSString *stripeId = [dict stp_stringForKey:@"id"];
     NSString *last4 = [dict stp_stringForKey:@"last4"];
-    if (!stripeId || !last4 || !dict[@"brand"] || !dict[@"exp_month"] || !dict[@"exp_year"]) {
+    NSString *rawBrand = [dict stp_stringForKey:@"brand"];
+    NSNumber *rawExpMonth = [dict stp_numberForKey:@"exp_month"];
+    NSNumber *rawExpYear = [dict stp_numberForKey:@"exp_year"];
+    if (!stripeId || !last4 || !rawBrand || !rawExpMonth || !rawExpYear) {
         return nil;
     }
 
@@ -189,7 +192,7 @@ NS_ASSUME_NONNULL_BEGIN
     card.name = [dict stp_stringForKey:@"name"];
     card.last4 = last4;
     card.dynamicLast4 = [dict stp_stringForKey:@"dynamic_last4"];
-    card.brand = [self.class brandFromString:dict[@"brand"]];
+    card.brand = [self.class brandFromString:rawBrand];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
     // This is only intended to be deprecated publicly.

@@ -123,6 +123,14 @@ NS_ASSUME_NONNULL_BEGIN
     return defaultValue;
 }
 
+- (nullable NSDictionary *)stp_numberForKey:(NSString *)key {
+    id value = self[key];
+    if (value && [value isKindOfClass:[NSNumber class]]) {
+        return value;
+    }
+    return nil;
+}
+
 - (nullable NSString *)stp_stringForKey:(NSString *)key {
     id value = self[key];
     if (value && [value isKindOfClass:[NSString class]]) {

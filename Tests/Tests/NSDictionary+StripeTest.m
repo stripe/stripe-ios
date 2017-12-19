@@ -236,6 +236,15 @@
     XCTAssertNil([dict stp_dictionaryForKey:@"b"]);
 }
 
+- (void)testNumberForKey {
+    NSDictionary *dict = @{
+                           @"a": @1,
+                           };
+
+    XCTAssertEqualObjects([dict stp_numberForKey:@"a"], @1);
+    XCTAssertNil([dict stp_numberForKey:@"b"]);
+}
+
 - (void)testStringForKey {
     NSDictionary *dict = @{@"a": @"foo"};
     XCTAssertEqualObjects([dict stp_stringForKey:@"a"], @"foo");

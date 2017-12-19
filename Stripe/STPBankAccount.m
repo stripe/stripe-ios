@@ -127,7 +127,8 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *bankName = [dict stp_stringForKey:@"bank_name"];
     NSString *country = [dict stp_stringForKey:@"country"];
     NSString *currency = [dict stp_stringForKey:@"currency"];
-    if (!stripeId || !last4 || !bankName || !country || !currency || !dict[@"status"]) {
+    NSString *rawStatus = [dict stp_stringForKey:@"status"];
+    if (!stripeId || !last4 || !bankName || !country || !currency || !rawStatus) {
         return nil;
     }
 
@@ -146,7 +147,7 @@ NS_ASSUME_NONNULL_BEGIN
     bankAccount.currency = currency;
     bankAccount.fingerprint = [dict stp_stringForKey:@"fingerprint"];
     bankAccount.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
-    bankAccount.status = [self statusFromString:dict[@"status"]];
+    bankAccount.status = [self statusFromString:rawStatus];
 
     // Owner details
     bankAccount.accountHolderName = [dict stp_stringForKey:@"account_holder_name"];

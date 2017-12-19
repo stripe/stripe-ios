@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSInteger)stp_intForKey:(NSString *)key or:(NSInteger)defaultValue;
 
+- (nullable NSNumber *)stp_numberForKey:(NSString *)key;
+
 - (nullable NSString *)stp_stringForKey:(NSString *)key;
 
 
