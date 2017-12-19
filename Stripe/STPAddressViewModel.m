@@ -240,14 +240,6 @@
     }
 }
 
-- (void)addressFieldTableViewCellDidBackspaceOnEmpty:(STPAddressFieldTableViewCell *)cell {
-    if ([self.addressCells indexOfObject:cell] == 0) {
-        [self.previousField becomeFirstResponder];
-    } else {
-        [[self cellBeforeCell:cell] becomeFirstResponder];
-    }
-}
-
 - (void)addressFieldTableViewCellDidUpdateText:(__unused STPAddressFieldTableViewCell *)cell {
     [self.delegate addressViewModelDidChange:self];
 }
@@ -346,11 +338,6 @@
     // `addressFieldTableViewCountryCode` if nil (important for STPBillingAddressFieldsZip)
     address.country = address.country ?: self.addressFieldTableViewCountryCode;
     return address;
-}
-
-- (STPAddressFieldTableViewCell *)cellBeforeCell:(STPAddressFieldTableViewCell *)cell {
-    NSInteger index = [self.addressCells indexOfObject:cell];
-    return [self.addressCells stp_boundSafeObjectAtIndex:index - 1];
 }
 
 - (STPAddressFieldTableViewCell *)cellAfterCell:(STPAddressFieldTableViewCell *)cell {

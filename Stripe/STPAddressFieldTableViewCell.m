@@ -15,9 +15,9 @@
 #import "STPPostalCodeValidator.h"
 #import "UIView+Stripe_SafeAreaBounds.h"
 
-@interface STPAddressFieldTableViewCell() <STPFormTextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
+@interface STPAddressFieldTableViewCell() <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
-@property (nonatomic, weak) STPFormTextField *textField;
+@property (nonatomic, weak) STPValidatedTextField *textField;
 @property (nonatomic) UIToolbar *inputAccessoryToolbar;
 @property (nonatomic) UIPickerView *countryPickerView;
 @property (nonatomic, strong) NSArray *countryCodes;
@@ -36,12 +36,22 @@
         _delegate = delegate;
         _theme = [STPTheme new];
         _contents = contents;
-        
-        STPFormTextField *textField = [[STPFormTextField alloc] init];
-        textField.formDelegate = self;
-        textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
-        textField.selectionEnabled = YES;
-        textField.preservesContentsOnPaste = YES;
+
+        STPValidatedTextField *textField;
+        if (type == STPAddressFieldTypePhone) {
+            // We have very specific US-based phone formatting that's built into STPFormTextField
+            STPFormTextField *formTextField = [[STPFormTextField alloc] init];
+            formTextField.preservesContentsOnPaste = NO;
+            formTextField.selectionEnabled = NO;
+            textField = formTextField;
+        }
+        else {
+            textField = [[STPValidatedTextField alloc] init];
+        }
+        textField.delegate = self;
+        [textField addTarget:self
+                      action:@selector(textFieldTextDidChange:)
+            forControlEvents:UIControlEventEditingChanged];
         _textField = textField;
         [self.contentView addSubview:textField];
         
@@ -136,9 +146,7 @@
             } else {
                 self.textField.keyboardType = UIKeyboardTypeASCIICapable;
             }
-            
-            self.textField.preservesContentsOnPaste = NO;
-            self.textField.selectionEnabled = NO;
+
             if (!self.lastInList) {
                 self.textField.inputAccessoryView = self.inputAccessoryToolbar;
             }
@@ -161,13 +169,10 @@
             break;
         case STPAddressFieldTypePhone:
             self.textField.keyboardType = UIKeyboardTypePhonePad;
-            if ([self countryCodeIsUnitedStates]) {
-                self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
-            } else {
-                self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
-            }
-            self.textField.preservesContentsOnPaste = NO;
-            self.textField.selectionEnabled = NO;
+            STPFormTextFieldAutoFormattingBehavior behavior = ([self countryCodeIsUnitedStates] ?
+                                                               STPFormTextFieldAutoFormattingBehaviorPhoneNumbers :
+                                                               STPFormTextFieldAutoFormattingBehaviorNone);
+            ((STPFormTextField *)self.textField).autoFormattingBehavior = behavior;
             if (!self.lastInList) {
                 self.textField.inputAccessoryView = self.inputAccessoryToolbar;
             }
@@ -267,9 +272,9 @@
     }
 }
 
-#pragma mark - STPFormTextFieldDelegate
+#pragma mark - UITextFieldDelegate
 
-- (void)formTextFieldTextDidChange:(STPFormTextField *)textField {
+- (void)textFieldTextDidChange:(STPValidatedTextField *)textField {
     if (self.type != STPAddressFieldTypeCountry) {
         _contents = textField.text;
         if ([textField isFirstResponder]) {
@@ -293,10 +298,6 @@
     if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCellDidEndEditing:)]) {
         [self.delegate addressFieldTableViewCellDidEndEditing:self];
     }
-}
-
-- (void)formTextFieldDidBackspaceOnEmpty:(__unused STPFormTextField *)formTextField {
-    [self.delegate addressFieldTableViewCellDidBackspaceOnEmpty:self];
 }
 
 - (void)setCaption:(NSString *)caption {
@@ -371,6 +372,7 @@
     self.ourCountryCode = self.countryCodes[row];
     self.contents = self.ourCountryCode;
     self.textField.text = [self pickerView:pickerView titleForRow:row forComponent:component];
+    [self textFieldTextDidChange:self.textField]; // UIControlEvent not fired for programmatic changes
     if ([self.delegate respondsToSelector:@selector(addressFieldTableViewCountryCode)]) {
         self.delegate.addressFieldTableViewCountryCode = self.ourCountryCode;
     }

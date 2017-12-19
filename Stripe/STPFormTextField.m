@@ -77,8 +77,6 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
 
 @implementation STPFormTextField
 
-@synthesize placeholderColor = _placeholderColor;
-
 + (NSDictionary *)attributesForAttributedString:(NSAttributedString *)attributedString {
     if (attributedString.length == 0) {
         return @{};
@@ -189,55 +187,9 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
     }
 }
 
-- (void)setPlaceholder:(NSString *)placeholder {
-    NSString *nonNilPlaceholder = placeholder ?: @"";
-    NSAttributedString *attributedPlaceholder = [[NSAttributedString alloc] initWithString:nonNilPlaceholder attributes:[self placeholderTextAttributes]];
-    [self setAttributedPlaceholder:attributedPlaceholder];
-}
-
 - (void)setAttributedPlaceholder:(NSAttributedString *)attributedPlaceholder {
     NSAttributedString *transformed = self.textFormattingBlock ? self.textFormattingBlock(attributedPlaceholder) : attributedPlaceholder;
     [super setAttributedPlaceholder:transformed];
-}
-
-- (NSDictionary *)placeholderTextAttributes {
-    NSMutableDictionary *defaultAttributes = [[self defaultTextAttributes] mutableCopy];
-    if (self.placeholderColor) {
-        defaultAttributes[NSForegroundColorAttributeName] = self.placeholderColor;
-    }
-    return [defaultAttributes copy];
-}
-
-- (void)setDefaultColor:(UIColor *)defaultColor {
-    _defaultColor = defaultColor;
-    [self updateColor];
-}
-
-- (void)setErrorColor:(UIColor *)errorColor {
-    _errorColor = errorColor;
-    [self updateColor];
-}
-
-- (void)setValidText:(BOOL)validText {
-    _validText = validText;
-    [self updateColor];
-}
-
-- (void)setPlaceholderColor:(UIColor *)placeholderColor {
-    _placeholderColor = placeholderColor;
-    [self setPlaceholder:self.placeholder]; //explicitly rebuild attributed placeholder
-}
-
-- (void)updateColor {
-    self.textColor = _validText ? self.defaultColor : self.errorColor;
-}
-
-// Workaround for http://www.openradar.appspot.com/19374610
-- (CGRect)editingRectForBounds:(CGRect)bounds {
-    // danj: I still see a small vertical jump between the editingRect & textRect for text fields in
-    // iOS 10.0-10.3 (but not 9.0 or 11.0-11.2). By using the textRect as the editingRect, this prevents
-    // mismatches causing vertical mis-alignments
-    return [self textRectForBounds:bounds];
 }
 
 // Fixes a weird issue related to our custom override of deleteBackwards. This only affects the simulator and iPads with custom keyboards.

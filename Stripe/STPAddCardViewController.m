@@ -118,7 +118,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     if (self.prefilledInformation.billingAddress != nil) {
         self.addressViewModel.address = self.prefilledInformation.billingAddress;
     }
-    self.addressViewModel.previousField = paymentCell;
     
     self.activityIndicator = [[STPPaymentActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20.0f, 20.0f)];
     
