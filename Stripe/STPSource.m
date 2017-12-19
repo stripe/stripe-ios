@@ -239,17 +239,11 @@
     source.livemode = [dict stp_boolForKey:@"livemode" or:YES];
     source.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     NSDictionary *rawOwner = [dict stp_dictionaryForKey:@"owner"];
-    if (rawOwner) {
-        source.owner = [STPSourceOwner decodedObjectFromAPIResponse:rawOwner];
-    }
+    source.owner = [STPSourceOwner decodedObjectFromAPIResponse:rawOwner];
     NSDictionary *rawReceiver = [dict stp_dictionaryForKey:@"receiver"];
-    if (rawReceiver) {
-        source.receiver = [STPSourceReceiver decodedObjectFromAPIResponse:rawReceiver];
-    }
+    source.receiver = [STPSourceReceiver decodedObjectFromAPIResponse:rawReceiver];
     NSDictionary *rawRedirect = [dict stp_dictionaryForKey:@"redirect"];
-    if (rawRedirect) {
-        source.redirect = [STPSourceRedirect decodedObjectFromAPIResponse:rawRedirect];
-    }
+    source.redirect = [STPSourceRedirect decodedObjectFromAPIResponse:rawRedirect];
     source.status = [[self class] statusFromString:rawStatus];
     source.type = [[self class] typeFromString:rawType];
     NSString *rawUsage = [dict stp_stringForKey:@"usage"];

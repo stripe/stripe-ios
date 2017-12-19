@@ -93,15 +93,11 @@
     token.created = created;
     
     NSDictionary *rawCard = [dict stp_dictionaryForKey:@"card"];
-    if (rawCard) {
-        token.card = [STPCard decodedObjectFromAPIResponse:rawCard];
-    }
-    
+    token.card = [STPCard decodedObjectFromAPIResponse:rawCard];
+
     NSDictionary *rawBankAccount = [dict stp_dictionaryForKey:@"bank_account"];
-    if (rawBankAccount) {
-        token.bankAccount = [STPBankAccount decodedObjectFromAPIResponse:rawBankAccount];
-    }
-    
+    token.bankAccount = [STPBankAccount decodedObjectFromAPIResponse:rawBankAccount];
+
     token.allResponseFields = dict;
     return token;
 }

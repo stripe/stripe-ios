@@ -38,16 +38,12 @@
     STPSourceOwner *owner = [self new];
     owner.allResponseFields = dict;
     NSDictionary *rawAddress = [dict stp_dictionaryForKey:@"address"];
-    if (rawAddress) {
-        owner.address = [STPAddress decodedObjectFromAPIResponse:rawAddress];
-    }
+    owner.address = [STPAddress decodedObjectFromAPIResponse:rawAddress];
     owner.email = [dict stp_stringForKey:@"email"];
     owner.name = [dict stp_stringForKey:@"name"];
     owner.phone = [dict stp_stringForKey:@"phone"];
     NSDictionary *rawVerifiedAddress = [dict stp_dictionaryForKey:@"verified_address"];
-    if (rawVerifiedAddress) {
-        owner.verifiedAddress = [STPAddress decodedObjectFromAPIResponse:rawVerifiedAddress];
-    }
+    owner.verifiedAddress = [STPAddress decodedObjectFromAPIResponse:rawVerifiedAddress];
     owner.verifiedEmail = [dict stp_stringForKey:@"verified_email"];
     owner.verifiedName = [dict stp_stringForKey:@"verified_name"];
     owner.verifiedPhone = [dict stp_stringForKey:@"verified_phone"];

@@ -78,8 +78,8 @@ NS_ASSUME_NONNULL_BEGIN
         shipping.name = [shippingDict stp_stringForKey:@"name"];
         shipping.phone = [shippingDict stp_stringForKey:@"phone"];
         NSDictionary *addressDict = [shippingDict stp_dictionaryForKey:@"address"];
-        if (addressDict) {
-            STPAddress *address = [STPAddress decodedObjectFromAPIResponse:addressDict];
+        STPAddress *address = [STPAddress decodedObjectFromAPIResponse:addressDict];
+        if (address) {
             shipping.line1 = address.line1;
             shipping.line2 = address.line2;
             shipping.city = address.city;
