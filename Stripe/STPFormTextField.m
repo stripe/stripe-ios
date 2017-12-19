@@ -22,13 +22,42 @@
 @implementation STPTextFieldDelegateProxy
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    BOOL insertingIntoEmptyField = (textField.text.length == 0 && range.location == 0 && range.length == 0);
+    BOOL hasTextContentType = NO;
+    if (@available(iOS 11.0, *)) {
+        // This property is available starting in 10.0, but didn't offer in-app suggestions till 11.0
+        hasTextContentType = textField.textContentType != nil;
+    }
+
+    if (hasTextContentType && insertingIntoEmptyField && [string isEqualToString:@" "]) {
+        /* Observed behavior w/iOS 11.0 through 11.2.0 (latest):
+
+         1. UITextContentType suggestions are only available when textField is empty
+         2. When user taps a QuickType suggestion for the `textContentType`, UIKit *first*
+         calls this method with `range:{0, 0} replacementString:@" "`
+         3. If that succeeds (we return YES), this method is called again, this time with
+         the actual content to insert (and a space at the end)
+
+         Therefore, always allow entry of a single space in order to support `textContentType`.
+
+         Warning: This bypasses `setText:`, and subsequently `setAttributedText:` and the
+         formDelegate methods: `formTextField:modifyIncomingTextChange:` & `formTextFieldTextDidChange:`
+         That's acceptable for a single space.
+         */
+        return YES;
+    }
+
     BOOL deleting = (range.location == textField.text.length - 1 && range.length == 1 && [string isEqualToString:@""]);
     NSString *inputText;
     if (deleting) {
         NSString *sanitized = [self unformattedStringForString:textField.text];
         inputText = [sanitized stp_safeSubstringToIndex:sanitized.length - 1];
-    } else {
+    }
+    else {
         NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        // Removes any disallowed characters from the whole string.
+        // If we (incorrectly) allowed a space to start the text entry hoping it would be a
+        // textContentType completion, this will remove it.
         NSString *sanitized = [self unformattedStringForString:newString];
         inputText = sanitized;
     }
@@ -96,9 +125,6 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
         case STPFormTextFieldAutoFormattingBehaviorNone:
         case STPFormTextFieldAutoFormattingBehaviorExpiration:
             self.textFormattingBlock = nil;
-            if (@available(iOS 10, *)) {
-                self.textContentType = nil;
-            }
             break;
         case STPFormTextFieldAutoFormattingBehaviorCardNumbers:
             self.textFormattingBlock = ^NSAttributedString *(NSAttributedString *inputString) {
@@ -124,9 +150,6 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                 }
                 return [attributedString copy];
             };
-            if (@available(iOS 10, *)) {
-                self.textContentType = UITextContentTypeCreditCardNumber;
-            }
             break;
         case STPFormTextFieldAutoFormattingBehaviorPhoneNumbers: {
             WEAK(self);
@@ -139,9 +162,6 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                 NSDictionary *attributes = [[self class] attributesForAttributedString:inputString];
                 return [[NSAttributedString alloc] initWithString:phoneNumber attributes:attributes];
             };
-            if (@available(iOS 10, *)) {
-                self.textContentType = UITextContentTypeTelephoneNumber;
-            }
             break;
         }
     }

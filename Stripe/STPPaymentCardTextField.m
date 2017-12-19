@@ -144,6 +144,11 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     self.brandImageView = brandImageView;
     
     STPFormTextField *numberField = [self buildTextField];
+    if (@available(iOS 10.0, *)) {
+        // This does not offer quick-type suggestions (as iOS 11.2), but does pick
+        // the best keyboard (maybe other, hidden behavior?)
+        numberField.textContentType = UITextContentTypeCreditCardNumber;
+    }
     numberField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorCardNumbers;
     numberField.tag = STPCardFieldTypeNumber;
     numberField.accessibilityLabel = STPLocalizedString(@"card number", @"accessibility label for text field");
@@ -166,6 +171,9 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     self.cvcField.accessibilityLabel = [self defaultCVCPlaceholder];
 
     STPFormTextField *postalCodeField = [self buildTextField];
+    if (@available(iOS 10.0, *)) {
+        postalCodeField.textContentType = UITextContentTypePostalCode;
+    }
     postalCodeField.tag = STPCardFieldTypePostalCode;
     postalCodeField.alpha = 0;
     self.postalCodeField = postalCodeField;
@@ -1106,7 +1114,12 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
 - (STPFormTextField *)buildTextField {
     STPFormTextField *textField = [[STPFormTextField alloc] initWithFrame:CGRectZero];
     textField.backgroundColor = [UIColor clearColor];
-    textField.keyboardType = UIKeyboardTypePhonePad;
+    // setCountryCode: updates the postalCodeField keyboardType, this is safe
+    if (@available(iOS 10, *)) {
+        textField.keyboardType = UIKeyboardTypeASCIICapableNumberPad;
+    } else {
+        textField.keyboardType = UIKeyboardTypeNumberPad;
+    }
     textField.textAlignment = NSTextAlignmentLeft;
     textField.font = self.font;
     textField.defaultColor = self.textColor;
