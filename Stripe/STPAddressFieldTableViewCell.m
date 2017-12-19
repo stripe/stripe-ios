@@ -175,9 +175,7 @@
             break;
         case STPAddressFieldTypeCountry:
             self.textField.keyboardType = UIKeyboardTypeDefault;
-            if (@available(iOS 10.0, *)) {
-                self.textField.textContentType = UITextContentTypeCountryName;
-            }
+            // Don't set textContentType for Country, because we don't want iOS to skip the UIPickerView for input
             self.textField.inputView = self.countryPickerView;
             NSInteger index = [self.countryCodes indexOfObject:self.contents];
             if (index == NSNotFound) {

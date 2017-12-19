@@ -1118,7 +1118,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
     if (@available(iOS 10, *)) {
         textField.keyboardType = UIKeyboardTypeASCIICapableNumberPad;
     } else {
-        textField.keyboardType = UIKeyboardTypeNumberPad;
+        textField.keyboardType = UIKeyboardTypePhonePad;
     }
     textField.textAlignment = NSTextAlignmentLeft;
     textField.font = self.font;
