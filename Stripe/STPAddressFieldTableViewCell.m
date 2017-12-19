@@ -17,7 +17,7 @@
 
 @interface STPAddressFieldTableViewCell() <UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
-@property (nonatomic, weak) STPFormTextField *textField;
+@property (nonatomic, weak) STPValidatedTextField *textField;
 @property (nonatomic) UIToolbar *inputAccessoryToolbar;
 @property (nonatomic) UIPickerView *countryPickerView;
 @property (nonatomic, strong) NSArray *countryCodes;
@@ -36,12 +36,19 @@
         _delegate = delegate;
         _theme = [STPTheme new];
         _contents = contents;
-        
-        STPFormTextField *textField = [[STPFormTextField alloc] init];
+
+        STPValidatedTextField *textField;
+        if (type == STPAddressFieldTypePhone) {
+            // We have very specific US-based phone formatting that's built into STPFormTextField
+            STPFormTextField *formTextField = [[STPFormTextField alloc] init];
+            formTextField.preservesContentsOnPaste = NO;
+            formTextField.selectionEnabled = NO;
+            textField = formTextField;
+        }
+        else {
+            textField = [[STPValidatedTextField alloc] init];
+        }
         textField.delegate = self;
-        textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
-        textField.selectionEnabled = YES;
-        textField.preservesContentsOnPaste = YES;
         [textField addTarget:self
                       action:@selector(textFieldTextDidChange:)
             forControlEvents:UIControlEventEditingChanged];
@@ -162,13 +169,10 @@
             break;
         case STPAddressFieldTypePhone:
             self.textField.keyboardType = UIKeyboardTypePhonePad;
-            if ([self countryCodeIsUnitedStates]) {
-                self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorPhoneNumbers;
-            } else {
-                self.textField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorNone;
-            }
-            self.textField.preservesContentsOnPaste = NO;
-            self.textField.selectionEnabled = NO;
+            STPFormTextFieldAutoFormattingBehavior behavior = ([self countryCodeIsUnitedStates] ?
+                                                               STPFormTextFieldAutoFormattingBehaviorPhoneNumbers :
+                                                               STPFormTextFieldAutoFormattingBehaviorNone);
+            ((STPFormTextField *)self.textField).autoFormattingBehavior = behavior;
             if (!self.lastInList) {
                 self.textField.inputAccessoryView = self.inputAccessoryToolbar;
             }

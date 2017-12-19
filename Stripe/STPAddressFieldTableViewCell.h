@@ -46,7 +46,7 @@ typedef NS_ENUM(NSInteger, STPAddressFieldType) {
 
 @property (nonatomic) STPAddressFieldType type;
 @property (nonatomic, copy) NSString *caption;
-@property (nonatomic, weak, readonly) STPFormTextField *textField;
+@property (nonatomic, weak, readonly) STPValidatedTextField *textField;
 @property (nonatomic, copy) NSString *contents;
 @property (nonatomic) STPTheme *theme;
 @property (nonatomic, assign) BOOL lastInList;
