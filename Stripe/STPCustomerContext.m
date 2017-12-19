@@ -9,7 +9,7 @@
 #import "STPCustomerContext.h"
 
 #import "STPAPIClient+Private.h"
-#import "STPCustomer.h"
+#import "STPCustomer+Private.h"
 #import "STPEphemeralKey.h"
 #import "STPEphemeralKeyManager.h"
 #import "STPWeakStrongMacros.h"
@@ -38,6 +38,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
     self = [self init];
     if (self) {
         _keyManager = keyManager;
+        _includeApplePaySources = NO;
         [self retrieveCustomer:nil];
     }
     return self;
@@ -50,6 +51,12 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
 - (void)setCustomer:(STPCustomer *)customer {
     _customer = customer;
     _customerRetrievedDate = (customer) ? [NSDate date] : nil;
+}
+
+- (void)setIncludeApplePaySources:(BOOL)includeApplePaySources {
+    _includeApplePaySources = includeApplePaySources;
+    [self.customer updateSourcesWithResponse:self.customer.allResponseFields
+                           filteringApplePay:!includeApplePaySources];
 }
 
 - (BOOL)shouldUseCachedCustomer {
@@ -80,6 +87,8 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
         }
         [STPAPIClient retrieveCustomerUsingKey:ephemeralKey completion:^(STPCustomer *customer, NSError *error) {
             if (customer) {
+                [customer updateSourcesWithResponse:self.customer.allResponseFields
+                                  filteringApplePay:!self.includeApplePaySources];
                 self.customer = customer;
             }
             if (completion) {
@@ -129,6 +138,8 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
                                           usingKey:ephemeralKey
                                         completion:^(STPCustomer *customer, NSError *error) {
                                             if (customer) {
+                                                [customer updateSourcesWithResponse:self.customer.allResponseFields
+                                                                  filteringApplePay:!self.includeApplePaySources];
                                                 self.customer = customer;
                                             }
                                             if (completion) {
@@ -157,6 +168,8 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
                                           usingKey:ephemeralKey
                                         completion:^(STPCustomer *customer, NSError *error) {
                                             if (customer) {
+                                                [customer updateSourcesWithResponse:self.customer.allResponseFields
+                                                                  filteringApplePay:!self.includeApplePaySources];
                                                 self.customer = customer;
                                             }
                                             if (completion) {
