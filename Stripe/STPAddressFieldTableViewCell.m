@@ -127,24 +127,43 @@
     switch (self.type) {
         case STPAddressFieldTypeName: 
             self.textField.keyboardType = UIKeyboardTypeDefault;
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypeName;
+            }
             break;
         case STPAddressFieldTypeLine1: 
             self.textField.keyboardType = UIKeyboardTypeDefault;
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypeStreetAddressLine1;
+            }
             break;
         case STPAddressFieldTypeLine2: 
             self.textField.keyboardType = UIKeyboardTypeDefault;
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypeStreetAddressLine2;
+            }
             break;
         case STPAddressFieldTypeCity:
             self.textField.keyboardType = UIKeyboardTypeDefault;
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypeAddressCity;
+            }
             break;
         case STPAddressFieldTypeState:
             self.textField.keyboardType = UIKeyboardTypeDefault;
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypeAddressState;
+            }
             break;
         case STPAddressFieldTypeZip:
             if ([self countryCodeIsUnitedStates]) { 
                 self.textField.keyboardType = UIKeyboardTypePhonePad;
             } else {
                 self.textField.keyboardType = UIKeyboardTypeASCIICapable;
+            }
+
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypePostalCode;
             }
 
             if (!self.lastInList) {
@@ -156,6 +175,7 @@
             break;
         case STPAddressFieldTypeCountry:
             self.textField.keyboardType = UIKeyboardTypeDefault;
+            // Don't set textContentType for Country, because we don't want iOS to skip the UIPickerView for input
             self.textField.inputView = self.countryPickerView;
             NSInteger index = [self.countryCodes indexOfObject:self.contents];
             if (index == NSNotFound) {
@@ -169,6 +189,9 @@
             break;
         case STPAddressFieldTypePhone:
             self.textField.keyboardType = UIKeyboardTypePhonePad;
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypeTelephoneNumber;
+            }
             STPFormTextFieldAutoFormattingBehavior behavior = ([self countryCodeIsUnitedStates] ?
                                                                STPFormTextFieldAutoFormattingBehaviorPhoneNumbers :
                                                                STPFormTextFieldAutoFormattingBehaviorNone);
@@ -180,10 +203,13 @@
                 self.textField.inputAccessoryView = nil;
             }
             break;
-        case STPAddressFieldTypeEmail: 
+        case STPAddressFieldTypeEmail:
             self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
             self.textField.keyboardType = UIKeyboardTypeEmailAddress;
+            if (@available(iOS 10.0, *)) {
+                self.textField.textContentType = UITextContentTypeEmailAddress;
+            }
             break;
             
     }
