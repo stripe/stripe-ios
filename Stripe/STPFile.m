@@ -76,24 +76,29 @@
 
 #pragma mark  - STPAPIResponseDecodable
 
-+ (NSArray *)requiredFields {
-    return @[@"id", @"created", @"size", @"purpose", @"type"];
-}
-
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
         return nil;
     }
-    
+
+    // required fields
+    NSString *stripeId = [dict stp_stringForKey:@"id"];
+    NSDate *created = [dict stp_dateForKey:@"created"];
+    NSNumber *size = [dict stp_numberForKey:@"size"];
+    NSString *type = [dict stp_stringForKey:@"type"];
+    NSString *rawPurpose = [dict stp_stringForKey:@"purpose"];
+    if (!stripeId || !created || !size || !type || !rawPurpose) {
+        return nil;
+    }
+
     STPFile *file = [[self alloc] init];
-    file.fileId = dict[@"id"];
-    file.created = [[NSDate alloc] initWithTimeIntervalSince1970:[dict[@"created"] doubleValue]];
-    file.size = dict[@"size"];
-    file.type = dict[@"type"];
+    file.fileId = stripeId;
+    file.created = created;
+    file.size = size;
+    file.type = type;
     
-    NSString *purpose = dict[@"purpose"];
-    file.purpose = [self.class purposeFromString:purpose];
+    file.purpose = [self.class purposeFromString:rawPurpose];
     file.allResponseFields = dict;
     
     return file;

@@ -14,19 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSDictionary (Stripe)
 
-- (nullable NSDictionary *)stp_dictionaryByRemovingNullsValidatingRequiredFields:(NSArray *)requiredFields {
-    NSDictionary *result = [self stp_dictionaryByRemovingNulls];
-
-    for (NSString *key in requiredFields) {
-        if (![[result allKeys] containsObject:key]) {
-            // Result missing required field
-            return nil;
-        }
-    }
-
-    return result;
-}
-
 - (NSDictionary *)stp_dictionaryByRemovingNulls {
     NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
 
@@ -66,8 +53,88 @@ NS_ASSUME_NONNULL_BEGIN
     return [result copy];
 }
 
-@end
+#pragma mark - Getters
 
+- (nullable NSArray *)stp_arrayForKey:(NSString *)key {
+    id value = self[key];
+    if (value && [value isKindOfClass:[NSArray class]]) {
+        return value;
+    }
+    return nil;
+}
+
+- (BOOL)stp_boolForKey:(NSString *)key or:(BOOL)defaultValue {
+    id value = self[key];
+    if (value) {
+        if ([value isKindOfClass:[NSNumber class]]) {
+            return [value boolValue];
+        }
+        if ([value isKindOfClass:[NSString class]]) {
+            NSString *string = [(NSString *)value lowercaseString];
+            // boolValue on NSString is true for "Y", "y", "T", "t", or 1-9
+            if ([string isEqualToString:@"true"] || [string boolValue]) {
+                return YES;
+            }
+            else {
+                return NO;
+            }
+        }
+    }
+    return defaultValue;
+}
+
+- (nullable NSDate *)stp_dateForKey:(NSString *)key {
+    id value = self[key];
+    if (value &&
+        ([value isKindOfClass:[NSNumber class]] || [value isKindOfClass:[NSString class]])) {
+        double timeInterval = [value doubleValue];
+        return [NSDate dateWithTimeIntervalSince1970:timeInterval];
+    }
+    return nil;
+}
+
+- (nullable NSDictionary *)stp_dictionaryForKey:(NSString *)key {
+    id value = self[key];
+    if (value && [value isKindOfClass:[NSDictionary class]]) {
+        return value;
+    }
+    return nil;
+}
+
+- (NSInteger)stp_intForKey:(NSString *)key or:(NSInteger)defaultValue {
+    id value = self[key];
+    if (value &&
+        ([value isKindOfClass:[NSNumber class]] || [value isKindOfClass:[NSString class]])) {
+        return [value integerValue];
+    }
+    return defaultValue;
+}
+
+- (nullable NSDictionary *)stp_numberForKey:(NSString *)key {
+    id value = self[key];
+    if (value && [value isKindOfClass:[NSNumber class]]) {
+        return value;
+    }
+    return nil;
+}
+
+- (nullable NSString *)stp_stringForKey:(NSString *)key {
+    id value = self[key];
+    if (value && [value isKindOfClass:[NSString class]]) {
+        return value;
+    }
+    return nil;
+}
+
+- (nullable NSURL *)stp_urlForKey:(NSString *)key {
+    id value = self[key];
+    if (value && [value isKindOfClass:[NSString class]]) {
+        return [NSURL URLWithString:value];
+    }
+    return nil;
+}
+
+@end
 void linkNSDictionaryCategory(void){}
 
 NS_ASSUME_NONNULL_END

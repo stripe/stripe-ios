@@ -63,20 +63,22 @@
 
 #pragma mark - STPAPIResponseDecodable
 
-+ (NSArray *)requiredFields {
-    return @[@"status"];
-}
-
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
         return nil;
     }
 
+    // required fields
+    NSString *rawStatus = [dict stp_stringForKey:@"status"];
+    if (!rawStatus) {
+        return nil;
+    }
+
     STPSourceVerification *verification = [self new];
+    verification.attemptsRemaining = [dict stp_numberForKey:@"attempts_remaining"];
+    verification.status = [self statusFromString:rawStatus];
     verification.allResponseFields = dict;
-    verification.attemptsRemaining = dict[@"attempts_remaining"];
-    verification.status = [self statusFromString:dict[@"status"]];
     return verification;
 }
 

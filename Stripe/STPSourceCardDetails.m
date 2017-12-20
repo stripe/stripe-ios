@@ -24,12 +24,8 @@
 
 #pragma mark - STPAPIResponseDecodable
 
-+ (NSArray *)requiredFields {
-    return @[];
-}
-
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
         return nil;
     }
@@ -39,19 +35,19 @@
 - (instancetype)initWithDictionary:(NSDictionary *)dict {
     self = [super init];
     if (self) {
-        _last4 = dict[@"last4"];
-        _brand = [STPCard brandFromString:dict[@"brand"]];
+        _last4 = [dict stp_stringForKey:@"last4"];
+        _brand = [STPCard brandFromString:[dict stp_stringForKey:@"brand"]];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
         // This is only intended to be deprecated publicly.
         // When removed from public header, can remove these pragmas
-        _funding = [STPCard fundingFromString:dict[@"funding"]];
+        _funding = [STPCard fundingFromString:[dict stp_stringForKey:@"funding"]];
 #pragma clang diagnostic pop
-        _country = dict[@"country"];
-        _expMonth = [dict[@"exp_month"] intValue];
-        _expYear = [dict[@"exp_year"] intValue];
-        _threeDSecure = [self.class threeDSecureStatusFromString:dict[@"three_d_secure"]];
-        _isApplePayCard = [dict[@"tokenization_method"] isEqual:@"apple_pay"];
+        _country = [dict stp_stringForKey:@"country"];
+        _expMonth = [dict stp_intForKey:@"exp_month" or:0];
+        _expYear = [dict stp_intForKey:@"exp_year" or:0];
+        _threeDSecure = [self.class threeDSecureStatusFromString:[dict stp_stringForKey:@"three_d_secure"]];
+        _isApplePayCard = [[dict stp_stringForKey:@"tokenization_method"] isEqual:@"apple_pay"];
 
         _allResponseFields = dict.copy;
     }

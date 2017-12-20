@@ -74,31 +74,30 @@
 
 #pragma mark - STPAPIResponseDecodable
 
-+ (NSArray *)requiredFields {
-    return @[@"id", @"livemode", @"created"];
-}
-
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
+        return nil;
+    }
+
+    // required fields
+    NSString *stripeId = [dict stp_stringForKey:@"id"];
+    NSDate *created = [dict stp_dateForKey:@"created"];
+    if (!stripeId || !created || !dict[@"livemode"]) {
         return nil;
     }
     
     STPToken *token = [self new];
-    token.tokenId = dict[@"id"];
-    token.livemode = [dict[@"livemode"] boolValue];
-    token.created = [NSDate dateWithTimeIntervalSince1970:[dict[@"created"] doubleValue]];
+    token.tokenId = stripeId;
+    token.livemode = [dict stp_boolForKey:@"livemode" or:YES];
+    token.created = created;
     
-    NSDictionary *cardDictionary = dict[@"card"];
-    if (cardDictionary) {
-        token.card = [STPCard decodedObjectFromAPIResponse:cardDictionary];
-    }
-    
-    NSDictionary *bankAccountDictionary = dict[@"bank_account"];
-    if (bankAccountDictionary) {
-        token.bankAccount = [STPBankAccount decodedObjectFromAPIResponse:bankAccountDictionary];
-    }
-    
+    NSDictionary *rawCard = [dict stp_dictionaryForKey:@"card"];
+    token.card = [STPCard decodedObjectFromAPIResponse:rawCard];
+
+    NSDictionary *rawBankAccount = [dict stp_dictionaryForKey:@"bank_account"];
+    token.bankAccount = [STPBankAccount decodedObjectFromAPIResponse:rawBankAccount];
+
     token.allResponseFields = dict;
     return token;
 }

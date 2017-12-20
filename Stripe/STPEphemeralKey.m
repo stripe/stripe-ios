@@ -24,21 +24,28 @@
 
 @implementation STPEphemeralKey
 
-+ (NSArray *)requiredFields {
-    return @[@"id", @"created", @"livemode", @"secret", @"expires", @"associated_objects"];
-}
-
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
         return nil;
     }
-    NSArray<NSDictionary *>*associatedObjects = dict[@"associated_objects"];
+    // required fields
+    NSString *stripeId = [dict stp_stringForKey:@"id"];
+    NSDate *created = [dict stp_dateForKey:@"created"];
+    NSString *secret = [dict stp_stringForKey:@"secret"];
+    NSDate *expires = [dict stp_dateForKey:@"expires"];
+    NSArray *associatedObjects = [dict stp_arrayForKey:@"associated_objects"];
+    if (!stripeId || !created || !secret || !expires || !associatedObjects || !dict[@"livemode"]) {
+        return nil;
+    }
+
     NSString *customerID;
-    for (NSDictionary *obj in associatedObjects) {
-        NSString *type = obj[@"type"];
-        if ([type isEqualToString:@"customer"]) {
-            customerID = obj[@"id"];
+    for (id obj in associatedObjects) {
+        if ([obj isKindOfClass:[NSDictionary class]]) {
+            NSString *type = [obj stp_stringForKey:@"type"];
+            if ([type isEqualToString:@"customer"]) {
+                customerID = [obj stp_stringForKey:@"id"];
+            }
         }
     }
     if (!customerID) {
@@ -46,11 +53,11 @@
     }
     STPEphemeralKey *key = [self new];
     key.customerID = customerID;
-    key.stripeID = dict[@"id"];
-    key.livemode = [dict[@"livemode"] boolValue];
-    key.created = [NSDate dateWithTimeIntervalSince1970:[dict[@"created"] doubleValue]];
-    key.secret = dict[@"secret"];
-    key.expires = [NSDate dateWithTimeIntervalSince1970:[dict[@"expires"] doubleValue]];
+    key.stripeID = stripeId;
+    key.livemode = [dict stp_boolForKey:@"livemode" or:YES];
+    key.created = created;
+    key.secret = secret;
+    key.expires = expires;
     key.allResponseFields = dict;
     return key;
 }

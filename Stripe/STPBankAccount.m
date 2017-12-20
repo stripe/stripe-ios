@@ -115,43 +115,44 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - STPAPIResponseDecodable
 
-+ (NSArray *)requiredFields {
-    return @[
-             @"id",
-             @"last4",
-             @"bank_name",
-             @"country",
-             @"currency",
-             @"status",
-             ];
-}
-
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
         return nil;
     }
     
+    // required fields
+    NSString *stripeId = [dict stp_stringForKey:@"id"];
+    NSString *last4 = [dict stp_stringForKey:@"last4"];
+    NSString *bankName = [dict stp_stringForKey:@"bank_name"];
+    NSString *country = [dict stp_stringForKey:@"country"];
+    NSString *currency = [dict stp_stringForKey:@"currency"];
+    NSString *rawStatus = [dict stp_stringForKey:@"status"];
+    if (!stripeId || !last4 || !bankName || !country || !currency || !rawStatus) {
+        return nil;
+    }
+
     STPBankAccount *bankAccount = [self new];
 
     // Identifier
-    bankAccount.stripeID = dict[@"id"];
+    bankAccount.stripeID = stripeId;
 
     // Basic account details
-    bankAccount.routingNumber = dict[@"routing_number"];
-    bankAccount.last4 = dict[@"last4"];
+    bankAccount.routingNumber = [dict stp_stringForKey:@"routing_number"];
+    bankAccount.last4 = last4;
 
     // Additional account details (alphabetical)
-    bankAccount.bankName = dict[@"bank_name"];
-    bankAccount.country = dict[@"country"];
-    bankAccount.currency = dict[@"currency"];
-    bankAccount.fingerprint = dict[@"fingerprint"];
-    bankAccount.metadata = [dict[@"metadata"] stp_dictionaryByRemovingNonStrings];
-    bankAccount.status = [self statusFromString:dict[@"status"]];
+    bankAccount.bankName = bankName;
+    bankAccount.country = country;
+    bankAccount.currency = currency;
+    bankAccount.fingerprint = [dict stp_stringForKey:@"fingerprint"];
+    bankAccount.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
+    bankAccount.status = [self statusFromString:rawStatus];
 
     // Owner details
-    bankAccount.accountHolderName = dict[@"account_holder_name"];
-    bankAccount.accountHolderType = [STPBankAccountParams accountHolderTypeFromString:dict[@"account_holder_type"]];
+    bankAccount.accountHolderName = [dict stp_stringForKey:@"account_holder_name"];
+    NSString *rawAccountHolderType = [dict stp_stringForKey:@"account_holder_type"];
+    bankAccount.accountHolderType = [STPBankAccountParams accountHolderTypeFromString:rawAccountHolderType];
 
     bankAccount.allResponseFields = dict;
 

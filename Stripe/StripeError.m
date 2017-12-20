@@ -8,6 +8,7 @@
 
 #import "StripeError.h"
 
+#import "NSDictionary+Stripe.h"
 #import "NSError+Stripe.h"
 #import "STPFormEncoder.h"
 
@@ -30,14 +31,14 @@ NSString *const STPIncorrectCVC = @"com.stripe.lib:IncorrectCVC";
 @implementation NSError (Stripe)
 
 + (NSError *)stp_errorFromStripeResponse:(NSDictionary *)jsonDictionary {
-    NSDictionary *errorDictionary = jsonDictionary[@"error"];
+    NSDictionary *errorDictionary = [jsonDictionary stp_dictionaryForKey:@"error"];
     if (!errorDictionary) {
         return nil;
     }
-    NSString *errorType = errorDictionary[@"type"];
-    NSString *errorParam = errorDictionary[@"param"];
-    NSString *stripeErrorMessage = errorDictionary[@"message"];
-    NSString *stripeErrorCode = errorDictionary[@"code"];
+    NSString *errorType = [errorDictionary stp_stringForKey:@"type"];
+    NSString *errorParam = [errorDictionary stp_stringForKey:@"param"];
+    NSString *stripeErrorMessage = [errorDictionary stp_stringForKey:@"message"];
+    NSString *stripeErrorCode = [errorDictionary stp_stringForKey:@"code"];
     NSInteger code = 0;
 
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];

@@ -214,34 +214,45 @@
     return @"source";
 }
 
-+ (NSArray *)requiredFields {
-    return @[@"id", @"livemode", @"status", @"type"];
-}
-
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
         return nil;
     }
 
+    // required fields
+    NSString *stripeId = [dict stp_stringForKey:@"id"];
+    NSString *rawStatus = [dict stp_stringForKey:@"status"];
+    NSString *rawType = [dict stp_stringForKey:@"type"];
+    if (!stripeId || !rawStatus || !rawType || !dict[@"livemode"]) {
+        return nil;
+    }
+
     STPSource *source = [self new];
-    source.stripeID = dict[@"id"];
-    source.amount = dict[@"amount"];
-    source.clientSecret = dict[@"client_secret"];
-    source.created = [NSDate dateWithTimeIntervalSince1970:[dict[@"created"] doubleValue]];
-    source.currency = dict[@"currency"];
-    source.flow = [[self class] flowFromString:dict[@"flow"]];
-    source.livemode = [dict[@"livemode"] boolValue];
-    source.metadata = [dict[@"metadata"] stp_dictionaryByRemovingNonStrings];
-    source.owner = [STPSourceOwner decodedObjectFromAPIResponse:dict[@"owner"]];
-    source.receiver = [STPSourceReceiver decodedObjectFromAPIResponse:dict[@"receiver"]];
-    source.redirect = [STPSourceRedirect decodedObjectFromAPIResponse:dict[@"redirect"]];
-    source.status = [[self class] statusFromString:dict[@"status"]];
-    NSString *typeString = dict[@"type"];
-    source.type = [[self class] typeFromString:typeString];
-    source.usage = [[self class] usageFromString:dict[@"usage"]];
-    source.verification = [STPSourceVerification decodedObjectFromAPIResponse:dict[@"verification"]];
-    source.details = dict[typeString];
+    source.stripeID = stripeId;
+    source.amount = [dict stp_numberForKey:@"amount"];
+    source.clientSecret = [dict stp_stringForKey:@"client_secret"];
+    source.created = [dict stp_dateForKey:@"created"];
+    source.currency = [dict stp_stringForKey:@"currency"];
+    NSString *rawFlow = [dict stp_stringForKey:@"flow"];
+    source.flow = [[self class] flowFromString:rawFlow];
+    source.livemode = [dict stp_boolForKey:@"livemode" or:YES];
+    source.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
+    NSDictionary *rawOwner = [dict stp_dictionaryForKey:@"owner"];
+    source.owner = [STPSourceOwner decodedObjectFromAPIResponse:rawOwner];
+    NSDictionary *rawReceiver = [dict stp_dictionaryForKey:@"receiver"];
+    source.receiver = [STPSourceReceiver decodedObjectFromAPIResponse:rawReceiver];
+    NSDictionary *rawRedirect = [dict stp_dictionaryForKey:@"redirect"];
+    source.redirect = [STPSourceRedirect decodedObjectFromAPIResponse:rawRedirect];
+    source.status = [[self class] statusFromString:rawStatus];
+    source.type = [[self class] typeFromString:rawType];
+    NSString *rawUsage = [dict stp_stringForKey:@"usage"];
+    source.usage = [[self class] usageFromString:rawUsage];
+    NSDictionary *rawVerification = [dict stp_dictionaryForKey:@"verification"];
+    if (rawVerification) {
+        source.verification = [STPSourceVerification decodedObjectFromAPIResponse:rawVerification];
+    }
+    source.details = [dict stp_dictionaryForKey:rawType];
     source.allResponseFields = dict;
 
     if (source.type == STPSourceTypeCard) {

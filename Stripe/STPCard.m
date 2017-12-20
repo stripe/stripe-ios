@@ -169,44 +169,51 @@ NS_ASSUME_NONNULL_BEGIN
     return @"card";
 }
 
-+ (NSArray *)requiredFields {
-    return @[@"id", @"last4", @"brand", @"exp_month", @"exp_year"];
-}
-
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
-    NSDictionary *dict = [response stp_dictionaryByRemovingNullsValidatingRequiredFields:[self requiredFields]];
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
     if (!dict) {
+        return nil;
+    }
+
+    // required fields
+    NSString *stripeId = [dict stp_stringForKey:@"id"];
+    NSString *last4 = [dict stp_stringForKey:@"last4"];
+    NSString *rawBrand = [dict stp_stringForKey:@"brand"];
+    NSNumber *rawExpMonth = [dict stp_numberForKey:@"exp_month"];
+    NSNumber *rawExpYear = [dict stp_numberForKey:@"exp_year"];
+    if (!stripeId || !last4 || !rawBrand || !rawExpMonth || !rawExpYear) {
         return nil;
     }
 
     STPCard *card = [self new];
     card.address = [STPAddress new];
 
-    card.stripeID = dict[@"id"];
-    card.name = dict[@"name"];
-    card.last4 = dict[@"last4"];
-    card.dynamicLast4 = dict[@"dynamic_last4"];
-    card.brand = [self.class brandFromString:dict[@"brand"]];
+    card.stripeID = stripeId;
+    card.name = [dict stp_stringForKey:@"name"];
+    card.last4 = last4;
+    card.dynamicLast4 = [dict stp_stringForKey:@"dynamic_last4"];
+    card.brand = [self.class brandFromString:rawBrand];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
     // This is only intended to be deprecated publicly.
     // When removed from public header, can remove these pragmas
-    card.funding = [self.class fundingFromString:dict[@"funding"]];
+    NSString *rawFunding = [dict stp_stringForKey:@"funding"];
+    card.funding = [self.class fundingFromString:rawFunding];
 #pragma clang diagnostic pop
 
-    card.country = dict[@"country"];
-    card.currency = dict[@"currency"];
-    card.expMonth = [dict[@"exp_month"] intValue];
-    card.expYear = [dict[@"exp_year"] intValue];
-    card.metadata = [dict[@"metadata"] stp_dictionaryByRemovingNonStrings];
+    card.country = [dict stp_stringForKey:@"country"];
+    card.currency = [dict stp_stringForKey:@"currency"];
+    card.expMonth = [dict stp_intForKey:@"exp_month" or:0];
+    card.expYear = [dict stp_intForKey:@"exp_year" or:0];
+    card.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
 
     card.address.name = card.name;
-    card.address.line1 = dict[@"address_line1"];
-    card.address.line2 = dict[@"address_line2"];
-    card.address.city = dict[@"address_city"];
-    card.address.state = dict[@"address_state"];
-    card.address.postalCode = dict[@"address_zip"];
-    card.address.country = dict[@"address_country"];
+    card.address.line1 = [dict stp_stringForKey:@"address_line1"];
+    card.address.line2 = [dict stp_stringForKey:@"address_line2"];
+    card.address.city = [dict stp_stringForKey:@"address_city"];
+    card.address.state = [dict stp_stringForKey:@"address_state"];
+    card.address.postalCode = [dict stp_stringForKey:@"address_zip"];
+    card.address.country = [dict stp_stringForKey:@"address_country"];
     
     card.allResponseFields = dict;
     return card;
