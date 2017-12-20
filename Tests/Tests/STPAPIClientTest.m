@@ -9,6 +9,7 @@
 @import XCTest;
 
 #import "STPAPIClient+Private.h"
+#import "STPFixtures.h"
 
 @interface STPAPIClient (Testing)
 
@@ -52,6 +53,17 @@
     XCTAssertNil(accountHeader);
     sut.stripeAccount = @"acct_123";
     accountHeader = sut.urlSession.configuration.HTTPAdditionalHeaders[@"Stripe-Account"];
+    XCTAssertEqualObjects(accountHeader, @"acct_123");
+}
+
+- (void)testInitWithConfiguration {
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.stripeAccount = @"acct_123";
+
+    STPAPIClient *sut = [[STPAPIClient alloc] initWithConfiguration:config];
+    XCTAssertEqualObjects(sut.publishableKey, config.publishableKey);
+    XCTAssertEqualObjects(sut.stripeAccount, config.stripeAccount);
+    NSString *accountHeader = sut.urlSession.configuration.HTTPAdditionalHeaders[@"Stripe-Account"];
     XCTAssertEqualObjects(accountHeader, @"acct_123");
 }
 

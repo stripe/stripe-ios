@@ -120,10 +120,11 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
     if (self) {
         _apiKey = publishableKey;
         _apiURL = [NSURL URLWithString:APIBaseURL];
-        _urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
         _configuration = configuration;
+        _stripeAccount = configuration.stripeAccount;
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
+        _urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
     }
     return self;
 }
