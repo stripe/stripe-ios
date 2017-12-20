@@ -35,7 +35,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        if (![[STPBundleLocator stripeResourcesBundle].preferredLocalizations.firstObject isEqualToString:[NSBundle mainBundle].preferredLocalizations.firstObject]) {
+        if (![[STPBundleLocator stripeResourcesBundle].preferredLocalizations.firstObject isEqualToString:[[[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode] lowercaseString]]) {
             useMainBundle = YES;
         }
     });
