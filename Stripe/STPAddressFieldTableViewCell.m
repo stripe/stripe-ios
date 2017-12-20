@@ -355,6 +355,7 @@
     } else {
         self.textField.validText = [self validContents];
     }
+    [self.delegate addressFieldTableViewCellDidUpdateText:self];
 }
 
 - (BOOL)validContents {
