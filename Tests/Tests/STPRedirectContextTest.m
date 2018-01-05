@@ -12,6 +12,7 @@
 #import "NSURLComponents+Stripe.h"
 #import "STPFixtures.h"
 #import "STPRedirectContext.h"
+#import "STPTestUtils.h"
 #import "STPURLCallbackHandler.h"
 #import "STPWeakStrongMacros.h"
 
@@ -60,6 +61,16 @@
 
 - (void)testInitWithNonRedirectSourceReturnsNil {
     STPSource *source = [STPFixtures cardSource];
+    STPRedirectContext *sut = [[STPRedirectContext alloc] initWithSource:source completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
+        XCTFail(@"completion was called");
+    }];
+    XCTAssertNil(sut);
+}
+
+- (void)testInitWithConsumedSourceReturnsNil {
+    NSMutableDictionary *json = [[STPTestUtils jsonNamed:STPTestJSONSourceCard] mutableCopy];
+    json[@"status"] = @"consumed";
+    STPSource *source = [STPSource decodedObjectFromAPIResponse:json];
     STPRedirectContext *sut = [[STPRedirectContext alloc] initWithSource:source completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
         XCTFail(@"completion was called");
     }];
