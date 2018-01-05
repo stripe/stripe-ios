@@ -36,7 +36,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
                              completion:(STPRedirectContextCompletionBlock)completion {
 
     if (source.flow != STPSourceFlowRedirect
-        || source.status != STPSourceStatusPending
+        || !(source.status == STPSourceStatusPending ||
+             source.status == STPSourceStatusChargeable)
         || source.redirect.returnURL == nil
         || (source.redirect.url == nil
             && [self nativeRedirectURLForSource:source] == nil)) {
