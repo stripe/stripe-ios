@@ -109,6 +109,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign, readwrite) BOOL canDeletePaymentMethods;
 
+/**
+ In order to perform API requests on behalf of a connected account, e.g. to
+ create a source on a connected account, set this property to the ID of the
+ account for which this request is being made.
+
+ @see https://stripe.com/docs/connect/authentication#authentication-via-the-stripe-account-header
+ */
+@property (nonatomic, copy, nullable) NSString *stripeAccount;
+
 @end
 
 NS_ASSUME_NONNULL_END
