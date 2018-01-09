@@ -53,6 +53,14 @@ FOUNDATION_EXPORT NSString * STPQueryStringFromParameters(NSDictionary *paramete
 + (id)formEncodableValueForObject:(NSObject *)object {
     if ([object conformsToProtocol:@protocol(STPFormEncodable)]) {
         return [self keyPairDictionaryForObject:(NSObject<STPFormEncodable>*)object];
+    } else if ([object isKindOfClass:[NSArray class]]) {
+        NSArray *array = (NSArray *)object;
+        NSMutableArray *result = [NSMutableArray arrayWithCapacity:array.count];
+
+        for (NSObject *element in array) {
+            [result addObject:[self formEncodableValueForObject:element]];
+        }
+        return result;
     } else {
         return object;
     }
@@ -174,9 +182,9 @@ NSArray * STPQueryStringPairsFromKeyAndValue(NSString *key, id value) {
         }
     } else if ([value isKindOfClass:[NSArray class]]) {
         NSArray *array = value;
-        for (id nestedValue in array) {
-            [mutableQueryStringComponents addObjectsFromArray:STPQueryStringPairsFromKeyAndValue([NSString stringWithFormat:@"%@[]", key], nestedValue)];
-        }
+        [array enumerateObjectsUsingBlock:^(id  _Nonnull nestedValue, NSUInteger idx, __unused BOOL * _Nonnull stop) {
+            [mutableQueryStringComponents addObjectsFromArray:STPQueryStringPairsFromKeyAndValue([NSString stringWithFormat:@"%@[%lu]", key, (unsigned long)idx], nestedValue)];
+        }];
     } else if ([value isKindOfClass:[NSSet class]]) {
         NSSet *set = value;
         for (id obj in [set sortedArrayUsingDescriptors:@[ sortDescriptor ]]) {
