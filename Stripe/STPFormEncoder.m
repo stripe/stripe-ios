@@ -53,11 +53,28 @@ FOUNDATION_EXPORT NSString * STPQueryStringFromParameters(NSDictionary *paramete
 + (id)formEncodableValueForObject:(NSObject *)object {
     if ([object conformsToProtocol:@protocol(STPFormEncodable)]) {
         return [self keyPairDictionaryForObject:(NSObject<STPFormEncodable>*)object];
+    } else if ([object isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *dict = (NSDictionary *)object;
+        NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:dict.count];
+
+        [dict enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull value, __unused BOOL * _Nonnull stop) {
+            result[[self formEncodableValueForObject:key]] = [self formEncodableValueForObject:value];
+        }];
+
+        return result;
     } else if ([object isKindOfClass:[NSArray class]]) {
         NSArray *array = (NSArray *)object;
         NSMutableArray *result = [NSMutableArray arrayWithCapacity:array.count];
 
         for (NSObject *element in array) {
+            [result addObject:[self formEncodableValueForObject:element]];
+        }
+        return result;
+    } else if ([object isKindOfClass:[NSSet class]]) {
+        NSSet *set = (NSSet *)object;
+        NSMutableSet *result = [NSMutableSet setWithCapacity:set.count];
+
+        for (NSObject *element in set) {
             [result addObject:[self formEncodableValueForObject:element]];
         }
         return result;
