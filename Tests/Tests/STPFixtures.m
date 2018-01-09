@@ -23,6 +23,11 @@ NSString *const STPTestJSONSourceSEPADebit = @"SEPADebitSource";
 
 @implementation STPFixtures
 
++ (STPConnectAccountParams *)accountParams {
+    return [[STPConnectAccountParams alloc] initTosShownAndAccepted:YES
+                                                        legalEntity:[self legalEntityParams]];
+}
+
 + (STPAddress *)address {
     STPAddress *address = [STPAddress new];
     address.name = @"Jenny Rosen";
@@ -246,6 +251,61 @@ NSString *const STPTestJSONSourceSEPADebit = @"SEPADebitSource";
     [payment performSelector:@selector(setToken:) withObject:paymentToken];
 #pragma clang diagnostic pop
     return payment;
+}
+
++ (STPLegalEntityParams *)legalEntityParams {
+    STPLegalEntityParams *legalEntity = [STPLegalEntityParams new];
+
+    legalEntity.firstName = @"Jessica";
+    legalEntity.lastName = @"Jones";
+    legalEntity.maidenName = @"Smith";
+    legalEntity.address = [self address];
+
+    legalEntity.dateOfBirth = [NSDateComponents new];
+    legalEntity.dateOfBirth.year = 1980;
+    legalEntity.dateOfBirth.month = 7;
+    legalEntity.dateOfBirth.day = 4;
+
+    legalEntity.verification = [STPVerificationParams new];
+    legalEntity.verification.document = @"file_abc";
+
+    STPPersonParams *jenny = [self personParams], *jacob = [self personParams];
+    jenny.firstName = @"Jenny";
+    jacob.firstName = @"Jacob";
+    legalEntity.additionalOwners = @[jenny, jacob];
+
+    legalEntity.businessName = @"Internet Business";
+    legalEntity.businessTaxId = @"123";
+    legalEntity.businessVATId = @"456";
+    legalEntity.genderString = @"female";
+    legalEntity.personalAddress = [self address];
+    legalEntity.personalAddress.state = @"CA";
+    legalEntity.personalIdNumber = @"000000000";
+    legalEntity.phoneNumber = @"555-1234";
+    legalEntity.ssnLast4 = @"0000";
+    legalEntity.taxIdRegistrar = @"321";
+    legalEntity.entityTypeString = @"individual";
+
+    return legalEntity;
+}
+
++ (STPPersonParams *)personParams {
+    STPPersonParams *person = [STPPersonParams new];
+
+    person.firstName = @"James";
+    person.lastName = @"Smith";
+    person.maidenName = @"Jones";
+    person.address = [self address];
+
+    person.dateOfBirth = [NSDateComponents new];
+    person.dateOfBirth.year = 1980;
+    person.dateOfBirth.month = 7;
+    person.dateOfBirth.day = 4;
+
+    person.verification = [STPVerificationParams new];
+    person.verification.document = @"file_abc";
+
+    return person;
 }
 
 @end
