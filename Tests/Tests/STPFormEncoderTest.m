@@ -95,7 +95,22 @@
     STPTestFormEncodableObject *testObject = [STPTestFormEncodableObject new];
     testObject.testProperty = @"success";
     testObject.testArrayProperty = @[@1, @2, @3];
-    XCTAssertEqualObjects([self encodeObject:testObject], @"test_object[test_array_property][]=1&test_object[test_array_property][]=2&test_object[test_array_property][]=3&test_object[test_property]=success");
+    XCTAssertEqualObjects([self encodeObject:testObject], @"test_object[test_array_property][0]=1&test_object[test_array_property][1]=2&test_object[test_array_property][2]=3&test_object[test_property]=success");
+}
+
+- (void)testFormEncoding_arrayOfEncodable {
+    STPTestFormEncodableObject *testObject = [STPTestFormEncodableObject new];
+
+    STPTestFormEncodableObject *inner1 = [STPTestFormEncodableObject new];
+    inner1.testProperty = @"inner1";
+    STPTestFormEncodableObject *inner2 = [STPTestFormEncodableObject new];
+    inner2.testArrayProperty = @[@"inner2"];
+
+    testObject.testArrayProperty = @[inner1, inner2];
+
+    XCTAssertEqualObjects([self encodeObject:testObject],
+                          @"test_object[test_array_property][0][test_property]=inner1"
+                          "&test_object[test_array_property][1][test_array_property][0]=inner2");
 }
 
 - (void)testFormEncoding_dictionaryValue_empty {
@@ -110,6 +125,33 @@
     testObject.testProperty = @"success";
     testObject.testDictionaryProperty = @{@"foo": @"bar"};
     XCTAssertEqualObjects([self encodeObject:testObject], @"test_object[test_dictionary_property][foo]=bar&test_object[test_property]=success");
+}
+
+- (void)testFormEncoding_dictionaryOfEncodable {
+    STPTestFormEncodableObject *testObject = [STPTestFormEncodableObject new];
+
+    STPTestFormEncodableObject *inner1 = [STPTestFormEncodableObject new];
+    inner1.testProperty = @"inner1";
+    STPTestFormEncodableObject *inner2 = [STPTestFormEncodableObject new];
+    inner2.testArrayProperty = @[@"inner2"];
+
+    testObject.testDictionaryProperty = @{@"one": inner1, @"two": inner2};
+
+    XCTAssertEqualObjects([self encodeObject:testObject],
+                          @"test_object[test_dictionary_property][one][test_property]=inner1"
+                          "&test_object[test_dictionary_property][two][test_array_property][0]=inner2");
+}
+
+- (void)testFormEncoding_setOfEncodable {
+    STPTestFormEncodableObject *testObject = [STPTestFormEncodableObject new];
+
+    STPTestFormEncodableObject *inner = [STPTestFormEncodableObject new];
+    inner.testProperty = @"inner";
+
+    testObject.testArrayProperty = @[[NSSet setWithObject:inner]];
+
+    XCTAssertEqualObjects([self encodeObject:testObject],
+                          @"test_object[test_array_property][0][test_property]=inner");
 }
 
 - (void)testFormEncoding_nestedValue {
