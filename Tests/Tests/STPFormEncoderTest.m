@@ -98,6 +98,21 @@
     XCTAssertEqualObjects([self encodeObject:testObject], @"test_object[test_array_property][0]=1&test_object[test_array_property][1]=2&test_object[test_array_property][2]=3&test_object[test_property]=success");
 }
 
+- (void)testFormEncoding_BoolAndNumbers {
+    STPTestFormEncodableObject *testObject = [STPTestFormEncodableObject new];
+    testObject.testArrayProperty = @[@0,
+                                     @1,
+                                     [NSNumber numberWithBool:NO],
+                                     [[NSNumber alloc] initWithBool:YES],
+                                     @YES];
+    XCTAssertEqualObjects([self encodeObject:testObject],
+                          @"test_object[test_array_property][0]=0"
+                          "&test_object[test_array_property][1]=1"
+                          "&test_object[test_array_property][2]=false"
+                          "&test_object[test_array_property][3]=true"
+                          "&test_object[test_array_property][4]=true");
+}
+
 - (void)testFormEncoding_arrayOfEncodable {
     STPTestFormEncodableObject *testObject = [STPTestFormEncodableObject new];
 
