@@ -29,8 +29,8 @@
 }
 
 - (void)testTokenCreation_terms_throws {
-    XCTAssertThrows([[STPConnectAccountParams alloc] initTosShownAndAccepted:NO
-                                                                 legalEntity:[STPFixtures legalEntityParams]],
+    XCTAssertThrows([[STPConnectAccountParams alloc] initWithTosShownAndAccepted:NO
+                                                                     legalEntity:[STPFixtures legalEntityParams]],
                     @"NSParameterAssert to prevent trying to call this with `NO`");
 }
 

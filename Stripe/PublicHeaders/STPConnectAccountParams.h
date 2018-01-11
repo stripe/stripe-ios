@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) STPLegalEntityParams *legalEntity;
 
 /**
- `STPConnectAccountParams` cannot be directly instantiated, use `initTosShownAndAccepted:legalEntity:`
+ `STPConnectAccountParams` cannot be directly instantiated, use `initWithTosShownAndAccepted:legalEntity:`
  or `initWithLegalEntity:`
  */
 - (instancetype)init __attribute__((unavailable("Cannot be directly instantiated")));
@@ -50,14 +50,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param wasAccepted Must be YES, but only if the user was shown & accepted the ToS
  @param legalEntity data about the legal entity
  */
-- (instancetype)initTosShownAndAccepted:(BOOL)wasAccepted
-                            legalEntity:(STPLegalEntityParams *)legalEntity;
+- (instancetype)initWithTosShownAndAccepted:(BOOL)wasAccepted
+                                legalEntity:(STPLegalEntityParams *)legalEntity;
 
 /**
  Initialize `STPConnectAccountParams` with the `STPLegalEntityParams` provided.
 
  This init method cannot change the `tosShownAndAccepted` parameter. Use
- `initTosShownAndAccepted:legalEntity:` instead if you need to do that.
+ `initWithTosShownAndAccepted:legalEntity:` instead if you need to do that.
 
  These two init methods exist to avoid the (slightly awkward) NSNumber box that would
  be needed around `tosShownAndAccepted` if it was optional/nullable, and to enforce

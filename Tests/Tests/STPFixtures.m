@@ -24,8 +24,8 @@ NSString *const STPTestJSONSourceSEPADebit = @"SEPADebitSource";
 @implementation STPFixtures
 
 + (STPConnectAccountParams *)accountParams {
-    return [[STPConnectAccountParams alloc] initTosShownAndAccepted:YES
-                                                        legalEntity:[self legalEntityParams]];
+    return [[STPConnectAccountParams alloc] initWithTosShownAndAccepted:YES
+                                                            legalEntity:[self legalEntityParams]];
 }
 
 + (STPAddress *)address {

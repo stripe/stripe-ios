@@ -14,8 +14,8 @@
 
 @synthesize additionalAPIParameters;
 
-- (instancetype)initTosShownAndAccepted:(BOOL)wasAccepted
-                            legalEntity:(STPLegalEntityParams *)legalEntity {
+- (instancetype)initWithTosShownAndAccepted:(BOOL)wasAccepted
+                                legalEntity:(STPLegalEntityParams *)legalEntity {
     // It is an error to call this method with wasAccepted == NO
     NSParameterAssert(wasAccepted == YES);
     self = [super init];
