@@ -11,6 +11,7 @@
 
 @class STPAddress, STPVerificationParams;
 
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  Stripe API parameters to define a Person. Things like their name, address, etc.
@@ -136,3 +137,5 @@
 @property (nonatomic, copy, nullable) NSString *document;
 
 @end
+
+NS_ASSUME_NONNULL_END

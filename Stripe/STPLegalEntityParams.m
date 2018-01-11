@@ -8,6 +8,8 @@
 
 #import "STPLegalEntityParams.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation STPVerificationParams
 @synthesize additionalAPIParameters;
 
@@ -148,3 +150,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
