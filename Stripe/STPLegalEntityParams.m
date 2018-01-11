@@ -7,6 +7,7 @@
 //
 
 #import "STPLegalEntityParams.h"
+#import "FauxPasAnnotations.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -124,24 +125,34 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /*
- Add STPFormEncodable conformance for `STPPersonParams.dateOfBirth`
+ Add STPFormEncodable conformance for `STPPersonParams.dateOfBirth`.
+
+ Faux Pas (correctly) points out this is dangerous. Probably a better thing to do
+ is either prefix all of these methods in the protocol, or add custom support for
+ `NSDateComponents` in `+[STPFormEncoder formEncodableValueForObject:]`.
+
+ For now, I think this is safe enough.
  */
 @interface NSDateComponents (STPFormEncodable) <STPFormEncodable> @end
 @implementation NSDateComponents (STPFormEncodable)
 
 - (NSDictionary *)additionalAPIParameters {
+    FAUXPAS_IGNORED_IN_METHOD(UnprefixedCategoryMethod)
     return @{};
 }
 
 - (void)setAdditionalAPIParameters:(__unused NSDictionary *)additionalAPIParameters {
+    FAUXPAS_IGNORED_IN_METHOD(UnprefixedCategoryMethod)
     [self doesNotRecognizeSelector:_cmd];
 }
 
 + (nullable NSString *)rootObjectName {
+    FAUXPAS_IGNORED_IN_METHOD(UnprefixedCategoryMethod)
     return nil;
 }
 
 + (nonnull NSDictionary *)propertyNamesToFormFieldNamesMapping {
+    FAUXPAS_IGNORED_IN_METHOD(UnprefixedCategoryMethod)
     return @{
              NSStringFromSelector(@selector(day)): @"day",
              NSStringFromSelector(@selector(month)): @"month",
