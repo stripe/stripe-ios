@@ -13,6 +13,7 @@
 #import "NSDictionary+Stripe.h"
 #import "STPCardValidator.h"
 #import "STPEmailAddressValidator.h"
+#import "STPFormEncoder.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPPostalCodeValidator.h"
 
@@ -32,6 +33,7 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
 @end
 
 @implementation STPAddress
+@synthesize additionalAPIParameters;
 
 + (NSDictionary *)shippingInfoForChargeWithAddress:(nullable STPAddress *)address
                                     shippingMethod:(nullable PKShippingMethod *)method {
@@ -42,14 +44,8 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
     params[@"name"] = address.name;
     params[@"phone"] = address.phone;
     params[@"carrier"] = method.label;
-    NSMutableDictionary *addressDict = [NSMutableDictionary new];
-    addressDict[@"line1"] = address.line1;
-    addressDict[@"line2"] = address.line2;
-    addressDict[@"city"] = address.city;
-    addressDict[@"state"] = address.state;
-    addressDict[@"postal_code"] = address.postalCode;
-    addressDict[@"country"] = address.country;
-    params[@"address"] = [addressDict copy];
+    // Re-use STPFormEncoder
+    params[@"address"] = [STPFormEncoder dictionaryForObject:address];
     return [params copy];
 }
 
@@ -311,7 +307,28 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
     return address;
 }
 
+#pragma mark STPFormEncodable
+
++ (nullable NSString *)rootObjectName {
+    return nil;
+}
+
++ (NSDictionary *)propertyNamesToFormFieldNamesMapping {
+    // Paralleling `decodedObjectFromAPIResponse:`, *only* the 6 address fields are encoded
+    // If this changes, shippingInfoForChargeWithAddress:shippingMethod: might break
+    return @{
+             NSStringFromSelector(@selector(line1)): @"line1",
+             NSStringFromSelector(@selector(line2)): @"line2",
+             NSStringFromSelector(@selector(city)): @"city",
+             NSStringFromSelector(@selector(state)): @"state",
+             NSStringFromSelector(@selector(postalCode)): @"postal_code",
+             NSStringFromSelector(@selector(country)): @"country",
+             };
+}
+
 @end
+
+#pragma mark -
 
 NSString *stringIfHasContentsElseNil(NSString *string) {
     if (string.length > 0) {
