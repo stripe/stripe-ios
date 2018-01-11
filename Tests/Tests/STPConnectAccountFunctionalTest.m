@@ -65,7 +65,8 @@
             XCTAssertNil(error);
             XCTAssertNotNil(token);
             XCTAssertNotNil(token.tokenId);
-        } else {
+        }
+        else {
             XCTAssertNil(token);
             XCTAssertNotNil(error);
         }
