@@ -292,7 +292,7 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 
 @implementation STPAPIClient (ConnectAccounts)
 
-- (void)createTokenWithConnectAccount:(__unused id)account completion:(__nullable STPTokenCompletionBlock)completion {
+- (void)createTokenWithConnectAccount:(STPConnectAccountParams *)account completion:(__nullable STPTokenCompletionBlock)completion {
     NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:account] mutableCopy];
     [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
     [self createTokenWithParameters:params completion:completion];
