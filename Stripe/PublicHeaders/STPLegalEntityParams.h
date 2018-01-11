@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Additional owners of the legal entity.
  */
-@property (nonatomic, strong, nullable) NSArray<STPPersonParams *> *additionalOwners;
+@property (nonatomic, copy, nullable) NSArray<STPPersonParams *> *additionalOwners;
 
 /**
  The business name
