@@ -360,6 +360,7 @@
 		B3A99BC41FEAF2CA003F6ED3 /* STPLegalEntityParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B3A99BC11FEAF2CA003F6ED3 /* STPLegalEntityParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B3A99BC51FEAF2CA003F6ED3 /* STPLegalEntityParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B3A99BC21FEAF2CA003F6ED3 /* STPLegalEntityParams.m */; };
 		B3A99BC61FEAF2CA003F6ED3 /* STPLegalEntityParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B3A99BC21FEAF2CA003F6ED3 /* STPLegalEntityParams.m */; };
+		B3C9CF2D2004595A005502ED /* STPConnectAccountFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C9CF2C2004595A005502ED /* STPConnectAccountFunctionalTest.m */; };
 		C1054F911FE197AE0033C87E /* STPPaymentContextSnapshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C1054F901FE197AE0033C87E /* STPPaymentContextSnapshotTests.m */; };
 		C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1080F4A1CBECF7B007B2D89 /* STPAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = C1080F481CBECF7B007B2D89 /* STPAddress.m */; };
@@ -1013,6 +1014,7 @@
 		B3A241381FFEB57400A2F00D /* STPConnectAccountParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountParams.m; sourceTree = "<group>"; };
 		B3A99BC11FEAF2CA003F6ED3 /* STPLegalEntityParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPLegalEntityParams.h; sourceTree = "<group>"; };
 		B3A99BC21FEAF2CA003F6ED3 /* STPLegalEntityParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPLegalEntityParams.m; sourceTree = "<group>"; };
+		B3C9CF2C2004595A005502ED /* STPConnectAccountFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountFunctionalTest.m; sourceTree = "<group>"; };
 		C1054F901FE197AE0033C87E /* STPPaymentContextSnapshotTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentContextSnapshotTests.m; sourceTree = "<group>"; };
 		C1080F471CBECF7B007B2D89 /* STPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPAddress.h; path = PublicHeaders/STPAddress.h; sourceTree = "<group>"; };
 		C1080F481CBECF7B007B2D89 /* STPAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPAddress.m; sourceTree = "<group>"; };
@@ -1518,6 +1520,7 @@
 				04CDB5211A5F3A9300B854EE /* STPApplePayFunctionalTest.m */,
 				04CDB5221A5F3A9300B854EE /* STPBankAccountFunctionalTest.m */,
 				04CDB5241A5F3A9300B854EE /* STPCardFunctionalTest.m */,
+				B3C9CF2C2004595A005502ED /* STPConnectAccountFunctionalTest.m */,
 				C1CFCB6F1ED5E11500BE45DF /* STPFileFunctionalTest.m */,
 				C1CFCB711ED5E11500BE45DF /* STPPIIFunctionalTest.m */,
 				C1D7B5241E36C70D002181F5 /* STPSourceFunctionalTest.m */,
@@ -2734,6 +2737,7 @@
 				04415C6F1A6605B5001225ED /* STPCertTest.m in Sources */,
 				04415C701A6605B5001225ED /* STPTokenTest.m in Sources */,
 				8B8DDBB31EF887A4004B141F /* STPBankAccountParamsTest.m in Sources */,
+				B3C9CF2D2004595A005502ED /* STPConnectAccountFunctionalTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
