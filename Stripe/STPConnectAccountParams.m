@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSParameterAssert(wasAccepted == YES);
     self = [super init];
     if (self) {
-        _tosShownAndAccepted = [NSNumber numberWithBool:wasAccepted];
+        _tosShownAndAccepted = @(wasAccepted);
         _legalEntity = legalEntity;
     }
     return self;
