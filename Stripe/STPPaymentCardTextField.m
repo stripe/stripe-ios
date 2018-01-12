@@ -195,6 +195,11 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     }
 
     [self addSubview:brandImageView];
+    // On small screens, the number field fits ~4 numbers, and the brandImage is just as large.
+    // Previously, taps on the brand image would *dismiss* the keyboard. Make it move to the numberField instead
+    brandImageView.userInteractionEnabled = YES;
+    [brandImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:numberField
+                                                                                 action:@selector(becomeFirstResponder)]];
 
     self.focusedTextFieldForLayout = @(STPCardFieldTypeNumber);
     [self updateCVCPlaceholder];
