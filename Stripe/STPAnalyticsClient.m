@@ -117,7 +117,7 @@
 
 + (NSString *)tokenTypeFromParameters:(NSDictionary *)parameters {
     if ([parameters.allKeys count] == 1) {
-        NSArray *validTypes = @[@"bank_account", @"card", @"pii"];
+        NSArray *validTypes = @[@"account", @"bank_account", @"card", @"pii"];
         NSString *type = [parameters.allKeys firstObject];
         if ([validTypes containsObject:type]) {
             return type;

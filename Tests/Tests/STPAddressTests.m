@@ -447,4 +447,28 @@
     XCTAssertEqualObjects(expected, info);
 }
 
+#pragma mark STPFormEncodable Tests
+
+- (void)testRootObjectName {
+    XCTAssertNil([STPAddress rootObjectName]);
+}
+
+- (void)testPropertyNamesToFormFieldNamesMapping {
+    STPAddress *address = [STPAddress new];
+
+    NSDictionary *mapping = [STPAddress propertyNamesToFormFieldNamesMapping];
+
+    for (NSString *propertyName in [mapping allKeys]) {
+        XCTAssertFalse([propertyName containsString:@":"]);
+        XCTAssert([address respondsToSelector:NSSelectorFromString(propertyName)]);
+    }
+
+    for (NSString *formFieldName in [mapping allValues]) {
+        XCTAssert([formFieldName isKindOfClass:[NSString class]]);
+        XCTAssert([formFieldName length] > 0);
+    }
+
+    XCTAssertEqual([[mapping allValues] count], [[NSSet setWithArray:[mapping allValues]] count]);
+}
+
 @end

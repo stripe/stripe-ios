@@ -34,6 +34,10 @@
     NSDictionary *cardDict = [STPFormEncoder dictionaryForObject:card];
     XCTAssertEqualObjects([STPAnalyticsClient tokenTypeFromParameters:cardDict], @"card");
 
+    STPConnectAccountParams *account = [STPFixtures accountParams];
+    NSDictionary *accountDict = [STPFormEncoder dictionaryForObject:account];
+    XCTAssertEqualObjects([STPAnalyticsClient tokenTypeFromParameters:accountDict], @"account");
+
     STPBankAccountParams *bank = [STPFixtures bankAccountParams];
     NSDictionary *bankDict = [STPFormEncoder dictionaryForObject:bank];
     XCTAssertEqualObjects([STPAnalyticsClient tokenTypeFromParameters:bankDict], @"bank_account");
