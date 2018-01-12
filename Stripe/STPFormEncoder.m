@@ -159,7 +159,16 @@ NSString * STPPercentEscapedStringFromString(NSString *string) {
     if (!self.value || [self.value isEqual:[NSNull null]]) {
         return STPPercentEscapedStringFromString([self.field description]);
     } else {
-        return [NSString stringWithFormat:@"%@=%@", STPPercentEscapedStringFromString([self.field description]), STPPercentEscapedStringFromString([self.value description])];
+        NSString *unescapedValue = [self.value description];
+
+        // coerce boxed BOOL values back into true/false
+        // https://stackoverflow.com/a/30223989/1196205
+        if ([self.value isKindOfClass:[NSNumber class]]
+            && (CFBooleanGetTypeID() == CFGetTypeID((__bridge CFTypeRef)(self.value)))) {
+            unescapedValue = [self.value boolValue] ? @"true" : @"false";
+        }
+
+        return [NSString stringWithFormat:@"%@=%@", STPPercentEscapedStringFromString([self.field description]), STPPercentEscapedStringFromString(unescapedValue)];
     }
 }
 
