@@ -1070,6 +1070,7 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
                                                                     fieldsHeight)];
         maskView.backgroundColor = [UIColor blackColor];
         maskView.opaque = YES;
+        maskView.userInteractionEnabled = NO;
         [UIView performWithoutAnimation:^{
             self.numberField.maskView = maskView;
         }];
