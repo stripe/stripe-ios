@@ -92,6 +92,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConnectAccountParams.html">STPConnectAccountParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes.html#/c:objc(cs)STPCoreScrollViewController">STPCoreScrollViewController</a>
               </li>
               <li class="nav-group-task">
@@ -116,6 +119,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPImageLibrary.html">STPImageLibrary</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPLegalEntityParams.html">STPLegalEntityParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentActivityIndicatorView.html">STPPaymentActivityIndicatorView</a>
               </li>
               <li class="nav-group-task">
@@ -132,6 +138,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentResult.html">STPPaymentResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPersonParams.html">STPPersonParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPRedirectContext.html">STPRedirectContext</a>
@@ -173,6 +182,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPUserInformation.html">STPUserInformation</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPVerificationParams.html">STPVerificationParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/Stripe.html">Stripe</a>
               </li>
             </ul>
@@ -185,6 +197,18 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPCardErrorCodeKey">STPCardErrorCodeKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPContactFieldEmailAddress">STPContactFieldEmailAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPContactFieldName">STPContactFieldName</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPContactFieldPhoneNumber">STPContactFieldPhoneNumber</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Constants.html#/c:@STPContactFieldPostalAddress">STPContactFieldPostalAddress</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Constants.html#/c:@STPErrorMessageKey">STPErrorMessageKey</a>
@@ -340,6 +364,9 @@
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:StripeError.h@T@STPCardErrorCode">STPCardErrorCode</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPAddress.h@T@STPContactField">STPContactField</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPCustomerCompletionBlock">STPCustomerCompletionBlock</a>
               </li>
               <li class="nav-group-task">
@@ -394,7 +421,7 @@
             <h1>STPPaymentContext</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="k">@interface</span> <span class="nc">STPPaymentContext</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
+                  <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">STPPaymentContext</span> <span class="p">:</span> <span class="nc">NSObject</span></code></pre>
 
                 </div>
               </div>
@@ -434,13 +461,13 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithCustomerContext</span><span class="p">:</span>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithCustomerContext</span><span class="p">:</span>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">customerContext</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -469,7 +496,7 @@ and modify its Stripe customer. - see: STPCustomerContext.h</p>
                         <p>the newly-instantiated payment context</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -501,7 +528,7 @@ and theme. After this class is initialized, you should also make sure to set its
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span>
 <span class="nf">initWithCustomerContext</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">customerContext</span>
           <span class="nf">configuration</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span>
                   <span class="nf">theme</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">theme</span><span class="p">;</span></code></pre>
@@ -509,7 +536,7 @@ and theme. After this class is initialized, you should also make sure to set its
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="nv">customerContext</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCustomerContext.html">STPCustomerContext</a></span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -564,7 +591,7 @@ that the payment context automatically creates for you. - see: STPTheme.h</p>
                         <p>the newly-instantiated payment context</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L60-L62">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L60-L62">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -594,18 +621,18 @@ Stripe customer for you. - see: STPCustomerContext.h</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithAPIAdapter</span><span class="p">:</span>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithAPIAdapter</span><span class="p">:</span>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">apiAdapter</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L72">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L72">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -641,7 +668,7 @@ and <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContex
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span>
 <span class="nf">initWithAPIAdapter</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="o">&gt;</span><span class="p">)</span><span class="nv">apiAdapter</span>
      <span class="nf">configuration</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span>
              <span class="nf">theme</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">theme</span><span class="p">;</span></code></pre>
@@ -649,7 +676,7 @@ and <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContex
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="nf">init</span><span class="p">(</span><span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span><span class="p">,</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -705,7 +732,7 @@ the payment context automatically creates for you. - see: STPTheme.h</p>
                         <p>the newly-instantiated payment context</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L94-L96">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L94-L96">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -740,17 +767,17 @@ You need to make a class conforming to this protocol that talks to your server. 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="o">&gt;</span> <span class="n">_Nonnull</span> <span class="n">apiAdapter</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span><span class="o">&gt;</span> <span class="n">_Nonnull</span> <span class="n">apiAdapter</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">apiAdapter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPBackendAPIAdapter.html">STPBackendAPIAdapter</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L107">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L107">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -775,17 +802,17 @@ You need to make a class conforming to this protocol that talks to your server. 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">configuration</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">configuration</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentConfiguration.html">STPPaymentConfiguration</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L112">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L112">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -810,17 +837,17 @@ You need to make a class conforming to this protocol that talks to your server. 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">theme</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">theme</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPTheme.html">STPTheme</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L117">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L117">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -845,18 +872,18 @@ You need to make a class conforming to this protocol that talks to your server. 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
     <span class="n"><a href="../Classes/STPUserInformation.html">STPUserInformation</a></span> <span class="o">*</span><span class="n">prefilledInformation</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">prefilledInformation</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPUserInformation.html">STPUserInformation</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">prefilledInformation</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPUserInformation.html">STPUserInformation</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L122">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L122">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -881,17 +908,17 @@ You need to make a class conforming to this protocol that talks to your server. 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="n">hostViewController</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIViewController</span> <span class="o">*</span><span class="n">hostViewController</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">weak</span> <span class="k">var</span> <span class="nv">hostViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">weak</span> <span class="k">var</span> <span class="nv">hostViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L127">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L127">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -916,18 +943,18 @@ You need to make a class conforming to this protocol that talks to your server. 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentContextDelegate.html">STPPaymentContextDelegate</a></span><span class="o">&gt;</span>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentContextDelegate.html">STPPaymentContextDelegate</a></span><span class="o">&gt;</span>
     <span class="n">delegate</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentContextDelegate.html">STPPaymentContextDelegate</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentContextDelegate.html">STPPaymentContextDelegate</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L132">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L132">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -952,17 +979,17 @@ You need to make a class conforming to this protocol that talks to your server. 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">loading</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">loading</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">loading</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">loading</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L137">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L137">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -987,18 +1014,18 @@ You need to make a class conforming to this protocol that talks to your server. 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="o">&gt;</span>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="o">&gt;</span>
     <span class="n">selectedPaymentMethod</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">selectedPaymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">selectedPaymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L142">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L142">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1023,18 +1050,18 @@ You need to make a class conforming to this protocol that talks to your server. 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
     <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="o">&gt;&gt;</span> <span class="o">*</span><span class="n">paymentMethods</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">paymentMethods</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">paymentMethods</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L147">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L147">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1059,18 +1086,18 @@ You need to make a class conforming to this protocol that talks to your server. 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
     <span class="n">PKShippingMethod</span> <span class="o">*</span><span class="n">selectedShippingMethod</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">selectedShippingMethod</span><span class="p">:</span> <span class="kt">PKShippingMethod</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">selectedShippingMethod</span><span class="p">:</span> <span class="kt">PKShippingMethod</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L152">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L152">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1095,18 +1122,18 @@ You need to make a class conforming to this protocol that talks to your server. 
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span>
     <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">PKShippingMethod</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">shippingMethods</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">shippingMethods</span><span class="p">:</span> <span class="p">[</span><span class="kt">PKShippingMethod</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">shippingMethods</span><span class="p">:</span> <span class="p">[</span><span class="kt">PKShippingMethod</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L157">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L157">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1150,17 +1177,17 @@ shipping address. To change this behavior, you can set
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="n">shippingAddress</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPAddress.html">STPAddress</a></span> <span class="o">*</span><span class="n">shippingAddress</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">shippingAddress</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">shippingAddress</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPAddress.html">STPAddress</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L181">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L181">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1199,17 +1226,17 @@ The other will be automatically calculated on demand using your <code><a href=".
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSInteger</span> <span class="n">paymentAmount</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSInteger</span> <span class="n">paymentAmount</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">paymentAmount</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">paymentAmount</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L194">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L194">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1241,17 +1268,17 @@ or <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">paymentCurrency</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">paymentCurrency</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">paymentCurrency</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">paymentCurrency</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L203">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L203">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1288,17 +1315,17 @@ payment requests.
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">paymentCountry</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">paymentCountry</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">paymentCountry</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">paymentCountry</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L213">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L213">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1338,18 +1365,18 @@ The other will be automatically calculated on demand using your <code><a href=".
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
     <span class="n">NSArray</span><span class="o">&lt;</span><span class="n">PKPaymentSummaryItem</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">paymentSummaryItems</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">paymentSummaryItems</span><span class="p">:</span> <span class="p">[</span><span class="kt">PKPaymentSummaryItem</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">paymentSummaryItems</span><span class="p">:</span> <span class="p">[</span><span class="kt">PKPaymentSummaryItem</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L226">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L226">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1377,18 +1404,64 @@ The default value is <code>UIModalPresentationFullScreen</code>.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
     <span class="n">UIModalPresentationStyle</span> <span class="n">modalPresentationStyle</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">modalPresentationStyle</span><span class="p">:</span> <span class="kt">UIModalPresentationStyle</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">modalPresentationStyle</span><span class="p">:</span> <span class="kt">UIModalPresentationStyle</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L234">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L234">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)STPPaymentContext(py)largeTitleDisplayMode"></a>
+                    <a name="//apple_ref/objc/Property/largeTitleDisplayMode" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)STPPaymentContext(py)largeTitleDisplayMode">largeTitleDisplayMode</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The mode to use when displaying the title of the navigation bar in all view
+controllers presented by the context. The default value is <code>automatic</code>,
+which causes the title to use the same styling as the previously displayed
+navigation item (if the view controller is pushed onto the <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code>).</p>
+
+<p>If the <code>prefersLargeTitles</code> property of the <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPPaymentContext(py)hostViewController">hostViewController</a></code>&lsquo;s navigation bar
+is false, this property has no effect and the navigation item&rsquo;s title is always
+displayed as a small title.</p>
+
+<p>If the view controller is presented modally, <code>automatic</code> and
+<code>never</code> always result in a navigation bar with a small title.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
+    <span class="n">UINavigationItemLargeTitleDisplayMode</span> <span class="n">largeTitleDisplayMode</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">largeTitleDisplayMode</span><span class="p">:</span> <span class="kt">UINavigationItem</span><span class="o">.</span><span class="kt">LargeTitleDisplayMode</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L249">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1418,18 +1491,18 @@ to be sized and positioned properly.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
     <span class="n">UIView</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">paymentMethodsViewControllerFooterView</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">paymentMethodsViewControllerFooterView</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">paymentMethodsViewControllerFooterView</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L244">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L259">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1458,18 +1531,18 @@ to be sized and positioned properly.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span>
     <span class="n">UIView</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">addCardViewControllerFooterView</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">addCardViewControllerFooterView</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">addCardViewControllerFooterView</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L253">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L268">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1497,17 +1570,17 @@ will be called again (and you can again call this to keep retrying, etc).</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">retryLoading</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">retryLoading</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">retryLoading</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">retryLoading</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L261">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L276">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1540,17 +1613,17 @@ when the user is done selecting their payment method.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">presentPaymentMethodsViewController</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">presentPaymentMethodsViewController</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">presentPaymentMethodsViewController</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">presentPaymentMethodsViewController</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L271">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L286">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1583,17 +1656,17 @@ automatically when the user is done selecting their payment method.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pushPaymentMethodsViewController</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pushPaymentMethodsViewController</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">pushPaymentMethodsViewController</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">pushPaymentMethodsViewController</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L281">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L296">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1627,17 +1700,17 @@ entering their shipping info.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">presentShippingViewController</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">presentShippingViewController</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">presentShippingViewController</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">presentShippingViewController</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L292">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L307">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1671,17 +1744,17 @@ user is done entering their shipping info.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pushShippingViewController</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pushShippingViewController</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">pushShippingViewController</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">pushShippingViewController</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L303">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L318">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1719,17 +1792,17 @@ context&rsquo;s <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPP
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">requestPayment</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">requestPayment</span><span class="p">;</span></code></pre>
 
                         </div>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">requestPayment</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">requestPayment</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v11.5.0/Stripe/PublicHeaders/STPPaymentContext.h#L318">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v12.0.0/Stripe/PublicHeaders/STPPaymentContext.h#L333">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1742,8 +1815,8 @@ context&rsquo;s <code><a href="../Classes/STPPaymentContext.html#/c:objc(cs)STPP
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2017 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2017-11-09)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-01-12)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.1</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
