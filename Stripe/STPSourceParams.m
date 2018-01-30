@@ -301,6 +301,13 @@
     return params;
 }
 
++ (STPSourceParams *)visaCheckoutParamsWithCallId:(NSString *)callId {
+    STPSourceParams *params = [self new];
+    params.type = STPSourceTypeCard;
+    params.additionalAPIParameters = @{ @"card": @{ @"visa_checkout": @{ @"callid": callId } } };
+    return params;
+}
+
 #pragma mark - Redirect Dictionary
 
 /**
