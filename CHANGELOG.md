@@ -1,3 +1,6 @@
+## 12.0.1 2018-01-31
+* Adding Visa Checkout support to `STPSourceParams` [#889](https://github.com/stripe/stripe-ios/pull/889)
+
 ## 12.0.0 2018-01-16
 * Minimum supported iOS version is now 9.0.
   * If you need to support iOS 8, the last supported version is [11.5.0](https://github.com/stripe/stripe-ios/releases/tag/v11.5.0)
