@@ -163,9 +163,13 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
-- (void)testShouldCreateSource {
+/**
+ Tests that setting createsCardSource creats a card source instead of a card
+ token and calls the correct delegate method.
+ */
+- (void)testCreatesCardSource {
     STPAddCardViewController *sut = [self buildAddCardViewController];
-    sut.shouldCreateSource = YES;
+    sut.createsCardSource = YES;
 
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     id mockDelegate = OCMProtocolMock(@protocol(STPAddCardViewControllerDelegate));

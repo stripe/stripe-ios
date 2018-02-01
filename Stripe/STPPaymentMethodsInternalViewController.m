@@ -21,6 +21,8 @@
 #import "STPPaymentMethodTuple.h"
 #import "STPPromise.h"
 #import "STPSourceProtocol.h"
+#import "STPSource.h"
+#import "STPToken.h"
 #import "UITableViewCell+Stripe_Borders.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "UIViewController+Stripe_Promises.h"
@@ -63,6 +65,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
         _paymentMethods = tuple.paymentMethods;
         _selectedPaymentMethod = tuple.selectedPaymentMethod;
         _delegate = delegate;
+        _createsCardSources = NO;
 
         self.title = STPLocalizedString(@"Payment Method", @"Title for Payment Method screen");
     }
@@ -325,6 +328,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
         paymentCardViewController.delegate = self;
         paymentCardViewController.prefilledInformation = self.prefilledInformation;
         paymentCardViewController.shippingAddress = self.shippingAddress;
+        paymentCardViewController.createsCardSource = self.createsCardSources;
 
         [self.navigationController pushViewController:paymentCardViewController animated:YES];
     }
@@ -378,7 +382,11 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 }
 
 - (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController didCreateToken:(STPToken *)token completion:(STPErrorBlock)completion {
-    [self.delegate internalViewControllerDidCreateToken:token completion:completion];
+    [self.delegate internalViewControllerDidCreateSource:token completion:completion];
+}
+
+- (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController didCreateSource:(STPSource *)source completion:(STPErrorBlock)completion {
+    [self.delegate internalViewControllerDidCreateSource:source completion:completion];
 }
 
 @end

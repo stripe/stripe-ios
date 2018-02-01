@@ -10,6 +10,7 @@
 #import "STPSourceCardDetails+Private.h"
 
 #import "STPCard+Private.h"
+#import "STPImageLibrary.h"
 #import "NSDictionary+Stripe.h"
 
 @interface STPSourceCardDetails ()
@@ -78,6 +79,21 @@
 
 + (nullable NSString *)stringFromThreeDSecureStatus:(STPSourceCard3DSecureStatus)threeDSecureStatus {
     return [[[self stringToThreeDSecureStatusMapping] allKeysForObject:@(threeDSecureStatus)] firstObject];
+}
+
+#pragma mark - STPPaymentMethod
+
+- (UIImage *)image {
+    return [STPImageLibrary brandImageForCardBrand:self.brand];
+}
+
+- (UIImage *)templateImage {
+    return [STPImageLibrary templatedBrandImageForCardBrand:self.brand];
+}
+
+- (NSString *)label {
+    NSString *brand = [self.class stringFromBrand:self.brand];
+    return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
 }
 
 #pragma mark - Description

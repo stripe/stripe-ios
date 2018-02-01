@@ -10,6 +10,7 @@
 
 #import "STPAPIResponseDecodable.h"
 #import "STPCard.h"
+#import "STPPaymentMethod.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -45,7 +46,7 @@ typedef NS_ENUM(NSInteger, STPSourceCard3DSecureStatus) {
  This class provides typed access to the contents of an STPSource `details`
  dictionary for card sources.
  */
-@interface STPSourceCardDetails : NSObject <STPAPIResponseDecodable>
+@interface STPSourceCardDetails : NSObject <STPAPIResponseDecodable, STPPaymentMethod>
 
 /**
  You cannot directly instantiate an `STPSourceCardDetails`. You should only 

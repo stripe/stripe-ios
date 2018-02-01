@@ -94,7 +94,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     _apiClient = [[STPAPIClient alloc] initWithConfiguration:configuration];
     _addressViewModel = [[STPAddressViewModel alloc] initWithRequiredBillingFields:configuration.requiredBillingAddressFields];
     _addressViewModel.delegate = self;
-    _shouldCreateSource = NO;
+    _createsCardSource = NO;
 
     self.title = STPLocalizedString(@"Add a Card", @"Title for Add a Card view");
 }
@@ -275,7 +275,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     cardParams.currency = self.managedAccountCurrency;
     if (cardParams) {
         // Create and return a card source
-        if (self.shouldCreateSource) {
+        if (self.createsCardSource) {
             STPSourceParams *sourceParams = [STPSourceParams cardParamsWithCard:cardParams];
             [self.apiClient createSourceWithParams:sourceParams completion:^(STPSource * _Nullable source, NSError * _Nullable tokenizationError) {
                 if (tokenizationError) {

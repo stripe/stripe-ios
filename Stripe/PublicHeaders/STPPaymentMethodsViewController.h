@@ -112,6 +112,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *paymentMethodsViewControllerFooterView;
 
 /**
+ If the value of this property is true, STPPaymentMethodsViewController creates
+ card sources instead of card tokens. The default value is false.
+
+ @see https://stripe.com/docs/sources/cards#create-source
+ */
+@property (nonatomic, assign) BOOL createsCardSources;
+
+/**
  A view that will be placed as the footer of the view controller when it is
  showing the add card view.
 

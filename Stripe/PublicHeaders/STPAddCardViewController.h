@@ -67,11 +67,11 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  If the value of this property is true, STPAddCardViewController creates a card
  source instead of a card token, and the `didCreateSource:` delegate method is
- called on completion instead of `didCreateToken:`. Default is false.
+ called on completion instead of `didCreateToken:`. The default value is false.
 
  @see https://stripe.com/docs/sources/cards#create-source
  */
-@property (nonatomic, assign) BOOL shouldCreateSource;
+@property (nonatomic, assign) BOOL createsCardSource;
 
 @end
 
@@ -95,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
  This is called when the user successfully adds a card and Stripe returns a
  card token.
 
- Note: If `shouldCreateSource` is true, this method will not be called;
+ Note: If `createsCardSource` is true, this method will not be called;
  `addCardViewController:didCreateSource:` will be called instead.
 
  You should send the token to your backend to store it on a customer, and then
@@ -115,7 +115,7 @@ NS_ASSUME_NONNULL_BEGIN
  This is called when the user successfully adds a card and Stripe returns a
  card source.
 
- Note: If `shouldCreateSource` is false, this method will not be called;
+ Note: If `createsCardSource` is false, this method will not be called;
  `addCardViewController:didCreateToken:` will be called instead.
 
  You should send the source to your backend to store it on a customer, and then

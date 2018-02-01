@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class STPSourceCardDetails;
+
 @interface STPCard () <STPInternalAPIResponseDecodable>
 
 + (STPCardFundingType)fundingFromString:(NSString *)string;
