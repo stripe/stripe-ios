@@ -49,12 +49,14 @@
 @implementation STPPaymentMethodsViewController
 
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext {
-    return [self initWithConfiguration:paymentContext.configuration
-                            apiAdapter:paymentContext.apiAdapter
-                        loadingPromise:paymentContext.currentValuePromise
-                                 theme:paymentContext.theme
-                       shippingAddress:paymentContext.shippingAddress
-                              delegate:paymentContext];
+    STPPaymentMethodsViewController *instance = [self initWithConfiguration:paymentContext.configuration
+                                                                 apiAdapter:paymentContext.apiAdapter
+                                                             loadingPromise:paymentContext.currentValuePromise
+                                                                      theme:paymentContext.theme
+                                                            shippingAddress:paymentContext.shippingAddress
+                                                                   delegate:paymentContext];
+    instance.createsCardSources = paymentContext.createsCardSources;
+    return instance;
 }
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration

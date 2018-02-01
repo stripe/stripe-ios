@@ -106,6 +106,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             _largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeAutomatic;
         }
         _state = STPPaymentContextStateNone;
+        _createsCardSources = NO;
         [self retryLoading];
     }
     return self;
