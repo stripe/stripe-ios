@@ -10,7 +10,6 @@
 #import "STPSourceCardDetails+Private.h"
 
 #import "STPCard+Private.h"
-#import "STPImageLibrary.h"
 #import "NSDictionary+Stripe.h"
 
 @interface STPSourceCardDetails ()

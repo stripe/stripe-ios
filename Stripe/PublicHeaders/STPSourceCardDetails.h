@@ -10,7 +10,6 @@
 
 #import "STPAPIResponseDecodable.h"
 #import "STPCard.h"
-#import "STPPaymentMethod.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

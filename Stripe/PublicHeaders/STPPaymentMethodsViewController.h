@@ -113,7 +113,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  If the value of this property is true, STPPaymentMethodsViewController creates
- card sources instead of card tokens. The default value is false.
+ a card sources instead of a card token when your user adds a card. The default
+ value is false.
 
  @see https://stripe.com/docs/sources/cards#create-source
  */
