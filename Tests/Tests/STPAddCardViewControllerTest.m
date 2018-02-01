@@ -119,6 +119,7 @@
 
 - (void)testNextWithCreateTokenSuccessAndDidCreateTokenSuccess {
     STPAddCardViewController *sut = [self buildAddCardViewController];
+    XCTAssertFalse(sut.createsCardSource);
 
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     id mockDelegate = OCMProtocolMock(@protocol(STPAddCardViewControllerDelegate));

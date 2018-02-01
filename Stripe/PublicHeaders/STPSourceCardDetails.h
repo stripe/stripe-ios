@@ -46,7 +46,7 @@ typedef NS_ENUM(NSInteger, STPSourceCard3DSecureStatus) {
  This class provides typed access to the contents of an STPSource `details`
  dictionary for card sources.
  */
-@interface STPSourceCardDetails : NSObject <STPAPIResponseDecodable, STPPaymentMethod>
+@interface STPSourceCardDetails : NSObject <STPAPIResponseDecodable>
 
 /**
  You cannot directly instantiate an `STPSourceCardDetails`. You should only 

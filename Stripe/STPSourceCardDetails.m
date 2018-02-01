@@ -81,21 +81,6 @@
     return [[[self stringToThreeDSecureStatusMapping] allKeysForObject:@(threeDSecureStatus)] firstObject];
 }
 
-#pragma mark - STPPaymentMethod
-
-- (UIImage *)image {
-    return [STPImageLibrary brandImageForCardBrand:self.brand];
-}
-
-- (UIImage *)templateImage {
-    return [STPImageLibrary templatedBrandImageForCardBrand:self.brand];
-}
-
-- (NSString *)label {
-    NSString *brand = [self.class stringFromBrand:self.brand];
-    return [NSString stringWithFormat:@"%@ %@", brand, self.last4];
-}
-
 #pragma mark - Description
 
 - (NSString *)description {

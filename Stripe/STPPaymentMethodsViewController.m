@@ -228,7 +228,7 @@
                 // created a card source
                 else if ([source isKindOfClass:[STPSource class]] &&
                          ((STPSource *)source).type == STPSourceTypeCard) {
-                    [self finishWithPaymentMethod:((STPSource *)source).cardDetails];
+                    [self finishWithPaymentMethod:(id<STPPaymentMethod>)source];
                 }
             }
         });
