@@ -648,10 +648,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             paymentAuthVC = [PKPaymentAuthorizationViewController
                              stp_controllerWithPaymentRequest:paymentRequest
                              apiClient:self.apiClient
+                             createSource:self.configuration.createCardSources
                              onShippingAddressSelection:shippingAddressHandler
                              onShippingMethodSelection:shippingMethodHandler
                              onPaymentAuthorization:paymentHandler
-                             onTokenCreation:applePayTokenHandler
+                             onTokenCreation:applePaySourceHandler
                              onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
                                  [self.hostViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]
                                                                              completion:^{
