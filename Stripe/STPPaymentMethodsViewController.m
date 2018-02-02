@@ -49,14 +49,12 @@
 @implementation STPPaymentMethodsViewController
 
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext {
-    STPPaymentMethodsViewController *instance = [self initWithConfiguration:paymentContext.configuration
-                                                                 apiAdapter:paymentContext.apiAdapter
-                                                             loadingPromise:paymentContext.currentValuePromise
-                                                                      theme:paymentContext.theme
-                                                            shippingAddress:paymentContext.shippingAddress
-                                                                   delegate:paymentContext];
-    instance.createsCardSources = paymentContext.createsCardSources;
-    return instance;
+    return [self initWithConfiguration:paymentContext.configuration
+                            apiAdapter:paymentContext.apiAdapter
+                        loadingPromise:paymentContext.currentValuePromise
+                                 theme:paymentContext.theme
+                       shippingAddress:paymentContext.shippingAddress
+                              delegate:paymentContext];
 }
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
@@ -120,7 +118,7 @@
                                                                                                                                  shippingAddress:self.shippingAddress
                                                                                                                               paymentMethodTuple:tuple
                                                                                                                                         delegate:self];
-            payMethodsInternal.createsCardSources = self.createsCardSources;
+            payMethodsInternal.createsCardSources = self.configuration.createCardSources;
             if (self.paymentMethodsViewControllerFooterView) {
                 payMethodsInternal.customFooterView = self.paymentMethodsViewControllerFooterView;
             }
@@ -131,7 +129,6 @@
             addCardViewController.delegate = self;
             addCardViewController.prefilledInformation = self.prefilledInformation;
             addCardViewController.shippingAddress = self.shippingAddress;
-            addCardViewController.createsCardSource = self.createsCardSources;
             internal = addCardViewController;
 
             if (self.addCardViewControllerFooterView) {
@@ -293,7 +290,6 @@
         _apiAdapter = apiAdapter;
         _loadingPromise = loadingPromise;
         _delegate = delegate;
-        _createsCardSources = NO;
 
         self.navigationItem.title = STPLocalizedString(@"Loading…", @"Title for screen when data is still loading from the network.");
 

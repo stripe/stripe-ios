@@ -46,6 +46,7 @@
         _shippingType = STPShippingTypeShipping;
         _companyName = [NSBundle stp_applicationName];
         _canDeletePaymentMethods = YES;
+        _createCardSources = NO;
     }
     return self;
 }

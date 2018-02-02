@@ -119,7 +119,6 @@
 
 - (void)testNextWithCreateTokenSuccessAndDidCreateTokenSuccess {
     STPAddCardViewController *sut = [self buildAddCardViewController];
-    XCTAssertFalse(sut.createsCardSource);
 
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     id mockDelegate = OCMProtocolMock(@protocol(STPAddCardViewControllerDelegate));
@@ -165,12 +164,16 @@
 }
 
 /**
- Tests that setting createsCardSource creats a card source instead of a card
+ Tests that setting createCardSource creates a card source instead of a card
  token and calls the correct delegate method.
  */
 - (void)testCreatesCardSource {
-    STPAddCardViewController *sut = [self buildAddCardViewController];
-    sut.createsCardSource = YES;
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.createCardSources = YES;
+    STPTheme *theme = [STPTheme defaultTheme];
+    STPAddCardViewController *sut = [[STPAddCardViewController alloc] initWithConfiguration:config
+                                                                                     theme:theme];
+    XCTAssertNotNil(sut.view);
 
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     id mockDelegate = OCMProtocolMock(@protocol(STPAddCardViewControllerDelegate));

@@ -1,8 +1,5 @@
 ## 12.1.0 2018-02-01
-* Adds `createsCardSources` to `STPPaymentContext`. If you enable this option, when your user adds a card, a card source will be created and attached to their Stripe Customer. If this option is disabled (the default), a card token is created.
-* Adds `createsCardSources` to `STPPaymentMethodsViewController`. If you enable this option, adding a card will create a card source instead of a card token.
-* Adds `createsCardSource` to `STPAddCardViewController`. If you enable this option, adding a card will create a card source instead of a card token.
-* For more information on card sources, see https://stripe.com/docs/sources/cards
+* Adds `createCardSources` to `STPPaymentConfiguration`. If you enable this option, when your user adds a card in the SDK's UI, a card source will be created and attached to their Stripe Customer. If this option is disabled (the default), a card token is created. For more information on card sources, see https://stripe.com/docs/sources/cards
 
 ## 12.0.1 2018-01-31
 * Adding Visa Checkout support to `STPSourceParams` [#889](https://github.com/stripe/stripe-ios/pull/889)

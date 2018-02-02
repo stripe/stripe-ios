@@ -20,8 +20,8 @@
 #import "STPPaymentMethodTableViewCell.h"
 #import "STPPaymentMethodTuple.h"
 #import "STPPromise.h"
-#import "STPSourceProtocol.h"
 #import "STPSource.h"
+#import "STPSourceProtocol.h"
 #import "STPToken.h"
 #import "UITableViewCell+Stripe_Borders.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
@@ -328,7 +328,6 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
         paymentCardViewController.delegate = self;
         paymentCardViewController.prefilledInformation = self.prefilledInformation;
         paymentCardViewController.shippingAddress = self.shippingAddress;
-        paymentCardViewController.createsCardSource = self.createsCardSources;
 
         [self.navigationController pushViewController:paymentCardViewController animated:YES];
     }

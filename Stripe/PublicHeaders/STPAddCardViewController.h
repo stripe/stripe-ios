@@ -64,15 +64,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, nullable) UIView *customFooterView;
 
-/**
- If the value of this property is true, STPAddCardViewController creates a card
- source instead of a card token, and the `didCreateSource:` delegate method is
- called on completion instead of `didCreateToken:`. The default value is false.
-
- @see https://stripe.com/docs/sources/cards#create-source
- */
-@property (nonatomic, assign) BOOL createsCardSource;
-
 @end
 
 /**
@@ -100,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  You should send the token to your backend to store it on a customer, and then
  call the provided `completion` block when that call is finished. If an error
- occurrs while talking to your backend, call `completion(error)`, otherwise,
+ occurs while talking to your backend, call `completion(error)`, otherwise,
  dismiss (or pop) the view controller.
 
  @param addCardViewController the view controller that successfully created a token
@@ -120,7 +111,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  You should send the source to your backend to store it on a customer, and then
  call the provided `completion` block when that call is finished. If an error
- occurrs while talking to your backend, call `completion(error)`, otherwise,
+ occurs while talking to your backend, call `completion(error)`, otherwise,
  dismiss (or pop) the view controller.
 
  @param addCardViewController the view controller that successfully created a token
@@ -128,7 +119,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param completion            call this callback when you're done sending the token to your backend
  */
 - (void)addCardViewController:(STPAddCardViewController *)addCardViewController
-               didCreateSource:(STPSource *)source
+              didCreateSource:(STPSource *)source
                    completion:(STPErrorBlock)completion;
 
 @end

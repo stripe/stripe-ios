@@ -134,7 +134,6 @@
                                                                                                     theme:theme
                                                                                           customerContext:mockCustomerContext
                                                                                                  delegate:delegate];
-    XCTAssertFalse(sut.createsCardSources);
     XCTAssertNotNil(sut.view);
     XCTAssertTrue([sut.internalViewController isKindOfClass:[STPAddCardViewController class]]);
 
@@ -169,12 +168,13 @@
 }
 
 /**
- When createsCardSources is enabled, AddCardVC should create a card source and
+ When createCardSources is enabled, AddCardVC should create a card source and
  the correct delegate methods should be called.
  */
 - (void)testCreatesCardSources {
     STPTheme *theme = [STPTheme defaultTheme];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.createCardSources = YES;
     STPCustomer *customer = [STPFixtures customerWithNoSources];
     STPCustomerContext *mockCustomerContext = [STPMocks staticCustomerContextWithCustomer:customer];
     id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
@@ -182,7 +182,6 @@
                                                                                                     theme:theme
                                                                                           customerContext:mockCustomerContext
                                                                                                  delegate:delegate];
-    sut.createsCardSources = YES;
     XCTAssertNotNil(sut.view);
     XCTAssertTrue([sut.internalViewController isKindOfClass:[STPAddCardViewController class]]);
 
