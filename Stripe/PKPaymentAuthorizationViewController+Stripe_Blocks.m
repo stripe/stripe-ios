@@ -53,7 +53,7 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
         else if ([result isKindOfClass:[STPSource class]]) {
             source = (STPSource *)result;
         }
-        self.onSourceCreation(result, ^(NSError *sourceCreation){
+        self.onSourceCreation(source, ^(NSError *sourceCreation){
             if (sourceCreation) {
                 self.lastError = sourceCreation;
                 completion(PKPaymentAuthorizationStatusFailure);
