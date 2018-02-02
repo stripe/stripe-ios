@@ -27,6 +27,7 @@
 #import "STPPaymentCardTextFieldCell.h"
 #import "STPPromise.h"
 #import "STPSectionHeaderView.h"
+#import "STPSourceParams.h"
 #import "STPToken.h"
 #import "STPWeakStrongMacros.h"
 #import "StripeError.h"
@@ -272,27 +273,61 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     cardParams.address = self.addressViewModel.address;
     cardParams.currency = self.managedAccountCurrency;
     if (cardParams) {
-        [self.apiClient createTokenWithCard:cardParams completion:^(STPToken *token, NSError *tokenError) {
-            if (tokenError) {
-                [self handleCardTokenError:tokenError];
-            }
-            else {
-                [self.delegate addCardViewController:self didCreateToken:token completion:^(NSError * _Nullable error) {
-                    stpDispatchToMainThreadIfNecessary(^{
-                        if (error) {
-                            [self handleCardTokenError:error];
-                        }
-                        else {
-                            self.loading = NO;
-                        }
-                    });
-                }];
-            }
-        }];
+        // Create and return a card source
+        if (self.configuration.createCardSources) {
+            STPSourceParams *sourceParams = [STPSourceParams cardParamsWithCard:cardParams];
+            [self.apiClient createSourceWithParams:sourceParams completion:^(STPSource * _Nullable source, NSError * _Nullable tokenizationError) {
+                if (tokenizationError) {
+                    [self handleCardTokenizationError:tokenizationError];
+                }
+                else {
+                    if ([self.delegate respondsToSelector:@selector(addCardViewController:didCreateSource:completion:)]) {
+                        [self.delegate addCardViewController:self didCreateSource:source completion:^(NSError * _Nullable error) {
+                            stpDispatchToMainThreadIfNecessary(^{
+                                if (error) {
+                                    [self handleCardTokenizationError:error];
+                                }
+                                else {
+                                    self.loading = NO;
+                                }
+                            });
+                        }];
+                    }
+                    else {
+                        self.loading = NO;
+                    }
+                }
+            }];
+        }
+        // Create and return a card token
+        else {
+            [self.apiClient createTokenWithCard:cardParams completion:^(STPToken *token, NSError *tokenizationError) {
+                if (tokenizationError) {
+                    [self handleCardTokenizationError:tokenizationError];
+                }
+                else {
+                    if ([self.delegate respondsToSelector:@selector(addCardViewController:didCreateToken:completion:)]) {
+                        [self.delegate addCardViewController:self didCreateToken:token completion:^(NSError * _Nullable error) {
+                            stpDispatchToMainThreadIfNecessary(^{
+                                if (error) {
+                                    [self handleCardTokenizationError:error];
+                                }
+                                else {
+                                    self.loading = NO;
+                                }
+                            });
+                        }];
+                    }
+                    else {
+                        self.loading = NO;
+                    }
+                }
+            }];
+        }
     }
 }
 
-- (void)handleCardTokenError:(NSError *)error {
+- (void)handleCardTokenizationError:(NSError *)error {
     self.loading = NO;
     [[self firstEmptyField] becomeFirstResponder];
     

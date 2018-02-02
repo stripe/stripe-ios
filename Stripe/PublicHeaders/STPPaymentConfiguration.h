@@ -110,6 +110,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readwrite) BOOL canDeletePaymentMethods;
 
 /**
+ If the value of this property is true, when your user adds a card in our UI,
+ a card source will be created and added to their Stripe Customer. The default
+ value is false.
+
+ @see https://stripe.com/docs/sources/cards#create-source
+ */
+@property (nonatomic, assign) BOOL createCardSources;
+
+/**
  In order to perform API requests on behalf of a connected account, e.g. to
  create a source on a connected account, set this property to the ID of the
  account for which this request is being made.

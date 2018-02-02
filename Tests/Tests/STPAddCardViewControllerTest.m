@@ -163,6 +163,60 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
+/**
+ Tests that setting createCardSource creates a card source instead of a card
+ token and calls the correct delegate method.
+ */
+- (void)testCreatesCardSource {
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.createCardSources = YES;
+    STPTheme *theme = [STPTheme defaultTheme];
+    STPAddCardViewController *sut = [[STPAddCardViewController alloc] initWithConfiguration:config
+                                                                                     theme:theme];
+    XCTAssertNotNil(sut.view);
+
+    id mockAPIClient = OCMClassMock([STPAPIClient class]);
+    id mockDelegate = OCMProtocolMock(@protocol(STPAddCardViewControllerDelegate));
+    sut.apiClient = mockAPIClient;
+    sut.delegate = mockDelegate;
+    STPCardParams *expectedCardParams = [STPFixtures cardParams];
+    sut.paymentCell.paymentField.cardParams = expectedCardParams;
+
+    STPSource *expectedSource = [STPFixtures cardSource];
+    XCTestExpectation *createSourceExp = [self expectationWithDescription:@"createSource"];
+    OCMStub([mockAPIClient createSourceWithParams:[OCMArg any] completion:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation){
+        STPSourceParams *sourceParams;
+        STPSourceCompletionBlock completion;
+        [invocation getArgument:&sourceParams atIndex:2];
+        [invocation getArgument:&completion atIndex:3];
+        XCTAssertEqualObjects(sourceParams.additionalAPIParameters[@"card"][@"number"], expectedCardParams.number);
+        XCTAssertTrue(sut.loading);
+        completion(expectedSource, nil);
+        [createSourceExp fulfill];
+    });
+
+    XCTestExpectation *didCreateSourceExp = [self expectationWithDescription:@"didCreateSource"];
+    OCMStub([mockDelegate addCardViewController:[OCMArg any] didCreateSource:[OCMArg any] completion:[OCMArg any]])
+    .andDo(^(NSInvocation *invocation){
+        STPSource *source;
+        STPErrorBlock completion;
+        [invocation getArgument:&source atIndex:3];
+        [invocation getArgument:&completion atIndex:4];
+        XCTAssertTrue(sut.loading);
+        XCTAssertEqualObjects(source.stripeID, expectedSource.stripeID);
+        completion(nil);
+        XCTAssertFalse(sut.loading);
+        [didCreateSourceExp fulfill];
+    });
+
+    // tap next button
+    UIBarButtonItem *nextButton = sut.navigationItem.rightBarButtonItem;
+    [nextButton.target performSelector:nextButton.action withObject:nextButton];
+
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
 #pragma clang diagnostic pop
 
 @end

@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)internalViewControllerDidSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
 - (void)internalViewControllerDidDeletePaymentMethod:(id<STPPaymentMethod>)paymentMethod;
-- (void)internalViewControllerDidCreateToken:(STPToken *)token completion:(STPErrorBlock)completion;
+- (void)internalViewControllerDidCreateSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion;
 - (void)internalViewControllerDidCancel;
 
 @end
@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateWithPaymentMethodTuple:(STPPaymentMethodTuple *)tuple;
 
 @property (nonatomic, strong, nullable) UIView *customFooterView;
+@property (nonatomic, assign) BOOL createsCardSources;
 
 
 @end
