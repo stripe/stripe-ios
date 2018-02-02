@@ -582,9 +582,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         else if ([self requestPaymentShouldPresentShippingViewController]) {
             [self presentShippingViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
         }
-        else if ([self.selectedPaymentMethod isKindOfClass:[STPCard class]]) {
+        else if ([self.selectedPaymentMethod isKindOfClass:[STPCard class]] ||
+                 [self.selectedPaymentMethod isKindOfClass:[STPSource class]]) {
             self.state = STPPaymentContextStateRequestingPayment;
-            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(STPCard *)self.selectedPaymentMethod];
+            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(id<STPSourceProtocol>)self.selectedPaymentMethod];
             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
                 stpDispatchToMainThreadIfNecessary(^{
                     if (error) {
