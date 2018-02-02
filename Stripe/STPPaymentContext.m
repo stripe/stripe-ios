@@ -625,19 +625,19 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                     [customerContext updateCustomerWithShippingAddress:self.shippingAddress completion:nil];
                 }
             };
-            STPApplePayTokenHandlerBlock applePayTokenHandler = ^(STPToken *token, STPErrorBlock tokenCompletion) {
-                [self.apiAdapter attachSourceToCustomer:token completion:^(NSError *tokenError) {
+            STPApplePaySourceHandlerBlock applePaySourceHandler = ^(id<STPSourceProtocol> source, STPErrorBlock completion) {
+                [self.apiAdapter attachSourceToCustomer:source completion:^(NSError *attachSourceError) {
                     stpDispatchToMainThreadIfNecessary(^{
-                        if (tokenError) {
-                            tokenCompletion(tokenError);
+                        if (attachSourceError) {
+                            completion(attachSourceError);
                         } else {
-                            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:token.card];
+                            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:source];
                             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
                                 // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
                                 if (error) {
-                                    tokenCompletion(error);
+                                    completion(error);
                                 } else {
-                                    tokenCompletion(nil);
+                                    completion(nil);
                                 }
                             }];
                         }
