@@ -1,0 +1,141 @@
+/* {card brand} ending in {last4} */
+"%@ Ending In %@" = "%1$@ loppuu %2$@";
+
+/* Title for Add a Card view */
+"Add a Card" = "Lisää kortti";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "Lisää uusi kortti…";
+
+/* Caption for Address field on address form */
+"Address" = "Osoite";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Osoite 2";
+
+/* Title for billing address entry section */
+"Billing Address" = "Laskutusosoite";
+
+/* Title for credit card number entry field */
+"Card" = "Kortti";
+
+/* accessibility label for text field */
+"card number" = "kortin numero";
+
+/* Caption for City field on address form */
+"City" = "Kaupunki";
+
+/* Title for contact info form */
+"Contact" = "Yhteystiedot";
+
+/* Caption for Country field on address form */
+"Country" = "Maa";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Maakunta";
+
+/* Title for delivery info form */
+"Delivery" = "Toimitus";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "Toimitusosoite";
+
+/* Caption for Email field on address form */
+"Email" = "Sähköposti";
+
+/* accessibility label for text field */
+"expiration date" = "eräpäivä";
+
+/* Label for free shipping method */
+"Free" = "Ilmainen";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Virheellinen toimitusosoite";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "Ladataan…";
+
+/* Caption for Name field on address form */
+"Name" = "Nimi";
+
+/* Button to move to the next text entry field */
+"Next" = "Seuraava";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Maksutapa";
+
+/* Caption for Phone field on address form */
+"Phone" = "Puhelin";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "Posti";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "Postinumero";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Maakunta";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Skannaa kortti";
+
+/* Title for shipping info form */
+"Shipping" = "Toimitus";
+
+/* Title for shipping address entry section */
+"Shipping Address" = "Toimitusosoite";
+
+/* Label for shipping method form */
+"Shipping Method" = "Toimitustapa";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Osavaltio";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+"State / Province / Region" = "Osavaltio / Maakunta / Alue";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Kortin prosessoinnissa tapahtui virhe -- yritä muutaman sekunnin päästä uudestaan";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Tapahtui odottamaton virhe -- yritä muutaman sekunnin päästä uudestaan";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Käytä maksuosoitetta";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Käytä toimitusosoitetta";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Käytä toimitusosoitetta";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Korttisi on vanhentunut";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Korttiasi ei hyväksytty";
+
+/* Error when the card's expiration month is not valid */
+"Your card's expiration month is invalid" = "Korttisi vanhenemiskuukausi on väärin";
+
+/* Error when the card's expiration year is not valid */
+"Your card's expiration year is invalid" = "Korttisi vanhenemisvuosi on väärin";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Korttisi numero on väärin";
+
+/* Error when the card's CVC is not valid */
+"Your card's security code is invalid" = "Korttisi turvakoodi on väärin";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "POSTI";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "Postinumero";
+
