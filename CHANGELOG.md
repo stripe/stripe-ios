@@ -1,3 +1,6 @@
+## 12.X.X 2018-XX-XX
+* Now matches clang static analyzer settings with Cocoapods, so you won't see any more analyzer issues.
+
 ## 12.1.0 2018-02-05
 * Adds `createCardSources` to `STPPaymentConfiguration`. If you enable this option, when your user adds a card in the SDK's UI, a card source will be created and attached to their Stripe Customer. If this option is disabled (the default), a card token is created. For more information on card sources, see https://stripe.com/docs/sources/cards
 
