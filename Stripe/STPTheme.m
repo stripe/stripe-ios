@@ -137,7 +137,7 @@ static UIFont  *STPThemeDefaultMediumFont;
 }
 
 - (UIBarStyle)barStyle {
-    if (_internalBarStyle) {
+    if (_internalBarStyle != nil) {
         return [_internalBarStyle integerValue];
     }
     return [self barStyleForColor:self.secondaryBackgroundColor];

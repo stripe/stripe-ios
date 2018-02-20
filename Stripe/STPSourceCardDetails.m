@@ -69,7 +69,7 @@
     NSString *key = [string lowercaseString];
     NSNumber *threeDSecureStatusNumber = [self stringToThreeDSecureStatusMapping][key];
 
-    if (threeDSecureStatusNumber) {
+    if (threeDSecureStatusNumber != nil) {
         return (STPSourceCard3DSecureStatus)[threeDSecureStatusNumber integerValue];
     }
 
