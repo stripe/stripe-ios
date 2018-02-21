@@ -41,7 +41,7 @@
     NSString *key = [string lowercaseString];
     NSNumber *purposeNumber = [self stringToPurposeMapping][key];
 
-    if (purposeNumber) {
+    if (purposeNumber != nil) {
         return (STPFilePurpose)[purposeNumber integerValue];
     }
 
@@ -88,7 +88,7 @@
     NSNumber *size = [dict stp_numberForKey:@"size"];
     NSString *type = [dict stp_stringForKey:@"type"];
     NSString *rawPurpose = [dict stp_stringForKey:@"purpose"];
-    if (!stripeId || !created || !size || !type || !rawPurpose) {
+    if (stripeId == nil || created == nil || size == nil || type == nil || rawPurpose == nil) {
         return nil;
     }
 

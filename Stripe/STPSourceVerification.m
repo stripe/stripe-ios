@@ -35,7 +35,7 @@
     NSString *key = [string lowercaseString];
     NSNumber *statusNumber = [self stringToStatusMapping][key];
 
-    if (statusNumber) {
+    if (statusNumber != nil) {
         return (STPSourceVerificationStatus)[statusNumber integerValue];
     }
 

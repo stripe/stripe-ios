@@ -92,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *key = [string lowercaseString];
     NSNumber *fundingNumber = [self stringToFundingMapping][key];
 
-    if (fundingNumber) {
+    if (fundingNumber != nil) {
         return (STPCardFundingType)[fundingNumber integerValue];
     }
 
@@ -181,7 +181,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *rawBrand = [dict stp_stringForKey:@"brand"];
     NSNumber *rawExpMonth = [dict stp_numberForKey:@"exp_month"];
     NSNumber *rawExpYear = [dict stp_numberForKey:@"exp_year"];
-    if (!stripeId || !last4 || !rawBrand || !rawExpMonth || !rawExpYear) {
+    if (stripeId == nil || last4 == nil || rawBrand == nil || rawExpMonth == nil || rawExpYear == nil) {
         return nil;
     }
 

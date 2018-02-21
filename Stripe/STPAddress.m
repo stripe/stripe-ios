@@ -257,7 +257,7 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
 
     for (STPContactField contactField in contactFields) {
         NSNumber *boxedConvertedField = contactToAddressFieldMap[contactField];
-        if (boxedConvertedField) {
+        if (boxedConvertedField != nil) {
             addressFields = (PKAddressField) (addressFields | [boxedConvertedField unsignedIntegerValue]);
         }
     }

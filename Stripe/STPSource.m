@@ -68,7 +68,7 @@
     NSString *key = [string lowercaseString];
     NSNumber *typeNumber = [self stringToTypeMapping][key];
 
-    if (typeNumber) {
+    if (typeNumber != nil) {
         return (STPSourceType)[typeNumber integerValue];
     }
 
@@ -94,7 +94,7 @@
     NSString *key = [string lowercaseString];
     NSNumber *flowNumber = [self stringToFlowMapping][key];
 
-    if (flowNumber) {
+    if (flowNumber != nil) {
         return (STPSourceFlow)[flowNumber integerValue];
     }
 
@@ -121,7 +121,7 @@
     NSString *key = [string lowercaseString];
     NSNumber *statusNumber = [self stringToStatusMapping][key];
 
-    if (statusNumber) {
+    if (statusNumber != nil) {
         return (STPSourceStatus)[statusNumber integerValue];
     }
 
@@ -145,7 +145,7 @@
     NSString *key = [string lowercaseString];
     NSNumber *usageNumber = [self stringToUsageMapping][key];
 
-    if (usageNumber) {
+    if (usageNumber != nil) {
         return (STPSourceUsage)[usageNumber integerValue];
     }
 

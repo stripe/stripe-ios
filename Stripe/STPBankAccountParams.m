@@ -51,7 +51,7 @@
     NSString *key = [string lowercaseString];
     NSNumber *accountHolderTypeNumber = [self stringToAccountHolderTypeMapping][key];
 
-    if (accountHolderTypeNumber) {
+    if (accountHolderTypeNumber != nil) {
         return (STPBankAccountHolderType)[accountHolderTypeNumber integerValue];
     }
 

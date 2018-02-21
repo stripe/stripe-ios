@@ -155,7 +155,7 @@ static NSString * const JSONKeyObject = @"object";
         // Some deserializers don't conform to STPInternalAPIResponseDecodable
         deserializerClass = [deserializers.firstObject class];
     }
-    else {
+    else if (objectString != nil) {
         for (id<STPAPIResponseDecodable> deserializer in deserializers) {
             if ([deserializer respondsToSelector:@selector(stripeObject)]
                 && [[(id<STPInternalAPIResponseDecodable>)deserializer stripeObject] isEqualToString:objectString]) {

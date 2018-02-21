@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *key = [string lowercaseString];
     NSNumber *statusNumber = [self stringToStatusMapping][key];
 
-    if (statusNumber) {
+    if (statusNumber != nil) {
         return (STPBankAccountStatus)[statusNumber integerValue];
     }
 
