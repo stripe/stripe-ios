@@ -45,15 +45,7 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
             completion(PKPaymentAuthorizationStatusFailure);
             return;
         }
-        id<STPSourceProtocol> source;
-        // return the child card, not the STPToken
-        if ([result isKindOfClass:[STPToken class]]) {
-            source = ((STPToken *)result).card;
-        }
-        else if ([result isKindOfClass:[STPSource class]]) {
-            source = (STPSource *)result;
-        }
-        self.onSourceCreation(source, ^(NSError *sourceCreation){
+        self.onSourceCreation(result, ^(NSError *sourceCreation){
             if (sourceCreation) {
                 self.lastError = sourceCreation;
                 completion(PKPaymentAuthorizationStatusFailure);
