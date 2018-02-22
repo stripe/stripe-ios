@@ -632,7 +632,23 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                         if (attachSourceError) {
                             completion(attachSourceError);
                         } else {
-                            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:source];
+                            /**
+                             When createCardSources is false, the SDK must:
+                             1. Send the token to customers/[id]/sources. This
+                             adds token.card to the customer's sources list.
+                             2. Return token.card to didCreatePaymentResult.
+                             A charge request with the customer ID and token ID
+                             will fail because the token is not linked to the
+                             customer (the card is).
+                             */
+                            id<STPSourceProtocol> paymentResultSource;
+                            if ([source isKindOfClass:[STPToken class]]) {
+                                paymentResultSource = ((STPToken *)source).card;
+                            }
+                            else if ([source isKindOfClass:[STPSource class]]) {
+                                paymentResultSource = (STPSource *)source;
+                            }
+                            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:paymentResultSource];
                             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
                                 // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
                                 if (error) {
