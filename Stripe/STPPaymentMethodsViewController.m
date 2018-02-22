@@ -219,10 +219,17 @@
         stpDispatchToMainThreadIfNecessary(^{
             completion(error);
             if (!error) {
-                // created a card token
+                /**
+                 When createCardSources is false, the SDK:
+                 1. Sends the token to customers/[id]/sources. This
+                 adds token.card to the customer's sources list.
+                 2. Return token.card to didCreatePaymentResult.
+                 A charge request with the customer ID and token ID
+                 will fail because the token is not linked to the
+                 customer (the card is).
+                 */
                 if ([source isKindOfClass:[STPToken class]]) {
-                    STPToken *token = (STPToken *)source;
-                    [self finishWithPaymentMethod:token.card];
+                    [self finishWithPaymentMethod:((STPToken *)source).card];
                 }
                 // created a card source
                 else if ([source isKindOfClass:[STPSource class]] &&

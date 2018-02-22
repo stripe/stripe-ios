@@ -633,8 +633,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                             completion(attachSourceError);
                         } else {
                             /**
-                             When createCardSources is false, the SDK must:
-                             1. Send the token to customers/[id]/sources. This
+                             When createCardSources is false, the SDK:
+                             1. Sends the token to customers/[id]/sources. This
                              adds token.card to the customer's sources list.
                              2. Return token.card to didCreatePaymentResult.
                              A charge request with the customer ID and token ID
