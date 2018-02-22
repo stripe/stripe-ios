@@ -636,7 +636,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                              When createCardSources is false, the SDK:
                              1. Sends the token to customers/[id]/sources. This
                              adds token.card to the customer's sources list.
-                             2. Return token.card to didCreatePaymentResult.
+                             2. Returns token.card to didCreatePaymentResult.
                              A charge request with the customer ID and token ID
                              will fail because the token is not linked to the
                              customer (the card is).
