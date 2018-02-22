@@ -632,6 +632,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                         if (attachSourceError) {
                             completion(attachSourceError);
                         } else {
+                            id<STPSourceProtocol> paymentResultSource = source;
                             /**
                              When createCardSources is false, the SDK:
                              1. Sends the token to customers/[id]/sources. This
@@ -644,12 +645,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                              will fail because the token is not linked to the
                              customer (the card is).
                              */
-                            id<STPSourceProtocol> paymentResultSource;
                             if ([source isKindOfClass:[STPToken class]]) {
                                 paymentResultSource = ((STPToken *)source).card;
-                            }
-                            else if ([source isKindOfClass:[STPSource class]]) {
-                                paymentResultSource = (STPSource *)source;
                             }
                             STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:paymentResultSource];
                             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
