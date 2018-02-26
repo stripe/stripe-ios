@@ -47,7 +47,7 @@ typedef NS_ENUM(NSUInteger, STPRedirectContextState) {
  is if SFSafariViewController fails its initial load (like the user has no 
  internet connection, or servers are down).
  */
-typedef void (^STPRedirectContextCompletionBlock)(NSString *sourceID, NSString *clientSecret, NSError *error);
+typedef void (^STPRedirectContextCompletionBlock)(NSString *sourceID, NSString * __nullable clientSecret, NSError * __nullable error);
 
 /**
  This is a helper class for handling redirect sources.
