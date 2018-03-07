@@ -61,6 +61,22 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)dismissWithCompletion:(nullable STPVoidBlock)completion;
 
+/**
+ Use one of the initializers declared in this interface.
+ */
+- (instancetype)initWithTheme:(STPTheme *)theme NS_UNAVAILABLE;
+
+/**
+ Use one of the initializers declared in this interface.
+ */
+- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil
+                         bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
+
+/**
+ Use one of the initializers declared in this interface.
+ */
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
+
 @end
 
 /**

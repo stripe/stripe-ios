@@ -64,6 +64,22 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, nullable) UIView *customFooterView;
 
+/**
+ Use init: or initWithConfiguration:theme:
+ */
+- (instancetype)initWithTheme:(STPTheme *)theme NS_UNAVAILABLE;
+
+/**
+ Use init: or initWithConfiguration:theme:
+ */
+- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil
+                         bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
+
+/**
+ Use init: or initWithConfiguration:theme:
+ */
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
+
 @end
 
 /**
