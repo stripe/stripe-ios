@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - STPCardBrand
 
 + (STPCardBrand)brandFromString:(NSString *)string {
+    // Documentation: https://stripe.com/docs/api#card_object-brand
     NSString *brand = [string lowercaseString];
     if ([brand isEqualToString:@"visa"]) {
         return STPCardBrandVisa;
@@ -54,6 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
         return STPCardBrandJCB;
     } else if ([brand isEqualToString:@"diners club"]) {
         return STPCardBrandDinersClub;
+    } else if ([brand isEqualToString:@"unionpay"]) {
+        return STPCardBrandUnionPay;
     } else {
         return STPCardBrandUnknown;
     }
@@ -71,6 +74,8 @@ NS_ASSUME_NONNULL_BEGIN
             return @"JCB";
         case STPCardBrandMasterCard:
             return @"MasterCard";
+        case STPCardBrandUnionPay:
+            return @"UnionPay";
         case STPCardBrandVisa:
             return @"Visa";
         case STPCardBrandUnknown:

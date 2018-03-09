@@ -1,3 +1,5 @@
+* Updated the "62..." credit card number BIN range to show a UnionPay icon
+
 ## 12.1.1 2018-02-22
 * Fix issue with apple pay token creation in PaymentContext, introduced by 12.1.0. [#899](https://github.com/stripe/stripe-ios/pull/899)
 * Now matches clang static analyzer settings with Cocoapods, so you won't see any more analyzer issues. [#897](https://github.com/stripe/stripe-ios/pull/897)
