@@ -71,11 +71,13 @@
 
 + (NSDictionary *)parametersForPayment:(PKPayment *)payment {
     NSCAssert(payment != nil, @"Cannot create a token with a nil payment.");
-    NSString *paymentString =
-    [[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding];
+
+    NSString *paymentString = [[NSString alloc] initWithData:payment.token.paymentData encoding:NSUTF8StringEncoding];
     NSMutableDictionary *payload = [NSMutableDictionary new];
     payload[@"pk_token"] = paymentString;
     payload[@"card"] = [self addressParamsFromPKContact:payment.billingContact];
+
+    NSCAssert(!(paymentString.length == 0 && [[Stripe defaultPublishableKey] hasPrefix:@"pk_live"]), @"The pk_token is empty. Using Apple Pay with an iOS Simulator while not in Stripe Test Mode will always fail.");
 
     NSString *paymentInstrumentName = payment.token.paymentMethod.displayName;
     if (paymentInstrumentName) {
