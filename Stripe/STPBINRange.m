@@ -30,22 +30,32 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSArray *ranges = @[
-                            // Catch-all values
+                            // Unknown
                             @[@"", @"", @16, @(STPCardBrandUnknown)],
+
+                            // American Express
                             @[@"34", @"34", @15, @(STPCardBrandAmex)],
                             @[@"37", @"37", @15, @(STPCardBrandAmex)],
+
+                            // Diners Club
                             @[@"30", @"30", @14, @(STPCardBrandDinersClub)],
                             @[@"36", @"36", @14, @(STPCardBrandDinersClub)],
                             @[@"38", @"39", @14, @(STPCardBrandDinersClub)],
+
+                            // Discover
                             @[@"60", @"60", @16, @(STPCardBrandDiscover)],
-                            @[@"62", @"62", @16, @(STPCardBrandDiscover)],
                             @[@"64", @"65", @16, @(STPCardBrandDiscover)],
+
+                            // JCB
                             @[@"35", @"35", @16, @(STPCardBrandJCB)],
+
+                            // MasterCard
                             @[@"50", @"59", @16, @(STPCardBrandMasterCard)],
                             @[@"22", @"27", @16, @(STPCardBrandMasterCard)],
                             @[@"67", @"67", @16, @(STPCardBrandMasterCard)], // Maestro
+
+                            // Visa
                             @[@"40", @"49", @16, @(STPCardBrandVisa)],
-                            // Specific known BIN ranges
                             @[@"413600", @"413600", @13, @(STPCardBrandVisa)],
                             @[@"444509", @"444509", @13, @(STPCardBrandVisa)],
                             @[@"444509", @"444509", @13, @(STPCardBrandVisa)],
