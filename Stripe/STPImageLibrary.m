@@ -39,6 +39,10 @@
     return [self brandImageForCardBrand:STPCardBrandMasterCard];
 }
 
++ (UIImage *)unionPayCardImage {
+    return [self brandImageForCardBrand:STPCardBrandUnionPay];
+}
+
 + (UIImage *)visaCardImage {
     return [self brandImageForCardBrand:STPCardBrandVisa];
 }
@@ -112,26 +116,33 @@
     BOOL shouldUseTemplate = isTemplate;
     NSString *imageName;
     switch (brand) {
-            case STPCardBrandAmex:
+        case STPCardBrandAmex:
             imageName = shouldUseTemplate ? @"stp_card_amex_template" : @"stp_card_amex";
             break;
-            case STPCardBrandDinersClub:
+        case STPCardBrandDinersClub:
             imageName = shouldUseTemplate ? @"stp_card_diners_template" : @"stp_card_diners";
             break;
-            case STPCardBrandDiscover:
+        case STPCardBrandDiscover:
             imageName = shouldUseTemplate ? @"stp_card_discover_template" : @"stp_card_discover";
             break;
-            case STPCardBrandJCB:
+        case STPCardBrandJCB:
             imageName = shouldUseTemplate ? @"stp_card_jcb_template" : @"stp_card_jcb";
             break;
-            case STPCardBrandMasterCard:
+        case STPCardBrandMasterCard:
             imageName = shouldUseTemplate ? @"stp_card_mastercard_template" : @"stp_card_mastercard";
             break;
-            case STPCardBrandUnknown:
+        case STPCardBrandUnionPay:
+            if ([[[NSLocale currentLocale] localeIdentifier].lowercaseString hasPrefix:@"zh"]) {
+                imageName = shouldUseTemplate ? @"stp_card_unionpay_template_zh" : @"stp_card_unionpay_zh";
+            } else {
+                imageName = shouldUseTemplate ? @"stp_card_unionpay_template_en" : @"stp_card_unionpay_en";
+            }
+            break;
+        case STPCardBrandUnknown:
             shouldUseTemplate = YES;
             imageName = @"stp_card_unknown";
             break;
-            case STPCardBrandVisa:
+        case STPCardBrandVisa:
             imageName = shouldUseTemplate ? @"stp_card_visa_template" : @"stp_card_visa";
             break;
     }

@@ -134,6 +134,7 @@
                        @[@(STPCardBrandDiscover), @[@16]],
                        @[@(STPCardBrandDinersClub), @[@14]],
                        @[@(STPCardBrandJCB), @[@16]],
+                       @[@(STPCardBrandUnionPay), @[@16]],
                        @[@(STPCardBrandUnknown), @[@16]],
                        ];
     for (NSArray *test in tests) {
@@ -153,6 +154,7 @@
                        @[@(STPCardBrandDiscover), @4],
                        @[@(STPCardBrandDinersClub), @2],
                        @[@(STPCardBrandJCB), @4],
+                       @[@(STPCardBrandUnionPay), @4],
                        @[@(STPCardBrandUnknown), @4],
                        ];
     for (NSArray *test in tests) {
@@ -214,6 +216,7 @@
                        @[@(STPCardBrandDiscover), @3],
                        @[@(STPCardBrandDinersClub), @3],
                        @[@(STPCardBrandJCB), @3],
+                       @[@(STPCardBrandUnionPay), @3],
                        @[@(STPCardBrandUnknown), @4],
                        ];
     for (NSArray *test in tests) {

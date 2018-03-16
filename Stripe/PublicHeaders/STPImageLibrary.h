@@ -48,6 +48,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImage *)masterCardCardImage;
 
 /**
+ An icon representing UnionPay.
+ */
++ (UIImage *)unionPayCardImage;
+
+/**
  An icon representing Visa.
  */
 + (UIImage *)visaCardImage;

@@ -54,6 +54,9 @@
                             @[@"22", @"27", @16, @(STPCardBrandMasterCard)],
                             @[@"67", @"67", @16, @(STPCardBrandMasterCard)], // Maestro
 
+                            // UnionPay
+                            @[@"62", @"62", @16, @(STPCardBrandUnionPay)],
+
                             // Visa
                             @[@"40", @"49", @16, @(STPCardBrandVisa)],
                             @[@"413600", @"413600", @13, @(STPCardBrandVisa)],

@@ -44,6 +44,11 @@ typedef NS_ENUM(NSInteger, STPCardBrand) {
     STPCardBrandDinersClub,
 
     /**
+     UnionPay card
+     */
+    STPCardBrandUnionPay,
+
+    /**
      An unknown card brand type
      */
     STPCardBrandUnknown,

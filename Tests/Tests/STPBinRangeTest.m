@@ -123,6 +123,7 @@
                            @(STPCardBrandDiscover),
                            @(STPCardBrandJCB),
                            @(STPCardBrandDinersClub),
+                           @(STPCardBrandUnionPay),
                            @(STPCardBrandUnknown)];
     for (NSNumber *brand in allBrands) {
         NSArray<STPBINRange *> *binRanges = [STPBINRange binRangesForBrand:brand.integerValue];
