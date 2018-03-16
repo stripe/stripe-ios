@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The current version of this library.
  */
-static NSString *const STPSDKVersion = @"12.1.1";
+static NSString *const STPSDKVersion = @"12.1.2";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPConnectAccountParams, STPSourceParams, STPToken, STPPaymentConfiguration;
 

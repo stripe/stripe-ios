@@ -1,3 +1,4 @@
+## 12.1.2 2018-03-16
 * Updated the "62..." credit card number BIN range to show a UnionPay icon
 
 ## 12.1.1 2018-02-22
