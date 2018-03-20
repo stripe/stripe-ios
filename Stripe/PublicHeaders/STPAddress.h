@@ -212,6 +212,8 @@ extern STPContactField const STPContactFieldName;
  */
 - (BOOL)containsContentForShippingAddressFields:(nullable NSSet<STPContactField> *)desiredFields;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 /**
  Converts an STPBillingAddressFields enum value into the closest equivalent
  representation of PKAddressField options
@@ -221,7 +223,10 @@ extern STPContactField const STPContactFieldName;
  a PKAddressField value.
  */
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields;
+#pragma clang diagnostic pop
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 /**
  Converts a set of STPContactField values into the closest equivalent
  representation of PKAddressField options
@@ -231,6 +236,7 @@ extern STPContactField const STPContactFieldName;
  a PKAddressField value.
  */
 + (PKAddressField)pkAddressFieldsFromStripeContactFields:(nullable NSSet<STPContactField> *)contactFields;
+#pragma clang diagnostic pop
 
 /**
  Converts a set of STPContactField values into the closest equivalent

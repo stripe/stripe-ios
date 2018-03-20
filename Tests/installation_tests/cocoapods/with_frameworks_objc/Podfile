@@ -1,0 +1,13 @@
+use_frameworks!
+
+target 'CocoapodsTest' do
+	platform :ios, '9.0'
+	use_frameworks!
+	pod 'Stripe', path: '../../../..'
+
+	post_install do |installer|
+	  installer.pods_project.build_configurations.each do |config|
+	    config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = "YES"
+	  end
+	end
+end
