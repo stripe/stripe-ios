@@ -220,7 +220,10 @@ extern STPContactField const STPContactFieldName;
  @return The closest representation of the billing address requirement as
  a PKAddressField value.
  */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 + (PKAddressField)applePayAddressFieldsFromBillingAddressFields:(STPBillingAddressFields)billingAddressFields;
+#pragma clang diagnostic pop
 
 /**
  Converts a set of STPContactField values into the closest equivalent
@@ -230,7 +233,10 @@ extern STPContactField const STPContactFieldName;
  @return The closest representation of the contact fields as
  a PKAddressField value.
  */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 + (PKAddressField)pkAddressFieldsFromStripeContactFields:(nullable NSSet<STPContactField> *)contactFields;
+#pragma clang diagnostic pop
 
 /**
  Converts a set of STPContactField values into the closest equivalent
