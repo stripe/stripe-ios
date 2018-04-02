@@ -7,9 +7,9 @@
     * Example: `(PKAddressField)(PKAddressFieldName|PKAddressFieldPostalAddress)` becomes `[NSSet setwithArray:@[STPContactFieldName, STPContactFieldPostalAddress]]`)
   * Anywhere you were using `PKAddressFieldNone` you can now simply pass in `nil`
   * If you were using `PKAddressFieldAll`, you must switch to manually listing all the fields that you want.
+  * The new constants also correspond to and work similarly to Apple's new `PKContactField` values.
 * `AddressBook` framework support has been removed. If you were using AddressBook related functionality, you must switch over to using the `Contacts` framework.
 * `STPRedirectContext` will no longer retain itself for the duration of the redirect. If you were relying on this functionality, you must change your code to explicitly maintain a reference to it.
-  * The new constants also correspond to and work similarly to Apple's new `PKContactField` values.
 
 ### Migrating from versions < 11.4.0
 * The `STPBackendAPIAdapter` protocol and all associated methods are no longer deprecated. We still recommend using `STPCustomerContext` to update a Stripe customer object on your behalf, rather than using your own implementation of `STPBackendAPIAdapter`.
