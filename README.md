@@ -18,7 +18,7 @@ The Stripe iOS SDK makes it quick and easy to build an excellent payment experie
 
 **Native UI**: We provide out-of-the-box native screens and elements so that you can get started quickly without having to think about designing the right interfaces. See our [Standard Integration Guide](https://stripe.com/docs/mobile/ios/standard) for the most hands off approach. Please see our [Custom Integration Guide](https://stripe.com/docs/mobile/ios/custom) if you want a little more control.
 
-**Card Scanning**: We support card scanning capabilities using card.io. See our [card.io](#cardio) section.
+**Card Scanning**: We support card scanning capabilities using card.io. See our [Card IO](#card-io) section.
 
 ## Releases
 
@@ -55,7 +55,7 @@ To try out any of these examples, clone this repository, open `Stripe.xcworkspac
 
 After this is done, you can make test payments through the app and see them in your Stripe dashboard. Head to https://stripe.com/docs/testing#cards for a list of test card numbers.
 
-## card.io
+## Card IO
 
 To add card scanning capabilities to our prebuilt UI components, you can simply [install card.io](https://github.com/card-io/card.io-iOS-SDK#setup) alongside our SDK. You'll also need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards").
 
