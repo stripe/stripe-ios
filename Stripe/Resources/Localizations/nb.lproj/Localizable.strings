@@ -1,0 +1,141 @@
+/* {card brand} ending in {last4} */
+"%@ Ending In %@" = "%1$@ som slutter på %2$@";
+
+/* Title for Add a Card view */
+"Add a Card" = "Legg til kort";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "Legg til nytt kort…";
+
+/* Caption for Address field on address form */
+"Address" = "Adresse";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Leil.";
+
+/* Title for billing address entry section */
+"Billing Address" = "Fakturaadresse";
+
+/* Title for credit card number entry field */
+"Card" = "Kort";
+
+/* accessibility label for text field */
+"card number" = "kortnummer";
+
+/* Caption for City field on address form */
+"City" = "By";
+
+/* Title for contact info form */
+"Contact" = "Kontakt";
+
+/* Caption for Country field on address form */
+"Country" = "Land";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Fylke";
+
+/* Title for delivery info form */
+"Delivery" = "Leveranse";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "Leveringsadresse";
+
+/* Caption for Email field on address form */
+"Email" = "E-post";
+
+/* accessibility label for text field */
+"expiration date" = "utløpsdato";
+
+/* Label for free shipping method */
+"Free" = "Gratis";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Ugyldig leveringsadresse";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "Laster…";
+
+/* Caption for Name field on address form */
+"Name" = "Navn";
+
+/* Button to move to the next text entry field */
+"Next" = "Neste";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Betalingsmåte";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "Poststed";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "Postkode";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provins";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Skann kort";
+
+/* Title for shipping info form */
+"Shipping" = "Frakt";
+
+/* Title for shipping address entry section */
+"Shipping Address" = "Sendingsadresse";
+
+/* Label for shipping method form */
+"Shipping Method" = "Sendingsmetode";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Stat";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+"State / Province / Region" = "Stat / Provins / Region";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Det oppstod en feil ved prosessering av kortet -- prøv igjen om et par sekunder";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "En uventet feil har oppstått -- prøv igjen om et par sekunder";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Bruk fakturaadresse";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Bruk leveringsadresse";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Bruk sendingsadresse";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Kortet ditt har utløpt";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Kortet ditt ble avvist";
+
+/* Error when the card's expiration month is not valid */
+"Your card's expiration month is invalid" = "Kortet sin utløpsmåned er ugyldig";
+
+/* Error when the card's expiration year is not valid */
+"Your card's expiration year is invalid" = "Kortet sitt utløpsår er ugyldig";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Ugyldig kortnummer";
+
+/* Error when the card's CVC is not valid */
+"Your card's security code is invalid" = "Ugyldig sikkerhetskode";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "ZIP";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "Postnummer";
+

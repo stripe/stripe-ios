@@ -1175,6 +1175,7 @@
 		C1FEE5941CBFF11400A7632B /* STPPostalCodeValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPPostalCodeValidator.h; sourceTree = "<group>"; };
 		C1FEE5951CBFF11400A7632B /* STPPostalCodeValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPostalCodeValidator.m; sourceTree = "<group>"; };
 		C1FEE5981CBFF24000A7632B /* STPPostalCodeValidatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPostalCodeValidatorTest.m; sourceTree = "<group>"; };
+		ED627D57207EA348007EFC56 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = Localizations/nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F10239381FDF4144006273B5 /* FauxPasAnnotations.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FauxPasAnnotations.h; path = PublicHeaders/FauxPasAnnotations.h; sourceTree = "<group>"; };
 		F1122A7D1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+StripeTest.m"; sourceTree = "<group>"; };
 		F12829D81D7747E4008B10D6 /* STPBundleLocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPBundleLocator.h; sourceTree = "<group>"; };
@@ -2481,6 +2482,7 @@
 				nl,
 				fr,
 				fi,
+				nb,
 			);
 			mainGroup = 11C74B8D164043050071C2CA;
 			productRefGroup = 11C74B99164043050071C2CA /* Products */;
@@ -3078,6 +3080,7 @@
 				F148ABF01D5E80A00014FD92 /* nl */,
 				F148ABF11D5E81EB0014FD92 /* fr */,
 				7E0B1132203572FB00271AD3 /* fi */,
+				ED627D57207EA348007EFC56 /* nb */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
