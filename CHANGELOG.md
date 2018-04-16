@@ -1,3 +1,6 @@
+* Silence STPAddress deprecation warnings we ignore to stay compatible with older iOS versions
+* Fix "Card IO" link in full SDK reference https://github.com/stripe/stripe-ios/pull/913
+
 ## 12.1.2 2018-03-16
 * Updated the "62..." credit card number BIN range to show a UnionPay icon
 
