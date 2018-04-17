@@ -160,8 +160,8 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     expirationField.tag = STPCardFieldTypeExpiration;
     expirationField.alpha = 0;
     expirationField.accessibilityLabel = STPLocalizedString(@"expiration date", @"accessibility label for text field");
+    expirationField.placeholder = STPLocalizedString(@"MM/YY", @"Placeholder for card expiration text field. Two digit month followed by two digit year.");
     self.expirationField = expirationField;
-    self.expirationPlaceholder = @"MM/YY";
         
     STPFormTextField *cvcField = [self buildTextField];
     cvcField.tag = STPCardFieldTypeCVC;
@@ -440,6 +440,31 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     for (STPFormTextField *field in [self allFields]) {
         field.inputAccessoryView = inputAccessoryView;
     }
+}
+
+- (STPPaymentCardTextFieldExpirationFormat)expirationFormat {
+    return self.viewModel.expirationFormat;
+}
+
+- (void)setExpirationFormat:(STPPaymentCardTextFieldExpirationFormat)expirationFormat {
+    self.viewModel.expirationFormat = expirationFormat;
+
+    // Update placeholder text
+    switch (expirationFormat) {
+        case STPPaymentCardTextFieldExpirationFormatMMYY:
+            if (self.expirationPlaceholder.length == 0) {  // No custom expiration placeholder defined
+                self.expirationField.placeholder = STPLocalizedString(@"MM/YY", @"Placeholder for card expiration text field. Two digit month followed by two digit year.");
+            }
+            break;
+        case STPPaymentCardTextFieldExpirationFormatYYMM:
+            if (self.expirationPlaceholder.length == 0) {  // No custom expiration placeholder defined
+                self.expirationField.placeholder = STPLocalizedString(@"YY/MM", @"Placeholder for card expiration text field. Two digit year followed by two digit month.");
+            }
+            break;
+    }
+
+    // Re-parse existing expiration text
+    self.viewModel.rawExpiration = self.expirationField.text;
 }
 
 #pragma mark UIControl

@@ -1,3 +1,5 @@
+* Added `expirationFormat` customization property to `STPPaymentCardTextField` to allow for both "MM/YY" and "YY/MM" formats
+* Added `NSLocalizedString` usage to allow translating "MM/YY" and "YY/MM" expiration placeholder strings
 * Silence STPAddress deprecation warnings we ignore to stay compatible with older iOS versions
 * Fix "Card IO" link in full SDK reference https://github.com/stripe/stripe-ios/pull/913
 
