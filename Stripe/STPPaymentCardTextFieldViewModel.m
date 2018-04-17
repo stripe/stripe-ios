@@ -23,8 +23,18 @@
 // This might contain slashes.
 - (void)setRawExpiration:(NSString *)expiration {
     NSString *sanitizedExpiration = [STPCardValidator sanitizedNumericStringForString:expiration];
-    self.expirationMonth = [sanitizedExpiration stp_safeSubstringToIndex:2];
-    self.expirationYear = [[sanitizedExpiration stp_safeSubstringFromIndex:2] stp_safeSubstringToIndex:2];
+
+    switch (self.expirationFormat) {
+        case STPPaymentCardTextFieldExpirationFormatMMYY:
+            self.expirationMonth = [sanitizedExpiration stp_safeSubstringToIndex:2];
+            self.expirationYear = [[sanitizedExpiration stp_safeSubstringFromIndex:2] stp_safeSubstringToIndex:2];
+            break;
+
+        case STPPaymentCardTextFieldExpirationFormatYYMM:
+            self.expirationYear = [sanitizedExpiration stp_safeSubstringToIndex:2];
+            self.expirationMonth = [[sanitizedExpiration stp_safeSubstringFromIndex:2] stp_safeSubstringToIndex:2];
+            break;
+    }
 }
 
 - (NSString *)rawExpiration {
