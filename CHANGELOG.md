@@ -1,3 +1,4 @@
+* Adding Masterpass support to `STPSourceParams` [#928](https://github.com/stripe/stripe-ios/pull/928)
 * Silence STPAddress deprecation warnings we ignore to stay compatible with older iOS versions
 * Fix "Card IO" link in full SDK reference https://github.com/stripe/stripe-ios/pull/913
 
