@@ -13,6 +13,11 @@
 @class STPPaymentCardTextField;
 @protocol STPPaymentCardTextFieldDelegate;
 
+typedef NS_ENUM(NSInteger, STPPaymentCardTextFieldExpirationFormat) {
+    STPPaymentCardTextFieldExpirationFormatMMYY,  // Default
+    STPPaymentCardTextFieldExpirationFormatYYMM,
+};
+
 /**
  STPPaymentCardTextField is a text field with similar properties to UITextField, 
  but specialized for collecting credit/debit card information. It manages 
@@ -70,7 +75,7 @@ IB_DESIGNABLE
 @property (nonatomic, copy, nullable) IBInspectable NSString *numberPlaceholder;
 
 /**
- The placeholder for the expiration field. Defaults to @"MM/YY".
+ The placeholder for the expiration field. Defaults to @"MM/YY" or @"YY/MM".
  */
 @property (nonatomic, copy, nullable) IBInspectable NSString *expirationPlaceholder;
 
@@ -150,6 +155,11 @@ The curent brand image displayed in the receiver.
  Enable/disable selecting or editing the field. Useful when submitting card details to Stripe.
  */
 @property(nonatomic, getter=isEnabled) BOOL enabled;
+
+/**
+ TODO
+ */
+@property (nonatomic) STPPaymentCardTextFieldExpirationFormat expirationFormat;
 
 /**
  The current card number displayed by the field. 

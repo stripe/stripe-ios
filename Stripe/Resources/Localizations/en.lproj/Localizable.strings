@@ -58,6 +58,9 @@
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Loading…";
 
+/* Placeholder for card expiration text field. Two digit month followed by two digit year. */
+"MM/YY" = "MM/YY";
+
 /* Caption for Name field on address form */
 "Name" = "Name";
 
@@ -132,6 +135,9 @@
 
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "Your card's security code is invalid";
+
+/* Placeholder for card expiration text field. Two digit year followed by two digit month. */
+"YY/MM" = "YY/MM";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "ZIP";

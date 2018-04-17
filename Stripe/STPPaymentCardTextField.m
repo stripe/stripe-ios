@@ -29,7 +29,6 @@
 @property (nonatomic, readwrite, weak) STPFormTextField *cvcField;
 @property (nonatomic, readwrite, weak) STPFormTextField *postalCodeField;
 @property (nonatomic, readwrite, strong) STPPaymentCardTextFieldViewModel *viewModel;
-@property (nonatomic, readwrite, strong) STPCardParams *internalCardParams;
 @property (nonatomic, strong) NSArray<STPFormTextField *> *allFields;
 @property (nonatomic, readwrite, strong) STPFormTextField *sizingField;
 @property (nonatomic, readwrite, strong) UILabel *sizingLabel;
@@ -131,7 +130,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 
     self.clipsToBounds = YES;
 
-    _internalCardParams = [STPCardParams new];
     _viewModel = [STPPaymentCardTextFieldViewModel new];
     _sizingField = [self buildTextField];
     _sizingField.formDelegate = nil;
@@ -160,8 +158,8 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     expirationField.tag = STPCardFieldTypeExpiration;
     expirationField.alpha = 0;
     expirationField.accessibilityLabel = STPLocalizedString(@"expiration date", @"accessibility label for text field");
+    expirationField.placeholder = STPLocalizedString(@"MM/YY", @"Placeholder for card expiration text field. Two digit month followed by two digit year.");
     self.expirationField = expirationField;
-    self.expirationPlaceholder = @"MM/YY";
         
     STPFormTextField *cvcField = [self buildTextField];
     cvcField.tag = STPCardFieldTypeCVC;
@@ -442,6 +440,31 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     }
 }
 
+- (STPPaymentCardTextFieldExpirationFormat)expirationFormat {
+    return self.viewModel.expirationFormat;
+}
+
+- (void)setExpirationFormat:(STPPaymentCardTextFieldExpirationFormat)expirationFormat {
+    self.viewModel.expirationFormat = expirationFormat;
+
+    // Update placeholder text
+    switch (expirationFormat) {
+        case STPPaymentCardTextFieldExpirationFormatMMYY:
+            if (self.expirationPlaceholder.length == 0) {  // No custom expiration placeholder defined
+                self.expirationField.placeholder = STPLocalizedString(@"MM/YY", @"Placeholder for card expiration text field. Two digit month followed by two digit year.");
+            }
+            break;
+        case STPPaymentCardTextFieldExpirationFormatYYMM:
+            if (self.expirationPlaceholder.length == 0) {  // No custom expiration placeholder defined
+                self.expirationField.placeholder = STPLocalizedString(@"YY/MM", @"Placeholder for card expiration text field. Two digit year followed by two digit month.");
+            }
+            break;
+    }
+
+    // Re-parse existing expiration text
+    self.viewModel.rawExpiration = self.expirationField.text;
+}
+
 #pragma mark UIControl
 
 - (void)setEnabled:(BOOL)enabled {
@@ -605,16 +628,19 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
 }
 
 - (STPCardParams *)cardParams {
-    self.internalCardParams.number = self.cardNumber;
-    self.internalCardParams.expMonth = self.expirationMonth;
-    self.internalCardParams.expYear = self.expirationYear;
-    self.internalCardParams.cvc = self.cvc;
+    STPCardParams *cardParams = [[STPCardParams alloc] init];
+    cardParams.number = self.cardNumber;
+    cardParams.expMonth = self.expirationMonth;
+    cardParams.expYear = self.expirationYear;
+    cardParams.cvc = self.cvc;
+
     if (self.postalCodeEntryEnabled) {
         // We don't clobber any manually set address zip code that was on our params
         // if we are not showing the postal code entry field.
-        self.internalCardParams.address.postalCode = self.postalCode;
+        cardParams.address.postalCode = self.postalCode;
     }
-    return self.internalCardParams;
+
+    return cardParams;
 }
 
 - (void)setCardParams:(STPCardParams *)cardParams {
@@ -634,7 +660,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
      */
     STPFormTextField *originalSubResponder = self.currentFirstResponderField;
 
-    self.internalCardParams = cardParams;
     [self setText:cardParams.number inField:STPCardFieldTypeNumber];
     BOOL expirationPresent = cardParams.expMonth && cardParams.expYear;
     if (expirationPresent) {
