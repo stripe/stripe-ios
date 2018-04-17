@@ -289,6 +289,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Creates params for a card source created from Visa Checkout.
+ @see https://stripe.com/docs/visa-checkout
 
  @note Creating an STPSource with these params will give you a
  source with type == STPSourceTypeCard
@@ -301,6 +302,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Creates params for a card source created from Masterpass.
+ @see https://stripe.com/docs/masterpass
 
  @note Creating an STPSource with these params will give you a
  source with type == STPSourceTypeCard
