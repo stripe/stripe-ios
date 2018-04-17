@@ -203,6 +203,30 @@
     XCTAssertEqualObjects(sourceAddress[@"country"], card.address.country);
 }
 
+- (void)testParamsWithVisaCheckout {
+    STPSourceParams *params = [STPSourceParams visaCheckoutParamsWithCallId:@"12345678"];
+
+    XCTAssertEqual(params.type, STPSourceTypeCard);
+    NSDictionary *sourceCard = params.additionalAPIParameters[@"card"];
+    XCTAssertNotNil(sourceCard);
+    NSDictionary *sourceVisaCheckout = sourceCard[@"visa_checkout"];
+    XCTAssertNotNil(sourceVisaCheckout);
+    XCTAssertEqualObjects(sourceVisaCheckout[@"callid"], @"12345678");
+}
+
+- (void)testParamsWithMasterPass {
+    STPSourceParams *params = [STPSourceParams masterpassParamsWithCartId:@"12345678"
+                                                            transactionId:@"87654321"];
+
+    XCTAssertEqual(params.type, STPSourceTypeCard);
+    NSDictionary *sourceCard = params.additionalAPIParameters[@"card"];
+    XCTAssertNotNil(sourceCard);
+    NSDictionary *sourceMasterpass = sourceCard[@"masterpass"];
+    XCTAssertNotNil(sourceMasterpass);
+    XCTAssertEqualObjects(sourceMasterpass[@"cart_id"], @"12345678");
+    XCTAssertEqualObjects(sourceMasterpass[@"transaction_id"], @"87654321");
+}
+
 
 #pragma mark - Redirect Dictionary Tests
 

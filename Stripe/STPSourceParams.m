@@ -308,6 +308,21 @@
     return params;
 }
 
++ (STPSourceParams *)masterpassParamsWithCartId:(NSString *)cartId
+                                  transactionId:(NSString *)transactionId {
+    STPSourceParams *params = [self new];
+    params.type = STPSourceTypeCard;
+    params.additionalAPIParameters = @{ @"card": @{
+                                                @"masterpass": @{
+                                                        @"cart_id": cartId,
+                                                        @"transaction_id": transactionId,
+                                                        }
+                                                }
+
+                                        };
+    return params;
+}
+
 #pragma mark - Redirect Dictionary
 
 /**

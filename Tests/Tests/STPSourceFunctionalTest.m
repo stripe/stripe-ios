@@ -16,6 +16,10 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 
 @end
 
+@interface STPAPIClient (WritableURL)
+@property (nonatomic, readwrite) NSURL *apiURL;
+@end
+
 @implementation STPSourceFunctionalTest
 
 - (void)testCreateSource_bancontact {
@@ -293,6 +297,58 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     }];
 
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
+- (void)skip_testCreateSourceVisaCheckout {
+    // The SDK does not have a means of generating Visa Checkout params for testing. Supply your own
+    // callId, and the correct publishable key, and you can run this test case
+    // manually after removing the `skip_` prefix. It'll log the source's stripeID, and that
+    // can be verified in dashboard.
+    STPSourceParams *params = [STPSourceParams visaCheckoutParamsWithCallId:@""];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_"];
+    client.apiURL = [NSURL URLWithString:@"https://api.stripe.com/v1"];
+
+    XCTestExpectation *sourceExp = [self expectationWithDescription:@"VCO source created"];
+    [client createSourceWithParams:params completion:^(STPSource * _Nullable source, NSError * _Nullable error) {
+        [sourceExp fulfill];
+
+        XCTAssertNil(error);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeCard);
+        XCTAssertEqual(source.flow, STPSourceFlowNone);
+        XCTAssertEqual(source.status, STPSourceStatusChargeable);
+        XCTAssertEqual(source.usage, STPSourceUsageReusable);
+        XCTAssertTrue([source.stripeID hasPrefix:@"src_"]);
+        NSLog(@"Created a VCO source %@", source.stripeID);
+    }];
+
+    [self waitForExpectationsWithTimeout:10.0 handler:nil];
+}
+
+- (void)skip_testCreateSourceMasterpass {
+    // The SDK does not have a means of generating Masterpass params for testing. Supply your own
+    // cartId & transactionId, and the correct publishable key, and you can run this test case
+    // manually after removing the `skip_` prefix. It'll log the source's stripeID, and that
+    // can be verified in dashboard.
+    STPSourceParams *params = [STPSourceParams masterpassParamsWithCartId:@"" transactionId:@""];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_"];
+    client.apiURL = [NSURL URLWithString:@"https://api.stripe.com/v1"];
+
+    XCTestExpectation *sourceExp = [self expectationWithDescription:@"Masterpass source created"];
+    [client createSourceWithParams:params completion:^(STPSource * _Nullable source, NSError * _Nullable error) {
+        [sourceExp fulfill];
+
+        XCTAssertNil(error);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeCard);
+        XCTAssertEqual(source.flow, STPSourceFlowNone);
+        XCTAssertEqual(source.status, STPSourceStatusChargeable);
+        XCTAssertEqual(source.usage, STPSourceUsageSingleUse);
+        XCTAssertTrue([source.stripeID hasPrefix:@"src_"]);
+        NSLog(@"Created a Masterpass source %@", source.stripeID);
+    }];
+
+    [self waitForExpectationsWithTimeout:10.0 handler:nil];
 }
 
 - (void)testCreateSource_alipay {

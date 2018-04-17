@@ -1,3 +1,4 @@
+* Adding Masterpass support to `STPSourceParams` [#928](https://github.com/stripe/stripe-ios/pull/928)
 * Added community submitted Norwegian (nb) translation. Thank @Nailer!
 * Fixed example app usage of localization files (they were not able to be tested in Finnish and Norwegian before)
 * Silence STPAddress deprecation warnings we ignore to stay compatible with older iOS versions
