@@ -10,7 +10,6 @@
 		C1140CC11F1EC0FC002084AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1140CC01F1EC0FC002084AB /* AppDelegate.swift */; };
 		C1140CC31F1EC0FC002084AB /* BrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1140CC21F1EC0FC002084AB /* BrowseViewController.swift */; };
 		C1140CC81F1EC0FC002084AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1140CC71F1EC0FC002084AB /* Assets.xcassets */; };
-		C1140CCB1F1EC0FC002084AB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C1140CC91F1EC0FC002084AB /* LaunchScreen.storyboard */; };
 		C13A00561F1FFA0D00825683 /* ThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13A00551F1FFA0D00825683 /* ThemeViewController.swift */; };
 		C13A00581F1FFEC200825683 /* CardFieldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13A00571F1FFEC200825683 /* CardFieldViewController.swift */; };
 		C19A55B01F1EC1ED00C8AABE /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C19A55A81F1EC1B000C8AABE /* Stripe.framework */; };
@@ -35,24 +34,25 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8BBD79D4207FD4CA00F85BED /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8BBD79D5207FD4DC00F85BED /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = Localizations/nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C1140CBD1F1EC0FC002084AB /* Stripe UI Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Stripe UI Examples.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1140CC01F1EC0FC002084AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C1140CC21F1EC0FC002084AB /* BrowseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseViewController.swift; sourceTree = "<group>"; };
 		C1140CC71F1EC0FC002084AB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C1140CCA1F1EC0FC002084AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C1140CCC1F1EC0FC002084AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C138865D1F293EF700380D46 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = Localizations/fr.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C138865E1F293EFF00380D46 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Localizations/de.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C138865F1F293F0500380D46 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "Localizations/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		C13886601F293F0B00380D46 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Localizations/ja.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C13886611F293F0F00380D46 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizations/es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C13886621F293F1600380D46 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = Localizations/it.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C13886631F293F4D00380D46 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = Localizations/nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C138865D1F293EF700380D46 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = Localizations/fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C138865E1F293EFF00380D46 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = Localizations/de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C138865F1F293F0500380D46 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "Localizations/zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		C13886601F293F0B00380D46 /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = Localizations/ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C13886611F293F0F00380D46 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = Localizations/es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C13886621F293F1600380D46 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = Localizations/it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C13886631F293F4D00380D46 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = Localizations/nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C13A00541F1FF7A800825683 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "UI Examples/README.md"; sourceTree = "<group>"; };
 		C13A00551F1FFA0D00825683 /* ThemeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeViewController.swift; sourceTree = "<group>"; };
 		C13A00571F1FFEC200825683 /* CardFieldViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardFieldViewController.swift; sourceTree = "<group>"; };
 		C19A55A81F1EC1B000C8AABE /* Stripe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C1A5E73D1F293EAF00E0C891 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C1A5E73D1F293EAF00E0C891 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = Localizations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C1A658E41F1EC7F500799757 /* MockCustomerContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockCustomerContext.swift; sourceTree = "<group>"; };
 		C1A658E61F1ED05500799757 /* MockAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAPIClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -97,7 +97,6 @@
 				C1A658E41F1EC7F500799757 /* MockCustomerContext.swift */,
 				C1A658E61F1ED05500799757 /* MockAPIClient.swift */,
 				C1140CC71F1EC0FC002084AB /* Assets.xcassets */,
-				C1140CC91F1EC0FC002084AB /* LaunchScreen.storyboard */,
 				C1140CCC1F1EC0FC002084AB /* Info.plist */,
 				C1A5E73C1F293EAF00E0C891 /* Localizable.strings */,
 			);
@@ -155,7 +154,6 @@
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				Base,
 				en,
 				fr,
 				de,
@@ -164,6 +162,8 @@
 				es,
 				it,
 				nl,
+				fi,
+				nb,
 			);
 			mainGroup = C1140CB41F1EC0FC002084AB;
 			productRefGroup = C1140CBE1F1EC0FC002084AB /* Products */;
@@ -180,7 +180,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C1140CCB1F1EC0FC002084AB /* LaunchScreen.storyboard in Resources */,
 				C1A5E73E1F293EAF00E0C891 /* Localizable.strings in Resources */,
 				C1140CC81F1EC0FC002084AB /* Assets.xcassets in Resources */,
 			);
@@ -205,14 +204,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		C1140CC91F1EC0FC002084AB /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C1140CCA1F1EC0FC002084AB /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
 		C1A5E73C1F293EAF00E0C891 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -224,6 +215,8 @@
 				C13886611F293F0F00380D46 /* es */,
 				C13886621F293F1600380D46 /* it */,
 				C13886631F293F4D00380D46 /* nl */,
+				8BBD79D4207FD4CA00F85BED /* fi */,
+				8BBD79D5207FD4DC00F85BED /* nb */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
