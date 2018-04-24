@@ -10,14 +10,36 @@
     "livemode": false,
     "metadata": {},
     "owner": {
-        "address": null,
-        "email": null,
-        "name": null,
-        "phone": null,
-        "verified_address": null,
-        "verified_email": null,
-        "verified_name": null,
-        "verified_phone": null
+        "address": {
+            "city": "Pittsburgh",
+            "country": "US",
+            "line1": "123 Fake St",
+            "line2": "Apt 1",
+            "postal_code": "19219",
+            "state": "PA"
+        },
+        "email": "jenny.rosen@example.com",
+        "name": "Jenny Rosen",
+        "phone": "555-867-5309",
+        "verified_address": {
+            "city": "Pittsburgh",
+            "country": "US",
+            "line1": "123 Fake St",
+            "line2": "Apt 1",
+            "postal_code": "19219",
+            "state": "PA"
+        },
+        "verified_email": "jenny.rosen@example.com",
+        "verified_name": "Jenny Rosen",
+        "verified_phone": "555-867-5309"
+    },
+    "receiver": {
+        "address": "test_1MBhWS3uv4ynCfQXF3xQjJkzFPukr4K56N",
+        "amount_charged": 300,
+        "amount_received": 200,
+        "amount_returned": 100,
+        "refund_attributes_method": "email",
+        "refund_attributes_status": "missing"
     },
     "redirect": {
         "return_url": "exampleappschema://stripe_callback",

@@ -52,7 +52,6 @@
 + (NSDictionary<NSString *,NSNumber *> *)stringToTypeMapping {
     return @{
              @"bancontact": @(STPSourceTypeBancontact),
-             @"bitcoin": @(STPSourceTypeBitcoin),
              @"card": @(STPSourceTypeCard),
              @"giropay": @(STPSourceTypeGiropay),
              @"ideal": @(STPSourceTypeIDEAL),

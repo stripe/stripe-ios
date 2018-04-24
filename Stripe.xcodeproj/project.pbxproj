@@ -361,7 +361,6 @@
 		8BCB6E612053389800629978 /* stp_card_unionpay_en@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BCB6E552053389800629978 /* stp_card_unionpay_en@3x.png */; };
 		8BD213371F044B57007F6FD1 /* BankAccount.json in Resources */ = {isa = PBXBuildFile; fileRef = 8BD213361F044B57007F6FD1 /* BankAccount.json */; };
 		8BD213391F0457A1007F6FD1 /* FileUpload.json in Resources */ = {isa = PBXBuildFile; fileRef = 8BD213381F0457A1007F6FD1 /* FileUpload.json */; };
-		8BD2133C1F0458F5007F6FD1 /* BitcoinSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8BD2133B1F0458F5007F6FD1 /* BitcoinSource.json */; };
 		8BD2133E1F045D31007F6FD1 /* SEPADebitSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8BD2133D1F045D31007F6FD1 /* SEPADebitSource.json */; };
 		8BD87B881EFB131700269C2B /* STPSourceCardDetails+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BD87B871EFB131400269C2B /* STPSourceCardDetails+Private.h */; };
 		8BD87B891EFB131800269C2B /* STPSourceCardDetails+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BD87B871EFB131400269C2B /* STPSourceCardDetails+Private.h */; };
@@ -2514,7 +2513,6 @@
 				C1CFCB7A1ED5F88D00BE45DF /* stp_test_upload_image.jpeg in Resources */,
 				F152322F1EA9344600D65C67 /* iDEALSource.json in Resources */,
 				F16AA26F1F5A0F1700207FFF /* AlipaySource.json in Resources */,
-				8BD2133C1F0458F5007F6FD1 /* BitcoinSource.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

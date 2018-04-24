@@ -44,9 +44,6 @@
     sourceParams.rawTypeString = @"bancontact";
     XCTAssertEqual(sourceParams.type, STPSourceTypeBancontact);
 
-    sourceParams.rawTypeString = @"bitcoin";
-    XCTAssertEqual(sourceParams.type, STPSourceTypeBitcoin);
-
     sourceParams.rawTypeString = @"card";
     XCTAssertEqual(sourceParams.type, STPSourceTypeCard);
 
@@ -84,9 +81,6 @@
 
     sourceParams.type = STPSourceTypeBancontact;
     XCTAssertEqualObjects(sourceParams.rawTypeString, @"bancontact");
-
-    sourceParams.type = STPSourceTypeBitcoin;
-    XCTAssertEqualObjects(sourceParams.rawTypeString, @"bitcoin");
 
     sourceParams.type = STPSourceTypeCard;
     XCTAssertEqualObjects(sourceParams.rawTypeString, @"card");

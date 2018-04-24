@@ -11,6 +11,7 @@
 #import "STPSourceOwner.h"
 #import "STPAddress.h"
 
+#import "STPFixtures.h"
 #import "STPTestUtils.h"
 
 @interface STPSourceOwnerTest : XCTestCase
@@ -25,17 +26,17 @@
     NSArray<NSString *> *requiredFields = @[];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"BitcoinSource"][@"owner"] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:STPTestJSONSource3DS][@"owner"] mutableCopy];
         [response removeObjectForKey:field];
 
         XCTAssertNil([STPSourceOwner decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssert([STPSourceOwner decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"][@"owner"]]);
+    XCTAssert([STPSourceOwner decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONSource3DS][@"owner"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [STPTestUtils jsonNamed:@"BitcoinSource"][@"owner"];
+    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONSource3DS][@"owner"];
     STPSourceOwner *owner = [STPSourceOwner decodedObjectFromAPIResponse:response];
 
     XCTAssertEqualObjects(owner.address.city, @"Pittsburgh");

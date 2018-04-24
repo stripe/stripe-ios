@@ -48,33 +48,6 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
-- (void)testCreateSource_bitcoin {
-    STPSourceParams *params = [STPSourceParams bitcoinParamsWithAmount:1000
-                                                              currency:@"usd"
-                                                                 email:@"user@example.com"];
-    params.metadata = @{@"foo": @"bar"};
-
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
-    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
-        XCTAssertNil(error);
-        XCTAssertNotNil(source);
-        XCTAssertEqual(source.type, STPSourceTypeBitcoin);
-        XCTAssertEqualObjects(source.amount, params.amount);
-        XCTAssertEqualObjects(source.currency, params.currency);
-        XCTAssertEqualObjects(source.owner.email, params.owner[@"email"]);
-        XCTAssertEqualObjects(source.metadata, params.metadata);
-        XCTAssertNotNil(source.receiver);
-        XCTAssertNotNil(source.receiver.address);
-        XCTAssertNotNil(source.receiver.amountCharged);
-        XCTAssertNotNil(source.receiver.amountReceived);
-        XCTAssertNotNil(source.receiver.amountReturned);
-
-        [expectation fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
-}
-
 - (void)testCreateSource_card {
     STPCardParams *card = [[STPCardParams alloc] init];
     card.number = @"4242 4242 4242 4242";
