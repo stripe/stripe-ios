@@ -1,9 +1,10 @@
-* Remove Bitcoin source support. See MIGRATING.md. [#931](https://github.com/stripe/stripe-ios/pull/931)
-* Add Masterpass support to `STPSourceParams` [#928](https://github.com/stripe/stripe-ios/pull/928)
-* Add community submitted Norwegian (nb) translation. Thank @Nailer!
-* Fix example app usage of localization files (they were not able to be tested in Finnish and Norwegian before)
-* Silence STPAddress deprecation warnings we ignore to stay compatible with older iOS versions
-* Fix "Card IO" link in full SDK reference https://github.com/stripe/stripe-ios/pull/913
+## 13.0.0 2018-04-26
+* Removes Bitcoin source support. See MIGRATING.md. [#931](https://github.com/stripe/stripe-ios/pull/931)
+* Adds Masterpass support to `STPSourceParams` [#928](https://github.com/stripe/stripe-ios/pull/928)
+* Adds community submitted Norwegian (nb) translation. Thank @Nailer!
+* Fixes example app usage of localization files (they were not able to be tested in Finnish and Norwegian before)
+* Silences STPAddress deprecation warnings we ignore to stay compatible with older iOS versions
+* Fixes "Card IO" link in full SDK reference [#913](https://github.com/stripe/stripe-ios/pull/913)
 
 ## 12.1.2 2018-03-16
 * Updated the "62..." credit card number BIN range to show a UnionPay icon
