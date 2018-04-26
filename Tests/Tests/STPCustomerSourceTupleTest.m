@@ -108,8 +108,7 @@
     STPCustomer *customer = [STPFixtures customerWithSourcesFromJSONKeys:@[STPTestJSONSource3DS,
                                                                            STPTestJSONSourceAlipay,
                                                                            STPTestJSONSourceiDEAL,
-                                                                           STPTestJSONSourceSEPADebit,
-                                                                           STPTestJSONSourceBitcoin]
+                                                                           STPTestJSONSourceSEPADebit]
                                                            defaultSource:STPTestJSONSourceiDEAL];
     [self performSourceTupleTestWithCustomer:customer
                         expectedValidSources:0
@@ -123,8 +122,7 @@
                                                                            STPTestJSONSourceCard,
                                                                            STPTestJSONSourceiDEAL,
                                                                            STPTestJSONSourceSEPADebit,
-                                                                           STPTestJSONCard,
-                                                                           STPTestJSONSourceBitcoin]
+                                                                           STPTestJSONCard]
                                                            defaultSource:STPTestJSONSourceiDEAL];
 
     [self performSourceTupleTestWithCustomer:customer
@@ -138,8 +136,7 @@
                                                                            STPTestJSONSourceCard,
                                                                            STPTestJSONSourceiDEAL,
                                                                            STPTestJSONSourceSEPADebit,
-                                                                           STPTestJSONCard,
-                                                                           STPTestJSONSourceBitcoin]
+                                                                           STPTestJSONCard]
                                                            defaultSource:STPTestJSONCard];
     [self performSourceTupleTestWithCustomer:customer
                         expectedValidSources:2

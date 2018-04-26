@@ -101,17 +101,6 @@
     return params;
 }
 
-+ (STPSourceParams *)bitcoinParamsWithAmount:(NSUInteger)amount
-                                    currency:(NSString *)currency
-                                       email:(NSString *)email {
-    STPSourceParams *params = [self new];
-    params.type = STPSourceTypeBitcoin;
-    params.amount = @(amount);
-    params.currency = currency;
-    params.owner = @{ @"email": email };
-    return params;
-}
-
 + (STPSourceParams *)cardParamsWithCard:(STPCardParams *)card {
     STPSourceParams *params = [self new];
     params.type = STPSourceTypeCard;

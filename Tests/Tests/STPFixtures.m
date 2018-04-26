@@ -15,7 +15,6 @@ NSString *const STPTestJSONCustomer = @"Customer";
 NSString *const STPTestJSONCard = @"Card";
 
 NSString *const STPTestJSONSourceAlipay = @"AlipaySource";
-NSString *const STPTestJSONSourceBitcoin = @"BitcoinSource";
 NSString *const STPTestJSONSourceCard = @"CardSource";
 NSString *const STPTestJSONSource3DS = @"3DSSource";
 NSString *const STPTestJSONSourceiDEAL = @"iDEALSource";

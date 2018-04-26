@@ -110,20 +110,6 @@ NS_ASSUME_NONNULL_BEGIN
                             statementDescriptor:(nullable NSString *)statementDescriptor;
 
 /**
- Creates params for a Bitcoin source.
- @see https://stripe.com/docs/bitcoin#creating-and-displaying-a-source-object
- 
- @param amount      The amount to charge the customer.
- @param currency    The currency the payment is being created in.
- @param email       The customer's email address.
- 
- @return an STPSourceParams object populated with the provided values.
- */
-+ (STPSourceParams *)bitcoinParamsWithAmount:(NSUInteger)amount
-                                    currency:(NSString *)currency
-                                       email:(NSString *)email;
-
-/**
  Creates params for a Card source.
  @see https://stripe.com/docs/sources/cards#create-source
  

@@ -10,6 +10,7 @@
 
 #import "STPSourceReceiver.h"
 
+#import "STPFixtures.h"
 #import "STPTestUtils.h"
 
 @interface STPSourceReceiverTest : XCTestCase
@@ -21,7 +22,7 @@
 #pragma mark - Description Tests
 
 - (void)testDescription {
-    STPSourceReceiver *receiver = [STPSourceReceiver decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"][@"receiver"]];
+    STPSourceReceiver *receiver = [STPSourceReceiver decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONSource3DS][@"receiver"]];
     XCTAssert(receiver.description);
 }
 
@@ -33,17 +34,17 @@
                                             ];
 
     for (NSString *field in requiredFields) {
-        NSMutableDictionary *response = [[STPTestUtils jsonNamed:@"BitcoinSource"][@"receiver"] mutableCopy];
+        NSMutableDictionary *response = [[STPTestUtils jsonNamed:STPTestJSONSource3DS][@"receiver"] mutableCopy];
         [response removeObjectForKey:field];
 
         XCTAssertNil([STPSourceReceiver decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssert([STPSourceReceiver decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"BitcoinSource"][@"receiver"]]);
+    XCTAssert([STPSourceReceiver decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONSource3DS][@"receiver"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [STPTestUtils jsonNamed:@"BitcoinSource"][@"receiver"];
+    NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONSource3DS][@"receiver"];
     STPSourceReceiver *receiver = [STPSourceReceiver decodedObjectFromAPIResponse:response];
 
     XCTAssertEqualObjects(receiver.address, @"test_1MBhWS3uv4ynCfQXF3xQjJkzFPukr4K56N");
