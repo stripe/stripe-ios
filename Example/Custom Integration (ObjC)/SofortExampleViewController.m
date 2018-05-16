@@ -100,31 +100,35 @@
             // your app delegate to forward URLs to the Stripe SDK.
             // See `[Stripe handleStripeURLCallback:]`
             self.redirectContext = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
-                [[STPAPIClient sharedClient] startPollingSourceWithId:sourceID
-                                                         clientSecret:clientSecret
-                                                              timeout:10
-                                                           completion:^(STPSource *source, NSError *error) {
-                                                               [self updateUIForPaymentInProgress:NO];
-                                                               if (error) {
-                                                                   [self.delegate exampleViewController:self didFinishWithError:error];
-                                                               } else {
-                                                                   switch (source.status) {
-                                                                       case STPSourceStatusChargeable:
-                                                                       case STPSourceStatusConsumed:
-                                                                           [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
-                                                                           break;
-                                                                       case STPSourceStatusCanceled:
-                                                                           [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
-                                                                           break;
-                                                                       case STPSourceStatusPending:
-                                                                       case STPSourceStatusFailed:
-                                                                       case STPSourceStatusUnknown:
-                                                                           [self.delegate exampleViewController:self didFinishWithMessage:@"Order received"];
-                                                                           break;
+                if (error) {
+                    [self.delegate exampleViewController:self didFinishWithError:error];
+                } else {
+                    [[STPAPIClient sharedClient] startPollingSourceWithId:sourceID
+                                                             clientSecret:clientSecret
+                                                                  timeout:10
+                                                               completion:^(STPSource *source, NSError *error) {
+                                                                   [self updateUIForPaymentInProgress:NO];
+                                                                   if (error) {
+                                                                       [self.delegate exampleViewController:self didFinishWithError:error];
+                                                                   } else {
+                                                                       switch (source.status) {
+                                                                           case STPSourceStatusChargeable:
+                                                                           case STPSourceStatusConsumed:
+                                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Payment successfully created"];
+                                                                               break;
+                                                                           case STPSourceStatusCanceled:
+                                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];
+                                                                               break;
+                                                                           case STPSourceStatusPending:
+                                                                           case STPSourceStatusFailed:
+                                                                           case STPSourceStatusUnknown:
+                                                                               [self.delegate exampleViewController:self didFinishWithMessage:@"Order received"];
+                                                                               break;
+                                                                       }
                                                                    }
-                                                               }
-                                                               self.redirectContext = nil;
-                                                           }];
+                                                                   self.redirectContext = nil;
+                                                               }];
+                }
             }];
             [self.redirectContext startRedirectFlowFromViewController:self];
         }
