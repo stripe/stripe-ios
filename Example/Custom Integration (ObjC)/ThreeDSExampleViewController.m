@@ -116,7 +116,9 @@
     STPAPIClient *stripeClient = [STPAPIClient sharedClient];
     STPSourceParams *sourceParams = [STPSourceParams cardParamsWithCard:self.paymentTextField.cardParams];
     [stripeClient createSourceWithParams:sourceParams completion:^(STPSource *source, NSError *error) {
-        if (source.cardDetails.threeDSecure == STPSourceCard3DSecureStatusRequired) {
+        if (error) {
+            [self.delegate exampleViewController:self didFinishWithError:error];
+        } else if (source.cardDetails && source.cardDetails.threeDSecure == STPSourceCard3DSecureStatusRequired) {
             STPSourceParams *threeDSParams = [STPSourceParams threeDSecureParamsWithAmount:1099
                                                                                   currency:@"usd"
                                                                                  returnURL:@"payments-example://stripe-redirect"
