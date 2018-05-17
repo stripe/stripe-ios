@@ -1,5 +1,5 @@
 ## 13.0.1 2018-05-17
-* Fixes bug in `STPRedirectContext` that'd close the `SFSafariViewController` during the initial redirects, but only in livemode. [#937](https://github.com/stripe/stripe-ios/pull/937)
+* Fixes an issue in `STPRedirectContext` causing some redirecting sources to fail in livemode due to prematurely dismissing the `SFSafariViewController` during the initial redirects. [#937](https://github.com/stripe/stripe-ios/pull/937)
 
 ## 13.0.0 2018-04-26
 * Removes Bitcoin source support. See MIGRATING.md. [#931](https://github.com/stripe/stripe-ios/pull/931)
