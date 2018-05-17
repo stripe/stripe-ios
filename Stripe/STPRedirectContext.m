@@ -26,7 +26,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
 @property (nonatomic, assign, readwrite) STPRedirectContextState state;
 /// If we're on iOS 11+ and in the SafariVC flow, this tracks the latest URL loaded/redirected to during the initial load
-@property (nonatomic, strong, readwrite, nullable) NSURL *latestSafariVCUrl;
+@property (nonatomic, strong, readwrite, nullable) NSURL *lastKnownSafariVCUrl;
 
 @property (nonatomic, assign) BOOL subscribedToURLNotifications;
 @property (nonatomic, assign) BOOL subscribedToForegroundNotifications;
@@ -123,8 +123,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     if (self.state == STPRedirectContextStateNotStarted) {
         _state = STPRedirectContextStateInProgress;
         [self subscribeToUrlNotifications];
-        self.latestSafariVCUrl = self.source.redirect.url;
-        self.safariVC = [[SFSafariViewController alloc] initWithURL:self.latestSafariVCUrl];
+        self.lastKnownSafariVCUrl = self.source.redirect.url;
+        self.safariVC = [[SFSafariViewController alloc] initWithURL:self.lastKnownSafariVCUrl];
         self.safariVC.delegate = self;
         [presentingViewController presentViewController:self.safariVC
                                                animated:YES
@@ -164,18 +164,20 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
      So, only report failures to complete the initial load if the host was a Stripe domain.
      Stripe uses 302 redirects, and this should catch local connection problems as well as
      server-side failures from Stripe.
-
-     We can only track the latest URL loaded on iOS 11, because `safariViewController:initialLoadDidRedirectToURL:`
-     didn't exist prior to that.
      */
     if (didLoadSuccessfully == NO) {
         if (@available(iOS 11, *)) {
             stpDispatchToMainThreadIfNecessary(^{
-                if ([self.latestSafariVCUrl.host containsString:@"stripe.com"]) {
+                if ([self.lastKnownSafariVCUrl.host containsString:@"stripe.com"]) {
                     [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]
                                 shouldDismissViewController:YES];
                 }
             });
+        } else {
+            /*
+             We can only track the latest URL loaded on iOS 11, because `safariViewController:initialLoadDidRedirectToURL:`
+             didn't exist prior to that. This might be a spurious error, so we need to ignore it.
+             */
         }
     }
 }
@@ -184,7 +186,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     stpDispatchToMainThreadIfNecessary(^{
         // This is only kept up to date during the "initial load", but we only need the value in
         // `safariViewController:didCompleteInitialLoad:`, so that's fine.
-        self.latestSafariVCUrl = URL;
+        self.lastKnownSafariVCUrl = URL;
     });
 }
 
