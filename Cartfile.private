@@ -1,2 +1,2 @@
-github "facebook/ios-snapshot-test-case"
+github "uber/ios-snapshot-test-case"
 github "erikdoe/ocmock"
