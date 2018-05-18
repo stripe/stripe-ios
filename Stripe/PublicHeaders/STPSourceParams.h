@@ -145,7 +145,7 @@ NS_ASSUME_NONNULL_BEGIN
  @see https://stripe.com/docs/sources/ideal#create-source
  
  @param amount               The amount to charge the customer in EUR.
- @param name                 The full name of the account holder.
+ @param name                 (Optional) The full name of the account holder.
  @param returnURL            The URL the customer should be redirected to after
  they have successfully verified the payment.
  @param statementDescriptor  (Optional) A custom statement descriptor for t
@@ -158,7 +158,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return an STPSourceParams object populated with the provided values.
  */
 + (STPSourceParams *)idealParamsWithAmount:(NSUInteger)amount
-                                      name:(NSString *)name
+                                      name:(nullable NSString *)name
                                  returnURL:(NSString *)returnURL
                        statementDescriptor:(nullable NSString *)statementDescriptor
                                       bank:(nullable NSString *)bank;
