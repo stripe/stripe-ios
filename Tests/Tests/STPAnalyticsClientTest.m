@@ -10,6 +10,7 @@
 #import "STPAnalyticsClient.h"
 #import "STPFixtures.h"
 #import "STPFormEncoder.h"
+#import "STPTelemetryClient.h"
 
 @interface STPAPIClient (Testing)
 + (NSDictionary *)parametersForPayment:(PKPayment *)payment;
@@ -31,20 +32,36 @@
 
 - (void)testTokenTypeFromParameters {
     STPCardParams *card = [STPFixtures cardParams];
-    NSDictionary *cardDict = [STPFormEncoder dictionaryForObject:card];
+    NSDictionary *cardDict = [self buildTokenParams:card];
     XCTAssertEqualObjects([STPAnalyticsClient tokenTypeFromParameters:cardDict], @"card");
 
     STPConnectAccountParams *account = [STPFixtures accountParams];
-    NSDictionary *accountDict = [STPFormEncoder dictionaryForObject:account];
+    NSDictionary *accountDict = [self buildTokenParams:account];
     XCTAssertEqualObjects([STPAnalyticsClient tokenTypeFromParameters:accountDict], @"account");
 
     STPBankAccountParams *bank = [STPFixtures bankAccountParams];
-    NSDictionary *bankDict = [STPFormEncoder dictionaryForObject:bank];
+    NSDictionary *bankDict = [self buildTokenParams:bank];
     XCTAssertEqualObjects([STPAnalyticsClient tokenTypeFromParameters:bankDict], @"bank_account");
 
     PKPayment *applePay = [STPFixtures applePayPayment];
-    NSDictionary *applePayDict = [STPAPIClient parametersForPayment:applePay];
+    NSDictionary *applePayDict = [self addTelemetry:[STPAPIClient parametersForPayment:applePay]];
     XCTAssertEqualObjects([STPAnalyticsClient tokenTypeFromParameters:applePayDict], @"apple_pay");
+}
+
+#pragma mark - Helpers
+
+- (NSDictionary *)buildTokenParams:(nonnull NSObject<STPFormEncodable> *)object {
+    return [self addTelemetry:[STPFormEncoder dictionaryForObject:object]];
+}
+
+- (NSDictionary *)addTelemetry:(NSDictionary *)params {
+    NSMutableDictionary *mutableParams = [params mutableCopy];
+
+    // STPAPIClient adds these before determining the token type,
+    // so do the same in the test
+    [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:mutableParams];
+
+    return mutableParams;
 }
 
 @end
