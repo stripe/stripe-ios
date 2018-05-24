@@ -107,6 +107,7 @@
     OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
                                    animated:YES
                                  completion:[OCMArg any]]);
+    [self unsubscribeContext:context];
 }
 
 
@@ -257,6 +258,7 @@
     OCMVerify([mockVC presentViewController:[OCMArg checkWithBlock:checker]
                                    animated:YES
                                  completion:[OCMArg any]]);
+    [self unsubscribeContext:context];
 }
 
 /**
