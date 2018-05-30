@@ -61,13 +61,16 @@
     [self.leftIcon sizeToFit];
     self.leftIcon.center = CGPointMake(padding + (iconWidth / 2.0f), midY);
 
-    // Title label
-    [self.titleLabel sizeToFit];
-    self.titleLabel.center = CGPointMake(padding + iconWidth + padding + CGRectGetMidX(self.titleLabel.bounds), midY);
-
     // Checkmark icon
     self.checkmarkIcon.frame = CGRectMake(0.0, 0.0, 14.0f, 14.0f);
     self.checkmarkIcon.center = CGPointMake(CGRectGetWidth(self.bounds) - padding - CGRectGetMidX(self.checkmarkIcon.bounds), midY);
+
+    // Title label
+    CGRect labelFrame = self.bounds;
+    // not every icon is `iconWidth` wide, but give them all the same amount of space:
+    labelFrame.origin.x = padding + iconWidth + padding;
+    labelFrame.size.width = CGRectGetMinX(self.checkmarkIcon.frame) - padding - labelFrame.origin.x;
+    self.titleLabel.frame = labelFrame;
 }
 
 - (void)configureForNewCardRowWithTheme:(STPTheme *)theme {
