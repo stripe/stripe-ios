@@ -300,6 +300,39 @@ NS_ASSUME_NONNULL_BEGIN
 + (STPSourceParams *)masterpassParamsWithCartId:(NSString *)cartId
                                   transactionId:(NSString *)transactionId;
 
+/**
+ Create params for an EPS source
+ @see https://stripe.com/docs/sources/eps
+
+ @param amount                  The amount to charge the customer.
+ @param name                    The full name of the account holder.
+ @param returnURL               The URL the customer should be redirected to
+ after the authorization process.
+ @param statementDescriptor     A custom statement descriptor for the
+ payment (optional).
+
+ @return An STPSourceParams object populated with the provided values.
+ */
++ (STPSourceParams *)epsParamsWithAmount:(NSUInteger)amount
+                                    name:(NSString *)name
+                               returnURL:(NSString *)returnURL
+                     statementDescriptor:(nullable NSString *)statementDescriptor;
+
+/**
+ Create params for a Multibanco source
+ @see https://stripe.com/docs/sources/multibanco
+
+ @param amount      The amount to charge the customer.
+ @param returnURL   The URL the customer should be redirected to after the
+ authorization process.
+ @param email       The full email address of the customer.
+
+ @return An STPSourceParams object populated with the provided values.
+ */
++ (STPSourceParams *)multibancoParamsWithAmount:(NSUInteger)amount
+                                      returnURL:(NSString *)returnURL
+                                          email:(NSString *)email;
+
 @end
 
 NS_ASSUME_NONNULL_END

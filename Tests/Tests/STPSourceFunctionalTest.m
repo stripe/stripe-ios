@@ -462,4 +462,58 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
+- (void)testCreateSource_eps {
+    STPSourceParams *params = [STPSourceParams epsParamsWithAmount:1099
+                                                              name:@"Jenny Rosen"
+                                                         returnURL:@"https://shop.example.com/crtABC"
+                                               statementDescriptor:@"ORDER AT123"];
+    params.metadata = @{@"foo": @"bar"};
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
+    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeEPS);
+        XCTAssertEqualObjects(source.amount, params.amount);
+        XCTAssertEqualObjects(source.currency, params.currency);
+        XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
+        XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertNotNil(source.redirect.url);
+        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertEqualObjects(source.allResponseFields[@"statement_descriptor"], @"ORDER AT123");
+
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
+- (void)testCreateSource_eps_no_statement_descriptor {
+    STPSourceParams *params = [STPSourceParams epsParamsWithAmount:1099
+                                                              name:@"Jenny Rosen"
+                                                         returnURL:@"https://shop.example.com/crtABC"
+                                               statementDescriptor:nil];
+    params.metadata = @{@"foo": @"bar"};
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
+    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeEPS);
+        XCTAssertEqualObjects(source.amount, params.amount);
+        XCTAssertEqualObjects(source.currency, params.currency);
+        XCTAssertEqualObjects(source.owner.name, params.owner[@"name"]);
+        XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertNotNil(source.redirect.url);
+        XCTAssertEqualObjects(source.metadata, params.metadata);
+        XCTAssertNil(source.allResponseFields[@"statement_descriptor"]);
+
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
 @end

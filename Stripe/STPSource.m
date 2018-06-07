@@ -60,6 +60,8 @@
              @"three_d_secure": @(STPSourceTypeThreeDSecure),
              @"alipay": @(STPSourceTypeAlipay),
              @"p24": @(STPSourceTypeP24),
+             @"eps": @(STPSourceTypeEPS),
+             @"multibanco": @(STPSourceTypeMultibanco),
              };
 }
 
