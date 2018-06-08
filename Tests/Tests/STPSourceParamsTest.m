@@ -68,6 +68,12 @@
     sourceParams.rawTypeString = @"p24";
     XCTAssertEqual(sourceParams.type, STPSourceTypeP24);
 
+    sourceParams.rawTypeString = @"eps";
+    XCTAssertEqual(sourceParams.type, STPSourceTypeEPS);
+
+    sourceParams.rawTypeString = @"multibanco";
+    XCTAssertEqual(sourceParams.type, STPSourceTypeMultibanco);
+
     sourceParams.rawTypeString = @"unknown";
     XCTAssertEqual(sourceParams.type, STPSourceTypeUnknown);
 
@@ -105,6 +111,12 @@
 
     sourceParams.type = STPSourceTypeP24;
     XCTAssertEqualObjects(sourceParams.rawTypeString, @"p24");
+
+    sourceParams.type = STPSourceTypeEPS;
+    XCTAssertEqualObjects(sourceParams.rawTypeString, @"eps");
+
+    sourceParams.type = STPSourceTypeMultibanco;
+    XCTAssertEqualObjects(sourceParams.rawTypeString, @"multibanco");
 
     sourceParams.type = STPSourceTypeUnknown;
     XCTAssertNil(sourceParams.rawTypeString);

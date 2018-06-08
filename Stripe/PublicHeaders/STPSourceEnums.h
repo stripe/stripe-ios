@@ -147,6 +147,16 @@ typedef NS_ENUM(NSInteger, STPSourceType) {
     STPSourceTypeP24,
 
     /**
+     An EPS source. @see https://stripe.com/docs/sources/eps
+     */
+    STPSourceTypeEPS,
+
+    /**
+     A Multibanco source. @see https://stripe.com/docs/sources/multibanco
+     */
+    STPSourceTypeMultibanco,
+
+    /**
      An unknown type of source.
      */
     STPSourceTypeUnknown,

@@ -314,6 +314,36 @@
     return params;
 }
 
++ (STPSourceParams *)epsParamsWithAmount:(NSUInteger)amount
+                                    name:(NSString *)name
+                               returnURL:(NSString *)returnURL
+                     statementDescriptor:(nullable NSString *)statementDescriptor {
+    STPSourceParams *params = [self new];
+    params.type = STPSourceTypeEPS;
+    params.amount = @(amount);
+    params.currency = @"eur"; // EPS must always use eur
+    params.owner = @{ @"name": name };
+    params.redirect = @{ @"return_url": returnURL };
+
+    if (statementDescriptor.length > 0) {
+        params.additionalAPIParameters = @{ @"statement_descriptor": statementDescriptor };
+    }
+
+    return params;
+}
+
++ (STPSourceParams *)multibancoParamsWithAmount:(NSUInteger)amount
+                                      returnURL:(NSString *)returnURL
+                                          email:(NSString *)email {
+    STPSourceParams *params = [self new];
+    params.type = STPSourceTypeMultibanco;
+    params.currency = @"eur"; // Multibanco must always use eur
+    params.amount = @(amount);
+    params.redirect = @{ @"return_url": returnURL };
+    params.owner = @{ @"email": email };
+    return params;
+}
+
 #pragma mark - Redirect Dictionary
 
 /**
