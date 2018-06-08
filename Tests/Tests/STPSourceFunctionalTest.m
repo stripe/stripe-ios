@@ -516,4 +516,27 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
+- (void)testCreateSource_multibanco {
+    STPSourceParams *params = [STPSourceParams multibancoParamsWithAmount:1099
+                                                                returnURL:@"https://shop.example.com/crtABC"
+                                                                    email:@"user@example.com"];
+    params.metadata = @{@"foo": @"bar"};
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:apiKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Source creation"];
+    [client createSourceWithParams:params completion:^(STPSource *source, NSError * error) {
+        XCTAssertNil(error);
+        XCTAssertNotNil(source);
+        XCTAssertEqual(source.type, STPSourceTypeMultibanco);
+        XCTAssertEqualObjects(source.amount, params.amount);
+        XCTAssertEqual(source.redirect.status, STPSourceRedirectStatusPending);
+        XCTAssertEqualObjects(source.redirect.returnURL, [NSURL URLWithString:@"https://shop.example.com/crtABC"]);
+        XCTAssertNotNil(source.redirect.url);
+        XCTAssertEqualObjects(source.metadata, params.metadata);
+
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
 @end
