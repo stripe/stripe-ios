@@ -401,21 +401,25 @@
  block and dismiss method should be called.
  */
 - (void)testSafariAppRedirectFlow_foregroundNotification {
+    id sut;
+
     STPSource *source = [STPFixtures iDEALSource];
     XCTestExpectation *exp = [self expectationWithDescription:@"completion"];
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString *sourceID, NSString *clientSecret, NSError *error) {
         XCTAssertEqualObjects(sourceID, source.stripeID);
         XCTAssertEqualObjects(clientSecret, source.clientSecret);
         XCTAssertNil(error);
+
+        OCMVerify([sut unsubscribeFromNotifications]);
+        OCMVerify([sut dismissPresentedViewController]);
+
         [exp fulfill];
     }];
-    id sut = OCMPartialMock(context);
+    sut = OCMPartialMock(context);
 
     [sut startSafariAppRedirectFlow];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
 
-    OCMVerify([sut unsubscribeFromNotifications]);
-    OCMVerify([sut dismissPresentedViewController]);
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 

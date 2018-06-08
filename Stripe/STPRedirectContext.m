@@ -193,7 +193,23 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 #pragma mark - Private methods -
 
 - (void)handleWillForegroundNotification {
-    stpDispatchToMainThreadIfNecessary(^{
+    // Always `dispatch_async` the `handleWillForegroundNotification` function
+    // call to re-queue the task at the end of the run loop. This is so that the
+    // `handleURLCallback` gets handled first.
+    //
+    // Verified this works even if `handleURLCallback` performs `dispatch_async`
+    // but not completely sure why :)
+    //
+    // When returning from a `startSafariAppRedirectFlow` call, the
+    // `UIApplicationWillEnterForegroundNotification` handler and
+    // `STPURLCallbackHandler` compete. The problem is the
+    // `UIApplicationWillEnterForegroundNotification` handler is always queued
+    // first causing the `STPURLCallbackHandler` to always fail because the
+    // registered callback was already unregistered by the
+    // `UIApplicationWillEnterForegroundNotification` handler. We are patching
+    // this so that the`STPURLCallbackHandler` can succeed and the
+    // `UIApplicationWillEnterForegroundNotification` handler can silently fail.
+    dispatch_async(dispatch_get_main_queue(), ^{
         [self handleRedirectCompletionWithError:nil
                     shouldDismissViewController:YES];
     });
