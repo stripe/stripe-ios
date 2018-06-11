@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  You should make your application's API client conform to this interface.
- It provides a way for `STPCustomerContext` to request a new ephemeral key from 
+ It provides a way for `STPCustomerContext` to request a new ephemeral key from
  your backend, which it will use to retrieve and update a Stripe customer.
  */
 @protocol STPEphemeralKeyProvider <NSObject>
@@ -26,9 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
  On your backend, you should create a new ephemeral key for the Stripe customer
  associated with your user, and return the raw JSON response from the Stripe API.
  For an example Ruby implementation of this API, refer to our example backend:
- https://github.com/stripe/example-ios-backend/blob/master/web.rb
+ https://github.com/stripe/example-ios-backend/blob/v13.0.3/web.rb
 
- Back in your iOS app, once you have a response from this API, call the provided 
+ Back in your iOS app, once you have a response from this API, call the provided
  completion block with the JSON response, or an error if one occurred.
 
  @param apiVersion  The Stripe API version to use when creating a key.
