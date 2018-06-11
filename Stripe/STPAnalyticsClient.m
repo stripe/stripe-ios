@@ -251,6 +251,8 @@
             dictionary[@"required_billing_address_fields"] = @"zip";
         case STPBillingAddressFieldsFull:
             dictionary[@"required_billing_address_fields"] = @"full";
+        case STPBillingAddressFieldsName:
+            dictionary[@"required_billing_address_fields"] = @"name";
     }
     NSMutableArray<NSString *> *shippingFields = [NSMutableArray new];
     if ([configuration.requiredShippingAddressFields containsObject:STPContactFieldName]) {

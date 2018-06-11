@@ -35,6 +35,11 @@ typedef NS_ENUM(NSUInteger, STPBillingAddressFields) {
      Request the user's full billing address
      */
     STPBillingAddressFieldsFull,
+
+    /**
+     Just request the user's billing name
+     */
+    STPBillingAddressFieldsName,
 };
 
 

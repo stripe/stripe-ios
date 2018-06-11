@@ -39,6 +39,10 @@
     for (NSUInteger i=0; i<[sut.addressCells count]; i++) {
         XCTAssertEqual(sut.addressCells[i].type, [types[i] integerValue]);
     }
+
+    sut = [[STPAddressViewModel alloc] initWithRequiredBillingFields:STPBillingAddressFieldsName];
+    XCTAssertTrue([sut.addressCells count] == 1);
+    XCTAssertEqual(sut.addressCells[0].type, STPAddressFieldTypeName);
 }
 
 - (void)testInitWithRequiredShippingFields {
@@ -160,6 +164,22 @@
     sut.addressCells[4].contents = @"New York";
     sut.addressCells[5].contents = @"NY";
     sut.addressCells[6].contents = @"US";
+    XCTAssertTrue(sut.isValid);
+}
+
+- (void)testIsValid_Name {
+    STPAddressViewModel *sut = [[STPAddressViewModel alloc] initWithRequiredBillingFields:STPBillingAddressFieldsName];
+
+    STPAddress *address = [STPAddress new];
+
+    address.name = @"";
+    sut.address = address;
+    XCTAssertEqual(sut.addressCells.count, 1ul);
+    XCTAssertFalse(sut.isValid);
+
+    address.name = @"Jane Doe";
+    sut.address = address;
+    XCTAssertEqual(sut.addressCells.count, 1ul);
     XCTAssertTrue(sut.isValid);
 }
 

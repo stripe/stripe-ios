@@ -52,6 +52,11 @@
                                   [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeCountry contents:_addressFieldTableViewCountryCode lastInList:YES delegate:self],
                                   ];
                 break;
+            case STPBillingAddressFieldsName:
+                _addressCells = @[
+                                  [[STPAddressFieldTableViewCell alloc] initWithType:STPAddressFieldTypeName contents:@"" lastInList:YES delegate:self]
+                                  ];
+                break;
         }
         [self commonInit];
     }
