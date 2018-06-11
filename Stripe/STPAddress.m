@@ -169,6 +169,8 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
                                                              countryCode:self.country] == STPCardValidationStateValid);
         case STPBillingAddressFieldsFull:
             return [self hasValidPostalAddress];
+        case STPBillingAddressFieldsName:
+            return self.name.length > 0;
     }
     return containsFields;
 }
@@ -181,6 +183,8 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
             return self.postalCode.length > 0;
         case STPBillingAddressFieldsFull:
             return [self hasPartialPostalAddress];
+        case STPBillingAddressFieldsName:
+            return self.name.length > 0;
     }
 
     return NO;
@@ -242,6 +246,8 @@ STPContactField const STPContactFieldName = @"STPContactFieldName";
         case STPBillingAddressFieldsZip:
         case STPBillingAddressFieldsFull:
             return PKAddressFieldPostalAddress;
+        case STPBillingAddressFieldsName:
+            return PKAddressFieldName;
     }
 }
 

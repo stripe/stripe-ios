@@ -111,12 +111,14 @@ class SettingsViewController: UITableViewController {
     fileprivate enum RequiredBillingAddressFields: String {
         case None = "None"
         case Zip = "Zip"
+        case Name = "Name"
         case Full = "Full"
 
         init(row: Int) {
             switch row {
             case 0: self = .None
             case 1: self = .Zip
+            case 2: self = .Name
             default: self = .Full
             }
         }
@@ -125,6 +127,7 @@ class SettingsViewController: UITableViewController {
             switch self {
             case .None: return .none
             case .Zip: return .zip
+            case .Name: return .name
             case .Full: return .full
             }
         }
@@ -196,7 +199,7 @@ class SettingsViewController: UITableViewController {
         switch Section(section: section) {
         case .Theme: return 3
         case .ApplePay: return 2
-        case .RequiredBillingAddressFields: return 3
+        case .RequiredBillingAddressFields: return 4
         case .RequiredShippingAddressFields: return 4
         case .ShippingType: return 2
         case .Session: return 1
