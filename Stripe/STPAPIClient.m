@@ -124,27 +124,41 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
         _stripeAccount = configuration.stripeAccount;
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
-        _urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
+        _urlSession = [NSURLSession sharedSession];
     }
     return self;
 }
 
-- (NSURLSessionConfiguration *)sessionConfiguration {
+- (NSMutableURLRequest *)configuredRequestForURL:(NSURL *)url {
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    [[self defaultHeaders] enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, NSString *  _Nonnull obj, __unused BOOL * _Nonnull stop) {
+        [request setValue:obj forHTTPHeaderField:key];
+    }];
+    return request;
+}
+
+- (NSDictionary<NSString *, NSString *> *)defaultHeaders {
     NSMutableDictionary *additionalHeaders = [NSMutableDictionary new];
     additionalHeaders[@"X-Stripe-User-Agent"] = [self.class stripeUserAgentDetails];
     additionalHeaders[@"Stripe-Version"] = APIVersion;
     additionalHeaders[@"Authorization"] = [@"Bearer " stringByAppendingString:self.apiKey ?: @""];
     additionalHeaders[@"Stripe-Account"] = self.stripeAccount;
-    NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    sessionConfiguration.HTTPAdditionalHeaders = additionalHeaders;
-    return sessionConfiguration;
+    return [additionalHeaders copy];
+}
+
+- (void)setUrlSession:(NSURLSession *)urlSession
+{
+    if (urlSession != _urlSession) {
+        [_urlSession invalidateAndCancel];
+        _urlSession = urlSession;
+    }
 }
 
 - (void)setApiKey:(NSString *)apiKey {
     _apiKey = apiKey;
 
     // Regenerate url session configuration
-    self.urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
+//    self.urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
 }
 
 - (void)setPublishableKey:(NSString *)publishableKey {
@@ -160,7 +174,7 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
     _stripeAccount = stripeAccount;
 
     // Regenerate url session configuration
-    self.urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
+//    self.urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
 }
 
 - (void)createTokenWithParameters:(NSDictionary *)parameters
@@ -342,7 +356,7 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
     NSString *boundary = [STPMultipartFormDataEncoder generateBoundary];
     NSData *data = [STPMultipartFormDataEncoder multipartFormDataForParts:@[purposePart, imagePart] boundary:boundary];
 
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:FileUploadURL]];
+    NSMutableURLRequest *request = [self configuredRequestForURL:[NSURL URLWithString:FileUploadURL]];
     [request setHTTPMethod:@"POST"];
     [request stp_setMultipartFormData:data boundary:boundary];
 

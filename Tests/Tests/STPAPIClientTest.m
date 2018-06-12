@@ -34,25 +34,25 @@
 
 - (void)testInitWithPublishableKey {
     STPAPIClient *sut = [[STPAPIClient alloc] initWithPublishableKey:@"pk_foo"];
-    NSString *authHeader = sut.urlSession.configuration.HTTPAdditionalHeaders[@"Authorization"];
+    NSString *authHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"]].allHTTPHeaderFields[@"Authorization"];
     XCTAssertEqualObjects(authHeader, @"Bearer pk_foo");
 }
 
 - (void)testSetPublishableKey {
     STPAPIClient *sut = [[STPAPIClient alloc] initWithPublishableKey:@"pk_foo"];
-    NSString *authHeader = sut.urlSession.configuration.HTTPAdditionalHeaders[@"Authorization"];
+    NSString *authHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"]].allHTTPHeaderFields[@"Authorization"];
     XCTAssertEqualObjects(authHeader, @"Bearer pk_foo");
     sut.publishableKey = @"pk_bar";
-    authHeader = sut.urlSession.configuration.HTTPAdditionalHeaders[@"Authorization"];
+    authHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"]].allHTTPHeaderFields[@"Authorization"];
     XCTAssertEqualObjects(authHeader, @"Bearer pk_bar");
 }
 
 - (void)testSetStripeAccount {
     STPAPIClient *sut = [[STPAPIClient alloc] initWithPublishableKey:@"pk_foo"];
-    NSString *accountHeader = sut.urlSession.configuration.HTTPAdditionalHeaders[@"Stripe-Account"];
+    NSString *accountHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"]].allHTTPHeaderFields[@"Stripe-Account"];
     XCTAssertNil(accountHeader);
     sut.stripeAccount = @"acct_123";
-    accountHeader = sut.urlSession.configuration.HTTPAdditionalHeaders[@"Stripe-Account"];
+    accountHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"]].allHTTPHeaderFields[@"Stripe-Account"];
     XCTAssertEqualObjects(accountHeader, @"acct_123");
 }
 
@@ -63,7 +63,7 @@
     STPAPIClient *sut = [[STPAPIClient alloc] initWithConfiguration:config];
     XCTAssertEqualObjects(sut.publishableKey, config.publishableKey);
     XCTAssertEqualObjects(sut.stripeAccount, config.stripeAccount);
-    NSString *accountHeader = sut.urlSession.configuration.HTTPAdditionalHeaders[@"Stripe-Account"];
+    NSString *accountHeader = [sut configuredRequestForURL:[NSURL URLWithString:@"https://www.stripe.com"]].allHTTPHeaderFields[@"Stripe-Account"];
     XCTAssertEqualObjects(accountHeader, @"acct_123");
 }
 

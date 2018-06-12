@@ -42,7 +42,7 @@ static NSString * const JSONKeyObject = @"object";
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
 
     // Setup request
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    NSMutableURLRequest *request = [apiClient configuredRequestForURL:url];
     request.HTTPMethod = HTTPMethodPOST;
     [request stp_setFormPayload:parameters];
 
@@ -66,7 +66,7 @@ static NSString * const JSONKeyObject = @"object";
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
 
     // Setup request
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    NSMutableURLRequest *request = [apiClient configuredRequestForURL:url];
     [request stp_addParametersToURL:parameters];
     request.HTTPMethod = HTTPMethodGET;
 
@@ -98,7 +98,7 @@ static NSString * const JSONKeyObject = @"object";
     NSURL *url = [apiClient.apiURL URLByAppendingPathComponent:endpoint];
 
     // Setup request
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    NSMutableURLRequest *request = [apiClient configuredRequestForURL:url];
     [request stp_addParametersToURL:parameters];
     request.HTTPMethod = HTTPMethodDELETE;
 
