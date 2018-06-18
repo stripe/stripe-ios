@@ -49,6 +49,14 @@
     STPAPIClient *apiClientMock = OCMClassMock([STPAPIClient class]);
     OCMStub([apiClientMock apiURL]).andReturn([NSURL URLWithString:@"https://api.stripe.com"]);
     OCMStub([apiClientMock urlSession]).andReturn(urlSessionMock);
+    OCMStub([apiClientMock configuredRequestForURL:[OCMArg isKindOfClass:[NSURL class]]]).andDo(^(NSInvocation *invocation)
+                                                                                                {
+                                                                                                    NSURL *urlArg;
+                                                                                                    [invocation getArgument:&urlArg atIndex:2];
+                                                                                                    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:urlArg];
+                                                                                                    [invocation setReturnValue:&request];
+                                                                                                    [invocation retainArguments];
+                                                                                                });
 
     id apiRequestMock = OCMClassMock([STPAPIRequest class]);
     OCMStub([apiRequestMock parseResponse:[OCMArg any]
@@ -117,6 +125,14 @@
     STPAPIClient *apiClientMock = OCMClassMock([STPAPIClient class]);
     OCMStub([apiClientMock apiURL]).andReturn([NSURL URLWithString:@"https://api.stripe.com"]);
     OCMStub([apiClientMock urlSession]).andReturn(urlSessionMock);
+    OCMStub([apiClientMock configuredRequestForURL:[OCMArg isKindOfClass:[NSURL class]]]).andDo(^(NSInvocation *invocation)
+                                                                                                {
+                                                                                                    NSURL *urlArg;
+                                                                                                    [invocation getArgument:&urlArg atIndex:2];
+                                                                                                    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:urlArg];
+                                                                                                    [invocation setReturnValue:&request];
+                                                                                                    [invocation retainArguments];
+                                                                                                });
 
     id apiRequestMock = OCMClassMock([STPAPIRequest class]);
     OCMStub([apiRequestMock parseResponse:[OCMArg any]
@@ -185,6 +201,14 @@
     STPAPIClient *apiClientMock = OCMClassMock([STPAPIClient class]);
     OCMStub([apiClientMock apiURL]).andReturn([NSURL URLWithString:@"https://api.stripe.com"]);
     OCMStub([apiClientMock urlSession]).andReturn(urlSessionMock);
+    OCMStub([apiClientMock configuredRequestForURL:[OCMArg isKindOfClass:[NSURL class]]]).andDo(^(NSInvocation *invocation)
+                                                                        {
+                                                                            NSURL *urlArg;
+                                                                            [invocation getArgument:&urlArg atIndex:2];
+                                                                            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:urlArg];
+                                                                            [invocation setReturnValue:&request];
+                                                                            [invocation retainArguments];
+                                                                        });
 
     id apiRequestMock = OCMClassMock([STPAPIRequest class]);
     OCMStub([apiRequestMock parseResponse:[OCMArg any]
