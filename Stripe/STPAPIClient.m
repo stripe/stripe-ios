@@ -146,21 +146,6 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
     return [additionalHeaders copy];
 }
 
-- (void)setUrlSession:(NSURLSession *)urlSession
-{
-    if (urlSession != _urlSession) {
-        [_urlSession invalidateAndCancel];
-        _urlSession = urlSession;
-    }
-}
-
-- (void)setApiKey:(NSString *)apiKey {
-    _apiKey = apiKey;
-
-    // Regenerate url session configuration
-//    self.urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
-}
-
 - (void)setPublishableKey:(NSString *)publishableKey {
     self.configuration.publishableKey = [publishableKey copy];
     self.apiKey = [publishableKey copy];
@@ -168,13 +153,6 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 
 - (NSString *)publishableKey {
     return self.configuration.publishableKey;
-}
-
-- (void)setStripeAccount:(NSString *)stripeAccount {
-    _stripeAccount = stripeAccount;
-
-    // Regenerate url session configuration
-//    self.urlSession = [NSURLSession sessionWithConfiguration:[self sessionConfiguration]];
 }
 
 - (void)createTokenWithParameters:(NSDictionary *)parameters
