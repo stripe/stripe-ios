@@ -24,7 +24,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @property (nonatomic, strong, readwrite) NSURL *apiURL;
-@property (nonatomic, strong, readwrite) NSURLSession *urlSession;
+@property (nonatomic, strong, readonly) NSURLSession *urlSession;
+
+- (NSMutableURLRequest *)configuredRequestForURL:(NSURL *)url;
 
 @end
 
