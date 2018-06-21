@@ -130,6 +130,9 @@
             case STPSourceTypeMultibanco:
                 XCTAssertEqualObjects(string, @"multibanco");
                 break;
+            case STPSourceTypeWeChatPay:
+                XCTAssertEqualObjects(string, @"wechat");
+                break;
             case STPSourceTypeUnknown:
                 XCTAssertNil(string);
                 break;

@@ -62,6 +62,7 @@
              @"p24": @(STPSourceTypeP24),
              @"eps": @(STPSourceTypeEPS),
              @"multibanco": @(STPSourceTypeMultibanco),
+             @"wechat": @(STPSourceTypeWeChatPay),
              };
 }
 
