@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPSource () <STPInternalAPIResponseDecodable, STPPaymentMethod>
+@interface STPSource () <STPInternalAPIResponseDecodable>
 
 + (STPSourceType)typeFromString:(NSString *)string;
 + (nullable NSString *)stringFromType:(STPSourceType)type;
