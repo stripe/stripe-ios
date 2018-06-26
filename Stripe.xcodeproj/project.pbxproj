@@ -325,6 +325,12 @@
 		04F94DD41D22A242004FC826 /* NSBundle+Stripe_AppName.m in Sources */ = {isa = PBXBuildFile; fileRef = 049A3F981CC76A2400F57DE7 /* NSBundle+Stripe_AppName.m */; };
 		04FCFA191BD59A8C00297732 /* STPCategoryLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 04FCFA171BD59A8C00297732 /* STPCategoryLoader.h */; };
 		8B013C891F1E784A00DD831B /* STPPaymentConfigurationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */; };
+		8B39128220E2F99600098401 /* EPSSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39128120E2F99600098401 /* EPSSource.json */; };
+		8B39128320E2F9A100098401 /* BancontactSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39127F20E2F6A500098401 /* BancontactSource.json */; };
+		8B39128520E2F9C400098401 /* GiropaySource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39128420E2F9C400098401 /* GiropaySource.json */; };
+		8B39128720E2F9D300098401 /* MultibancoSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39128620E2F9D300098401 /* MultibancoSource.json */; };
+		8B39128920E2F9E000098401 /* P24Source.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39128820E2F9E000098401 /* P24Source.json */; };
+		8B39128B20E2F9F500098401 /* SOFORTSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39128A20E2F9F500098401 /* SOFORTSource.json */; };
 		8B429AD81EF9D4B400F95F34 /* STPBankAccountParams+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B429AD71EF9D4A300F95F34 /* STPBankAccountParams+Private.h */; };
 		8B429AD91EF9D4B500F95F34 /* STPBankAccountParams+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B429AD71EF9D4A300F95F34 /* STPBankAccountParams+Private.h */; };
 		8B429ADE1EF9EFF900F95F34 /* STPFile+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B429ADD1EF9EFF600F95F34 /* STPFile+Private.h */; };
@@ -1016,6 +1022,12 @@
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		7E0B1132203572FB00271AD3 /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentConfigurationTest.m; sourceTree = "<group>"; };
+		8B39127F20E2F6A500098401 /* BancontactSource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BancontactSource.json; sourceTree = "<group>"; };
+		8B39128120E2F99600098401 /* EPSSource.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = EPSSource.json; sourceTree = "<group>"; };
+		8B39128420E2F9C400098401 /* GiropaySource.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GiropaySource.json; sourceTree = "<group>"; };
+		8B39128620E2F9D300098401 /* MultibancoSource.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MultibancoSource.json; sourceTree = "<group>"; };
+		8B39128820E2F9E000098401 /* P24Source.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = P24Source.json; sourceTree = "<group>"; };
+		8B39128A20E2F9F500098401 /* SOFORTSource.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SOFORTSource.json; sourceTree = "<group>"; };
 		8B429AD71EF9D4A300F95F34 /* STPBankAccountParams+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPBankAccountParams+Private.h"; sourceTree = "<group>"; };
 		8B429ADD1EF9EFF600F95F34 /* STPFile+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPFile+Private.h"; sourceTree = "<group>"; };
 		8B5B4B431EFDD925005CF475 /* STPSourceOwnerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceOwnerTest.m; sourceTree = "<group>"; };
@@ -1038,7 +1050,6 @@
 		8BCB6E552053389800629978 /* stp_card_unionpay_en@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_unionpay_en@3x.png"; sourceTree = "<group>"; };
 		8BD213361F044B57007F6FD1 /* BankAccount.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BankAccount.json; sourceTree = "<group>"; };
 		8BD213381F0457A1007F6FD1 /* FileUpload.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FileUpload.json; sourceTree = "<group>"; };
-		8BD2133B1F0458F5007F6FD1 /* BitcoinSource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BitcoinSource.json; sourceTree = "<group>"; };
 		8BD2133D1F045D31007F6FD1 /* SEPADebitSource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SEPADebitSource.json; sourceTree = "<group>"; };
 		8BD87B871EFB131400269C2B /* STPSourceCardDetails+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPSourceCardDetails+Private.h"; sourceTree = "<group>"; };
 		8BD87B8A1EFB136F00269C2B /* STPSourceCardDetailsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceCardDetailsTest.m; sourceTree = "<group>"; };
@@ -1548,11 +1559,16 @@
 			isa = PBXGroup;
 			children = (
 				F1BA241F1E57BEC600E4A1CF /* 3DSSource.json */,
-				8BD2133B1F0458F5007F6FD1 /* BitcoinSource.json */,
-				F1BA241C1E57BE5700E4A1CF /* CardSource.json */,
-				F152322E1EA9344000D65C67 /* iDEALSource.json */,
-				8BD2133D1F045D31007F6FD1 /* SEPADebitSource.json */,
 				F16AA26D1F5A05A100207FFF /* AlipaySource.json */,
+				8B39127F20E2F6A500098401 /* BancontactSource.json */,
+				F1BA241C1E57BE5700E4A1CF /* CardSource.json */,
+				8B39128120E2F99600098401 /* EPSSource.json */,
+				8B39128420E2F9C400098401 /* GiropaySource.json */,
+				F152322E1EA9344000D65C67 /* iDEALSource.json */,
+				8B39128620E2F9D300098401 /* MultibancoSource.json */,
+				8B39128820E2F9E000098401 /* P24Source.json */,
+				8BD2133D1F045D31007F6FD1 /* SEPADebitSource.json */,
+				8B39128A20E2F9F500098401 /* SOFORTSource.json */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -1561,10 +1577,10 @@
 			isa = PBXGroup;
 			children = (
 				F156753F1DB544D3004468E3 /* STPAddCardViewControllerLocalizationTests.m */,
+				C1054F901FE197AE0033C87E /* STPPaymentContextSnapshotTests.m */,
 				F1B980931DB550E60075332E /* STPPaymentMethodsViewControllerLocalizationTests.m */,
 				C1EF04491DD2396200FBF452 /* STPShippingAddressViewControllerLocalizationTests.m */,
 				C1EF044A1DD2396200FBF452 /* STPShippingMethodsViewControllerLocalizationTests.m */,
-				C1054F901FE197AE0033C87E /* STPPaymentContextSnapshotTests.m */,
 			);
 			name = Snapshot;
 			sourceTree = "<group>";
@@ -2511,11 +2527,17 @@
 				C1C02CCC1ECCD0ED00DF5643 /* EphemeralKey.json in Resources */,
 				F1BA24211E57BECA00E4A1CF /* 3DSSource.json in Resources */,
 				F1BA241E1E57BE5E00E4A1CF /* CardSource.json in Resources */,
+				8B39128520E2F9C400098401 /* GiropaySource.json in Resources */,
 				F1343BE91D652CAB00F102D8 /* Card.json in Resources */,
+				8B39128720E2F9D300098401 /* MultibancoSource.json in Resources */,
 				8BD213391F0457A1007F6FD1 /* FileUpload.json in Resources */,
 				C1CFCB7A1ED5F88D00BE45DF /* stp_test_upload_image.jpeg in Resources */,
 				F152322F1EA9344600D65C67 /* iDEALSource.json in Resources */,
 				F16AA26F1F5A0F1700207FFF /* AlipaySource.json in Resources */,
+				8B39128920E2F9E000098401 /* P24Source.json in Resources */,
+				8B39128220E2F99600098401 /* EPSSource.json in Resources */,
+				8B39128320E2F9A100098401 /* BancontactSource.json in Resources */,
+				8B39128B20E2F9F500098401 /* SOFORTSource.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

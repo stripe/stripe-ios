@@ -1,0 +1,33 @@
+// Source: https://stripe.com/docs/sources/p24
+{
+    "id": "src_16xhynE8WzK49JbAs9M21jaR",
+    "object": "source",
+    "amount": 1099,
+    "client_secret": "src_client_secret_UfwvW2WHpZ0s3QEn9g5x7waU",
+    "created": 1445277809,
+    "currency": "eur",
+    "flow": "redirect",
+    "livemode": true,
+    "owner": {
+        "address": null,
+        "email": "jenny.rosen@example.com",
+        "name": "Jenny Rosen",
+        "phone": null,
+        "verified_address": null,
+        "verified_email": "jenny.rosen@example.com",
+        "verified_name": "Jenny Rosen",
+        "verified_phone": null
+    },
+    "redirect": {
+        "return_url": "https://shop.example.com/crtA6B28E1",
+        "status": "pending",
+        "url": "https://pay.stripe.com/redirect/src_16xhynE8WzK49JbAs9M21jaR?client_secret=src_client_secret_UfwvW2WHpZ0s3QEn9g5x7waU"
+    },
+    "statement_descriptor": null,
+    "status": "pending",
+    "type": "p24",
+    "usage": "single_use",
+    "p24": {
+        "reference": "P24-000-111-222"
+    }
+}

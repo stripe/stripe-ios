@@ -1,0 +1,42 @@
+// Source: https://stripe.com/docs/sources/multibanco
+{
+    "id": "src_16xhynE8WzK49JbAs9M21jaR",
+    "object": "source",
+    "amount": 1099,
+    "client_secret": "src_client_secret_UfwvW2WHpZ0s3QEn9g5x7waU",
+    "created": 1445277809,
+    "currency": "eur",
+    "flow": "receiver",
+    "livemode": true,
+    "owner": {
+        "address": null,
+        "email": null,
+        "name": "Jenny Rosen",
+        "phone": null,
+        "verified_address": null,
+        "verified_email": null,
+        "verified_name": "Jenny Rosen",
+        "verified_phone": null
+    },
+    "redirect": {
+        "return_url": "https://shop.example.com/crtA6B28E1",
+        "status": "pending",
+        "url": "https://pay.stripe.com/redirect/src_16xhynE8WzK49JbAs9M21jaR?client_secret=src_client_secret_UfwvW2WHpZ0s3QEn9g5x7waU"
+    },
+    "receiver": {
+        "address": "12345-123456789",
+        "amount_charged": 0,
+        "amount_received": 0,
+        "amount_returned": 0,
+        "refund_attributes_method": "email",
+        "refund_attributes_status": "missing"
+    },
+    "statement_descriptor": null,
+    "status": "pending",
+    "type": "multibanco",
+    "usage": "single_use",
+    "multibanco": {
+        "reference": "12345",
+        "entity": "123456789",
+    }
+}

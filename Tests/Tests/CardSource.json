@@ -1,3 +1,4 @@
+// Source: https://stripe.com/docs/sources/cards
 {
     "id": "src_123",
     "object": "source",

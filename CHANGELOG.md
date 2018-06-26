@@ -1,3 +1,5 @@
+* Adds `STPPaymentMethod` protocol implementation for `STPSource` [#976](https://github.com/stripe/stripe-ios/pull/976)
+
 ## 13.0.3 2018-06-11
 * Fixes payment method label overlapping the checkmark, for Amex on small devices [#952](https://github.com/stripe/stripe-ios/pull/952)
 * Adds EPS and Multibanco support to `STPSourceParams` [#961](https://github.com/stripe/stripe-ios/pull/961)

@@ -1,0 +1,38 @@
+// Source: https://stripe.com/docs/sources/bancontact
+{
+    "id": "src_16xhynE8WzK49JbAs9M21jaR",
+    "object": "source",
+    "amount": 1099,
+    "client_secret": "src_client_secret_UfwvW2WHpZ0s3QEn9g5x7waU",
+    "created": 1445277809,
+    "currency": "eur",
+    "statement_descriptor": null,
+    "flow": "redirect",
+    "livemode": true,
+    "owner": {
+        "address": null,
+        "email": null,
+        "name": "Jenny Rosen",
+        "phone": null,
+        "verified_address": null,
+        "verified_email": null,
+        "verified_name": "Jenny Rosen",
+        "verified_phone": null
+    },
+    "redirect": {
+        "return_url": "https://shop.example.com/crtA6B28E1",
+        "status": "pending",
+        "url": "https://pay.stripe.com/redirect/src_16xhynE8WzK49JbAs9M21jaR?client_secret=src_client_secret_UfwvW2WHpZ0s3QEn9g5x7waU"
+    },
+    "status": "pending",
+    "type": "bancontact",
+    "usage": "single_use",
+    "bancontact": {
+        "bank_code": null,
+        "bic": null,
+        "bank_name": null,
+        "iban_last4": null,
+        "statement_descriptor": null,
+        "preferred_language": null
+    }
+}

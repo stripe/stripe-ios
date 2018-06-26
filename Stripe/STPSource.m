@@ -269,8 +269,7 @@
 #pragma mark - STPPaymentMethod
 
 - (UIImage *)image {
-    if (self.type == STPSourceTypeCard
-        && self.cardDetails != nil) {
+    if (self.type == STPSourceTypeCard && self.cardDetails != nil) {
         return [STPImageLibrary brandImageForCardBrand:self.cardDetails.brand];
     }
     else {
@@ -279,8 +278,7 @@
 }
 
 - (UIImage *)templateImage {
-    if (self.type == STPSourceTypeCard
-        && self.cardDetails != nil) {
+    if (self.type == STPSourceTypeCard && self.cardDetails != nil) {
         return [STPImageLibrary templatedBrandImageForCardBrand:self.cardDetails.brand];
     }
     else {
@@ -289,15 +287,38 @@
 }
 
 - (NSString *)label {
-    if (self.type == STPSourceTypeCard
-        && self.cardDetails != nil) {
-        NSString *brand = [STPCard stringFromBrand:self.cardDetails.brand];
-        return [NSString stringWithFormat:@"%@ %@", brand, self.cardDetails.last4];;
-    }
-    else {
-        return [STPCard stringFromBrand:STPCardBrandUnknown];
+    switch (self.type) {
+        case STPSourceTypeBancontact:
+            return @"Bancontact";
+        case STPSourceTypeCard:
+            if (self.cardDetails != nil) {
+                NSString *brand = [STPCard stringFromBrand:self.cardDetails.brand];
+                return [NSString stringWithFormat:@"%@ %@", brand, self.cardDetails.last4];
+            }
+            else {
+                return [STPCard stringFromBrand:STPCardBrandUnknown];
+            }
+        case STPSourceTypeGiropay:
+            return @"Giropay";
+        case STPSourceTypeIDEAL:
+            return @"iDEAL";
+        case STPSourceTypeSEPADebit:
+            return @"SEPA Direct Debit";
+        case STPSourceTypeSofort:
+            return @"SOFORT";
+        case STPSourceTypeThreeDSecure:
+            return @"3D Secure";
+        case STPSourceTypeAlipay:
+            return @"Alipay";
+        case STPSourceTypeP24:
+            return @"P24";
+        case STPSourceTypeEPS:
+            return @"EPS";
+        case STPSourceTypeMultibanco:
+            return @"Multibanco";
+        case STPSourceTypeUnknown:
+            return [STPCard stringFromBrand:STPCardBrandUnknown];
     }
 }
-
 
 @end
