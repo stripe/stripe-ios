@@ -31,7 +31,7 @@
         CGColorRelease(cgcolor);
     }
 
-    for (CGFloat white = 0.3001; white < 2; white += 0.1) {
+    for (CGFloat white = (CGFloat)0.3001; white < 2; white += 0.1) {
         components[0] = white;
         CGColorRef cgcolor = CGColorCreate(space, components);
         UIColor *color = [UIColor colorWithCGColor:cgcolor];
