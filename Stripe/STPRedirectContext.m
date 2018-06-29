@@ -47,21 +47,38 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
     if (source.flow != STPSourceFlowRedirect
         || !(source.status == STPSourceStatusPending ||
-             source.status == STPSourceStatusChargeable)
-        || source.redirect.returnURL == nil
-        || (source.redirect.url == nil
-            && [STPRedirectContext nativeRedirectURLForSource:source] == nil)) {
+             source.status == STPSourceStatusChargeable)) {
+        return nil;
+    }
+
+    self = [self initWithNativeRedirectUrl:[STPRedirectContext nativeRedirectURLForSource:source]
+                               redirectUrl:source.redirect.url
+                                 returnUrl:source.redirect.returnURL
+                                completion:^(NSError * _Nullable error) {
+                                    completion(source.stripeID, source.clientSecret, error);
+                                }];
+    return self;
+}
+
+/**
+ Failable initializer for the general case of STPRedirectContext, some URLs and a completion block.
+ */
+- (nullable instancetype)initWithNativeRedirectUrl:(nullable NSURL *)nativeRedirectUrl
+                                       redirectUrl:(nullable NSURL *)redirectUrl
+                                         returnUrl:(NSURL *)returnUrl
+                                        completion:(STPErrorBlock)completion {
+    if ((nativeRedirectUrl == nil && redirectUrl == nil)
+        || returnUrl == nil) {
         return nil;
     }
 
     self = [super init];
     if (self) {
-        _nativeRedirectUrl = [STPRedirectContext nativeRedirectURLForSource:source];
-        _redirectUrl = source.redirect.url;
-        _returnUrl = source.redirect.returnURL;
-        _completion = ^(NSError * __nullable error) {
-            completion(source.stripeID, source.clientSecret, error);
-        };
+        _nativeRedirectUrl = nativeRedirectUrl;
+        _redirectUrl = redirectUrl;
+        _returnUrl = returnUrl;
+        _completion = completion;
+
         _subscribedToURLNotifications = NO;
         _subscribedToForegroundNotifications = NO;
     }
