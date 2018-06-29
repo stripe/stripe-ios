@@ -51,7 +51,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         return nil;
     }
 
-    self = [self initWithNativeRedirectUrl:[STPRedirectContext nativeRedirectURLForSource:source]
+    self = [self initWithNativeRedirectUrl:[[self class] nativeRedirectURLForSource:source]
                                redirectUrl:source.redirect.url
                                  returnUrl:source.redirect.returnURL
                                 completion:^(NSError * _Nullable error) {
