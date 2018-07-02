@@ -75,12 +75,12 @@
 
 - (void)testAllColorSpaces {
     // block to create & check brightness of color in a given color space
-    void (^testColorSpace)(const CFStringRef, BOOL) = ^(const CFStringRef colorSpaceName, BOOL expectedToBeBright) {
+    void (^testColorSpace)(NSString *, BOOL) = ^(NSString *colorSpaceName, BOOL expectedToBeBright) {
         // this a bright color in almost all color spaces
         CGFloat components[] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
 
         UIColor *color = nil;
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateWithName(colorSpaceName);
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateWithName((__bridge CFStringRef)colorSpaceName);
 
         if (colorSpace) {
             CGColorRef cgcolor = CGColorCreate(colorSpace, components);
@@ -103,38 +103,42 @@
         }
     };
 
-    CFStringRef colorSpaceNames[] = {
-      kCGColorSpaceSRGB,
-      kCGColorSpaceDCIP3,
-      kCGColorSpaceROMMRGB,
-      kCGColorSpaceITUR_709,
-      kCGColorSpaceDisplayP3,
-      kCGColorSpaceITUR_2020,
-      kCGColorSpaceGenericRGB,
-      kCGColorSpaceGenericXYZ,
-      kCGColorSpaceLinearGray,
-      kCGColorSpaceLinearSRGB,
-      kCGColorSpaceGenericCMYK,
-      kCGColorSpaceGenericGray,
-      kCGColorSpaceACESCGLinear,
-      kCGColorSpaceAdobeRGB1998,
-      kCGColorSpaceExtendedGray,
-      kCGColorSpaceExtendedSRGB,
-      kCGColorSpaceGenericRGBLinear,
-      kCGColorSpaceExtendedLinearGray,
-      kCGColorSpaceExtendedLinearSRGB,
-      kCGColorSpaceGenericGrayGamma2_2,
-    };
+    NSArray *colorSpaceNames = @[
+      (__bridge NSString *)kCGColorSpaceSRGB,
+      (__bridge NSString *)kCGColorSpaceDCIP3,
+      (__bridge NSString *)kCGColorSpaceROMMRGB,
+      (__bridge NSString *)kCGColorSpaceITUR_709,
+      (__bridge NSString *)kCGColorSpaceDisplayP3,
+      (__bridge NSString *)kCGColorSpaceITUR_2020,
+      (__bridge NSString *)kCGColorSpaceGenericRGB,
+      (__bridge NSString *)kCGColorSpaceGenericXYZ,
+      (__bridge NSString *)kCGColorSpaceLinearSRGB,
+      (__bridge NSString *)kCGColorSpaceGenericCMYK,
+      (__bridge NSString *)kCGColorSpaceGenericGray,
+      (__bridge NSString *)kCGColorSpaceACESCGLinear,
+      (__bridge NSString *)kCGColorSpaceAdobeRGB1998,
+      (__bridge NSString *)kCGColorSpaceExtendedGray,
+      (__bridge NSString *)kCGColorSpaceExtendedSRGB,
+      (__bridge NSString *)kCGColorSpaceGenericRGBLinear,
+      (__bridge NSString *)kCGColorSpaceExtendedLinearSRGB,
+      (__bridge NSString *)kCGColorSpaceGenericGrayGamma2_2,
+      ];
 
-    int colorSpaceCount = sizeof(colorSpaceNames) / sizeof(colorSpaceNames[0]);
-    for (int i = 0; i < colorSpaceCount; ++i) {
+    if (@available(iOS 10.0, *)) {
+        colorSpaceNames = [colorSpaceNames arrayByAddingObjectsFromArray:@[
+                                                                           (__bridge NSString *)kCGColorSpaceLinearGray,
+                                                                           (__bridge NSString *)kCGColorSpaceExtendedLinearGray,
+                                                                           ]];
+    }
+
+    for (NSString *name in colorSpaceNames) {
         // CMYK is the only one where all 1's results in a dark color
-        testColorSpace(colorSpaceNames[i], colorSpaceNames[i] != kCGColorSpaceGenericCMYK);
+        testColorSpace(name, name != (__bridge NSString *)kCGColorSpaceGenericCMYK);
     }
 
     if (@available(iOS 11.0, *)) {
         // in LAB all 1's is dark
-        testColorSpace(kCGColorSpaceGenericLab, NO);
+        testColorSpace((__bridge NSString *)kCGColorSpaceGenericLab, NO);
     }
 }
 
