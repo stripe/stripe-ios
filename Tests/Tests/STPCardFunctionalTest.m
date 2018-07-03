@@ -68,7 +68,32 @@
                          XCTAssertEqual(error.code, 70);
                          XCTAssertEqualObjects(error.domain, StripeDomain);
                          XCTAssertEqualObjects(error.userInfo[STPErrorParameterKey], @"number");
-                         XCTAssertNil(token, @"token should not be nil: %@", token.description);
+                         XCTAssertNil(token, @"token should be nil: %@", token.description);
+                     }];
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
+- (void)testCardTokenCreationWithExpiredCard {
+    STPCardParams *card = [[STPCardParams alloc] init];
+
+    card.number = @"4242 4242 4242 4242";
+    card.expMonth = 6;
+    card.expYear = 2013;
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Card creation"];
+
+    [client createTokenWithCard:card
+                     completion:^(STPToken *token, NSError *error) {
+                         [expectation fulfill];
+
+                         XCTAssertNotNil(error, @"error should not be nil");
+                         XCTAssertEqual(error.code, 70);
+                         XCTAssertEqualObjects(error.domain, StripeDomain);
+                         XCTAssertEqualObjects(error.userInfo[STPCardErrorCodeKey], STPInvalidExpYear);
+                         XCTAssertEqualObjects(error.userInfo[STPErrorParameterKey], @"expYear");
+                         XCTAssertNil(token, @"token should be nil: %@", token.description);
                      }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
