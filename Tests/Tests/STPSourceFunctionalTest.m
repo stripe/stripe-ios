@@ -307,6 +307,13 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertNotNil(source1);
         XCTAssertEqual(source1.cardDetails.threeDSecure, STPSourceCard3DSecureStatusRequired);
         [cardExp fulfill];
+
+        if (source1.stripeID == nil) {
+            XCTFail(@"stripeID of the Card Source is required to create a 3DS source");
+            [threeDSExp fulfill];
+            return;
+        }
+
         STPSourceParams *params = [STPSourceParams threeDSecureParamsWithAmount:1099
                                                                        currency:@"eur"
                                                                       returnURL:@"https://shop.example.com/crtABC"
