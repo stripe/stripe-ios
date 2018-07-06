@@ -396,6 +396,7 @@
 		B3BDCACB20EEF22D0034F7F5 /* STPPaymentIntentEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = B3BDCAC720EEF22D0034F7F5 /* STPPaymentIntentEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B3BDCACD20EEF4540034F7F5 /* STPPaymentIntentTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B3BDCACC20EEF4540034F7F5 /* STPPaymentIntentTest.m */; };
 		B3BDCACF20EEF4640034F7F5 /* STPPaymentIntentFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B3BDCACE20EEF4640034F7F5 /* STPPaymentIntentFunctionalTest.m */; };
+		B3BDCADF20F0142C0034F7F5 /* PaymentIntent.json in Resources */ = {isa = PBXBuildFile; fileRef = B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */; };
 		B3C9CF2D2004595A005502ED /* STPConnectAccountFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C9CF2C2004595A005502ED /* STPConnectAccountFunctionalTest.m */; };
 		C1054F911FE197AE0033C87E /* STPPaymentContextSnapshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C1054F901FE197AE0033C87E /* STPPaymentContextSnapshotTests.m */; };
 		C1080F491CBECF7B007B2D89 /* STPAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = C1080F471CBECF7B007B2D89 /* STPAddress.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1072,6 +1073,7 @@
 		B3BDCAC720EEF22D0034F7F5 /* STPPaymentIntentEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentIntentEnums.h; path = PublicHeaders/STPPaymentIntentEnums.h; sourceTree = "<group>"; };
 		B3BDCACC20EEF4540034F7F5 /* STPPaymentIntentTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentIntentTest.m; sourceTree = "<group>"; };
 		B3BDCACE20EEF4640034F7F5 /* STPPaymentIntentFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentIntentFunctionalTest.m; sourceTree = "<group>"; };
+		B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PaymentIntent.json; sourceTree = "<group>"; };
 		B3C9CF2C2004595A005502ED /* STPConnectAccountFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountFunctionalTest.m; sourceTree = "<group>"; };
 		C1054F901FE197AE0033C87E /* STPPaymentContextSnapshotTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentContextSnapshotTests.m; sourceTree = "<group>"; };
 		C1080F471CBECF7B007B2D89 /* STPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPAddress.h; path = PublicHeaders/STPAddress.h; sourceTree = "<group>"; };
@@ -1567,6 +1569,7 @@
 				8BD2133B1F0458F5007F6FD1 /* BitcoinSource.json */,
 				F1BA241C1E57BE5700E4A1CF /* CardSource.json */,
 				F152322E1EA9344000D65C67 /* iDEALSource.json */,
+				B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */,
 				8BD2133D1F045D31007F6FD1 /* SEPADebitSource.json */,
 				F16AA26D1F5A05A100207FFF /* AlipaySource.json */,
 			);
@@ -2535,6 +2538,7 @@
 			files = (
 				F1343BEA1D652CAD00F102D8 /* Customer.json in Resources */,
 				8BD2133E1F045D31007F6FD1 /* SEPADebitSource.json in Resources */,
+				B3BDCADF20F0142C0034F7F5 /* PaymentIntent.json in Resources */,
 				8BD213371F044B57007F6FD1 /* BankAccount.json in Resources */,
 				C1C02CCC1ECCD0ED00DF5643 /* EphemeralKey.json in Resources */,
 				F1BA24211E57BECA00E4A1CF /* 3DSSource.json in Resources */,

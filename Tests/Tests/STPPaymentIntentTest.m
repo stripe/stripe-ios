@@ -11,6 +11,8 @@
 #import "STPPaymentIntent.h"
 #import "STPPaymentIntent+Private.h"
 
+#import "STPTestUtils.h"
+
 @interface STPPaymentIntentTest : XCTestCase
 
 @end
@@ -104,6 +106,17 @@
                    STPPaymentIntentConfirmationMethodUnknown);
 }
 
-// FIXME: add description + STPAPIResponseDecodable Tests (see STPSourceTest, STPSourceOwnerTest)
+#pragma mark - Description Tests
+
+- (void)testDescription {
+    STPPaymentIntent *paymentIntent = [STPPaymentIntent decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"PaymentIntent"]];
+
+    XCTAssertNotNil(paymentIntent);
+    NSString *desc = paymentIntent.description;
+    XCTAssertTrue([desc containsString:NSStringFromClass([paymentIntent class])]);
+    XCTAssertGreaterThan(desc.length, 500UL, @"Custom description should be long");
+}
+
+// FIXME: add STPAPIResponseDecodable Tests (see STPSourceTest, STPSourceOwnerTest)
 
 @end
