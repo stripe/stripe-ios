@@ -17,6 +17,7 @@
 		04533F191A688A0A00C7E52E /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 04533F181A688A0A00C7E52E /* Constants.m */; };
 		04D076171A69C11600094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04533F0C1A68812D00C7E52E /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8BBD79C6207FD2F900F85BED /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8BBD79C8207FD2F900F85BED /* Localizable.strings */; };
+		B3BDCADD20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B3BDCADB20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.m */; };
 		C12C50DD1E57B3C800EC6D58 /* BrowseExamplesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */; };
 		C1CACE861E5DE6C3002D0821 /* CardExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE851E5DE6C3002D0821 /* CardExampleViewController.m */; };
 		C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */; };
@@ -62,6 +63,8 @@
 		8BBD79CF207FD34200F85BED /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79D0207FD34A00F85BED /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79D1207FD35200F85BED /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B3BDCADB20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreeDSPaymentIntentExampleViewController.m; sourceTree = "<group>"; };
+		B3BDCADC20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreeDSPaymentIntentExampleViewController.h; sourceTree = "<group>"; };
 		C12C50DB1E57B3C800EC6D58 /* BrowseExamplesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowseExamplesViewController.h; sourceTree = "<group>"; };
 		C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowseExamplesViewController.m; sourceTree = "<group>"; };
 		C18A6EE31F1EB7A6005600CC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = "Custom Integration (ObjC)/README.md"; sourceTree = "<group>"; };
@@ -110,25 +113,27 @@
 		04533E891A687F5D00C7E52E /* Custom Integration (ObjC) */ = {
 			isa = PBXGroup;
 			children = (
-				04533EB01A68802E00C7E52E /* ShippingManager.h */,
-				04533EB11A68802E00C7E52E /* ShippingManager.m */,
-				04533F171A688A0A00C7E52E /* Constants.h */,
-				04533F181A688A0A00C7E52E /* Constants.m */,
 				04533E8E1A687F5D00C7E52E /* AppDelegate.h */,
 				04533E8F1A687F5D00C7E52E /* AppDelegate.m */,
+				C1CACE871E5DF7A9002D0821 /* ApplePayExampleViewController.h */,
+				C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */,
 				C12C50DB1E57B3C800EC6D58 /* BrowseExamplesViewController.h */,
 				C12C50DC1E57B3C800EC6D58 /* BrowseExamplesViewController.m */,
 				C1CACE841E5DE6C3002D0821 /* CardExampleViewController.h */,
 				C1CACE851E5DE6C3002D0821 /* CardExampleViewController.m */,
-				C1CACE8D1E5E0F94002D0821 /* ThreeDSExampleViewController.h */,
-				C1CACE8E1E5E0F94002D0821 /* ThreeDSExampleViewController.m */,
-				C1CACE871E5DF7A9002D0821 /* ApplePayExampleViewController.h */,
-				C1CACE881E5DF7A9002D0821 /* ApplePayExampleViewController.m */,
+				04533F171A688A0A00C7E52E /* Constants.h */,
+				04533F181A688A0A00C7E52E /* Constants.m */,
+				04533E971A687F5D00C7E52E /* Images.xcassets */,
+				8BBD79C8207FD2F900F85BED /* Localizable.strings */,
+				04533EB01A68802E00C7E52E /* ShippingManager.h */,
+				04533EB11A68802E00C7E52E /* ShippingManager.m */,
 				C1CACE921E5E3DF6002D0821 /* SofortExampleViewController.h */,
 				C1CACE931E5E3DF6002D0821 /* SofortExampleViewController.m */,
-				04533E971A687F5D00C7E52E /* Images.xcassets */,
 				04533E8A1A687F5D00C7E52E /* Supporting Files */,
-				8BBD79C8207FD2F900F85BED /* Localizable.strings */,
+				C1CACE8D1E5E0F94002D0821 /* ThreeDSExampleViewController.h */,
+				C1CACE8E1E5E0F94002D0821 /* ThreeDSExampleViewController.m */,
+				B3BDCADC20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.h */,
+				B3BDCADB20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.m */,
 			);
 			path = "Custom Integration (ObjC)";
 			sourceTree = "<group>";
@@ -235,6 +240,7 @@
 				C1CACE941E5E3DF6002D0821 /* SofortExampleViewController.m in Sources */,
 				C1CACE861E5DE6C3002D0821 /* CardExampleViewController.m in Sources */,
 				04533EB21A68802E00C7E52E /* ShippingManager.m in Sources */,
+				B3BDCADD20EF03010034F7F5 /* ThreeDSPaymentIntentExampleViewController.m in Sources */,
 				04533E901A687F5D00C7E52E /* AppDelegate.m in Sources */,
 				C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */,
 				04533E8D1A687F5D00C7E52E /* main.m in Sources */,
