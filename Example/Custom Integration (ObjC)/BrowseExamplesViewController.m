@@ -56,7 +56,7 @@
         cell.textLabel.text = @"Sofort";
         break;
         case 4:
-        cell.textLabel.text = @"Card + 3DS + PaymentIntent";
+        cell.textLabel.text = @"PaymentIntent: Card + 3DS";
         break;
     }
     return cell;
