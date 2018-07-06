@@ -33,14 +33,17 @@
 }
 
 - (STPVoidPromise *)stp_didAppearPromise {
+    printf("stp_didAppearPromise");
     STPVoidPromise *promise = objc_getAssociatedObject(self, @selector(stp_didAppearPromise));
     if (!promise) {
         promise = [STPVoidPromise new];
         if (self.isViewLoaded && self.view.window) {
+            printf("succed here");
             [promise succeed];
         } else {
             [self stp_aspect_hookSelector:@selector(viewDidAppear:) withOptions:(STPAspectPositionAfter) usingBlock:^{
                 if (!promise.completed) {
+                    printf("succeed in the other place");
                     [promise succeed];
                 }
             } error:nil];

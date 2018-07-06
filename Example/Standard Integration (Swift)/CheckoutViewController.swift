@@ -184,6 +184,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     }
 
     @objc func didTapBuy() {
+        print("didTapBuy")
         self.paymentInProgress = true
         self.paymentContext.requestPayment()
     }
@@ -191,6 +192,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     // MARK: STPPaymentContextDelegate
 
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
+        print("didCreatePaymentResult: \(paymentResult)")
         MyAPIClient.sharedClient.completeCharge(paymentResult,
                                                 amount: self.paymentContext.paymentAmount,
                                                 shippingAddress: self.paymentContext.shippingAddress,
@@ -199,6 +201,12 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     }
 
     func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
+        if case .userCancellation = status {
+            print("didFinishWith: \(status.rawValue)")
+        } else {
+            print("not cancel")
+        }
+
         self.paymentInProgress = false
         let title: String
         let message: String
@@ -211,6 +219,10 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
             message = "You bought a \(self.product)!"
         case .userCancellation:
             return
+        case .failedCancellation:
+            print("failed to cancel")
+            title = "Error"
+            message = "failed to cancel. Do not try to get your money back."
         }
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -219,6 +231,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     }
 
     func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
+        print("paymentContextDidChange: \(paymentContext)")
         self.paymentRow.loading = paymentContext.loading
         if let paymentMethod = paymentContext.selectedPaymentMethod {
             self.paymentRow.detail = paymentMethod.label
@@ -236,6 +249,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     }
 
     func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
+        print("didFailToLoad: \(error)")
         let alertController = UIAlertController(
             title: "Error",
             message: error.localizedDescription,
@@ -257,6 +271,7 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     // Note: this delegate method is optional. If you do not need to collect a
     // shipping method from your user, you should not implement this method.
     func paymentContext(_ paymentContext: STPPaymentContext, didUpdateShippingAddress address: STPAddress, completion: @escaping STPShippingMethodsCompletionBlock) {
+        print("didUpdateShippingAddress: \(address)")
         let upsGround = PKShippingMethod()
         upsGround.amount = 0
         upsGround.label = "UPS Ground"
