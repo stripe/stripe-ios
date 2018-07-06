@@ -31,7 +31,33 @@
 
 @implementation STPPaymentIntent
 
-// FIXME: add description override
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Identifier
+                       [NSString stringWithFormat:@"stripeId = %@", self.stripeId],
+
+                       // PaymentIntent details (alphabetical)
+                       [NSString stringWithFormat:@"amount = %@", self.amount],
+                       [NSString stringWithFormat:@"canceledAt = %@", self.canceledAt],
+                       [NSString stringWithFormat:@"captureMethod = %@", [self.allResponseFields stp_stringForKey:@"capture_method"]],
+                       [NSString stringWithFormat:@"clientSecret = %@", (self.clientSecret) ? @"<redacted>" : nil],
+                       [NSString stringWithFormat:@"confirmationMethod = %@", [self.allResponseFields stp_stringForKey:@"confirmation_method"]],
+                       [NSString stringWithFormat:@"created = %@", self.created],
+                       [NSString stringWithFormat:@"currency = %@", self.currency],
+                       [NSString stringWithFormat:@"description = %@", self.stripeDescription],
+                       [NSString stringWithFormat:@"livemode = %@", self.livemode ? @"YES" : @"NO"],
+                       [NSString stringWithFormat:@"nextSourceAction = %@", self.allResponseFields[@"next_source_action"]],
+                       [NSString stringWithFormat:@"receiptEmail = %@", self.receiptEmail],
+                       [NSString stringWithFormat:@"shipping = %@", self.allResponseFields[@"shipping"]],
+                       [NSString stringWithFormat:@"sourceId = %@", self.sourceId],
+                       [NSString stringWithFormat:@"status = %@", [self.allResponseFields stp_stringForKey:@"status"]],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
 
 #pragma mark - STPPaymentIntent+Private.h
 
