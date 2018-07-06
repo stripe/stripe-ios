@@ -5,7 +5,7 @@
     "card"
   ],
   "amount": 2345,
-  "canceled_at": null,
+  "canceled_at": 1530911045,
   "capture_method": "manual",
   "client_secret": "pi_1Cl15wIl4IdHmuTbCWrpJXN6_secret_EkKtQ7Sg75hLDFKqFG8DtWcaK",
   "confirmation_method": "publishable",

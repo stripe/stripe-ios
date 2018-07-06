@@ -117,6 +117,52 @@
     XCTAssertGreaterThan(desc.length, 500UL, @"Custom description should be long");
 }
 
-// FIXME: add STPAPIResponseDecodable Tests (see STPSourceTest, STPSourceOwnerTest)
+#pragma mark - STPAPIResponseDecodable Tests
+
+- (void)testDecodedObjectFromAPIResponseRequiredFields {
+    NSDictionary *fullJson = [STPTestUtils jsonNamed:@"PaymentIntent"];
+
+    XCTAssertNotNil([STPPaymentIntent decodedObjectFromAPIResponse:fullJson], @"can decode with full json");
+
+    NSArray<NSString *> *requiredFields = @[
+                                            @"id",
+                                            @"client_secret",
+                                            @"amount",
+                                            @"currency",
+                                            @"livemode",
+                                            @"status",
+                                            ];
+
+    for (NSString *field in requiredFields) {
+        NSMutableDictionary *partialJson = [fullJson mutableCopy];
+
+        XCTAssertNotNil(partialJson[field], @"json should contain %@", field);
+        [partialJson removeObjectForKey:field];
+
+        XCTAssertNil([STPPaymentIntent decodedObjectFromAPIResponse:partialJson], @"should not decode without %@", field);
+    }
+}
+
+- (void)testDecodedObjectFromAPIResponseMapping {
+    NSDictionary *response = [STPTestUtils jsonNamed:@"PaymentIntent"];
+    STPPaymentIntent *paymentIntent = [STPPaymentIntent decodedObjectFromAPIResponse:response];
+
+    XCTAssertEqualObjects(paymentIntent.stripeId, @"pi_1Cl15wIl4IdHmuTbCWrpJXN6");
+    XCTAssertEqualObjects(paymentIntent.clientSecret, @"pi_1Cl15wIl4IdHmuTbCWrpJXN6_secret_EkKtQ7Sg75hLDFKqFG8DtWcaK");
+    XCTAssertEqualObjects(paymentIntent.amount, @2345);
+    XCTAssertEqualObjects(paymentIntent.canceledAt, [NSDate dateWithTimeIntervalSince1970:1530911045]);
+    XCTAssertEqual(paymentIntent.captureMethod, STPPaymentIntentCaptureMethodManual);
+    XCTAssertEqual(paymentIntent.confirmationMethod, STPPaymentIntentConfirmationMethodPublic);
+    XCTAssertEqualObjects(paymentIntent.created, [NSDate dateWithTimeIntervalSince1970:1530911040]);
+    XCTAssertEqualObjects(paymentIntent.currency, @"usd");
+    XCTAssertEqualObjects(paymentIntent.stripeDescription, @"My Sample PaymentIntent");
+    XCTAssertFalse(paymentIntent.livemode);
+    XCTAssertEqualObjects(paymentIntent.receiptEmail, @"danj@example.com");
+    XCTAssertEqualObjects(paymentIntent.sourceId, @"src_1Cl1AdIl4IdHmuTbseiDWq6m");
+    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresSourceAction);
+
+    XCTAssertNotEqual(paymentIntent.allResponseFields, response, @"should have own copy of fields");
+    XCTAssertEqualObjects(paymentIntent.allResponseFields, response, @"fields values should match");
+}
 
 @end
