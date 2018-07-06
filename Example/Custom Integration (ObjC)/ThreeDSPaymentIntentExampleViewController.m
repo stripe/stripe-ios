@@ -38,6 +38,12 @@
 
 @implementation ThreeDSPaymentIntentExampleViewController
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    self.title = @"PaymentIntent: Card + 3DS";
+}
+
 - (void)pay {
     if (![self.paymentTextField isValid]) {
         return;
