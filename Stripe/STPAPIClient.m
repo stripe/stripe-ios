@@ -27,6 +27,7 @@
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentIntent+Private.h"
+#import "STPPaymentIntentParams.h"
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
 #import "STPSourceParams+Private.h"
@@ -574,6 +575,30 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                              completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *error) {
                                                  completion(paymentIntent, error);
                                              }];
+}
+
+- (void)confirmPaymentIntentWithParams:(STPPaymentIntentParams *)paymentIntentParams
+                            completion:(STPPaymentIntentCompletionBlock)completion {
+    NSString *secret = paymentIntentParams.clientSecret;
+    NSCAssert(secret != nil, @"'secret' is required to confirm a PaymentIntent");
+    NSString *identifier = paymentIntentParams.stripeId;
+
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@/confirm", APIEndpointPaymentIntents, identifier];
+
+    NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:paymentIntentParams] mutableCopy];
+    if ([params[@"source_data"] isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *sourceParamsDict = [params[@"source_data"] mutableCopy];
+        [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:sourceParamsDict];
+        params[@"source_data"] = [sourceParamsDict copy];
+    }
+
+    [STPAPIRequest<STPPaymentIntent *> postWithAPIClient:self
+                                                endpoint:endpoint
+                                              parameters:[params copy]
+                                            deserializer:[STPPaymentIntent new]
+                                              completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                  completion(paymentIntent, error);
+                                              }];
 }
 
 @end
