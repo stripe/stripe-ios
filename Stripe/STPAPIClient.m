@@ -582,6 +582,9 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
     NSString *secret = paymentIntentParams.clientSecret;
     NSCAssert(secret != nil, @"'secret' is required to confirm a PaymentIntent");
     NSString *identifier = paymentIntentParams.stripeId;
+    NSString *sourceType = [STPSource stringFromType:paymentIntentParams.sourceParams.type];
+    [[STPAnalyticsClient sharedClient] logPaymentIntentConfirmationAttemptWithConfiguration:self.configuration
+                                                                                 sourceType:sourceType];
 
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/confirm", APIEndpointPaymentIntents, identifier];
 

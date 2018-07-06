@@ -29,4 +29,7 @@
 - (void)logSourceCreationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
                                        sourceType:(NSString *)sourceType;
 
+- (void)logPaymentIntentConfirmationAttemptWithConfiguration:(STPPaymentConfiguration *)configuration
+                                                  sourceType:(NSString *)sourceType;
+
 @end
