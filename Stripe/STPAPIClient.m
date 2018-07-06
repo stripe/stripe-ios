@@ -26,6 +26,7 @@
 #import "STPMultipartFormDataPart.h"
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPPaymentConfiguration.h"
+#import "STPPaymentIntent+Private.h"
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
 #import "STPSourceParams+Private.h"
@@ -49,6 +50,7 @@ static NSString * const APIEndpointToken = @"tokens";
 static NSString * const APIEndpointSources = @"sources";
 static NSString * const APIEndpointCustomers = @"customers";
 static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
+static NSString * const APIEndpointPaymentIntents = @"payment_intents";
 
 #pragma mark - Stripe
 
@@ -549,6 +551,29 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                                completion:^(id object, __unused NSHTTPURLResponse *response, NSError *error) {
                                                    completion(object, error);
                                                }];
+}
+
+@end
+
+#pragma mark - Payment Intents
+
+@implementation STPAPIClient (PaymentIntents)
+
+- (void)retrievePaymentIntentWithClientSecret:(NSString *)secret
+                                   completion:(STPPaymentIntentCompletionBlock)completion {
+    NSCAssert(secret != nil, @"'secret' is required to retrieve a PaymentIntent");
+    NSCAssert(completion != nil, @"'completion' is required to use the PaymentIntent that is retrieved");
+    NSString *identifier = [STPPaymentIntent idFromClientSecret:secret];
+
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointPaymentIntents, identifier];
+
+    [STPAPIRequest<STPPaymentIntent *> getWithAPIClient:self
+                                               endpoint:endpoint
+                                             parameters:@{ @"client_secret": secret }
+                                           deserializer:[STPPaymentIntent new]
+                                             completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                 completion(paymentIntent, error);
+                                             }];
 }
 
 @end

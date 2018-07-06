@@ -320,6 +320,23 @@ static NSString *const STPSDKVersion = @"13.0.3";
 
 @end
 
+#pragma mark Payment Intents
+
+/**
+ Stripe extensions for working with PaymentIntent objects.
+ */
+@interface STPAPIClient (PaymentIntents)
+
+/**
+ Retrieves the PaymentIntent object using the given secret. @see https://stripe.com/docs/api#retrieve_payment_intent
+
+ @param secret      The client secret of the payment intent to be retrieved. Cannot be nil.
+ @param completion  The callback to run with the returned PaymentIntent object, or an error.
+ */
+- (void)retrievePaymentIntentWithClientSecret:(NSString *)secret
+                                   completion:(STPPaymentIntentCompletionBlock)completion;
+@end
+
 #pragma mark URL callbacks
 
 /**
