@@ -95,10 +95,10 @@
     XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"SECRET"],
                    STPPaymentIntentConfirmationMethodSecret);
 
-    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"public"],
-                   STPPaymentIntentConfirmationMethodPublic);
-    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"PUBLIC"],
-                   STPPaymentIntentConfirmationMethodPublic);
+    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"publishable"],
+                   STPPaymentIntentConfirmationMethodPublishable);
+    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"PUBLISHABLE"],
+                   STPPaymentIntentConfirmationMethodPublishable);
 
     XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"garbage"],
                    STPPaymentIntentConfirmationMethodUnknown);
@@ -152,7 +152,7 @@
     XCTAssertEqualObjects(paymentIntent.amount, @2345);
     XCTAssertEqualObjects(paymentIntent.canceledAt, [NSDate dateWithTimeIntervalSince1970:1530911045]);
     XCTAssertEqual(paymentIntent.captureMethod, STPPaymentIntentCaptureMethodManual);
-    XCTAssertEqual(paymentIntent.confirmationMethod, STPPaymentIntentConfirmationMethodPublic);
+    XCTAssertEqual(paymentIntent.confirmationMethod, STPPaymentIntentConfirmationMethodPublishable);
     XCTAssertEqualObjects(paymentIntent.created, [NSDate dateWithTimeIntervalSince1970:1530911040]);
     XCTAssertEqualObjects(paymentIntent.currency, @"usd");
     XCTAssertEqualObjects(paymentIntent.stripeDescription, @"My Sample PaymentIntent");

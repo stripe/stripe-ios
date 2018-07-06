@@ -83,9 +83,9 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentConfirmationMethod) {
     STPPaymentIntentConfirmationMethodUnknown,
 
     /**
-     Confirmed via public key
+     Confirmed via publishable key
      */
-    STPPaymentIntentConfirmationMethodPublic,
+    STPPaymentIntentConfirmationMethodPublishable,
 
     /**
      Confirmed via secret key
