@@ -31,7 +31,28 @@
     return [STPPaymentIntent idFromClientSecret:self.clientSecret];
 }
 
-// FIXME: override description
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Identifier
+                       [NSString stringWithFormat:@"stripeId = %@", self.stripeId],
+
+                       // PaymentIntentParams details (alphabetical)
+                       [NSString stringWithFormat:@"clientSecret = %@", (self.clientSecret.length > 0) ? @"<redacted>" : @""],
+                       [NSString stringWithFormat:@"receiptEmail = %@", self.receiptEmail],
+                       [NSString stringWithFormat:@"returnUrl = %@", self.returnUrl],
+                       [NSString stringWithFormat:@"saveSourceToCustomer = %@", (self.saveSourceToCustomer.boolValue) ? @"YES" : @"NO"],
+                       [NSString stringWithFormat:@"sourceId = %@", self.sourceId],
+                       [NSString stringWithFormat:@"sourceParams = %@", self.sourceParams],
+
+                       // Additional params set by app
+                       [NSString stringWithFormat:@"additionalAPIParameters = %@", self.additionalAPIParameters],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
 
 #pragma mark - STPFormEncodable
 

@@ -34,7 +34,10 @@
     }
 }
 
-// FIXME: test description
+- (void)testDescription {
+    STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] init];
+    XCTAssertNotNil(params.description);
+}
 
 #pragma mark STPFormEncodable Tests
 
