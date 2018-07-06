@@ -9,12 +9,12 @@
 #import <UIKit/UIKit.h>
 #import <Stripe/Stripe.h>
 
-typedef NS_ENUM(NSInteger, STPBackendChargeResult) {
-    STPBackendChargeResultSuccess,
-    STPBackendChargeResultFailure,
+typedef NS_ENUM(NSInteger, STPBackendResult) {
+    STPBackendResultSuccess,
+    STPBackendResultFailure,
 };
 
-typedef void (^STPSourceSubmissionHandler)(STPBackendChargeResult status, NSError *error);
+typedef void (^STPSourceSubmissionHandler)(STPBackendResult status, NSError *error);
 
 @protocol ExampleViewControllerDelegate <NSObject>
 
