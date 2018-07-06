@@ -13,6 +13,7 @@
 #import "Constants.h"
 #import "SofortExampleViewController.h"
 #import "ThreeDSExampleViewController.h"
+#import "ThreeDSPaymentIntentExampleViewController.h"
 
 /**
  This view controller presents different examples, each of which demonstrates creating a payment using a different payment method.
@@ -36,24 +37,27 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 4;
+    return 5;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [UITableViewCell new];
     switch (indexPath.row) {
         case 0:
-            cell.textLabel.text = @"Card";
-            break;
+        cell.textLabel.text = @"Card";
+        break;
         case 1:
-            cell.textLabel.text = @"Card + 3DS";
-            break;
+        cell.textLabel.text = @"Card + 3DS";
+        break;
         case 2:
-            cell.textLabel.text = @"Apple Pay";
-            break;
+        cell.textLabel.text = @"Apple Pay";
+        break;
         case 3:
-            cell.textLabel.text = @"Sofort";
-            break;
+        cell.textLabel.text = @"Sofort";
+        break;
+        case 4:
+        cell.textLabel.text = @"Card + 3DS + PaymentIntent";
+        break;
     }
     return cell;
 }
@@ -81,6 +85,12 @@
         }
         case 3: {
             SofortExampleViewController *exampleVC = [SofortExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 4: {
+            ThreeDSPaymentIntentExampleViewController *exampleVC = [ThreeDSPaymentIntentExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;
@@ -123,7 +133,69 @@
                                                           if (error) {
                                                               completion(STPBackendResultFailure, error);
                                                           } else {
-                                                              completion(STPBackendChargeResultSuccess, nil);
+                                                              completion(STPBackendResultSuccess, nil);
+                                                          }
+                                                      }];
+
+    [uploadTask resume];
+}
+
+
+/**
+ Ask the example backed to create a PaymentIntent with the specified amount.
+
+ The implementation of this function is not interesting nor relevant to using PaymentIntents. The
+ method signature is the most interesting part: you need some way to ask *your* backend to create
+ a PaymentIntent with the correct properties, and then it needs to pass the client secret back.
+
+ @param amount Amount to charge the customer
+ @param completion completion block called with status of backend call & the client secret if successful.
+ */
+- (void)createBackendPaymentIntentWithAmount:(NSNumber *)amount returnUrl:(NSString *)returnUrl completion:(STPPaymentIntentCreationHandler)completion {
+    if (!BackendBaseURL) {
+        NSError *error = [NSError errorWithDomain:StripeDomain
+                                             code:STPInvalidRequestError
+                                         userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to create a charge."}];
+        completion(STPBackendResultFailure, nil, error);
+        return;
+    }
+
+    // This asks the backend to create a PaymentIntent for us, which can then be passed to the Stripe SDK to confirm
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+
+    NSString *urlString = [BackendBaseURL stringByAppendingPathComponent:@"create_intent"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    NSString *encodedReturnUrl = [returnUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]];
+    NSString *postBody = [NSString stringWithFormat:@"amount=%@&return_url=%@", amount, encodedReturnUrl];
+    NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
+
+    NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
+                                                               fromData:data
+                                                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                          NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                                          if (!error && httpResponse.statusCode != 200) {
+                                                              error = [NSError errorWithDomain:StripeDomain
+                                                                                          code:STPInvalidRequestError
+                                                                                      userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
+                                                          }
+                                                          if (error || data == nil) {
+                                                              completion(STPBackendResultFailure, nil, error);
+                                                          }
+                                                          else {
+                                                              NSError *jsonError = nil;
+                                                              id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+
+                                                              if (json &&
+                                                                  [json isKindOfClass:[NSDictionary class]] &&
+                                                                  [json[@"secret"] isKindOfClass:[NSString class]]) {
+                                                                  completion(STPBackendResultSuccess, json[@"secret"], nil);
+                                                              }
+                                                              else {
+                                                                  completion(STPBackendResultFailure, nil, jsonError);
+                                                              }
                                                           }
                                                       }];
 
