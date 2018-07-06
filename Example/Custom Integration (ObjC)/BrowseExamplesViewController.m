@@ -96,7 +96,7 @@
         NSError *error = [NSError errorWithDomain:StripeDomain
                                              code:STPInvalidRequestError
                                          userInfo:@{NSLocalizedDescriptionKey: @"You must set a backend base URL in Constants.m to create a charge."}];
-        completion(STPBackendChargeResultFailure, error);
+        completion(STPBackendResultFailure, error);
         return;
     }
 
@@ -121,7 +121,7 @@
                                                                                       userInfo:@{NSLocalizedDescriptionKey: @"There was an error connecting to your payment backend."}];
                                                           }
                                                           if (error) {
-                                                              completion(STPBackendChargeResultFailure, error);
+                                                              completion(STPBackendResultFailure, error);
                                                           } else {
                                                               completion(STPBackendChargeResultSuccess, nil);
                                                           }

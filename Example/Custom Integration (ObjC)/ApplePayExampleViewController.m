@@ -121,8 +121,8 @@
     [[STPAPIClient sharedClient] createTokenWithPayment:payment
                                              completion:^(STPToken *token, NSError *error) {
                                                  [self.delegate createBackendChargeWithSource:token.tokenId
-                                                                                   completion:^(STPBackendChargeResult status, NSError *error) {
-                                                                                       if (status == STPBackendChargeResultSuccess) {
+                                                                                   completion:^(STPBackendResult status, NSError *error) {
+                                                                                       if (status == STPBackendResultSuccess) {
                                                                                            self.applePaySucceeded = YES;
                                                                                            completion(PKPaymentAuthorizationStatusSuccess);
                                                                                        } else {
