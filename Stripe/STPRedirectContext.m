@@ -10,6 +10,7 @@
 
 #import "STPBlocks.h"
 #import "STPDispatchFunctions.h"
+#import "STPPaymentIntent.h"
 #import "STPSource.h"
 #import "STPURLCallbackHandler.h"
 #import "STPWeakStrongMacros.h"
@@ -43,7 +44,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 @implementation STPRedirectContext
 
 - (nullable instancetype)initWithSource:(STPSource *)source
-                             completion:(STPRedirectContextCompletionBlock)completion {
+                             completion:(STPRedirectContextSourceCompletionBlock)completion {
 
     if (source.flow != STPSourceFlowRedirect
         || !(source.status == STPSourceStatusPending ||
@@ -58,6 +59,31 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
                                     completion(source.stripeID, source.clientSecret, error);
                                 }];
     return self;
+}
+
+- (nullable instancetype)initWithPaymentIntent:(STPPaymentIntent *)paymentIntent
+                                     returnUrl:(NSString *)returnUrl
+                                    completion:(STPRedirectContextPaymentIntentCompletionBlock)completion {
+    if (!(returnUrl != nil
+          && paymentIntent.status == STPPaymentIntentStatusRequiresSourceAction
+          && [paymentIntent.allResponseFields[@"next_source_action"] isKindOfClass: [NSDictionary class]])) {
+        return nil;
+    }
+
+    NSDictionary *nextSourceAction = paymentIntent.allResponseFields[@"next_source_action"];
+    if (!([nextSourceAction[@"type"] isEqual:@"authorize_with_url"]
+          && [nextSourceAction[@"value"] isKindOfClass:[NSDictionary class]]
+          && [nextSourceAction[@"value"][@"url"] isKindOfClass:[NSString class]])) {
+        return nil;
+    }
+
+    NSString *redirectUrl = nextSourceAction[@"value"][@"url"];
+    return [self initWithNativeRedirectUrl:nil
+                               redirectUrl:[NSURL URLWithString:redirectUrl]
+                                 returnUrl:[NSURL URLWithString:returnUrl]
+                                completion:^(NSError * _Nullable error) {
+                                    completion(paymentIntent.clientSecret, error);
+                                }];
 }
 
 /**
