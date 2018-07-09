@@ -19,8 +19,8 @@
     STPCardParams *card = [[STPCardParams alloc] init];
 
     card.number = @"4242 4242 4242 4242";
-    card.expMonth = 12;
-    card.expYear = 2050;
+    card.expMonth = 6;
+    card.expYear = 2018;
     card.currency = @"usd";
     card.address.line1 = @"123 Fake Street";
     card.address.line2 = @"Apartment 4";
@@ -41,8 +41,8 @@
                          XCTAssertNotNil(token, @"token should not be nil");
 
                          XCTAssertNotNil(token.tokenId);
-                         XCTAssertEqual(card.expMonth, token.card.expMonth);
-                         XCTAssertEqual(card.expYear, token.card.expYear);
+                         XCTAssertEqual(6U, token.card.expMonth);
+                         XCTAssertEqual(2018U, token.card.expYear);
                          XCTAssertEqualObjects(@"4242", token.card.last4);
                          XCTAssertEqualObjects(@"usd", token.card.currency);
                      }];
@@ -53,8 +53,8 @@
     STPCardParams *card = [[STPCardParams alloc] init];
 
     card.number = @"4242 4242 4242 4241";
-    card.expMonth = 12;
-    card.expYear = 2050;
+    card.expMonth = 6;
+    card.expYear = 2018;
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
 
@@ -77,8 +77,8 @@
     STPCardParams *card = [[STPCardParams alloc] init];
 
     card.number = @"4242 4242 4242 4242";
-    card.expMonth = 12;
-    card.expYear = 2050;
+    card.expMonth = 6;
+    card.expYear = 2018;
 
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"not_a_valid_key_asdf"];
 

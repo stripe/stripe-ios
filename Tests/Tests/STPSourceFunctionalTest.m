@@ -51,8 +51,8 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 - (void)testCreateSource_card {
     STPCardParams *card = [[STPCardParams alloc] init];
     card.number = @"4242 4242 4242 4242";
-    card.expMonth = 12;
-    card.expYear = 2050;
+    card.expMonth = 6;
+    card.expYear = 2018;
     card.currency = @"usd";
     card.name = @"Jenny Rosen";
     card.address.line1 = @"123 Fake Street";
@@ -288,8 +288,8 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 - (void)testCreateSource_threeDSecure {
     STPCardParams *card = [[STPCardParams alloc] init];
     card.number = @"4000000000003063";
-    card.expMonth = 12;
-    card.expYear = 2050;
+    card.expMonth = 6;
+    card.expYear = 2018;
     card.currency = @"usd";
     card.address.line1 = @"123 Fake Street";
     card.address.line2 = @"Apartment 4";
