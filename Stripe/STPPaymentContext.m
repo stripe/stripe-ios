@@ -63,6 +63,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 @property (nonatomic) BOOL shippingAddressNeedsVerification;
 
 @property (nonatomic) BOOL hasCalledCreatePaymentResultApplePay;
+@property (nonatomic) STPCancelInteruptsPaymentBlockHandler cancelInteruptHandler;
 
 // If hostViewController was set to a nav controller, the original VC on top of the stack
 @property (nonatomic, weak) UIViewController *originalTopViewController;
@@ -573,6 +574,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     BOOL verificationRequired = self.configuration.verifyPrefilledShippingAddress && self.shippingAddressNeedsVerification;
     // true if STPShippingVC should be presented to collect or verify a shipping address
     BOOL shouldPresentShippingAddress = (shippingAddressRequired && (shippingAddressIncomplete || verificationRequired));
+
     // this handles a corner case where STPShippingVC should be presented because:
     // - shipping address has been pre-filled
     // - no verification is required, but the user still needs to enter a shipping method
@@ -674,7 +676,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                             STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:paymentResultSource];
                             printf("called in source handl\n");
                             self.hasCalledCreatePaymentResultApplePay = YES;
-                            [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
+                            self.cancelInteruptHandler = [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
                                 // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
                                 if (error) {
                                     completion(error);
@@ -702,6 +704,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                                                          error:error];
                                  }];
                              }];
+
             [self.hostViewController presentViewController:paymentAuthVC
                                                   animated:[self transitionAnimationsEnabled]
                                                 completion:nil];
@@ -715,16 +718,19 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 - (void)didFinishWithStatus:(STPPaymentStatus)status
                       error:(nullable NSError *)error {
     self.state = STPPaymentContextStateNone;
-    if (self.hasCalledCreatePaymentResultApplePay) {
-        printf("fail cancelling\n");
-        [self.delegate paymentContext:self
-                  didFinishWithStatus:STPPaymentStatusFailedCancellation
-                            error:error];
-    } else {
-        [self.delegate paymentContext:self
+//    if (self.hasCalledCreatePaymentResultApplePay) {
+//        printf("fail cancelling\n");
+//        [self.delegate paymentContext:self
+//                  didFinishWithStatus:STPPaymentStatusFailedCancellation
+//                            error:error];
+//    } else {
+    if (self.cancelInteruptHandler != nil) {
+        self.cancelInteruptHandler();
+    }
+    [self.delegate paymentContext:self
                   didFinishWithStatus:status
                                 error:error];
-    }
+//    }
 }
 
 - (PKPaymentRequest *)buildPaymentRequest {
