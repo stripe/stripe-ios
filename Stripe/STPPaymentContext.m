@@ -62,7 +62,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 @property (nonatomic) STPPaymentContextAmountModel *paymentAmountModel;
 @property (nonatomic) BOOL shippingAddressNeedsVerification;
 
-@property (nonatomic) BOOL hasCalledCreatePaymentResultApplePay;
 @property (nonatomic) STPCancelInteruptsPaymentBlockHandler cancelInteruptHandler;
 
 // If hostViewController was set to a nav controller, the original VC on top of the stack
@@ -109,7 +108,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             _largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeAutomatic;
         }
         _state = STPPaymentContextStateNone;
-        _hasCalledCreatePaymentResultApplePay = NO;
         [self retryLoading];
     }
     return self;
@@ -172,7 +170,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)setHostViewController:(UIViewController *)hostViewController {
-    printf("setHostViewController");
     NSCAssert(_hostViewController == nil, @"You cannot change the hostViewController on an STPPaymentContext after it's already been set.");
     _hostViewController = hostViewController;
     if ([hostViewController isKindOfClass:[UINavigationController class]]) {
@@ -291,7 +288,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)presentPaymentMethodsViewControllerWithNewState:(STPPaymentContextState)state {
-    printf("presentPaymentMethodsViewControllerWithNewState");
     NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushPaymentMethodsViewController on it. Next time, set the hostViewController property first!");
     WEAK(self);
     [self.didAppearPromise voidOnSuccess:^{
@@ -321,7 +317,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)pushPaymentMethodsViewController {
-    printf("pushPaymentMethodsViewController");
     NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushPaymentMethodsViewController on it. Next time, set the hostViewController property first!");
     UINavigationController *navigationController;
     if ([self.hostViewController isKindOfClass:[UINavigationController class]]) {
@@ -371,15 +366,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 - (void)paymentMethodsViewControllerDidCancel:(STPPaymentMethodsViewController *)paymentMethodsViewController {
     [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController completion:^{
         if (self.state == STPPaymentContextStateRequestingPayment) {
-            printf("cancelling\n");
-            if (self.hasCalledCreatePaymentResultApplePay) {
-                printf("fail cancelling\n");
-                [self didFinishWithStatus:STPPaymentStatusFailedCancellation
-                                    error:nil];
-            } else {
-                [self didFinishWithStatus:STPPaymentStatusUserCancellation
-                                    error:nil];
-            }
+            [self didFinishWithStatus:STPPaymentStatusUserCancellation
+                                error:nil];
         }
         else {
             self.state = STPPaymentContextStateNone;
@@ -428,7 +416,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)presentShippingViewControllerWithNewState:(STPPaymentContextState)state {
-    printf("presentShippingViewControllerWithNewState");
     NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling presentShippingViewController on it. Next time, set the hostViewController property first!");
     WEAK(self);
     [self.didAppearPromise voidOnSuccess:^{
@@ -454,7 +441,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)pushShippingViewController {
-    printf("pushShippingViewController");
     NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushShippingViewController on it. Next time, set the hostViewController property first!");
     UINavigationController *navigationController;
     if ([self.hostViewController isKindOfClass:[UINavigationController class]]) {
@@ -482,15 +468,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 - (void)shippingAddressViewControllerDidCancel:(STPShippingAddressViewController *)addressViewController {
     [self appropriatelyDismissViewController:addressViewController completion:^{
         if (self.state == STPPaymentContextStateRequestingPayment) {
-            printf("in shipping\n");
-            if (self.hasCalledCreatePaymentResultApplePay == YES) {
-                printf("called in shipping\n");
-                [self didFinishWithStatus:STPPaymentStatusFailedCancellation
-                                    error:nil];
-            } else {
-                [self didFinishWithStatus:STPPaymentStatusUserCancellation
-                                    error:nil];
-            }
+            [self didFinishWithStatus:STPPaymentStatusUserCancellation
+                                error:nil];
         }
         else {
             self.state = STPPaymentContextStateNone;
@@ -574,7 +553,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     BOOL verificationRequired = self.configuration.verifyPrefilledShippingAddress && self.shippingAddressNeedsVerification;
     // true if STPShippingVC should be presented to collect or verify a shipping address
     BOOL shouldPresentShippingAddress = (shippingAddressRequired && (shippingAddressIncomplete || verificationRequired));
-
     // this handles a corner case where STPShippingVC should be presented because:
     // - shipping address has been pre-filled
     // - no verification is required, but the user still needs to enter a shipping method
@@ -610,7 +588,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                  [self.selectedPaymentMethod isKindOfClass:[STPSource class]]) {
             self.state = STPPaymentContextStateRequestingPayment;
             STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(id<STPSourceProtocol>)self.selectedPaymentMethod];
-            printf("called from promise");
             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
                 stpDispatchToMainThreadIfNecessary(^{
                     if (error) {
@@ -674,8 +651,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                                 paymentResultSource = ((STPToken *)source).card;
                             }
                             STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:paymentResultSource];
-                            printf("called in source handl\n");
-                            self.hasCalledCreatePaymentResultApplePay = YES;
                             self.cancelInteruptHandler = [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
                                 // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
                                 if (error) {
@@ -718,19 +693,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 - (void)didFinishWithStatus:(STPPaymentStatus)status
                       error:(nullable NSError *)error {
     self.state = STPPaymentContextStateNone;
-//    if (self.hasCalledCreatePaymentResultApplePay) {
-//        printf("fail cancelling\n");
-//        [self.delegate paymentContext:self
-//                  didFinishWithStatus:STPPaymentStatusFailedCancellation
-//                            error:error];
-//    } else {
     if (self.cancelInteruptHandler != nil) {
         self.cancelInteruptHandler();
     }
     [self.delegate paymentContext:self
-                  didFinishWithStatus:status
-                                error:error];
-//    }
+              didFinishWithStatus:status
+                            error:error];
 }
 
 - (PKPaymentRequest *)buildPaymentRequest {

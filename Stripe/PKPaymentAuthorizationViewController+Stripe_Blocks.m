@@ -91,7 +91,8 @@ typedef void (^STPPaymentAuthorizationStatusCallback)(PKPaymentAuthorizationStat
     }
     else if (self.lastError) {
         self.onFinish(STPPaymentStatusError, self.lastError);
-    } else {
+    }
+    else {
         self.onFinish(STPPaymentStatusUserCancellation, nil);
     }
 }

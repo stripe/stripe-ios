@@ -57,13 +57,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentStatus) {
      */
     STPPaymentStatusError,
     /**
-     The user cancelled the payment succesfully (for example, by hitting "cancel" in the Apple Pay dialog).
+     The user cancelled the payment (for example, by hitting "cancel" in the Apple Pay dialog).
      */
     STPPaymentStatusUserCancellation,
-    /**
-     The use tried to cancel the payment but it is too late
-     */
-    STPPaymentStatusFailedCancellation
 };
 
 /**

@@ -368,6 +368,7 @@ typedef void(^STPCancelInteruptsPaymentBlockHandler) (void);
  @param paymentContext The context that succeeded
  @param paymentResult  Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and make a charge to complete the payment, passing `paymentResult.source.stripeID` as the `source` parameter to the create charge method and your customer's ID as the `customer` parameter (see stripe.com/docs/api#charge_create for more info). Once that's done call the `completion` block with any error that occurred (or none, if the charge succeeded). @see STPPaymentResult.h
  @param completion     Call this block when you're done creating a charge (or subscription, etc) on your backend. If it succeeded, call `completion(nil)`. If it failed with an error, call `completion(error)`.
+ @return This block can only be called when apple pay is used. This block is called if the user taps the apple pay cancel button after this method has been called. If this block is called after stripe has processed the payment, the only way to return the user's money is to issue a refund.
  */
 - (STPCancelInteruptsPaymentBlockHandler)paymentContext:(STPPaymentContext *)paymentContext
 didCreatePaymentResult:(STPPaymentResult *)paymentResult
