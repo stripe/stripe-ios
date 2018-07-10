@@ -44,20 +44,20 @@
     UITableViewCell *cell = [UITableViewCell new];
     switch (indexPath.row) {
         case 0:
-        cell.textLabel.text = @"Card";
-        break;
+            cell.textLabel.text = @"Card";
+            break;
         case 1:
-        cell.textLabel.text = @"Card + 3DS";
-        break;
+            cell.textLabel.text = @"Card + 3DS";
+            break;
         case 2:
-        cell.textLabel.text = @"Apple Pay";
-        break;
+            cell.textLabel.text = @"Apple Pay";
+            break;
         case 3:
-        cell.textLabel.text = @"Sofort";
-        break;
+            cell.textLabel.text = @"Sofort";
+            break;
         case 4:
-        cell.textLabel.text = @"PaymentIntent: Card + 3DS";
-        break;
+            cell.textLabel.text = @"PaymentIntent: Card + 3DS";
+            break;
     }
     return cell;
 }
@@ -132,7 +132,8 @@
                                                           }
                                                           if (error) {
                                                               completion(STPBackendResultFailure, error);
-                                                          } else {
+                                                          }
+                                                          else {
                                                               completion(STPBackendResultSuccess, nil);
                                                           }
                                                       }];
@@ -142,9 +143,9 @@
 
 
 /**
- Ask the example backed to create a PaymentIntent with the specified amount.
+ Ask the example backend to create a PaymentIntent with the specified amount.
 
- The implementation of this function is not interesting nor relevant to using PaymentIntents. The
+ The implementation of this function is not interesting or relevant to using PaymentIntents. The
  method signature is the most interesting part: you need some way to ask *your* backend to create
  a PaymentIntent with the correct properties, and then it needs to pass the client secret back.
 
