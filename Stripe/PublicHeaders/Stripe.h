@@ -37,6 +37,8 @@
 #import "STPPaymentCardTextField.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentContext.h"
+#import "STPPaymentIntent.h"
+#import "STPPaymentIntentEnums.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentMethodsViewController.h"
 #import "STPPaymentResult.h"

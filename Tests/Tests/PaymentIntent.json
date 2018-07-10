@@ -1,0 +1,40 @@
+{
+  "id": "pi_1Cl15wIl4IdHmuTbCWrpJXN6",
+  "object": "payment_intent",
+  "allowed_source_types": [
+    "card"
+  ],
+  "amount": 2345,
+  "canceled_at": 1530911045,
+  "capture_method": "manual",
+  "client_secret": "pi_1Cl15wIl4IdHmuTbCWrpJXN6_secret_EkKtQ7Sg75hLDFKqFG8DtWcaK",
+  "confirmation_method": "publishable",
+  "created": 1530911040,
+  "currency": "usd",
+  "description": "My Sample PaymentIntent",
+  "livemode": false,
+  "next_source_action": {
+    "type": "authorize_with_url",
+    "value": {
+      "url": "https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"
+    }
+  },
+  "receipt_email": "danj@example.com",
+  "return_url": "payments-example://stripe-redirect",
+  "shipping": {
+    "address": {
+      "city": "San Francisco",
+      "country": "USA",
+      "line1": "123 Main St",
+      "line2": "Apt 456",
+      "postal_code": "94107",
+      "state": "CA"
+    },
+    "carrier": "USPS",
+    "name": "Dan",
+    "phone": "1-415-555-1234",
+    "tracking_number": "xyz123abc"
+  },
+  "source": "src_1Cl1AdIl4IdHmuTbseiDWq6m",
+  "status": "requires_source_action"
+}
