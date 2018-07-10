@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, STPRedirectContextState) {
  @param error An error if one occured. Note that a lack of an error does not 
  mean that the action was completed successfully, the presence of one confirms 
  that it was not. Currently the only possible error the context can know about 
- is if SFSafariViewController fails its initial load (like the user has no 
+ is if SFSafariViewController fails its initial load (e.g. the user has no
  internet connection, or servers are down).
  */
 typedef void (^STPRedirectContextSourceCompletionBlock)(NSString *sourceID, NSString * __nullable clientSecret, NSError * __nullable error);
@@ -60,7 +60,7 @@ typedef STPRedirectContextSourceCompletionBlock STPRedirectContextCompletionBloc
  @param error An error if one occured. Note that a lack of an error does not
  mean that the action was completed successfully, the presence of one confirms
  that it was not. Currently the only possible error the context can know about
- is if SFSafariViewController fails its initial load (like the user has no
+ is if SFSafariViewController fails its initial load (e.g. the user has no
  internet connection, or servers are down).
  */
 typedef void(^STPRedirectContextPaymentIntentCompletionBlock)(NSString *clientSecret, NSError * __nullable error);
