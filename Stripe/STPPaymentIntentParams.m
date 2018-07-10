@@ -21,7 +21,7 @@
 - (instancetype)initWithClientSecret:(NSString *)clientSecret {
     self = [super init];
     if (self) {
-        _clientSecret = clientSecret;
+        _clientSecret = [clientSecret copy];
         _additionalAPIParameters = @{};
     }
     return self;
