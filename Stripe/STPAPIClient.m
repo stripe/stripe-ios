@@ -450,9 +450,9 @@ static NSString * const APIEndpointPaymentIntents = @"payment_intents";
 }
 
 - (void)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(STPSourceCompletionBlock)completion {
-    NSCAssert(identifier != nil, @"'identifier' is required to create a source");
-    NSCAssert(secret != nil, @"'secret' is required to create a source");
-    NSCAssert(completion != nil, @"'completion' is required to use the source that is created");
+    NSCAssert(identifier != nil, @"'identifier' is required to retrieve a source");
+    NSCAssert(secret != nil, @"'secret' is required to retrieve a source");
+    NSCAssert(completion != nil, @"'completion' is required to use the source that is retrieved");
     [self retrieveSourceWithId:identifier clientSecret:secret responseCompletion:^(STPSource * object, __unused NSHTTPURLResponse *response, NSError *error) {
         completion(object, error);
     }];

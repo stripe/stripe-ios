@@ -1054,7 +1054,6 @@
 		8BCB6E552053389800629978 /* stp_card_unionpay_en@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_card_unionpay_en@3x.png"; sourceTree = "<group>"; };
 		8BD213361F044B57007F6FD1 /* BankAccount.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BankAccount.json; sourceTree = "<group>"; };
 		8BD213381F0457A1007F6FD1 /* FileUpload.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FileUpload.json; sourceTree = "<group>"; };
-		8BD2133B1F0458F5007F6FD1 /* BitcoinSource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BitcoinSource.json; sourceTree = "<group>"; };
 		8BD2133D1F045D31007F6FD1 /* SEPADebitSource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SEPADebitSource.json; sourceTree = "<group>"; };
 		8BD87B871EFB131400269C2B /* STPSourceCardDetails+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPSourceCardDetails+Private.h"; sourceTree = "<group>"; };
 		8BD87B8A1EFB136F00269C2B /* STPSourceCardDetailsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceCardDetailsTest.m; sourceTree = "<group>"; };
@@ -1574,7 +1573,6 @@
 			isa = PBXGroup;
 			children = (
 				F1BA241F1E57BEC600E4A1CF /* 3DSSource.json */,
-				8BD2133B1F0458F5007F6FD1 /* BitcoinSource.json */,
 				F1BA241C1E57BE5700E4A1CF /* CardSource.json */,
 				F152322E1EA9344000D65C67 /* iDEALSource.json */,
 				B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */,

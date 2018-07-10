@@ -131,7 +131,7 @@ static NSString *const STPSDKVersion = @"13.0.3";
 #pragma mark Connect Accounts
 
 /**
- Stripe extensions for working with Connect Accounts
+ STPAPIClient extensions for working with Connect Accounts
  */
 @interface STPAPIClient (ConnectAccounts)
 
@@ -324,7 +324,7 @@ static NSString *const STPSDKVersion = @"13.0.3";
 #pragma mark Payment Intents
 
 /**
- Stripe extensions for working with PaymentIntent objects.
+ STPAPIClient extensions for working with PaymentIntent objects.
  */
 @interface STPAPIClient (PaymentIntents)
 
