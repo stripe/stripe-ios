@@ -38,12 +38,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSString *clientSecret;
 
 /**
- The amount associated with the PaymentIntent
+ Amount intended to be collected by this PaymentIntent.
  */
 @property (nonatomic, readonly) NSNumber *amount;
 
 /**
- If status is canceled, when the PaymentIntent was canceled.
+ If status is `STPPaymentIntentStatusCanceled`, when the PaymentIntent was canceled.
  */
 @property (nonatomic, nullable, readonly) NSDate *canceledAt;
 
