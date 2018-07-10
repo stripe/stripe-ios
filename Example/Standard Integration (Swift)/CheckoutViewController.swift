@@ -191,17 +191,17 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
 
     // MARK: STPPaymentContextDelegate
 
-    func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) -> STPCancelInteruptsPaymentBlockHandler {
-        print("didCreatePaymentResult: \(paymentResult)")
-        MyAPIClient.sharedClient.completeCharge(paymentResult,
-                                                amount: self.paymentContext.paymentAmount,
-                                                shippingAddress: self.paymentContext.shippingAddress,
-                                                shippingMethod: self.paymentContext.selectedShippingMethod,
-                                                completion: completion)
-        return {
-            print("my handler is activated")
-        }
-    }
+//    func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) -> STPCancelInteruptsPaymentBlockHandler {
+//        print("didCreatePaymentResult: \(paymentResult)")
+//        MyAPIClient.sharedClient.completeCharge(paymentResult,
+//                                                amount: self.paymentContext.paymentAmount,
+//                                                shippingAddress: self.paymentContext.shippingAddress,
+//                                                shippingMethod: self.paymentContext.selectedShippingMethod,
+//                                                completion: completion)
+//        return {
+//            print("my handler is activated")
+//        }
+//    }
 
     func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
         if case .userCancellation = status {
