@@ -49,6 +49,11 @@ typedef NS_ENUM(NSUInteger, STPRedirectContextState) {
  */
 typedef void (^STPRedirectContextSourceCompletionBlock)(NSString *sourceID, NSString * __nullable clientSecret, NSError * __nullable error);
 
+/**
+ A callback run when the context believes the redirect action has been completed.
+
+ This type has been renamed to `STPRedirectContextSourceCompletionBlock` and deprecated.
+ */
 __attribute__((deprecated("STPRedirectContextCompletionBlock has been renamed to STPRedirectContextSourceCompletionBlock", "STPRedirectContextSourceCompletionBlock")))
 typedef STPRedirectContextSourceCompletionBlock STPRedirectContextCompletionBlock;
 
