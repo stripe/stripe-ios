@@ -8,10 +8,12 @@
 
 #import <SafariServices/SafariServices.h>
 #import <XCTest/XCTest.h>
+
 #import "NSError+Stripe.h"
 #import "NSURLComponents+Stripe.h"
 #import "STPFixtures.h"
 #import "STPRedirectContext.h"
+#import "STPRedirectContext+Private.h"
 #import "STPTestUtils.h"
 #import "STPURLCallbackHandler.h"
 #import "STPWeakStrongMacros.h"
@@ -126,6 +128,7 @@
         XCTAssertNil(error);
         [exp fulfill];
     }];
+    XCTAssertEqualObjects(source.redirect.returnURL, context.returnUrl);
     id sut = OCMPartialMock(context);
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
@@ -171,6 +174,7 @@
     BOOL(^checker)(id) = ^BOOL(id vc) {
         if ([vc isKindOfClass:[SFSafariViewController class]]) {
             NSURL *url = [NSURL URLWithString:@"my-app://some_path"];
+            XCTAssertNotEqualObjects(url, context.returnUrl);
             [[STPURLCallbackHandler shared] handleURLCallback:url];
             return YES;
         }
@@ -454,6 +458,10 @@
                                                                   completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
         XCTFail(@"completion called");
     }];
+
+    XCTAssertNotNil(context.nativeRedirectUrl);
+    XCTAssertEqualObjects(context.nativeRedirectUrl, sourceURL);
+
     id sut = OCMPartialMock(context);
 
     id applicationMock = OCMClassMock([UIApplication class]);
@@ -481,11 +489,12 @@
  */
 - (void)testNativeRedirectSupportingSourceFlow_invalidNativeURL {
     STPSource *source = [STPFixtures alipaySource];
-
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
                                                                   completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
                                                                       XCTFail(@"completion called");
                                                                   }];
+    XCTAssertNil(context.nativeRedirectUrl);
+
     id sut = OCMPartialMock(context);
 
     id applicationMock = OCMClassMock([UIApplication class]);
