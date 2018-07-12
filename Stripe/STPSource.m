@@ -289,7 +289,7 @@
 - (NSString *)label {
     switch (self.type) {
         case STPSourceTypeBancontact:
-            return @"Bancontact";
+            return STPLocalizedString(@"Bancontact", @"Source type brand name");
         case STPSourceTypeCard:
             if (self.cardDetails != nil) {
                 NSString *brand = [STPCard stringFromBrand:self.cardDetails.brand];
@@ -299,25 +299,25 @@
                 return [STPCard stringFromBrand:STPCardBrandUnknown];
             }
         case STPSourceTypeGiropay:
-            return @"Giropay";
+            return STPLocalizedString(@"Giropay", @"Source type brand name");
         case STPSourceTypeIDEAL:
-            return @"iDEAL";
+            return STPLocalizedString(@"iDEAL", @"Source type brand name");
         case STPSourceTypeSEPADebit:
-            return @"SEPA Direct Debit";
+            return STPLocalizedString(@"SEPA Direct Debit", @"Source type brand name");
         case STPSourceTypeSofort:
-            return @"SOFORT";
+            return STPLocalizedString(@"SOFORT", @"Source type brand name");
         case STPSourceTypeThreeDSecure:
-            return @"3D Secure";
+            return STPLocalizedString(@"3D Secure", @"Source type brand name");
         case STPSourceTypeAlipay:
-            return @"Alipay";
+            return STPLocalizedString(@"Alipay", @"Source type brand name");
         case STPSourceTypeP24:
-            return @"P24";
+            return STPLocalizedString(@"P24", @"Source type brand name");
         case STPSourceTypeEPS:
-            return @"EPS";
+            return STPLocalizedString(@"EPS", @"Source type brand name");
         case STPSourceTypeMultibanco:
-            return @"Multibanco";
+            return STPLocalizedString(@"Multibanco", @"Source type brand name");
         case STPSourceTypeUnknown:
-            return [STPCard stringFromBrand:STPCardBrandUnknown];
+            return STPLocalizedString(@"Unknown", @"Default missing source type label");
     }
 }
 
