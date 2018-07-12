@@ -79,6 +79,51 @@
     XCTAssertNil(sut);
 }
 
+- (void)testInitWithSource {
+    STPSource *source = [STPFixtures iDEALSource];
+    XCTestExpectation *expect = [self expectationWithDescription:@"completion"];
+    NSError *fakeError = [NSError new];
+
+    STPRedirectContext *sut = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString * _Nonnull sourceID, NSString * _Nullable clientSecret, NSError * _Nullable error) {
+        XCTAssertEqualObjects(source.stripeID, sourceID);
+        XCTAssertEqualObjects(source.clientSecret, clientSecret);
+        XCTAssertEqual(error, fakeError, @"Should be the same NSError object passed to completion() below");
+        [expect fulfill];
+    }];
+
+    // Make sure the initWithSource: method pulled out the right values from the Source
+    XCTAssertNil(sut.nativeRedirectUrl);
+    XCTAssertEqualObjects(sut.redirectUrl, source.redirect.url);
+    XCTAssertEqualObjects(sut.returnUrl, source.redirect.returnURL);
+
+    // and make sure the completion calls the completion block above
+    sut.completion(fakeError);
+    [self waitForExpectationsWithTimeout:0 handler:nil];
+}
+
+- (void)testInitWithSourceWithNativeURL {
+    STPSource *source = [STPFixtures alipaySourceWithNativeUrl];
+    XCTestExpectation *expect = [self expectationWithDescription:@"completion"];
+    NSURL *nativeURL = [NSURL URLWithString:source.details[@"native_url"]];
+    NSError *fakeError = [NSError new];
+
+    STPRedirectContext *sut = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString * _Nonnull sourceID, NSString * _Nullable clientSecret, NSError * _Nullable error) {
+        XCTAssertEqualObjects(source.stripeID, sourceID);
+        XCTAssertEqualObjects(source.clientSecret, clientSecret);
+        XCTAssertEqual(error, fakeError, @"Should be the same NSError object passed to completion() below");
+        [expect fulfill];
+    }];
+
+    // Make sure the initWithSource: method pulled out the right values from the Source
+    XCTAssertEqualObjects(sut.nativeRedirectUrl, nativeURL);
+    XCTAssertEqualObjects(sut.redirectUrl, source.redirect.url);
+    XCTAssertEqualObjects(sut.returnUrl, source.redirect.returnURL);
+
+    // and make sure the completion calls the completion block above
+    sut.completion(fakeError);
+    [self waitForExpectationsWithTimeout:0 handler:nil];
+}
+
 /**
  After starting a SafariViewController redirect flow,
  when a WillEnterForeground notification is posted, RedirectContext's completion
