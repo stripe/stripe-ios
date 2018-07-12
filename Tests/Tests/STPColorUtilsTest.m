@@ -31,7 +31,7 @@
         CGColorRelease(cgcolor);
     }
 
-    for (CGFloat white = 0.3001; white < 2; white += 0.1) {
+    for (CGFloat white = (CGFloat)0.3001; white < 2; white += 0.1) {
         components[0] = white;
         CGColorRef cgcolor = CGColorCreate(space, components);
         UIColor *color = [UIColor colorWithCGColor:cgcolor];
@@ -104,32 +104,35 @@
     };
 
     CFStringRef colorSpaceNames[] = {
-      kCGColorSpaceSRGB,
-      kCGColorSpaceDCIP3,
-      kCGColorSpaceROMMRGB,
-      kCGColorSpaceITUR_709,
-      kCGColorSpaceDisplayP3,
-      kCGColorSpaceITUR_2020,
-      kCGColorSpaceGenericRGB,
-      kCGColorSpaceGenericXYZ,
-      kCGColorSpaceLinearGray,
-      kCGColorSpaceLinearSRGB,
-      kCGColorSpaceGenericCMYK,
-      kCGColorSpaceGenericGray,
-      kCGColorSpaceACESCGLinear,
-      kCGColorSpaceAdobeRGB1998,
-      kCGColorSpaceExtendedGray,
-      kCGColorSpaceExtendedSRGB,
-      kCGColorSpaceGenericRGBLinear,
-      kCGColorSpaceExtendedLinearGray,
-      kCGColorSpaceExtendedLinearSRGB,
-      kCGColorSpaceGenericGrayGamma2_2,
+        kCGColorSpaceSRGB,
+        kCGColorSpaceDCIP3,
+        kCGColorSpaceROMMRGB,
+        kCGColorSpaceITUR_709,
+        kCGColorSpaceDisplayP3,
+        kCGColorSpaceITUR_2020,
+        kCGColorSpaceGenericRGB,
+        kCGColorSpaceGenericXYZ,
+        kCGColorSpaceLinearSRGB,
+        kCGColorSpaceGenericCMYK,
+        kCGColorSpaceGenericGray,
+        kCGColorSpaceACESCGLinear,
+        kCGColorSpaceAdobeRGB1998,
+        kCGColorSpaceExtendedGray,
+        kCGColorSpaceExtendedSRGB,
+        kCGColorSpaceGenericRGBLinear,
+        kCGColorSpaceExtendedLinearSRGB,
+        kCGColorSpaceGenericGrayGamma2_2,
     };
 
     int colorSpaceCount = sizeof(colorSpaceNames) / sizeof(colorSpaceNames[0]);
     for (int i = 0; i < colorSpaceCount; ++i) {
         // CMYK is the only one where all 1's results in a dark color
         testColorSpace(colorSpaceNames[i], colorSpaceNames[i] != kCGColorSpaceGenericCMYK);
+    }
+
+    if (@available(iOS 10.0, *)) {
+        testColorSpace(kCGColorSpaceLinearGray, YES);
+        testColorSpace(kCGColorSpaceExtendedLinearGray, YES);
     }
 
     if (@available(iOS 11.0, *)) {

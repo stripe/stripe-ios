@@ -52,7 +52,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     STPCardParams *card = [[STPCardParams alloc] init];
     card.number = @"4242 4242 4242 4242";
     card.expMonth = 6;
-    card.expYear = 2018;
+    card.expYear = 2024;
     card.currency = @"usd";
     card.name = @"Jenny Rosen";
     card.address.line1 = @"123 Fake Street";
@@ -289,7 +289,7 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
     STPCardParams *card = [[STPCardParams alloc] init];
     card.number = @"4000000000003063";
     card.expMonth = 6;
-    card.expYear = 2018;
+    card.expYear = 2024;
     card.currency = @"usd";
     card.address.line1 = @"123 Fake Street";
     card.address.line2 = @"Apartment 4";
@@ -307,6 +307,13 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
         XCTAssertNotNil(source1);
         XCTAssertEqual(source1.cardDetails.threeDSecure, STPSourceCard3DSecureStatusRequired);
         [cardExp fulfill];
+
+        if (source1.stripeID == nil) {
+            XCTFail(@"stripeID of the Card Source is required to create a 3DS source");
+            [threeDSExp fulfill];
+            return;
+        }
+
         STPSourceParams *params = [STPSourceParams threeDSecureParamsWithAmount:1099
                                                                        currency:@"eur"
                                                                       returnURL:@"https://shop.example.com/crtABC"

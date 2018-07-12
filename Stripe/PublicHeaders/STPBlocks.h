@@ -14,6 +14,7 @@
 @class STPSource;
 @class STPCustomer;
 @protocol STPSourceProtocol;
+@class STPPaymentIntent;
 
 /**
  These values control the labels used in the shipping info collection form.
@@ -86,7 +87,7 @@ typedef void (^STPJSONResponseCompletionBlock)(NSDictionary * __nullable jsonRes
  A callback to be run with a token response from the Stripe API.
 
  @param token The Stripe token from the response. Will be nil if an error occurs. @see STPToken
- @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
+ @param error The error returned from the response, or nil if none occurs. @see StripeError.h for possible values.
  */
 typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * __nullable error);
 
@@ -94,7 +95,7 @@ typedef void (^STPTokenCompletionBlock)(STPToken * __nullable token, NSError * _
  A callback to be run with a source response from the Stripe API.
 
  @param source The Stripe source from the response. Will be nil if an error occurs. @see STPSource
- @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
+ @param error The error returned from the response, or nil if none occurs. @see StripeError.h for possible values.
  */
 typedef void (^STPSourceCompletionBlock)(STPSource * __nullable source, NSError * __nullable error);
 
@@ -102,9 +103,17 @@ typedef void (^STPSourceCompletionBlock)(STPSource * __nullable source, NSError 
  A callback to be run with a source or card response from the Stripe API.
 
  @param source The Stripe source from the response. Will be nil if an error occurs. @see STPSourceProtocol
- @param error The error returned from the response, or nil in one occurs. @see StripeError.h for possible values.
+ @param error The error returned from the response, or nil if none occurs. @see StripeError.h for possible values.
  */
 typedef void (^STPSourceProtocolCompletionBlock)(id<STPSourceProtocol> __nullable source, NSError * __nullable error);
+
+/**
+ A callback to be run with a PaymentIntent response from the Stripe API.
+
+ @param paymentIntent The Stripe PaymentIntent from the response. Will be nil if an error occurs. @see STPPaymentIntent
+ @param error The error returned from the response, or nil if none occurs. @see StripeError.h for possible values.
+ */
+typedef void (^STPPaymentIntentCompletionBlock)(STPPaymentIntent * __nullable paymentIntent, NSError * __nullable error);
 
 /**
  A callback to be run with a validation result and shipping methods for a 
@@ -121,7 +130,7 @@ typedef void (^STPShippingMethodsCompletionBlock)(STPShippingStatus status, NSEr
  A callback to be run with a file response from the Stripe API.
 
  @param file The Stripe file from the response. Will be nil if an error occurs. @see STPFile
- @param error The error returned from the response, or nil in none occurs. @see StripeError.h for possible values.
+ @param error The error returned from the response, or nil if none occurs. @see StripeError.h for possible values.
  */
 typedef void (^STPFileCompletionBlock)(STPFile * __nullable file, NSError * __nullable error);
 
@@ -129,6 +138,6 @@ typedef void (^STPFileCompletionBlock)(STPFile * __nullable file, NSError * __nu
  A callback to be run with a customer response from the Stripe API.
 
  @param customer     The Stripe customer from the response, or nil if an error occurred. @see STPCustomer
- @param error        The error returned from the response, or nil in none occurs.
+ @param error        The error returned from the response, or nil if none occurs.
  */
 typedef void (^STPCustomerCompletionBlock)(STPCustomer * __nullable customer, NSError * __nullable error);
