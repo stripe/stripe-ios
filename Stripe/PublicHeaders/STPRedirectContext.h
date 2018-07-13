@@ -128,15 +128,7 @@ NS_EXTENSION_UNAVAILABLE("STPRedirectContext is not available in extensions")
  This should be used when the `status` is `STPPaymentIntentStatusRequiresSourceAction`.
  If the next action involves a redirect, this init method will return a non-nil object.
 
- @note You must ensure that the `returnURL` set up in the created PaymentIntent
- correctly goes to your app so that users can be returned once
- they complete the redirect in the web broswer. The *same* value should be passed
- into this method, otherwise `+ [Stripe handleStripeURLCallbackWithURL:]` won't
- recognize it.
-
  @param paymentIntent The STPPaymentIntent that needs a redirect.
- @param returnUrl The same `returnUrl` that the PaymentIntent has, either passed during creation
- by your backend, or in `STPPaymentIntentParams.returnUrl`
  @param completion A block to fire when the action is believed to have
  been completed.
 
@@ -147,7 +139,6 @@ NS_EXTENSION_UNAVAILABLE("STPRedirectContext is not available in extensions")
  successfully performed the redirect action.
  */
 - (nullable instancetype)initWithPaymentIntent:(STPPaymentIntent *)paymentIntent
-                                     returnUrl:(NSString *)returnUrl
                                     completion:(STPRedirectContextPaymentIntentCompletionBlock)completion;
 
 /**

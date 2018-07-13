@@ -7,6 +7,7 @@
 //
 
 #import "STPRedirectContext.h"
+#import "STPRedirectContext+Private.h"
 
 #import "STPBlocks.h"
 #import "STPDispatchFunctions.h"
@@ -23,14 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 @interface STPRedirectContext () <SFSafariViewControllerDelegate, STPURLCallbackListener>
-/// Optional URL for a native app. This is passed directly to `UIApplication openURL:`, and if it fails this class falls back to `redirectUrl`
-@property (nonatomic, nullable, copy) NSURL *nativeRedirectUrl;
-/// The URL to redirect to, assuming `nativeRedirectUrl` is nil or fails to open. Cannot be nil if `nativeRedirectUrl` is.
-@property (nonatomic, nullable, copy) NSURL *redirectUrl;
-/// The expected `returnUrl`, passed to STPURLCallbackHandler
-@property (nonatomic, copy) NSURL *returnUrl;
-/// Completion block to execute when finished redirecting, with optional error parameter.
-@property (nonatomic, copy) STPErrorBlock completion;
 
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
 @property (nonatomic, assign, readwrite) STPRedirectContextState state;
@@ -62,9 +55,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 
 - (nullable instancetype)initWithPaymentIntent:(STPPaymentIntent *)paymentIntent
-                                     returnUrl:(NSString *)returnUrl
                                     completion:(STPRedirectContextPaymentIntentCompletionBlock)completion {
-    if (!(returnUrl != nil
+    if (!(paymentIntent.returnUrl != nil
           && paymentIntent.status == STPPaymentIntentStatusRequiresSourceAction
           && [paymentIntent.allResponseFields[@"next_source_action"] isKindOfClass: [NSDictionary class]])) {
         return nil;
@@ -80,7 +72,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     NSString *redirectUrl = nextSourceAction[@"value"][@"url"];
     return [self initWithNativeRedirectUrl:nil
                                redirectUrl:[NSURL URLWithString:redirectUrl]
-                                 returnUrl:[NSURL URLWithString:returnUrl]
+                                 returnUrl:paymentIntent.returnUrl
                                 completion:^(NSError * _Nullable error) {
                                     completion(paymentIntent.clientSecret, error);
                                 }];

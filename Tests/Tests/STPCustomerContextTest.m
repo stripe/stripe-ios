@@ -285,9 +285,9 @@
                    fromCustomerUsingKey:[OCMArg isEqual:customerKey]
                              completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
-        STPCustomerCompletionBlock completion;
+        STPErrorBlock completion;
         [invocation getArgument:&completion atIndex:4];
-        completion([STPFixtures customerWithSingleCardTokenSource], nil);
+        completion(nil);
         [exp fulfill];
     });
     id mockKeyManager = [self mockKeyManagerWithKey:customerKey];
