@@ -194,7 +194,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
 
         [STPAPIClient deleteSource:source.stripeID
               fromCustomerUsingKey:ephemeralKey
-                        completion:^(__unused id<STPSourceProtocol> obj, NSError *error) {
+                        completion:^(NSError *error) {
                             [self clearCachedCustomer];
 
                             if (completion) {
