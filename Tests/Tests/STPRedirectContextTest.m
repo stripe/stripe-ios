@@ -81,14 +81,14 @@
 
 - (void)testInitWithSource {
     STPSource *source = [STPFixtures iDEALSource];
-    XCTestExpectation *expect = [self expectationWithDescription:@"completion"];
+    __block BOOL completionCalled = NO;
     NSError *fakeError = [NSError new];
 
     STPRedirectContext *sut = [[STPRedirectContext alloc] initWithSource:source completion:^(NSString * _Nonnull sourceID, NSString * _Nullable clientSecret, NSError * _Nullable error) {
         XCTAssertEqualObjects(source.stripeID, sourceID);
         XCTAssertEqualObjects(source.clientSecret, clientSecret);
         XCTAssertEqual(error, fakeError, @"Should be the same NSError object passed to completion() below");
-        [expect fulfill];
+        completionCalled = YES;
     }];
 
     // Make sure the initWithSource: method pulled out the right values from the Source
@@ -98,12 +98,12 @@
 
     // and make sure the completion calls the completion block above
     sut.completion(fakeError);
-    [self waitForExpectationsWithTimeout:0 handler:nil];
+    XCTAssertTrue(completionCalled);
 }
 
 - (void)testInitWithSourceWithNativeURL {
     STPSource *source = [STPFixtures alipaySourceWithNativeUrl];
-    XCTestExpectation *expect = [self expectationWithDescription:@"completion"];
+    __block BOOL completionCalled = NO;
     NSURL *nativeURL = [NSURL URLWithString:source.details[@"native_url"]];
     NSError *fakeError = [NSError new];
 
@@ -111,7 +111,7 @@
         XCTAssertEqualObjects(source.stripeID, sourceID);
         XCTAssertEqualObjects(source.clientSecret, clientSecret);
         XCTAssertEqual(error, fakeError, @"Should be the same NSError object passed to completion() below");
-        [expect fulfill];
+        completionCalled = YES;
     }];
 
     // Make sure the initWithSource: method pulled out the right values from the Source
@@ -121,19 +121,19 @@
 
     // and make sure the completion calls the completion block above
     sut.completion(fakeError);
-    [self waitForExpectationsWithTimeout:0 handler:nil];
+    XCTAssertTrue(completionCalled);
 }
 
 - (void)testInitWithPaymentIntent {
     STPPaymentIntent *paymentIntent = [STPFixtures paymentIntent];
-    XCTestExpectation *expect = [self expectationWithDescription:@"completion"];
+    __block BOOL completionCalled = NO;
     NSError *fakeError = [NSError new];
     NSString *returnUrlString = @"payments-example://stripe-redirect";
 
     STPRedirectContext *sut = [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent returnUrl:returnUrlString completion:^(NSString * _Nonnull clientSecret, NSError * _Nullable error) {
         XCTAssertEqualObjects(paymentIntent.clientSecret, clientSecret);
         XCTAssertEqual(error, fakeError, @"Should be the same NSError object passed to completion() below");
-        [expect fulfill];
+        completionCalled = YES;
     }];
 
     // Make sure the initWithPaymentIntent: method pulled out the right values from the PaymentIntent
@@ -144,7 +144,7 @@
 
     // and make sure the completion calls the completion block above
     sut.completion(fakeError);
-    [self waitForExpectationsWithTimeout:0 handler:nil];
+    XCTAssertTrue(completionCalled);
 }
 
 - (void)testInitWithPaymentIntentFailures {

@@ -37,7 +37,7 @@ typedef NS_ENUM(NSUInteger, STPRedirectContextState) {
 };
 
 /**
- A callback run when the context believes the redirect action has been completed.
+ A callback that is executed when the context believes the redirect action has been completed.
 
  @param sourceID The stripe id of the source.
  @param clientSecret The client secret of the source.
@@ -50,7 +50,7 @@ typedef NS_ENUM(NSUInteger, STPRedirectContextState) {
 typedef void (^STPRedirectContextSourceCompletionBlock)(NSString *sourceID, NSString * __nullable clientSecret, NSError * __nullable error);
 
 /**
- A callback run when the context believes the redirect action has been completed.
+ A callback that is executed when the context believes the redirect action has been completed.
 
  This type has been renamed to `STPRedirectContextSourceCompletionBlock` and deprecated.
  */
@@ -59,7 +59,7 @@ typedef STPRedirectContextSourceCompletionBlock STPRedirectContextCompletionBloc
 
 
 /**
- A callback run when the context believes the redirect action has been completed.
+ A callback that is executed when the context believes the redirect action has been completed.
 
  @param clientSecret The client secret of the PaymentIntent
  @param error An error if one occured. Note that a lack of an error does not
@@ -112,10 +112,10 @@ NS_EXTENSION_UNAVAILABLE("STPRedirectContext is not available in extensions")
  @param completion A block to fire when the action is believed to have 
  been completed.
 
- @return Nil if the specified source is not a redirect-flow source. Otherwise 
+ @return nil if the specified source is not a redirect-flow source. Otherwise
  a new context object.
 
- @note Firing of the completion block does not necessarily mean the user 
+ @note Execution of the completion block does not necessarily mean the user
  successfully performed the redirect action. You should listen for source status
  change webhooks on your backend to determine the result of a redirect.
  */
@@ -140,10 +140,10 @@ NS_EXTENSION_UNAVAILABLE("STPRedirectContext is not available in extensions")
  @param completion A block to fire when the action is believed to have
  been completed.
 
- @return Nil if the provided PaymentIntent does not need a redirect. Otherwise
+ @return nil if the provided PaymentIntent does not need a redirect. Otherwise
  a new context object.
 
- @note Firing of the completion block does not necessarily mean the user
+ @note Execution of the completion block does not necessarily mean the user
  successfully performed the redirect action.
  */
 - (nullable instancetype)initWithPaymentIntent:(STPPaymentIntent *)paymentIntent
