@@ -152,7 +152,7 @@
  @param amount Amount to charge the customer
  @param completion completion block called with status of backend call & the client secret if successful.
  */
-- (void)createBackendPaymentIntentWithAmount:(NSNumber *)amount returnUrl:(NSString *)returnUrl completion:(STPPaymentIntentCreationHandler)completion {
+- (void)createBackendPaymentIntentWithAmount:(NSNumber *)amount completion:(STPPaymentIntentCreationHandler)completion {
     if (!BackendBaseURL) {
         NSError *error = [NSError errorWithDomain:StripeDomain
                                              code:STPInvalidRequestError
@@ -169,8 +169,7 @@
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
-    NSString *encodedReturnUrl = [returnUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]];
-    NSString *postBody = [NSString stringWithFormat:@"amount=%@&return_url=%@", amount, encodedReturnUrl];
+    NSString *postBody = [NSString stringWithFormat:@"amount=%@", amount];
     NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
 
     NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request

@@ -23,7 +23,7 @@ typedef void (^STPPaymentIntentCreationHandler)(STPBackendResult status, NSStrin
 - (void)exampleViewController:(UIViewController *)controller didFinishWithMessage:(NSString *)message;
 - (void)exampleViewController:(UIViewController *)controller didFinishWithError:(NSError *)error;
 - (void)createBackendChargeWithSource:(NSString *)sourceID completion:(STPSourceSubmissionHandler)completion;
-- (void)createBackendPaymentIntentWithAmount:(NSNumber *)amount returnUrl:(NSString *)returnUrl completion:(STPPaymentIntentCreationHandler)completion;
+- (void)createBackendPaymentIntentWithAmount:(NSNumber *)amount completion:(STPPaymentIntentCreationHandler)completion;
 
 @end
 
