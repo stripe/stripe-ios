@@ -1,6 +1,6 @@
 ## Migration Guides
 
-### Migrating from versions < XX.X.X
+### Migrating from versions < 13.1.0
  * The SDK now supports PaymentIntents with `STPPaymentIntent`, which use `STPRedirectContext` in the same way that `STPSource` does
    * `STPRedirectContextCompletionBlock` has been renamed to `STPRedirectContextSourceCompletionBlock`. It has the same signature, and Xcode should offer a deprecation warning & fix-it to help you migrate.
 
