@@ -1,5 +1,9 @@
 ## Migration Guides
 
+### Migrating from versions < XX.X.X
+ * The SDK now supports PaymentIntents with `STPPaymentIntent`, which use `STPRedirectContext` in the same way that `STPSource` does
+   * `STPRedirectContextCompletionBlock` has been renamed to `STPRedirectContextSourceCompletionBlock`. It has the same signature, and Xcode should offer a deprecation warning & fix-it to help you migrate.
+
 ### Migrating from versions < 13.0.0
 * Remove Bitcoin source support because Stripe no longer processes Bitcoin payments: https://stripe.com/blog/ending-bitcoin-support
   * Sources can no longer have a "STPSourceTypeBitcoin" source type. These sources will now be interpreted as "STPSourceTypeUnknown".
