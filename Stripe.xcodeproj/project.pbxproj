@@ -378,6 +378,8 @@
 		B32B176020F6D2C4000D6EF8 /* STPGenericStripeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B32B175D20F6D2C4000D6EF8 /* STPGenericStripeObject.m */; };
 		B32B176120F6D2C4000D6EF8 /* STPGenericStripeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B32B175D20F6D2C4000D6EF8 /* STPGenericStripeObject.m */; };
 		B32B176320F6D722000D6EF8 /* STPGenericStripeObjectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B32B176220F6D722000D6EF8 /* STPGenericStripeObjectTest.m */; };
+		B32B176520F80442000D6EF8 /* STPRedirectContext+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B32B176420F80442000D6EF8 /* STPRedirectContext+Private.h */; };
+		B32B176620F80442000D6EF8 /* STPRedirectContext+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B32B176420F80442000D6EF8 /* STPRedirectContext+Private.h */; };
 		B3302F462006FBA7005DDBE9 /* STPConnectAccountParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B3302F452006FBA7005DDBE9 /* STPConnectAccountParamsTest.m */; };
 		B3302F4C200700AB005DDBE9 /* STPLegalEntityParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B3302F4B200700AB005DDBE9 /* STPLegalEntityParamsTest.m */; };
 		B347DD481FE35423006B3BAC /* STPValidatedTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = B347DD461FE35423006B3BAC /* STPValidatedTextField.h */; };
@@ -1071,6 +1073,7 @@
 		B32B175C20F6D2C4000D6EF8 /* STPGenericStripeObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPGenericStripeObject.h; sourceTree = "<group>"; };
 		B32B175D20F6D2C4000D6EF8 /* STPGenericStripeObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPGenericStripeObject.m; sourceTree = "<group>"; };
 		B32B176220F6D722000D6EF8 /* STPGenericStripeObjectTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPGenericStripeObjectTest.m; sourceTree = "<group>"; };
+		B32B176420F80442000D6EF8 /* STPRedirectContext+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPRedirectContext+Private.h"; sourceTree = "<group>"; };
 		B3302F452006FBA7005DDBE9 /* STPConnectAccountParamsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountParamsTest.m; sourceTree = "<group>"; };
 		B3302F4B200700AB005DDBE9 /* STPLegalEntityParamsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPLegalEntityParamsTest.m; sourceTree = "<group>"; };
 		B347DD461FE35423006B3BAC /* STPValidatedTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPValidatedTextField.h; sourceTree = "<group>"; };
@@ -1824,9 +1827,9 @@
 				04CDB4C31A5F30A700B854EE /* STPAPIClient.m */,
 				04633B061CD44F47009D4FB5 /* STPAPIClient+ApplePay.h */,
 				04633B041CD44F1C009D4FB5 /* STPAPIClient+ApplePay.m */,
+				C184107A1EC2539F00178149 /* STPEphemeralKeyProvider.h */,
 				F152321F1EA92FCF00D65C67 /* STPRedirectContext.h */,
 				F152321C1EA92FC100D65C67 /* STPRedirectContext.m */,
-				C184107A1EC2539F00178149 /* STPEphemeralKeyProvider.h */,
 			);
 			name = "API Bindings";
 			sourceTree = "<group>";
@@ -1916,6 +1919,8 @@
 				F1D3A2481EB012010095BFA9 /* STPMultipartFormDataEncoder.m */,
 				F1D3A2491EB012010095BFA9 /* STPMultipartFormDataPart.h */,
 				F1D3A24A1EB012010095BFA9 /* STPMultipartFormDataPart.m */,
+				B3BDCAC120EEF2150034F7F5 /* STPPaymentIntent+Private.h */,
+				B32B176420F80442000D6EF8 /* STPRedirectContext+Private.h */,
 				C1C1012C1E57A26F00C7BFAE /* STPSource+Private.h */,
 				8BD87B871EFB131400269C2B /* STPSourceCardDetails+Private.h */,
 				F1A0197A1EA5733200354301 /* STPSourceParams+Private.h */,
@@ -1999,7 +2004,6 @@
 				B3A99BC21FEAF2CA003F6ED3 /* STPLegalEntityParams.m */,
 				B3BDCAC620EEF22D0034F7F5 /* STPPaymentIntent.h */,
 				B3BDCAC020EEF2150034F7F5 /* STPPaymentIntent.m */,
-				B3BDCAC120EEF2150034F7F5 /* STPPaymentIntent+Private.h */,
 				B3BDCAC720EEF22D0034F7F5 /* STPPaymentIntentEnums.h */,
 				B3BDCAD520EEF5EC0034F7F5 /* STPPaymentIntentParams.h */,
 				B3BDCAD220EEF5E00034F7F5 /* STPPaymentIntentParams.m */,
@@ -2139,6 +2143,7 @@
 				C159933D1D8808970047950D /* STPShippingMethodsViewController.h in Headers */,
 				F15232251EA9303800D65C67 /* STPURLCallbackHandler.h in Headers */,
 				B3A2413A1FFEB57400A2F00D /* STPConnectAccountParams.h in Headers */,
+				B32B176620F80442000D6EF8 /* STPRedirectContext+Private.h in Headers */,
 				F1D3A2561EB012350095BFA9 /* STPMultipartFormDataPart.h in Headers */,
 				04F94DCD1D22A22F004FC826 /* UIViewController+Stripe_KeyboardAvoiding.h in Headers */,
 				C1BD9B3A1E39416700CEE925 /* STPSourceOwner.h in Headers */,
@@ -2283,6 +2288,7 @@
 				C11810A71CC6EE840022FB55 /* STPBackendAPIAdapter.h in Headers */,
 				F12C8DC01D63DE9F00ADA0D7 /* STPPaymentContextAmountModel.h in Headers */,
 				B3A241391FFEB57400A2F00D /* STPConnectAccountParams.h in Headers */,
+				B32B176520F80442000D6EF8 /* STPRedirectContext+Private.h in Headers */,
 				F19491DE1E5F6B8C001E1FC2 /* STPSourceCardDetails.h in Headers */,
 				0439B9871C454F97005A1ED5 /* STPPaymentMethodsViewController.h in Headers */,
 				04B31DF91D11AC6400EF1631 /* STPUserInformation.h in Headers */,

@@ -11,6 +11,7 @@
 #import "STPPaymentIntent.h"
 #import "STPPaymentIntent+Private.h"
 
+#import "STPFixtures.h"
 #import "STPTestUtils.h"
 
 @interface STPPaymentIntentTest : XCTestCase
@@ -109,7 +110,7 @@
 #pragma mark - Description Tests
 
 - (void)testDescription {
-    STPPaymentIntent *paymentIntent = [STPPaymentIntent decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"PaymentIntent"]];
+    STPPaymentIntent *paymentIntent = [STPFixtures paymentIntent];
 
     XCTAssertNotNil(paymentIntent);
     NSString *desc = paymentIntent.description;
@@ -120,7 +121,7 @@
 #pragma mark - STPAPIResponseDecodable Tests
 
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
-    NSDictionary *fullJson = [STPTestUtils jsonNamed:@"PaymentIntent"];
+    NSDictionary *fullJson = [STPTestUtils jsonNamed:STPTestJSONPaymentIntent];
 
     XCTAssertNotNil([STPPaymentIntent decodedObjectFromAPIResponse:fullJson], @"can decode with full json");
 
