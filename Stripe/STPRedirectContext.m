@@ -55,9 +55,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 
 - (nullable instancetype)initWithPaymentIntent:(STPPaymentIntent *)paymentIntent
-                                     returnUrl:(NSString *)returnUrl
                                     completion:(STPRedirectContextPaymentIntentCompletionBlock)completion {
-    if (!(returnUrl != nil
+    if (!(paymentIntent.returnUrl != nil
           && paymentIntent.status == STPPaymentIntentStatusRequiresSourceAction
           && [paymentIntent.allResponseFields[@"next_source_action"] isKindOfClass: [NSDictionary class]])) {
         return nil;
@@ -73,7 +72,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     NSString *redirectUrl = nextSourceAction[@"value"][@"url"];
     return [self initWithNativeRedirectUrl:nil
                                redirectUrl:[NSURL URLWithString:redirectUrl]
-                                 returnUrl:[NSURL URLWithString:returnUrl]
+                                 returnUrl:paymentIntent.returnUrl
                                 completion:^(NSError * _Nullable error) {
                                     completion(paymentIntent.clientSecret, error);
                                 }];
