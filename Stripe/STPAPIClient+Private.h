@@ -73,7 +73,7 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
  */
 + (void)deleteSource:(NSString *)sourceID
 fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
-          completion:(STPSourceProtocolCompletionBlock)completion;
+          completion:(STPErrorBlock)completion;
 
 @end
 

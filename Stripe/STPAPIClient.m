@@ -15,16 +15,17 @@
 
 #import "NSBundle+Stripe_AppName.h"
 #import "NSError+Stripe.h"
-#import "STPAPIRequest.h"
+#import "NSMutableURLRequest+Stripe.h"
 #import "STPAnalyticsClient.h"
+#import "STPAPIRequest.h"
 #import "STPBankAccount.h"
 #import "STPCard.h"
 #import "STPDispatchFunctions.h"
 #import "STPEphemeralKey.h"
 #import "STPFormEncoder.h"
+#import "STPGenericStripeObject.h"
 #import "STPMultipartFormDataEncoder.h"
 #import "STPMultipartFormDataPart.h"
-#import "NSMutableURLRequest+Stripe.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentIntentParams.h"
@@ -542,15 +543,15 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                              }];
 }
 
-+ (void)deleteSource:(NSString *)sourceID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPSourceProtocolCompletionBlock)completion {
++ (void)deleteSource:(NSString *)sourceID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion {
     STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@/%@", APIEndpointCustomers, ephemeralKey.customerID, APIEndpointSources, sourceID];
     [STPAPIRequest<STPSourceProtocol> deleteWithAPIClient:client
                                                  endpoint:endpoint
                                                parameters:nil
-                                            deserializers:@[[STPCard new], [STPSource new]]
-                                               completion:^(id object, __unused NSHTTPURLResponse *response, NSError *error) {
-                                                   completion(object, error);
+                                            deserializers:@[[STPGenericStripeObject new]]
+                                               completion:^(__unused STPGenericStripeObject *object, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                   completion(error);
                                                }];
 }
 
