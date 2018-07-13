@@ -54,12 +54,11 @@
     }
     [self updateUIForPaymentInProgress:YES];
 
-    NSString *returnUrl = @"payments-example://stripe-redirect";
     // In a more interesting app, you'll probably create your PaymentIntent as soon as you know the
     // payment amount you wish to collect from your customer. For simplicity, this example does it once they've
     // pushed the Pay button.
     // https://stripe.com/docs/payments/dynamic-authentication#create-payment-intent
-    [self.delegate createBackendPaymentIntentWithAmount:@1099 returnUrl:returnUrl completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
+    [self.delegate createBackendPaymentIntentWithAmount:@1099 completion:^(STPBackendResult status, NSString *clientSecret, NSError *error) {
         if (status == STPBackendResultFailure || clientSecret == nil) {
             [self.delegate exampleViewController:self didFinishWithError:error];
             return;
@@ -68,6 +67,7 @@
         STPAPIClient *stripeClient = [STPAPIClient sharedClient];
         STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
         paymentIntentParams.sourceParams = [STPSourceParams cardParamsWithCard:self.paymentTextField.cardParams];
+        paymentIntentParams.returnUrl = @"payments-example://stripe-redirect";
 
         [stripeClient confirmPaymentIntentWithParams:paymentIntentParams completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
             if (error) {
@@ -76,7 +76,7 @@
             }
 
             if (paymentIntent.status == STPPaymentIntentStatusRequiresSourceAction) {
-                self.redirectContext = [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent returnUrl:returnUrl completion:^(NSString * _Nonnull clientSecret, NSError * _Nullable error) {
+                self.redirectContext = [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent completion:^(NSString * _Nonnull clientSecret, NSError * _Nullable error) {
                     if (error) {
                         [self.delegate exampleViewController:self didFinishWithError:error];
                     }
