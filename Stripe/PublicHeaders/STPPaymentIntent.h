@@ -84,6 +84,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly) NSString *receiptEmail;
 
 /**
+ The URL to redirect your customer back to after they authenticate or cancel their
+ payment on the payment method’s app or site.
+
+ This should be a URL that your app handles if the PaymentIntent is going to
+ be confirmed in your app, and it has a redirect authorization flow.
+ */
+@property (nonatomic, nullable, readonly) NSURL *returnUrl;
+
+/**
  The Stripe ID of the Source used in this PaymentIntent.
  */
 @property (nonatomic, nullable, readonly) NSString *sourceId;
