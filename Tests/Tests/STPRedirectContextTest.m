@@ -124,6 +124,80 @@
     [self waitForExpectationsWithTimeout:0 handler:nil];
 }
 
+- (void)testInitWithPaymentIntent {
+    STPPaymentIntent *paymentIntent = [STPFixtures paymentIntent];
+    XCTestExpectation *expect = [self expectationWithDescription:@"completion"];
+    NSError *fakeError = [NSError new];
+    NSString *returnUrlString = @"payments-example://stripe-redirect";
+
+    STPRedirectContext *sut = [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent returnUrl:returnUrlString completion:^(NSString * _Nonnull clientSecret, NSError * _Nullable error) {
+        XCTAssertEqualObjects(paymentIntent.clientSecret, clientSecret);
+        XCTAssertEqual(error, fakeError, @"Should be the same NSError object passed to completion() below");
+        [expect fulfill];
+    }];
+
+    // Make sure the initWithPaymentIntent: method pulled out the right values from the PaymentIntent
+    XCTAssertNil(sut.nativeRedirectUrl);
+    XCTAssertEqualObjects(sut.redirectUrl.absoluteString,
+                          @"https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk");
+    XCTAssertEqualObjects(sut.returnUrl.absoluteString, returnUrlString);
+
+    // and make sure the completion calls the completion block above
+    sut.completion(fakeError);
+    [self waitForExpectationsWithTimeout:0 handler:nil];
+}
+
+- (void)testInitWithPaymentIntentFailures {
+    NSMutableDictionary *json = [[STPTestUtils jsonNamed:STPTestJSONPaymentIntent] mutableCopy];
+    json[@"next_source_action"] = [json[@"next_source_action"] mutableCopy];
+    json[@"next_source_action"][@"value"] = [json[@"next_source_action"][@"value"] mutableCopy];
+
+    void (^unusedCompletion)(NSString *, NSError *) = ^(__unused NSString * _Nonnull clientSecret, __unused NSError * _Nullable error) {
+        XCTFail(@"should not be constructed, definitely not completed");
+    };
+
+    STPRedirectContext *(^create)(void) = ^{
+        STPPaymentIntent *paymentIntent = [STPPaymentIntent decodedObjectFromAPIResponse:json];
+        return [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent
+                                                       returnUrl:@"http://example.com"
+                                                      completion:unusedCompletion];
+    };
+
+    XCTAssertNotNil(create(), @"before mutation of json, creation should succeed");
+
+    // `next_source_action` is not (currently) represented in the public API, and so there aren't
+    // any tests on it's decoding *other* than these right here. This is a white-box test for each condition
+    // that might result in a nil `STPRedirectContext`, because `STPRedirectContext` is the only place that
+    // understands `next_source_action` right now.
+
+    json[@"next_source_action"][@"value"][@"url"] = @"not a valid URL";
+    XCTAssertNil(create(), @"not created with an invalid URL in next_source_action.value.url");
+
+    json[@"next_source_action"][@"value"][@"url"] = @[@"an array", @"not a string"];
+    XCTAssertNil(create(), @"not created with a non-string next_source_action.value.url");
+
+    json[@"next_source_action"][@"value"] = @"not a dictionary";
+    XCTAssertNil(create(), @"not created with a non-dictionary next_source_action.value");
+
+    json[@"next_source_action"][@"value"] = @{ @"url": @"http://example.com/" };
+    json[@"next_source_action"][@"type"] = @"not_authorize_with_url";
+    XCTAssertNil(create(), @"not created with wrong next_source_action.type");
+
+    json[@"next_source_action"][@"type"] = @"authorize_with_url";
+    NSString *correctStatus = json[@"status"];
+    json[@"status"] = @"processing";
+    XCTAssertNil(create(), @"not created with wrong status");
+
+    json[@"status"] = correctStatus;
+    json[@"next_source_action"] = @"not a dictionary";
+    XCTAssertNil(create(), @"not created with a non-dictionary next_source_action");
+
+    XCTAssertNil([[STPRedirectContext alloc] initWithPaymentIntent:[STPFixtures paymentIntent]
+                                                         returnUrl:@"not a url"
+                                                        completion:unusedCompletion],
+                 @"not created with invalid returnUrl");
+}
+
 /**
  After starting a SafariViewController redirect flow,
  when a WillEnterForeground notification is posted, RedirectContext's completion
