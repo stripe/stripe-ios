@@ -15,17 +15,20 @@
 
 #import "NSBundle+Stripe_AppName.h"
 #import "NSError+Stripe.h"
-#import "STPAPIRequest.h"
+#import "NSMutableURLRequest+Stripe.h"
 #import "STPAnalyticsClient.h"
+#import "STPAPIRequest.h"
 #import "STPBankAccount.h"
 #import "STPCard.h"
 #import "STPDispatchFunctions.h"
 #import "STPEphemeralKey.h"
 #import "STPFormEncoder.h"
+#import "STPGenericStripeObject.h"
 #import "STPMultipartFormDataEncoder.h"
 #import "STPMultipartFormDataPart.h"
-#import "NSMutableURLRequest+Stripe.h"
 #import "STPPaymentConfiguration.h"
+#import "STPPaymentIntent+Private.h"
+#import "STPPaymentIntentParams.h"
 #import "STPSource+Private.h"
 #import "STPSourceParams.h"
 #import "STPSourceParams+Private.h"
@@ -49,6 +52,7 @@ static NSString * const APIEndpointToken = @"tokens";
 static NSString * const APIEndpointSources = @"sources";
 static NSString * const APIEndpointCustomers = @"customers";
 static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
+static NSString * const APIEndpointPaymentIntents = @"payment_intents";
 
 #pragma mark - Stripe
 
@@ -447,9 +451,9 @@ static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 }
 
 - (void)retrieveSourceWithId:(NSString *)identifier clientSecret:(NSString *)secret completion:(STPSourceCompletionBlock)completion {
-    NSCAssert(identifier != nil, @"'identifier' is required to create a source");
-    NSCAssert(secret != nil, @"'secret' is required to create a source");
-    NSCAssert(completion != nil, @"'completion' is required to use the source that is created");
+    NSCAssert(identifier != nil, @"'identifier' is required to retrieve a source");
+    NSCAssert(secret != nil, @"'secret' is required to retrieve a source");
+    NSCAssert(completion != nil, @"'completion' is required to use the source that is retrieved");
     [self retrieveSourceWithId:identifier clientSecret:secret responseCompletion:^(STPSource * object, __unused NSHTTPURLResponse *response, NSError *error) {
         completion(object, error);
     }];
@@ -539,16 +543,65 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                              }];
 }
 
-+ (void)deleteSource:(NSString *)sourceID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPSourceProtocolCompletionBlock)completion {
++ (void)deleteSource:(NSString *)sourceID fromCustomerUsingKey:(STPEphemeralKey *)ephemeralKey completion:(STPErrorBlock)completion {
     STPAPIClient *client = [self apiClientWithEphemeralKey:ephemeralKey];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@/%@/%@", APIEndpointCustomers, ephemeralKey.customerID, APIEndpointSources, sourceID];
     [STPAPIRequest<STPSourceProtocol> deleteWithAPIClient:client
                                                  endpoint:endpoint
                                                parameters:nil
-                                            deserializers:@[[STPCard new], [STPSource new]]
-                                               completion:^(id object, __unused NSHTTPURLResponse *response, NSError *error) {
-                                                   completion(object, error);
+                                            deserializers:@[[STPGenericStripeObject new]]
+                                               completion:^(__unused STPGenericStripeObject *object, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                   completion(error);
                                                }];
+}
+
+@end
+
+#pragma mark - Payment Intents
+
+@implementation STPAPIClient (PaymentIntents)
+
+- (void)retrievePaymentIntentWithClientSecret:(NSString *)secret
+                                   completion:(STPPaymentIntentCompletionBlock)completion {
+    NSCAssert(secret != nil, @"'secret' is required to retrieve a PaymentIntent");
+    NSCAssert(completion != nil, @"'completion' is required to use the PaymentIntent that is retrieved");
+    NSString *identifier = [STPPaymentIntent idFromClientSecret:secret];
+
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", APIEndpointPaymentIntents, identifier];
+
+    [STPAPIRequest<STPPaymentIntent *> getWithAPIClient:self
+                                               endpoint:endpoint
+                                             parameters:@{ @"client_secret": secret }
+                                           deserializer:[STPPaymentIntent new]
+                                             completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                 completion(paymentIntent, error);
+                                             }];
+}
+
+- (void)confirmPaymentIntentWithParams:(STPPaymentIntentParams *)paymentIntentParams
+                            completion:(STPPaymentIntentCompletionBlock)completion {
+    NSCAssert(paymentIntentParams.clientSecret != nil, @"'clientSecret' is required to confirm a PaymentIntent");
+    NSString *identifier = paymentIntentParams.stripeId;
+    NSString *sourceType = [STPSource stringFromType:paymentIntentParams.sourceParams.type];
+    [[STPAnalyticsClient sharedClient] logPaymentIntentConfirmationAttemptWithConfiguration:self.configuration
+                                                                                 sourceType:sourceType];
+
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@/confirm", APIEndpointPaymentIntents, identifier];
+
+    NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:paymentIntentParams] mutableCopy];
+    if ([params[@"source_data"] isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *sourceParamsDict = [params[@"source_data"] mutableCopy];
+        [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:sourceParamsDict];
+        params[@"source_data"] = [sourceParamsDict copy];
+    }
+
+    [STPAPIRequest<STPPaymentIntent *> postWithAPIClient:self
+                                                endpoint:endpoint
+                                              parameters:[params copy]
+                                            deserializer:[STPPaymentIntent new]
+                                              completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                  completion(paymentIntent, error);
+                                              }];
 }
 
 @end

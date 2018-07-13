@@ -368,14 +368,14 @@ typedef void(^STPCancelInteruptsPaymentBlockHandler) (void);
  @param paymentContext The context that succeeded
  @param paymentResult  Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and make a charge to complete the payment, passing `paymentResult.source.stripeID` as the `source` parameter to the create charge method and your customer's ID as the `customer` parameter (see stripe.com/docs/api#charge_create for more info). Once that's done call the `completion` block with any error that occurred (or none, if the charge succeeded). @see STPPaymentResult.h
  @param completion     Call this block when you're done creating a charge (or subscription, etc) on your backend. If it succeeded, call `completion(nil)`. If it failed with an error, call `completion(error)`.
- @return This block can only be called when apple pay is used. This block is called if the user taps the apple pay cancel button after this method has been called. If this block is called after stripe has processed the payment, the only way to return the user's money is to issue a refund.
+ @return This block can only be called when apple pay is used. The block is called if the user taps the apple pay cancel button after this delegate method has been called. If this block is called after stripe has processed the payment, the only way to return the user's money is to issue a refund.
  */
 - (STPCancelInteruptsPaymentBlockHandler)paymentContext:(STPPaymentContext *)paymentContext
 didCreatePaymentResult:(STPPaymentResult *)paymentResult
             completion:(STPErrorBlock)completion;
 
 /**
- This is invoked by an `STPPaymentContext` when it is finished. This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the returned `status` and behave appropriately. For example: if it's `STPPaymentStatusSuccess`, show the user a receipt. If it's `STPPaymentStatusError`, inform the user of the error. If it's `STPPaymentStatusUserCanceled`, do nothing.
+ This is invoked by an `STPPaymentContext` when it is finished. This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the returned `status` and behave appropriately. For example: if it's `STPPaymentStatusSuccess`, show the user a receipt. If it's `STPPaymentStatusError`, inform the user of the error. If it's `STPPaymentStatusUserCanceled`, do nothing. If the user cancels before a payment token is created then then this delegate method is invoked. When a payment token is created, the didCreatePaymentResult delgate method is called with a completion block passed in. In this case, the didFinishWithStatus delegate method will not be invoked until the completion block is called even if the user cancels.
 
  @param paymentContext The payment context that finished
  @param status         The status of the payment - `STPPaymentStatusSuccess` if it succeeded, `STPPaymentStatusError` if it failed with an error (in which case the `error` parameter will be non-nil), `STPPaymentStatusUserCanceled` if the user canceled the payment.
