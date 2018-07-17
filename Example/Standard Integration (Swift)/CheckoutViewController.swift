@@ -198,6 +198,10 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
                                                 completion: completion)
     }
 
+    func paymentContext(_ paymentContext: STPPaymentContext, didCancelAfterPaymentTokenCreated paymentResult: STPPaymentResult) {
+        print("cancel delegate method")
+    }
+
     func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
         self.paymentInProgress = false
         let title: String
@@ -288,5 +292,4 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
             }
         }
     }
-
 }

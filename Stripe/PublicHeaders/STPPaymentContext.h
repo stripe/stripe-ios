@@ -371,6 +371,9 @@ NS_ASSUME_NONNULL_BEGIN
 didCreatePaymentResult:(STPPaymentResult *)paymentResult
             completion:(STPErrorBlock)completion;
 
+- (void)paymentContext:(STPPaymentContext *)paymentContext
+didCancelAfterPaymentTokenCreated:(STPPaymentResult *)paymentResult;
+
 /**
  This is invoked by an `STPPaymentContext` when it is finished. This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the returned `status` and behave appropriately. For example: if it's `STPPaymentStatusSuccess`, show the user a receipt. If it's `STPPaymentStatusError`, inform the user of the error. If it's `STPPaymentStatusUserCanceled`, do nothing. If the user cancels before a payment token is created then then this delegate method is invoked. When a payment token is created, the didCreatePaymentResult delgate method is called with a completion block passed in. In this case, the didFinishWithStatus delegate method will not be invoked until the completion block is called even if the user cancels.
 
