@@ -10,6 +10,7 @@
 #import <OCMock/OCMock.h>
 #import <Stripe/Stripe.h>
 #import "NSError+Stripe.h"
+#import "NSLocale+STPSwizzling.h"
 #import "STPCard.h"
 #import "STPFixtures.h"
 #import "STPPaymentCardTextFieldCell.h"
@@ -40,6 +41,53 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
+- (void)testPrefilledBillingAddress_removeAddress {
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.requiredBillingAddressFields = STPBillingAddressFieldsZip;
+    STPAddCardViewController *sut = [[STPAddCardViewController alloc] initWithConfiguration:config
+                                                                                      theme:[STPTheme defaultTheme]];
+    STPAddress *address = [STPAddress new];
+    address.name = @"John Smith Doe";
+    address.phone = @"8885551212";
+    address.email = @"foo@example.com";
+    address.line1 = @"55 John St";
+    address.city = @"Harare";
+    address.postalCode = @"10002";
+    address.country = @"ZW";
+
+    STPUserInformation *prefilledInfo = [[STPUserInformation alloc] init];
+    prefilledInfo.billingAddress = address;
+    sut.prefilledInformation = prefilledInfo;
+
+    [sut loadView];
+    [sut viewDidLoad];
+}
+
+- (void)testPrefilledBillingAddress_addAddress {
+    [NSLocale stp_setCurrentLocale:[NSLocale localeWithLocaleIdentifier:@"en_ZW"]];
+    STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
+    config.requiredBillingAddressFields = STPBillingAddressFieldsZip;
+    STPAddCardViewController *sut = [[STPAddCardViewController alloc] initWithConfiguration:config
+                                                                                      theme:[STPTheme defaultTheme]];
+    STPAddress *address = [STPAddress new];
+    address.name = @"John Smith Doe";
+    address.phone = @"8885551212";
+    address.email = @"foo@example.com";
+    address.line1 = @"55 John St";
+    address.city = @"New York";
+    address.state = @"NY";
+    address.postalCode = @"10002";
+    address.country = @"US";
+
+    STPUserInformation *prefilledInfo = [[STPUserInformation alloc] init];
+    prefilledInfo.billingAddress = address;
+    sut.prefilledInformation = prefilledInfo;
+
+    [sut loadView];
+    [sut viewDidLoad];
+    [NSLocale stp_resetCurrentLocale];
+}
 
 - (void)testNextWithCreateTokenError {
     STPAddCardViewController *sut = [self buildAddCardViewController];
