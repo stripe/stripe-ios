@@ -88,7 +88,7 @@
                                               if (error) {
                                                   [self.delegate exampleViewController:self didFinishWithError:error];
                                               }
-                                              [self.delegate createBackendChargeWithSource:token.tokenId completion:^(STPBackendChargeResult result, NSError *error) {
+                                              [self.delegate createBackendChargeWithSource:token.tokenId completion:^(STPBackendResult result, NSError *error) {
                                                   if (error) {
                                                       [self.delegate exampleViewController:self didFinishWithError:error];
                                                       return;

@@ -134,6 +134,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentContext.html">STPPaymentContext</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntent.html">STPPaymentIntent</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a>
               </li>
               <li class="nav-group-task">
@@ -282,6 +288,15 @@
                 <a class="nav-group-task-link" href="../Enums/STPFilePurpose.html">STPFilePurpose</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentCaptureMethod.html">STPPaymentIntentCaptureMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentStatus.html">STPPaymentIntentStatus</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentMethodType.html">STPPaymentMethodType</a>
               </li>
               <li class="nav-group-task">
@@ -379,7 +394,16 @@
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPPaymentIntentCompletionBlock">STPPaymentIntentCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextCompletionBlock">STPRedirectContextCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextPaymentIntentCompletionBlock">STPRedirectContextPaymentIntentCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextSourceCompletionBlock">STPRedirectContextSourceCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPShippingMethodsCompletionBlock">STPShippingMethodsCompletionBlock</a>
@@ -484,7 +508,7 @@ possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.<
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPAPIClient.h#L37">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPAPIClient.h#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -514,7 +538,7 @@ possible in your application&rsquo;s lifecycle, preferably in your AppDelegate.<
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPAPIClient.h#L42">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPAPIClient.h#L43">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -582,7 +606,7 @@ stored Apple Pay cards on their device.</p>
                         <p>whether or not the user is currently able to pay with Apple Pay.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPAPIClient.h#L212">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPAPIClient.h#L213">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -622,7 +646,7 @@ of the supported networks. NO if the user does not have a saved card of a
 supported type, or other restrictions prevent payment (such as parental controls).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPAPIClient.h#L225">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPAPIClient.h#L226">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -685,7 +709,7 @@ Apple Pay is available in many countries and currencies, and you should use
 the appropriate values for your business.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPAPIClient.h#L243">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPAPIClient.h#L244">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -772,7 +796,7 @@ attached to this request as amounts in this currency.</p>
                         <p>a <code>PKPaymentRequest</code> with proper default values. Returns nil if running on &lt; iOS8.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPAPIClient.h#L261-L263">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPAPIClient.h#L262-L264">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -848,7 +872,7 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
                         <p>YES if the URL is expected and will be handled by Stripe. NO otherwise.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPAPIClient.h#L349">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPAPIClient.h#L381">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -861,7 +885,7 @@ To learn more about native url schemes, see <a href="https://developer.apple.com
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-06-11)</p>
+      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-07-13)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

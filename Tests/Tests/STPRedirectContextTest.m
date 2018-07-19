@@ -128,9 +128,8 @@
     STPPaymentIntent *paymentIntent = [STPFixtures paymentIntent];
     __block BOOL completionCalled = NO;
     NSError *fakeError = [NSError new];
-    NSString *returnUrlString = @"payments-example://stripe-redirect";
 
-    STPRedirectContext *sut = [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent returnUrl:returnUrlString completion:^(NSString * _Nonnull clientSecret, NSError * _Nullable error) {
+    STPRedirectContext *sut = [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent completion:^(NSString * _Nonnull clientSecret, NSError * _Nullable error) {
         XCTAssertEqualObjects(paymentIntent.clientSecret, clientSecret);
         XCTAssertEqual(error, fakeError, @"Should be the same NSError object passed to completion() below");
         completionCalled = YES;
@@ -140,7 +139,7 @@
     XCTAssertNil(sut.nativeRedirectUrl);
     XCTAssertEqualObjects(sut.redirectUrl.absoluteString,
                           @"https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk");
-    XCTAssertEqualObjects(sut.returnUrl.absoluteString, returnUrlString);
+    XCTAssertEqualObjects(sut.returnUrl, paymentIntent.returnUrl);
 
     // and make sure the completion calls the completion block above
     sut.completion(fakeError);
@@ -159,7 +158,6 @@
     STPRedirectContext *(^create)(void) = ^{
         STPPaymentIntent *paymentIntent = [STPPaymentIntent decodedObjectFromAPIResponse:json];
         return [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent
-                                                       returnUrl:@"http://example.com"
                                                       completion:unusedCompletion];
     };
 
@@ -189,13 +187,13 @@
     XCTAssertNil(create(), @"not created with wrong status");
 
     json[@"status"] = correctStatus;
+    NSDictionary *nextSourceAction = json[@"next_source_action"];
     json[@"next_source_action"] = @"not a dictionary";
     XCTAssertNil(create(), @"not created with a non-dictionary next_source_action");
 
-    XCTAssertNil([[STPRedirectContext alloc] initWithPaymentIntent:[STPFixtures paymentIntent]
-                                                         returnUrl:@"not a url"
-                                                        completion:unusedCompletion],
-                 @"not created with invalid returnUrl");
+    json[@"next_source_action"] = nextSourceAction;
+    json[@"return_url"] = @"not a url";
+    XCTAssertNil(create(), @"not created with invalid returnUrl");
 }
 
 /**
