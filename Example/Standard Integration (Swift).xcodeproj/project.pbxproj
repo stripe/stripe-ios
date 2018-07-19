@@ -160,7 +160,7 @@
 					04823F771A6849200098400B = {
 						CreatedOnToolsVersion = 6.1.1;
 						LastSwiftMigration = 0920;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplePay = {
 								enabled = 1;
@@ -411,7 +411,6 @@
 				CODE_SIGN_ENTITLEMENTS = "Standard Integration (Swift)/Standard Integration (Swift).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -441,7 +440,6 @@
 				CODE_SIGN_ENTITLEMENTS = "Standard Integration (Swift)/Standard Integration (Swift).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -455,7 +453,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SimpleSDKExample;
 				PRODUCT_NAME = "Standard Integration (Swift)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
