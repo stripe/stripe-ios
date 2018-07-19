@@ -371,6 +371,16 @@ NS_ASSUME_NONNULL_BEGIN
 didCreatePaymentResult:(STPPaymentResult *)paymentResult
             completion:(STPErrorBlock)completion;
 
+/**
+ This method is only called when the following happens:
+    1. The user uses apple pay
+    2. A token for stripe is created and we call the delegate method with the parameter named didCreatePaymentResult is called
+    2. The user taps Apple pay's cancel button AFTER we already called the delegate method with didCreatePaymentResult
+ When this is called the user will expect you to cancel the payment but that may be difficult if you already sent the stripe token to your server. You could try
+ to give the user a refund or just tell them that they can't cancel.
+
+ Note that if the user cancel BEFORE the delegate method with didCreatePaymentResult is called then didFinish will be called and this method will not be called.
+ */
 - (void)paymentContext:(STPPaymentContext *)paymentContext
 didCancelAfterPaymentTokenCreated:(STPPaymentResult *)paymentResult;
 
