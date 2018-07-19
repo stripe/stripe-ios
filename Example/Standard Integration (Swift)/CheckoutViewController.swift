@@ -191,7 +191,6 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
     // MARK: STPPaymentContextDelegate
 
     func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
-        print("created payment token")
         MyAPIClient.sharedClient.completeCharge(paymentResult,
                                                 amount: self.paymentContext.paymentAmount,
                                                 shippingAddress: self.paymentContext.shippingAddress,
@@ -199,12 +198,9 @@ class CheckoutViewController: UIViewController, STPPaymentContextDelegate {
                                                 completion: completion)
     }
 
-    func paymentContext(_ paymentContext: STPPaymentContext, didCancelAfterPaymentTokenCreated paymentResult: STPPaymentResult) {
-        print("cancel delegate method")
-    }
+    func paymentContext(_ paymentContext: STPPaymentContext, didCancelAfterPaymentTokenCreated paymentResult: STPPaymentResult) {}
 
     func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
-        print("did finish")
         self.paymentInProgress = false
         let title: String
         let message: String

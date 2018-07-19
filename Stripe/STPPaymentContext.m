@@ -663,16 +663,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                                 // The apple pay vc finishes when the user cancels and it finishes only once.
                                 // So if the user has already canceled calling completion will not cause the apple pay vc to finish
                                 // Therefore, we must directly call our did finish with status method
-                                printf("completion is called\n");
-
                                 if (error) {
                                     completion(error);
                                     if (isCanceledAfterTokenCreated) {
-                                        printf("with error\n");
                                         [self didFinishWithStatus:STPPaymentStatusError error:error];
                                     }
                                 } else {
-                                    printf("without error\n");
                                     if (isCanceledAfterTokenCreated) {
                                         [self didFinishWithStatus:STPPaymentStatusSuccess error:error];
                                     }
@@ -721,9 +717,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     // we have to reset everything so that we can do another payment after this
     self.state = STPPaymentContextStateNone;
     self.isTokenCreated = NO;
-//    if (self.cancelInteruptHandler != nil) {
-//        self.cancelInteruptHandler();
-//    }
     [self.delegate paymentContext:self
               didFinishWithStatus:status
                             error:error];
