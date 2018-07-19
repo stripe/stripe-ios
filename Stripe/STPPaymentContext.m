@@ -367,10 +367,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 - (void)paymentMethodsViewControllerDidCancel:(STPPaymentMethodsViewController *)paymentMethodsViewController {
     [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController completion:^{
         if (self.state == STPPaymentContextStateRequestingPayment) {
-//            if (self.cancelInteruptHandler == nil) {
-//                [self didFinishWithStatus:STPPaymentStatusUserCancellation
-//                                    error:nil];
-//            }
+            [self didFinishWithStatus:STPPaymentStatusUserCancellation
+                                error:nil];
         }
         else {
             self.state = STPPaymentContextStateNone;
@@ -471,10 +469,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 - (void)shippingAddressViewControllerDidCancel:(STPShippingAddressViewController *)addressViewController {
     [self appropriatelyDismissViewController:addressViewController completion:^{
         if (self.state == STPPaymentContextStateRequestingPayment) {
-//            if (self.cancelInteruptHandler == nil) {
-//                [self didFinishWithStatus:STPPaymentStatusUserCancellation
-//                                    error:nil];
-//            }
+            [self didFinishWithStatus:STPPaymentStatusUserCancellation
+                                error:nil];
         }
         else {
             self.state = STPPaymentContextStateNone;
