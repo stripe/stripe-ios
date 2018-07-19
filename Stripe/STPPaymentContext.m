@@ -62,6 +62,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 @property (nonatomic) STPPaymentContextAmountModel *paymentAmountModel;
 @property (nonatomic) BOOL shippingAddressNeedsVerification;
 
+@property (nonatomic) BOOL isTokenCreated;
+
 // If hostViewController was set to a nav controller, the original VC on top of the stack
 @property (nonatomic, weak) UIViewController *originalTopViewController;
 
@@ -102,6 +104,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         _paymentCountry = @"US";
         _paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithAmount:0];
         _modalPresentationStyle = UIModalPresentationFullScreen;
+        _isTokenCreated = NO;
         if (@available(iOS 11, *)) {
             _largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeAutomatic;
         }
@@ -630,6 +633,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                     [customerContext updateCustomerWithShippingAddress:self.shippingAddress completion:nil];
                 }
             };
+            __block BOOL isCanceledAfterTokenCreated = NO;
+            __block STPPaymentResult *result;
             STPApplePaySourceHandlerBlock applePaySourceHandler = ^(id<STPSourceProtocol> source, STPErrorBlock completion) {
                 [self.apiAdapter attachSourceToCustomer:source completion:^(NSError *attachSourceError) {
                     stpDispatchToMainThreadIfNecessary(^{
@@ -652,15 +657,29 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                             if ([source isKindOfClass:[STPToken class]]) {
                                 paymentResultSource = ((STPToken *)source).card;
                             }
-                            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:paymentResultSource];
+                            result = [[STPPaymentResult alloc] initWithSource:paymentResultSource];
                             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
                                 // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
+                                // The apple pay vc finishes when the user cancels and it finishes only once.
+                                // So if the user has already canceled calling completion will not cause the apple pay vc to finish
+                                // Therefore, we must directly call our did finish with status method
+                                printf("completion is called\n");
+
                                 if (error) {
                                     completion(error);
+                                    if (isCanceledAfterTokenCreated) {
+                                        printf("with error\n");
+                                        [self didFinishWithStatus:STPPaymentStatusError error:error];
+                                    }
                                 } else {
+                                    printf("without error\n");
+                                    if (isCanceledAfterTokenCreated) {
+                                        [self didFinishWithStatus:STPPaymentStatusSuccess error:error];
+                                    }
                                     completion(nil);
                                 }
                             }];
+                            self.isTokenCreated = YES;
                         }
                     });
                 }];
@@ -677,12 +696,13 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                              onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
                                  [self.hostViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]
                                                                              completion:^{
-//                                                                                 bool isUserCancellationAfterPaymentTokenCreated = (status == STPPaymentStatusUserCancellation
-//                                                                                 && self.cancelInteruptHandler != nil);
-//                                                                                 if (!isUserCancellationAfterPaymentTokenCreated) {
+                                                                                 if (self.isTokenCreated && status == STPPaymentStatusUserCancellation) {
+                                                                                     isCanceledAfterTokenCreated = YES;
+                                                                                     [self.delegate paymentContext:self didCancelAfterPaymentTokenCreated:result];
+                                                                                 } else {
                                                                                      [self didFinishWithStatus:status
                                                                                                          error:error];
-//                                                                                 }
+                                                                                 }
                                  }];
                              }];
 
@@ -698,7 +718,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 - (void)didFinishWithStatus:(STPPaymentStatus)status
                       error:(nullable NSError *)error {
+    // we have to reset everything so that we can do another payment after this
     self.state = STPPaymentContextStateNone;
+    self.isTokenCreated = NO;
 //    if (self.cancelInteruptHandler != nil) {
 //        self.cancelInteruptHandler();
 //    }
