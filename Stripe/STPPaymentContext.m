@@ -62,7 +62,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 @property (nonatomic) STPPaymentContextAmountModel *paymentAmountModel;
 @property (nonatomic) BOOL shippingAddressNeedsVerification;
 
-@property (nonatomic) BOOL isTokenCreated;
+/**
+ When this is nil that indicates that a payment result has not been created yet.
+ Therefore, paymentContext:didCreatePaymentResult method of self.delegate has not been called yet
+ */
+@property (nonatomic) STPPaymentResult *paymentResult;
 
 // If hostViewController was set to a nav controller, the original VC on top of the stack
 @property (nonatomic, weak) UIViewController *originalTopViewController;
@@ -104,7 +108,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         _paymentCountry = @"US";
         _paymentAmountModel = [[STPPaymentContextAmountModel alloc] initWithAmount:0];
         _modalPresentationStyle = UIModalPresentationFullScreen;
-        _isTokenCreated = NO;
         if (@available(iOS 11, *)) {
             _largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeAutomatic;
         }
@@ -629,51 +632,27 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                     [customerContext updateCustomerWithShippingAddress:self.shippingAddress completion:nil];
                 }
             };
-            __block BOOL isCanceledAfterTokenCreated = NO;
-            __block STPPaymentResult *result;
+            __block BOOL isCanceledAfterPaymentResultCreated = NO;
             STPApplePaySourceHandlerBlock applePaySourceHandler = ^(id<STPSourceProtocol> source, STPErrorBlock completion) {
-                [self.apiAdapter attachSourceToCustomer:source completion:^(NSError *attachSourceError) {
-                    stpDispatchToMainThreadIfNecessary(^{
-                        if (attachSourceError) {
-                            completion(attachSourceError);
-                        } else {
-                            id<STPSourceProtocol> paymentResultSource = source;
-                            /**
-                             When createCardSources is false, the SDK:
-                             1. Sends the token to customers/[id]/sources. This
-                             adds token.card to the customer's sources list.
-                             Surprisingly, attaching token.card to the customer
-                             will fail.
-                             2. Returns token.card to didCreatePaymentResult,
-                             where the user tells their backend to create a charge.
-                             A charge request with the token ID and customer ID
-                             will fail because the token is not linked to the
-                             customer (the card is).
-                             */
-                            if ([source isKindOfClass:[STPToken class]]) {
-                                paymentResultSource = ((STPToken *)source).card;
-                            }
-                            result = [[STPPaymentResult alloc] initWithSource:paymentResultSource];
-                            [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * error) {
-                                // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
-                                // The apple pay vc finishes when the user cancels and it finishes only once.
-                                // So if the user has already canceled calling completion will not cause the apple pay vc to finish
-                                // Therefore, we must directly call our did finish with status method
-                                if (error) {
-                                    completion(error);
-                                    if (isCanceledAfterTokenCreated) {
-                                        [self didFinishWithStatus:STPPaymentStatusError error:error];
-                                    }
-                                } else {
-                                    if (isCanceledAfterTokenCreated) {
-                                        [self didFinishWithStatus:STPPaymentStatusSuccess error:error];
-                                    }
-                                    completion(nil);
-                                }
-                            }];
-                            self.isTokenCreated = YES;
+                [self handleApplePaySource:source
+                                completion:^(NSError * error) {
+                    // for Apple Pay, the didFinishWithStatus callback is fired later when Apple Pay VC finishes
+                    // The apple pay vc finishes when the user cancels and it finishes only once.
+                    // So if the user has already canceled, calling completion will not cause the apple pay vc to finish
+                    // Therefore, we must directly call our did finish with status method
+                    if (error) {
+                        completion(error);
+                        if (isCanceledAfterPaymentResultCreated) {
+                            [self didFinishWithStatus:STPPaymentStatusError error:error];
                         }
-                    });
+                    } else {
+                        completion(nil);
+                        // if isCanceledAfterPaymentResultCreated is true then we should call self.didFinishWithStatus immediately
+                        // because the user already canceled. Otherwise, self.didFinishWithStatus will be called later
+                        if (isCanceledAfterPaymentResultCreated) {
+                            [self didFinishWithStatus:STPPaymentStatusSuccess error:nil];
+                        }
+                    }
                 }];
             };
             PKPaymentAuthorizationViewController *paymentAuthVC;
@@ -688,9 +667,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                              onFinish:^(STPPaymentStatus status, NSError * _Nullable error) {
                                  [self.hostViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]
                                                                              completion:^{
-                                                                                 if (self.isTokenCreated && status == STPPaymentStatusUserCancellation) {
-                                                                                     isCanceledAfterTokenCreated = YES;
-                                                                                     [self.delegate paymentContext:self didCancelAfterPaymentTokenCreated:result];
+                                                                                 if (status == STPPaymentStatusUserCancellation &&
+                                                                                     self.paymentResult != nil) {
+                                                                                     isCanceledAfterPaymentResultCreated = YES;
+                                                                                     [self.delegate paymentContext:self didCancelAfterPaymentResultCreated:self.paymentResult];
                                                                                  } else {
                                                                                      [self didFinishWithStatus:status
                                                                                                          error:error];
@@ -708,11 +688,45 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
+/**
+ @param completion The completion block that gets passed to the paymentContext:didCreatePaymentResult
+ method on self.delegate.
+ */
+- (void)handleApplePaySource:(id<STPSourceProtocol>)source
+                  completion:(STPErrorBlock)completion {
+    [self.apiAdapter attachSourceToCustomer:source completion:^(NSError *attachSourceError) {
+        stpDispatchToMainThreadIfNecessary(^{
+            if (attachSourceError) {
+                completion(attachSourceError);
+            } else {
+                id<STPSourceProtocol> paymentResultSource = source;
+                /**
+                 When createCardSources is false, the SDK:
+                 1. Sends the token to customers/[id]/sources. This
+                 adds token.card to the customer's sources list.
+                 Surprisingly, attaching token.card to the customer
+                 will fail.
+                 2. Returns token.card to the delgate's paymentContext:didCreatePaymentResult method,
+                 where the user tells their backend to create a charge.
+                 A charge request with the token ID and customer ID
+                 will fail because the token is not linked to the
+                 customer (the card is).
+                 */
+                if ([source isKindOfClass:[STPToken class]]) {
+                    paymentResultSource = ((STPToken *)source).card;
+                }
+                self.paymentResult = [[STPPaymentResult alloc] initWithSource:paymentResultSource];
+                [self.delegate paymentContext:self didCreatePaymentResult:self.paymentResult completion:completion];
+            }
+        });
+    }];
+}
+
 - (void)didFinishWithStatus:(STPPaymentStatus)status
                       error:(nullable NSError *)error {
     // we have to reset everything so that we can do another payment after this
     self.state = STPPaymentContextStateNone;
-    self.isTokenCreated = NO;
+    self.paymentResult = nil;
     [self.delegate paymentContext:self
               didFinishWithStatus:status
                             error:error];

@@ -372,17 +372,17 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
             completion:(STPErrorBlock)completion;
 
 /**
- This method is only called when the following happens:
-    1. The user uses apple pay
-    2. A token for stripe is created and we call the delegate method with the parameter named didCreatePaymentResult is called
-    2. The user taps Apple pay's cancel button AFTER we already called the delegate method with didCreatePaymentResult
- When this is called the user will expect you to cancel the payment but that may be difficult if you already sent the stripe token to your server. You could try
- to give the user a refund or just tell them that they can't cancel.
-
- Note that if the user cancel BEFORE the delegate method with didCreatePaymentResult is called then didFinish will be called and this method will not be called.
+ Unfortunately, some payment flows support user cancellation after they have initially authorized a payment but before it has been processed.
+ ApplePay is one such payment flow, where the ApplePay sheet remains displayed with a "Cancel" button until the payment is completed.
+ As a result, the following sequence of events may occur:
+    1. The user authorizes the payment
+    2. the payment context object calls your degelate's paymentContext:didCreatePaymentResult
+    3. The user taps the cancel button before the payment is completed
+ In order to handle this case, the payment context object calls this delegate method whenever the user taps ApplePay's cancel button after paymentContext:didCreatePaymentResult. Note that paymentContext:didFinishWithStatus will not be called in this case.
+ This delegate method should cancel the payment that is still processing if possible, or communicate to the user that the merchant was unable to cancel.
  */
 - (void)paymentContext:(STPPaymentContext *)paymentContext
-didCancelAfterPaymentTokenCreated:(STPPaymentResult *)paymentResult;
+didCancelAfterPaymentResultCreated:(STPPaymentResult *)paymentResult;
 
 /**
  This is invoked by an `STPPaymentContext` when it is finished. This will be called after the payment is done and all necessary UI has been dismissed. You should inspect the returned `status` and behave appropriately. For example: if it's `STPPaymentStatusSuccess`, show the user a receipt. If it's `STPPaymentStatusError`, inform the user of the error. If it's `STPPaymentStatusUserCanceled`, do nothing. If the user cancels before a payment token is created then then this delegate method is invoked. When a payment token is created, the didCreatePaymentResult delgate method is called with a completion block passed in. In this case, the didFinishWithStatus delegate method will not be invoked until the completion block is called even if the user cancels.
