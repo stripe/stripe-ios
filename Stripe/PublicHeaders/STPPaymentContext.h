@@ -373,12 +373,12 @@ didCreatePaymentResult:(STPPaymentResult *)paymentResult
 
 /**
  Unfortunately, some payment flows support user cancellation after they have initially authorized a payment but before it has been processed.
- ApplePay is one such payment flow, where the ApplePay sheet remains displayed with a "Cancel" button until the payment is completed.
+ Apple Pay is one such payment flow, where the Apple Pay sheet remains displayed with a "Cancel" button until the payment is completed.
  As a result, the following sequence of events may occur:
     1. The user authorizes the payment
     2. the payment context object calls your degelate's paymentContext:didCreatePaymentResult
     3. The user taps the cancel button before the payment is completed
- In order to handle this case, the payment context object calls this delegate method whenever the user taps ApplePay's cancel button after paymentContext:didCreatePaymentResult. Note that paymentContext:didFinishWithStatus will not be called in this case.
+ In order to handle this case, the payment context object calls this delegate method whenever the user taps Apple Pay's cancel button after paymentContext:didCreatePaymentResult. Note that paymentContext:didFinishWithStatus will not be called in this case.
  This delegate method should cancel the payment that is still processing if possible, or communicate to the user that the merchant was unable to cancel.
  */
 - (void)paymentContext:(STPPaymentContext *)paymentContext
