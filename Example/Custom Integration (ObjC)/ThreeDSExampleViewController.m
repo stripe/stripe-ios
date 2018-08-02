@@ -165,7 +165,7 @@
                 }
             }];
         } else {
-            [self.delegate createBackendChargeWithSource:source.stripeID completion:^(STPBackendChargeResult status, NSError *error) {
+            [self.delegate createBackendChargeWithSource:source.stripeID completion:^(STPBackendResult status, NSError *error) {
                 if (error) {
                     [self.delegate exampleViewController:self didFinishWithError:error];
                     return;

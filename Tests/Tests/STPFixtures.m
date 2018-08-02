@@ -14,6 +14,8 @@ NSString *const STPTestJSONCustomer = @"Customer";
 
 NSString *const STPTestJSONCard = @"Card";
 
+NSString *const STPTestJSONPaymentIntent = @"PaymentIntent";
+
 NSString *const STPTestJSONSource3DS = @"3DSSource";
 NSString *const STPTestJSONSourceAlipay = @"AlipaySource";
 NSString *const STPTestJSONSourceBancontact = @"BancontactSource";
@@ -193,6 +195,10 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
     detailsDictionary[@"native_url"] = @"alipay://test";
     dictionary[@"alipay"] = detailsDictionary;
     return [STPSource decodedObjectFromAPIResponse:dictionary];
+}
+
++ (STPPaymentIntent *)paymentIntent {
+    return [STPPaymentIntent decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:@"PaymentIntent"]];
 }
 
 + (STPPaymentConfiguration *)paymentConfiguration {

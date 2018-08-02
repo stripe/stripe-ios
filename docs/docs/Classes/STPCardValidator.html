@@ -134,6 +134,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentContext.html">STPPaymentContext</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntent.html">STPPaymentIntent</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a>
               </li>
               <li class="nav-group-task">
@@ -282,6 +288,15 @@
                 <a class="nav-group-task-link" href="../Enums/STPFilePurpose.html">STPFilePurpose</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentCaptureMethod.html">STPPaymentIntentCaptureMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentStatus.html">STPPaymentIntentStatus</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentMethodType.html">STPPaymentMethodType</a>
               </li>
               <li class="nav-group-task">
@@ -379,7 +394,16 @@
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPJSONResponseCompletionBlock">STPJSONResponseCompletionBlock</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPPaymentIntentCompletionBlock">STPPaymentIntentCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextCompletionBlock">STPRedirectContextCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextPaymentIntentCompletionBlock">STPRedirectContextPaymentIntentCompletionBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPRedirectContext.h@T@STPRedirectContextSourceCompletionBlock">STPRedirectContextSourceCompletionBlock</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Type Definitions.html#/c:STPBlocks.h@T@STPShippingMethodsCompletionBlock">STPShippingMethodsCompletionBlock</a>
@@ -462,7 +486,7 @@ see <a href="https://stripe.com/docs/testing">https://stripe.com/docs/testing</a
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPCardValidator.h#L27">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPCardValidator.h#L27">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -492,7 +516,7 @@ see <a href="https://stripe.com/docs/testing">https://stripe.com/docs/testing</a
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPCardValidator.h#L32">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPCardValidator.h#L32">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -572,7 +596,7 @@ STPCardValidationStateIncomplete if the number is a substring of a valid
 card (e.g. @<q>4242</q>).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPCardValidator.h#L55-L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPCardValidator.h#L55-L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -628,7 +652,7 @@ return STPCardBrandVisa, STPCardBrandMasterCard, and
 STPCardBrandUnknown, respectively.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPCardValidator.h#L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPCardValidator.h#L68">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -683,7 +707,7 @@ cards contain 15 characters.</p>
                         <p>The set of possible lengths cards associated with that brand can be.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPCardValidator.h#L79">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPCardValidator.h#L79">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -740,7 +764,7 @@ would return 16 for the that card brand.</p>
                         <p>The maximum length card numbers associated with that brand could be.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPCardValidator.h#L93">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPCardValidator.h#L93">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -797,7 +821,7 @@ American Express cards display their final 5 digits, e.g. <q>10005</q>.</p>
                         <p>The final fragment length card numbers associated with that brand use.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPCardValidator.h#L107">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPCardValidator.h#L107">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -858,7 +882,7 @@ STPCardValidationStateIncomplete if the month is a substring of a valid
 month (e.g. @<q>0</q> or @<q>1</q>).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPCardValidator.h#L123">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPCardValidator.h#L123">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -942,7 +966,7 @@ STPCardValidationStateIncomplete if the year is a substring of a valid
 year (e.g. @<q>1</q> or @<q>2</q>).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPCardValidator.h#L150-L151">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPCardValidator.h#L150-L151">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -996,7 +1020,7 @@ year (e.g. @<q>1</q> or @<q>2</q>).</p>
                         <p>The maximum length of CVC numbers for cards associated with that brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPCardValidator.h#L161">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPCardValidator.h#L161">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1067,7 +1091,7 @@ STPCardBrandAmericanExpress, STPCardValidationStateIncomplete for @<q>12</q> and
 STPCardBrandVisa, and STPCardValidationStateInvalid for @<q>12345</q> and any brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPCardValidator.h#L176-L177">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPCardValidator.h#L176-L177">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1122,7 +1146,7 @@ STPCardValidationStateInvalid if any field is invalid, or
 STPCardValidationStateIncomplete if all fields are either incomplete or valid.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.0.3/Stripe/PublicHeaders/STPCardValidator.h#L188">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPCardValidator.h#L188">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1135,7 +1159,7 @@ STPCardValidationStateIncomplete if all fields are either incomplete or valid.</
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-06-11)</p>
+      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-07-13)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
