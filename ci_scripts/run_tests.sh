@@ -64,7 +64,6 @@ xcodebuild clean test \
   -skip-testing:"StripeiOS Tests/STPPaymentMethodsViewControllerLocalizationTests" \
   -skip-testing:"StripeiOS Tests/STPShippingAddressViewControllerLocalizationTests" \
   -skip-testing:"StripeiOS Tests/STPShippingMethodsViewControllerLocalizationTests" \
-  -skip-testing:"StripeiOS Tests/STPImageLibraryTest" \
   ONLY_ACTIVE_ARCH=NO \
   | xcpretty
 
