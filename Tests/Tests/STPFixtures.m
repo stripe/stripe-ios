@@ -16,11 +16,18 @@ NSString *const STPTestJSONCard = @"Card";
 
 NSString *const STPTestJSONPaymentIntent = @"PaymentIntent";
 
-NSString *const STPTestJSONSourceAlipay = @"AlipaySource";
-NSString *const STPTestJSONSourceCard = @"CardSource";
 NSString *const STPTestJSONSource3DS = @"3DSSource";
+NSString *const STPTestJSONSourceAlipay = @"AlipaySource";
+NSString *const STPTestJSONSourceBancontact = @"BancontactSource";
+NSString *const STPTestJSONSourceCard = @"CardSource";
+NSString *const STPTestJSONSourceEPS = @"EPSSource";
+NSString *const STPTestJSONSourceGiropay = @"GiropaySource";
 NSString *const STPTestJSONSourceiDEAL = @"iDEALSource";
+NSString *const STPTestJSONSourceMultibanco = @"MultibancoSource";
+NSString *const STPTestJSONSourceP24 = @"P24Source";
 NSString *const STPTestJSONSourceSEPADebit = @"SEPADebitSource";
+NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
+
 
 @implementation STPFixtures
 

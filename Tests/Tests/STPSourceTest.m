@@ -455,4 +455,96 @@
     XCTAssertEqualObjects(source.allResponseFields, [response stp_dictionaryByRemovingNulls]);
 }
 
+#pragma mark - STPPaymentMethod Tests
+
+- (NSArray *)possibleAPIResponses {
+    return @[[STPTestUtils jsonNamed:STPTestJSONSourceCard],
+             [STPTestUtils jsonNamed:STPTestJSONSource3DS],
+             [STPTestUtils jsonNamed:STPTestJSONSourceAlipay],
+             [STPTestUtils jsonNamed:STPTestJSONSourceBancontact],
+             [STPTestUtils jsonNamed:STPTestJSONSourceEPS],
+             [STPTestUtils jsonNamed:STPTestJSONSourceGiropay],
+             [STPTestUtils jsonNamed:STPTestJSONSourceiDEAL],
+             [STPTestUtils jsonNamed:STPTestJSONSourceMultibanco],
+             [STPTestUtils jsonNamed:STPTestJSONSourceP24],
+             [STPTestUtils jsonNamed:STPTestJSONSourceSEPADebit],
+             [STPTestUtils jsonNamed:STPTestJSONSourceSOFORT]];
+}
+
+- (void)testPaymentMethodImage {
+    for (NSDictionary *response in [self possibleAPIResponses]) {
+        STPSource *source = [STPSource decodedObjectFromAPIResponse:response];
+
+        switch (source.type) {
+            case STPSourceTypeCard:
+                AssertEqualImages(source.image, [STPImageLibrary brandImageForCardBrand:source.cardDetails.brand]);
+                break;
+            default:
+                AssertEqualImages(source.image, [STPImageLibrary brandImageForCardBrand:STPCardBrandUnknown]);
+                break;
+        }
+    }
+}
+
+- (void)testPaymentMethodTemplateImage {
+    for (NSDictionary *response in [self possibleAPIResponses]) {
+        STPSource *source = [STPSource decodedObjectFromAPIResponse:response];
+
+        switch (source.type) {
+            case STPSourceTypeCard:
+                AssertEqualImages(source.templateImage, [STPImageLibrary templatedBrandImageForCardBrand:source.cardDetails.brand]);
+                break;
+            default:
+                AssertEqualImages(source.templateImage, [STPImageLibrary templatedBrandImageForCardBrand:STPCardBrandUnknown]);
+                break;
+        }
+    }
+}
+
+- (void)testPaymentMethodLabel {
+    for (NSDictionary *response in [self possibleAPIResponses]) {
+        STPSource *source = [STPSource decodedObjectFromAPIResponse:response];
+
+        switch (source.type) {
+            case STPSourceTypeBancontact:
+                XCTAssertEqualObjects(source.label, @"Bancontact");
+                break;
+            case STPSourceTypeCard:
+                XCTAssertEqualObjects(source.label, @"Visa 5556");
+                break;
+            case STPSourceTypeGiropay:
+                XCTAssertEqualObjects(source.label, @"Giropay");
+                break;
+            case STPSourceTypeIDEAL:
+                XCTAssertEqualObjects(source.label, @"iDEAL");
+                break;
+            case STPSourceTypeSEPADebit:
+                XCTAssertEqualObjects(source.label, @"SEPA Direct Debit");
+                break;
+            case STPSourceTypeSofort:
+                XCTAssertEqualObjects(source.label, @"SOFORT");
+                break;
+            case STPSourceTypeThreeDSecure:
+                XCTAssertEqualObjects(source.label, @"3D Secure");
+                break;
+            case STPSourceTypeAlipay:
+                XCTAssertEqualObjects(source.label, @"Alipay");
+                break;
+            case STPSourceTypeP24:
+                XCTAssertEqualObjects(source.label, @"P24");
+                break;
+            case STPSourceTypeEPS:
+                XCTAssertEqualObjects(source.label, @"EPS");
+                break;
+            case STPSourceTypeMultibanco:
+                XCTAssertEqualObjects(source.label, @"Multibanco");
+                break;
+            case STPSourceTypeUnknown:
+                XCTAssertEqualObjects(source.label, [STPCard stringFromBrand:STPCardBrandUnknown]);
+                break;
+        }
+
+    }
+}
+
 @end

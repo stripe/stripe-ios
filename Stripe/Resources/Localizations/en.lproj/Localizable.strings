@@ -1,6 +1,9 @@
 /* {card brand} ending in {last4} */
 "%@ Ending In %@" = "%1$@ Ending In %2$@";
 
+/* Source type brand name */
+"3D Secure" = "3D Secure";
+
 /* Title for Add a Card view */
 "Add a Card" = "Add a Card";
 
@@ -10,11 +13,17 @@
 /* Caption for Address field on address form */
 "Address" = "Address";
 
+/* Source type brand name */
+"Alipay" = "Alipay";
+
 /* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Apt.";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
 
 /* Title for billing address entry section */
 "Billing Address" = "Billing Address";
@@ -46,11 +55,20 @@
 /* Caption for Email field on address form */
 "Email" = "Email";
 
+/* Source type brand name */
+"EPS" = "EPS";
+
 /* accessibility label for text field */
 "expiration date" = "expiration date";
 
 /* Label for free shipping method */
 "Free" = "Free";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
 
 /* Shipping form error message */
 "Invalid Shipping Address" = "Invalid Shipping Address";
@@ -58,14 +76,20 @@
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Loading…";
 
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+
 /* Caption for Name field on address form */
 "Name" = "Name";
 
 /* Button to move to the next text entry field */
 "Next" = "Next";
 
-/* No comment provided by engineer. */
+/* ok button */
 "OK" = "OK";
+
+/* Source type brand name */
+"P24" = "P24";
 
 /* Title for Payment Method screen */
 "Payment Method" = "Payment Method";
@@ -85,6 +109,9 @@
 /* Text for button to scan a credit card */
 "Scan Card" = "Scan Card";
 
+/* Source type brand name */
+"SEPA Direct Debit" = "SEPA Direct Debit";
+
 /* Title for shipping info form */
 "Shipping" = "Shipping";
 
@@ -93,6 +120,9 @@
 
 /* Label for shipping method form */
 "Shipping Method" = "Shipping Method";
+
+/* Source type brand name */
+"SOFORT" = "SOFORT";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "State";
@@ -105,6 +135,9 @@
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "There was an unexpected error -- try again in a few seconds";
+
+/* Default missing source type label */
+"Unknown" = "Unknown";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Use Billing";

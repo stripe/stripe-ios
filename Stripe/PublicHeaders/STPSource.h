@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Representation of a customer's payment instrument created with the Stripe API. @see https://stripe.com/docs/api#sources
  */
-@interface STPSource : NSObject<STPAPIResponseDecodable, STPSourceProtocol>
+@interface STPSource : NSObject<STPAPIResponseDecodable, STPSourceProtocol, STPPaymentMethod>
 
 /**
  You cannot directly instantiate an `STPSource`. You should only use one that 
