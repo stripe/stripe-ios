@@ -37,4 +37,13 @@
     XCTAssertEqualObjects([@"" stp_reversedString], @"");
 }
 
+- (void)testStringByRemovingSuffix {
+    XCTAssertEqualObjects([@"foobar" stp_stringByRemovingSuffix:@"bar"], @"foo");
+    XCTAssertEqualObjects([@"foobar" stp_stringByRemovingSuffix:@"baz"], @"foobar");
+    XCTAssertEqualObjects([@"foobar" stp_stringByRemovingSuffix:nil], @"foobar");
+    XCTAssertEqualObjects([@"foobar" stp_stringByRemovingSuffix:@"foobar"], @"");
+    XCTAssertEqualObjects([@"foobar" stp_stringByRemovingSuffix:@""], @"foobar");
+    XCTAssertEqualObjects([@"foobar" stp_stringByRemovingSuffix:@"oba"], @"foobar");
+}
+
 @end
