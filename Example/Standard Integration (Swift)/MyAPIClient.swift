@@ -30,8 +30,12 @@ class MyAPIClient: NSObject, STPEphemeralKeyProvider {
         let url = self.baseURL.appendingPathComponent("charge")
         var params: [String: Any] = [
             "source": result.source.stripeID,
-            "amount": amount
-        ]
+            "amount": amount,
+            "metadata": [
+                // example-ios-backend allows passing metadata through to Stripe
+                "charge_request_id": "B3E611D1-5FA1-4410-9CEC-00958A5126CB",
+            ],
+            ]
         params["shipping"] = STPAddress.shippingInfoForCharge(with: shippingAddress, shippingMethod: shippingMethod)
         Alamofire.request(url, method: .post, parameters: params)
             .validate(statusCode: 200..<300)
