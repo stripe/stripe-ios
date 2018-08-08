@@ -118,7 +118,12 @@
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
-    NSString *postBody = [NSString stringWithFormat:@"source=%@&amount=%@", sourceID, @1099];
+    NSString *postBody = [NSString stringWithFormat:
+                          @"source=%@&amount=%@&metadata[charge_request_id]=%@",
+                          sourceID,
+                          @1099,
+                          // example-ios-backend allows passing metadata through to Stripe
+                          @"B3E611D1-5FA1-4410-9CEC-00958A5126CB"];
     NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
 
     NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
@@ -169,7 +174,12 @@
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
-    NSString *postBody = [NSString stringWithFormat:@"amount=%@", amount];
+    NSString *postBody = [NSString stringWithFormat:
+                          @"amount=%@&metadata[charge_request_id]=%@",
+                          amount,
+                          // example-ios-backend allows passing metadata through to Stripe
+                          @"B3E611D1-5FA1-4410-9CEC-00958A5126CB"
+                          ];
     NSData *data = [postBody dataUsingEncoding:NSUTF8StringEncoding];
 
     NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request
