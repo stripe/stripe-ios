@@ -46,6 +46,12 @@
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "County";
 
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
 /* Title for delivery info form */
 "Delivery" = "Delivery";
 
@@ -76,6 +82,9 @@
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Loading…";
 
+/* label for text field to enter card expiry */
+"MM/YY" = "MM/YY";
+
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
@@ -97,7 +106,7 @@
 /* Caption for Phone field on address form */
 "Phone" = "Phone";
 
-/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+/* Short string for postal code (text used in non-US countries) */
 "Postal" = "Postal";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
@@ -166,7 +175,7 @@
 /* Error when the card's CVC is not valid */
 "Your card's security code is invalid" = "Your card's security code is invalid";
 
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+/* Short string for zip code (United States only) */
 "ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
