@@ -1,11 +1,23 @@
 /* {card brand} ending in {last4} */
-"%@ Ending In %@" = "%1$@ loppuu %2$@";
+"%@ Ending In %@" = "%1$@ päättyy numeroihin %2$@";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Tili";
+
+/* Title for address entry section */
+"ACCOUNT HOLDER ADDRESS" = "TILINOMISTAJAN OSOITE";
+
+/* Caption for Name field on bank info form */
+"Account Holder Name" = "Tilinomistajan nimi";
 
 /* Title for Add a Card view */
 "Add a Card" = "Lisää kortti";
 
+/* Title for SEPA Debit Account form */
+"Add a Direct Debit Account" = "Lisää suoraveloitustili";
+
 /* Button to add a new credit card. */
-"Add New Card…" = "Lisää uusi kortti…";
+"Add New Card…" = "Lisää uusi kortti...";
 
 /* Caption for Address field on address form */
 "Address" = "Osoite";
@@ -14,10 +26,28 @@
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
-"Apt." = "Osoite 2";
+"Apt." = "Asunto";
+
+/* Text for back button */
+"Back" = "Takaisin";
+
+/* Title for bank picker section */
+"BANK" = "PANKKI";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "PANKKITILIN TIEDOT";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "LASKUTUSOSOITE";
 
 /* Title for billing address entry section */
 "Billing Address" = "Laskutusosoite";
+
+/* SEPA legal authorization text – must use official translations. */
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Antamalla IBAN-tilinumeron ja vahvistamalla tämän maksun annat %@n ja Stripen, maksunhoitajamme, lähettää pankillesi ohjeet veloittaa tililtäsi ja annat pankkisi suorittaa veloitukset näiden ohjeiden mukaisesti. Sinulla on oikeus pankkisi maksamaan hyvitykseen pankin kanssa tekemäsi sopimuksen ehtojen mukaisesti. Hyvitystä on pyydettävä 8 viikon kuluessa päivästä, jolloin maksu veloitettiin tililtäsi.";
+
+/* Title for card number entry field */
+"CARD" = "KORTTI";
 
 /* Title for credit card number entry field */
 "Card" = "Kortti";
@@ -26,19 +56,31 @@
 "card number" = "kortin numero";
 
 /* Caption for City field on address form */
-"City" = "Kaupunki";
+"City" = "Paikkakunta";
 
 /* Title for contact info form */
 "Contact" = "Yhteystiedot";
 
+/* Title for contact info form */
+"CONTACT" = "YHTEYSTIEDOT";
+
+/* Text for continue button */
+"Continue" = "Jatka";
+
 /* Caption for Country field on address form */
 "Country" = "Maa";
 
+/* Title for country picker section */
+"COUNTRY" = "MAA";
+
 /* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Maakunta";
+"County" = "Lääni";
 
 /* Title for delivery info form */
 "Delivery" = "Toimitus";
+
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "TOIMITUSOSOITE";
 
 /* Title for delivery address entry section */
 "Delivery Address" = "Toimitusosoite";
@@ -47,25 +89,43 @@
 "Email" = "Sähköposti";
 
 /* accessibility label for text field */
-"expiration date" = "eräpäivä";
+"expiration date" = "erääntymispäivä";
 
 /* Label for free shipping method */
-"Free" = "Ilmainen";
+"Free" = "Maksuton";
+
+/* IBAN placeholder – don't translate */
+"IBAN" = "IBAN";
 
 /* Shipping form error message */
-"Invalid Shipping Address" = "Virheellinen toimitusosoite";
+"Invalid Shipping Address" = "Toimitusosoite ei kelpaa";
 
 /* Title for screen when data is still loading from the network. */
-"Loading…" = "Ladataan…";
+"Loading…" = "Lataa...";
+
+/* Title for payment options section */
+"MORE OPTIONS" = "LISÄÄ VAIHTOEHTOJA";
 
 /* Caption for Name field on address form */
 "Name" = "Nimi";
+
+/* Label for button to add a new credit or debit card */
+"New Card" = "Uusi kortti";
+
+/* Label for button to add a new SEPA Direct Debit account */
+"New Direct Debit Account" = "Uusi suoraveloitustili";
+
+/* Accessibility label for button to add a new SEPA Direct Debit account */
+"New SEPA Direct Debit Account" = "Uusi SEPA-suoraveloitustili";
 
 /* Button to move to the next text entry field */
 "Next" = "Seuraava";
 
 /* No comment provided by engineer. */
 "OK" = "OK";
+
+/* Pay with {payment method} */
+"Pay with %@" = "Maksutapa: %@";
 
 /* Title for Payment Method screen */
 "Payment Method" = "Maksutapa";
@@ -74,46 +134,61 @@
 "Phone" = "Puhelin";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Posti";
+"Postal" = "Postinro";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postinumero";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Maakunta";
+"Province" = "Provinssi";
 
 /* Text for button to scan a credit card */
 "Scan Card" = "Skannaa kortti";
+
+/* part of {SEPA Account} ending in {last4} */
+"SEPA Account" = "SEPA-tili";
 
 /* Title for shipping info form */
 "Shipping" = "Toimitus";
 
 /* Title for shipping address entry section */
-"Shipping Address" = "Toimitusosoite";
+"SHIPPING ADDRESS" = "TOIMITUSOSOITE";
+
+/* Title for shipping address entry section */
+"Shipping Address" = "Lähetysosoite";
 
 /* Label for shipping method form */
-"Shipping Method" = "Toimitustapa";
+"SHIPPING METHOD" = "TOIMITUSTAPA";
+
+/* Label for shipping method form */
+"Shipping Method" = "Lähetysmenetelmä";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Osavaltio";
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
-"State / Province / Region" = "Osavaltio / Maakunta / Alue";
+"State / Province / Region" = "Osavaltio/maakunta/alue";
+
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+"The selected payment method is not available." = "Valittu maksutapa ei ole käytettävissä.";
 
 /* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Kortin prosessoinnissa tapahtui virhe -- yritä muutaman sekunnin päästä uudestaan";
+"There was an error processing your card -- try again in a few seconds" = "Korttia käsiteltäessä esiintyi virhe – kokeile uudelleen muutaman sekunnin kuluttua";
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
-"There was an unexpected error -- try again in a few seconds" = "Tapahtui odottamaton virhe -- yritä muutaman sekunnin päästä uudestaan";
+"There was an unexpected error -- try again in a few seconds" = "Esiintyi odottamaton virhe – kokeile uudelleen muutaman sekunnin kuluttua";
 
 /* Button to fill shipping address from billing address. */
-"Use Billing" = "Käytä maksuosoitetta";
+"Use Billing" = "Käytä laskutusosoitetta";
 
 /* Button to fill billing address from delivery address. */
 "Use Delivery" = "Käytä toimitusosoitetta";
 
 /* Button to fill billing address from shipping address. */
-"Use Shipping" = "Käytä toimitusosoitetta";
+"Use Shipping" = "Käytä lähetysosoitetta";
+
+/* You'll be taken to {bank name} to finish your purchase. */
+"You'll be taken to %@ to finish your purchase." = "Sinut viedään pankkiin %@ ostoksen viimeistelemiseksi.";
 
 /* Error when the card has already expired */
 "Your card has expired" = "Korttisi on vanhentunut";
@@ -122,19 +197,19 @@
 "Your card was declined" = "Korttiasi ei hyväksytty";
 
 /* Error when the card's expiration month is not valid */
-"Your card's expiration month is invalid" = "Korttisi vanhenemiskuukausi on väärin";
+"Your card's expiration month is invalid" = "Kortin erääntymiskuukausi ei kelpaa";
 
 /* Error when the card's expiration year is not valid */
-"Your card's expiration year is invalid" = "Korttisi vanhenemisvuosi on väärin";
+"Your card's expiration year is invalid" = "Kortin erääntymisvuosi ei kelpaa";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "Korttisi numero on väärin";
+"Your card's number is invalid" = "Kortin numero ei kelpaa";
 
 /* Error when the card's CVC is not valid */
-"Your card's security code is invalid" = "Korttisi turvakoodi on väärin";
+"Your card's security code is invalid" = "Kortin turvakoodi ei kelpaa";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "POSTI";
+"ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Postinumero";
