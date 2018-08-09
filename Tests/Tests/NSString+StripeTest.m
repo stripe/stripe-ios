@@ -44,6 +44,18 @@
     XCTAssertEqualObjects([@"foobar" stp_stringByRemovingSuffix:@"foobar"], @"");
     XCTAssertEqualObjects([@"foobar" stp_stringByRemovingSuffix:@""], @"foobar");
     XCTAssertEqualObjects([@"foobar" stp_stringByRemovingSuffix:@"oba"], @"foobar");
+
+    XCTAssertEqualObjects([@"foobar☺¿" stp_stringByRemovingSuffix:@"bar☺¿"], @"foo");
+    XCTAssertEqualObjects([@"foobar☺¿" stp_stringByRemovingSuffix:@"bar¿"], @"foobar☺¿");
+
+    XCTAssertEqualObjects([@"foobar\u202C" stp_stringByRemovingSuffix:@"bar"], @"foobar\u202C");
+    XCTAssertEqualObjects([@"foobar\u202C" stp_stringByRemovingSuffix:@"bar\u202C"], @"foo");
+
+    // e + \u0041 => é
+    XCTAssertEqualObjects([@"foobare\u0301" stp_stringByRemovingSuffix:@"bare"], @"foobare\u0301");
+    XCTAssertEqualObjects([@"foobare\u0301" stp_stringByRemovingSuffix:@"bare\u0301"], @"foo");
+    XCTAssertEqualObjects([@"foobare" stp_stringByRemovingSuffix:@"bare\u0301"], @"foobare");
+
 }
 
 @end
