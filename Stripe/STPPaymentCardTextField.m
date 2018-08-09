@@ -726,18 +726,13 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     }
 
     STPCardBrand currentBrand = [STPCardValidator brandForNumber:cardNumber];
-    NSArray<NSNumber *> *cardNumberFormat = [STPCardValidator cardNumberFormatForBrand:currentBrand];
+    NSArray<NSNumber *> *sortedCardNumberFormat = [[STPCardValidator cardNumberFormatForBrand:currentBrand] sortedArrayUsingSelector:@selector(unsignedIntegerValue)];
     NSUInteger fragmentLength = [STPCardValidator fragmentLengthForCardBrand:currentBrand];
+    NSUInteger maxLength = MAX([[sortedCardNumberFormat lastObject] unsignedIntegerValue], fragmentLength);
 
-    NSMutableString *maxCompressedString = [[NSMutableString alloc] init];
-    while (fragmentLength > maxCompressedString.length) {
+    NSMutableString *maxCompressedString = [[NSMutableString alloc] initWithCapacity:maxLength];
+    for (NSUInteger i = 0; i < maxLength; ++i) {
         [maxCompressedString appendString:@"8"];
-    }
-    for (NSNumber *segment in cardNumberFormat) {
-        NSUInteger segmentLength = [segment unsignedIntegerValue];
-        while (segmentLength > maxCompressedString.length) {
-            [maxCompressedString appendString:@"8"];
-        }
     }
 
     return [self widthForText:maxCompressedString];
