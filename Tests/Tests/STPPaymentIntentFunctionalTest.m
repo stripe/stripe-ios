@@ -93,8 +93,8 @@
                                     XCTAssertNotNil(error);
                                     XCTAssertEqualObjects(error.domain, StripeDomain);
                                     XCTAssertEqual(error.code, STPInvalidRequestError);
-                                    XCTAssertEqualObjects(error.userInfo[STPErrorMessageKey],
-                                                          @"This PaymentIntent could not be updated because it has a status of canceled. Only a PaymentIntent with one of the following statuses may be updated: requires_source, requires_confirmation, requires_source_action.");
+                                    XCTAssertTrue([error.userInfo[STPErrorMessageKey] hasPrefix:@"This PaymentIntent could not be updated because it has a status of canceled."],
+                                                  @"Expected error message to complain about status being canceled. Actual msg: `%@`", error.userInfo[STPErrorMessageKey]);
 
                                     [expectation fulfill];
                                 }];
