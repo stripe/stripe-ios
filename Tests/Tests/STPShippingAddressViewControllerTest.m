@@ -11,6 +11,7 @@
 #import <Stripe/Stripe.h>
 #import "NSLocale+STPSwizzling.h"
 #import "STPFixtures.h"
+#import "STPPostalCodeValidator.h"
 
 @interface STPShippingAddressViewControllerTest : XCTestCase
 
@@ -29,7 +30,10 @@
     address.line1 = @"55 John St";
     address.city = @"Harare";
     address.postalCode = @"10002";
-    address.country = @"ZW";
+    address.country = @"ZW"; // Zimbabwe does not require zip codes, while the default locale for tests (US) does
+    // Sanity checks
+    XCTAssertFalse([STPPostalCodeValidator postalCodeIsRequiredForCountryCode:@"ZW"]);
+    XCTAssertTrue([STPPostalCodeValidator postalCodeIsRequiredForCountryCode:@"US"]);
 
     STPShippingAddressViewController *sut = [[STPShippingAddressViewController alloc] initWithConfiguration:config
                                                                                                       theme:[STPTheme defaultTheme]
@@ -38,12 +42,16 @@
                                                                                      selectedShippingMethod:nil
                                                                                        prefilledInformation:nil];
 
-    [sut loadView];
-    [sut viewDidLoad];
+    XCTAssertNoThrow([sut loadView]);
+    XCTAssertNoThrow([sut viewDidLoad]);
 }
 
 - (void)testPrefilledBillingAddress_addAddress {
     [NSLocale stp_setCurrentLocale:[NSLocale localeWithLocaleIdentifier:@"en_ZW"]];
+    // Zimbabwe does not require zip codes, while the default locale for tests (US) does
+    // Sanity checks
+    XCTAssertFalse([STPPostalCodeValidator postalCodeIsRequiredForCountryCode:@"ZW"]);
+    XCTAssertTrue([STPPostalCodeValidator postalCodeIsRequiredForCountryCode:@"US"]);
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.requiredShippingAddressFields = [NSSet setWithObject:STPContactFieldPostalAddress];
 
@@ -64,8 +72,8 @@
                                                                                      selectedShippingMethod:nil
                                                                                        prefilledInformation:nil];
 
-    [sut loadView];
-    [sut viewDidLoad];
+    XCTAssertNoThrow([sut loadView]);
+    XCTAssertNoThrow([sut viewDidLoad]);
     [NSLocale stp_resetCurrentLocale];
 }
 

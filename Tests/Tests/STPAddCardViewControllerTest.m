@@ -14,6 +14,7 @@
 #import "STPCard.h"
 #import "STPFixtures.h"
 #import "STPPaymentCardTextFieldCell.h"
+#import "STPPostalCodeValidator.h"
 
 @interface STPAddCardViewController (Testing)
 @property (nonatomic) STPPaymentCardTextFieldCell *paymentCell;
@@ -39,9 +40,6 @@
     return vc;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-
 - (void)testPrefilledBillingAddress_removeAddress {
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.requiredBillingAddressFields = STPBillingAddressFieldsZip;
@@ -54,18 +52,24 @@
     address.line1 = @"55 John St";
     address.city = @"Harare";
     address.postalCode = @"10002";
-    address.country = @"ZW";
+    address.country = @"ZW"; // Zimbabwe does not require zip codes, while the default locale for tests (US) does
+    // Sanity checks
+    XCTAssertFalse([STPPostalCodeValidator postalCodeIsRequiredForCountryCode:@"ZW"]);
+    XCTAssertTrue([STPPostalCodeValidator postalCodeIsRequiredForCountryCode:@"US"]);
 
     STPUserInformation *prefilledInfo = [[STPUserInformation alloc] init];
     prefilledInfo.billingAddress = address;
     sut.prefilledInformation = prefilledInfo;
 
-    [sut loadView];
-    [sut viewDidLoad];
+    XCTAssertNoThrow([sut loadView]);
+    XCTAssertNoThrow([sut viewDidLoad]);
 }
 
 - (void)testPrefilledBillingAddress_addAddress {
-    [NSLocale stp_setCurrentLocale:[NSLocale localeWithLocaleIdentifier:@"en_ZW"]];
+    [NSLocale stp_setCurrentLocale:[NSLocale localeWithLocaleIdentifier:@"en_ZW"]]; // Zimbabwe does not require zip codes, while the default locale for tests (US) does
+    // Sanity checks
+    XCTAssertFalse([STPPostalCodeValidator postalCodeIsRequiredForCountryCode:@"ZW"]);
+    XCTAssertTrue([STPPostalCodeValidator postalCodeIsRequiredForCountryCode:@"US"]);
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.requiredBillingAddressFields = STPBillingAddressFieldsZip;
     STPAddCardViewController *sut = [[STPAddCardViewController alloc] initWithConfiguration:config
@@ -84,10 +88,14 @@
     prefilledInfo.billingAddress = address;
     sut.prefilledInformation = prefilledInfo;
 
-    [sut loadView];
-    [sut viewDidLoad];
+    XCTAssertNoThrow([sut loadView]);
+    XCTAssertNoThrow([sut viewDidLoad]);
     [NSLocale stp_resetCurrentLocale];
 }
+
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
 - (void)testNextWithCreateTokenError {
     STPAddCardViewController *sut = [self buildAddCardViewController];
