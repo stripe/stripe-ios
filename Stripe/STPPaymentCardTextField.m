@@ -159,6 +159,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     expirationField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorExpiration;
     expirationField.tag = STPCardFieldTypeExpiration;
     expirationField.alpha = 0;
+    expirationField.isAccessibilityElement = NO;
     expirationField.accessibilityLabel = STPLocalizedString(@"expiration date", @"accessibility label for text field");
     self.expirationField = expirationField;
     self.expirationPlaceholder = @"MM/YY";
@@ -166,6 +167,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     STPFormTextField *cvcField = [self buildTextField];
     cvcField.tag = STPCardFieldTypeCVC;
     cvcField.alpha = 0;
+    cvcField.isAccessibilityElement = NO;
     self.cvcField = cvcField;
     self.cvcPlaceholder = nil;
     self.cvcField.accessibilityLabel = [self defaultCVCPlaceholder];
@@ -176,6 +178,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     }
     postalCodeField.tag = STPCardFieldTypePostalCode;
     postalCodeField.alpha = 0;
+    postalCodeField.isAccessibilityElement = NO;
     self.postalCodeField = postalCodeField;
     // Placeholder and appropriate keyboard typeare set by country code setter
 
@@ -1108,11 +1111,20 @@ typedef NS_ENUM(NSInteger, STPCardTextFieldState) {
         self.postalCodeField.frame = CGRectMake(xOffset, 0, width + additionalWidth, fieldsHeight);
     }
 
-    self.numberField.alpha = (CGFloat) ((panVisibility == STPCardTextFieldStateHidden) ? 0.0:  1.0);
-    self.expirationField.alpha = (CGFloat) ((expiryVisibility == STPCardTextFieldStateHidden) ? 0.0:  1.0);
-    self.cvcField.alpha = (CGFloat) ((cvcVisibility == STPCardTextFieldStateHidden) ? 0.0:  1.0);
-    self.postalCodeField.alpha = (CGFloat) (((postalVisibility == STPCardTextFieldStateHidden)
-                                  || !self.postalCodeEntryEnabled) ? 0.0:  1.0);
+    void (^updateFieldVisibility)(STPFormTextField *, STPCardTextFieldState) = ^(STPFormTextField *field, STPCardTextFieldState fieldState) {
+        if (fieldState == STPCardTextFieldStateHidden) {
+            field.alpha = 0.0f;
+            field.isAccessibilityElement = NO;
+        } else {
+            field.alpha = 1.0f;
+            field.isAccessibilityElement = YES;
+        }
+    };
+
+    updateFieldVisibility(self.numberField, panVisibility);
+    updateFieldVisibility(self.expirationField, expiryVisibility);
+    updateFieldVisibility(self.cvcField, cvcVisibility);
+    updateFieldVisibility(self.postalCodeField, self.postalCodeEntryEnabled ? postalVisibility :  STPCardTextFieldStateHidden);
 }
 
 #pragma mark - private helper methods
