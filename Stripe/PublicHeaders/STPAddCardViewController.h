@@ -16,6 +16,7 @@
 #import "STPPaymentConfiguration.h"
 #import "STPTheme.h"
 #import "STPUserInformation.h"
+#import "STPPaymentCardTextFieldCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -39,6 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                                 theme:(STPTheme *)theme;
+
+/**
+ Available only on ShareTheMeal forked Stripe repo.
+ Use this property to get credit cards data.
+ */
+@property (nonatomic, readonly) STPPaymentCardTextFieldCell *paymentCell;
 
 /**
  The view controller's delegate. This must be set before showing the view controller in order for it to work properly. @see STPAddCardViewControllerDelegate
