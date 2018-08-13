@@ -140,7 +140,7 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                 for (NSNumber *segmentLength in cardNumberFormat) {
                     NSUInteger segmentIndex = 0;
                     for (; index < attributedString.length && segmentIndex < [segmentLength unsignedIntegerValue]; index++, segmentIndex++) {
-                        if (segmentIndex + 1 == [segmentLength unsignedIntegerValue]) {
+                        if (index + 1 != attributedString.length && segmentIndex + 1 == [segmentLength unsignedIntegerValue]) {
                             [attributedString addAttribute:NSKernAttributeName value:@(5)
                                                      range:NSMakeRange(index, 1)];
                         } else {

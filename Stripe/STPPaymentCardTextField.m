@@ -733,11 +733,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     NSUInteger fragmentLength = [STPCardValidator fragmentLengthForCardBrand:currentBrand];
     NSUInteger maxLength = MAX([[sortedCardNumberFormat lastObject] unsignedIntegerValue], fragmentLength);
 
-    NSMutableString *maxCompressedString = [[NSMutableString alloc] initWithCapacity:maxLength];
-    for (NSUInteger i = 0; i < maxLength; ++i) {
-        [maxCompressedString appendString:@"8"];
-    }
-
+    NSString *maxCompressedString = [@"" stringByPaddingToLength:maxLength withString:@"8" startingAtIndex:0];
     return [self widthForText:maxCompressedString];
 }
 
