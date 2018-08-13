@@ -28,6 +28,14 @@
     return [mutableReversedString copy];
 }
 
+- (NSString *)stp_stringByRemovingSuffix:(NSString *)suffix {
+    if (suffix != nil && [self hasSuffix:suffix]) {
+        return [self stp_safeSubstringToIndex:self.length-suffix.length];
+    } else {
+        return [self copy];
+    }
+}
+
 @end
 
 void linkNSStringCategory(void){}

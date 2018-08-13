@@ -152,7 +152,7 @@
                        @[@(STPCardBrandMasterCard), @4],
                        @[@(STPCardBrandAmex), @5],
                        @[@(STPCardBrandDiscover), @4],
-                       @[@(STPCardBrandDinersClub), @2],
+                       @[@(STPCardBrandDinersClub), @4],
                        @[@(STPCardBrandJCB), @4],
                        @[@(STPCardBrandUnionPay), @4],
                        @[@(STPCardBrandUnknown), @4],
