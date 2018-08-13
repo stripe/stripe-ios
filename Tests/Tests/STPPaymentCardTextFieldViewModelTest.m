@@ -103,7 +103,7 @@
     XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"12");
 
     self.viewModel.cardNumber = @"30569309025904";
-    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"04"); // Use fragment length for valid card
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"5904");
     self.viewModel.cardNumber = @"3056930902590";
     XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"590");
     self.viewModel.cardNumber = @"30569309025";
