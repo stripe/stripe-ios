@@ -494,6 +494,11 @@ field.</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithClientSecret</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">clientSecret</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -515,7 +520,7 @@ field.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -543,9 +548,14 @@ field.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">stripeId</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">stripeId</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L43">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -573,9 +583,14 @@ field.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">clientSecret</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L48">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -609,9 +624,14 @@ during PaymentIntent confirmation.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n"><a href="../Classes/STPSourceParams.html">STPSourceParams</a></span> <span class="o">*</span><span class="n">sourceParams</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">sourceParams</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPSourceParams.html">STPSourceParams</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -644,9 +664,14 @@ during PaymentIntent confirmation.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">sourceId</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">sourceId</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L63">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L63">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -674,9 +699,14 @@ during PaymentIntent confirmation.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">receiptEmail</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">receiptEmail</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L68">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -708,9 +738,14 @@ if the Source is not already attached.</p>
     <span class="n">NSNumber</span> <span class="o">*</span><span class="n">saveSourceToCustomer</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">saveSourceToCustomer</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L76">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L76">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -740,9 +775,14 @@ This should probably be a URL that opens your iOS app.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">returnUrl</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">returnUrl</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L83">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPPaymentIntentParams.h#L83">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -755,7 +795,7 @@ This should probably be a URL that opens your iOS app.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-07-13)</p>
+      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-08-13)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
