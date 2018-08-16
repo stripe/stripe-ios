@@ -280,6 +280,7 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
 
     legalEntity.verification = [STPVerificationParams new];
     legalEntity.verification.document = @"file_abc";
+    legalEntity.verification.documentBack = @"file_def";
 
     STPPersonParams *jenny = [self personParams], *jacob = [self personParams];
     jenny.firstName = @"Jenny";
