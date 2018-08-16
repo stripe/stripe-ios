@@ -65,4 +65,4 @@ We welcome contributions of any kind including new features, bug fixes, and docu
 
 ## Migrating from Older Versions
 
-See `MIGRATING.md`
+See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md)
