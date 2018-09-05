@@ -13,14 +13,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPCustomer ()
 
 /**
- Replaces the customer's sources and defaultSource with the contents of a
- Customer API response.
+ Replaces the customer's `sources` and `defaultSource` based on whether or not
+ they should include Apple Pay sources. More details on documentation for
+ `STPCustomerContext includeApplePaySources`
 
- @param response            The Customer API response
  @param filterApplePay      If YES, Apple Pay sources will be ignored
  */
-- (void)updateSourcesWithResponse:(NSDictionary *)response
-                filteringApplePay:(BOOL)filterApplePay;
+- (void)updateSourcesFilteringApplePay:(BOOL)filterApplePay;
 
 @end
 
