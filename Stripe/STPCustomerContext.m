@@ -87,7 +87,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
         }
         [STPAPIClient retrieveCustomerUsingKey:ephemeralKey completion:^(STPCustomer *customer, NSError *error) {
             if (customer) {
-                [customer updateSourcesWithResponse:self.customer.allResponseFields
+                [customer updateSourcesWithResponse:customer.allResponseFields
                                   filteringApplePay:!self.includeApplePaySources];
                 self.customer = customer;
             }
@@ -138,7 +138,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
                                           usingKey:ephemeralKey
                                         completion:^(STPCustomer *customer, NSError *error) {
                                             if (customer) {
-                                                [customer updateSourcesWithResponse:self.customer.allResponseFields
+                                                [customer updateSourcesWithResponse:customer.allResponseFields
                                                                   filteringApplePay:!self.includeApplePaySources];
                                                 self.customer = customer;
                                             }
@@ -168,7 +168,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
                                           usingKey:ephemeralKey
                                         completion:^(STPCustomer *customer, NSError *error) {
                                             if (customer) {
-                                                [customer updateSourcesWithResponse:self.customer.allResponseFields
+                                                [customer updateSourcesWithResponse:customer.allResponseFields
                                                                   filteringApplePay:!self.includeApplePaySources];
                                                 self.customer = customer;
                                             }
