@@ -638,7 +638,6 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
      */
     STPFormTextField *originalSubResponder = self.currentFirstResponderField;
 
-    self.internalCardParams = cardParams;
     [self setText:cardParams.number inField:STPCardFieldTypeNumber];
     BOOL expirationPresent = cardParams.expMonth && cardParams.expYear;
     if (expirationPresent) {
@@ -653,6 +652,8 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     [self setText:cardParams.cvc inField:STPCardFieldTypeCVC];
 
     [self setText:cardParams.address.postalCode inField:STPCardFieldTypePostalCode];
+
+    self.internalCardParams = cardParams;
 
     if ([self isFirstResponder]) {
         STPCardFieldType fieldType = originalSubResponder.tag;
