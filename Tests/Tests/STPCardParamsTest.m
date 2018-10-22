@@ -152,4 +152,16 @@
     }
 }
 
+- (void)testAddressIsNotCopied {
+    STPCardParams *cardParams = [STPFixtures cardParams];
+    cardParams.address = [STPFixtures address];
+    STPCardParams *secondCardParams = [STPCardParams new];
+
+    secondCardParams.address = cardParams.address;
+    cardParams.address.line1 = @"123 Main";
+
+    XCTAssertEqualObjects(cardParams.address.line1, @"123 Main");
+    XCTAssertEqualObjects(secondCardParams.address.line1, @"123 Main");
+}
+
 @end
