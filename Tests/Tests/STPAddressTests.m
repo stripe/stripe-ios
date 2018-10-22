@@ -11,6 +11,7 @@
 #import <Contacts/Contacts.h>
 #import "STPAddress.h"
 #import "STPFixtures.h"
+#import "STPTestUtils.h"
 
 @interface STPAddressTests : XCTestCase
 
@@ -488,6 +489,37 @@
     }
 
     XCTAssertEqual([[mapping allValues] count], [[NSSet setWithArray:[mapping allValues]] count]);
+}
+
+#pragma mark NSCopying Tests
+
+- (void)testCopyWithZone {
+    STPAddress *address = [STPFixtures address];
+    STPAddress *copiedAddress = [address copy];
+
+    XCTAssertNotEqual(address, copiedAddress, @"should be different objects");
+
+    // The property names we expect to *not* be equal objects
+    NSArray *notEqualProperties = @[
+                                    // these include the object's address, so they won't be the same across copies
+                                    @"debugDescription",
+                                    @"description",
+                                    @"hash",
+                                    ];
+    // use runtime inspection to find the list of properties. If a new property is
+    // added to the fixture, but not the `copyWithZone:` implementation, this should catch it
+    for (NSString *property in [STPTestUtils propertyNamesOf:address]) {
+        if ([notEqualProperties containsObject:property]) {
+            XCTAssertNotEqualObjects([address valueForKey:property],
+                                     [copiedAddress valueForKey:property],
+                                     @"%@", property);
+        }
+        else {
+            XCTAssertEqualObjects([address valueForKey:property],
+                                  [copiedAddress valueForKey:property],
+                                  @"%@", property);
+        }
+    }
 }
 
 @end
