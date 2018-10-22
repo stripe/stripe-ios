@@ -38,6 +38,26 @@
     XCTAssertNil(cardParams.last4);
 }
 
+- (void)testNameSharedWithAddress {
+    STPCardParams *cardParams = [STPCardParams new];
+
+    cardParams.name = @"James";
+    XCTAssertEqualObjects(cardParams.name, @"James");
+    XCTAssertEqualObjects(cardParams.address.name, @"James");
+
+    STPAddress *address = [STPAddress new];
+    address.name = @"Jim";
+
+    cardParams.address = address;
+    XCTAssertEqualObjects(cardParams.name, @"Jim");
+    XCTAssertEqualObjects(cardParams.address.name, @"Jim");
+
+    // Doesn't update `name`, since mutation invisible to the STPCardParams
+    cardParams.address.name = @"Smith";
+    XCTAssertEqualObjects(cardParams.name, @"Jim");
+    XCTAssertEqualObjects(cardParams.address.name, @"Smith");
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 
