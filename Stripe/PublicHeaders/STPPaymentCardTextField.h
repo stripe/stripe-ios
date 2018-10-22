@@ -236,7 +236,7 @@ The curent brand image displayed in the receiver.
  to scan your user's credit card with a camera, you can assemble that data into an STPCardParams
  object and set this property to that object to prefill the fields you've collected.
  */
-@property (nonatomic, strong, readwrite, nonnull) STPCardParams *cardParams;
+@property (nonatomic, copy, readwrite, nonnull) STPCardParams *cardParams;
 
 /**
  Causes the text field to begin editing. Presents the keyboard.

@@ -383,31 +383,29 @@
     STPCardParams *actual = sut.cardParams;
 
     XCTAssertEqualObjects(@"4242424242424242", actual.number);
-    XCTAssertEqualObjects(@"123", actual.cvc); // fails due to #1027
+    XCTAssertEqualObjects(@"123", actual.cvc);
     XCTAssertEqualObjects(@"John", actual.name);
 }
 
-- (void)testCardParamsDoesNotCopyObject {
-    // danj: I don't actually know if this behavior is desirable. It is the *current* behavior,
-    // and changing it might break a user's integration
-
+- (void)testSetCardParamsCopiesObject {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
     STPCardParams *params = [STPCardParams new];
 
     params.number = @"4242424242424242"; // legit
     sut.cardParams = params;
-    params.name = @"John"; // wouldn't necessarily expect this to work
-    sut.cardParams.currency = @"GBP"; // reasonable?
+    params.name = @"John"; // doesn't work
+    sut.cardParams.currency = @"GBP"; // reasonable, and it works
 
     STPCardParams *actual = sut.cardParams;
-    actual.address.line1 = @"123 Main St"; // address is also shared
-    params.address.line2 = @"Apt 3"; // shared with the original object too
+    actual.address.line1 = @"123 Main St"; // can fetch `sut.cardParams` and modify it
+    params.address.line2 = @"Apt 3"; // but `sut` has a copy, so edits to original params don't show up
 
     XCTAssertEqualObjects(@"4242424242424242", sut.cardParams.number, @"set via setCardParams:");
-    XCTAssertEqualObjects(@"John", sut.cardParams.name, @"caller changed their copy after setCardParams:");
     XCTAssertEqualObjects(@"GBP", sut.cardParams.currency, @"return value from cardParams edited inline");
-    XCTAssertEqualObjects(@"123 Main St", sut.cardParams.address.line1, @"address is also not copied");
-    XCTAssertEqualObjects(@"Apt 3", sut.cardParams.address.line2, @"address is also not copied");
+    XCTAssertEqualObjects(@"123 Main St", sut.cardParams.address.line1, @"returned cardParams.address edited");
+
+    XCTAssertNotEqualObjects(@"John", sut.cardParams.name, @"caller changed their copy after setCardParams:");
+    XCTAssertNotEqualObjects(@"Apt 3", sut.cardParams.address.line2, @"caller changed their copy after setCardParams:");
 }
 
 @end

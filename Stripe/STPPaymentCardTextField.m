@@ -638,7 +638,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
      */
     STPFormTextField *originalSubResponder = self.currentFirstResponderField;
 
-    self.internalCardParams = cardParams;
+    self.internalCardParams = [cardParams copy];
     [self setText:cardParams.number inField:STPCardFieldTypeNumber];
     BOOL expirationPresent = cardParams.expMonth && cardParams.expYear;
     if (expirationPresent) {
