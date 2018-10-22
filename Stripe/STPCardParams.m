@@ -34,13 +34,13 @@
 }
 
 - (void)setName:(NSString *)name {
-    _name = name.copy;
-    self.address.name = name;
+    _name = [name copy];
+    self.address.name = self.name;
 }
 
 - (void)setAddress:(STPAddress *)address {
-    _address = address;
-    self.name = address.name;
+    _address = [address copy];
+    _name = self.address.name;
 }
 
 #pragma mark - Description
