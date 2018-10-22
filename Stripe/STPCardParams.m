@@ -33,6 +33,11 @@
     }
 }
 
+- (void)setName:(NSString *)name {
+    _name = name.copy;
+    self.address.name = name;
+}
+
 - (void)setAddress:(STPAddress *)address {
     _address = address;
     self.name = address.name;
@@ -85,11 +90,6 @@
              };
 }
 
-- (void)setName:(NSString *)name {
-    _name = name.copy;
-    self.address.name = name;
-}
-
 #pragma mark - Deprecated methods
 
 - (void)setAddressLine1:(NSString *)addressLine1 {
@@ -138,6 +138,26 @@
 
 - (NSString *)addressCountry {
     return self.address.country;
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(__unused NSZone *)zone {
+    STPCardParams *copyCardParams = [self.class new];
+
+    copyCardParams.number = self.number;
+    copyCardParams.expMonth = self.expMonth;
+    copyCardParams.expYear = self.expYear;
+    copyCardParams.cvc = self.cvc;
+
+    // Use ivar to avoid setName:/setAddress: behavior that'd possibly overwrite name/address.name
+    copyCardParams->_name = self.name;
+    copyCardParams->_address = [self.address copy];
+
+    copyCardParams.currency = self.currency;
+    copyCardParams.additionalAPIParameters = self.additionalAPIParameters;
+
+    return copyCardParams;
 }
 
 @end

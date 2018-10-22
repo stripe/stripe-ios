@@ -10,6 +10,9 @@
 
 #import "STPCardParams.h"
 
+#import "STPFixtures.h"
+#import "STPTestUtils.h"
+
 @interface STPCardParamsTest : XCTestCase
 
 @end
@@ -112,6 +115,41 @@
     }
 
     XCTAssertEqual([[mapping allValues] count], [[NSSet setWithArray:[mapping allValues]] count]);
+}
+
+#pragma mark - NSCopying Tests
+
+- (void)testCopyWithZone {
+    STPCardParams *cardParams = [STPFixtures cardParams];
+    cardParams.address = [STPFixtures address];
+    STPCardParams *copiedCardParams = [cardParams copy];
+
+    XCTAssertNotEqual(cardParams, copiedCardParams, @"should be different objects");
+
+    // The property names we expect to *not* be equal objects
+    NSArray *notEqualProperties = @[
+                                    // these include the object's address, so they won't be the same across copies
+                                    @"debugDescription",
+                                    @"description",
+                                    @"hash",
+                                    // STPAddress does not override isEqual:, so this is pointer comparison
+                                    @"address",
+                                    ];
+
+    // use runtime inspection to find the list of properties. If a new property is
+    // added to the fixture, but not the `copyWithZone:` implementation, this should catch it
+    for (NSString *property in [STPTestUtils propertyNamesOf:cardParams]) {
+        if ([notEqualProperties containsObject:property]) {
+            XCTAssertNotEqualObjects([cardParams valueForKey:property],
+                                     [copiedCardParams valueForKey:property],
+                                     @"%@", property);
+        }
+        else {
+            XCTAssertEqualObjects([cardParams valueForKey:property],
+                                  [copiedCardParams valueForKey:property],
+                                  @"%@", property);
+        }
+    }
 }
 
 @end

@@ -20,7 +20,7 @@
 
  @see https://stripe.com/docs/api#cards
  */
-@interface STPCardParams : NSObject<STPFormEncodable>
+@interface STPCardParams : NSObject<STPFormEncodable, NSCopying>
 
 /**
  The card's number.
