@@ -1,5 +1,26 @@
 ## Migration Guides
 
+### Migrating from versions < 14.0.0
+* `STPPaymentCardTextField` now copies the `STPCardParams` object when setting/getting the `cardParams` property, instead of sharing the object with the caller.
+  * Changes to the `STPCardParams` object after setting `cardParams` no longer mutate the object held by the `STPPaymentCardTextField`
+  * Changes to the object returned by `STPPaymentCardTextField.cardParams` no longer mutate the object held by the `STPPaymentCardTextField`
+  * This is a breaking change for code like: `paymentCardTextField.cardParams.name = @"Jane Doe";`
+* `STPCardParams` now copies the `STPAddress` object when setting the `address` property. However, unlike `STPPaymentCardTextField.cardParams`, `STPCardParams.address` still returns a reference to the `STPAddress` object held by the `STPCardParams` instance.
+
+```objective-c
+STPCardParams *cardParams = ...;
+
+STPAddress *myAddress = [[STPAddress alloc] init];
+cardParams.address = address;
+
+// Breaking change:
+// Changes to `myAddress` after setting `cardParams.address` don't change `cardParams`
+myAddress.line1 = @"123 Main St"; // no longer supported
+
+// This still works for `STPCardParams` objects:
+cardParams.address.line1 = @"456 Maple Ave";
+```
+
 ### Migrating from versions < 13.1.0
  * The SDK now supports PaymentIntents with `STPPaymentIntent`, which use `STPRedirectContext` in the same way that `STPSource` does
    * `STPRedirectContextCompletionBlock` has been renamed to `STPRedirectContextSourceCompletionBlock`. It has the same signature, and Xcode should offer a deprecation warning & fix-it to help you migrate.
