@@ -618,7 +618,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
         // if we are not showing the postal code entry field.
         self.internalCardParams.address.postalCode = self.postalCode;
     }
-    return self.internalCardParams;
+    return [self.internalCardParams copy];
 }
 
 - (void)setCardParams:(STPCardParams *)cardParams {
