@@ -118,22 +118,24 @@ Versions of Stripe-iOS prior to 1.2 included a class called `STPView`, which pro
 2. Replace any references to `STPView` with a `PTKView` instead. Similarly, any classes that implement `STPViewDelegate` should now instead implement the equivalent `PTKViewDelegate` methods. Note that unlike `STPView`, `PTKView` does not take a Stripe API key in its constructor.
 3. To submit the credit card details from your `PTKView` instance, where you would previously call `createToken` on your `STPView`, replace that with the following code (assuming `self.paymentView` is your `PTKView` instance):
 
-        if (![self.paymentView isValid]) {
-            return;
-        }
-        STPCard *card = [[STPCard alloc] init];
-        card.number = self.paymentView.card.number;
-        card.expMonth = self.paymentView.card.expMonth;
-        card.expYear = self.paymentView.card.expYear;
-        card.cvc = self.paymentView.card.cvc;
-        STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
-        [client createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
-            if (error) {
-                // handle the error as you did previously
-            } else {
-                // submit the token to your payment backend as you did previously
-            }
-        }];
+```objective-c
+if (![self.paymentView isValid]) {
+    return;
+}
+STPCard *card = [[STPCard alloc] init];
+card.number = self.paymentView.card.number;
+card.expMonth = self.paymentView.card.expMonth;
+card.expYear = self.paymentView.card.expYear;
+card.cvc = self.paymentView.card.cvc;
+STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:publishableKey];
+[client createTokenWithCard:card completion:^(STPToken *token, NSError *error) {
+    if (error) {
+        // handle the error as you did previously
+    } else {
+        // submit the token to your payment backend as you did previously
+    }
+}];
+```
 
 ## Misc. notes
 
@@ -149,10 +151,12 @@ The simplest thing you can do is to populate an `STPCard` object and, before sen
 
 To validate `STPCard` properties individually, you should use the following:
 
+```objective-c
  - (BOOL)validateNumber:error:
  - (BOOL)validateCvc:error:
  - (BOOL)validateExpMonth:error:
  - (BOOL)validateExpYear:error:
+```
 
 These methods follow the validation method convention used by [key-value validation](http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/KeyValueCoding/Articles/Validation.html).  So, you can use these methods by invoking them directly, or by calling `[card validateValue:forKey:error]` for a property on the `STPCard` object.
 
