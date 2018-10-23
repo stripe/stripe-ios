@@ -62,7 +62,7 @@
  be the value of `address.name`. However, changing `address.name` directly will
  *not* change `name`.
  */
-@property (nonatomic, copy, nonnull) STPAddress *address;
+@property (nonatomic, strong, nonnull) STPAddress *address;
 
 /**
  Three-letter ISO currency code representing the currency paid out to the bank 

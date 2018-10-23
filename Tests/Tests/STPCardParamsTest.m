@@ -172,7 +172,7 @@
     }
 }
 
-- (void)testAddressIsCopied {
+- (void)testAddressIsNotCopied {
     STPCardParams *cardParams = [STPFixtures cardParams];
     cardParams.address = [STPFixtures address];
     STPCardParams *secondCardParams = [STPCardParams new];
@@ -181,7 +181,7 @@
     cardParams.address.line1 = @"123 Main";
 
     XCTAssertEqualObjects(cardParams.address.line1, @"123 Main");
-    XCTAssertEqualObjects(secondCardParams.address.line1, @"27 Smith St");
+    XCTAssertEqualObjects(secondCardParams.address.line1, @"123 Main");
 }
 
 @end

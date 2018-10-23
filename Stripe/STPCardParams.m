@@ -39,8 +39,8 @@
 }
 
 - (void)setAddress:(STPAddress *)address {
-    _address = [address copy];
-    _name = self.address.name;
+    _address = address;
+    _name = [address.name copy];
 }
 
 #pragma mark - Description
