@@ -160,11 +160,6 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
         return NO;
     }
 
-    if (paymentMethod == self.selectedPaymentMethod) {
-        // Cannot detach selected payment method
-        return NO;
-    }
-
     if (![paymentMethod conformsToProtocol:@protocol(STPSourceProtocol)]) {
         // Cannot detach non-source payment method
         return NO;
