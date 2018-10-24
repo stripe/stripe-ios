@@ -38,7 +38,7 @@ NSString *const STPExamplePublishableKey = @"bad_key";
 }
 
 - (void)testExpired {
-    [self createTokenWithBaseURL:[NSURL URLWithString:@"https://testssl-expire.disig.sk/index.en.html"]
+    [self createTokenWithBaseURL:[NSURL URLWithString:@"https://testssl-expire-r2i2.disig.sk/index.en.html"]
                       completion:^(STPToken *token, NSError *error) {
                           XCTAssertNil(token, @"Token should be nil.");
                           XCTAssertEqualObjects(error.domain, @"NSURLErrorDomain", @"Error should be NSURLErrorDomain");
