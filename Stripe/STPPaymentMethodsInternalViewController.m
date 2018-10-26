@@ -26,6 +26,7 @@
 #import "UITableViewCell+Stripe_Borders.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "UIViewController+Stripe_Promises.h"
+#import "STPPaymentActivityIndicatorView.h"
 
 static NSString * const PaymentMethodCellReuseIdentifier = @"PaymentMethodCellReuseIdentifier";
 
@@ -122,7 +123,12 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     }
     else {
         // Show done button
-        barButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(handleDoneButtonTapped:)];
+        if (_paymentMethods.count == 0) {
+            [self.tableView setEditing:NO animated:YES];
+            barButtonItem = nil;
+        } else {
+            barButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(handleDoneButtonTapped:)];
+        }
     }
 
     [self.stp_navigationItemProxy setRightBarButtonItem:barButtonItem animated:animated];
