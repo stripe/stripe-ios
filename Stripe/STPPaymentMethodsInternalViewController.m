@@ -26,7 +26,6 @@
 #import "UITableViewCell+Stripe_Borders.h"
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "UIViewController+Stripe_Promises.h"
-#import "STPPaymentActivityIndicatorView.h"
 
 static NSString * const PaymentMethodCellReuseIdentifier = @"PaymentMethodCellReuseIdentifier";
 
