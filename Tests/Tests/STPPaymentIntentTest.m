@@ -159,8 +159,9 @@
     XCTAssertEqualObjects(paymentIntent.stripeDescription, @"My Sample PaymentIntent");
     XCTAssertFalse(paymentIntent.livemode);
     XCTAssertEqualObjects(paymentIntent.receiptEmail, @"danj@example.com");
-    XCTAssertNotNil(paymentIntent.returnUrl);
-    XCTAssertEqualObjects(paymentIntent.returnUrl, [NSURL URLWithString:@"payments-example://stripe-redirect"]);
+    NSURL *returnUrl = nil; // FIXME
+    XCTAssertNotNil(returnUrl);
+    XCTAssertEqualObjects(returnUrl, [NSURL URLWithString:@"payments-example://stripe-redirect"]);
     XCTAssertEqualObjects(paymentIntent.sourceId, @"src_1Cl1AdIl4IdHmuTbseiDWq6m");
     XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresSourceAction);
 
