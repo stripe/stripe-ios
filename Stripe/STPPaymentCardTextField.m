@@ -618,10 +618,10 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
         // if we are not showing the postal code entry field.
         self.internalCardParams.address.postalCode = self.postalCode;
     }
-    return self.internalCardParams;
+    return [self.internalCardParams copy];
 }
 
-- (void)setCardParams:(STPCardParams *)cardParams {
+- (void)setCardParams:(STPCardParams *)callersCardParams {
     /*
      Due to the way this class is written, programmatically setting field text
      behaves identically to user entering text (and will have the same forwarding 
@@ -638,21 +638,28 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
      */
     STPFormTextField *originalSubResponder = self.currentFirstResponderField;
 
-    self.internalCardParams = cardParams;
-    [self setText:cardParams.number inField:STPCardFieldTypeNumber];
-    BOOL expirationPresent = cardParams.expMonth && cardParams.expYear;
+    /*
+     #1031 small footgun hiding here. Use copies to protect from mutations of
+     `internalCardParams` in the `cardParams` property accessor and any mutations
+     the app code might make to their `callersCardParams` object.
+     */
+    STPCardParams *desiredCardParams = [callersCardParams copy];
+    self.internalCardParams = [desiredCardParams copy];
+
+    [self setText:desiredCardParams.number inField:STPCardFieldTypeNumber];
+    BOOL expirationPresent = desiredCardParams.expMonth && desiredCardParams.expYear;
     if (expirationPresent) {
         NSString *text = [NSString stringWithFormat:@"%02lu%02lu",
-                          (unsigned long)cardParams.expMonth,
-                          (unsigned long)cardParams.expYear%100];
+                          (unsigned long)desiredCardParams.expMonth,
+                          (unsigned long)desiredCardParams.expYear%100];
         [self setText:text inField:STPCardFieldTypeExpiration];
     }
     else {
         [self setText:@"" inField:STPCardFieldTypeExpiration];
     }
-    [self setText:cardParams.cvc inField:STPCardFieldTypeCVC];
+    [self setText:desiredCardParams.cvc inField:STPCardFieldTypeCVC];
 
-    [self setText:cardParams.address.postalCode inField:STPCardFieldTypePostalCode];
+    [self setText:desiredCardParams.address.postalCode inField:STPCardFieldTypePostalCode];
 
     if ([self isFirstResponder]) {
         STPCardFieldType fieldType = originalSubResponder.tag;

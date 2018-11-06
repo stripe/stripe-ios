@@ -235,8 +235,12 @@ The curent brand image displayed in the receiver.
  or programmatically setting the field's contents. For example, if you're using another library
  to scan your user's credit card with a camera, you can assemble that data into an STPCardParams
  object and set this property to that object to prefill the fields you've collected.
+
+ Accessing this property returns a *copied* `cardParams`. The only way to change properties in this
+ object is to make changes to a STPCardParams you own (retrieved from this text field if desired),
+ and then set this property to the new value.
  */
-@property (nonatomic, strong, readwrite, nonnull) STPCardParams *cardParams;
+@property (nonatomic, copy, readwrite, nonnull) STPCardParams *cardParams;
 
 /**
  Causes the text field to begin editing. Presents the keyboard.

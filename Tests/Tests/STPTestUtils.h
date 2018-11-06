@@ -12,6 +12,14 @@
 
 + (NSDictionary *)jsonNamed:(NSString *)name;
 
+/**
+ Using runtime inspection, what are all the property names for this object?
+
+ @param object the object to introspect
+ @return list of property names, usable with `valueForKey:`
+ */
++ (NSArray<NSString *> *)propertyNamesOf:(NSObject *)object;
+
 @end
 
 
