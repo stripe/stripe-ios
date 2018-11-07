@@ -112,6 +112,16 @@
     return statusNumber.integerValue;
 }
 
++ (STPPaymentIntentSourceActionType)sourceActionTypeFromString:(NSString *)string {
+    NSDictionary<NSString *, NSNumber *> *map = @{
+                                                  @"authorize_with_url": @(STPPaymentIntentSourceActionTypeAuthorizeWithURL),
+                                                  };
+
+    NSString *key = string.lowercaseString;
+    NSNumber *statusNumber = map[key] ?: @(STPPaymentIntentSourceActionTypeUnknown);
+    return statusNumber.integerValue;
+}
+
 
 #pragma mark - STPAPIResponseDecodable
 

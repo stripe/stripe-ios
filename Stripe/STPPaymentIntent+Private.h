@@ -44,6 +44,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (STPPaymentIntentConfirmationMethod)confirmationMethodFromString:(NSString *)string;
 
+/**
+ Parse the string and return the correct `STPPaymentIntentSourceActionType`,
+ or `STPPaymentIntentSourceActionTypeUnknown` if it's unrecognized by this version of the SDK.
+
+ @param string the NSString with the `next_source_action.type`
+ */
++ (STPPaymentIntentSourceActionType)sourceActionTypeFromString:(NSString *)string;
+
 @end
 
 NS_ASSUME_NONNULL_END
