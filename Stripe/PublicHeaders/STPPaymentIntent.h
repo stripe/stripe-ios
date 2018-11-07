@@ -13,6 +13,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class STPPaymentIntentSourceAction;
+
 /**
  A PaymentIntent tracks the process of collecting a payment from your customer.
 
@@ -77,6 +79,12 @@ NS_ASSUME_NONNULL_BEGIN
  Whether or not this PaymentIntent was created in livemode.
  */
 @property (nonatomic, readonly) BOOL livemode;
+
+/**
+ If `status == STPPaymentIntentStatusRequiresSourceAction`, this
+ property contains the next action to take for this PaymentIntent.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentIntentSourceAction* nextSourceAction;
 
 /**
  Email address that the receipt for the resulting payment will be sent to.
