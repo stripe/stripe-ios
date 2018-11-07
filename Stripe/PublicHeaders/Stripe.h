@@ -40,6 +40,8 @@
 #import "STPPaymentIntent.h"
 #import "STPPaymentIntentEnums.h"
 #import "STPPaymentIntentParams.h"
+#import "STPPaymentIntentSourceAction.h"
+#import "STPPaymentIntentSourceActionAuthorizeWithURL.h"
 #import "STPPaymentMethod.h"
 #import "STPPaymentMethodsViewController.h"
 #import "STPPaymentResult.h"
