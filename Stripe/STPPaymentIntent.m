@@ -124,6 +124,18 @@
     return statusNumber.integerValue;
 }
 
++ (NSString *)stringFromSourceActionType:(STPPaymentIntentSourceActionType)sourceActionType {
+    switch (sourceActionType) {
+        case STPPaymentIntentSourceActionTypeAuthorizeWithURL:
+            return @"authorize_with_url";
+        case STPPaymentIntentSourceActionTypeUnknown:
+            break;
+    }
+
+    // catch any unknown values here
+    return @"unknown";
+}
+
 
 #pragma mark - STPAPIResponseDecodable
 

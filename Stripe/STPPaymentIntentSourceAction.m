@@ -29,7 +29,7 @@
                                [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
 
                                // Type
-                               [NSString stringWithFormat:@"type = %@", [allResponseFields stp_stringForKey:@"type"]],
+                               [NSString stringWithFormat:@"type = %@", [STPPaymentIntent stringFromSourceActionType:self.type]],
                                ] mutableCopy];
 
     // omit properties that don't apply to this type
