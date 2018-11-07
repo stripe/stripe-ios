@@ -32,8 +32,7 @@
                                            XCTAssertFalse(paymentIntent.livemode);
                                            XCTAssertNil(paymentIntent.sourceId);
                                            XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusCanceled);
-                                           NSURL *returnUrl = nil; // FIXME
-                                           XCTAssertEqualObjects(returnUrl, [NSURL URLWithString:@"payments-example://stripe-redirect"]);
+                                           XCTAssertNil(paymentIntent.nextSourceAction);
 
                                            [expectation fulfill];
                                        }];
