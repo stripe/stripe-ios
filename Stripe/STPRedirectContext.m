@@ -28,7 +28,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 @property (nonatomic, strong, nullable) SFSafariViewController *safariVC;
 @property (nonatomic, assign, readwrite) STPRedirectContextState state;
 /// If we're on iOS 11+ and in the SafariVC flow, this tracks the latest URL loaded/redirected to during the initial load
-@property (nonatomic, strong, readwrite, nullable) NSURL *lastKnownSafariVCUrl;
+@property (nonatomic, strong, readwrite, nullable) NSURL *lastKnownSafariVCURL;
 
 @property (nonatomic, assign) BOOL subscribedToURLNotifications;
 @property (nonatomic, assign) BOOL subscribedToForegroundNotifications;
@@ -45,9 +45,9 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         return nil;
     }
 
-    self = [self initWithNativeRedirectUrl:[[self class] nativeRedirectURLForSource:source]
-                               redirectUrl:source.redirect.url
-                                 returnUrl:source.redirect.returnURL
+    self = [self initWithNativeRedirectURL:[[self class] nativeRedirectURLForSource:source]
+                               redirectURL:source.redirect.url
+                                 returnURL:source.redirect.returnURL
                                 completion:^(NSError * _Nullable error) {
                                     completion(source.stripeID, source.clientSecret, error);
                                 }];
@@ -69,10 +69,10 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         return nil;
     }
 
-    NSString *redirectUrl = nextSourceAction[@"value"][@"url"];
-    return [self initWithNativeRedirectUrl:nil
-                               redirectUrl:[NSURL URLWithString:redirectUrl]
-                                 returnUrl:paymentIntent.returnUrl
+    NSString *redirectURL = nextSourceAction[@"value"][@"url"];
+    return [self initWithNativeRedirectURL:nil
+                               redirectURL:[NSURL URLWithString:redirectURL]
+                                 returnURL:paymentIntent.returnUrl
                                 completion:^(NSError * _Nullable error) {
                                     completion(paymentIntent.clientSecret, error);
                                 }];
@@ -81,20 +81,20 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 /**
  Failable initializer for the general case of STPRedirectContext, some URLs and a completion block.
  */
-- (nullable instancetype)initWithNativeRedirectUrl:(nullable NSURL *)nativeRedirectUrl
-                                       redirectUrl:(nullable NSURL *)redirectUrl
-                                         returnUrl:(NSURL *)returnUrl
+- (nullable instancetype)initWithNativeRedirectURL:(nullable NSURL *)nativeRedirectURL
+                                       redirectURL:(nullable NSURL *)redirectURL
+                                         returnURL:(NSURL *)returnURL
                                         completion:(STPErrorBlock)completion {
-    if ((nativeRedirectUrl == nil && redirectUrl == nil)
-        || returnUrl == nil) {
+    if ((nativeRedirectURL == nil && redirectURL == nil)
+        || returnURL == nil) {
         return nil;
     }
 
     self = [super init];
     if (self) {
-        _nativeRedirectUrl = nativeRedirectUrl;
-        _redirectUrl = redirectUrl;
-        _returnUrl = returnUrl;
+        _nativeRedirectURL = nativeRedirectURL;
+        _redirectURL = redirectURL;
+        _returnURL = returnURL;
         _completion = completion;
 
         _subscribedToURLNotifications = NO;
@@ -110,8 +110,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 - (void)performAppRedirectIfPossibleWithCompletion:(STPBoolCompletionBlock)onCompletion {
 
     if (self.state == STPRedirectContextStateNotStarted) {
-        NSURL *nativeUrl = self.nativeRedirectUrl;
-        if (!nativeUrl) {
+        NSURL *nativeURL = self.nativeRedirectURL;
+        if (!nativeURL) {
             onCompletion(NO);
             return;
         }
@@ -119,13 +119,13 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         // Optimistically start listening in case we get app switched away.
         // If the app switch fails we'll undo this later
         self.state = STPRedirectContextStateInProgress;
-        [self subscribeToUrlAndForegroundNotifications];
+        [self subscribeToURLAndForegroundNotifications];
 
         UIApplication *application = [UIApplication sharedApplication];
         if (@available(iOS 10, *)) {
 
             WEAK(self);
-            [application openURL:nativeUrl options:@{} completionHandler:^(BOOL success) {
+            [application openURL:nativeURL options:@{} completionHandler:^(BOOL success) {
                 if (!success) {
                     STRONG(self);
                     self.state = STPRedirectContextStateNotStarted;
@@ -136,7 +136,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
         }
         else {
             _state = STPRedirectContextStateInProgress;
-            BOOL opened = [application openURL:nativeUrl];
+            BOOL opened = [application openURL:nativeURL];
             if (!opened) {
                 self.state = STPRedirectContextStateNotStarted;
                 [self unsubscribeFromNotifications];
@@ -169,9 +169,9 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
     if (self.state == STPRedirectContextStateNotStarted) {
         _state = STPRedirectContextStateInProgress;
-        [self subscribeToUrlNotifications];
-        self.lastKnownSafariVCUrl = self.redirectUrl;
-        self.safariVC = [[SFSafariViewController alloc] initWithURL:self.lastKnownSafariVCUrl];
+        [self subscribeToURLNotifications];
+        self.lastKnownSafariVCURL = self.redirectURL;
+        self.safariVC = [[SFSafariViewController alloc] initWithURL:self.lastKnownSafariVCURL];
         self.safariVC.delegate = self;
         [presentingViewController presentViewController:self.safariVC
                                                animated:YES
@@ -182,8 +182,8 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 - (void)startSafariAppRedirectFlow {
     if (self.state == STPRedirectContextStateNotStarted) {
         self.state = STPRedirectContextStateInProgress;
-        [self subscribeToUrlAndForegroundNotifications];
-        [[UIApplication sharedApplication] openURL:self.redirectUrl];
+        [self subscribeToURLAndForegroundNotifications];
+        [[UIApplication sharedApplication] openURL:self.redirectURL];
     }
 }
 
@@ -215,7 +215,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     if (didLoadSuccessfully == NO) {
         if (@available(iOS 11, *)) {
             stpDispatchToMainThreadIfNecessary(^{
-                if ([self.lastKnownSafariVCUrl.host containsString:@"stripe.com"]) {
+                if ([self.lastKnownSafariVCURL.host containsString:@"stripe.com"]) {
                     [self handleRedirectCompletionWithError:[NSError stp_genericConnectionError]
                                 shouldDismissViewController:YES];
                 }
@@ -233,7 +233,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     stpDispatchToMainThreadIfNecessary(^{
         // This is only kept up to date during the "initial load", but we only need the value in
         // `safariViewController:didCompleteInitialLoad:`, so that's fine.
-        self.lastKnownSafariVCUrl = URL;
+        self.lastKnownSafariVCURL = URL;
     });
 }
 
@@ -288,16 +288,16 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     self.completion(error);
 }
 
-- (void)subscribeToUrlNotifications {
+- (void)subscribeToURLNotifications {
     if (!self.subscribedToURLNotifications) {
         self.subscribedToURLNotifications = YES;
         [[STPURLCallbackHandler shared] registerListener:self
-                                                  forURL:self.returnUrl];
+                                                  forURL:self.returnURL];
     }
 }
 
-- (void)subscribeToUrlAndForegroundNotifications {
-    [self subscribeToUrlNotifications];
+- (void)subscribeToURLAndForegroundNotifications {
+    [self subscribeToURLNotifications];
     if (!self.subscribedToForegroundNotifications) {
         self.subscribedToForegroundNotifications = YES;
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -329,18 +329,18 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 }
 
 + (nullable NSURL *)nativeRedirectURLForSource:(STPSource *)source {
-    NSString *nativeUrlString = nil;
+    NSString *nativeURLString = nil;
     switch (source.type) {
         case STPSourceTypeAlipay:
-            nativeUrlString = source.details[@"native_url"];
+            nativeURLString = source.details[@"native_url"];
             break;
         default:
             // All other sources currently have no native url support
             break;
     }
 
-    NSURL *nativeUrl = nativeUrlString ? [NSURL URLWithString:nativeUrlString] : nil;
-    return nativeUrl;
+    NSURL *nativeURL = nativeURLString ? [NSURL URLWithString:nativeURLString] : nil;
+    return nativeURL;
 }
 
 @end
