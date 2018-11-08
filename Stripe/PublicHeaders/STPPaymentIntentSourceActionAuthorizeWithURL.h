@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- The `STPPaymentIntentSourceAction` details when type is `authorize_with_url`.
+ The `STPPaymentIntentSourceAction` details when type is `STPPaymentIntentSourceActionTypeAuthorizeWithURL`.
 
  These are created & owned by the containing `STPPaymentIntent`.
  */
