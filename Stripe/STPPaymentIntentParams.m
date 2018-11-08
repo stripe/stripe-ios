@@ -54,6 +54,16 @@
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
 }
 
+#pragma mark - Deprecated Properties
+
+- (NSString *)returnUrl {
+    return self.returnURL;
+}
+
+- (void)setReturnUrl:(NSString *)returnUrl {
+    self.returnURL = returnUrl;
+}
+
 #pragma mark - STPFormEncodable
 
 + (nullable NSString *)rootObjectName {
