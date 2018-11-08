@@ -42,7 +42,7 @@
                        // PaymentIntentParams details (alphabetical)
                        [NSString stringWithFormat:@"clientSecret = %@", (self.clientSecret.length > 0) ? @"<redacted>" : @""],
                        [NSString stringWithFormat:@"receiptEmail = %@", self.receiptEmail],
-                       [NSString stringWithFormat:@"returnUrl = %@", self.returnUrl],
+                       [NSString stringWithFormat:@"returnURL = %@", self.returnURL],
                        [NSString stringWithFormat:@"saveSourceToCustomer = %@", (self.saveSourceToCustomer.boolValue) ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"sourceId = %@", self.sourceId],
                        [NSString stringWithFormat:@"sourceParams = %@", self.sourceParams],
@@ -67,7 +67,7 @@
              NSStringFromSelector(@selector(sourceId)): @"source",
              NSStringFromSelector(@selector(receiptEmail)): @"receipt_email",
              NSStringFromSelector(@selector(saveSourceToCustomer)): @"save_source_to_customer",
-             NSStringFromSelector(@selector(returnUrl)): @"return_url",
+             NSStringFromSelector(@selector(returnURL)): @"return_url",
              };
 }
 

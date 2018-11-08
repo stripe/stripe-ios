@@ -30,7 +30,7 @@
         XCTAssertNil(params.sourceId);
         XCTAssertNil(params.receiptEmail);
         XCTAssertNil(params.saveSourceToCustomer);
-        XCTAssertNil(params.returnUrl);
+        XCTAssertNil(params.returnURL);
     }
 }
 
