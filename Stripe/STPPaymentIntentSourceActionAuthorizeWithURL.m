@@ -40,7 +40,7 @@
     }
 
     // required fields
-    NSURL *url = [response stp_urlForKey:@"url"];
+    NSURL *url = [dict stp_urlForKey:@"url"];
     if (!url) {
         return nil;
     }
