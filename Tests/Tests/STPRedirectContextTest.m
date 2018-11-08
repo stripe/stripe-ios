@@ -102,7 +102,7 @@
 }
 
 - (void)testInitWithSourceWithNativeURL {
-    STPSource *source = [STPFixtures alipaySourceWithNativeUrl];
+    STPSource *source = [STPFixtures alipaySourceWithNativeURL];
     __block BOOL completionCalled = NO;
     NSURL *nativeURL = [NSURL URLWithString:source.details[@"native_url"]];
     NSError *fakeError = [NSError new];
@@ -568,7 +568,7 @@
  url, an app to app redirect should attempt to be initiated.
  */
 - (void)testNativeRedirectSupportingSourceFlow_validNativeURL {
-    STPSource *source = [STPFixtures alipaySourceWithNativeUrl];
+    STPSource *source = [STPFixtures alipaySourceWithNativeURL];
     NSURL *sourceURL = [NSURL URLWithString:source.details[@"native_url"]];
 
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source

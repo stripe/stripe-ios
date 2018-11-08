@@ -189,7 +189,7 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
     return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONSourceAlipay]];
 }
 
-+ (STPSource *)alipaySourceWithNativeUrl {
++ (STPSource *)alipaySourceWithNativeURL {
     NSMutableDictionary *dictionary = [STPTestUtils jsonNamed:STPTestJSONSourceAlipay].mutableCopy;
     NSMutableDictionary *detailsDictionary = ((NSDictionary *)dictionary[@"alipay"]).mutableCopy;
     detailsDictionary[@"native_url"] = @"alipay://test";
