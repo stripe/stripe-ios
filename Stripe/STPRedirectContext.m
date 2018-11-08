@@ -12,6 +12,8 @@
 #import "STPBlocks.h"
 #import "STPDispatchFunctions.h"
 #import "STPPaymentIntent.h"
+#import "STPPaymentIntentSourceAction.h"
+#import "STPPaymentIntentSourceActionAuthorizeWithURL.h"
 #import "STPSource.h"
 #import "STPURLCallbackHandler.h"
 #import "STPWeakStrongMacros.h"
@@ -56,24 +58,19 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
 
 - (nullable instancetype)initWithPaymentIntent:(STPPaymentIntent *)paymentIntent
                                     completion:(STPRedirectContextPaymentIntentCompletionBlock)completion {
-    NSURL *returnUrl = nil; // FIXME
-    if (!(returnUrl != nil
-          && paymentIntent.status == STPPaymentIntentStatusRequiresSourceAction
-          && [paymentIntent.allResponseFields[@"next_source_action"] isKindOfClass: [NSDictionary class]])) {
+    NSURL *redirectURL = paymentIntent.nextSourceAction.authorizeWithURL.url;
+    NSURL *returnURL = paymentIntent.nextSourceAction.authorizeWithURL.returnURL;
+
+    if (paymentIntent.status != STPPaymentIntentStatusRequiresSourceAction
+        || paymentIntent.nextSourceAction.type != STPPaymentIntentSourceActionTypeAuthorizeWithURL
+        || !redirectURL
+        || !returnURL) {
         return nil;
     }
 
-    NSDictionary *nextSourceAction = paymentIntent.allResponseFields[@"next_source_action"];
-    if (!([nextSourceAction[@"type"] isEqual:@"authorize_with_url"]
-          && [nextSourceAction[@"value"] isKindOfClass:[NSDictionary class]]
-          && [nextSourceAction[@"value"][@"url"] isKindOfClass:[NSString class]])) {
-        return nil;
-    }
-
-    NSString *redirectURL = nextSourceAction[@"value"][@"url"];
     return [self initWithNativeRedirectURL:nil
-                               redirectURL:[NSURL URLWithString:redirectURL]
-                                 returnURL:returnUrl
+                               redirectURL:redirectURL
+                                 returnURL:returnURL
                                 completion:^(NSError * _Nullable error) {
                                     completion(paymentIntent.clientSecret, error);
                                 }];

@@ -139,18 +139,18 @@
     XCTAssertNil(sut.nativeRedirectURL);
     XCTAssertEqualObjects(sut.redirectURL.absoluteString,
                           @"https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk");
-    NSURL *returnUrl = nil; // FIXME
-    XCTAssertEqualObjects(sut.returnURL, returnUrl);
+    XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL.returnURL);
+    XCTAssertEqualObjects(sut.returnURL, paymentIntent.nextSourceAction.authorizeWithURL.returnURL);
 
     // and make sure the completion calls the completion block above
-    if (sut.completion) sut.completion(fakeError); // FIXME: HACK to avoid EXC_BAD_ACCESS when NULL
+    sut.completion(fakeError);
     XCTAssertTrue(completionCalled);
 }
 
 - (void)testInitWithPaymentIntentFailures {
     NSMutableDictionary *json = [[STPTestUtils jsonNamed:STPTestJSONPaymentIntent] mutableCopy];
     json[@"next_source_action"] = [json[@"next_source_action"] mutableCopy];
-    json[@"next_source_action"][@"value"] = [json[@"next_source_action"][@"value"] mutableCopy];
+    json[@"next_source_action"][@"authorize_with_url"] = [json[@"next_source_action"][@"authorize_with_url"] mutableCopy];
 
     void (^unusedCompletion)(NSString *, NSError *) = ^(__unused NSString * _Nonnull clientSecret, __unused NSError * _Nullable error) {
         XCTFail(@"should not be constructed, definitely not completed");
@@ -164,37 +164,25 @@
 
     XCTAssertNotNil(create(), @"before mutation of json, creation should succeed");
 
-    // `next_source_action` is not (currently) represented in the public API, and so there aren't
-    // any tests on it's decoding *other* than these right here. This is a white-box test for each condition
-    // that might result in a nil `STPRedirectContext`, because `STPRedirectContext` is the only place that
-    // understands `next_source_action` right now.
-
-    json[@"next_source_action"][@"value"][@"url"] = @"not a valid URL";
-    XCTAssertNil(create(), @"not created with an invalid URL in next_source_action.value.url");
-
-    json[@"next_source_action"][@"value"][@"url"] = @[@"an array", @"not a string"];
-    XCTAssertNil(create(), @"not created with a non-string next_source_action.value.url");
-
-    json[@"next_source_action"][@"value"] = @"not a dictionary";
-    XCTAssertNil(create(), @"not created with a non-dictionary next_source_action.value");
-
-    json[@"next_source_action"][@"value"] = @{ @"url": @"http://example.com/" };
-    json[@"next_source_action"][@"type"] = @"not_authorize_with_url";
-    XCTAssertNil(create(), @"not created with wrong next_source_action.type");
-
-    json[@"next_source_action"][@"type"] = @"authorize_with_url";
-    NSString *correctStatus = json[@"status"];
     json[@"status"] = @"processing";
     XCTAssertNil(create(), @"not created with wrong status");
+    json[@"status"] = @"requires_source_action";
 
-    json[@"status"] = correctStatus;
-    NSDictionary *nextSourceAction = json[@"next_source_action"];
-    json[@"next_source_action"] = @"not a dictionary";
-    XCTAssertNil(create(), @"not created with a non-dictionary next_source_action");
+    json[@"next_source_action"][@"type"] = @"not_authorize_with_url";
+    XCTAssertNil(create(), @"not created with wrong next_source_action.type");
+    json[@"next_source_action"][@"type"] = @"authorize_with_url";
 
-    json[@"next_source_action"] = nextSourceAction;
-    json[@"return_url"] = @"not a url";
+    NSString *correctURL = json[@"next_source_action"][@"authorize_with_url"][@"url"];
+    json[@"next_source_action"][@"authorize_with_url"][@"url"] = @"not a valid URL";
+    XCTAssertNil(create(), @"not created with an invalid URL in next_source_action.authorize_with_url.url");
+    json[@"next_source_action"][@"authorize_with_url"][@"url"] = correctURL;
+
+    NSString *correctReturnURL = json[@"next_source_action"][@"authorize_with_url"][@"return_url"];
+    json[@"next_source_action"][@"authorize_with_url"][@"return_url"] = @"not a url";
     XCTAssertNil(create(), @"not created with invalid returnUrl");
+    json[@"next_source_action"][@"authorize_with_url"][@"return_url"] = correctReturnURL;
+
+    XCTAssertNotNil(create(), @"works again when everything is back to normal");
 }
 
 /**
