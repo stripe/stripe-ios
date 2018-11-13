@@ -110,7 +110,7 @@
 - (void)testSourceActionFromString {
     XCTAssertEqual([STPPaymentIntent sourceActionTypeFromString:@"authorize_with_url"],
                    STPPaymentIntentSourceActionTypeAuthorizeWithURL);
-    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"AUTHORIZE_WITH_URL"],
+    XCTAssertEqual([STPPaymentIntent sourceActionTypeFromString:@"AUTHORIZE_WITH_URL"],
                    STPPaymentIntentSourceActionTypeAuthorizeWithURL);
 
     XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"garbage"],
