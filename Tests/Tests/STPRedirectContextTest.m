@@ -92,9 +92,9 @@
     }];
 
     // Make sure the initWithSource: method pulled out the right values from the Source
-    XCTAssertNil(sut.nativeRedirectUrl);
-    XCTAssertEqualObjects(sut.redirectUrl, source.redirect.url);
-    XCTAssertEqualObjects(sut.returnUrl, source.redirect.returnURL);
+    XCTAssertNil(sut.nativeRedirectURL);
+    XCTAssertEqualObjects(sut.redirectURL, source.redirect.url);
+    XCTAssertEqualObjects(sut.returnURL, source.redirect.returnURL);
 
     // and make sure the completion calls the completion block above
     sut.completion(fakeError);
@@ -102,7 +102,7 @@
 }
 
 - (void)testInitWithSourceWithNativeURL {
-    STPSource *source = [STPFixtures alipaySourceWithNativeUrl];
+    STPSource *source = [STPFixtures alipaySourceWithNativeURL];
     __block BOOL completionCalled = NO;
     NSURL *nativeURL = [NSURL URLWithString:source.details[@"native_url"]];
     NSError *fakeError = [NSError new];
@@ -115,9 +115,9 @@
     }];
 
     // Make sure the initWithSource: method pulled out the right values from the Source
-    XCTAssertEqualObjects(sut.nativeRedirectUrl, nativeURL);
-    XCTAssertEqualObjects(sut.redirectUrl, source.redirect.url);
-    XCTAssertEqualObjects(sut.returnUrl, source.redirect.returnURL);
+    XCTAssertEqualObjects(sut.nativeRedirectURL, nativeURL);
+    XCTAssertEqualObjects(sut.redirectURL, source.redirect.url);
+    XCTAssertEqualObjects(sut.returnURL, source.redirect.returnURL);
 
     // and make sure the completion calls the completion block above
     sut.completion(fakeError);
@@ -136,10 +136,10 @@
     }];
 
     // Make sure the initWithPaymentIntent: method pulled out the right values from the PaymentIntent
-    XCTAssertNil(sut.nativeRedirectUrl);
-    XCTAssertEqualObjects(sut.redirectUrl.absoluteString,
+    XCTAssertNil(sut.nativeRedirectURL);
+    XCTAssertEqualObjects(sut.redirectURL.absoluteString,
                           @"https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk");
-    XCTAssertEqualObjects(sut.returnUrl, paymentIntent.returnUrl);
+    XCTAssertEqualObjects(sut.returnURL, paymentIntent.returnUrl);
 
     // and make sure the completion calls the completion block above
     sut.completion(fakeError);
@@ -245,7 +245,7 @@
         XCTAssertNil(error);
         [exp fulfill];
     }];
-    XCTAssertEqualObjects(source.redirect.returnURL, context.returnUrl);
+    XCTAssertEqualObjects(source.redirect.returnURL, context.returnURL);
     id sut = OCMPartialMock(context);
 
     [sut startSafariViewControllerRedirectFlowFromViewController:mockVC];
@@ -291,7 +291,7 @@
     BOOL(^checker)(id) = ^BOOL(id vc) {
         if ([vc isKindOfClass:[SFSafariViewController class]]) {
             NSURL *url = [NSURL URLWithString:@"my-app://some_path"];
-            XCTAssertNotEqualObjects(url, context.returnUrl);
+            XCTAssertNotEqualObjects(url, context.returnURL);
             [[STPURLCallbackHandler shared] handleURLCallback:url];
             return YES;
         }
@@ -568,7 +568,7 @@
  url, an app to app redirect should attempt to be initiated.
  */
 - (void)testNativeRedirectSupportingSourceFlow_validNativeURL {
-    STPSource *source = [STPFixtures alipaySourceWithNativeUrl];
+    STPSource *source = [STPFixtures alipaySourceWithNativeURL];
     NSURL *sourceURL = [NSURL URLWithString:source.details[@"native_url"]];
 
     STPRedirectContext *context = [[STPRedirectContext alloc] initWithSource:source
@@ -576,8 +576,8 @@
         XCTFail(@"completion called");
     }];
 
-    XCTAssertNotNil(context.nativeRedirectUrl);
-    XCTAssertEqualObjects(context.nativeRedirectUrl, sourceURL);
+    XCTAssertNotNil(context.nativeRedirectURL);
+    XCTAssertEqualObjects(context.nativeRedirectURL, sourceURL);
 
     id sut = OCMPartialMock(context);
 
@@ -620,7 +620,7 @@
                                                                   completion:^(__unused NSString *sourceID, __unused NSString *clientSecret, __unused NSError *error) {
                                                                       XCTFail(@"completion called");
                                                                   }];
-    XCTAssertNil(context.nativeRedirectUrl);
+    XCTAssertNil(context.nativeRedirectURL);
 
     id sut = OCMPartialMock(context);
 

@@ -127,7 +127,7 @@ extern NSString *const STPTestJSONSourceSOFORT;
 /**
  A Source object with type Alipay and a native redirect url
  */
-+ (STPSource *)alipaySourceWithNativeUrl;
++ (STPSource *)alipaySourceWithNativeURL;
 
 /**
  A PaymentIntent object
