@@ -6,6 +6,7 @@
   * Changes to the object returned by `STPPaymentCardTextField.cardParams` no longer mutate the object held by the `STPPaymentCardTextField`
   * This is a breaking change for code like: `paymentCardTextField.cardParams.name = @"Jane Doe";`
 * `STPPaymentIntentParams.returnUrl` has been renamed to `STPPaymentIntentParams.returnURL`. Xcode should offer a deprecation warning & fix-it to help you migrate.
+* `STPPaymentIntent.returnUrl` has been removed, because it's no longer a property of the PaymentIntent. When the PaymentIntent status is `.requiresSourceAction`, and the `nextSourceAction.type` is `.authorizeWithURL`, you can find the return URL at `nextSourceAction.authorizeWithURL.returnURL`.
 
 ### Migrating from versions < 13.1.0
  * The SDK now supports PaymentIntents with `STPPaymentIntent`, which use `STPRedirectContext` in the same way that `STPSource` does

@@ -15,12 +15,12 @@
   "livemode": false,
   "next_source_action": {
     "type": "authorize_with_url",
-    "value": {
+    "authorize_with_url": {
+      "return_url": "payments-example://stripe-redirect",
       "url": "https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"
     }
   },
   "receipt_email": "danj@example.com",
-  "return_url": "payments-example://stripe-redirect",
   "shipping": {
     "address": {
       "city": "San Francisco",

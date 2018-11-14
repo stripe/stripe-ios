@@ -32,7 +32,7 @@
                                            XCTAssertFalse(paymentIntent.livemode);
                                            XCTAssertNil(paymentIntent.sourceId);
                                            XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusCanceled);
-                                           XCTAssertEqualObjects(paymentIntent.returnUrl, [NSURL URLWithString:@"payments-example://stripe-redirect"]);
+                                           XCTAssertNil(paymentIntent.nextSourceAction);
 
                                            [expectation fulfill];
                                        }];
@@ -124,6 +124,8 @@
 
     STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
     params.sourceParams = [self cardSourceParams];
+    // returnURL must be passed in while confirming (not creation time)
+    params.returnURL = @"example-app-scheme://authorized";
     [client confirmPaymentIntentWithParams:params
                                 completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
                                     XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
@@ -134,6 +136,11 @@
 
                                     // sourceParams is the 3DS-required test card
                                     XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresSourceAction);
+
+                                    // STPRedirectContext is relying on receiving returnURL
+                                    XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL.returnURL);
+                                    XCTAssertEqualObjects(paymentIntent.nextSourceAction.authorizeWithURL.returnURL,
+                                                          [NSURL URLWithString:@"example-app-scheme://authorized"]);
 
                                     // Going to log all the fields, so that you, the developer manually running this test can inspect them
                                     NSLog(@"Confirmed PaymentIntent: %@", paymentIntent.allResponseFields);

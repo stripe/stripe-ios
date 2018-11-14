@@ -8,6 +8,7 @@
 
 #import "STPPaymentIntent.h"
 #import "STPPaymentIntent+Private.h"
+#import "STPPaymentIntentSourceAction.h"
 
 #import "NSDictionary+Stripe.h"
 
@@ -22,8 +23,8 @@
 @property (nonatomic, copy, readwrite) NSString *currency;
 @property (nonatomic, copy, nullable, readwrite) NSString *stripeDescription;
 @property (nonatomic, assign, readwrite) BOOL livemode;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentIntentSourceAction* nextSourceAction;
 @property (nonatomic, copy, nullable, readwrite) NSString *receiptEmail;
-@property (nonatomic, copy, nullable, readwrite) NSURL *returnUrl;
 @property (nonatomic, copy, nullable, readwrite) NSString *sourceId;
 @property (nonatomic, assign, readwrite) STPPaymentIntentStatus status;
 
@@ -50,9 +51,8 @@
                        [NSString stringWithFormat:@"currency = %@", self.currency],
                        [NSString stringWithFormat:@"description = %@", self.stripeDescription],
                        [NSString stringWithFormat:@"livemode = %@", self.livemode ? @"YES" : @"NO"],
-                       [NSString stringWithFormat:@"nextSourceAction = %@", self.allResponseFields[@"next_source_action"]],
+                       [NSString stringWithFormat:@"nextSourceAction = %@", self.nextSourceAction],
                        [NSString stringWithFormat:@"receiptEmail = %@", self.receiptEmail],
-                       [NSString stringWithFormat:@"returnUrl = %@", self.returnUrl],
                        [NSString stringWithFormat:@"shipping = %@", self.allResponseFields[@"shipping"]],
                        [NSString stringWithFormat:@"sourceId = %@", self.sourceId],
                        [NSString stringWithFormat:@"status = %@", [self.allResponseFields stp_stringForKey:@"status"]],
@@ -114,6 +114,28 @@
     return statusNumber.integerValue;
 }
 
++ (STPPaymentIntentSourceActionType)sourceActionTypeFromString:(NSString *)string {
+    NSDictionary<NSString *, NSNumber *> *map = @{
+                                                  @"authorize_with_url": @(STPPaymentIntentSourceActionTypeAuthorizeWithURL),
+                                                  };
+
+    NSString *key = string.lowercaseString;
+    NSNumber *statusNumber = map[key] ?: @(STPPaymentIntentSourceActionTypeUnknown);
+    return statusNumber.integerValue;
+}
+
++ (NSString *)stringFromSourceActionType:(STPPaymentIntentSourceActionType)sourceActionType {
+    switch (sourceActionType) {
+        case STPPaymentIntentSourceActionTypeAuthorizeWithURL:
+            return @"authorize_with_url";
+        case STPPaymentIntentSourceActionTypeUnknown:
+            break;
+    }
+
+    // catch any unknown values here
+    return @"unknown";
+}
+
 
 #pragma mark - STPAPIResponseDecodable
 
@@ -147,10 +169,8 @@
     paymentIntent.currency = currency;
     paymentIntent.stripeDescription = [dict stp_stringForKey:@"description"];
     paymentIntent.livemode = [dict stp_boolForKey:@"livemode" or:YES];
-    // next_source_action is not being parsed. Today type=`authorize_with_url` is the only one
-    // and STPRedirectContext reaches directly into it. Not yet sure how I want to model
-    // this polymorphic object, so keeping it out of the public API.
-    paymentIntent.returnUrl = [dict stp_urlForKey:@"return_url"];
+    NSDictionary *nextSourceActionDict = [dict stp_dictionaryForKey:@"next_source_action"];
+    paymentIntent.nextSourceAction = [STPPaymentIntentSourceAction decodedObjectFromAPIResponse:nextSourceActionDict];
     paymentIntent.receiptEmail = [dict stp_stringForKey:@"receipt_email"];
     // FIXME: add support for `shipping`
     paymentIntent.sourceId = [dict stp_stringForKey:@"source"];
