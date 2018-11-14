@@ -140,6 +140,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentSourceAction.html">STPPaymentIntentSourceAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentSourceActionAuthorizeWithURL.html">STPPaymentIntentSourceActionAuthorizeWithURL</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a>
               </li>
               <li class="nav-group-task">
@@ -294,6 +300,9 @@
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSourceActionType.html">STPPaymentIntentSourceActionType</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentStatus.html">STPPaymentIntentStatus</a>
               </li>
               <li class="nav-group-task">
@@ -445,7 +454,7 @@
             <h1>STPCardParams</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">STPCardParams</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n"><a href="../Protocols/STPFormEncodable.html">STPFormEncodable</a></span><span class="o">&gt;</span></code></pre>
+                  <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">STPCardParams</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n"><a href="../Protocols/STPFormEncodable.html">STPFormEncodable</a></span><span class="p">,</span> <span class="n">NSCopying</span><span class="o">&gt;</span></code></pre>
 
                 </div>
               </div>
@@ -495,7 +504,7 @@ an STPAPIClient.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L28">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L28">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -530,7 +539,7 @@ an STPAPIClient.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L33">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L33">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -565,7 +574,7 @@ an STPAPIClient.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -600,7 +609,7 @@ an STPAPIClient.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L43">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -635,7 +644,7 @@ an STPAPIClient.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L48">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L48">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -676,7 +685,7 @@ param&rsquo;s <code><a href="../Classes/STPCardParams.html#/c:objc(cs)STPCardPar
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -697,8 +706,9 @@ param&rsquo;s <code><a href="../Classes/STPCardParams.html#/c:objc(cs)STPCardPar
                         <p>The cardholder&rsquo;s address.</p>
 <div class="aside aside-note">
     <p class="aside-title">Note</p>
-    Changing this property will also changing the name of the 
-param&rsquo;s <code><a href="../Classes/STPCardParams.html#/c:objc(cs)STPCardParams(py)name">name</a></code> property
+    Setting <code>address</code> to a new value will also change the <code><a href="../Classes/STPCardParams.html#/c:objc(cs)STPCardParams(py)name">name</a></code> property to
+be the value of <code>address.name</code>. However, changing <code>address.name</code> directly will
+<em>not</em> change <code><a href="../Classes/STPCardParams.html#/c:objc(cs)STPCardParams(py)name">name</a></code>.
 
 </div>
 
@@ -717,7 +727,7 @@ param&rsquo;s <code><a href="../Classes/STPCardParams.html#/c:objc(cs)STPCardPar
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L64">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L65">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -755,7 +765,7 @@ used as a transfer destination for funds in this currency.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L72">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L73">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -801,7 +811,7 @@ used as a transfer destination for funds in this currency.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L80">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L81">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -836,7 +846,7 @@ used as a transfer destination for funds in this currency.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L85">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L86">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -871,7 +881,7 @@ used as a transfer destination for funds in this currency.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L90">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L91">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -906,7 +916,7 @@ used as a transfer destination for funds in this currency.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L95">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L96">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -941,7 +951,7 @@ used as a transfer destination for funds in this currency.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L100">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L101">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -976,7 +986,7 @@ used as a transfer destination for funds in this currency.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.2.0/Stripe/PublicHeaders/STPCardParams.h#L105">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPCardParams.h#L106">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -989,8 +999,8 @@ used as a transfer destination for funds in this currency.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-08-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-11-14)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
