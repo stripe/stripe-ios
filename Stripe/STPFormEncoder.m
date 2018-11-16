@@ -171,7 +171,7 @@ FOUNDATION_EXPORT id STPPercentEscapedObject(id object);
 
 NSString * STPQueryStringFromParameters(NSDictionary *parameters) {
     
-    if (!parameters || parameters == [NSNull null]) {
+    if (!parameters) {
         return @"";
     }
     
