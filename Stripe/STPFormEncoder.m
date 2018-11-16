@@ -171,6 +171,10 @@ FOUNDATION_EXPORT id STPPercentEscapedObject(id object);
 
 NSString * STPQueryStringFromParameters(NSDictionary *parameters) {
     
+    if (!parameters || parameters == [NSNull null]) {
+        return @"";
+    }
+    
     // Escape any reserved characters. due to the implementation of `STPQueryStringPairsFromKeyAndValue`, it's much easier to do this now, as when that function is called recursively on a dictionary, `key` will (correctly) contain characters like `[]`.
     NSDictionary *escaped = STPPercentEscapedObject(parameters);
     
@@ -196,9 +200,7 @@ NSString * STPQueryStringFromParameters(NSDictionary *parameters) {
 // This function recursively converts an object into a version that is safe to convert into
 // a form-encoded path string by escaping any reserved characters in it or its children.
 id STPPercentEscapedObject(id object) {
-    if (!object) {
-        return @{};
-    } else if (object == [NSNull null]) {
+    if (!object || object == [NSNull null]) {
         return @"";
     } else if ([object isKindOfClass:[NSArray class]]) {
         NSMutableArray *escapedArray = [NSMutableArray array];
@@ -246,9 +248,9 @@ NSArray * STPQueryStringPairsFromKeyAndValue(NSString *key, id value) {
         }
     } else if ([value isKindOfClass:[NSArray class]]) {
         NSArray *array = value;
-        for (id nestedValue in array) {
-            [mutableQueryStringComponents addObjectsFromArray:STPQueryStringPairsFromKeyAndValue([NSString stringWithFormat:@"%@[]", key], nestedValue)];
-        }
+        [array enumerateObjectsUsingBlock:^(id  _Nonnull nestedValue, NSUInteger idx, __unused BOOL * _Nonnull stop) {
+            [mutableQueryStringComponents addObjectsFromArray:STPQueryStringPairsFromKeyAndValue([NSString stringWithFormat:@"%@[%lu]", key, (unsigned long)idx], nestedValue)];
+        }];
     } else if ([value isKindOfClass:[NSSet class]]) {
         NSSet *set = value;
         for (id obj in [set sortedArrayUsingDescriptors:@[ sortDescriptor ]]) {

@@ -94,7 +94,7 @@
     STPTestFormEncodableObject *testObject = [STPTestFormEncodableObject new];
     testObject.testProperty = @"success";
     testObject.testArrayProperty = @[@1, @2, @3];
-    XCTAssertEqualObjects([self encodeObject:testObject], @"test_object[test_array_property][]=1&test_object[test_array_property][]=2&test_object[test_array_property][]=3&test_object[test_property]=success");
+    XCTAssertEqualObjects([self encodeObject:testObject], @"test_object[test_array_property][0]=1&test_object[test_array_property][1]=2&test_object[test_array_property][2]=3&test_object[test_property]=success");
 }
 
 - (void)testFormEncoding_BoolAndNumbers {
@@ -105,11 +105,11 @@
                                      [[NSNumber alloc] initWithBool:YES],
                                      @YES];
     XCTAssertEqualObjects([self encodeObject:testObject],
-                          @"test_object[test_array_property][]=0"
-                          "&test_object[test_array_property][]=1"
-                          "&test_object[test_array_property][]=false"
-                          "&test_object[test_array_property][]=true"
-                          "&test_object[test_array_property][]=true");
+                          @"test_object[test_array_property][0]=0"
+                          "&test_object[test_array_property][1]=1"
+                          "&test_object[test_array_property][2]=false"
+                          "&test_object[test_array_property][3]=true"
+                          "&test_object[test_array_property][4]=true");
 }
 
 - (void)testFormEncoding_arrayOfEncodable {
@@ -123,8 +123,8 @@
     testObject.testArrayProperty = @[inner1, inner2];
 
     XCTAssertEqualObjects([self encodeObject:testObject],
-                          @"test_object[test_array_property][][test_property]=inner1"
-                          "&test_object[test_array_property][][test_array_property][]=inner2");
+                          @"test_object[test_array_property][0][test_property]=inner1"
+                          "&test_object[test_array_property][1][test_array_property][0]=inner2");
 }
 
 - (void)testFormEncoding_dictionaryValue_empty {
@@ -153,7 +153,7 @@
 
     XCTAssertEqualObjects([self encodeObject:testObject],
                           @"test_object[test_dictionary_property][one][test_property]=inner1"
-                          "&test_object[test_dictionary_property][two][test_array_property][]=inner2");
+                          "&test_object[test_dictionary_property][two][test_array_property][0]=inner2");
 }
 
 - (void)testFormEncoding_setOfEncodable {
@@ -165,7 +165,7 @@
     testObject.testArrayProperty = @[[NSSet setWithObject:inner]];
 
     XCTAssertEqualObjects([self encodeObject:testObject],
-                          @"test_object[test_array_property][][test_property]=inner");
+                          @"test_object[test_array_property][0][test_property]=inner");
 }
 
 - (void)testFormEncoding_nestedValue {
@@ -187,9 +187,10 @@
     NSDictionary *params = @{
                              @"foo]": @"bar",
                              @"baz": @"qux[",
+                             @"woo;": @";hoo",
                              };
     NSString *result = [STPFormEncoder queryStringFromParameters:params];
-    XCTAssertEqualObjects(result, @"baz=qux%5B&foo%5D=bar");
+    XCTAssertEqualObjects(result, @"baz=qux%5B&foo%5D=bar&woo%3B=%3Bhoo");
 }
 
 - (void)testQueryStringFromParameters {
@@ -218,7 +219,7 @@
                                      },
                              };
     NSString *result = [STPFormEncoder queryStringFromParameters:params];
-    XCTAssertEqualObjects(result, @"ios[certificates][]=cert1&ios[certificates][]=cert2&ios[nonce]=123mynonce&ios[nonce_signature]=sig");
+    XCTAssertEqualObjects(result, @"ios[certificates][0]=cert1&ios[certificates][1]=cert2&ios[nonce]=123mynonce&ios[nonce_signature]=sig");
 }
 
 @end
