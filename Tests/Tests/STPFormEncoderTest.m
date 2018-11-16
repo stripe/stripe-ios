@@ -61,8 +61,7 @@
 // helper test method
 - (NSString *)encodeObject:(STPTestFormEncodableObject *)object {
     NSDictionary *dictionary = [STPFormEncoder dictionaryForObject:object];
-    NSString *queryString = [STPFormEncoder queryStringFromParameters:dictionary];
-    return [queryString stringByRemovingPercentEncoding];
+    return [STPFormEncoder queryStringFromParameters:dictionary];
 }
 
 - (void)testFormEncoding_emptyObject {
@@ -95,7 +94,7 @@
     STPTestFormEncodableObject *testObject = [STPTestFormEncodableObject new];
     testObject.testProperty = @"success";
     testObject.testArrayProperty = @[@1, @2, @3];
-    XCTAssertEqualObjects([self encodeObject:testObject], @"test_object[test_array_property][0]=1&test_object[test_array_property][1]=2&test_object[test_array_property][2]=3&test_object[test_property]=success");
+    XCTAssertEqualObjects([self encodeObject:testObject], @"test_object[test_array_property][]=1&test_object[test_array_property][]=2&test_object[test_array_property][]=3&test_object[test_property]=success");
 }
 
 - (void)testFormEncoding_BoolAndNumbers {
@@ -106,11 +105,11 @@
                                      [[NSNumber alloc] initWithBool:YES],
                                      @YES];
     XCTAssertEqualObjects([self encodeObject:testObject],
-                          @"test_object[test_array_property][0]=0"
-                          "&test_object[test_array_property][1]=1"
-                          "&test_object[test_array_property][2]=false"
-                          "&test_object[test_array_property][3]=true"
-                          "&test_object[test_array_property][4]=true");
+                          @"test_object[test_array_property][]=0"
+                          "&test_object[test_array_property][]=1"
+                          "&test_object[test_array_property][]=false"
+                          "&test_object[test_array_property][]=true"
+                          "&test_object[test_array_property][]=true");
 }
 
 - (void)testFormEncoding_arrayOfEncodable {
@@ -124,8 +123,8 @@
     testObject.testArrayProperty = @[inner1, inner2];
 
     XCTAssertEqualObjects([self encodeObject:testObject],
-                          @"test_object[test_array_property][0][test_property]=inner1"
-                          "&test_object[test_array_property][1][test_array_property][0]=inner2");
+                          @"test_object[test_array_property][][test_property]=inner1"
+                          "&test_object[test_array_property][][test_array_property][]=inner2");
 }
 
 - (void)testFormEncoding_dictionaryValue_empty {
@@ -154,7 +153,7 @@
 
     XCTAssertEqualObjects([self encodeObject:testObject],
                           @"test_object[test_dictionary_property][one][test_property]=inner1"
-                          "&test_object[test_dictionary_property][two][test_array_property][0]=inner2");
+                          "&test_object[test_dictionary_property][two][test_array_property][]=inner2");
 }
 
 - (void)testFormEncoding_setOfEncodable {
@@ -166,7 +165,7 @@
     testObject.testArrayProperty = @[[NSSet setWithObject:inner]];
 
     XCTAssertEqualObjects([self encodeObject:testObject],
-                          @"test_object[test_array_property][0][test_property]=inner");
+                          @"test_object[test_array_property][][test_property]=inner");
 }
 
 - (void)testFormEncoding_nestedValue {
@@ -184,6 +183,15 @@
     XCTAssertEqualObjects([self encodeObject:testObject], @"test_property=success");
 }
 
+- (void)testQueryStringWithBadFields {
+    NSDictionary *params = @{
+                             @"foo]": @"bar",
+                             @"baz": @"qux[",
+                             };
+    NSString *result = [STPFormEncoder queryStringFromParameters:params];
+    XCTAssertEqualObjects(result, @"baz=qux%5B&foo%5D=bar");
+}
+
 - (void)testQueryStringFromParameters {
     NSDictionary *params = @{
                              @"foo": @"bar",
@@ -192,7 +200,25 @@
                                      }
                              };
     NSString *result = [STPFormEncoder queryStringFromParameters:params];
-    XCTAssertEqualObjects(result, @"baz%5Bqux%5D=1&foo=bar");
+    XCTAssertEqualObjects(result, @"baz[qux]=1&foo=bar");
+}
+
+- (void)testQueryStringFromNil {
+    NSDictionary *obj = nil;
+    NSString *result = [STPFormEncoder queryStringFromParameters:obj];
+    XCTAssertEqualObjects(result, @"");
+}
+
+- (void)testPushProvisioningQueryStringFromParameters {
+    NSDictionary *params = @{
+                             @"ios": @{
+                                     @"certificates": @[@"cert1", @"cert2"],
+                                     @"nonce": @"123mynonce",
+                                     @"nonce_signature": @"sig",
+                                     },
+                             };
+    NSString *result = [STPFormEncoder queryStringFromParameters:params];
+    XCTAssertEqualObjects(result, @"ios[certificates][]=cert1&ios[certificates][]=cert2&ios[nonce]=123mynonce&ios[nonce_signature]=sig");
 }
 
 @end

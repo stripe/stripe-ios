@@ -45,6 +45,7 @@
                          XCTAssertEqual(2024U, token.card.expYear);
                          XCTAssertEqualObjects(@"4242", token.card.last4);
                          XCTAssertEqualObjects(@"usd", token.card.currency);
+                         XCTAssertEqualObjects(@"10002", token.card.address.postalCode);
                      }];
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
