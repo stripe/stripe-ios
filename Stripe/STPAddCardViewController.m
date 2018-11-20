@@ -13,6 +13,7 @@
 #import "STPAddressViewModel.h"
 #import "STPAnalyticsClient.h"
 #import "STPCardIOProxy.h"
+#import "STPCardValidator.h"
 #import "STPColorUtils.h"
 #import "STPCoreTableViewController+Private.h"
 #import "STPDispatchFunctions.h"
@@ -382,7 +383,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
                       duration:0.2
                        options:UIViewAnimationOptionTransitionFlipFromRight
                     animations:^{
-                        self.cardImageView.image = [STPImageLibrary largeCardBackImage];
+                        if ([STPCardValidator brandForNumber:textField.cardNumber] == STPCardBrandAmex) {
+                            self.cardImageView.image = [STPImageLibrary largeCardAmexCVCImage];
+                        }
+                        else {
+                            self.cardImageView.image = [STPImageLibrary largeCardBackImage];
+                        }
                     } completion:nil];
 }
 
