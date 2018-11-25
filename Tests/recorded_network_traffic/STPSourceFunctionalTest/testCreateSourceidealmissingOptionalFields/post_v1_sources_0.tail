@@ -1,0 +1,58 @@
+POST
+/v1/sources$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, HEAD, OPTIONS, DELETE
+Server: nginx
+Access-Control-Expose-Headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+Access-Control-Max-Age: 300
+Cache-Control: no-cache, no-store
+Date: Sun, 25 Nov 2018 07:36:13 GMT
+Stripe-Version: 2015-10-12
+Access-Control-Allow-Credentials: true
+Content-Length: 947
+Connection: keep-alive
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Request-Id: req_ffVEX3n9dEyikZ
+
+{
+  "id" : "src_1DaIA5BbvEcIpqUbPMDgC54f",
+  "livemode" : false,
+  "amount" : 1099,
+  "metadata" : {
+
+  },
+  "owner" : {
+    "address" : null,
+    "phone" : null,
+    "verified_address" : null,
+    "verified_phone" : null,
+    "verified_email" : null,
+    "verified_name" : null,
+    "email" : null,
+    "name" : null
+  },
+  "statement_descriptor" : null,
+  "usage" : "single_use",
+  "type" : "ideal",
+  "redirect" : {
+    "status" : "pending",
+    "failure_reason" : null,
+    "url" : "https:\/\/hooks.stripe.com\/redirect\/authenticate\/src_1DaIA5BbvEcIpqUbPMDgC54f?client_secret=src_client_secret_E2MtdnHWMWU96MiJCgwMB2tz",
+    "return_url" : "https:\/\/shop.example.com\/crtABC"
+  },
+  "object" : "source",
+  "ideal" : {
+    "bank" : null,
+    "bic" : null,
+    "iban_last4" : null,
+    "statement_descriptor" : null
+  },
+  "created" : 1543131373,
+  "client_secret" : "src_client_secret_E2MtdnHWMWU96MiJCgwMB2tz",
+  "flow" : "redirect",
+  "currency" : "eur",
+  "status" : "pending"
+}

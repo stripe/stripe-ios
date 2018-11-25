@@ -1,0 +1,57 @@
+POST
+/v1/sources$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, HEAD, OPTIONS, DELETE
+Server: nginx
+Access-Control-Expose-Headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+Access-Control-Max-Age: 300
+Cache-Control: no-cache, no-store
+Date: Sun, 25 Nov 2018 07:36:11 GMT
+Stripe-Version: 2015-10-12
+Access-Control-Allow-Credentials: true
+Content-Length: 956
+Connection: keep-alive
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Request-Id: req_4zwvyaXaXZS191
+
+{
+  "id" : "src_1DaIA3BbvEcIpqUb3qLl7MbD",
+  "livemode" : false,
+  "amount" : 1099,
+  "metadata" : {
+    "foo" : "bar"
+  },
+  "owner" : {
+    "address" : null,
+    "phone" : null,
+    "verified_address" : null,
+    "verified_phone" : null,
+    "verified_email" : null,
+    "verified_name" : null,
+    "email" : null,
+    "name" : null
+  },
+  "statement_descriptor" : null,
+  "usage" : "single_use",
+  "type" : "alipay",
+  "redirect" : {
+    "status" : "pending",
+    "failure_reason" : null,
+    "url" : "https:\/\/hooks.stripe.com\/redirect\/authenticate\/src_1DaIA3BbvEcIpqUb3qLl7MbD?client_secret=src_client_secret_E2MtQ9HkWPyo9SP3Sz2DPNPz",
+    "return_url" : "https:\/\/shop.example.com\/crtABC"
+  },
+  "object" : "source",
+  "alipay" : {
+    "native_url" : null,
+    "statement_descriptor" : null,
+    "data_string" : null
+  },
+  "created" : 1543131371,
+  "client_secret" : "src_client_secret_E2MtQ9HkWPyo9SP3Sz2DPNPz",
+  "flow" : "redirect",
+  "currency" : "usd",
+  "status" : "pending"
+}

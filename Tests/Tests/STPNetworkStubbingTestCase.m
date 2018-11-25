@@ -56,6 +56,11 @@
         NSError *recordingError;
         BOOL success = [[SWHttpTrafficRecorder sharedRecorder] startRecordingAtPath:recordingPath forSessionConfiguration:config error:&recordingError];
         NSCAssert(success, @"Error recording requests: %@", recordingError);
+        __weak typeof(self) weakself = self;
+        [self addTeardownBlock:^{
+            // Like XCTFail, but avoiding a retain cycle
+            _XCTPrimitiveFail(weakself, @"Network traffic for %@ has been recorded - re-run with self.recordingMode = NO for this test to succeed", [weakself name]);
+        }];
     } else {
         [OHHTTPStubs stubRequestsPassingTest:^BOOL(__unused NSURLRequest * _Nonnull request) {
             return YES;
