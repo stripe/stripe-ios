@@ -9,11 +9,17 @@
 @import XCTest;
 
 #import "Stripe.h"
+#import "STPNetworkStubbingTestCase.h"
 
-@interface STPCardFunctionalTest : XCTestCase
+@interface STPCardFunctionalTest : STPNetworkStubbingTestCase
 @end
 
 @implementation STPCardFunctionalTest
+
+- (void)setUp {
+//    self.recordingMode = YES;
+    [super setUp];
+}
 
 - (void)testCreateCardToken {
     STPCardParams *card = [[STPCardParams alloc] init];

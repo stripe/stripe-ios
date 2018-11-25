@@ -128,9 +128,18 @@ static NSString * const APIEndpointPaymentIntents = @"payment_intents";
         _stripeAccount = configuration.stripeAccount;
         _sourcePollers = [NSMutableDictionary dictionary];
         _sourcePollersQueue = dispatch_queue_create("com.stripe.sourcepollers", DISPATCH_QUEUE_SERIAL);
-        _urlSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+        _urlSession = [NSURLSession sessionWithConfiguration:[STPAPIClient sharedUrlSessionConfiguration]];
     }
     return self;
+}
+
++ (NSURLSessionConfiguration *)sharedUrlSessionConfiguration {
+    static NSURLSessionConfiguration  *STPSharedURLSessionConfiguration;
+    static dispatch_once_t configToken;
+    dispatch_once(&configToken, ^{
+        STPSharedURLSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    });
+    return STPSharedURLSessionConfiguration;
 }
 
 - (NSMutableURLRequest *)configuredRequestForURL:(NSURL *)url {

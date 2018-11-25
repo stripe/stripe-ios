@@ -1,2 +1,4 @@
-github "erikdoe/ocmock" "v3.4.1"
+github "AliSoftware/OHHTTPStubs" "6.1.0"
+github "capitalone/SWHttpTrafficRecorder" "1.0.2"
+github "erikdoe/ocmock" "v3.4.3"
 github "facebook/ios-snapshot-test-case" "2.1.4"
