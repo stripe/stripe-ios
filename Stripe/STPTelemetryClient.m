@@ -30,18 +30,22 @@
 }
 
 + (instancetype)sharedInstance {
-    static id sharedClient;
+    NSURLSessionConfiguration *config = [STPAPIClient sharedUrlSessionConfiguration];
+    static STPTelemetryClient *sharedClient;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedClient = [self new];
+        sharedClient = [[STPTelemetryClient alloc] initWithSessionConfiguration:config];
     });
     return sharedClient;
 }
 
 - (instancetype)init {
+    return [self initWithSessionConfiguration:[STPAPIClient sharedUrlSessionConfiguration]];
+}
+
+- (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration *)config {
     self = [super init];
     if (self) {
-        NSURLSessionConfiguration *config = [STPAPIClient sharedUrlSessionConfiguration];
         _urlSession = [NSURLSession sessionWithConfiguration:config];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
