@@ -34,7 +34,7 @@
     static STPTelemetryClient *sharedClient;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedClient = [[STPTelemetryClient alloc] initWithSessionConfiguration:config];
+        sharedClient = [[self alloc] initWithSessionConfiguration:config];
     });
     return sharedClient;
 }
