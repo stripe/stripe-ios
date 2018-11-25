@@ -1,0 +1,41 @@
+POST
+/v1/tokens$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, HEAD, OPTIONS, DELETE
+Server: nginx
+Access-Control-Expose-Headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+Access-Control-Max-Age: 300
+Cache-Control: no-cache, no-store
+Date: Sun, 25 Nov 2018 04:09:49 GMT
+Stripe-Version: 2015-10-12
+Access-Control-Allow-Credentials: true
+Content-Length: 542
+Connection: keep-alive
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Request-Id: req_5MxAAWAcO3yXT9
+
+{
+  "object" : "token",
+  "id" : "btok_1DaEwLBbvEcIpqUbhqaIOlsf",
+  "livemode" : false,
+  "client_ip" : "24.17.230.157",
+  "created" : 1543118989,
+  "used" : false,
+  "type" : "bank_account",
+  "bank_account" : {
+    "object" : "bank_account",
+    "status" : "new",
+    "account_holder_name" : "Jimmy bob",
+    "id" : "ba_1DaEwLBbvEcIpqUbTT1ArseZ",
+    "bank_name" : "STRIPE TEST BANK",
+    "country" : "US",
+    "routing_number" : "110000000",
+    "last4" : "6789",
+    "account_holder_type" : "company",
+    "currency" : "usd",
+    "name" : "Jimmy bob"
+  }
+}

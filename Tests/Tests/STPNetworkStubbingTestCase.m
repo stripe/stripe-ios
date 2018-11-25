@@ -63,9 +63,15 @@
             NSCAssert(NO, @"Attempted to hit the live network at %@", request.URL.path);
             return nil;
         }];
-        NSError *stubError;
-        [OHHTTPStubs stubRequestsUsingMocktailsAtPath:relativePath inBundle:[NSBundle bundleForClass:self.class] error:&stubError];
-        NSCAssert(!stubError, @"Error stubbing requests: %@", stubError);
+        NSBundle *bundle = [NSBundle bundleForClass:self.class];
+        NSURL *url = [bundle URLForResource:relativePath withExtension:nil];
+        if (url) {
+            NSError *stubError;
+            [OHHTTPStubs stubRequestsUsingMocktailsAtPath:relativePath inBundle:bundle error:&stubError];
+            NSCAssert(!stubError, @"Error stubbing requests: %@", stubError);
+        } else {
+            NSLog(@"No stubs found - all network access will raise an exception.");
+        }
     }
 }
 
