@@ -163,7 +163,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     expirationField.isAccessibilityElement = NO;
     expirationField.accessibilityLabel = STPLocalizedString(@"expiration date", @"accessibility label for text field");
     self.expirationField = expirationField;
-    self.expirationPlaceholder = STPLocalizedString(@"MM/YY", "label for text field to enter card expiry");
+    self.expirationPlaceholder = STPLocalizedString(@"MM/YY", @"label for text field to enter card expiry");
         
     STPFormTextField *cvcField = [self buildTextField];
     cvcField.tag = STPCardFieldTypeCVC;
