@@ -136,6 +136,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) NSString *document;
 
+/**
+ The file id for the uploaded verification document (back side).
+ */
+@property (nonatomic, copy, nullable) NSString *documentBack;
+
 @end
 
 NS_ASSUME_NONNULL_END

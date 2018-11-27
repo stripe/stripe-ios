@@ -140,6 +140,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentSourceAction.html">STPPaymentIntentSourceAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentSourceActionAuthorizeWithURL.html">STPPaymentIntentSourceActionAuthorizeWithURL</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a>
               </li>
               <li class="nav-group-task">
@@ -292,6 +298,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSourceActionType.html">STPPaymentIntentSourceActionType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentStatus.html">STPPaymentIntentStatus</a>
@@ -482,9 +491,14 @@ the user accepted them.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSNumber</span> <span class="o">*</span><span class="n">tosShownAndAccepted</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">tosShownAndAccepted</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L26">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L26">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -515,9 +529,14 @@ call will fail.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n"><a href="../Classes/STPLegalEntityParams.html">STPLegalEntityParams</a></span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">legalEntity</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">legalEntity</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPLegalEntityParams.html">STPLegalEntityParams</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L34">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -548,7 +567,7 @@ or <code>initWithLegalEntity:</code></p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L40">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L40">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -581,6 +600,11 @@ don&rsquo;t, use the <code>initWithLegalEntity:</code> version instead.</p>
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">instancetype</span><span class="p">)</span>
 <span class="nf">initWithTosShownAndAccepted</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">wasAccepted</span>
                 <span class="nf">legalEntity</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPLegalEntityParams.html">STPLegalEntityParams</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">legalEntity</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="n"><a href="../Classes/STPConnectAccountParams.html#/c:objc(cs)STPConnectAccountParams(py)tosShownAndAccepted">tosShownAndAccepted</a></span> <span class="nv">wasAccepted</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">legalEntity</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPLegalEntityParams.html">STPLegalEntityParams</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -616,7 +640,7 @@ don&rsquo;t, use the <code>initWithLegalEntity:</code> version instead.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L53-L54">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L53-L54">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -652,6 +676,11 @@ that it is either nil or YES.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPLegalEntityParams.html">STPLegalEntityParams</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">legalEntity</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="nv">legalEntity</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPLegalEntityParams.html">STPLegalEntityParams</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -673,7 +702,7 @@ that it is either nil or YES.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L68">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPConnectAccountParams.h#L68">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -686,8 +715,8 @@ that it is either nil or YES.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-07-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-11-14)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

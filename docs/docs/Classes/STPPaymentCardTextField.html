@@ -140,6 +140,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentSourceAction.html">STPPaymentIntentSourceAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentSourceActionAuthorizeWithURL.html">STPPaymentIntentSourceActionAuthorizeWithURL</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a>
               </li>
               <li class="nav-group-task">
@@ -292,6 +298,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSourceActionType.html">STPPaymentIntentSourceActionType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentStatus.html">STPPaymentIntentStatus</a>
@@ -490,9 +499,14 @@ anywhere a UITextField would be appropriate.</p>
     <span class="n">delegate</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentCardTextFieldDelegate.html">STPPaymentCardTextFieldDelegate</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L29">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L29">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -522,9 +536,14 @@ anywhere a UITextField would be appropriate.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIFont</span> <span class="o">*</span><span class="n">font</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@NSCopying</span> <span class="k">var</span> <span class="nv">font</span><span class="p">:</span> <span class="kt">UIFont</span><span class="o">!</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L36">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L36">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -554,9 +573,14 @@ anywhere a UITextField would be appropriate.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">textColor</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@NSCopying</span> <span class="k">var</span> <span class="nv">textColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="o">!</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L43">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -587,9 +611,14 @@ such as an invalid card number. </p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">textErrorColor</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@NSCopying</span> <span class="k">var</span> <span class="nv">textErrorColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="o">!</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L51">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L51">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -622,9 +651,14 @@ such as an invalid card number. </p>
     <span class="n">UIColor</span> <span class="o">*</span><span class="n">placeholderColor</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@NSCopying</span> <span class="k">var</span> <span class="nv">placeholderColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="o">!</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L60">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L60">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -657,9 +691,14 @@ format it as such (in other words, you don&rsquo;t need to add spaces to this st
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">numberPlaceholder</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">numberPlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L70">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L70">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -687,9 +726,14 @@ format it as such (in other words, you don&rsquo;t need to add spaces to this st
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">expirationPlaceholder</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">expirationPlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L75">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L75">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -717,9 +761,14 @@ format it as such (in other words, you don&rsquo;t need to add spaces to this st
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">cvcPlaceholder</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">cvcPlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L80">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L80">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -748,9 +797,14 @@ or @<q>Postal</q> for all other country codes.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">postalCodePlaceholder</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">postalCodePlaceholder</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L86">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L86">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -781,9 +835,14 @@ or @<q>Postal</q> for all other country codes.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">null_resettable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">cursorColor</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@NSCopying</span> <span class="k">var</span> <span class="nv">cursorColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="o">!</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L94">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L94">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -815,9 +874,14 @@ or @<q>Postal</q> for all other country codes.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">borderColor</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@NSCopying</span> <span class="k">var</span> <span class="nv">borderColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L103">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L103">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -847,9 +911,14 @@ or @<q>Postal</q> for all other country codes.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">borderWidth</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">borderWidth</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L110">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L110">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -879,9 +948,14 @@ or @<q>Postal</q> for all other country codes.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">cornerRadius</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">cornerRadius</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L117">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L117">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -911,9 +985,14 @@ or @<q>Postal</q> for all other country codes.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIKeyboardAppearance</span> <span class="n">keyboardAppearance</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">keyboardAppearance</span><span class="p">:</span> <span class="kt">UIKeyboardAppearance</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L124">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L124">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -941,9 +1020,14 @@ or @<q>Postal</q> for all other country codes.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIView</span> <span class="o">*</span><span class="n">inputView</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">inputView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L129">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L129">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -971,9 +1055,14 @@ or @<q>Postal</q> for all other country codes.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIView</span> <span class="o">*</span><span class="n">inputAccessoryView</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">inputAccessoryView</span><span class="p">:</span> <span class="kt">UIView</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L134">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L134">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1001,9 +1090,14 @@ or @<q>Postal</q> for all other country codes.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">UIImage</span> <span class="o">*</span><span class="n">brandImage</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">brandImage</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L139">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L139">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1037,9 +1131,14 @@ expiration date, CVC, and postal code (if required).</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">isValid</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">isValid</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L147">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L147">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1067,9 +1166,14 @@ expiration date, CVC, and postal code (if required).</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">getter</span><span class="o">=</span><span class="n">isEnabled</span><span class="p">,</span> <span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">enabled</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">isEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L152">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L152">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1100,9 +1204,14 @@ to be valid.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">cardNumber</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">cardNumber</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L160">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L160">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1133,9 +1242,14 @@ guaranteed to be valid.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSUInteger</span> <span class="n">expirationMonth</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">expirationMonth</span><span class="p">:</span> <span class="kt">UInt</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L168">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L168">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1166,9 +1280,14 @@ It may be also 0-prefixed (i.e. <q>01</q> for January).</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">formattedExpirationMonth</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">formattedExpirationMonth</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L176">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L176">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1200,9 +1319,14 @@ guaranteed to be valid.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSUInteger</span> <span class="n">expirationYear</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">expirationYear</span><span class="p">:</span> <span class="kt">UInt</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L185">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L185">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1233,9 +1357,14 @@ unless <code><a href="../Classes/STPPaymentCardTextField.html#/c:objc(cs)STPPaym
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">formattedExpirationYear</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">formattedExpirationYear</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L193">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L193">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1266,9 +1395,14 @@ is guaranteed to be valid.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">cvc</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">cvc</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L201">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L201">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1296,9 +1430,14 @@ is guaranteed to be valid.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readonly</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">postalCode</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">postalCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L206">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L206">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1332,9 +1471,14 @@ those countries do not commonly use postal codes.</p>
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">assign</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">postalCodeEntryEnabled</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">postalCodeEntryEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L217">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L217">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1370,9 +1514,14 @@ locale will be filled in. Otherwise the specific country code set will be used.<
                           <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nullable</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">countryCode</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">countryCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L231">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L231">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1395,17 +1544,26 @@ or programmatically setting the field&rsquo;s contents. For example, if you&rsqu
 to scan your user&rsquo;s credit card with a camera, you can assemble that data into an STPCardParams
 object and set this property to that object to prefill the fields you&rsquo;ve collected.</p>
 
+<p>Accessing this property returns a <em>copied</em> <code>cardParams</code>. The only way to change properties in this
+object is to make changes to a STPCardParams you own (retrieved from this text field if desired),
+and then set this property to the new value.</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Objective-C</p>
-                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nonnull</span><span class="p">)</span> <span class="n"><a href="../Classes/STPCardParams.html">STPCardParams</a></span> <span class="o">*</span><span class="n">cardParams</span><span class="p">;</span></code></pre>
+                          <pre class="highlight objective_c"><code><span class="k">@property</span> <span class="p">(</span><span class="n">readwrite</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">,</span> <span class="n">nonnull</span><span class="p">)</span> <span class="n"><a href="../Classes/STPCardParams.html">STPCardParams</a></span> <span class="o">*</span><span class="n">cardParams</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@NSCopying</span> <span class="k">var</span> <span class="nv">cardParams</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPCardParams.html">STPCardParams</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L239">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L243">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1438,13 +1596,18 @@ object and set this property to that object to prefill the fields you&rsquo;ve c
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">becomeFirstResponder</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">becomeFirstResponder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Return Value</h4>
                         <p>Whether or not the text field successfully began editing.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L247">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L251">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1477,13 +1640,18 @@ object and set this property to that object to prefill the fields you&rsquo;ve c
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">resignFirstResponder</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">resignFirstResponder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Return Value</h4>
                         <p>Whether or not the field successfully stopped editing.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L255">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L259">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1511,9 +1679,14 @@ object and set this property to that object to prefill the fields you&rsquo;ve c
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">clear</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">clear</span><span class="p">()</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L260">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L264">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1542,6 +1715,11 @@ Override this method in a subclass if you would like to provide custom images.</
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">cvcImageForCardBrand</span><span class="p">:(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nv">cardBrand</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">cvcImage</span><span class="p">(</span><span class="k">for</span> <span class="nv">cardBrand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -1567,7 +1745,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>The cvc image used for a card brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L268">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L272">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1596,6 +1774,11 @@ Override this method in a subclass if you would like to provide custom images.</
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">brandImageForCardBrand</span><span class="p">:(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nv">cardBrand</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">brandImage</span><span class="p">(</span><span class="k">for</span> <span class="nv">cardBrand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -1621,7 +1804,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>The brand image used for a card brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L276">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L280">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1650,6 +1833,11 @@ Override this method in a subclass if you would like to provide custom images.</
                           <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">errorImageForCardBrand</span><span class="p">:(</span><span class="n"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span><span class="nv">cardBrand</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">errorImage</span><span class="p">(</span><span class="k">for</span> <span class="nv">cardBrand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -1675,7 +1863,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>The error image used for a card brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L284">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L288">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1703,6 +1891,11 @@ Override this method in a subclass if you would like to provide custom images.</
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="nf">brandImageRectForBounds</span><span class="p">:(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">bounds</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">brandImageRect</span><span class="p">(</span><span class="n">forBounds</span> <span class="nv">bounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -1728,7 +1921,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>the rectangle in which the receiver draws its brand image.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L291">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L295">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1756,6 +1949,11 @@ Override this method in a subclass if you would like to provide custom images.</
                           <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="nf">fieldsRectForBounds</span><span class="p">:(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">bounds</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">fieldsRect</span><span class="p">(</span><span class="n">forBounds</span> <span class="nv">bounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -1781,7 +1979,7 @@ Override this method in a subclass if you would like to provide custom images.</
                         <p>The rectangle in which the receiver draws the text fields.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L298">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L302">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1794,8 +1992,8 @@ Override this method in a subclass if you would like to provide custom images.</
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-07-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-11-14)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

@@ -84,4 +84,32 @@
     XCTAssertFalse([self.viewModel isValid]);
 }
 
+- (void)testCompressedCardNumber {
+    self.viewModel.cardNumber = nil;
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"4242"); // Should use default placeholder
+
+    self.viewModel.cardNumber = @"424212345678";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"5678");
+    self.viewModel.cardNumber = @"42421234567";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"567");
+    self.viewModel.cardNumber = @"4242123456";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"56");
+    self.viewModel.cardNumber = @"424212345";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"5");
+    self.viewModel.cardNumber = @"42421234";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"1234");
+
+    self.viewModel.cardNumber = @"12";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"12");
+
+    self.viewModel.cardNumber = @"30569309025904";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"5904");
+    self.viewModel.cardNumber = @"3056930902590";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"590");
+    self.viewModel.cardNumber = @"30569309025";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"5");
+    self.viewModel.cardNumber = @"3056930902";
+    XCTAssertEqualObjects(self.viewModel.compressedCardNumber, @"930902");
+}
+
 @end

@@ -107,6 +107,18 @@
                    STPPaymentIntentConfirmationMethodUnknown);
 }
 
+- (void)testSourceActionFromString {
+    XCTAssertEqual([STPPaymentIntent sourceActionTypeFromString:@"authorize_with_url"],
+                   STPPaymentIntentSourceActionTypeAuthorizeWithURL);
+    XCTAssertEqual([STPPaymentIntent sourceActionTypeFromString:@"AUTHORIZE_WITH_URL"],
+                   STPPaymentIntentSourceActionTypeAuthorizeWithURL);
+
+    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"garbage"],
+                   STPPaymentIntentSourceActionTypeUnknown);
+    XCTAssertEqual([STPPaymentIntent confirmationMethodFromString:@"GARBAGE"],
+                   STPPaymentIntentSourceActionTypeUnknown);
+}
+
 #pragma mark - Description Tests
 
 - (void)testDescription {
@@ -159,8 +171,16 @@
     XCTAssertEqualObjects(paymentIntent.stripeDescription, @"My Sample PaymentIntent");
     XCTAssertFalse(paymentIntent.livemode);
     XCTAssertEqualObjects(paymentIntent.receiptEmail, @"danj@example.com");
-    XCTAssertNotNil(paymentIntent.returnUrl);
-    XCTAssertEqualObjects(paymentIntent.returnUrl, [NSURL URLWithString:@"payments-example://stripe-redirect"]);
+    XCTAssertNotNil(paymentIntent.nextSourceAction);
+    XCTAssertEqual(paymentIntent.nextSourceAction.type, STPPaymentIntentSourceActionTypeAuthorizeWithURL);
+    XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL);
+    XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL.url);
+    NSURL *returnURL = paymentIntent.nextSourceAction.authorizeWithURL.returnURL;
+    XCTAssertNotNil(returnURL);
+    XCTAssertEqualObjects(returnURL, [NSURL URLWithString:@"payments-example://stripe-redirect"]);
+    NSURL *url = paymentIntent.nextSourceAction.authorizeWithURL.url;
+    XCTAssertNotNil(url);
+    XCTAssertEqualObjects(url, [NSURL URLWithString:@"https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"]);
     XCTAssertEqualObjects(paymentIntent.sourceId, @"src_1Cl1AdIl4IdHmuTbseiDWq6m");
     XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresSourceAction);
 

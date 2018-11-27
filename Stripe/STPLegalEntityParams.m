@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSArray *props = @[
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
                        [NSString stringWithFormat:@"document = %@", self.document],
+                       [NSString stringWithFormat:@"documentBack = %@", self.documentBack],
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
@@ -30,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (nonnull NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
              NSStringFromSelector(@selector(document)): @"document",
+             NSStringFromSelector(@selector(documentBack)): @"document_back",
              };
 }
 

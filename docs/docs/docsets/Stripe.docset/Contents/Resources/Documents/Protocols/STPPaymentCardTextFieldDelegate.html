@@ -140,6 +140,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentSourceAction.html">STPPaymentIntentSourceAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentSourceActionAuthorizeWithURL.html">STPPaymentIntentSourceActionAuthorizeWithURL</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a>
               </li>
               <li class="nav-group-task">
@@ -292,6 +298,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSourceActionType.html">STPPaymentIntentSourceActionType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentStatus.html">STPPaymentIntentStatus</a>
@@ -492,6 +501,11 @@ self.paymentButton.enabled = textField.isValid;
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidChange</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -513,7 +527,7 @@ self.paymentButton.enabled = textField.isValid;
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L320">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L324">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -545,9 +559,14 @@ specific subfield of the view began editing.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditing</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L329">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L333">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -579,9 +598,14 @@ specific subfield of the view ended its editing.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditing</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L338">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L342">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -610,9 +634,14 @@ specific subfield of the view ended its editing.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditingNumber</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L343">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L347">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -641,9 +670,14 @@ specific subfield of the view ended its editing.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditingNumber</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L348">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L352">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -672,9 +706,14 @@ specific subfield of the view ended its editing.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditingCVC</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L353">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L357">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -703,9 +742,14 @@ specific subfield of the view ended its editing.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditingCVC</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L358">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L362">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -734,9 +778,14 @@ specific subfield of the view ended its editing.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditingExpiration</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L363">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L367">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -765,9 +814,14 @@ specific subfield of the view ended its editing.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditingExpiration</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L368">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L372">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -796,9 +850,14 @@ specific subfield of the view ended its editing.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidBeginEditingPostalCode</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L373">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L377">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -827,9 +886,14 @@ specific subfield of the view ended its editing.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">textField</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentCardTextFieldDidEndEditingPostalCode</span><span class="p">(</span><span class="n">_</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentCardTextField.html">STPPaymentCardTextField</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L378">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentCardTextField.h#L382">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -842,8 +906,8 @@ specific subfield of the view ended its editing.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-07-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-11-14)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

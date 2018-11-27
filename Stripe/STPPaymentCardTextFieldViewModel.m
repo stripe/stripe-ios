@@ -9,6 +9,7 @@
 #import "STPPaymentCardTextFieldViewModel.h"
 
 #import "NSString+Stripe.h"
+#import "STPCardValidator+Private.h"
 #import "STPPostalCodeValidator.h"
 
 @implementation STPPaymentCardTextFieldViewModel
@@ -18,6 +19,38 @@
     STPCardBrand brand = [STPCardValidator brandForNumber:sanitizedNumber];
     NSInteger maxLength = [STPCardValidator maxLengthForCardBrand:brand];
     _cardNumber = [sanitizedNumber stp_safeSubstringToIndex:maxLength];
+}
+
+- (NSString *)compressedCardNumber {
+    NSString *cardNumber = self.cardNumber;
+    if (cardNumber.length == 0) {
+        cardNumber = self.defaultPlaceholder;
+    }
+
+    STPCardBrand currentBrand = [STPCardValidator brandForNumber:cardNumber];
+    if ([self validationStateForField:STPCardFieldTypeNumber] == STPCardValidationStateValid) {
+        // Use fragment length
+        NSUInteger length = [STPCardValidator fragmentLengthForCardBrand:currentBrand];
+        NSUInteger index = cardNumber.length - length;
+
+        if (index < cardNumber.length) {
+            return [cardNumber stp_safeSubstringFromIndex:index];
+        }
+    } else {
+        // use the card number format
+        NSArray<NSNumber *> *cardNumberFormat = [STPCardValidator cardNumberFormatForBrand:currentBrand];
+
+        NSUInteger index = 0;
+        for (NSNumber *segment in cardNumberFormat) {
+            NSUInteger segmentLength = [segment unsignedIntegerValue];
+            if (index + segmentLength >= cardNumber.length) {
+                return [cardNumber stp_safeSubstringFromIndex:index];
+            }
+            index += segmentLength;
+        }
+    }
+
+    return nil;
 }
 
 // This might contain slashes.

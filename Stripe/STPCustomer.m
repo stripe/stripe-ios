@@ -82,13 +82,13 @@ NS_ASSUME_NONNULL_BEGIN
     }
     customer.sources = @[];
     customer.defaultSource = nil;
-    [customer updateSourcesWithResponse:dict filteringApplePay:YES];
     customer.allResponseFields = dict;
+    [customer updateSourcesFilteringApplePay:YES];
     return customer;
 }
 
-- (void)updateSourcesWithResponse:(NSDictionary *)response
-                filteringApplePay:(BOOL)filterApplePay {
+- (void)updateSourcesFilteringApplePay:(BOOL)filterApplePay {
+    NSDictionary *response = self.allResponseFields;
     NSArray *data;
     NSDictionary *sourcesDict = [response stp_dictionaryForKey:@"sources"];
     if (sourcesDict) {

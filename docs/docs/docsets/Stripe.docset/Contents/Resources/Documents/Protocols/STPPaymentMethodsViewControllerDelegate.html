@@ -140,6 +140,12 @@
                 <a class="nav-group-task-link" href="../Classes/STPPaymentIntentParams.html">STPPaymentIntentParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentSourceAction.html">STPPaymentIntentSourceAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentIntentSourceActionAuthorizeWithURL.html">STPPaymentIntentSourceActionAuthorizeWithURL</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a>
               </li>
               <li class="nav-group-task">
@@ -292,6 +298,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentConfirmationMethod.html">STPPaymentIntentConfirmationMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentIntentSourceActionType.html">STPPaymentIntentSourceActionType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentIntentStatus.html">STPPaymentIntentStatus</a>
@@ -488,6 +497,11 @@ when this is called.</p>
               <span class="n">didFailToLoadWithError</span><span class="o">:</span><span class="p">(</span><span class="n">nonnull</span> <span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="n">error</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">paymentMethodsViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentMethodsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></span><span class="p">,</span> <span class="n">didFailToLoadWithError</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -521,7 +535,7 @@ when this is called.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L169-L170">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L169-L170">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -552,6 +566,11 @@ You should dismiss the view controller when this is called.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentMethodsViewController</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">paymentMethodsViewControllerDidFinish</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentMethodsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -573,7 +592,7 @@ You should dismiss the view controller when this is called.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L179">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L179">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -603,6 +622,11 @@ You should dismiss the view controller when this is called.</p>
     <span class="p">(</span><span class="n">nonnull</span> <span class="n"><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">paymentMethodsViewController</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">paymentMethodsViewControllerDidCancel</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentMethodsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -624,7 +648,7 @@ You should dismiss the view controller when this is called.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L187">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L187">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -663,6 +687,11 @@ call them directly during this method.</p>
                   <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="o">&gt;</span><span class="p">)</span><span class="n">paymentMethod</span><span class="p">;</span></code></pre>
 
                         </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">paymentMethodsViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">paymentMethodsViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/STPPaymentMethodsViewController.html">STPPaymentMethodsViewController</a></span><span class="p">,</span> <span class="n">didSelect</span> <span class="nv">paymentMethod</span><span class="p">:</span> <span class="kt"><a href="../Protocols/STPPaymentMethod.html">STPPaymentMethod</a></span><span class="p">)</span></code></pre>
+
+                        </div>
                       </div>
                       <div>
                         <h4>Parameters</h4>
@@ -696,7 +725,7 @@ call them directly during this method.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/v13.1.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L204-L205">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/v14.0.0/Stripe/PublicHeaders/STPPaymentMethodsViewController.h#L204-L205">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -709,8 +738,8 @@ call them directly during this method.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-07-13)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>&copy; 2018 <a class="link" href="https://stripe.com" target="_blank" rel="external">Stripe</a>. All rights reserved. (Last updated: 2018-11-14)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

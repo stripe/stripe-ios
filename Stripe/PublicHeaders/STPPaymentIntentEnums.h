@@ -92,3 +92,23 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentConfirmationMethod) {
      */
     STPPaymentIntentConfirmationMethodSecret,
 };
+
+/**
+ Types of Source Actions from a `STPPaymentIntent`, when the payment intent
+ status is `STPPaymentIntentStatusRequiresSourceAction`.
+ */
+typedef NS_ENUM(NSUInteger, STPPaymentIntentSourceActionType) {
+    /**
+     This is an unknown source action, that's been added since the SDK
+     was last updated.
+     Update your SDK, or use the `nextSourceAction.allResponseFields`
+     for custom handling.
+     */
+    STPPaymentIntentSourceActionTypeUnknown,
+
+    /**
+     The payment intent needs to be authorized by the user. We provide
+     `STPRedirectContext` to handle the url redirections necessary.
+     */
+    STPPaymentIntentSourceActionTypeAuthorizeWithURL,
+};

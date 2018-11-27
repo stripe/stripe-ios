@@ -10,6 +10,7 @@
 
 #import "NSString+Stripe.h"
 #import "STPCardValidator.h"
+#import "STPCardValidator+Private.h"
 #import "STPDelegateProxy.h"
 #import "STPPhoneNumberValidator.h"
 #import "STPWeakStrongMacros.h"
@@ -132,20 +133,20 @@ typedef NSAttributedString* (^STPFormTextTransformationBlock)(NSAttributedString
                     return [inputString copy];
                 }
                 NSMutableAttributedString *attributedString = [inputString mutableCopy];
-                NSArray *cardSpacing;
                 STPCardBrand currentBrand = [STPCardValidator brandForNumber:attributedString.string];
-                if (currentBrand == STPCardBrandAmex) {
-                    cardSpacing = @[@3, @9];
-                } else {
-                    cardSpacing = @[@3, @7, @11];
-                }
-                for (NSUInteger i = 0; i < attributedString.length; i++) {
-                    if ([cardSpacing containsObject:@(i)]) {
-                        [attributedString addAttribute:NSKernAttributeName value:@(5)
-                                                 range:NSMakeRange(i, 1)];
-                    } else {
-                        [attributedString addAttribute:NSKernAttributeName value:@(0)
-                                                 range:NSMakeRange(i, 1)];
+                NSArray<NSNumber *> *cardNumberFormat = [STPCardValidator cardNumberFormatForBrand:currentBrand];
+
+                NSUInteger index = 0;
+                for (NSNumber *segmentLength in cardNumberFormat) {
+                    NSUInteger segmentIndex = 0;
+                    for (; index < attributedString.length && segmentIndex < [segmentLength unsignedIntegerValue]; index++, segmentIndex++) {
+                        if (index + 1 != attributedString.length && segmentIndex + 1 == [segmentLength unsignedIntegerValue]) {
+                            [attributedString addAttribute:NSKernAttributeName value:@(5)
+                                                     range:NSMakeRange(index, 1)];
+                        } else {
+                            [attributedString addAttribute:NSKernAttributeName value:@(0)
+                                                     range:NSMakeRange(index, 1)];
+                        }
                     }
                 }
                 return [attributedString copy];

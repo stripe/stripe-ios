@@ -7,6 +7,7 @@
 //
 
 #import "STPCardValidator.h"
+#import "STPCardValidator+Private.h"
 
 #import "STPBINRange.h"
 #import "NSCharacterSet+Stripe.h"
@@ -241,14 +242,7 @@ static NSString * _Nonnull stringByRemovingCharactersFromSet(NSString * _Nonnull
 }
 
 + (NSInteger)fragmentLengthForCardBrand:(STPCardBrand)brand {
-    switch (brand) {
-        case STPCardBrandAmex:
-            return 5;
-        case STPCardBrandDinersClub:
-            return 2;
-        default:
-            return 4;
-    }
+    return [[[self cardNumberFormatForBrand:brand] lastObject] unsignedIntegerValue];
 }
 
 + (BOOL)stringIsValidLuhn:(NSString *)number {

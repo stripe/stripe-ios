@@ -67,7 +67,7 @@
         STPAPIClient *stripeClient = [STPAPIClient sharedClient];
         STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
         paymentIntentParams.sourceParams = [STPSourceParams cardParamsWithCard:self.paymentTextField.cardParams];
-        paymentIntentParams.returnUrl = @"payments-example://stripe-redirect";
+        paymentIntentParams.returnURL = @"payments-example://stripe-redirect";
 
         [stripeClient confirmPaymentIntentWithParams:paymentIntentParams completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
             if (error) {

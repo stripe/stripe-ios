@@ -189,7 +189,7 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
     return [STPSource decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONSourceAlipay]];
 }
 
-+ (STPSource *)alipaySourceWithNativeUrl {
++ (STPSource *)alipaySourceWithNativeURL {
     NSMutableDictionary *dictionary = [STPTestUtils jsonNamed:STPTestJSONSourceAlipay].mutableCopy;
     NSMutableDictionary *detailsDictionary = ((NSDictionary *)dictionary[@"alipay"]).mutableCopy;
     detailsDictionary[@"native_url"] = @"alipay://test";
@@ -280,6 +280,7 @@ NSString *const STPTestJSONSourceSOFORT = @"SOFORTSource";
 
     legalEntity.verification = [STPVerificationParams new];
     legalEntity.verification.document = @"file_abc";
+    legalEntity.verification.documentBack = @"file_def";
 
     STPPersonParams *jenny = [self personParams], *jacob = [self personParams];
     jenny.firstName = @"Jenny";

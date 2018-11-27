@@ -8,6 +8,8 @@
 
 #import "STPTestUtils.h"
 
+@import ObjectiveC.runtime;
+
 @implementation STPTestUtils
 
 + (NSDictionary *)jsonNamed:(NSString *)name {
@@ -16,6 +18,20 @@
         return [NSJSONSerialization JSONObjectWithData:data options:(NSJSONReadingOptions)kNilOptions error:nil];
     }
     return nil;
+}
+
++ (NSArray<NSString *> *)propertyNamesOf:(NSObject *)object {
+    uint propertyCount;
+    objc_property_t *propertyList = class_copyPropertyList([object class], &propertyCount);
+    NSMutableArray *propertyNames = [NSMutableArray arrayWithCapacity:propertyCount];
+
+    for (uint i = 0; i < propertyCount; i++) {
+        objc_property_t property = propertyList[i];
+        NSString *propertyName = [NSString stringWithUTF8String:property_getName(property)];
+        [propertyNames addObject:propertyName];
+    }
+    free(propertyList);
+    return propertyNames;
 }
 
 #pragma mark -

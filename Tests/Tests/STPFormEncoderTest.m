@@ -61,8 +61,7 @@
 // helper test method
 - (NSString *)encodeObject:(STPTestFormEncodableObject *)object {
     NSDictionary *dictionary = [STPFormEncoder dictionaryForObject:object];
-    NSString *queryString = [STPFormEncoder queryStringFromParameters:dictionary];
-    return [queryString stringByRemovingPercentEncoding];
+    return [STPFormEncoder queryStringFromParameters:dictionary];
 }
 
 - (void)testFormEncoding_emptyObject {
@@ -184,6 +183,16 @@
     XCTAssertEqualObjects([self encodeObject:testObject], @"test_property=success");
 }
 
+- (void)testQueryStringWithBadFields {
+    NSDictionary *params = @{
+                             @"foo]": @"bar",
+                             @"baz": @"qux[",
+                             @"woo;": @";hoo",
+                             };
+    NSString *result = [STPFormEncoder queryStringFromParameters:params];
+    XCTAssertEqualObjects(result, @"baz=qux%5B&foo%5D=bar&woo%3B=%3Bhoo");
+}
+
 - (void)testQueryStringFromParameters {
     NSDictionary *params = @{
                              @"foo": @"bar",
@@ -192,7 +201,25 @@
                                      }
                              };
     NSString *result = [STPFormEncoder queryStringFromParameters:params];
-    XCTAssertEqualObjects(result, @"baz%5Bqux%5D=1&foo=bar");
+    XCTAssertEqualObjects(result, @"baz[qux]=1&foo=bar");
+}
+
+- (void)testQueryStringFromNil {
+    NSDictionary *obj = nil;
+    NSString *result = [STPFormEncoder queryStringFromParameters:obj];
+    XCTAssertEqualObjects(result, @"");
+}
+
+- (void)testPushProvisioningQueryStringFromParameters {
+    NSDictionary *params = @{
+                             @"ios": @{
+                                     @"certificates": @[@"cert1", @"cert2"],
+                                     @"nonce": @"123mynonce",
+                                     @"nonce_signature": @"sig",
+                                     },
+                             };
+    NSString *result = [STPFormEncoder queryStringFromParameters:params];
+    XCTAssertEqualObjects(result, @"ios[certificates][0]=cert1&ios[certificates][1]=cert2&ios[nonce]=123mynonce&ios[nonce_signature]=sig");
 }
 
 @end

@@ -55,8 +55,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
 
 - (void)setIncludeApplePaySources:(BOOL)includeApplePaySources {
     _includeApplePaySources = includeApplePaySources;
-    [self.customer updateSourcesWithResponse:self.customer.allResponseFields
-                           filteringApplePay:!includeApplePaySources];
+    [self.customer updateSourcesFilteringApplePay:!includeApplePaySources];
 }
 
 - (BOOL)shouldUseCachedCustomer {
@@ -87,8 +86,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
         }
         [STPAPIClient retrieveCustomerUsingKey:ephemeralKey completion:^(STPCustomer *customer, NSError *error) {
             if (customer) {
-                [customer updateSourcesWithResponse:self.customer.allResponseFields
-                                  filteringApplePay:!self.includeApplePaySources];
+                [customer updateSourcesFilteringApplePay:!self.includeApplePaySources];
                 self.customer = customer;
             }
             if (completion) {
@@ -138,8 +136,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
                                           usingKey:ephemeralKey
                                         completion:^(STPCustomer *customer, NSError *error) {
                                             if (customer) {
-                                                [customer updateSourcesWithResponse:self.customer.allResponseFields
-                                                                  filteringApplePay:!self.includeApplePaySources];
+                                                [customer updateSourcesFilteringApplePay:!self.includeApplePaySources];
                                                 self.customer = customer;
                                             }
                                             if (completion) {
@@ -168,8 +165,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
                                           usingKey:ephemeralKey
                                         completion:^(STPCustomer *customer, NSError *error) {
                                             if (customer) {
-                                                [customer updateSourcesWithResponse:self.customer.allResponseFields
-                                                                  filteringApplePay:!self.includeApplePaySources];
+                                                [customer updateSourcesFilteringApplePay:!self.includeApplePaySources];
                                                 self.customer = customer;
                                             }
                                             if (completion) {

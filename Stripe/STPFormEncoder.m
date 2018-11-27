@@ -137,7 +137,7 @@ NSString * STPPercentEscapedStringFromString(NSString *string) {
 
 - (instancetype)initWithField:(id)field value:(id)value;
 
-- (NSString *)URLEncodedStringValue;
+- (NSString *)stringValue;
 @end
 
 @implementation STPQueryStringPair
@@ -154,20 +154,11 @@ NSString * STPPercentEscapedStringFromString(NSString *string) {
     return self;
 }
 
-- (NSString *)URLEncodedStringValue {
+- (NSString *)stringValue {
     if (!self.value || [self.value isEqual:[NSNull null]]) {
-        return STPPercentEscapedStringFromString([self.field description]);
+        return [self.field description] ? : @"";
     } else {
-        NSString *unescapedValue = [self.value description];
-
-        // coerce boxed BOOL values back into true/false
-        // https://stackoverflow.com/a/30223989/1196205
-        if ([self.value isKindOfClass:[NSNumber class]]
-            && (CFBooleanGetTypeID() == CFGetTypeID((__bridge CFTypeRef)(self.value)))) {
-            unescapedValue = [self.value boolValue] ? @"true" : @"false";
-        }
-
-        return [NSString stringWithFormat:@"%@=%@", STPPercentEscapedStringFromString([self.field description]), STPPercentEscapedStringFromString(unescapedValue)];
+        return [NSString stringWithFormat:@"%@=%@", [self.field description], [self.value description]];
     }
 }
 
@@ -175,20 +166,70 @@ NSString * STPPercentEscapedStringFromString(NSString *string) {
 
 #pragma mark -
 
-FOUNDATION_EXPORT NSArray * STPQueryStringPairsFromDictionary(NSDictionary *dictionary);
 FOUNDATION_EXPORT NSArray * STPQueryStringPairsFromKeyAndValue(NSString *key, id value);
+FOUNDATION_EXPORT id STPPercentEscapedObject(id object);
 
 NSString * STPQueryStringFromParameters(NSDictionary *parameters) {
-    NSMutableArray *mutablePairs = [NSMutableArray array];
-    for (STPQueryStringPair *pair in STPQueryStringPairsFromDictionary(parameters)) {
-        [mutablePairs addObject:[pair URLEncodedStringValue]];
+    
+    if (!parameters) {
+        return @"";
     }
     
-    return [mutablePairs componentsJoinedByString:@"&"];
+    // Escape any reserved characters. due to the implementation of `STPQueryStringPairsFromKeyAndValue`, it's much easier to do this now, as when that function is called recursively on a dictionary, `key` will (correctly) contain characters like `[]`.
+    NSDictionary *escaped = STPPercentEscapedObject(parameters);
+    
+    NSString *descriptionSelector = NSStringFromSelector(@selector(description));
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:descriptionSelector ascending:YES selector:@selector(compare:)];
+    
+    // For each dictionary key-value pair, form-encode the pair (potentially recursively). Thus {foo: {bar: "baz"}} becomes the tuple, ("foo[bar]", "baz"). Each one of these tuples will become a key/value pair in the final query string (e.g. POST /v1/charges?foo[bar]=baz).
+    NSMutableArray *mutablePairs = [NSMutableArray array];    
+    for (id key in [escaped.allKeys sortedArrayUsingDescriptors:@[ sortDescriptor ]]) {
+        id value = escaped[key];
+        NSArray *pairs = STPQueryStringPairsFromKeyAndValue(key, value);
+        [mutablePairs addObjectsFromArray:pairs];
+    }
+    
+    NSMutableArray *mutablePathComponents = [NSMutableArray array];
+    for (STPQueryStringPair *pair in mutablePairs) {
+        [mutablePathComponents addObject:[pair stringValue]];
+    }
+    
+    return [mutablePathComponents componentsJoinedByString:@"&"];
 }
 
-NSArray * STPQueryStringPairsFromDictionary(NSDictionary *dictionary) {
-    return STPQueryStringPairsFromKeyAndValue(nil, dictionary);
+// This function recursively converts an object into a version that is safe to convert into
+// a form-encoded path string by escaping any reserved characters in it or its children.
+id STPPercentEscapedObject(id object) {
+    if (!object || object == [NSNull null]) {
+        return @"";
+    } else if ([object isKindOfClass:[NSArray class]]) {
+        NSMutableArray *escapedArray = [NSMutableArray array];
+        for (id subObject in object) {
+            [escapedArray addObject:STPPercentEscapedObject(subObject)];
+        }
+        return escapedArray;
+    } else if ([object isKindOfClass:[NSSet class]]) {
+        NSMutableSet *escapedSet = [NSMutableSet set];
+        for (id subObject in object) {
+            [escapedSet addObject:STPPercentEscapedObject(subObject)];
+        }
+        return escapedSet;
+    } else if ([object isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *escapedDictionary = [NSMutableDictionary dictionary];
+        for (id key in object) {
+            id escapedKey = STPPercentEscapedStringFromString([key description]);
+            id subObject = object[key];
+            escapedDictionary[escapedKey] = STPPercentEscapedObject(subObject);
+        }
+        return escapedDictionary;
+    } else if ([object isKindOfClass:[NSNumber class]]
+               && (CFBooleanGetTypeID() == CFGetTypeID((__bridge CFTypeRef)(object)))) {
+        // Unbox NSNumbers containing booleans
+        // https://stackoverflow.com/a/30223989/1196205
+        return [object boolValue] ? @"true" : @"false";
+    } else {
+        return STPPercentEscapedStringFromString([object description]);
+    }
 }
 
 NSArray * STPQueryStringPairsFromKeyAndValue(NSString *key, id value) {
@@ -198,12 +239,12 @@ NSArray * STPQueryStringPairsFromKeyAndValue(NSString *key, id value) {
     
     if ([value isKindOfClass:[NSDictionary class]]) {
         NSDictionary *dictionary = value;
-        // Sort dictionary keys to ensure consistent ordering in query string, which is important when deserializing potentially ambiguous sequences, such as an array of dictionaries
+        // Sort dictionary keys to ensure consistent ordering in query string, which is important when serializing potentially ambiguous sequences, such as an array of dictionaries
         for (id nestedKey in [dictionary.allKeys sortedArrayUsingDescriptors:@[ sortDescriptor ]]) {
             id nestedValue = dictionary[nestedKey];
-            if (nestedValue) {
-                [mutableQueryStringComponents addObjectsFromArray:STPQueryStringPairsFromKeyAndValue((key ? [NSString stringWithFormat:@"%@[%@]", key, nestedKey] : nestedKey), nestedValue)];
-            }
+            // Call ourselves recursively, building up a larger param string
+            NSString *combinedKey = [NSString stringWithFormat:@"%@[%@]", key, nestedKey];
+            [mutableQueryStringComponents addObjectsFromArray:STPQueryStringPairsFromKeyAndValue(combinedKey, nestedValue)];
         }
     } else if ([value isKindOfClass:[NSArray class]]) {
         NSArray *array = value;

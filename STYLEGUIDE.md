@@ -18,7 +18,7 @@
 
 - Avoid single letter variables. Try using `idx` / `jdx` instead of `i` / `j` in for loops.
 
-- Prefer `urlString` over `URLString` (acronym prefix), `baseUrlString` over `baseURLString` (acronym infix), and `stripeId` over `stripeID` (acronym suffix)
+- Acronyms should be all lowercase as a method prefix (ex:`url` or `urlString`). Otherwise, they should be all caps when occurring elsewhere in the method name, or as a class name (ex: `handleStripeURLCallbackWithURL`, `stripeID` or `STPAPIClient`)
 
 ### Control Flow
 

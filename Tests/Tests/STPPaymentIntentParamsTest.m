@@ -30,7 +30,7 @@
         XCTAssertNil(params.sourceId);
         XCTAssertNil(params.receiptEmail);
         XCTAssertNil(params.saveSourceToCustomer);
-        XCTAssertNil(params.returnUrl);
+        XCTAssertNil(params.returnURL);
     }
 }
 
@@ -38,6 +38,26 @@
     STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] init];
     XCTAssertNotNil(params.description);
 }
+
+#pragma mark Deprecated Property
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+
+- (void)testReturnURLRenaming {
+    STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] init];
+
+    XCTAssertNil(params.returnURL);
+    XCTAssertNil(params.returnUrl);
+
+    params.returnURL = @"set via new name";
+    XCTAssertEqualObjects(params.returnUrl, @"set via new name");
+
+    params.returnUrl = @"set via old name";
+    XCTAssertEqualObjects(params.returnURL, @"set via old name");
+}
+
+#pragma clang diagnostic pop
 
 #pragma mark STPFormEncodable Tests
 

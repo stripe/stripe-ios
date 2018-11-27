@@ -80,7 +80,15 @@ NS_ASSUME_NONNULL_BEGIN
  their payment on the payment method’s app or site.
  This should probably be a URL that opens your iOS app.
  */
-@property (nonatomic, copy, nullable, readwrite) NSString *returnUrl;
+@property (nonatomic, copy, nullable, readwrite) NSString *returnURL;
+
+/**
+ The URL to redirect your customer back to after they authenticate or cancel
+ their payment on the payment method’s app or site.
+
+ This property has been renamed to `returnURL` and deprecated.
+ */
+@property (nonatomic, copy, nullable, readwrite) NSString *returnUrl __attribute__((deprecated("returnUrl has been renamed to returnURL", "returnURL")));
 
 @end
 

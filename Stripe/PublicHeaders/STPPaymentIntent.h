@@ -13,6 +13,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class STPPaymentIntentSourceAction;
+
 /**
  A PaymentIntent tracks the process of collecting a payment from your customer.
 
@@ -79,18 +81,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL livemode;
 
 /**
+ If `status == STPPaymentIntentStatusRequiresSourceAction`, this
+ property contains the next action to take for this PaymentIntent.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentIntentSourceAction* nextSourceAction;
+
+/**
  Email address that the receipt for the resulting payment will be sent to.
  */
 @property (nonatomic, nullable, readonly) NSString *receiptEmail;
-
-/**
- The URL to redirect your customer back to after they authenticate or cancel their
- payment on the payment method’s app or site.
-
- This should be a URL that your app handles if the PaymentIntent is going to
- be confirmed in your app, and it has a redirect authorization flow.
- */
-@property (nonatomic, nullable, readonly) NSURL *returnUrl;
 
 /**
  The Stripe ID of the Source used in this PaymentIntent.
