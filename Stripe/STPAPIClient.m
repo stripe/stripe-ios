@@ -191,18 +191,18 @@ static NSString * const APIEndpointPaymentIntents = @"payment_intents";
 + (void)validateKey:(NSString *)publishableKey {
     NSCAssert(publishableKey != nil && ![publishableKey isEqualToString:@""],
               @"You must use a valid publishable key to create a token. For more info, see https://stripe.com/docs/stripe.js");
-    BOOL secretKey = [publishableKey hasPrefix:@"sk_"];
-    NSCAssert(!secretKey,
-              @"You are using a secret key to create a token, instead of the publishable one. For more info, see https://stripe.com/docs/stripe.js");
-#ifndef DEBUG
-    if ([publishableKey.lowercaseString hasPrefix:@"pk_test"]) {
-        FAUXPAS_IGNORED_IN_METHOD(NSLogUsed);
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            NSLog(@"ℹ️ You're using your Stripe testmode key. Make sure to use your livemode key when submitting to the App Store!");
-        });
-    }
-#endif
+//    BOOL secretKey = [publishableKey hasPrefix:@"sk_"];
+//    NSCAssert(!secretKey,
+//              @"You are using a secret key to create a token, instead of the publishable one. For more info, see https://stripe.com/docs/stripe.js");
+//#ifndef DEBUG
+//    if ([publishableKey.lowercaseString hasPrefix:@"pk_test"]) {
+//        FAUXPAS_IGNORED_IN_METHOD(NSLogUsed);
+//        static dispatch_once_t onceToken;
+//        dispatch_once(&onceToken, ^{
+//            NSLog(@"ℹ️ You're using your Stripe testmode key. Make sure to use your livemode key when submitting to the App Store!");
+//        });
+//    }
+//#endif
 }
 #pragma clang diagnostic pop
 

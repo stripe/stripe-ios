@@ -21,7 +21,7 @@
     NSMutableDictionary *params = [[[self class] parametersForPayment:payment] mutableCopy];
     [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
     [self createTokenWithParameters:params
-                         completion:completion];
+                        completion:completion];
     [[STPTelemetryClient sharedInstance] sendTelemetryData];
 }
 

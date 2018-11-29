@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol STPEphemeralKeyProvider;
+@protocol STPCustomerEphemeralKeyProvider;
 @class STPEphemeralKey, STPEphemeralKeyManager;
 
 /**
@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param keyProvider   The key provider the customer context will use.
  @return the newly-instantiated customer context.
  */
-- (instancetype)initWithKeyProvider:(id<STPEphemeralKeyProvider>)keyProvider;
+- (instancetype)initWithKeyProvider:(id<STPCustomerEphemeralKeyProvider>)keyProvider;
 
 /**
  `STPCustomerContext` will cache its customer object for up to 60 seconds.
