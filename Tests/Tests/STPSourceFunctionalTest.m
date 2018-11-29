@@ -9,11 +9,11 @@
 @import XCTest;
 
 #import "Stripe.h"
+#import "STPNetworkStubbingTestCase.h"
 
 static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 
-@interface STPSourceFunctionalTest : XCTestCase
-
+@interface STPSourceFunctionalTest : STPNetworkStubbingTestCase
 @end
 
 @interface STPAPIClient (WritableURL)
@@ -21,6 +21,10 @@ static NSString *const apiKey = @"pk_test_vOo1umqsYxSrP5UXfOeL3ecm";
 @end
 
 @implementation STPSourceFunctionalTest
+
+- (void)setUp {
+    [super setUp];
+}
 
 - (void)testCreateSource_bancontact {
     STPSourceParams *params = [STPSourceParams bancontactParamsWithAmount:1099

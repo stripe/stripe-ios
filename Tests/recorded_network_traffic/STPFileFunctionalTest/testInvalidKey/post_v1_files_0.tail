@@ -1,0 +1,24 @@
+POST
+/v1/files$
+401
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, HEAD, OPTIONS, DELETE
+Server: nginx
+Access-Control-Expose-Headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+Access-Control-Max-Age: 300
+Cache-Control: no-cache, no-store
+Date: Sun, 25 Nov 2018 07:32:52 GMT
+Stripe-Version: 2015-10-12
+Access-Control-Allow-Credentials: true
+Content-Length: 122
+Connection: keep-alive
+Www-Authenticate: Bearer realm="Stripe"
+
+{
+  "error" : {
+    "message" : "Invalid API Key provided: not_a_*****_***_asdf",
+    "type" : "invalid_request_error"
+  }
+}

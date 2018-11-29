@@ -12,6 +12,7 @@
 #import "NSMutableURLRequest+Stripe.h"
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient.h"
+#import "STPAPIClient+Private.h"
 #import "STPAddCardViewController+Private.h"
 #import "STPAddCardViewController.h"
 #import "STPAspects.h"
@@ -134,7 +135,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSessionConfiguration *config = [STPAPIClient sharedUrlSessionConfiguration];
         _urlSession = [NSURLSession sessionWithConfiguration:config];
         _apiUsage = [NSSet set];
         _additionalInfoSet = [NSSet set];

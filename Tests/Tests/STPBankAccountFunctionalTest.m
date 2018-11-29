@@ -12,11 +12,17 @@
 #import "Stripe.h"
 #import "STPBankAccount.h"
 #import "STPToken.h"
+#import "STPNetworkStubbingTestCase.h"
 
-@interface STPBankAccountFunctionalTest : XCTestCase
+@interface STPBankAccountFunctionalTest : STPNetworkStubbingTestCase
 @end
 
 @implementation STPBankAccountFunctionalTest
+
+- (void)setUp {
+//    self.recordingMode = YES;
+    [super setUp];
+}
 
 - (void)testCreateAndRetreiveBankAccountToken {
     STPBankAccountParams *bankAccount = [[STPBankAccountParams alloc] init];

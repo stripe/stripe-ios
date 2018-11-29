@@ -1,2 +1,4 @@
 github "facebook/ios-snapshot-test-case"
 github "erikdoe/ocmock"
+github "AliSoftware/OHHTTPStubs"
+github "capitalone/SWHttpTrafficRecorder"

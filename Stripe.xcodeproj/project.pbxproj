@@ -267,6 +267,13 @@
 		04CDE5C71BC20AF800548833 /* STPBankAccountParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDE5C11BC20AF800548833 /* STPBankAccountParams.m */; };
 		04CDE5C91BC20B1D00548833 /* STPBankAccountParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDE5C81BC20B1D00548833 /* STPBankAccountParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04CDE5CB1BC20B1D00548833 /* STPBankAccountParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 04CDE5C81BC20B1D00548833 /* STPBankAccountParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04E01F7B21A8C37D0061402F /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */; };
+		04E01F7C21A8C37D0061402F /* SWHttpTrafficRecorder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */; };
+		04E01F7D21A8C39D0061402F /* OHHTTPStubs.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04E01F7E21A8C39D0061402F /* SWHttpTrafficRecorder.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04E01F8521AA36320061402F /* STPNetworkStubbingTestCase.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E01F8321AA36320061402F /* STPNetworkStubbingTestCase.h */; };
+		04E01F8621AA36320061402F /* STPNetworkStubbingTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E01F8421AA36320061402F /* STPNetworkStubbingTestCase.m */; };
+		04E01F8A21AA55E30061402F /* recorded_network_traffic in Resources */ = {isa = PBXBuildFile; fileRef = 04E01F8921AA55E30061402F /* recorded_network_traffic */; };
 		04E32A9D1B7A9490009C9E35 /* STPPaymentCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E32A9C1B7A9490009C9E35 /* STPPaymentCardTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04E32AA01B7A9490009C9E35 /* STPPaymentCardTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E32A9C1B7A9490009C9E35 /* STPPaymentCardTextField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		04E39F541CECF7A100AF3B96 /* STPPaymentMethodTuple.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E39F501CECF7A100AF3B96 /* STPPaymentMethodTuple.h */; };
@@ -859,6 +866,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				04E01F7D21A8C39D0061402F /* OHHTTPStubs.framework in CopyFiles */,
+				04E01F7E21A8C39D0061402F /* SWHttpTrafficRecorder.framework in CopyFiles */,
 				C18867D41E8AF8F300A77634 /* OCMock.framework in CopyFiles */,
 				F15AC1901DBA9CC60009EADE /* FBSnapshotTestCase.framework in CopyFiles */,
 			);
@@ -1030,6 +1039,11 @@
 		04CDE5C11BC20AF800548833 /* STPBankAccountParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPBankAccountParams.m; sourceTree = "<group>"; };
 		04CDE5C81BC20B1D00548833 /* STPBankAccountParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPBankAccountParams.h; path = PublicHeaders/STPBankAccountParams.h; sourceTree = "<group>"; };
 		04D5BF9019BF958F009521A5 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
+		04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = Carthage/Build/iOS/OHHTTPStubs.framework; sourceTree = "<group>"; };
+		04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SWHttpTrafficRecorder.framework; path = Carthage/Build/iOS/SWHttpTrafficRecorder.framework; sourceTree = "<group>"; };
+		04E01F8321AA36320061402F /* STPNetworkStubbingTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STPNetworkStubbingTestCase.h; sourceTree = "<group>"; };
+		04E01F8421AA36320061402F /* STPNetworkStubbingTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPNetworkStubbingTestCase.m; sourceTree = "<group>"; };
+		04E01F8921AA55E30061402F /* recorded_network_traffic */ = {isa = PBXFileReference; lastKnownFileType = folder; name = recorded_network_traffic; path = Tests/recorded_network_traffic; sourceTree = SOURCE_ROOT; };
 		04E32A9C1B7A9490009C9E35 /* STPPaymentCardTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentCardTextField.h; path = PublicHeaders/STPPaymentCardTextField.h; sourceTree = "<group>"; };
 		04E39F501CECF7A100AF3B96 /* STPPaymentMethodTuple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STPPaymentMethodTuple.h; sourceTree = "<group>"; };
 		04E39F511CECF7A100AF3B96 /* STPPaymentMethodTuple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodTuple.m; sourceTree = "<group>"; };
@@ -1354,6 +1368,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04E01F7B21A8C37D0061402F /* OHHTTPStubs.framework in Frameworks */,
+				04E01F7C21A8C37D0061402F /* SWHttpTrafficRecorder.framework in Frameworks */,
 				045E7C091A5F41DE004751EF /* Stripe.framework in Frameworks */,
 				C11B14971E8AE316000F760C /* OCMock.framework in Frameworks */,
 				F15AC18E1DBA9CA90009EADE /* FBSnapshotTestCase.framework in Frameworks */,
@@ -1537,6 +1553,7 @@
 		04CDB5281A5F3A9300B854EE /* StripeTests */ = {
 			isa = PBXGroup;
 			children = (
+				04E01F8921AA55E30061402F /* recorded_network_traffic */,
 				F1B8534D1FDF544B0065A49E /* FBSnapshotTestCase+STPViewControllerLoading.h */,
 				F1B8534E1FDF544B0065A49E /* FBSnapshotTestCase+STPViewControllerLoading.m */,
 				C18867D71E8B07F600A77634 /* Functional */,
@@ -1547,6 +1564,8 @@
 				C1CFCB781ED5F85A00BE45DF /* stp_test_upload_image.jpeg */,
 				C18867D91E8B0C4100A77634 /* STPFixtures.h */,
 				C18867DA1E8B0C4100A77634 /* STPFixtures.m */,
+				04E01F8321AA36320061402F /* STPNetworkStubbingTestCase.h */,
+				04E01F8421AA36320061402F /* STPNetworkStubbingTestCase.m */,
 				F1D96F981DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.h */,
 				F1D96F991DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.m */,
 				C1CFCB691ED5E0F400BE45DF /* STPMocks.h */,
@@ -1603,6 +1622,8 @@
 		11C74B9A164043050071C2CA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				04E01F7921A8C37C0061402F /* OHHTTPStubs.framework */,
+				04E01F7A21A8C37D0061402F /* SWHttpTrafficRecorder.framework */,
 				F1D765CD1EDE331500F37005 /* CoreLocation.framework */,
 				F15232301EA93E6800D65C67 /* Contacts.framework */,
 				C11B14961E8AE316000F760C /* OCMock.framework */,
@@ -2180,6 +2201,7 @@
 			files = (
 				F1B8534F1FDF544B0065A49E /* FBSnapshotTestCase+STPViewControllerLoading.h in Headers */,
 				F1D96F9A1DC7DCDE00477E64 /* STPLocalizationUtils+STPTestAdditions.h in Headers */,
+				04E01F8521AA36320061402F /* STPNetworkStubbingTestCase.h in Headers */,
 				F148ABFA1D5E88C40014FD92 /* STPTestUtils.h in Headers */,
 				C1CFCB6D1ED5E0F800BE45DF /* STPMocks.h in Headers */,
 				C18867DB1E8B0C4100A77634 /* STPFixtures.h in Headers */,
@@ -2640,6 +2662,7 @@
 				F152322F1EA9344600D65C67 /* iDEALSource.json in Resources */,
 				F16AA26F1F5A0F1700207FFF /* AlipaySource.json in Resources */,
 				8B39128920E2F9E000098401 /* P24Source.json in Resources */,
+				04E01F8A21AA55E30061402F /* recorded_network_traffic in Resources */,
 				8B39128220E2F99600098401 /* EPSSource.json in Resources */,
 				8B39128320E2F9A100098401 /* BancontactSource.json in Resources */,
 				8B39128B20E2F9F500098401 /* SOFORTSource.json in Resources */,
@@ -2854,7 +2877,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\n# If we're already inside this script then die\nif [ -n \"$RW_MULTIPLATFORM_BUILD_IN_PROGRESS\" ]; then\nexit 0\nfi\nexport RW_MULTIPLATFORM_BUILD_IN_PROGRESS=1\n\nRW_FRAMEWORK_NAME=\"Stripe\"\nRW_INPUT_STATIC_LIB=\"libStripe.a\"\nRW_FRAMEWORK_LOCATION=\"${BUILT_PRODUCTS_DIR}/${RW_FRAMEWORK_NAME}.framework\"\n\nfunction build_static_library {\n    # Will rebuild the static library as specified\n    #     build_static_library sdk\n    xcrun xcodebuild -project \"${PROJECT_FILE_PATH}\" \\\n    -target \"${TARGET_NAME}\" \\\n    -configuration \"${CONFIGURATION}\" \\\n    -sdk \"${1}\" \\\n    ONLY_ACTIVE_ARCH=NO \\\n    BUILD_DIR=\"${BUILD_DIR}\" \\\n    OBJROOT=\"${OBJROOT}\" \\\n    BUILD_ROOT=\"${BUILD_ROOT}\" \\\n    SYMROOT=\"${SYMROOT}\" $ACTION\n}\n\nfunction make_fat_library {\n    # Will smash 2 static libs together\n    #     make_fat_library in1 in2 out\n    xcrun lipo -create \"${1}\" \"${2}\" -output \"${3}\"\n}\n\n# 1 - Extract the platform (iphoneos/iphonesimulator) from the SDK name\nif [[ \"$SDK_NAME\" =~ ([A-Za-z]+) ]]; then\nRW_SDK_PLATFORM=${BASH_REMATCH[1]}\nelse\necho \"Could not find platform name from SDK_NAME: $SDK_NAME\"\nexit 1\nfi\n\n# 2 - Extract the version from the SDK\nif [[ \"$SDK_NAME\" =~ ([0-9]+.*$) ]]; then\nRW_SDK_VERSION=${BASH_REMATCH[1]}\nelse\necho \"Could not find sdk version from SDK_NAME: $SDK_NAME\"\nexit 1\nfi\n\n# 3 - Determine the other platform\nif [ \"$RW_SDK_PLATFORM\" == \"iphoneos\" ]; then\nRW_OTHER_PLATFORM=iphonesimulator\nelse\nRW_OTHER_PLATFORM=iphoneos\nfi\n\n# 4 - Find the build directory\nif [[ \"$BUILT_PRODUCTS_DIR\" =~ (.*)$RW_SDK_PLATFORM$ ]]; then\nRW_OTHER_BUILT_PRODUCTS_DIR=\"${BASH_REMATCH[1]}${RW_OTHER_PLATFORM}\"\nelse\necho \"Could not find other platform build directory.\"\nexit 1\nfi\n\n# Build the other platform.\nbuild_static_library \"${RW_OTHER_PLATFORM}${RW_SDK_VERSION}\"\n\n# If we're currently building for iphonesimulator, then need to rebuild\n#   to ensure that we get both i386 and x86_64\nif [ \"$RW_SDK_PLATFORM\" == \"iphonesimulator\" ]; then\nbuild_static_library \"${SDK_NAME}\"\nfi\n\n# Join the 2 static libs into 1 and push into the .framework\nmake_fat_library \"${BUILT_PRODUCTS_DIR}/${RW_INPUT_STATIC_LIB}\" \\\n\"${RW_OTHER_BUILT_PRODUCTS_DIR}/${RW_INPUT_STATIC_LIB}\" \\\n\"${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}\"\n\n/usr/bin/strip -Sx \"${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}\"\n\n# Ensure that the framework is present in both platform's build directories\ncp -a \"${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}\" \\\n\"${RW_OTHER_BUILT_PRODUCTS_DIR}/${RW_FRAMEWORK_NAME}.framework/Versions/A/${RW_FRAMEWORK_NAME}\"";
+			shellScript = "set -e\n\n# If we're already inside this script then die\nif [ -n \"$RW_MULTIPLATFORM_BUILD_IN_PROGRESS\" ]; then\nexit 0\nfi\nexport RW_MULTIPLATFORM_BUILD_IN_PROGRESS=1\n\nRW_FRAMEWORK_NAME=\"Stripe\"\nRW_INPUT_STATIC_LIB=\"libStripe.a\"\nRW_FRAMEWORK_LOCATION=\"${BUILT_PRODUCTS_DIR}/${RW_FRAMEWORK_NAME}.framework\"\n\nfunction build_static_library {\n    # Will rebuild the static library as specified\n    #     build_static_library sdk\n    xcrun xcodebuild -project \"${PROJECT_FILE_PATH}\" \\\n    -target \"${TARGET_NAME}\" \\\n    -configuration \"${CONFIGURATION}\" \\\n    -sdk \"${1}\" \\\n    ONLY_ACTIVE_ARCH=NO \\\n    BUILD_DIR=\"${BUILD_DIR}\" \\\n    OBJROOT=\"${OBJROOT}/DependentBuilds\" \\\n    BUILD_ROOT=\"${BUILD_ROOT}\" \\\n    SYMROOT=\"${SYMROOT}\" $ACTION\n}\n\nfunction make_fat_library {\n    # Will smash 2 static libs together\n    #     make_fat_library in1 in2 out\n    xcrun lipo -create \"${1}\" \"${2}\" -output \"${3}\"\n}\n\n# 1 - Extract the platform (iphoneos/iphonesimulator) from the SDK name\nif [[ \"$SDK_NAME\" =~ ([A-Za-z]+) ]]; then\nRW_SDK_PLATFORM=${BASH_REMATCH[1]}\nelse\necho \"Could not find platform name from SDK_NAME: $SDK_NAME\"\nexit 1\nfi\n\n# 2 - Extract the version from the SDK\nif [[ \"$SDK_NAME\" =~ ([0-9]+.*$) ]]; then\nRW_SDK_VERSION=${BASH_REMATCH[1]}\nelse\necho \"Could not find sdk version from SDK_NAME: $SDK_NAME\"\nexit 1\nfi\n\n# 3 - Determine the other platform\nif [ \"$RW_SDK_PLATFORM\" == \"iphoneos\" ]; then\nRW_OTHER_PLATFORM=iphonesimulator\nelse\nRW_OTHER_PLATFORM=iphoneos\nfi\n\n# 4 - Find the build directory\nif [[ \"$BUILT_PRODUCTS_DIR\" =~ (.*)$RW_SDK_PLATFORM$ ]]; then\nRW_OTHER_BUILT_PRODUCTS_DIR=\"${BASH_REMATCH[1]}${RW_OTHER_PLATFORM}\"\nelse\necho \"Could not find other platform build directory.\"\nexit 1\nfi\n\n# Build the other platform.\nbuild_static_library \"${RW_OTHER_PLATFORM}${RW_SDK_VERSION}\"\n\n# If we're currently building for iphonesimulator, then need to rebuild\n#   to ensure that we get both i386 and x86_64\nif [ \"$RW_SDK_PLATFORM\" == \"iphonesimulator\" ]; then\nbuild_static_library \"${SDK_NAME}\"\nfi\n\n# Join the 2 static libs into 1 and push into the .framework\nmake_fat_library \"${BUILT_PRODUCTS_DIR}/${RW_INPUT_STATIC_LIB}\" \\\n\"${RW_OTHER_BUILT_PRODUCTS_DIR}/${RW_INPUT_STATIC_LIB}\" \\\n\"${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}\"\n\n/usr/bin/strip -Sx \"${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}\"\n\n# Ensure that the framework is present in both platform's build directories\ncp -a \"${RW_FRAMEWORK_LOCATION}/Versions/A/${RW_FRAMEWORK_NAME}\" \\\n\"${RW_OTHER_BUILT_PRODUCTS_DIR}/${RW_FRAMEWORK_NAME}.framework/Versions/A/${RW_FRAMEWORK_NAME}\"\n";
 		};
 		F1122A821DFF7CB900A8B1AF /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2867,7 +2890,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ ! -d \"$PROJECT_HOME/Carthage/Build/iOS/FBSnapshotTestCase.framework/\" ]; then\necho \"FBSnapshotTestCase not found. Run \\`carthage bootstrap --platform ios --configuration Release\\` and then run tests again.\"\nexit 0\nfi";
+			shellScript = "if [ ! -d \"$PROJECT_HOME/Carthage/Build/iOS/FBSnapshotTestCase.framework/\" ]; then\necho \"FBSnapshotTestCase not found. Run \\`carthage bootstrap --platform ios --configuration Release\\` and then run tests again.\"\nexit 0\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2885,6 +2908,7 @@
 				C1EEDCCA1CA2186300A54582 /* STPPhoneNumberValidatorTest.m in Sources */,
 				04CB86BA1BA89CE100E4F61E /* PKPayment+StripeTest.m in Sources */,
 				F1B980941DB550E60075332E /* STPPaymentMethodsViewControllerLocalizationTests.m in Sources */,
+				04E01F8621AA36320061402F /* STPNetworkStubbingTestCase.m in Sources */,
 				C124A1851CCAB750007D42EE /* STPAnalyticsClientTest.m in Sources */,
 				C18867DC1E8B0C4100A77634 /* STPFixtures.m in Sources */,
 				C1CFCB761ED5E12400BE45DF /* STPFileFunctionalTest.m in Sources */,

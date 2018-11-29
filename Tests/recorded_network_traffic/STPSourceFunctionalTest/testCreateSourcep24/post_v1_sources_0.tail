@@ -1,0 +1,55 @@
+POST
+/v1/sources$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, HEAD, OPTIONS, DELETE
+Server: nginx
+Access-Control-Expose-Headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+Access-Control-Max-Age: 300
+Cache-Control: no-cache, no-store
+Date: Sun, 25 Nov 2018 07:36:14 GMT
+Stripe-Version: 2015-10-12
+Access-Control-Allow-Credentials: true
+Content-Length: 940
+Connection: keep-alive
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Request-Id: req_e7UbVRjpNURDUl
+
+{
+  "id" : "src_1DaIA5BbvEcIpqUbTn7d0KlS",
+  "livemode" : false,
+  "amount" : 1099,
+  "metadata" : {
+    "foo" : "bar"
+  },
+  "owner" : {
+    "address" : null,
+    "phone" : null,
+    "verified_address" : null,
+    "verified_phone" : null,
+    "verified_email" : null,
+    "verified_name" : null,
+    "email" : "user@example.com",
+    "name" : "Jenny Rosen"
+  },
+  "statement_descriptor" : null,
+  "usage" : "single_use",
+  "type" : "p24",
+  "redirect" : {
+    "status" : "pending",
+    "failure_reason" : null,
+    "url" : "https:\/\/hooks.stripe.com\/redirect\/authenticate\/src_1DaIA5BbvEcIpqUbTn7d0KlS?client_secret=src_client_secret_E2MttZyK55ZztGu7fYUJo4gN",
+    "return_url" : "https:\/\/shop.example.com\/crtABC"
+  },
+  "object" : "source",
+  "created" : 1543131373,
+  "client_secret" : "src_client_secret_E2MttZyK55ZztGu7fYUJo4gN",
+  "flow" : "redirect",
+  "currency" : "eur",
+  "status" : "pending",
+  "p24" : {
+    "reference" : "P24-N01-101-101 STRIPE POLAND"
+  }
+}

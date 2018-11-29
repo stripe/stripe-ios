@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSMutableURLRequest *)configuredRequestForURL:(NSURL *)url;
 
++ (NSURLSessionConfiguration *)sharedUrlSessionConfiguration;
+
 @end
 
 @interface STPAPIClient (SourcesPrivate)
