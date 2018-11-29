@@ -1076,6 +1076,13 @@
 		3691EB6F2119111A008C49E1 /* STPCardValidator+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPCardValidator+Private.h"; sourceTree = "<group>"; };
 		3691EB702119111A008C49E1 /* STPCardValidator+Private.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "STPCardValidator+Private.m"; sourceTree = "<group>"; };
 		3691EB73211A4F31008C49E1 /* STPShippingAddressViewControllerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPShippingAddressViewControllerTest.m; sourceTree = "<group>"; };
+		36D153B521AE0FDC00567EFE /* da */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = da; path = Localizations/da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		36D153B621AE101F00567EFE /* es-AR */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "es-AR"; path = "Localizations/es-AR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36D153B721AE106D00567EFE /* fr-CA */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "Localizations/fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36D153B821AE10E300567EFE /* nn-NO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "Localizations/nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36D153B921AE111500567EFE /* pt-BR */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "Localizations/pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36D153BA21AE111F00567EFE /* pt-PT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Localizations/pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		36D153BB21AE11CF00567EFE /* sv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sv; path = Localizations/sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		7E0B1132203572FB00271AD3 /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentConfigurationTest.m; sourceTree = "<group>"; };
@@ -2627,6 +2634,13 @@
 				fr,
 				fi,
 				nb,
+				da,
+				"es-AR",
+				"fr-CA",
+				"nn-NO",
+				"pt-BR",
+				"pt-PT",
+				sv,
 			);
 			mainGroup = 11C74B8D164043050071C2CA;
 			productRefGroup = 11C74B99164043050071C2CA /* Products */;
@@ -3253,6 +3267,13 @@
 				F148ABF11D5E81EB0014FD92 /* fr */,
 				7E0B1132203572FB00271AD3 /* fi */,
 				ED627D57207EA348007EFC56 /* nb */,
+				36D153B521AE0FDC00567EFE /* da */,
+				36D153B621AE101F00567EFE /* es-AR */,
+				36D153B721AE106D00567EFE /* fr-CA */,
+				36D153B821AE10E300567EFE /* nn-NO */,
+				36D153B921AE111500567EFE /* pt-BR */,
+				36D153BA21AE111F00567EFE /* pt-PT */,
+				36D153BB21AE11CF00567EFE /* sv */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
