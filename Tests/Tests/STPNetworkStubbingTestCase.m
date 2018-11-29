@@ -18,9 +18,10 @@
     [super setUp];
     
     // [self name] returns a string like `-[STPMyTestCase testThing]` - this transforms it into the recorded path `recorded_network_traffic/STPMyTestCase/testThing`.
-    NSMutableArray *components = [[[self name] componentsSeparatedByString:@" "] mutableCopy];
-    NSCAssert(components.count == 2, @"Invalid format received from XCTest#name: %@", [self name]);
-    [components enumerateObjectsUsingBlock:^(NSString *component, NSUInteger idx, __unused BOOL *stop) {
+    NSMutableArray *rawComponents = [[[self name] componentsSeparatedByString:@" "] mutableCopy];
+    NSCAssert(rawComponents.count == 2, @"Invalid format received from XCTest#name: %@", [self name]);
+    NSMutableArray *components = [NSMutableArray array];
+    [rawComponents enumerateObjectsUsingBlock:^(NSString *component, NSUInteger idx, __unused BOOL *stop) {
         components[idx] = [[component componentsSeparatedByCharactersInSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]] componentsJoinedByString:@""];
     }];
     
