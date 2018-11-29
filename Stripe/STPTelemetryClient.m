@@ -12,6 +12,7 @@
 #import "NSBundle+Stripe_AppName.h"
 #import "STPTelemetryClient.h"
 #import "STPAPIClient.h"
+#import "STPAPIClient+Private.h"
 
 @interface STPTelemetryClient ()
 @property (nonatomic) NSDate *appOpenTime;
@@ -29,18 +30,22 @@
 }
 
 + (instancetype)sharedInstance {
-    static id sharedClient;
+    NSURLSessionConfiguration *config = [STPAPIClient sharedUrlSessionConfiguration];
+    static STPTelemetryClient *sharedClient;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedClient = [self new];
+        sharedClient = [[self alloc] initWithSessionConfiguration:config];
     });
     return sharedClient;
 }
 
 - (instancetype)init {
+    return [self initWithSessionConfiguration:[STPAPIClient sharedUrlSessionConfiguration]];
+}
+
+- (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration *)config {
     self = [super init];
     if (self) {
-        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         _urlSession = [NSURLSession sessionWithConfiguration:config];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];

@@ -7,15 +7,19 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "STPNetworkStubbingTestCase.h"
 @import Stripe;
 
 #import "STPPaymentIntent+Private.h"
 
-@interface STPPaymentIntentFunctionalTest : XCTestCase
-
+@interface STPPaymentIntentFunctionalTest : STPNetworkStubbingTestCase
 @end
 
 @implementation STPPaymentIntentFunctionalTest
+
+- (void)setUp {
+    [super setUp];
+}
 
 - (void)testRetrievePreviousCreatedPaymentIntent {
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_kFIsmbqInGw6ynJJDMGvsjRi"];

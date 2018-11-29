@@ -11,14 +11,20 @@
 
 #import "STPAPIClient.h"
 #import "STPAPIClient+ApplePay.h"
+#import "STPNetworkStubbingTestCase.h"
 #import "STPFixtures.h"
 
-@interface STPApplePayFunctionalTest : XCTestCase
+@interface STPApplePayFunctionalTest : STPNetworkStubbingTestCase
 
 @end
 
 @implementation STPApplePayFunctionalTest
 
+- (void)setUp {
+    [super setUp];
+}
+
+// TODO: regenerate these fixtures with a fresh/real PKPayment
 - (void)testCreateTokenWithPayment {
     PKPayment *payment = [STPFixtures applePayPayment];
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];

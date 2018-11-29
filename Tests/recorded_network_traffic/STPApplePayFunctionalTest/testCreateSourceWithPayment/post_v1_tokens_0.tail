@@ -1,0 +1,25 @@
+POST
+/v1/tokens$
+400
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, HEAD, OPTIONS, DELETE
+Server: nginx
+Access-Control-Expose-Headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+Access-Control-Max-Age: 300
+Cache-Control: no-cache, no-store
+Date: Sun, 25 Nov 2018 07:31:23 GMT
+Stripe-Version: 2015-10-12
+Access-Control-Allow-Credentials: true
+Content-Length: 213
+Connection: keep-alive
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Request-Id: req_HuXvuC4dH1J8pn
+
+{
+  "error" : {
+    "message" : "It's been too long since the user approved this payment in your app. You have to create a token within 24 hours of their in-app approval.",
+    "type" : "invalid_request_error"
+  }
+}

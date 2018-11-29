@@ -1,0 +1,31 @@
+POST
+/v1/files$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+Content-Encoding: gzip
+Access-Control-Allow-Methods: GET, POST, HEAD, OPTIONS, DELETE
+Server: nginx
+Access-Control-Expose-Headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+Access-Control-Max-Age: 300
+Transfer-Encoding: Identity
+Cache-Control: no-cache, no-store
+Date: Sun, 25 Nov 2018 07:32:51 GMT
+Stripe-Version: 2015-10-12
+Access-Control-Allow-Credentials: true
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+Connection: keep-alive
+Vary: Accept-Encoding
+Request-Id: req_OJOSl79sUfxfId
+
+{
+  "object" : "file_upload",
+  "id" : "file_1DaI6pBbvEcIpqUbh305MXIV",
+  "purpose" : "dispute_evidence",
+  "size" : 785,
+  "created" : 1543131171,
+  "filename" : "image.jpg",
+  "type" : "jpg",
+  "url" : "https:\/\/files.stripe.com\/files\/f_test_LIV1DUrOZL7iYynVIYdxbtey"
+}
