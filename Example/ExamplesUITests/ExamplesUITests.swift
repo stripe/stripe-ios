@@ -1,6 +1,6 @@
 //
-//  Stripe_UI_ExamplesUITests.swift
-//  Stripe UI ExamplesUITests
+//  ExamplesUITests.swift
+//  ExamplesUITests
 //
 //  Created by Aaltan Ahmad on 11/20/18.
 //  Copyright © 2018 Stripe. All rights reserved.
