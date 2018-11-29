@@ -38,20 +38,20 @@ class ExamplesUITests: XCTestCase {
         let tablesQuery = app.tables
         
         // Visit Add Card VC
-        tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["STPPaymentCardTextField"]/*[[".cells.staticTexts[\"STPPaymentCardTextField\"]",".staticTexts[\"STPPaymentCardTextField\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        tablesQuery.staticTexts["STPPaymentCardTextField"].tap()
         waitForElementToAppear(app.navigationBars.buttons["CardFieldViewControllerDoneButtonIdentifier"])
         takeScreenshot(name: "Add Card")
         app.navigationBars.buttons["CardFieldViewControllerDoneButtonIdentifier"].tap()
         
         // Visit Card Form VC
-        tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Card Form with Billing Address"]/*[[".cells.staticTexts[\"Card Form with Billing Address\"]",".staticTexts[\"Card Form with Billing Address\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        tablesQuery.staticTexts["Card Form with Billing Address"].tap()
         
         waitForElementToAppear(app.buttons["AddCardViewControllerNavBarCancelButtonIdentifier"])
         takeScreenshot(name: "Card Form with Billing Address")
         app.buttons["AddCardViewControllerNavBarCancelButtonIdentifier"].tap()
         
         // Visit Payment Method VC
-        tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Payment Method Picker"]/*[[".cells.staticTexts[\"Payment Method Picker\"]",".staticTexts[\"Payment Method Picker\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        tablesQuery.staticTexts["Payment Method Picker"].tap()
         waitForElementToAppear(tablesQuery.cells["PaymentMethodTableViewAddNewCardButtonIdentifier"])
         takeScreenshot(name: "Payment Method Picker")
         
@@ -64,8 +64,8 @@ class ExamplesUITests: XCTestCase {
         app.buttons["PaymentMethodViewControllerCancelButtonIdentifier"].tap()
         
         // Visit the Shipping Info VC
-        tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Shipping Info Form"]/*[[".cells.staticTexts[\"Shipping Info Form\"]",".staticTexts[\"Shipping Info Form\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-        waitForElementToAppear(app.navigationBars/*@START_MENU_TOKEN@*/.buttons["ShippingViewControllerNextButtonIdentifier"]/*[[".buttons[\"Next\"]",".buttons[\"ShippingViewControllerNextButtonIdentifier\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/)
+        tablesQuery.staticTexts["Shipping Info Form"].tap()
+        waitForElementToAppear(app.navigationBars.buttons["ShippingViewControllerNextButtonIdentifier"])
         takeScreenshot(name: "Shipping Info")
         
         // Fill out the Shipping Info
@@ -90,7 +90,7 @@ class ExamplesUITests: XCTestCase {
         app.pickerWheels.element.adjust(toPickerWheelValue: "Afghanistan")
         
         // Go to Shipping Methods
-        app.navigationBars/*@START_MENU_TOKEN@*/.buttons["ShippingViewControllerNextButtonIdentifier"]/*[[".buttons[\"Next\"]",".buttons[\"ShippingViewControllerNextButtonIdentifier\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app.navigationBars.buttons["ShippingViewControllerNextButtonIdentifier"].tap()
         waitForElementToAppear(app.navigationBars.buttons["ShippingMethodsViewControllerDoneButtonIdentifier"])
         takeScreenshot(name: "Shipping Methods")
         
