@@ -12,19 +12,11 @@ class ExamplesUITests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-        
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-        // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
         XCUIApplication().launch()
-        
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
     
@@ -39,7 +31,6 @@ class ExamplesUITests: XCTestCase {
     
     func waitForElementToAppear(_ element: XCUIElement) {
         XCTAssert(element.waitForExistence(timeout: 5), "An exepected element did not appear on screen: \(element)")
-        
     }
     
     func testVisitAll() {
@@ -87,13 +78,13 @@ class ExamplesUITests: XCTestCase {
         tablesQuery.textFields["ShippingAddressFieldTypeLine2Identifier"].typeText("Test")
         
         tablesQuery.textFields["ShippingAddressFieldTypeZipIdentifier"].tap()
-        tablesQuery.textFields["ShippingAddressFieldTypeZipIdentifier"].typeText("95014")
+        tablesQuery.textFields["ShippingAddressFieldTypeZipIdentifier"].typeText("1001")
         
         tablesQuery.textFields["ShippingAddressFieldTypeCityIdentifier"].tap()
-        tablesQuery.textFields["ShippingAddressFieldTypeCityIdentifier"].typeText("Cupertino")
+        tablesQuery.textFields["ShippingAddressFieldTypeCityIdentifier"].typeText("Kabul")
         
         tablesQuery.textFields["ShippingAddressFieldTypeStateIdentifier"].tap()
-        tablesQuery.textFields["ShippingAddressFieldTypeStateIdentifier"].typeText("CA")
+        tablesQuery.textFields["ShippingAddressFieldTypeStateIdentifier"].typeText("Kabul")
         
         tablesQuery.textFields["ShippingAddressFieldTypeCountryIdentifier"].tap()
         app.pickerWheels.element.adjust(toPickerWheelValue: "Afghanistan")

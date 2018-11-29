@@ -95,7 +95,6 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     [self.tableView setEditing:NO animated:NO];
     [self reloadRightBarButtonItemWithTableViewIsEditing:self.tableView.isEditing animated:NO];
     
-//    self.navigationController.navigationBar.accessibilityIdentifier = @"PaymentMethodViewControllerIdentifier";
     self.stp_navigationItemProxy.leftBarButtonItem.accessibilityIdentifier = @"PaymentMethodViewControllerCancelButtonIdentifier";
 }
 

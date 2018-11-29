@@ -106,7 +106,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     self.stp_navigationItemProxy.rightBarButtonItem = doneItem;
     self.stp_navigationItemProxy.rightBarButtonItem.enabled = NO;
     
-//    self.navigationController.navigationBar.accessibilityIdentifier = @"AddCardViewControllerNavBarIdentifier";
     self.stp_navigationItemProxy.leftBarButtonItem.accessibilityIdentifier = @"AddCardViewControllerNavBarCancelButtonIdentifier";
     
     UIImageView *cardImageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeCardFrontImage]];

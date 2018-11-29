@@ -118,7 +118,6 @@
     self.stp_navigationItemProxy.rightBarButtonItem = nextItem;
     self.stp_navigationItemProxy.rightBarButtonItem.enabled = NO;
     self.stp_navigationItemProxy.rightBarButtonItem.accessibilityIdentifier = @"ShippingViewControllerNextButtonIdentifier";
-//    self.stp_navigationItemProxy.leftBarButtonItem.accessibilityIdentifier = @"ShippingViewControllerCancelButtonIdentifier";
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[STPImageLibrary largeShippingImage]];
     imageView.contentMode = UIViewContentModeCenter;
