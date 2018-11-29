@@ -216,6 +216,32 @@
             
     }
     self.textField.accessibilityLabel = self.textField.placeholder;
+    self.textField.accessibilityIdentifier = [self accessibilityIdentifierForAddressField:self.type];
+}
+
+- (NSString *)accessibilityIdentifierForAddressField:(STPAddressFieldType)type {
+    switch (type) {
+        case STPAddressFieldTypeName:
+            return @"ShippingAddressFieldTypeNameIdentifier";
+        case STPAddressFieldTypeLine1:
+            return @"ShippingAddressFieldTypeLine1Identifier";
+        case STPAddressFieldTypeLine2:
+            return @"ShippingAddressFieldTypeLine2Identifier";
+        case STPAddressFieldTypeCity:
+            return @"ShippingAddressFieldTypeCityIdentifier";
+        case STPAddressFieldTypeState:
+            return @"ShippingAddressFieldTypeStateIdentifier";
+        case STPAddressFieldTypeZip:
+            return @"ShippingAddressFieldTypeZipIdentifier";
+        case STPAddressFieldTypeCountry:
+            return @"ShippingAddressFieldTypeCountryIdentifier";
+        case STPAddressFieldTypePhone:
+            return @"ShippingAddressFieldTypePhoneIdentifier";
+        case STPAddressFieldTypeEmail:
+            return @"ShippingAddressFieldTypeEmailIdentifier";
+        default:
+            return @"";
+    }
 }
 
 + (NSString *)stateFieldCaptionForCountryCode:(NSString *)countryCode {
@@ -257,6 +283,31 @@
             return STPLocalizedString(@"Phone", @"Caption for Phone field on address form");
     }
 }
+
+//- (NSString *)accessibilityIdentifierForAddressField:(STPAddressFieldType)addressFieldType {
+//    switch (addressFieldType) {
+//        case STPAddressFieldTypeName:
+//            return @"Name", @"Caption for Name field on address form");
+//        case STPAddressFieldTypeLine1:
+//            return @"Address", @"Caption for Address field on address form");
+//        case STPAddressFieldTypeLine2:
+//            return @"Apt.", @"Caption for Apartment/Address line 2 field on address form");
+//        case STPAddressFieldTypeCity:
+//            return @"City", @"Caption for City field on address form");
+//        case STPAddressFieldTypeState:
+//            return [[self class] stateFieldCaptionForCountryCode:self.ourCountryCode];
+//        case STPAddressFieldTypeZip:
+//            return ([self countryCodeIsUnitedStates]
+//                    ? @"ZIP Code", @"Caption for Zip Code field on address form (only shown when country is United States only)")
+//                    : @"Postal Code", @"Caption for Postal Code field on address form (only shown in countries other than the United States)"));
+//        case STPAddressFieldTypeCountry:
+//            return @"Country", @"Caption for Country field on address form");
+//        case STPAddressFieldTypeEmail:
+//            return @"Email", @"Caption for Email field on address form");
+//        case STPAddressFieldTypePhone:
+//            return @"Phone", @"Caption for Phone field on address form");
+//    }
+//}
 
 - (void)delegateCountryCodeDidChange:(NSString *)countryCode {
     if (self.type == STPAddressFieldTypeCountry) {

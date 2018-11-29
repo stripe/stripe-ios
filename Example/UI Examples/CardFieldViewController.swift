@@ -28,7 +28,9 @@ class CardFieldViewController: UIViewController {
         cardField.borderWidth = 1.0
         cardField.textErrorColor = theme.errorColor
         cardField.postalCodeEntryEnabled = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        doneItem.accessibilityIdentifier = "CardFieldViewControllerDoneButtonIdentifier"
+        navigationItem.leftBarButtonItem = doneItem
         navigationController?.navigationBar.stp_theme = theme
     }
 

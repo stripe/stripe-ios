@@ -77,7 +77,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 
     // Table view
     [self.tableView registerClass:[STPPaymentMethodTableViewCell class] forCellReuseIdentifier:PaymentMethodCellReuseIdentifier];
-
+    
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
 
@@ -94,6 +94,9 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     // Table view editing state
     [self.tableView setEditing:NO animated:NO];
     [self reloadRightBarButtonItemWithTableViewIsEditing:self.tableView.isEditing animated:NO];
+    
+//    self.navigationController.navigationBar.accessibilityIdentifier = @"PaymentMethodViewControllerIdentifier";
+    self.stp_navigationItemProxy.leftBarButtonItem.accessibilityIdentifier = @"PaymentMethodViewControllerCancelButtonIdentifier";
 }
 
 - (void)viewDidLayoutSubviews {
@@ -243,6 +246,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     }
     else {
         [cell configureForNewCardRowWithTheme:self.theme];
+        cell.accessibilityIdentifier = @"PaymentMethodTableViewAddNewCardButtonIdentifier";
     }
 
     return cell;
