@@ -379,23 +379,34 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 }
 
 - (void)paymentCardTextFieldDidBeginEditingCVC:(STPPaymentCardTextField *)textField {
+    BOOL isAmex = [STPCardValidator brandForNumber:textField.cardNumber] == STPCardBrandAmex;
+    UIImage *newImage;
+    UIViewAnimationOptions animationTransition;
+
+    if (isAmex) {
+        newImage = [STPImageLibrary largeCardAmexCVCImage];
+        animationTransition = UIViewAnimationOptionTransitionCrossDissolve;
+    }
+    else {
+        newImage = [STPImageLibrary largeCardBackImage];
+        animationTransition = UIViewAnimationOptionTransitionFlipFromRight;
+    }
+
     [UIView transitionWithView:self.cardImageView
                       duration:0.2
-                       options:UIViewAnimationOptionTransitionFlipFromRight
+                       options:animationTransition
                     animations:^{
-                        if ([STPCardValidator brandForNumber:textField.cardNumber] == STPCardBrandAmex) {
-                            self.cardImageView.image = [STPImageLibrary largeCardAmexCVCImage];
-                        }
-                        else {
-                            self.cardImageView.image = [STPImageLibrary largeCardBackImage];
-                        }
+                        self.cardImageView.image = newImage;
                     } completion:nil];
 }
 
-- (void)paymentCardTextFieldDidEndEditingCVC:(__unused STPPaymentCardTextField *)textField {
+- (void)paymentCardTextFieldDidEndEditingCVC:(STPPaymentCardTextField *)textField {
+    BOOL isAmex = [STPCardValidator brandForNumber:textField.cardNumber] == STPCardBrandAmex;
+    UIViewAnimationOptions animationTransition = isAmex ? UIViewAnimationOptionTransitionCrossDissolve : UIViewAnimationOptionTransitionFlipFromLeft;
+
     [UIView transitionWithView:self.cardImageView
                       duration:0.2
-                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                       options:animationTransition
                     animations:^{
                         self.cardImageView.image = [STPImageLibrary largeCardFrontImage];
                     } completion:nil];
