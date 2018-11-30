@@ -163,7 +163,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     expirationField.isAccessibilityElement = NO;
     expirationField.accessibilityLabel = STPLocalizedString(@"expiration date", @"accessibility label for text field");
     self.expirationField = expirationField;
-    self.expirationPlaceholder = @"MM/YY";
+    self.expirationPlaceholder = STPLocalizedString(@"MM/YY", @"label for text field to enter card expiry");
         
     STPFormTextField *cvcField = [self buildTextField];
     cvcField.tag = STPCardFieldTypeCVC;
@@ -1571,9 +1571,9 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
 
 - (NSString *)defaultCVCPlaceholder {
     if (self.viewModel.brand == STPCardBrandAmex) {
-        return STPNonLocalizedString(@"CVV");
+        return STPLocalizedString(@"CVV", @"Label for entering CVV in text field");
     } else {
-        return STPNonLocalizedString(@"CVC");
+        return STPLocalizedString(@"CVC", @"Label for entering CVC in text field");
     }
 }
 
