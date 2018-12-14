@@ -138,6 +138,7 @@
                        forState:UIControlStateNormal];
     [headerView.button addTarget:self action:@selector(useBillingAddress:)
                 forControlEvents:UIControlEventTouchUpInside];
+    headerView.button.accessibilityIdentifier = @"ShippingAddressViewControllerUseBillingButton";
     NSSet<STPContactField> *requiredFields = self.configuration.requiredShippingAddressFields;
     BOOL needsAddress = [requiredFields containsObject:STPContactFieldPostalAddress] && !self.addressViewModel.isValid;
     BOOL buttonVisible = (needsAddress
