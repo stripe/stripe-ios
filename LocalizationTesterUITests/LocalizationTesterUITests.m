@@ -67,6 +67,18 @@
     [self _takeScreenShotNamed:@"Add Card VC Prefilled Delivery"];
     [app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"] tap]; // back
 
+    // Visit Payment Method VC
+    [tablesQuery.staticTexts[@"Payment Methods VC"] tap];
+    [self _waitForElementToAppear:tablesQuery.cells[@"PaymentMethodTableViewAddNewCardButtonIdentifier"]];
+    [self _takeScreenShotNamed:@"Payment Methods VC"];
+    [app.buttons[@"PaymentMethodViewControllerCancelButtonIdentifier"] tap]; // back
+
+    // Visit Payment Method VC (loading)
+    [tablesQuery.staticTexts[@"Payment Methods VC Loading"] tap];
+    [self _takeScreenShotNamed:@"Payment Methods VC Loading"];
+    [app.buttons[@"PaymentMethodViewControllerCancelButtonIdentifier"] tap]; // back
+
+
 //    // Visit Card Form VC
 //    tablesQuery.staticTexts["Card Form with Billing Address"].tap()
 //

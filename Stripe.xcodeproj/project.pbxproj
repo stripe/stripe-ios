@@ -333,6 +333,7 @@
 		04FCFA191BD59A8C00297732 /* STPCategoryLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 04FCFA171BD59A8C00297732 /* STPCategoryLoader.h */; };
 		3617A51420FE5BBB001A9E6A /* NSLocale+STPSwizzling.h in Headers */ = {isa = PBXBuildFile; fileRef = 3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */; };
 		3617A51520FE5BBB001A9E6A /* NSLocale+STPSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */; };
+		3620B63021C41E08009FC6FB /* MockCustomerContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 3620B62F21C41E08009FC6FB /* MockCustomerContext.m */; };
 		3650AA4221C07E3C002B0893 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA4121C07E3C002B0893 /* AppDelegate.m */; };
 		3650AA4521C07E3C002B0893 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3650AA4421C07E3C002B0893 /* ViewController.m */; };
 		3650AA4A21C07E3D002B0893 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3650AA4921C07E3D002B0893 /* Assets.xcassets */; };
@@ -1106,6 +1107,8 @@
 		11C74B9B164043050071C2CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSLocale+STPSwizzling.h"; sourceTree = "<group>"; };
 		3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSLocale+STPSwizzling.m"; sourceTree = "<group>"; };
+		3620B62E21C41E08009FC6FB /* MockCustomerContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MockCustomerContext.h; sourceTree = "<group>"; };
+		3620B62F21C41E08009FC6FB /* MockCustomerContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MockCustomerContext.m; sourceTree = "<group>"; };
 		3650AA3E21C07E3C002B0893 /* LocalizationTester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalizationTester.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3650AA4021C07E3C002B0893 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3650AA4121C07E3C002B0893 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -1716,12 +1719,14 @@
 			children = (
 				3650AA4021C07E3C002B0893 /* AppDelegate.h */,
 				3650AA4121C07E3C002B0893 /* AppDelegate.m */,
+				3650AA4921C07E3D002B0893 /* Assets.xcassets */,
+				3650AA4E21C07E3D002B0893 /* Info.plist */,
+				3650AA4B21C07E3D002B0893 /* LaunchScreen.storyboard */,
+				3650AA4F21C07E3D002B0893 /* main.m */,
+				3620B62E21C41E08009FC6FB /* MockCustomerContext.h */,
+				3620B62F21C41E08009FC6FB /* MockCustomerContext.m */,
 				3650AA4321C07E3C002B0893 /* ViewController.h */,
 				3650AA4421C07E3C002B0893 /* ViewController.m */,
-				3650AA4921C07E3D002B0893 /* Assets.xcassets */,
-				3650AA4B21C07E3D002B0893 /* LaunchScreen.storyboard */,
-				3650AA4E21C07E3D002B0893 /* Info.plist */,
-				3650AA4F21C07E3D002B0893 /* main.m */,
 			);
 			path = LocalizationTester;
 			sourceTree = "<group>";
@@ -3387,6 +3392,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3650AA4521C07E3C002B0893 /* ViewController.m in Sources */,
+				3620B63021C41E08009FC6FB /* MockCustomerContext.m in Sources */,
 				3650AA5021C07E3D002B0893 /* main.m in Sources */,
 				3650AA4221C07E3C002B0893 /* AppDelegate.m in Sources */,
 			);
