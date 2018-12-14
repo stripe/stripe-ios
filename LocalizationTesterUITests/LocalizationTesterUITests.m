@@ -54,9 +54,18 @@
     [self _takeScreenShotNamed:@"Add Card VC Alert"];
     [[errorAlert.buttons elementBoundByIndex:0] tap]; // dismiss alert
     [app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"] tap]; // back
-//    [[app.popUpButtons elementBoundByIndex:0] tap];
 
+    // Visit Add Card VC (prefilled shipping)
+    [tablesQuery.staticTexts[@"Add Card VC Prefilled Shipping"] tap];
+    [self _waitForElementToAppear:app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"]];
+    [self _takeScreenShotNamed:@"Add Card VC Prefilled Shipping"];
+    [app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"] tap]; // back
 
+    // Visit Add Card VC (prefilled delivery)
+    [tablesQuery.staticTexts[@"Add Card VC Prefilled Delivery"] tap];
+    [self _waitForElementToAppear:app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"]];
+    [self _takeScreenShotNamed:@"Add Card VC Prefilled Delivery"];
+    [app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"] tap]; // back
 
 //    // Visit Card Form VC
 //    tablesQuery.staticTexts["Card Form with Billing Address"].tap()
