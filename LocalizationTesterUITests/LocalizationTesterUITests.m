@@ -75,8 +75,43 @@
 
     // Visit Payment Method VC (loading)
     [tablesQuery.staticTexts[@"Payment Methods VC Loading"] tap];
+    // TODO : Add wait for
     [self _takeScreenShotNamed:@"Payment Methods VC Loading"];
     [app.buttons[@"PaymentMethodViewControllerCancelButtonIdentifier"] tap]; // back
+
+    // Visit the Shipping Info VC
+    [tablesQuery.staticTexts[@"Shipping Address VC"] tap];
+    [self _waitForElementToAppear:app.navigationBars.buttons[@"ShippingViewControllerNextButtonIdentifier"]];
+    [self _takeScreenShotNamed:@"Shipping Address VC"];
+
+    // Fill out the Shipping Info
+    [tablesQuery.textFields[@"ShippingAddressFieldTypeNameIdentifier"] typeText:@"Test"];
+
+    [tablesQuery.textFields[@"ShippingAddressFieldTypeLine1Identifier"] tap];
+    [tablesQuery.textFields[@"ShippingAddressFieldTypeLine1Identifier"] typeText:@"Test"];
+
+    [tablesQuery.textFields[@"ShippingAddressFieldTypeLine2Identifier"] tap];
+    [tablesQuery.textFields[@"ShippingAddressFieldTypeLine2Identifier"] typeText:@"Test"];
+
+    [tablesQuery.textFields[@"ShippingAddressFieldTypeZipIdentifier"] tap];
+    [tablesQuery.textFields[@"ShippingAddressFieldTypeZipIdentifier"] typeText:@"1001"];
+
+    [tablesQuery.textFields[@"ShippingAddressFieldTypeCityIdentifier"] tap];
+    [tablesQuery.textFields[@"ShippingAddressFieldTypeCityIdentifier"] typeText:@"Kabul"];
+
+    [tablesQuery.textFields[@"ShippingAddressFieldTypeStateIdentifier"] tap];
+    [tablesQuery.textFields[@"ShippingAddressFieldTypeStateIdentifier"] typeText:@"Kabul"];
+
+    [tablesQuery.textFields[@"ShippingAddressFieldTypeCountryIdentifier"] tap];
+    [app.pickerWheels.element adjustToPickerWheelValue:@"Afghanistan"];
+
+    // Go to Shipping Methods
+    [app.navigationBars.buttons[@"ShippingViewControllerNextButtonIdentifier"] tap];
+    [self _waitForElementToAppear:app.navigationBars.buttons[@"ShippingMethodsViewControllerDoneButtonIdentifier"]];
+    [self _takeScreenShotNamed:@"Shipping Methods VC"];
+
+    // Back to main menu
+    [app.navigationBars.buttons[@"ShippingMethodsViewControllerDoneButtonIdentifier"] tap];
 
 
 //    // Visit Card Form VC
