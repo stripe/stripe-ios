@@ -153,6 +153,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     numberField.autoFormattingBehavior = STPFormTextFieldAutoFormattingBehaviorCardNumbers;
     numberField.tag = STPCardFieldTypeNumber;
     numberField.accessibilityLabel = STPLocalizedString(@"card number", @"accessibility label for text field");
+    numberField.accessibilityIdentifier = @"card number";
     self.numberField = numberField;
     self.numberPlaceholder = [self.viewModel defaultPlaceholder];
 
@@ -162,6 +163,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     expirationField.alpha = 0;
     expirationField.isAccessibilityElement = NO;
     expirationField.accessibilityLabel = STPLocalizedString(@"expiration date", @"accessibility label for text field");
+    expirationField.accessibilityIdentifier = @"expiration date";
     self.expirationField = expirationField;
     self.expirationPlaceholder = @"MM/YY";
         
@@ -172,6 +174,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     self.cvcField = cvcField;
     self.cvcPlaceholder = nil;
     self.cvcField.accessibilityLabel = [self defaultCVCPlaceholder];
+    self.cvcField.accessibilityIdentifier = @"cvc";
 
     STPFormTextField *postalCodeField = [self buildTextField];
     if (@available(iOS 10.0, *)) {
@@ -180,6 +183,7 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     postalCodeField.tag = STPCardFieldTypePostalCode;
     postalCodeField.alpha = 0;
     postalCodeField.isAccessibilityElement = NO;
+    postalCodeField.accessibilityIdentifier = @"postal code";
     self.postalCodeField = postalCodeField;
     // Placeholder and appropriate keyboard typeare set by country code setter
 

@@ -40,7 +40,10 @@ class ExamplesUITests: XCTestCase {
         // Visit Add Card VC
         tablesQuery.staticTexts["STPPaymentCardTextField"].tap()
         waitForElementToAppear(app.navigationBars.buttons["CardFieldViewControllerDoneButtonIdentifier"])
+        // tapping expiry date field shows all forms
+        app.textFields["expiration date"].tap()
         takeScreenshot(name: "Add Card")
+
         app.navigationBars.buttons["CardFieldViewControllerDoneButtonIdentifier"].tap()
         
         // Visit Card Form VC
@@ -48,10 +51,13 @@ class ExamplesUITests: XCTestCase {
         
         waitForElementToAppear(app.buttons["AddCardViewControllerNavBarCancelButtonIdentifier"])
         takeScreenshot(name: "Card Form with Billing Address")
+        // TODO : Looks like we'll need new code to preset address and change type to delivery
+        // TODO : Fill with invalid info, press next. Wait for error to pop up. screenshot
         app.buttons["AddCardViewControllerNavBarCancelButtonIdentifier"].tap()
         
         // Visit Payment Method VC
         tablesQuery.staticTexts["Payment Method Picker"].tap()
+        // TODO: Add code for long loading...
         waitForElementToAppear(tablesQuery.cells["PaymentMethodTableViewAddNewCardButtonIdentifier"])
         takeScreenshot(name: "Payment Method Picker")
         
