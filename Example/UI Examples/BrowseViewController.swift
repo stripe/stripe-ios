@@ -11,52 +11,18 @@ import Stripe
 
 class BrowseViewController: UITableViewController, STPAddCardViewControllerDelegate, STPPaymentMethodsViewControllerDelegate, STPShippingAddressViewControllerDelegate {
 
-    enum Demo {
-        static let count = 7
+    enum Demo: Int {
+        static let count = 5
         case STPPaymentCardTextField
-        enum AddCardViewControllerState {
-            case standard
-            case prefilledShipping
-            case prefilledDelivery
-        }
-        case STPAddCardViewController(AddCardViewControllerState)
+        case STPAddCardViewController
         case STPPaymentMethodsViewController
         case STPShippingInfoViewController
         case ChangeTheme
 
-        init?(row: Int) {
-            switch row {
-            case 0:
-                self = .STPPaymentCardTextField
-            case 1:
-                self = .STPAddCardViewController(.standard)
-            case 2:
-                self = .STPAddCardViewController(.prefilledShipping)
-            case 3:
-                self = .STPAddCardViewController(.prefilledDelivery)
-            case 4:
-                self = .STPPaymentMethodsViewController
-            case 5:
-                self = .STPShippingInfoViewController
-            case 6:
-                self = .ChangeTheme
-            default:
-                return nil
-            }
-        }
-
         var title: String {
             switch self {
             case .STPPaymentCardTextField: return "Card Field"
-            case .STPAddCardViewController(let state):
-                switch state {
-                case .standard:
-                    return "Card Form with Billing Address"
-                case .prefilledShipping:
-                    return "Card Form with Prefilled Shipping Address"
-                case .prefilledDelivery:
-                    return "Card Form with Prefilled Delivery Address"
-                }
+            case .STPAddCardViewController: return "Card Form with Billing Address"
             case .STPPaymentMethodsViewController: return "Payment Method Picker"
             case .STPShippingInfoViewController: return "Shipping Info Form"
             case .ChangeTheme: return "Change Theme"
@@ -98,7 +64,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
-        if let example = Demo(row: indexPath.row) {
+        if let example = Demo(rawValue: indexPath.row) {
             cell.textLabel?.text = example.title
             cell.detailTextLabel?.text = example.detail
         }
@@ -107,7 +73,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard let example = Demo(row: indexPath.row) else { return }
+        guard let example = Demo(rawValue: indexPath.row) else { return }
         let theme = themeViewController.theme.stpTheme
 
         switch example {
@@ -117,31 +83,11 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
-        case .STPAddCardViewController(let state):
-            // TODO : Use state
+        case .STPAddCardViewController:
             let config = STPPaymentConfiguration()
             config.requiredBillingAddressFields = .full
-            let viewController: STPAddCardViewController = {
-            switch state {
-            case .standard:
-                return STPAddCardViewController(configuration: config, theme: theme)
-            case .prefilledShipping:
-                config.shippingType = STPShippingType.shipping
-                let viewController = STPAddCardViewController(configuration: config, theme: theme)
-                viewController.shippingAddress = STPAddress()
-                viewController.shippingAddress.line1 = "1"; // trigger "use shipping address" button
-                return viewController
-            case .prefilledDelivery:
-                config.shippingType = STPShippingType.delivery
-                let viewController = STPAddCardViewController(configuration: config, theme: theme)
-                viewController.shippingAddress = STPAddress()
-                viewController.shippingAddress.line1 = "1"; // trigger "use delivery address" button
-                return viewController
-
-            }
-            }()
+            let viewController = STPAddCardViewController(configuration: config, theme: theme)
             viewController.delegate = self
-
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
