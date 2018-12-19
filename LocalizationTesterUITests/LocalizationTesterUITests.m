@@ -142,11 +142,24 @@
 
 - (void)_takeScreenShotNamed:(NSString *)name {
     XCUIApplication *app = [[XCUIApplication alloc] init];
-    XCUIScreenshot *screenshot = [app.windows.firstMatch screenshot];
-    XCTAttachment *attachment = [XCTAttachment attachmentWithScreenshot:screenshot];
-    attachment.lifetime = XCTAttachmentLifetimeKeepAlways;
-    attachment.name = name;
-    [self addAttachment:attachment];
+    XCUIElement *table = [app.tables elementBoundByIndex:0];
+    XCUIElement *lastCell = [table.cells elementBoundByIndex:table.cells.count - 1];
+    NSInteger viewPortScreen = 0;
+
+    do {
+        XCUIScreenshot *screenshot = [app.windows.firstMatch screenshot];
+        XCTAttachment *attachment = [XCTAttachment attachmentWithScreenshot:screenshot];
+        attachment.lifetime = XCTAttachmentLifetimeKeepAlways;
+        attachment.name = viewPortScreen > 0 ? [NSString stringWithFormat:@"%@-%ld", name, (long)viewPortScreen] : name;
+        [self addAttachment:attachment];
+
+        viewPortScreen += 1;
+        if (lastCell.exists && !CGRectIsEmpty(lastCell.frame) && !CGRectContainsRect(app.windows.firstMatch.frame, lastCell.frame)) {
+            [app swipeUp];
+        } else {
+            break;
+        }
+    } while (lastCell.exists && viewPortScreen < 4); // viewPortScreen < 4 as sanity check to avoid infinite loop
 }
 
 - (void)_waitForElementToAppear:(XCUIElement *)element {
