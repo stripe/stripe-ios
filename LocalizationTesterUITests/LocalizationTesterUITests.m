@@ -53,7 +53,7 @@
     [app.buttons[@"AddCardViewControllerNavBarDoneButtonIdentifier"] tap];
     XCUIElement *errorAlert = [app.alerts elementBoundByIndex:0];
     [self _waitForElementToAppear:errorAlert];
-    [self _takeScreenShotNamed:@"Add Card VC Alert"];
+    [self _takeScreenShotNamed:@"Add Card VC Alert" suppressAutoScroll:YES];
     [[errorAlert.buttons elementBoundByIndex:0] tap]; // dismiss alert
     [app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"] tap]; // back
 
@@ -115,7 +115,7 @@
 
     errorAlert = [app.alerts elementBoundByIndex:0];
     [self _waitForElementToAppear:errorAlert];
-    [self _takeScreenShotNamed:@"Shipping Address VC Bad Address Alert"];
+    [self _takeScreenShotNamed:@"Shipping Address VC Bad Address Alert" suppressAutoScroll:YES];
     [[errorAlert.buttons elementBoundByIndex:0] tap]; // dismiss alert
     [app.navigationBars.buttons[@"CoreViewControllerCancelIdentifier"] tap];
 
@@ -141,6 +141,10 @@
 #pragma mark - Helpers
 
 - (void)_takeScreenShotNamed:(NSString *)name {
+    [self _takeScreenShotNamed:name suppressAutoScroll:NO];
+}
+
+- (void)_takeScreenShotNamed:(NSString *)name suppressAutoScroll:(BOOL)suppressAutoScroll {
     XCUIApplication *app = [[XCUIApplication alloc] init];
     XCUIElement *table = [app.tables elementBoundByIndex:0];
     XCUIElement *lastCell = [table.cells elementBoundByIndex:table.cells.count - 1];
@@ -154,7 +158,8 @@
         [self addAttachment:attachment];
 
         viewPortScreen += 1;
-        if (lastCell.exists && !CGRectIsEmpty(lastCell.frame) && !CGRectContainsRect(app.windows.firstMatch.frame, lastCell.frame)) {
+        if (!suppressAutoScroll &&
+            lastCell.exists && !CGRectIsEmpty(lastCell.frame) && !CGRectContainsRect(app.windows.firstMatch.frame, lastCell.frame)) {
             [app swipeUp];
         } else {
             break;
