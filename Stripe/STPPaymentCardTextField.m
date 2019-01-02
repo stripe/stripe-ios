@@ -1329,6 +1329,14 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
                 if (sanitizedCvc.length < [STPCardValidator maxCVCLengthForCardBrand:self.viewModel.brand]) {
                     break;
                 }
+            } else if (fieldType == STPCardFieldTypePostalCode) {
+                /*
+                 Similar to the UX problems on CVC, since our Postal Code validation
+                 is pretty light, we want to block auto-advance here. In the US, this
+                 allows users to enter 9 digit zips if they want, and as many as they
+                need in non-US countries (where >0 characters is "valid")
+                 */
+                break;
             }
 
             // This is a no-op if this is the last field & they're all valid
