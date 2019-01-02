@@ -1493,6 +1493,18 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
     }
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if (textField == [self lastSubField] && [self firstInvalidSubField] == nil) {
+        // User pressed return in the last field, and all fields are valid
+        [self resignFirstResponder];
+    } else {
+        // otherwise, move to the next field
+        [[self nextFirstResponderField] becomeFirstResponder];
+    }
+
+    return NO;
+}
+
 - (UIImage *)brandImage {
     STPCardFieldType fieldType = STPCardFieldTypeNumber;
     if (self.currentFirstResponderField) {
