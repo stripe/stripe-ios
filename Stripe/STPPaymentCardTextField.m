@@ -471,13 +471,20 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     return [firstResponder becomeFirstResponder];
 }
 
+/**
+ Returns the next text field to be edited, in priority order:
+
+ 1. If we're currently in a text field, returns the next one (ignoring postalCodeField if postalCodeEntryEnabled == NO)
+ 2. Otherwise, returns the first invalid field (either cycling back from the end or as it gains 1st responder)
+ 3. As a final fallback, just returns the last field
+ */
 - (nonnull STPFormTextField *)nextFirstResponderField {
     STPFormTextField *currentFirstResponder = [self currentFirstResponderField];
     if (currentFirstResponder) {
         NSUInteger index = [self.allFields indexOfObject:currentFirstResponder];
         if (index != NSNotFound) {
             STPFormTextField *nextField = [self.allFields stp_boundSafeObjectAtIndex:index + 1];
-            if (self.postalCodeEntryEnabled || nextField != self.postalCodeField) {
+            if (nextField != nil && (self.postalCodeEntryEnabled || nextField != self.postalCodeField)) {
                 return nextField;
             }
         }
