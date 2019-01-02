@@ -332,6 +332,20 @@ The curent brand image displayed in the receiver.
  */
 - (void)paymentCardTextFieldDidBeginEditing:(nonnull STPPaymentCardTextField *)textField;
 
+/**
+ Notification that the user pressed the `return` key after completely filling
+ out the STPPaymentCardTextField with data that passes validation.
+
+ The Stripe SDK is going to `resignFirstResponder` on the `STPPaymentCardTextField`
+ to dismiss the keyboard after this delegate method returns, however if your app wants
+ to do something more (ex: move first responder to another field), this is a good
+ opportunity to do that.
+
+ This is delivered *before* the corresponding `paymentCardTextFieldDidEndEditing:`
+
+ @param textField The STPPaymentCardTextField that was being edited when the user pressed return
+ */
+- (void)paymentCardTextFieldWillEndEditingForReturn:(nonnull STPPaymentCardTextField *)textField;
 
 /**
  Called when editing ends in the text field as a whole.
