@@ -1334,7 +1334,7 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
                  Similar to the UX problems on CVC, since our Postal Code validation
                  is pretty light, we want to block auto-advance here. In the US, this
                  allows users to enter 9 digit zips if they want, and as many as they
-                need in non-US countries (where >0 characters is "valid")
+                 need in non-US countries (where >0 characters is "valid")
                  */
                 break;
             }
