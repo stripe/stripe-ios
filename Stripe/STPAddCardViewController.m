@@ -378,6 +378,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     [[self.addressViewModel.addressCells stp_boundSafeObjectAtIndex:0] becomeFirstResponder];
 }
 
+- (void)paymentCardTextFieldWillEndEditingForReturn:(__unused STPPaymentCardTextField *)textField {
+    [self paymentFieldNextTapped];
+}
+
 - (void)paymentCardTextFieldDidBeginEditingCVC:(STPPaymentCardTextField *)textField {
     BOOL isAmex = [STPCardValidator brandForNumber:textField.cardNumber] == STPCardBrandAmex;
     UIImage *newImage;
