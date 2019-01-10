@@ -471,13 +471,20 @@ CGFloat const STPPaymentCardTextFieldMinimumPadding = 10;
     return [firstResponder becomeFirstResponder];
 }
 
+/**
+ Returns the next text field to be edited, in priority order:
+
+ 1. If we're currently in a text field, returns the next one (ignoring postalCodeField if postalCodeEntryEnabled == NO)
+ 2. Otherwise, returns the first invalid field (either cycling back from the end or as it gains 1st responder)
+ 3. As a final fallback, just returns the last field
+ */
 - (nonnull STPFormTextField *)nextFirstResponderField {
     STPFormTextField *currentFirstResponder = [self currentFirstResponderField];
     if (currentFirstResponder) {
         NSUInteger index = [self.allFields indexOfObject:currentFirstResponder];
         if (index != NSNotFound) {
             STPFormTextField *nextField = [self.allFields stp_boundSafeObjectAtIndex:index + 1];
-            if (self.postalCodeEntryEnabled || nextField != self.postalCodeField) {
+            if (nextField != nil && (self.postalCodeEntryEnabled || nextField != self.postalCodeField)) {
                 return nextField;
             }
         }
@@ -1322,6 +1329,14 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
                 if (sanitizedCvc.length < [STPCardValidator maxCVCLengthForCardBrand:self.viewModel.brand]) {
                     break;
                 }
+            } else if (fieldType == STPCardFieldTypePostalCode) {
+                /*
+                 Similar to the UX problems on CVC, since our Postal Code validation
+                 is pretty light, we want to block auto-advance here. In the US, this
+                 allows users to enter 9 digit zips if they want, and as many as they
+                 need in non-US countries (where >0 characters is "valid")
+                 */
+                break;
             }
 
             // This is a no-op if this is the last field & they're all valid
@@ -1476,6 +1491,21 @@ typedef NS_ENUM(NSInteger, STPFieldEditingTransitionCallSite) {
             [self.delegate paymentCardTextFieldDidEndEditing:self];
         }
     }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if (textField == [self lastSubField] && [self firstInvalidSubField] == nil) {
+        // User pressed return in the last field, and all fields are valid
+        if ([self.delegate respondsToSelector:@selector(paymentCardTextFieldWillEndEditingForReturn:)]) {
+            [self.delegate paymentCardTextFieldWillEndEditingForReturn:self];
+        }
+        [self resignFirstResponder];
+    } else {
+        // otherwise, move to the next field
+        [[self nextFirstResponderField] becomeFirstResponder];
+    }
+
+    return NO;
 }
 
 - (UIImage *)brandImage {
