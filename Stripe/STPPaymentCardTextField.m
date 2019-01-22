@@ -1306,6 +1306,8 @@ typedef void (^STPLayoutAnimationCompletionBlock)(BOOL completed);
     if (fieldType == STPCardFieldTypeNumber) {
         [self updateImageForFieldType:fieldType];
         [self updateCVCPlaceholder];
+        // Changing the card number field can invalidate the cvc, e.g. going from 4 digit Amex cvc to 3 digit Visa
+        self.cvcField.validText = [self.viewModel validationStateForField:STPCardFieldTypeCVC] != STPCardValidationStateInvalid;
     }
     
     STPCardValidationState state = [self.viewModel validationStateForField:fieldType];
