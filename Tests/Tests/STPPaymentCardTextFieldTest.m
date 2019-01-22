@@ -135,6 +135,16 @@
     XCTAssertFalse(sut.isValid);
 }
 
+- (void)testSetCard_updatesCVCValidity {
+    STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
+    sut.numberField.text = @"378282246310005";
+    sut.cvcField.text = @"1234";
+    sut.expirationField.text = @"10/99";
+    XCTAssertTrue(sut.cvcField.validText);
+    sut.numberField.text = @"4242424242424242";
+    XCTAssertFalse(sut.cvcField.validText);
+}
+
 - (void)testSetCard_numberVisa {
     STPPaymentCardTextField *sut = [STPPaymentCardTextField new];
     STPCardParams *card = [STPCardParams new];
