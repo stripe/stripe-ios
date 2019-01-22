@@ -227,7 +227,6 @@ static NSUInteger countOfCharactersFromSetInString(NSString * _Nonnull string, N
               @"PA",
               @"QA",
               @"RW",
-              @"SA",
               @"SB",
               @"SC",
               @"SL",
