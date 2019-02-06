@@ -15,7 +15,7 @@
 #import "STPFixtures.h"
 
 @interface STPEphemeralKeyManager (Testing)
-@property (nonatomic) STPEphemeralKey *customerKey;
+@property (nonatomic) STPEphemeralKey *ephemeralKey;
 @property (nonatomic) NSDate *lastEagerKeyRefresh;
 @end
 
@@ -68,7 +68,7 @@
     OCMReject([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg any] completion:[OCMArg any]]);
     STPEphemeralKeyManager *sut = [[STPEphemeralKeyManager alloc] initWithKeyProvider:mockKeyProvider apiVersion:self.apiVersion performsEagerFetching:YES];
     STPEphemeralKey *expectedKey = [STPFixtures ephemeralKey];
-    sut.customerKey = expectedKey;
+    sut.ephemeralKey = expectedKey;
     XCTestExpectation *exp = [self expectationWithDescription:@"getOrCreateKey"];
     [sut getOrCreateKey:^(STPEphemeralKey *resourceKey, NSError *error) {
         XCTAssertEqualObjects(resourceKey, expectedKey);
@@ -83,7 +83,7 @@
     NSDictionary *keyResponse = [expectedKey allResponseFields];
     id mockKeyProvider = [self mockKeyProviderWithKeyResponse:keyResponse];
     STPEphemeralKeyManager *sut = [[STPEphemeralKeyManager alloc] initWithKeyProvider:mockKeyProvider apiVersion:self.apiVersion performsEagerFetching:YES];
-    sut.customerKey = [STPFixtures expiringEphemeralKey];
+    sut.ephemeralKey = [STPFixtures expiringEphemeralKey];
     XCTestExpectation *exp = [self expectationWithDescription:@"retrieve"];
     [sut getOrCreateKey:^(STPEphemeralKey *resourceKey, NSError *error) {
         XCTAssertEqualObjects(resourceKey, expectedKey);
@@ -163,7 +163,7 @@
     id mockKeyProvider = OCMProtocolMock(@protocol(STPEphemeralKeyProvider));
     OCMReject([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg any] completion:[OCMArg any]]);
     STPEphemeralKeyManager *sut = [[STPEphemeralKeyManager alloc] initWithKeyProvider:mockKeyProvider apiVersion:self.apiVersion performsEagerFetching:YES];
-    sut.customerKey = [STPFixtures ephemeralKey];
+    sut.ephemeralKey = [STPFixtures ephemeralKey];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
@@ -171,7 +171,7 @@
     id mockKeyProvider = OCMProtocolMock(@protocol(STPEphemeralKeyProvider));
     OCMReject([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg any] completion:[OCMArg any]]);
     STPEphemeralKeyManager *sut = [[STPEphemeralKeyManager alloc] initWithKeyProvider:mockKeyProvider apiVersion:self.apiVersion performsEagerFetching:YES];
-    sut.customerKey = [STPFixtures expiringEphemeralKey];
+    sut.ephemeralKey = [STPFixtures expiringEphemeralKey];
     sut.lastEagerKeyRefresh = [NSDate dateWithTimeIntervalSinceNow:-60];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
 }
