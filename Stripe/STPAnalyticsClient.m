@@ -119,7 +119,7 @@
 + (NSString *)tokenTypeFromParameters:(NSDictionary *)parameters {
     NSArray *parameterKeys = parameters.allKeys;
     // these are currently mutually exclusive, so we can just run through and find the first match
-    NSArray *tokenTypes = @[@"account", @"bank_account", @"card", @"pii"];
+    NSArray *tokenTypes = @[@"account", @"bank_account", @"card", @"pii", @"cvc_update"];
     for (NSString *type in tokenTypes) {
         if ([parameterKeys containsObject:type]) {
             return type;

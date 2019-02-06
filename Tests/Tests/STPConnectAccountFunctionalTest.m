@@ -65,6 +65,7 @@
             XCTAssertNil(error);
             XCTAssertNotNil(token);
             XCTAssertNotNil(token.tokenId);
+            XCTAssertEqual(token.type, STPTokenTypeAccount);
         }
         else {
             XCTAssertNil(token);

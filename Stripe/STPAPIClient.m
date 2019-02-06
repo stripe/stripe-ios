@@ -387,6 +387,13 @@ static NSString * const APIEndpointPaymentIntents = @"payment_intents";
     [[STPTelemetryClient sharedInstance] sendTelemetryData];
 }
 
+- (void)createTokenForCVCUpdate:(NSString *)cvc completion:(nullable STPTokenCompletionBlock)completion {
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:@{@"cvc": cvc} forKey:@"cvc_update"];
+    [[STPTelemetryClient sharedInstance] addTelemetryFieldsToParams:params];
+    [self createTokenWithParameters:params completion:completion];
+    [[STPTelemetryClient sharedInstance] sendTelemetryData];
+}
+
 @end
 
 #pragma mark - Apple Pay
