@@ -68,7 +68,6 @@
     [self.tokenId isEqualToString:object.tokenId] &&
     [self.created isEqualToDate:object.created] &&
     [self.card isEqual:object.card] &&
-    [self.tokenId isEqualToString:object.tokenId] &&
     [self.created isEqualToDate:object.created];
 }
 
@@ -90,7 +89,7 @@
     NSString *stripeId = [dict stp_stringForKey:@"id"];
     NSDate *created = [dict stp_dateForKey:@"created"];
     NSString *rawType = [dict stp_stringForKey:@"type"];
-    if (!stripeId || !created || !dict[@"livemode"] || ![STPToken _isValidRawTokenType:rawType]) {
+    if (!stripeId || !created || !dict[@"livemode"] || ![[self class] _isValidRawTokenType:rawType]) {
         return nil;
     }
     
@@ -98,7 +97,7 @@
     token.tokenId = stripeId;
     token.livemode = [dict stp_boolForKey:@"livemode" or:YES];
     token.created = created;
-    token.type = [STPToken _tokenTypeForString:rawType];
+    token.type = [[self class] _tokenTypeForString:rawType];
     
     NSDictionary *rawCard = [dict stp_dictionaryForKey:@"card"];
     token.card = [STPCard decodedObjectFromAPIResponse:rawCard];
