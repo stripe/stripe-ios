@@ -16,8 +16,14 @@
 
 @implementation AppDelegate
 
+- (void)_keyboardDidShowNotification {
+    [((UINavigationController *)self.window.rootViewController).topViewController.view endEditing:YES];
+}
 
 - (BOOL)application:(__unused UIApplication *)application didFinishLaunchingWithOptions:(__unused NSDictionary *)launchOptions {
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardDidShowNotification) name:UIKeyboardDidShowNotification object:nil];
+
     UIViewController *rootVC = [[ViewController alloc] init];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:rootVC];
     UIWindow *window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
