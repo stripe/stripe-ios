@@ -7,7 +7,6 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <OCMock/OCMock.h>
 #import <Stripe/Stripe.h>
 #import "NSError+Stripe.h"
 #import "STPEphemeralKey.h"
@@ -41,6 +40,7 @@
     OCMStub([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg isEqual:self.apiVersion]
                                                   completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
+        [invocation retainArguments];
         STPJSONResponseCompletionBlock completion;
         [invocation getArgument:&completion atIndex:3];
         completion(keyResponse, nil);
