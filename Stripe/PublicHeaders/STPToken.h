@@ -17,10 +17,29 @@
  Possible Token types
  */
 typedef NS_ENUM(NSInteger, STPTokenType) {
+    /**
+     Account token type
+     */
     STPTokenTypeAccount = 0,
+
+    /**
+     Bank account token type
+     */
     STPTokenTypeBankAccount,
+
+    /**
+     Card token type
+     */
     STPTokenTypeCard,
+
+    /**
+     PII token type
+     */
     STPTokenTypePII,
+
+    /**
+     CVC update token type
+     */
     STPTokenTypeCVCUpdate,
 };
 
