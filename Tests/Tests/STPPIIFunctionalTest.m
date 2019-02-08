@@ -31,6 +31,7 @@
         XCTAssertNil(error, @"error should be nil %@", error.localizedDescription);
         XCTAssertNotNil(token, @"token should not be nil");
         XCTAssertNotNil(token.tokenId);
+        XCTAssertEqual(token.type, STPTokenTypePII);
     }];
     
     [self waitForExpectationsWithTimeout:5.0f handler:nil];

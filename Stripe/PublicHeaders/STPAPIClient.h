@@ -192,6 +192,14 @@ static NSString *const STPSDKVersion = @"14.0.0";
  */
 - (void)createTokenWithCard:(STPCardParams *)card completion:(nullable STPTokenCompletionBlock)completion;
 
+/**
+ Converts a CVC string into a Stripe token using the Stripe API.
+
+ @param cvc         The CVC/CVV number used to create the token. Cannot be nil.
+ @param completion  The callback to run with the returned Stripe token (and any errors that may have occurred).
+ */
+- (void)createTokenForCVCUpdate:(NSString *)cvc completion:(nullable STPTokenCompletionBlock)completion;
+
 @end
 
 /**
