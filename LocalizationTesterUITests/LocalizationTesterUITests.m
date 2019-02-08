@@ -36,16 +36,14 @@
     XCUIApplication *app = [[XCUIApplication alloc] init];
     XCUIElementQuery *tablesQuery = app.tables;
 
-#pragma mark -
-    // Visit Payment Text Field
+#pragma mark - Visit Payment Text Field
     [tablesQuery.staticTexts[@"Payment Card Text Field"] tap];
     [self _waitForElementToAppear:app.navigationBars.buttons[@"CardFieldViewControllerDoneButtonIdentifier"]];
     [self _takeScreenShotNamed:@"Payment Card Text Field"];
 
     [app.navigationBars.buttons[@"CardFieldViewControllerDoneButtonIdentifier"] tap];
 
-#pragma mark -
-    // Visit Add Card VC (default)
+#pragma mark - Visit Add Card VC (default)
     [tablesQuery.staticTexts[@"Add Card VC Standard"] tap];
     [self _waitForElementToAppear:app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"]];
     [self _takeScreenShotNamed:@"Add Card VC Standard"];
@@ -57,36 +55,31 @@
     [[errorAlert.buttons elementBoundByIndex:0] tap]; // dismiss alert
     [app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"] tap]; // back
 
-#pragma mark -
-    // Visit Add Card VC (prefilled shipping)
+#pragma mark - Visit Add Card VC (prefilled shipping)
     [tablesQuery.staticTexts[@"Add Card VC Prefilled Shipping"] tap];
     [self _waitForElementToAppear:app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"]];
     [self _takeScreenShotNamed:@"Add Card VC Prefilled Shipping"];
     [app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"] tap]; // back
 
-#pragma mark -
-    // Visit Add Card VC (prefilled delivery)
+#pragma mark - Visit Add Card VC (prefilled delivery)
     [tablesQuery.staticTexts[@"Add Card VC Prefilled Delivery"] tap];
     [self _waitForElementToAppear:app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"]];
     [self _takeScreenShotNamed:@"Add Card VC Prefilled Delivery"];
     [app.navigationBars.buttons[@"AddCardViewControllerNavBarCancelButtonIdentifier"] tap]; // back
 
-#pragma mark -
-    // Visit Payment Method VC
+#pragma mark - Visit Payment Method VC
     [tablesQuery.staticTexts[@"Payment Methods VC"] tap];
     [self _waitForElementToAppear:tablesQuery.cells[@"PaymentMethodTableViewAddNewCardButtonIdentifier"]];
     [self _takeScreenShotNamed:@"Payment Methods VC"];
     [app.buttons[@"PaymentMethodViewControllerCancelButtonIdentifier"] tap]; // back
 
-#pragma mark -
-    // Visit Payment Method VC (loading)
+#pragma mark - Visit Payment Method VC (loading)
     [tablesQuery.staticTexts[@"Payment Methods VC Loading"] tap];
     [self _waitForElementToAppear:app.buttons[@"CoreViewControllerCancelIdentifier"]];
     [self _takeScreenShotNamed:@"Payment Methods VC Loading"];
     [app.buttons[@"CoreViewControllerCancelIdentifier"] tap]; // back
 
-#pragma mark -
-    // Visit the Shipping Address VC
+#pragma mark - Visit the Shipping Address VC
     [tablesQuery.staticTexts[@"Shipping Address VC"] tap];
     [self _waitForElementToAppear:app.navigationBars.buttons[@"ShippingViewControllerNextButtonIdentifier"]];
     [self _takeScreenShotNamed:@"Shipping Address VC"];
@@ -102,8 +95,7 @@
     // Back to main menu
     [app.navigationBars.buttons[@"ShippingMethodsViewControllerDoneButtonIdentifier"] tap];
 
-#pragma mark -
-    // Visit the Shipping Address VC Bad Address
+#pragma mark - Visit the Shipping Address VC Bad Address
     [tablesQuery.staticTexts[@"Shipping Address VC Bad Address"] tap];
     [self _waitForElementToAppear:app.navigationBars.buttons[@"ShippingViewControllerNextButtonIdentifier"]];
 
@@ -119,8 +111,7 @@
     [[errorAlert.buttons elementBoundByIndex:0] tap]; // dismiss alert
     [app.navigationBars.buttons[@"CoreViewControllerCancelIdentifier"] tap];
 
-#pragma mark -
-    // Visit the Shipping Info VC for Delivery
+#pragma mark - Visit the Shipping Info VC for Delivery
     [tablesQuery.staticTexts[@"Shipping Address VC for Delivery"] tap];
     [self _waitForElementToAppear:app.navigationBars.buttons[@"ShippingViewControllerNextButtonIdentifier"]];
     [self _takeScreenShotNamed:@"Shipping Address VC for Delivery"];
@@ -128,8 +119,7 @@
     // Back to main menu
     [app.navigationBars.buttons[@"CoreViewControllerCancelIdentifier"] tap];
 
-#pragma mark -
-    // Visit the Shipping Info VC for Delivery
+#pragma mark - Visit the Shipping Info VC for Delivery
     [tablesQuery.staticTexts[@"Shipping Address VC for Contact"] tap];
     [self _waitForElementToAppear:app.navigationBars.buttons[@"ShippingViewControllerNextButtonIdentifier"]];
     [self _takeScreenShotNamed:@"Shipping Address VC for Contact"];
@@ -168,7 +158,7 @@
 }
 
 - (void)_waitForElementToAppear:(XCUIElement *)element {
-    XCTAssert([element waitForExistenceWithTimeout:5], "An exepected element did not appear on screen: \(element)");
+    XCTAssert([element waitForExistenceWithTimeout:5], "An exepected element did not appear on screen: %@", element);
 }
 
 @end

@@ -112,7 +112,9 @@
     if ([source isKindOfClass:[STPToken class]] && ((STPToken *)source).card != nil) {
         [_mockCustomer.mockSources addObject:((STPToken *)source).card];
     }
-    completion(nil);
+    if (completion) {
+        completion(nil);
+    }
 }
 
 - (void)selectDefaultCustomerSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
@@ -126,7 +128,9 @@
     if (hasSource) {
         _mockCustomer.mockDefaultSource = source;
     }
-    completion(nil);
+    if (completion) {
+        completion(nil);
+    }
 }
 
 - (void)updateCustomerWithShippingAddress:(STPAddress *)shipping completion:(STPErrorBlock)completion {
