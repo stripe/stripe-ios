@@ -14,6 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class STPEphemeralKey;
 
+/**
+ You should make your application's API client conform to this interface.
+ It provides a way for Stripe utility classes to request a new ephemeral key from
+ your backend, which it will use to retrieve and update Stripe API objects.
+ */
 @protocol STPCustomerEphemeralKeyProvider <NSObject>
 /**
  Creates a new ephemeral key for retrieving and updating a Stripe customer.
@@ -36,6 +41,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)createCustomerKeyWithAPIVersion:(NSString *)apiVersion completion:(STPJSONResponseCompletionBlock)completion;
 @end
 
+/**
+ You should make your application's API client conform to this interface.
+ It provides a way for Stripe utility classes to request a new ephemeral key from
+ your backend, which it will use to retrieve and update Stripe API objects.
+ */
 @protocol STPIssuingCardEphemeralKeyProvider <NSObject>
 /**
  Creates a new ephemeral key for retrieving and updating a Stripe Issuing Card.
