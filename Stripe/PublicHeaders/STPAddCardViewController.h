@@ -51,6 +51,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) STPUserInformation *prefilledInformation;
 
 /**
+ You can set this property to pre-fill any information you've already collected from your user. @see STPCardParams.h
+ */
+@property (nonatomic, strong, nullable) STPCardParams *prefilledCardInformation;
+
+/**
  If you're using the token generated from STPAddCardViewController to make a Managed Account, you should set this property to the currency that account will use. Otherwise, you should leave it empty. For more information, see https://stripe.com/docs/api#create_card_token-card-currency
  */
 @property (nonatomic, copy, nullable) NSString *managedAccountCurrency;

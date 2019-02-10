@@ -115,6 +115,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 
     STPPaymentCardTextFieldCell *paymentCell = [[STPPaymentCardTextFieldCell alloc] init];
     paymentCell.paymentField.delegate = self;
+    if (self.prefilledCardInformation != nil) {
+        paymentCell.paymentField.cardParams = self.prefilledCardInformation;
+    }
     self.paymentCell = paymentCell;
     
     self.activityIndicator = [[STPPaymentActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20.0f, 20.0f)];
