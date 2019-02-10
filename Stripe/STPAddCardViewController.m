@@ -115,9 +115,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
 
     STPPaymentCardTextFieldCell *paymentCell = [[STPPaymentCardTextFieldCell alloc] init];
     paymentCell.paymentField.delegate = self;
-    if (self.prefilledCardInformation != nil) {
-        paymentCell.paymentField.cardParams = self.prefilledCardInformation;
-    }
     self.paymentCell = paymentCell;
     
     self.activityIndicator = [[STPPaymentActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20.0f, 20.0f)];
@@ -252,6 +249,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentCardSection) {
     [self stp_beginObservingKeyboardAndInsettingScrollView:self.tableView
                                              onChangeBlock:nil];
     [[self firstEmptyField] becomeFirstResponder];
+    if (self.prefilledCardInformation != nil) {
+        self.paymentCell.paymentField.cardParams = self.prefilledCardInformation;
+    }
 }
 
 - (UIResponder *)firstEmptyField {
