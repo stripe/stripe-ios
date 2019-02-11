@@ -74,7 +74,7 @@ static NSTimeInterval const MinEagerRefreshInterval = 60*60;
     }
 }
 
-- (void)createKey {
+- (void)_createKey {
     STPJSONResponseCompletionBlock jsonCompletion = ^(NSDictionary *jsonResponse, NSError *error) {
         STPEphemeralKey *key = [STPEphemeralKey decodedObjectFromAPIResponse:jsonResponse];
         if (key) {
@@ -125,7 +125,7 @@ static NSTimeInterval const MinEagerRefreshInterval = 60*60;
             }] onFailure:^(NSError *error) {
                 completion(nil, error);
             }];
-            [self createKey];
+            [self _createKey];
         }
     }
 }
