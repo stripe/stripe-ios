@@ -65,7 +65,7 @@ static NSTimeInterval const MinEagerRefreshInterval = 60*60;
 - (void)handleWillForegroundNotification {
     // To make sure we don't end up hitting the ephemeral keys endpoint on every
     // foreground (e.g. if there's an issue decoding the ephemeral key), throttle
-    // eager refreshses to once per hour.
+    // eager refreshes to once per hour.
     if (!self.currentKeyIsUnexpired && self.shouldPerformEagerRefresh) {
         self.lastEagerKeyRefresh = [NSDate date];
         [self getOrCreateKey:^(__unused STPEphemeralKey * _Nullable ephemeralKey, __unused NSError * _Nullable error) {
@@ -89,8 +89,7 @@ static NSTimeInterval const MinEagerRefreshInterval = 60*60;
                 NSString protocol = "unknown";
                 if ([self.keyProvider conformsToProtocol:@protocol(STPCustomerEphemeralKeyProvider)]) {
                     protocol = @"STPCustomerEphemeralKeyProvider";
-                }
-                else if ([self.keyProvider conformsToProtocol:@protocol(STPIssuingCardEphemeralKeyProvider)]) {
+                } else if ([self.keyProvider conformsToProtocol:@protocol(STPIssuingCardEphemeralKeyProvider)]) {
                     protocol = @"STPIssuingCardEphemeralKeyProvider";
                 }
                 NSAssert(NO, [NSString stringWithFormat:@"Could not parse the ephemeral key response following protocol %@. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api", protocol]);
@@ -102,8 +101,7 @@ static NSTimeInterval const MinEagerRefreshInterval = 60*60;
     if ([self.keyProvider conformsToProtocol:@protocol(STPCustomerEphemeralKeyProvider)]) {
         id<STPCustomerEphemeralKeyProvider> provider = self.keyProvider;
         [provider createCustomerKeyWithAPIVersion:self.apiVersion completion:jsonCompletion];
-    }
-    else if ([self.keyProvider conformsToProtocol:@protocol(STPIssuingCardEphemeralKeyProvider)]) {
+    } else if ([self.keyProvider conformsToProtocol:@protocol(STPIssuingCardEphemeralKeyProvider)]) {
         id<STPIssuingCardEphemeralKeyProvider> provider = self.keyProvider;
         [provider createIssuingCardKeyWithAPIVersion:self.apiVersion completion:jsonCompletion];
     }
