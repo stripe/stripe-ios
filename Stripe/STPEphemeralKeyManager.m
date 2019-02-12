@@ -69,7 +69,7 @@ static NSTimeInterval const MinEagerRefreshInterval = 60*60;
     if (!self.currentKeyIsUnexpired && self.shouldPerformEagerRefresh) {
         self.lastEagerKeyRefresh = [NSDate date];
         [self getOrCreateKey:^(__unused STPEphemeralKey * _Nullable ephemeralKey, __unused NSError * _Nullable error) {
-            
+            // getOrCreateKey sets the self.ephemeralKey. Nothing left to do for us here
         }];
     }
 }
