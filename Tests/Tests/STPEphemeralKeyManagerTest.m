@@ -31,9 +31,6 @@
     self.apiVersion = @"2015-03-03";
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-
 - (id)mockKeyProviderWithKeyResponse:(NSDictionary *)keyResponse {
     XCTestExpectation *exp = [self expectationWithDescription:@"createCustomerKey"];
     id mockKeyProvider = OCMProtocolMock(@protocol(STPEphemeralKeyProvider));
@@ -177,7 +174,5 @@
     sut.lastEagerKeyRefresh = [NSDate dateWithTimeIntervalSinceNow:-60];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillEnterForegroundNotification object:nil];
 }
-
-#pragma clang diagnostic pop
 
 @end
