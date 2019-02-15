@@ -86,14 +86,12 @@ static NSTimeInterval const MinEagerRefreshInterval = 60*60;
             } else {
                 // the ephemeral key could not be decoded
                 [self.createKeyPromise fail:[NSError stp_ephemeralKeyDecodingError]];
-                NSString *protocol = @"unknown";
                 if ([self.keyProvider conformsToProtocol:@protocol(STPCustomerEphemeralKeyProvider)]) {
-                    protocol = @"STPCustomerEphemeralKeyProvider";
+                    NSAssert(NO, @"Could not parse the ephemeral key response following protocol STPCustomerEphemeralKeyProvider. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api");
                 } else if ([self.keyProvider conformsToProtocol:@protocol(STPIssuingCardEphemeralKeyProvider)]) {
-                    protocol = @"STPIssuingCardEphemeralKeyProvider";
+                    NSAssert(NO, @"Could not parse the ephemeral key response following protocol STPCustomerEphemeralKeyProvider. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api");
                 }
-                NSString *errorString = [NSString stringWithFormat:@"Could not parse the ephemeral key response following protocol %@. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api", protocol];
-                NSAssert(NO, errorString);
+                NSAssert(NO, @"Could not parse the ephemeral key response. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api");
             }
         }
         self.createKeyPromise = nil;
