@@ -37,7 +37,7 @@
     OCMStub([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg isEqual:self.apiVersion]
                                                   completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
-        [invocation retainArguments];
+        [invocation retainArguments]; // avoids https://github.com/erikdoe/ocmock/issues/147
         STPJSONResponseCompletionBlock completion;
         [invocation getArgument:&completion atIndex:3];
         completion(keyResponse, nil);
@@ -99,7 +99,7 @@
     OCMStub([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg isEqual:self.apiVersion]
                                                   completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
-        [invocation retainArguments];
+        [invocation retainArguments]; // avoids https://github.com/erikdoe/ocmock/issues/147
         STPJSONResponseCompletionBlock completion;
         [invocation getArgument:&completion atIndex:3];
         [createExp fulfill];
@@ -131,7 +131,7 @@
     OCMStub([mockKeyProvider createCustomerKeyWithAPIVersion:[OCMArg isEqual:self.apiVersion]
                                                   completion:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
-        [invocation retainArguments];
+        [invocation retainArguments]; // avoids https://github.com/erikdoe/ocmock/issues/147
         STPJSONResponseCompletionBlock completion;
         [invocation getArgument:&completion atIndex:3];
         XCTAssertThrows(completion(invalidKeyResponse, nil));
