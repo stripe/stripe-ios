@@ -31,7 +31,7 @@
 
 - (id)mockKeyManagerWithKey:(STPEphemeralKey *)ephemeralKey {
     id mockKeyManager = OCMClassMock([STPEphemeralKeyManager class]);
-    OCMStub([mockKeyManager getCustomerKey:[OCMArg any]])
+    OCMStub([mockKeyManager getOrCreateKey:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
         STPEphemeralKeyCompletionBlock completion;
         [invocation getArgument:&completion atIndex:2];
@@ -42,7 +42,7 @@
 
 - (id)mockKeyManagerWithError:(NSError *)error {
     id mockKeyManager = OCMClassMock([STPEphemeralKeyManager class]);
-    OCMStub([mockKeyManager getCustomerKey:[OCMArg any]])
+    OCMStub([mockKeyManager getOrCreateKey:[OCMArg any]])
     .andDo(^(NSInvocation *invocation) {
         STPEphemeralKeyCompletionBlock completion;
         [invocation getArgument:&completion atIndex:2];
@@ -78,7 +78,7 @@
     });
 }
 
-- (void)testGetCustomerKeyErrorForwardedToRetrieveCustomer {
+- (void)testgetOrCreateKeyErrorForwardedToRetrieveCustomer {
     NSError *expectedError = [NSError errorWithDomain:@"foo" code:123 userInfo:nil];
     id mockAPIClient = OCMClassMock([STPAPIClient class]);
     OCMReject([mockAPIClient retrieveCustomerUsingKey:[OCMArg any] completion:[OCMArg any]]);

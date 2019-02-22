@@ -28,9 +28,10 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
 
 @implementation STPCustomerContext
 
-- (instancetype)initWithKeyProvider:(nonnull id<STPEphemeralKeyProvider>)keyProvider {
+- (instancetype)initWithKeyProvider:(nonnull id<STPCustomerEphemeralKeyProvider>)keyProvider {
     STPEphemeralKeyManager *keyManager = [[STPEphemeralKeyManager alloc] initWithKeyProvider:keyProvider
-                                                                                  apiVersion:[STPAPIClient apiVersion]];
+
+                                                                                  apiVersion:[STPAPIClient apiVersion] performsEagerFetching:YES];
     return [self initWithKeyManager:keyManager];
 }
 
@@ -75,7 +76,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
         }
         return;
     }
-    [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
+    [self.keyManager getOrCreateKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
         if (retrieveKeyError) {
             if (completion) {
                 stpDispatchToMainThreadIfNecessary(^{
@@ -99,7 +100,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
 }
 
 - (void)attachSourceToCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
-    [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
+    [self.keyManager getOrCreateKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
         if (retrieveKeyError) {
             if (completion) {
                 stpDispatchToMainThreadIfNecessary(^{
@@ -123,7 +124,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
 }
 
 - (void)selectDefaultCustomerSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
-    [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
+    [self.keyManager getOrCreateKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
         if (retrieveKeyError) {
             if (completion) {
                 stpDispatchToMainThreadIfNecessary(^{
@@ -149,7 +150,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
 }
 
 - (void)updateCustomerWithShippingAddress:(STPAddress *)shipping completion:(STPErrorBlock)completion {
-    [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
+    [self.keyManager getOrCreateKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
         if (retrieveKeyError) {
             if (completion) {
                 stpDispatchToMainThreadIfNecessary(^{
@@ -178,7 +179,7 @@ static NSTimeInterval const CachedCustomerMaxAge = 60;
 }
 
 - (void)detachSourceFromCustomer:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion {
-    [self.keyManager getCustomerKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
+    [self.keyManager getOrCreateKey:^(STPEphemeralKey *ephemeralKey, NSError *retrieveKeyError) {
         if (retrieveKeyError) {
             if (completion) {
                 stpDispatchToMainThreadIfNecessary(^{
