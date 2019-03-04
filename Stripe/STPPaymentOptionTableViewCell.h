@@ -14,10 +14,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPPaymentMethodTableViewCell : UITableViewCell
+@interface STPPaymentOptionTableViewCell : UITableViewCell
 
 - (void)configureForNewCardRowWithTheme:(STPTheme *)theme;
-- (void)configureWithPaymentMethod:(id<STPPaymentOption>)paymentMethod theme:(STPTheme *)theme selected:(BOOL)selected;
+- (void)configureWithPaymentOption:(id<STPPaymentOption>)paymentOption theme:(STPTheme *)theme selected:(BOOL)selected;
 
 @end
 

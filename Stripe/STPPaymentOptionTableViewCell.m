@@ -1,12 +1,12 @@
 //
-//  STPPaymentMethodTableViewCell.m
+//  STPPaymentOptionTableViewCell.m
 //  Stripe
 //
 //  Created by Ben Guo on 8/30/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentMethodTableViewCell.h"
+#import "STPPaymentOptionTableViewCell.h"
 
 #import "STPApplePay.h"
 #import "STPCard.h"
@@ -16,9 +16,9 @@
 #import "STPSource.h"
 #import "STPTheme.h"
 
-@interface STPPaymentMethodTableViewCell ()
+@interface STPPaymentOptionTableViewCell ()
 
-@property (nonatomic, strong, nullable, readwrite) id<STPPaymentOption> paymentMethod;
+@property (nonatomic, strong, nullable, readwrite) id<STPPaymentOption> paymentOption;
 @property (nonatomic, strong, readwrite) STPTheme *theme;
 
 @property (nonatomic, strong, readwrite) UIImageView *leftIcon;
@@ -27,7 +27,7 @@
 
 @end
 
-@implementation STPPaymentMethodTableViewCell
+@implementation STPPaymentOptionTableViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(nullable NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -74,7 +74,7 @@
 }
 
 - (void)configureForNewCardRowWithTheme:(STPTheme *)theme {
-    self.paymentMethod = nil;
+    self.paymentOption = nil;
     self.theme = theme;
 
     self.backgroundColor = theme.secondaryBackgroundColor;
@@ -94,19 +94,19 @@
     [self setNeedsLayout];
 }
 
-- (void)configureWithPaymentMethod:(id<STPPaymentOption>)paymentMethod theme:(STPTheme *)theme selected:(BOOL)selected {
-    self.paymentMethod = paymentMethod;
+- (void)configureWithPaymentOption:(id<STPPaymentOption>)paymentOption theme:(STPTheme *)theme selected:(BOOL)selected {
+    self.paymentOption = paymentOption;
     self.theme = theme;
 
     self.backgroundColor = theme.secondaryBackgroundColor;
 
     // Left icon
-    self.leftIcon.image = paymentMethod.templateImage;
-    self.leftIcon.tintColor = [self primaryColorForPaymentMethodWithSelected:selected];
+    self.leftIcon.image = paymentOption.templateImage;
+    self.leftIcon.tintColor = [self primaryColorForPaymentOptionWithSelected:selected];
 
     // Title label
     self.titleLabel.font = theme.font;
-    self.titleLabel.attributedText = [self buildAttributedStringWithPaymentMethod:paymentMethod selected:selected];
+    self.titleLabel.attributedText = [self buildAttributedStringWithPaymentOption:paymentOption selected:selected];
 
     // Checkmark icon
     self.checkmarkIcon.tintColor = theme.accentColor;
@@ -115,25 +115,25 @@
     [self setNeedsLayout];
 }
 
-- (UIColor *)primaryColorForPaymentMethodWithSelected:(BOOL)selected {
+- (UIColor *)primaryColorForPaymentOptionWithSelected:(BOOL)selected {
     return selected ? self.theme.accentColor : [self.theme.primaryForegroundColor colorWithAlphaComponent:0.6f];
 }
 
-- (NSAttributedString *)buildAttributedStringWithPaymentMethod:(id<STPPaymentOption>)paymentMethod selected:(BOOL)selected {
-    if ([paymentMethod isKindOfClass:[STPCard class]]) {
-        return [self buildAttributedStringWithCard:(STPCard *)paymentMethod selected:selected];
+- (NSAttributedString *)buildAttributedStringWithPaymentOption:(id<STPPaymentOption>)paymentOption selected:(BOOL)selected {
+    if ([paymentOption isKindOfClass:[STPCard class]]) {
+        return [self buildAttributedStringWithCard:(STPCard *)paymentOption selected:selected];
     }
-    else if ([paymentMethod isKindOfClass:[STPSource class]]) {
-        STPSource *source = (STPSource *)paymentMethod;
+    else if ([paymentOption isKindOfClass:[STPSource class]]) {
+        STPSource *source = (STPSource *)paymentOption;
         if (source.type == STPSourceTypeCard
             && source.cardDetails != nil) {
             return [self buildAttributedStringWithCardSource:source selected:selected];
         }
     }
 
-    if ([paymentMethod isKindOfClass:[STPApplePay class]]) {
+    if ([paymentOption isKindOfClass:[STPApplePay class]]) {
         NSString *label = STPLocalizedString(@"Apple Pay", @"Text for Apple Pay payment method");
-        UIColor *primaryColor = [self primaryColorForPaymentMethodWithSelected:selected];
+        UIColor *primaryColor = [self primaryColorForPaymentOptionWithSelected:selected];
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];
     }
 

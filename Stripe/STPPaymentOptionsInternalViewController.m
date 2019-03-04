@@ -17,7 +17,7 @@
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
-#import "STPPaymentMethodTableViewCell.h"
+#import "STPPaymentOptionTableViewCell.h"
 #import "STPPaymentOptionTuple.h"
 #import "STPPromise.h"
 #import "STPSource.h"
@@ -76,7 +76,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     [super createAndSetupViews];
 
     // Table view
-    [self.tableView registerClass:[STPPaymentMethodTableViewCell class] forCellReuseIdentifier:PaymentMethodCellReuseIdentifier];
+    [self.tableView registerClass:[STPPaymentOptionTableViewCell class] forCellReuseIdentifier:PaymentMethodCellReuseIdentifier];
 
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
@@ -233,13 +233,13 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    STPPaymentMethodTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:PaymentMethodCellReuseIdentifier forIndexPath:indexPath];
+    STPPaymentOptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:PaymentMethodCellReuseIdentifier forIndexPath:indexPath];
 
     if (indexPath.section == PaymentMethodSectionCardList) {
         id<STPPaymentOption> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
         BOOL selected = [paymentMethod isEqual:self.selectedPaymentMethod];
 
-        [cell configureWithPaymentMethod:paymentMethod theme:self.theme selected:selected];
+        [cell configureWithPaymentOption:paymentMethod theme:self.theme selected:selected];
     }
     else {
         [cell configureForNewCardRowWithTheme:self.theme];
