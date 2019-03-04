@@ -10,7 +10,7 @@
 
 #import "STPBackendAPIAdapter.h"
 #import "STPPaymentConfiguration.h"
-#import "STPPaymentMethod.h"
+#import "STPPaymentOption.h"
 #import "STPPaymentMethodTuple.h"
 #import "STPPromise.h"
 

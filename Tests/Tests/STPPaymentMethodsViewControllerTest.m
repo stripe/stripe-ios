@@ -43,7 +43,7 @@
 - (void)testInitWithNoSourcesAndConfigWithUseSourcesOffAndCardAvailable {
     STPCustomer *customer = [STPFixtures customerWithNoSources];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    config.additionalPaymentMethods = STPPaymentMethodTypeNone;
+    config.additionalPaymentMethods = STPPaymentOptionTypeNone;
     id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
     STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
                                                                    configuration:config
@@ -58,7 +58,7 @@
 - (void)testInitWithSingleCardTokenSourceAndCardAvailable {
     STPCustomer *customer = [STPFixtures customerWithSingleCardTokenSource];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    config.additionalPaymentMethods = STPPaymentMethodTypeAll;
+    config.additionalPaymentMethods = STPPaymentOptionTypeAll;
     id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
     STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
                                                                    configuration:config
@@ -73,7 +73,7 @@
 - (void)testInitWithSingleCardSourceSourceAndCardAvailable {
     STPCustomer *customer = [STPFixtures customerWithSingleCardSourceSource];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    config.additionalPaymentMethods = STPPaymentMethodTypeNone;
+    config.additionalPaymentMethods = STPPaymentOptionTypeNone;
     id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
     STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
                                                                    configuration:config
@@ -204,7 +204,7 @@
         STPSource *source = (STPSource *)obj;
         return source.stripeID == expectedSource.stripeID;
     };
-    BOOL (^paymentMethodChecker)(id<STPPaymentMethod>) = ^BOOL(id<STPPaymentMethod> obj) {
+    BOOL (^paymentMethodChecker)(id<STPPaymentOption>) = ^BOOL(id<STPPaymentOption> obj) {
         STPSource *source = (STPSource *)obj;
         return source.cardDetails.last4 == expectedSource.cardDetails.last4;
     };

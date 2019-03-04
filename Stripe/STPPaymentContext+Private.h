@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) STPPromise<STPPaymentMethodTuple *> *currentValuePromise;
 
-- (void)removePaymentMethod:(id<STPPaymentMethod>)paymentMethodToRemove;
+- (void)removePaymentMethod:(id<STPPaymentOption>)paymentMethodToRemove;
 
 @end
 

@@ -254,9 +254,9 @@
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"publishable_key"] = configuration.publishableKey ?: @"unknown";
     switch (configuration.additionalPaymentMethods) {
-        case STPPaymentMethodTypeAll:
+        case STPPaymentOptionTypeAll:
             dictionary[@"additional_payment_methods"] = @"all";
-        case STPPaymentMethodTypeNone:
+        case STPPaymentOptionTypeNone:
             dictionary[@"additional_payment_methods"] = @"none";
     }
     switch (configuration.requiredBillingAddressFields) {

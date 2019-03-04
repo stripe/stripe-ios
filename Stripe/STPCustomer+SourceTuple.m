@@ -18,8 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation STPCustomer (SourceTuple)
 
 - (STPPaymentMethodTuple *)filteredSourceTupleForUIWithConfiguration:(STPPaymentConfiguration *)configuration {
-    id<STPPaymentMethod> _Nullable selectedMethod = nil;
-    NSMutableArray<id<STPPaymentMethod>> *methods = [NSMutableArray array];
+    id<STPPaymentOption> _Nullable selectedMethod = nil;
+    NSMutableArray<id<STPPaymentOption>> *methods = [NSMutableArray array];
     for (id<STPSourceProtocol> customerSource in self.sources) {
         if ([customerSource isKindOfClass:[STPCard class]]) {
             STPCard *card = (STPCard *)customerSource;

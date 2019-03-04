@@ -8,17 +8,17 @@
 
 #import "STPPaymentMethodTableViewCell.h"
 
-#import "STPApplePayPaymentMethod.h"
+#import "STPApplePay.h"
 #import "STPCard.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
-#import "STPPaymentMethod.h"
+#import "STPPaymentOption.h"
 #import "STPSource.h"
 #import "STPTheme.h"
 
 @interface STPPaymentMethodTableViewCell ()
 
-@property (nonatomic, strong, nullable, readwrite) id<STPPaymentMethod> paymentMethod;
+@property (nonatomic, strong, nullable, readwrite) id<STPPaymentOption> paymentMethod;
 @property (nonatomic, strong, readwrite) STPTheme *theme;
 
 @property (nonatomic, strong, readwrite) UIImageView *leftIcon;
@@ -94,7 +94,7 @@
     [self setNeedsLayout];
 }
 
-- (void)configureWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod theme:(STPTheme *)theme selected:(BOOL)selected {
+- (void)configureWithPaymentMethod:(id<STPPaymentOption>)paymentMethod theme:(STPTheme *)theme selected:(BOOL)selected {
     self.paymentMethod = paymentMethod;
     self.theme = theme;
 
@@ -119,7 +119,7 @@
     return selected ? self.theme.accentColor : [self.theme.primaryForegroundColor colorWithAlphaComponent:0.6f];
 }
 
-- (NSAttributedString *)buildAttributedStringWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod selected:(BOOL)selected {
+- (NSAttributedString *)buildAttributedStringWithPaymentMethod:(id<STPPaymentOption>)paymentMethod selected:(BOOL)selected {
     if ([paymentMethod isKindOfClass:[STPCard class]]) {
         return [self buildAttributedStringWithCard:(STPCard *)paymentMethod selected:selected];
     }
@@ -131,7 +131,7 @@
         }
     }
 
-    if ([paymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
+    if ([paymentMethod isKindOfClass:[STPApplePay class]]) {
         NSString *label = STPLocalizedString(@"Apple Pay", @"Text for Apple Pay payment method");
         UIColor *primaryColor = [self primaryColorForPaymentMethodWithSelected:selected];
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];

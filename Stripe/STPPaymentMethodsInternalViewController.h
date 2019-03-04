@@ -11,14 +11,14 @@
 
 @class STPAddress, STPCustomerContext, STPPaymentConfiguration, STPPaymentMethodTuple, STPToken, STPUserInformation;
 
-@protocol STPPaymentMethod;
+@protocol STPPaymentOption;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol STPPaymentMethodsInternalViewControllerDelegate
 
-- (void)internalViewControllerDidSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
-- (void)internalViewControllerDidDeletePaymentMethod:(id<STPPaymentMethod>)paymentMethod;
+- (void)internalViewControllerDidSelectPaymentMethod:(id<STPPaymentOption>)paymentMethod;
+- (void)internalViewControllerDidDeletePaymentMethod:(id<STPPaymentOption>)paymentMethod;
 - (void)internalViewControllerDidCreateSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion;
 - (void)internalViewControllerDidCancel;
 

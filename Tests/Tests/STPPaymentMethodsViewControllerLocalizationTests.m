@@ -29,7 +29,7 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.additionalPaymentMethods = STPPaymentMethodTypeAll;
+    config.additionalPaymentMethods = STPPaymentOptionTypeAll;
     STPTheme *theme = [STPTheme defaultTheme];
     id customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources]];
     id delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));

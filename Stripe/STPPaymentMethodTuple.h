@@ -7,21 +7,21 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "STPPaymentMethod.h"
+#import "STPPaymentOption.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPaymentMethodTuple : NSObject
 
-+ (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods
-                  selectedPaymentMethod:(nullable id<STPPaymentMethod>)selectedPaymentMethod;
++ (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentOption>> *)paymentMethods
+                  selectedPaymentMethod:(nullable id<STPPaymentOption>)selectedPaymentMethod;
 
-+ (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods
-                  selectedPaymentMethod:(nullable id<STPPaymentMethod>)selectedPaymentMethod
++ (instancetype)tupleWithPaymentMethods:(NSArray<id<STPPaymentOption>> *)paymentMethods
+                  selectedPaymentMethod:(nullable id<STPPaymentOption>)selectedPaymentMethod
                       addApplePayMethod:(BOOL)applePayEnabled;
 
-@property (nonatomic, nullable, readonly) id<STPPaymentMethod> selectedPaymentMethod;
-@property (nonatomic, readonly) NSArray<id<STPPaymentMethod>> *paymentMethods;
+@property (nonatomic, nullable, readonly) id<STPPaymentOption> selectedPaymentMethod;
+@property (nonatomic, readonly) NSArray<id<STPPaymentOption>> *paymentMethods;
 
 @end
 

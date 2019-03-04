@@ -455,7 +455,7 @@
     XCTAssertEqualObjects(source.allResponseFields, [response stp_dictionaryByRemovingNulls]);
 }
 
-#pragma mark - STPPaymentMethod Tests
+#pragma mark - STPPaymentOption Tests
 
 - (NSArray *)possibleAPIResponses {
     return @[[STPTestUtils jsonNamed:STPTestJSONSourceCard],

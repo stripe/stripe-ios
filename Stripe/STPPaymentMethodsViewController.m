@@ -170,7 +170,7 @@
     self.activityIndicator.tintColor = self.theme.accentColor;
 }
 
-- (void)finishWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
+- (void)finishWithPaymentMethod:(id<STPPaymentOption>)paymentMethod {
     BOOL methodIsCardToken = [paymentMethod isKindOfClass:[STPCard class]];
     BOOL methodIsCardSource = ([paymentMethod isKindOfClass:[STPSource class]] &&
                                ((STPSource *)paymentMethod).type == STPSourceTypeCard);
@@ -202,11 +202,11 @@
     [self.delegate paymentMethodsViewControllerDidFinish:self];
 }
 
-- (void)internalViewControllerDidSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
+- (void)internalViewControllerDidSelectPaymentMethod:(id<STPPaymentOption>)paymentMethod {
     [self finishWithPaymentMethod:paymentMethod];
 }
 
-- (void)internalViewControllerDidDeletePaymentMethod:(id<STPPaymentMethod>)paymentMethod {
+- (void)internalViewControllerDidDeletePaymentMethod:(id<STPPaymentOption>)paymentMethod {
     if ([self.delegate isKindOfClass:[STPPaymentContext class]]) {
         // Notify payment context to update its copy of payment methods
         STPPaymentContext *paymentContext = (STPPaymentContext *)self.delegate;
@@ -236,7 +236,7 @@
                 // created a card source
                 else if ([source isKindOfClass:[STPSource class]] &&
                          ((STPSource *)source).type == STPSourceTypeCard) {
-                    [self finishWithPaymentMethod:(id<STPPaymentMethod>)source];
+                    [self finishWithPaymentMethod:(id<STPPaymentOption>)source];
                 }
             }
         });

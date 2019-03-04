@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "STPBackendAPIAdapter.h"
-#import "STPPaymentMethod.h"
+#import "STPPaymentOption.h"
 #import "STPTheme.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -40,9 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  An enum value representing which payment methods you will accept from your user
  in addition to credit cards. Unless you have a very specific reason not to, you
- should leave this at the default, `STPPaymentMethodTypeAll`.
+ should leave this at the default, `STPPaymentOptionTypeAll`.
  */
-@property (nonatomic, assign, readwrite) STPPaymentMethodType additionalPaymentMethods;
+@property (nonatomic, assign, readwrite) STPPaymentOptionType additionalPaymentMethods;
 
 /**
  The billing address fields the user must fill out when prompted for their 

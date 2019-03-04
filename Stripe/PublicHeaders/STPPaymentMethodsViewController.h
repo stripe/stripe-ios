@@ -11,12 +11,12 @@
 #import "STPBackendAPIAdapter.h"
 #import "STPCoreViewController.h"
 #import "STPPaymentConfiguration.h"
-#import "STPPaymentMethod.h"
+#import "STPPaymentOption.h"
 #import "STPUserInformation.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol STPPaymentMethod, STPPaymentMethodsViewControllerDelegate;
+@protocol STPPaymentOption, STPPaymentMethodsViewControllerDelegate;
 @class STPPaymentContext, STPPaymentMethodsViewController, STPCustomerContext;
 
 /**
@@ -202,7 +202,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param paymentMethod                the selected payment method
  */
 - (void)paymentMethodsViewController:(STPPaymentMethodsViewController *)paymentMethodsViewController
-              didSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod;
+              didSelectPaymentMethod:(id<STPPaymentOption>)paymentMethod;
 
 @end
 

@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethod.h
+//  STPPaymentOption.h
 //  Stripe
 //
 //  Created by Ben Guo on 4/19/16.
@@ -15,35 +15,35 @@ NS_ASSUME_NONNULL_BEGIN
  configuring an `STPPaymentContext`. This is in addition to card payments, which
  are always enabled.
  */
-typedef NS_OPTIONS(NSUInteger, STPPaymentMethodType) {
+typedef NS_OPTIONS(NSUInteger, STPPaymentOptionType) {
     /**
      Don't allow any payment methods except for cards.
      */
-    STPPaymentMethodTypeNone = 0,
+    STPPaymentOptionTypeNone = 0,
 
     /**
      The user is allowed to pay with Apple Pay if it's configured and available
      on their device.
      */
-    STPPaymentMethodTypeApplePay = 1 << 0,
+    STPPaymentOptionTypeApplePay = 1 << 0,
 
     /**
      The user is allowed to use any available payment method to pay.
      */
-    STPPaymentMethodTypeAll = STPPaymentMethodTypeApplePay
+    STPPaymentOptionTypeAll = STPPaymentOptionTypeApplePay
 };
 
 /**
  This protocol represents a payment method that a user can select and use to 
  pay. Currently the only classes that conform to it are `STPCard`, which
  represents that the user wants to pay with a specific card,
- `STPApplePayPaymentMethod`, which represents that the user wants to pay with
+ `STPApplePay`, which represents that the user wants to pay with
  Apple Pay, and `STPSource`. Only `STPSource.type == STPSourceTypeCard` payment
  methods are supported by `STPPaymentContext` and `STPPaymentMethodViewController`,
  but the other types do have basic support for this protocol for use in a custom
  integration.
  */
-@protocol STPPaymentMethod <NSObject>
+@protocol STPPaymentOption <NSObject>
 
 /**
  A small (32 x 20 points) logo image representing the payment method. For

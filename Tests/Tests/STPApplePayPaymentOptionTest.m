@@ -1,5 +1,5 @@
 //
-//  STPApplePayPaymentMethodTest.m
+//  STPApplePayPaymentOptionTest.m
 //  Stripe
 //
 //  Created by Joey Dong on 7/28/17.
@@ -8,36 +8,36 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPApplePayPaymentMethod.h"
+#import "STPApplePay.h"
 
-@interface STPApplePayPaymentMethodTest : XCTestCase
+@interface STPApplePayPaymentOptionTest : XCTestCase
 
 @end
 
-@implementation STPApplePayPaymentMethodTest
+@implementation STPApplePayPaymentOptionTest
 
-#pragma mark - STPPaymentMethod Tests
+#pragma mark - STPPaymentOption Tests
 
 - (void)testImage {
-    STPApplePayPaymentMethod *applePay = [[STPApplePayPaymentMethod alloc] init];
+    STPApplePay *applePay = [[STPApplePay alloc] init];
     XCTAssert([applePay image]);
 }
 
 - (void)testTemplateImage {
-    STPApplePayPaymentMethod *applePay = [[STPApplePayPaymentMethod alloc] init];
+    STPApplePay *applePay = [[STPApplePay alloc] init];
     XCTAssert([applePay templateImage]);
 }
 
 - (void)testLabel {
-    STPApplePayPaymentMethod *applePay = [[STPApplePayPaymentMethod alloc] init];
+    STPApplePay *applePay = [[STPApplePay alloc] init];
     XCTAssertEqualObjects([applePay label], @"Apple Pay");
 }
 
 #pragma mark - Equality Tests
 
 - (void)testApplePayEquals {
-    STPApplePayPaymentMethod *applePay1 = [[STPApplePayPaymentMethod alloc] init];
-    STPApplePayPaymentMethod *applePay2 = [[STPApplePayPaymentMethod alloc] init];
+    STPApplePay *applePay1 = [[STPApplePay alloc] init];
+    STPApplePay *applePay2 = [[STPApplePay alloc] init];
 
     XCTAssertNotEqual(applePay1, applePay2);
 

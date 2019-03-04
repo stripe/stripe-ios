@@ -39,7 +39,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _additionalPaymentMethods = STPPaymentMethodTypeAll;
+        _additionalPaymentMethods = STPPaymentOptionTypeAll;
         _requiredBillingAddressFields = STPBillingAddressFieldsNone;
         _requiredShippingAddressFields = nil;
         _verifyPrefilledShippingAddress = YES;
@@ -53,7 +53,7 @@
 
 - (BOOL)applePayEnabled {
     return self.appleMerchantIdentifier &&
-    (self.additionalPaymentMethods & STPPaymentMethodTypeApplePay) &&
+    (self.additionalPaymentMethods & STPPaymentOptionTypeApplePay) &&
     [Stripe deviceSupportsApplePay];
 }
 
@@ -62,17 +62,17 @@
 - (NSString *)description {
     NSString *additionalPaymentMethodsDescription;
 
-    if (self.additionalPaymentMethods == STPPaymentMethodTypeAll) {
-        additionalPaymentMethodsDescription = @"STPPaymentMethodTypeAll";
+    if (self.additionalPaymentMethods == STPPaymentOptionTypeAll) {
+        additionalPaymentMethodsDescription = @"STPPaymentOptionTypeAll";
     }
-    else if (self.additionalPaymentMethods == STPPaymentMethodTypeNone) {
-        additionalPaymentMethodsDescription = @"STPPaymentMethodTypeNone";
+    else if (self.additionalPaymentMethods == STPPaymentOptionTypeNone) {
+        additionalPaymentMethodsDescription = @"STPPaymentOptionTypeNone";
     }
     else {
         NSMutableArray *paymentMethodOptions = [[NSMutableArray alloc] init];
 
-        if (self.additionalPaymentMethods & STPPaymentMethodTypeApplePay) {
-            [paymentMethodOptions addObject:@"STPPaymentMethodTypeApplePay"];
+        if (self.additionalPaymentMethods & STPPaymentOptionTypeApplePay) {
+            [paymentMethodOptions addObject:@"STPPaymentOptionTypeApplePay"];
         }
 
         additionalPaymentMethodsDescription = [paymentMethodOptions componentsJoinedByString:@"|"];

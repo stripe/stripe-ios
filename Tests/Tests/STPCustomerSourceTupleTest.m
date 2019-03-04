@@ -38,7 +38,7 @@
                       expectedValidSources:(NSUInteger)expectedSourceCount
                     expectedSelectedSource:(id)expectedSelectedSource {
     STPPaymentConfiguration *config = [STPMocks paymentConfigurationWithApplePaySupportingDevice];
-    config.additionalPaymentMethods = applePayEnabled ? STPPaymentMethodTypeAll : STPPaymentMethodTypeNone;
+    config.additionalPaymentMethods = applePayEnabled ? STPPaymentOptionTypeAll : STPPaymentOptionTypeNone;
 
     STPPaymentMethodTuple *tuple = [sut filteredSourceTupleForUIWithConfiguration:config];
     XCTAssertNotNil(tuple);
@@ -72,7 +72,7 @@
     [self performSourceTupleTestWithCustomer:sut
                              applePayEnabled:YES
                         expectedValidSources:expectedSourceCount + 1
-                      expectedSelectedSource:expectedSelectedSource ?: [STPApplePayPaymentMethod new]];
+                      expectedSelectedSource:expectedSelectedSource ?: [STPApplePay new]];
 }
 
 - (void)testSourceTupleCreationNoSources {

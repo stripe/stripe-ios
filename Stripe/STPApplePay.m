@@ -1,20 +1,20 @@
 //
-//  STPApplePayPaymentMethod.m
+//  STPApplePay.m
 //  Stripe
 //
 //  Created by Ben Guo on 4/19/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPApplePayPaymentMethod.h"
+#import "STPApplePay.h"
 
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
 
-@implementation STPApplePayPaymentMethod
+@implementation STPApplePay
 
-#pragma mark - STPPaymentMethod
+#pragma mark - STPPaymentOption
 
 - (UIImage *)image {
     return [STPImageLibrary applePayCardImage];
@@ -32,7 +32,7 @@
 #pragma mark - Equality
 
 - (BOOL)isEqual:(id)object {
-    return [object isKindOfClass:[STPApplePayPaymentMethod class]];
+    return [object isKindOfClass:[STPApplePay class]];
 }
 
 - (NSUInteger)hash {

@@ -13,14 +13,14 @@
 #import "STPAddress.h"
 #import "STPBlocks.h"
 #import "STPPaymentConfiguration.h"
-#import "STPPaymentMethod.h"
+#import "STPPaymentOption.h"
 #import "STPPaymentResult.h"
 #import "STPUserInformation.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class STPPaymentContext, STPAPIClient, STPTheme, STPCustomerContext;
-@protocol STPBackendAPIAdapter, STPPaymentMethod, STPPaymentContextDelegate;
+@protocol STPBackendAPIAdapter, STPPaymentOption, STPPaymentContextDelegate;
 
 /**
  An `STPPaymentContext` keeps track of all of the state around a payment. It will manage fetching a user's saved payment methods, tracking any information they select, and prompting them for required additional information before completing their purchase. It can be used to power your application's "payment confirmation" page with just a few lines of code.
@@ -139,12 +139,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The user's currently selected payment method. May be nil.
  */
-@property (nonatomic, readonly, nullable) id<STPPaymentMethod> selectedPaymentMethod;
+@property (nonatomic, readonly, nullable) id<STPPaymentOption> selectedPaymentMethod;
 
 /**
  The available payment methods the user can choose between. May be nil.
  */
-@property (nonatomic, readonly, nullable) NSArray<id<STPPaymentMethod>> *paymentMethods;
+@property (nonatomic, readonly, nullable) NSArray<id<STPPaymentOption>> *paymentMethods;
 
 /**
  The user's currently selected shipping method. May be nil.

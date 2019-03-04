@@ -38,8 +38,8 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 @property (nonatomic, strong, nullable, readwrite) id<STPBackendAPIAdapter> apiAdapter;
 @property (nonatomic, strong, nullable, readwrite) STPUserInformation *prefilledInformation;
 @property (nonatomic, strong, nullable, readwrite) STPAddress *shippingAddress;
-@property (nonatomic, strong, readwrite) NSArray<id<STPPaymentMethod>> *paymentMethods;
-@property (nonatomic, strong, nullable, readwrite) id<STPPaymentMethod> selectedPaymentMethod;
+@property (nonatomic, strong, readwrite) NSArray<id<STPPaymentOption>> *paymentMethods;
+@property (nonatomic, strong, nullable, readwrite) id<STPPaymentOption> selectedPaymentMethod;
 @property (nonatomic, weak, nullable, readwrite) id<STPPaymentMethodsInternalViewControllerDelegate> delegate;
 
 @property (nonatomic, strong, readwrite) UIImageView *cardImageView;
@@ -129,7 +129,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 }
 
 - (BOOL)isAnyPaymentMethodDetachable {
-    for (id<STPPaymentMethod> paymentMethod in self.paymentMethods) {
+    for (id<STPPaymentOption> paymentMethod in self.paymentMethods) {
         if ([self isPaymentMethodDetachable:paymentMethod]) {
             return YES;
         }
@@ -138,7 +138,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     return NO;
 }
 
-- (BOOL)isPaymentMethodDetachable:(id<STPPaymentMethod>)paymentMethod {
+- (BOOL)isPaymentMethodDetachable:(id<STPPaymentOption>)paymentMethod {
     if (!self.configuration.canDeletePaymentMethods) {
         // Feature is disabled
         return NO;
@@ -236,7 +236,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     STPPaymentMethodTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:PaymentMethodCellReuseIdentifier forIndexPath:indexPath];
 
     if (indexPath.section == PaymentMethodSectionCardList) {
-        id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
+        id<STPPaymentOption> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
         BOOL selected = [paymentMethod isEqual:self.selectedPaymentMethod];
 
         [cell configureWithPaymentMethod:paymentMethod theme:self.theme selected:selected];
@@ -250,7 +250,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 
 - (BOOL)tableView:(__unused UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == PaymentMethodSectionCardList) {
-        id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
+        id<STPPaymentOption> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
 
         if ([self isPaymentMethodDetachable:paymentMethod]) {
             return YES;
@@ -274,7 +274,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
             return;
         }
 
-        id<STPPaymentMethod> paymentMethodToDelete = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
+        id<STPPaymentOption> paymentMethodToDelete = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
 
         if (![self isPaymentMethodDetachable:paymentMethodToDelete]) {
             // Showed the user a delete option for a payment method when we shouldn't have
@@ -314,7 +314,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == PaymentMethodSectionCardList) {
         // Update data source
-        id<STPPaymentMethod> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
+        id<STPPaymentOption> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
         self.selectedPaymentMethod = paymentMethod;
 
         // Perform selection animation

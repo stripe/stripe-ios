@@ -51,8 +51,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 @property (nonatomic) STPVoidPromise *didAppearPromise;
 
 @property (nonatomic, weak) STPPaymentMethodsViewController *paymentMethodsViewController;
-@property (nonatomic) id<STPPaymentMethod> selectedPaymentMethod;
-@property (nonatomic) NSArray<id<STPPaymentMethod>> *paymentMethods;
+@property (nonatomic) id<STPPaymentOption> selectedPaymentMethod;
+@property (nonatomic) NSArray<id<STPPaymentOption>> *paymentMethods;
 @property (nonatomic) STPAddress *shippingAddress;
 @property (nonatomic) PKShippingMethod *selectedShippingMethod;
 @property (nonatomic) NSArray<PKShippingMethod *> *shippingMethods;
@@ -206,9 +206,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }
 }
 
-- (void)setPaymentMethods:(NSArray<id<STPPaymentMethod>> *)paymentMethods {
-    _paymentMethods = [paymentMethods sortedArrayUsingComparator:^NSComparisonResult(id<STPPaymentMethod> obj1, id<STPPaymentMethod> obj2) {
-        Class applePayKlass = [STPApplePayPaymentMethod class];
+- (void)setPaymentMethods:(NSArray<id<STPPaymentOption>> *)paymentMethods {
+    _paymentMethods = [paymentMethods sortedArrayUsingComparator:^NSComparisonResult(id<STPPaymentOption> obj1, id<STPPaymentOption> obj2) {
+        Class applePayKlass = [STPApplePay class];
         Class cardKlass = [STPCard class];
         if ([obj1 isKindOfClass:applePayKlass]) {
             return NSOrderedAscending;
@@ -223,7 +223,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
-- (void)setSelectedPaymentMethod:(id<STPPaymentMethod>)selectedPaymentMethod {
+- (void)setSelectedPaymentMethod:(id<STPPaymentOption>)selectedPaymentMethod {
     if (selectedPaymentMethod && ![self.paymentMethods containsObject:selectedPaymentMethod]) {
         self.paymentMethods = [self.paymentMethods arrayByAddingObject:selectedPaymentMethod];
     }
@@ -267,7 +267,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }
 }
 
-- (void)removePaymentMethod:(id<STPPaymentMethod>)paymentMethodToRemove {
+- (void)removePaymentMethod:(id<STPPaymentOption>)paymentMethodToRemove {
     // Remove payment method from cached representation
     NSMutableArray *paymentMethods = [self.paymentMethods mutableCopy];
     [paymentMethods removeObject:paymentMethodToRemove];
@@ -345,7 +345,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 }
 
 - (void)paymentMethodsViewController:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController
-              didSelectPaymentMethod:(id<STPPaymentMethod>)paymentMethod {
+              didSelectPaymentMethod:(id<STPPaymentOption>)paymentMethod {
     self.selectedPaymentMethod = paymentMethod;
 }
 
@@ -596,7 +596,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                 });
             }];
         }
-        else if ([self.selectedPaymentMethod isKindOfClass:[STPApplePayPaymentMethod class]]) {
+        else if ([self.selectedPaymentMethod isKindOfClass:[STPApplePay class]]) {
             self.state = STPPaymentContextStateRequestingPayment;
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
             STPShippingAddressSelectionBlock shippingAddressHandler = ^(STPAddress *shippingAddress, STPShippingAddressValidationBlock completion) {
