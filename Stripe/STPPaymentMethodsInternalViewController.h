@@ -9,7 +9,7 @@
 #import "STPCoreTableViewController.h"
 #import "STPBlocks.h"
 
-@class STPAddress, STPCustomerContext, STPPaymentConfiguration, STPPaymentMethodTuple, STPToken, STPUserInformation;
+@class STPAddress, STPCustomerContext, STPPaymentConfiguration, STPPaymentOptionTuple, STPToken, STPUserInformation;
 
 @protocol STPPaymentOption;
 
@@ -31,10 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
                                 theme:(STPTheme *)theme
                  prefilledInformation:(nullable STPUserInformation *)prefilledInformation
                       shippingAddress:(nullable STPAddress *)shippingAddress
-                   paymentMethodTuple:(STPPaymentMethodTuple *)tuple
+                   paymentMethodTuple:(STPPaymentOptionTuple *)tuple
                              delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate;
 
-- (void)updateWithPaymentMethodTuple:(STPPaymentMethodTuple *)tuple;
+- (void)updateWithPaymentMethodTuple:(STPPaymentOptionTuple *)tuple;
 
 @property (nonatomic, strong, nullable) UIView *customFooterView;
 @property (nonatomic, assign) BOOL createsCardSources;

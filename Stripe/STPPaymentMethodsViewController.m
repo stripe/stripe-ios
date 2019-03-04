@@ -20,7 +20,7 @@
 #import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentContext+Private.h"
 #import "STPPaymentContext.h"
-#import "STPPaymentMethodTuple.h"
+#import "STPPaymentOptionTuple.h"
 #import "STPPaymentMethodsInternalViewController.h"
 #import "STPPaymentMethodsViewController+Private.h"
 #import "STPSource.h"
@@ -39,7 +39,7 @@
 @property (nonatomic) STPAddress *shippingAddress;
 @property (nonatomic) id<STPBackendAPIAdapter> apiAdapter;
 @property (nonatomic) STPAPIClient *apiClient;
-@property (nonatomic) STPPromise<STPPaymentMethodTuple *> *loadingPromise;
+@property (nonatomic) STPPromise<STPPaymentOptionTuple *> *loadingPromise;
 @property (nonatomic, weak) STPPaymentActivityIndicatorView *activityIndicator;
 @property (nonatomic, weak) UIViewController *internalViewController;
 @property (nonatomic) BOOL loading;
@@ -68,7 +68,7 @@
                                 theme:(STPTheme *)theme
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
-    STPPromise<STPPaymentMethodTuple *> *promise = [self retrieveCustomerWithConfiguration:configuration apiAdapter:apiAdapter];
+    STPPromise<STPPaymentOptionTuple *> *promise = [self retrieveCustomerWithConfiguration:configuration apiAdapter:apiAdapter];
     return [self initWithConfiguration:configuration
                             apiAdapter:apiAdapter
                         loadingPromise:promise
@@ -77,15 +77,15 @@
                               delegate:delegate];
 }
 
-- (STPPromise<STPPaymentMethodTuple *>*)retrieveCustomerWithConfiguration:(STPPaymentConfiguration *)configuration
+- (STPPromise<STPPaymentOptionTuple *>*)retrieveCustomerWithConfiguration:(STPPaymentConfiguration *)configuration
                                                                apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter {
-    STPPromise<STPPaymentMethodTuple *> *promise = [STPPromise new];
+    STPPromise<STPPaymentOptionTuple *> *promise = [STPPromise new];
     [apiAdapter retrieveCustomer:^(STPCustomer * _Nullable customer, NSError * _Nullable error) {
         stpDispatchToMainThreadIfNecessary(^{
             if (error) {
                 [promise fail:error];
             } else {
-                STPPaymentMethodTuple *paymentTuple = [customer filteredSourceTupleForUIWithConfiguration:configuration];
+                STPPaymentOptionTuple *paymentTuple = [customer filteredSourceTupleForUIWithConfiguration:configuration];
                 [promise succeed:paymentTuple];
             }
         });
@@ -102,13 +102,13 @@
     self.activityIndicator = activityIndicator;
 
     WEAK(self);
-    [self.loadingPromise onSuccess:^(STPPaymentMethodTuple *tuple) {
+    [self.loadingPromise onSuccess:^(STPPaymentOptionTuple *tuple) {
         STRONG(self);
         if (!self) {
             return;
         }
         UIViewController *internal;
-        if (tuple.paymentMethods.count > 0) {
+        if (tuple.paymentOptions.count > 0) {
             STPCustomerContext *customerContext = ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) ? (STPCustomerContext *)self.apiAdapter : nil;
 
             STPPaymentMethodsInternalViewController *payMethodsInternal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:self.configuration
@@ -185,8 +185,8 @@
         // Make this payment method the default source
         [self.apiAdapter selectDefaultCustomerSource:source completion:^(__unused NSError *error) {
             // Reload the internal payment methods view controller with the updated customer
-            STPPromise<STPPaymentMethodTuple *> *promise = [self retrieveCustomerWithConfiguration:self.configuration apiAdapter:self.apiAdapter];
-            [promise onSuccess:^(STPPaymentMethodTuple *tuple) {
+            STPPromise<STPPaymentOptionTuple *> *promise = [self retrieveCustomerWithConfiguration:self.configuration apiAdapter:self.apiAdapter];
+            [promise onSuccess:^(STPPaymentOptionTuple *tuple) {
                 stpDispatchToMainThreadIfNecessary(^{
                     if ([self.internalViewController isKindOfClass:[STPPaymentMethodsInternalViewController class]]) {
                         STPPaymentMethodsInternalViewController *paymentMethodsVC = (STPPaymentMethodsInternalViewController *)self.internalViewController;
@@ -287,7 +287,7 @@
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                       loadingPromise:(STPPromise<STPPaymentMethodTuple *> *)loadingPromise
+                       loadingPromise:(STPPromise<STPPaymentOptionTuple *> *)loadingPromise
                                 theme:(STPTheme *)theme
                       shippingAddress:(STPAddress *)shippingAddress
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
@@ -305,16 +305,16 @@
         WEAK(self);
         [[[self.stp_didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
             return loadingPromise;
-        }] onSuccess:^(STPPaymentMethodTuple *tuple) {
+        }] onSuccess:^(STPPaymentOptionTuple *tuple) {
             STRONG(self);
             if (!self) {
                 return;
             }
 
-            if (tuple.selectedPaymentMethod) {
+            if (tuple.selectedPaymentOption) {
                 if ([self.delegate respondsToSelector:@selector(paymentMethodsViewController:didSelectPaymentMethod:)]) {
                     [self.delegate paymentMethodsViewController:self
-                                         didSelectPaymentMethod:tuple.selectedPaymentMethod];
+                                         didSelectPaymentMethod:tuple.selectedPaymentOption];
                 }
             }
         }] onFailure:^(NSError *error) {

@@ -11,14 +11,14 @@
 #import "STPBackendAPIAdapter.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentOption.h"
-#import "STPPaymentMethodTuple.h"
+#import "STPPaymentOptionTuple.h"
 #import "STPPromise.h"
 
 @interface STPPaymentMethodsViewController (Private)
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                       loadingPromise:(STPPromise<STPPaymentMethodTuple *> *)loadingPromise
+                       loadingPromise:(STPPromise<STPPaymentOptionTuple *> *)loadingPromise
                                 theme:(STPTheme *)theme
                       shippingAddress:(STPAddress *)shippingAddress
                              delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;

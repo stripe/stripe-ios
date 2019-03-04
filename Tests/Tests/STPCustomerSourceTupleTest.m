@@ -40,19 +40,19 @@
     STPPaymentConfiguration *config = [STPMocks paymentConfigurationWithApplePaySupportingDevice];
     config.additionalPaymentMethods = applePayEnabled ? STPPaymentOptionTypeAll : STPPaymentOptionTypeNone;
 
-    STPPaymentMethodTuple *tuple = [sut filteredSourceTupleForUIWithConfiguration:config];
+    STPPaymentOptionTuple *tuple = [sut filteredSourceTupleForUIWithConfiguration:config];
     XCTAssertNotNil(tuple);
 
     if (expectedSelectedSource) {
-        XCTAssertEqualObjects(tuple.selectedPaymentMethod, expectedSelectedSource);
+        XCTAssertEqualObjects(tuple.selectedPaymentOption, expectedSelectedSource);
     }
     else {
-        XCTAssertNil(tuple.selectedPaymentMethod);
+        XCTAssertNil(tuple.selectedPaymentOption);
     }
 
-    XCTAssertNotNil(tuple.paymentMethods);
+    XCTAssertNotNil(tuple.paymentOptions);
 
-    XCTAssertTrue(tuple.paymentMethods.count == expectedSourceCount);
+    XCTAssertTrue(tuple.paymentOptions.count == expectedSourceCount);
 }
 
 /**

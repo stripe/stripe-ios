@@ -8,7 +8,7 @@
 
 #import <Stripe/Stripe.h>
 
-#import "STPPaymentMethodTuple.h"
+#import "STPPaymentOptionTuple.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @return A new tuple ready to be used by the SDK's UI elements
  */
-- (STPPaymentMethodTuple *)filteredSourceTupleForUIWithConfiguration:(STPPaymentConfiguration *)configuration;
+- (STPPaymentOptionTuple *)filteredSourceTupleForUIWithConfiguration:(STPPaymentConfiguration *)configuration;
 
 @end
 

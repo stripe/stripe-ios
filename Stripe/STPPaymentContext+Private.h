@@ -8,7 +8,7 @@
 
 #import <Stripe/Stripe.h>
 
-#import "STPPaymentMethodTuple.h"
+#import "STPPaymentOptionTuple.h"
 #import "STPPromise.h"
 #import "STPShippingAddressViewController.h"
 
@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STPPaymentContext (Private)<STPPaymentMethodsViewControllerDelegate, STPShippingAddressViewControllerDelegate>
 
-@property (nonatomic, readonly) STPPromise<STPPaymentMethodTuple *> *currentValuePromise;
+@property (nonatomic, readonly) STPPromise<STPPaymentOptionTuple *> *currentValuePromise;
 
 - (void)removePaymentMethod:(id<STPPaymentOption>)paymentMethodToRemove;
 

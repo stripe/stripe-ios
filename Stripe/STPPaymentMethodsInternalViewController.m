@@ -18,7 +18,7 @@
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
 #import "STPPaymentMethodTableViewCell.h"
-#import "STPPaymentMethodTuple.h"
+#import "STPPaymentOptionTuple.h"
 #import "STPPromise.h"
 #import "STPSource.h"
 #import "STPSourceProtocol.h"
@@ -53,7 +53,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
                                 theme:(STPTheme *)theme
                  prefilledInformation:(nullable STPUserInformation *)prefilledInformation
                       shippingAddress:(nullable STPAddress *)shippingAddress
-                   paymentMethodTuple:(STPPaymentMethodTuple *)tuple
+                   paymentMethodTuple:(STPPaymentOptionTuple *)tuple
                              delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate {
     self = [super initWithTheme:theme];
     if (self) {
@@ -62,8 +62,8 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
         _apiAdapter = customerContext;
         _prefilledInformation = prefilledInformation;
         _shippingAddress = shippingAddress;
-        _paymentMethods = tuple.paymentMethods;
-        _selectedPaymentMethod = tuple.selectedPaymentMethod;
+        _paymentMethods = tuple.paymentOptions;
+        _selectedPaymentMethod = tuple.selectedPaymentOption;
         _delegate = delegate;
         _createsCardSources = NO;
 
@@ -174,14 +174,14 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     return YES;
 }
 
-- (void)updateWithPaymentMethodTuple:(STPPaymentMethodTuple *)tuple {
-    if ([self.paymentMethods isEqualToArray:tuple.paymentMethods] &&
-        [self.selectedPaymentMethod isEqual:tuple.selectedPaymentMethod]) {
+- (void)updateWithPaymentMethodTuple:(STPPaymentOptionTuple *)tuple {
+    if ([self.paymentMethods isEqualToArray:tuple.paymentOptions] &&
+        [self.selectedPaymentMethod isEqual:tuple.selectedPaymentOption]) {
         return;
     }
 
-    self.paymentMethods = tuple.paymentMethods;
-    self.selectedPaymentMethod = tuple.selectedPaymentMethod;
+    self.paymentMethods = tuple.paymentOptions;
+    self.selectedPaymentMethod = tuple.selectedPaymentOption;
 
     // Reload card list section
     NSMutableIndexSet *sections = [NSMutableIndexSet indexSetWithIndex:PaymentMethodSectionCardList];

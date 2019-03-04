@@ -17,7 +17,7 @@
 #import "STPPaymentConfiguration+Private.h"
 #import "STPPaymentContext+Private.h"
 #import "STPPaymentContextAmountModel.h"
-#import "STPPaymentMethodTuple.h"
+#import "STPPaymentOptionTuple.h"
 #import "STPPromise.h"
 #import "STPShippingMethodsViewController.h"
 #import "STPWeakStrongMacros.h"
@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 @property (nonatomic) STPTheme *theme;
 @property (nonatomic) id<STPBackendAPIAdapter> apiAdapter;
 @property (nonatomic) STPAPIClient *apiClient;
-@property (nonatomic) STPPromise<STPPaymentMethodTuple *> *loadingPromise;
+@property (nonatomic) STPPromise<STPPaymentOptionTuple *> *loadingPromise;
 
 // these wrap hostViewController's promises because the hostVC is nil at init-time
 @property (nonatomic) STPVoidPromise *willAppearPromise;
@@ -118,10 +118,10 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         [customerContext clearCachedCustomer];
     }
     WEAK(self);
-    self.loadingPromise = [[[STPPromise<STPPaymentMethodTuple *> new] onSuccess:^(STPPaymentMethodTuple *tuple) {
+    self.loadingPromise = [[[STPPromise<STPPaymentOptionTuple *> new] onSuccess:^(STPPaymentOptionTuple *tuple) {
         STRONG(self);
-        self.paymentMethods = tuple.paymentMethods;
-        self.selectedPaymentMethod = tuple.selectedPaymentMethod;
+        self.paymentMethods = tuple.paymentOptions;
+        self.selectedPaymentMethod = tuple.selectedPaymentOption;
     }] onFailure:^(NSError * _Nonnull error) {
         STRONG(self);
         if (self.hostViewController) {
@@ -151,7 +151,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                 self.shippingAddressNeedsVerification = YES;
             }
 
-            STPPaymentMethodTuple *paymentTuple = [customer filteredSourceTupleForUIWithConfiguration:self.configuration];
+            STPPaymentOptionTuple *paymentTuple = [customer filteredSourceTupleForUIWithConfiguration:self.configuration];
 
             [self.loadingPromise succeed:paymentTuple];
         });
@@ -189,12 +189,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
-- (STPPromise<STPPaymentMethodTuple *> *)currentValuePromise {
+- (STPPromise<STPPaymentOptionTuple *> *)currentValuePromise {
     WEAK(self);
-    return (STPPromise<STPPaymentMethodTuple *> *)[self.loadingPromise map:^id _Nonnull(__unused STPPaymentMethodTuple *value) {
+    return (STPPromise<STPPaymentOptionTuple *> *)[self.loadingPromise map:^id _Nonnull(__unused STPPaymentOptionTuple *value) {
         STRONG(self);
-        return [STPPaymentMethodTuple tupleWithPaymentMethods:self.paymentMethods
-                                        selectedPaymentMethod:self.selectedPaymentMethod];
+        return [STPPaymentOptionTuple tupleWithPaymentOptions:self.paymentMethods
+                                        selectedPaymentOption:self.selectedPaymentMethod];
     }];
 }
 
@@ -566,7 +566,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     [[[self.didAppearPromise voidFlatMap:^STPPromise * _Nonnull{
         STRONG(self);
         return self.loadingPromise;
-    }] onSuccess:^(__unused STPPaymentMethodTuple *tuple) {
+    }] onSuccess:^(__unused STPPaymentOptionTuple *tuple) {
         STRONG(self);
         if (!self) {
             return;

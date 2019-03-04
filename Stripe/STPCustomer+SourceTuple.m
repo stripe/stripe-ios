@@ -10,14 +10,14 @@
 
 #import "STPCard.h"
 #import "STPPaymentConfiguration+Private.h"
-#import "STPPaymentMethodTuple.h"
+#import "STPPaymentOptionTuple.h"
 #import "STPSource+Private.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation STPCustomer (SourceTuple)
 
-- (STPPaymentMethodTuple *)filteredSourceTupleForUIWithConfiguration:(STPPaymentConfiguration *)configuration {
+- (STPPaymentOptionTuple *)filteredSourceTupleForUIWithConfiguration:(STPPaymentConfiguration *)configuration {
     id<STPPaymentOption> _Nullable selectedMethod = nil;
     NSMutableArray<id<STPPaymentOption>> *methods = [NSMutableArray array];
     for (id<STPSourceProtocol> customerSource in self.sources) {
@@ -40,9 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
 
-    return [STPPaymentMethodTuple tupleWithPaymentMethods:methods
-                                    selectedPaymentMethod:selectedMethod
-                                        addApplePayMethod:configuration.applePayEnabled];
+    return [STPPaymentOptionTuple tupleWithPaymentOptions:methods
+                                    selectedPaymentOption:selectedMethod
+                                        addApplePayOption:configuration.applePayEnabled];
 }
 
 @end
