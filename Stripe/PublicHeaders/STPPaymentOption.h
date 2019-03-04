@@ -39,7 +39,7 @@ typedef NS_OPTIONS(NSUInteger, STPPaymentOptionType) {
  represents that the user wants to pay with a specific card,
  `STPApplePay`, which represents that the user wants to pay with
  Apple Pay, and `STPSource`. Only `STPSource.type == STPSourceTypeCard` payment
- methods are supported by `STPPaymentContext` and `STPPaymentMethodViewController`,
+ methods are supported by `STPPaymentContext` and `STPPaymentOptionsViewController`,
  but the other types do have basic support for this protocol for use in a custom
  integration.
  */

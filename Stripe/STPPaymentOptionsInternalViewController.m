@@ -1,12 +1,12 @@
 //
-//  STPPaymentMethodsInternalViewController.m
+//  STPPaymentOptionsInternalViewController.m
 //  Stripe
 //
 //  Created by Jack Flintermann on 6/9/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentMethodsInternalViewController.h"
+#import "STPPaymentOptionsInternalViewController.h"
 
 #import "NSArray+Stripe.h"
 #import "STPAddCardViewController.h"
@@ -32,7 +32,7 @@ static NSString * const PaymentMethodCellReuseIdentifier = @"PaymentMethodCellRe
 static NSInteger const PaymentMethodSectionCardList = 0;
 static NSInteger const PaymentMethodSectionAddCard = 1;
 
-@interface STPPaymentMethodsInternalViewController () <UITableViewDataSource, UITableViewDelegate, STPAddCardViewControllerDelegate>
+@interface STPPaymentOptionsInternalViewController () <UITableViewDataSource, UITableViewDelegate, STPAddCardViewControllerDelegate>
 
 @property (nonatomic, strong, readwrite) STPPaymentConfiguration *configuration;
 @property (nonatomic, strong, nullable, readwrite) id<STPBackendAPIAdapter> apiAdapter;
@@ -40,13 +40,13 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 @property (nonatomic, strong, nullable, readwrite) STPAddress *shippingAddress;
 @property (nonatomic, strong, readwrite) NSArray<id<STPPaymentOption>> *paymentMethods;
 @property (nonatomic, strong, nullable, readwrite) id<STPPaymentOption> selectedPaymentMethod;
-@property (nonatomic, weak, nullable, readwrite) id<STPPaymentMethodsInternalViewControllerDelegate> delegate;
+@property (nonatomic, weak, nullable, readwrite) id<STPPaymentOptionsInternalViewControllerDelegate> delegate;
 
 @property (nonatomic, strong, readwrite) UIImageView *cardImageView;
 
 @end
 
-@implementation STPPaymentMethodsInternalViewController
+@implementation STPPaymentOptionsInternalViewController
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                       customerContext:(nullable STPCustomerContext *)customerContext
@@ -54,7 +54,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
                  prefilledInformation:(nullable STPUserInformation *)prefilledInformation
                       shippingAddress:(nullable STPAddress *)shippingAddress
                    paymentMethodTuple:(STPPaymentOptionTuple *)tuple
-                             delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate {
+                             delegate:(id<STPPaymentOptionsInternalViewControllerDelegate>)delegate {
     self = [super initWithTheme:theme];
     if (self) {
         _configuration = configuration;

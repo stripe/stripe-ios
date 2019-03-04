@@ -38,7 +38,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     STPPaymentContextStateRequestingPayment,
 };
 
-@interface STPPaymentContext()<STPPaymentMethodsViewControllerDelegate, STPShippingAddressViewControllerDelegate>
+@interface STPPaymentContext()<STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate>
 
 @property (nonatomic) STPPaymentConfiguration *configuration;
 @property (nonatomic) STPTheme *theme;
@@ -50,7 +50,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 @property (nonatomic) STPVoidPromise *willAppearPromise;
 @property (nonatomic) STPVoidPromise *didAppearPromise;
 
-@property (nonatomic, weak) STPPaymentMethodsViewController *paymentMethodsViewController;
+@property (nonatomic, weak) STPPaymentOptionsViewController *paymentMethodsViewController;
 @property (nonatomic) id<STPPaymentOption> selectedPaymentMethod;
 @property (nonatomic) NSArray<id<STPPaymentOption>> *paymentMethods;
 @property (nonatomic) STPAddress *shippingAddress;
@@ -292,7 +292,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         STRONG(self);
         if (self.state == STPPaymentContextStateNone) {
             self.state = state;
-            STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
+            STPPaymentOptionsViewController *paymentMethodsViewController = [[STPPaymentOptionsViewController alloc] initWithPaymentContext:self];
             self.paymentMethodsViewController = paymentMethodsViewController;
             paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
             paymentMethodsViewController.paymentMethodsViewControllerFooterView = self.paymentMethodsViewControllerFooterView;
@@ -329,7 +329,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         if (self.state == STPPaymentContextStateNone) {
             self.state = STPPaymentContextStateShowingRequestedViewController;
 
-            STPPaymentMethodsViewController *paymentMethodsViewController = [[STPPaymentMethodsViewController alloc] initWithPaymentContext:self];
+            STPPaymentOptionsViewController *paymentMethodsViewController = [[STPPaymentOptionsViewController alloc] initWithPaymentContext:self];
             self.paymentMethodsViewController = paymentMethodsViewController;
             paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
             paymentMethodsViewController.paymentMethodsViewControllerFooterView = self.paymentMethodsViewControllerFooterView;
@@ -344,12 +344,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
-- (void)paymentMethodsViewController:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController
+- (void)paymentMethodsViewController:(__unused STPPaymentOptionsViewController *)paymentMethodsViewController
               didSelectPaymentMethod:(id<STPPaymentOption>)paymentMethod {
     self.selectedPaymentMethod = paymentMethod;
 }
 
-- (void)paymentMethodsViewControllerDidFinish:(STPPaymentMethodsViewController *)paymentMethodsViewController {
+- (void)paymentMethodsViewControllerDidFinish:(STPPaymentOptionsViewController *)paymentMethodsViewController {
     [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController completion:^{
         if (self.state == STPPaymentContextStateRequestingPayment) {
             self.state = STPPaymentContextStateNone;
@@ -361,7 +361,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
-- (void)paymentMethodsViewControllerDidCancel:(STPPaymentMethodsViewController *)paymentMethodsViewController {
+- (void)paymentMethodsViewControllerDidCancel:(STPPaymentOptionsViewController *)paymentMethodsViewController {
     [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController completion:^{
         if (self.state == STPPaymentContextStateRequestingPayment) {
             [self didFinishWithStatus:STPPaymentStatusUserCancellation
@@ -373,12 +373,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
-- (void)paymentMethodsViewController:(__unused STPPaymentMethodsViewController *)paymentMethodsViewController
+- (void)paymentMethodsViewController:(__unused STPPaymentOptionsViewController *)paymentMethodsViewController
               didFailToLoadWithError:(__unused NSError *)error {
     // we'll handle this ourselves when the loading promise fails.
 }
 
-- (void)appropriatelyDismissPaymentMethodsViewController:(STPPaymentMethodsViewController *)viewController
+- (void)appropriatelyDismissPaymentMethodsViewController:(STPPaymentOptionsViewController *)viewController
                                               completion:(STPVoidBlock)completion {
     if ([viewController stp_isAtRootOfNavigationController]) {
         // if we're the root of the navigation controller, we've been presented modally.

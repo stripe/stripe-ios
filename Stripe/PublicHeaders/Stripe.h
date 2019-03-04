@@ -43,7 +43,7 @@
 #import "STPPaymentIntentSourceAction.h"
 #import "STPPaymentIntentSourceActionAuthorizeWithURL.h"
 #import "STPPaymentOption.h"
-#import "STPPaymentMethodsViewController.h"
+#import "STPPaymentOptionsViewController.h"
 #import "STPPaymentResult.h"
 #import "STPRedirectContext.h"
 #import "STPShippingAddressViewController.h"

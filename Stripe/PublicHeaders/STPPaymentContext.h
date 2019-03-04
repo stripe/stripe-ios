@@ -278,7 +278,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)retryLoading;
 
 /**
- This creates, configures, and appropriately presents an `STPPaymentMethodsViewController` 
+ This creates, configures, and appropriately presents an `STPPaymentOptionsViewController` 
  on top of the payment context's `hostViewController`. It'll be dismissed automatically 
  when the user is done selecting their payment method.
 
@@ -288,7 +288,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)presentPaymentMethodsViewController;
 
 /**
- This creates, configures, and appropriately pushes an `STPPaymentMethodsViewController` 
+ This creates, configures, and appropriately pushes an `STPPaymentOptionsViewController` 
  onto the navigation stack of the context's `hostViewController`. It'll be popped 
  automatically when the user is done selecting their payment method.
 

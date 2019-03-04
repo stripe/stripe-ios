@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodsInternalViewController.h
+//  STPPaymentOptionsInternalViewController.h
 //  Stripe
 //
 //  Created by Jack Flintermann on 6/9/16.
@@ -15,7 +15,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol STPPaymentMethodsInternalViewControllerDelegate
+@protocol STPPaymentOptionsInternalViewControllerDelegate
 
 - (void)internalViewControllerDidSelectPaymentMethod:(id<STPPaymentOption>)paymentMethod;
 - (void)internalViewControllerDidDeletePaymentMethod:(id<STPPaymentOption>)paymentMethod;
@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface STPPaymentMethodsInternalViewController : STPCoreTableViewController
+@interface STPPaymentOptionsInternalViewController : STPCoreTableViewController
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                       customerContext:(nullable STPCustomerContext *)customerContext
@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
                  prefilledInformation:(nullable STPUserInformation *)prefilledInformation
                       shippingAddress:(nullable STPAddress *)shippingAddress
                    paymentMethodTuple:(STPPaymentOptionTuple *)tuple
-                             delegate:(id<STPPaymentMethodsInternalViewControllerDelegate>)delegate;
+                             delegate:(id<STPPaymentOptionsInternalViewControllerDelegate>)delegate;
 
 - (void)updateWithPaymentMethodTuple:(STPPaymentOptionTuple *)tuple;
 

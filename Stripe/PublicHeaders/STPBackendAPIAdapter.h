@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
  If you would prefer retrieving and updating your Stripe customer object via
  your own backend instead of using `STPCustomerContext`, you should make your 
  application's API client conform to this interface. It provides a "bridge" from 
- the prebuilt UI we expose (such as `STPPaymentMethodsViewController`) to your
+ the prebuilt UI we expose (such as `STPPaymentOptionsViewController`) to your
  backend to fetch the information it needs to power those views.
  */
 @protocol STPBackendAPIAdapter<NSObject>

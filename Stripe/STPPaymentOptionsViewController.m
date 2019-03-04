@@ -1,12 +1,12 @@
 //
-//  STPPaymentMethodsViewController.m
+//  STPPaymentOptionsViewController.m
 //  Stripe
 //
 //  Created by Jack Flintermann on 1/12/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentMethodsViewController.h"
+#import "STPPaymentOptionsViewController.h"
 
 #import "STPAPIClient.h"
 #import "STPAddCardViewController+Private.h"
@@ -21,8 +21,8 @@
 #import "STPPaymentContext+Private.h"
 #import "STPPaymentContext.h"
 #import "STPPaymentOptionTuple.h"
-#import "STPPaymentMethodsInternalViewController.h"
-#import "STPPaymentMethodsViewController+Private.h"
+#import "STPPaymentOptionsInternalViewController.h"
+#import "STPPaymentOptionsViewController+Private.h"
 #import "STPSource.h"
 #import "STPTheme.h"
 #import "STPToken.h"
@@ -33,7 +33,7 @@
 #import "UIViewController+Stripe_ParentViewController.h"
 #import "UIViewController+Stripe_Promises.h"
 
-@interface STPPaymentMethodsViewController()<STPPaymentMethodsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
+@interface STPPaymentOptionsViewController()<STPPaymentOptionsInternalViewControllerDelegate, STPAddCardViewControllerDelegate>
 
 @property (nonatomic) STPPaymentConfiguration *configuration;
 @property (nonatomic) STPAddress *shippingAddress;
@@ -46,7 +46,7 @@
 
 @end
 
-@implementation STPPaymentMethodsViewController
+@implementation STPPaymentOptionsViewController
 
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext {
     return [self initWithConfiguration:paymentContext.configuration
@@ -60,14 +60,14 @@
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                                 theme:(STPTheme *)theme
                       customerContext:(STPCustomerContext *)customerContext
-                             delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
+                             delegate:(id<STPPaymentOptionsViewControllerDelegate>)delegate {
     return [self initWithConfiguration:configuration theme:theme apiAdapter:customerContext delegate:delegate];
 }
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                                 theme:(STPTheme *)theme
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                             delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
+                             delegate:(id<STPPaymentOptionsViewControllerDelegate>)delegate {
     STPPromise<STPPaymentOptionTuple *> *promise = [self retrieveCustomerWithConfiguration:configuration apiAdapter:apiAdapter];
     return [self initWithConfiguration:configuration
                             apiAdapter:apiAdapter
@@ -111,7 +111,7 @@
         if (tuple.paymentOptions.count > 0) {
             STPCustomerContext *customerContext = ([self.apiAdapter isKindOfClass:[STPCustomerContext class]]) ? (STPCustomerContext *)self.apiAdapter : nil;
 
-            STPPaymentMethodsInternalViewController *payMethodsInternal = [[STPPaymentMethodsInternalViewController alloc] initWithConfiguration:self.configuration
+            STPPaymentOptionsInternalViewController *payMethodsInternal = [[STPPaymentOptionsInternalViewController alloc] initWithConfiguration:self.configuration
                                                                                                                                  customerContext:customerContext
                                                                                                                                            theme:self.theme
                                                                                                                             prefilledInformation:self.prefilledInformation
@@ -188,8 +188,8 @@
             STPPromise<STPPaymentOptionTuple *> *promise = [self retrieveCustomerWithConfiguration:self.configuration apiAdapter:self.apiAdapter];
             [promise onSuccess:^(STPPaymentOptionTuple *tuple) {
                 stpDispatchToMainThreadIfNecessary(^{
-                    if ([self.internalViewController isKindOfClass:[STPPaymentMethodsInternalViewController class]]) {
-                        STPPaymentMethodsInternalViewController *paymentMethodsVC = (STPPaymentMethodsInternalViewController *)self.internalViewController;
+                    if ([self.internalViewController isKindOfClass:[STPPaymentOptionsInternalViewController class]]) {
+                        STPPaymentOptionsInternalViewController *paymentMethodsVC = (STPPaymentOptionsInternalViewController *)self.internalViewController;
                         [paymentMethodsVC updateWithPaymentMethodTuple:tuple];
                     }
                 });
@@ -283,14 +283,14 @@
 
 @end
 
-@implementation STPPaymentMethodsViewController (Private)
+@implementation STPPaymentOptionsViewController (Private)
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
                        loadingPromise:(STPPromise<STPPaymentOptionTuple *> *)loadingPromise
                                 theme:(STPTheme *)theme
                       shippingAddress:(STPAddress *)shippingAddress
-                             delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
+                             delegate:(id<STPPaymentOptionsViewControllerDelegate>)delegate {
     self = [super initWithTheme:theme];
     if (self) {
         _configuration = configuration;

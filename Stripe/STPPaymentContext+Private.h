@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPPaymentContext (Private)<STPPaymentMethodsViewControllerDelegate, STPShippingAddressViewControllerDelegate>
+@interface STPPaymentContext (Private)<STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate>
 
 @property (nonatomic, readonly) STPPromise<STPPaymentOptionTuple *> *currentValuePromise;
 

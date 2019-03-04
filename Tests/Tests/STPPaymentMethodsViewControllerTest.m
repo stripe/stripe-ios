@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodsViewControllerTest.m
+//  STPPaymentOptionsViewControllerTest.m
 //  Stripe
 //
 //  Created by Brian Dorfman on 10/10/17.
@@ -10,23 +10,23 @@
 #import <OCMock/OCMock.h>
 #import "STPFixtures.h"
 #import "STPMocks.h"
-#import "STPPaymentMethodsInternalViewController.h"
+#import "STPPaymentOptionsInternalViewController.h"
 
-@interface STPPaymentMethodsViewController (Testing)
+@interface STPPaymentOptionsViewController (Testing)
 @property(nonatomic, weak)UIViewController *internalViewController;
 @end
 
-@interface STPPaymentMethodsViewControllerTest : XCTestCase
+@interface STPPaymentOptionsViewControllerTest : XCTestCase
 @end
 
-@implementation STPPaymentMethodsViewControllerTest
+@implementation STPPaymentOptionsViewControllerTest
 
-- (STPPaymentMethodsViewController *)buildViewControllerWithCustomer:(STPCustomer *)customer
+- (STPPaymentOptionsViewController *)buildViewControllerWithCustomer:(STPCustomer *)customer
                                                        configuration:(STPPaymentConfiguration *)config
-                                                            delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate {
+                                                            delegate:(id<STPPaymentOptionsViewControllerDelegate>)delegate {
     STPTheme *theme = [STPTheme defaultTheme];
     STPCustomerContext *mockCustomerContext = [STPMocks staticCustomerContextWithCustomer:customer];
-    STPPaymentMethodsViewController *vc = [[STPPaymentMethodsViewController alloc] initWithConfiguration:config
+    STPPaymentOptionsViewController *vc = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config
                                                                                                    theme:theme
                                                                                          customerContext:mockCustomerContext
                                                                                                 delegate:delegate];
@@ -44,8 +44,8 @@
     STPCustomer *customer = [STPFixtures customerWithNoSources];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.additionalPaymentMethods = STPPaymentOptionTypeNone;
-    id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
-    STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
+    id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
+    STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomer:customer
                                                                    configuration:config
                                                                         delegate:delegate];
     XCTAssertTrue([sut.internalViewController isKindOfClass:[STPAddCardViewController class]]);
@@ -53,32 +53,32 @@
 
 /**
  When the customer has a single card token source and the available payment methods
- are card and apple pay, STPPaymentMethodsInternalVC should be shown.
+ are card and apple pay, STPPaymentOptionsInternalVC should be shown.
  */
 - (void)testInitWithSingleCardTokenSourceAndCardAvailable {
     STPCustomer *customer = [STPFixtures customerWithSingleCardTokenSource];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.additionalPaymentMethods = STPPaymentOptionTypeAll;
-    id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
-    STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
+    id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
+    STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomer:customer
                                                                    configuration:config
                                                                         delegate:delegate];
-    XCTAssertTrue([sut.internalViewController isKindOfClass:[STPPaymentMethodsInternalViewController class]]);
+    XCTAssertTrue([sut.internalViewController isKindOfClass:[STPPaymentOptionsInternalViewController class]]);
 }
 
 /**
  When the customer has a single card source source and the available payment methods
- are card only, STPPaymentMethodsInternalVC should be shown.
+ are card only, STPPaymentOptionsInternalVC should be shown.
  */
 - (void)testInitWithSingleCardSourceSourceAndCardAvailable {
     STPCustomer *customer = [STPFixtures customerWithSingleCardSourceSource];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.additionalPaymentMethods = STPPaymentOptionTypeNone;
-    id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
-    STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
+    id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
+    STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomer:customer
                                                                    configuration:config
                                                                         delegate:delegate];
-    XCTAssertTrue([sut.internalViewController isKindOfClass:[STPPaymentMethodsInternalViewController class]]);
+    XCTAssertTrue([sut.internalViewController isKindOfClass:[STPPaymentOptionsInternalViewController class]]);
 }
 
 #pragma clang diagnostic push
@@ -91,8 +91,8 @@
 - (void)testAddCardCancelForwardsToDelegate {
     STPCustomer *customer = [STPFixtures customerWithNoSources];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
-    STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
+    id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
+    STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomer:customer
                                                                    configuration:config
                                                                         delegate:delegate];
     XCTAssertTrue([sut.internalViewController isKindOfClass:[STPAddCardViewController class]]);
@@ -109,11 +109,11 @@
 - (void)testInternalCancelForwardsToDelegate {
     STPCustomer *customer = [STPFixtures customerWithSingleCardTokenSource];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
-    id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
-    STPPaymentMethodsViewController *sut = [self buildViewControllerWithCustomer:customer
+    id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
+    STPPaymentOptionsViewController *sut = [self buildViewControllerWithCustomer:customer
                                                                    configuration:config
                                                                         delegate:delegate];
-    XCTAssertTrue([sut.internalViewController isKindOfClass:[STPPaymentMethodsInternalViewController class]]);
+    XCTAssertTrue([sut.internalViewController isKindOfClass:[STPPaymentOptionsInternalViewController class]]);
     UIBarButtonItem *cancelButton = sut.internalViewController.navigationItem.leftBarButtonItem;
     [cancelButton.target performSelector:cancelButton.action withObject:cancelButton];
 
@@ -129,8 +129,8 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     STPCustomer *customer = [STPFixtures customerWithNoSources];
     STPCustomerContext *mockCustomerContext = [STPMocks staticCustomerContextWithCustomer:customer];
-    id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
-    STPPaymentMethodsViewController *sut = [[STPPaymentMethodsViewController alloc] initWithConfiguration:config
+    id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
+    STPPaymentOptionsViewController *sut = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config
                                                                                                     theme:theme
                                                                                           customerContext:mockCustomerContext
                                                                                                  delegate:delegate];
@@ -177,8 +177,8 @@
     config.createCardSources = YES;
     STPCustomer *customer = [STPFixtures customerWithNoSources];
     STPCustomerContext *mockCustomerContext = [STPMocks staticCustomerContextWithCustomer:customer];
-    id<STPPaymentMethodsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
-    STPPaymentMethodsViewController *sut = [[STPPaymentMethodsViewController alloc] initWithConfiguration:config
+    id<STPPaymentOptionsViewControllerDelegate>delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
+    STPPaymentOptionsViewController *sut = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config
                                                                                                     theme:theme
                                                                                           customerContext:mockCustomerContext
                                                                                                  delegate:delegate];
