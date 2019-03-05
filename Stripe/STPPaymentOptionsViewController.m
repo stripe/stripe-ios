@@ -116,11 +116,11 @@
                                                                                                                                            theme:self.theme
                                                                                                                             prefilledInformation:self.prefilledInformation
                                                                                                                                  shippingAddress:self.shippingAddress
-                                                                                                                              paymentMethodTuple:tuple
+                                                                                                                              paymentOptionTuple:tuple
                                                                                                                                         delegate:self];
             payMethodsInternal.createsCardSources = self.configuration.createCardSources;
-            if (self.paymentMethodsViewControllerFooterView) {
-                payMethodsInternal.customFooterView = self.paymentMethodsViewControllerFooterView;
+            if (self.paymentOptionsViewControllerFooterView) {
+                payMethodsInternal.customFooterView = self.paymentOptionsViewControllerFooterView;
             }
             internal = payMethodsInternal;
         }
@@ -170,16 +170,16 @@
     self.activityIndicator.tintColor = self.theme.accentColor;
 }
 
-- (void)finishWithPaymentMethod:(id<STPPaymentOption>)paymentMethod {
-    BOOL methodIsCardToken = [paymentMethod isKindOfClass:[STPCard class]];
-    BOOL methodIsCardSource = ([paymentMethod isKindOfClass:[STPSource class]] &&
-                               ((STPSource *)paymentMethod).type == STPSourceTypeCard);
+- (void)finishWithPaymentOption:(id<STPPaymentOption>)paymentOption {
+    BOOL methodIsCardToken = [paymentOption isKindOfClass:[STPCard class]];
+    BOOL methodIsCardSource = ([paymentOption isKindOfClass:[STPSource class]] &&
+                               ((STPSource *)paymentOption).type == STPSourceTypeCard);
     id<STPSourceProtocol> source;
     if (methodIsCardToken) {
-        source = (STPCard *)paymentMethod;
+        source = (STPCard *)paymentOption;
     }
     else if (methodIsCardSource) {
-        source = (STPSource *)paymentMethod;
+        source = (STPSource *)paymentOption;
     }
     if (source) {
         // Make this payment method the default source
@@ -189,28 +189,28 @@
             [promise onSuccess:^(STPPaymentOptionTuple *tuple) {
                 stpDispatchToMainThreadIfNecessary(^{
                     if ([self.internalViewController isKindOfClass:[STPPaymentOptionsInternalViewController class]]) {
-                        STPPaymentOptionsInternalViewController *paymentMethodsVC = (STPPaymentOptionsInternalViewController *)self.internalViewController;
-                        [paymentMethodsVC updateWithPaymentMethodTuple:tuple];
+                        STPPaymentOptionsInternalViewController *paymentOptionsVC = (STPPaymentOptionsInternalViewController *)self.internalViewController;
+                        [paymentOptionsVC updateWithPaymentOptionTuple:tuple];
                     }
                 });
             }];
         }];
     }
-    if ([self.delegate respondsToSelector:@selector(paymentMethodsViewController:didSelectPaymentMethod:)]) {
-        [self.delegate paymentMethodsViewController:self didSelectPaymentMethod:paymentMethod];
+    if ([self.delegate respondsToSelector:@selector(paymentOptionsViewController:didSelectPaymentOption:)]) {
+        [self.delegate paymentOptionsViewController:self didSelectPaymentOption:paymentOption];
     }
-    [self.delegate paymentMethodsViewControllerDidFinish:self];
+    [self.delegate paymentOptionsViewControllerDidFinish:self];
 }
 
-- (void)internalViewControllerDidSelectPaymentMethod:(id<STPPaymentOption>)paymentMethod {
-    [self finishWithPaymentMethod:paymentMethod];
+- (void)internalViewControllerDidSelectPaymentOption:(id<STPPaymentOption>)paymentOption {
+    [self finishWithPaymentOption:paymentOption];
 }
 
-- (void)internalViewControllerDidDeletePaymentMethod:(id<STPPaymentOption>)paymentMethod {
+- (void)internalViewControllerDidDeletePaymentOption:(id<STPPaymentOption>)paymentOption {
     if ([self.delegate isKindOfClass:[STPPaymentContext class]]) {
         // Notify payment context to update its copy of payment methods
         STPPaymentContext *paymentContext = (STPPaymentContext *)self.delegate;
-        [paymentContext removePaymentMethod:paymentMethod];
+        [paymentContext removePaymentOption:paymentOption];
     }
 }
 
@@ -231,12 +231,12 @@
                  customer (the card is).
                  */
                 if ([source isKindOfClass:[STPToken class]]) {
-                    [self finishWithPaymentMethod:((STPToken *)source).card];
+                    [self finishWithPaymentOption:((STPToken *)source).card];
                 }
                 // created a card source
                 else if ([source isKindOfClass:[STPSource class]] &&
                          ((STPSource *)source).type == STPSourceTypeCard) {
-                    [self finishWithPaymentMethod:(id<STPPaymentOption>)source];
+                    [self finishWithPaymentOption:(id<STPPaymentOption>)source];
                 }
             }
         });
@@ -244,13 +244,13 @@
 }
 
 - (void)internalViewControllerDidCancel {
-    [self.delegate paymentMethodsViewControllerDidCancel:self];
+    [self.delegate paymentOptionsViewControllerDidCancel:self];
 }
 
 - (void)addCardViewControllerDidCancel:(__unused STPAddCardViewController *)addCardViewController {
     // Add card is only our direct delegate if there are no other payment methods possible
     // and we skipped directly to this screen. In this case, a cancel from it is the same as a cancel to us.
-    [self.delegate paymentMethodsViewControllerDidCancel:self];
+    [self.delegate paymentOptionsViewControllerDidCancel:self];
 }
 
 - (void)addCardViewController:(__unused STPAddCardViewController *)addCardViewController
@@ -312,9 +312,9 @@
             }
 
             if (tuple.selectedPaymentOption) {
-                if ([self.delegate respondsToSelector:@selector(paymentMethodsViewController:didSelectPaymentMethod:)]) {
-                    [self.delegate paymentMethodsViewController:self
-                                         didSelectPaymentMethod:tuple.selectedPaymentOption];
+                if ([self.delegate respondsToSelector:@selector(paymentOptionsViewController:didSelectPaymentOption:)]) {
+                    [self.delegate paymentOptionsViewController:self
+                                         didSelectPaymentOption:tuple.selectedPaymentOption];
                 }
             }
         }] onFailure:^(NSError *error) {
@@ -323,7 +323,7 @@
                 return;
             }
 
-            [self.delegate paymentMethodsViewController:self didFailToLoadWithError:error];
+            [self.delegate paymentOptionsViewController:self didFailToLoadWithError:error];
         }];
     }
     return self;

@@ -27,10 +27,10 @@
 #import "UIViewController+Stripe_NavigationItemProxy.h"
 #import "UIViewController+Stripe_Promises.h"
 
-static NSString * const PaymentMethodCellReuseIdentifier = @"PaymentMethodCellReuseIdentifier";
+static NSString * const PaymentOptionCellReuseIdentifier = @"PaymentOptionCellReuseIdentifier";
 
-static NSInteger const PaymentMethodSectionCardList = 0;
-static NSInteger const PaymentMethodSectionAddCard = 1;
+static NSInteger const PaymentOptionSectionCardList = 0;
+static NSInteger const PaymentOptionSectionAddCard = 1;
 
 @interface STPPaymentOptionsInternalViewController () <UITableViewDataSource, UITableViewDelegate, STPAddCardViewControllerDelegate>
 
@@ -38,8 +38,8 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 @property (nonatomic, strong, nullable, readwrite) id<STPBackendAPIAdapter> apiAdapter;
 @property (nonatomic, strong, nullable, readwrite) STPUserInformation *prefilledInformation;
 @property (nonatomic, strong, nullable, readwrite) STPAddress *shippingAddress;
-@property (nonatomic, strong, readwrite) NSArray<id<STPPaymentOption>> *paymentMethods;
-@property (nonatomic, strong, nullable, readwrite) id<STPPaymentOption> selectedPaymentMethod;
+@property (nonatomic, strong, readwrite) NSArray<id<STPPaymentOption>> *paymentOptions;
+@property (nonatomic, strong, nullable, readwrite) id<STPPaymentOption> selectedPaymentOption;
 @property (nonatomic, weak, nullable, readwrite) id<STPPaymentOptionsInternalViewControllerDelegate> delegate;
 
 @property (nonatomic, strong, readwrite) UIImageView *cardImageView;
@@ -53,7 +53,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
                                 theme:(STPTheme *)theme
                  prefilledInformation:(nullable STPUserInformation *)prefilledInformation
                       shippingAddress:(nullable STPAddress *)shippingAddress
-                   paymentMethodTuple:(STPPaymentOptionTuple *)tuple
+                   paymentOptionTuple:(STPPaymentOptionTuple *)tuple
                              delegate:(id<STPPaymentOptionsInternalViewControllerDelegate>)delegate {
     self = [super initWithTheme:theme];
     if (self) {
@@ -62,8 +62,8 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
         _apiAdapter = customerContext;
         _prefilledInformation = prefilledInformation;
         _shippingAddress = shippingAddress;
-        _paymentMethods = tuple.paymentOptions;
-        _selectedPaymentMethod = tuple.selectedPaymentOption;
+        _paymentOptions = tuple.paymentOptions;
+        _selectedPaymentOption = tuple.selectedPaymentOption;
         _delegate = delegate;
         _createsCardSources = NO;
 
@@ -76,7 +76,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     [super createAndSetupViews];
 
     // Table view
-    [self.tableView registerClass:[STPPaymentOptionTableViewCell class] forCellReuseIdentifier:PaymentMethodCellReuseIdentifier];
+    [self.tableView registerClass:[STPPaymentOptionTableViewCell class] forCellReuseIdentifier:PaymentOptionCellReuseIdentifier];
 
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
@@ -111,7 +111,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     UIBarButtonItem *barButtonItem;
 
     if (!tableViewIsEditing) {
-        if ([self isAnyPaymentMethodDetachable]) {
+        if ([self isAnyPaymentOptionDetachable]) {
             // Show edit button
             barButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(handleEditButtonTapped:)];
         }
@@ -128,9 +128,9 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     [self.stp_navigationItemProxy setRightBarButtonItem:barButtonItem animated:animated];
 }
 
-- (BOOL)isAnyPaymentMethodDetachable {
-    for (id<STPPaymentOption> paymentMethod in self.paymentMethods) {
-        if ([self isPaymentMethodDetachable:paymentMethod]) {
+- (BOOL)isAnyPaymentOptionDetachable {
+    for (id<STPPaymentOption> paymentOption in self.paymentOptions) {
+        if ([self isPaymentOptionDetachable:paymentOption]) {
             return YES;
         }
     }
@@ -138,8 +138,8 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     return NO;
 }
 
-- (BOOL)isPaymentMethodDetachable:(id<STPPaymentOption>)paymentMethod {
-    if (!self.configuration.canDeletePaymentMethods) {
+- (BOOL)isPaymentOptionDetachable:(id<STPPaymentOption>)paymentOption {
+    if (!self.configuration.canDeletePaymentOptions) {
         // Feature is disabled
         return NO;
     }
@@ -155,17 +155,17 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
         return NO;
     }
 
-    if (!paymentMethod) {
+    if (!paymentOption) {
         // Cannot detach non-existent payment method
         return NO;
     }
 
-    if (paymentMethod == self.selectedPaymentMethod) {
+    if (paymentOption == self.selectedPaymentOption) {
         // Cannot detach selected payment method
         return NO;
     }
 
-    if (![paymentMethod conformsToProtocol:@protocol(STPSourceProtocol)]) {
+    if (![paymentOption conformsToProtocol:@protocol(STPSourceProtocol)]) {
         // Cannot detach non-source payment method
         return NO;
     }
@@ -174,17 +174,17 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
     return YES;
 }
 
-- (void)updateWithPaymentMethodTuple:(STPPaymentOptionTuple *)tuple {
-    if ([self.paymentMethods isEqualToArray:tuple.paymentOptions] &&
-        [self.selectedPaymentMethod isEqual:tuple.selectedPaymentOption]) {
+- (void)updateWithPaymentOptionTuple:(STPPaymentOptionTuple *)tuple {
+    if ([self.paymentOptions isEqualToArray:tuple.paymentOptions] &&
+        [self.selectedPaymentOption isEqual:tuple.selectedPaymentOption]) {
         return;
     }
 
-    self.paymentMethods = tuple.paymentOptions;
-    self.selectedPaymentMethod = tuple.selectedPaymentOption;
+    self.paymentOptions = tuple.paymentOptions;
+    self.selectedPaymentOption = tuple.selectedPaymentOption;
 
     // Reload card list section
-    NSMutableIndexSet *sections = [NSMutableIndexSet indexSetWithIndex:PaymentMethodSectionCardList];
+    NSMutableIndexSet *sections = [NSMutableIndexSet indexSetWithIndex:PaymentOptionSectionCardList];
     [self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
@@ -221,11 +221,11 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 }
 
 - (NSInteger)tableView:(__unused UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == PaymentMethodSectionCardList) {
-        return self.paymentMethods.count;
+    if (section == PaymentOptionSectionCardList) {
+        return self.paymentOptions.count;
     }
 
-    if (section == PaymentMethodSectionAddCard) {
+    if (section == PaymentOptionSectionAddCard) {
         return 1;
     }
 
@@ -233,13 +233,13 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    STPPaymentOptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:PaymentMethodCellReuseIdentifier forIndexPath:indexPath];
+    STPPaymentOptionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:PaymentOptionCellReuseIdentifier forIndexPath:indexPath];
 
-    if (indexPath.section == PaymentMethodSectionCardList) {
-        id<STPPaymentOption> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
-        BOOL selected = [paymentMethod isEqual:self.selectedPaymentMethod];
+    if (indexPath.section == PaymentOptionSectionCardList) {
+        id<STPPaymentOption> paymentOption = [self.paymentOptions stp_boundSafeObjectAtIndex:indexPath.row];
+        BOOL selected = [paymentOption isEqual:self.selectedPaymentOption];
 
-        [cell configureWithPaymentOption:paymentMethod theme:self.theme selected:selected];
+        [cell configureWithPaymentOption:paymentOption theme:self.theme selected:selected];
     }
     else {
         [cell configureForNewCardRowWithTheme:self.theme];
@@ -249,10 +249,10 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 }
 
 - (BOOL)tableView:(__unused UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == PaymentMethodSectionCardList) {
-        id<STPPaymentOption> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
+    if (indexPath.section == PaymentOptionSectionCardList) {
+        id<STPPaymentOption> paymentOption = [self.paymentOptions stp_boundSafeObjectAtIndex:indexPath.row];
 
-        if ([self isPaymentMethodDetachable:paymentMethod]) {
+        if ([self isPaymentOptionDetachable:paymentOption]) {
             return YES;
         }
     }
@@ -261,42 +261,42 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == PaymentMethodSectionCardList) {
+    if (indexPath.section == PaymentOptionSectionCardList) {
         if (editingStyle != UITableViewCellEditingStyleDelete) {
             // Showed the user a non-delete option when we shouldn't have
             [tableView reloadData];
             return;
         }
 
-        if (!(indexPath.row < (NSInteger)self.paymentMethods.count)) {
+        if (!(indexPath.row < (NSInteger)self.paymentOptions.count)) {
             // Data source and table view out of sync for some reason
             [tableView reloadData];
             return;
         }
 
-        id<STPPaymentOption> paymentMethodToDelete = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
+        id<STPPaymentOption> paymentOptionToDelete = [self.paymentOptions stp_boundSafeObjectAtIndex:indexPath.row];
 
-        if (![self isPaymentMethodDetachable:paymentMethodToDelete]) {
+        if (![self isPaymentOptionDetachable:paymentOptionToDelete]) {
             // Showed the user a delete option for a payment method when we shouldn't have
             [tableView reloadData];
             return;
         }
 
-        if (![paymentMethodToDelete conformsToProtocol:@protocol(STPSourceProtocol)]) {
+        if (![paymentOptionToDelete conformsToProtocol:@protocol(STPSourceProtocol)]) {
             // Showed the user a delete option for a payment method when we shouldn't have
             [tableView reloadData];
             return;
         }
 
-        id<STPSourceProtocol> source = (id<STPSourceProtocol>)paymentMethodToDelete;
+        id<STPSourceProtocol> source = (id<STPSourceProtocol>)paymentOptionToDelete;
 
         // Kickoff request to delete source from customer
         [self.apiAdapter detachSourceFromCustomer:source completion:nil];
 
         // Optimistically remove payment method from data source
-        NSMutableArray *paymentMethods = [self.paymentMethods mutableCopy];
-        [paymentMethods removeObjectAtIndex:indexPath.row];
-        self.paymentMethods = paymentMethods;
+        NSMutableArray *paymentOptions = [self.paymentOptions mutableCopy];
+        [paymentOptions removeObjectAtIndex:indexPath.row];
+        self.paymentOptions = paymentOptions;
 
         // Perform deletion animation for single row
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -305,25 +305,25 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
         [self reloadRightBarButtonItemWithTableViewIsEditing:tableView.isEditing animated:YES];
 
         // Notify delegate
-        [self.delegate internalViewControllerDidDeletePaymentMethod:paymentMethodToDelete];
+        [self.delegate internalViewControllerDidDeletePaymentOption:paymentOptionToDelete];
     }
 }
 
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == PaymentMethodSectionCardList) {
+    if (indexPath.section == PaymentOptionSectionCardList) {
         // Update data source
-        id<STPPaymentOption> paymentMethod = [self.paymentMethods stp_boundSafeObjectAtIndex:indexPath.row];
-        self.selectedPaymentMethod = paymentMethod;
+        id<STPPaymentOption> paymentOption = [self.paymentOptions stp_boundSafeObjectAtIndex:indexPath.row];
+        self.selectedPaymentOption = paymentOption;
 
         // Perform selection animation
-        [tableView reloadSections:[NSIndexSet indexSetWithIndex:PaymentMethodSectionCardList] withRowAnimation:UITableViewRowAnimationFade];
+        [tableView reloadSections:[NSIndexSet indexSetWithIndex:PaymentOptionSectionCardList] withRowAnimation:UITableViewRowAnimationFade];
 
         // Notify delegate
-        [self.delegate internalViewControllerDidSelectPaymentMethod:paymentMethod];
+        [self.delegate internalViewControllerDidSelectPaymentOption:paymentOption];
     }
-    else if (indexPath.section == PaymentMethodSectionAddCard) {
+    else if (indexPath.section == PaymentOptionSectionAddCard) {
         STPAddCardViewController *paymentCardViewController = [[STPAddCardViewController alloc] initWithConfiguration:self.configuration theme:self.theme];
         paymentCardViewController.delegate = self;
         paymentCardViewController.prefilledInformation = self.prefilledInformation;
@@ -359,7 +359,7 @@ static NSInteger const PaymentMethodSectionAddCard = 1;
 }
 
 - (UITableViewCellEditingStyle)tableView:(__unused UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == PaymentMethodSectionCardList) {
+    if (indexPath.section == PaymentOptionSectionCardList) {
         return UITableViewCellEditingStyleDelete;
     }
 

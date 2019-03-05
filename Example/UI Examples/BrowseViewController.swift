@@ -93,7 +93,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             present(navigationController, animated: true, completion: nil)
         case .STPPaymentOptionsViewController:
             let config = STPPaymentConfiguration()
-            config.additionalPaymentMethods = .all
+            config.additionalPaymentOptions = .all
             config.requiredBillingAddressFields = .none
             config.appleMerchantIdentifier = "dummy-merchant-id"
             let viewController = STPPaymentOptionsViewController(configuration: config,
@@ -134,15 +134,15 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
 
     // MARK: STPPaymentOptionsViewControllerDelegate
 
-    func paymentMethodsViewControllerDidCancel(_ paymentMethodsViewController: STPPaymentOptionsViewController) {
+    func paymentOptionsViewControllerDidCancel(_ paymentOptionsViewController: STPPaymentOptionsViewController) {
         dismiss(animated: true, completion: nil)
     }
 
-    func paymentMethodsViewControllerDidFinish(_ paymentMethodsViewController: STPPaymentOptionsViewController) {
-        paymentMethodsViewController.navigationController?.popViewController(animated: true)
+    func paymentOptionsViewControllerDidFinish(_ paymentOptionsViewController: STPPaymentOptionsViewController) {
+        paymentOptionsViewController.navigationController?.popViewController(animated: true)
     }
 
-    func paymentMethodsViewController(_ paymentMethodsViewController: STPPaymentOptionsViewController, didFailToLoadWithError error: Error) {
+    func paymentOptionsViewController(_ paymentOptionsViewController: STPPaymentOptionsViewController, didFailToLoadWithError error: Error) {
         dismiss(animated: true, completion: nil)
     }
 

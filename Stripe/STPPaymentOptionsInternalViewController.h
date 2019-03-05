@@ -17,8 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol STPPaymentOptionsInternalViewControllerDelegate
 
-- (void)internalViewControllerDidSelectPaymentMethod:(id<STPPaymentOption>)paymentMethod;
-- (void)internalViewControllerDidDeletePaymentMethod:(id<STPPaymentOption>)paymentMethod;
+- (void)internalViewControllerDidSelectPaymentOption:(id<STPPaymentOption>)paymentOption;
+- (void)internalViewControllerDidDeletePaymentOption:(id<STPPaymentOption>)paymentOption;
 - (void)internalViewControllerDidCreateSource:(id<STPSourceProtocol>)source completion:(STPErrorBlock)completion;
 - (void)internalViewControllerDidCancel;
 
@@ -31,10 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
                                 theme:(STPTheme *)theme
                  prefilledInformation:(nullable STPUserInformation *)prefilledInformation
                       shippingAddress:(nullable STPAddress *)shippingAddress
-                   paymentMethodTuple:(STPPaymentOptionTuple *)tuple
+                   paymentOptionTuple:(STPPaymentOptionTuple *)tuple
                              delegate:(id<STPPaymentOptionsInternalViewControllerDelegate>)delegate;
 
-- (void)updateWithPaymentMethodTuple:(STPPaymentOptionTuple *)tuple;
+- (void)updateWithPaymentOptionTuple:(STPPaymentOptionTuple *)tuple;
 
 @property (nonatomic, strong, nullable) UIView *customFooterView;
 @property (nonatomic, assign) BOOL createsCardSources;

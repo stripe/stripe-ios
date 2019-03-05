@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodTableViewCell.h
+//  STPPaymentOptionTableViewCell.h
 //  Stripe
 //
 //  Created by Ben Guo on 8/30/16.

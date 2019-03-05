@@ -50,9 +50,9 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 @property (nonatomic) STPVoidPromise *willAppearPromise;
 @property (nonatomic) STPVoidPromise *didAppearPromise;
 
-@property (nonatomic, weak) STPPaymentOptionsViewController *paymentMethodsViewController;
-@property (nonatomic) id<STPPaymentOption> selectedPaymentMethod;
-@property (nonatomic) NSArray<id<STPPaymentOption>> *paymentMethods;
+@property (nonatomic, weak) STPPaymentOptionsViewController *paymentOptionsViewController;
+@property (nonatomic) id<STPPaymentOption> selectedPaymentOption;
+@property (nonatomic) NSArray<id<STPPaymentOption>> *paymentOptions;
 @property (nonatomic) STPAddress *shippingAddress;
 @property (nonatomic) PKShippingMethod *selectedShippingMethod;
 @property (nonatomic) NSArray<PKShippingMethod *> *shippingMethods;
@@ -120,14 +120,14 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     WEAK(self);
     self.loadingPromise = [[[STPPromise<STPPaymentOptionTuple *> new] onSuccess:^(STPPaymentOptionTuple *tuple) {
         STRONG(self);
-        self.paymentMethods = tuple.paymentOptions;
-        self.selectedPaymentMethod = tuple.selectedPaymentOption;
+        self.paymentOptions = tuple.paymentOptions;
+        self.selectedPaymentOption = tuple.selectedPaymentOption;
     }] onFailure:^(NSError * _Nonnull error) {
         STRONG(self);
         if (self.hostViewController) {
             [self.didAppearPromise onSuccess:^(__unused id value) {
-                if (self.paymentMethodsViewController) {
-                    [self appropriatelyDismissPaymentMethodsViewController:self.paymentMethodsViewController completion:^{
+                if (self.paymentOptionsViewController) {
+                    [self appropriatelyDismissPaymentOptionsViewController:self.paymentOptionsViewController completion:^{
                         [self.delegate paymentContext:self didFailToLoadWithError:error];
                     }];
                 } else {
@@ -193,8 +193,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     WEAK(self);
     return (STPPromise<STPPaymentOptionTuple *> *)[self.loadingPromise map:^id _Nonnull(__unused STPPaymentOptionTuple *value) {
         STRONG(self);
-        return [STPPaymentOptionTuple tupleWithPaymentOptions:self.paymentMethods
-                                        selectedPaymentOption:self.selectedPaymentMethod];
+        return [STPPaymentOptionTuple tupleWithPaymentOptions:self.paymentOptions
+                                        selectedPaymentOption:self.selectedPaymentOption];
     }];
 }
 
@@ -206,8 +206,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }
 }
 
-- (void)setPaymentMethods:(NSArray<id<STPPaymentOption>> *)paymentMethods {
-    _paymentMethods = [paymentMethods sortedArrayUsingComparator:^NSComparisonResult(id<STPPaymentOption> obj1, id<STPPaymentOption> obj2) {
+- (void)setPaymentOptions:(NSArray<id<STPPaymentOption>> *)paymentOptions {
+    _paymentOptions = [paymentOptions sortedArrayUsingComparator:^NSComparisonResult(id<STPPaymentOption> obj1, id<STPPaymentOption> obj2) {
         Class applePayKlass = [STPApplePay class];
         Class cardKlass = [STPCard class];
         if ([obj1 isKindOfClass:applePayKlass]) {
@@ -223,12 +223,12 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
-- (void)setSelectedPaymentMethod:(id<STPPaymentOption>)selectedPaymentMethod {
-    if (selectedPaymentMethod && ![self.paymentMethods containsObject:selectedPaymentMethod]) {
-        self.paymentMethods = [self.paymentMethods arrayByAddingObject:selectedPaymentMethod];
+- (void)setSelectedPaymentOption:(id<STPPaymentOption>)selectedPaymentOption {
+    if (selectedPaymentOption && ![self.paymentOptions containsObject:selectedPaymentOption]) {
+        self.paymentOptions = [self.paymentOptions arrayByAddingObject:selectedPaymentOption];
     }
-    if (![_selectedPaymentMethod isEqual:selectedPaymentMethod]) {
-        _selectedPaymentMethod = selectedPaymentMethod;
+    if (![_selectedPaymentOption isEqual:selectedPaymentOption]) {
+        _selectedPaymentOption = selectedPaymentOption;
         stpDispatchToMainThreadIfNecessary(^{
             [self.delegate paymentContextDidChange:self];
         });
@@ -267,41 +267,41 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }
 }
 
-- (void)removePaymentMethod:(id<STPPaymentOption>)paymentMethodToRemove {
+- (void)removePaymentOption:(id<STPPaymentOption>)paymentOptionToRemove {
     // Remove payment method from cached representation
-    NSMutableArray *paymentMethods = [self.paymentMethods mutableCopy];
-    [paymentMethods removeObject:paymentMethodToRemove];
-    self.paymentMethods = paymentMethods;
+    NSMutableArray *paymentOptions = [self.paymentOptions mutableCopy];
+    [paymentOptions removeObject:paymentOptionToRemove];
+    self.paymentOptions = paymentOptions;
 
     // Elect new selected payment method if needed
-    if ([self.selectedPaymentMethod isEqual:paymentMethodToRemove]) {
-        self.selectedPaymentMethod = self.paymentMethods.firstObject;
+    if ([self.selectedPaymentOption isEqual:paymentOptionToRemove]) {
+        self.selectedPaymentOption = self.paymentOptions.firstObject;
     }
 }
 
 #pragma mark - Payment Methods
 
-- (void)presentPaymentMethodsViewController {
-    [self presentPaymentMethodsViewControllerWithNewState:STPPaymentContextStateShowingRequestedViewController];
+- (void)presentPaymentOptionsViewController {
+    [self presentPaymentOptionsViewControllerWithNewState:STPPaymentContextStateShowingRequestedViewController];
 }
 
-- (void)presentPaymentMethodsViewControllerWithNewState:(STPPaymentContextState)state {
-    NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushPaymentMethodsViewController on it. Next time, set the hostViewController property first!");
+- (void)presentPaymentOptionsViewControllerWithNewState:(STPPaymentContextState)state {
+    NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushPaymentOptionsViewController on it. Next time, set the hostViewController property first!");
     WEAK(self);
     [self.didAppearPromise voidOnSuccess:^{
         STRONG(self);
         if (self.state == STPPaymentContextStateNone) {
             self.state = state;
-            STPPaymentOptionsViewController *paymentMethodsViewController = [[STPPaymentOptionsViewController alloc] initWithPaymentContext:self];
-            self.paymentMethodsViewController = paymentMethodsViewController;
-            paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
-            paymentMethodsViewController.paymentMethodsViewControllerFooterView = self.paymentMethodsViewControllerFooterView;
-            paymentMethodsViewController.addCardViewControllerFooterView = self.addCardViewControllerFooterView;
+            STPPaymentOptionsViewController *paymentOptionsViewController = [[STPPaymentOptionsViewController alloc] initWithPaymentContext:self];
+            self.paymentOptionsViewController = paymentOptionsViewController;
+            paymentOptionsViewController.prefilledInformation = self.prefilledInformation;
+            paymentOptionsViewController.paymentOptionsViewControllerFooterView = self.paymentOptionsViewControllerFooterView;
+            paymentOptionsViewController.addCardViewControllerFooterView = self.addCardViewControllerFooterView;
             if (@available(iOS 11, *)) {
-                paymentMethodsViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
+                paymentOptionsViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
             }
 
-            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsViewController];
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:paymentOptionsViewController];
             navigationController.navigationBar.stp_theme = self.theme;
             if (@available(iOS 11, *)) {
                 navigationController.navigationBar.prefersLargeTitles = YES;
@@ -314,43 +314,43 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
-- (void)pushPaymentMethodsViewController {
-    NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushPaymentMethodsViewController on it. Next time, set the hostViewController property first!");
+- (void)pushPaymentOptionsViewController {
+    NSCAssert(self.hostViewController != nil, @"hostViewController must not be nil on STPPaymentContext when calling pushPaymentOptionsViewController on it. Next time, set the hostViewController property first!");
     UINavigationController *navigationController;
     if ([self.hostViewController isKindOfClass:[UINavigationController class]]) {
         navigationController = (UINavigationController *)self.hostViewController;
     } else {
         navigationController = self.hostViewController.navigationController;
     }
-    NSCAssert(self.hostViewController != nil, @"The payment context's hostViewController is not a navigation controller, or is not contained in one. Either make sure it is inside a navigation controller before calling pushPaymentMethodsViewController, or call presentPaymentMethodsViewController instead.");
+    NSCAssert(self.hostViewController != nil, @"The payment context's hostViewController is not a navigation controller, or is not contained in one. Either make sure it is inside a navigation controller before calling pushPaymentOptionsViewController, or call presentPaymentOptionsViewController instead.");
     WEAK(self);
     [self.didAppearPromise voidOnSuccess:^{
         STRONG(self);
         if (self.state == STPPaymentContextStateNone) {
             self.state = STPPaymentContextStateShowingRequestedViewController;
 
-            STPPaymentOptionsViewController *paymentMethodsViewController = [[STPPaymentOptionsViewController alloc] initWithPaymentContext:self];
-            self.paymentMethodsViewController = paymentMethodsViewController;
-            paymentMethodsViewController.prefilledInformation = self.prefilledInformation;
-            paymentMethodsViewController.paymentMethodsViewControllerFooterView = self.paymentMethodsViewControllerFooterView;
-            paymentMethodsViewController.addCardViewControllerFooterView = self.addCardViewControllerFooterView;
+            STPPaymentOptionsViewController *paymentOptionsViewController = [[STPPaymentOptionsViewController alloc] initWithPaymentContext:self];
+            self.paymentOptionsViewController = paymentOptionsViewController;
+            paymentOptionsViewController.prefilledInformation = self.prefilledInformation;
+            paymentOptionsViewController.paymentOptionsViewControllerFooterView = self.paymentOptionsViewControllerFooterView;
+            paymentOptionsViewController.addCardViewControllerFooterView = self.addCardViewControllerFooterView;
             if (@available(iOS 11, *)) {
-                paymentMethodsViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
+                paymentOptionsViewController.navigationItem.largeTitleDisplayMode = self.largeTitleDisplayMode;
             }
 
-            [navigationController pushViewController:paymentMethodsViewController
+            [navigationController pushViewController:paymentOptionsViewController
                                             animated:[self transitionAnimationsEnabled]];
         }
     }];
 }
 
-- (void)paymentMethodsViewController:(__unused STPPaymentOptionsViewController *)paymentMethodsViewController
-              didSelectPaymentMethod:(id<STPPaymentOption>)paymentMethod {
-    self.selectedPaymentMethod = paymentMethod;
+- (void)paymentOptionsViewController:(__unused STPPaymentOptionsViewController *)paymentOptionsViewController
+              didSelectPaymentOption:(id<STPPaymentOption>)paymentOption {
+    self.selectedPaymentOption = paymentOption;
 }
 
-- (void)paymentMethodsViewControllerDidFinish:(STPPaymentOptionsViewController *)paymentMethodsViewController {
-    [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController completion:^{
+- (void)paymentOptionsViewControllerDidFinish:(STPPaymentOptionsViewController *)paymentOptionsViewController {
+    [self appropriatelyDismissPaymentOptionsViewController:paymentOptionsViewController completion:^{
         if (self.state == STPPaymentContextStateRequestingPayment) {
             self.state = STPPaymentContextStateNone;
             [self requestPayment];
@@ -361,8 +361,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
-- (void)paymentMethodsViewControllerDidCancel:(STPPaymentOptionsViewController *)paymentMethodsViewController {
-    [self appropriatelyDismissPaymentMethodsViewController:paymentMethodsViewController completion:^{
+- (void)paymentOptionsViewControllerDidCancel:(STPPaymentOptionsViewController *)paymentOptionsViewController {
+    [self appropriatelyDismissPaymentOptionsViewController:paymentOptionsViewController completion:^{
         if (self.state == STPPaymentContextStateRequestingPayment) {
             [self didFinishWithStatus:STPPaymentStatusUserCancellation
                                 error:nil];
@@ -373,18 +373,18 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
     }];
 }
 
-- (void)paymentMethodsViewController:(__unused STPPaymentOptionsViewController *)paymentMethodsViewController
+- (void)paymentOptionsViewController:(__unused STPPaymentOptionsViewController *)paymentOptionsViewController
               didFailToLoadWithError:(__unused NSError *)error {
     // we'll handle this ourselves when the loading promise fails.
 }
 
-- (void)appropriatelyDismissPaymentMethodsViewController:(STPPaymentOptionsViewController *)viewController
+- (void)appropriatelyDismissPaymentOptionsViewController:(STPPaymentOptionsViewController *)viewController
                                               completion:(STPVoidBlock)completion {
     if ([viewController stp_isAtRootOfNavigationController]) {
         // if we're the root of the navigation controller, we've been presented modally.
         [viewController.presentingViewController dismissViewControllerAnimated:[self transitionAnimationsEnabled]
                                                                     completion:^{
-            self.paymentMethodsViewController = nil;
+            self.paymentOptionsViewController = nil;
             if (completion) {
                 completion();
             }
@@ -399,7 +399,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
         [viewController.navigationController stp_popToViewController:destinationViewController
                                                             animated:[self transitionAnimationsEnabled]
                                                           completion:^{
-            self.paymentMethodsViewController = nil;
+            self.paymentOptionsViewController = nil;
             if (completion) {
                 completion();
             }
@@ -576,16 +576,16 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
             return;
         }
 
-        if (!self.selectedPaymentMethod) {
-            [self presentPaymentMethodsViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
+        if (!self.selectedPaymentOption) {
+            [self presentPaymentOptionsViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
         }
         else if ([self requestPaymentShouldPresentShippingViewController]) {
             [self presentShippingViewControllerWithNewState:STPPaymentContextStateRequestingPayment];
         }
-        else if ([self.selectedPaymentMethod isKindOfClass:[STPCard class]] ||
-                 [self.selectedPaymentMethod isKindOfClass:[STPSource class]]) {
+        else if ([self.selectedPaymentOption isKindOfClass:[STPCard class]] ||
+                 [self.selectedPaymentOption isKindOfClass:[STPSource class]]) {
             self.state = STPPaymentContextStateRequestingPayment;
-            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(id<STPSourceProtocol>)self.selectedPaymentMethod];
+            STPPaymentResult *result = [[STPPaymentResult alloc] initWithSource:(id<STPSourceProtocol>)self.selectedPaymentOption];
             [self.delegate paymentContext:self didCreatePaymentResult:result completion:^(NSError * _Nullable error) {
                 stpDispatchToMainThreadIfNecessary(^{
                     if (error) {
@@ -596,7 +596,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                 });
             }];
         }
-        else if ([self.selectedPaymentMethod isKindOfClass:[STPApplePay class]]) {
+        else if ([self.selectedPaymentOption isKindOfClass:[STPApplePay class]]) {
             self.state = STPPaymentContextStateRequestingPayment;
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
             STPShippingAddressSelectionBlock shippingAddressHandler = ^(STPAddress *shippingAddress, STPShippingAddressValidationBlock completion) {

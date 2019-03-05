@@ -29,18 +29,18 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.additionalPaymentMethods = STPPaymentOptionTypeAll;
+    config.additionalPaymentOptions = STPPaymentOptionTypeAll;
     STPTheme *theme = [STPTheme defaultTheme];
     id customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources]];
     id delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
     [STPLocalizationUtils overrideLanguageTo:language];
-    STPPaymentOptionsViewController *paymentMethodsVC = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config
+    STPPaymentOptionsViewController *paymentOptionsVC = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config
                                                                                                                  theme:theme
                                                                                                        customerContext:customerContext
                                                                                                               delegate:delegate];
 
 
-    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:paymentMethodsVC];
+    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:paymentOptionsVC];
 
     FBSnapshotVerifyView(viewToTest, nil);
     [STPLocalizationUtils overrideLanguageTo:nil];

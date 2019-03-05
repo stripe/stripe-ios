@@ -253,7 +253,7 @@
 + (NSDictionary *)serializeConfiguration:(STPPaymentConfiguration *)configuration {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"publishable_key"] = configuration.publishableKey ?: @"unknown";
-    switch (configuration.additionalPaymentMethods) {
+    switch (configuration.additionalPaymentOptions) {
         case STPPaymentOptionTypeAll:
             dictionary[@"additional_payment_methods"] = @"all";
         case STPPaymentOptionTypeNone:

@@ -28,8 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
  as the `rootViewController` and then present the `UINavigationController`, 
  or push a new `STPPaymentOptionsViewController` onto an existing 
  `UINavigationController`'s stack. You can also have `STPPaymentContext` do this
- for you automatically, by calling `presentPaymentMethodsViewController` 
- or `pushPaymentMethodsViewController` on it.
+ for you automatically, by calling `presentPaymentOptionsViewController` 
+ or `pushPaymentOptionsViewController` on it.
  */
 @interface STPPaymentOptionsViewController : STPCoreViewController
 
@@ -109,7 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
  `sizeThatFits:` call. The view should respond correctly to this method in order
  to be sized and positioned properly.
  */
-@property (nonatomic, strong) UIView *paymentMethodsViewControllerFooterView;
+@property (nonatomic, strong) UIView *paymentOptionsViewControllerFooterView;
 
 /**
  A view that will be placed as the footer of the view controller when it is
@@ -160,31 +160,31 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  This is called when the view controller encounters an error fetching the user's
- payment methods from its API adapter. You should dismiss the view controller 
+ payment options from its API adapter. You should dismiss the view controller
  when this is called.
 
- @param paymentMethodsViewController the view controller in question
+ @param paymentOptionsViewController the view controller in question
  @param error                        the error that occurred
  */
-- (void)paymentMethodsViewController:(STPPaymentOptionsViewController *)paymentMethodsViewController
+- (void)paymentOptionsViewController:(STPPaymentOptionsViewController *)paymentOptionsViewController
               didFailToLoadWithError:(NSError *)error;
 
 /**
  This is called when the user selects or adds a payment method, so it will often
- be called immediately after calling `paymentMethodsViewController:didSelectPaymentMethod:`.
+ be called immediately after calling `paymentOptionsViewController:didSelectPaymentOption:`.
  You should dismiss the view controller when this is called.
 
- @param paymentMethodsViewController the view controller that has finished
+ @param paymentOptionsViewController the view controller that has finished
  */
-- (void)paymentMethodsViewControllerDidFinish:(STPPaymentOptionsViewController *)paymentMethodsViewController;
+- (void)paymentOptionsViewControllerDidFinish:(STPPaymentOptionsViewController *)paymentOptionsViewController;
 
 /**
  This is called when the user taps "cancel".
  You should dismiss the view controller when this is called.
 
- @param paymentMethodsViewController the view controller that has finished
+ @param paymentOptionsViewController the view controller that has finished
  */
-- (void)paymentMethodsViewControllerDidCancel:(STPPaymentOptionsViewController *)paymentMethodsViewController;
+- (void)paymentOptionsViewControllerDidCancel:(STPPaymentOptionsViewController *)paymentOptionsViewController;
 
 @optional
 /**
@@ -194,15 +194,15 @@ NS_ASSUME_NONNULL_BEGIN
  choice. You should use this callback to update any necessary UI in your app 
  that displays the user's currently selected payment method. You should *not* 
  dismiss the view controller at this point, instead do this in 
- `paymentMethodsViewControllerDidFinish:`. `STPPaymentOptionsViewController` 
+ `paymentOptionsViewControllerDidFinish:`. `STPPaymentOptionsViewController`
  will also call the necessary methods on your API adapter, so you don't need to 
  call them directly during this method.
 
- @param paymentMethodsViewController the view controller in question
- @param paymentMethod                the selected payment method
+ @param paymentOptionsViewController the view controller in question
+ @param paymentOption                the selected payment method
  */
-- (void)paymentMethodsViewController:(STPPaymentOptionsViewController *)paymentMethodsViewController
-              didSelectPaymentMethod:(id<STPPaymentOption>)paymentMethod;
+- (void)paymentOptionsViewController:(STPPaymentOptionsViewController *)paymentOptionsViewController
+              didSelectPaymentOption:(id<STPPaymentOption>)paymentOption;
 
 @end
 

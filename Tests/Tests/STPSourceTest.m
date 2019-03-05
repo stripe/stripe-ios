@@ -471,7 +471,7 @@
              [STPTestUtils jsonNamed:STPTestJSONSourceSOFORT]];
 }
 
-- (void)testPaymentMethodImage {
+- (void)testPaymentOptionImage {
     for (NSDictionary *response in [self possibleAPIResponses]) {
         STPSource *source = [STPSource decodedObjectFromAPIResponse:response];
 
@@ -486,7 +486,7 @@
     }
 }
 
-- (void)testPaymentMethodTemplateImage {
+- (void)testPaymentOptionTemplateImage {
     for (NSDictionary *response in [self possibleAPIResponses]) {
         STPSource *source = [STPSource decodedObjectFromAPIResponse:response];
 
@@ -501,7 +501,7 @@
     }
 }
 
-- (void)testPaymentMethodLabel {
+- (void)testPaymentOptionLabel {
     for (NSDictionary *response in [self possibleAPIResponses]) {
         STPSource *source = [STPSource decodedObjectFromAPIResponse:response];
 

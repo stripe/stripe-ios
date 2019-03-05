@@ -24,7 +24,7 @@
  behavior with variable input data.
 
  If a customer has valid sources for UI, they should all be in the tuple's
- payment methods. If apple pay is enabled, it should also be included in the
+ payment options. If apple pay is enabled, it should also be included in the
  method count.
 
  @param sut The customer to test
@@ -38,7 +38,7 @@
                       expectedValidSources:(NSUInteger)expectedSourceCount
                     expectedSelectedSource:(id)expectedSelectedSource {
     STPPaymentConfiguration *config = [STPMocks paymentConfigurationWithApplePaySupportingDevice];
-    config.additionalPaymentMethods = applePayEnabled ? STPPaymentOptionTypeAll : STPPaymentOptionTypeNone;
+    config.additionalPaymentOptions = applePayEnabled ? STPPaymentOptionTypeAll : STPPaymentOptionTypeNone;
 
     STPPaymentOptionTuple *tuple = [sut filteredSourceTupleForUIWithConfiguration:config];
     XCTAssertNotNil(tuple);

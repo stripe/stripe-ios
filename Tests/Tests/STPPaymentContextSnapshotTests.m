@@ -30,7 +30,7 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.additionalPaymentMethods = STPPaymentOptionTypeAll;
+    config.additionalPaymentOptions = STPPaymentOptionTypeAll;
     config.shippingType = STPShippingTypeShipping;
     self.config = config;
     STPCustomerContext *customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources]];
@@ -54,7 +54,7 @@
 
         self.hostViewController.navigationBar.prefersLargeTitles = NO;
         self.paymentContext.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeAutomatic;
-        [self.paymentContext pushPaymentMethodsViewController];
+        [self.paymentContext pushPaymentOptionsViewController];
         UIView *view = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:self.hostViewController];
         FBSnapshotVerifyView(view, nil);
     }
@@ -66,7 +66,7 @@
 
         self.hostViewController.navigationBar.prefersLargeTitles = YES;
         self.paymentContext.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeAutomatic;
-        [self.paymentContext pushPaymentMethodsViewController];
+        [self.paymentContext pushPaymentOptionsViewController];
         UIView *view = [self stp_preparedAndSizedViewForSnapshotTestFromNavigationController:self.hostViewController];
         FBSnapshotVerifyView(view, nil);
     }

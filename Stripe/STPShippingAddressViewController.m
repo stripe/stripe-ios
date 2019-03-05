@@ -49,9 +49,9 @@
 
 - (instancetype)initWithPaymentContext:(STPPaymentContext *)paymentContext {
     STPAddress *billingAddress = nil;
-    id<STPPaymentOption> paymentMethod = paymentContext.selectedPaymentMethod;
-    if ([paymentMethod isKindOfClass:[STPCard class]]) {
-        STPCard *card = (STPCard *)paymentMethod;
+    id<STPPaymentOption> paymentOption = paymentContext.selectedPaymentOption;
+    if ([paymentOption isKindOfClass:[STPCard class]]) {
+        STPCard *card = (STPCard *)paymentOption;
         billingAddress = [card address];
     }
     STPUserInformation *prefilledInformation;

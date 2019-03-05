@@ -14,7 +14,7 @@
  be checked on an `STPPaymentContext`, e.g:
  
  ```
- if ([paymentContext.selectedPaymentMethod isKindOfClass:[STPApplePay class]]) {
+ if ([paymentContext.selectedPaymentOption isKindOfClass:[STPApplePay class]]) {
     // Don't ask the user for their card number; they want to pay with apple pay.
  }
  ```
