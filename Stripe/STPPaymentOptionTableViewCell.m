@@ -8,7 +8,7 @@
 
 #import "STPPaymentOptionTableViewCell.h"
 
-#import "STPApplePay.h"
+#import "STPApplePayPaymentOption.h"
 #import "STPCard.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
@@ -131,7 +131,7 @@
         }
     }
 
-    if ([paymentOption isKindOfClass:[STPApplePay class]]) {
+    if ([paymentOption isKindOfClass:[STPApplePayPaymentOption class]]) {
         NSString *label = STPLocalizedString(@"Apple Pay", @"Text for Apple Pay payment method");
         UIColor *primaryColor = [self primaryColorForPaymentOptionWithSelected:selected];
         return [[NSAttributedString alloc] initWithString:label attributes:@{NSForegroundColorAttributeName: primaryColor}];

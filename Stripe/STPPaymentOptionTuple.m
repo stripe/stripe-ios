@@ -7,7 +7,7 @@
 //
 
 #import "STPPaymentOptionTuple.h"
-#import "STPApplePay.h"
+#import "STPApplePayPaymentOption.h"
 #import "STPCard.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
      id<STPPaymentOption> _Nullable selected = selectedPaymentOption;
 
     if (applePayEnabled) {
-        STPApplePay *applePay = [STPApplePay new];
+        STPApplePayPaymentOption *applePay = [STPApplePayPaymentOption new];
         [mutablePaymentOptions addObject:applePay];
 
         if (!selected) {

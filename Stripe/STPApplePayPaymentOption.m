@@ -1,18 +1,18 @@
 //
-//  STPApplePay.m
+//  STPApplePayPaymentOption.m
 //  Stripe
 //
 //  Created by Ben Guo on 4/19/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
-#import "STPApplePay.h"
+#import "STPApplePayPaymentOption.h"
 
 #import "STPImageLibrary.h"
 #import "STPImageLibrary+Private.h"
 #import "STPLocalizationUtils.h"
 
-@implementation STPApplePay
+@implementation STPApplePayPaymentOption
 
 #pragma mark - STPPaymentOption
 
@@ -32,7 +32,7 @@
 #pragma mark - Equality
 
 - (BOOL)isEqual:(id)object {
-    return [object isKindOfClass:[STPApplePay class]];
+    return [object isKindOfClass:[STPApplePayPaymentOption class]];
 }
 
 - (NSUInteger)hash {

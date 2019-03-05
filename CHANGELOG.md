@@ -2,7 +2,7 @@
 * Renames all references to 'PaymentMethod' to 'PaymentOption', in anticipation of a new 'PaymentMethod' type. [#1139](https://github.com/stripe/stripe-ios/pull/1139)
   * Renames `STPPaymentMethod` to `STPPaymentOption`
   * Renames `STPPaymentMethodType` to `STPPaymentOptionType`
-  * Renames `STPApplePaymentMethod` to `STPApplePay`
+  * Renames `STPApplePaymentMethod` to `STPApplePayPaymentOption`
   * Renames `STPPaymentMethodTuple` to `STPPaymentOptionTuple`
   * Renames `STPPaymentMethodsViewController` to `STPPaymentOptionsViewController`
   * Renames all properties, methods, comments referencing 'PaymentMethod' to 'PaymentOption'

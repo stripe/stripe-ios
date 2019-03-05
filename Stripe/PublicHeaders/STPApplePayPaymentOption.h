@@ -1,5 +1,5 @@
 //
-//  STPApplePay.h
+//  STPApplePayPaymentOption.h
 //  Stripe
 //
 //  Created by Ben Guo on 4/19/16.
@@ -19,6 +19,6 @@
  }
  ```
  */
-@interface STPApplePay : NSObject <STPPaymentOption>
+@interface STPApplePayPaymentOption : NSObject <STPPaymentOption>
 
 @end

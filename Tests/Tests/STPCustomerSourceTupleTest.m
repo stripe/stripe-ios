@@ -72,7 +72,7 @@
     [self performSourceTupleTestWithCustomer:sut
                              applePayEnabled:YES
                         expectedValidSources:expectedSourceCount + 1
-                      expectedSelectedSource:expectedSelectedSource ?: [STPApplePay new]];
+                      expectedSelectedSource:expectedSelectedSource ?: [STPApplePayPaymentOption new]];
 }
 
 - (void)testSourceTupleCreationNoSources {

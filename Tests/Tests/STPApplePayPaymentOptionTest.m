@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPApplePay.h"
+#import "STPApplePayPaymentOption.h"
 
 @interface STPApplePayPaymentOptionTest : XCTestCase
 
@@ -19,25 +19,25 @@
 #pragma mark - STPPaymentOption Tests
 
 - (void)testImage {
-    STPApplePay *applePay = [[STPApplePay alloc] init];
+    STPApplePayPaymentOption *applePay = [[STPApplePayPaymentOption alloc] init];
     XCTAssert([applePay image]);
 }
 
 - (void)testTemplateImage {
-    STPApplePay *applePay = [[STPApplePay alloc] init];
+    STPApplePayPaymentOption *applePay = [[STPApplePayPaymentOption alloc] init];
     XCTAssert([applePay templateImage]);
 }
 
 - (void)testLabel {
-    STPApplePay *applePay = [[STPApplePay alloc] init];
+    STPApplePayPaymentOption *applePay = [[STPApplePayPaymentOption alloc] init];
     XCTAssertEqualObjects([applePay label], @"Apple Pay");
 }
 
 #pragma mark - Equality Tests
 
 - (void)testApplePayEquals {
-    STPApplePay *applePay1 = [[STPApplePay alloc] init];
-    STPApplePay *applePay2 = [[STPApplePay alloc] init];
+    STPApplePayPaymentOption *applePay1 = [[STPApplePayPaymentOption alloc] init];
+    STPApplePayPaymentOption *applePay2 = [[STPApplePayPaymentOption alloc] init];
 
     XCTAssertNotEqual(applePay1, applePay2);
 

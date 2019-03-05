@@ -12,7 +12,7 @@
 #import "STPAPIClient+ApplePay.h"
 #import "STPAPIClient.h"
 #import "STPAPIResponseDecodable.h"
-#import "STPApplePay.h"
+#import "STPApplePayPaymentOption.h"
 #import "STPBackendAPIAdapter.h"
 #import "STPBankAccount.h"
 #import "STPBankAccountParams.h"

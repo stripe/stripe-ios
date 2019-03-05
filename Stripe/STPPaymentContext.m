@@ -208,7 +208,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
 
 - (void)setPaymentOptions:(NSArray<id<STPPaymentOption>> *)paymentOptions {
     _paymentOptions = [paymentOptions sortedArrayUsingComparator:^NSComparisonResult(id<STPPaymentOption> obj1, id<STPPaymentOption> obj2) {
-        Class applePayKlass = [STPApplePay class];
+        Class applePayKlass = [STPApplePayPaymentOption class];
         Class cardKlass = [STPCard class];
         if ([obj1 isKindOfClass:applePayKlass]) {
             return NSOrderedAscending;
@@ -596,7 +596,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentContextState) {
                 });
             }];
         }
-        else if ([self.selectedPaymentOption isKindOfClass:[STPApplePay class]]) {
+        else if ([self.selectedPaymentOption isKindOfClass:[STPApplePayPaymentOption class]]) {
             self.state = STPPaymentContextStateRequestingPayment;
             PKPaymentRequest *paymentRequest = [self buildPaymentRequest];
             STPShippingAddressSelectionBlock shippingAddressHandler = ^(STPAddress *shippingAddress, STPShippingAddressValidationBlock completion) {
