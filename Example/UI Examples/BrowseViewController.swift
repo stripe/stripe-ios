@@ -23,7 +23,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             switch self {
             case .STPPaymentCardTextField: return "Card Field"
             case .STPAddCardViewController: return "Card Form with Billing Address"
-            case .STPPaymentOptionsViewController: return "Payment Method Picker"
+            case .STPPaymentOptionsViewController: return "Payment Option Picker"
             case .STPShippingInfoViewController: return "Shipping Info Form"
             case .ChangeTheme: return "Change Theme"
             }
