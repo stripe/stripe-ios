@@ -48,7 +48,7 @@
     self.paymentContext = context;
 }
 
-- (void)testPushPaymentMethodsSmallTitle {
+- (void)testPushPaymentOptionsSmallTitle {
     if (@available(iOS 11.0, *)) {
         [self buildPaymentContext];
 
@@ -60,7 +60,7 @@
     }
 }
 
-- (void)testPushPaymentMethodsLargeTitle {
+- (void)testPushPaymentOptionsLargeTitle {
     if (@available(iOS 11.0, *)) {
         [self buildPaymentContext];
 
