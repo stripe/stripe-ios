@@ -1,3 +1,12 @@
+## 15.0.0 2019-??-??
+* Renames all references to 'PaymentMethod' to 'PaymentOption', in anticipation of a new 'PaymentMethod' type. [#1139](https://github.com/stripe/stripe-ios/pull/1139)
+  * Renames `STPPaymentMethod` to `STPPaymentOption`
+  * Renames `STPPaymentMethodType` to `STPPaymentOptionType`
+  * Renames `STPApplePaymentMethod` to `STPApplePay`
+  * Renames `STPPaymentMethodTuple` to `STPPaymentOptionTuple`
+  * Renames `STPPaymentMethodsViewController` to `STPPaymentOptionsViewController`
+  * Renames all properties, methods, comments referencing 'PaymentMethod' to 'PaymentOption'
+
 ## 14.0.0 2018-11-14
 * Changes `STPPaymentCardTextField`, which now copies the `cardParams` property. See [MIGRATING.md](/MIGRATING.md) for more details. [#1031](https://github.com/stripe/stripe-ios/pull/1031)
 * Renames `STPPaymentIntentParams.returnUrl` to `STPPaymentIntentParams.returnURL`. [#1037](https://github.com/stripe/stripe-ios/pull/1037)
