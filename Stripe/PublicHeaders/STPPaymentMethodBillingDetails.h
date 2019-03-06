@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "STPPaymentMethodBillingDetailsAddress.h"
+#import "STPAPIResponseDecodable.h"
 
+@class STPPaymentMethodBillingDetailsAddress;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @see https://site-admin.stripe.com/docs/api/payment_methods/object#payment_method_object-billing_details
  */
-@interface STPPaymentMethodBillingDetails : NSObject
+@interface STPPaymentMethodBillingDetails : NSObject <STPAPIResponseDecodable>
 
 /**
  You cannot directly instantiate an `STPPaymentMethodBillingDetails`. You should only use one that is part of an existing `STPPaymentMethod` object.
