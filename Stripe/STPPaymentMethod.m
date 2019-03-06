@@ -43,6 +43,7 @@
     paymentMethod.liveMode = [dict stp_boolForKey:@"livemode" or:NO];
     paymentMethod.billingDetails = [STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"billing_details"]];
     paymentMethod.card = [STPPaymentMethodCard decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"card"]];
+    paymentMethod.type = [dict stp_stringForKey:@"type"];
     paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
     paymentMethod.metadata = [dict stp_dictionaryForKey:@"metadata"];
     return paymentMethod;

@@ -444,6 +444,8 @@
 		B3BDCAD720EEF5EC0034F7F5 /* STPPaymentIntentParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B3BDCAD520EEF5EC0034F7F5 /* STPPaymentIntentParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B3BDCADF20F0142C0034F7F5 /* PaymentIntent.json in Resources */ = {isa = PBXBuildFile; fileRef = B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */; };
 		B3C9CF2D2004595A005502ED /* STPConnectAccountFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C9CF2C2004595A005502ED /* STPConnectAccountFunctionalTest.m */; };
+		B66B39B4223044A2006D1CAD /* STPPaymentMethodTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */; };
+		B66B39B6223045EF006D1CAD /* PaymentMethod.json in Resources */ = {isa = PBXBuildFile; fileRef = B66B39B5223045EF006D1CAD /* PaymentMethod.json */; };
 		B66D5021222F5611004A9210 /* STPPaymentMethodCardChecks.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */; };
 		B66D5022222F5611004A9210 /* STPPaymentMethodCardChecks.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */; };
 		B66D5024222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B66D5023222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m */; };
@@ -1196,6 +1198,8 @@
 		B3BDCAD520EEF5EC0034F7F5 /* STPPaymentIntentParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentIntentParams.h; path = PublicHeaders/STPPaymentIntentParams.h; sourceTree = "<group>"; };
 		B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PaymentIntent.json; sourceTree = "<group>"; };
 		B3C9CF2C2004595A005502ED /* STPConnectAccountFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountFunctionalTest.m; sourceTree = "<group>"; };
+		B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodTest.m; sourceTree = "<group>"; };
+		B66B39B5223045EF006D1CAD /* PaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PaymentMethod.json; sourceTree = "<group>"; };
 		B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardChecks.m; sourceTree = "<group>"; };
 		B66D5023222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodThreeDSecureUsageTest.m; sourceTree = "<group>"; };
 		B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardChecksTest.m; sourceTree = "<group>"; };
@@ -1725,6 +1729,7 @@
 				F152322E1EA9344000D65C67 /* iDEALSource.json */,
 				8B39128620E2F9D300098401 /* MultibancoSource.json */,
 				B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */,
+				B66B39B5223045EF006D1CAD /* PaymentMethod.json */,
 				8B39128820E2F9E000098401 /* P24Source.json */,
 				8BD2133D1F045D31007F6FD1 /* SEPADebitSource.json */,
 				8B39128A20E2F9F500098401 /* SOFORTSource.json */,
@@ -1806,6 +1811,7 @@
 				B36C6D772193A16F00D17575 /* STPPaymentIntentSourceActionTest.m */,
 				B3BDCACC20EEF4540034F7F5 /* STPPaymentIntentTest.m */,
 				B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */,
+				B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */,
 				B66D5023222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m */,
 				F1DE87FF1F8D410D00602F4C /* STPPaymentOptionsViewControllerTest.m */,
 				C1EEDCC91CA2186300A54582 /* STPPhoneNumberValidatorTest.m */,
@@ -2778,6 +2784,7 @@
 				8B39128920E2F9E000098401 /* P24Source.json in Resources */,
 				04E01F8A21AA55E30061402F /* recorded_network_traffic in Resources */,
 				8B39128220E2F99600098401 /* EPSSource.json in Resources */,
+				B66B39B6223045EF006D1CAD /* PaymentMethod.json in Resources */,
 				8B39128320E2F9A100098401 /* BancontactSource.json in Resources */,
 				8B39128B20E2F9F500098401 /* SOFORTSource.json in Resources */,
 			);
@@ -3058,6 +3065,7 @@
 				8BD87B951EFB1CB100269C2B /* STPSourceVerificationTest.m in Sources */,
 				C124A1811CCAA1BF007D42EE /* NSMutableURLRequest+StripeTest.m in Sources */,
 				B3BDCACD20EEF4540034F7F5 /* STPPaymentIntentTest.m in Sources */,
+				B66B39B4223044A2006D1CAD /* STPPaymentMethodTest.m in Sources */,
 				C1EEDCC61CA2126000A54582 /* STPDelegateProxyTest.m in Sources */,
 				F1D777C01D81DD520076FA19 /* STPStringUtilsTest.m in Sources */,
 				C1FEE5991CBFF24000A7632B /* STPPostalCodeValidatorTest.m in Sources */,
