@@ -8,6 +8,10 @@
 
 #import "STPPaymentMethod.h"
 
+#import "NSDictionary+Stripe.h"
+#import "STPPaymentMethodBillingDetails.h"
+#import "STPPaymentMethodCard.h"
+
 @interface STPPaymentMethod ()
 
 @property (nonatomic, nullable) NSString *identifier;
@@ -18,10 +22,30 @@
 @property (nonatomic, nullable) STPPaymentMethodCard *card;
 @property (nonatomic, nullable) NSString *customerId;
 @property (nonatomic, nullable, copy) NSDictionary<NSString*, NSString *> *metadata;
+@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
 
 
 @implementation STPPaymentMethod
+
+#pragma mark - STPAPIResponseDecodable
+
++ (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
+    if (!dict) {
+        return nil;
+    }
+    STPPaymentMethod * paymentMethod = [STPPaymentMethod new];
+    paymentMethod.allResponseFields = dict;
+    paymentMethod.identifier = [dict stp_stringForKey:@"id"];
+    paymentMethod.created = [dict stp_dateForKey:@"created"];
+    paymentMethod.liveMode = [dict stp_boolForKey:@"livemode" or:NO];
+    paymentMethod.billingDetails = [STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"billing_details"]];
+    paymentMethod.card = [STPPaymentMethodCard decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"card"]];
+    paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
+    paymentMethod.metadata = [dict stp_dictionaryForKey:@"metadata"];
+    return paymentMethod;
+}
 
 @end

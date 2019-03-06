@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @see https://site-admin.stripe.com/docs/api/payment_methods
  */
-@interface STPPaymentMethod : NSObject
+@interface STPPaymentMethod : NSObject <STPAPIResponseDecodable>
 
 /**
  Unique identifier for the object.
