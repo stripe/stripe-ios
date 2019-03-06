@@ -44,12 +44,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Two-digit number representing the card’s expiration month.
  */
-@property (nonatomic, nullable, readonly) NSString *expMonth;
+@property (nonatomic, readonly) NSInteger expMonth;
 
 /**
  Four-digit number representing the card’s expiration year.
  */
-@property (nonatomic, nullable, readonly) NSString *expYear;
+@property (nonatomic, readonly) NSInteger expYear;
 
 /**
  Card funding type. Can be credit, debit, prepaid, or unknown.

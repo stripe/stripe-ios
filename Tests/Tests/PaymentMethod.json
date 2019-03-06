@@ -29,6 +29,7 @@
     "issuer": "Stripe Payments UK Limited",
     "last4": "4242",
     "three_d_secure_usage": {
+      "supported": true
     },
   },
   "created": 123456789,
