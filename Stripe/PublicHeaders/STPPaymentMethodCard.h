@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "STPAPIResponseDecodable.h"
+
 @class STPPaymentMethodThreeDSecureUsage, STPPaymentMethodCardWallet, STPPaymentMethodCardChecks;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -17,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @see https://site-admin.stripe.com/docs/api/payment_methods/object#payment_method_object-card
  */
-@interface STPPaymentMethodCard : NSObject
+@interface STPPaymentMethodCard : NSObject <STPAPIResponseDecodable>
 
 /**
  You cannot directly instantiate an `STPPaymentMethodCard`. You should only use one that is part of an existing `STPPaymentMethod` object.
