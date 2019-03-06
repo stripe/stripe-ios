@@ -10,6 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+//TODO: This is empty in the docs - do I need to support?
 @interface STPPaymentMethodCardWallet : NSObject
 
 @end
