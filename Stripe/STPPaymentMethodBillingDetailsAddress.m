@@ -38,7 +38,7 @@
     address.country = [dict stp_stringForKey:@"country"];
     address.line1 = [dict stp_stringForKey:@"line1"];
     address.line2 = [dict stp_stringForKey:@"line2"];
-    address.postalCode = [dict stp_stringForKey:@"postalCode"];
+    address.postalCode = [dict stp_stringForKey:@"postal_code"];
     address.state = [dict stp_stringForKey:@"state"];
     return address;
 }

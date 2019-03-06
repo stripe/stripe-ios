@@ -477,6 +477,7 @@
 		B6B5FC48222F4D9000440249 /* STPPaymentMethodCardWallet.h in Headers */ = {isa = PBXBuildFile; fileRef = B6B5FC45222F4D9000440249 /* STPPaymentMethodCardWallet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6B5FC49222F4D9000440249 /* STPPaymentMethodCardWallet.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FC46222F4D9000440249 /* STPPaymentMethodCardWallet.m */; };
 		B6B5FC4A222F4D9000440249 /* STPPaymentMethodCardWallet.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FC46222F4D9000440249 /* STPPaymentMethodCardWallet.m */; };
+		B6D6C933223076600092AFC8 /* STPPaymentMethodBillingDetailsAddressTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D6C932223076600092AFC8 /* STPPaymentMethodBillingDetailsAddressTest.m */; };
 		B6E2F308222F442E0001FED4 /* STPPaymentMethodCardChecks.h in Headers */ = {isa = PBXBuildFile; fileRef = B6E2F306222F442E0001FED4 /* STPPaymentMethodCardChecks.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6E2F309222F442E0001FED4 /* STPPaymentMethodCardChecks.h in Headers */ = {isa = PBXBuildFile; fileRef = B6E2F306222F442E0001FED4 /* STPPaymentMethodCardChecks.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6E2F30A222F442E0001FED4 /* STPPaymentMethodCardPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = B6E2F307222F442E0001FED4 /* STPPaymentMethodCardPresent.m */; };
@@ -1216,6 +1217,7 @@
 		B6B5FC40222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodThreeDSecureUsage.m; sourceTree = "<group>"; };
 		B6B5FC45222F4D9000440249 /* STPPaymentMethodCardWallet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardWallet.h; path = PublicHeaders/STPPaymentMethodCardWallet.h; sourceTree = "<group>"; };
 		B6B5FC46222F4D9000440249 /* STPPaymentMethodCardWallet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWallet.m; sourceTree = "<group>"; };
+		B6D6C932223076600092AFC8 /* STPPaymentMethodBillingDetailsAddressTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBillingDetailsAddressTest.m; sourceTree = "<group>"; };
 		B6E2F306222F442E0001FED4 /* STPPaymentMethodCardChecks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardChecks.h; path = PublicHeaders/STPPaymentMethodCardChecks.h; sourceTree = "<group>"; };
 		B6E2F307222F442E0001FED4 /* STPPaymentMethodCardPresent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardPresent.m; sourceTree = "<group>"; };
 		C1054F901FE197AE0033C87E /* STPPaymentContextSnapshotTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentContextSnapshotTests.m; sourceTree = "<group>"; };
@@ -1810,6 +1812,7 @@
 				B3BDCAD020EEF5B90034F7F5 /* STPPaymentIntentParamsTest.m */,
 				B36C6D772193A16F00D17575 /* STPPaymentIntentSourceActionTest.m */,
 				B3BDCACC20EEF4540034F7F5 /* STPPaymentIntentTest.m */,
+				B6D6C932223076600092AFC8 /* STPPaymentMethodBillingDetailsAddressTest.m */,
 				B66D5026222F8605004A9210 /* STPPaymentMethodCardChecksTest.m */,
 				B66B39B3223044A2006D1CAD /* STPPaymentMethodTest.m */,
 				B66D5023222F5A27004A9210 /* STPPaymentMethodThreeDSecureUsageTest.m */,
@@ -3050,6 +3053,7 @@
 				F148ABFB1D5E88C70014FD92 /* STPTestUtils.m in Sources */,
 				8BB97F081F26645B0095122A /* NSDictionary+StripeTest.m in Sources */,
 				045A62AB1B8E7259000165CE /* STPPaymentCardTextFieldTest.m in Sources */,
+				B6D6C933223076600092AFC8 /* STPPaymentMethodBillingDetailsAddressTest.m in Sources */,
 				3617A51520FE5BBB001A9E6A /* NSLocale+STPSwizzling.m in Sources */,
 				C1054F911FE197AE0033C87E /* STPPaymentContextSnapshotTests.m in Sources */,
 				C127110A1DBA7E490087840D /* STPAddressViewModelTest.m in Sources */,

@@ -7,6 +7,9 @@
       "city": "München",
       "country": "DE",
       "postal_code": "80337",
+      "line1": "Marienplatz",
+      "line2": "8",
+      "state": "Bayern",
     },
     "email": "jenny@example.com",
     "phone": "+15555555555"
