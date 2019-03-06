@@ -12,7 +12,8 @@
       "state": "Bayern",
     },
     "email": "jenny@example.com",
-    "phone": "+15555555555"
+    "phone": "+15555555555",
+    "name": "jenny",
   },
   "card": {
     "brand": "visa",
