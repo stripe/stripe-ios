@@ -8,9 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import "STPAPIResponseDecodable.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPPaymentMethodBillingDetailsAddress : NSObject
+@interface STPPaymentMethodBillingDetailsAddress : NSObject <STPAPIResponseDecodable>
 
 /**
  You cannot directly instantiate an `STPPaymentMethodBillingDetailsAddress`.
