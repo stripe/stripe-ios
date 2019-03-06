@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "STPAPIResponseDecodable.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -15,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @see https://site-admin.stripe.com/docs/api/payment_methods/object#payment_method_object-card-checks
  */
-@interface STPPaymentMethodCardChecks : NSObject
+@interface STPPaymentMethodCardChecks : NSObject <STPAPIResponseDecodable>
 
 /**
  You cannot directly instantiate an `STPPaymentMethodCardChecks`.
