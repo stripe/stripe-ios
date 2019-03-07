@@ -27,6 +27,7 @@
 #import "STPMultipartFormDataEncoder.h"
 #import "STPMultipartFormDataPart.h"
 #import "STPPaymentConfiguration.h"
+#import "STPPaymentMethodParams.h"
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentIntentParams.h"
 #import "STPSource+Private.h"
@@ -53,6 +54,7 @@ static NSString * const APIEndpointSources = @"sources";
 static NSString * const APIEndpointCustomers = @"customers";
 static NSString * const FileUploadURL = @"https://uploads.stripe.com/v1/files";
 static NSString * const APIEndpointPaymentIntents = @"payment_intents";
+static NSString * const APIEndpointPaymentMethods = @"payment_methods";
 
 #pragma mark - Stripe
 
@@ -618,6 +620,28 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                               completion:^(STPPaymentIntent *paymentIntent, __unused NSHTTPURLResponse *response, NSError *error) {
                                                   completion(paymentIntent, error);
                                               }];
+}
+
+@end
+
+#pragma mark - Payment Methods
+
+@implementation STPAPIClient (PaymentMethods)
+
+- (void)createPaymentMethodWithParams:(STPPaymentMethodParams *)paymentMethodParams
+                                 completion:(STPPaymentMethodCompletionBlock)completion {
+    NSCAssert(paymentMethodParams != nil, @"'paymentMethodParams' is required to create a PaymentMethod");
+    
+    NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:paymentMethodParams] mutableCopy];
+
+    [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:self
+                                               endpoint:APIEndpointPaymentMethods
+                                             parameters:params
+                                           deserializer:[STPPaymentMethod new]
+                                             completion:^(STPPaymentMethod *paymentMethod, __unused NSHTTPURLResponse *response, NSError *error) {
+                                                 completion(paymentMethod, error);
+                                             }];
+
 }
 
 @end

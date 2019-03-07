@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 static NSString *const STPSDKVersion = @"15.0.0";
 
 @class STPBankAccount, STPBankAccountParams, STPCard, STPCardParams, STPConnectAccountParams;
-@class STPPaymentConfiguration, STPPaymentIntentParams, STPSourceParams, STPToken;
+@class STPPaymentConfiguration, STPPaymentIntentParams, STPSourceParams, STPToken, STPPaymentMethodParams;
 
 /**
  A top-level class that imports the rest of the Stripe SDK.
@@ -357,6 +357,27 @@ static NSString *const STPSDKVersion = @"15.0.0";
  */
 - (void)confirmPaymentIntentWithParams:(STPPaymentIntentParams *)paymentIntentParams
                             completion:(STPPaymentIntentCompletionBlock)completion;
+
+@end
+
+
+#pragma mark Payment Methods
+
+/**
+ STPAPIClient extensions for working with PaymentMethod objects.
+ */
+@interface STPAPIClient (PaymentMethods)
+
+/**
+ Creates a PaymentMethod object with the provided params object.
+ 
+ @see https://site-admin.stripe.com/docs/api/payment_methods/create
+ 
+ @param paymentMethodParams  The `STPPaymentMethodParams` to pass to `/payment_methods`.  Cannot be nil.
+ @param completion           The callback to run with the returned PaymentMethod object, or an error.
+ */
+- (void)createPaymentMethodWithParams:(STPPaymentMethodParams *)paymentMethodParams
+                           completion:(STPPaymentMethodCompletionBlock)completion;
 
 @end
 

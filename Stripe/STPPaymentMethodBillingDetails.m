@@ -33,6 +33,22 @@
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
 }
 
+#pragma mark - STPFormEncodable
+@synthesize additionalAPIParameters;
+
++ (nonnull NSDictionary *)propertyNamesToFormFieldNamesMapping {
+    return @{
+             NSStringFromSelector(@selector(address)): @"address",
+             NSStringFromSelector(@selector(email)): @"email",
+             NSStringFromSelector(@selector(name)): @"name",
+             NSStringFromSelector(@selector(phone)): @"phone",
+             };
+}
+
++ (nullable NSString *)rootObjectName {
+    return nil;
+}
+
 #pragma mark - STPAPIResponseDecodable
 
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
