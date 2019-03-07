@@ -22,7 +22,6 @@
 @property (nonatomic, nullable) NSString *funding;
 @property (nonatomic, nullable) NSString *last4;
 @property (nonatomic, nullable) STPPaymentMethodThreeDSecureUsage *threeDSecureUsage;
-@property (nonatomic, nullable) STPPaymentMethodCardWallet *wallet;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
@@ -46,7 +45,6 @@
     card.funding = [dict stp_stringForKey:@"funding"];
     card.last4 = [dict stp_stringForKey:@"last4"];
     card.threeDSecureUsage = [STPPaymentMethodThreeDSecureUsage decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"three_d_secure_usage"]];
-    // Ignoring wallet...
     return card;
 }
 

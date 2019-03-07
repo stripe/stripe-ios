@@ -49,7 +49,6 @@
 #import "STPPaymentMethodBillingDetailsAddress.h"
 #import "STPPaymentMethodCard.h"
 #import "STPPaymentMethodCardChecks.h"
-#import "STPPaymentMethodCardWallet.h"
 #import "STPPaymentMethodThreeDSecureUsage.h"
 #import "STPPaymentMethod.h"
 #import "STPRedirectContext.h"
