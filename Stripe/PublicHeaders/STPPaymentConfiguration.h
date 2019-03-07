@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "STPBackendAPIAdapter.h"
-#import "STPPaymentMethod.h"
+#import "STPPaymentOption.h"
 #import "STPTheme.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -38,11 +38,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readwrite) NSString *publishableKey;
 
 /**
- An enum value representing which payment methods you will accept from your user
+ An enum value representing which payment options you will accept from your user
  in addition to credit cards. Unless you have a very specific reason not to, you
- should leave this at the default, `STPPaymentMethodTypeAll`.
+ should leave this at the default, `STPPaymentOptionTypeAll`.
  */
-@property (nonatomic, assign, readwrite) STPPaymentMethodType additionalPaymentMethods;
+@property (nonatomic, assign, readwrite) STPPaymentOptionType additionalPaymentOptions;
 
 /**
  The billing address fields the user must fill out when prompted for their 
@@ -95,19 +95,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable, readwrite) NSString *appleMerchantIdentifier;
 
 /**
- Determines whether or not the user is able to delete payment methods
+ Determines whether or not the user is able to delete payment options
  
- This is only relevant to the `STPPaymentMethodsViewController` which, if 
- enabled, will allow the user to delete payment methods by tapping the "Edit" 
- button in the navigation bar or by swiping left on a payment method and tapping
+ This is only relevant to the `STPPaymentOptionsViewController` which, if 
+ enabled, will allow the user to delete payment options by tapping the "Edit" 
+ button in the navigation bar or by swiping left on a payment option and tapping
  "Delete". Currently, the user is not allowed to delete the selected payment 
- method but this may change in the future.
+ option but this may change in the future.
 
- Default value is YES but will only work if `STPPaymentMethodsViewController` is
+ Default value is YES but will only work if `STPPaymentOptionsViewController` is
  initialized with a `STPCustomerContext` either through the `STPPaymentContext` 
  or directly as an init parameter.
  */
-@property (nonatomic, assign, readwrite) BOOL canDeletePaymentMethods;
+@property (nonatomic, assign, readwrite) BOOL canDeletePaymentOptions;
 
 /**
  If the value of this property is true, when your user adds a card in our UI,

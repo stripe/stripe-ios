@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodsViewControllerLocalizationTests.m
+//  STPPaymentOptionsViewControllerLocalizationTests.m
 //  Stripe
 //
 //  Created by Brian Dorfman on 10/17/16.
@@ -14,10 +14,10 @@
 #import "STPMocks.h"
 #import "STPLocalizationUtils+STPTestAdditions.h"
 
-@interface STPPaymentMethodsViewControllerLocalizationTests : FBSnapshotTestCase
+@interface STPPaymentOptionsViewControllerLocalizationTests : FBSnapshotTestCase
 @end
 
-@implementation STPPaymentMethodsViewControllerLocalizationTests
+@implementation STPPaymentOptionsViewControllerLocalizationTests
 
 //- (void)setUp {
 //    [super setUp];
@@ -29,18 +29,18 @@
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.companyName = @"Test Company";
     config.requiredBillingAddressFields = STPBillingAddressFieldsFull;
-    config.additionalPaymentMethods = STPPaymentMethodTypeAll;
+    config.additionalPaymentOptions = STPPaymentOptionTypeAll;
     STPTheme *theme = [STPTheme defaultTheme];
     id customerContext = [STPMocks staticCustomerContextWithCustomer:[STPFixtures customerWithCardTokenAndSourceSources]];
-    id delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
+    id delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
     [STPLocalizationUtils overrideLanguageTo:language];
-    STPPaymentMethodsViewController *paymentMethodsVC = [[STPPaymentMethodsViewController alloc] initWithConfiguration:config
+    STPPaymentOptionsViewController *paymentOptionsVC = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config
                                                                                                                  theme:theme
                                                                                                        customerContext:customerContext
                                                                                                               delegate:delegate];
 
 
-    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:paymentMethodsVC];
+    UIView *viewToTest = [self stp_preparedAndSizedViewForSnapshotTestFromViewController:paymentOptionsVC];
 
     FBSnapshotVerifyView(viewToTest, nil);
     [STPLocalizationUtils overrideLanguageTo:nil];

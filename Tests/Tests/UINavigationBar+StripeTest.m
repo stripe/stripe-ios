@@ -18,35 +18,35 @@
 
 @implementation UINavigationBar_StripeTest
 
-- (STPPaymentMethodsViewController *)buildPaymentMethodsViewController {
+- (STPPaymentOptionsViewController *)buildPaymentOptionsViewController {
     id customerContext = [STPMocks staticCustomerContext];
     STPPaymentConfiguration *config = [STPFixtures paymentConfiguration];
     config.publishableKey = @"pk_test";
     STPTheme *theme = [STPTheme defaultTheme];
-    id delegate = OCMProtocolMock(@protocol(STPPaymentMethodsViewControllerDelegate));
-    STPPaymentMethodsViewController *paymentMethodsVC = [[STPPaymentMethodsViewController alloc] initWithConfiguration:config
+    id delegate = OCMProtocolMock(@protocol(STPPaymentOptionsViewControllerDelegate));
+    STPPaymentOptionsViewController *paymentOptionsVC = [[STPPaymentOptionsViewController alloc] initWithConfiguration:config
                                                                                                                  theme:theme
                                                                                                        customerContext:customerContext
                                                                                                               delegate:delegate];
-    return paymentMethodsVC;
+    return paymentOptionsVC;
 }
 
 - (void)testVCUsesNavigationBarColor {
-    STPPaymentMethodsViewController *paymentMethodsVC = [self buildPaymentMethodsViewController];
+    STPPaymentOptionsViewController *paymentOptionsVC = [self buildPaymentOptionsViewController];
     STPTheme *navTheme = [STPTheme new];
     navTheme.accentColor = [UIColor purpleColor];
 
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsVC];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:paymentOptionsVC];
     navController.navigationBar.stp_theme = navTheme;
-    __unused UIView *view = paymentMethodsVC.view;
-    XCTAssertEqualObjects(paymentMethodsVC.navigationItem.leftBarButtonItem.tintColor, [UIColor purpleColor]);
+    __unused UIView *view = paymentOptionsVC.view;
+    XCTAssertEqualObjects(paymentOptionsVC.navigationItem.leftBarButtonItem.tintColor, [UIColor purpleColor]);
 }
 
 - (void)testVCDoesNotUseNavigationBarColor {
-    STPPaymentMethodsViewController *paymentMethodsVC = [self buildPaymentMethodsViewController];
-    __unused UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:paymentMethodsVC];
-    __unused UIView *view = paymentMethodsVC.view;
-    XCTAssertEqualObjects(paymentMethodsVC.navigationItem.leftBarButtonItem.tintColor, [STPTheme defaultTheme].accentColor);
+    STPPaymentOptionsViewController *paymentOptionsVC = [self buildPaymentOptionsViewController];
+    __unused UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:paymentOptionsVC];
+    __unused UIView *view = paymentOptionsVC.view;
+    XCTAssertEqualObjects(paymentOptionsVC.navigationItem.leftBarButtonItem.tintColor, [STPTheme defaultTheme].accentColor);
 }
 
 

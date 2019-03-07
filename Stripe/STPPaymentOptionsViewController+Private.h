@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodsViewController+Private.h
+//  STPPaymentOptionsViewController+Private.h
 //  Stripe
 //
 //  Created by Jack Flintermann on 5/18/16.
@@ -10,17 +10,17 @@
 
 #import "STPBackendAPIAdapter.h"
 #import "STPPaymentConfiguration.h"
-#import "STPPaymentMethod.h"
-#import "STPPaymentMethodTuple.h"
+#import "STPPaymentOption.h"
+#import "STPPaymentOptionTuple.h"
 #import "STPPromise.h"
 
-@interface STPPaymentMethodsViewController (Private)
+@interface STPPaymentOptionsViewController (Private)
 
 - (instancetype)initWithConfiguration:(STPPaymentConfiguration *)configuration
                            apiAdapter:(id<STPBackendAPIAdapter>)apiAdapter
-                       loadingPromise:(STPPromise<STPPaymentMethodTuple *> *)loadingPromise
+                       loadingPromise:(STPPromise<STPPaymentOptionTuple *> *)loadingPromise
                                 theme:(STPTheme *)theme
                       shippingAddress:(STPAddress *)shippingAddress
-                             delegate:(id<STPPaymentMethodsViewControllerDelegate>)delegate;
+                             delegate:(id<STPPaymentOptionsViewControllerDelegate>)delegate;
 
 @end

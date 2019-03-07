@@ -224,7 +224,7 @@ NS_ASSUME_NONNULL_BEGIN
     return card;
 }
 
-#pragma mark - STPPaymentMethod
+#pragma mark - STPPaymentOption
 
 - (UIImage *)image {
     return [STPImageLibrary brandImageForCardBrand:self.brand];

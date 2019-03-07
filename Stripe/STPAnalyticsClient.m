@@ -23,8 +23,8 @@
 #import "STPPaymentCardTextField+Private.h"
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentContext.h"
-#import "STPPaymentMethodsViewController+Private.h"
-#import "STPPaymentMethodsViewController.h"
+#import "STPPaymentOptionsViewController+Private.h"
+#import "STPPaymentOptionsViewController.h"
 #import "STPToken.h"
 #import <UIKit/UIKit.h>
 #import <sys/utsname.h>
@@ -84,11 +84,11 @@
                                                    [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPAddCardViewController class])]];
                                                } error:nil];
         
-        [STPPaymentMethodsViewController stp_aspect_hookSelector:@selector(initWithConfiguration:apiAdapter:loadingPromise:theme:shippingAddress:delegate:)
+        [STPPaymentOptionsViewController stp_aspect_hookSelector:@selector(initWithConfiguration:apiAdapter:loadingPromise:theme:shippingAddress:delegate:)
                                                      withOptions:STPAspectPositionAfter
                                                       usingBlock:^{
                                                           STPAnalyticsClient *client = [self sharedClient];
-                                                          [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPPaymentMethodsViewController class])]];
+                                                          [client setApiUsage:[client.apiUsage setByAddingObject:NSStringFromClass([STPPaymentOptionsViewController class])]];
                                                       } error:nil];
 
         [STPShippingAddressViewController stp_aspect_hookSelector:@selector(initWithConfiguration:theme:currency:shippingAddress:selectedShippingMethod:prefilledInformation:)
@@ -253,10 +253,10 @@
 + (NSDictionary *)serializeConfiguration:(STPPaymentConfiguration *)configuration {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     dictionary[@"publishable_key"] = configuration.publishableKey ?: @"unknown";
-    switch (configuration.additionalPaymentMethods) {
-        case STPPaymentMethodTypeAll:
+    switch (configuration.additionalPaymentOptions) {
+        case STPPaymentOptionTypeAll:
             dictionary[@"additional_payment_methods"] = @"all";
-        case STPPaymentMethodTypeNone:
+        case STPPaymentOptionTypeNone:
             dictionary[@"additional_payment_methods"] = @"none";
     }
     switch (configuration.requiredBillingAddressFields) {

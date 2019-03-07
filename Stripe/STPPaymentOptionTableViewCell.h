@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodTableViewCell.h
+//  STPPaymentOptionTableViewCell.h
 //  Stripe
 //
 //  Created by Ben Guo on 8/30/16.
@@ -10,14 +10,14 @@
 
 @class STPTheme;
 
-@protocol STPPaymentMethod;
+@protocol STPPaymentOption;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPPaymentMethodTableViewCell : UITableViewCell
+@interface STPPaymentOptionTableViewCell : UITableViewCell
 
 - (void)configureForNewCardRowWithTheme:(STPTheme *)theme;
-- (void)configureWithPaymentMethod:(id<STPPaymentMethod>)paymentMethod theme:(STPTheme *)theme selected:(BOOL)selected;
+- (void)configureWithPaymentOption:(id<STPPaymentOption>)paymentOption theme:(STPTheme *)theme selected:(BOOL)selected;
 
 @end
 

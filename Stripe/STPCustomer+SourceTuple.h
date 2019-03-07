@@ -8,7 +8,7 @@
 
 #import <Stripe/Stripe.h>
 
-#import "STPPaymentMethodTuple.h"
+#import "STPPaymentOptionTuple.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,12 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Returns a tuple for this customer's sources array and defaultSource
  filtered to only include the source types supported 
- by STPPaymentContext/STPPaymentMethodsViewController and adding Apple Pay as a 
+ by STPPaymentContext/STPPaymentOptionsViewController and adding Apple Pay as a 
  method if appropriate.
 
  @return A new tuple ready to be used by the SDK's UI elements
  */
-- (STPPaymentMethodTuple *)filteredSourceTupleForUIWithConfiguration:(STPPaymentConfiguration *)configuration;
+- (STPPaymentOptionTuple *)filteredSourceTupleForUIWithConfiguration:(STPPaymentConfiguration *)configuration;
 
 @end
 

@@ -305,7 +305,7 @@
     XCTAssertEqualObjects(card.stripeID, @"card_103kbR2eZvKYlo2CDczLmw4K");
 }
 
-#pragma mark - STPPaymentMethod Tests
+#pragma mark - STPPaymentOption Tests
 
 - (void)testImage {
     STPCard *card = [STPFixtures card];

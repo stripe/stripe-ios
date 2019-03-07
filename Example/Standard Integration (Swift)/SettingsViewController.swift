@@ -11,7 +11,7 @@ import Stripe
 
 struct Settings {
     let theme: STPTheme
-    let additionalPaymentMethods: STPPaymentMethodType
+    let additionalPaymentOptions: STPPaymentOptionType
     let requiredBillingAddressFields: STPBillingAddressFields
     let requiredShippingAddressFields: Set<STPContactField>
     let shippingType: STPShippingType
@@ -20,7 +20,7 @@ struct Settings {
 class SettingsViewController: UITableViewController {
     var settings: Settings {
         return Settings(theme: self.theme.stpTheme,
-                        additionalPaymentMethods: self.applePay.enabled ? .all : STPPaymentMethodType(),
+                        additionalPaymentOptions: self.applePay.enabled ? .all : STPPaymentOptionType(),
                         requiredBillingAddressFields: self.requiredBillingAddressFields.stpBillingAddressFields,
                         requiredShippingAddressFields: self.requiredShippingAddressFields.stpContactFields,
                         shippingType: self.shippingType.stpShippingType)

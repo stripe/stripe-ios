@@ -32,7 +32,7 @@
  A PaymentConfiguration object with a fake publishable key and a fake apple
  merchant identifier that ignores the true value of [Stripe deviceSupportsApplePay]
  and bases its `applePayEnabled` value solely on what is set
- in `additionalPaymentMethods`
+ in `additionalPaymentOptions`
  */
 + (STPPaymentConfiguration *)paymentConfigurationWithApplePaySupportingDevice;
 
