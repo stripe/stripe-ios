@@ -13,10 +13,6 @@
 
 @interface STPPaymentMethodBillingDetails ()
 
-@property (nonatomic, nullable) STPPaymentMethodBillingDetailsAddress *address;
-@property (nonatomic, nullable) NSString *email;
-@property (nonatomic, nullable) NSString *name;
-@property (nonatomic, nullable) NSString *phone;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end

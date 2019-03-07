@@ -12,12 +12,6 @@
 
 @interface STPPaymentMethodBillingDetailsAddress ()
 
-@property (nonatomic, nullable) NSString *city;
-@property (nonatomic, nullable) NSString *country;
-@property (nonatomic, nullable) NSString *line1;
-@property (nonatomic, nullable) NSString *line2;
-@property (nonatomic, nullable) NSString *postalCode;
-@property (nonatomic, nullable) NSString *state;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
