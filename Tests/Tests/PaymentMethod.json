@@ -1,4 +1,4 @@
-// Source: https://site-admin.stripe.com/docs/api/payment_methods/object
+// Source: https://stripe.com/docs/api/payment_methods/object
 {
   "id": "pm_123456789",
   "object": "payment_method",

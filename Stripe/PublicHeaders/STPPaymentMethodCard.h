@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Contains details about a user's credit card.
  
- @see https://site-admin.stripe.com/docs/api/payment_methods/object#payment_method_object-card
+ @see https://stripe.com/docs/api/payment_methods/object#payment_method_object-card
  */
 @interface STPPaymentMethodCard : NSObject <STPAPIResponseDecodable>
 

@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Billing information associated with a `STPPaymentMethod` that may be used or required by particular types of payment methods.
  
- @see https://site-admin.stripe.com/docs/api/payment_methods/object#payment_method_object-billing_details
+ @see https://stripe.com/docs/api/payment_methods/object#payment_method_object-billing_details
  */
 
 /**

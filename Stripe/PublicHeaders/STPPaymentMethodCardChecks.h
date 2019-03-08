@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Checks on Card address and CVC.
  
- @see https://site-admin.stripe.com/docs/api/payment_methods/object#payment_method_object-card-checks
+ @see https://stripe.com/docs/api/payment_methods/object#payment_method_object-card-checks
  */
 @interface STPPaymentMethodCardChecks : NSObject <STPAPIResponseDecodable>
 
