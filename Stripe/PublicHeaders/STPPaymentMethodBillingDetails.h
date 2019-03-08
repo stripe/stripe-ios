@@ -14,13 +14,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPPaymentMethodBillingDetails : NSObject <STPAPIResponseDecodable>
-
 /**
  Billing information associated with a `STPPaymentMethod` that may be used or required by particular types of payment methods.
  
  @see https://stripe.com/docs/api/payment_methods/object#payment_method_object-billing_details
  */
+@interface STPPaymentMethodBillingDetails : NSObject <STPAPIResponseDecodable>
 
 /**
  Billing address.

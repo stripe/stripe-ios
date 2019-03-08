@@ -12,6 +12,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Contains details on how an `STPPaymentMethodCard` maybe be used for 3D Secure authentication.
+ */
 @interface STPPaymentMethodThreeDSecureUsage : NSObject <STPAPIResponseDecodable>
 
 /**

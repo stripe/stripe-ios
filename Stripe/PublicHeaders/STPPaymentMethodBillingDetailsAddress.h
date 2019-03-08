@@ -12,6 +12,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ The billing address, a property on `STPPaymentMethodBillingDetails`
+ */
 @interface STPPaymentMethodBillingDetailsAddress : NSObject <STPAPIResponseDecodable>
 
 /**
