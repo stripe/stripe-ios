@@ -14,11 +14,17 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentStatus) {
      Unknown status
      */
     STPPaymentIntentStatusUnknown,
+    
+    /**
+     This PaymentIntent requires a PaymentMethod or Source
+     */
+    STPPaymentIntentStatusRequiresPaymentMethod,
 
     /**
      This PaymentIntent requires a Source
+     @deprecated Use STPPaymentIntentStatusRequiresPaymentMethod instead.
      */
-    STPPaymentIntentStatusRequiresSource,
+    STPPaymentIntentStatusRequiresSource DEPRECATED_MSG_ATTRIBUTE("Use STPPaymentIntentStatusRequiresPaymentMethod"),
 
     /**
      This PaymentIntent needs to be confirmed

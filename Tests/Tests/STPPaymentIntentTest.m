@@ -32,10 +32,17 @@
 }
 
 - (void)testStatusFromString {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_source"],
-                   STPPaymentIntentStatusRequiresSource);
+                    STPPaymentIntentStatusRequiresSource);
     XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_SOURCE"],
-                   STPPaymentIntentStatusRequiresSource);
+                    STPPaymentIntentStatusRequiresSource);
+#pragma clang diagnostic pop
+    XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_payment_method"],
+                   STPPaymentIntentStatusRequiresPaymentMethod);
+    XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_PAYMENT_METHOD"],
+                   STPPaymentIntentStatusRequiresPaymentMethod);
 
     XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_confirmation"],
                    STPPaymentIntentStatusRequiresConfirmation);

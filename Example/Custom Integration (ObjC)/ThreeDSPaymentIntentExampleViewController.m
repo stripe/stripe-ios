@@ -109,8 +109,8 @@
 
 - (void)finishWithStatus:(STPPaymentIntentStatus)status {
     switch (status) {
-        // There may have been a problem with the STPSourceParams
-        case STPPaymentIntentStatusRequiresSource:
+        // There may have been a problem with the payment method (STPPaymentMethodParams or STPSourceParams)
+        case STPPaymentIntentStatusRequiresPaymentMethod:
         // did you call `confirmPaymentIntentWithParams:completion`?
         case STPPaymentIntentStatusRequiresConfirmation:
         // App should have handled the source action, but didn't for some reason
