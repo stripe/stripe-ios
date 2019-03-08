@@ -97,6 +97,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly) NSString *sourceId;
 
 /**
+ The Stripe ID of the PaymentMethod used in this PaymentIntent.
+ */
+@property (nonatomic, nullable, readonly) NSString *paymentMethodId;
+
+/**
  Status of the PaymentIntent
  */
 @property (nonatomic, readonly) STPPaymentIntentStatus status;
