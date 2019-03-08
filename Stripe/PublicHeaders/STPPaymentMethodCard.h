@@ -62,6 +62,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly) NSString *last4;
 
 /**
+ Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example.
+ */
+@property (nonatomic, nullable, readonly) NSString *fingerprint;
+
+/**
  Contains details on how this Card maybe be used for 3D Secure authentication.
  */
 @property (nonatomic, nullable, readonly) STPPaymentMethodThreeDSecureUsage *threeDSecureUsage;

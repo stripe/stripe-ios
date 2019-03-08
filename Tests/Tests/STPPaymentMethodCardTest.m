@@ -41,6 +41,7 @@
     XCTAssertEqual(card.expYear, 2020);
     XCTAssertEqualObjects(card.funding, @"credit");
     XCTAssertEqualObjects(card.last4, @"4242");
+    XCTAssertEqualObjects(card.fingerprint, @"6gVyxfIhqc8Z0g0X");
     XCTAssertNotNil(card.threeDSecureUsage);
     XCTAssertEqual(card.threeDSecureUsage.supported, YES);
 }

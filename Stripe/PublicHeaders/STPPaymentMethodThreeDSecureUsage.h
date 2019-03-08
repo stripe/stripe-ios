@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPPaymentMethodThreeDSecureUsage.")));
 
 /**
- `YES` if 3D Secure is support on this card.
+ `YES` if 3D Secure is supported on this card.
  */
 @property (nonatomic, readonly) BOOL supported;
 

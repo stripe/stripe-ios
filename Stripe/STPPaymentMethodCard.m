@@ -21,6 +21,7 @@
 @property (nonatomic) NSInteger expYear;
 @property (nonatomic, nullable) NSString *funding;
 @property (nonatomic, nullable) NSString *last4;
+@property (nonatomic, nullable) NSString *fingerprint;
 @property (nonatomic, nullable) STPPaymentMethodThreeDSecureUsage *threeDSecureUsage;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
@@ -44,6 +45,7 @@
     card.expYear = [dict stp_intForKey:@"exp_year" or:0];
     card.funding = [dict stp_stringForKey:@"funding"];
     card.last4 = [dict stp_stringForKey:@"last4"];
+    card.fingerprint = [dict stp_stringForKey:@"fingerprint"];
     card.threeDSecureUsage = [STPPaymentMethodThreeDSecureUsage decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"three_d_secure_usage"]];
     return card;
 }
