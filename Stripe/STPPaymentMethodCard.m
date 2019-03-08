@@ -36,7 +36,7 @@
     if (!dict) {
         return nil;
     }
-    STPPaymentMethodCard *card = [STPPaymentMethodCard new];
+    STPPaymentMethodCard *card = [self new];
     card.allResponseFields = dict;
     card.brand = [dict stp_stringForKey:@"brand"];
     card.checks = [STPPaymentMethodCardChecks decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"checks"]];

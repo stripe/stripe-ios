@@ -26,7 +26,7 @@
     if (!dict) {
         return nil;
     }
-    STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
+    STPPaymentMethodBillingDetails *billingDetails = [self new];
     billingDetails.allResponseFields = dict;
     billingDetails.address = [STPPaymentMethodBillingDetailsAddress decodedObjectFromAPIResponse:[response stp_dictionaryForKey:@"address"]];
     billingDetails.email = [dict stp_stringForKey:@"email"];

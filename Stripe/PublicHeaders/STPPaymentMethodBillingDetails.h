@@ -30,17 +30,17 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Email address.
  */
-@property (nonatomic, nullable) NSString *email;
+@property (nonatomic, copy, nullable) NSString *email;
 
 /**
  Full name.
  */
-@property (nonatomic, nullable) NSString *name;
+@property (nonatomic, copy, nullable) NSString *name;
 
 /**
  Billing phone number (including extension).
  */
-@property (nonatomic, nullable) NSString *phone;
+@property (nonatomic, copy, nullable) NSString *phone;
 
 @end
 

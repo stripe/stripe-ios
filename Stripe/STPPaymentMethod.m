@@ -36,7 +36,7 @@
     if (!dict) {
         return nil;
     }
-    STPPaymentMethod * paymentMethod = [STPPaymentMethod new];
+    STPPaymentMethod * paymentMethod = [self new];
     paymentMethod.allResponseFields = dict;
     paymentMethod.identifier = [dict stp_stringForKey:@"id"];
     paymentMethod.created = [dict stp_dateForKey:@"created"];

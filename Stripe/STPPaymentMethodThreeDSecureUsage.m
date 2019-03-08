@@ -23,7 +23,7 @@
 
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
     NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
-    if (!dict || [dict objectForKey:@"supported"] == nil) {
+    if (!dict || dict[@"supported"] == nil) {
         return nil;
     }
     STPPaymentMethodThreeDSecureUsage *usage = [self new];

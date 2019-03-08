@@ -26,7 +26,7 @@
     if (!dict) {
         return nil;
     }
-    STPPaymentMethodBillingDetailsAddress *address = [STPPaymentMethodBillingDetailsAddress new];
+    STPPaymentMethodBillingDetailsAddress *address = [self new];
     address.allResponseFields = dict;
     address.city = [dict stp_stringForKey:@"city"];
     address.country = [dict stp_stringForKey:@"country"];
