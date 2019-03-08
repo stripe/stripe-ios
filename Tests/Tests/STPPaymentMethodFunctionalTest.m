@@ -26,8 +26,8 @@
     STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     card.number = @"4242424242424242";
-    card.expMonth = @"10";
-    card.expYear = @"2022";
+    card.expMonth = 10;
+    card.expYear = 2022;
     card.cvc = @"100";
     
     STPPaymentMethodBillingDetailsAddress *billingAddress = [STPPaymentMethodBillingDetailsAddress new];
@@ -45,7 +45,7 @@
     billingDetails.phone = @"555-555-5555";
     
     
-    STPPaymentMethodParams *params = [STPPaymentMethodParams cardParamsWithCard:card
+    STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithCard:card
                                                                  billingDetails:billingDetails
                                                                        metadata:@{@"test_key": @"test_value"}];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Method retrieve"];
@@ -53,7 +53,7 @@
                                completion:^(STPPaymentMethod *paymentMethod, NSError *error) {
                                    XCTAssertNil(error);
                                    XCTAssertNotNil(paymentMethod);
-                                   XCTAssertEqualObjects(paymentMethod.identifier, @"pm_1EBSEWBbvEcIpqUbBHBUkXgQ");
+                                   XCTAssertEqualObjects(paymentMethod.stripeId, @"pm_1EBSEWBbvEcIpqUbBHBUkXgQ");
                                    XCTAssertEqualObjects(paymentMethod.created, [NSDate dateWithTimeIntervalSince1970:1551988224]);
                                    XCTAssertFalse(paymentMethod.liveMode);
                                    XCTAssertEqualObjects(paymentMethod.type, @"card");
@@ -73,10 +73,10 @@
                                    XCTAssertEqualObjects(paymentMethod.billingDetails.address.postalCode, @"94103");
                                    
                                    // Card
-                                   XCTAssertEqualObjects(paymentMethod.card.brand, @"visa");
-                                   XCTAssertEqualObjects(paymentMethod.card.checks.cvcCheck, @"unchecked");
-                                   XCTAssertEqualObjects(paymentMethod.card.checks.addressLine1Check, @"unchecked");
-                                   XCTAssertEqualObjects(paymentMethod.card.checks.addressPostalCodeCheck, @"unchecked");
+                                   XCTAssertEqual(paymentMethod.card.brand, STPCardBrandVisa);
+                                   XCTAssertEqual(paymentMethod.card.checks.cvcCheck, STPPaymentMethodCardCheckResultUnchecked);
+                                   XCTAssertEqual(paymentMethod.card.checks.addressLine1Check, STPPaymentMethodCardCheckResultUnchecked);
+                                   XCTAssertEqual(paymentMethod.card.checks.addressPostalCodeCheck, STPPaymentMethodCardCheckResultUnchecked);
                                    XCTAssertEqualObjects(paymentMethod.card.country, @"US");
                                    XCTAssertEqual(paymentMethod.card.expMonth, 10);
                                    XCTAssertEqual(paymentMethod.card.expYear, 2022);

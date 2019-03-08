@@ -50,7 +50,7 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodParamsType) {
  @param billingDetails      An object containing the user's billing details.
  @param metadata            Additional information to attach to the PaymentMethod.
  */
-+ (STPPaymentMethodParams *)cardParamsWithCard:(STPPaymentMethodCardParams *)card
++ (STPPaymentMethodParams *)paramsWithCard:(STPPaymentMethodCardParams *)card
                                 billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
                                       metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 

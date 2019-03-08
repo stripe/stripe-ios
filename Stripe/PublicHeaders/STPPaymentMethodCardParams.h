@@ -22,12 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Two-digit number representing the card's expiration month.
  */
-@property (nonatomic, nullable) NSString *expMonth;
+@property (nonatomic) NSUInteger expMonth;
 
 /**
  Two- or four-digit number representing the card's expiration year.
  */
-@property (nonatomic, nullable) NSString *expYear;
+@property (nonatomic) NSUInteger expYear;
 
 /**
  For backwards compatibility, you can alternatively set this as a Stripe token (e.g., for apple pay)

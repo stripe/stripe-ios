@@ -13,7 +13,7 @@
 
 @synthesize additionalAPIParameters = _additionalAPIParameters;
 
-+ (STPPaymentMethodParams *)cardParamsWithCard:(STPPaymentMethodCardParams *)card billingDetails:(STPPaymentMethodBillingDetails *)billingDetails metadata:(NSDictionary<NSString *,NSString *> *)metadata {
++ (STPPaymentMethodParams *)paramsWithCard:(STPPaymentMethodCardParams *)card billingDetails:(STPPaymentMethodBillingDetails *)billingDetails metadata:(NSDictionary<NSString *,NSString *> *)metadata {
     STPPaymentMethodParams *params = [STPPaymentMethodParams new];
     params.type = STPPaymentMethodParamsTypeCard;
     params.card = card;
