@@ -1,0 +1,67 @@
+//
+//  STPPaymentMethodCardWallet.m
+//  Stripe
+//
+//  Created by Yuki Tokuhiro on 3/9/19.
+//  Copyright © 2019 Stripe, Inc. All rights reserved.
+//
+
+#import "STPPaymentMethodCardWallet.h"
+#import "STPPaymentMethodCardWallet+Private.h"
+
+#import "STPPaymentMethodCardWalletVisaCheckout.h"
+#import "STPPaymentMethodCardWalletMasterpass.h"
+
+#import "NSDictionary+Stripe.h"
+
+@interface STPPaymentMethodCardWallet()
+
+@property (nonatomic) STPPaymentMethodCardWalletType type;
+@property (nonatomic, nullable) STPPaymentMethodCardWalletMasterpass *masterpass;
+@property (nonatomic, nullable) STPPaymentMethodCardWalletVisaCheckout *visaCheckout;
+@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+
+@end
+
+@implementation STPPaymentMethodCardWallet
+
+#pragma mark - STPPaymentMethodCardWalletType
+
++ (NSDictionary<NSString *,NSNumber *> *)stringToTypeMapping {
+    return @{
+             @"amex_express_checkout": @(STPPaymentMethodCardWalletTypeAmexExpressCheckout),
+             @"apple_pay": @(STPPaymentMethodCardWalletTypeApplePay),
+             @"google_pay": @(STPPaymentMethodCardWalletTypeGooglePay),
+             @"masterpass": @(STPPaymentMethodCardWalletTypeMasterpass),
+             @"samsung_pay": @(STPPaymentMethodCardWalletTypeSamsungPay),
+             @"visa_checkout": @(STPPaymentMethodCardWalletTypeVisaCheckout),
+             };
+}
+
++ (STPPaymentMethodCardWalletType)typeFromString:(NSString *)string {
+    NSString *key = [string lowercaseString];
+    NSNumber *typeNumber = [self stringToTypeMapping][key];
+    
+    if (typeNumber != nil) {
+        return (STPPaymentMethodCardWalletType)[typeNumber integerValue];
+    }
+    
+    return STPPaymentMethodCardWalletTypeUnknown;
+}
+
+#pragma mark - STPAPIResponseDecodable
+
++ (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
+    NSDictionary *dict = [response stp_dictionaryByRemovingNulls];
+    if (!dict) {
+        return nil;
+    }
+    STPPaymentMethodCardWallet *wallet = [self new];
+    wallet.allResponseFields = dict;
+    wallet.type = [self typeFromString:[dict stp_stringForKey:@"type"]];
+    wallet.visaCheckout = [STPPaymentMethodCardWalletVisaCheckout decodedObjectFromAPIResponse:[response stp_dictionaryForKey:@"visa_checkout"]];
+    wallet.masterpass = [STPPaymentMethodCardWalletMasterpass decodedObjectFromAPIResponse:[response stp_dictionaryForKey:@"masterpass"]];
+    return wallet;
+}
+
+@end

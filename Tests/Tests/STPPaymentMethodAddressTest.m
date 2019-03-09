@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodBillingDetailsAddressTest.m
+//  STPPaymentMethodAddressTest.m
 //  StripeiOS Tests
 //
 //  Created by Yuki Tokuhiro on 3/6/19.
@@ -8,15 +8,15 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPPaymentMethodBillingDetailsAddress.h"
+#import "STPPaymentMethodAddress.h"
 #import "STPTestUtils.h"
 #import "STPFixtures.h"
 
-@interface STPPaymentMethodBillingDetailsAddressTest : XCTestCase
+@interface STPPaymentMethodAddressTest : XCTestCase
 
 @end
 
-@implementation STPPaymentMethodBillingDetailsAddressTest
+@implementation STPPaymentMethodAddressTest
 
 - (void)testDecodedObjectFromAPIResponseRequiredFields {
     NSArray<NSString *> *requiredFields = @[];
@@ -25,15 +25,15 @@
         NSMutableDictionary *response = [[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"billing_details"][@"address"] mutableCopy];
         [response removeObjectForKey:field];
         
-        XCTAssertNil([STPPaymentMethodBillingDetailsAddress decodedObjectFromAPIResponse:response]);
+        XCTAssertNil([STPPaymentMethodAddress decodedObjectFromAPIResponse:response]);
     }
 
-    XCTAssertNotNil([STPPaymentMethodBillingDetailsAddress decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"billing_details"][@"address"]]);
+    XCTAssertNotNil([STPPaymentMethodAddress decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"billing_details"][@"address"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
     NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"billing_details"][@"address"];
-    STPPaymentMethodBillingDetailsAddress *address = [STPPaymentMethodBillingDetailsAddress decodedObjectFromAPIResponse:response];
+    STPPaymentMethodAddress *address = [STPPaymentMethodAddress decodedObjectFromAPIResponse:response];
     XCTAssertEqualObjects(address.city, @"München");
     XCTAssertEqualObjects(address.country, @"DE");
     XCTAssertEqualObjects(address.postalCode, @"80337");

@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodBillingDetailsAddress.h
+//  STPPaymentMethodAddress.h
 //  Stripe
 //
 //  Created by Yuki Tokuhiro on 3/5/19.
@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The billing address, a property on `STPPaymentMethodBillingDetails`
  */
-@interface STPPaymentMethodBillingDetailsAddress : NSObject <STPAPIResponseDecodable, STPFormEncodable>
+@interface STPPaymentMethodAddress : NSObject <STPAPIResponseDecodable, STPFormEncodable>
 
 /**
  City/District/Suburb/Town/Village.
