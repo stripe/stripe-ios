@@ -11,7 +11,7 @@
 #import "STPAPIResponseDecodable.h"
 #import "STPPaymentMethodEnums.h"
 
-@class STPPaymentMethodBillingDetails, STPPaymentMethodCard;
+@class STPPaymentMethodBillingDetails, STPPaymentMethodCard, STPPaymentMethodIdeal;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -52,6 +52,11 @@ NS_ASSUME_NONNULL_BEGIN
  If this is a card PaymentMethod (ie `self.type == STPPaymentMethodTypeCard`), this contains additional details.
  */
 @property (nonatomic, nullable, readonly) STPPaymentMethodCard *card;
+
+/**
+ If this is a iDEAL PaymentMethod (ie `self.type == STPPaymentMethodTypeIdeal`), this contains additional details.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodIdeal *ideal;
 
 /**
  The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.

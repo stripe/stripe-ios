@@ -11,6 +11,7 @@
 #import "NSDictionary+Stripe.h"
 #import "STPPaymentMethodBillingDetails.h"
 #import "STPPaymentMethodCard.h"
+#import "STPPaymentMethodIdeal.h"
 
 @interface STPPaymentMethod ()
 
@@ -20,6 +21,7 @@
 @property (nonatomic, readwrite) STPPaymentMethodType type;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBillingDetails *billingDetails;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCard *card;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodIdeal *ideal;
 @property (nonatomic, copy, nullable, readwrite) NSString *customerId;
 @property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString*, NSString *> *metadata;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
@@ -42,6 +44,7 @@
                        [NSString stringWithFormat:@"card = %@", self.card],
                        [NSString stringWithFormat:@"created = %@", self.created],
                        [NSString stringWithFormat:@"customerId = %@", self.customerId],
+                       [NSString stringWithFormat:@"ideal = %@", self.ideal],
                        [NSString stringWithFormat:@"liveMode = %@", self.liveMode ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"metadata = %@", self.metadata],
                        [NSString stringWithFormat:@"type = %@", [self.allResponseFields stp_stringForKey:@"type"]],
@@ -54,6 +57,7 @@
 + (NSDictionary<NSString *,NSNumber *> *)stringToTypeMapping {
     return @{
              @"card": @(STPPaymentMethodTypeCard),
+             @"ideal": @(STPPaymentMethodTypeIdeal),
              };
 }
 
@@ -94,6 +98,7 @@
     paymentMethod.billingDetails = [STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"billing_details"]];
     paymentMethod.card = [STPPaymentMethodCard decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"card"]];
     paymentMethod.type = [self typeFromString:[dict stp_stringForKey:@"type"]];
+    paymentMethod.ideal = [STPPaymentMethodIdeal decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"ideal"]];
     paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
     paymentMethod.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     return paymentMethod;
