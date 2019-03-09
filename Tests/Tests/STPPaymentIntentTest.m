@@ -49,10 +49,10 @@
     XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_CONFIRMATION"],
                    STPPaymentIntentStatusRequiresConfirmation);
 
-    XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_source_action"],
-                   STPPaymentIntentStatusRequiresSourceAction);
-    XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_SOURCE_ACTION"],
-                   STPPaymentIntentStatusRequiresSourceAction);
+    XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_action"],
+                   STPPaymentIntentStatusRequiresAction);
+    XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_ACTION"],
+                   STPPaymentIntentStatusRequiresAction);
 
     XCTAssertEqual([STPPaymentIntent statusFromString:@"processing"],
                    STPPaymentIntentStatusProcessing);
@@ -189,7 +189,7 @@
     XCTAssertNotNil(url);
     XCTAssertEqualObjects(url, [NSURL URLWithString:@"https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"]);
     XCTAssertEqualObjects(paymentIntent.sourceId, @"src_1Cl1AdIl4IdHmuTbseiDWq6m");
-    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresSourceAction);
+    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
 
     XCTAssertNotEqual(paymentIntent.allResponseFields, response, @"should have own copy of fields");
     XCTAssertEqualObjects(paymentIntent.allResponseFields, response, @"fields values should match");

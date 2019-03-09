@@ -166,7 +166,7 @@
 
     json[@"status"] = @"processing";
     XCTAssertNil(create(), @"not created with wrong status");
-    json[@"status"] = @"requires_source_action";
+    json[@"status"] = @"requires_action";
 
     json[@"next_source_action"][@"type"] = @"not_authorize_with_url";
     XCTAssertNil(create(), @"not created with wrong next_source_action.type");

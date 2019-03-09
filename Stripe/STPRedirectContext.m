@@ -61,7 +61,7 @@ typedef void (^STPBoolCompletionBlock)(BOOL success);
     NSURL *redirectURL = paymentIntent.nextSourceAction.authorizeWithURL.url;
     NSURL *returnURL = paymentIntent.nextSourceAction.authorizeWithURL.returnURL;
 
-    if (paymentIntent.status != STPPaymentIntentStatusRequiresSourceAction
+    if (paymentIntent.status != STPPaymentIntentStatusRequiresAction
         || paymentIntent.nextSourceAction.type != STPPaymentIntentSourceActionTypeAuthorizeWithURL
         || !redirectURL
         || !returnURL) {

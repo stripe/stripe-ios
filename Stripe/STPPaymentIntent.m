@@ -86,7 +86,7 @@
 #pragma clang diagnostic pop
                                                   @"requires_payment_method": @(STPPaymentIntentStatusRequiresPaymentMethod),
                                                   @"requires_confirmation": @(STPPaymentIntentStatusRequiresConfirmation),
-                                                  @"requires_source_action": @(STPPaymentIntentStatusRequiresSourceAction),
+                                                  @"requires_action": @(STPPaymentIntentStatusRequiresAction),
                                                   @"processing": @(STPPaymentIntentStatusProcessing),
                                                   @"succeeded": @(STPPaymentIntentStatusSucceeded),
                                                   @"requires_capture": @(STPPaymentIntentStatusRequiresCapture),

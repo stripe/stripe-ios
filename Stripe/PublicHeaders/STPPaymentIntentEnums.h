@@ -30,12 +30,19 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentStatus) {
      This PaymentIntent needs to be confirmed
      */
     STPPaymentIntentStatusRequiresConfirmation,
+    
+    /**
+     The selected Source requires additional authentication steps.
+     Additional actions found via `next_action`
+     */
+    STPPaymentIntentStatusRequiresAction,
 
     /**
      The selected Source requires additional authentication steps.
      Additional actions found via `next_source_action`
+     @deprecated Use STPPaymentIntentStatusRequiresAction instead.
      */
-    STPPaymentIntentStatusRequiresSourceAction,
+    STPPaymentIntentStatusRequiresSourceAction DEPRECATED_MSG_ATTRIBUTE("Use STPPaymentIntentStatusRequiresAction"),
 
     /**
      Stripe is processing this PaymentIntent
@@ -101,7 +108,7 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentConfirmationMethod) {
 
 /**
  Types of Source Actions from a `STPPaymentIntent`, when the payment intent
- status is `STPPaymentIntentStatusRequiresSourceAction`.
+ status is `STPPaymentIntentStatusRequiresAction`.
  */
 typedef NS_ENUM(NSUInteger, STPPaymentIntentSourceActionType) {
     /**

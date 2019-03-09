@@ -143,7 +143,7 @@
                                     XCTAssertFalse(paymentIntent.livemode);
 
                                     // sourceParams is the 3DS-required test card
-                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresSourceAction);
+                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
 
                                     // STPRedirectContext is relying on receiving returnURL
                                     XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL.returnURL);
@@ -195,7 +195,7 @@
                                     XCTAssertNotNil(paymentIntent.paymentMethodId);
                                     
                                     // sourceParams is the 3DS-required test card
-                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresSourceAction);
+                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
                                     
                                     // STPRedirectContext is relying on receiving returnURL
                                     XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL.returnURL);

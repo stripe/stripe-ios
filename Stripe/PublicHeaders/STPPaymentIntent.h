@@ -81,7 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL livemode;
 
 /**
- If `status == STPPaymentIntentStatusRequiresSourceAction`, this
+ If `status == STPPaymentIntentStatusRequiresAction`, this
  property contains the next action to take for this PaymentIntent.
  */
 @property (nonatomic, nullable, readonly) STPPaymentIntentSourceAction* nextSourceAction;
