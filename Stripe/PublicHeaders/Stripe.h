@@ -46,6 +46,7 @@
 #import "STPPaymentMethodAddress.h"
 #import "STPPaymentMethodBillingDetails.h"
 #import "STPPaymentMethodCard.h"
+#import "STPPaymentMethodCardPresent.h"
 #import "STPPaymentMethodCardWallet.h"
 #import "STPPaymentMethodCardWalletMasterpass.h"
 #import "STPPaymentMethodCardWalletVisaCheckout.h"

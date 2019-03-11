@@ -25,6 +25,8 @@
     XCTAssertEqual([STPPaymentMethod typeFromString:@"CARD"], STPPaymentMethodTypeCard);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"ideal"], STPPaymentMethodTypeIdeal);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"IDEAL"], STPPaymentMethodTypeIdeal);
+    XCTAssertEqual([STPPaymentMethod typeFromString:@"card_present"], STPPaymentMethodTypeCardPresent);
+    XCTAssertEqual([STPPaymentMethod typeFromString:@"CARD_PRESENT"], STPPaymentMethodTypeCardPresent);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"unknown_string"], STPPaymentMethodTypeUnknown);
 }
 
@@ -32,6 +34,7 @@
     NSArray<NSNumber *> *values = @[
                                     @(STPPaymentMethodTypeCard),
                                     @(STPPaymentMethodTypeIdeal),
+                                    @(STPPaymentMethodTypeCardPresent),
                                     @(STPPaymentMethodTypeUnknown),
                                     ];
     for (NSNumber *typeNumber in values) {
@@ -44,6 +47,9 @@
                 break;
             case STPPaymentMethodTypeIdeal:
                 XCTAssertEqualObjects(string, @"ideal");
+                break;
+            case STPPaymentMethodTypeCardPresent:
+                XCTAssertEqualObjects(string, @"card_present");
                 break;
             case STPPaymentMethodTypeUnknown:
                 XCTAssertNil(string);

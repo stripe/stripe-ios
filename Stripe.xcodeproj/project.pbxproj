@@ -485,6 +485,10 @@
 		B690DDFB222F0564000B902D /* STPPaymentMethodCard.m in Sources */ = {isa = PBXBuildFile; fileRef = B690DDF7222F0564000B902D /* STPPaymentMethodCard.m */; };
 		B69CFB4A22370547001E9885 /* STPPaymentMethodCardChecks+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CFB4922370547001E9885 /* STPPaymentMethodCardChecks+Private.h */; };
 		B69CFB4B22370547001E9885 /* STPPaymentMethodCardChecks+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CFB4922370547001E9885 /* STPPaymentMethodCardChecks+Private.h */; };
+		B69CFB452236F8E3001E9885 /* STPPaymentMethodCardPresent.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CFB432236F8E3001E9885 /* STPPaymentMethodCardPresent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B69CFB462236F8E3001E9885 /* STPPaymentMethodCardPresent.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CFB432236F8E3001E9885 /* STPPaymentMethodCardPresent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B69CFB472236F8E3001E9885 /* STPPaymentMethodCardPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = B69CFB442236F8E3001E9885 /* STPPaymentMethodCardPresent.m */; };
+		B69CFB482236F8E3001E9885 /* STPPaymentMethodCardPresent.m in Sources */ = {isa = PBXBuildFile; fileRef = B69CFB442236F8E3001E9885 /* STPPaymentMethodCardPresent.m */; };
 		B69FEC3F222EE8FE00273A16 /* STPPaymentMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B69FEC3C222EE8FE00273A16 /* STPPaymentMethod.m */; };
 		B69FEC40222EE8FE00273A16 /* STPPaymentMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B69FEC3C222EE8FE00273A16 /* STPPaymentMethod.m */; };
 		B69FEC42222EE9E000273A16 /* STPPaymentMethod.h in Headers */ = {isa = PBXBuildFile; fileRef = B69FEC41222EE9E000273A16 /* STPPaymentMethod.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1259,6 +1263,8 @@
 		B690DDF6222F0564000B902D /* STPPaymentMethodCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCard.h; path = PublicHeaders/STPPaymentMethodCard.h; sourceTree = "<group>"; };
 		B690DDF7222F0564000B902D /* STPPaymentMethodCard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCard.m; sourceTree = "<group>"; };
 		B69CFB4922370547001E9885 /* STPPaymentMethodCardChecks+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPPaymentMethodCardChecks+Private.h"; sourceTree = "<group>"; };
+		B69CFB432236F8E3001E9885 /* STPPaymentMethodCardPresent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardPresent.h; path = PublicHeaders/STPPaymentMethodCardPresent.h; sourceTree = "<group>"; };
+		B69CFB442236F8E3001E9885 /* STPPaymentMethodCardPresent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardPresent.m; sourceTree = "<group>"; };
 		B69FEC3C222EE8FE00273A16 /* STPPaymentMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethod.m; sourceTree = "<group>"; };
 		B69FEC41222EE9E000273A16 /* STPPaymentMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethod.h; path = PublicHeaders/STPPaymentMethod.h; sourceTree = "<group>"; };
 		B6B41F70223476AE0020BA7F /* STPPaymentMethodCardWalletMasterpassTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWalletMasterpassTest.m; sourceTree = "<group>"; };
@@ -2247,6 +2253,8 @@
 				B6027BC12230ABAE0025DB29 /* STPPaymentMethodCardParams.m */,
 				B6027BC02230ABAE0025DB29 /* STPPaymentMethodCardParams.h */,
 				B6DB0CA5223817A300AEF640 /* STPPaymentMethodEnums.h */,
+				B69CFB432236F8E3001E9885 /* STPPaymentMethodCardPresent.h */,
+				B69CFB442236F8E3001E9885 /* STPPaymentMethodCardPresent.m */,
 				B6DE52D92230981200B70A66 /* STPPaymentMethodParams.h */,
 				B6DE52DA2230981200B70A66 /* STPPaymentMethodParams.m */,
 				B621F051223454E9002141B7 /* STPPaymentMethodCardWallet.h */,
@@ -2396,6 +2404,7 @@
 				04EBC7561B7533C300A0E6AE /* STPCardValidationState.h in Headers */,
 				04F94DA11D229F12004FC826 /* STPAddressFieldTableViewCell.h in Headers */,
 				B6027BC32230ABAE0025DB29 /* STPPaymentMethodCardParams.h in Headers */,
+				B69CFB462236F8E3001E9885 /* STPPaymentMethodCardPresent.h in Headers */,
 				04EBC75A1B7533C300A0E6AE /* STPCardValidator.h in Headers */,
 				C159933D1D8808970047950D /* STPShippingMethodsViewController.h in Headers */,
 				F15232251EA9303800D65C67 /* STPURLCallbackHandler.h in Headers */,
@@ -2676,6 +2685,7 @@
 				04B31DF21D09F0A800EF1631 /* UIViewController+Stripe_NavigationItemProxy.h in Headers */,
 				B3BDCAC420EEF2150034F7F5 /* STPPaymentIntent+Private.h in Headers */,
 				8BD87B881EFB131700269C2B /* STPSourceCardDetails+Private.h in Headers */,
+				B69CFB452236F8E3001E9885 /* STPPaymentMethodCardPresent.h in Headers */,
 				8BD87B8D1EFB152B00269C2B /* STPSourceRedirect+Private.h in Headers */,
 				04CDB4D31A5F30A700B854EE /* Stripe.h in Headers */,
 				F1A0197C1EA5733200354301 /* STPSourceParams+Private.h in Headers */,
@@ -3248,6 +3258,7 @@
 				04633B171CD45437009D4FB5 /* STPCategoryLoader.m in Sources */,
 				B6B41F8222348A1E0020BA7F /* STPPaymentMethodIdealParams.m in Sources */,
 				F1D3A2531EB012220095BFA9 /* STPFile.m in Sources */,
+				B69CFB482236F8E3001E9885 /* STPPaymentMethodCardPresent.m in Sources */,
 				B621F05C22346243002141B7 /* STPPaymentMethodCardWalletMasterpass.m in Sources */,
 				F1DEB89C1E2074480066B8E8 /* STPCoreViewController.m in Sources */,
 				04F94DAC1D229F42004FC826 /* UIBarButtonItem+Stripe.m in Sources */,
@@ -3469,6 +3480,7 @@
 				049952D01BCF13510088C703 /* STPAPIRequest.m in Sources */,
 				F1A2F92E1EEB6A70006B0456 /* NSCharacterSet+Stripe.m in Sources */,
 				F1D3A24B1EB012010095BFA9 /* STPFile.m in Sources */,
+				B69CFB472236F8E3001E9885 /* STPPaymentMethodCardPresent.m in Sources */,
 				049A3F9A1CC76A2400F57DE7 /* NSBundle+Stripe_AppName.m in Sources */,
 				B690DDF4222F0211000B902D /* STPPaymentMethodAddress.m in Sources */,
 				B347DD491FE35423006B3BAC /* STPValidatedTextField.m in Sources */,
