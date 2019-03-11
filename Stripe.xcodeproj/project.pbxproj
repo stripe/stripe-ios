@@ -464,6 +464,8 @@
 		B690DDF9222F0564000B902D /* STPPaymentMethodCard.h in Headers */ = {isa = PBXBuildFile; fileRef = B690DDF6222F0564000B902D /* STPPaymentMethodCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B690DDFA222F0564000B902D /* STPPaymentMethodCard.m in Sources */ = {isa = PBXBuildFile; fileRef = B690DDF7222F0564000B902D /* STPPaymentMethodCard.m */; };
 		B690DDFB222F0564000B902D /* STPPaymentMethodCard.m in Sources */ = {isa = PBXBuildFile; fileRef = B690DDF7222F0564000B902D /* STPPaymentMethodCard.m */; };
+		B69CFB4A22370547001E9885 /* STPPaymentMethodCardChecks+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CFB4922370547001E9885 /* STPPaymentMethodCardChecks+Private.h */; };
+		B69CFB4B22370547001E9885 /* STPPaymentMethodCardChecks+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B69CFB4922370547001E9885 /* STPPaymentMethodCardChecks+Private.h */; };
 		B69FEC3F222EE8FE00273A16 /* STPPaymentMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B69FEC3C222EE8FE00273A16 /* STPPaymentMethod.m */; };
 		B69FEC40222EE8FE00273A16 /* STPPaymentMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B69FEC3C222EE8FE00273A16 /* STPPaymentMethod.m */; };
 		B69FEC42222EE9E000273A16 /* STPPaymentMethod.h in Headers */ = {isa = PBXBuildFile; fileRef = B69FEC41222EE9E000273A16 /* STPPaymentMethod.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1205,6 +1207,7 @@
 		B690DDF1222F0211000B902D /* STPPaymentMethodBillingDetailsAddress.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBillingDetailsAddress.m; sourceTree = "<group>"; };
 		B690DDF6222F0564000B902D /* STPPaymentMethodCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCard.h; path = PublicHeaders/STPPaymentMethodCard.h; sourceTree = "<group>"; };
 		B690DDF7222F0564000B902D /* STPPaymentMethodCard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCard.m; sourceTree = "<group>"; };
+		B69CFB4922370547001E9885 /* STPPaymentMethodCardChecks+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPPaymentMethodCardChecks+Private.h"; sourceTree = "<group>"; };
 		B69FEC3C222EE8FE00273A16 /* STPPaymentMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethod.m; sourceTree = "<group>"; };
 		B69FEC41222EE9E000273A16 /* STPPaymentMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethod.h; path = PublicHeaders/STPPaymentMethod.h; sourceTree = "<group>"; };
 		B6B5FC3F222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodThreeDSecureUsage.h; path = PublicHeaders/STPPaymentMethodThreeDSecureUsage.h; sourceTree = "<group>"; };
@@ -2068,6 +2071,7 @@
 				F1D3A2491EB012010095BFA9 /* STPMultipartFormDataPart.h */,
 				F1D3A24A1EB012010095BFA9 /* STPMultipartFormDataPart.m */,
 				B3BDCAC120EEF2150034F7F5 /* STPPaymentIntent+Private.h */,
+				B69CFB4922370547001E9885 /* STPPaymentMethodCardChecks+Private.h */,
 				B32B176420F80442000D6EF8 /* STPRedirectContext+Private.h */,
 				C1C1012C1E57A26F00C7BFAE /* STPSource+Private.h */,
 				8BD87B871EFB131400269C2B /* STPSourceCardDetails+Private.h */,
@@ -2324,6 +2328,7 @@
 				C1785F5D1EC60B5E00E9CFAC /* STPCardIOProxy.h in Headers */,
 				B6E2F309222F442E0001FED4 /* STPPaymentMethodCardChecks.h in Headers */,
 				C1363BB81D7633D800EB82B4 /* STPPaymentOptionTableViewCell.h in Headers */,
+				B69CFB4B22370547001E9885 /* STPPaymentMethodCardChecks+Private.h in Headers */,
 				C1271A3F1E3FA4EB00F25DFE /* STPSectionHeaderView.h in Headers */,
 				049E84D91A605EF0000B66CD /* Stripe.h in Headers */,
 				0439B9881C454F97005A1ED5 /* STPPaymentOptionsViewController.h in Headers */,
@@ -2505,6 +2510,7 @@
 				049952D21BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */,
 				8B429AD81EF9D4B400F95F34 /* STPBankAccountParams+Private.h in Headers */,
 				049A3F911CC740FF00F57DE7 /* NSDecimalNumber+Stripe_Currency.h in Headers */,
+				B69CFB4A22370547001E9885 /* STPPaymentMethodCardChecks+Private.h in Headers */,
 				3691EB712119111A008C49E1 /* STPCardValidator+Private.h in Headers */,
 				04633B071CD44F47009D4FB5 /* STPAPIClient+ApplePay.h in Headers */,
 				04BC29BD1CDD535700318357 /* STPSwitchTableViewCell.h in Headers */,

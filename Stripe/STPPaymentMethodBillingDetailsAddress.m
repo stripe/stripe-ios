@@ -12,7 +12,7 @@
 
 @interface STPPaymentMethodBillingDetailsAddress ()
 
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
 

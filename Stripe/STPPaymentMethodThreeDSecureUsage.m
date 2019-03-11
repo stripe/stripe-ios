@@ -12,8 +12,8 @@
 
 @interface STPPaymentMethodThreeDSecureUsage ()
 
-@property (nonatomic) BOOL supported;
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, readwrite) BOOL supported;
+@property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
 

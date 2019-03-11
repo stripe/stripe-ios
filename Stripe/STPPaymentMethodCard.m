@@ -15,16 +15,16 @@
 
 @interface STPPaymentMethodCard ()
 
-@property (nonatomic) STPCardBrand brand;
-@property (nonatomic, nullable) STPPaymentMethodCardChecks *checks;
-@property (nonatomic, nullable) NSString *country;
-@property (nonatomic) NSInteger expMonth;
-@property (nonatomic) NSInteger expYear;
-@property (nonatomic, nullable) NSString *funding;
-@property (nonatomic, nullable) NSString *last4;
-@property (nonatomic, nullable) NSString *fingerprint;
-@property (nonatomic, nullable) STPPaymentMethodThreeDSecureUsage *threeDSecureUsage;
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, readwrite) STPCardBrand brand;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCardChecks *checks;
+@property (nonatomic, copy, nullable, readwrite) NSString *country;
+@property (nonatomic, readwrite) NSInteger expMonth;
+@property (nonatomic, readwrite) NSInteger expYear;
+@property (nonatomic, copy, nullable, readwrite) NSString *funding;
+@property (nonatomic, copy, nullable, readwrite) NSString *last4;
+@property (nonatomic, copy, nullable, readwrite) NSString *fingerprint;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodThreeDSecureUsage *threeDSecureUsage;
+@property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
 

@@ -14,15 +14,15 @@
 
 @interface STPPaymentMethod ()
 
-@property (nonatomic, nullable) NSString *stripeId;
-@property (nonatomic, nullable) NSDate *created;
-@property (nonatomic) BOOL liveMode;
-@property (nonatomic, nullable) NSString *type;
-@property (nonatomic, nullable) STPPaymentMethodBillingDetails *billingDetails;
-@property (nonatomic, nullable) STPPaymentMethodCard *card;
-@property (nonatomic, nullable) NSString *customerId;
-@property (nonatomic, nullable, copy) NSDictionary<NSString*, NSString *> *metadata;
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, copy, nullable, readwrite) NSString *stripeId;
+@property (nonatomic, strong, nullable, readwrite) NSDate *created;
+@property (nonatomic, readwrite) BOOL liveMode;
+@property (nonatomic, nullable, readwrite) NSString *type;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBillingDetails *billingDetails;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCard *card;
+@property (nonatomic, copy, nullable, readwrite) NSString *customerId;
+@property (nonatomic, copy, nullable) NSDictionary<NSString*, NSString *> *metadata;
+@property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
 
@@ -38,13 +38,13 @@
                        [NSString stringWithFormat:@"stripeId = %@", self.stripeId],
                        
                        // STPPaymentMethod details (alphabetical)
-                       [NSString stringWithFormat:@"created = %@", self.created],
-                       [NSString stringWithFormat:@"liveMode = %@", self.liveMode ? @"YES" : @"NO"],
-                       [NSString stringWithFormat:@"type = %@", self.type],
                        [NSString stringWithFormat:@"billingDetails = %@", self.billingDetails],
                        [NSString stringWithFormat:@"card = %@", self.card],
+                       [NSString stringWithFormat:@"created = %@", self.created],
                        [NSString stringWithFormat:@"customerId = %@", self.customerId],
+                       [NSString stringWithFormat:@"liveMode = %@", self.liveMode ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"metadata = %@", self.metadata],
+                       [NSString stringWithFormat:@"type = %@", self.type],
                        ];
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
 }

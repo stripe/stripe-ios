@@ -50,18 +50,6 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodCardCheckResult) {
  */
 @property (nonatomic, readonly) STPPaymentMethodCardCheckResult cvcCheck;
 
-/**
-@param string a string representing the check result as returned from
-the Stripe API
- 
-@see https://stripe.com/docs/api/payment_methods/object#payment_method_object-card-checks
-
-@return an enum value mapped to that string. If the string is unrecognized or nil,
-returns STPPaymentMethodCardCheckResultUnknown.
-*/
-+ (STPPaymentMethodCardCheckResult)checkResultFromString:(nullable NSString *)string;
-
-
 @end
 
 NS_ASSUME_NONNULL_END

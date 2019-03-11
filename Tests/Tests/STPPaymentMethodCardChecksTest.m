@@ -8,7 +8,7 @@
 
 @import XCTest;
 
-#import "STPPaymentMethodCardChecks.h"
+#import "STPPaymentMethodCardChecks+Private.h"
 
 @interface STPPaymentMethodCardChecksTest : XCTestCase
 

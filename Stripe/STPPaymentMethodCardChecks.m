@@ -12,10 +12,10 @@
 
 @interface STPPaymentMethodCardChecks ()
 
-@property (nonatomic) STPPaymentMethodCardCheckResult addressLine1Check;
-@property (nonatomic) STPPaymentMethodCardCheckResult addressPostalCodeCheck;
-@property (nonatomic) STPPaymentMethodCardCheckResult cvcCheck;
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, readwrite) STPPaymentMethodCardCheckResult addressLine1Check;
+@property (nonatomic, readwrite) STPPaymentMethodCardCheckResult addressPostalCodeCheck;
+@property (nonatomic, readwrite) STPPaymentMethodCardCheckResult cvcCheck;
+@property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
 
