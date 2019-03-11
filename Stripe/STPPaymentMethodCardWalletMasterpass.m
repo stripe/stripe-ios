@@ -24,6 +24,20 @@
 
 @implementation STPPaymentMethodCardWalletMasterpass
 
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+                       
+                       // Properties
+                       [NSString stringWithFormat:@"email: %@", self.email],
+                       [NSString stringWithFormat:@"name: %@", self.name],
+                       [NSString stringWithFormat:@"billingAddress: %@", self.billingAddress],
+                       [NSString stringWithFormat:@"shippingAddress: %@", self.shippingAddress],
+                       ];
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 #pragma mark - STPAPIResponseDecodable
 
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {

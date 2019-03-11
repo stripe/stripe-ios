@@ -25,6 +25,18 @@
 
 @implementation STPPaymentMethodCardWallet
 
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+                       
+                       // Properties
+                       [NSString stringWithFormat:@"masterpass: %@", self.masterpass],
+                       [NSString stringWithFormat:@"visaCheckout: %@", self.visaCheckout],
+                       ];
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 #pragma mark - STPPaymentMethodCardWalletType
 
 + (NSDictionary<NSString *,NSNumber *> *)stringToTypeMapping {

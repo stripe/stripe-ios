@@ -46,6 +46,7 @@
                        [NSString stringWithFormat:@"last4 = %@", self.last4],
                        [NSString stringWithFormat:@"fingerprint = %@", self.fingerprint],
                        [NSString stringWithFormat:@"threeDSecureUsage = %@", self.threeDSecureUsage],
+                       [NSString stringWithFormat:@"wallet = %@", self.wallet],
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];

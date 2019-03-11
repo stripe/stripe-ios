@@ -16,6 +16,14 @@
 
 @implementation STPPaymentMethodCardPresent
 
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+                       ];
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 #pragma mark - STPAPIResponseDecodable
 
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {

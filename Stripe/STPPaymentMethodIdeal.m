@@ -20,6 +20,19 @@
 
 @implementation STPPaymentMethodIdeal
 
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+                       
+                       // Properties
+                       [NSString stringWithFormat:@"bank: %@", self.bank],
+                       [NSString stringWithFormat:@"bic: %@", self.bic],
+                       ];
+    
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 #pragma mark - STPAPIResponseDecodable
 
 + (instancetype)decodedObjectFromAPIResponse:(NSDictionary *)response {
