@@ -17,11 +17,11 @@
 @property (nonatomic, copy, nullable, readwrite) NSString *stripeId;
 @property (nonatomic, strong, nullable, readwrite) NSDate *created;
 @property (nonatomic, readwrite) BOOL liveMode;
-@property (nonatomic, nullable, readwrite) NSString *type;
+@property (nonatomic, copy, nullable, readwrite) NSString *type;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBillingDetails *billingDetails;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCard *card;
 @property (nonatomic, copy, nullable, readwrite) NSString *customerId;
-@property (nonatomic, copy, nullable) NSDictionary<NSString*, NSString *> *metadata;
+@property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString*, NSString *> *metadata;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
