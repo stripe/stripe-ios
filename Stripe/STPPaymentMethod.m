@@ -14,7 +14,7 @@
 
 @interface STPPaymentMethod ()
 
-@property (nonatomic, nullable) NSString *identifier;
+@property (nonatomic, nullable) NSString *stripeId;
 @property (nonatomic, nullable) NSDate *created;
 @property (nonatomic) BOOL liveMode;
 @property (nonatomic, nullable) NSString *type;
@@ -36,16 +36,23 @@
     if (!dict) {
         return nil;
     }
+    
+    // Required fields
+    NSString *stripeId = [dict stp_stringForKey:@"id"];
+    if (!stripeId) {
+        return nil;
+    }
+    
     STPPaymentMethod * paymentMethod = [self new];
     paymentMethod.allResponseFields = dict;
-    paymentMethod.identifier = [dict stp_stringForKey:@"id"];
+    paymentMethod.stripeId = stripeId;
     paymentMethod.created = [dict stp_dateForKey:@"created"];
     paymentMethod.liveMode = [dict stp_boolForKey:@"livemode" or:NO];
     paymentMethod.billingDetails = [STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"billing_details"]];
     paymentMethod.card = [STPPaymentMethodCard decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"card"]];
     paymentMethod.type = [dict stp_stringForKey:@"type"];
     paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
-    paymentMethod.metadata = [dict stp_dictionaryForKey:@"metadata"];
+    paymentMethod.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     return paymentMethod;
 }
 

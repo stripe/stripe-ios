@@ -28,13 +28,13 @@
         XCTAssertNil([STPPaymentMethodCard decodedObjectFromAPIResponse:response]);
     }
     
-    XCTAssert([STPPaymentMethodCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"card"]]);
+    XCTAssertNotNil([STPPaymentMethodCard decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"card"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
     NSDictionary *response = [STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"card"];
     STPPaymentMethodCard *card = [STPPaymentMethodCard decodedObjectFromAPIResponse:response];
-    XCTAssertEqualObjects(card.brand, @"visa");
+    XCTAssertEqual(card.brand, STPCardBrandVisa);
     XCTAssertEqualObjects(card.country, @"US");
     XCTAssertNotNil(card.checks);
     XCTAssertEqual(card.expMonth, 8);

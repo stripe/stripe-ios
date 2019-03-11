@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #import "STPAPIResponseDecodable.h"
-#import "STPSourceProtocol.h"
 
 @class STPPaymentMethodBillingDetails, STPPaymentMethodCard;
 
@@ -25,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Unique identifier for the object.
  */
-@property (nonatomic, readonly) NSString *identifier;
+@property (nonatomic, readonly) NSString *stripeId;
 
 /**
  Time at which the object was created. Measured in seconds since the Unix epoch.
@@ -59,6 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ 
+ @see https://stripe.com/docs/api#metadata
  */
 @property (nonatomic, nullable, readonly) NSDictionary<NSString*, NSString *> *metadata;
 

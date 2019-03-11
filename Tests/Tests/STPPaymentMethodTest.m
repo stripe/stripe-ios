@@ -25,7 +25,7 @@
     
     XCTAssertNotNil([STPPaymentMethod decodedObjectFromAPIResponse:fullJson], @"can decode with full json");
     
-    NSArray<NSString *> *requiredFields = @[];
+    NSArray<NSString *> *requiredFields = @[@"id"];
     
     for (NSString *field in requiredFields) {
         NSMutableDictionary *partialJson = [fullJson mutableCopy];
@@ -41,7 +41,7 @@
     NSDictionary *response = [STPTestUtils jsonNamed:@"PaymentMethod"];
     STPPaymentMethod *paymentMethod = [STPPaymentMethod decodedObjectFromAPIResponse:response];
     
-    XCTAssertEqualObjects(paymentMethod.identifier, @"pm_123456789");
+    XCTAssertEqualObjects(paymentMethod.stripeId, @"pm_123456789");
     XCTAssertEqualObjects(paymentMethod.created, [NSDate dateWithTimeIntervalSince1970:123456789]);
     XCTAssertEqual(paymentMethod.liveMode, NO);
     XCTAssertEqualObjects(paymentMethod.type, @"card");

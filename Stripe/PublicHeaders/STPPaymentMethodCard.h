@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "STPAPIResponseDecodable.h"
+#import "STPCardBrand.h"
 
 @class STPPaymentMethodThreeDSecureUsage, STPPaymentMethodCardChecks;
 
@@ -27,9 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPPaymentMethodCard. You should only use one that is part of an existing STPPaymentMethod object.")));
 
 /**
- Card brand. Can be amex, diners, discover, jcb, mastercard, unionpay, visa, or unknown.
+ The issuer of the card.
  */
-@property (nonatomic, nullable, readonly) NSString *brand;
+@property (nonatomic, readonly) STPCardBrand brand;
 
 /**
  Checks on Card address and CVC if provided.

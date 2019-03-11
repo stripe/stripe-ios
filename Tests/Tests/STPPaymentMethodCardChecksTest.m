@@ -27,8 +27,20 @@
         [mutableResponse removeObjectForKey:field];
         XCTAssertNil([STPPaymentMethodCardChecks decodedObjectFromAPIResponse:mutableResponse]);
     }
-    XCTAssertNotNil([STPPaymentMethodCardChecks decodedObjectFromAPIResponse:response]);
+    STPPaymentMethodCardChecks *checks = [STPPaymentMethodCardChecks decodedObjectFromAPIResponse:response];
+    XCTAssertNotNil(checks);
+    XCTAssertEqual(checks.addressLine1Check, STPPaymentMethodCardCheckResultUnknown);
+    XCTAssertEqual(checks.addressPostalCodeCheck, STPPaymentMethodCardCheckResultUnknown);
+    XCTAssertEqual(checks.cvcCheck, STPPaymentMethodCardCheckResultUnknown);
 }
 
+- (void)testCheckResultFromString {
+    XCTAssertEqual([STPPaymentMethodCardChecks checkResultFromString:@"pass"], STPPaymentMethodCardCheckResultPass);
+    XCTAssertEqual([STPPaymentMethodCardChecks checkResultFromString:@"failed"], STPPaymentMethodCardCheckResultFailed);
+    XCTAssertEqual([STPPaymentMethodCardChecks checkResultFromString:@"unavailable"], STPPaymentMethodCardCheckResultUnavailable);
+    XCTAssertEqual([STPPaymentMethodCardChecks checkResultFromString:@"unchecked"], STPPaymentMethodCardCheckResultUnchecked);
+    XCTAssertEqual([STPPaymentMethodCardChecks checkResultFromString:@"unknown_string"], STPPaymentMethodCardCheckResultUnknown);
+    XCTAssertEqual([STPPaymentMethodCardChecks checkResultFromString:nil], STPPaymentMethodCardCheckResultUnknown);
+}
 
 @end

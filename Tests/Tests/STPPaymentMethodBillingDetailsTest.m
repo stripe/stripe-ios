@@ -30,7 +30,7 @@
         XCTAssertNil([STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:response]);
     }
     
-    XCTAssert([STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"billing_details"]]);
+    XCTAssertNotNil([STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:[STPTestUtils jsonNamed:STPTestJSONPaymentMethod][@"billing_details"]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
@@ -39,7 +39,7 @@
     XCTAssertEqualObjects(billingDetails.email, @"jenny@example.com");
     XCTAssertEqualObjects(billingDetails.name, @"jenny");
     XCTAssertEqualObjects(billingDetails.phone, @"+15555555555");
-
+    XCTAssertNotNil(billingDetails.address);
 }
 
 @end

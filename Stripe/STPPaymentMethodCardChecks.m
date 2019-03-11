@@ -12,14 +12,29 @@
 
 @interface STPPaymentMethodCardChecks ()
 
-@property (nonatomic, nullable) NSString *addressLine1Check;
-@property (nonatomic, nullable) NSString *addressPostalCodeCheck;
-@property (nonatomic, nullable) NSString *cvcCheck;
+@property (nonatomic) STPPaymentMethodCardCheckResult addressLine1Check;
+@property (nonatomic) STPPaymentMethodCardCheckResult addressPostalCodeCheck;
+@property (nonatomic) STPPaymentMethodCardCheckResult cvcCheck;
 @property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
 
 @end
 
 @implementation STPPaymentMethodCardChecks
+
++ (STPPaymentMethodCardCheckResult)checkResultFromString:(nullable NSString *)string {
+    NSString *check = [string lowercaseString];
+    if ([check isEqualToString:@"pass"]) {
+        return STPPaymentMethodCardCheckResultPass;
+    } else if ([check isEqualToString:@"failed"]) {
+        return STPPaymentMethodCardCheckResultFailed;
+    } else if ([check isEqualToString:@"unavailable"]) {
+        return STPPaymentMethodCardCheckResultUnavailable;
+    } else if ([check isEqualToString:@"unchecked"]) {
+        return STPPaymentMethodCardCheckResultUnchecked;
+    } else {
+        return STPPaymentMethodCardCheckResultUnknown;
+    }
+}
 
 #pragma mark - STPAPIResponseDecodable
 
@@ -28,11 +43,14 @@
     if (!dict) {
         return nil;
     }
+    NSString *addressLine1CheckRawString = [dict stp_stringForKey:@"address_line1_check"];
+    NSString *addressPostalCodeCheckRawString = [dict stp_stringForKey:@"address_postal_code_check"];
+    NSString *cvcCheckRawString = [dict stp_stringForKey:@"cvc_check"];
     STPPaymentMethodCardChecks *cardChecks = [self new];
     cardChecks.allResponseFields = dict;
-    cardChecks.addressLine1Check = [dict stp_stringForKey:@"address_line1_check"];
-    cardChecks.addressPostalCodeCheck = [dict stp_stringForKey:@"address_postal_code_check"];
-    cardChecks.cvcCheck = [dict stp_stringForKey:@"cvc_check"];
+    cardChecks.addressLine1Check = [[self class] checkResultFromString:addressLine1CheckRawString];
+    cardChecks.addressPostalCodeCheck = [[self class] checkResultFromString:addressPostalCodeCheckRawString];
+    cardChecks.cvcCheck = [[self class] checkResultFromString:cvcCheckRawString];
     return cardChecks;
 }
 

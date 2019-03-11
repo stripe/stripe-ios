@@ -11,10 +11,11 @@
 #import "NSDictionary+Stripe.h"
 #import "STPPaymentMethodCardChecks.h"
 #import "STPPaymentMethodThreeDSecureUsage.h"
+#import "STPCard.h"
 
 @interface STPPaymentMethodCard ()
 
-@property (nonatomic, nullable) NSString *brand;
+@property (nonatomic) STPCardBrand brand;
 @property (nonatomic, nullable) STPPaymentMethodCardChecks *checks;
 @property (nonatomic, nullable) NSString *country;
 @property (nonatomic) NSInteger expMonth;
@@ -38,7 +39,7 @@
     }
     STPPaymentMethodCard *card = [self new];
     card.allResponseFields = dict;
-    card.brand = [dict stp_stringForKey:@"brand"];
+    card.brand = [STPCard brandFromString:[dict stp_stringForKey:@"brand"]];
     card.checks = [STPPaymentMethodCardChecks decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"checks"]];
     card.country = [dict stp_stringForKey:@"country"];
     card.expMonth = [dict stp_intForKey:@"exp_month" or:0];
