@@ -12,6 +12,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ The result of a check on a Card address or CVC.
+ */
 typedef NS_ENUM(NSUInteger, STPPaymentMethodCardCheckResult) {
     STPPaymentMethodCardCheckResultPass,
     STPPaymentMethodCardCheckResultFailed,
