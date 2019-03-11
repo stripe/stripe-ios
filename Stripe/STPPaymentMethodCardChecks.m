@@ -21,6 +21,20 @@
 
 @implementation STPPaymentMethodCardChecks
 
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+
+                       // Properties
+                       [NSString stringWithFormat:@"addressLine1Check: %@", [self.allResponseFields stp_stringForKey:@"address_line1_check"]],
+                       [NSString stringWithFormat:@"addressPostalCodeCheck: %@", [self.allResponseFields stp_stringForKey:@"address_postal_code_check"]],
+                       [NSString stringWithFormat:@"cvcCheck: %@", [self.allResponseFields stp_stringForKey:@"cvc_check"]],
+                       ];
+    
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 + (STPPaymentMethodCardCheckResult)checkResultFromString:(nullable NSString *)string {
     NSString *check = [string lowercaseString];
     if ([check isEqualToString:@"pass"]) {

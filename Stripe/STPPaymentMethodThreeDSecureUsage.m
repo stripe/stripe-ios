@@ -19,6 +19,18 @@
 
 @implementation STPPaymentMethodThreeDSecureUsage
 
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+                       
+                       // Properties
+                       [NSString stringWithFormat:@"supported: %@", self.supported ? @"YES" : @"NO"]
+                       ];
+    
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 #pragma mark - STPAPIResponseDecodable
 
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {

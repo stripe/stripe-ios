@@ -19,6 +19,20 @@
 
 @implementation STPPaymentMethodBillingDetails
 
+- (NSString *)description {
+    NSArray *props = @[
+                        // Object
+                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+                        
+                        // Properties
+                        [NSString stringWithFormat:@"name = %@", self.name],
+                        [NSString stringWithFormat:@"phone = %@", self.phone],
+                        [NSString stringWithFormat:@"email = %@", self.email],
+                        [NSString stringWithFormat:@"address = %@", self.address],
+                        ];
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 #pragma mark - STPAPIResponseDecodable
 
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {

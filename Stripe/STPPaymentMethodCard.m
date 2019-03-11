@@ -30,6 +30,25 @@
 
 @implementation STPPaymentMethodCard
 
+- (NSString *)description {
+    NSArray *props = @[
+                       // Object
+                       [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+                       
+                       [NSString stringWithFormat:@"brand = %@", [STPCard stringFromBrand:self.brand]],
+                       [NSString stringWithFormat:@"checks = %@", self.checks],
+                       [NSString stringWithFormat:@"country = %@", self.country],
+                       [NSString stringWithFormat:@"expMonth = %lu", (unsigned long)self.expMonth],
+                       [NSString stringWithFormat:@"expYear = %lu", (unsigned long)self.expYear],
+                       [NSString stringWithFormat:@"funding = %@", self.funding],
+                       [NSString stringWithFormat:@"last4 = %@", self.last4],
+                       [NSString stringWithFormat:@"fingerprint = %@", self.fingerprint],
+                       [NSString stringWithFormat:@"threeDSecureUsage = %@", self.threeDSecureUsage],
+                       ];
+
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 #pragma mark - STPAPIResponseDecodable
 
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {
