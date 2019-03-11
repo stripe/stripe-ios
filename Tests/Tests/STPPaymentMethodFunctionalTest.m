@@ -48,7 +48,7 @@
     STPPaymentMethodParams *params = [STPPaymentMethodParams paramsWithCard:card
                                                                  billingDetails:billingDetails
                                                                        metadata:@{@"test_key": @"test_value"}];
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Method retrieve"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Method create"];
     [client createPaymentMethodWithParams:params
                                completion:^(STPPaymentMethod *paymentMethod, NSError *error) {
                                    XCTAssertNil(error);

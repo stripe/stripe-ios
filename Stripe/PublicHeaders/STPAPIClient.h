@@ -371,9 +371,9 @@ static NSString *const STPSDKVersion = @"15.0.0";
 /**
  Creates a PaymentMethod object with the provided params object.
  
- @see https://site-admin.stripe.com/docs/api/payment_methods/create
+ @see https://stripe.com/docs/api/payment_methods/create
  
- @param paymentMethodParams  The `STPPaymentMethodParams` to pass to `/payment_methods`.  Cannot be nil.
+ @param paymentMethodParams  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
  @param completion           The callback to run with the returned PaymentMethod object, or an error.
  */
 - (void)createPaymentMethodWithParams:(STPPaymentMethodParams *)paymentMethodParams
