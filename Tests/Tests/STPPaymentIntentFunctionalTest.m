@@ -109,7 +109,7 @@
 
 #pragma mark - Disabled Tests
 /*
- These tests exists so that you can manually plug in an id + secret and verify that confirming a PaymentIntent
+ These tests exist so that you can manually plug in an id + secret and verify that confirming a PaymentIntent
  succeeds, as a one time thing.
 
  These are disabled because we don't have an automatic method for creating PaymentIntents, but you can create one using

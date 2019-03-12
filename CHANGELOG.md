@@ -7,7 +7,7 @@
   * Renames `STPPaymentMethodsViewController` to `STPPaymentOptionsViewController`
   * Renames all properties, methods, comments referencing 'PaymentMethod' to 'PaymentOption'
 * Adds `[STPAPI createPaymentMethodWithParams:completion:]`, which creates a PaymentMethod.
-* Adds paymentMethod, paymentMethodId to STPPaymentIntentParams
+* Adds paymentMethodParams, paymentMethodId to STPPaymentIntentParams.
 * Deprecates `saveSourceToCustomer` on `STPPaymentIntentParams`, replaced by `savePaymentMethod`
 
 ## 14.0.0 2018-11-14
