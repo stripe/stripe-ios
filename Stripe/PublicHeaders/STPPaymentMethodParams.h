@@ -26,22 +26,22 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodParamsType) {
 /**
  The type of payment method.  The associated property will contain additional information (e.g. `type == STPPaymentMethodParamsTypeCard` means `card` should also be populated).
  */
-@property (nonatomic, assign) STPPaymentMethodParamsType type;
+@property (nonatomic, assign, readwrite) STPPaymentMethodParamsType type;
 
 /**
  Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
  */
-@property (nonatomic, nullable) STPPaymentMethodBillingDetails *billingDetails;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBillingDetails *billingDetails;
 
 /**
  If this is a card PaymentMethod, this contains the user’s card details.
  */
-@property (nonatomic, nullable) STPPaymentMethodCardParams *card;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCardParams *card;
 
 /**
  Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
  */
-@property (nonatomic, nullable) NSDictionary<NSString *, NSString *> *metadata;
+@property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString *, NSString *> *metadata;
 
 /**
  Creates params for a card PaymentMethod.
