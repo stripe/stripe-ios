@@ -632,11 +632,9 @@ toCustomerUsingKey:(STPEphemeralKey *)ephemeralKey
                                  completion:(STPPaymentMethodCompletionBlock)completion {
     NSCAssert(paymentMethodParams != nil, @"'paymentMethodParams' is required to create a PaymentMethod");
     
-    NSMutableDictionary *params = [[STPFormEncoder dictionaryForObject:paymentMethodParams] mutableCopy];
-
     [STPAPIRequest<STPPaymentMethod *> postWithAPIClient:self
                                                endpoint:APIEndpointPaymentMethods
-                                             parameters:params
+                                             parameters:[STPFormEncoder dictionaryForObject:paymentMethodParams]
                                            deserializer:[STPPaymentMethod new]
                                              completion:^(STPPaymentMethod *paymentMethod, __unused NSHTTPURLResponse *response, NSError *error) {
                                                  completion(paymentMethod, error);
