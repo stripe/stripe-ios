@@ -33,15 +33,6 @@
     }
 }
 
-- (NSString *)apiStringType {
-    switch (self.type) {
-        case STPPaymentMethodTypeCard:
-            return @"card";
-        case STPPaymentMethodTypeUnknown:
-            return @"";
-    }
-}
-
 #pragma mark - STPFormEncodable
 
 + (nullable NSString *)rootObjectName {
@@ -50,7 +41,7 @@
 
 + (nonnull NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
-             NSStringFromSelector(@selector(apiStringType)): @"type",
+             NSStringFromSelector(@selector(rawTypeString)): @"type",
              NSStringFromSelector(@selector(billingDetails)): @"billing_details",
              NSStringFromSelector(@selector(card)): @"card",
              NSStringFromSelector(@selector(metadata)): @"metadata",
