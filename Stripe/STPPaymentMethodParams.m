@@ -27,7 +27,6 @@
 }
 
 - (void)setType:(STPPaymentMethodType)type {
-    // If setting unknown and we're already unknown, don't want to override raw value
     if (type != self.type) {
         self.rawTypeString = [STPPaymentMethod stringFromType:type];
     }

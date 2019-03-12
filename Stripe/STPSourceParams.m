@@ -40,7 +40,7 @@
 }
 
 - (void)setType:(STPSourceType)type {
-    // If setting unknown and we're already unknown, don't want to override raw value
+    NSCAssert(type != STPSourceTypeUnknown, @"Set the rawTypeString directly instead, and `type` will have the appropriate value");
     if (type != self.type) {
         self.rawTypeString = [STPSource stringFromType:type];
     }

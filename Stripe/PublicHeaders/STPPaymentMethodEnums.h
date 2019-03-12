@@ -1,5 +1,5 @@
 //
-//  Header.h
+//  STPPaymentMethodEnums.h
 //  Stripe
 //
 //  Created by Yuki Tokuhiro on 3/12/19.

@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The type of payment method.  The associated property will contain additional information (e.g. `type == STPPaymentMethodTypeCard` means `card` should also be populated).
  */
-@property (nonatomic) STPPaymentMethodType type;
+@property (nonatomic, readonly) STPPaymentMethodType type;
 
 /**
  The raw underlying type string sent to the server.
