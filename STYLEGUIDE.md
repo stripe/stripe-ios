@@ -232,6 +232,8 @@ NS_ASSUME_NON_NULL_END
 @property (<nonatomic / atomic>, <assign>, <readonly / readwrite>) <type> <name>;
 ```
 
+- Omit default properties (`assign`, `readwrite`), except for `strong`
+
 - Use `copy` for classes with mutable counterparts such as `NSString`, `NSArray`, `NSDictionary`
 
 - Leverage auto property synthesis whenever possible

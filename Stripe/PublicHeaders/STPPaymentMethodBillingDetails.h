@@ -25,22 +25,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Billing address.
  */
-@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBillingDetailsAddress *address;
+@property (nonatomic, strong, nullable) STPPaymentMethodBillingDetailsAddress *address;
 
 /**
  Email address.
  */
-@property (nonatomic, copy, nullable, readwrite) NSString *email;
+@property (nonatomic, copy, nullable) NSString *email;
 
 /**
  Full name.
  */
-@property (nonatomic, copy, nullable, readwrite) NSString *name;
+@property (nonatomic, copy, nullable) NSString *name;
 
 /**
  Billing phone number (including extension).
  */
-@property (nonatomic, copy, nullable, readwrite) NSString *phone;
+@property (nonatomic, copy, nullable) NSString *phone;
 
 @end
 

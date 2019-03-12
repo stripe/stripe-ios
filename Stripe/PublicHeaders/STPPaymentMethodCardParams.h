@@ -20,27 +20,27 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The card number, as a string without any separators. Ex. @"4242424242424242"
  */
-@property (nonatomic, copy, nullable, readwrite) NSString *number;
+@property (nonatomic, copy, nullable) NSString *number;
 
 /**
  Two-digit number representing the card's expiration month.
  */
-@property (nonatomic, readwrite) NSUInteger expMonth;
+@property (nonatomic) NSUInteger expMonth;
 
 /**
  Two- or four-digit number representing the card's expiration year.
  */
-@property (nonatomic, readwrite) NSUInteger expYear;
+@property (nonatomic) NSUInteger expYear;
 
 /**
  For backwards compatibility, you can alternatively set this as a Stripe token (e.g., for apple pay)
  */
-@property (nonatomic, copy, nullable, readwrite) NSString *token;
+@property (nonatomic, copy, nullable) NSString *token;
 
 /**
  Card security code. It is highly recommended to always include this value.
  */
-@property (nonatomic, copy, nullable, readwrite) NSString *cvc;
+@property (nonatomic, copy, nullable) NSString *cvc;
 
 @end
 

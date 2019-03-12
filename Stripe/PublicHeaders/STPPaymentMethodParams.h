@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The type of payment method.  The associated property will contain additional information (e.g. `type == STPPaymentMethodTypeCard` means `card` should also be populated).
  */
-@property (nonatomic, assign, readwrite) STPPaymentMethodType type;
+@property (nonatomic) STPPaymentMethodType type;
 
 /**
  The raw underlying type string sent to the server.
@@ -41,17 +41,17 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
  */
-@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBillingDetails *billingDetails;
+@property (nonatomic, strong, nullable) STPPaymentMethodBillingDetails *billingDetails;
 
 /**
  If this is a card PaymentMethod, this contains the user’s card details.
  */
-@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCardParams *card;
+@property (nonatomic, strong, nullable) STPPaymentMethodCardParams *card;
 
 /**
  Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
  */
-@property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString *, NSString *> *metadata;
+@property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *metadata;
 
 /**
  Creates params for a card PaymentMethod.
