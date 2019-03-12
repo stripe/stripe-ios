@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The client secret of the PaymentIntent. Required
  */
-@property (nonatomic, copy, readwrite) NSString *clientSecret;
+@property (nonatomic, copy) NSString *clientSecret;
 
 /**
  Provide a supported `STPPaymentMethodParams` object, and Stripe will create a
@@ -53,14 +53,14 @@ NS_ASSUME_NONNULL_BEGIN
  
  @note alternative to `paymentMethodId`
  */
-@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodParams *paymentMethodParams;
+@property (nonatomic, strong, nullable) STPPaymentMethodParams *paymentMethodParams;
 
 /**
  Provide an already created PaymentMethod's id, and it will be used to confirm the PaymentIntent.
  
  @note alternative to `paymentMethodParams`
  */
-@property (nonatomic, copy, nullable, readwrite) NSString *paymentMethodId;
+@property (nonatomic, copy, nullable) NSString *paymentMethodId;
 
 /**
  Provide a supported `STPSourceParams` object into here, and Stripe will create a Source
@@ -68,19 +68,19 @@ NS_ASSUME_NONNULL_BEGIN
 
  @note alternative to `sourceId`
  */
-@property (nonatomic, strong, nullable, readwrite) STPSourceParams *sourceParams;
+@property (nonatomic, strong, nullable) STPSourceParams *sourceParams;
 
 /**
  Provide an already created Source's id, and it will be used to confirm the PaymentIntent.
 
  @note alternative to `sourceParams`
  */
-@property (nonatomic, copy, nullable, readwrite) NSString *sourceId;
+@property (nonatomic, copy, nullable) NSString *sourceId;
 
 /**
  Email address that the receipt for the resulting payment will be sent to.
  */
-@property (nonatomic, copy, nullable, readwrite) NSString *receiptEmail;
+@property (nonatomic, copy, nullable) NSString *receiptEmail;
 
 /**
  `@YES` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
@@ -88,14 +88,14 @@ NS_ASSUME_NONNULL_BEGIN
  
  This should be a boolean NSNumber, so that it can be `nil`
  */
-@property (nonatomic, strong, nullable, readwrite) NSNumber *savePaymentMethod;
+@property (nonatomic, strong, nullable) NSNumber *savePaymentMethod;
 
 /**
  The URL to redirect your customer back to after they authenticate or cancel
  their payment on the payment method’s app or site.
  This should probably be a URL that opens your iOS app.
  */
-@property (nonatomic, copy, nullable, readwrite) NSString *returnURL;
+@property (nonatomic, copy, nullable) NSString *returnURL;
 
 /**
  The URL to redirect your customer back to after they authenticate or cancel
@@ -103,7 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  This property has been renamed to `returnURL` and deprecated.
  */
-@property (nonatomic, copy, nullable, readwrite) NSString *returnUrl __attribute__((deprecated("returnUrl has been renamed to returnURL", "returnURL")));
+@property (nonatomic, copy, nullable) NSString *returnUrl __attribute__((deprecated("returnUrl has been renamed to returnURL", "returnURL")));
 
 
 /**
@@ -112,9 +112,9 @@ NS_ASSUME_NONNULL_BEGIN
  
  This should be a boolean NSNumber, so that it can be `nil`
  
- This property has been renamed to `savePaymentMethodToCustomer` and deprecated.
+ This property has been renamed to `savePaymentMethod` and deprecated.
  */
-@property (nonatomic, strong, nullable, readwrite) NSNumber *saveSourceToCustomer __attribute__((deprecated("saveSourceToCustomer has been renamed to savePaymentMethod", "saveSourceToCustomer")));
+@property (nonatomic, strong, nullable) NSNumber *saveSourceToCustomer __attribute__((deprecated("saveSourceToCustomer has been renamed to savePaymentMethod", "saveSourceToCustomer")));
 
 @end
 
