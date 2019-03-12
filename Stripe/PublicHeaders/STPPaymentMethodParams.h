@@ -9,24 +9,30 @@
 #import <Foundation/Foundation.h>
 
 #import "STPFormEncodable.h"
+#import "STPPaymentMethodEnums.h"
 
 @class STPPaymentMethodBillingDetails, STPPaymentMethodCardParams;
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- Types of a PaymentMethod
- */
-typedef NS_ENUM(NSUInteger, STPPaymentMethodParamsType) {
-    STPPaymentMethodParamsTypeCard,
-};
-
 @interface STPPaymentMethodParams : NSObject <STPFormEncodable>
 
 /**
- The type of payment method.  The associated property will contain additional information (e.g. `type == STPPaymentMethodParamsTypeCard` means `card` should also be populated).
+ The type of payment method.  The associated property will contain additional information (e.g. `type == STPPaymentMethodTypeCard` means `card` should also be populated).
  */
-@property (nonatomic, assign, readwrite) STPPaymentMethodParamsType type;
+@property (nonatomic, assign, readwrite) STPPaymentMethodType type;
+
+/**
+ The raw underlying type string sent to the server.
+ 
+ Generally you should use `type` instead unless you have a reason not to.
+ You can use this if you want to create a param of a type not yet supported
+ by the current version of the SDK's `STPPaymentMethodType` enum.
+ 
+ Setting this to a value not known by the SDK causes `type` to
+ return `STPPaymentMethodTypeUnknown`
+ */
+@property (nonatomic, copy) NSString *rawTypeString;
 
 /**
  Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.

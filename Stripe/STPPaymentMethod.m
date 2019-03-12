@@ -17,7 +17,7 @@
 @property (nonatomic, copy, nullable, readwrite) NSString *stripeId;
 @property (nonatomic, strong, nullable, readwrite) NSDate *created;
 @property (nonatomic, readwrite) BOOL liveMode;
-@property (nonatomic, copy, nullable, readwrite) NSString *type;
+@property (nonatomic, readwrite) STPPaymentMethodType type;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBillingDetails *billingDetails;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCard *card;
 @property (nonatomic, copy, nullable, readwrite) NSString *customerId;
@@ -44,9 +44,32 @@
                        [NSString stringWithFormat:@"customerId = %@", self.customerId],
                        [NSString stringWithFormat:@"liveMode = %@", self.liveMode ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"metadata = %@", self.metadata],
-                       [NSString stringWithFormat:@"type = %@", self.type],
+                       [NSString stringWithFormat:@"type = %@", [self.allResponseFields stp_stringForKey:@"type"]],
                        ];
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
+#pragma mark - STPPaymentMethodType
+
++ (NSDictionary<NSString *,NSNumber *> *)stringToTypeMapping {
+    return @{
+             @"card": @(STPPaymentMethodTypeCard),
+             };
+}
+
++ (nullable NSString *)stringFromType:(STPPaymentMethodType)type {
+    return [[[self stringToTypeMapping] allKeysForObject:@(type)] firstObject];
+}
+
++ (STPPaymentMethodType)typeFromString:(NSString *)string {
+    NSString *key = [string lowercaseString];
+    NSNumber *typeNumber = [self stringToTypeMapping][key];
+    
+    if (typeNumber != nil) {
+        return (STPPaymentMethodType)[typeNumber integerValue];
+    }
+    
+    return STPPaymentMethodTypeUnknown;
 }
 
 #pragma mark - STPAPIResponseDecodable
@@ -70,7 +93,7 @@
     paymentMethod.liveMode = [dict stp_boolForKey:@"livemode" or:NO];
     paymentMethod.billingDetails = [STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"billing_details"]];
     paymentMethod.card = [STPPaymentMethodCard decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"card"]];
-    paymentMethod.type = [dict stp_stringForKey:@"type"];
+    paymentMethod.type = [self typeFromString:[dict stp_stringForKey:@"type"]];
     paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
     paymentMethod.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     return paymentMethod;

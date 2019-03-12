@@ -482,6 +482,10 @@
 		B6B5FC44222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B5FC40222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.m */; };
 		B6D6C933223076600092AFC8 /* STPPaymentMethodBillingDetailsAddressTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D6C932223076600092AFC8 /* STPPaymentMethodBillingDetailsAddressTest.m */; };
 		B6D6C935223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D6C934223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m */; };
+		B6DB0CA6223817A300AEF640 /* STPPaymentMethodEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = B6DB0CA5223817A300AEF640 /* STPPaymentMethodEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6DB0CA7223817A300AEF640 /* STPPaymentMethodEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = B6DB0CA5223817A300AEF640 /* STPPaymentMethodEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B6DB0CA922381B4900AEF640 /* STPPaymentMethod+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B6DB0CA822381B4900AEF640 /* STPPaymentMethod+Private.h */; };
+		B6DB0CAA22381B4900AEF640 /* STPPaymentMethod+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = B6DB0CA822381B4900AEF640 /* STPPaymentMethod+Private.h */; };
 		B6DE52DB2230981200B70A66 /* STPPaymentMethodParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B6DE52D92230981200B70A66 /* STPPaymentMethodParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6DE52DC2230981200B70A66 /* STPPaymentMethodParams.h in Headers */ = {isa = PBXBuildFile; fileRef = B6DE52D92230981200B70A66 /* STPPaymentMethodParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B6DE52DD2230981200B70A66 /* STPPaymentMethodParams.m in Sources */ = {isa = PBXBuildFile; fileRef = B6DE52DA2230981200B70A66 /* STPPaymentMethodParams.m */; };
@@ -1228,6 +1232,8 @@
 		B6B5FC40222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodThreeDSecureUsage.m; sourceTree = "<group>"; };
 		B6D6C932223076600092AFC8 /* STPPaymentMethodBillingDetailsAddressTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBillingDetailsAddressTest.m; sourceTree = "<group>"; };
 		B6D6C934223078840092AFC8 /* STPPaymentMethodBillingDetailsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBillingDetailsTest.m; sourceTree = "<group>"; };
+		B6DB0CA5223817A300AEF640 /* STPPaymentMethodEnums.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodEnums.h; path = PublicHeaders/STPPaymentMethodEnums.h; sourceTree = "<group>"; };
+		B6DB0CA822381B4900AEF640 /* STPPaymentMethod+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STPPaymentMethod+Private.h"; sourceTree = "<group>"; };
 		B6DE52D92230981200B70A66 /* STPPaymentMethodParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodParams.h; path = PublicHeaders/STPPaymentMethodParams.h; sourceTree = "<group>"; };
 		B6DE52DA2230981200B70A66 /* STPPaymentMethodParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodParams.m; sourceTree = "<group>"; };
 		B6E2F306222F442E0001FED4 /* STPPaymentMethodCardChecks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STPPaymentMethodCardChecks.h; path = PublicHeaders/STPPaymentMethodCardChecks.h; sourceTree = "<group>"; };
@@ -2089,6 +2095,7 @@
 				F1D3A2491EB012010095BFA9 /* STPMultipartFormDataPart.h */,
 				F1D3A24A1EB012010095BFA9 /* STPMultipartFormDataPart.m */,
 				B3BDCAC120EEF2150034F7F5 /* STPPaymentIntent+Private.h */,
+				B6DB0CA822381B4900AEF640 /* STPPaymentMethod+Private.h */,
 				B69CFB4922370547001E9885 /* STPPaymentMethodCardChecks+Private.h */,
 				B32B176420F80442000D6EF8 /* STPRedirectContext+Private.h */,
 				C1C1012C1E57A26F00C7BFAE /* STPSource+Private.h */,
@@ -2193,6 +2200,7 @@
 				B66D5020222F5611004A9210 /* STPPaymentMethodCardChecks.m */,
 				B6027BC12230ABAE0025DB29 /* STPPaymentMethodCardParams.m */,
 				B6027BC02230ABAE0025DB29 /* STPPaymentMethodCardParams.h */,
+				B6DB0CA5223817A300AEF640 /* STPPaymentMethodEnums.h */,
 				B6DE52D92230981200B70A66 /* STPPaymentMethodParams.h */,
 				B6DE52DA2230981200B70A66 /* STPPaymentMethodParams.m */,
 				B6B5FC3F222F4C0200440249 /* STPPaymentMethodThreeDSecureUsage.h */,
@@ -2338,6 +2346,7 @@
 				B3A2413A1FFEB57400A2F00D /* STPConnectAccountParams.h in Headers */,
 				B32B176620F80442000D6EF8 /* STPRedirectContext+Private.h in Headers */,
 				F1D3A2561EB012350095BFA9 /* STPMultipartFormDataPart.h in Headers */,
+				B6DB0CA7223817A300AEF640 /* STPPaymentMethodEnums.h in Headers */,
 				04F94DCD1D22A22F004FC826 /* UIViewController+Stripe_KeyboardAvoiding.h in Headers */,
 				C1BD9B3A1E39416700CEE925 /* STPSourceOwner.h in Headers */,
 				F1D3A2541EB012350095BFA9 /* STPMultipartFormDataEncoder.h in Headers */,
@@ -2446,6 +2455,7 @@
 				04B31DDB1D09A4DC00EF1631 /* STPPaymentConfiguration+Private.h in Headers */,
 				045D710F1CEEE30500F6CD65 /* STPAspects.h in Headers */,
 				04F94DAF1D229F59004FC826 /* STPPaymentOptionsViewController+Private.h in Headers */,
+				B6DB0CAA22381B4900AEF640 /* STPPaymentMethod+Private.h in Headers */,
 				B3BDCAC520EEF2150034F7F5 /* STPPaymentIntent+Private.h in Headers */,
 				04633AFD1CD129AF009D4FB5 /* STPPhoneNumberValidator.h in Headers */,
 				04633AFE1CD129B4009D4FB5 /* STPDelegateProxy.h in Headers */,
@@ -2529,6 +2539,7 @@
 				F1FA6F951E25960500EB444D /* STPCoreScrollViewController+Private.h in Headers */,
 				C17A030D1CBEE7A2006C819F /* STPAddressFieldTableViewCell.h in Headers */,
 				C1C1012D1E57A26F00C7BFAE /* STPSource+Private.h in Headers */,
+				B6DB0CA922381B4900AEF640 /* STPPaymentMethod+Private.h in Headers */,
 				04A4C3891C4F25F900B3B290 /* NSArray+Stripe.h in Headers */,
 				04827D151D257764002DB3E8 /* STPImageLibrary+Private.h in Headers */,
 				049952D21BCF13DD0088C703 /* STPAPIClient+Private.h in Headers */,
@@ -2586,6 +2597,7 @@
 				0426B96E1CEADC98006AC8DD /* STPColorUtils.h in Headers */,
 				04B31DDA1D09A4DC00EF1631 /* STPPaymentConfiguration+Private.h in Headers */,
 				F1D96F961DC7D82400477E64 /* STPLocalizationUtils.h in Headers */,
+				B6DB0CA6223817A300AEF640 /* STPPaymentMethodEnums.h in Headers */,
 				0438EF381B7416BB00D506CC /* STPPaymentCardTextFieldViewModel.h in Headers */,
 				04CDE5BC1BC1F21500548833 /* STPCardParams.h in Headers */,
 				C19D098F1EAEAE4000A4AB3E /* STPTelemetryClient.h in Headers */,

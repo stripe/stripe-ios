@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "STPAPIResponseDecodable.h"
+#import "STPPaymentMethodEnums.h"
 
 @class STPPaymentMethodBillingDetails, STPPaymentMethodCard;
 
@@ -37,9 +38,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL liveMode;
 
 /**
- The type of the PaymentMethod, currently only @"card" is supported. The corresponding property (`card`) contains additional information specific to the PaymentMethod type.
+ The type of the PaymentMethod.  The corresponding, similarly named property contains additional information specific to the PaymentMethod type.
+ e.g. if the type is `STPPaymentMethodTypeCard`, the `card` property is also populated.
  */
-@property (nonatomic, nullable, readonly) NSString *type;
+@property (nonatomic, readonly) STPPaymentMethodType type;
 
 /**
  Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
@@ -47,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly) STPPaymentMethodBillingDetails *billingDetails;
 
 /**
- If this is a card PaymentMethod (ie `self.type == @"card"`), this contains details about the card.
+ If this is a card PaymentMethod (ie `self.type == STPPaymentMethodTypeCard`), this contains additional details.
  */
 @property (nonatomic, nullable, readonly) STPPaymentMethodCard *card;
 

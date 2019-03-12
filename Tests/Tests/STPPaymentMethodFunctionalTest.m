@@ -56,7 +56,7 @@
                                    XCTAssertEqualObjects(paymentMethod.stripeId, @"pm_1EBSEWBbvEcIpqUbBHBUkXgQ");
                                    XCTAssertEqualObjects(paymentMethod.created, [NSDate dateWithTimeIntervalSince1970:1551988224]);
                                    XCTAssertFalse(paymentMethod.liveMode);
-                                   XCTAssertEqualObjects(paymentMethod.type, @"card");
+                                   XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeCard);
                                    XCTAssertEqualObjects(paymentMethod.metadata, @{@"test_key": @"test_value"});
                                    
                                    // Billing Details
