@@ -15,6 +15,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ An object representing parameters used to create a PaymentMethod object.
+ @see https://stripe.com/docs/api/payment_methods/create
+ */
 @interface STPPaymentMethodParams : NSObject <STPFormEncodable>
 
 /**

@@ -48,6 +48,7 @@
 #import "STPPaymentMethodCard.h"
 #import "STPPaymentMethodCardChecks.h"
 #import "STPPaymentMethodCardParams.h"
+#import "STPPaymentMethodEnums.h"
 #import "STPPaymentMethodParams.h"
 #import "STPPaymentMethodThreeDSecureUsage.h"
 #import "STPPaymentOption.h"

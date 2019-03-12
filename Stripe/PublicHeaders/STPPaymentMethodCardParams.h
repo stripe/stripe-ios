@@ -12,6 +12,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ The user's card details.
+ */
 @interface STPPaymentMethodCardParams : NSObject <STPFormEncodable>
 
 /**
