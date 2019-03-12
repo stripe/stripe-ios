@@ -14,11 +14,11 @@
 
 @interface STPPaymentMethodCardWalletMasterpass()
 
-@property (nonatomic, nullable, copy) NSString *email;
-@property (nonatomic, nullable, copy) NSString *name;
-@property (nonatomic, nullable) STPPaymentMethodAddress *billingAddress;
-@property (nonatomic, nullable) STPPaymentMethodAddress *shippingAddress;
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, copy, nullable, readwrite) NSString *email;
+@property (nonatomic, copy, nullable, readwrite) NSString *name;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodAddress *billingAddress;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodAddress *shippingAddress;
+@property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
 

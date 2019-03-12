@@ -12,9 +12,9 @@
 
 @interface STPPaymentMethodIdeal ()
 
-@property (nonatomic, nullable, copy) NSString *bank;
-@property (nonatomic, nullable, copy) NSString *bic;
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, nullable, copy, readwrite) NSString *bank;
+@property (nonatomic, nullable, copy, readwrite) NSString *bic;
+@property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
 

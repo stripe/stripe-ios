@@ -23,7 +23,7 @@
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBillingDetails *billingDetails;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCard *card;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodIdeal *ideal;
-@property (nonatomic,  strong, nullable, readwrite) STPPaymentMethodCardPresent *cardPresent;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCardPresent *cardPresent;
 @property (nonatomic, copy, nullable, readwrite) NSString *customerId;
 @property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString*, NSString *> *metadata;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;

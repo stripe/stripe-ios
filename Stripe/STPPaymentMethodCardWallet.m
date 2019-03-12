@@ -16,10 +16,10 @@
 
 @interface STPPaymentMethodCardWallet()
 
-@property (nonatomic) STPPaymentMethodCardWalletType type;
-@property (nonatomic, nullable) STPPaymentMethodCardWalletMasterpass *masterpass;
-@property (nonatomic, nullable) STPPaymentMethodCardWalletVisaCheckout *visaCheckout;
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, readwrite) STPPaymentMethodCardWalletType type;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCardWalletMasterpass *masterpass;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCardWalletVisaCheckout *visaCheckout;
+@property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
 

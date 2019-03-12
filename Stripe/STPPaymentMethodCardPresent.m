@@ -11,7 +11,7 @@
 #import "NSDictionary+Stripe.h"
 
 @interface STPPaymentMethodCardPresent()
-@property (nonatomic, readwrite, nonnull, copy) NSDictionary *allResponseFields;
+@property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 @end
 
 @implementation STPPaymentMethodCardPresent
