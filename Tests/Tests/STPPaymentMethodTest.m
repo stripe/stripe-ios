@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "STPPaymentMethod.h"
+#import "STPPaymentMethod+Private.h"
 #import "STPTestUtils.h"
 #import "STPFixtures.h"
 
@@ -17,6 +17,35 @@
 @end
 
 @implementation STPPaymentMethodTest
+
+#pragma mark - STPPaymentMethodType Tests
+
+- (void)testTypeFromString {
+    XCTAssertEqual([STPPaymentMethod typeFromString:@"card"], STPPaymentMethodTypeCard);
+    XCTAssertEqual([STPPaymentMethod typeFromString:@"CARD"], STPPaymentMethodTypeCard);
+    XCTAssertEqual([STPPaymentMethod typeFromString:@"unknown_string"], STPPaymentMethodTypeUnknown);
+}
+
+- (void)testStringFromType {
+    NSArray<NSNumber *> *values = @[
+                                    @(STPPaymentMethodTypeCard),
+                                    @(STPPaymentMethodTypeUnknown),
+                                    ];
+    for (NSNumber *typeNumber in values) {
+        STPPaymentMethodType type = (STPPaymentMethodType)[typeNumber integerValue];
+        NSString *string = [STPPaymentMethod stringFromType:type];
+        
+        switch (type) {
+            case STPPaymentMethodTypeCard:
+                XCTAssertEqualObjects(string, @"card");
+                break;
+            case STPPaymentMethodTypeUnknown:
+                XCTAssertNil(string);
+                break;
+        }
+    }
+}
+
 
 #pragma mark - STPAPIResponseDecodable Tests
 
@@ -44,7 +73,7 @@
     XCTAssertEqualObjects(paymentMethod.stripeId, @"pm_123456789");
     XCTAssertEqualObjects(paymentMethod.created, [NSDate dateWithTimeIntervalSince1970:123456789]);
     XCTAssertEqual(paymentMethod.liveMode, NO);
-    XCTAssertEqualObjects(paymentMethod.type, @"card");
+    XCTAssertEqual(paymentMethod.type, STPPaymentMethodTypeCard);
     XCTAssertNotNil(paymentMethod.billingDetails);
     XCTAssertNotNil(paymentMethod.card);
     XCTAssertNil(paymentMethod.customerId);

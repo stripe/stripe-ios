@@ -9,13 +9,14 @@
 #import <Foundation/Foundation.h>
 
 #import "STPAPIResponseDecodable.h"
+#import "STPFormEncodable.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  The billing address, a property on `STPPaymentMethodBillingDetails`
  */
-@interface STPPaymentMethodBillingDetailsAddress : NSObject <STPAPIResponseDecodable>
+@interface STPPaymentMethodBillingDetailsAddress : NSObject <STPAPIResponseDecodable, STPFormEncodable>
 
 /**
  City/District/Suburb/Town/Village.

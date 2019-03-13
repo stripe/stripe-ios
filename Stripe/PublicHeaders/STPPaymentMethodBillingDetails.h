@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "STPAPIResponseDecodable.h"
+#import "STPFormEncodable.h"
 
 @class STPPaymentMethodBillingDetailsAddress;
 
@@ -19,12 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
  
  @see https://stripe.com/docs/api/payment_methods/object#payment_method_object-billing_details
  */
-@interface STPPaymentMethodBillingDetails : NSObject <STPAPIResponseDecodable>
+@interface STPPaymentMethodBillingDetails : NSObject <STPAPIResponseDecodable, STPFormEncodable>
 
 /**
  Billing address.
  */
-@property (nonatomic, nullable) STPPaymentMethodBillingDetailsAddress *address;
+@property (nonatomic, strong, nullable) STPPaymentMethodBillingDetailsAddress *address;
 
 /**
  Email address.

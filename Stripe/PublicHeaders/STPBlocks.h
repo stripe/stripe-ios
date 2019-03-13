@@ -15,6 +15,7 @@
 @class STPCustomer;
 @protocol STPSourceProtocol;
 @class STPPaymentIntent;
+@class STPPaymentMethod;
 
 /**
  These values control the labels used in the shipping info collection form.
@@ -114,6 +115,14 @@ typedef void (^STPSourceProtocolCompletionBlock)(id<STPSourceProtocol> __nullabl
  @param error The error returned from the response, or nil if none occurs. @see StripeError.h for possible values.
  */
 typedef void (^STPPaymentIntentCompletionBlock)(STPPaymentIntent * __nullable paymentIntent, NSError * __nullable error);
+
+/**
+ A callback to be run with a PaymentMethod response from the Stripe API.
+ 
+ @param paymentMethod The Stripe PaymentMethod from the response. Will be nil if an error occurs. @see STPPaymentMethod
+ @param error The error returned from the response, or nil if none occurs. @see StripeError.h for possible values.
+ */
+typedef void (^STPPaymentMethodCompletionBlock)(STPPaymentMethod * __nullable paymentMethod, NSError * __nullable error);
 
 /**
  A callback to be run with a validation result and shipping methods for a 
