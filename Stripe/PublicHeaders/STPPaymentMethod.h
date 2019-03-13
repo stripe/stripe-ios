@@ -11,7 +11,7 @@
 #import "STPAPIResponseDecodable.h"
 #import "STPPaymentMethodEnums.h"
 
-@class STPPaymentMethodBillingDetails, STPPaymentMethodCard, STPPaymentMethodIdeal, STPPaymentMethodCardPresent;
+@class STPPaymentMethodBillingDetails, STPPaymentMethodCard, STPPaymentMethodiDEAL, STPPaymentMethodCardPresent;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -54,9 +54,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly) STPPaymentMethodCard *card;
 
 /**
- If this is a iDEAL PaymentMethod (ie `self.type == STPPaymentMethodTypeIdeal`), this contains additional details.
+ If this is a iDEAL PaymentMethod (ie `self.type == STPPaymentMethodTypeiDEAL`), this contains additional details.
  */
-@property (nonatomic, nullable, readonly) STPPaymentMethodIdeal *ideal;
+@property (nonatomic, nullable, readonly) STPPaymentMethodiDEAL *iDEAL;
 
 /**
  If this is a card present PaymentMethod (ie `self.type == STPPaymentMethodTypeCardPresent`), this contains additional details.

@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPPaymentMethodCardWallet ()
+@interface STPPaymentMethodCardWallet (Private)
 
 + (STPPaymentMethodCardWalletType)typeFromString:(NSString *)string;
 

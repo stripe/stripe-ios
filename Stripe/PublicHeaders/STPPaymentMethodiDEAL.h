@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodIdeal.h
+//  STPPaymentMethodiDEAL.h
 //  Stripe
 //
 //  Created by Yuki Tokuhiro on 3/9/19.
@@ -12,18 +12,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPPaymentMethodIdeal : NSObject <STPAPIResponseDecodable>
+@interface STPPaymentMethodiDEAL : NSObject <STPAPIResponseDecodable>
 
 /**
  The customer’s bank.
  */
-@property (nonatomic, nullable, readonly) NSString *bank;
+@property (nonatomic, nullable, readonly) NSString *bankName;
 
 /**
  The Bank Identifier Code of the customer’s bank.
  */
-@property (nonatomic, nullable, readonly) NSString *bic;
+@property (nonatomic, nullable, readonly) NSString *bankIdentifierCode;
 
 @end
 
 NS_ASSUME_NONNULL_END
+

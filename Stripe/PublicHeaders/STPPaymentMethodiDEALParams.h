@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodIdealParams.h
+//  STPPaymentMethodiDEALParams.h
 //  Stripe
 //
 //  Created by Yuki Tokuhiro on 3/9/19.
@@ -12,12 +12,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STPPaymentMethodIdealParams : NSObject <STPFormEncodable>
+@interface STPPaymentMethodiDEALParams : NSObject <STPFormEncodable>
 
 /**
  The customer’s bank.
  */
-@property (nonatomic, nullable, copy) NSString *bank;
+@property (nonatomic, nullable, copy) NSString *bankName;
 
 @end
 

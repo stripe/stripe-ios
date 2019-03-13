@@ -23,8 +23,8 @@
 - (void)testTypeFromString {
     XCTAssertEqual([STPPaymentMethod typeFromString:@"card"], STPPaymentMethodTypeCard);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"CARD"], STPPaymentMethodTypeCard);
-    XCTAssertEqual([STPPaymentMethod typeFromString:@"ideal"], STPPaymentMethodTypeIdeal);
-    XCTAssertEqual([STPPaymentMethod typeFromString:@"IDEAL"], STPPaymentMethodTypeIdeal);
+    XCTAssertEqual([STPPaymentMethod typeFromString:@"ideal"], STPPaymentMethodTypeiDEAL);
+    XCTAssertEqual([STPPaymentMethod typeFromString:@"IDEAL"], STPPaymentMethodTypeiDEAL);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"card_present"], STPPaymentMethodTypeCardPresent);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"CARD_PRESENT"], STPPaymentMethodTypeCardPresent);
     XCTAssertEqual([STPPaymentMethod typeFromString:@"unknown_string"], STPPaymentMethodTypeUnknown);
@@ -33,7 +33,7 @@
 - (void)testStringFromType {
     NSArray<NSNumber *> *values = @[
                                     @(STPPaymentMethodTypeCard),
-                                    @(STPPaymentMethodTypeIdeal),
+                                    @(STPPaymentMethodTypeiDEAL),
                                     @(STPPaymentMethodTypeCardPresent),
                                     @(STPPaymentMethodTypeUnknown),
                                     ];
@@ -45,7 +45,7 @@
             case STPPaymentMethodTypeCard:
                 XCTAssertEqualObjects(string, @"card");
                 break;
-            case STPPaymentMethodTypeIdeal:
+            case STPPaymentMethodTypeiDEAL:
                 XCTAssertEqualObjects(string, @"ideal");
                 break;
             case STPPaymentMethodTypeCardPresent:

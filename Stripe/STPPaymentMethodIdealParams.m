@@ -1,14 +1,14 @@
 //
-//  STPPaymentMethodIdealParams.m
+//  STPPaymentMethodiDEALParams.m
 //  Stripe
 //
 //  Created by Yuki Tokuhiro on 3/9/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentMethodIdealParams.h"
+#import "STPPaymentMethodiDEALParams.h"
 
-@implementation STPPaymentMethodIdealParams
+@implementation STPPaymentMethodiDEALParams
 
 @synthesize additionalAPIParameters = _additionalAPIParameters;
 
@@ -20,7 +20,7 @@
 
 + (NSDictionary *)propertyNamesToFormFieldNamesMapping {
     return @{
-             NSStringFromSelector(@selector(bank)): @"bank",
+             NSStringFromSelector(@selector(bankName)): @"bank",
              };
 }
 

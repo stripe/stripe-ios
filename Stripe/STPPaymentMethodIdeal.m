@@ -1,35 +1,35 @@
 //
-//  STPPaymentMethodIdeal.m
+//  STPPaymentMethodiDEAL.m
 //  Stripe
 //
 //  Created by Yuki Tokuhiro on 3/9/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentMethodIdeal.h"
+#import "STPPaymentMethodiDEAL.h"
 
 #import "NSDictionary+Stripe.h"
 
-@interface STPPaymentMethodIdeal ()
+@interface STPPaymentMethodiDEAL ()
 
-@property (nonatomic, nullable, copy, readwrite) NSString *bank;
-@property (nonatomic, nullable, copy, readwrite) NSString *bic;
+@property (nonatomic, nullable, copy, readwrite) NSString *bankName;
+@property (nonatomic, nullable, copy, readwrite) NSString *bankIdentifierCode;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
 
-@implementation STPPaymentMethodIdeal
+@implementation STPPaymentMethodiDEAL
 
 - (NSString *)description {
     NSArray *props = @[
                        // Object
                        [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
-                       
+
                        // Properties
-                       [NSString stringWithFormat:@"bank: %@", self.bank],
-                       [NSString stringWithFormat:@"bic: %@", self.bic],
+                       [NSString stringWithFormat:@"bank: %@", self.bankName],
+                       [NSString stringWithFormat:@"bic: %@", self.bankIdentifierCode],
                        ];
-    
+
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
 }
 
@@ -40,11 +40,12 @@
     if (!dict) {
         return nil;
     }
-    STPPaymentMethodIdeal *ideal = [self new];
+    STPPaymentMethodiDEAL *ideal = [self new];
     ideal.allResponseFields = dict;
-    ideal.bank = [dict stp_stringForKey:@"bank"];
-    ideal.bic = [dict stp_stringForKey:@"bic"];
+    ideal.bankName = [dict stp_stringForKey:@"bank"];
+    ideal.bankIdentifierCode = [dict stp_stringForKey:@"bic"];
     return ideal;
 }
 
 @end
+

@@ -1,5 +1,5 @@
 //
-//  STPPaymentMethodIdealTest.m
+//  STPPaymentMethodiDEALTest.m
 //  StripeiOS Tests
 //
 //  Created by Yuki Tokuhiro on 3/9/19.
@@ -10,11 +10,11 @@
 
 #import "STPPaymentMethodIdeal.h"
 
-@interface STPPaymentMethodIdealTest : XCTestCase
+@interface STPPaymentMethodiDEALTest : XCTestCase
 
 @end
 
-@implementation STPPaymentMethodIdealTest
+@implementation STPPaymentMethodiDEALTest
 
 - (NSDictionary *)exampleJson {
     return @{
@@ -30,17 +30,17 @@
         NSMutableDictionary *response = [[self exampleJson] mutableCopy];
         [response removeObjectForKey:field];
         
-        XCTAssertNil([STPPaymentMethodIdeal decodedObjectFromAPIResponse:response]);
+        XCTAssertNil([STPPaymentMethodiDEAL decodedObjectFromAPIResponse:response]);
     }
     
-    XCTAssert([STPPaymentMethodIdeal decodedObjectFromAPIResponse:[self exampleJson]]);
+    XCTAssert([STPPaymentMethodiDEAL decodedObjectFromAPIResponse:[self exampleJson]]);
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
     NSDictionary *response = [self exampleJson];
-    STPPaymentMethodIdeal *ideal = [STPPaymentMethodIdeal decodedObjectFromAPIResponse:response];
-    XCTAssertEqualObjects(ideal.bank, @"Rabobank");
-    XCTAssertEqualObjects(ideal.bic, @"RABONL2U");
+    STPPaymentMethodiDEAL *ideal = [STPPaymentMethodiDEAL decodedObjectFromAPIResponse:response];
+    XCTAssertEqualObjects(ideal.bankName, @"Rabobank");
+    XCTAssertEqualObjects(ideal.bankIdentifierCode, @"RABONL2U");
 }
 
 @end

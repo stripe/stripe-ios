@@ -14,13 +14,44 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ The type of Card Wallet.
+ */
 typedef NS_ENUM(NSUInteger, STPPaymentMethodCardWalletType) {
+    
+    /**
+     Amex Express Checkout
+     */
     STPPaymentMethodCardWalletTypeAmexExpressCheckout,
+    
+    /**
+     Apple Pay
+     */
     STPPaymentMethodCardWalletTypeApplePay,
+    
+    /**
+     Google Pay
+     */
     STPPaymentMethodCardWalletTypeGooglePay,
+    
+    /**
+     Masterpass
+     */
     STPPaymentMethodCardWalletTypeMasterpass,
+    
+    /**
+     Samsung Pay
+     */
     STPPaymentMethodCardWalletTypeSamsungPay,
+    
+    /**
+     Visa Checkout
+     */
     STPPaymentMethodCardWalletTypeVisaCheckout,
+    
+    /**
+     An unknown Card Wallet type.
+     */
     STPPaymentMethodCardWalletTypeUnknown,
 };
 

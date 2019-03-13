@@ -11,7 +11,7 @@
 #import "STPFormEncodable.h"
 #import "STPPaymentMethodEnums.h"
 
-@class STPPaymentMethodBillingDetails, STPPaymentMethodCardParams, STPPaymentMethodIdealParams;
+@class STPPaymentMethodBillingDetails, STPPaymentMethodCardParams, STPPaymentMethodiDEALParams;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  If this is a iDEAL PaymentMethod, this contains details about user's bank.
  */
-@property (nonatomic, nullable) STPPaymentMethodIdealParams *ideal;
+@property (nonatomic, nullable) STPPaymentMethodiDEALParams *iDEAL;
 
 /**
  Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
@@ -72,11 +72,11 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Creates params for a card PaymentMethod.
  
- @param ideal                An object containing the user's iDEAL bank details.
+ @param iDEAL               An object containing the user's iDEAL bank details.
  @param billingDetails      An object containing the user's billing details.
  @param metadata            Additional information to attach to the PaymentMethod.
  */
-+ (STPPaymentMethodParams *)paramsWithIdeal:(STPPaymentMethodIdealParams *)ideal
++ (STPPaymentMethodParams *)paramsWithiDEAL:(STPPaymentMethodiDEALParams *)iDEAL
                             billingDetails:(nullable STPPaymentMethodBillingDetails *)billingDetails
                                   metadata:(nullable NSDictionary<NSString *, NSString *> *)metadata;
 
