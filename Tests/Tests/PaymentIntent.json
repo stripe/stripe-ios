@@ -20,6 +20,13 @@
       "url": "https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"
     }
   },
+  "next_action": {
+      "type": "redirect_to_url",
+      "redirect_to_url": {
+          "return_url": "payments-example://stripe-redirect",
+          "url": "https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"
+      }
+  },
   "receipt_email": "danj@example.com",
   "shipping": {
     "address": {
@@ -36,5 +43,5 @@
     "tracking_number": "xyz123abc"
   },
   "source": "src_1Cl1AdIl4IdHmuTbseiDWq6m",
-  "status": "requires_action"
+  "status": "requires_source_action"
 }

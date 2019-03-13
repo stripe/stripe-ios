@@ -139,18 +139,30 @@
     XCTAssertNil(sut.nativeRedirectURL);
     XCTAssertEqualObjects(sut.redirectURL.absoluteString,
                           @"https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk");
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
     XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL.returnURL);
     XCTAssertEqualObjects(sut.returnURL, paymentIntent.nextSourceAction.authorizeWithURL.returnURL);
+#pragma clang diagnostic pop
+    
+    XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
+    XCTAssertEqualObjects(sut.returnURL, paymentIntent.nextAction.redirectToURL.returnURL);
 
     // and make sure the completion calls the completion block above
-    sut.completion(fakeError);
+    XCTAssertNotNil(sut);
+    if (sut.completion) {
+        sut.completion(fakeError);
+    }
     XCTAssertTrue(completionCalled);
 }
 
 - (void)testInitWithPaymentIntentFailures {
+    // Note next_action has been renamed to next_source_action in the API, but both still get sent down in the 2015-10-12 API
     NSMutableDictionary *json = [[STPTestUtils jsonNamed:STPTestJSONPaymentIntent] mutableCopy];
     json[@"next_source_action"] = [json[@"next_source_action"] mutableCopy];
     json[@"next_source_action"][@"authorize_with_url"] = [json[@"next_source_action"][@"authorize_with_url"] mutableCopy];
+    json[@"next_action"] = [json[@"next_action"] mutableCopy];
+    json[@"next_action"][@"redirect_to_url"] = [json[@"next_action"][@"redirect_to_url"] mutableCopy];
 
     void (^unusedCompletion)(NSString *, NSError *) = ^(__unused NSString * _Nonnull clientSecret, __unused NSError * _Nullable error) {
         XCTFail(@"should not be constructed, definitely not completed");
@@ -166,21 +178,27 @@
 
     json[@"status"] = @"processing";
     XCTAssertNil(create(), @"not created with wrong status");
-    json[@"status"] = @"requires_action";
+    json[@"status"] = @"requires_source_action";
 
     json[@"next_source_action"][@"type"] = @"not_authorize_with_url";
+    json[@"next_action"][@"type"] = @"not_authorize_with_url";
     XCTAssertNil(create(), @"not created with wrong next_source_action.type");
     json[@"next_source_action"][@"type"] = @"authorize_with_url";
+    json[@"next_action"][@"type"] = @"redirect_to_url";
 
     NSString *correctURL = json[@"next_source_action"][@"authorize_with_url"][@"url"];
     json[@"next_source_action"][@"authorize_with_url"][@"url"] = @"not a valid URL";
+    json[@"next_action"][@"redirect_to_url"][@"url"] = @"not a valid URL";
     XCTAssertNil(create(), @"not created with an invalid URL in next_source_action.authorize_with_url.url");
     json[@"next_source_action"][@"authorize_with_url"][@"url"] = correctURL;
+    json[@"next_action"][@"redirect_to_url"][@"url"] = correctURL;
 
     NSString *correctReturnURL = json[@"next_source_action"][@"authorize_with_url"][@"return_url"];
     json[@"next_source_action"][@"authorize_with_url"][@"return_url"] = @"not a url";
+    json[@"next_action"][@"redirect_to_url"][@"return_url"] = @"not a url";
     XCTAssertNil(create(), @"not created with invalid returnUrl");
     json[@"next_source_action"][@"authorize_with_url"][@"return_url"] = correctReturnURL;
+    json[@"next_action"][@"redirect_to_url"][@"return_url"] = correctReturnURL;
 
     XCTAssertNotNil(create(), @"works again when everything is back to normal");
 }

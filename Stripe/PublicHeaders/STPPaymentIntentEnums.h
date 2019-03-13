@@ -110,18 +110,44 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentConfirmationMethod) {
  Types of Source Actions from a `STPPaymentIntent`, when the payment intent
  status is `STPPaymentIntentStatusRequiresAction`.
  */
-typedef NS_ENUM(NSUInteger, STPPaymentIntentSourceActionType) {
+typedef NS_ENUM(NSUInteger, STPPaymentIntentActionType)  {
+    /**
+     This is an unknown action, that's been added since the SDK
+     was last updated.
+     Update your SDK, or use the `nextAction.allResponseFields`
+     for custom handling.
+     */
+    STPPaymentIntentActionTypeUnknown,
+    
+    /**
+     The payment intent needs to be authorized by the user. We provide
+     `STPRedirectContext` to handle the url redirections necessary.
+     */
+    STPPaymentIntentActionTypeRedirectToURL,
+};
+
+/**
+ Types of Source Actions from a `STPPaymentIntent`, when the payment intent
+ status is `STPPaymentIntentStatusRequiresSourceAction`.
+ 
+ @deprecated Use`STPPaymentIntentActionType` instead.
+ */
+__attribute__((deprecated("Use STPPaymentIntentActionType instead", "STPPaymentIntentActionType")))
+typedef NS_ENUM(NSUInteger, STPPaymentIntentSourceActionType)  {
     /**
      This is an unknown source action, that's been added since the SDK
      was last updated.
      Update your SDK, or use the `nextSourceAction.allResponseFields`
      for custom handling.
      */
-    STPPaymentIntentSourceActionTypeUnknown,
+    STPPaymentIntentSourceActionTypeUnknown __attribute__((deprecated("Use STPPaymentIntentActionTypeUnknown instead", "STPPaymentIntentActionTypeUnknown"))) = STPPaymentIntentActionTypeUnknown,
 
     /**
      The payment intent needs to be authorized by the user. We provide
      `STPRedirectContext` to handle the url redirections necessary.
      */
-    STPPaymentIntentSourceActionTypeAuthorizeWithURL,
+    STPPaymentIntentSourceActionTypeAuthorizeWithURL __attribute__((deprecated("Use STPPaymentIntentActionTypeRedirectToURL instead", "STPPaymentIntentActionTypeRedirectToURL"))) = STPPaymentIntentActionTypeRedirectToURL,
 };
+
+
+

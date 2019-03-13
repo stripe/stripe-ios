@@ -10,6 +10,9 @@
 * Adds paymentMethodParams, paymentMethodId to STPPaymentIntentParams.
 * Deprecates `saveSourceToCustomer` on `STPPaymentIntentParams`, replaced by `savePaymentMethod`
 * Deprecates `STPPaymentIntentsStatusRequiresSource`, replaced by `STPPaymentIntentsStatusRequiresPaymentMethod`
+* Deprecates `STPPaymentIntentsStatusRequiresSourceAction`, replaced by `STPPaymentIntentsStatusRequiresAction`
+* Deprecates `STPPaymentIntentSourceAction` and `STPPaymentSourceActionAuthorizeWithURL` classes, replaced by `STPPaymentIntentAction` and `STPPaymentActionRedirectToURL`
+* Deprecates `nextSourceAction` on `STPPaymentIntent`, replaced by `nextAction`
 
 ## 14.0.0 2018-11-14
 * Changes `STPPaymentCardTextField`, which now copies the `cardParams` property. See [MIGRATING.md](/MIGRATING.md) for more details. [#1031](https://github.com/stripe/stripe-ios/pull/1031)

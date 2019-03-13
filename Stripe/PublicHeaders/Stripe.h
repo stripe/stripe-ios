@@ -38,6 +38,8 @@
 #import "STPPaymentConfiguration.h"
 #import "STPPaymentContext.h"
 #import "STPPaymentIntent.h"
+#import "STPPaymentIntentAction.h"
+#import "STPPaymentIntentActionRedirectToURL.h"
 #import "STPPaymentIntentEnums.h"
 #import "STPPaymentIntentParams.h"
 #import "STPPaymentIntentSourceAction.h"

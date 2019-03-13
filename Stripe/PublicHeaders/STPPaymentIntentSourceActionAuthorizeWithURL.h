@@ -8,33 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-#import "STPAPIResponseDecodable.h"
-
-NS_ASSUME_NONNULL_BEGIN
+#import "STPPaymentIntentActionRedirectToURL.h"
 
 /**
  The `STPPaymentIntentSourceAction` details when type is `STPPaymentIntentSourceActionTypeAuthorizeWithURL`.
-
+ 
  These are created & owned by the containing `STPPaymentIntent`.
+ 
+ @deprecated Use `STPPaymentIntentActionRedirectToURL` instead.
  */
-@interface STPPaymentIntentSourceActionAuthorizeWithURL: NSObject<STPAPIResponseDecodable>
-
-/**
- You cannot directly instantiate an `STPPaymentIntentSourceActionAuthorizeWithURL`.
- */
-- (instancetype)init __attribute__((unavailable("You cannot directly instantiate an STPPaymentIntentSourceActionAuthorizeWithURL.")));
-
-/**
- The URL where the user will authorize this charge.
- */
-@property (nonatomic, readonly) NSURL *url;
-
-/**
- The return URL that'll be redirected back to when the user is done
- authorizing the charge.
- */
-@property (nonatomic, nullable, readonly) NSURL *returnURL;
-
-@end
-
-NS_ASSUME_NONNULL_END
+__attribute__((deprecated("Use STPPaymentIntentActionRedirectToURL instead", "STPPaymentIntentActionRedirectToURL")))
+typedef STPPaymentIntentActionRedirectToURL STPPaymentIntentSourceActionAuthorizeWithURL;
