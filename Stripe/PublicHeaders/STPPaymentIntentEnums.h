@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentStatus) {
      This PaymentIntent requires a Source
      @deprecated Use STPPaymentIntentStatusRequiresPaymentMethod instead.
      */
-    STPPaymentIntentStatusRequiresSource DEPRECATED_MSG_ATTRIBUTE("Use STPPaymentIntentStatusRequiresPaymentMethod"),
+    STPPaymentIntentStatusRequiresSource __attribute__((deprecated("Use STPPaymentIntentStatusRequiresPaymentMethod", "STPPaymentIntentStatusRequiresPaymentMethod"))) = STPPaymentIntentStatusRequiresPaymentMethod,
 
     /**
      This PaymentIntent needs to be confirmed
@@ -42,7 +42,7 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentStatus) {
      Additional actions found via `next_source_action`
      @deprecated Use STPPaymentIntentStatusRequiresAction instead.
      */
-    STPPaymentIntentStatusRequiresSourceAction DEPRECATED_MSG_ATTRIBUTE("Use STPPaymentIntentStatusRequiresAction"),
+    STPPaymentIntentStatusRequiresSourceAction __attribute__((deprecated("Use STPPaymentIntentStatusRequiresAction", "STPPaymentIntentStatusRequiresAction"))) = STPPaymentIntentStatusRequiresAction,
 
     /**
      Stripe is processing this PaymentIntent
@@ -125,6 +125,8 @@ typedef NS_ENUM(NSUInteger, STPPaymentIntentActionType)  {
      */
     STPPaymentIntentActionTypeRedirectToURL,
 };
+
+#pragma mark - Deprecated
 
 /**
  Types of Source Actions from a `STPPaymentIntent`, when the payment intent
