@@ -12,6 +12,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ An iDEAL Payment Method.
+ 
+ @see https://stripe.com/docs/api/payment_methods/object#payment_method_object-ideal
+ */
 @interface STPPaymentMethodiDEAL : NSObject <STPAPIResponseDecodable>
 
 /**

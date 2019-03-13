@@ -23,7 +23,7 @@
 }
 
 + (STPPaymentMethodParams *)paramsWithiDEAL:(STPPaymentMethodiDEALParams *)iDEAL billingDetails:(STPPaymentMethodBillingDetails *)billingDetails metadata:(NSDictionary<NSString *,NSString *> *)metadata {
-    STPPaymentMethodParams *params = [STPPaymentMethodParams new];
+    STPPaymentMethodParams *params = [self new];
     params.type = STPPaymentMethodTypeiDEAL;
     params.iDEAL = iDEAL;
     params.billingDetails = billingDetails;

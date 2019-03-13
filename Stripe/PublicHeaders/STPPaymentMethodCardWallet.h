@@ -55,6 +55,11 @@ typedef NS_ENUM(NSUInteger, STPPaymentMethodCardWalletType) {
     STPPaymentMethodCardWalletTypeUnknown,
 };
 
+/**
+ A Card Wallet.
+ 
+ @see https://stripe.com/docs/api/payment_methods/object#payment_method_object-card-wallet
+ */
 @interface STPPaymentMethodCardWallet : NSObject <STPAPIResponseDecodable>
 
 /**

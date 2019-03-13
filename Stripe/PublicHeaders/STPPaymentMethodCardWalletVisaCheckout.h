@@ -14,6 +14,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ A Visa Checkout Card Wallet
+ 
+ @see https://stripe.com/docs/visa-checkout
+ */
 @interface STPPaymentMethodCardWalletVisaCheckout : NSObject <STPAPIResponseDecodable>
 
 /**

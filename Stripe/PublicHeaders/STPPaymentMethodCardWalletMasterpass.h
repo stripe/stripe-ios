@@ -14,6 +14,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ A Masterpass Card Wallet
+ 
+ @see https://stripe.com/docs/masterpass
+ */
 @interface STPPaymentMethodCardWalletMasterpass : NSObject <STPAPIResponseDecodable>
 
 /**

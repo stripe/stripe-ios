@@ -12,6 +12,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ An object representing parameters used to create an iDEAL Payment Method
+ */
 @interface STPPaymentMethodiDEALParams : NSObject <STPFormEncodable>
 
 /**
