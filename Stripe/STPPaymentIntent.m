@@ -26,6 +26,7 @@
 @property (nonatomic, strong, nullable, readwrite) STPPaymentIntentSourceAction* nextSourceAction;
 @property (nonatomic, copy, nullable, readwrite) NSString *receiptEmail;
 @property (nonatomic, copy, nullable, readwrite) NSString *sourceId;
+@property (nonatomic, copy, nullable, readwrite) NSString *paymentMethodId;
 @property (nonatomic, assign, readwrite) STPPaymentIntentStatus status;
 
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
@@ -52,6 +53,7 @@
                        [NSString stringWithFormat:@"description = %@", self.stripeDescription],
                        [NSString stringWithFormat:@"livemode = %@", self.livemode ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"nextSourceAction = %@", self.nextSourceAction],
+                       [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodId],
                        [NSString stringWithFormat:@"receiptEmail = %@", self.receiptEmail],
                        [NSString stringWithFormat:@"shipping = %@", self.allResponseFields[@"shipping"]],
                        [NSString stringWithFormat:@"sourceId = %@", self.sourceId],
@@ -174,6 +176,7 @@
     paymentIntent.receiptEmail = [dict stp_stringForKey:@"receipt_email"];
     // FIXME: add support for `shipping`
     paymentIntent.sourceId = [dict stp_stringForKey:@"source"];
+    paymentIntent.paymentMethodId = [dict stp_stringForKey:@"payment_method"];
     paymentIntent.status = [[self class] statusFromString:rawStatus];
 
     paymentIntent.allResponseFields = dict;

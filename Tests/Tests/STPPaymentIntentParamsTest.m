@@ -29,7 +29,11 @@
         XCTAssertNil(params.sourceParams);
         XCTAssertNil(params.sourceId);
         XCTAssertNil(params.receiptEmail);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
         XCTAssertNil(params.saveSourceToCustomer);
+#pragma clang diagnostic pop
+        XCTAssertNil(params.savePaymentMethod);
         XCTAssertNil(params.returnURL);
     }
 }
@@ -55,6 +59,19 @@
 
     params.returnUrl = @"set via old name";
     XCTAssertEqualObjects(params.returnURL, @"set via old name");
+}
+
+- (void)testSaveSourceToCustomerRenaming {
+    STPPaymentIntentParams *params = [[STPPaymentIntentParams alloc] init];
+    
+    XCTAssertNil(params.saveSourceToCustomer);
+    XCTAssertNil(params.savePaymentMethod);
+    
+    params.savePaymentMethod = @NO;
+    XCTAssertEqualObjects(params.saveSourceToCustomer, @NO);
+    
+    params.saveSourceToCustomer = @YES;
+    XCTAssertEqualObjects(params.savePaymentMethod, @YES);
 }
 
 #pragma clang diagnostic pop

@@ -23,7 +23,7 @@
 }
 
 - (void)testCreatePaymentMethod {
-    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_vOo1umqsYxSrP5UXfOeL3ecm"];
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:@"pk_test_dCyfhfyeO2CZkcvT5xyIDdJj"];
     STPPaymentMethodCardParams *card = [STPPaymentMethodCardParams new];
     card.number = @"4242424242424242";
     card.expMonth = 10;

@@ -9,13 +9,13 @@ Server: nginx
 Access-Control-Expose-Headers: Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 Access-Control-Max-Age: 300
 Cache-Control: no-cache, no-store
-Date: Sun, 25 Nov 2018 07:34:38 GMT
+Date: Fri, 08 Mar 2019 00:50:08 GMT
 Stripe-Version: 2015-10-12
 Access-Control-Allow-Credentials: true
-Content-Length: 666
+Content-Length: 759
 Connection: keep-alive
 Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
-Request-Id: req_kG4PviQlbWMTXt
+Request-Id: req_runuXHL1NGNQxC
 
 {
   "next_source_action" : null,
@@ -30,7 +30,9 @@ Request-Id: req_kG4PviQlbWMTXt
   "currency" : "usd",
   "last_payment_error" : null,
   "cancellation_reason" : null,
+  "next_action" : null,
   "return_url" : "payments-example:\/\/stripe-redirect",
+  "payment_method" : null,
   "client_secret" : "pi_1ChlnaIl4IdHmuTbVnM2HCCf_secret_0T6n3wuf21l04Jun2ZCOB8rOZ",
   "id" : "pi_1ChlnaIl4IdHmuTbVnM2HCCf",
   "allowed_source_types" : [
@@ -38,6 +40,9 @@ Request-Id: req_kG4PviQlbWMTXt
   ],
   "confirmation_method" : "publishable",
   "receipt_email" : null,
+  "payment_method_types" : [
+    "card"
+  ],
   "created" : 1530137258,
   "description" : "Example PaymentIntent charge"
 }
