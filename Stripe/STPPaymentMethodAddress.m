@@ -1,22 +1,22 @@
 //
-//  STPPaymentMethodBillingDetailsAddress.m
+//  STPPaymentMethodAddress.m
 //  Stripe
 //
 //  Created by Yuki Tokuhiro on 3/5/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
 
-#import "STPPaymentMethodBillingDetailsAddress.h"
+#import "STPPaymentMethodAddress.h"
 
 #import "NSDictionary+Stripe.h"
 
-@interface STPPaymentMethodBillingDetailsAddress ()
+@interface STPPaymentMethodAddress ()
 
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
 
-@implementation STPPaymentMethodBillingDetailsAddress
+@implementation STPPaymentMethodAddress
 
 - (NSString *)description {
     NSArray *props = @[
@@ -61,7 +61,7 @@
     if (!dict) {
         return nil;
     }
-    STPPaymentMethodBillingDetailsAddress *address = [self new];
+    STPPaymentMethodAddress *address = [self new];
     address.allResponseFields = dict;
     address.city = [dict stp_stringForKey:@"city"];
     address.country = [dict stp_stringForKey:@"country"];

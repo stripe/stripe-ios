@@ -11,6 +11,8 @@
 #import "NSDictionary+Stripe.h"
 #import "STPPaymentMethodBillingDetails.h"
 #import "STPPaymentMethodCard.h"
+#import "STPPaymentMethodCardPresent.h"
+#import "STPPaymentMethodiDEAL.h"
 
 @interface STPPaymentMethod ()
 
@@ -20,6 +22,8 @@
 @property (nonatomic, readwrite) STPPaymentMethodType type;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodBillingDetails *billingDetails;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCard *card;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodiDEAL *iDEAL;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCardPresent *cardPresent;
 @property (nonatomic, copy, nullable, readwrite) NSString *customerId;
 @property (nonatomic, copy, nullable, readwrite) NSDictionary<NSString*, NSString *> *metadata;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
@@ -40,8 +44,10 @@
                        // STPPaymentMethod details (alphabetical)
                        [NSString stringWithFormat:@"billingDetails = %@", self.billingDetails],
                        [NSString stringWithFormat:@"card = %@", self.card],
+                       [NSString stringWithFormat:@"cardPresent = %@", self.cardPresent],
                        [NSString stringWithFormat:@"created = %@", self.created],
                        [NSString stringWithFormat:@"customerId = %@", self.customerId],
+                       [NSString stringWithFormat:@"ideal = %@", self.iDEAL],
                        [NSString stringWithFormat:@"liveMode = %@", self.liveMode ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"metadata = %@", self.metadata],
                        [NSString stringWithFormat:@"type = %@", [self.allResponseFields stp_stringForKey:@"type"]],
@@ -54,6 +60,8 @@
 + (NSDictionary<NSString *,NSNumber *> *)stringToTypeMapping {
     return @{
              @"card": @(STPPaymentMethodTypeCard),
+             @"ideal": @(STPPaymentMethodTypeiDEAL),
+             @"card_present": @(STPPaymentMethodTypeCardPresent),
              };
 }
 
@@ -94,6 +102,8 @@
     paymentMethod.billingDetails = [STPPaymentMethodBillingDetails decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"billing_details"]];
     paymentMethod.card = [STPPaymentMethodCard decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"card"]];
     paymentMethod.type = [self typeFromString:[dict stp_stringForKey:@"type"]];
+    paymentMethod.iDEAL = [STPPaymentMethodiDEAL decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"ideal"]];
+    paymentMethod.cardPresent = [STPPaymentMethodCardPresent decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"card_present"]];
     paymentMethod.customerId = [dict stp_stringForKey:@"customer"];
     paymentMethod.metadata = [[dict stp_dictionaryForKey:@"metadata"] stp_dictionaryByRemovingNonStrings];
     return paymentMethod;

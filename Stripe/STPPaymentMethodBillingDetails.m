@@ -8,7 +8,7 @@
 
 #import "STPPaymentMethodBillingDetails.h"
 
-#import "STPPaymentMethodBillingDetailsAddress.h"
+#import "STPPaymentMethodAddress.h"
 #import "NSDictionary+Stripe.h"
 
 @interface STPPaymentMethodBillingDetails ()
@@ -58,7 +58,7 @@
     }
     STPPaymentMethodBillingDetails *billingDetails = [self new];
     billingDetails.allResponseFields = dict;
-    billingDetails.address = [STPPaymentMethodBillingDetailsAddress decodedObjectFromAPIResponse:[response stp_dictionaryForKey:@"address"]];
+    billingDetails.address = [STPPaymentMethodAddress decodedObjectFromAPIResponse:[response stp_dictionaryForKey:@"address"]];
     billingDetails.email = [dict stp_stringForKey:@"email"];
     billingDetails.name = [dict stp_stringForKey:@"name"];
     billingDetails.phone = [dict stp_stringForKey:@"phone"];
