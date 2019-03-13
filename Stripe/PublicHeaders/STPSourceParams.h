@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
  Setting this to a value not known by the SDK causes `type` to 
  return `STPSourceTypeUnknown`
  */
-@property (nonatomic, copy) NSString *rawTypeString;
+@property (nonatomic, copy, nullable) NSString *rawTypeString;
 
 /**
  A positive integer in the smallest currency unit representing the
