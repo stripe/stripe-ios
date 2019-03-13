@@ -11,7 +11,7 @@
 #import "STPAPIResponseDecodable.h"
 #import "STPCardBrand.h"
 
-@class STPPaymentMethodThreeDSecureUsage, STPPaymentMethodCardChecks;
+@class STPPaymentMethodThreeDSecureUsage, STPPaymentMethodCardChecks, STPPaymentMethodCardWallet;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -71,6 +71,11 @@ NS_ASSUME_NONNULL_BEGIN
  Contains details on how this Card maybe be used for 3D Secure authentication.
  */
 @property (nonatomic, nullable, readonly) STPPaymentMethodThreeDSecureUsage *threeDSecureUsage;
+
+/**
+ If this Card is part of a Card Wallet, this contains the details of the Card Wallet.
+ */
+@property (nonatomic, nullable, readonly) STPPaymentMethodCardWallet *wallet;
 
 @end
 

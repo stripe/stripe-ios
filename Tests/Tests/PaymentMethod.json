@@ -31,6 +31,29 @@
     "three_d_secure_usage": {
       "supported": true
     },
+    "wallet": {
+        "type": "visa_checkout",
+        "visa_checkout": {
+            "name": "Jenny",
+            "email": "jenny@example.com",
+            "billing_address": {
+                "city": "München",
+                "country": "DE",
+                "postal_code": "80337",
+                "line1": "Marienplatz",
+                "line2": "8",
+                "state": "Bayern",
+            },
+            "shipping_address": {
+                "city": "München",
+                "country": "DE",
+                "postal_code": "80337",
+                "line1": "Marienplatz",
+                "line2": "8",
+                "state": "Bayern",
+            },
+        }
+    }
   },
   "created": 123456789,
   "livemode": false,

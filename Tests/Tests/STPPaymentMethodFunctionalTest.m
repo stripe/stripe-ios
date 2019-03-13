@@ -30,7 +30,7 @@
     card.expYear = 2022;
     card.cvc = @"100";
     
-    STPPaymentMethodBillingDetailsAddress *billingAddress = [STPPaymentMethodBillingDetailsAddress new];
+    STPPaymentMethodAddress *billingAddress = [STPPaymentMethodAddress new];
     billingAddress.city = @"San Francisco";
     billingAddress.country = @"United States";
     billingAddress.line1 = @"150 Townsend St";

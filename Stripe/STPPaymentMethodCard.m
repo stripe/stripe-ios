@@ -9,6 +9,7 @@
 #import "STPPaymentMethodCard.h"
 
 #import "NSDictionary+Stripe.h"
+#import "STPPaymentMethodCardWallet.h"
 #import "STPPaymentMethodCardChecks.h"
 #import "STPPaymentMethodThreeDSecureUsage.h"
 #import "STPCard.h"
@@ -24,6 +25,7 @@
 @property (nonatomic, copy, nullable, readwrite) NSString *last4;
 @property (nonatomic, copy, nullable, readwrite) NSString *fingerprint;
 @property (nonatomic, strong, nullable, readwrite) STPPaymentMethodThreeDSecureUsage *threeDSecureUsage;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentMethodCardWallet *wallet;
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 
 @end
@@ -44,6 +46,7 @@
                        [NSString stringWithFormat:@"last4 = %@", self.last4],
                        [NSString stringWithFormat:@"fingerprint = %@", self.fingerprint],
                        [NSString stringWithFormat:@"threeDSecureUsage = %@", self.threeDSecureUsage],
+                       [NSString stringWithFormat:@"wallet = %@", self.wallet],
                        ];
 
     return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
@@ -67,6 +70,7 @@
     card.last4 = [dict stp_stringForKey:@"last4"];
     card.fingerprint = [dict stp_stringForKey:@"fingerprint"];
     card.threeDSecureUsage = [STPPaymentMethodThreeDSecureUsage decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"three_d_secure_usage"]];
+    card.wallet = [STPPaymentMethodCardWallet decodedObjectFromAPIResponse:[dict stp_dictionaryForKey:@"wallet"]];
     return card;
 }
 
