@@ -30,6 +30,12 @@
     XCTAssertEqual([STPPaymentMethod typeFromString:@"unknown_string"], STPPaymentMethodTypeUnknown);
 }
 
+- (void)testTypesFromStrings {
+    NSArray *rawTypes = @[@"card", @"ideal", @"card_present"];
+    NSArray *expectedTypes = @[@(STPPaymentMethodTypeCard), @(STPPaymentMethodTypeiDEAL), @(STPPaymentMethodTypeCardPresent)];
+    XCTAssertEqualObjects([STPPaymentMethod typesFromStrings:rawTypes], expectedTypes);
+}
+
 - (void)testStringFromType {
     NSArray<NSNumber *> *values = @[
                                     @(STPPaymentMethodTypeCard),

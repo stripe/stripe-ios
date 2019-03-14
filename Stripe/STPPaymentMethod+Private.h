@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface STPPaymentMethod ()
 
 + (STPPaymentMethodType)typeFromString:(NSString *)string;
++ (NSArray<NSNumber *> *)typesFromStrings:(NSArray<NSString *> *)strings;
 + (nullable NSString *)stringFromType:(STPPaymentMethodType)type;
 
 @end

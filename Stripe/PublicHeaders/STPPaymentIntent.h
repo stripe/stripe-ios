@@ -10,6 +10,7 @@
 
 #import "STPAPIResponseDecodable.h"
 #import "STPPaymentIntentEnums.h"
+#import "STPPaymentMethodEnums.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -105,6 +106,11 @@ NS_ASSUME_NONNULL_BEGIN
  Status of the PaymentIntent
  */
 @property (nonatomic, readonly) STPPaymentIntentStatus status;
+
+/**
+ The list of payment method types (e.g. `@[@(STPPaymentMethodTypeCard)]`) that this PaymentIntent is allowed to use.
+ */
+@property (nonatomic, nullable, readonly) NSArray<NSNumber *> *paymentMethodTypes;
 
 #pragma mark - Deprecated
 

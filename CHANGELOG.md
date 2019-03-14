@@ -8,6 +8,7 @@
   * Renames all properties, methods, comments referencing 'PaymentMethod' to 'PaymentOption'
 * Adds `[STPAPI createPaymentMethodWithParams:completion:]`, which creates a PaymentMethod.
 * Adds paymentMethodParams, paymentMethodId to STPPaymentIntentParams.
+* Adds paymentMethodTypes to STPPaymentIntent.
 * Deprecates `saveSourceToCustomer` on `STPPaymentIntentParams`, replaced by `savePaymentMethod`
 * Deprecates `STPPaymentIntentsStatusRequiresSource`, replaced by `STPPaymentIntentsStatusRequiresPaymentMethod`
 * Deprecates `STPPaymentIntentsStatusRequiresSourceAction`, replaced by `STPPaymentIntentsStatusRequiresAction`
