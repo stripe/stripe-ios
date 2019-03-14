@@ -205,6 +205,8 @@
     XCTAssertEqualObjects(url, [NSURL URLWithString:@"https://hooks.stripe.com/redirect/authenticate/src_1Cl1AeIl4IdHmuTb1L7x083A?client_secret=src_client_secret_DBNwUe9qHteqJ8qQBwNWiigk"]);
     XCTAssertEqualObjects(paymentIntent.sourceId, @"src_1Cl1AdIl4IdHmuTbseiDWq6m");
     XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+    
+    XCTAssertEqualObjects(paymentIntent.paymentMethodTypes, @[@(STPPaymentMethodTypeCard)]);
 
     XCTAssertNotEqual(paymentIntent.allResponseFields, response, @"should have own copy of fields");
     XCTAssertEqualObjects(paymentIntent.allResponseFields, response, @"fields values should match");

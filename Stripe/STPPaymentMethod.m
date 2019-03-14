@@ -80,6 +80,14 @@
     return STPPaymentMethodTypeUnknown;
 }
 
++ (NSArray<NSNumber *> *)typesFromStrings:(NSArray<NSString *> *)strings {
+    NSMutableArray *types = [NSMutableArray new];
+    for (NSString *string in strings) {
+        [types addObject:@([STPPaymentMethod typeFromString:string])];
+    }
+    return [types copy];
+}
+
 #pragma mark - STPAPIResponseDecodable
 
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {

@@ -10,8 +10,10 @@
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentIntentSourceAction.h"
 #import "STPPaymentIntentAction.h"
+#import "STPPaymentMethod+Private.h"
 
 #import "NSDictionary+Stripe.h"
+#import "NSArray+Stripe.h"
 
 @interface STPPaymentIntent ()
 @property (nonatomic, copy, readwrite) NSString *stripeId;
@@ -29,6 +31,7 @@
 @property (nonatomic, copy, nullable, readwrite) NSString *sourceId;
 @property (nonatomic, copy, nullable, readwrite) NSString *paymentMethodId;
 @property (nonatomic, assign, readwrite) STPPaymentIntentStatus status;
+@property (nonatomic, copy, nullable, readwrite) NSArray<NSNumber *> *paymentMethodTypes;
 
 @property (nonatomic, copy, nonnull, readwrite) NSDictionary *allResponseFields;
 @end
@@ -55,6 +58,7 @@
                        [NSString stringWithFormat:@"livemode = %@", self.livemode ? @"YES" : @"NO"],
                        [NSString stringWithFormat:@"nextAction = %@", self.nextAction],
                        [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodId],
+                       [NSString stringWithFormat:@"paymentMethodTypes = %@", [self.allResponseFields stp_arrayForKey:@"payment_method_types"]],
                        [NSString stringWithFormat:@"receiptEmail = %@", self.receiptEmail],
                        [NSString stringWithFormat:@"shipping = %@", self.allResponseFields[@"shipping"]],
                        [NSString stringWithFormat:@"sourceId = %@", self.sourceId],
@@ -185,6 +189,10 @@
     // FIXME: add support for `shipping`
     paymentIntent.sourceId = [dict stp_stringForKey:@"source"];
     paymentIntent.paymentMethodId = [dict stp_stringForKey:@"payment_method"];
+    NSArray<NSString *> *rawPaymentMethodTypes = [[dict stp_arrayForKey:@"payment_method_types"] stp_arrayByRemovingNulls];
+    if (rawPaymentMethodTypes) {
+        paymentIntent.paymentMethodTypes = [STPPaymentMethod typesFromStrings:rawPaymentMethodTypes];
+    }
     paymentIntent.status = [[self class] statusFromString:rawStatus];
 
     paymentIntent.allResponseFields = dict;
