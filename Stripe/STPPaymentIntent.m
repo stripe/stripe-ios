@@ -81,10 +81,6 @@
 
 + (STPPaymentIntentStatus)statusFromString:(NSString *)string {
     NSDictionary<NSString *, NSNumber *> *map = @{
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated"
-                                                  @"requires_source": @(STPPaymentIntentStatusRequiresSource),
-#pragma clang diagnostic pop
                                                   @"requires_payment_method": @(STPPaymentIntentStatusRequiresPaymentMethod),
                                                   @"requires_confirmation": @(STPPaymentIntentStatusRequiresConfirmation),
                                                   @"requires_source_action": @(STPPaymentIntentStatusRequiresAction), // 2015-10-12 API version still returns this instead of 'requires_action'

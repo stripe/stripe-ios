@@ -23,6 +23,28 @@
 
 @implementation STPPaymentIntentAction
 
+- (NSString *)description {
+    NSMutableArray *props = [@[
+                               // Object
+                               [NSString stringWithFormat:@"%@: %p", NSStringFromClass([self class]), self],
+                               
+                               // Type
+                               [NSString stringWithFormat:@"type = %@", [STPPaymentIntent stringFromActionType:self.type]],
+                               ] mutableCopy];
+    
+    // omit properties that don't apply to this type
+    switch (self.type) {
+        case STPPaymentIntentActionTypeRedirectToURL:
+            [props addObject:[NSString stringWithFormat:@"redirectToURL = %@", self.redirectToURL]];
+            break;
+        default:
+            // unrecognized type, just show the original dictionary for debugging help
+            [props addObject:[NSString stringWithFormat:@"allResponseFields = %@", self.allResponseFields]];
+    }
+    
+    return [NSString stringWithFormat:@"<%@>", [props componentsJoinedByString:@"; "]];
+}
+
 #pragma mark - STPAPIResponseDecodable
 
 + (nullable instancetype)decodedObjectFromAPIResponse:(nullable NSDictionary *)response {

@@ -34,10 +34,7 @@
 - (void)testStatusFromString {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-    XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_source"],
-                    STPPaymentIntentStatusRequiresSource);
-    XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_SOURCE"],
-                    STPPaymentIntentStatusRequiresSource);
+    XCTAssertEqual(STPPaymentIntentStatusRequiresSourceAction, STPPaymentIntentStatusRequiresAction);
 #pragma clang diagnostic pop
     XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_payment_method"],
                    STPPaymentIntentStatusRequiresPaymentMethod);
@@ -49,10 +46,18 @@
     XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_CONFIRMATION"],
                    STPPaymentIntentStatusRequiresConfirmation);
 
+    XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_source_action"],
+                   STPPaymentIntentStatusRequiresAction);
+    XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_SOURCE_ACTION"],
+                   STPPaymentIntentStatusRequiresAction);
     XCTAssertEqual([STPPaymentIntent statusFromString:@"requires_action"],
                    STPPaymentIntentStatusRequiresAction);
     XCTAssertEqual([STPPaymentIntent statusFromString:@"REQUIRES_ACTION"],
                    STPPaymentIntentStatusRequiresAction);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+    XCTAssertEqual(STPPaymentIntentStatusRequiresAction, STPPaymentIntentStatusRequiresSourceAction);
+#pragma clang diagnostic pop
 
     XCTAssertEqual([STPPaymentIntent statusFromString:@"processing"],
                    STPPaymentIntentStatusProcessing);
@@ -179,20 +184,13 @@
     XCTAssertFalse(paymentIntent.livemode);
     XCTAssertEqualObjects(paymentIntent.receiptEmail, @"danj@example.com");
     
-    // Deprecated: nextSourceAction
+    // Deprecated: `nextSourceAction` & `authorizeWithURL` should just be aliases for `nextAction` & `redirectToURL`
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-    XCTAssertNotNil(paymentIntent.nextSourceAction);
-    XCTAssertEqual(paymentIntent.nextSourceAction.type, STPPaymentIntentSourceActionTypeAuthorizeWithURL);
-    XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL);
-    XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL.url);
-    NSURL *nextSourceActionReturnURL = paymentIntent.nextSourceAction.authorizeWithURL.returnURL;
-    XCTAssertNotNil(nextSourceActionReturnURL);
-    XCTAssertEqualObjects(nextSourceActionReturnURL, [NSURL URLWithString:@"payments-example://stripe-redirect"]);
-    NSURL *nextSourceActionURL = paymentIntent.nextSourceAction.authorizeWithURL.url;
-    XCTAssertNotNil(nextSourceActionURL);
+    XCTAssertEqual(paymentIntent.nextSourceAction, paymentIntent.nextAction, @"Should be the same object.");
+    XCTAssertEqual(paymentIntent.nextSourceAction.authorizeWithURL, paymentIntent.nextAction.redirectToURL, @"Should be the same object.");
 #pragma clang diagnostic pop
-    
+
     // nextAction
     XCTAssertNotNil(paymentIntent.nextAction);
     XCTAssertEqual(paymentIntent.nextAction.type, STPPaymentIntentActionTypeRedirectToURL);

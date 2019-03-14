@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class STPPaymentIntentActionRedirectToURL;
 
 /**
- Source Action details for an STPPaymentIntent. This is a container for
+ Action details for an STPPaymentIntent. This is a container for
  the various types that are available. Check the `type` to see which one
  it is, and then use the related property for the details necessary to handle it.
  */
@@ -36,14 +36,16 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The details for authorizing via URL, when `type == STPPaymentIntentActionTypeRedirectToURL`
  */
-@property (nonatomic, strong, nullable, readonly) STPPaymentIntentActionRedirectToURL* redirectToURL;
+@property (nonatomic, strong, nullable, readonly) STPPaymentIntentActionRedirectToURL *redirectToURL;
+
+#pragma mark - Deprecated
 
 /**
- The details for authorizing via URL, when `type == STPPaymentIntentSourceActionTypeAuthorizeWithURL`
+ The details for authorizing via URL, when `type == STPPaymentIntentActionTypeRedirectToURL`
  
  @deprecated Use `redirectToURL` instead.
  */
-@property (nonatomic, strong, nullable, readonly) STPPaymentIntentActionRedirectToURL* authorizeWithURL DEPRECATED_MSG_ATTRIBUTE("Use `redirectToURL` instead");
+@property (nonatomic, strong, nullable, readonly) STPPaymentIntentActionRedirectToURL *authorizeWithURL __attribute__((deprecated("Use `redirectToURL` instead", "redirectToURL")));
 
 @end
 

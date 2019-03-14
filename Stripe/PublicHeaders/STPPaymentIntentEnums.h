@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentStatus) {
     STPPaymentIntentStatusRequiresConfirmation,
     
     /**
-     The selected Source requires additional authentication steps.
+     The selected PaymentMethod or Source requires additional authentication steps.
      Additional actions found via `next_action`
      */
     STPPaymentIntentStatusRequiresAction,
@@ -107,7 +107,7 @@ typedef NS_ENUM(NSInteger, STPPaymentIntentConfirmationMethod) {
 };
 
 /**
- Types of Source Actions from a `STPPaymentIntent`, when the payment intent
+ Types of Actions from a `STPPaymentIntent`, when the payment intent
  status is `STPPaymentIntentStatusRequiresAction`.
  */
 typedef NS_ENUM(NSUInteger, STPPaymentIntentActionType)  {

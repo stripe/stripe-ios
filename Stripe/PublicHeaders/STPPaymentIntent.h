@@ -81,13 +81,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL livemode;
 
 /**
- If `status == STPPaymentIntentStatusRequiresSourceAction`, this
- property contains the next source action to take for this PaymentIntent.
- @deprecated Use nextAction instead
- */
-@property (nonatomic, nullable, readonly) STPPaymentIntentAction* nextSourceAction DEPRECATED_MSG_ATTRIBUTE("Use nextAction instead");
-
-/**
  If `status == STPPaymentIntentStatusRequiresAction`, this
  property contains the next action to take for this PaymentIntent.
 */
@@ -112,6 +105,16 @@ NS_ASSUME_NONNULL_BEGIN
  Status of the PaymentIntent
  */
 @property (nonatomic, readonly) STPPaymentIntentStatus status;
+
+#pragma mark - Deprecated
+
+/**
+ If `status == STPPaymentIntentStatusRequiresAction`, this
+ property contains the next source action to take for this PaymentIntent.
+ 
+ @deprecated Use nextAction instead
+ */
+@property (nonatomic, nullable, readonly) STPPaymentIntentAction *nextSourceAction __attribute__((deprecated("Use nextAction instead", "nextAction")));
 
 @end
 
