@@ -18,7 +18,7 @@
 @implementation STPPaymentIntentFunctionalTest
 
 - (void)setUp {
-//    self.recordngMode = YES;
+//    self.recordingMode = YES;
     [super setUp];
 }
 
@@ -38,7 +38,11 @@
                                            XCTAssertNil(paymentIntent.sourceId);
                                            XCTAssertNil(paymentIntent.paymentMethodId);
                                            XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusCanceled);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
                                            XCTAssertNil(paymentIntent.nextSourceAction);
+#pragma clang diagnostic pop
+                                           XCTAssertNil(paymentIntent.nextAction);
 
                                            [expectation fulfill];
                                        }];
@@ -143,12 +147,20 @@
                                     XCTAssertFalse(paymentIntent.livemode);
 
                                     // sourceParams is the 3DS-required test card
-                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresSourceAction);
+                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
 
                                     // STPRedirectContext is relying on receiving returnURL
+                                    XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
+                                    XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
+                                                          [NSURL URLWithString:@"example-app-scheme://authorized"]);
+                                    
+                                    // Test deprecated property still works too
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
                                     XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL.returnURL);
                                     XCTAssertEqualObjects(paymentIntent.nextSourceAction.authorizeWithURL.returnURL,
                                                           [NSURL URLWithString:@"example-app-scheme://authorized"]);
+#pragma clang diagnostic pop
 
                                     // Going to log all the fields, so that you, the developer manually running this test can inspect them
                                     NSLog(@"Confirmed PaymentIntent: %@", paymentIntent.allResponseFields);
@@ -195,13 +207,14 @@
                                     XCTAssertNotNil(paymentIntent.paymentMethodId);
                                     
                                     // sourceParams is the 3DS-required test card
-                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresSourceAction);
+                                    XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
                                     
                                     // STPRedirectContext is relying on receiving returnURL
-                                    XCTAssertNotNil(paymentIntent.nextSourceAction.authorizeWithURL.returnURL);
-                                    XCTAssertEqualObjects(paymentIntent.nextSourceAction.authorizeWithURL.returnURL,
-                                                          [NSURL URLWithString:@"example-app-scheme://authorized"]);
                                     
+                                    XCTAssertNotNil(paymentIntent.nextAction.redirectToURL.returnURL);
+                                    XCTAssertEqualObjects(paymentIntent.nextAction.redirectToURL.returnURL,
+                                                          [NSURL URLWithString:@"example-app-scheme://authorized"]);
+
                                     // Going to log all the fields so that you, the developer manually running this test, can inspect them
                                     NSLog(@"Confirmed PaymentIntent: %@", paymentIntent.allResponseFields);
                                     

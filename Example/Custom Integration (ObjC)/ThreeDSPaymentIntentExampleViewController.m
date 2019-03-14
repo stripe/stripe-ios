@@ -75,7 +75,7 @@
                 return;
             }
 
-            if (paymentIntent.status == STPPaymentIntentStatusRequiresSourceAction) {
+            if (paymentIntent.status == STPPaymentIntentStatusRequiresAction) {
                 self.redirectContext = [[STPRedirectContext alloc] initWithPaymentIntent:paymentIntent completion:^(NSString * _Nonnull clientSecret, NSError * _Nullable error) {
                     if (error) {
                         [self.delegate exampleViewController:self didFinishWithError:error];
@@ -109,12 +109,12 @@
 
 - (void)finishWithStatus:(STPPaymentIntentStatus)status {
     switch (status) {
-        // There may have been a problem with the STPSourceParams
-        case STPPaymentIntentStatusRequiresSource:
+        // There may have been a problem with the payment method (STPPaymentMethodParams or STPSourceParams)
+        case STPPaymentIntentStatusRequiresPaymentMethod:
         // did you call `confirmPaymentIntentWithParams:completion`?
         case STPPaymentIntentStatusRequiresConfirmation:
-        // App should have handled the source action, but didn't for some reason
-        case STPPaymentIntentStatusRequiresSourceAction:
+        // App should have handled the action, but didn't for some reason
+        case STPPaymentIntentStatusRequiresAction:
         // The PaymentIntent was canceled (maybe by the backend?)
         case STPPaymentIntentStatusCanceled:
             [self.delegate exampleViewController:self didFinishWithMessage:@"Payment failed"];

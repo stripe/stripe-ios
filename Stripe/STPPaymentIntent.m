@@ -9,6 +9,7 @@
 #import "STPPaymentIntent.h"
 #import "STPPaymentIntent+Private.h"
 #import "STPPaymentIntentSourceAction.h"
+#import "STPPaymentIntentAction.h"
 
 #import "NSDictionary+Stripe.h"
 
@@ -23,7 +24,7 @@
 @property (nonatomic, copy, readwrite) NSString *currency;
 @property (nonatomic, copy, nullable, readwrite) NSString *stripeDescription;
 @property (nonatomic, assign, readwrite) BOOL livemode;
-@property (nonatomic, strong, nullable, readwrite) STPPaymentIntentSourceAction* nextSourceAction;
+@property (nonatomic, strong, nullable, readwrite) STPPaymentIntentAction* nextAction;
 @property (nonatomic, copy, nullable, readwrite) NSString *receiptEmail;
 @property (nonatomic, copy, nullable, readwrite) NSString *sourceId;
 @property (nonatomic, copy, nullable, readwrite) NSString *paymentMethodId;
@@ -52,7 +53,7 @@
                        [NSString stringWithFormat:@"currency = %@", self.currency],
                        [NSString stringWithFormat:@"description = %@", self.stripeDescription],
                        [NSString stringWithFormat:@"livemode = %@", self.livemode ? @"YES" : @"NO"],
-                       [NSString stringWithFormat:@"nextSourceAction = %@", self.nextSourceAction],
+                       [NSString stringWithFormat:@"nextAction = %@", self.nextAction],
                        [NSString stringWithFormat:@"paymentMethodId = %@", self.paymentMethodId],
                        [NSString stringWithFormat:@"receiptEmail = %@", self.receiptEmail],
                        [NSString stringWithFormat:@"shipping = %@", self.allResponseFields[@"shipping"]],
@@ -80,9 +81,11 @@
 
 + (STPPaymentIntentStatus)statusFromString:(NSString *)string {
     NSDictionary<NSString *, NSNumber *> *map = @{
-                                                  @"requires_source": @(STPPaymentIntentStatusRequiresSource),
+                                                  @"requires_source": @(STPPaymentIntentStatusRequiresPaymentMethod), // 2015-10-12 API version still returns this instead of 'requires_payment_method'
+                                                  @"requires_payment_method": @(STPPaymentIntentStatusRequiresPaymentMethod),
                                                   @"requires_confirmation": @(STPPaymentIntentStatusRequiresConfirmation),
-                                                  @"requires_source_action": @(STPPaymentIntentStatusRequiresSourceAction),
+                                                  @"requires_source_action": @(STPPaymentIntentStatusRequiresAction), // 2015-10-12 API version still returns this instead of 'requires_action'
+                                                  @"requires_action": @(STPPaymentIntentStatusRequiresAction),
                                                   @"processing": @(STPPaymentIntentStatusProcessing),
                                                   @"succeeded": @(STPPaymentIntentStatusSucceeded),
                                                   @"requires_capture": @(STPPaymentIntentStatusRequiresCapture),
@@ -116,28 +119,33 @@
     return statusNumber.integerValue;
 }
 
-+ (STPPaymentIntentSourceActionType)sourceActionTypeFromString:(NSString *)string {
++ (STPPaymentIntentActionType)actionTypeFromString:(NSString *)string {
     NSDictionary<NSString *, NSNumber *> *map = @{
-                                                  @"authorize_with_url": @(STPPaymentIntentSourceActionTypeAuthorizeWithURL),
+                                                  @"redirect_to_url": @(STPPaymentIntentActionTypeRedirectToURL),
                                                   };
-
+    
     NSString *key = string.lowercaseString;
-    NSNumber *statusNumber = map[key] ?: @(STPPaymentIntentSourceActionTypeUnknown);
+    NSNumber *statusNumber = map[key] ?: @(STPPaymentIntentActionTypeUnknown);
     return statusNumber.integerValue;
 }
 
-+ (NSString *)stringFromSourceActionType:(STPPaymentIntentSourceActionType)sourceActionType {
-    switch (sourceActionType) {
-        case STPPaymentIntentSourceActionTypeAuthorizeWithURL:
-            return @"authorize_with_url";
-        case STPPaymentIntentSourceActionTypeUnknown:
++ (NSString *)stringFromActionType:(STPPaymentIntentActionType)actionType {
+    switch (actionType) {
+        case STPPaymentIntentActionTypeRedirectToURL:
+            return @"redirect_to_url";
+        case STPPaymentIntentActionTypeUnknown:
             break;
     }
-
+    
     // catch any unknown values here
     return @"unknown";
 }
 
+#pragma mark - Deprecated
+
+- (STPPaymentIntentAction *)nextSourceAction {
+    return self.nextAction;
+}
 
 #pragma mark - STPAPIResponseDecodable
 
@@ -171,8 +179,8 @@
     paymentIntent.currency = currency;
     paymentIntent.stripeDescription = [dict stp_stringForKey:@"description"];
     paymentIntent.livemode = [dict stp_boolForKey:@"livemode" or:YES];
-    NSDictionary *nextSourceActionDict = [dict stp_dictionaryForKey:@"next_source_action"];
-    paymentIntent.nextSourceAction = [STPPaymentIntentSourceAction decodedObjectFromAPIResponse:nextSourceActionDict];
+    NSDictionary *nextActionDict = [dict stp_dictionaryForKey:@"next_action"];
+    paymentIntent.nextAction = [STPPaymentIntentAction decodedObjectFromAPIResponse:nextActionDict];
     paymentIntent.receiptEmail = [dict stp_stringForKey:@"receipt_email"];
     // FIXME: add support for `shipping`
     paymentIntent.sourceId = [dict stp_stringForKey:@"source"];

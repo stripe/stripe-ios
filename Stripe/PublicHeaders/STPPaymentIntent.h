@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class STPPaymentIntentSourceAction;
+@class STPPaymentIntentAction;
 
 /**
  A PaymentIntent tracks the process of collecting a payment from your customer.
@@ -81,10 +81,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL livemode;
 
 /**
- If `status == STPPaymentIntentStatusRequiresSourceAction`, this
+ If `status == STPPaymentIntentStatusRequiresAction`, this
  property contains the next action to take for this PaymentIntent.
- */
-@property (nonatomic, nullable, readonly) STPPaymentIntentSourceAction* nextSourceAction;
+*/
+@property (nonatomic, nullable, readonly) STPPaymentIntentAction *nextAction;
 
 /**
  Email address that the receipt for the resulting payment will be sent to.
@@ -105,6 +105,16 @@ NS_ASSUME_NONNULL_BEGIN
  Status of the PaymentIntent
  */
 @property (nonatomic, readonly) STPPaymentIntentStatus status;
+
+#pragma mark - Deprecated
+
+/**
+ If `status == STPPaymentIntentStatusRequiresAction`, this
+ property contains the next source action to take for this PaymentIntent.
+ 
+ @deprecated Use nextAction instead
+ */
+@property (nonatomic, nullable, readonly) STPPaymentIntentAction *nextSourceAction __attribute__((deprecated("Use nextAction instead", "nextAction")));
 
 @end
 
