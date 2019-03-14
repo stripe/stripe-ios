@@ -83,7 +83,7 @@
 + (NSArray<NSNumber *> *)typesFromStrings:(NSArray<NSString *> *)strings {
     NSMutableArray *types = [NSMutableArray new];
     for (NSString *string in strings) {
-        [types addObject:@([STPPaymentMethod typeFromString:string])];
+        [types addObject:@([self typeFromString:string])];
     }
     return [types copy];
 }
