@@ -160,11 +160,6 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
         return NO;
     }
 
-    if (paymentOption == self.selectedPaymentOption) {
-        // Cannot detach selected payment method
-        return NO;
-    }
-
     if (![paymentOption conformsToProtocol:@protocol(STPSourceProtocol)]) {
         // Cannot detach non-source payment method
         return NO;
@@ -210,8 +205,12 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
 }
 
 - (void)handleDoneButtonTapped:(__unused id)sender {
-    [self.tableView setEditing:NO animated:YES];
+    [self _endTableViewEditing];
     [self reloadRightBarButtonItemWithTableViewIsEditing:self.tableView.isEditing animated:YES];
+}
+
+- (void)_endTableViewEditing {
+    [self.tableView setEditing:NO animated:YES];
 }
 
 #pragma mark - UITableViewDataSource
@@ -301,8 +300,21 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
         // Perform deletion animation for single row
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 
+        BOOL tableViewIsEditing = tableView.isEditing;
+        if (![self isAnyPaymentOptionDetachable]) {
+            // we deleted the last available payment option, stop editing
+            // (but delay to next runloop because calling tableView setEditing:animated:
+            // in this function is not allowed)
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self _endTableViewEditing];
+            });
+            // manually set the value passed to reloadRightBarButtonItemWithTableViewIsEditing
+            // below
+            tableViewIsEditing = NO;
+        }
+
         // Reload right bar button item text
-        [self reloadRightBarButtonItemWithTableViewIsEditing:tableView.isEditing animated:YES];
+        [self reloadRightBarButtonItemWithTableViewIsEditing:tableViewIsEditing animated:YES];
 
         // Notify delegate
         [self.delegate internalViewControllerDidDeletePaymentOption:paymentOptionToDelete];
