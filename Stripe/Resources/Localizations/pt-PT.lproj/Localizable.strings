@@ -167,10 +167,10 @@
 "Phone" = "Telefone";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Código postal";
+"Postal" = "C.P.";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
-"Postal Code" = "Código Postal";
+"Postal Code" = "C.P.";
 
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Província";
@@ -254,5 +254,5 @@
 "ZIP" = "C.P.";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
-"ZIP Code" = "Código postal";
+"ZIP Code" = "C.P.";
 

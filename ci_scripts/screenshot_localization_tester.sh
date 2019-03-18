@@ -2,7 +2,7 @@
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-for i in en,US zh-HANS,CN de,DE es,ES it,IT ja,JP nl,NL fr,FR fi,FI nb,NO da,DK pt-BR,BR pt-PT,PT sv,SE es-LA,AR fr-CA,CA nn,NO; do
+for i in en,US zh-HANS,CN de,DE es,ES it,IT ja,JP nl,NL fr,FR fi,FI nb,NO da,DK pt-BR,BR pt-PT,PT sv,SE es-AR,AR fr-CA,CA nn,NO; do
   #statements
   IFS=",";
   set -- $i;

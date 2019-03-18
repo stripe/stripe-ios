@@ -188,16 +188,16 @@
 "Shipping" = "Expédition";
 
 /* Title for shipping address entry section */
-"SHIPPING ADDRESS" = "ADRESSE D’EXPÉDITION";
+"SHIPPING ADDRESS" = "ADRESSE D'EXPÉDITION";
 
 /* Title for shipping address entry section */
-"Shipping Address" = "Adresse d’expédition";
+"Shipping Address" = "Adresse d'expédition";
 
 /* Label for shipping method form */
-"SHIPPING METHOD" = "MODE D’EXPÉDITION";
+"SHIPPING METHOD" = "MODE D'EXPÉDITION";
 
 /* Label for shipping method form */
-"Shipping Method" = "Méthode d’expédition";
+"Shipping Method" = "Mode d'expédition";
 
 /* Source type brand name */
 "SOFORT" = "SOFORT";
@@ -221,13 +221,13 @@
 "Unknown" = "Inconnu";
 
 /* Button to fill shipping address from billing address. */
-"Use Billing" = "Utiliser adr. facturation";
+"Use Billing" = "Utiliser l'adresse de facturation";
 
 /* Button to fill billing address from delivery address. */
-"Use Delivery" = "Utiliser adr. livraison";
+"Use Delivery" = "Utiliser l'adresse de livraison";
 
 /* Button to fill billing address from shipping address. */
-"Use Shipping" = "Utiliser adr. expédition";
+"Use Shipping" = "Utiliser l'adresse d'expédition";
 
 /* You'll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Vous allez être redirigé vers %@ pour finir votre achat.";

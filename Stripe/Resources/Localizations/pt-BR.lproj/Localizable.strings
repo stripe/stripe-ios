@@ -167,7 +167,7 @@
 "Phone" = "Telefone";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Postal";
+"Postal" = "CEP";
 
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "CEP";
