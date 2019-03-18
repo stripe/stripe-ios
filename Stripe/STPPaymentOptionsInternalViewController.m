@@ -307,7 +307,7 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
             // in this function is not allowed)
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self _endTableViewEditing];
-            })
+            });
             // manually set the value passed to reloadRightBarButtonItemWithTableViewIsEditing
             // below
             tableViewIsEditing = NO;
