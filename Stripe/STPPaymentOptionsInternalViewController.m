@@ -303,9 +303,12 @@ static NSInteger const PaymentOptionSectionAddCard = 1;
         BOOL tableViewIsEditing = tableView.isEditing;
         if (![self isAnyPaymentOptionDetachable]) {
             // we deleted the last available payment option, stop editing
-            [self _endTableViewEditing];
-            // tableView.isEditing doesn't update immediately when called from this method
-            // so manually set the value passed to reloadRightBarButtonItemWithTableViewIsEditing
+            // (but delay to next runloop because calling tableView setEditing:animated:
+            // in this function is not allowed)
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self _endTableViewEditing];
+            })
+            // manually set the value passed to reloadRightBarButtonItemWithTableViewIsEditing
             // below
             tableViewIsEditing = NO;
         }
